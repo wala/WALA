@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<genmodel:GenModel xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.ibm.wala.emf/src"
+    modelPluginID="com.ibm.wala.emf" modelName="Wala" importerID="org.eclipse.emf.importer.ecore">
+  <foreignModel>wala.ecore</foreignModel>
+  <genPackages prefix="Wala" basePackage="com.ibm.wala" disposableProviderFactory="true"
+      ecorePackage="wala.ecore#/">
+    <nestedGenPackages prefix="Graph" disposableProviderFactory="true" ecorePackage="wala.ecore#//graph">
+      <genClasses ecoreClass="wala.ecore#//graph/EGraph">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference wala.ecore#//graph/EGraph/nodes"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wala.ecore#//graph/EGraph/edges"/>
+      </genClasses>
+      <genClasses ecoreClass="wala.ecore#//graph/ETree"/>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Common" disposableProviderFactory="true" ecorePackage="wala.ecore#//common">
+      <genDataTypes ecoreDataType="wala.ecore#//common/EJavaCollection"/>
+      <genDataTypes ecoreDataType="wala.ecore#//common/EFile"/>
+      <genDataTypes ecoreDataType="wala.ecore#//common/EIterator"/>
+      <genClasses image="false" ecoreClass="wala.ecore#//common/ECollection">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference wala.ecore#//common/ECollection/contents"/>
+      </genClasses>
+      <genClasses ecoreClass="wala.ecore#//common/EPair">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference wala.ecore#//common/EPair/X"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference wala.ecore#//common/EPair/Y"/>
+      </genClasses>
+      <genClasses ecoreClass="wala.ecore#//common/ERelation">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//common/ERelation/name"/>
+      </genClasses>
+      <genClasses ecoreClass="wala.ecore#//common/EContainer">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wala.ecore#//common/EContainer/containees"/>
+      </genClasses>
+      <genClasses ecoreClass="wala.ecore#//common/ENotContainer">
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference wala.ecore#//common/ENotContainer/elements"/>
+      </genClasses>
+      <genClasses ecoreClass="wala.ecore#//common/EStringHolder">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//common/EStringHolder/value"/>
+      </genClasses>
+      <genClasses ecoreClass="wala.ecore#//common/EObjectWithContainerId">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//common/EObjectWithContainerId/id"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Regex" disposableProviderFactory="true" ecorePackage="wala.ecore#//regex">
+      <genClasses ecoreClass="wala.ecore#//regex/EPattern">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//regex/EPattern/pattern"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Perf" disposableProviderFactory="true" ecorePackage="wala.ecore#//perf">
+      <genClasses ecoreClass="wala.ecore#//perf/EPhaseTiming">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//perf/EPhaseTiming/name"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//perf/EPhaseTiming/millis"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//perf/EPhaseTiming/order"/>
+      </genClasses>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="Java" disposableProviderFactory="true" ecorePackage="wala.ecore#//java">
+      <genEnums ecoreEnum="wala.ecore#//java/EClassLoaderName">
+        <genEnumLiterals ecoreEnumLiteral="wala.ecore#//java/EClassLoaderName/Application"/>
+        <genEnumLiterals ecoreEnumLiteral="wala.ecore#//java/EClassLoaderName/Primordial"/>
+        <genEnumLiterals ecoreEnumLiteral="wala.ecore#//java/EClassLoaderName/Extension"/>
+      </genEnums>
+      <genClasses ecoreClass="wala.ecore#//java/EJavaClass">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/EJavaClass/className"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/EJavaClass/loader"/>
+      </genClasses>
+      <genClasses ecoreClass="wala.ecore#//java/EJavaMethod">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/EJavaMethod/methodName"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/EJavaMethod/descriptor"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference wala.ecore#//java/EJavaMethod/javaClass"/>
+        <genFeatures property="Readonly" createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/EJavaMethod/signature"/>
+        <genOperations ecoreOperation="wala.ecore#//java/EJavaMethod/isClinit"/>
+      </genClasses>
+      <genClasses ecoreClass="wala.ecore#//java/ECallSite">
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/ECallSite/bytecodeIndex"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference wala.ecore#//java/ECallSite/javaMethod"/>
+        <genFeatures notify="false" createChild="false" propertySortChoices="true"
+            ecoreFeature="ecore:EReference wala.ecore#//java/ECallSite/declaredTarget"/>
+      </genClasses>
+      <genClasses ecoreClass="wala.ecore#//java/EClassHierarchy"/>
+      <genClasses ecoreClass="wala.ecore#//java/EInterfaceHierarchy"/>
+      <genClasses ecoreClass="wala.ecore#//java/ETypeHierarchy">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wala.ecore#//java/ETypeHierarchy/classes"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wala.ecore#//java/ETypeHierarchy/interfaces"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wala.ecore#//java/ETypeHierarchy/implements"/>
+      </genClasses>
+      <nestedGenPackages prefix="CallGraph" disposableProviderFactory="true" ecorePackage="wala.ecore#//java/callGraph">
+        <genClasses ecoreClass="wala.ecore#//java/callGraph/ECallGraph">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference wala.ecore#//java/callGraph/ECallGraph/entrypoints"/>
+        </genClasses>
+      </nestedGenPackages>
+      <nestedGenPackages prefix="PointerAnalysis" disposableProviderFactory="true"
+          ecorePackage="wala.ecore#//java/pointerAnalysis">
+        <genClasses image="false" ecoreClass="wala.ecore#//java/pointerAnalysis/EPointer"/>
+        <genClasses ecoreClass="wala.ecore#//java/pointerAnalysis/EInstanceField">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/pointerAnalysis/EInstanceField/fieldName"/>
+        </genClasses>
+        <genClasses ecoreClass="wala.ecore#//java/pointerAnalysis/EArrayContents">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference wala.ecore#//java/pointerAnalysis/EArrayContents/javaClass"/>
+        </genClasses>
+        <genClasses ecoreClass="wala.ecore#//java/pointerAnalysis/EStaticField">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/pointerAnalysis/EStaticField/fieldName"/>
+        </genClasses>
+        <genClasses ecoreClass="wala.ecore#//java/pointerAnalysis/ELocalPointer">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/pointerAnalysis/ELocalPointer/valueNumber"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference wala.ecore#//java/pointerAnalysis/ELocalPointer/javaMethod"/>
+        </genClasses>
+        <genClasses ecoreClass="wala.ecore#//java/pointerAnalysis/EReturnValuePointer">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/pointerAnalysis/EReturnValuePointer/isExceptionalReturnValue"/>
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference wala.ecore#//java/pointerAnalysis/EReturnValuePointer/javaMethod"/>
+        </genClasses>
+        <genClasses image="false" ecoreClass="wala.ecore#//java/pointerAnalysis/EInstance"/>
+        <genClasses ecoreClass="wala.ecore#//java/pointerAnalysis/EJavaClassInstance">
+          <genFeatures notify="false" createChild="false" propertySortChoices="true"
+              ecoreFeature="ecore:EReference wala.ecore#//java/pointerAnalysis/EJavaClassInstance/javaClass"/>
+        </genClasses>
+        <genClasses ecoreClass="wala.ecore#//java/pointerAnalysis/EHeapGraph"/>
+      </nestedGenPackages>
+      <nestedGenPackages prefix="JavaScope" disposableProviderFactory="true" ecorePackage="wala.ecore#//java/scope">
+        <genEnums ecoreEnum="wala.ecore#//java/scope/EBuiltInResource">
+          <genEnumLiterals ecoreEnumLiteral="wala.ecore#//java/scope/EBuiltInResource/DefaultJ2SELibs"/>
+          <genEnumLiterals ecoreEnumLiteral="wala.ecore#//java/scope/EBuiltInResource/DefaultJ2EELibs"/>
+          <genEnumLiterals ecoreEnumLiteral="wala.ecore#//java/scope/EBuiltInResource/primordial_jar_model"/>
+          <genEnumLiterals ecoreEnumLiteral="wala.ecore#//java/scope/EBuiltInResource/extension_jar_model"/>
+        </genEnums>
+        <genEnums ecoreEnum="wala.ecore#//java/scope/EStandardClassLoader">
+          <genEnumLiterals ecoreEnumLiteral="wala.ecore#//java/scope/EStandardClassLoader/Primordial"/>
+          <genEnumLiterals ecoreEnumLiteral="wala.ecore#//java/scope/EStandardClassLoader/Extension"/>
+          <genEnumLiterals ecoreEnumLiteral="wala.ecore#//java/scope/EStandardClassLoader/Application"/>
+          <genEnumLiterals ecoreEnumLiteral="wala.ecore#//java/scope/EStandardClassLoader/Synthetic"/>
+        </genEnums>
+        <genClasses ecoreClass="wala.ecore#//java/scope/EJavaAnalysisScope">
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wala.ecore#//java/scope/EJavaAnalysisScope/loaders"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/scope/EJavaAnalysisScope/exclusionFileName"/>
+        </genClasses>
+        <genClasses ecoreClass="wala.ecore#//java/scope/EClassLoader">
+          <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference wala.ecore#//java/scope/EClassLoader/modules"/>
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/scope/EClassLoader/loaderName"/>
+        </genClasses>
+        <genClasses image="false" ecoreClass="wala.ecore#//java/scope/EModule"/>
+        <genClasses ecoreClass="wala.ecore#//java/scope/EBuiltInModule">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/scope/EBuiltInModule/id"/>
+        </genClasses>
+        <genClasses ecoreClass="wala.ecore#//java/scope/EJarFile">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/scope/EJarFile/url"/>
+        </genClasses>
+        <genClasses ecoreClass="wala.ecore#//java/scope/EFile">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/scope/EFile/url"/>
+        </genClasses>
+        <genClasses ecoreClass="wala.ecore#//java/scope/EClassFile"/>
+        <genClasses ecoreClass="wala.ecore#//java/scope/ESourceFile">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/scope/ESourceFile/classpathRoot"/>
+        </genClasses>
+        <genClasses ecoreClass="wala.ecore#//java/scope/EClasspath">
+          <genFeatures createChild="false" ecoreFeature="ecore:EAttribute wala.ecore#//java/scope/EClasspath/string"/>
+        </genClasses>
+      </nestedGenPackages>
+    </nestedGenPackages>
+    <nestedGenPackages prefix="J2EE" disposableProviderFactory="true" ecorePackage="wala.ecore#//j2ee">
+      <nestedGenPackages prefix="J2EEScope" disposableProviderFactory="true" ecorePackage="wala.ecore#//j2ee/scope">
+        <genClasses ecoreClass="wala.ecore#//j2ee/scope/EJ2EEAnalysisScope"/>
+        <genClasses ecoreClass="wala.ecore#//j2ee/scope/EEarFile"/>
+        <genClasses ecoreClass="wala.ecore#//j2ee/scope/EWarFile"/>
+      </nestedGenPackages>
+    </nestedGenPackages>
+  </genPackages>
+</genmodel:GenModel>

@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: WALA Tests Plug-in
+Bundle-SymbolicName: com.ibm.wala.core.tests
+Bundle-Version: 1.0.0
+Bundle-Vendor: IBM
+Bundle-Localization: plugin
+Require-Bundle: com.ibm.wala.core,
+ org.junit,
+ org.eclipse.jface
+Export-Package: com.ibm.wala.core.tests.basic,
+ com.ibm.wala.core.tests.callGraph,
+ com.ibm.wala.core.tests.cha,
+ com.ibm.wala.core.tests.ir,
+ com.ibm.wala.core.tests.util,
+ com.ibm.wala.examples.drivers,
+ com.ibm.wala.examples.properties

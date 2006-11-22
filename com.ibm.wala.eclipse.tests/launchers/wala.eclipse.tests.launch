@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launchConfiguration type="org.eclipse.pde.ui.JunitLaunchConfig">
+<stringAttribute key="product" value="org.eclipse.sdk.ide"/>
+<stringAttribute key="bootstrap" value=""/>
+<booleanAttribute key="useProduct" value="true"/>
+<booleanAttribute key="tracing" value="false"/>
+<stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value="=com.ibm.wala.eclipse.tests"/>
+<booleanAttribute key="automaticValidate" value="false"/>
+<booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
+<booleanAttribute key="automaticAdd" value="true"/>
+<stringAttribute key="checked" value="[NONE]"/>
+<stringAttribute key="location" value="${workspace_loc}/../runtime-walaWorkspace"/>
+<stringAttribute key="configLocation" value="${workspace_loc}/.metadata/.plugins/org.eclipse.pde.core/pde-junit"/>
+<booleanAttribute key="clearws" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value=""/>
+<stringAttribute key="pde.version" value="3.2a"/>
+<stringAttribute key="templateConfig" value=""/>
+<booleanAttribute key="default" value="true"/>
+<booleanAttribute key="clearConfig" value="true"/>
+<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<booleanAttribute key="useDefaultConfigArea" value="false"/>
+<booleanAttribute key="useDefaultConfig" value="true"/>
+<stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.wala.eclipse.tests"/>
+<booleanAttribute key="askclear" value="false"/>
+<booleanAttribute key="includeOptional" value="true"/>
+</launchConfiguration>

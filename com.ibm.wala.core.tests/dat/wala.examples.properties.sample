@@ -1,0 +1,30 @@
+###############################################################################
+# WALA Examples property file
+# This file defines the default settings for the WALA examples
+###############################################################################
+
+################# Mandatory settings without default value ####################
+
+################### Mandatory settings with default value ######################
+
+
+############################ Optional settings ################################
+
+### These are needed to run various individual examples
+
+
+##### Ghostview executable
+# Path to the ghostview executable
+# For instance, on a windows OS it's typically something like C:/Progra~1/Ghostgum/gsview/gsview32.exe
+# Default value: none
+# Info: Must be absolute path
+#####
+#ghostview_exe = Your location
+
+##### DOT executable
+# Path to the AT&T Graphview DOT executable
+# For instance, on a windows OS it's typically something like C:/Progra~1/ATT/Graphviz/bin/dot.exe
+# Default value: none
+# Info: Must be absolute path
+#####
+#dot_exe = Your location

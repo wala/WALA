@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Shrike Bytecode Manipulation Library
+Bundle-SymbolicName: com.ibm.wala.shrike
+Bundle-Version: 1.0.0
+Bundle-Vendor: WALA
+Bundle-Localization: plugin
+Eclipse-LazyStart: true
+Export-Package: com.ibm.wala.shrike.bench,
+ com.ibm.wala.shrike.copywriter,
+ com.ibm.wala.shrike.tools,
+ com.ibm.wala.shrikeBT,
+ com.ibm.wala.shrikeBT.analysis,
+ com.ibm.wala.shrikeBT.info,
+ com.ibm.wala.shrikeBT.shrikeCT,
+ com.ibm.wala.shrikeBT.shrikeCT.tools,
+ com.ibm.wala.shrikeBT.tools,
+ com.ibm.wala.shrikeCT

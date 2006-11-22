@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0"
+    xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="ecore"
+    nsURI="http:///com/ibm/wala/wala.ecore" nsPrefix="com.ibm.wala">
+  <eSubpackages name="graph" nsURI="http:///com/ibm/wala/wala.ecore.graph" nsPrefix="com.ibm.wala.graph">
+    <eClassifiers xsi:type="ecore:EClass" name="EGraph">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="nodes" lowerBound="1"
+          eType="#//common/ECollection"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="edges" lowerBound="1"
+          eType="#//common/ERelation" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ETree" eSuperTypes="#//graph/EGraph"/>
+  </eSubpackages>
+  <eSubpackages name="common" nsURI="http:///com/ibm/wala/wala.ecore.common" nsPrefix="com.ibm.wala.common">
+    <eClassifiers xsi:type="ecore:EClass" name="ECollection" abstract="true" interface="true">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="contents" upperBound="-1"
+          eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject" volatile="true"
+          transient="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EPair">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="X" lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="Y" lowerBound="1" eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ERelation" eSuperTypes="#//common/EContainer">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EContainer" eSuperTypes="#//common/ECollection">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="containees" upperBound="-1"
+          eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ENotContainer" eSuperTypes="#//common/ECollection">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="elements" upperBound="-1"
+          eType="ecore:EClass http://www.eclipse.org/emf/2002/Ecore#//EObject"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EStringHolder">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="value" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EDataType" name="EJavaCollection" instanceClassName="java.util.Collection"
+        serializable="false"/>
+    <eClassifiers xsi:type="ecore:EDataType" name="EFile" instanceClassName="java.io.File"
+        serializable="false"/>
+    <eClassifiers xsi:type="ecore:EClass" name="EObjectWithContainerId">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
+          defaultValueLiteral="-1" iD="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EDataType" name="EIterator" instanceClassName="java.util.Iterator"
+        serializable="false"/>
+  </eSubpackages>
+  <eSubpackages name="regex" nsURI="http:///com/ibm/wala/wala.ecore.regex" nsPrefix="com.ibm.wala.regex">
+    <eClassifiers xsi:type="ecore:EClass" name="EPattern">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="pattern" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="perf" nsURI="http:///com/ibm/wala/wala.ecore.perf" nsPrefix="com.ibm.wala.perf">
+    <eClassifiers xsi:type="ecore:EClass" name="EPhaseTiming">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="millis" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//ELong"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="order" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    </eClassifiers>
+  </eSubpackages>
+  <eSubpackages name="java" nsURI="http:///com/ibm/wala/wala.ecore.java" nsPrefix="com.ibm.wala.java">
+    <eClassifiers xsi:type="ecore:EClass" name="EJavaClass" eSuperTypes="#//common/EObjectWithContainerId">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="className" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="loader" lowerBound="1"
+          eType="#//java/EClassLoaderName"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EJavaMethod" eSuperTypes="#//common/EObjectWithContainerId">
+      <eOperations name="isClinit" ordered="false" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="methodName" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="descriptor" lowerBound="1"
+          eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="javaClass" lowerBound="1"
+          eType="#//java/EJavaClass"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="signature" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"
+          changeable="false" volatile="true" transient="true" derived="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="ECallSite" eSuperTypes="#//common/EObjectWithContainerId">
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="bytecodeIndex" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="javaMethod" lowerBound="1"
+          eType="#//java/EJavaMethod"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="declaredTarget" lowerBound="1"
+          eType="#//java/EJavaMethod"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EClass" name="EClassHierarchy" eSuperTypes="#//graph/ETree"/>
+    <eClassifiers xsi:type="ecore:EClass" name="EInterfaceHierarchy" eSuperTypes="#//graph/EGraph"/>
+    <eClassifiers xsi:type="ecore:EClass" name="ETypeHierarchy">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="classes" lowerBound="1"
+          eType="#//java/EClassHierarchy" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="interfaces" lowerBound="1"
+          eType="#//java/EInterfaceHierarchy" containment="true"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="implements" lowerBound="1"
+          eType="#//common/ERelation" containment="true"/>
+    </eClassifiers>
+    <eClassifiers xsi:type="ecore:EEnum" name="EClassLoaderName">
+      <eLiterals name="Application"/>
+      <eLiterals name="Primordial" value="1"/>
+      <eLiterals name="Extension" value="2"/>
+    </eClassifiers>
+    <eSubpackages name="callGraph" nsURI="http:///com/ibm/wala/wala.ecore.java.callGraph"
+        nsPrefix="com.ibm.wala.java.callGraph">
+      <eClassifiers xsi:type="ecore:EClass" name="ECallGraph" eSuperTypes="#//graph/EGraph">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="entrypoints" upperBound="-1"
+            eType="#//java/EJavaMethod"/>
+      </eClassifiers>
+    </eSubpackages>
+    <eSubpackages name="pointerAnalysis" nsURI="http:///com/ibm/wala/wala.ecore.java.pointerAnalysis"
+        nsPrefix="com.ibm.wala.java.pointerAnalysis">
+      <eClassifiers xsi:type="ecore:EClass" name="EPointer" abstract="true"/>
+      <eClassifiers xsi:type="ecore:EClass" name="EInstanceField" eSuperTypes="#//java/pointerAnalysis/EPointer">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fieldName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="EArrayContents" eSuperTypes="#//java/pointerAnalysis/EPointer">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="javaClass" lowerBound="1"
+            eType="#//java/EJavaClass"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="EStaticField" eSuperTypes="#//java/pointerAnalysis/EPointer">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="fieldName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="ELocalPointer" eSuperTypes="#//java/pointerAnalysis/EPointer">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="valueNumber" lowerBound="1"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="javaMethod" lowerBound="1"
+            eType="#//java/EJavaMethod"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="EReturnValuePointer" eSuperTypes="#//java/pointerAnalysis/EPointer">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="isExceptionalReturnValue"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
+        <eStructuralFeatures xsi:type="ecore:EReference" name="javaMethod" lowerBound="1"
+            eType="#//java/EJavaMethod"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="EInstance" abstract="true"/>
+      <eClassifiers xsi:type="ecore:EClass" name="EJavaClassInstance" eSuperTypes="#//java/pointerAnalysis/EInstance">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="javaClass" lowerBound="1"
+            eType="#//java/EJavaClass"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="EHeapGraph" eSuperTypes="#//graph/EGraph"/>
+    </eSubpackages>
+    <eSubpackages name="scope" nsURI="http:///com/ibm/wala/wala.ecore.java.scope"
+        nsPrefix="com.ibm.wala.java.scope">
+      <eClassifiers xsi:type="ecore:EClass" name="EJavaAnalysisScope">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="loaders" lowerBound="1"
+            upperBound="-1" eType="#//java/scope/EClassLoader" containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="exclusionFileName"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="EClassLoader">
+        <eStructuralFeatures xsi:type="ecore:EReference" name="modules" lowerBound="1"
+            upperBound="-1" eType="#//java/scope/EModule" containment="true"/>
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="loaderName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="EBuiltInResource" instanceClassName="java.lang.String">
+        <eLiterals name="DefaultJ2SELibs"/>
+        <eLiterals name="DefaultJ2EELibs" value="1"/>
+        <eLiterals name="primordial_jar_model" value="2"/>
+        <eLiterals name="extension_jar_model" value="3"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="EModule" abstract="true" interface="true"/>
+      <eClassifiers xsi:type="ecore:EClass" name="EBuiltInModule" eSuperTypes="#//java/scope/EModule">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="id" lowerBound="1"
+            eType="#//java/scope/EBuiltInResource"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="EJarFile" eSuperTypes="#//java/scope/EModule">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" lowerBound="1"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EEnum" name="EStandardClassLoader">
+        <eLiterals name="Primordial"/>
+        <eLiterals name="Extension" value="1"/>
+        <eLiterals name="Application" value="2"/>
+        <eLiterals name="Synthetic" value="4"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="EFile" eSuperTypes="#//java/scope/EModule">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="url" lowerBound="1"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eClassifiers>
+      <eClassifiers xsi:type="ecore:EClass" name="EClassFile" eSuperTypes="#//java/scope/EFile"/>
+      <eClassifiers xsi:type="ecore:EClass" name="ESourceFile" eSuperTypes="#//java/scope/EFile"/>
+      <eClassifiers xsi:type="ecore:EClass" name="EClasspath">
+        <eStructuralFeatures xsi:type="ecore:EAttribute" name="string" lowerBound="1"
+            eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+      </eClassifiers>
+    </eSubpackages>
+  </eSubpackages>
+  <eSubpackages name="j2ee" nsURI="http:///com/ibm/wala/wala.ecore.j2ee" nsPrefix="com.ibm.wala.j2ee">
+    <eSubpackages name="scope" nsURI="http:///com/ibm/wala/wala.ecore.j2ee.scope"
+        nsPrefix="com.ibm.wala.j2ee.scope">
+      <eClassifiers xsi:type="ecore:EClass" name="EJ2EEAnalysisScope" eSuperTypes="#//java/scope/EJavaAnalysisScope"/>
+      <eClassifiers xsi:type="ecore:EClass" name="EEarFile" eSuperTypes="#//java/scope/EJarFile"/>
+      <eClassifiers xsi:type="ecore:EClass" name="EWarFile" eSuperTypes="#//java/scope/EJarFile"/>
+    </eSubpackages>
+  </eSubpackages>
+</ecore:EPackage>

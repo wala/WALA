@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="com.ibm.shrike" default="build.update.jar" basedir=".">
+	<import file="../com.ibm.watson.safari.feature/buildCommon.xml"/>
+	<import file="../com.ibm.watson.safari.update/buildPluginCommon.xml"/>
+
+	<target name="init" depends="properties">
+		<property name="plugin.name" value="com.ibm.shrike"/>
+		<property name="plugin.version" value="${safari.version}"/>
+		<property name="plugin.jar.name" value="${plugin.name}_${plugin.version}.jar"/>
+		<property name="plugin.zip.name" value="${plugin.name}_${plugin.version}.zip"/>
+		<property name="plugin.src.zip" value="${plugin.name}src.zip"/>
+		<property name="plugin.destination" value="${basedir}"/>
+		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+		<condition property="build.result.folder" value="${pluginTemp}/${plugin.name}">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+	<!-- ================================================================================= -->
+
+	<target name="plugin.jar" depends="init" unless="${plugin.jar.name}" description="Create jar: ${plugin.jar.name}.">
+		<delete dir="${temp.folder}/${plugin.jar.name}.bin"/>
+		<mkdir dir="${temp.folder}/${plugin.jar.name}.bin"/>
+		<!-- compile the source code -->
+		<javac destdir="${temp.folder}/${plugin.jar.name}.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bootclasspath}" source="${javacSource}" target="${javacTarget}"		>
+			<compilerarg line="${compilerArg}"/>
+			<classpath>
+				<pathelement path="${eclipse.build.path}"/>
+			</classpath>
+			<src path="src/"/>
+		</javac>
+		<!-- Copy necessary resources -->
+		<copy todir="${temp.folder}/${plugin.jar.name}.bin" failonerror="true" overwrite="false">
+			<fileset dir="src/" excludes="**/*.java,**/package.htm*"/>
+		</copy>
+		<mkdir dir="${build.result.folder}"/>
+		<jar destfile="${build.result.folder}/${plugin.jar.name}" basedir="${temp.folder}/${plugin.jar.name}.bin"
+			manifest="META-INF/MANIFEST.MF"/>
+		<delete dir="${temp.folder}/${plugin.jar.name}.bin"/>
+	</target>
+</project>

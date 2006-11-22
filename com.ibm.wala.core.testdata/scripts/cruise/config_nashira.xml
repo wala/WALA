@@ -1,0 +1,229 @@
+<cruisecontrol>
+
+	<!-- ************************************************************************** -->
+	<!-- ***************************** Basic configuration ************************ -->
+	<!-- ************************************************************************** -->
+
+	<system>
+		<configuration>
+			<threads count="2" />
+		</configuration>
+	</system>
+
+	<!-- ************************************************************************** -->
+	<!-- ************************* Meta-config (copy CC scripts) ****************** -->
+	<!-- ************************************************************************** -->
+
+	<!-- Meta-config 
+		<project name="update-scripts" default="build" basedir="scripts/cruisescripts">
+		<modificationset quietperiod="10">
+		<cvs cvsroot=":ext:eyahav@cvs.cs.opensource.ibm.com:/cvsroot/safe/" module="cruisescripts" />
+		</modificationset>
+		<schedule interval="600">
+		<ant timeout="120" antscript="c:/devTools/apache-ant-1.6.5/bin/ant.bat"
+		buildfile="update-scripts.xml"
+		target="build" uselogger="true" usedebug="false"/>
+		</schedule>
+		</project>
+	-->
+
+	<!-- ************************************************************************** -->
+	<!-- *********************************** WALA ********************************* -->
+	<!-- ************************************************************************** -->
+	<project name="com.ibm.wala.core">
+		<listeners>
+			<currentbuildstatuslistener
+				file="logs/${project.name}/status.txt" />
+		</listeners>
+		<bootstrappers>
+			<svnbootstrapper
+				localWorkingCopy="projects/${project.name}" />
+		</bootstrappers>
+		<modificationset quietperiod="30">
+			<svn localWorkingCopy="projects/${project.name}" />
+		</modificationset>
+		<schedule interval="300">
+			<ant anthome="apache-ant-1.6.5"
+				buildfile="projects/${project.name}/build.xml"
+				target="build.update.jar" />
+		</schedule>
+		<log>
+			<merge dir="projects/${project.name}/output" />
+		</log>
+		<publishers>
+			<onsuccess>
+				<artifactspublisher dest="artifacts/${project.name}"
+					dir="projects/${project.name}/output" />
+			</onsuccess>
+			<email spamwhilebroken="false"
+				buildresultsurl="http://nashira.watson.ibm.com:8001"
+				returnaddress="sjfink@us.ibm.com" mailhost="us.ibm.com">
+				<failure address="sjfink@us.ibm.com" />
+			</email>
+		</publishers>
+	</project>
+
+	<project name="com.ibm.wala.core.testdata">
+		<listeners>
+			<currentbuildstatuslistener
+				file="logs/${project.name}/status.txt" />
+		</listeners>
+		<bootstrappers>
+			<svnbootstrapper
+				localWorkingCopy="projects/${project.name}" />
+		</bootstrappers>
+		<modificationset quietperiod="30">
+			<svn localWorkingCopy="projects/${project.name}" />
+		</modificationset>
+		<schedule interval="300">
+			<ant anthome="apache-ant-1.6.5"
+				buildfile="projects/${project.name}/build.xml"
+				target="build.update.jar" />
+		</schedule>
+		<log>
+			<merge dir="projects/${project.name}/output" />
+		</log>
+		<publishers>
+			<onsuccess>
+				<artifactspublisher dest="artifacts/${project.name}"
+					dir="projects/${project.name}/output" />
+			</onsuccess>
+			<email spamwhilebroken="false"
+				buildresultsurl="http://nashira.watson.ibm.com:8001"
+				returnaddress="sjfink@us.ibm.com" mailhost="us.ibm.com">
+				<failure address="sjfink@us.ibm.com" />
+			</email>
+		</publishers>
+	</project>
+
+	<project name="com.ibm.wala.core.tests">
+		<listeners>
+			<currentbuildstatuslistener
+				file="logs/${project.name}/status.txt" />
+		</listeners>
+		<bootstrappers>
+			<svnbootstrapper
+				localWorkingCopy="projects/${project.name}" />
+		</bootstrappers>
+		<modificationset quietperiod="30">
+			<svn localWorkingCopy="projects/${project.name}" />
+		</modificationset>
+		<schedule interval="300">
+			<ant anthome="apache-ant-1.6.5"
+				buildfile="projects/${project.name}/build.xml" target="buildAndRun" />
+		</schedule>
+		<log>
+			<merge dir="projects/${project.name}/output" />
+		</log>
+		<publishers>
+			<onsuccess>
+				<artifactspublisher dest="artifacts/${project.name}"
+					dir="projects/${project.name}/output" />
+			</onsuccess>
+			<email spamwhilebroken="false"
+				buildresultsurl="http://nashira.watson.ibm.com:8001"
+				returnaddress="sjfink@us.ibm.com" mailhost="us.ibm.com">
+				<failure address="sjfink@us.ibm.com" />
+			</email>
+		</publishers>
+	</project>
+
+	<project name="com.ibm.wala.emf">
+		<listeners>
+			<currentbuildstatuslistener
+				file="logs/${project.name}/status.txt" />
+		</listeners>
+		<bootstrappers>
+			<svnbootstrapper
+				localWorkingCopy="projects/${project.name}" />
+		</bootstrappers>
+		<modificationset quietperiod="30">
+			<svn localWorkingCopy="projects/${project.name}" />
+		</modificationset>
+		<schedule interval="300">
+			<ant anthome="apache-ant-1.6.5"
+				buildfile="projects/${project.name}/build.xml"
+				target="build.update.jar" />
+		</schedule>
+		<log>
+			<merge dir="projects/${project.name}/output" />
+		</log>
+		<publishers>
+			<onsuccess>
+				<artifactspublisher dest="artifacts/${project.name}"
+					dir="projects/${project.name}/output" />
+			</onsuccess>
+			<email spamwhilebroken="false"
+				buildresultsurl="http://nashira.watson.ibm.com:8001"
+				returnaddress="sjfink@us.ibm.com" mailhost="us.ibm.com">
+				<failure address="sjfink@us.ibm.com" />
+			</email>
+		</publishers>
+	</project>
+
+	<project name="com.ibm.wala.j2ee">
+		<listeners>
+			<currentbuildstatuslistener
+				file="logs/${project.name}/status.txt" />
+		</listeners>
+		<bootstrappers>
+			<svnbootstrapper
+				localWorkingCopy="projects/${project.name}" />
+		</bootstrappers>
+		<modificationset quietperiod="30">
+			<svn localWorkingCopy="projects/${project.name}" />
+		</modificationset>
+		<schedule interval="300">
+			<ant anthome="apache-ant-1.6.5"
+				buildfile="projects/${project.name}/build.xml"
+				target="build.update.jar" />
+		</schedule>
+		<log>
+			<merge dir="projects/${project.name}/output" />
+		</log>
+		<publishers>
+			<onsuccess>
+				<artifactspublisher dest="artifacts/${project.name}"
+					dir="projects/${project.name}/output" />
+			</onsuccess>
+			<email spamwhilebroken="false"
+				buildresultsurl="http://nashira.watson.ibm.com:8001"
+				returnaddress="sjfink@us.ibm.com" mailhost="us.ibm.com">
+				<failure address="sjfink@us.ibm.com" />
+			</email>
+		</publishers>
+	</project>
+
+	<project name="com.ibm.wala.shrike">
+		<listeners>
+			<currentbuildstatuslistener
+				file="logs/${project.name}/status.txt" />
+		</listeners>
+		<bootstrappers>
+			<svnbootstrapper
+				localWorkingCopy="projects/${project.name}" />
+		</bootstrappers>
+		<modificationset quietperiod="30">
+			<svn localWorkingCopy="projects/${project.name}" />
+		</modificationset>
+		<schedule interval="300">
+			<ant anthome="apache-ant-1.6.5"
+				buildfile="projects/${project.name}/build.xml"
+				target="build.update.jar" />
+		</schedule>
+		<log>
+			<merge dir="projects/${project.name}/output" />
+		</log>
+		<publishers>
+			<onsuccess>
+				<artifactspublisher dest="artifacts/${project.name}"
+					dir="projects/${project.name}/output" />
+			</onsuccess>
+			<email spamwhilebroken="false"
+				buildresultsurl="http://nashira.watson.ibm.com:8001"
+				returnaddress="sjfink@us.ibm.com" mailhost="us.ibm.com">
+				<failure address="sjfink@us.ibm.com" />
+			</email>
+		</publishers>
+	</project>
+</cruisecontrol>
