@@ -51,7 +51,7 @@ abstract public class WalaCGModel {
 		roots = inferRoots(callGraph);
 	}
 
-	public Graph getGraph() {
+	public CallGraph getGraph() {
 		return callGraph;
 	}
 
@@ -76,7 +76,7 @@ abstract public class WalaCGModel {
 
 	abstract protected Collection inferRoots(CallGraph cg) throws WalaException;
 
-	public ApplicationWindow makeUI(Graph graph, Collection roots) throws WalaException {
+	public ApplicationWindow makeUI(Graph graph, Collection<?> roots) throws WalaException {
 		final SWTTreeViewer v = new SWTTreeViewer();
 		v.setGraphInput(graph);
 		v.setRootsInput(roots);

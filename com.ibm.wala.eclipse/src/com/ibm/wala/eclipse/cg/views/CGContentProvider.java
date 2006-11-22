@@ -21,8 +21,8 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.graph.Graph;
 
 /**
  * @author sfink
@@ -32,13 +32,13 @@ import com.ibm.wala.util.graph.Graph;
  */
 public class CGContentProvider implements ITreeContentProvider {
 
-  protected Graph graph;
+  protected CallGraph graph;
 
   protected Collection roots;
 
   protected Map<Integer, IJavaElement> capaNodeIdToJavaElement = null;
 
-  public CGContentProvider(Graph g, Collection roots, Map<Integer, IJavaElement> capaNodeIdToJavaElement) {
+  public CGContentProvider(CallGraph g, Collection roots, Map<Integer, IJavaElement> capaNodeIdToJavaElement) {
     this.graph = g;
     this.roots = roots;
     this.capaNodeIdToJavaElement = capaNodeIdToJavaElement;

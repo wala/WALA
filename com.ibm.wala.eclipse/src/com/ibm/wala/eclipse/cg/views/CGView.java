@@ -34,7 +34,7 @@ import com.ibm.wala.eclipse.cg.model.WalaCGModelWithMain;
 import com.ibm.wala.eclipse.util.CapaToJavaEltConverter;
 import com.ibm.wala.eclipse.util.JdtUtil;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
@@ -99,7 +99,7 @@ public class CGView extends ViewPart {
       WalaCGModel model = new WalaCGModelWithMain(applicationJar);
       model.buildGraph();
       Collection roots = model.getRoots();
-      Graph graph = model.getGraph();
+      CallGraph graph = model.getGraph();
 
       // convert call graph nodes to Eclipse JDT elements
       final Map<Integer, IJavaElement> capaNodeIdToJavaElement = CapaToJavaEltConverter.convert(
