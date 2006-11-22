@@ -1,0 +1,284 @@
+/*******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.ipa.callgraph.propagation.rta;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.Map;
+
+import com.ibm.wala.analysis.typeInference.TypeAbstraction;
+import com.ibm.wala.analysis.typeInference.TypeInference;
+import com.ibm.wala.classLoader.ArrayClass;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.ClassBasedInstanceKeys;
+import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceFilteredPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CFAPointerKeys;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.warnings.WarningSet;
+
+/**
+ * 
+ * A trivial field-based heap model, which only uses the information of which
+ * types (classes) are live.
+ * 
+ * Note that this heap model is based on ssa value numbers for locals, since we
+ * will build a pointer flow graph based on this heap model when resolving
+ * reflection.
+ * 
+ * This is an inefficient prototype.
+ * 
+ * @author sfink
+ */
+public class TypeBasedHeapModel implements HeapModel {
+
+  CFAPointerKeys pointerKeys = new CFAPointerKeys();
+
+  private final ClassBasedInstanceKeys iKeyFactory;
+
+  private final Collection<IClass> klasses;
+
+  private final CallGraph cg;
+  
+  private final Collection<CGNode> nodesHandled = HashSetFactory.make();
+
+  /**
+   * Map: <PointerKey> -> thing, where thing is a FilteredPointerKey or an
+   * InstanceKey representing a constant.
+   * 
+   * computed lazily
+   */
+  private Map<PointerKey,Object> pKeys;
+
+  /**
+   * @param klasses
+   *          Collection<IClass>
+   */
+  public TypeBasedHeapModel(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) {
+    iKeyFactory = new ClassBasedInstanceKeys(options, cg.getClassHierarchy(), new WarningSet());
+    this.klasses = klasses;
+    this.cg = cg;
+  }
+
+  private void initAllPKeys() {
+    if (pKeys == null) {
+      pKeys = HashMapFactory.make();
+    }
+    for (Iterator<IClass> it = klasses.iterator(); it.hasNext();) {
+      IClass klass = it.next();
+      pKeys.putAll(computePointerKeys(klass));
+    }
+    for (Iterator it = cg.iterateNodes(); it.hasNext();) {
+      CGNode node = (CGNode) it.next();
+      initPKeysForNode(node);
+    }
+  }
+  
+  private void initPKeysForNode(CGNode node) {
+    if (pKeys == null) {
+      pKeys = HashMapFactory.make();
+    }
+    if (!nodesHandled.contains(node)) {
+      nodesHandled.add(node);
+      pKeys.putAll(computePointerKeys(node, cg));
+    }
+  }
+
+  /**
+   * @return Collection<IClass> representing pointer keys for locals of node
+   */
+  private Map<PointerKey, Object> computePointerKeys(CGNode node, CallGraph cg) {
+    IR ir = cg.getInterpreter(node).getIR(node, new WarningSet());
+    if (ir == null) {
+      return Collections.emptyMap();
+    }
+    Map<PointerKey,Object> result = HashMapFactory.make();
+    SymbolTable s = ir.getSymbolTable();
+    if (s == null) {
+      return Collections.emptyMap();
+    }
+    TypeInference ti = new TypeInference(ir, cg.getClassHierarchy());
+    ti.solve();
+
+    for (int i = 1; i <= s.getMaxValueNumber(); i++) {
+      if (s.isConstant(i)) {
+        if (s.isStringConstant(i)) {
+          result.put(pointerKeys.getPointerKeyForLocal(node, i), getInstanceKeyForConstant(s.getConstantValue(i)));
+        }
+      } else {
+        TypeAbstraction t = ti.getType(i);
+        if (t.getType() != null && t.getType().isReferenceType()) {
+          result.put(pointerKeys.getPointerKeyForLocal(node, i), pointerKeys.getFilteredPointerKeyForLocal(node, i, t.getType()));
+        }
+      }
+    }
+    return result;
+  }
+
+  /**
+   */
+  private Map<PointerKey,Object> computePointerKeys(IClass klass) {
+    Map<PointerKey, Object> result = HashMapFactory.make();
+    if (klass.isArrayClass()) {
+      ArrayClass a = (ArrayClass) klass;
+      if (a.getElementClass() != null && a.getElementClass().isReferenceType()) {
+        PointerKey p = pointerKeys.getPointerKeyForArrayContents(new ConcreteTypeKey(a));
+        result.put(p, p);
+      }
+    } else {
+      try {
+        for (Iterator<IField> it = klass.getAllFields().iterator(); it.hasNext();) {
+          IField f = it.next();
+          if (!f.getFieldTypeReference().isPrimitiveType()) {
+            if (f.isStatic()) {
+              PointerKey p = pointerKeys.getPointerKeyForStaticField(f);
+              result.put(p, p);
+            } else {
+              PointerKey p = pointerKeys.getPointerKeyForInstanceField(new ConcreteTypeKey(klass), f);
+              result.put(p, p);
+            }
+          }
+        }
+      } catch (ClassHierarchyException e) {
+        e.printStackTrace();
+        Assertions.UNREACHABLE();
+      }
+    }
+    return result;
+  }
+
+  @SuppressWarnings("unchecked")
+  public Iterator<PointerKey> iteratePointerKeys() {
+    initAllPKeys();
+    return new FilterIterator(pKeys.values().iterator(), new Filter() {
+      public boolean accepts(Object o) {
+        return o instanceof PointerKey;
+      }
+    });
+  }
+
+  public ClassHierarchy getClassHierarchy() {
+    return iKeyFactory.getClassHierarchy();
+  }
+
+  public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
+    Assertions.UNREACHABLE();
+    return null;
+  }
+
+  public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
+    Assertions.UNREACHABLE();
+    return null;
+  }
+
+  public InstanceKey getInstanceKeyForConstant(Object S) {
+    return iKeyFactory.getInstanceKeyForConstant(S);
+  }
+
+  public String getStringConstantForInstanceKey(InstanceKey I) {
+    Assertions.UNREACHABLE();
+    return null;
+  }
+
+  public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
+    Assertions.UNREACHABLE();
+    return null;
+  }
+
+  public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
+    Assertions.UNREACHABLE();
+    return null;
+  }
+
+  public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
+    initPKeysForNode(node);
+    PointerKey p = pointerKeys.getPointerKeyForLocal(node, valueNumber);
+    Object result = pKeys.get(p);
+    if (result == null) {
+      // a null constant
+      return null;
+    }
+    if (result instanceof FilteredPointerKey) {
+      return (PointerKey) result;
+    } else {
+      if (result instanceof ConcreteTypeKey) {
+        ConcreteTypeKey c = (ConcreteTypeKey) result;
+        if (c.getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
+          // a string constant;
+          return pointerKeys.getFilteredPointerKeyForLocal(node, valueNumber, c.getConcreteType());
+        } else {
+          Assertions.UNREACHABLE("need to handle " + result.getClass());
+          return null;
+        }
+      } else {
+        Assertions.UNREACHABLE("need to handle " + result.getClass());
+        return null;
+      }
+    }
+  }
+
+  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, IClass filter) {
+    Assertions.UNREACHABLE();
+    return null;
+  }
+
+  public InstanceFilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, InstanceKey filter) {
+    Assertions.UNREACHABLE();
+    return null;
+  }
+
+  public PointerKey getPointerKeyForReturnValue(CGNode node) {
+    return pointerKeys.getPointerKeyForReturnValue(node);
+  }
+
+  public PointerKey getPointerKeyForExceptionalReturnValue(CGNode node) {
+    return pointerKeys.getPointerKeyForExceptionalReturnValue(node);
+  }
+
+  public PointerKey getPointerKeyForStaticField(IField f) {
+    return pointerKeys.getPointerKeyForStaticField(f);
+  }
+
+  public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
+    return pointerKeys.getPointerKeyForInstanceField(I, field);
+  }
+
+  public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
+    return pointerKeys.getPointerKeyForArrayContents(I);
+  }
+
+  /**
+   * @return Returns the iKeyFactory.
+   */
+  protected ClassBasedInstanceKeys getIKeyFactory() {
+    return iKeyFactory;
+  }
+}

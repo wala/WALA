@@ -1,0 +1,57 @@
+/*******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.dataflow.IFDS;
+
+import com.ibm.wala.util.intset.SparseIntSet;
+
+/**
+ * 
+ * Representation of a Dyck-language graph reachability problem for the 
+ * tabulation solver.
+ * 
+ * Special case: if supportsMerge(), then the problem is not really IFDS
+ * anymore. (TODO: rename it?). Instead, we perform a merge operation before
+ * propagating at every program point. This way, we can implement standard
+ * interprocedural dataflow and ESP-style property simulation, and various other
+ * things.
+ * 
+ * Note that at the momemt, the data structures in the TabulationSolver are not
+ * set up to do merge efficiently. TODO.
+ * 
+ * See Reps, Horwitz, Sagiv POPL 95
+ * 
+ * @author sfink
+ */
+public interface TabulationProblem<T,P> {
+
+  public ISupergraph<T,P> getSupergraph();
+
+  public TabulationDomain getDomain();
+
+  public IFlowFunctionMap getFunctionMap();
+
+  /**
+   * @return the set of facts that are live on entry to the analysis. This set
+   *         MUST include the universal truth, 0.
+   */
+  public SparseIntSet getReachableOnEntry();
+
+  /**
+   * Special case: if supportsMerge(), then the problem is not really IFDS
+   * anymore. (TODO: rename it?). Instead, we perform a merge operation before
+   * propagating at every program point. This way, we can implement standard
+   * interprocedural dataflow and ESP-style property simulation, and various
+   * other things.
+   * 
+   * @return the merge function, or null if !supportsMerge()
+   */
+  public IMergeFunction getMergeFunction();
+}

@@ -1,0 +1,40 @@
+/*******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.util.graph.impl;
+
+import com.ibm.wala.util.graph.INodeWithNumber;
+
+/**
+ *
+ * A node which carries it's own number; which identifies it in a 
+ * NumberedGraph implementation.
+ * 
+ * @author sfink
+ */
+public class NodeWithNumber implements INodeWithNumber {
+
+  private int number = -1;
+
+  /**
+   * @return the number which identifies this node in the numbered graph
+   */
+  public int getGraphNodeId() {
+    return number;
+  }
+
+  /**
+   * @param i
+   */
+  public void setGraphNodeId(int i) {
+    number = i;
+  }
+
+}

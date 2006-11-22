@@ -1,0 +1,106 @@
+/*******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.util.intset;
+
+import java.util.Vector;
+
+import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.math.Logs;
+
+/**
+ * an int vector implementation which delegates to pages of int vectors.
+ * 
+ * @author sfink
+ */
+public class TwoLevelIntVector implements IntVector {
+
+  private static final int PAGE_SIZE = 4096;
+  private static final int LOG_PAGE_SIZE = Logs.log2(PAGE_SIZE);
+
+  /**
+   * Array of IntVector: data.get(i) holds data[i*PAGE_SIZE] ...
+   * data[(i+1)*PAGESIZE - 1]
+   */
+  private Vector<SparseIntVector> data = new Vector<SparseIntVector>();
+
+  private final int defaultValue;
+
+  TwoLevelIntVector(int defaultValue) {
+    this.defaultValue = defaultValue;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.util.intset.IntVector#get(int)
+   */
+  public int get(int x) {
+    int page = getPageNumber(x);
+    if (page >= data.size()) {
+      return defaultValue;
+    }
+    IntVector v = data.get(page);
+    if (v == null) {
+      return defaultValue;
+    }
+    int localX = toLocalIndex(x, page);
+    return v.get(localX);
+  }
+
+  private int toLocalIndex(int x, int page) {
+    return  x - getFirstIndexOnPage(page);
+  }
+
+  private int getFirstIndexOnPage(int page) {
+    return page << LOG_PAGE_SIZE;
+  }
+
+  private int getPageNumber(int x) {
+    return x >> LOG_PAGE_SIZE;
+  }
+
+  /*
+   * TODO: this can be optimized (non-Javadoc)
+   * 
+   * @see com.ibm.wala.util.intset.IntVector#set(int, int)
+   */
+  public void set(int x, int value) {
+    int page = getPageNumber(x);
+    IntVector v = findOrCreatePage(page);
+    int localX = toLocalIndex(x,page);
+    v.set(localX,value);
+  }
+
+  private IntVector findOrCreatePage(int page) {
+    if (page >= data.size()) {
+      SparseIntVector v = new SparseIntVector(defaultValue);
+      data.setSize(page+1);
+      data.add(page,v);
+      return v;
+    } else {
+      SparseIntVector v = data.get(page);
+      if (v == null) {
+        v = new SparseIntVector(defaultValue);
+        data.set(page,v);
+      }
+      return v;
+    }
+  }
+
+  /* (non-Javadoc)
+   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
+   */
+  public void performVerboseAction() {
+    Trace.println("stats of " + getClass());
+    Trace.println("data: size = " + data.size());
+  }
+
+}

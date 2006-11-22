@@ -1,0 +1,148 @@
+/*******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.ipa.callgraph.impl;
+
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.warnings.ResolutionFailure;
+import com.ibm.wala.util.warnings.WarningSet;
+
+/**
+ * A MethodTargetSelector that simply looks up the declared type, name and
+ * descriptor of a CallSiteReference in the appropriate class hierarchy.
+ * 
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
+public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector {
+
+  /**
+   * Governing class hierarchy
+   */
+  private final ClassHierarchy classHierarchy;
+
+  /**
+   * An object which records analysis warnings
+   */
+  private final WarningSet warnings;
+
+  /**
+   * Initialization. The class hierarchy is needed for lookups and the warnings
+   * are used when the lookups fails (which should never happen).
+   * 
+   * @param cha
+   *          The class hierarchy to use.
+   * @param warn
+   *          Where and how to emit warnings.
+   */
+  public ClassHierarchyMethodTargetSelector(ClassHierarchy cha, WarningSet warn) {
+    classHierarchy = cha;
+    warnings = warn;
+  }
+
+  /**
+   * This target selector searches the clas hierachy for the method matching the
+   * signature of the call that is appropriate for the receiver type.
+   */
+  public IMethod getCalleeTarget(CGNode caller, CallSiteReference call, IClass receiver) {
+
+    IClass klass;
+    TypeReference targetType = call.getDeclaredTarget().getDeclaringClass();
+
+    // java virtual calls
+    if (call.isDispatch()) {
+      if (Assertions.verifyAssertions) {
+        if (receiver == null) {
+          Assertions._assert(receiver != null, "null receiver for " + call);
+        }
+      }
+      klass = receiver;
+
+      // java static calls
+    } else if (call.isFixed()) {
+      klass = classHierarchy.lookupClass(targetType);
+      if (klass == null) {
+        warnings.add(ResolutionFailure.create(caller,targetType));
+        return null;
+      }
+      // anything else
+    } else {
+      return null;
+    }
+
+    IMethod target = feasibleChaResolution(classHierarchy,call,klass) ? classHierarchy.resolveMethod(klass, call.getDeclaredTarget().getSelector()) : null;
+    if (target == null) {
+      warnings.add(ResolutionFailure.create(caller,call.getDeclaredTarget().getSelector()));
+      return null;
+    }
+
+    return target;
+  }
+  
+  /**
+   * @return true if it may be possible to resolve a call to a site on the concrete type dispatchType
+   */
+  public static boolean feasibleChaResolution(ClassHierarchy cha, CallSiteReference site, IClass dispatchType) {
+    if (dispatchType == null) {
+      return false;
+    }
+
+    /**
+     *  An interface as the dispatchType is a special case.  The only time this
+     * makes sense is for a static invocation of the class initializer method
+     * (<clinit>) of an interface type.  So we check for that here.
+     */
+    if (dispatchType.isInterface()) {
+      if (site.getDeclaredTarget().getSelector().equals(
+	    MethodReference.clinitSelector)) 
+      {
+	return true;
+      } else {
+	return false;
+      }
+    }
+
+    TypeReference targetType = site.getDeclaredTarget().getDeclaringClass();
+    IClass resolvedType = cha.lookupClass(targetType);
+    if (resolvedType == null) {
+      return false;
+    } else {
+      if (resolvedType.isInterface()) {
+        return cha.implementsInterface(dispatchType,resolvedType.getReference());
+      } else {
+        return cha.isSubclassOf(dispatchType,resolvedType);
+      }
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.ipa.callgraph.MethodTargetSelector#mightReturnSyntheticMethod(com.ibm.wala.ipa.callgraph.CGNode,
+   *      com.ibm.wala.classLoader.CallSiteReference)
+   */
+  public boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site) {
+    return false;
+  }
+
+  /* (non-Javadoc)
+   * @see com.ibm.wala.ipa.callgraph.MethodTargetSelector#mightReturnSyntheticMethod(com.ibm.wala.types.MethodReference)
+   */
+  public boolean mightReturnSyntheticMethod(MethodReference declaredTarget) {
+    return false;
+  }
+}

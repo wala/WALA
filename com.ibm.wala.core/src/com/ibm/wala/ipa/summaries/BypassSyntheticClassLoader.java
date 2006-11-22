@@ -1,0 +1,168 @@
+/*******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.ipa.summaries;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.warnings.WarningSet;
+
+/**
+ * This class represents class loaders that introduce classes that do not exist
+ * in the actual application being analyzed. They may be abstract summaries of
+ * unanalyzed library code, wrappers that encode J2EE specialized behavior or
+ * other invented classes.
+ * 
+ * The intention is that there be (at most) one such classloader in a given
+ * class hierarchy, and that it be referenced using the "Synthetic" classloader
+ * reference. Furthermore, it is required that this synthetic loader be a child
+ * loader of the Primordial, Extension and Application loaders.
+ * 
+ * This special classloader has some interactions with the hierarchy for, while
+ * the classes it loads are normal-seeming IClass objects, unlike the other
+ * loaders, its set of classes is not fixed, causing special cases in code that
+ * caches hierarchy data. Also note that this causes the getNumberfClasses and
+ * iterateAllClasses methods to behave differently for those of other
+ * classloaders.
+ * 
+ * Code that wants to introduce synthetic classes uses the registerClass method,
+ * giving it an Atom which is the class name, and an IClass which is the class
+ * to load. Since the synthetic loader musat be a child of the others, it would
+ * be very bad to use an existing name for a new synthetic class.
+ * 
+ * Class lookup works just as for any other classloader.
+ * 
+ * @author Julian Dolby (dolby@us.ibm.com)
+ * 
+ */
+public class BypassSyntheticClassLoader implements IClassLoader {
+
+  private final ClassLoaderReference me;
+
+  private final IClassLoader parent;
+
+  private final ClassHierarchy cha;
+
+  /**
+   * A mapping from TypeName -> IClass
+   */
+  private final HashMap<TypeName, IClass> syntheticClasses = HashMapFactory.make();
+
+  public BypassSyntheticClassLoader(ClassLoaderReference me, IClassLoader parent, SetOfClasses exclusions, ClassHierarchy cha,
+      WarningSet warnings) {
+    this.me = me;
+    this.cha = cha;
+    this.parent = parent;
+  }
+
+  public IClass lookupClass(TypeName className) {
+    IClass pc = parent.lookupClass(className);
+    if (pc == null) {
+      IClass c = syntheticClasses.get(className);
+      return c;
+    } else {
+      return pc;
+    }
+  }
+
+  /**
+   * Register the existence of a new synthetic class
+   * 
+   * @param className
+   * @param theClass
+   */
+  public void registerClass(TypeName className, IClass theClass) {
+    cha.addClass(theClass);
+    syntheticClasses.put(className, theClass);
+  }
+
+  /**
+   * Return the ClassLoaderReference for this class loader.
+   * 
+   * @return ClassLoaderReference
+   */
+  public ClassLoaderReference getReference() {
+    return me;
+  }
+
+  /**
+   * @return an Iterator of all classees loaded by this loader
+   */
+  public Iterator<IClass> iterateAllClasses() {
+    return syntheticClasses.values().iterator();
+  }
+
+  /**
+   * @return the number of classes in scope to be loaded by this loader
+   */
+  public int getNumberOfClasses() {
+    return syntheticClasses.size();
+  }
+
+  /**
+   * @return the unique name that identifies this class loader.
+   */
+  public Atom getName() {
+    return me.getName();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.classLoader.IClassLoader#getNumberOfMethods()
+   */
+  public int getNumberOfMethods() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.classLoader.IClassLoader#getSourceFileName(com.ibm.wala.classLoader.IClass)
+   */
+  public String getSourceFileName(IClass klass) {
+    return null;
+  }
+
+  /**
+   * @see com.ibm.wala.classLoader.IClassLoader#getParent()
+   */
+  public IClassLoader getParent() {
+    return parent;
+  }
+
+  public void init(Set modules) {
+
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.classLoader.IClassLoader#removeAll(java.util.Collection)
+   */
+  public void removeAll(Collection<IClass> toRemove) {
+    for (Iterator<IClass> it = toRemove.iterator(); it.hasNext();) {
+      IClass klass = it.next();
+      syntheticClasses.remove(klass.getName());
+    }
+  }
+}

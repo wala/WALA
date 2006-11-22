@@ -1,0 +1,168 @@
+/*******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.util.intset;
+
+import java.util.Iterator;
+import java.util.Vector;
+
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.math.Logs;
+
+/**
+ * a vector implementation which delegates to pages of int vectors.
+ * 
+ * @author sfink
+ */
+public class TwoLevelVector<T> implements IVector<T> {
+
+  private static final int PAGE_SIZE = 4096;
+
+  private static final int LOG_PAGE_SIZE = Logs.log2(PAGE_SIZE);
+
+  /**
+   * Array of IVector: data.get(i) holds data[i*PAGE_SIZE] ...
+   * data[(i+1)*PAGESIZE - 1]
+   */
+  private Vector<SparseVector<T>> data = new Vector<SparseVector<T>>(0);
+
+  private int maxPage = -1;
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.util.intset.IntVector#get(int)
+   */
+  public T get(int x) {
+    int page = getPageNumber(x);
+    if (page >= data.size()) {
+      return null;
+    }
+    IVector<T> v = data.get(page);
+    if (v == null) {
+      return null;
+    }
+    int localX = x - getFirstIndexOnPage(page);
+    return v.get(localX);
+  }
+
+  private int getFirstIndexOnPage(int page) {
+    return page << LOG_PAGE_SIZE;
+  }
+
+  private int getPageNumber(int x) {
+    return x >> LOG_PAGE_SIZE;
+  }
+
+  /*
+   * TODO: this can be optimized (non-Javadoc)
+   * 
+   * @see com.ibm.wala.util.intset.IntVector#set(int, int)
+   */
+  public void set(int x, T value) {
+    int page = getPageNumber(x);
+    IVector<T> v = findOrCreatePage(page);
+    int localX = toLocalIndex(x, page);
+    v.set(localX, value);
+  }
+
+  private int toLocalIndex(int x, int page) {
+    return x - getFirstIndexOnPage(page);
+  }
+
+  private IVector<T> findOrCreatePage(int page) {
+    if (page >= data.size()) {
+      SparseVector<T> v = new SparseVector<T>();
+      data.setSize(page + 1);
+      data.add(page, v);
+      maxPage = Math.max(page, maxPage);
+      return v;
+    } else {
+      SparseVector<T> v = data.get(page);
+      if (v == null) {
+        v = new SparseVector<T>();
+        data.set(page, v);
+        maxPage = Math.max(page, maxPage);
+      }
+      return v;
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
+   */
+  public void performVerboseAction() {
+    // do nothing;
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.util.intset.IVector#iterator()
+   */
+  public Iterator<T> iterator() {
+    return new Iterator<T>() {
+      final Iterator<SparseVector<T>> outer = data.iterator();
+
+      Iterator<T> inner;
+      {
+        while (outer.hasNext()) {
+          IVector<T> v = outer.next();
+          Iterator<T> it = v.iterator();
+          if (it.hasNext()) {
+            inner = it;
+            break;
+          }
+        }
+      }
+
+      public boolean hasNext() {
+        return inner != null;
+      }
+
+      public T next() {
+        T result = inner.next();
+        if (!inner.hasNext()) {
+          inner = null;
+          while (outer.hasNext()) {
+            IVector<T> v = outer.next();
+            if (v != null) {
+              Iterator<T> it = v.iterator();
+              if (it.hasNext()) {
+                inner = it;
+                break;
+              }
+            }
+          }
+        }
+        return result;
+      }
+
+      public void remove() {
+        // TODO Auto-generated method stub
+        Assertions.UNREACHABLE();
+      }
+    };
+  }
+
+  public int getMaxIndex() {
+    if (maxPage == -1) {
+      return -1;
+    } else {
+      IVector v = data.get(maxPage);
+      int localMax = v.getMaxIndex();
+      return maxPage * PAGE_SIZE + localMax;
+    }
+
+  }
+
+}

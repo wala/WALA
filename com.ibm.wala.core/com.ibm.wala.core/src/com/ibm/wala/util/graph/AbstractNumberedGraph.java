@@ -1,0 +1,74 @@
+/*******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.util.graph;
+
+import java.util.Iterator;
+
+import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
+import com.ibm.wala.util.intset.IntSet;
+
+/**
+ * 
+ * Basic functionality for a graph that delegates node and edge management, and
+ * tracks node numbers
+ * 
+ * @author sfink
+ */
+public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implements NumberedGraph<T> {
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.util.graph.NumberedNodeManager#getMaxNumber()
+   */
+  public int getMaxNumber() {
+    return ((NumberedNodeManager<T>) getNodeManager()).getMaxNumber();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.util.graph.NumberedNodeManager#getNode(int)
+   */
+  public T getNode(int number) {
+    return ((NumberedNodeManager<T>) getNodeManager()).getNode(number);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(com.ibm.wala.util.graph.Node)
+   */
+  public int getNumber(T N) {
+    return ((NumberedNodeManager<T>) getNodeManager()).getNumber(N);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
+   */
+  public Iterator<T> iterateNodes(final IntSet s) {
+    return new NumberedNodeIterator<T>(s, this);
+  }
+  
+  /* (non-Javadoc)
+   */
+  public IntSet getPredNodeNumbers(T node) {
+    return ((NumberedEdgeManager<T>) getEdgeManager()).getPredNodeNumbers(node);
+  }
+
+  /* (non-Javadoc)
+   */
+  public IntSet getSuccNodeNumbers(T node) {
+    return ((NumberedEdgeManager<T>) getEdgeManager()).getSuccNodeNumbers(node);
+  }
+}

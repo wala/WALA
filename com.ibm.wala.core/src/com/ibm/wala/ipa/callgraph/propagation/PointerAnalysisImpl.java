@@ -1,0 +1,582 @@
+/*******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.ipa.callgraph.propagation;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ssa.DefUse;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAArrayLoadInstruction;
+import com.ibm.wala.ssa.SSACheckCastInstruction;
+import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
+import com.ibm.wala.ssa.SSAGetInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.SSAPiInstruction;
+import com.ibm.wala.ssa.SSAThrowInstruction;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.MutableMapping;
+import com.ibm.wala.util.intset.MutableSparseIntSet;
+import com.ibm.wala.util.intset.OrdinalSet;
+import com.ibm.wala.util.warnings.WarningSet;
+
+/**
+ * 
+ * General representation of the results of pointer analysis
+ * 
+ * @author sfink
+ */
+public class PointerAnalysisImpl extends AbstractPointerAnalysis {
+
+  /**
+   * mapping from PointerKey to PointsToSetVariable
+   */
+  private final PointsToMap pointsToMap;
+
+  /**
+   * Meta-data regarding heap abstractions
+   */
+  private final HeapModel H;
+
+  /**
+   * An object that abstracts how to model pointers in the heap.
+   */
+  private final PointerKeyFactory pointerKeys;
+
+  /**
+   * An object that abstracts how to model instances in the heap.
+   */
+  private final InstanceKeyFactory iKeyFactory;
+
+  private final PropagationCallGraphBuilder builder;
+
+  public PointerAnalysisImpl(PropagationCallGraphBuilder builder, CallGraph cg, PointsToMap pointsToMap, MutableMapping<InstanceKey> instanceKeys, PointerKeyFactory pointerKeys,
+      InstanceKeyFactory iKeyFactory) {
+    super(cg, instanceKeys);
+    this.builder = builder;
+    this.pointerKeys = pointerKeys;
+    this.iKeyFactory = iKeyFactory;
+    this.pointsToMap = pointsToMap;
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(iKeyFactory != null);
+    }
+
+    H = makeHeapModel();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#toString()
+   */
+  public String toString() {
+    StringBuffer result = new StringBuffer("PointerAnalysis:\n");
+    for (Iterator it = pointsToMap.iterateKeys(); it.hasNext();) {
+      PointerKey p = (PointerKey) it.next();
+      OrdinalSet O = getPointsToSet(p);
+      result.append("  ").append(p).append(" ->\n");
+      for (Iterator it2 = O.iterator(); it2.hasNext();) {
+        result.append("     ").append(it2.next()).append("\n");
+      }
+    }
+    return result.toString();
+  }
+
+  private HeapModel makeHeapModel() {
+    return new HModel();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getPointsToSet(com.ibm.wala.ipa.callgraph.propagation.PointerKey)
+   */
+  public OrdinalSet<InstanceKey> getPointsToSet(PointerKey key) {
+    if (pointsToMap.isImplicit(key)) {
+      return computeImplicitPointsToSet(key);
+    }
+    PointsToSetVariable v = pointsToMap.getPointsToSet(key);
+
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(key != null);
+    }
+
+    if (v == null) {
+      return OrdinalSet.empty();
+    } else {
+      IntSet S = v.getValue();
+      return new OrdinalSet<InstanceKey>(S, instanceKeys);
+    }
+  }
+
+  /**
+   * did the pointer analysis use a type filter for a given points-to set?
+   * (this is ugly).
+   */
+  public boolean isFiltered(PointerKey key) {
+    if (pointsToMap.isImplicit(key)) {
+      return false;
+    }
+    PointsToSetVariable v = pointsToMap.getPointsToSet(key);
+    if (v == null) {
+      return false;
+    } else {
+      return v.getPointerKey() instanceof FilteredPointerKey;
+    }
+  }
+
+  protected class ImplicitPointsToSetVisitor extends SSAInstruction.Visitor {
+    protected final CGNode node;
+    protected final LocalPointerKey lpk;
+    protected OrdinalSet<InstanceKey> pointsToSet = null;
+
+    protected ImplicitPointsToSetVisitor(LocalPointerKey lpk) {
+      this.lpk = lpk;
+      this.node = lpk.getNode();
+    }
+
+    public void visitNew(SSANewInstruction instruction) {
+      pointsToSet = OrdinalSet.empty();
+    }
+
+    public void visitInvoke(SSAInvokeInstruction instruction) {
+      pointsToSet = computeImplicitPointsToSetAtCall(lpk, node, instruction);
+    }
+
+    public void visitCheckCast(SSACheckCastInstruction instruction) {
+      pointsToSet = computeImplicitPointsToSetAtCheckCast(node, instruction);
+    }
+
+    public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
+      pointsToSet = computeImplicitPointsToSetAtCatch(node, instruction);
+    }
+
+    public void visitGet(SSAGetInstruction instruction) {
+      pointsToSet = computeImplicitPointsToSetAtGet(node, instruction);
+    }
+
+    public void visitPhi(SSAPhiInstruction instruction) {
+      pointsToSet = computeImplicitPointsToSetAtPhi(node, instruction);
+    }
+    
+    public void visitPi(SSAPiInstruction instruction) {
+      pointsToSet = computeImplicitPointsToSetAtPi(node, instruction);
+    }
+
+    public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
+      pointsToSet = computeImplicitPointsToSetAtALoad(node, instruction);
+    }
+  };
+      
+  protected ImplicitPointsToSetVisitor makeImplicitPointsToVisitor(LocalPointerKey lpk) {
+    return new ImplicitPointsToSetVisitor(lpk);
+  }
+
+  private OrdinalSet<InstanceKey> computeImplicitPointsToSet(PointerKey key) {
+    if (key instanceof LocalPointerKey) {
+      LocalPointerKey lpk = (LocalPointerKey) key;
+      CGNode node = lpk.getNode();
+      SSAContextInterpreter interp = getCallGraph().getInterpreter(node);
+      IR ir = interp.getIR(node, new WarningSet());
+      DefUse du = interp.getDU(node, new WarningSet());
+      if (((SSAPropagationCallGraphBuilder)builder).contentsAreInvariant(ir.getSymbolTable(), du, lpk.getValueNumber())) {
+        // cons up the points-to set for invariant contents
+        InstanceKey[] ik = ((SSAPropagationCallGraphBuilder)builder).getInvariantContents(ir.getSymbolTable(), du, node, lpk.getValueNumber(), H, true);
+        return toOrdinalSet(ik);
+      } else {
+        SSAInstruction def = du.getDef(lpk.getValueNumber());
+        if (def != null) {
+	  ImplicitPointsToSetVisitor v = makeImplicitPointsToVisitor(lpk);
+	  def.visit(v);
+	  if (v.pointsToSet != null) {
+	    return v.pointsToSet;
+	  } else {
+	    Assertions.UNREACHABLE("saw " + key + ": time to implement for " + def.getClass());
+            return null;
+          }
+        } else {
+          Assertions.UNREACHABLE("unexpected null def for " + key);
+          return null;
+        }
+      }
+    } else {
+      Assertions.UNREACHABLE("unexpected implicit key " + key + " that's not a local pointer key");
+      return null;
+    }
+  }
+  
+  private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtPi(CGNode node, SSAPiInstruction instruction) {
+    MutableSparseIntSet S = new MutableSparseIntSet();
+    for (int i = 0; i < instruction.getNumberOfUses(); i++) {
+      int vn = instruction.getUse(i);
+      if (vn != -1) {
+        PointerKey lpk = pointerKeys.getPointerKeyForLocal(node, vn);
+        OrdinalSet pointees = getPointsToSet(lpk);
+        IntSet set = pointees.getBackingSet();
+        if (set != null) {
+          S.addAll(set);
+        }
+      }
+    }
+    return new OrdinalSet<InstanceKey>(S, instanceKeys);
+  }
+
+  private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtPhi(CGNode node, SSAPhiInstruction instruction) {
+    MutableSparseIntSet S = new MutableSparseIntSet();
+    for (int i = 0; i < instruction.getNumberOfUses(); i++) {
+      int vn = instruction.getUse(i);
+      if (vn != -1) {
+        PointerKey lpk = pointerKeys.getPointerKeyForLocal(node, vn);
+        OrdinalSet pointees = getPointsToSet(lpk);
+        IntSet set = pointees.getBackingSet();
+        if (set != null) {
+          S.addAll(set);
+        }
+      }
+    }
+    return new OrdinalSet<InstanceKey>(S, instanceKeys);
+  }
+
+  private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtALoad(CGNode node, SSAArrayLoadInstruction instruction) {
+    PointerKey arrayRef = pointerKeys.getPointerKeyForLocal(node, instruction.getArrayRef());
+    MutableSparseIntSet S = new MutableSparseIntSet();
+    OrdinalSet refs = getPointsToSet(arrayRef);
+    for (Iterator it = refs.iterator(); it.hasNext();) {
+      InstanceKey ik = (InstanceKey) it.next();
+      PointerKey key = pointerKeys.getPointerKeyForArrayContents(ik);
+      OrdinalSet pointees = getPointsToSet(key);
+      IntSet set = pointees.getBackingSet();
+      if (set != null) {
+        S.addAll(set);
+      }
+    }
+    return new OrdinalSet<InstanceKey>(S, instanceKeys);
+  }
+
+  private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtGet(CGNode node, SSAGetInstruction instruction) {
+      return computeImplicitPointsToSetAtGet(node, instruction.getDeclaredField(), instruction.getRef(), instruction.isStatic());
+  }
+
+  protected OrdinalSet<InstanceKey> computeImplicitPointsToSetAtGet(CGNode node, FieldReference field, int refVn, boolean isStatic) {
+    IField f = getCallGraph().getClassHierarchy().resolveField(field);
+    if (f == null) {
+      return OrdinalSet.empty();
+    }
+    if (isStatic) {
+      PointerKey fKey = pointerKeys.getPointerKeyForStaticField(f);
+      return getPointsToSet(fKey);
+    } else {
+      PointerKey ref = pointerKeys.getPointerKeyForLocal(node, refVn);
+      MutableSparseIntSet S = new MutableSparseIntSet();
+      OrdinalSet refs = getPointsToSet(ref);
+      for (Iterator it = refs.iterator(); it.hasNext();) {
+        InstanceKey ik = (InstanceKey) it.next();
+        PointerKey fkey = pointerKeys.getPointerKeyForInstanceField(ik, f);
+        OrdinalSet pointees = getPointsToSet(fkey);
+        IntSet set = pointees.getBackingSet();
+        if (set != null) {
+          S.addAll(set);
+        }
+      }
+      return new OrdinalSet<InstanceKey>(S, instanceKeys);
+    }
+  }
+
+  private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtCatch(CGNode node, SSAGetCaughtExceptionInstruction instruction) {
+    IR ir = getCallGraph().getInterpreter(node).getIR(node, new WarningSet());
+    List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getBasicBlockForCatch(instruction));
+    Set caughtTypes = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
+    MutableSparseIntSet S = new MutableSparseIntSet();
+    // add the instances from each incoming pei ...
+    for (Iterator<ProgramCounter> it = peis.iterator(); it.hasNext();) {
+      ProgramCounter peiLoc = it.next();
+      SSAInstruction pei = ir.getPEI(peiLoc);
+      PointerKey e = null;
+      // first deal with exception variables from calls and throws.
+      if (pei instanceof SSAAbstractInvokeInstruction) {
+        SSAAbstractInvokeInstruction s = (SSAAbstractInvokeInstruction) pei;
+        e = pointerKeys.getPointerKeyForLocal(node, s.getException());
+      } else if (pei instanceof SSAThrowInstruction) {
+        SSAThrowInstruction s = (SSAThrowInstruction) pei;
+        e = pointerKeys.getPointerKeyForLocal(node, s.getException());
+      }
+      if (e != null) {
+        OrdinalSet ep = getPointsToSet(e);
+        for (Iterator it2 = ep.iterator(); it2.hasNext();) {
+          InstanceKey ik = (InstanceKey) it2.next();
+          if (SSAPropagationCallGraphBuilder.catches(caughtTypes, ik.getConcreteType(), getCallGraph().getClassHierarchy())) {
+            S.add(instanceKeys.getMappedIndex(ik));
+          }
+        }
+      }
+
+      // Account for those exceptions for which we do not actually have a
+      // points-to set for
+      // the pei, but just instance keys
+      Collection types = pei.getExceptionTypes();
+      if (types != null) {
+        for (Iterator it2 = types.iterator(); it2.hasNext();) {
+          TypeReference type = (TypeReference) it2.next();
+          if (type != null) {
+            InstanceKey ik = SSAPropagationCallGraphBuilder.getInstanceKeyForPEI(node, peiLoc, type, iKeyFactory);
+            ConcreteTypeKey ck = (ConcreteTypeKey) ik;
+            IClass klass = ck.getType();
+            if (SSAPropagationCallGraphBuilder.catches(caughtTypes, klass, getCallGraph().getClassHierarchy())) {
+              S.add(instanceKeys.getMappedIndex(SSAPropagationCallGraphBuilder
+                  .getInstanceKeyForPEI(node, peiLoc, type, iKeyFactory)));
+            }
+          }
+        }
+      }
+    }
+    return new OrdinalSet<InstanceKey>(S, instanceKeys);
+  }
+
+  private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtCheckCast(CGNode node, SSACheckCastInstruction instruction) {
+    PointerKey rhs = pointerKeys.getPointerKeyForLocal(node, instruction.getVal());
+    OrdinalSet<InstanceKey> rhsSet = getPointsToSet(rhs);
+    MutableSparseIntSet S = new MutableSparseIntSet();
+    IClass klass = getCallGraph().getClassHierarchy().lookupClass(instruction.getDeclaredResultType());
+    if (klass == null) {
+      // could not find the type. conservatively assume Object
+      return rhsSet;
+    } else {
+      if (klass.isInterface()) {
+        for (Iterator it = rhsSet.iterator(); it.hasNext();) {
+          InstanceKey ik = (InstanceKey) it.next();
+          if (getCallGraph().getClassHierarchy().implementsInterface(ik.getConcreteType(), klass.getReference())) {
+            S.add(getInstanceKeyMapping().getMappedIndex(ik));
+          }
+        }
+      } else {
+        for (Iterator it = rhsSet.iterator(); it.hasNext();) {
+          InstanceKey ik = (InstanceKey) it.next();
+          if (getCallGraph().getClassHierarchy().isSubclassOf(ik.getConcreteType(), klass)) {
+            S.add(getInstanceKeyMapping().getMappedIndex(ik));
+          }
+        }
+      }
+    }
+    return new OrdinalSet<InstanceKey>(S, instanceKeys);
+  }
+
+  private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtCall(LocalPointerKey lpk, CGNode node, SSAInvokeInstruction call) {
+    int exc = call.getException();
+    if (lpk.getValueNumber() == exc) {
+      return computeImplicitExceptionsForCall(node, call);
+    } else {
+      Assertions.UNREACHABLE("time to implement me.");
+      return null;
+    }
+  }
+
+  private OrdinalSet<InstanceKey> toOrdinalSet(InstanceKey[] ik) {
+    MutableSparseIntSet s = new MutableSparseIntSet();
+    for (int i = 0; i < ik.length; i++) {
+      int index = instanceKeys.getMappedIndex(ik[i]);
+      if (index != -1) {
+        s.add(index);
+      } else {
+        Assertions._assert(index != -1, "instance " + ik[i] + " not mapped!");
+      }
+    }
+    return new OrdinalSet<InstanceKey>(s, instanceKeys);
+  }
+
+  /**
+   * @param node
+   * @param call
+   * @return the points-to set for the exceptional return values from a
+   *         particular call site
+   */
+  private OrdinalSet<InstanceKey> computeImplicitExceptionsForCall(CGNode node, SSAInvokeInstruction call) {
+    MutableSparseIntSet S = new MutableSparseIntSet();
+    for (Iterator it = node.getPossibleTargets(call.getCallSite()).iterator(); it.hasNext();) {
+      CGNode target = (CGNode) it.next();
+      PointerKey retVal = pointerKeys.getPointerKeyForExceptionalReturnValue(target);
+      IntSet set = getPointsToSet(retVal).getBackingSet();
+      if (set != null) {
+        S.addAll(set);
+      }
+    }
+    return new OrdinalSet<InstanceKey>(S, instanceKeys);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getHeapModel()
+   */
+  public HeapModel getHeapModel() {
+    return H;
+  }
+
+  private class HModel implements HeapModel {
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys()
+     */
+    public Iterator iteratePointerKeys() {
+      return pointsToMap.iterateKeys();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForAllocation(com.ibm.detox.ipa.callgraph.CGNode,
+     *      com.ibm.wala.ssa.NewInstruction)
+     */
+    public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
+      return iKeyFactory.getInstanceKeyForAllocation(node, allocation);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForMultiNewArray(com.ibm.detox.ipa.callgraph.CGNode,
+     *      com.ibm.wala.ssa.NewInstruction, int)
+     */
+    public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
+      return iKeyFactory.getInstanceKeyForMultiNewArray(node, allocation, dim);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForStringConstant(java.lang.String)
+     */
+    public InstanceKey getInstanceKeyForConstant(Object S) {
+      return iKeyFactory.getInstanceKeyForConstant(S);
+    }
+
+    public String getStringConstantForInstanceKey(InstanceKey I) {
+      Assertions.UNREACHABLE();
+      return null;
+    }
+
+    public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter peiLoc, TypeReference type) {
+      Assertions.UNREACHABLE();
+      return null;
+    }
+
+    public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
+      Assertions.UNREACHABLE();
+      return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.detox.ipa.callgraph.CGNode,
+     *      int)
+     */
+    public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
+      return pointerKeys.getPointerKeyForLocal(node, valueNumber);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.detox.ipa.callgraph.CGNode,
+     *      int)
+     */
+    public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, IClass filter) {
+      return pointerKeys.getFilteredPointerKeyForLocal(node, valueNumber, filter);
+    }
+
+    public InstanceFilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, InstanceKey filter) {
+      return pointerKeys.getFilteredPointerKeyForLocal(node, valueNumber, filter);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForReturnValue(com.ibm.detox.ipa.callgraph.CGNode)
+     */
+    public PointerKey getPointerKeyForReturnValue(CGNode node) {
+      return pointerKeys.getPointerKeyForReturnValue(node);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForExceptionalReturnValue(com.ibm.detox.ipa.callgraph.CGNode)
+     */
+    public PointerKey getPointerKeyForExceptionalReturnValue(CGNode node) {
+      return pointerKeys.getPointerKeyForExceptionalReturnValue(node);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForStaticField(com.ibm.wala.classLoader.FieldReference)
+     */
+    public PointerKey getPointerKeyForStaticField(IField f) {
+      return pointerKeys.getPointerKeyForStaticField(f);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForInstance(com.ibm.wala.ipa.callgraph.propagation.InstanceKey,
+     *      com.ibm.wala.classLoader.FieldReference)
+     */
+    public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
+      assert field != null;
+      return pointerKeys.getPointerKeyForInstanceField(I, field);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForArrayContents(com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
+     */
+    public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
+      return pointerKeys.getPointerKeyForArrayContents(I);
+    }
+
+    public ClassHierarchy getClassHierarchy() {
+      return getCallGraph().getClassHierarchy();
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#iteratePointerKeys()
+   */
+  public Collection<PointerKey> getPointerKeys() {
+    return new Iterator2Collection<PointerKey>(pointsToMap.iterateKeys());
+  }
+
+  public ClassHierarchy getClassHierarchy() {
+    return builder.getClassHierarchy();
+  }
+}
