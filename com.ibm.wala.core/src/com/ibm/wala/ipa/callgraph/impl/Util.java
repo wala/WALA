@@ -152,7 +152,7 @@ public class Util {
    * @return the Set of CGNodes in the call graph that are reachable without
    *         traversing any entrypoint node
    */
-  public static Collection<CGNode> computeDarkEntrypointNodes(final CallGraph cg, final Collection entrypoints) {
+  public static Collection<CGNode> computeDarkEntrypointNodes(final CallGraph cg, final Collection<CGNode> entrypoints) {
 
     final class DarkIterator extends SlowDFSDiscoverTimeIterator<CGNode> {
 

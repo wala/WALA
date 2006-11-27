@@ -60,7 +60,7 @@ public class CodeScanner {
    * @return iterator of FieldReference
    * @throws InvalidClassFileException
    */
-  public static Iterator iterateFieldsRead(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+  public static Iterator<FieldReference> iterateFieldsRead(IMethod m, WarningSet warnings) throws InvalidClassFileException {
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getFieldsRead(sm.getStatements(SSAOptions.defaultOptions(), warnings)).iterator();
@@ -73,7 +73,7 @@ public class CodeScanner {
    * @return iterator of FieldReference
    * @throws InvalidClassFileException
    */
-  public static Iterator iterateFieldsWritten(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+  public static Iterator<FieldReference> iterateFieldsWritten(IMethod m, WarningSet warnings) throws InvalidClassFileException {
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getFieldsWritten(sm.getStatements(SSAOptions.defaultOptions(), warnings)).iterator();
