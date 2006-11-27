@@ -222,9 +222,9 @@ public class EJBEntrypoints implements Entrypoints, EJBConstants {
    * time deletions.
    */
   private void pruneEntrypointsByTransactions(Archive A, ClassLoaderReference loader) {
-    Set<Object> S = TransactionUtil.createDeclaredTransactionEntries(A, loader);
+    Set<DeploymentDeclaredTransaction> S = TransactionUtil.createDeclaredTransactionEntries(A, loader);
     Set<MethodReference> M = HashSetFactory.make(); // set of MethodReferences to prune.
-    for (Iterator<Object> it = S.iterator(); it.hasNext();) {
+    for (Iterator<DeploymentDeclaredTransaction> it = S.iterator(); it.hasNext();) {
       DeploymentDeclaredTransaction X = (DeploymentDeclaredTransaction) it.next();
       if (X.isMandatory()) {
         M.add(X.getMethodReference());

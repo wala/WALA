@@ -48,7 +48,7 @@ public class TransactionUtil {
    * defined in this module.
    */
   @SuppressWarnings({ "restriction", "unchecked" })
-  public static Set<Object> createDeclaredTransactionEntries(Archive A, ClassLoaderReference loader) {
+  public static Set<DeploymentDeclaredTransaction> createDeclaredTransactionEntries(Archive A, ClassLoaderReference loader) {
 
     if (DEBUG) {
       Trace.println("createDeclaredTransactionEntries: " + A + " type " + A.getClass());
@@ -60,7 +60,7 @@ public class TransactionUtil {
       return createDeclaredTransactionEntries(DD, loader);
     } else if (A.isEARFile()) {
       EARFile ear = (EARFile) A;
-      Set<Object> result = HashSetFactory.make();
+      Set<DeploymentDeclaredTransaction> result = HashSetFactory.make();
       for (Iterator it = ear.getEJBJarFiles().iterator(); it.hasNext();) {
         EJBJarFile j = (EJBJarFile) it.next();
         result.addAll(createDeclaredTransactionEntries(j, loader));
@@ -76,13 +76,13 @@ public class TransactionUtil {
    * defined in this module.
    */
   @SuppressWarnings("unchecked")
-  private static Set<Object> createDeclaredTransactionEntries(EJBJar DD, ClassLoaderReference loader) {
+  private static Set<DeploymentDeclaredTransaction> createDeclaredTransactionEntries(EJBJar DD, ClassLoaderReference loader) {
 
     if (DEBUG) {
       Trace.println("createDeclaredTransactionEntries: " + DD);
     }
 
-    TreeSet<Object> result = new TreeSet<Object>();
+    TreeSet<DeploymentDeclaredTransaction> result = new TreeSet<DeploymentDeclaredTransaction>();
     AssemblyDescriptor AD = DD.getAssemblyDescriptor();
     if (AD == null) {
       System.err.println("Warning: no assembly descriptor found for EJBJar: " + DD);
