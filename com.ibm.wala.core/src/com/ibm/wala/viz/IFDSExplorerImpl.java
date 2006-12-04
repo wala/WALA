@@ -37,13 +37,13 @@ public class IFDSExplorerImpl  {
   /**
    * absolute path name to invoke dot
    */
-  private static String dotExe = null;
+  protected static String dotExe = null;
 
 
   /**
    * Absolute path name to invoke ghostview
    */
-  private static String gvExe = null;
+  protected static String gvExe = null;
 
 
   /**
