@@ -105,4 +105,12 @@ public class IFDSExplorerImpl  {
     
   }
 
+  public static String getDotExe() {
+    return dotExe;
+  }
+
+  public static String getGvExe() {
+    return gvExe;
+  }
+
 } //IFDSExplorerImpl
