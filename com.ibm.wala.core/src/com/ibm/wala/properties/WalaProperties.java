@@ -20,7 +20,6 @@ import java.util.Properties;
 
 import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.internationalization.StringBundle;
 import com.ibm.wala.util.warnings.WalaException;
 
 public final class WalaProperties {
@@ -34,7 +33,7 @@ public final class WalaProperties {
   public final static String J2SE_DIR = "java_runtime_dir"; //$NON-NLS-1$
 
   public final static String J2EE_DIR = "j2ee_runtime_dir"; //$NON-NLS-1$
-  
+
   public final static String ECLIPSE_PLUGINS_DIR = "eclipse_plugins_dir"; //$NON-NLS-1$
 
   /**
@@ -114,13 +113,13 @@ public final class WalaProperties {
   public static Properties loadProperties() throws WalaException {
     try {
       Properties result = loadPropertiesFromFile(PROPERTY_FILENAME);
-      
+
       String outputDir = result.getProperty(OUTPUT_DIR, DefaultPropertiesValues.DEFAULT_OUTPUT_DIR);
       result.setProperty(OUTPUT_DIR, convertToAbsolute(outputDir));
-      
+
       String walaReport = result.getProperty(WALA_REPORT, DefaultPropertiesValues.DEFAULT_WALA_REPORT_FILENAME);
       result.setProperty(WALA_REPORT, convertToAbsolute(walaReport));
-  
+
       return result;
     } catch (Exception e) {
       e.printStackTrace();
@@ -136,8 +135,7 @@ public final class WalaProperties {
   public static Properties loadPropertiesFromFile(String fileName) throws IOException {
     final InputStream propertyStream = WalaProperties.class.getClassLoader().getResourceAsStream(fileName);
     if (propertyStream == null) {
-      throw new IOException(StringBundle.getInstance().get("PersistentPropertiesManager.property_file_unreadable", //$NON-NLS-1$
-          fileName));
+      throw new IOException("property_file_unreadable " + fileName);
     }
     Properties result = new Properties();
     result.load(propertyStream);
@@ -148,7 +146,7 @@ public final class WalaProperties {
     final String envProperty = System.getProperty("WALA_HOME"); //$NON-NLS-1$
     if (envProperty != null)
       return envProperty;
-  
+
     final URL url = WalaProperties.class.getClassLoader().getResource("wala.properties"); //$NON-NLS-1$
     if (url == null) {
       return System.getProperty("user.dir"); //$NON-NLS-1$

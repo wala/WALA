@@ -11,7 +11,6 @@
 
 package com.ibm.wala.ipa.cha;
 
-import com.ibm.wala.util.internationalization.StringBundle;
 
 /**
  * Exception class that indicates that construction of class hierarchy has been
@@ -24,7 +23,7 @@ public final class CancelCHAConstructionException extends ClassHierarchyExceptio
   private static final long serialVersionUID = -1987107302523285889L;
 
   public CancelCHAConstructionException() {
-    super(StringBundle.getInstance().get("CancelCHAConstructionException.cancelation_message")); //$NON-NLS-1$
+    super("class hierarchy construction was cancelled"); 
   }
 
 }
