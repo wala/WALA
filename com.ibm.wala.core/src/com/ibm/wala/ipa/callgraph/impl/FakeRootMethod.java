@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -522,6 +523,15 @@ public class FakeRootMethod extends SyntheticMethod {
    */
   public static boolean isFakeRootMethod(MethodReference m) {
     return m.equals(rootMethod);
+  }
+  
+  /**
+   * @param block
+   * @return true iff block is a basic block in the fake root method
+   */
+  public static boolean isFromFakeRoot(IBasicBlock block) {
+    IMethod m = block.getMethod();
+    return FakeRootMethod.isFakeRootMethod(m.getReference());
   }
 
   public static TypeReference getRootClass() {
