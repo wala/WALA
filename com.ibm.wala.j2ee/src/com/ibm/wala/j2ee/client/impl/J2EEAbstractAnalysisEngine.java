@@ -17,13 +17,14 @@ import org.eclipse.jst.j2ee.commonarchivecore.internal.Archive;
 
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.client.impl.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.j2ee.DeploymentMetaData;
 import com.ibm.wala.j2ee.J2EEAnalysisScope;
-import com.ibm.wala.j2ee.client.J2EEAnalysisEngine;
 import com.ibm.wala.j2ee.client.CallGraphBuilderFactory;
+import com.ibm.wala.j2ee.client.J2EEAnalysisEngine;
 import com.ibm.wala.j2ee.util.TopLevelArchiveModule;
 import com.ibm.wala.j2ee.util.TopLevelArchiveModule.BloatedArchiveModule;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -35,7 +36,7 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * @author sfink
  */
-public abstract class J2EEAbstractAnalysisEngine extends com.ibm.wala.client.impl.AbstractAnalysisEngine implements J2EEAnalysisEngine {
+public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine implements J2EEAnalysisEngine {
 
   /**
    * A representation of the deployment descriptor
