@@ -45,8 +45,10 @@ public class SSABinaryOpInstruction extends SSAInstruction {
   }
 
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + " = binaryop(<opcode printing unsupported) "
-        + getValueString(symbolTable, d, val1) + " , " + getValueString(symbolTable, d, val2);
+    return getValueString(symbolTable, d, result) + 
+	" = binaryop(" + operator + ") " + 
+	getValueString(symbolTable, d, val1) + " , " +
+	getValueString(symbolTable, d, val2);
   }
 
   /**

@@ -731,7 +731,7 @@ public class SSACFG implements ControlFlowGraph {
    * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#entry()
    */
-  public IBasicBlock entry() {
+  public SSACFG.BasicBlock entry() {
     return basicBlocks[0];
   }
 
@@ -740,7 +740,7 @@ public class SSACFG implements ControlFlowGraph {
    * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#exit()
    */
-  public IBasicBlock exit() {
+  public SSACFG.BasicBlock exit() {
     return exit;
   }
 
