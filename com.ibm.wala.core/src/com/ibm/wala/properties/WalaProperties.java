@@ -112,7 +112,7 @@ public final class WalaProperties {
 
   public static Properties loadProperties() throws WalaException {
     try {
-      Properties result = loadPropertiesFromFile(PROPERTY_FILENAME);
+      Properties result = loadPropertiesFromFile(WalaProperties.class.getClassLoader(), PROPERTY_FILENAME);
 
       String outputDir = result.getProperty(OUTPUT_DIR, DefaultPropertiesValues.DEFAULT_OUTPUT_DIR);
       result.setProperty(OUTPUT_DIR, convertToAbsolute(outputDir));
@@ -132,8 +132,8 @@ public final class WalaProperties {
     return (file.isAbsolute()) ? file.getAbsolutePath() : WalaProperties.getWalaHomeDir().concat(File.separator).concat(path);
   }
 
-  public static Properties loadPropertiesFromFile(String fileName) throws IOException {
-    final InputStream propertyStream = WalaProperties.class.getClassLoader().getResourceAsStream(fileName);
+  public static Properties loadPropertiesFromFile(ClassLoader loader, String fileName) throws IOException {
+    final InputStream propertyStream = loader.getResourceAsStream(fileName);
     if (propertyStream == null) {
       throw new IOException("property_file_unreadable " + fileName);
     }
