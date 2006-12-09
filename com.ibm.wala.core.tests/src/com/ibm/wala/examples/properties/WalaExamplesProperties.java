@@ -29,7 +29,7 @@ public final class WalaExamplesProperties {
   public static Properties loadProperties() throws WalaException {
 
     try {
-      Properties result = WalaProperties.loadPropertiesFromFile(PROPERTY_FILENAME);
+      Properties result = WalaProperties.loadPropertiesFromFile(WalaExamplesProperties.class.getClassLoader(), PROPERTY_FILENAME);
 
       return result;
     } catch (Exception e) {

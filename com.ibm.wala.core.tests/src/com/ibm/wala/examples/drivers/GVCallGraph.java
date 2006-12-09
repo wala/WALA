@@ -51,8 +51,9 @@ public class GVCallGraph {
    * be something like "c:/temp/testdata/java_cup.jar"
    * 
    * @param args
+   * @throws WalaException 
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws WalaException {
     run(args);
   }
 
@@ -61,8 +62,9 @@ public class GVCallGraph {
    * something like "c:/temp/testdata/java_cup.jar"
    * 
    * @param args
+   * @throws WalaException 
    */
-  public static Process run(String[] args) {
+  public static Process run(String[] args) throws WalaException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
     return run(p.getProperty("appJar"));

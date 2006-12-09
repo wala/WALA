@@ -45,8 +45,9 @@ public class SWTPointsTo {
    * something like "c:/temp/testdata/java_cup.jar"
    * 
    * @param args
+   * @throws WalaException 
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws WalaException {
     Properties p = CommandLine.parse(args);
     GVCallGraph.validateCommandLine(p);
     run(p.getProperty("appJar"));
