@@ -508,14 +508,14 @@ public class BasicHeapGraph extends HeapGraph {
   public String toString() {
     StringBuffer result = new StringBuffer();
     result.append("Nodes:\n");
-    for (int i = 0; i < getMaxNumber(); i++) {
+    for (int i = 0; i <= getMaxNumber(); i++) {
       Object node = getNode(i);
       if (node != null) {
         result.append(i).append("  ").append(node).append("\n");
       }
     }
     result.append("Edges:\n");
-    for (int i = 0; i < getMaxNumber(); i++) {
+    for (int i = 0; i <= getMaxNumber(); i++) {
       Object node = getNode(i);
       if (node != null) {
         result.append(i).append(" -> ");
