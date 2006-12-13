@@ -31,13 +31,13 @@ public class CommandLine {
    */
   public static Properties parse(String[] args) throws WalaException {
     Properties result = new Properties();
-    for (int i = 0; i < args.length - 1; i++) {
+    for (int i = 0; i < args.length; i++) {
       String key = parseForKey(args[i]);
       if (key != null) {
         if (args[i].contains("=")) {
-          result.put(key, args[i].substring(args[i].indexOf('=')+1));
+          result.put(key, args[i].substring(args[i].indexOf('=') + 1));
         } else {
-          if (args[i + 1].charAt(0) == '-') {
+          if ((i + 1) >= args.length || args[i + 1].charAt(0) == '-') {
             throw new WalaException("Malformed command-line.  Must be of form -key=value or -key value");
           }
           result.put(key, args[i + 1]);
