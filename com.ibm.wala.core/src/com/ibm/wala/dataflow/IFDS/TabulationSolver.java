@@ -134,7 +134,7 @@ public class TabulationSolver<T, P> {
   /**
    * The problem being solved.
    */
-  private final TabulationProblem problem;
+  private final TabulationProblem<T, P> problem;
 
   /**
    * A map from Object (entry node in supergraph) -> LocalPathEdges.
@@ -1060,7 +1060,7 @@ public class TabulationSolver<T, P> {
   /**
    * @return Returns the supergraph.
    */
-  public ISupergraph getSupergraph() {
+  public ISupergraph<T,P> getSupergraph() {
     return supergraph;
   }
 
@@ -1122,7 +1122,7 @@ public class TabulationSolver<T, P> {
     return summaries.getInvertedSummaryEdgesForTarget(num1, num2, d2);
   }
 
-  public TabulationProblem getProblem() {
+  public TabulationProblem<T,P> getProblem() {
     return problem;
   }
 }

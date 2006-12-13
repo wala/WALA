@@ -430,7 +430,7 @@ public class ExplodedSupergraphPath<T> {
    * return nodes, and 2) excludes call/return pairs in which no state
    * transitions occur
    */
-  public static <T> ExplodedSupergraphPath summarize(ISupergraph<T,?> supergraph, ExplodedSupergraphPath<T> path) {
+  public static <T> ExplodedSupergraphPath<T> summarize(ISupergraph<T,?> supergraph, ExplodedSupergraphPath<T> path) {
     pruneForCallReturn(supergraph, path);
     // System.err.println("pruned path A: " + p);
     pruneBoringCalls(supergraph, path);
