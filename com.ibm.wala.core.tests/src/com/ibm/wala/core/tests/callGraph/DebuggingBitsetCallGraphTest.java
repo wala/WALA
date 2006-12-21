@@ -12,13 +12,7 @@ package com.ibm.wala.core.tests.callGraph;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.util.intset.BimodalMutableIntSetFactory;
-import com.ibm.wala.util.intset.BitVectorIntSetFactory;
-import com.ibm.wala.util.intset.DebuggingMutableIntSetFactory;
-import com.ibm.wala.util.intset.IntSetUtil;
-import com.ibm.wala.util.intset.MutableIntSetFactory;
-import com.ibm.wala.util.intset.MutableSharedBitVectorIntSetFactory;
-import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
+import com.ibm.wala.util.intset.*;
 
 /**
  *
@@ -60,6 +54,10 @@ public class DebuggingBitsetCallGraphTest extends WalaTestCase {
 
   public void testSharedBitVector() throws ClassHierarchyException {
     runBitsetTest(new MutableSharedBitVectorIntSetFactory(), new BitVectorIntSetFactory());
+  }
+
+  public void testSemiSparseShared() throws ClassHierarchyException {
+    runBitsetTest(new SemiSparseMutableIntSetFactory(), new MutableSharedBitVectorIntSetFactory());
   }
 
 }

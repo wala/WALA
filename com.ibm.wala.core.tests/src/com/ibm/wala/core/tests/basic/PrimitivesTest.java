@@ -20,26 +20,14 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.collections.BimodalMap;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.SmallMap;
+import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Dominators;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.BFSPathFinder;
 import com.ibm.wala.util.graph.traverse.BoundedBFSIterator;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
-import com.ibm.wala.util.intset.BimodalMutableIntSetFactory;
-import com.ibm.wala.util.intset.BitVector;
-import com.ibm.wala.util.intset.BitVectorIntSetFactory;
-import com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation;
-import com.ibm.wala.util.intset.IntPair;
-import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetUtil;
-import com.ibm.wala.util.intset.IntegerUnionFind;
-import com.ibm.wala.util.intset.MutableIntSet;
-import com.ibm.wala.util.intset.MutableIntSetFactory;
-import com.ibm.wala.util.intset.MutableSharedBitVectorIntSetFactory;
-import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
-import com.ibm.wala.util.intset.SparseIntSet;
+import com.ibm.wala.util.intset.*;
 
 /**
  * 
@@ -73,21 +61,21 @@ public class PrimitivesTest extends WalaTestCase {
     MutableIntSet y = factory.make(new int[] { 7, 7, 7, 2, 7, 1 });
     MutableIntSet z = factory.parse("{ 9 }");
 
-    System.out.println(w); // { }
-    System.out.println(x); // { 2 4 7 }
-    System.out.println(y); // { 1 2 7 }
-    System.out.println(z); // { 9 }
+    Trace.println(w); // { }
+    Trace.println(x); // { 2 4 7 }
+    Trace.println(y); // { 1 2 7 }
+    Trace.println(z); // { 9 }
 
     MutableIntSet temp = factory.makeCopy(x);
     temp.intersectWith(y);
-    System.out.println(temp); // { 2 7 }
+    Trace.println(temp); // { 2 7 }
     temp.copySet(x);
     temp.addAll(y);
-    System.out.println(temp); // { 1 2 4 7 }
+    Trace.println(temp); // { 1 2 4 7 }
     temp.copySet(x);
-    System.out.println(IntSetUtil.diff(x, y, factory)); // { 4 }
-    System.out.println(IntSetUtil.diff(v, z, factory)); // { 17 }
-    System.out.println(IntSetUtil.diff(z, v, factory)); // { }
+    Trace.println(IntSetUtil.diff(x, y, factory)); // { 4 }
+    Trace.println(IntSetUtil.diff(v, z, factory)); // { 17 }
+    Trace.println(IntSetUtil.diff(z, v, factory)); // { }
 
     // assertTrue(x.union(z).intersection(y.union(z)).equals(x.intersection(y).union(z)));
     MutableIntSet temp1 = factory.makeCopy(x);
@@ -109,16 +97,16 @@ public class PrimitivesTest extends WalaTestCase {
     assertTrue(z.isSubset(v));
     temp = factory.make();
     temp.add(4);
-    System.out.println(temp); // { 4 }
+    Trace.println(temp); // { 4 }
     temp.add(7);
-    System.out.println(temp); // { 4 7 }
+    Trace.println(temp); // { 4 7 }
     temp.add(2);
-    System.out.println(temp); // { 2 4 7 }
-    System.out.println(x); // { 2 4 7 }
+    Trace.println(temp); // { 2 4 7 }
+    Trace.println(x); // { 2 4 7 }
     assertTrue(temp.sameValue(x));
 
     MutableIntSet a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
-    System.out.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
+    Trace.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
                             // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
     assertTrue(a.sameValue(a));
@@ -213,7 +201,7 @@ public class PrimitivesTest extends WalaTestCase {
     assertFalse(a.sameValue(c));
 
     a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
-    System.out.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
+    Trace.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
                             // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
     assertTrue(a.sameValue(a));
@@ -271,6 +259,13 @@ public class PrimitivesTest extends WalaTestCase {
    */
   public void testBitVectorIntSet() {
     doMutableIntSet(new BitVectorIntSetFactory());
+  }
+
+  /**
+   * Test the SemiSparseMutableIntSet implementation
+   */
+  public void testSemiSparseMutableIntSet() {
+    doMutableIntSet(new SemiSparseMutableIntSetFactory());
   }
 
   public void testSmallMap() {
@@ -343,7 +338,7 @@ public class PrimitivesTest extends WalaTestCase {
     List<Integer> p = pf.find();
 
     // path should be 8, 6, 4, 2, 0
-    System.out.println("Path is " + p);
+    Trace.println("Path is " + p);
     for (int i = 0; i < p.size(); i++) {
       assertTrue((p.get(i)).intValue() == new int[] { 8, 6, 4, 2, 0 }[i]);
     }
@@ -457,7 +452,7 @@ public class PrimitivesTest extends WalaTestCase {
     R.add(5, 1);
     int count = 0;
     for (Iterator<IntPair> it = R.iterator(); it.hasNext();) {
-      System.err.println(it.next());
+      Trace.println(it.next());
       count++;
     }
     assertTrue(count == 5);
@@ -533,14 +528,36 @@ public class PrimitivesTest extends WalaTestCase {
     return s.size();
   }
 
-  public void testBitVectors() {
-    BitVector bv = new BitVector();
+  public void testBitVector() {
+    testSingleBitVector(new BitVector());
+  }
 
+  public void testOffsetBitVector0_10() {
+    testSingleBitVector(new OffsetBitVector(0, 10));
+  }
+
+  public void testOffsetBitVector10_10() {
+    testSingleBitVector(new OffsetBitVector(10, 10));
+  }
+
+  public void testOffsetBitVector50_10() {
+    testSingleBitVector(new OffsetBitVector(50, 10));
+  }
+
+  public void testOffsetBitVector50_50() {
+    testSingleBitVector(new OffsetBitVector(50, 50));
+  }
+
+  public void testOffsetBitVector100_10() {
+    testSingleBitVector(new OffsetBitVector(100, 10));
+  }
+
+  private void testSingleBitVector(BitVectorBase bv) {
     // does the following not automatically scale the bitvector to
     // a reasonable size?
     bv.set(55);
 
-    assertTrue(bv.max() == 55);
+    assertTrue("bv.max() is " + bv.max(), bv.max() == 55);
     assertTrue(bv.get(55));
 
     bv.set(59);
@@ -559,7 +576,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     bv.set(77);
 
-    assertTrue(bv.max() == 77);
+    assertTrue("bv.max() is " + bv.max(), bv.max() == 77);
     {
       boolean[] gets = new boolean[] { false, true, true, true };
       int[] bits = new int[] { 0, 55, 59, 77 };
@@ -570,7 +587,7 @@ public class PrimitivesTest extends WalaTestCase {
     }
 
     bv.set(3);
-    assertTrue(bv.max() == 77);
+    assertTrue("bv.max() is " + bv.max(), bv.max() == 77);
     {
       boolean[] gets = new boolean[] { false, true, true, true, true };
       int[] bits = new int[] { 0, 3, 55, 59, 77 };
@@ -580,6 +597,188 @@ public class PrimitivesTest extends WalaTestCase {
       }
     }
 
-    System.out.println(bv);
+    Trace.println(bv);
+  }
+
+  public void testBitVectors() {
+    testBitVectors(new BitVector(), new BitVector());
+  }
+
+  public void testOffsetBitVectors150_10() {
+    testBitVectors(new OffsetBitVector(150, 10),
+		   new OffsetBitVector(150, 10));
+  }
+
+  public void testOffsetBitVectors100_200_10() {
+    testBitVectors(new OffsetBitVector(100, 10),
+		   new OffsetBitVector(200, 10));
+  }
+
+  public void testOffsetBitVectors100_25_10() {
+    testBitVectors(new OffsetBitVector(100, 10),
+		   new OffsetBitVector(25, 10));
+  }
+
+  public void testOffsetBitVectors35_25_20_10() {
+    testBitVectors(new OffsetBitVector(35, 20),
+		   new OffsetBitVector(25, 10));
+  }
+
+  private <T extends BitVectorBase> void testBitVectors(T v1, T v2) {
+    v1.set(100);
+    v1.set(101);
+    v1.set(102);
+    assertTrue("v1.max() is " + v1.max(), v1.max() == 102);
+
+    v2.set(200);
+    v2.set(201);
+    v2.set(202);
+    assertTrue("v2.max() is " + v2.max(), v2.max() == 202);
+
+    assertTrue(v1.intersectionEmpty(v2));
+    assertTrue(v2.intersectionEmpty(v1));
+
+    v1.or(v2);
+
+    Trace.println("v1 = " + v1 + ", v2 = " + v2);
+    assertFalse("v1 = " + v1 + ", v2 = " + v2, v1.intersectionEmpty(v2));
+    assertFalse("v1 = " + v1 + ", v2 = " + v2, v2.intersectionEmpty(v1));
+    assertTrue("v1.max() is " + v1.max(), v1.max() == 202);
+
+    {
+      boolean[] gets =
+	new boolean[] { false, true, true, true, true, true, true };
+      int[] bits =
+	new int[] { 0, 100, 101, 102, 200, 201, 202};
+      for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
+        assertTrue(i == bits[j]);
+        assertTrue(v1.get(i) == gets[j]);
+      }
+    }
+
+    v1.clearAll();
+    v2.clearAll();
+
+    v1.set(100);
+    v1.set(101);
+    v1.set(102);
+    v1.set(103);
+    v1.set(104);
+    v1.set(105);
+    assertTrue("v1.max() is " + v1.max(), v1.max() == 105);
+
+    v2.set(103);
+    v2.set(104);
+    v2.set(200);
+    v2.set(201);
+    assertTrue("v2.max() is " + v2.max(), v2.max() == 201);
+
+    v1.and(v2);
+    assertTrue("v1.max() is " + v1.max(), v1.max() == 104);
+
+    {
+      boolean[] gets =
+	new boolean[] { false, true, true };
+      int[] bits =
+	new int[] { 0, 103, 104};
+      for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
+        assertTrue(i == bits[j]);
+        assertTrue(v1.get(i) == gets[j]);
+      }
+    }
+    
+    v1.set(100);
+    v1.set(101);
+    v1.set(102);
+    v1.set(105);
+    assertTrue("v1.max() is " + v1.max(), v1.max() == 105);
+
+    {
+      boolean[] gets =
+	new boolean[] { false, true, true, true, true, true, true };
+      int[] bits =
+	new int[] { 0, 100, 101, 102, 103, 104, 105};
+      for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
+        assertTrue(i == bits[j]);
+        assertTrue(v1.get(i) == gets[j]);
+      }
+    }
+    
+    v2.clear(103);
+    v2.clear(104);
+    v1.andNot(v2);
+
+    {
+      boolean[] gets =
+	new boolean[] { false, true, true, true, true, true, true };
+      int[] bits =
+	new int[] { 0, 100, 101, 102, 103, 104, 105};
+      for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
+        assertTrue(i == bits[j]);
+        assertTrue(v1.get(i) == gets[j]);
+      }
+    }
+    
+    v2.set(101);
+    v2.set(102);
+
+    Trace.println("v1 = " + v1 + ", v2 = " + v2);
+    v1.andNot(v2);
+
+    {
+      boolean[] gets =
+	new boolean[] { false, true, true, true, true };
+      int[] bits =
+	new int[] { 0, 100, 103, 104, 105};
+      for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
+        assertTrue(i == bits[j]);
+        assertTrue(v1.get(i) == gets[j]);
+      }
+    }
+
+    v1.clearAll();
+    v2.clearAll();
+
+    v1.set(35);
+    v1.set(101);
+    v1.set(102);
+    v1.set(103);
+    v1.set(104);
+    v1.set(105);
+
+    v2.set(101);
+    v2.set(102);
+    v2.set(104);
+    v2.set(206);
+
+    Trace.println("v1 = " + v1 + ", v2 = " + v2);
+    v1.xor(v2);
+    
+    {
+      boolean[] gets =
+	new boolean[] { false, true, true, true, true };
+      int[] bits =
+	new int[] { 0, 35, 103, 105, 206};
+      for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
+        assertTrue(i == bits[j]);
+        assertTrue(v1.get(i) == gets[j]);
+      }
+    }
+
+    v2.set(35);
+    v2.set(103);
+    v2.set(105);
+
+    Trace.println("v1 = " + v1 + ", v2 = " + v2);
+    assertTrue(v1.isSubset(v2));
+
+    v2.clearAll();
+    v2.set(111);
+    v2.or(v1);
+    assertTrue(v1.isSubset(v2));
+
+    v2.and(v1);
+
+    assertTrue(v1.sameBits(v2));
   }
 }
