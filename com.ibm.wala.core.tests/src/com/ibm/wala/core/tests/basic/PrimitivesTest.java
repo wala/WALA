@@ -107,7 +107,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     MutableIntSet a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
     Trace.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
-                            // 35
+    // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
     assertTrue(a.sameValue(a));
     IntSet i = a.intersection(temp);
@@ -202,7 +202,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
     Trace.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
-                            // 35
+    // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
     assertTrue(a.sameValue(a));
     i = a.intersection(temp);
@@ -269,7 +269,7 @@ public class PrimitivesTest extends WalaTestCase {
   }
 
   public void testSmallMap() {
-    SmallMap<Integer,Integer> M = new SmallMap<Integer,Integer>();
+    SmallMap<Integer, Integer> M = new SmallMap<Integer, Integer>();
     Integer I1 = new Integer(1);
     Integer I2 = new Integer(2);
     Integer I3 = new Integer(3);
@@ -343,34 +343,34 @@ public class PrimitivesTest extends WalaTestCase {
       assertTrue((p.get(i)).intValue() == new int[] { 8, 6, 4, 2, 0 }[i]);
     }
   }
-  
+
   public void testBoundedBFS() {
     NumberedGraph<Integer> G = makeBFSTestGraph();
-    
+
     BoundedBFSIterator<Integer> bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 0);
     Collection<Integer> c = new Iterator2Collection<Integer>(bfs);
     assertTrue(c.size() == 1);
-    
+
     bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 1);
     c = new Iterator2Collection<Integer>(bfs);
     assertTrue(c.size() == 3);
-    
+
     bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 2);
     c = new Iterator2Collection<Integer>(bfs);
     assertTrue(c.size() == 5);
-    
+
     bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 3);
     c = new Iterator2Collection<Integer>(bfs);
     assertTrue(c.size() == 7);
-    
+
     bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 4);
     c = new Iterator2Collection<Integer>(bfs);
     assertTrue(c.size() == 9);
-    
+
     bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 5);
     c = new Iterator2Collection<Integer>(bfs);
     assertTrue(c.size() == 10);
-    
+
     bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 500);
     c = new Iterator2Collection<Integer>(bfs);
     assertTrue(c.size() == 10);
@@ -552,6 +552,7 @@ public class PrimitivesTest extends WalaTestCase {
     testSingleBitVector(new OffsetBitVector(100, 10));
   }
 
+  @SuppressWarnings("unchecked")
   private void testSingleBitVector(BitVectorBase bv) {
     // does the following not automatically scale the bitvector to
     // a reasonable size?
@@ -605,25 +606,22 @@ public class PrimitivesTest extends WalaTestCase {
   }
 
   public void testOffsetBitVectors150_10() {
-    testBitVectors(new OffsetBitVector(150, 10),
-		   new OffsetBitVector(150, 10));
+    testBitVectors(new OffsetBitVector(150, 10), new OffsetBitVector(150, 10));
   }
 
   public void testOffsetBitVectors100_200_10() {
-    testBitVectors(new OffsetBitVector(100, 10),
-		   new OffsetBitVector(200, 10));
+    testBitVectors(new OffsetBitVector(100, 10), new OffsetBitVector(200, 10));
   }
 
   public void testOffsetBitVectors100_25_10() {
-    testBitVectors(new OffsetBitVector(100, 10),
-		   new OffsetBitVector(25, 10));
+    testBitVectors(new OffsetBitVector(100, 10), new OffsetBitVector(25, 10));
   }
 
   public void testOffsetBitVectors35_25_20_10() {
-    testBitVectors(new OffsetBitVector(35, 20),
-		   new OffsetBitVector(25, 10));
+    testBitVectors(new OffsetBitVector(35, 20), new OffsetBitVector(25, 10));
   }
 
+  @SuppressWarnings("unchecked")
   private <T extends BitVectorBase> void testBitVectors(T v1, T v2) {
     v1.set(100);
     v1.set(101);
@@ -646,10 +644,8 @@ public class PrimitivesTest extends WalaTestCase {
     assertTrue("v1.max() is " + v1.max(), v1.max() == 202);
 
     {
-      boolean[] gets =
-	new boolean[] { false, true, true, true, true, true, true };
-      int[] bits =
-	new int[] { 0, 100, 101, 102, 200, 201, 202};
+      boolean[] gets = new boolean[] { false, true, true, true, true, true, true };
+      int[] bits = new int[] { 0, 100, 101, 102, 200, 201, 202 };
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         assertTrue(i == bits[j]);
         assertTrue(v1.get(i) == gets[j]);
@@ -677,16 +673,14 @@ public class PrimitivesTest extends WalaTestCase {
     assertTrue("v1.max() is " + v1.max(), v1.max() == 104);
 
     {
-      boolean[] gets =
-	new boolean[] { false, true, true };
-      int[] bits =
-	new int[] { 0, 103, 104};
+      boolean[] gets = new boolean[] { false, true, true };
+      int[] bits = new int[] { 0, 103, 104 };
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         assertTrue(i == bits[j]);
         assertTrue(v1.get(i) == gets[j]);
       }
     }
-    
+
     v1.set(100);
     v1.set(101);
     v1.set(102);
@@ -694,31 +688,27 @@ public class PrimitivesTest extends WalaTestCase {
     assertTrue("v1.max() is " + v1.max(), v1.max() == 105);
 
     {
-      boolean[] gets =
-	new boolean[] { false, true, true, true, true, true, true };
-      int[] bits =
-	new int[] { 0, 100, 101, 102, 103, 104, 105};
+      boolean[] gets = new boolean[] { false, true, true, true, true, true, true };
+      int[] bits = new int[] { 0, 100, 101, 102, 103, 104, 105 };
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         assertTrue(i == bits[j]);
         assertTrue(v1.get(i) == gets[j]);
       }
     }
-    
+
     v2.clear(103);
     v2.clear(104);
     v1.andNot(v2);
 
     {
-      boolean[] gets =
-	new boolean[] { false, true, true, true, true, true, true };
-      int[] bits =
-	new int[] { 0, 100, 101, 102, 103, 104, 105};
+      boolean[] gets = new boolean[] { false, true, true, true, true, true, true };
+      int[] bits = new int[] { 0, 100, 101, 102, 103, 104, 105 };
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         assertTrue(i == bits[j]);
         assertTrue(v1.get(i) == gets[j]);
       }
     }
-    
+
     v2.set(101);
     v2.set(102);
 
@@ -726,10 +716,8 @@ public class PrimitivesTest extends WalaTestCase {
     v1.andNot(v2);
 
     {
-      boolean[] gets =
-	new boolean[] { false, true, true, true, true };
-      int[] bits =
-	new int[] { 0, 100, 103, 104, 105};
+      boolean[] gets = new boolean[] { false, true, true, true, true };
+      int[] bits = new int[] { 0, 100, 103, 104, 105 };
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         assertTrue(i == bits[j]);
         assertTrue(v1.get(i) == gets[j]);
@@ -753,12 +741,10 @@ public class PrimitivesTest extends WalaTestCase {
 
     Trace.println("v1 = " + v1 + ", v2 = " + v2);
     v1.xor(v2);
-    
+
     {
-      boolean[] gets =
-	new boolean[] { false, true, true, true, true };
-      int[] bits =
-	new int[] { 0, 35, 103, 105, 206};
+      boolean[] gets = new boolean[] { false, true, true, true, true };
+      int[] bits = new int[] { 0, 35, 103, 105, 206 };
       for (int i = 0, j = 0; i != -1; i = v1.nextSetBit(i + 1), j++) {
         assertTrue(i == bits[j]);
         assertTrue(v1.get(i) == gets[j]);
