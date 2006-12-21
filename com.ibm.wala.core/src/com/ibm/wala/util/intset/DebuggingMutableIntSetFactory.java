@@ -56,7 +56,7 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
       
       Assertions._assert( pr.sameValue( db.primaryImpl ) );
       Assertions._assert( sr.sameValue( db.secondaryImpl ) );
-      Assertions._assert( sr.sameValue( pr ) );
+      Assertions._assert( pr.sameValue( sr ) );
 
       return new DebuggingMutableIntSet(pr, sr);
     } else {
