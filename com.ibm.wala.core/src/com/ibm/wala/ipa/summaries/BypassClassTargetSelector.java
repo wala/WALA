@@ -99,7 +99,7 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
       }
       if (realType.isAbstract() || realType.isInterface()) {
         TypeName syntheticName = BypassSyntheticClass.getName(realRef);
-        IClass result = bypassLoader.lookupClass(syntheticName);
+        IClass result = bypassLoader.lookupClass(syntheticName, realType.getClassHierarchy());
         if (result != null) {
           return result;
         } else {

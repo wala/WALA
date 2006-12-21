@@ -51,7 +51,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  * @author sfink
  */
 
-public class SSACFG implements ControlFlowGraph {
+public class SSACFG implements ControlFlowGraph{
 
   private static final boolean DEBUG = false;
 
@@ -64,6 +64,7 @@ public class SSACFG implements ControlFlowGraph {
   private WarningSet warnings;
 
   protected AbstractCFG cfg;
+ 
 
   /**
    * cache a ref to the exit block for efficient access
@@ -129,7 +130,7 @@ public class SSACFG implements ControlFlowGraph {
       } else {
         TypeReference exceptionType = ShrikeUtil.makeTypeReference(loader.getReference(), handler.getCatchClass());
         IClass klass = null;
-        klass = loader.lookupClass(exceptionType.getName());
+        klass = loader.lookupClass(exceptionType.getName(), method.getClassHierarchy());
         if (klass == null) {
           warnings.add(ExceptionLoadFailure.create(exceptionType, method));
           t = exceptionType;
@@ -1121,4 +1122,5 @@ public class SSACFG implements ControlFlowGraph {
   public IBasicBlock getBasicBlock(int bb) {
     return basicBlocks[bb];
   }
+
 }

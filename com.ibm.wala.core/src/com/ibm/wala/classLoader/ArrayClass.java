@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -33,19 +34,22 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class ArrayClass implements IClass, Constants {
 
+  private final ClassHierarchy cha;
+  
   /**
    * Package-visible constructor; only for use by ArrayClassLoader class.
    * 'loader' must be the Primordial IClassLoader.
    * 
    * [WHY? -- array classes are loaded by the element classloader??]
    */
-  ArrayClass(TypeReference type, IClassLoader loader) {
+  ArrayClass(TypeReference type, IClassLoader loader, ClassHierarchy cha) {
     this.type = type;
     this.loader = loader;
+    this.cha = cha;
     if (Assertions.verifyAssertions) {
       TypeReference elementType = type.getInnermostElementType();
       if (!elementType.isPrimitiveType()) {
-        IClass klass = loader.lookupClass(elementType.getName());
+        IClass klass = loader.lookupClass(elementType.getName(), cha);
         if (klass == null) {
           Assertions.UNREACHABLE("caller should not attempt to create an array with type " + type);
         }
@@ -123,14 +127,14 @@ public class ArrayClass implements IClass, Constants {
       // 1) [Ljava/lang/Object
       // 2) [? for primitive arrays (null from getElementClass)
       if (elt == null || elt.getReference() == TypeReference.JavaLangObject) {
-        return loader.lookupClass(TypeReference.JavaLangObject.getName());
+        return loader.lookupClass(TypeReference.JavaLangObject.getName(), getClassHierarchy());
       }
 
       // else it is array of super of element type (yuck)
       else {
         TypeReference eltSuperRef = elt.getSuperclass().getReference();
         TypeReference superRef = TypeReference.findOrCreateArrayOf(eltSuperRef);
-        return elt.getSuperclass().getClassLoader().lookupClass(superRef.getName());
+        return elt.getSuperclass().getClassLoader().lookupClass(superRef.getName(), getClassHierarchy());
       }
     } catch (ClassHierarchyException e) {
       e.printStackTrace();
@@ -145,7 +149,7 @@ public class ArrayClass implements IClass, Constants {
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
   public IMethod getMethod(Selector sig) {
-    return loader.lookupClass(TypeReference.JavaLangObject.getName()).getMethod(sig);
+    return loader.lookupClass(TypeReference.JavaLangObject.getName(), getClassHierarchy()).getMethod(sig);
   }
 
   public IField getField(Atom name) {
@@ -219,7 +223,7 @@ public class ArrayClass implements IClass, Constants {
     if (elementType.isPrimitiveType()) {
       return null;
     }
-    return loader.lookupClass(elementType.getName());
+    return loader.lookupClass(elementType.getName(), getClassHierarchy());
   }
 
   public int hashCode() {
@@ -253,8 +257,8 @@ public class ArrayClass implements IClass, Constants {
    */
   public Collection<IClass> getAllImplementedInterfaces() {
     HashSet<IClass> result = HashSetFactory.make(2);
-    result.add(loader.lookupClass(TypeReference.array_interfaces[0]));
-    result.add(loader.lookupClass(TypeReference.array_interfaces[1]));
+    result.add(loader.lookupClass(TypeReference.array_interfaces[0], getClassHierarchy()));
+    result.add(loader.lookupClass(TypeReference.array_interfaces[1], getClassHierarchy()));
     return result;
   }
 
@@ -290,7 +294,7 @@ public class ArrayClass implements IClass, Constants {
     if (elementType.isPrimitiveType()) {
       return null;
     }
-    return loader.lookupClass(elementType.getName());
+    return loader.lookupClass(elementType.getName(), getClassHierarchy());
   }
 
   /*
@@ -350,5 +354,9 @@ public class ArrayClass implements IClass, Constants {
   public Collection<IField> getAllFields() throws ClassHierarchyException {
 	Assertions.UNREACHABLE();
 	return null;
+  }
+
+  public ClassHierarchy getClassHierarchy() {
+    return cha;
   }
 }

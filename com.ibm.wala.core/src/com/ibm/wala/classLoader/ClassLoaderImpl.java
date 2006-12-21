@@ -396,14 +396,14 @@ public class ClassLoaderImpl implements IClassLoader {
     return loadedClasses.get(className);
   }
 
-  public IClass lookupClass(TypeName className) {
+  public IClass lookupClass(TypeName className, ClassHierarchy cha) {
     if (DEBUG_LEVEL > 1) {
       Trace.println(this + ": lookupClass " + className);
     }
 
     // treat arrays specially:
     if (className.isArrayType()) {
-      return arrayClassLoader.lookupClass(className, this);
+      return arrayClassLoader.lookupClass(className, this,cha);
     }
 
     // try delegating first.

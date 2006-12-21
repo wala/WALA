@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeCT.ClassReader;
@@ -40,10 +41,13 @@ public final class ShrikeCTMethodWrapper extends ShrikeBTMethodWrapper {
    * JVM-level modifiers for this method a value of -1 means "uninitialized"
    */
   private int modifiers = -1;
+  
+  private final ClassHierarchy cha;
 
   public ShrikeCTMethodWrapper(IClass klass, int index) {
     super(klass);
     this.shrikeMethodIndex = index;
+    this.cha = klass.getClassHierarchy();
   }
 
   public byte[] getBytecodes() {
@@ -237,5 +241,9 @@ public final class ShrikeCTMethodWrapper extends ShrikeBTMethodWrapper {
 
   public TypeReference getReturnType() {
     return getReference().getReturnType();
+  }
+
+  public ClassHierarchy getClassHierarchy() {
+    return cha;
   }
 }

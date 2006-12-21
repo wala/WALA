@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.Atom;
@@ -36,7 +37,7 @@ public interface IClassLoader {
    * @return the IClass defined by this class loader that 
    * corresponds to the given class name, or null if not found.
    */
-  public abstract IClass lookupClass(TypeName className);
+  public abstract IClass lookupClass(TypeName className, ClassHierarchy cha);
 
   /**
    * Return the ClassLoaderReference for this class loader.

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
@@ -17,7 +18,7 @@ import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- *
+ * 
  * Implementation of a canonical field reference. TODO: canonicalize these?
  * TODO: don't cache fieldType here .. move to class?
  * 
@@ -26,13 +27,15 @@ import com.ibm.wala.util.debug.Assertions;
 public final class FieldImpl implements IField {
 
   private final IClass declaringClass;
+
   private final FieldReference fieldRef;
+
   private final int accessFlags;
 
   /**
    * constructor when the field type is not a primitive
    */
-  public FieldImpl(IClass declaringClass, FieldReference canonicalRef,int accessFlags) {
+  public FieldImpl(IClass declaringClass, FieldReference canonicalRef, int accessFlags) {
     this.declaringClass = declaringClass;
     this.fieldRef = canonicalRef;
     this.accessFlags = accessFlags;
@@ -60,7 +63,7 @@ public final class FieldImpl implements IField {
     // instanceof is OK because this class is final
     if (obj instanceof FieldImpl) {
       FieldImpl other = (FieldImpl) obj;
-      return fieldRef.equals(other.fieldRef)  && declaringClass.equals(other.declaringClass);
+      return fieldRef.equals(other.fieldRef) && declaringClass.equals(other.declaringClass);
     } else {
       return false;
     }
@@ -111,20 +114,23 @@ public final class FieldImpl implements IField {
     return ((accessFlags & ClassConstants.ACC_STATIC) != 0);
   }
 
-  
   public boolean isFinal() {
     return ((accessFlags & ClassConstants.ACC_FINAL) != 0);
   }
 
   public boolean isPrivate() {
-	return ((accessFlags & ClassConstants.ACC_PRIVATE) != 0);
+    return ((accessFlags & ClassConstants.ACC_PRIVATE) != 0);
   }
 
   public boolean isProtected() {
-	return ((accessFlags & ClassConstants.ACC_PROTECTED) != 0);
+    return ((accessFlags & ClassConstants.ACC_PROTECTED) != 0);
   }
 
   public boolean isPublic() {
-	  return ((accessFlags & ClassConstants.ACC_PUBLIC) != 0);
+    return ((accessFlags & ClassConstants.ACC_PUBLIC) != 0);
+  }
+
+  public ClassHierarchy getClassHierarchy() {
+    return declaringClass.getClassHierarchy();
   }
 }

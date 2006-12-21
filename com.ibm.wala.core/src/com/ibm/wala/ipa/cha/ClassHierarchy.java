@@ -318,7 +318,7 @@ public class ClassHierarchy {
       throw new UnimplementedError("factory.getLoader failed " + e);
     }
     IClass declaredClass;
-    declaredClass = loader.lookupClass(ref.getDeclaringClass().getName());
+    declaredClass = loader.lookupClass(ref.getDeclaringClass().getName(), this);
     if (declaredClass == null) {
       return EmptyIterator.instance();
     }
@@ -741,7 +741,7 @@ public class ClassHierarchy {
     ClassLoaderReference loaderRef = A.getClassLoader();
     for (int i = 0; i < loaders.length; i++) {
       if (loaders[i].getReference().equals(loaderRef)) {
-        IClass klass = loaders[i].lookupClass(A.getName());
+        IClass klass = loaders[i].lookupClass(A.getName(), this);
         if (klass != null) {
           if (DEBUG) {
             Trace.println("lookupClass: got " + klass);

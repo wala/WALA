@@ -12,6 +12,7 @@ package com.ibm.wala.classLoader;
 
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
@@ -355,6 +356,11 @@ public class SyntheticMethod implements IMethod {
    */
   public TypeReference getReturnType() {
     return getReference().getReturnType();
+  }
+
+
+  public ClassHierarchy getClassHierarchy() {
+    return getDeclaringClass().getClassHierarchy();
   }
 
 }

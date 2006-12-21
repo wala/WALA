@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -27,7 +28,7 @@ import com.ibm.wala.util.Atom;
  * 
  * @author sfink
  */
-public interface IClass {
+public interface IClass extends IClassHierarchyDweller {
 
   /**
    * Return the object that represents the defining class loader

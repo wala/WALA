@@ -73,8 +73,8 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     this.parent = parent;
   }
 
-  public IClass lookupClass(TypeName className) {
-    IClass pc = parent.lookupClass(className);
+  public IClass lookupClass(TypeName className, ClassHierarchy cha) {
+    IClass pc = parent.lookupClass(className, cha);
     if (pc == null) {
       IClass c = syntheticClasses.get(className);
       return c;

@@ -74,7 +74,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    */
   public IClass getSuperclass() throws ClassHierarchyException {
     if (realType.isInterface()) {
-      IClass result = loader.lookupClass(TypeReference.JavaLangObject.getName());
+      IClass result = loader.lookupClass(TypeReference.JavaLangObject.getName(), getClassHierarchy());
       if (result != null) {
         return result;
       } else {

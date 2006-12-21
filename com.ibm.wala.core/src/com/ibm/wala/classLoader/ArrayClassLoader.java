@@ -12,6 +12,7 @@ package com.ibm.wala.classLoader;
 
 import java.util.HashMap;
 
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -32,13 +33,14 @@ public class ArrayClassLoader {
    */
   private HashMap<TypeReference, ArrayClass> arrayClasses = HashMapFactory.make();
 
+
   /**
    * @param className
    *          name of the array class
    * @param delegator
    *          class loader to look up element type with
    */
-  public IClass lookupClass(TypeName className, IClassLoader delegator)  {
+  public IClass lookupClass(TypeName className, IClassLoader delegator, ClassHierarchy cha) {
     if (DEBUG) {
       Assertions._assert(className.toString().startsWith("["));
     }
@@ -52,14 +54,14 @@ public class ArrayClassLoader {
         arrayClass = arrayClasses.get(aRef);
         IClassLoader primordial = getRootClassLoader(delegator);
         if (arrayClass == null) {
-          arrayClasses.put(aRef, arrayClass = new ArrayClass(aRef, primordial));
+          arrayClasses.put(aRef, arrayClass = new ArrayClass(aRef, primordial, cha));
         }
       } else {
         // check that the element class is loadable. If not, return null.
-        if (delegator.lookupClass(elementType.getName()) == null) {
+        if (delegator.lookupClass(elementType.getName(), cha) == null) {
           return null;
         }
-        arrayClass = new ArrayClass(type, delegator);
+        arrayClass = new ArrayClass(type, delegator, cha);
       }
       arrayClasses.put(type, arrayClass);
     }

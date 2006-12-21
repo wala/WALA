@@ -25,6 +25,8 @@ public abstract class SyntheticClass implements IClass {
 
   private final TypeReference T;
   
+
+
   private final ClassHierarchy cha;
   /**
    * @param T type reference describing this class
@@ -77,5 +79,9 @@ public abstract class SyntheticClass implements IClass {
    */
   public boolean isArrayClass() {
     return false;
+  }
+  
+  public ClassHierarchy getClassHierarchy() {
+    return cha;
   }
 }

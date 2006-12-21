@@ -274,12 +274,12 @@ public final class ShrikeCTClassWrapper implements IClass {
 
     if (superName == null) {
       if (!getReference().equals(TypeReference.JavaLangObject)) {
-        superClass = loader.lookupClass(TypeReference.JavaLangObject.getName());
+        superClass = loader.lookupClass(TypeReference.JavaLangObject.getName(), getClassHierarchy());
       }
       return;
     }
 
-    superClass = loader.lookupClass(TypeName.findOrCreate(superName));
+    superClass = loader.lookupClass(TypeName.findOrCreate(superName), getClassHierarchy());
     if (DEBUG) {
       Trace.println("got superclass " + superClass + " for " + this);
     }
@@ -379,7 +379,7 @@ public final class ShrikeCTClassWrapper implements IClass {
     for (int i = 0; i < interfaces.length; i++) {
       ImmutableByteArray name = interfaces[i];
       IClass klass = null;
-      klass = loader.lookupClass(TypeName.findOrCreate(name));
+      klass = loader.lookupClass(TypeName.findOrCreate(name), getClassHierarchy());
       if (klass == null) {
         warnings.add(ClassNotFoundWarning.create(name));
       } else {
