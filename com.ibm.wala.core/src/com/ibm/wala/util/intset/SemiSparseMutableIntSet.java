@@ -10,13 +10,16 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.util.collections.*;
+import com.ibm.wala.util.collections.CompoundIntIterator;
+import com.ibm.wala.util.collections.EmptyIntIterator;
 
 public class SemiSparseMutableIntSet implements MutableIntSet {
   private static final int SPARSE_INSERT_THRESHOLD = 10;
 
   private MutableSparseIntSet sparsePart = new MutableSparseIntSet();
+
   private OffsetBitVector densePart = null;
+
   private int sparseInsertCount = 0;
 
   private void fixAfterSparseInsert() {
@@ -25,122 +28,118 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       IntIterator sparseBits = sparsePart.intIterator();
       int thisBit = sparseBits.next();
       if (densePart == null) {
-	int maxOffset = -1;
-	int maxCount = -1;
-	int maxMax = -1;
-	int maxBit = -1;
+        int maxOffset = -1;
+        int maxCount = -1;
+        int maxMax = -1;
 
-	int offset = thisBit;
-	int bits = 32;
-	int count = 1;
-	while (sparseBits.hasNext()) {
-	  int nextBit = sparseBits.next();
+        int offset = thisBit;
+        int bits = 32;
+        int count = 1;
+        while (sparseBits.hasNext()) {
+          int nextBit = sparseBits.next();
 
-	  int newBits = bits + (nextBit - thisBit);
-	  int newCount = count + 1;
-	
-	  if (newBits > (32*newCount)) {
-	    count = newCount;
-	    bits = newBits;
-	  } else if (bits > 32*count) {
-	    if (count > maxCount) {
-	      maxOffset = offset;
-	      maxMax = thisBit;
-	      maxCount = count;
-	    }
-	    offset = nextBit;
-	    count = 1;
-	    bits = 32;
-	  }
-	  thisBit = nextBit;
-	}
+          int newBits = bits + (nextBit - thisBit);
+          int newCount = count + 1;
 
-	if (maxOffset != -1) {
-	  densePart = new OffsetBitVector(maxOffset, maxMax);
-	  sparseBits = sparsePart.intIterator();
-	  int bit;
-	  while ((bit = sparseBits.next()) != maxOffset);
-	  for(int i = 0; i < maxCount; i++) {
-	    densePart.set(sparseBits.next());
-	  }
-	  for(int bit1 = densePart.nextSetBit(0); 
-	      bit1 != -1;
-	      bit1 = densePart.nextSetBit(bit1+1))
-	  { 
-	    sparsePart.remove(bit1);
-	  }
-	}
+          if (newBits > (32 * newCount)) {
+            count = newCount;
+            bits = newBits;
+          } else if (bits > 32 * count) {
+            if (count > maxCount) {
+              maxOffset = offset;
+              maxMax = thisBit;
+              maxCount = count;
+            }
+            offset = nextBit;
+            count = 1;
+            bits = 32;
+          }
+          thisBit = nextBit;
+        }
+
+        if (maxOffset != -1) {
+          densePart = new OffsetBitVector(maxOffset, maxMax);
+          sparseBits = sparsePart.intIterator();
+          while ((sparseBits.next()) != maxOffset)
+            ;
+          for (int i = 0; i < maxCount; i++) {
+            densePart.set(sparseBits.next());
+          }
+          for (int bit1 = densePart.nextSetBit(0); bit1 != -1; bit1 = densePart.nextSetBit(bit1 + 1)) {
+            sparsePart.remove(bit1);
+          }
+        }
 
       } else {
-	int moveCount = 0;
-	int newOffset = -1;
-	int newLength = -1;
-	
-	// push stuff just below dense part into it, if it saves space
-	if (thisBit < densePart.getOffset()) {
-	  newOffset = thisBit;
-	  int bits = 32;
-	  int count = 1;
-	  while (sparseBits.hasNext()) {
-	    int nextBit = sparseBits.next();
-	    if (nextBit >= densePart.getOffset()) {
-	      if (bits > (32*count)) {
-		moveCount += count;
-		break;
-	      } else {
-		newOffset = -1;
-	      }
-	    } else {
-	      bits += (nextBit - thisBit);
-	      count++;
-	
-	      if (bits > (32*count)) {
-		newOffset = nextBit;
-		count = 1;
-		bits = 32;
-	      }
-	    }
-	  }
-	}
+        int moveCount = 0;
+        int newOffset = -1;
+        int newLength = -1;
 
-	// push stuff just above dense part into it, if it saves space
-	if (thisBit >= densePart.length()) {
-	  int count = 1;
-	  int bits = (thisBit + 1 - densePart.length());
-	  if (32*count > bits) {
-	    newLength = thisBit;
-	  }
-	  while (sparseBits.hasNext()) {
-	    thisBit = sparseBits.next();
-	    count++;
-	    bits = (thisBit + 1 - densePart.length());
-	    newLength = (32*count > bits)? thisBit: newLength;
-	  }
-	  if (newLength > -1) {
-	    moveCount += count;
-	  }
-	}
-	
-	// actually move bits from sparse to dense
-	if (newOffset != -1 || newLength != -1) {
-	  int index = 0;
-	  int[] bits = new int[ moveCount ];
-	  for(sparseBits = sparsePart.intIterator(); sparseBits.hasNext(); ) {
-	    int bit = sparseBits.next();
-	    if (newOffset!=-1 && bit>=newOffset && bit<=densePart.getOffset()) {
-	      bits[index++] = bit;
-	    }
-	    if (newLength!=-1 && bit>=densePart.length() && bit<=newLength) {
-	      bits[index++] = bit;
-	    }
-	  }
-	  
-	  for(int i = 0; i < moveCount; i++) {
-	    sparsePart.remove(bits[i]);
-	    densePart.set(bits[i]);
-	  }
-	}
-      }  
+        // push stuff just below dense part into it, if it saves space
+        if (thisBit < densePart.getOffset()) {
+          newOffset = thisBit;
+          int bits = 32;
+          int count = 1;
+          while (sparseBits.hasNext()) {
+            int nextBit = sparseBits.next();
+            if (nextBit >= densePart.getOffset()) {
+              if (bits > (32 * count)) {
+                moveCount += count;
+                break;
+              } else {
+                newOffset = -1;
+              }
+            } else {
+              bits += (nextBit - thisBit);
+              count++;
+
+              if (bits > (32 * count)) {
+                newOffset = nextBit;
+                count = 1;
+                bits = 32;
+              }
+            }
+          }
+        }
+
+        // push stuff just above dense part into it, if it saves space
+        if (thisBit >= densePart.length()) {
+          int count = 1;
+          int bits = (thisBit + 1 - densePart.length());
+          if (32 * count > bits) {
+            newLength = thisBit;
+          }
+          while (sparseBits.hasNext()) {
+            thisBit = sparseBits.next();
+            count++;
+            bits = (thisBit + 1 - densePart.length());
+            newLength = (32 * count > bits) ? thisBit : newLength;
+          }
+          if (newLength > -1) {
+            moveCount += count;
+          }
+        }
+
+        // actually move bits from sparse to dense
+        if (newOffset != -1 || newLength != -1) {
+          int index = 0;
+          int[] bits = new int[moveCount];
+          for (sparseBits = sparsePart.intIterator(); sparseBits.hasNext();) {
+            int bit = sparseBits.next();
+            if (newOffset != -1 && bit >= newOffset && bit <= densePart.getOffset()) {
+              bits[index++] = bit;
+            }
+            if (newLength != -1 && bit >= densePart.length() && bit <= newLength) {
+              bits[index++] = bit;
+            }
+          }
+
+          for (int i = 0; i < moveCount; i++) {
+            sparsePart.remove(bits[i]);
+            densePart.set(bits[i]);
+          }
+        }
+      }
     }
   }
 
@@ -149,8 +148,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * @return true iff this set contains integer i
    */
   public boolean contains(int i) {
-    return 
-      sparsePart.contains(i) || (densePart != null && densePart.contains(i));
+    return sparsePart.contains(i) || (densePart != null && densePart.contains(i));
   }
 
   /**
@@ -161,12 +159,13 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       return true;
     } else if (densePart != null) {
       int lower = densePart.getOffset();
-      for(IntIterator is = set.intIterator(); is.hasNext(); ) {
-	int i = is.next();
-	if (i < lower) continue;
-	if (densePart.get(i)) {
-	  return true;
-	}
+      for (IntIterator is = set.intIterator(); is.hasNext();) {
+        int i = is.next();
+        if (i < lower)
+          continue;
+        if (densePart.get(i)) {
+          return true;
+        }
       }
     }
 
@@ -180,15 +179,15 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    */
   public IntSet intersection(IntSet that) {
     SemiSparseMutableIntSet newThis = new SemiSparseMutableIntSet();
-    for(IntIterator bits = intIterator(); bits.hasNext(); ) {
+    for (IntIterator bits = intIterator(); bits.hasNext();) {
       int bit = bits.next();
       if (that.contains(bit)) {
-	newThis.add(bit);
+        newThis.add(bit);
       }
     }
     return newThis;
   }
-    
+
   /**
    * @return true iff this set is empty
    */
@@ -200,7 +199,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * @return the number of elements in this set
    */
   public int size() {
-    return sparsePart.size() + (densePart==null? 0: densePart.populationCount());
+    return sparsePart.size() + (densePart == null ? 0 : densePart.populationCount());
   }
 
   /**
@@ -211,30 +210,28 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       private int i = -1;
 
       public boolean hasNext() {
-	return densePart.nextSetBit(i+1) != -1;
+        return densePart.nextSetBit(i + 1) != -1;
       }
- 
+
       public int next() {
-	int next = densePart.nextSetBit(i+1);
-	i = next+1;
-	return next;
+        int next = densePart.nextSetBit(i + 1);
+        i = next + 1;
+        return next;
       }
-    };
+    }
+    ;
 
     if (sparsePart.isEmpty()) {
       if (densePart == null || densePart.isZero()) {
-	return EmptyIntIterator.instance();
+        return EmptyIntIterator.instance();
       } else {
-	return new DensePartIterator();
+        return new DensePartIterator();
       }
     } else {
       if (densePart == null || densePart.isZero()) {
-	return sparsePart.intIterator();
+        return sparsePart.intIterator();
       } else {
-	return 
-	  new CompoundIntIterator(
-	    sparsePart.intIterator(),
-	    new DensePartIterator());
+        return new CompoundIntIterator(sparsePart.intIterator(), new DensePartIterator());
       }
     }
   }
@@ -247,11 +244,8 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   public void foreach(IntSetAction action) {
     sparsePart.foreach(action);
     if (densePart != null) {
-      for(int b = densePart.nextSetBit(0); 
-	      b != -1;
-	      b = densePart.nextSetBit(b+1))
-      { 
-	action.act(b);
+      for (int b = densePart.nextSetBit(0); b != -1; b = densePart.nextSetBit(b + 1)) {
+        action.act(b);
       }
     }
   }
@@ -264,13 +258,10 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   public void foreachExcluding(IntSet X, IntSetAction action) {
     sparsePart.foreachExcluding(X, action);
     if (densePart != null) {
-      for(int b = densePart.nextSetBit(0); 
-	      b != -1;
-	      b = densePart.nextSetBit(b+1))
-      { 
-	if (! X.contains(b)) {
-	  action.act(b);
-	}
+      for (int b = densePart.nextSetBit(0); b != -1; b = densePart.nextSetBit(b + 1)) {
+        if (!X.contains(b)) {
+          action.act(b);
+        }
       }
     }
   }
@@ -295,18 +286,15 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       return false;
     }
     if (densePart != null) {
-      for(int bit = densePart.nextSetBit(0); 
-	  bit != -1;
-	  bit = densePart.nextSetBit(bit+1))
-      { 
-	if (! that.contains(bit)) {
-	  return false;
-	}
+      for (int bit = densePart.nextSetBit(0); bit != -1; bit = densePart.nextSetBit(bit + 1)) {
+        if (!that.contains(bit)) {
+          return false;
+        }
       }
     }
-    for(IntIterator bits = sparsePart.intIterator(); bits.hasNext(); ) {
-      if (! that.contains(bits.next())) {
-	return false;
+    for (IntIterator bits = sparsePart.intIterator(); bits.hasNext();) {
+      if (!that.contains(bits.next())) {
+        return false;
       }
     }
     return true;
@@ -320,20 +308,17 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       return false;
     }
 
-    for(IntIterator bits = sparsePart.intIterator(); bits.hasNext(); ) {
-      if (! that.contains(bits.next())) {
-	return false;
+    for (IntIterator bits = sparsePart.intIterator(); bits.hasNext();) {
+      if (!that.contains(bits.next())) {
+        return false;
       }
     }
 
     if (densePart != null) {
-      for(int b = densePart.nextSetBit(0); 
-	      b != -1;
-	      b = densePart.nextSetBit(b+1))
-      { 
-	if (! that.contains(b)) {
-	  return false;
-	}
+      for (int b = densePart.nextSetBit(0); b != -1; b = densePart.nextSetBit(b + 1)) {
+        if (!that.contains(b)) {
+          return false;
+        }
       }
     }
 
@@ -350,15 +335,15 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       SemiSparseMutableIntSet that = (SemiSparseMutableIntSet) set;
       sparsePart = new MutableSparseIntSet(that.sparsePart);
       if (that.densePart == null) {
-	densePart = null;
-      } else {  
-	densePart = new OffsetBitVector(that.densePart);
+        densePart = null;
+      } else {
+        densePart = new OffsetBitVector(that.densePart);
       }
     } else {
       densePart = null;
       sparsePart = new MutableSparseIntSet();
-      for(IntIterator bits = set.intIterator(); bits.hasNext(); ) {
-	add( bits.next() );
+      for (IntIterator bits = set.intIterator(); bits.hasNext();) {
+        add(bits.next());
       }
     }
   }
@@ -373,64 +358,59 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     boolean change = false;
     if (set instanceof SemiSparseMutableIntSet) {
       SemiSparseMutableIntSet that = (SemiSparseMutableIntSet) set;
-    
+
       if (densePart == null) {
 
-	// that dense part only
-	if (that.densePart != null) {
-	  densePart = new OffsetBitVector(that.densePart);
-	  for(int b = densePart.nextSetBit(0); 
-	      b != -1;
-	      b = densePart.nextSetBit(b+1))
-	   { 
-	     if (sparsePart.contains(b)) {
-	       sparsePart.remove(b);
-	     } else {
-	       change = true;
-	     }
-	  }
-	  for(IntIterator bits = that.sparsePart.intIterator(); 
-	      bits.hasNext(); )
-	  {
-	    change |= sparsePart.add( bits.next() );
-	  }
+        // that dense part only
+        if (that.densePart != null) {
+          densePart = new OffsetBitVector(that.densePart);
+          for (int b = densePart.nextSetBit(0); b != -1; b = densePart.nextSetBit(b + 1)) {
+            if (sparsePart.contains(b)) {
+              sparsePart.remove(b);
+            } else {
+              change = true;
+            }
+          }
+          for (IntIterator bits = that.sparsePart.intIterator(); bits.hasNext();) {
+            change |= sparsePart.add(bits.next());
+          }
 
-	// no dense part
-	} else {
-	  for(IntIterator bs = that.sparsePart.intIterator(); bs.hasNext(); ) {
-	    change |= add( bs.next() );
-	  }
-	}
+          // no dense part
+        } else {
+          for (IntIterator bs = that.sparsePart.intIterator(); bs.hasNext();) {
+            change |= add(bs.next());
+          }
+        }
 
       } else {
-	int oldSize = size();
+        int oldSize = size();
 
-	// both dense parts
-	if (that.densePart != null) {
-	  densePart.or(that.densePart);
+        // both dense parts
+        if (that.densePart != null) {
+          densePart.or(that.densePart);
 
-	  for(IntIterator bs = that.sparsePart.intIterator(); bs.hasNext(); ) {
-	    add( bs.next() );
-	  }
-	  for(IntIterator bs = sparsePart.intIterator(); bs.hasNext(); ) {
-	    int b = bs.next();
-	    if (densePart.get(b)) {
-	      sparsePart.remove(b);
-	    }
-	  }
+          for (IntIterator bs = that.sparsePart.intIterator(); bs.hasNext();) {
+            add(bs.next());
+          }
+          for (IntIterator bs = sparsePart.intIterator(); bs.hasNext();) {
+            int b = bs.next();
+            if (densePart.get(b)) {
+              sparsePart.remove(b);
+            }
+          }
 
-	  change = (size() != oldSize);
+          change = (size() != oldSize);
 
-	// this dense part only
-	} else {
-	  for(IntIterator bs = that.sparsePart.intIterator(); bs.hasNext(); ) {
-	    change |= add(bs.next());
-	  }
-	}
+          // this dense part only
+        } else {
+          for (IntIterator bs = that.sparsePart.intIterator(); bs.hasNext();) {
+            change |= add(bs.next());
+          }
+        }
       }
     } else {
-      for(IntIterator bs = set.intIterator(); bs.hasNext(); ) {
-	change |= add(bs.next());
+      for (IntIterator bs = set.intIterator(); bs.hasNext();) {
+        change |= add(bs.next());
       }
     }
 
@@ -440,16 +420,17 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * Add an integer value to this set.
    * 
-   * @param i integer to add
+   * @param i
+   *          integer to add
    * @return true iff the value of this changes.
    */
   public boolean add(int i) {
-    if (! contains(i)) {
-      if (densePart!=null && densePart.getOffset()<=i && densePart.length()>i){
-	densePart.set(i);
+    if (!contains(i)) {
+      if (densePart != null && densePart.getOffset() <= i && densePart.length() > i) {
+        densePart.set(i);
       } else {
-	sparsePart.add(i);
-	fixAfterSparseInsert();
+        sparsePart.add(i);
+        fixAfterSparseInsert();
       }
       return true;
     } else {
@@ -460,7 +441,8 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * Remove an integer from this set.
    * 
-   * @param i integer to remove
+   * @param i
+   *          integer to remove
    * @return true iff the value of this changes.
    */
   public boolean remove(int i) {
@@ -483,27 +465,24 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   public void intersectWith(IntSet set) {
     sparsePart.intersectWith(set);
     if (densePart != null) {
-      for(int b = densePart.nextSetBit(0); 
-	      b != -1;
-	      b = densePart.nextSetBit(b+1))
-      { 
-	if (! set.contains(b)) {
-	  densePart.clear(b);
-	}
+      for (int b = densePart.nextSetBit(0); b != -1; b = densePart.nextSetBit(b + 1)) {
+        if (!set.contains(b)) {
+          densePart.clear(b);
+        }
       }
     }
   }
-    
+
   /**
    * @param other
    * @param filter
    */
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     boolean change = false;
-    for(IntIterator bits = other.intIterator(); bits.hasNext(); ) {
+    for (IntIterator bits = other.intIterator(); bits.hasNext();) {
       int bit = bits.next();
       if (filter.contains(bit)) {
-	change |= add( bit );
+        change |= add(bit);
       }
     }
 

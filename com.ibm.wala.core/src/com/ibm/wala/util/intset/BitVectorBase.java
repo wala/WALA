@@ -12,8 +12,6 @@ package com.ibm.wala.util.intset;
 
 import java.io.Serializable;
 
-import com.ibm.wala.util.debug.Assertions;
-
 /**
  * @author sfink
  * @author Julian Dolby (dolby@us.ibm.com) 

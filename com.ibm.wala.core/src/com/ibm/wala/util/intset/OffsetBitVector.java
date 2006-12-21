@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import java.io.Serializable;
-
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -52,12 +50,12 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     }
   }
 
-  private void ensureCapacity(OffsetBitVector set) {
-    int newOffset = Math.min(offset, set.offset);
-    int newCapacity = 
-      Math.max(length(),set.length())-newOffset;
-    ensureCapacity(newOffset, newCapacity);
-  }
+//  private void ensureCapacity(OffsetBitVector set) {
+//    int newOffset = Math.min(offset, set.offset);
+//    int newCapacity = 
+//      Math.max(length(),set.length())-newOffset;
+//    ensureCapacity(newOffset, newCapacity);
+//  }
 
   public OffsetBitVector() {
     this(0, 1);

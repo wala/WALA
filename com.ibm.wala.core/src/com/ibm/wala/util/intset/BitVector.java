@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import java.io.Serializable;
-
 import com.ibm.wala.util.debug.Assertions;
 
 /**
