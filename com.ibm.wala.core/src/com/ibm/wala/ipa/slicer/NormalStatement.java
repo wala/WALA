@@ -23,6 +23,12 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class NormalStatement extends Statement {
 
+  /**
+   * Index of the instruction in the ShrikeBT array.
+   * Note that this is different from the bytecode index.
+   * Use ShrikeCTMethodWrapper.getBytecodeIndex to convert
+   * to a bytecode index.
+   */
   private final int instructionIndex;
   
   public NormalStatement(CGNode node, int instructionIndex) {
