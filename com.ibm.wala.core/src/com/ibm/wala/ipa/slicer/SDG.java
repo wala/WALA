@@ -208,7 +208,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       case EXC_RET_CALLER: {
         ParamStatement.ExceptionalReturnCaller nrc = (ParamStatement.ExceptionalReturnCaller) N;
         SSAInvokeInstruction call = nrc.getCall();
-        Collection<Statement> result = HashSetFactory.make(5);
+        Collection<Statement> result = new Iterator2Collection<Statement>(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
           for (CGNode t : N.getNode().getPossibleTargets(call.getCallSite())) {
@@ -222,7 +222,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       case NORMAL_RET_CALLER: {
         ParamStatement.NormalReturnCaller nrc = (ParamStatement.NormalReturnCaller) N;
         SSAInvokeInstruction call = nrc.getCall();
-        Collection<Statement> result = HashSetFactory.make(5);
+        Collection<Statement> result = new Iterator2Collection<Statement>(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
           for (CGNode t : N.getNode().getPossibleTargets(call.getCallSite())) {
