@@ -198,7 +198,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     Collection<IClass> threads = cha.computeSubClasses(TypeReference.JavaLangThread);
     for (Iterator<IClass>clss = threads.iterator(); clss.hasNext();) {
       IClass cls = (IClass) clss.next();
-      for (Iterator<IMethod> ms = cls.getDeclaredMethods(); ms.hasNext();) {
+      for (Iterator<IMethod> ms = cls.getDeclaredMethods().iterator(); ms.hasNext();) {
         IMethod m = (IMethod) ms.next();
         if (m.isInit()) {
           Set<CGNode> nodes = cg.getNodes(m.getReference());
