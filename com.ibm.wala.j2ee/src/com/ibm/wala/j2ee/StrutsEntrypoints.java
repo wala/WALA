@@ -139,7 +139,7 @@ public class StrutsEntrypoints implements Entrypoints, EJBConstants {
   private void addSpeculativeDispatchMethods(IClass klass, ClassHierarchy cha) {
     IClass C = klass;
     while (C != null) {
-      for (Iterator<IMethod> it = C.getDeclaredMethods(); it.hasNext();) {
+      for (Iterator<IMethod> it = C.getDeclaredMethods().iterator(); it.hasNext();) {
         IMethod M = (IMethod) it.next();
         Descriptor D = M.getDescriptor();
         if (D.equals(executeDesc) || D.equals(httpExecuteDesc)) {

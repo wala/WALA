@@ -156,26 +156,8 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
       return null;
   }
 
-  public Iterator<IMethod> getDeclaredMethods() {
-    return new Iterator<IMethod>() {
-      private boolean done = false;
-
-      public void remove() {
-        throw new UnsupportedOperationException();
-      }
-
-      public boolean hasNext() {
-        return !done;
-      }
-
-      public IMethod next() {
-        if (!done) {
-          done = true;
-          return getClassInitializer();
-        } else
-          throw new NoSuchElementException();
-      }
-    };
+  public Collection<IMethod> getDeclaredMethods() {
+    return Collections.singleton(getClassInitializer());
   }
 
   public String toString() {
