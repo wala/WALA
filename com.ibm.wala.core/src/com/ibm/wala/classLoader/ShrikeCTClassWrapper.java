@@ -684,7 +684,7 @@ public final class ShrikeCTClassWrapper implements IClass {
    * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
-  public Iterator<IMethod> getDeclaredMethods() {
+  public Collection<IMethod> getDeclaredMethods() {
     if (methodMap == null) {
       try {
         computeMethodMap();
@@ -693,7 +693,7 @@ public final class ShrikeCTClassWrapper implements IClass {
         Assertions.UNREACHABLE();
       }
     }
-    return methodMap.values().iterator();
+    return Collections.unmodifiableCollection(methodMap.values());
   }
 
   /*
@@ -755,7 +755,7 @@ public final class ShrikeCTClassWrapper implements IClass {
   public void clearSoftCaches() {
     // toss optional information from each method.
     if (methodMap != null) {
-      for (Iterator it = getDeclaredMethods(); it.hasNext();) {
+      for (Iterator it = getDeclaredMethods().iterator(); it.hasNext();) {
         ShrikeCTMethodWrapper m = (ShrikeCTMethodWrapper) it.next();
         m.clearCaches();
       }
@@ -807,13 +807,13 @@ public final class ShrikeCTClassWrapper implements IClass {
    */
   public Collection<IMethod> getAllMethods() throws ClassHierarchyException {
     Collection<IMethod> result = new LinkedList<IMethod>();
-    Iterator<IMethod> declaredMethods = getDeclaredMethods();
+    Iterator<IMethod> declaredMethods = getDeclaredMethods().iterator();
     while (declaredMethods.hasNext()) {
       result.add(declaredMethods.next());
     }
     IClass s = getSuperclass();
     while (s != null) {
-      Iterator<IMethod> superDeclaredMethods = s.getDeclaredMethods();
+      Iterator<IMethod> superDeclaredMethods = s.getDeclaredMethods().iterator();
       while (superDeclaredMethods.hasNext()) {
         result.add(superDeclaredMethods.next());
       }

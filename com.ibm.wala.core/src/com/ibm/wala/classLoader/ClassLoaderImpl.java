@@ -458,10 +458,7 @@ public class ClassLoaderImpl implements IClassLoader {
     int result = 0;
     for (Iterator<IClass> it = iterateAllClasses(); it.hasNext();) {
       IClass klass = it.next();
-      for (Iterator i2 = klass.getDeclaredMethods(); i2.hasNext();) {
-        i2.next();
-        result++;
-      }
+      result += klass.getDeclaredMethods().size();
     }
     return result;
   }

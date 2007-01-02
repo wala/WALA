@@ -12,7 +12,6 @@
 package com.ibm.wala.classLoader;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
@@ -118,7 +117,7 @@ public interface IClass extends IClassHierarchyDweller {
   /**
    * @return an Iterator of the IMethods declared by this class.
    */
-  Iterator<IMethod> getDeclaredMethods();
+  Collection<IMethod> getDeclaredMethods();
 
   /**
    * Compute the instance fields declared by this class or any of

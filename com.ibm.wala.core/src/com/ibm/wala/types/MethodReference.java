@@ -47,7 +47,6 @@ public final class MethodReference extends MemberReference {
 
   public final static Atom initAtom = Atom.findOrCreateUnicodeAtom("<init>");
   public final static Descriptor defaultInitDesc = Descriptor.findOrCreateUTF8("()V");
-
   public final static Selector initSelector = new Selector(initAtom, defaultInitDesc);
 
   public final static Atom clinitName = Atom.findOrCreateUnicodeAtom("<clinit>");

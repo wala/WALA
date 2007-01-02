@@ -80,7 +80,7 @@ public class ReferenceCleanser {
           ShrikeCTClassWrapper c = (ShrikeCTClassWrapper) klass;
           c.clearSoftCaches();
         } else {
-          for (Iterator it2 = klass.getDeclaredMethods(); it2.hasNext(); ) {
+          for (Iterator it2 = klass.getDeclaredMethods().iterator(); it2.hasNext(); ) {
             IMethod m = (IMethod)it2.next();
             if (m instanceof ShrikeCTMethodWrapper) {
               ((ShrikeCTMethodWrapper)m).clearCaches();

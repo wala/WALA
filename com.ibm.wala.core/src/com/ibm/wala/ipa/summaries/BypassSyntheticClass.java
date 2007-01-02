@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.summaries;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -155,7 +154,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
-  public Iterator<IMethod> getDeclaredMethods() {
+  public Collection<IMethod> getDeclaredMethods() {
     return realType.getDeclaredMethods();
   }
 

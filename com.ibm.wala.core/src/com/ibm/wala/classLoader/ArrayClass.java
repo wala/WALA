@@ -11,8 +11,8 @@
 package com.ibm.wala.classLoader;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -22,7 +22,6 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -161,8 +160,8 @@ public class ArrayClass implements IClass, Constants {
    * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
-  public Iterator<IMethod> getDeclaredMethods() {
-    return EmptyIterator.instance();
+  public Collection<IMethod> getDeclaredMethods() {
+    return Collections.emptySet();
   }
 
   public int getNumberOfDeclaredMethods() {

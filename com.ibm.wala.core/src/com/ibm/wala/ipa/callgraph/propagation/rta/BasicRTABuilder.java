@@ -84,7 +84,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     if (DEBUG) {
       Trace.println("registerImplementedMethods: " + declarer + " " + iKey);
     }
-    for (Iterator it = declarer.getDeclaredMethods(); it.hasNext();) {
+    for (Iterator it = declarer.getDeclaredMethods().iterator(); it.hasNext();) {
       IMethod M = (IMethod) it.next();
       Selector selector = M.getReference().getSelector();
       PointerKey sKey = getKeyForSelector(selector);

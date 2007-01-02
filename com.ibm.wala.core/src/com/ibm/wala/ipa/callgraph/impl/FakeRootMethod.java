@@ -186,7 +186,7 @@ public class FakeRootMethod extends SyntheticMethod {
      * 
      * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
      */
-    public Iterator<IMethod> getDeclaredMethods() {
+    public Collection<IMethod> getDeclaredMethods() {
       // TODO Auto-generated method stub
       Assertions.UNREACHABLE();
       return null;

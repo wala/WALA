@@ -40,7 +40,7 @@ public class AllApplicationEntrypoints extends BasicEntrypoints {
       IClass klass = classIt.next();
       if (!klass.isInterface()) {
         if (isApplicationClass(scope, klass)) {
-          for (Iterator methodIt = klass.getDeclaredMethods(); methodIt.hasNext();) {
+          for (Iterator methodIt = klass.getDeclaredMethods().iterator(); methodIt.hasNext();) {
             IMethod method = (IMethod) methodIt.next();
             if (!method.isAbstract()) {
               add(new ArgumentTypeEntrypoint(method, cha));

@@ -103,7 +103,7 @@ public class JUnitEntryPoints {
             Trace.println("found test class");
           }
           // add entry point corresponding to the target method
-          for (Iterator methodsIt = klass.getDeclaredMethods(); methodsIt.hasNext();) {
+          for (Iterator methodsIt = klass.getDeclaredMethods().iterator(); methodsIt.hasNext();) {
             IMethod method = (IMethod) methodsIt.next();
             Atom methodAtom = method.getName();
             if (methodAtom.equals(targetMethodAtom)) {
@@ -181,7 +181,7 @@ public class JUnitEntryPoints {
     IClass currClass = testClass;
     while (currClass != null && !currClass.getName().equals(junitTestCaseType) && !currClass.getName().equals(junitTestSuiteType)) {
 
-      for (Iterator methodsIt = currClass.getDeclaredMethods(); methodsIt.hasNext();) {
+      for (Iterator methodsIt = currClass.getDeclaredMethods().iterator(); methodsIt.hasNext();) {
 
         IMethod method = (IMethod) methodsIt.next();
         final Atom methodAtom = method.getName();
