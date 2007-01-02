@@ -260,7 +260,7 @@ public class FakeRootMethod extends SyntheticMethod {
      * 
      * @see com.ibm.wala.classLoader.IClass#getAllMethods()
      */
-    public Collection getAllMethods() throws ClassHierarchyException {
+    public Collection<IMethod> getAllMethods() throws ClassHierarchyException {
       Assertions.UNREACHABLE();
       return null;
     }

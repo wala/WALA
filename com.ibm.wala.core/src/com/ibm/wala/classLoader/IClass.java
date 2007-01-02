@@ -153,7 +153,7 @@ public interface IClass extends IClassHierarchyDweller {
    * @return Collection of IMethods
    * @throws ClassHierarchyException 
    */
-  Collection getAllMethods() throws ClassHierarchyException;
+  Collection<IMethod> getAllMethods() throws ClassHierarchyException;
   
   /**
    * Compute the instance fields declared by this class.
