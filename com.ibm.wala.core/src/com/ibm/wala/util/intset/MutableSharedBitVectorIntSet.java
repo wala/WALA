@@ -335,6 +335,8 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       return that.sameValue(makeSparseCopy());
     } else if (that instanceof BitVectorIntSet) {
       return sameValue((BitVectorIntSet) that);
+    } else if (that instanceof SemiSparseMutableIntSet) {
+        return that.sameValue(this);   	
     } else {
       Assertions.UNREACHABLE("unexpected class " + that.getClass());
       return false;

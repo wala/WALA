@@ -20,7 +20,26 @@ import com.ibm.wala.util.debug.Trace;
  */
 public class IntSetUtil {
 
-  private static MutableIntSetFactory defaultIntSetFactory = new MutableSharedBitVectorIntSetFactory();
+  public static final String INT_SET_FACTORY_CONFIG_PROPERTY_NAME = "com.ibm.wala.mutableIntSetFactory";
+  
+  private static MutableIntSetFactory defaultIntSetFactory;
+  
+  static {
+	  MutableIntSetFactory defaultFactory = new MutableSharedBitVectorIntSetFactory();
+	  if (System.getProperties().containsKey(INT_SET_FACTORY_CONFIG_PROPERTY_NAME)) {
+		  try {
+		    Class intSetFactoryClass = Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+		    MutableIntSetFactory intSetFactory = (MutableIntSetFactory) intSetFactoryClass.newInstance();
+		    setDefaultIntSetFactory(intSetFactory);
+		  } catch (Exception e) {
+			Trace.println("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+			setDefaultIntSetFactory(defaultFactory);
+		  }
+	  } else {
+		setDefaultIntSetFactory(defaultFactory);
+	  }
+	  assert defaultIntSetFactory != null;
+  }
   
   public static MutableIntSet make() {
     return defaultIntSetFactory.make();
@@ -44,6 +63,12 @@ public class IntSetUtil {
       return BimodalMutableIntSet.makeCopy(set);
     } else if (set instanceof MutableSharedBitVectorIntSet) {
       return new MutableSharedBitVectorIntSet((MutableSharedBitVectorIntSet) set);
+    } else if (set instanceof SemiSparseMutableIntSet) {
+      return new SemiSparseMutableIntSet((SemiSparseMutableIntSet) set);
+    } else if (set instanceof DebuggingMutableIntSet) {
+    	MutableIntSet pCopy = makeMutableCopy(((DebuggingMutableIntSet)set).primaryImpl);
+    	MutableIntSet sCopy = makeMutableCopy(((DebuggingMutableIntSet)set).secondaryImpl);
+    	return new DebuggingMutableIntSet(pCopy, sCopy);
     } else {
       Assertions.UNREACHABLE(set.getClass().toString());
       return null;

@@ -22,6 +22,14 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   private int sparseInsertCount = 0;
 
+  public SemiSparseMutableIntSet() {
+    // this space intentionally left blank
+  }
+
+  public SemiSparseMutableIntSet(SemiSparseMutableIntSet set) {
+	copySet(set);
+  }
+
   private void fixAfterSparseInsert() {
     if (sparseInsertCount++ > SPARSE_INSERT_THRESHOLD) {
       sparseInsertCount = 0;
@@ -58,7 +66,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         }
 
         if (maxOffset != -1) {
-          densePart = new OffsetBitVector(maxOffset, maxMax);
+          densePart = new OffsetBitVector(maxOffset, maxMax-maxOffset);
           sparseBits = sparsePart.intIterator();
           while ((sparseBits.next()) != maxOffset)
             ;
@@ -215,7 +223,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
       public int next() {
         int next = densePart.nextSetBit(i + 1);
-        i = next + 1;
+        i = next;
         return next;
       }
     }
@@ -487,5 +495,14 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     }
 
     return change;
+  }
+  
+  public String toString() {
+	  StringBuffer sb = new StringBuffer("[");
+	  if (densePart !=  null) {
+		  sb.append("densePart: ").append(densePart.toString()).append(" ");
+	  }
+	  sb.append("sparsePart: ").append(sparsePart.toString()).append("]");
+	  return sb.toString();
   }
 }
