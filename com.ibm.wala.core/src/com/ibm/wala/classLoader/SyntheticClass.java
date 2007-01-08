@@ -24,8 +24,6 @@ import com.ibm.wala.types.TypeReference;
 public abstract class SyntheticClass implements IClass {
 
   private final TypeReference T;
-  
-
 
   private final ClassHierarchy cha;
   /**

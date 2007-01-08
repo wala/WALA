@@ -47,6 +47,11 @@ public interface IClass extends IClassHierarchyDweller {
    *  @return true iff this class is abstract
    */
   boolean isAbstract();
+  
+  /**
+   *  @return true iff this class is public
+   */
+  boolean isPublic();
 
   /**
    * Return the integer that encodes the class's modifiers,
@@ -177,4 +182,5 @@ public interface IClass extends IClassHierarchyDweller {
    * to a primitive type.
    */
   boolean isReferenceType();
+
 }

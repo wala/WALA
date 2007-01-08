@@ -358,4 +358,8 @@ public class ArrayClass implements IClass, Constants {
   public ClassHierarchy getClassHierarchy() {
     return cha;
   }
+
+  public boolean isPublic() {
+    return true;
+  }
 }

@@ -833,4 +833,9 @@ public final class ShrikeCTClassWrapper implements IClass {
     result.addAll(getAllStaticFields());
     return result;
   }
+
+  public boolean isPublic() {
+    boolean result = ((modifiers & Constants.ACC_PUBLIC) != 0);
+    return result;
+  }
 }
