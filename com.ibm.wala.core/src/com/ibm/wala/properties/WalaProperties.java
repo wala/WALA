@@ -36,24 +36,9 @@ public final class WalaProperties {
 
   public final static String ECLIPSE_PLUGINS_DIR = "eclipse_plugins_dir"; //$NON-NLS-1$
 
-  /**
-   * Like java.lang.String.replace, but replaces substrings not characters.
-   * Inefficient.
-   */
-  public static String replaceString(String str, String pattern, String replacement) {
-
-    int plen = pattern.length();
-    for (;;) {
-      int index = str.indexOf(pattern);
-      if (index == -1)
-        return str;
-      str = str.substring(0, index) + replacement + str.substring(index + plen);
-    }
-  }
 
   public static String[] getJ2SEJarFiles() {
     Properties p = null;
-    ;
     try {
       p = WalaProperties.loadProperties();
     } catch (WalaException e) {

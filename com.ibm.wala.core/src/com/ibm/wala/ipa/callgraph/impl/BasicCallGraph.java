@@ -27,7 +27,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -260,9 +259,8 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   }
 
   private String prettyPrint(CGNode n) {
-    // XXX very hacky/inefficient. good enough for debugging though.
-    String s = WalaProperties.replaceString(n.toString(), ",", "\\n");
-    return WalaProperties.replaceString(s, " > Context: ", "\\n");
+    String s = n.toString().replace(",", "\\n");
+    return s.replace(" > Context: ", "\\n");
   }
 
   /*
