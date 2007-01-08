@@ -289,4 +289,8 @@ public class BypassSyntheticClass extends SyntheticClass {
   public Collection<IField> getAllFields() throws ClassHierarchyException {
 	return realType.getAllFields();
   }
+
+  public boolean isPublic() {
+    return realType.isPublic();
+  }
 }
