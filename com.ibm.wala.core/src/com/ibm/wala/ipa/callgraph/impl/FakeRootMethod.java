@@ -274,6 +274,10 @@ public class FakeRootMethod extends SyntheticMethod {
       Assertions.UNREACHABLE();
       return null;
     }
+
+    public boolean isPublic() {
+      return false;
+    }
   }
 
   public FakeRootMethod(final ClassHierarchy cha, AnalysisOptions options) {
