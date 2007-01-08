@@ -15,7 +15,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.intset.*;
 
 /**
- *
+ * 
  * Run the call graph only test with paranoid debugging bit vectors
  * 
  * @author Julian Dolby
@@ -25,7 +25,7 @@ public class DebuggingBitsetCallGraphTest extends WalaTestCase {
   public static void main(String[] args) {
     justThisTest(DebuggingBitsetCallGraphTest.class);
   }
-  
+
   private final CallGraphTest graphTest;
 
   public DebuggingBitsetCallGraphTest(String arg0) {
@@ -35,9 +35,12 @@ public class DebuggingBitsetCallGraphTest extends WalaTestCase {
 
   private void runBitsetTest(MutableIntSetFactory p, MutableIntSetFactory s) throws ClassHierarchyException {
     MutableIntSetFactory save = IntSetUtil.getDefaultIntSetFactory();
-    IntSetUtil.setDefaultIntSetFactory(new DebuggingMutableIntSetFactory(p, s));
-    graphTest.testJLex();
-    IntSetUtil.setDefaultIntSetFactory(save);
+    try {
+      IntSetUtil.setDefaultIntSetFactory(new DebuggingMutableIntSetFactory(p, s));
+      graphTest.testJLex();
+    } finally {
+      IntSetUtil.setDefaultIntSetFactory(save);
+    }
   }
 
   public void testBimodalSparse() throws ClassHierarchyException {
