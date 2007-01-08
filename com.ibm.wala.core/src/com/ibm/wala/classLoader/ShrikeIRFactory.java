@@ -91,6 +91,23 @@ public class ShrikeIRFactory implements IRFactory {
         DeadAssignmentElimination.perform(this);
       }
 
+      protected String instructionPosition(int instructionIndex) {
+	try {
+	  int bcIndex = 
+	    ((ShrikeCTMethodWrapper) method).getBytecodeIndex(instructionIndex);
+	  int lineNumber =
+	    ((ShrikeCTMethodWrapper) method).getLineNumber(bcIndex);
+
+	  if (lineNumber == -1) {
+	    return "";
+	  } else {
+	    return "(line " + lineNumber + ")";
+	  }
+	} catch (InvalidClassFileException e) {
+	  return "";
+	}
+      }
+  
       public SSA2LocalMap getLocalMap() {
 	return localMap;
       }

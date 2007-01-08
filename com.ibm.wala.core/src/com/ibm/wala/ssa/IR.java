@@ -133,6 +133,8 @@ public abstract class IR {
     return toString(null);
   }
 
+  protected abstract String instructionPosition(int instructionIndex);
+
   /**
    * Create a string representation, with decoration for each variable
    * 
@@ -171,8 +173,9 @@ public abstract class IR {
       for (int j = start; j <= end; j++) {
         if (instructions[j] != null) {
           StringBuffer x = new StringBuffer(j + "   " + instructions[j].toString(symbolTable, d));
-          StringStuff.padWithSpaces(x, 35);
+          StringStuff.padWithSpaces(x, 45);
           result.append(x);
+	  result.append(instructionPosition(j));
           result.append("\n");
         }
       }

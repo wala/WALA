@@ -76,6 +76,13 @@ public class SyntheticIR extends IR {
   }
 
   /**
+   *  This returns "", as synthetic IRs have no line numbers right now.
+   */
+  protected String instructionPosition(int instructionIndex) {
+    return "";
+  }
+
+  /**
    *  This returns null, as synthetic IRs have no local names right now.
    */
   public SSA2LocalMap getLocalMap() {
