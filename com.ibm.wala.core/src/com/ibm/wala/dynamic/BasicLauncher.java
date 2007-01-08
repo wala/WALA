@@ -16,45 +16,9 @@ import com.ibm.wala.util.warnings.WalaException;
  * A generic process launcher
  */
 public class BasicLauncher extends Launcher  {
-  /**
-   * The default value of the '{@link #getCmd() <em>Cmd</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getCmd()
-   * @generated
-   * @ordered
-   */
-  protected static final String CMD_EDEFAULT = null;
 
-  /**
-   * The cached value of the '{@link #getCmd() <em>Cmd</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getCmd()
-   * @generated
-   * @ordered
-   */
-  protected String cmd = CMD_EDEFAULT;
+  protected String cmd;
 
-  /**
-   * The default value of the '{@link #isCaptureOutput() <em>Capture Output</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isCaptureOutput()
-   * @generated
-   * @ordered
-   */
-  protected static final boolean CAPTURE_OUTPUT_EDEFAULT = false;
-
-  /**
-   * The default value of the '{@link #getOutput() <em>Output</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getOutput()
-   * @generated
-   * @ordered
-   */
-  protected static final byte[] OUTPUT_EDEFAULT = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -118,4 +82,4 @@ public class BasicLauncher extends Launcher  {
       setOutput(d.getCapture().toByteArray());
     }
   }
-} //BasicLauncher
+} 
