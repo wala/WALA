@@ -168,7 +168,7 @@ public class SWTCallGraph {
     return (new File(appJar).isDirectory());
   }
 
-  static String findJarFiles(String[] directories) throws WalaException {
+  public static String findJarFiles(String[] directories) throws WalaException {
     Collection<String> result = HashSetFactory.make();
     for (int i = 0; i < directories.length; i++) {
       for (Iterator<File> it = FileUtil.listFiles(directories[i], ".*\\.jar", true).iterator(); it.hasNext();) {
