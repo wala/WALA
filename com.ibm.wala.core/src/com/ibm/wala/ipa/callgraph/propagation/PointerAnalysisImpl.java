@@ -75,8 +75,8 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
 
   private final PropagationCallGraphBuilder builder;
 
-  public PointerAnalysisImpl(PropagationCallGraphBuilder builder, CallGraph cg, PointsToMap pointsToMap, MutableMapping<InstanceKey> instanceKeys, PointerKeyFactory pointerKeys,
-      InstanceKeyFactory iKeyFactory) {
+  public PointerAnalysisImpl(PropagationCallGraphBuilder builder, CallGraph cg, PointsToMap pointsToMap,
+      MutableMapping<InstanceKey> instanceKeys, PointerKeyFactory pointerKeys, InstanceKeyFactory iKeyFactory) {
     super(cg, instanceKeys);
     this.builder = builder;
     this.pointerKeys = pointerKeys;
@@ -135,8 +135,8 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   /**
-   * did the pointer analysis use a type filter for a given points-to set?
-   * (this is ugly).
+   * did the pointer analysis use a type filter for a given points-to set? (this
+   * is ugly).
    */
   public boolean isFiltered(PointerKey key) {
     if (pointsToMap.isImplicit(key)) {
@@ -152,7 +152,9 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
 
   protected class ImplicitPointsToSetVisitor extends SSAInstruction.Visitor {
     protected final CGNode node;
+
     protected final LocalPointerKey lpk;
+
     protected OrdinalSet<InstanceKey> pointsToSet = null;
 
     protected ImplicitPointsToSetVisitor(LocalPointerKey lpk) {
@@ -183,7 +185,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     public void visitPhi(SSAPhiInstruction instruction) {
       pointsToSet = computeImplicitPointsToSetAtPhi(node, instruction);
     }
-    
+
     public void visitPi(SSAPiInstruction instruction) {
       pointsToSet = computeImplicitPointsToSetAtPi(node, instruction);
     }
@@ -192,7 +194,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       pointsToSet = computeImplicitPointsToSetAtALoad(node, instruction);
     }
   };
-      
+
   protected ImplicitPointsToSetVisitor makeImplicitPointsToVisitor(LocalPointerKey lpk) {
     return new ImplicitPointsToSetVisitor(lpk);
   }
@@ -204,19 +206,20 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       SSAContextInterpreter interp = getCallGraph().getInterpreter(node);
       IR ir = interp.getIR(node, new WarningSet());
       DefUse du = interp.getDU(node, new WarningSet());
-      if (((SSAPropagationCallGraphBuilder)builder).contentsAreInvariant(ir.getSymbolTable(), du, lpk.getValueNumber())) {
+      if (((SSAPropagationCallGraphBuilder) builder).contentsAreInvariant(ir.getSymbolTable(), du, lpk.getValueNumber())) {
         // cons up the points-to set for invariant contents
-        InstanceKey[] ik = ((SSAPropagationCallGraphBuilder)builder).getInvariantContents(ir.getSymbolTable(), du, node, lpk.getValueNumber(), H, true);
+        InstanceKey[] ik = ((SSAPropagationCallGraphBuilder) builder).getInvariantContents(ir.getSymbolTable(), du, node, lpk
+            .getValueNumber(), H, true);
         return toOrdinalSet(ik);
       } else {
         SSAInstruction def = du.getDef(lpk.getValueNumber());
         if (def != null) {
-	  ImplicitPointsToSetVisitor v = makeImplicitPointsToVisitor(lpk);
-	  def.visit(v);
-	  if (v.pointsToSet != null) {
-	    return v.pointsToSet;
-	  } else {
-	    Assertions.UNREACHABLE("saw " + key + ": time to implement for " + def.getClass());
+          ImplicitPointsToSetVisitor v = makeImplicitPointsToVisitor(lpk);
+          def.visit(v);
+          if (v.pointsToSet != null) {
+            return v.pointsToSet;
+          } else {
+            Assertions.UNREACHABLE("saw " + key + ": time to implement for " + def.getClass());
             return null;
           }
         } else {
@@ -229,7 +232,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       return null;
     }
   }
-  
+
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtPi(CGNode node, SSAPiInstruction instruction) {
     MutableSparseIntSet S = new MutableSparseIntSet();
     for (int i = 0; i < instruction.getNumberOfUses(); i++) {
@@ -279,7 +282,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtGet(CGNode node, SSAGetInstruction instruction) {
-      return computeImplicitPointsToSetAtGet(node, instruction.getDeclaredField(), instruction.getRef(), instruction.isStatic());
+    return computeImplicitPointsToSetAtGet(node, instruction.getDeclaredField(), instruction.getRef(), instruction.isStatic());
   }
 
   protected OrdinalSet<InstanceKey> computeImplicitPointsToSetAtGet(CGNode node, FieldReference field, int refVn, boolean isStatic) {
