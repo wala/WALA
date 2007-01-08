@@ -153,7 +153,7 @@ public interface IMethod extends IMember, ContextItem {
   String getLocalVariableName(int bcIndex, int localNumber);
 
   /**
-   * Method getSignature. something like:
+   * something like:
    * com.foo.bar.createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
    * 
    * @return String
@@ -161,8 +161,8 @@ public interface IMethod extends IMember, ContextItem {
   public String getSignature();
 
   /**
-   * Method getSignature. something like:
-   * createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
+   * something like:
+   * foo(Ljava/langString;)Ljava/lang/Class;
    * 
    * @return String
    */
