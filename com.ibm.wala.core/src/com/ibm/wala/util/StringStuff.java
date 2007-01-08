@@ -455,6 +455,7 @@ public class StringStuff {
           );
       // Convert to standard Java dot-notation
       readable = new StringBuffer(slashToDot(readable.toString()));
+      readable = new StringBuffer(dollarToDot(readable.toString()));
     }
     // append trailing "[]" for each array dimension
     for (int i = 0; i < numberOfDimensions; ++i) {
@@ -478,6 +479,26 @@ public class StringStuff {
     for (int i = 0; i < dotForm.length(); ++i) {
       if (dotForm.charAt(i) == '/') {
         dotForm.setCharAt(i, '.'); // replace '/' with '.'
+      }
+    }
+    return dotForm.toString();
+  }
+  
+  /**
+   * Convert '$' to '.' in names.
+   * 
+   * @param a
+   *          String object in which dollar signs('$') must be converted to
+   *          dots ('.').
+   * @return a String object obtained by replacing the dollar signs ('S') in
+   *         the String passed as argument with ('.').
+   */
+  public static String dollarToDot(String path) {
+    StringBuffer dotForm = new StringBuffer(path);
+    // replace all '$' in the path with '.'
+    for (int i = 0; i < dotForm.length(); ++i) {
+      if (dotForm.charAt(i) == '$') {
+        dotForm.setCharAt(i, '.'); // replace '$' with '.'
       }
     }
     return dotForm.toString();
