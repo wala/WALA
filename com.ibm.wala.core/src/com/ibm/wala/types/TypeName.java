@@ -336,4 +336,11 @@ public final class TypeName {
   public Atom getPackage() {
     return key.packageName;
   }
+  
+  /**
+   * @return the Atom naming the class for this type (without package)
+   */
+  public Atom getClassName() {
+    return key.className;
+  }
 }
