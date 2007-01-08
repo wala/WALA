@@ -399,4 +399,8 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   public Collection<IMethod> getAllMethods() {
     return Collections.singleton(getClassInitializer());
   }
+
+  public boolean isPublic() {
+    return false;
+  }
 }
