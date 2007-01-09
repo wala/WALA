@@ -64,7 +64,7 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
   }
 
   /**
-   * Constructor DFSFinishTimeIterator.
+   * Constructor SlowDFSDiscoverTimeIterator.
    * @param G
    */
   public SlowDFSDiscoverTimeIterator(Graph<T> G) {
