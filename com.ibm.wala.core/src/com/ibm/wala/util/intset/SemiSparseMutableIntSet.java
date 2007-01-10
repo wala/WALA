@@ -14,7 +14,7 @@ import com.ibm.wala.util.collections.CompoundIntIterator;
 import com.ibm.wala.util.collections.EmptyIntIterator;
 
 public class SemiSparseMutableIntSet implements MutableIntSet {
-  private static final int SPARSE_INSERT_THRESHOLD = 10;
+  private static final int SPARSE_INSERT_THRESHOLD = 11;
 
   private MutableSparseIntSet sparsePart = new MutableSparseIntSet();
 
@@ -49,15 +49,15 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
           int newBits = bits + (nextBit - thisBit);
           int newCount = count + 1;
 
-          if (newBits > (32 * newCount)) {
+          if (newBits < (32 * newCount)) {
             count = newCount;
             bits = newBits;
-          } else if (bits > 32 * count) {
             if (count > maxCount) {
               maxOffset = offset;
-              maxMax = thisBit;
+              maxMax = nextBit;
               maxCount = count;
             }
+          } else if (bits < 32 * count) {
             offset = nextBit;
             count = 1;
             bits = 32;
@@ -68,9 +68,11 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         if (maxOffset != -1) {
           densePart = new OffsetBitVector(maxOffset, maxMax-maxOffset);
           sparseBits = sparsePart.intIterator();
-          while ((sparseBits.next()) != maxOffset)
+	  int bit;
+          while ((bit = sparseBits.next()) != maxOffset)
             ;
-          for (int i = 0; i < maxCount; i++) {
+	  densePart.set(bit);
+          for (int i = 1; i < maxCount; i++) {
             densePart.set(sparseBits.next());
           }
           for (int bit1 = densePart.nextSetBit(0); bit1 != -1; bit1 = densePart.nextSetBit(bit1 + 1)) {
@@ -81,6 +83,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       } else {
         int moveCount = 0;
         int newOffset = -1;
+	int newCount = -1;
         int newLength = -1;
 
         // push stuff just below dense part into it, if it saves space
@@ -90,13 +93,15 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
           int count = 1;
           while (sparseBits.hasNext()) {
             int nextBit = sparseBits.next();
-            if (nextBit >= densePart.getOffset()) {
-              if (bits > (32 * count)) {
+            if (nextBit >= densePart.getOffset() || !sparseBits.hasNext()) {
+	      if (!sparseBits.hasNext()) count++;
+              if (densePart.getOffset()-newOffset < (32 * count)) {
                 moveCount += count;
-                break;
               } else {
                 newOffset = -1;
               }
+	      thisBit = nextBit;
+	      break;
             } else {
               bits += (nextBit - thisBit);
               count++;
@@ -106,47 +111,56 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
                 count = 1;
                 bits = 32;
               }
+
+	      thisBit = nextBit;
             }
           }
         }
 
-        // push stuff just above dense part into it, if it saves space
-        if (thisBit >= densePart.length()) {
-          int count = 1;
-          int bits = (thisBit + 1 - densePart.length());
-          if (32 * count > bits) {
-            newLength = thisBit;
-          }
-          while (sparseBits.hasNext()) {
-            thisBit = sparseBits.next();
-            count++;
+
+	while (thisBit<densePart.length() && sparseBits.hasNext()) {
+	  thisBit=sparseBits.next();
+	}
+
+	// push stuff just above dense part into it, if it saves space
+	if (thisBit >= densePart.length()) {
+	  int count = 1;
+	  int bits = (thisBit + 1 - densePart.length());
+	  if (32 * count > bits) {
+	    newLength = thisBit;
+	    newCount = 1;
+	  }
+	  while (sparseBits.hasNext()) {
+	    thisBit = sparseBits.next();
+	    count++;
             bits = (thisBit + 1 - densePart.length());
-            newLength = (32 * count > bits) ? thisBit : newLength;
-          }
-          if (newLength > -1) {
-            moveCount += count;
-          }
-        }
-
-        // actually move bits from sparse to dense
-        if (newOffset != -1 || newLength != -1) {
-          int index = 0;
-          int[] bits = new int[moveCount];
-          for (sparseBits = sparsePart.intIterator(); sparseBits.hasNext();) {
-            int bit = sparseBits.next();
-            if (newOffset != -1 && bit >= newOffset && bit <= densePart.getOffset()) {
-              bits[index++] = bit;
-            }
-            if (newLength != -1 && bit >= densePart.length() && bit <= newLength) {
-              bits[index++] = bit;
-            }
-          }
-
-          for (int i = 0; i < moveCount; i++) {
-            sparsePart.remove(bits[i]);
-            densePart.set(bits[i]);
-          }
-        }
+	    newLength = ((32*count) > bits) ? thisBit : newLength;
+	    newCount = ((32*count) > bits) ? count : newCount;
+	  }
+	  if (newLength > -1) {
+	    moveCount += newCount;
+	  }
+	}
+	
+	// actually move bits from sparse to dense
+	if (newOffset != -1 || newLength != -1) {
+	  int index = 0;
+	  int[] bits = new int[moveCount];
+	  for (sparseBits = sparsePart.intIterator(); sparseBits.hasNext();) {
+	    int bit = sparseBits.next();
+	    if (newOffset != -1 && bit >= newOffset && bit < densePart.getOffset()) {
+	      bits[index++] = bit;
+	    }
+	    if (newLength != -1 && bit >= densePart.length() && bit <= newLength) {
+	      bits[index++] = bit;
+	    }
+	  }
+	  
+	  for (int i = 0; i < moveCount; i++) {
+	    sparsePart.remove(bits[i]);
+	    densePart.set(bits[i]);
+	  }
+	}
       }
     }
   }
@@ -456,6 +470,9 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   public boolean remove(int i) {
     if (densePart != null && densePart.get(i)) {
       densePart.clear(i);
+      if (densePart.populationCount() == 0) {
+	densePart = null;
+      }
       return true;
     } else if (sparsePart.contains(i)) {
       sparsePart.remove(i);
