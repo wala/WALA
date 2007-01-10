@@ -250,9 +250,9 @@ public class ClassLoaderImpl implements IClassLoader {
         if (loadedClasses.get(T) != null) {
           warnings.add(MultipleImplementationsWarning.create(className));
         } else {
-          ShrikeCTClassWrapper klass = new ShrikeCTClassWrapper(reader, this, cha, warnings);
+          ShrikeClass klass = new ShrikeClass(reader, this, cha, warnings);
           if (klass.getReference().getName().equals(T)) {
-            loadedClasses.put(T, new ShrikeCTClassWrapper(reader, this, cha, warnings));
+            loadedClasses.put(T, new ShrikeClass(reader, this, cha, warnings));
             if (DEBUG_LEVEL > 1) {
               Trace.println("put " + T + " ");
             }

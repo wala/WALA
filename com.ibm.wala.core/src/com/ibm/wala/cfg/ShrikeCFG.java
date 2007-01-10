@@ -17,7 +17,7 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.ShrikeCTMethodWrapper;
+import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
@@ -53,7 +53,7 @@ public class ShrikeCFG extends AbstractCFG {
 
   private final ClassHierarchy cha;
 
-  private final ShrikeCTMethodWrapper method;
+  private final ShrikeCTMethod method;
 
   /**
    * Cache this here for efficiency
@@ -68,7 +68,7 @@ public class ShrikeCFG extends AbstractCFG {
   /**
    * Constructor for ControlFlowGraph.
    */
-  public ShrikeCFG(ShrikeCTMethodWrapper method, WarningSet warnings, ClassHierarchy cha) {
+  public ShrikeCFG(ShrikeCTMethod method, WarningSet warnings, ClassHierarchy cha) {
     super(method);
     this.method = method;
     this.hashBase = method.hashCode() * 9967;

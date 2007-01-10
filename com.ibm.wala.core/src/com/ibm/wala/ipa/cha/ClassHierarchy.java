@@ -29,7 +29,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.ShrikeCTClassWrapper;
+import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
@@ -226,7 +226,7 @@ public class ClassHierarchy {
       loadedSuperInterfaces = klass.isInterface() ? null : klass.getAllImplementedInterfaces();
     } catch (ClassHierarchyException e) {
       // a little cleanup
-      if (klass instanceof ShrikeCTClassWrapper) {
+      if (klass instanceof ShrikeClass) {
         if (DEBUG) {
           Trace.println("Exception.  Clearing " + klass);
         }

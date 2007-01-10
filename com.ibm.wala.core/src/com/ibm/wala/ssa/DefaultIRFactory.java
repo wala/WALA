@@ -12,7 +12,7 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.ShrikeCTMethodWrapper;
+import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeIRFactory;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -35,7 +35,7 @@ public class DefaultIRFactory implements IRFactory {
   public ControlFlowGraph makeCFG(IMethod method, Context C, ClassHierarchy cha, WarningSet warnings) {
     if (method.isSynthetic()) {
       return syntheticFactory.makeCFG(method, C, cha, warnings);
-    } else if (method instanceof ShrikeCTMethodWrapper) {
+    } else if (method instanceof ShrikeCTMethod) {
       return shrikeFactory.makeCFG(method, C, cha, warnings);
     } else {
       Assertions.UNREACHABLE();
@@ -49,7 +49,7 @@ public class DefaultIRFactory implements IRFactory {
   public IR makeIR(IMethod method, Context C, ClassHierarchy cha, SSAOptions options, WarningSet warnings) {
     if (method.isSynthetic()) {
       return syntheticFactory.makeIR(method, C, cha, options, warnings);
-    } else if (method instanceof ShrikeCTMethodWrapper) {
+    } else if (method instanceof ShrikeCTMethod) {
       return shrikeFactory.makeIR(method, C, cha, options, warnings);
     } else {
       Assertions.UNREACHABLE();

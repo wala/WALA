@@ -18,7 +18,7 @@ import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.cfg.ShrikeCFG.BasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.classLoader.ShrikeCTMethodWrapper;
+import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
 import com.ibm.wala.shrikeBT.ArrayLoadInstruction;
@@ -62,7 +62,7 @@ public class SSABuilder extends AbstractIntStackMachine {
   /**
    * A wrapper around the method being analyzed.
    */
-  private ShrikeCTMethodWrapper method;
+  private ShrikeCTMethod method;
 
   /**
    * Governing symbol table
@@ -75,7 +75,7 @@ public class SSABuilder extends AbstractIntStackMachine {
    */
   private final SSA2LocalMap localMap;
 
-  public SSABuilder(ShrikeCTMethodWrapper method, ClassHierarchy cha, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
+  public SSABuilder(ShrikeCTMethod method, ClassHierarchy cha, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
       SymbolTable symbolTable, boolean buildLocalMap, boolean addPiNodes, WarningSet warnings) {
     super(scfg);
     localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes(), maxLocals) : null;
@@ -737,7 +737,7 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     public com.ibm.wala.shrikeBT.Instruction[] getInstructions() {
       try {
-        return ((ShrikeCTMethodWrapper) shrikeCFG.getMethod()).getInstructions();
+        return ((ShrikeCTMethod) shrikeCFG.getMethod()).getInstructions();
       } catch (InvalidClassFileException e) {
         e.printStackTrace();
         Assertions.UNREACHABLE();
@@ -849,7 +849,7 @@ public class SSABuilder extends AbstractIntStackMachine {
           if (localNumbers == null) {
             return null;
           } else {
-            ShrikeCTMethodWrapper m = (ShrikeCTMethodWrapper) shrikeCFG.getMethod();
+            ShrikeCTMethod m = (ShrikeCTMethod) shrikeCFG.getMethod();
             String[] result = new String[localNumbers.length];
             for (int i = 0; i < localNumbers.length; i++) {
               result[i] = m.getLocalVariableName(m.getBytecodeIndex(index), localNumbers[i]);

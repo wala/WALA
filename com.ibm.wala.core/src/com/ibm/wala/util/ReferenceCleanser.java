@@ -15,8 +15,8 @@ import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.ShrikeCTClassWrapper;
-import com.ibm.wala.classLoader.ShrikeCTMethodWrapper;
+import com.ibm.wala.classLoader.ShrikeClass;
+import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 
@@ -76,14 +76,14 @@ public class ReferenceCleanser {
     if (cha != null) {
       for (Iterator<IClass> it = cha.iterateAllClasses(); it.hasNext();) {
         IClass klass = it.next();
-        if (klass instanceof ShrikeCTClassWrapper) {
-          ShrikeCTClassWrapper c = (ShrikeCTClassWrapper) klass;
+        if (klass instanceof ShrikeClass) {
+          ShrikeClass c = (ShrikeClass) klass;
           c.clearSoftCaches();
         } else {
           for (Iterator it2 = klass.getDeclaredMethods().iterator(); it2.hasNext(); ) {
             IMethod m = (IMethod)it2.next();
-            if (m instanceof ShrikeCTMethodWrapper) {
-              ((ShrikeCTMethodWrapper)m).clearCaches();
+            if (m instanceof ShrikeCTMethod) {
+              ((ShrikeCTMethod)m).clearCaches();
             }
           }
         }

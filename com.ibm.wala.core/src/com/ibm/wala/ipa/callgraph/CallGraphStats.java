@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.ShrikeCTMethodWrapper;
+import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.graph.traverse.DFS;
@@ -64,8 +64,8 @@ public class CallGraphStats {
       CGNode node = iter.next();
       IMethod method = node.getMethod();
       if (counted.add(method)) {
-        if (method instanceof ShrikeCTMethodWrapper) {
-          byte[] bytecodes = ((ShrikeCTMethodWrapper) method).getBytecodes();
+        if (method instanceof ShrikeCTMethod) {
+          byte[] bytecodes = ((ShrikeCTMethod) method).getBytecodes();
           if (bytecodes != null) {
             ret += bytecodes.length;
           }

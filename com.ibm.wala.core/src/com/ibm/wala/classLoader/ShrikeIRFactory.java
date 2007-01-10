@@ -42,7 +42,7 @@ public class ShrikeIRFactory implements IRFactory {
    *      com.ibm.wala.util.warnings.WarningSet)
    */
   public ControlFlowGraph makeCFG(final IMethod method, Context C, final ClassHierarchy cha, final WarningSet warnings) {
-    return new ShrikeCFG((ShrikeCTMethodWrapper) method, warnings, cha);
+    return new ShrikeCFG((ShrikeCTMethod) method, warnings, cha);
   }
 
   /*
@@ -54,11 +54,11 @@ public class ShrikeIRFactory implements IRFactory {
    */
   public IR makeIR(final IMethod method, Context C, final ClassHierarchy cha, final SSAOptions options, final WarningSet warnings) {
     // This should be a method from Shrike
-    Assertions._assert(method instanceof ShrikeCTMethodWrapper);
+    Assertions._assert(method instanceof ShrikeCTMethod);
 
     // Set up some ShrikeCT mapping information before constructing SSA
     try {
-      ((ShrikeCTMethodWrapper) method).processBytecodes();
+      ((ShrikeCTMethod) method).processBytecodes();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -66,7 +66,7 @@ public class ShrikeIRFactory implements IRFactory {
 
     com.ibm.wala.shrikeBT.Instruction[] shrikeInstructions;
     try {
-      shrikeInstructions = ((ShrikeCTMethodWrapper) method).getInstructions();
+      shrikeInstructions = ((ShrikeCTMethod) method).getInstructions();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -94,9 +94,9 @@ public class ShrikeIRFactory implements IRFactory {
       protected String instructionPosition(int instructionIndex) {
 	try {
 	  int bcIndex = 
-	    ((ShrikeCTMethodWrapper) method).getBytecodeIndex(instructionIndex);
+	    ((ShrikeCTMethod) method).getBytecodeIndex(instructionIndex);
 	  int lineNumber =
-	    ((ShrikeCTMethodWrapper) method).getLineNumber(bcIndex);
+	    ((ShrikeCTMethod) method).getLineNumber(bcIndex);
 
 	  if (lineNumber == -1) {
 	    return "";
@@ -113,7 +113,7 @@ public class ShrikeIRFactory implements IRFactory {
       }
 
       {
-        SSABuilder builder = new SSABuilder((ShrikeCTMethodWrapper) method, cha, newCfg, shrikeCFG, newInstrs, symbolTable,
+        SSABuilder builder = new SSABuilder((ShrikeCTMethod) method, cha, newCfg, shrikeCFG, newInstrs, symbolTable,
             buildLocalMap, options.getUsePiNodes(), warnings);
         builder.build();
         if (buildLocalMap)
