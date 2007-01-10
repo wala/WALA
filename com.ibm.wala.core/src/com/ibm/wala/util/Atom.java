@@ -89,16 +89,18 @@ public final class Atom {
 
   public static Atom findOrCreate(byte utf8[], int off, int len) {
     byte val[] = new byte[len];
-    for (int i = 0; i < len; ++i)
+    for (int i = 0; i < len; ++i) {
       val[i] = utf8[off++];
+    }
     return findOrCreate(val);
   }
 
   public static synchronized Atom findOrCreate(byte[] bytes) {
     AtomKey key = new AtomKey(bytes);
     Atom val = dictionary.get(key);
-    if (val != null)
+    if (val != null) {
       return val;
+    }
     val = new Atom(key);
     dictionary.put(key, val);
     return val;
@@ -237,8 +239,9 @@ public final class Atom {
      */
     private AtomKey(byte utf8[]) {
       int tmp = 99989;
-      for (int i = utf8.length; --i >= 0;)
+      for (int i = utf8.length; --i >= 0;) {
         tmp = 99991 * tmp + utf8[i];
+      }
       this.val = utf8;
       this.hash = tmp;
     }
