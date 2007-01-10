@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeCT;
 /**
  * This class reads ConstantValue attributes.
  */
-public final class ConstantValueReader extends ClassReaderAttribute {
+public final class ConstantValueReader extends AttributeReader {
   /**
    * Build a reader for the attribute 'iter'.
    */

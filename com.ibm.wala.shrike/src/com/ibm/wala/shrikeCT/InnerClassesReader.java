@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeCT;
 /**
  * This class reads InnerClasses attributes.
  */
-public final class InnerClassesReader extends ClassReaderAttribute {
+public final class InnerClassesReader extends AttributeReader {
   /**
    * Build a reader for the attribute 'iter'.
    */

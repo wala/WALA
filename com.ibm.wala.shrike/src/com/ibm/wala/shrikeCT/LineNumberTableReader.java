@@ -18,7 +18,7 @@ package com.ibm.wala.shrikeCT;
  * to aggregate line number data from all the LineNumberTable attributes for a
  * given Code.
  */
-public final class LineNumberTableReader extends ClassReaderAttribute {
+public final class LineNumberTableReader extends AttributeReader {
   /**
    * Build a reader for a LineNumberTable attribute.
    */

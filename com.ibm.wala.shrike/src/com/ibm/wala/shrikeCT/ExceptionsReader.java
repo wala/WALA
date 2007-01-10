@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeCT;
 /**
  * This class reads Exceptions attributes.
  */
-public final class ExceptionsReader extends ClassReaderAttribute {
+public final class ExceptionsReader extends AttributeReader {
   /**
    * Build a reader for the attribute 'iter'.
    */

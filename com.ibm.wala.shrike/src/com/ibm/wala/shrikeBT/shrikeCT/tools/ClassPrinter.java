@@ -30,6 +30,7 @@ import com.ibm.wala.shrikeCT.ConstantValueReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
+import com.ibm.wala.shrikeCT.SignatureReader;
 import com.ibm.wala.shrikeCT.SourceFileReader;
 
 /**
@@ -37,12 +38,14 @@ import com.ibm.wala.shrikeCT.SourceFileReader;
  * javap that shows more information.
  * 
  * In Unix I run it like this: java -cp ~/dev/shrike/shrike
- * com.ibm.wala.shrikeBT.shrikeCT.tools.ClassPrinter test.jar This will print the
- * contents of every class in the JAR file.
+ * com.ibm.wala.shrikeBT.shrikeCT.tools.ClassPrinter test.jar This will print
+ * the contents of every class in the JAR file.
  */
 public class ClassPrinter {
   private PrintWriter w;
+
   private boolean printLineNumberInfo = true;
+
   private boolean printConstantPool = true;
 
   /**
@@ -257,6 +260,9 @@ public class ClassPrinter {
       } else if (name.equals("SourceFile")) {
         SourceFileReader sr = new SourceFileReader(attrs);
         w.write("    file: " + cr.getCP().getCPUtf8(sr.getSourceFileCPIndex()) + "\n");
+      } else if (name.equals("Signature")) {
+        SignatureReader sr = new SignatureReader(attrs);
+        w.write("    signature: " + cr.getCP().getCPUtf8(sr.getSignatureCPIndex()) + "\n");
       } else {
         int len = attrs.getDataSize();
         int pos = attrs.getDataOffset();

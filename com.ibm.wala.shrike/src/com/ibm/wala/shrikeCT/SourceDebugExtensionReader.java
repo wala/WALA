@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeCT;
 
-public class SourceDebugExtensionReader extends ClassReaderAttribute {
+public class SourceDebugExtensionReader extends AttributeReader {
 	public SourceDebugExtensionReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
 	    super(iter, "SourceDebugExtension");
 

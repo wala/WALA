@@ -17,7 +17,7 @@ package com.ibm.wala.shrikeCT;
  * LocalVariableTable.makeVarMap for convenient access to aggregate local
  * variable data from all the LocalVariableTable attributes for a given Code.
  */
-public final class LocalVariableTableReader extends ClassReaderAttribute {
+public final class LocalVariableTableReader extends AttributeReader {
   public LocalVariableTableReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
     super(iter, "LocalVariableTable");
 

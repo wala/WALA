@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeCT;
 /**
  * This class reads SourceFile attributes.
  */
-public final class SourceFileReader extends ClassReaderAttribute {
+public final class SourceFileReader extends AttributeReader {
   /**
    * Build a reader for the attribute 'iter'.
    */
