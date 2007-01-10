@@ -13,7 +13,7 @@ package com.ibm.wala.core.tests.ir;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.ShrikeCTMethodWrapper;
+import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
@@ -71,7 +71,7 @@ public class CornerCasesTest extends WalaTestCase {
     TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "Main");
     IClass klass = cha.lookupClass(t);
     assertTrue(klass != null);
-    ShrikeCTMethodWrapper m = (ShrikeCTMethodWrapper) klass.getMethod(new Selector(Atom.findOrCreateAsciiAtom("foo"), Descriptor
+    ShrikeCTMethod m = (ShrikeCTMethod) klass.getMethod(new Selector(Atom.findOrCreateAsciiAtom("foo"), Descriptor
         .findOrCreateUTF8("()Ljava/lang/Object;")));
     assertTrue(m != null);
     IR ir = options.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, cha, options.getSSAOptions(), warnings);
