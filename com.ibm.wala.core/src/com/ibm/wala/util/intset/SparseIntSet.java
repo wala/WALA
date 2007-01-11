@@ -253,8 +253,8 @@ public class SparseIntSet implements IntSet {
     if (A.isEmpty()) {
       return new int[0];
     } else if (B.isEmpty()) {
-      int[] newElts = new int[ A.elements.length ];
-      System.arraycopy(A.elements, 0, newElts, 0, A.elements.length);
+      int[] newElts = new int[ A.size ];
+      System.arraycopy(A.elements, 0, newElts, 0, A.size);
       return newElts;
     } else if (A.equals(B)) {
       return new int[0];
