@@ -120,6 +120,11 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
      * Exception types this method might throw. Computed on demand.
      */
     private TypeReference[] exceptionTypes;
+    
+    /**
+     * the "Signature" attribute; holds information on generics
+     */
+    protected String genericsSignature;
   }
 
   /**
@@ -202,7 +207,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   /**
-   * Method processBytecodes. Do a cheap pass over the bytecodes to collect some
+   * Do a cheap pass over the bytecodes to collect some
    * mapping information. Some methods require this as a pre-req to accessing
    * ShrikeCT information.
    * 
@@ -215,6 +220,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
     bcInfo = new BytecodeInfo();
     bcInfo.exceptionTypes = computeDeclaredExceptions();
+    bcInfo.genericsSignature = computeGenericsSignature();
 
     if (isNative()) {
       return;
@@ -416,6 +422,10 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
   public boolean isFinal() {
     return ((getModifiers() & Constants.ACC_FINAL) != 0);
+  }
+  
+  public boolean isVolatile() {
+    return ((getModifiers() & Constants.ACC_VOLATILE) != 0);
   }
 
   public boolean isSynchronized() {
@@ -838,6 +848,8 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       return null;
     }
   }
+  
+  protected abstract String computeGenericsSignature() throws InvalidClassFileException; 
 
   /*
    * (non-Javadoc)

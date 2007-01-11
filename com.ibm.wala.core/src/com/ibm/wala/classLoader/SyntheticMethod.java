@@ -119,6 +119,13 @@ public class SyntheticMethod implements IMethod {
   public boolean isFinal() {
     return false;
   }
+  
+  /**
+   * @see com.ibm.wala.classLoader.IMethod#isVolatile()
+   */
+  public boolean isVolatile() {
+    return false;
+  }
 
   /**
    * @see com.ibm.wala.classLoader.IMethod#isAbstract()

@@ -19,8 +19,10 @@ import com.ibm.wala.shrikeCT.ExceptionsReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
+import com.ibm.wala.shrikeCT.SignatureReader;
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.generics.MethodTypeSignature;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -29,7 +31,7 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * @author sfink
  */
-public final class ShrikeCTMethod extends ShrikeBTMethod {
+public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
 
   /**
    * The index of this method in the declaring class's method list according to
@@ -41,7 +43,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod {
    * JVM-level modifiers for this method a value of -1 means "uninitialized"
    */
   private int modifiers = -1;
-  
+
   private final ClassHierarchy cha;
 
   public ShrikeCTMethod(IClass klass, int index) {
@@ -131,7 +133,6 @@ public final class ShrikeCTMethod extends ShrikeBTMethod {
     bcInfo.localVariableMap = LocalVariableTableReader.makeVarMap(cr);
   }
 
-
   public String getLocalVariableName(int bcIndex, int localNumber) {
     if (bcInfo == null) {
       try {
@@ -198,7 +199,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod {
   }
 
   private ClassReader getClassReader() {
-    return ((ShrikeClass)getDeclaringClass()).getReader();
+    return ((ShrikeClass) getDeclaringClass()).getReader();
   }
 
   private CodeReader getCodeReader() {
@@ -239,11 +240,64 @@ public final class ShrikeCTMethod extends ShrikeBTMethod {
     return result;
   }
 
+  private SignatureReader getSignatureReader() {
+    ClassReader.AttrIterator iter = new AttrIterator();
+    getClassReader().initMethodAttributeIterator(shrikeMethodIndex, iter);
+
+    // search for the desired attribute
+    SignatureReader result = null;
+    try {
+      for (; iter.isValid(); iter.advance()) {
+        if (iter.getName().toString().equals("Signature")) {
+          result = new SignatureReader(iter);
+          break;
+        }
+      }
+    } catch (InvalidClassFileException e) {
+      Assertions.UNREACHABLE();
+    }
+    return result;
+  }
+
+  protected String computeGenericsSignature() throws InvalidClassFileException {
+    SignatureReader reader = getSignatureReader();
+    if (reader == null) {
+      return null;
+    } else {
+      return reader.getSignature();
+    }
+  }
+
   public TypeReference getReturnType() {
     return getReference().getReturnType();
   }
 
   public ClassHierarchy getClassHierarchy() {
     return cha;
+  }
+  
+  /** 
+   * @return raw "Signature" attribute from the bytecode
+   */
+  private String getGenericsSignature() {
+    if (bcInfo == null) {
+      try {
+        processBytecodes();
+      } catch (InvalidClassFileException e) {
+        e.printStackTrace();
+        Assertions.UNREACHABLE();
+      }
+    }
+    return bcInfo.genericsSignature;
+  }
+  
+  /**
+   * UNDER CONSTRUCTION
+   * 
+   * @return
+   */
+  public MethodTypeSignature getMethodTypeSignature() {
+    String sig = getGenericsSignature();
+    return sig == null ? null : MethodTypeSignature.make(sig);
   }
 }

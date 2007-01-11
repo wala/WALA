@@ -129,8 +129,14 @@ public final class FieldImpl implements IField {
   public boolean isPublic() {
     return ((accessFlags & ClassConstants.ACC_PUBLIC) != 0);
   }
+  
+  public boolean isVolatile() {
+    return ((accessFlags & ClassConstants.ACC_VOLATILE) != 0);
+  }
 
   public ClassHierarchy getClassHierarchy() {
     return declaringClass.getClassHierarchy();
   }
+
+ 
 }

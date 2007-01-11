@@ -37,9 +37,13 @@ public interface IMember extends IClassHierarchyDweller {
   Atom getName();
 
   /**
-   * Is this method static?
-   * @return boolean
+   * Is this member static?
    */
   boolean isStatic();
+  
+  /**
+   * Is this member volatile?
+   */
+  boolean isVolatile();
 
 }
