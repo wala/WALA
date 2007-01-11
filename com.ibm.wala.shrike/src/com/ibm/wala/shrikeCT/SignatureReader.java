@@ -29,4 +29,8 @@ public final class SignatureReader extends AttributeReader {
   public int getSignatureCPIndex() {
     return cr.getUShort(attr + 6);
   }
+
+  public String getSignature() throws InvalidClassFileException {
+    return cr.getCP().getCPUtf8(getSignatureCPIndex());
+  }
 }
