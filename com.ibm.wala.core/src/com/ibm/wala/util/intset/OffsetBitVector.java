@@ -89,6 +89,10 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     return super.toString() + "(offset:" + offset + ")";
   }
 
+  void growCapacity(float fraction) {
+    expand(offset, (int) fraction*(bits.length<<LOG_BITS_PER_UNIT));
+  }
+
   public int getOffset() {
     return offset;
   }

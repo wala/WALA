@@ -96,6 +96,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         int newOffset = -1;
 	int newCount = -1;
         int newLength = -1;
+	boolean swallowTail = false;
 
         // push stuff just below dense part into it, if it saves space
         if (thisBit < densePart.getOffset()) {
@@ -145,8 +146,11 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 	    thisBit = sparseBits.next();
 	    count++;
             bits = (thisBit + 1 - densePart.length());
-	    newLength = ((32*count) > bits) ? thisBit : newLength;
-	    newCount = ((32*count) > bits) ? count : newCount;
+	    if ((32*count) > bits) {
+	      newLength = thisBit;
+	      newCount = count;
+	      swallowTail = ! sparseBits.hasNext();
+	    }
 	  }
 	  if (newLength > -1) {
 	    moveCount += newCount;
@@ -166,8 +170,17 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 	      bits[index++] = bit;
 	    }
 	  }
-	  
-	  for (int i = 0; i < moveCount; i++) {
+
+	  if (swallowTail) {
+	    int base = densePart.getOffset();
+	    int currentSize = densePart.length() - base;
+	    float newSize = 1.1f * (bits[index-1] - base);
+	    float fraction = newSize / (float)currentSize;
+	    assert fraction > 1;
+	    densePart.growCapacity(fraction);
+	  }
+
+	  for (int i = index-1; i >= 0; i--) {
 	    sparsePart.remove(bits[i]);
 	    densePart.set(bits[i]);
 	  }
