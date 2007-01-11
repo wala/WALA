@@ -119,6 +119,11 @@ public class PrimitivesTest extends WalaTestCase {
     assertTrue(a.sameValue(b));
     assertTrue(a.isSubset(b));
 
+    IntSet f = IntSetUtil.diff(b, factory.parse("{7,8,9}"), factory);
+    Trace.println(f);
+    assertFalse(f.sameValue(b));
+    assertTrue(f.isSubset(b));
+
     b = factory.makeCopy(a);
     assertTrue(a.sameValue(b));
     b.remove(1);
@@ -231,6 +236,37 @@ public class PrimitivesTest extends WalaTestCase {
 
     temp2 = factory.make();
     assertTrue(temp2.sameValue(a));
+
+    for(int idx = 500; idx < 550; ) {
+      for(int xx = 0; xx < 50; xx++,idx++) {
+	temp2.add(idx);
+      }
+      Trace.println(temp2);
+    }
+
+    for(int idx = 3000; idx < 3200; ) {
+      for(int xx = 0; xx < 50; xx++,idx++) {
+	temp2.add(idx);
+      }
+      Trace.println(temp2);
+    }
+
+
+    temp2 = factory.make();
+    assertTrue(temp2.sameValue(a));
+
+    for(int idx = 500; idx < 550; ) {
+      for(int xx = 0; xx < 50; xx++,idx++) {
+	temp2.add(idx);
+      }
+      Trace.println(temp2);
+    }
+
+    for(int idx = 0; idx < 25; idx++) {
+      temp2.add(idx);
+      Trace.println(temp2);
+    }
+
   }
 
   /**
@@ -766,5 +802,7 @@ public class PrimitivesTest extends WalaTestCase {
     v2.and(v1);
 
     assertTrue(v1.sameBits(v2));
+
+    v1.clearAll();
   }
 }
