@@ -124,6 +124,12 @@ public class PrimitivesTest extends WalaTestCase {
     assertFalse(f.sameValue(b));
     assertTrue(f.isSubset(b));
 
+    IntSet tmp = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
+    f = IntSetUtil.diff(b, tmp, factory);
+    Trace.println(f);
+    assertFalse(f.sameValue(b));
+    assertTrue(f.isSubset(b));
+
     b = factory.makeCopy(a);
     assertTrue(a.sameValue(b));
     b.remove(1);
