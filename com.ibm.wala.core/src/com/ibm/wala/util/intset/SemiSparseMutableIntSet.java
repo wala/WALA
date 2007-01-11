@@ -16,18 +16,29 @@ import com.ibm.wala.util.collections.EmptyIntIterator;
 public class SemiSparseMutableIntSet implements MutableIntSet {
   private static final int SPARSE_INSERT_THRESHOLD = 11;
 
-  private MutableSparseIntSet sparsePart = new MutableSparseIntSet();
+  private MutableSparseIntSet sparsePart;
 
   private OffsetBitVector densePart = null;
 
   private int sparseInsertCount = 0;
 
   public SemiSparseMutableIntSet() {
-    // this space intentionally left blank
+    this(new MutableSparseIntSet());
+  }
+
+  private SemiSparseMutableIntSet(MutableSparseIntSet sparsePart) {
+    this.sparsePart = sparsePart;
+  }
+
+  private SemiSparseMutableIntSet(MutableSparseIntSet sparsePart,
+				  OffsetBitVector densePart)
+  {
+    this.sparsePart = sparsePart;
+    this.densePart = densePart;
   }
 
   public SemiSparseMutableIntSet(SemiSparseMutableIntSet set) {
-	copySet(set);
+    copySet(set);
   }
 
   private void fixAfterSparseInsert() {
@@ -240,8 +251,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         i = next;
         return next;
       }
-    }
-    ;
+    };
 
     if (sparsePart.isEmpty()) {
       if (densePart == null || densePart.isZero()) {
@@ -470,7 +480,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   public boolean remove(int i) {
     if (densePart != null && densePart.get(i)) {
       densePart.clear(i);
-      if (densePart.populationCount() == 0) {
+      if (densePart.nextSetBit(0) == -1) {
 	densePart = null;
       }
       return true;
@@ -515,11 +525,117 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   }
   
   public String toString() {
-	  StringBuffer sb = new StringBuffer("[");
-	  if (densePart !=  null) {
-		  sb.append("densePart: ").append(densePart.toString()).append(" ");
-	  }
-	  sb.append("sparsePart: ").append(sparsePart.toString()).append("]");
-	  return sb.toString();
+    StringBuffer sb = new StringBuffer("[");
+    if (densePart !=  null) {
+      sb.append("densePart: ").append(densePart.toString()).append(" ");
+    }
+    sb.append("sparsePart: ").append(sparsePart.toString()).append("]");
+    return sb.toString();
   }
+
+  public SemiSparseMutableIntSet removeAll(SemiSparseMutableIntSet B) 
+  {
+    if (densePart == null) {
+
+      if (B.densePart == null) {
+        sparsePart = MutableSparseIntSet.diff(sparsePart, B.sparsePart);
+
+      } else {
+	MutableSparseIntSet C =
+	  MutableSparseIntSet.diff(sparsePart, B.sparsePart);
+	for(IntIterator bits = sparsePart.intIterator(); bits.hasNext(); ) {
+	  int bit = bits.next();
+	  if (B.densePart.get(bit)) {
+	    C.remove(bit);
+	  }
+	}
+
+	sparsePart = C;
+      }
+
+    } else {
+      if (B.densePart == null) {
+	for(IntIterator bits = B.sparsePart.intIterator(); bits.hasNext(); ) {
+	  densePart.clear(bits.next());
+	}
+	  
+	sparsePart = MutableSparseIntSet.diff(sparsePart, B.sparsePart);
+
+      } else {
+	densePart.andNot(B.densePart);
+	for(IntIterator bits = B.sparsePart.intIterator(); bits.hasNext(); ) {
+	  densePart.clear(bits.next());
+	}
+	  
+	MutableSparseIntSet C = 
+	  MutableSparseIntSet.diff(sparsePart, B.sparsePart);
+	for(IntIterator bits = sparsePart.intIterator(); bits.hasNext(); ) {
+	  int bit = bits.next();
+	  if (B.densePart.get(bit)) {
+	    C.remove(bit);
+	  }
+	}
+
+	sparsePart = C;
+      }
+    }
+
+    return this;
+  }
+	
+  public static SemiSparseMutableIntSet 
+    diff(SemiSparseMutableIntSet A, SemiSparseMutableIntSet B) 
+  {
+    if (A.densePart == null) {
+
+      if (B.densePart == null) {
+	return 
+	  new SemiSparseMutableIntSet(
+	    MutableSparseIntSet.diff(A.sparsePart, B.sparsePart));
+
+      } else {
+	MutableSparseIntSet C =
+	  MutableSparseIntSet.diff(A.sparsePart, B.sparsePart);
+	for(IntIterator bits = A.sparsePart.intIterator(); bits.hasNext(); ) {
+	  int bit = bits.next();
+	  if (B.densePart.get(bit)) {
+	    C.remove(bit);
+	  }
+	}
+
+	return new SemiSparseMutableIntSet(C);
+      }
+
+    } else {
+      if (B.densePart == null) {
+	OffsetBitVector newDensePart = new OffsetBitVector(A.densePart);
+	for(IntIterator bits = B.sparsePart.intIterator(); bits.hasNext(); ) {
+	  newDensePart.clear(bits.next());
+	}
+	  
+	return new SemiSparseMutableIntSet(
+	  MutableSparseIntSet.diff(A.sparsePart, B.sparsePart),
+	  newDensePart);
+
+      } else {
+	OffsetBitVector newDensePart = new OffsetBitVector(A.densePart);
+	newDensePart.andNot(B.densePart);
+	for(IntIterator bits = B.sparsePart.intIterator(); bits.hasNext(); ) {
+	  newDensePart.clear(bits.next());
+	}
+	  
+	MutableSparseIntSet C = 
+	  MutableSparseIntSet.diff(A.sparsePart, B.sparsePart);
+	for(IntIterator bits = A.sparsePart.intIterator(); bits.hasNext(); ) {
+	  int bit = bits.next();
+	  if (B.densePart.get(bit)) {
+	    C.remove(bit);
+	  }
+	}
+
+	return new SemiSparseMutableIntSet(C, newDensePart);
+      }
+    }
+  }
+	
 }

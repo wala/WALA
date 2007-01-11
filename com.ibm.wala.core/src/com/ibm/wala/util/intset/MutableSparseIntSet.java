@@ -472,4 +472,11 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     }
   }
 
+  public static MutableSparseIntSet 
+    diff(MutableSparseIntSet A, MutableSparseIntSet B) 
+  {
+    return new MutableSparseIntSet(diffInternal(A, B));
+  }
+
+
 }

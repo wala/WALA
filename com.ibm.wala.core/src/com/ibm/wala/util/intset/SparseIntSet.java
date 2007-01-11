@@ -240,6 +240,10 @@ public class SparseIntSet implements IntSet {
    * 
    */
   public static SparseIntSet diff(SparseIntSet A, SparseIntSet B) {
+    return new SparseIntSet(diffInternal(A, B));
+  }
+
+  public static int[] diffInternal(SparseIntSet A, SparseIntSet B) {
 
     if (Assertions.verifyAssertions) {
       Assertions._assert(A != null);
@@ -247,13 +251,15 @@ public class SparseIntSet implements IntSet {
     }
 
     if (A.isEmpty()) {
-      return new SparseIntSet(0);
+      return new int[0];
     } else if (B.isEmpty()) {
-      return new SparseIntSet(A);
+      int[] newElts = new int[ A.elements.length ];
+      System.arraycopy(A.elements, 0, newElts, 0, A.elements.length);
+      return newElts;
     } else if (A.equals(B)) {
-      return new SparseIntSet(0);
+      return new int[0];
     } else if (A.sameValue(B)) {
-      return new SparseIntSet(0);
+      return new int[0];
     }
 
     int[] ar = A.elements;
@@ -291,7 +297,7 @@ public class SparseIntSet implements IntSet {
     // now compact cr to 'just enough'
     ar = new int[ci];
     System.arraycopy(cr, 0, ar, 0, ci); // ar := cr
-    return new SparseIntSet(ar);
+    return ar;
   }
 
   /*
