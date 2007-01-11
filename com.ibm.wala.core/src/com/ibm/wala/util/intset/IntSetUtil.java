@@ -85,6 +85,25 @@ public class IntSetUtil {
     return diff(A, B, IntSetUtil.getDefaultIntSetFactory());
   }
 
+  private static IntSet defaultSlowDiff(IntSet A, IntSet B, MutableIntSetFactory factory) {
+    // TODO: this is slow ... optimize please.
+    MutableIntSet result = factory.makeCopy(A);
+    if (DEBUG) {
+      Trace.println("initial result " + result + " " + result.getClass());
+    }
+    for (IntIterator it = B.intIterator(); it.hasNext();) {
+      int I = it.next();
+      result.remove(I);
+      if (DEBUG) {
+        Trace.println("removed " + I + " now is " + result);
+      }
+    }
+    if (DEBUG) {
+      Trace.println("return " + result);
+    }
+    return result;
+  }
+
   /**
    * Compute the asymmetric difference of two sets, a \ b.
    * 
@@ -107,27 +126,20 @@ public class IntSetUtil {
       if (DEBUG) {
 	Trace.println("call SemiSparseMutableIntSet.diff");
       }
-      return SemiSparseMutableIntSet.diff((SemiSparseMutableIntSet) A, 
-					  (SemiSparseMutableIntSet) B);
+      IntSet d = 
+	SemiSparseMutableIntSet.diff(
+	  (SemiSparseMutableIntSet) A, 
+	  (SemiSparseMutableIntSet) B);
+
+      if (DEBUG) {
+	Assertions._assert(d.sameValue(defaultSlowDiff(A, B, factory)));
+      }
+
+      return d;
     } else {
-      // TODO: this is slow ... optimize please.
-      MutableIntSet result = factory.makeCopy(A);
-      if (DEBUG) {
-        Trace.println("initial result " + result + " " + result.getClass());
-      }
-      for (IntIterator it = B.intIterator(); it.hasNext();) {
-        int I = it.next();
-        result.remove(I);
-        if (DEBUG) {
-          Trace.println("removed " + I + " now is " + result);
-        }
-      }
-      if (DEBUG) {
-        Trace.println("return " + result);
-      }
-      return result;
+      return defaultSlowDiff(A, B, factory);
     }
-    }
+  }
 
   /**
    * Subtract two sets, i.e. a = a \ b.

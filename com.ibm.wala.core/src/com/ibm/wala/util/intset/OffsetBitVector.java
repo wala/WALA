@@ -82,7 +82,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
   public OffsetBitVector(OffsetBitVector s) {
     offset = s.offset;
     bits = new int[s.bits.length];
-    copyBits(s);
+    System.arraycopy(s.bits, 0, bits, 0, s.bits.length);
   }
 
   public String toString() {
@@ -256,36 +256,56 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
   /**
    * Compares this object against the specified object.
    * 
-   * @param B
+   * @param set
    *          the object to compare with
    * @return true if the objects are the same; false otherwise.
    */
-  public final boolean sameBits(OffsetBitVector B) {
-    if (this == B) { // should help alias analysis
+  public final boolean sameBits(OffsetBitVector set) {
+    if (this == set) { // should help alias analysis
       return true;
     }
-    int n = Math.min(bits.length, B.bits.length);
-    if (bits.length > B.bits.length) {
-      for (int i = n; i < bits.length; i++) {
-        if (bits[i] != 0)
-          return false;
+
+    int wordDiff = wordDiff(offset, set.offset);
+    int maxWord = Math.min(bits.length, set.bits.length-wordDiff);
+
+    int i = 0;
+
+    if (wordDiff < 0) {
+      for ( ; i < -wordDiff; i++) {
+	if (bits[i] != 0) {
+	  return false;
+	}
       }
-    } else if (B.bits.length > bits.length) {
-      for (int i = n; i < B.bits.length; i++) {
-        if (B.bits[i] != 0)
-          return false;
+    } else {
+      for(int j = 0; j < wordDiff; j++) {
+	if (set.bits[j] != 0) {
+	  return false;
+	}
       }
     }
-    for (int i = n - 1; i >= 0;) {
-      if (bits[i] != B.bits[i]) {
-        return false;
+
+    for ( ; i < maxWord; i++) {
+      if (bits[i] != set.bits[i+wordDiff]) {
+	return false;
       }
-      i--;
     }
+
+    for(int j = maxWord+wordDiff; j < set.bits.length; j++) {
+      if (set.bits[j] != 0) {
+	return false;
+      }
+    }
+
+    for ( ; i < bits.length; i++) {
+      if (bits[i] != 0) {
+	return false;
+      }   
+    }
+
     return true;
   }
 
-  /**
+  /*
    * @param other
    * @return true iff this is a subset of other
    */
@@ -294,17 +314,18 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
       return true;
     }
     int wordDiff = wordDiff(offset, other.offset);
+    int maxWord = Math.min(bits.length, other.bits.length-wordDiff);
 
     int i = 0;
+
     for ( ; i < -wordDiff; i++) {
-      if (other.bits[i] != 0) {
+      if (bits[i] != 0) {
         return false;
       }
     }
 
-    int min = Math.min(bits.length, other.bits.length+wordDiff);
-    for ( ; i < min; i++) {
-      if ((bits[i] & ~other.bits[i-wordDiff]) != 0) {
+    for ( ; i < maxWord; i++) {
+      if ((bits[i] & ~other.bits[i+wordDiff]) != 0) {
         return false;
       }
     }
@@ -341,7 +362,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     }
 
     int wordDiff = wordDiff(offset, set.offset);
-    int maxWord = Math.min(bits.length, set.bits.length+wordDiff);
+    int maxWord = Math.min(bits.length, set.bits.length-wordDiff);
 
     int i = 0;
 
@@ -350,7 +371,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     }
 
     for ( ; i < maxWord; i++) {
-      bits[i] &= set.bits[i-wordDiff];
+      bits[i] &= set.bits[i+wordDiff];
     }
 
     for ( ; i < bits.length; i++) {
@@ -409,21 +430,18 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param vector
    */
   public void andNot(OffsetBitVector set) {
-    if (this == set) { // should help alias analysis
+    if (this == set) {
+      clearAll();
       return;
     }
 
-    int newOffset = Math.min(offset, set.offset);
-    int newCapacity = 
-      Math.max(length(),set.length())-newOffset;
-    ensureCapacity(newOffset, newCapacity);
-
     int wordDiff = wordDiff(offset, set.offset);
+    int maxWord = Math.min(bits.length, set.bits.length-wordDiff);
 
-    int n = Math.min(bits.length, set.bits.length+wordDiff);
-    for (int i = n - 1; i >= 0;) {
-      bits[i] &= ~(set.bits[i-wordDiff]);
-      i--;
+    int i = Math.max(0, -wordDiff);
+
+    for ( ; i < maxWord; i++) {
+      bits[i] &= ~set.bits[i+wordDiff];
     }
   }
   
