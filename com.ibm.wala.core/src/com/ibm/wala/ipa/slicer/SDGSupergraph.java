@@ -139,7 +139,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getExitsForProcedure(java.lang.Object)
    */
   public Statement[] getExitsForProcedure(PDG procedure) {
-    if (procedure.equals(getMain())) {
+    if (procedure.equals(getMain()) && backward) {
       Statement[] normal = procedure.getReturnStatements();
       Statement[] result = new Statement[normal.length + 1];
       result[0] = getMainExit();
