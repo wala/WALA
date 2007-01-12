@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.java.scope.EBuiltInModule;
 import com.ibm.wala.ecore.java.scope.EBuiltInResource;
 import com.ibm.wala.ecore.java.scope.EClassFile;
@@ -58,6 +59,7 @@ public class JavaScopeFactoryImpl extends EFactoryImpl implements JavaScopeFacto
    * <!-- end-user-doc -->
    * @generated
    */
+  @Internal
   public JavaScopeFactoryImpl() {
     super();
   }

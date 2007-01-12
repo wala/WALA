@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.j2ee.scope.EEarFile;
 import com.ibm.wala.ecore.j2ee.scope.EJ2EEAnalysisScope;
 import com.ibm.wala.ecore.j2ee.scope.EWarFile;
@@ -50,6 +51,7 @@ public class J2EEScopeFactoryImpl extends EFactoryImpl implements J2EEScopeFacto
    * <!-- end-user-doc -->
    * @generated
    */
+  @Internal
   public J2EEScopeFactoryImpl() {
     super();
   }
