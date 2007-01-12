@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.JarURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -97,16 +98,10 @@ public class FileProvider {
    */
   private static File getFileFromPlugin(String fileName) throws IOException {
 
-    URL url = FileLocator.find(CorePlugin.getDefault().getBundle(), new Path(fileName), null);
+    URL url = getFileURLFromPlugin(fileName);
     if (url == null) {
-      // try lib/fileName
-      fileName = "lib/" + fileName;
-      url = FileLocator.find(CorePlugin.getDefault().getBundle(), new Path(fileName), null);
-      if (url == null) {
-        throw new FileNotFoundException(fileName);
-      }
+      throw new FileNotFoundException(fileName);
     }
-    url = FileLocator.toFileURL(url);
     return new File(filePathFromURL(url));
   }
 
@@ -116,7 +111,19 @@ public class FileProvider {
    *         if not found.
    */
   private static JarFileModule getFromPlugin(String fileName) throws IOException {
+    URL url = getFileURLFromPlugin(fileName);
+    return (url == null) ? null : new JarFileModule(new JarFile(filePathFromURL(url)));
+  }
 
+  /**
+   * get a file URL for a file from a plugin
+   * 
+   * @param fileName
+   *          the file name
+   * @return the URL, or <code>null</code> if the file is not found
+   * @throws IOException
+   */
+  private static URL getFileURLFromPlugin(String fileName) throws IOException {
     URL url = FileLocator.find(CorePlugin.getDefault().getBundle(), new Path(fileName), null);
     if (url == null) {
       // try lib/fileName
@@ -128,7 +135,40 @@ public class FileProvider {
       }
     }
     url = FileLocator.toFileURL(url);
-    return new JarFileModule(new JarFile(filePathFromURL(url)));
+    url = fixupFileURLSpaces(url);
+    return url;
+  }
+
+  /**
+   * escape spaces in a URL, primarily to work around a bug in
+   * {@link File#toURL()}
+   * 
+   * @param url
+   * @return an escaped version of the URL
+   */
+  private static URL fixupFileURLSpaces(URL url) {
+    String urlString = url.toExternalForm();
+    StringBuffer fixedUpUrl = new StringBuffer();
+    int lastIndex = 0;
+    while (true) {
+      int spaceIndex = urlString.indexOf(' ', lastIndex);
+
+      if (spaceIndex < 0) {
+        fixedUpUrl.append(urlString.substring(lastIndex));
+        break;
+      }
+
+      fixedUpUrl.append(urlString.substring(lastIndex, spaceIndex));
+      fixedUpUrl.append("%20");
+      lastIndex = spaceIndex + 1;
+    }
+    try {
+      return new URL(fixedUpUrl.toString());
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
+    }
+    return null;
   }
 
   /**
@@ -175,13 +215,13 @@ public class FileProvider {
   }
 
   /**
-   * Properly creates the String file name of a {@link URL}. This works
-   * around a bug in the Sun implementation of {@link URL#getFile()}, which
-   * doesn't properly handle file paths with spaces (see <a
+   * Properly creates the String file name of a {@link URL}. This works around
+   * a bug in the Sun implementation of {@link URL#getFile()}, which doesn't
+   * properly handle file paths with spaces (see <a
    * href="http://sourceforge.net/tracker/index.php?func=detail&aid=1565842&group_id=176742&atid=878458">bug
-   * report</a>).  For now, fails with an assertion if the url is malformed.
+   * report</a>). For now, fails with an assertion if the url is malformed.
    * 
-   * @param url 
+   * @param url
    * @return the path name for the url
    */
   public static String filePathFromURL(URL url) {
