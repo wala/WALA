@@ -20,6 +20,8 @@ import org.eclipse.emf.ecore.EObject;
 
 import com.ibm.wala.cfg.CFGCache;
 import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ecore.java.ECallSite;
@@ -32,14 +34,18 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.Entrypoints;
 import com.ibm.wala.ipa.callgraph.impl.AllApplicationEntrypoints;
+import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.InterproceduralCFG;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -243,6 +249,45 @@ public class CallGraphTest extends WalaTestCase {
     Trace.print(warnings.toString());
 
     doCallGraphs(options, cha, scope, null, useShortProfile(), false);
+  }
+
+  public void testPrimordial() throws ClassHierarchyException {
+    if (useShortProfile()) {
+      return;
+    }
+
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.xml","GUIExclusions.xml");
+    WarningSet warnings = new WarningSet();
+    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    Entrypoints entrypoints = makePrimordialMainEntrypoints(scope, cha);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    Trace.println("primordial set up warnings:\n");
+    Trace.print(warnings.toString());
+
+    CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings);
+  }
+
+  /**
+   * make main entrypoints, even in the primordial loader.
+   */
+  public static Entrypoints makePrimordialMainEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+    final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
+    final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
+    for (Iterator<IClass> it = cha.iterateAllClasses(); it.hasNext();) {
+      IClass klass = it.next();
+      MethodReference mainRef = MethodReference.findOrCreate(klass.getReference(), mainMethod, Descriptor
+          .findOrCreateUTF8("([Ljava/lang/String;)V"));
+      IMethod m = klass.getMethod(mainRef.getSelector());
+      if (m != null) {
+        result.add(new DefaultEntrypoint(m, cha));
+      }
+    }
+    return new Entrypoints() {
+      public Iterator<Entrypoint> iterator() {
+        return result.iterator();
+      }
+    };
   }
 
   //
