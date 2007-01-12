@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
@@ -19,10 +22,14 @@ import com.ibm.wala.shrikeCT.ExceptionsReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
+import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
 import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
+import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader.UnimplementedException;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.types.generics.MethodTypeSignature;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -259,6 +266,25 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     return result;
   }
 
+  private RuntimeInvisibleAnnotationsReader getRuntimeInvisibleAnnotationsReader() {
+    ClassReader.AttrIterator iter = new AttrIterator();
+    getClassReader().initMethodAttributeIterator(shrikeMethodIndex, iter);
+
+    // search for the desired attribute
+    RuntimeInvisibleAnnotationsReader result = null;
+    try {
+      for (; iter.isValid(); iter.advance()) {
+        if (iter.getName().toString().equals("RuntimeInvisibleAnnotations")) {
+          result = new RuntimeInvisibleAnnotationsReader(iter);
+          break;
+        }
+      }
+    } catch (InvalidClassFileException e) {
+      Assertions.UNREACHABLE();
+    }
+    return result;
+  }
+
   protected String computeGenericsSignature() throws InvalidClassFileException {
     SignatureReader reader = getSignatureReader();
     if (reader == null) {
@@ -275,8 +301,8 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
   public ClassHierarchy getClassHierarchy() {
     return cha;
   }
-  
-  /** 
+
+  /**
    * @return raw "Signature" attribute from the bytecode
    */
   private String getGenericsSignature() {
@@ -290,7 +316,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     }
     return bcInfo.genericsSignature;
   }
-  
+
   /**
    * UNDER CONSTRUCTION
    * 
@@ -299,5 +325,22 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
   public MethodTypeSignature getMethodTypeSignature() {
     String sig = getGenericsSignature();
     return sig == null ? null : MethodTypeSignature.make(sig);
+  }
+
+  public Collection<Annotation> getRuntimeInvisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
+    RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader();
+    if (r != null) {
+      int[] offsets = r.getAnnotationOffsets();
+      Collection<Annotation> result = HashSetFactory.make();
+      for (int i : offsets) {
+        String type = r.getAnnotationType(i);
+        type = type.replaceAll(";","");
+        TypeReference t = TypeReference.findOrCreate(getDeclaringClass().getClassLoader().getReference(), type);
+        result.add(Annotation.make(t));
+      }
+      return result;
+    } else {
+      return Collections.emptySet();
+    }
   }
 }

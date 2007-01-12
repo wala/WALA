@@ -1221,7 +1221,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         system.recordImplicitPointsToSet(dst);
       } else {
         if (com.ibm.wala.cfg.Util.endsWithConditionalBranch(CFG, getBasicBlock()) && CFG.getSuccNodeCount(getBasicBlock()) == 2) {
-          SSAConditionalBranchInstruction cond = com.ibm.wala.cfg.Util.getConditionalBranch(CFG, getBasicBlock());
+          SSAConditionalBranchInstruction cond = (SSAConditionalBranchInstruction)com.ibm.wala.cfg.Util.getLastInstruction(CFG, getBasicBlock());
           SSAInstruction cause = instruction.getCause();
           BasicBlock target = (BasicBlock) CFG.getNode(instruction.getSuccessor());
           if ((cause instanceof SSAInstanceofInstruction) && ((dir = booleanConstantTest(cond, cause.getDef())) != 0)) {

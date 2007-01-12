@@ -18,6 +18,10 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSASwitchInstruction;
 import com.ibm.wala.util.debug.Assertions;
 
+/**
+ * 
+ *
+ */
 public class Util {
 
   public static SSAInstruction getLastInstruction(ControlFlowGraph G, IBasicBlock b) {
@@ -28,16 +32,8 @@ public class Util {
     return getLastInstruction(G, b) instanceof SSAConditionalBranchInstruction;
   }
 
-  public static SSAConditionalBranchInstruction getConditionalBranch(ControlFlowGraph G, IBasicBlock b) {
-    return (SSAConditionalBranchInstruction) getLastInstruction(G, b);
-  }
-
   public static boolean endsWithSwitch(ControlFlowGraph G, IBasicBlock b) {
     return getLastInstruction(G, b) instanceof SSASwitchInstruction;
-  }
-
-  public static SSASwitchInstruction getSwitch(ControlFlowGraph G, IBasicBlock b) {
-    return (SSASwitchInstruction) getLastInstruction(G, b);
   }
 
   public static IBasicBlock getFallThruBlock(ControlFlowGraph G, IBasicBlock b) {
@@ -61,7 +57,7 @@ public class Util {
   }
 
   public static IBasicBlock resolveSwitch(ControlFlowGraph G, IBasicBlock b, int c) {
-    SSASwitchInstruction s = getSwitch(G, b);
+    SSASwitchInstruction s = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = s.getCasesAndLabels();
     for (int i = 0; i < casesAndLabels.length; i += 2)
       if (casesAndLabels[i] == c)
@@ -71,7 +67,7 @@ public class Util {
   }
 
   public static IBasicBlock resolveBranch(ControlFlowGraph G, IBasicBlock bb, int c1, int c2) {
-    SSAConditionalBranchInstruction c = getConditionalBranch(G, bb);
+    SSAConditionalBranchInstruction c = (SSAConditionalBranchInstruction) getLastInstruction(G, bb);
     switch ((ConditionalBranchInstruction.Operator)c.getOperator()) {
     case EQ:
       if (c1 == c2)
