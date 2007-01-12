@@ -30,6 +30,7 @@ import com.ibm.wala.shrikeCT.ConstantValueReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.LineNumberTableReader;
 import com.ibm.wala.shrikeCT.LocalVariableTableReader;
+import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
 import com.ibm.wala.shrikeCT.SourceFileReader;
 
@@ -40,6 +41,8 @@ import com.ibm.wala.shrikeCT.SourceFileReader;
  * In Unix I run it like this: java -cp ~/dev/shrike/shrike
  * com.ibm.wala.shrikeBT.shrikeCT.tools.ClassPrinter test.jar This will print
  * the contents of every class in the JAR file.
+ * 
+ * @author roca
  */
 public class ClassPrinter {
   private PrintWriter w;
@@ -263,6 +266,23 @@ public class ClassPrinter {
       } else if (name.equals("Signature")) {
         SignatureReader sr = new SignatureReader(attrs);
         w.write("    signature: " + cr.getCP().getCPUtf8(sr.getSignatureCPIndex()) + "\n");
+      } else if (name.equals("RuntimeInvisibleAnnotations")) {
+        RuntimeInvisibleAnnotationsReader r = new RuntimeInvisibleAnnotationsReader(attrs);
+        try {
+          int[] annotations = r.getAnnotationOffsets();
+          for (int j : annotations) {
+            w.write("    Annotation type: " + r.getAnnotationType(j) + "\n");
+          }
+        } catch (RuntimeInvisibleAnnotationsReader.UnimplementedException e) {
+          int len = attrs.getDataSize();
+          int pos = attrs.getDataOffset();
+          while (len > 0) {
+            int amount = Math.min(16, len);
+            w.write("    " + makeHex(cr.getBytes(), pos, amount, 32) + " " + makeChars(cr.getBytes(), pos, amount) + "\n");
+            len -= amount;
+            pos += amount;
+          }
+        }
       } else {
         int len = attrs.getDataSize();
         int pos = attrs.getDataOffset();
