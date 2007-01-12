@@ -6,15 +6,15 @@
  */
 package com.ibm.wala.ecore.perf.impl;
 
-import com.ibm.wala.ecore.perf.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import com.ibm.wala.ecore.perf.EPhaseTiming;
+import com.ibm.wala.ecore.perf.PerfFactory;
+import com.ibm.wala.ecore.perf.PerfPackage;
 
 /**
  * <!-- begin-user-doc -->

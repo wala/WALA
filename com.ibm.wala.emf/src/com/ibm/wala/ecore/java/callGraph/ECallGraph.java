@@ -6,9 +6,9 @@
  */
 package com.ibm.wala.ecore.java.callGraph;
 
-import com.ibm.wala.ecore.graph.EGraph;
-
 import org.eclipse.emf.common.util.EList;
+
+import com.ibm.wala.ecore.graph.EGraph;
 
 /**
  * <!-- begin-user-doc -->

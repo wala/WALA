@@ -6,14 +6,12 @@
  */
 package com.ibm.wala.ecore.java.pointerAnalysis.impl;
 
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
 import com.ibm.wala.ecore.java.pointerAnalysis.EInstanceField;
 import com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisPackage;
-
-import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->

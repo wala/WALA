@@ -6,9 +6,9 @@
  */
 package com.ibm.wala.ecore.java;
 
-import com.ibm.wala.ecore.common.ERelation;
-
 import org.eclipse.emf.ecore.EObject;
+
+import com.ibm.wala.ecore.common.ERelation;
 
 /**
  * <!-- begin-user-doc -->

@@ -6,12 +6,19 @@
  */
 package com.ibm.wala.ecore.common.util;
 
-import com.ibm.wala.ecore.common.*;
-
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+
+import com.ibm.wala.ecore.common.CommonPackage;
+import com.ibm.wala.ecore.common.ECollection;
+import com.ibm.wala.ecore.common.EContainer;
+import com.ibm.wala.ecore.common.ENotContainer;
+import com.ibm.wala.ecore.common.EObjectWithContainerId;
+import com.ibm.wala.ecore.common.EPair;
+import com.ibm.wala.ecore.common.ERelation;
+import com.ibm.wala.ecore.common.EStringHolder;
 
 /**
  * <!-- begin-user-doc -->

@@ -6,12 +6,11 @@
  */
 package com.ibm.wala.ecore.java.impl;
 
-import com.ibm.wala.ecore.graph.impl.ETreeImpl;
+import org.eclipse.emf.ecore.EClass;
 
+import com.ibm.wala.ecore.graph.impl.ETreeImpl;
 import com.ibm.wala.ecore.java.EClassHierarchy;
 import com.ibm.wala.ecore.java.JavaPackage;
-
-import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->

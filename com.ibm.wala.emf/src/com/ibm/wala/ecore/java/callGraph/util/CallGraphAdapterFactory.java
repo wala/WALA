@@ -6,16 +6,14 @@
  */
 package com.ibm.wala.ecore.java.callGraph.util;
 
-import com.ibm.wala.ecore.graph.EGraph;
-
-import com.ibm.wala.ecore.java.callGraph.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import com.ibm.wala.ecore.graph.EGraph;
+import com.ibm.wala.ecore.java.callGraph.CallGraphPackage;
+import com.ibm.wala.ecore.java.callGraph.ECallGraph;
 
 /**
  * <!-- begin-user-doc -->

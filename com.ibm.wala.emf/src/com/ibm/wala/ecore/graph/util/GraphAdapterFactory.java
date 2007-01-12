@@ -6,14 +6,14 @@
  */
 package com.ibm.wala.ecore.graph.util;
 
-import com.ibm.wala.ecore.graph.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import com.ibm.wala.ecore.graph.EGraph;
+import com.ibm.wala.ecore.graph.ETree;
+import com.ibm.wala.ecore.graph.GraphPackage;
 
 /**
  * <!-- begin-user-doc -->

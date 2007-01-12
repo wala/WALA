@@ -6,15 +6,15 @@
  */
 package com.ibm.wala.ecore.java.callGraph.impl;
 
-import com.ibm.wala.ecore.java.callGraph.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import com.ibm.wala.ecore.java.callGraph.CallGraphFactory;
+import com.ibm.wala.ecore.java.callGraph.CallGraphPackage;
+import com.ibm.wala.ecore.java.callGraph.ECallGraph;
 
 /**
  * <!-- begin-user-doc -->

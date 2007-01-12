@@ -6,15 +6,17 @@
  */
 package com.ibm.wala.ecore.j2ee.scope.impl;
 
-import com.ibm.wala.ecore.j2ee.scope.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import com.ibm.wala.ecore.j2ee.scope.EEarFile;
+import com.ibm.wala.ecore.j2ee.scope.EJ2EEAnalysisScope;
+import com.ibm.wala.ecore.j2ee.scope.EWarFile;
+import com.ibm.wala.ecore.j2ee.scope.J2EEScopeFactory;
+import com.ibm.wala.ecore.j2ee.scope.J2EEScopePackage;
 
 /**
  * <!-- begin-user-doc -->

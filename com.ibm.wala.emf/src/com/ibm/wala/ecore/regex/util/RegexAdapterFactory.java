@@ -6,14 +6,13 @@
  */
 package com.ibm.wala.ecore.regex.util;
 
-import com.ibm.wala.ecore.regex.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import com.ibm.wala.ecore.regex.EPattern;
+import com.ibm.wala.ecore.regex.RegexPackage;
 
 /**
  * <!-- begin-user-doc -->

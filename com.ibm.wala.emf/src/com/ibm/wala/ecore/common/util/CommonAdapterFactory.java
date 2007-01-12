@@ -6,14 +6,19 @@
  */
 package com.ibm.wala.ecore.common.util;
 
-import com.ibm.wala.ecore.common.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import com.ibm.wala.ecore.common.CommonPackage;
+import com.ibm.wala.ecore.common.ECollection;
+import com.ibm.wala.ecore.common.EContainer;
+import com.ibm.wala.ecore.common.ENotContainer;
+import com.ibm.wala.ecore.common.EObjectWithContainerId;
+import com.ibm.wala.ecore.common.EPair;
+import com.ibm.wala.ecore.common.ERelation;
+import com.ibm.wala.ecore.common.EStringHolder;
 
 /**
  * <!-- begin-user-doc -->

@@ -6,14 +6,21 @@
  */
 package com.ibm.wala.ecore.java.scope.util;
 
-import com.ibm.wala.ecore.java.scope.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import com.ibm.wala.ecore.java.scope.EBuiltInModule;
+import com.ibm.wala.ecore.java.scope.EClassFile;
+import com.ibm.wala.ecore.java.scope.EClassLoader;
+import com.ibm.wala.ecore.java.scope.EClasspath;
+import com.ibm.wala.ecore.java.scope.EFile;
+import com.ibm.wala.ecore.java.scope.EJarFile;
+import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
+import com.ibm.wala.ecore.java.scope.EModule;
+import com.ibm.wala.ecore.java.scope.ESourceFile;
+import com.ibm.wala.ecore.java.scope.JavaScopePackage;
 
 /**
  * <!-- begin-user-doc -->

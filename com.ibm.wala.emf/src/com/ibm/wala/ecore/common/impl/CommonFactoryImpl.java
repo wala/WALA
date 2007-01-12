@@ -6,16 +6,22 @@
  */
 package com.ibm.wala.ecore.common.impl;
 
-import com.ibm.wala.ecore.common.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import com.ibm.wala.annotations.Internal;
+import com.ibm.wala.ecore.common.CommonFactory;
+import com.ibm.wala.ecore.common.CommonPackage;
+import com.ibm.wala.ecore.common.EContainer;
+import com.ibm.wala.ecore.common.ENotContainer;
+import com.ibm.wala.ecore.common.EObjectWithContainerId;
+import com.ibm.wala.ecore.common.EPair;
+import com.ibm.wala.ecore.common.ERelation;
+import com.ibm.wala.ecore.common.EStringHolder;
 
 /**
  * <!-- begin-user-doc -->
@@ -49,6 +55,7 @@ public class CommonFactoryImpl extends EFactoryImpl implements CommonFactory {
    * <!-- end-user-doc -->
    * @generated
    */
+  @Internal
   public CommonFactoryImpl() {
     super();
   }

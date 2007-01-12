@@ -6,20 +6,16 @@
  */
 package com.ibm.wala.ecore.java.callGraph.impl;
 
-import com.ibm.wala.ecore.graph.impl.EGraphImpl;
-
-import com.ibm.wala.ecore.java.EJavaMethod;
-
-import com.ibm.wala.ecore.java.callGraph.CallGraphPackage;
-import com.ibm.wala.ecore.java.callGraph.ECallGraph;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+
+import com.ibm.wala.ecore.graph.impl.EGraphImpl;
+import com.ibm.wala.ecore.java.EJavaMethod;
+import com.ibm.wala.ecore.java.callGraph.CallGraphPackage;
+import com.ibm.wala.ecore.java.callGraph.ECallGraph;
 
 /**
  * <!-- begin-user-doc -->

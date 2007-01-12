@@ -6,18 +6,15 @@
  */
 package com.ibm.wala.ecore.java.impl;
 
-import com.ibm.wala.ecore.common.impl.EObjectWithContainerIdImpl;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import com.ibm.wala.ecore.common.impl.EObjectWithContainerIdImpl;
 import com.ibm.wala.ecore.java.EJavaClass;
 import com.ibm.wala.ecore.java.EJavaMethod;
 import com.ibm.wala.ecore.java.JavaPackage;
-
-import org.eclipse.emf.common.notify.Notification;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 /**
  * <!-- begin-user-doc -->

@@ -6,10 +6,10 @@
  */
 package com.ibm.wala.ecore.java.scope.impl;
 
+import org.eclipse.emf.ecore.EClass;
+
 import com.ibm.wala.ecore.java.scope.EClassFile;
 import com.ibm.wala.ecore.java.scope.JavaScopePackage;
-
-import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->

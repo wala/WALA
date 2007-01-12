@@ -6,19 +6,16 @@
  */
 package com.ibm.wala.ecore.common.impl;
 
-import com.ibm.wala.ecore.common.CommonPackage;
-import com.ibm.wala.ecore.common.ENotContainer;
-
 import java.util.Collection;
 
 import org.eclipse.emf.common.util.EList;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.impl.EObjectImpl;
-
 import org.eclipse.emf.ecore.util.EObjectResolvingEList;
+
+import com.ibm.wala.ecore.common.CommonPackage;
+import com.ibm.wala.ecore.common.ENotContainer;
 
 /**
  * <!-- begin-user-doc -->

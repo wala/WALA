@@ -6,48 +6,31 @@
  */
 package com.ibm.wala.ecore.graph.impl;
 
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EPackage;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.impl.EPackageImpl;
+
 import com.ibm.wala.ecore.common.CommonPackage;
-
 import com.ibm.wala.ecore.common.impl.CommonPackageImpl;
-
 import com.ibm.wala.ecore.graph.EGraph;
 import com.ibm.wala.ecore.graph.ETree;
 import com.ibm.wala.ecore.graph.GraphFactory;
 import com.ibm.wala.ecore.graph.GraphPackage;
-
 import com.ibm.wala.ecore.j2ee.scope.J2EEScopePackage;
-
 import com.ibm.wala.ecore.j2ee.scope.impl.J2EEScopePackageImpl;
-
 import com.ibm.wala.ecore.java.JavaPackage;
-
 import com.ibm.wala.ecore.java.callGraph.CallGraphPackage;
-
 import com.ibm.wala.ecore.java.callGraph.impl.CallGraphPackageImpl;
-
 import com.ibm.wala.ecore.java.impl.JavaPackageImpl;
-
 import com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisPackage;
-
 import com.ibm.wala.ecore.java.pointerAnalysis.impl.PointerAnalysisPackageImpl;
-
 import com.ibm.wala.ecore.java.scope.JavaScopePackage;
-
 import com.ibm.wala.ecore.java.scope.impl.JavaScopePackageImpl;
-
 import com.ibm.wala.ecore.perf.PerfPackage;
-
 import com.ibm.wala.ecore.perf.impl.PerfPackageImpl;
-
 import com.ibm.wala.ecore.regex.RegexPackage;
-
 import com.ibm.wala.ecore.regex.impl.RegexPackageImpl;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.EPackage;
-import org.eclipse.emf.ecore.EReference;
-
-import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 /**
  * <!-- begin-user-doc -->

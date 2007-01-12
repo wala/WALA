@@ -6,12 +6,12 @@
  */
 package com.ibm.wala.ecore.java.pointerAnalysis;
 
-import com.ibm.wala.ecore.graph.GraphPackage;
-
 import org.eclipse.emf.ecore.EAttribute;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+
+import com.ibm.wala.ecore.graph.GraphPackage;
 
 /**
  * <!-- begin-user-doc -->

@@ -6,19 +6,21 @@
  */
 package com.ibm.wala.ecore.java.util;
 
-import com.ibm.wala.ecore.common.EObjectWithContainerId;
-
-import com.ibm.wala.ecore.graph.EGraph;
-import com.ibm.wala.ecore.graph.ETree;
-
-import com.ibm.wala.ecore.java.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import com.ibm.wala.ecore.common.EObjectWithContainerId;
+import com.ibm.wala.ecore.graph.EGraph;
+import com.ibm.wala.ecore.graph.ETree;
+import com.ibm.wala.ecore.java.ECallSite;
+import com.ibm.wala.ecore.java.EClassHierarchy;
+import com.ibm.wala.ecore.java.EInterfaceHierarchy;
+import com.ibm.wala.ecore.java.EJavaClass;
+import com.ibm.wala.ecore.java.EJavaMethod;
+import com.ibm.wala.ecore.java.ETypeHierarchy;
+import com.ibm.wala.ecore.java.JavaPackage;
 
 /**
  * <!-- begin-user-doc -->

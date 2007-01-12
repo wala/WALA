@@ -6,15 +6,16 @@
  */
 package com.ibm.wala.ecore.graph.impl;
 
-import com.ibm.wala.ecore.graph.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import com.ibm.wala.ecore.graph.EGraph;
+import com.ibm.wala.ecore.graph.ETree;
+import com.ibm.wala.ecore.graph.GraphFactory;
+import com.ibm.wala.ecore.graph.GraphPackage;
 
 /**
  * <!-- begin-user-doc -->

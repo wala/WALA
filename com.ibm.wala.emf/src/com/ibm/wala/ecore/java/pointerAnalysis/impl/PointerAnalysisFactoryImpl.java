@@ -6,15 +6,21 @@
  */
 package com.ibm.wala.ecore.java.pointerAnalysis.impl;
 
-import com.ibm.wala.ecore.java.pointerAnalysis.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import com.ibm.wala.ecore.java.pointerAnalysis.EArrayContents;
+import com.ibm.wala.ecore.java.pointerAnalysis.EHeapGraph;
+import com.ibm.wala.ecore.java.pointerAnalysis.EInstanceField;
+import com.ibm.wala.ecore.java.pointerAnalysis.EJavaClassInstance;
+import com.ibm.wala.ecore.java.pointerAnalysis.ELocalPointer;
+import com.ibm.wala.ecore.java.pointerAnalysis.EReturnValuePointer;
+import com.ibm.wala.ecore.java.pointerAnalysis.EStaticField;
+import com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisFactory;
+import com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisPackage;
 
 /**
  * <!-- begin-user-doc -->

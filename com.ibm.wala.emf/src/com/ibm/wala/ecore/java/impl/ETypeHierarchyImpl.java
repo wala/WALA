@@ -6,21 +6,18 @@
  */
 package com.ibm.wala.ecore.java.impl;
 
-import com.ibm.wala.ecore.common.ERelation;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
 
+import com.ibm.wala.ecore.common.ERelation;
 import com.ibm.wala.ecore.java.EClassHierarchy;
 import com.ibm.wala.ecore.java.EInterfaceHierarchy;
 import com.ibm.wala.ecore.java.ETypeHierarchy;
 import com.ibm.wala.ecore.java.JavaPackage;
-
-import org.eclipse.emf.common.notify.Notification;
-import org.eclipse.emf.common.notify.NotificationChain;
-
-import org.eclipse.emf.ecore.EClass;
-import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->

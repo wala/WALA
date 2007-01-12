@@ -6,20 +6,17 @@
  */
 package com.ibm.wala.ecore.graph.impl;
 
-import com.ibm.wala.ecore.common.ECollection;
-import com.ibm.wala.ecore.common.ERelation;
-
-import com.ibm.wala.ecore.graph.EGraph;
-import com.ibm.wala.ecore.graph.GraphPackage;
-
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
+
+import com.ibm.wala.ecore.common.ECollection;
+import com.ibm.wala.ecore.common.ERelation;
+import com.ibm.wala.ecore.graph.EGraph;
+import com.ibm.wala.ecore.graph.GraphPackage;
 
 /**
  * <!-- begin-user-doc -->

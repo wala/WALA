@@ -6,14 +6,13 @@
  */
 package com.ibm.wala.ecore.perf.util;
 
-import com.ibm.wala.ecore.perf.*;
-
 import org.eclipse.emf.common.notify.Adapter;
 import org.eclipse.emf.common.notify.Notifier;
-
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
-
 import org.eclipse.emf.ecore.EObject;
+
+import com.ibm.wala.ecore.perf.EPhaseTiming;
+import com.ibm.wala.ecore.perf.PerfPackage;
 
 /**
  * <!-- begin-user-doc -->

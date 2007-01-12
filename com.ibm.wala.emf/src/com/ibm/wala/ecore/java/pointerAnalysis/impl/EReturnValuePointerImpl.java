@@ -6,17 +6,14 @@
  */
 package com.ibm.wala.ecore.java.pointerAnalysis.impl;
 
-import com.ibm.wala.ecore.java.EJavaMethod;
-
-import com.ibm.wala.ecore.java.pointerAnalysis.EReturnValuePointer;
-import com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisPackage;
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+
+import com.ibm.wala.ecore.java.EJavaMethod;
+import com.ibm.wala.ecore.java.pointerAnalysis.EReturnValuePointer;
+import com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisPackage;
 
 /**
  * <!-- begin-user-doc -->

@@ -6,12 +6,13 @@
  */
 package com.ibm.wala.ecore.regex.util;
 
-import com.ibm.wala.ecore.regex.*;
-
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+
+import com.ibm.wala.ecore.regex.EPattern;
+import com.ibm.wala.ecore.regex.RegexPackage;
 
 /**
  * <!-- begin-user-doc -->

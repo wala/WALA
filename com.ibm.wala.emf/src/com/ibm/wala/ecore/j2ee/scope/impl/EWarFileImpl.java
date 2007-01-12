@@ -6,12 +6,11 @@
  */
 package com.ibm.wala.ecore.j2ee.scope.impl;
 
+import org.eclipse.emf.ecore.EClass;
+
 import com.ibm.wala.ecore.j2ee.scope.EWarFile;
 import com.ibm.wala.ecore.j2ee.scope.J2EEScopePackage;
-
 import com.ibm.wala.ecore.java.scope.impl.EJarFileImpl;
-
-import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->

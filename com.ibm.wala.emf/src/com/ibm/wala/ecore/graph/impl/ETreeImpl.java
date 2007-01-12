@@ -6,10 +6,10 @@
  */
 package com.ibm.wala.ecore.graph.impl;
 
+import org.eclipse.emf.ecore.EClass;
+
 import com.ibm.wala.ecore.graph.ETree;
 import com.ibm.wala.ecore.graph.GraphPackage;
-
-import org.eclipse.emf.ecore.EClass;
 
 /**
  * <!-- begin-user-doc -->

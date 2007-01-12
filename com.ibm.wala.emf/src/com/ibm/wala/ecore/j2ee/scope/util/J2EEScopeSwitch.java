@@ -6,16 +6,18 @@
  */
 package com.ibm.wala.ecore.j2ee.scope.util;
 
-import com.ibm.wala.ecore.j2ee.scope.*;
-
-import com.ibm.wala.ecore.java.scope.EJarFile;
-import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
-import com.ibm.wala.ecore.java.scope.EModule;
-
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+
+import com.ibm.wala.ecore.j2ee.scope.EEarFile;
+import com.ibm.wala.ecore.j2ee.scope.EJ2EEAnalysisScope;
+import com.ibm.wala.ecore.j2ee.scope.EWarFile;
+import com.ibm.wala.ecore.j2ee.scope.J2EEScopePackage;
+import com.ibm.wala.ecore.java.scope.EJarFile;
+import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
+import com.ibm.wala.ecore.java.scope.EModule;
 
 /**
  * <!-- begin-user-doc -->

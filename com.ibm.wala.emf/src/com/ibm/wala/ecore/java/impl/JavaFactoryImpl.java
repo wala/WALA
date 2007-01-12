@@ -6,16 +6,22 @@
  */
 package com.ibm.wala.ecore.java.impl;
 
-import com.ibm.wala.ecore.java.*;
-
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
-
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
-
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+
+import com.ibm.wala.ecore.java.ECallSite;
+import com.ibm.wala.ecore.java.EClassHierarchy;
+import com.ibm.wala.ecore.java.EClassLoaderName;
+import com.ibm.wala.ecore.java.EInterfaceHierarchy;
+import com.ibm.wala.ecore.java.EJavaClass;
+import com.ibm.wala.ecore.java.EJavaMethod;
+import com.ibm.wala.ecore.java.ETypeHierarchy;
+import com.ibm.wala.ecore.java.JavaFactory;
+import com.ibm.wala.ecore.java.JavaPackage;
 
 /**
  * <!-- begin-user-doc -->

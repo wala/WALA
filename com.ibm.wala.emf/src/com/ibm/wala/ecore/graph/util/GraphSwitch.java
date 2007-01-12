@@ -6,12 +6,14 @@
  */
 package com.ibm.wala.ecore.graph.util;
 
-import com.ibm.wala.ecore.graph.*;
-
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+
+import com.ibm.wala.ecore.graph.EGraph;
+import com.ibm.wala.ecore.graph.ETree;
+import com.ibm.wala.ecore.graph.GraphPackage;
 
 /**
  * <!-- begin-user-doc -->

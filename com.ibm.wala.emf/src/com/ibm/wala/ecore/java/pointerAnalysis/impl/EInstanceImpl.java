@@ -6,12 +6,11 @@
  */
 package com.ibm.wala.ecore.java.pointerAnalysis.impl;
 
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.impl.EObjectImpl;
+
 import com.ibm.wala.ecore.java.pointerAnalysis.EInstance;
 import com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisPackage;
-
-import org.eclipse.emf.ecore.EClass;
-
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 
 /**
  * <!-- begin-user-doc -->

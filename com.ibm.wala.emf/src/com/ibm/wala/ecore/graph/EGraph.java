@@ -6,10 +6,10 @@
  */
 package com.ibm.wala.ecore.graph;
 
+import org.eclipse.emf.ecore.EObject;
+
 import com.ibm.wala.ecore.common.ECollection;
 import com.ibm.wala.ecore.common.ERelation;
-
-import org.eclipse.emf.ecore.EObject;
 
 /**
  * <!-- begin-user-doc -->
