@@ -28,7 +28,12 @@ public final class InnerClassesWriter extends ClassWriter.Element {
     return table == null ? 8 : 8 + table.length * 2;
   }
 
-  public int copyInto(byte[] buf, int offset) {
+  /**
+   * Copy the bytes into 'buf' at offset 'offset'.
+   * 
+   * @return the number of bytes copies, which must be equal to getSize()
+   */
+  public int copyInto(byte[] buf, int offset) throws IllegalArgumentException {
     ClassWriter.setUShort(buf, offset, attrID);
     ClassWriter.setInt(buf, offset + 2, getSize() - 6);
     ClassWriter.setUShort(buf, offset + 6, table == null ? 0 : table.length);

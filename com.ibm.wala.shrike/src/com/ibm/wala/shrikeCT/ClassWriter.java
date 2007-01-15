@@ -925,6 +925,9 @@ public final class ClassWriter implements ClassConstants {
    * v.
    */
   public static void setUShort(byte[] buf, int offset, int v) {
+    if (offset + 1 >= buf.length) {
+      throw new IllegalArgumentException("buf is too short " + buf.length + " " + offset);
+    }
     buf[offset] = (byte) (v >> 8);
     buf[offset + 1] = (byte) v;
   }

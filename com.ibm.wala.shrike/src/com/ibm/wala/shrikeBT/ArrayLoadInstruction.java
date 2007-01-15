@@ -29,7 +29,7 @@ final public class ArrayLoadInstruction extends Instruction {
     return r;
   }
 
-  public static ArrayLoadInstruction make(String type) {
+  public static ArrayLoadInstruction make(String type) throws IllegalArgumentException {
     int i = Util.getTypeIndex(type);
     if (i < 0 || i > TYPE_boolean_index) {
       throw new IllegalArgumentException("Invalid type " + type + " for ArrayLoadInstruction");
