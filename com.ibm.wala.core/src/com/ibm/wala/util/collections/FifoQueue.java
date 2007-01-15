@@ -148,7 +148,7 @@ public class FifoQueue<T> {
    * 
    * @return the next Object in the queue.
    */
-  public T pop() {
+  public T pop() throws IllegalStateException {
     // While there are work queue elements, remove the next element &
     // indicate that it is no longer in the work queue.
     // Throw a IllegalStateException when there is a queue underflow.
@@ -172,7 +172,7 @@ public class FifoQueue<T> {
    * 
    * @return the next Object in the queue.
    */
-  public T peek() {
+  public T peek() throws IllegalStateException {
     // While there are work queue elements, return the next element.
     // Throw a IllegalStateException if there is a queue underflow.
     if (isEmpty())

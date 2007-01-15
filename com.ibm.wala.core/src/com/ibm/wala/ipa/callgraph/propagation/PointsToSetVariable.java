@@ -28,10 +28,7 @@ public class PointsToSetVariable extends IntSetVariable {
     }
     this.pointerKey = key;
   }
-  public PointsToSetVariable() {
-    super();
-    this.pointerKey = null;
-  }
+
   /**
    * @return Returns the pointerKey.
    */

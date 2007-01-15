@@ -147,8 +147,14 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     return Collections.unmodifiableCollection(map.keySet());
   }
 
-  public void replace(T a, T b) {
+  /**
+   * Replace a in this mapping with b.
+   */
+  public void replace(T a, T b) throws IllegalArgumentException {
     int i = getMappedIndex(a);
+    if (i == -1) {
+      throw new IllegalArgumentException("first element does not exist in map");
+    }
     map.remove(a);
     map.put(b,new Integer(i));
     array[i] = b; 

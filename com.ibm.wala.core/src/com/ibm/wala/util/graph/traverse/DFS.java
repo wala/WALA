@@ -25,7 +25,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedGraph;
 
@@ -154,16 +153,6 @@ public class DFS {
       // throws an exception if either node has not been ordered
       return (t1.intValue() - t2.intValue());
     }
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
-  public int hashCode() {
-    Assertions.UNREACHABLE("define a custom hash code to avoid non-determinism");
-    return 0;
   }
 
   /**

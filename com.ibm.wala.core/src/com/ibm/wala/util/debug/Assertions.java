@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.debug;
 
+import com.ibm.wala.annotations.Internal;
+
 /**
  * @author sfink
  */
@@ -73,6 +75,7 @@ public class Assertions {
   /**
    * Method UNREACHABLE.
    */
+  @Internal
   public static void UNREACHABLE() {
     throw new UnimplementedError();
   }
@@ -81,6 +84,7 @@ public class Assertions {
    * Method UNREACHABLE.
    * @param string
    */
+  @Internal
   public static void UNREACHABLE(String string) {
     throw new UnimplementedError(string);
   }

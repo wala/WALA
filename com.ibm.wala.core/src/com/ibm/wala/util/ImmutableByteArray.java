@@ -39,7 +39,10 @@ public final class ImmutableByteArray {
     return b.length;
   }
 
-  public byte get(int i) {
+  public byte get(int i) throws IllegalArgumentException {
+    if (i >= b.length) {
+      throw new IllegalArgumentException("index out of bounds " + b.length + " " + i);
+    }
     return b[i];
   }
 

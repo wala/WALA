@@ -337,27 +337,31 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       case PARAM_CALLER: {
         ParamStatement.ParamCaller pac = (ParamStatement.ParamCaller) s;
         int vn = pac.getValueNumber();
-        if (ir.getSymbolTable().isParameter(vn)) {
-          Statement a = new ParamStatement.ParamCallee(node, vn);
-          addEdge(a, pac);
-        } else {
-          SSAInstruction d = DU.getDef(vn);
-          if (dOptions.isTerminateAtCast() && (d instanceof SSACheckCastInstruction)) {
-            break;
-          }
-          if (d != null) {
-            if (d instanceof SSAInvokeInstruction) {
-              SSAInvokeInstruction call = (SSAInvokeInstruction) d;
-              if (vn == call.getException()) {
-                Statement st = new ParamStatement.ExceptionalReturnCaller(node, call);
-                addEdge(st, pac);
+        // note that if the caller is the fake root method and the parameter type is primitive,
+        // it's possible to have a value number of -1.  If so, just ignore it.
+        if (vn > -1) {
+          if (ir.getSymbolTable().isParameter(vn)) {
+            Statement a = new ParamStatement.ParamCallee(node, vn);
+            addEdge(a, pac);
+          } else {
+            SSAInstruction d = DU.getDef(vn);
+            if (dOptions.isTerminateAtCast() && (d instanceof SSACheckCastInstruction)) {
+              break;
+            }
+            if (d != null) {
+              if (d instanceof SSAInvokeInstruction) {
+                SSAInvokeInstruction call = (SSAInvokeInstruction) d;
+                if (vn == call.getException()) {
+                  Statement st = new ParamStatement.ExceptionalReturnCaller(node, call);
+                  addEdge(st, pac);
+                } else {
+                  Statement st = new ParamStatement.NormalReturnCaller(node, call);
+                  addEdge(st, pac);
+                }
               } else {
-                Statement st = new ParamStatement.NormalReturnCaller(node, call);
-                addEdge(st, pac);
+                Statement ds = ssaInstruction2Statement(d);
+                addEdge(ds, pac);
               }
-            } else {
-              Statement ds = ssaInstruction2Statement(d);
-              addEdge(ds, pac);
             }
           }
         }

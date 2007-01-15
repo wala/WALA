@@ -185,7 +185,6 @@ public abstract class SSAInstruction implements IInstruction {
   }
 
   public int getDef(int i) {
-    Assertions.UNREACHABLE();
     return -1;
   }
 

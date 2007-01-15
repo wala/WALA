@@ -253,7 +253,7 @@ public class SparseIntSet implements IntSet {
     if (A.isEmpty()) {
       return new int[0];
     } else if (B.isEmpty()) {
-      int[] newElts = new int[ A.size ];
+      int[] newElts = new int[A.size];
       System.arraycopy(A.elements, 0, newElts, 0, A.size);
       return newElts;
     } else if (A.equals(B)) {
@@ -323,8 +323,9 @@ public class SparseIntSet implements IntSet {
    */
   public static int[] parseIntArray(String str) throws NumberFormatException {
     int len = str.length();
-    if (str.charAt(0) != '{' || str.charAt(len - 1) != '}')
+    if (len == 0 || str.charAt(0) != '{' || str.charAt(len - 1) != '}') {
       throw new NumberFormatException(str);
+    }
     str = str.substring(1, len - 1);
     StringTokenizer tok = new StringTokenizer(str, " ,");
 
