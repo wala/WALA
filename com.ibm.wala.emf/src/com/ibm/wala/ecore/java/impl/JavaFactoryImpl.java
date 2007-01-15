@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.java.ECallSite;
 import com.ibm.wala.ecore.java.EClassHierarchy;
 import com.ibm.wala.ecore.java.EClassLoaderName;
@@ -55,6 +56,7 @@ public class JavaFactoryImpl extends EFactoryImpl implements JavaFactory {
    * <!-- end-user-doc -->
    * @generated
    */
+  @Internal
   public JavaFactoryImpl() {
     super();
   }

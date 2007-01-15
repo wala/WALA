@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.java.pointerAnalysis.EArrayContents;
 import com.ibm.wala.ecore.java.pointerAnalysis.EHeapGraph;
 import com.ibm.wala.ecore.java.pointerAnalysis.EInstanceField;
@@ -54,6 +55,7 @@ public class PointerAnalysisFactoryImpl extends EFactoryImpl implements PointerA
    * <!-- end-user-doc -->
    * @generated
    */
+  @Internal
   public PointerAnalysisFactoryImpl() {
     super();
   }

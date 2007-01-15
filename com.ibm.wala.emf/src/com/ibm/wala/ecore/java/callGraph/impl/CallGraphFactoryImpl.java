@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.java.callGraph.CallGraphFactory;
 import com.ibm.wala.ecore.java.callGraph.CallGraphPackage;
 import com.ibm.wala.ecore.java.callGraph.ECallGraph;
@@ -48,6 +49,7 @@ public class CallGraphFactoryImpl extends EFactoryImpl implements CallGraphFacto
    * <!-- end-user-doc -->
    * @generated
    */
+  @Internal
   public CallGraphFactoryImpl() {
     super();
   }

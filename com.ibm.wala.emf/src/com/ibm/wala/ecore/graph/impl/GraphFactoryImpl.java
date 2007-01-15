@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.graph.EGraph;
 import com.ibm.wala.ecore.graph.ETree;
 import com.ibm.wala.ecore.graph.GraphFactory;
@@ -49,6 +50,7 @@ public class GraphFactoryImpl extends EFactoryImpl implements GraphFactory {
    * <!-- end-user-doc -->
    * @generated
    */
+  @Internal
   public GraphFactoryImpl() {
     super();
   }

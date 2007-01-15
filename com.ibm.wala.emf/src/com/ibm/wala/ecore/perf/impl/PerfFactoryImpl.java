@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.perf.EPhaseTiming;
 import com.ibm.wala.ecore.perf.PerfFactory;
 import com.ibm.wala.ecore.perf.PerfPackage;
@@ -48,6 +49,7 @@ public class PerfFactoryImpl extends EFactoryImpl implements PerfFactory {
    * <!-- end-user-doc -->
    * @generated
    */
+  @Internal
   public PerfFactoryImpl() {
     super();
   }

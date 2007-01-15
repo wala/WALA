@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.regex.EPattern;
 import com.ibm.wala.ecore.regex.RegexFactory;
 import com.ibm.wala.ecore.regex.RegexPackage;
@@ -48,6 +49,7 @@ public class RegexFactoryImpl extends EFactoryImpl implements RegexFactory {
    * <!-- end-user-doc -->
    * @generated
    */
+  @Internal
   public RegexFactoryImpl() {
     super();
   }
