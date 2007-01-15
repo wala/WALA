@@ -15,45 +15,46 @@ import java.io.UnsupportedEncodingException;
 import com.ibm.wala.shrikeCT.ClassWriter;
 
 public class SourceDebugExtensionWriter extends ClassWriter.Element {
-	private int attrID;
-	private byte[] table;
-	
-	public SourceDebugExtensionWriter(ClassWriter w){
-		attrID = w.addCPUtf8("SourceDebugExtension");
-	}
-	
-	public int getSize() {
-	    return table == null ? 6 : 6 + table.length;
-	}
+  private int attrID;
 
-	public int copyInto(byte[] buf, int offset) {
-	    ClassWriter.setUShort(buf, offset, attrID);
-	    ClassWriter.setInt(buf, offset + 2, getSize() - 6);
-	    offset += 6;
-	    if (table != null) {
-	      for (int i = 0; i < table.length; i++) {
-	        ClassWriter.setUByte(buf, offset, table[i]);
-	        offset++;
-	      }
-	    }
-	    return offset;
-	}
-	
-	public void setRawTable(byte[] sourceDebug){
-		for(int i = 0; i < sourceDebug.length ; i++){
-			if (sourceDebug[i] < 1 || sourceDebug[i] > 0xFFFF) {
-		        throw new IllegalArgumentException("Invalid CP index: " + sourceDebug[i]);
-			}
-		}
-		 this.table = sourceDebug;
-	}
+  private byte[] table;
 
-	public void setDebugInfo(String sourceDebug){
-		try {
-			byte[] bytes = sourceDebug.getBytes("UTF8");
-			setRawTable(bytes);
-		} catch (UnsupportedEncodingException e){
-			System.err.println(e);
-		}
-	}
+  public SourceDebugExtensionWriter(ClassWriter w) {
+    attrID = w.addCPUtf8("SourceDebugExtension");
+  }
+
+  public int getSize() {
+    return table == null ? 6 : 6 + table.length;
+  }
+
+  public int copyInto(byte[] buf, int offset) throws IllegalArgumentException  {
+    ClassWriter.setUShort(buf, offset, attrID);
+    ClassWriter.setInt(buf, offset + 2, getSize() - 6);
+    offset += 6;
+    if (table != null) {
+      for (int i = 0; i < table.length; i++) {
+        ClassWriter.setUByte(buf, offset, table[i]);
+        offset++;
+      }
+    }
+    return offset;
+  }
+
+  public void setRawTable(byte[] sourceDebug) {
+    for (int i = 0; i < sourceDebug.length; i++) {
+      if (sourceDebug[i] < 1 || sourceDebug[i] > 0xFFFF) {
+        throw new IllegalArgumentException("Invalid CP index: " + sourceDebug[i]);
+      }
+    }
+    this.table = sourceDebug;
+  }
+
+  public void setDebugInfo(String sourceDebug) {
+    try {
+      byte[] bytes = sourceDebug.getBytes("UTF8");
+      setRawTable(bytes);
+    } catch (UnsupportedEncodingException e) {
+      System.err.println(e);
+    }
+  }
 }

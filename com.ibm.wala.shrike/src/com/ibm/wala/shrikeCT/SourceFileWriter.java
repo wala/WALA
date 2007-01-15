@@ -32,7 +32,7 @@ public final class SourceFileWriter extends ClassWriter.Element {
     }
   }
 
-  public int getSize() {
+  public int getSize() throws IllegalArgumentException {
     verify();
     return 8;
   }

@@ -43,12 +43,11 @@ public final class CodeWriter extends ClassWriter.Element {
     }
   }
 
-  //By Xiangyu
   public int getCodeLength() {
     return code.length;
   }
 
-  public int getSize() {
+  public int getSize() throws IllegalArgumentException {
     verify();
 
     int size = 14 + code.length + 2 + (exnHandlers == null ? 0 : exnHandlers.length) * 2 + 2;
@@ -60,7 +59,7 @@ public final class CodeWriter extends ClassWriter.Element {
     return size;
   }
 
-  public int copyInto(byte[] buf, int offset) {
+  public int copyInto(byte[] buf, int offset) throws IllegalArgumentException {
     verify();
 
     int start = offset;

@@ -61,7 +61,7 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
     return 8 + rawTable.length * 2;
   }
 
-  public int copyInto(byte[] buf, int offset) {
+  public int copyInto(byte[] buf, int offset) throws IllegalArgumentException {
     ClassWriter.setUShort(buf, offset, attrID);
     ClassWriter.setInt(buf, offset + 2, 2 + rawTable.length * 2);
     ClassWriter.setUShort(buf, offset + 6, rawTable.length / 5);

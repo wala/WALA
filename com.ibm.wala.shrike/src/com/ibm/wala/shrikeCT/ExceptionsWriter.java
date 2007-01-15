@@ -28,7 +28,7 @@ public final class ExceptionsWriter extends ClassWriter.Element {
     return table == null ? 8 : 8 + table.length * 2;
   }
 
-  public int copyInto(byte[] buf, int offset) {
+  public int copyInto(byte[] buf, int offset) throws IllegalArgumentException {
     ClassWriter.setUShort(buf, offset, attrID);
     ClassWriter.setInt(buf, offset + 2, getSize() - 6);
     ClassWriter.setUShort(buf, offset + 6, table == null ? 0 : table.length);

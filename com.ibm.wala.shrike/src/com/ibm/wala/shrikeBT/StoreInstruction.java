@@ -36,7 +36,7 @@ public final class StoreInstruction extends Instruction {
     return r;
   }
 
-  public static StoreInstruction make(String type, int index) {
+  public static StoreInstruction make(String type, int index) throws IllegalArgumentException {
     int t = Util.getTypeIndex(type);
     if (t < 0 || t > TYPE_Object_index) {
       throw new IllegalArgumentException("Cannot store local of type " + type);

@@ -29,7 +29,7 @@ public final class ReturnInstruction extends Instruction {
     return r;
   }
 
-  public static ReturnInstruction make(String type) {
+  public static ReturnInstruction make(String type) throws IllegalArgumentException {
     if (type.equals(TYPE_void)) {
       return preallocatedVoid;
     } else {

@@ -401,7 +401,7 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Set the constant pool index for the name of the class.
    */
-  public void setNameIndex(int c) {
+  public void setNameIndex(int c) throws IllegalArgumentException {
     if (c < 1 || c > 0xFFFF) {
       throw new IllegalArgumentException("Class name index out of range: " + c);
     }
@@ -812,7 +812,7 @@ public final class ClassWriter implements ClassConstants {
    * After you've added everything you need to the class, call this method to
    * generate the actual class file data. This can only be called once.
    */
-  public byte[] makeBytes() {
+  public byte[] makeBytes() throws IllegalArgumentException {
     if (buf != null) {
       throw new IllegalArgumentException("Can't call makeBytes() twice");
     }
@@ -882,7 +882,10 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Set the byte at offset 'offset' in 'buf' to the unsigned 8-bit value in v.
    */
-  public static void setUByte(byte[] buf, int offset, int v) {
+  public static void setUByte(byte[] buf, int offset, int v) throws IllegalArgumentException {
+    if (offset >= buf.length) {
+      throw new IllegalArgumentException("illegal offset " + offset);
+    }
     buf[offset] = (byte) v;
   }
 
@@ -890,7 +893,10 @@ public final class ClassWriter implements ClassConstants {
    * Set the 4 bytes at offset 'offset' in 'buf' to the signed 32-bit value in
    * v.
    */
-  public static void setInt(byte[] buf, int offset, int v) {
+  public static void setInt(byte[] buf, int offset, int v) throws IllegalArgumentException {
+    if (offset >= buf.length) {
+      throw new IllegalArgumentException("illegal offset " + offset);
+    }
     buf[offset] = (byte) (v >> 24);
     buf[offset + 1] = (byte) (v >> 16);
     buf[offset + 2] = (byte) (v >> 8);
@@ -901,7 +907,7 @@ public final class ClassWriter implements ClassConstants {
    * Set the 8 bytes at offset 'offset' in 'buf' to the signed 64-bit value in
    * v.
    */
-  public static void setLong(byte[] buf, int offset, long v) {
+  public static void setLong(byte[] buf, int offset, long v) throws IllegalArgumentException {
     setInt(buf, offset, (int) (v >> 32));
     setInt(buf, offset + 4, (int) v);
   }
@@ -909,14 +915,14 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Set the 4 bytes at offset 'offset' in 'buf' to the float value in v.
    */
-  public static void setFloat(byte[] buf, int offset, float v) {
+  public static void setFloat(byte[] buf, int offset, float v) throws IllegalArgumentException{
     setInt(buf, offset, Float.floatToIntBits(v));
   }
 
   /**
    * Set the 8 bytes at offset 'offset' in 'buf' to the double value in v.
    */
-  public static void setDouble(byte[] buf, int offset, double v) {
+  public static void setDouble(byte[] buf, int offset, double v) throws IllegalArgumentException{
     setLong(buf, offset, Double.doubleToRawLongBits(v));
   }
 
@@ -924,7 +930,7 @@ public final class ClassWriter implements ClassConstants {
    * Set the 2 bytes at offset 'offset' in 'buf' to the unsigned 16-bit value in
    * v.
    */
-  public static void setUShort(byte[] buf, int offset, int v) {
+  public static void setUShort(byte[] buf, int offset, int v) throws IllegalArgumentException {
     if (offset + 1 >= buf.length) {
       throw new IllegalArgumentException("buf is too short " + buf.length + " " + offset);
     }

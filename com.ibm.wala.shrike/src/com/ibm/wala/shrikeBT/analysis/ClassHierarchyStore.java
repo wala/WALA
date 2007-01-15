@@ -59,9 +59,9 @@ public final class ClassHierarchyStore implements ClassHierarchyProvider {
    * @param superInterfaces
    *          the JVM types of its implemented interfaces
    */
-  public void setClassInfo(String cl, boolean isInterface, boolean isFinal, String superClass, String[] superInterfaces) {
+  public void setClassInfo(String cl, boolean isInterface, boolean isFinal, String superClass, String[] superInterfaces) throws IllegalArgumentException {
     if (superClass != null && superClass.equals(cl)) {
-      throw new Error("Class " + cl + " cannot be its own superclass");
+      throw new IllegalArgumentException("Class " + cl + " cannot be its own superclass");
     }
     contents.put(cl, new ClassInfo(isInterface, isFinal, superClass, superInterfaces));
   }

@@ -122,7 +122,7 @@ public final class Util {
   /**
    * Convert a JVM type name back into a Java class name.
    */
-  public static String makeClass(String t) {
+  public static String makeClass(String t) throws IllegalArgumentException {
     if (t.startsWith("[")) {
       return t;
     } else if (!t.startsWith("L")) {

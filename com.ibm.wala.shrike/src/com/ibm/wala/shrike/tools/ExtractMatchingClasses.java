@@ -36,7 +36,10 @@ public class ExtractMatchingClasses {
     }
   }
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws Exception, IllegalArgumentException {
+    if (args.length < 2) {
+      throw new IllegalArgumentException("Invalid command line");
+    }
     String in = args[0];
     String out = args[1];
     String[] match = new String[args.length - 2];

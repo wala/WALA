@@ -12,6 +12,7 @@ package com.ibm.wala.shrikeBT;
 
 public final class NewInstruction extends Instruction {
   private String type;
+
   private short arrayBoundsCount;
 
   protected NewInstruction(short opcode, String type, short arrayBoundsCount) {
@@ -28,7 +29,7 @@ public final class NewInstruction extends Instruction {
    *          the number of array dimensions to preconstruct (equal to the
    *          number of integer parameters this instruction expects)
    */
-  public static NewInstruction make(String type, int arrayBoundsCount) {
+  public static NewInstruction make(String type, int arrayBoundsCount) throws IllegalArgumentException {
     if (arrayBoundsCount < 0 || arrayBoundsCount > 255) {
       throw new IllegalArgumentException("Too many array bounds: " + arrayBoundsCount);
     } else {
@@ -100,7 +101,10 @@ public final class NewInstruction extends Instruction {
   public void visit(Visitor v) {
     v.visitNew(this);
   }
-    /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.domo.cfg.IInstruction#isPEI()
    */
   public boolean isPEI() {

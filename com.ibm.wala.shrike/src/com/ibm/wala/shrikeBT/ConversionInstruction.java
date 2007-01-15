@@ -45,7 +45,7 @@ public final class ConversionInstruction extends Instruction {
     return r;
   }
 
-  public static ConversionInstruction make(String fromType, String toType) {
+  public static ConversionInstruction make(String fromType, String toType) throws IllegalArgumentException {
     int from = Util.getTypeIndex(fromType);
     int to = Util.getTypeIndex(toType);
     if (from < 0 || from > TYPE_double_index) {

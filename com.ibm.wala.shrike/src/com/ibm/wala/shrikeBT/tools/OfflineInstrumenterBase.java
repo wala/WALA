@@ -413,7 +413,7 @@ public abstract class OfflineInstrumenterBase {
   /**
    * Set the JAR Comment for the output JAR.
    */
-  final public void setJARComment(String comment) throws IOException {
+  final public void setJARComment(String comment) throws IOException, IllegalArgumentException {
     makeOutputJar();
     outputJar.setComment(comment);
   }
