@@ -24,7 +24,10 @@ public class SSAThrowInstruction extends SSAAbstractThrowInstruction {
     super(exception);
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+    if (uses != null && uses.length != 1) {
+      throw new IllegalArgumentException("if non-null, uses.length must be 1");
+    }
     return new SSAThrowInstruction(uses==null? getException(): uses[0]);
   }
 

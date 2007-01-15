@@ -50,28 +50,31 @@ public abstract class AbstractGraph<T> implements Graph<T> {
   /*
    * (non-Javadoc)
    */
-  public int getPredNodeCount(T N) {
+  public int getPredNodeCount(T N) throws IllegalArgumentException {
     return getEdgeManager().getPredNodeCount(N);
   }
 
   /*
    * (non-Javadoc)
    */
-  public Iterator<? extends T> getPredNodes(T N) {
+  public Iterator<? extends T> getPredNodes(T N) throws IllegalArgumentException {
     return getEdgeManager().getPredNodes(N);
   }
 
   /*
    * (non-Javadoc)
    */
-  public int getSuccNodeCount(T N) {
+  public int getSuccNodeCount(T N) throws IllegalArgumentException {
+    if (!containsNode(N)) {
+      throw new IllegalArgumentException("node not in graph " + N);
+    }
     return getEdgeManager().getSuccNodeCount(N);
   }
 
   /*
    * (non-Javadoc)
    */
-  public Iterator<? extends T> getSuccNodes(T N) {
+  public Iterator<? extends T> getSuccNodes(T N) throws IllegalArgumentException {
     return getEdgeManager().getSuccNodes(N);
   }
 
@@ -90,11 +93,11 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node,
    *      com.ibm.wala.util.graph.Node)
    */
-  public void addEdge(T src, T dst) {
+  public void addEdge(T src, T dst) throws IllegalArgumentException {
     getEdgeManager().addEdge(src, dst);
   }
 
-  public void removeEdge(T src, T dst) {
+  public void removeEdge(T src, T dst) throws IllegalArgumentException {
     getEdgeManager().removeEdge(src, dst);
   }
 
@@ -110,7 +113,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeAllIncidentEdges(T node) {
+  public void removeAllIncidentEdges(T node) throws IllegalArgumentException {
     getEdgeManager().removeAllIncidentEdges(node);
   }
 
@@ -119,7 +122,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeIncomingEdges(T node) {
+  public void removeIncomingEdges(T node) throws IllegalArgumentException {
     getEdgeManager().removeIncomingEdges(node);
   }
 
@@ -128,7 +131,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeOutgoingEdges(T node) {
+  public void removeOutgoingEdges(T node) throws IllegalArgumentException {
     getEdgeManager().removeOutgoingEdges(node);
   }
 
@@ -137,7 +140,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    * 
    * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
    */
-  public void removeNodeAndEdges(T N) {
+  public void removeNodeAndEdges(T N) throws IllegalArgumentException {
     getEdgeManager().removeAllIncidentEdges(N);
     getNodeManager().removeNode(N);
   }

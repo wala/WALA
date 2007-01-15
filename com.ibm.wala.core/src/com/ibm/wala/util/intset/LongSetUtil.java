@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-
 /**
  * 
  * Utilities for dealing with LongSets
@@ -19,7 +18,6 @@ package com.ibm.wala.util.intset;
  */
 public class LongSetUtil {
 
-
   /**
    * @param data
    * @param key
@@ -27,16 +25,23 @@ public class LongSetUtil {
    * @param high
    * @return index \in [low,high] s.t. data[index] = key, or -1 if not found
    */
-  public static int binarySearch(long[] data, long key, int low, int high) {
+  public static int binarySearch(long[] data, long key, int low, int high) throws IllegalArgumentException {
+    if (data == null) {
+      throw new IllegalArgumentException("null array");
+    }
+    if (data.length == 0) {
+      return -1;
+    }
     if (low <= high) {
       int mid = (low + high) / 2;
       long midValue = data[mid];
-      if (midValue == key)
+      if (midValue == key) {
         return mid;
-      else if (midValue > key)
+      } else if (midValue > key) {
         return binarySearch(data, key, low, mid - 1);
-      else
+      } else {
         return binarySearch(data, key, mid + 1, high);
+      }
     } else {
       return -1;
     }

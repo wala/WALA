@@ -60,11 +60,11 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
    * 
    * @param initialCapacity
    */
-  public MutableSparseIntSet(int initialCapacity) {
+  public MutableSparseIntSet(int initialCapacity) throws IllegalArgumentException {
     super(new int[initialCapacity]);
     size = 0;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(initialCapacity > 0);
+    if (initialCapacity <= 0) {
+      throw new IllegalArgumentException("initialCapacity must be positive");
     }
   }
 

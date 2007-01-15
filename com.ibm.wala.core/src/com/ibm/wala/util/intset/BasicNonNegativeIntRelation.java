@@ -128,13 +128,13 @@ public final class BasicNonNegativeIntRelation implements IBinaryNonNegativeIntR
    * @param y
    * @return true iff the relation changes as a result of this call.
    */
-  public boolean add(int x, int y) {
+  public boolean add(int x, int y) throws IllegalArgumentException {
     if (Assertions.verifyAssertions) {
       if (x < 0) {
-        Assertions.UNREACHABLE();
+        throw new IllegalArgumentException("illegal x: " + x);
       }
       if (y < 0) {
-        Assertions.UNREACHABLE();
+        throw new IllegalArgumentException("illegal y: " + y);
       }
     }
     maxX = Math.max(maxX, x);

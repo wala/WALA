@@ -11,6 +11,7 @@
 package com.ibm.wala.types.generics;
 
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * UNDER CONSTRUCTION
@@ -66,11 +67,11 @@ public class TypeArgument {
     return s;
   }
 
-  public static TypeArgument make(String string) {
+  public static TypeArgument make(String string) throws UnimplementedError {
     if (string.equals("*")) {
       return WILDCARD;
     } else {
-      Assertions.UNREACHABLE();
+      Assertions.UNREACHABLE("implement me");
       return null;
     }
   }

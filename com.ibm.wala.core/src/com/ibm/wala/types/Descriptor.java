@@ -57,7 +57,7 @@ public final class Descriptor {
    * @param b a byte array holding the string representation of this descriptor
    * @return the canonical representative for this descriptor value
    */
-  public static Descriptor findOrCreate(ImmutableByteArray b) {
+  public static Descriptor findOrCreate(ImmutableByteArray b) throws IllegalArgumentException {
     TypeName returnType = StringStuff.parseForReturnTypeName(b);
     TypeName[] parameters = StringStuff.parseForParameterNames(b);
     Key k = new Key(returnType, parameters);
@@ -73,7 +73,7 @@ public final class Descriptor {
    * @param s string representation of this descriptor
    * @return the canonical representative for this descriptor value
    */
-  public static Descriptor findOrCreateUTF8(String s) {
+  public static Descriptor findOrCreateUTF8(String s) throws IllegalArgumentException {
     byte[] b = UTF8Convert.toUTF8(s);
     return findOrCreate(new ImmutableByteArray(b));
   }

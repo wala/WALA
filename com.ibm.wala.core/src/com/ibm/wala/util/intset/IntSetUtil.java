@@ -21,32 +21,31 @@ import com.ibm.wala.util.debug.Trace;
 public class IntSetUtil {
 
   public static final String INT_SET_FACTORY_CONFIG_PROPERTY_NAME = "com.ibm.wala.mutableIntSetFactory";
-  
+
   private static MutableIntSetFactory defaultIntSetFactory;
-  
+
   static {
-	  MutableIntSetFactory defaultFactory = new MutableSharedBitVectorIntSetFactory();
-	  if (System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME) != null) {
-		  try {
-		    Class intSetFactoryClass = Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
-		    MutableIntSetFactory intSetFactory = (MutableIntSetFactory) intSetFactoryClass.newInstance();
-		    setDefaultIntSetFactory(intSetFactory);
-		  } catch (Exception e) {
-			Trace.println("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
-			setDefaultIntSetFactory(defaultFactory);
-		  }
-	  } else {
-		setDefaultIntSetFactory(defaultFactory);
-	  }
-	  assert defaultIntSetFactory != null;
+    MutableIntSetFactory defaultFactory = new MutableSharedBitVectorIntSetFactory();
+    if (System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME) != null) {
+      try {
+        Class intSetFactoryClass = Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+        MutableIntSetFactory intSetFactory = (MutableIntSetFactory) intSetFactoryClass.newInstance();
+        setDefaultIntSetFactory(intSetFactory);
+      } catch (Exception e) {
+        Trace.println("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+        setDefaultIntSetFactory(defaultFactory);
+      }
+    } else {
+      setDefaultIntSetFactory(defaultFactory);
+    }
+    assert defaultIntSetFactory != null;
   }
-  
+
   public static MutableIntSet make() {
     return defaultIntSetFactory.make();
   }
 
   private final static boolean DEBUG = false;
-
 
   /**
    * This method constructs an appropriate mutable copy of set.
@@ -66,9 +65,9 @@ public class IntSetUtil {
     } else if (set instanceof SemiSparseMutableIntSet) {
       return new SemiSparseMutableIntSet((SemiSparseMutableIntSet) set);
     } else if (set instanceof DebuggingMutableIntSet) {
-    	MutableIntSet pCopy = makeMutableCopy(((DebuggingMutableIntSet)set).primaryImpl);
-    	MutableIntSet sCopy = makeMutableCopy(((DebuggingMutableIntSet)set).secondaryImpl);
-    	return new DebuggingMutableIntSet(pCopy, sCopy);
+      MutableIntSet pCopy = makeMutableCopy(((DebuggingMutableIntSet) set).primaryImpl);
+      MutableIntSet sCopy = makeMutableCopy(((DebuggingMutableIntSet) set).secondaryImpl);
+      return new DebuggingMutableIntSet(pCopy, sCopy);
     } else {
       Assertions.UNREACHABLE(set.getClass().toString());
       return null;
@@ -120,19 +119,14 @@ public class IntSetUtil {
       }
       return SparseIntSet.diff((SparseIntSet) A, (SparseIntSet) B);
 
-    } else if (A instanceof SemiSparseMutableIntSet &&
-	       B instanceof SemiSparseMutableIntSet) 
-    {
+    } else if (A instanceof SemiSparseMutableIntSet && B instanceof SemiSparseMutableIntSet) {
       if (DEBUG) {
-	Trace.println("call SemiSparseMutableIntSet.diff");
+        Trace.println("call SemiSparseMutableIntSet.diff");
       }
-      IntSet d = 
-	SemiSparseMutableIntSet.diff(
-	  (SemiSparseMutableIntSet) A, 
-	  (SemiSparseMutableIntSet) B);
+      IntSet d = SemiSparseMutableIntSet.diff((SemiSparseMutableIntSet) A, (SemiSparseMutableIntSet) B);
 
       if (DEBUG) {
-	Assertions._assert(d.sameValue(defaultSlowDiff(A, B, factory)));
+        Assertions._assert(d.sameValue(defaultSlowDiff(A, B, factory)));
       }
 
       return d;
@@ -148,24 +142,21 @@ public class IntSetUtil {
    * @param B
    */
   public static MutableIntSet removeAll(MutableIntSet A, IntSet B) {
-    if (A instanceof SemiSparseMutableIntSet && 
-	B instanceof SemiSparseMutableIntSet) 
-    {
+    if (A instanceof SemiSparseMutableIntSet && B instanceof SemiSparseMutableIntSet) {
       if (DEBUG) {
         Trace.println("call SemiSparseMutableIntSet.removeAll");
       }
-      return
-	((SemiSparseMutableIntSet) A).removeAll((SemiSparseMutableIntSet) B);
+      return ((SemiSparseMutableIntSet) A).removeAll((SemiSparseMutableIntSet) B);
     } else {
       for (IntIterator it = B.intIterator(); it.hasNext();) {
         int I = it.next();
-	A.remove(I);
-	if (DEBUG) {
-         Trace.println("removed " + I + " now is " + A);
-	}
+        A.remove(I);
+        if (DEBUG) {
+          Trace.println("removed " + I + " now is " + A);
+        }
       }
       if (DEBUG) {
-	Trace.println("return " + A);
+        Trace.println("return " + A);
       }
       return A;
     }
@@ -178,32 +169,43 @@ public class IntSetUtil {
    * @param high
    * @return index \in [low,high] s.t. data[index] = key, or -1 if not found
    */
-  public static int binarySearch(int[] data, int key, int low, int high) {
+  public static int binarySearch(int[] data, int key, int low, int high) throws IllegalArgumentException {
+    if (data == null) {
+      throw new IllegalArgumentException("null array");
+    }
+    if (data.length == 0) {
+      return -1;
+    }
     if (low <= high) {
       int mid = (low + high) / 2;
       int midValue = data[mid];
-      if (midValue == key)
+      if (midValue == key) {
         return mid;
-      else if (midValue > key)
+      } else if (midValue > key) {
         return binarySearch(data, key, low, mid - 1);
-      else
+      } else {
         return binarySearch(data, key, mid + 1, high);
+      }
     } else {
       return -1;
     }
   }
+
   /**
    * @return Returns the defaultIntSetFactory.
    */
   public static MutableIntSetFactory getDefaultIntSetFactory() {
     return defaultIntSetFactory;
   }
+
   /**
-   * @param defaultIntSetFactory The defaultIntSetFactory to set.
+   * @param defaultIntSetFactory
+   *          The defaultIntSetFactory to set.
    */
   public static void setDefaultIntSetFactory(MutableIntSetFactory defaultIntSetFactory) {
     IntSetUtil.defaultIntSetFactory = defaultIntSetFactory;
   }
+
   /**
    * @param s
    * @param j
@@ -211,8 +213,8 @@ public class IntSetUtil {
    */
   public static IntSet add(IntSet s, int j) {
     if (s instanceof SparseIntSet) {
-      SparseIntSet sis = (SparseIntSet)s;
-      return SparseIntSet.add(sis,j);
+      SparseIntSet sis = (SparseIntSet) s;
+      return SparseIntSet.add(sis, j);
     } else {
       Assertions.UNREACHABLE("implement me");
       return null;

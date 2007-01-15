@@ -13,6 +13,7 @@ package com.ibm.wala.util;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -22,6 +23,7 @@ import com.ibm.wala.util.debug.Assertions;
  * @author Julian Dolby
  * @author sfink
  */
+@Internal
 public final class CacheReference {
 
   private final static byte SOFT = 0;

@@ -30,26 +30,14 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
    */
   private MutableMapping<T> map = new MutableMapping<T>();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.graph.NumberedGraph#getNumber(com.ibm.wala.util.graph.Node)
-   */
+
   public int getNumber(Object T) {
     return map.getMappedIndex(T);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.graph.NumberedGraph#getNode(int)
-   */
+
   public T getNode(int number)  {
     T result = (T) map.getMappedObject(number);
-    
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(getNumber(result) == number);
-    }
     return result;
   }
 
@@ -62,20 +50,12 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
     return map.getMappingSize() - 1;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.graph.Graph#iterateNodes()
-   */
+
   public Iterator<T> iterateNodes() {
     return map.iterator();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.graph.Graph#getNumberOfNodes()
-   */
+
   public int getNumberOfNodes() {
     return map.getMappingSize();
   }

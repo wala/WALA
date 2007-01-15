@@ -21,25 +21,13 @@ import com.ibm.wala.util.intset.IntSet;
  * @author sfink
  */
 public interface NumberedNodeManager<T> extends NodeManager<T> {
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.graph.NumberedGraph#getNumber(com.ibm.wala.util.graph.Node)
-   */
+
   public abstract int getNumber(T N);
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.graph.NumberedGraph#getNode(int)
-   */
+
   public abstract T getNode(int number);
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.graph.NumberedGraph#getMaxNumber()
-   */
+
   public abstract int getMaxNumber();
 
   /**

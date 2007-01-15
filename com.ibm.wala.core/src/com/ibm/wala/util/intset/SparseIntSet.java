@@ -120,6 +120,9 @@ public class SparseIntSet implements IntSet {
    * @see com.ibm.wala.util.intset.IntSet#contains(int)
    */
   public final boolean contains(int x) {
+    if (elements == null) {
+      return false;
+    }
     return IntSetUtil.binarySearch(elements, x, 0, size - 1) >= 0;
   }
 
@@ -128,6 +131,9 @@ public class SparseIntSet implements IntSet {
    * @return index i s.t. elements[i] == x, or -1 if not found.
    */
   public final int getIndex(int x) {
+    if (elements == null) {
+      return -1;
+    }
     return IntSetUtil.binarySearch(elements, x, 0, size - 1);
   }
 
@@ -449,6 +455,9 @@ public class SparseIntSet implements IntSet {
    */
   public static SparseIntSet add(SparseIntSet s, int j) {
 
+    if (s.elements == null) {
+      return SparseIntSet.singleton(j);
+    }
     SparseIntSet result = new SparseIntSet(s.size + 1);
     int k = 0;
     int m = 0;

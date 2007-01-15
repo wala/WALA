@@ -42,7 +42,7 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory {
   /**
    * @param string
    */
-  public MutableIntSet parse(String string) {
+  public MutableIntSet parse(String string) throws NumberFormatException {
     int[] data = SparseIntSet.parseIntArray(string);
     MutableIntSet result = new SemiSparseMutableIntSet();
     for (int i = 0; i < data.length; i++)

@@ -122,11 +122,14 @@ public class StringStuff {
    *          method descriptor - something like "(III)V"
    * @return type description
    */
-  public static final TypeName parseForReturnTypeName(ImmutableByteArray b) {
-    if (Assertions.verifyAssertions) {
-      if (b.get(0) != '(') {
-        Assertions._assert(b.get(0) == '(', "bad descriptor: " + b);
-      }
+  public static final TypeName parseForReturnTypeName(ImmutableByteArray b) throws IllegalArgumentException {
+
+    if (b.length() <= 2) {
+      throw new IllegalArgumentException("invalid descriptor: " + b);
+
+    }
+    if (b.get(0) != '(') {
+      throw new IllegalArgumentException("invalid descriptor: " + b);
     }
 
     int i = 0;
@@ -171,12 +174,14 @@ public class StringStuff {
    * 
    * @return parameter descriptions, or null if there are no parameters
    */
-  public static final TypeName[] parseForParameterNames(ImmutableByteArray b) {
+  public static final TypeName[] parseForParameterNames(ImmutableByteArray b) throws IllegalArgumentException {
 
-    if (Assertions.verifyAssertions) {
-      if (b.get(0) != '(') {
-        Assertions._assert(b.get(0) == '(', "bad descriptor " + b);
-      }
+    if (b.length() <= 2) {
+      throw new IllegalArgumentException("invalid descriptor: " + b);
+
+    }
+    if (b.get(0) != '(') {
+      throw new IllegalArgumentException("invalid descriptor: " + b);
     }
 
     ArrayList<TypeName> sigs = new ArrayList<TypeName>(10);
@@ -335,7 +340,7 @@ public class StringStuff {
    * @return an ImmutableByteArray that represents the package, or null if it's
    *         the unnamed package
    */
-  public static ImmutableByteArray parseForClass(ImmutableByteArray name) {
+  public static ImmutableByteArray parseForClass(ImmutableByteArray name) throws IllegalArgumentException {
     return parseForClass(name, 0, name.length());
   }
 
@@ -345,15 +350,14 @@ public class StringStuff {
    * 
    * @return dimensionality - something like "1" or "2"
    */
-  public static short parseForArrayDimensionality(ImmutableByteArray b, int start, int length) {
+  public static short parseForArrayDimensionality(ImmutableByteArray b, int start, int length) throws IllegalArgumentException {
 
     for (int i = start; i < start + length; ++i) {
       if (b.b[i] != '[') {
         return (short) (i - start);
       }
     }
-    Assertions.UNREACHABLE();
-    return -1;
+    throw new IllegalArgumentException("ill-formed array descriptor " + b);
   }
 
   /**
@@ -390,10 +394,13 @@ public class StringStuff {
    * @param length
    * @return true iff the class returned by parseForClass is primitive
    */
-  public static boolean classIsPrimitive(ImmutableByteArray name, int start, int length) {
+  public static boolean classIsPrimitive(ImmutableByteArray name, int start, int length) throws IllegalArgumentException {
     while (length > 0 && name.b[start] == '[') {
       start++;
       length--;
+    }
+    if (start >= name.b.length) {
+      throw new IllegalArgumentException("ill-formed type name: " + name);
     }
     return name.b[start] != 'L';
   }
@@ -402,7 +409,10 @@ public class StringStuff {
    * @param methodSig
    *          something like "java_cup.lexer.advance()V"
    */
-  public static MethodReference makeMethodReference(String methodSig) {
+  public static MethodReference makeMethodReference(String methodSig) throws IllegalArgumentException {
+    if (methodSig.lastIndexOf('.') < 0) {
+      throw new IllegalArgumentException("ill-formed sig " + methodSig);
+    }
     String type = methodSig.substring(0, methodSig.lastIndexOf('.'));
     type = deployment2CanonicalTypeString(type);
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, type);
@@ -420,10 +430,14 @@ public class StringStuff {
    *          a String containing a type name in JVM internal format.
    * @return the same type name in readable (source code) format.
    */
-  public static String jvmToReadableType(String jvmType) {
+  public static String jvmToReadableType(String jvmType)throws IllegalArgumentException {
     StringBuffer readable = new StringBuffer(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
 
+    if (jvmType.length() == 0) {
+      throw new IllegalArgumentException("ill-formed type : " + jvmType);
+    }
+    
     // cycle through prefixes of '['
     char prefix = jvmType.charAt(0);
     while (prefix == '[') {

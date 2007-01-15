@@ -164,16 +164,6 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumber> implements
     n.removeOutgoingEdges();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
-  public String toString() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return super.toString();
-  }
 
   /*
    * (non-Javadoc)

@@ -30,7 +30,13 @@ public class SSAArrayLengthInstruction extends SSAInstruction {
     this.arrayref = arrayref;
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+    if (defs != null && defs.length != 1) {
+      throw new IllegalArgumentException();
+    }
+    if (uses != null && uses.length != 1) {
+      throw new IllegalArgumentException();
+    }
     return new SSAArrayLengthInstruction(defs == null ? result : defs[0], uses == null ? arrayref : uses[0]);
   }
 

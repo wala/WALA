@@ -11,10 +11,10 @@
 package com.ibm.wala.fixedpoint.impl;
 
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Heap;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * Worklist for fixed-point solver implementation
@@ -33,7 +33,7 @@ public class Worklist extends Heap {
     return (eq1.getOrderNumber() < eq2.getOrderNumber());
   }
 
-  public AbstractStatement takeStatement() {
+  public AbstractStatement takeStatement() throws NoSuchElementException {
     AbstractStatement result = (AbstractStatement)super.take();
     contents.remove(result);
     return result;
@@ -45,10 +45,5 @@ public class Worklist extends Heap {
       super.insert(eq);
     }
   }
-  /* (non-Javadoc)
-   * @see com.ibm.wala.util.collections.Heap#insert(java.lang.Object)
-   */
-  public void insert(Object elt) {
-    Assertions.UNREACHABLE();
-  }
+
 }

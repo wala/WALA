@@ -15,14 +15,13 @@ import com.ibm.wala.util.warnings.WalaException;
 /**
  * A generic process launcher
  */
-public class BasicLauncher extends Launcher  {
+public class BasicLauncher extends Launcher {
 
   protected String cmd;
 
-
   /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+   * <!-- begin-user-doc --> <!-- end-user-doc -->
+   * 
    * @generated
    */
   public BasicLauncher() {
@@ -30,8 +29,8 @@ public class BasicLauncher extends Launcher  {
   }
 
   /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+   * <!-- begin-user-doc --> <!-- end-user-doc -->
+   * 
    * @generated
    */
   public String getCmd() {
@@ -39,8 +38,8 @@ public class BasicLauncher extends Launcher  {
   }
 
   /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+   * <!-- begin-user-doc --> <!-- end-user-doc -->
+   * 
    * @generated
    */
   public void setCmd(String newCmd) {
@@ -48,8 +47,8 @@ public class BasicLauncher extends Launcher  {
   }
 
   /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
+   * <!-- begin-user-doc --> <!-- end-user-doc -->
+   * 
    * @generated
    */
   public String toString() {
@@ -64,10 +63,12 @@ public class BasicLauncher extends Launcher  {
     return result.toString();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.capa.core.impl.EAnalysisEngineImpl#processImpl()
    */
-  public void launch() throws WalaException {
+  public void launch() throws WalaException, IllegalArgumentException {
     Process p = spawnProcess(getCmd());
     Thread d1 = drainStdErr(p);
     Thread d2 = isCaptureOutput() ? captureStdOut(p) : drainStdOut(p);
@@ -78,8 +79,8 @@ public class BasicLauncher extends Launcher  {
       throw new WalaException("Internal error", e);
     }
     if (isCaptureOutput()) {
-      Drainer d = (Drainer)d2;
+      Drainer d = (Drainer) d2;
       setOutput(d.getCapture().toByteArray());
     }
   }
-} 
+}

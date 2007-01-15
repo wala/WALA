@@ -62,13 +62,13 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
   
   /* (non-Javadoc)
    */
-  public IntSet getPredNodeNumbers(T node) {
+  public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
     return ((NumberedEdgeManager<T>) getEdgeManager()).getPredNodeNumbers(node);
   }
 
   /* (non-Javadoc)
    */
-  public IntSet getSuccNodeNumbers(T node) {
+  public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
     return ((NumberedEdgeManager<T>) getEdgeManager()).getSuccNodeNumbers(node);
   }
 }

@@ -116,6 +116,9 @@ public class SparseLongSet implements LongSet {
    * @see com.ibm.wala.util.intset.IntSet#contains(int)
    */
   public final boolean contains(long x) {
+    if (elements == null) {
+      return false;
+    }
     return LongSetUtil.binarySearch(elements, x, 0, size - 1) >= 0;
   }
 
@@ -124,6 +127,9 @@ public class SparseLongSet implements LongSet {
    * @return index i s.t. elements[i] == x, or -1 if not found.
    */
   public final int getIndex(long x) {
+    if (elements == null) {
+      return -1;
+    }
     return LongSetUtil.binarySearch(elements, x, 0, size - 1);
   }
 
@@ -299,10 +305,14 @@ public class SparseLongSet implements LongSet {
   /**
    * Reverse of toString(): "{2,3}" -> [2,3]
    */
-  public static long[] parseLongArray(String str) throws NumberFormatException {
+  public static long[] parseLongArray(String str) throws NumberFormatException, IllegalArgumentException {
     int len = str.length();
-    if (str.charAt(0) != '{' || str.charAt(len - 1) != '}')
+    if (len < 2) {
+      throw new IllegalArgumentException("malformed input: " + str);
+    }
+    if (str.charAt(0) != '{' || str.charAt(len - 1) != '}') {
       throw new NumberFormatException(str);
+    }
     str = str.substring(1, len - 1);
     StringTokenizer tok = new StringTokenizer(str, " ,");
 
@@ -363,12 +373,12 @@ public class SparseLongSet implements LongSet {
   }
 
   /**
-   * @param s
-   * @param j
    * @return a new sparse int set which adds j to s
    */
   public static SparseLongSet add(SparseLongSet s, int j) {
-
+    if (s == null || s.elements == null) {
+      return SparseLongSet.singleton(j);
+    }
     SparseLongSet result = new SparseLongSet(s.size + 1);
     int k = 0;
     int m = 0;

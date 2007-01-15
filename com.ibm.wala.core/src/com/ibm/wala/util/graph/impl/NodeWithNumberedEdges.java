@@ -11,6 +11,7 @@
 package com.ibm.wala.util.graph.impl;
 
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.INodeWithNumberedEdges;
 import com.ibm.wala.util.intset.BimodalMutableIntSet;
 import com.ibm.wala.util.intset.IntSet;
@@ -21,27 +22,32 @@ import com.ibm.wala.util.intset.IntSet;
 public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNumberedEdges {
 
   private BimodalMutableIntSet predNumbers;
+
   private BimodalMutableIntSet succNumbers;
 
-
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.dataflow.fixpoint.IVariable#getUseNumbers()
    */
   public IntSet getSuccNumbers() {
     return succNumbers;
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.dataflow.fixpoint.IVariable#getDefNumbers()
    */
   public IntSet getPredNumbers() {
     return predNumbers;
   }
 
-  /** 
+  /**
    * Note that this variable appears on the RHS of an equation.
-   *
-   * @param eqNumber the equation number
+   * 
+   * @param eqNumber
+   *          the equation number
    */
   public void addSucc(int eqNumber) {
     if (succNumbers == null) {
@@ -52,10 +58,11 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
     }
   }
 
-  /** 
-   * Note that this variable appears on the LHS of an equation. 
-   *
-   * @param eqNumber the equation number
+  /**
+   * Note that this variable appears on the LHS of an equation.
+   * 
+   * @param eqNumber
+   *          the equation number
    */
   public void addPred(int eqNumber) {
     if (predNumbers == null) {
@@ -65,10 +72,9 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
       predNumbers.add(eqNumber);
     }
   }
- 
+
   /**
-   * remove the edge that indicates this variable is Succd by a certain
-   * equation
+   * remove the edge that indicates this variable is Succd by a certain equation
    * 
    * @param eqNumber
    */
@@ -80,6 +86,7 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
       }
     }
   }
+
   /**
    * remove the edge that indicates this variable is Predined by a certain
    * equation
@@ -95,30 +102,28 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
     }
   }
 
-
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.util.graph.INodeWithNumberedEdges#removeAllIncidentEdges()
    */
-  public void removeAllIncidentEdges() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
+  public void removeAllIncidentEdges() throws UnimplementedError {
+    Assertions.UNREACHABLE("Implement me");
   }
 
-
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    */
-  public void removeIncomingEdges() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    
+  public void removeIncomingEdges() throws UnimplementedError {
+    Assertions.UNREACHABLE("Implement me");
+
   }
 
-
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    */
-  public void removeOutgoingEdges() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    
+  public void removeOutgoingEdges() throws UnimplementedError {
+    Assertions.UNREACHABLE("Implement me");
+
   }
 }
