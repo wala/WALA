@@ -251,12 +251,46 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, cha, scope, null, useShortProfile(), false);
   }
 
+  public void testIO() throws ClassHierarchyException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.xml", "GUIExclusions.xml");
+    WarningSet warnings = new WarningSet();
+    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    Entrypoints entrypoints = makePrimordialPublicEntrypoints(scope, cha, "java/io");
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    Trace.println("primordial set up warnings:\n");
+    Trace.print(warnings.toString());
+
+    CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings);
+  }
+
+  public static Entrypoints makePrimordialPublicEntrypoints(AnalysisScope scope, ClassHierarchy cha, String pkg) {
+    final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
+    for (Iterator<IClass> it = cha.iterateAllClasses(); it.hasNext();) {
+      IClass clazz = it.next();
+
+      if (clazz.getName().toString().indexOf(pkg) != -1 && !clazz.isInterface() && !clazz.isAbstract()) {
+        for (IMethod method : clazz.getDeclaredMethods()) {
+          if (method.isPublic() && !method.isAbstract()) {
+            System.out.println("Entry:" + method.getReference());
+            result.add(new DefaultEntrypoint(method, cha));
+          }
+        }
+      }
+    }
+    return new Entrypoints() {
+      public Iterator<Entrypoint> iterator() {
+        return result.iterator();
+      }
+    };
+  }
+
   public void testPrimordial() throws ClassHierarchyException {
     if (useShortProfile()) {
       return;
     }
 
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.xml","GUIExclusions.xml");
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.xml", "GUIExclusions.xml");
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
     Entrypoints entrypoints = makePrimordialMainEntrypoints(scope, cha);
