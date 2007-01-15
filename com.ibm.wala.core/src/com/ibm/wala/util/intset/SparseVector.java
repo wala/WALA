@@ -132,7 +132,7 @@ public class SparseVector<T> implements IVector<T>  {
   /**
    * @return max i s.t get(i) != null
    */
-  public int getMaxIndex() {
+  public int getMaxIndex() throws IllegalStateException {
     return indices.max();
   }
 

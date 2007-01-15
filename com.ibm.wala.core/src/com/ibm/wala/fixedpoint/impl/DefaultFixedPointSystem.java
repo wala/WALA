@@ -329,12 +329,6 @@ public class DefaultFixedPointSystem extends AbstractFixedPointSystem {
     });
   }
 
-  public int getNumberOfVariables() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return 0;
-  }
-
   public int getNumberOfNodes() {
     return graph.getNumberOfNodes();
   }
@@ -346,17 +340,6 @@ public class DefaultFixedPointSystem extends AbstractFixedPointSystem {
 
   public int getPredNodeCount(INodeWithNumber n) {
     return graph.getPredNodeCount(n);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#performVerboseAction()
-   */
-  public void performVerboseAction() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-
   }
 
   /*

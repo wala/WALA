@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  *
@@ -73,14 +74,17 @@ public class ArrayIterator<T> implements Iterator<T> {
   /* (non-Javadoc)
    * @see java.util.Iterator#next()
    */
-  public T next() {
+  public T next() throws NoSuchElementException {
+    if (_cnt >= _elts.length) {
+      throw new NoSuchElementException();
+    }
     return _elts[_cnt++];
   }
 
   /* (non-Javadoc)
    * @see java.util.Iterator#remove()
    */
-  public void remove() {
+  public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 }

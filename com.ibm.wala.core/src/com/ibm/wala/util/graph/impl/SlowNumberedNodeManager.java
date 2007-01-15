@@ -44,8 +44,9 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
    * 
    * @see com.ibm.wala.util.graph.NumberedGraph#getNode(int)
    */
-  public T getNode(int number) {
+  public T getNode(int number)  {
     T result = (T) map.getMappedObject(number);
+    
     if (Assertions.verifyAssertions) {
       Assertions._assert(getNumber(result) == number);
     }

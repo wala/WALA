@@ -291,15 +291,6 @@ public class PropagationGraph extends AbstractFixedPointSystem {
     implicitUnaryCount--;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  public boolean equals(Object obj) {
-    Assertions.UNREACHABLE();
-    return false;
-  }
 
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatements() {
@@ -489,16 +480,6 @@ public class PropagationGraph extends AbstractFixedPointSystem {
       Assertions.UNREACHABLE();
 
     }
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
-  public int hashCode() {
-    Assertions.UNREACHABLE();
-    return 0;
   }
 
   /**

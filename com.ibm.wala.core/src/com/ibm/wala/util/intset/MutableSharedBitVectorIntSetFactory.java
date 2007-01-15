@@ -37,7 +37,7 @@ public class MutableSharedBitVectorIntSetFactory implements MutableIntSetFactory
    * 
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#parse(java.lang.String)
    */
-  public MutableIntSet parse(String string) {
+  public MutableIntSet parse(String string) throws NumberFormatException {
     SparseIntSet s = (SparseIntSet) sparseFactory.parse(string);
     return new MutableSharedBitVectorIntSet(s);
   }

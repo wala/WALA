@@ -11,6 +11,7 @@
 package com.ibm.wala.util.intset;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
@@ -142,9 +143,9 @@ public class SparseLongSet implements LongSet {
     return size == 0;
   }
 
-  public final long elementAt(int idx) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(idx < size);
+  public final long elementAt(int idx) throws NoSuchElementException {
+    if (idx >= size) {
+      throw new NoSuchElementException();
     }
     return elements[idx];
   }
@@ -319,7 +320,6 @@ public class SparseLongSet implements LongSet {
     return result;
   }
 
-
   public static SparseLongSet singleton(int i) {
     if (i >= 0 && i < SINGLETON_CACHE_SIZE) {
       return singletonCache[i];
@@ -355,7 +355,10 @@ public class SparseLongSet implements LongSet {
   /**
    * @return the largest element in the set
    */
-  public final long max() {
+  public final long max() throws IllegalStateException {
+    if (elements == null) {
+      throw new IllegalStateException("Illegal to ask max() on an empty int set");
+    }
     return elements[size - 1];
   }
 

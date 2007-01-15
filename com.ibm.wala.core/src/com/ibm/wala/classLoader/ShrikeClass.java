@@ -28,11 +28,14 @@ import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
+import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader.UnimplementedException;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.ImmutableByteArray;
 import com.ibm.wala.util.ShrikeClassReaderHandle;
@@ -838,34 +841,73 @@ public final class ShrikeClass implements IClass {
     return result;
   }
 
-//  private SignatureReader getSignatureReader() throws InvalidClassFileException {
-//    ClassReader r = reader.get();
-//    ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
-//    r.initClassAttributeIterator(attrs);
-//
-//    // search for the desired attribute
-//    SignatureReader result = null;
-//    try {
-//      for (; attrs.isValid(); attrs.advance()) {
-//        if (attrs.getName().toString().equals("Signature")) {
-//          result = new SignatureReader(attrs);
-//          break;
-//        }
-//      }
-//    } catch (InvalidClassFileException e) {
-//      Assertions.UNREACHABLE();
-//    }
-//    return result;
-//  }
-  
-//  public ParameterizedTypeReference getGenericType() throws InvalidClassFileException {
-//    // TODO: cache this later?
-//    SignatureReader r = getSignatureReader();
-//    if (r == null) {
-//      return ParameterizedTypeReference.makeRaw(getReference());
-//    } else {
-//      System.err.println("parse for " + getReference());
-//      return StringStuff.parseForGenericType(r.getSignature());
-//    }
-//  }
+  public Collection<Annotation> getRuntimeInvisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
+    RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader();
+    if (r != null) {
+      int[] offsets = r.getAnnotationOffsets();
+      Collection<Annotation> result = HashSetFactory.make();
+      for (int i : offsets) {
+        String type = r.getAnnotationType(i);
+        type = type.replaceAll(";", "");
+        TypeReference t = TypeReference.findOrCreate(getClassLoader().getReference(), type);
+        result.add(Annotation.make(t));
+      }
+      return result;
+    } else {
+      return Collections.emptySet();
+    }
+  }
+
+  private RuntimeInvisibleAnnotationsReader getRuntimeInvisibleAnnotationsReader() throws InvalidClassFileException {
+    ClassReader r = reader.get();
+    ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
+    r.initClassAttributeIterator(attrs);
+
+    // search for the desired attribute
+    RuntimeInvisibleAnnotationsReader result = null;
+    try {
+      for (; attrs.isValid(); attrs.advance()) {
+        if (attrs.getName().toString().equals("RuntimeInvisibleAnnotations")) {
+          result = new RuntimeInvisibleAnnotationsReader(attrs);
+          break;
+        }
+      }
+    } catch (InvalidClassFileException e) {
+      Assertions.UNREACHABLE();
+    }
+    return result;
+  }
+
+  // private SignatureReader getSignatureReader() throws
+  // InvalidClassFileException {
+  // ClassReader r = reader.get();
+  // ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
+  // r.initClassAttributeIterator(attrs);
+  //
+  // // search for the desired attribute
+  // SignatureReader result = null;
+  // try {
+  // for (; attrs.isValid(); attrs.advance()) {
+  // if (attrs.getName().toString().equals("Signature")) {
+  // result = new SignatureReader(attrs);
+  // break;
+  // }
+  // }
+  // } catch (InvalidClassFileException e) {
+  // Assertions.UNREACHABLE();
+  // }
+  // return result;
+  // }
+
+  // public ParameterizedTypeReference getGenericType() throws
+  // InvalidClassFileException {
+  // // TODO: cache this later?
+  // SignatureReader r = getSignatureReader();
+  // if (r == null) {
+  // return ParameterizedTypeReference.makeRaw(getReference());
+  // } else {
+  // System.err.println("parse for " + getReference());
+  // return StringStuff.parseForGenericType(r.getSignature());
+  // }
+  // }
 }

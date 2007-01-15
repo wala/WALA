@@ -32,7 +32,7 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory {
   /**
    * @param string
    */
-  public MutableIntSet parse(String string) {
+  public MutableIntSet parse(String string) throws NumberFormatException {
     BimodalMutableIntSet result = new BimodalMutableIntSet();
     result.impl = factory.parse(string);
     return result;

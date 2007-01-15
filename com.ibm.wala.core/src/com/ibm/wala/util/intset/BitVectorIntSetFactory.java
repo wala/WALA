@@ -42,11 +42,12 @@ public class BitVectorIntSetFactory implements MutableIntSetFactory {
   /**
    * @param string
    */
-  public MutableIntSet parse(String string) {
+  public MutableIntSet parse(String string) throws NumberFormatException {
     int[] data = SparseIntSet.parseIntArray(string);
     MutableIntSet result = new BitVectorIntSet();
-    for (int i = 0; i < data.length; i++)
+    for (int i = 0; i < data.length; i++) {
       result.add(data[i]);
+    }
     return result;
   }
 

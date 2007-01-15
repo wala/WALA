@@ -36,9 +36,9 @@ public class Logs {
   /**
    * @param x where x == 2^n for some integral n
    */
-  public static int log2(int x) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(isPowerOf2(x));
+  public static int log2(int x) throws IllegalArgumentException {
+    if (!isPowerOf2(x)) {
+      throw new IllegalArgumentException();
     }
     int test = 1;
     for (int i =0 ; i<31; i++) {

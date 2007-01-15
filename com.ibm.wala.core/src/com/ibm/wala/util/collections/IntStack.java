@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
-import com.ibm.wala.util.debug.Assertions;
+import java.util.EmptyStackException;
 
 /**
  *
@@ -45,8 +45,10 @@ public class IntStack {
   /**
    * @return the int at the top of the stack
    */
-  public int peek() {
-    Assertions._assert(! isEmpty());
+  public int peek() throws EmptyStackException {
+    if (isEmpty()) {
+      throw new EmptyStackException();
+    }
     return state[top];
   }
 
@@ -54,8 +56,10 @@ public class IntStack {
    * pop the stack
    * @return the int at the top of the stack
    */
-  public int pop() {
-    Assertions._assert(! isEmpty());
+  public int pop() throws EmptyStackException{
+    if (isEmpty()) {
+      throw new EmptyStackException();
+    }
     return state[top--];
   }
 

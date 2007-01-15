@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -26,6 +27,7 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * @author sfink
  */
+@Internal
 public class ParanoidHashSet<T> extends HashSet<T> {
   public static final long serialVersionUID = 30919839181133333L;
 

@@ -51,7 +51,7 @@ public final class TypeName {
    */
   private final TypeNameKey key;
 
-  public static TypeName findOrCreate(ImmutableByteArray name, int start, int length) {
+  public static TypeName findOrCreate(ImmutableByteArray name, int start, int length) throws IllegalArgumentException {
 
     Atom className = Atom.findOrCreate(StringStuff.parseForClass(name, start, length));
     ImmutableByteArray p = StringStuff.parseForPackage(name, start, length);
@@ -65,7 +65,7 @@ public final class TypeName {
     return findOrCreate(t);
   }
 
-  public static TypeName findOrCreate(ImmutableByteArray name) {
+  public static TypeName findOrCreate(ImmutableByteArray name) throws IllegalArgumentException {
     return findOrCreate(name, 0, name.length());
   }
 
@@ -131,7 +131,7 @@ public final class TypeName {
    *          a String like Ljava/lang/Object
    * @return the corresponding TypeName
    */
-  public static TypeName string2TypeName(String s) {
+  public static TypeName string2TypeName(String s) throws IllegalArgumentException {
     byte[] val = s.getBytes();
 
     return findOrCreate(new ImmutableByteArray(val));

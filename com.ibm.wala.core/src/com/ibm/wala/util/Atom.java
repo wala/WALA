@@ -331,6 +331,9 @@ public final class Atom {
   }
 
   public static boolean isArrayDescriptor(ImmutableByteArray b) {
+    if (b.length() == 0) {
+      return false;
+    }
     return b.get(0) == '[';
   }
 }

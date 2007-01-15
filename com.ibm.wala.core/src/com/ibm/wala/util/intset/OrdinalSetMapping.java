@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import java.util.NoSuchElementException;
+
 
 /** 
  * An object that implements a bijection between whole numbers and
@@ -19,9 +21,9 @@ package com.ibm.wala.util.intset;
  */
 public interface OrdinalSetMapping<T> extends Iterable<T> {
   /**
-   * @return the object numbered n.
+   * @return the object numbered n.  
    */
-  public T getMappedObject(int n);
+  public T getMappedObject(int n) throws NoSuchElementException;
 
   /**
    * @return the number of a given object, or -1 if the object is not

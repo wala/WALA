@@ -12,28 +12,29 @@ package com.ibm.wala.util.graph.impl;
 
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.EdgeManager;
+import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.NodeManager;
 
 
 /**
  * @author sfink
  */
-public class DelegatingNumberedGraph extends AbstractNumberedGraph {
+public class DelegatingNumberedGraph<T extends INodeWithNumber> extends AbstractNumberedGraph<T> {
 
-  private DelegatingNumberedNodeManager nodeManager = new DelegatingNumberedNodeManager();
-  private DelegatingNumberedEdgeManager edgeManager = new DelegatingNumberedEdgeManager(nodeManager);
+  private DelegatingNumberedNodeManager<T> nodeManager = new DelegatingNumberedNodeManager<T>();
+  private DelegatingNumberedEdgeManager<T> edgeManager = new DelegatingNumberedEdgeManager<T>(nodeManager);
 
   /* (non-Javadoc)
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
    */
-  protected NodeManager getNodeManager() {
+  protected NodeManager<T> getNodeManager() {
     return nodeManager;
   }
 
   /* (non-Javadoc)
    * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
    */
-  protected EdgeManager getEdgeManager() {
+  protected EdgeManager<T> getEdgeManager() {
     return edgeManager;
   }
 }

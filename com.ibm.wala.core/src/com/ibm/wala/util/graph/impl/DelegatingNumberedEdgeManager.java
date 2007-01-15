@@ -15,6 +15,7 @@ import java.util.Iterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.EdgeManager;
+import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.INodeWithNumberedEdges;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
@@ -22,45 +23,51 @@ import com.ibm.wala.util.intset.IntSet;
 /**
  * 
  * An object that delegates edge management to the nodes, INodeWithNumberedEdges
+ * 
  * @author sfink
- *
+ * 
  */
-public class DelegatingNumberedEdgeManager implements EdgeManager {
+public class DelegatingNumberedEdgeManager<T extends INodeWithNumber> implements EdgeManager<T> {
 
+  private final DelegatingNumberedNodeManager<T> nodeManager;
 
-  private final DelegatingNumberedNodeManager nodeManager;
-  
   /**
    * 
    */
-  public DelegatingNumberedEdgeManager(DelegatingNumberedNodeManager nodeManager) {
+  public DelegatingNumberedEdgeManager(DelegatingNumberedNodeManager<T> nodeManager) {
     this.nodeManager = nodeManager;
   }
-  
+
   // TODO: optimization is possible
-  private class IntSetNodeIterator implements Iterator {
+  private class IntSetNodeIterator implements Iterator<T> {
 
     private final IntIterator delegate;
-    
+
     IntSetNodeIterator(IntIterator delegate) {
       this.delegate = delegate;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Iterator#hasNext()
      */
     public boolean hasNext() {
       return delegate.hasNext();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Iterator#next()
      */
-    public Object next() {
-     return nodeManager.getNode(delegate.next());
+    public T next() {
+      return nodeManager.getNode(delegate.next());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Iterator#remove()
      */
     public void remove() {
@@ -68,77 +75,98 @@ public class DelegatingNumberedEdgeManager implements EdgeManager {
       Assertions.UNREACHABLE();
     }
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator getPredNodes(Object N) {
-    INodeWithNumberedEdges en = (INodeWithNumberedEdges)N;
+  public Iterator<T> getPredNodes(T N) {
+    INodeWithNumberedEdges en = (INodeWithNumberedEdges) N;
     IntSet pred = en.getPredNumbers();
-    return (pred == null) ? (Iterator)EmptyIterator.instance() : (Iterator)new IntSetNodeIterator(pred.intIterator());
+    Iterator<T> empty = EmptyIterator.instance();
+    return (pred == null) ? empty : (Iterator<T>) new IntSetNodeIterator(pred.intIterator());
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
-  public int getPredNodeCount(Object N) {
-    INodeWithNumberedEdges en = (INodeWithNumberedEdges)N;
+  public int getPredNodeCount(T N) {
+    INodeWithNumberedEdges en = (INodeWithNumberedEdges) N;
     return en.getPredNumbers().size();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator getSuccNodes(Object N) {
-    INodeWithNumberedEdges en = (INodeWithNumberedEdges)N;
+  public Iterator<T> getSuccNodes(T N) {
+    INodeWithNumberedEdges en = (INodeWithNumberedEdges) N;
     IntSet succ = en.getSuccNumbers();
-    return (succ == null) ? (Iterator)EmptyIterator.instance() : (Iterator)new IntSetNodeIterator(succ.intIterator());
+    Iterator<T> empty = EmptyIterator.instance();
+    return (succ == null) ? empty: (Iterator<T>) new IntSetNodeIterator(succ.intIterator());
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(com.ibm.wala.util.graph.Node)
    */
-  public int getSuccNodeCount(Object N) {
-    INodeWithNumberedEdges en = (INodeWithNumberedEdges)N;
+  public int getSuccNodeCount(T N) {
+    INodeWithNumberedEdges en = (INodeWithNumberedEdges) N;
     return en.getSuccNumbers().size();
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node, com.ibm.wala.util.graph.Node)
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node,
+   *      com.ibm.wala.util.graph.Node)
    */
-  public void addEdge(Object src, Object dst) {
-    Assertions.UNREACHABLE();
-  }
-  public void removeEdge(Object src, Object dst) {
+  public void addEdge(T src, T dst) {
     Assertions.UNREACHABLE();
   }
 
-  /* (non-Javadoc)
+  public void removeEdge(T src, T dst) {
+    Assertions.UNREACHABLE();
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeAllIncidentEdges(Object node) {
-    INodeWithNumberedEdges n = (INodeWithNumberedEdges)node;
+  public void removeAllIncidentEdges(T node) {
+    INodeWithNumberedEdges n = (INodeWithNumberedEdges) node;
     n.removeAllIncidentEdges();
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeIncomingEdges(Object node) {
-    INodeWithNumberedEdges n = (INodeWithNumberedEdges)node;
+  public void removeIncomingEdges(T node) {
+    INodeWithNumberedEdges n = (INodeWithNumberedEdges) node;
     n.removeIncomingEdges();
   }
 
-  
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeOutgoingEdges(Object node) {
-    INodeWithNumberedEdges n = (INodeWithNumberedEdges)node;
+  public void removeOutgoingEdges(T node) {
+    INodeWithNumberedEdges n = (INodeWithNumberedEdges) node;
     n.removeOutgoingEdges();
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#toString()
    */
   public String toString() {
@@ -147,9 +175,10 @@ public class DelegatingNumberedEdgeManager implements EdgeManager {
     return super.toString();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    */
-  public boolean hasEdge(Object src, Object dst) {
+  public boolean hasEdge(T src, T dst) {
     Assertions.UNREACHABLE("implement me");
     return false;
   }

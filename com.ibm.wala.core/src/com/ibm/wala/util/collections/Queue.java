@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 
 /**
  * @author unknown
- *  
+ * 
  * TODO: document me!
  */
 public class Queue<T> {
@@ -64,9 +64,10 @@ public class Queue<T> {
   }
 
   @SuppressWarnings("unchecked")
-  public T dequeue() {
-    if (isEmpty())
+  public T dequeue() throws NoSuchElementException {
+    if (isEmpty()) {
       throw new NoSuchElementException();
+    }
 
     T result = (T) items[first];
 

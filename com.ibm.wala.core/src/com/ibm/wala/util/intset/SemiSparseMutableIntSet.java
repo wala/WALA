@@ -314,7 +314,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * @return maximum integer in this set.
    */
-  public int max() {
+  public int max() throws IllegalStateException {
     if (densePart == null) {
       return sparsePart.max();
     } else {

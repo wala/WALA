@@ -384,6 +384,9 @@ public class AnalysisOptions {
     this.ssaOptions = ssaOptions;
   }
 
+  /**
+   * TODO: what is this and why is it here?
+   */
   public TypeReference getConstantType(Object S) {
     Class<? extends Object> key = (S == null) ? null : S.getClass();
     if (Assertions.verifyAssertions && !constantTypes.containsKey(key)) {

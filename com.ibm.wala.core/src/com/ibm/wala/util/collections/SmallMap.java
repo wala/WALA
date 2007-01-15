@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
@@ -55,7 +56,10 @@ public class SmallMap<K,V> implements Map<K,V> {
    * @param i
    * @return the ith key
    */
-  public Object getKey(int i) {
+  public Object getKey(int i) throws IllegalStateException {
+    if (keysAndValues == null) {
+      throw new IllegalStateException("getKey on empty map");
+    }
     return keysAndValues[i];
   }
 
@@ -65,7 +69,10 @@ public class SmallMap<K,V> implements Map<K,V> {
    * @param i
    * @return the ith key
    */
-  public Object getValue(int i) {
+  public Object getValue(int i) throws IllegalStateException{
+    if (keysAndValues == null) {
+      throw new IllegalStateException("getValue on empty map");
+    }
     return keysAndValues[size() + i];
   }
 
@@ -98,6 +105,9 @@ public class SmallMap<K,V> implements Map<K,V> {
    * @see java.util.Map#containsValue(java.lang.Object)
    */
   public boolean containsValue(Object value) {
+    if (keysAndValues == null) {
+      return false;
+    }
     for (int i = size(); i < keysAndValues.length; i++) {
       if (keysAndValues[i].equals(value)) {
         return true;
@@ -165,9 +175,8 @@ public class SmallMap<K,V> implements Map<K,V> {
    * 
    * @see java.util.Map#remove(java.lang.Object)
    */
-  public V remove(Object key) {
-    Assertions.UNREACHABLE();
-    return null;
+  public V remove(Object key) throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
 
   /*
@@ -226,7 +235,7 @@ public class SmallMap<K,V> implements Map<K,V> {
    * 
    * @see java.util.Map#entrySet()
    */
-  public Set<Map.Entry<K,V>> entrySet() {
+  public Set<Map.Entry<K,V>> entrySet() throws UnimplementedError {
     Assertions.UNREACHABLE("must implement entrySet");
     return null;
   }

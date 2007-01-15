@@ -104,10 +104,11 @@ abstract public class BitVectorBase<T extends BitVectorBase>
   /**
    * Clones the FixedSizeBitVector.
    */
+  @SuppressWarnings("unchecked")
   public Object clone() {
-    BitVector result = null;
+    BitVectorBase<T> result = null;
     try {
-      result = (BitVector) super.clone();
+      result = (BitVectorBase<T>) super.clone();
     } catch (CloneNotSupportedException e) {
       // this shouldn't happen, since we are Cloneable
       throw new InternalError();

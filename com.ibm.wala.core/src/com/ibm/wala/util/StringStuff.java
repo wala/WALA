@@ -168,7 +168,7 @@ public class StringStuff {
 
   /**
    * Parse method descriptor to obtain descriptions of method's parameters.
-
+   * 
    * @return parameter descriptions, or null if there are no parameters
    */
   public static final TypeName[] parseForParameterNames(ImmutableByteArray b) {
@@ -302,7 +302,10 @@ public class StringStuff {
    * @return an ImmutableByteArray that represents the package, or null if it's
    *         the unnamed package
    */
-  public static ImmutableByteArray parseForClass(ImmutableByteArray name, int start, int length) {
+  public static ImmutableByteArray parseForClass(ImmutableByteArray name, int start, int length) throws IllegalArgumentException {
+    if (name.length() == 0) {
+      throw new IllegalArgumentException("invalid class name: zero length");
+    }
     if (parseForPackage(name, start, length) == null) {
       while (name.b[start] == '[') {
         start++;
@@ -403,10 +406,10 @@ public class StringStuff {
     String type = methodSig.substring(0, methodSig.lastIndexOf('.'));
     type = deployment2CanonicalTypeString(type);
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, type);
-  
+
     String methodName = methodSig.substring(methodSig.lastIndexOf('.') + 1, methodSig.indexOf('('));
     String desc = methodSig.substring(methodSig.indexOf('('));
-  
+
     return MethodReference.findOrCreate(t, methodName, desc);
   }
 
@@ -420,7 +423,7 @@ public class StringStuff {
   public static String jvmToReadableType(String jvmType) {
     StringBuffer readable = new StringBuffer(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
-  
+
     // cycle through prefixes of '['
     char prefix = jvmType.charAt(0);
     while (prefix == '[') {
@@ -483,15 +486,15 @@ public class StringStuff {
     }
     return dotForm.toString();
   }
-  
+
   /**
    * Convert '$' to '.' in names.
    * 
    * @param a
-   *          String object in which dollar signs('$') must be converted to
-   *          dots ('.').
-   * @return a String object obtained by replacing the dollar signs ('S') in
-   *         the String passed as argument with ('.').
+   *          String object in which dollar signs('$') must be converted to dots
+   *          ('.').
+   * @return a String object obtained by replacing the dollar signs ('S') in the
+   *         String passed as argument with ('.').
    */
   public static String dollarToDot(String path) {
     StringBuffer dotForm = new StringBuffer(path);

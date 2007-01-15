@@ -14,11 +14,11 @@ import java.io.*;
 import java.util.Collection;
 import java.util.Iterator;
 
-
 /**
  * Simple utility for printing trace messages.
  * 
- * TODO: should this be nuked and replaced with some java.util.Logging functions?
+ * TODO: should this be nuked and replaced with some java.util.Logging
+ * functions?
  * 
  * @author sfink
  * 
@@ -28,6 +28,7 @@ public class Trace {
   private static final String TRACEFILE_KEY = "com.ibm.wala.tracefile";
 
   private static String traceFile = null;
+
   private static PrintStream out = null;
 
   public synchronized static void setTraceFile(String fileName) {
@@ -104,11 +105,17 @@ public class Trace {
   }
 
   public static void flush() {
-    out.flush();
+    if (setTraceFile()) {
+      out.flush();
+    }
   }
 
   public static PrintWriter getTraceWriter() {
-    return new PrintWriter(out);
+    if (setTraceFile()) {
+      return new PrintWriter(out);
+    } else {
+      return null;
+    }
   }
 
   /**

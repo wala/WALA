@@ -33,15 +33,6 @@ public class Worklist extends Heap {
     return (eq1.getOrderNumber() < eq2.getOrderNumber());
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.util.collections.Heap#take()
-   */
-  public Object take() {
-    Assertions.UNREACHABLE();
-    return null;
-  }
-  
-
   public AbstractStatement takeStatement() {
     AbstractStatement result = (AbstractStatement)super.take();
     contents.remove(result);

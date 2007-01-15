@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -24,6 +25,7 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * @author sfink
  */
+@Internal
 public class ParanoidHashMap<K,V> extends HashMap<K,V> {
   public static final long serialVersionUID = 909018793791787198L;
 

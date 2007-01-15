@@ -149,9 +149,9 @@ public class SymbolTable {
    * @param i
    * @return int
    */
-  public int getParameter(int i) {
-    if (Assertions.verifyAssertions && parameters.length <= i) {
-      Assertions.UNREACHABLE("parameters too small for index " + i + ", length = " + parameters.length);
+  public int getParameter(int i) throws IllegalArgumentException {
+    if (parameters.length <= i) {
+      throw new IllegalArgumentException("parameters too small for index " + i + ", length = " + parameters.length);
     }
     return parameters[i];
   }
@@ -270,23 +270,26 @@ public class SymbolTable {
     return parameters.length;
   }
 
-  public String getStringValue(int v) {
-    if (Assertions.verifyAssertions)
-      Assertions._assert(isStringConstant(v));
+  public String getStringValue(int v) throws IllegalArgumentException {
+    if (!isStringConstant(v)) {
+      throw new IllegalArgumentException("not a string constant: value number " + v);
+    }
 
     return (String) ((ConstantValue) values[v]).getValue();
   }
 
-  public double getDoubleValue(int v) {
-    if (Assertions.verifyAssertions)
-      Assertions._assert(isNumberConstant(v));
+  public double getDoubleValue(int v) throws IllegalArgumentException {
+    if (!isNumberConstant(v)) {
+      throw new IllegalArgumentException("value number " + v + " is not a numeric constant.");
+    }
 
     return ((Number) ((ConstantValue) values[v]).getValue()).doubleValue();
   }
 
-  public Object getConstantValue(int v) {
-    if (Assertions.verifyAssertions)
-      Assertions._assert(isConstant(v));
+  public Object getConstantValue(int v) throws IllegalArgumentException{
+    if (!isConstant(v)) {
+      throw new IllegalArgumentException("value number " + v + " is not a constant.");
+    }
 
     Object value = ((ConstantValue) values[v]).getValue();
     if (value == null) {

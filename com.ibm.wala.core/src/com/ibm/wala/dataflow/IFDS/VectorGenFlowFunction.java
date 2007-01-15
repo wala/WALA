@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.IFDS;
 
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
@@ -28,9 +27,6 @@ public class VectorGenFlowFunction implements IReversibleFlowFunction {
    */
   private VectorGenFlowFunction(SparseIntSet gen) {
     this.gen = gen;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(gen.contains(0));
-    }
   }
 
   /*

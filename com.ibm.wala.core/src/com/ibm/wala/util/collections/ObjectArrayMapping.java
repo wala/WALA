@@ -12,25 +12,28 @@ package com.ibm.wala.util.collections;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
- *
- * A bit set mapping based on an immutable object array.
- * This is not terribly efficient, but is useful for prototyping.
+ * 
+ * A bit set mapping based on an immutable object array. This is not terribly
+ * efficient, but is useful for prototyping.
  * 
  * @author sfink
  */
 public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
 
   private T[] array;
+
   /**
    * A mapping from object to Integer
    */
-  private HashMap<T,Integer> map = HashMapFactory.make();
+  private HashMap<T, Integer> map = HashMapFactory.make();
 
   /**
    * Constructor for ObjectArrayMapping.
@@ -42,21 +45,22 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     }
   }
 
-
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    */
-  public T getMappedObject(int n) {
+  public T getMappedObject(int n) throws NoSuchElementException {
+    if (n >= array.length) {
+      throw new NoSuchElementException("n too big: " + n);
+    }
     return array[n];
   }
 
-
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    */
   public int getMappedIndex(Object o) {
-    if (Assertions.verifyAssertions) {
-      if (map.get(o) == null) {
-        Assertions.UNREACHABLE("unmapped object " + o);
-      }
+    if (map.get(o) == null) {
+      return -1;
     }
     return map.get(o).intValue();
   }
@@ -65,31 +69,33 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     return map.get(o) != null;
   }
 
-
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    */
   public int getMappingSize() {
     return array.length;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.util.intset.OrdinalSetMapping#iterator()
    */
   public Iterator<T> iterator() {
     return map.keySet().iterator();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.util.intset.OrdinalSetMapping#makeSingleton(int)
    */
-  public OrdinalSet makeSingleton(int i) {
-    // TODO Auto-generated method stub
+  public OrdinalSet makeSingleton(int i) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
-
-  public int add(Object o) {
+  public int add(Object o) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return 0;
   }

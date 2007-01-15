@@ -143,7 +143,10 @@ public abstract class Launcher  {
    * @param cmd
    * @throws WalaException
    */
-  protected Process spawnProcess(String cmd) throws WalaException {
+  protected Process spawnProcess(String cmd) throws WalaException, IllegalArgumentException {
+    if (cmd == null) {
+      throw new IllegalArgumentException("cmd cannot be null");
+    }
     System.out.println("spawning process " + cmd);
     String[] env = getEnv()== null ? null : buildEnv(getEnv());
     try {

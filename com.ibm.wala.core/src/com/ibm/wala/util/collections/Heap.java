@@ -63,7 +63,7 @@ public abstract class Heap {
   /**
    * @return the first object in the priority queue
    */
-  public Object take() {
+  public Object take() throws NoSuchElementException {
     if (numberOfElements == 0) {
       throw new NoSuchElementException();
     }
