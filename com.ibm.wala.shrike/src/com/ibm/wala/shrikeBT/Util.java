@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
 
 /**
@@ -29,6 +30,7 @@ import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
  * containing class. There is no way to for Shrike to disambiguate 'A.B'
  * otherwise.
  */
+@Internal
 public final class Util {
   private Util() {
     // prevent instantiation
@@ -45,7 +47,7 @@ public final class Util {
    * @return the JVM "stack word size" for the given JVM type, looking at index
    *         'index'
    */
-  public static byte getWordSize(String s, int index) {
+  static byte getWordSize(String s, int index) {
     switch (s.charAt(index)) {
     case 'V':
       return 0;
@@ -61,7 +63,7 @@ public final class Util {
    * Computes the character length of the internal JVM type given by
    * s.substring(i).
    */
-  public static int getTypeLength(String s, int i) {
+  private static int getTypeLength(String s, int i) {
     switch (s.charAt(i)) {
     case 'L':
       return s.indexOf(';', i) - i + 1;
@@ -77,7 +79,7 @@ public final class Util {
    * parameters for method signature "type". Any "this" parameter is not
    * included.
    */
-  public static int getParamsWordSize(String type) {
+  public static int getParamsWordSize(String type) throws IllegalArgumentException {
     int index = 1;
     int count = 0;
 
@@ -136,7 +138,7 @@ public final class Util {
    * Convert a JVM type name (either for a primitive or a class name) into a
    * Java type name.
    */
-  public static String makeClassAll(String t) {
+  static String makeClassAll(String t) {
     String alias = classAliases.get(t);
     if (alias != null) {
       return alias;
@@ -146,12 +148,14 @@ public final class Util {
   }
 
   private static HashMap<String, String> classAliases;
+
   private static HashMap<String, String> typeAliases;
 
   private static void addAlias(String c, String t) {
     typeAliases.put(c, t);
     classAliases.put(t, c);
   }
+
   static {
     typeAliases = new HashMap<String, String>();
     classAliases = new HashMap<String, String>();
@@ -184,7 +188,7 @@ public final class Util {
    * Compute the number of parameters given by method signature "type". Any
    * "this" parameter is not included.
    */
-  public static int getParamsCount(String type) {
+  static int getParamsCount(String type) {
     int index = 1;
     int count = 0;
 
@@ -274,7 +278,7 @@ public final class Util {
    * @return true iff t is an array type
    */
   public static boolean isArrayType(String t) {
-    if (t == null) {
+    if (t == null || t.length() == 0) {
       return false;
     } else {
       switch (t.charAt(0)) {
@@ -414,7 +418,8 @@ public final class Util {
           if (result != null) {
             throw new IllegalArgumentException("Constructor " + makeName(name, paramTypes) + " is ambiguous in class " + c);
           }
-          result = InvokeInstruction.make(computeSignature(con.getParameterTypes(), Void.TYPE), makeType(c), name, Dispatch.SPECIAL);
+          result = InvokeInstruction
+              .make(computeSignature(con.getParameterTypes(), Void.TYPE), makeType(c), name, Dispatch.SPECIAL);
         }
       }
     } else {

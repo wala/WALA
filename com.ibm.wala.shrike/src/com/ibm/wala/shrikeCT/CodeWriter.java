@@ -43,7 +43,10 @@ public final class CodeWriter extends ClassWriter.Element {
     }
   }
 
-  public int getCodeLength() {
+  public int getCodeLength() throws IllegalStateException {
+    if (code == null) {
+      throw new IllegalStateException("code not initialized");
+    }
     return code.length;
   }
 
@@ -93,7 +96,7 @@ public final class CodeWriter extends ClassWriter.Element {
   /**
    * Set the bytecodes for this Code attribute.
    */
-  public void setCode(byte[] code) {
+  public void setCode(byte[] code) throws IllegalArgumentException{
     if (code.length > 0xFFFF) {
       throw new IllegalArgumentException("Code array is too long: " + code.length);
     }

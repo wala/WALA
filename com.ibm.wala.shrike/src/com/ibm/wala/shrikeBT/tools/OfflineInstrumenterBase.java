@@ -413,15 +413,15 @@ public abstract class OfflineInstrumenterBase {
   /**
    * Set the JAR Comment for the output JAR.
    */
-  final public void setJARComment(String comment) throws IOException, IllegalArgumentException {
+  final public void setJARComment(String comment) throws IOException, IllegalStateException {
     makeOutputJar();
     outputJar.setComment(comment);
   }
 
-  final void makeOutputJar() throws IOException {
+  final void makeOutputJar() throws IOException, IllegalStateException {
     if (outputJar == null) {
       if (outputFile == null) {
-        throw new IllegalArgumentException("Output file was not set");
+        throw new IllegalStateException("Output file was not set");
       }
 
       outputJar = new JarOutputStream(new FileOutputStream(outputFile));
@@ -431,7 +431,7 @@ public abstract class OfflineInstrumenterBase {
   /**
    * Skip the last class returned in every future traversal of the class list.
    */
-  final public void setIgnore(boolean ignore) {
+  final public void setIgnore(boolean ignore) throws IllegalArgumentException {
     if (inputIndex == 0) {
       throw new IllegalArgumentException("Must get a class before ignoring it");
     }
@@ -476,7 +476,10 @@ public abstract class OfflineInstrumenterBase {
    * 
    * @return the OutputStream to be used to write the entry contents
    */
-  final public OutputStream addOutputJarEntry(ZipEntry ze) throws IOException {
+  final public OutputStream addOutputJarEntry(ZipEntry ze) throws IOException, IllegalStateException {
+    if (outputJar == null) {
+      throw new IllegalStateException("output jar is null");
+    }
     putNextEntry(ze);
     return outputJar;
   }
@@ -484,7 +487,10 @@ public abstract class OfflineInstrumenterBase {
   /**
    * Complete and flush the entry initiated by addOutputJarEntry.
    */
-  final public void endOutputJarEntry() throws IOException {
+  final public void endOutputJarEntry() throws IOException, IllegalStateException {
+    if (outputJar == null) {
+      throw new IllegalStateException("output jar is null");
+    }
     outputJar.closeEntry();
   }
 
@@ -494,7 +500,7 @@ public abstract class OfflineInstrumenterBase {
    * entry to the JAR file *after* the unmodified classes. This will only ever
    * be called once per output JAR.
    */
-  final public void writeUnmodifiedClasses() throws IOException {
+  final public void writeUnmodifiedClasses() throws IOException, IllegalStateException  {
     passUnmodifiedClasses = false;
     makeOutputJar();
     for (int i = 0; i < inputs.size(); i++) {
@@ -571,7 +577,10 @@ public abstract class OfflineInstrumenterBase {
     }
   }
 
-  private void putNextEntry(ZipEntry newEntry) throws IOException {
+  private void putNextEntry(ZipEntry newEntry) throws IOException, IllegalStateException {
+    if (outputJar == null) {
+      throw new IllegalStateException();
+    }
     outputJar.putNextEntry(newEntry);
     entryNames.add(newEntry.getName());
     if (manifestBuilder != null) {

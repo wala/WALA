@@ -37,7 +37,7 @@ public final class SourceFileWriter extends ClassWriter.Element {
     return 8;
   }
 
-  public int copyInto(byte[] buf, int offset) {
+  public int copyInto(byte[] buf, int offset) throws IllegalArgumentException {
     verify();
     ClassWriter.setUShort(buf, offset, attrID);
     ClassWriter.setInt(buf, offset + 2, 2);
@@ -48,7 +48,7 @@ public final class SourceFileWriter extends ClassWriter.Element {
   /**
    * Set the index of the constant pool item holding the source file name.
    */
-  public void setSourceFileCPIndex(int index) {
+  public void setSourceFileCPIndex(int index) throws IllegalArgumentException {
     if (index < 1 || index > 0xFFFF) {
       throw new IllegalArgumentException("Invalid CP index: " + index);
     }
