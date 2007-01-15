@@ -13,9 +13,12 @@ package com.ibm.wala.eclipse;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.ibm.wala.annotations.Internal;
+
 /**
  * The activator class controls the plug-in life cycle
  */
+@Internal
 public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
