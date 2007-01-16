@@ -503,16 +503,17 @@ public final class ShrikeClass implements IClass {
 
     // didn't find it yet. special logic for interfaces
     try {
-      if (isInterface()) {
+      if (isInterface() || isAbstract()) {
+        final Iterator<IClass> it = (isInterface()) ? getAllAncestorInterfaces().iterator() :
+                                                      getAllImplementedInterfaces().iterator();
         // try each superinterface
-        for (Iterator it = getAllAncestorInterfaces().iterator(); it.hasNext();) {
+        while (it.hasNext()) {
           IClass k = (IClass) it.next();
           result = k.getMethod(selector);
           if (result != null) {
             return result;
           }
         }
-
       }
     } catch (ClassHierarchyException e) {
       e.printStackTrace();
@@ -757,7 +758,7 @@ public final class ShrikeClass implements IClass {
   public void clearSoftCaches() {
     // toss optional information from each method.
     if (methodMap != null) {
-      for (Iterator it = getDeclaredMethods().iterator(); it.hasNext();) {
+      for (Iterator<IMethod> it = getDeclaredMethods().iterator(); it.hasNext();) {
         ShrikeCTMethod m = (ShrikeCTMethod) it.next();
         m.clearCaches();
       }
