@@ -10,70 +10,144 @@
  *******************************************************************************/
 package com.ibm.wala.types.generics;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * UNDER CONSTRUCTION
  * 
+ * <verbatim> 
+ * TypeArgument: 
+ *    WildcardIndicator? FieldTypeSignature 
+ *    *
+ * 
+ * WildcardIndicator: 
+ *    + 
+ *    - 
+ * </verbatim>
+ * 
  * @author sjfink
- *
+ * 
  */
-public class TypeArgument {
+public class TypeArgument extends Signature {
+
+  private final TypeSignature sig;
   
   private final static TypeArgument WILDCARD = new TypeArgument("*") {
     public boolean isWildcard() {
       return true;
     }
   };
-  
-  private final String s;
-  
-  TypeArgument(String s) {
-    this.s = s;
+
+  private TypeArgument(String s) {
+    super(s);
+    sig = null;
+  }
+
+  private TypeArgument(TypeSignature sig) {
+    super(sig.rawString());
+    this.sig = sig;
   }
   
   public boolean isWildcard() {
     return false;
   }
 
-  @Override
-  public int hashCode() {
-    final int PRIME = 31;
-    int result = 1;
-    result = PRIME * result + ((s == null) ? 0 : s.hashCode());
+  public static TypeArgument[] make(String s) {
+    assert (s.charAt(0) == '<');
+    assert (s.charAt(s.length() - 1) == '>');
+    String[] args = parseForTypeArguments(s);
+    TypeArgument[] result = new TypeArgument[args.length];
+    for (int i = 0; i < result.length; i++) {
+      result[i] = makeTypeArgument(args[i]);
+    }
     return result;
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (obj == null)
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    final TypeArgument other = (TypeArgument) obj;
-    if (s == null) {
-      if (other.s != null)
-        return false;
-    } else if (!s.equals(other.s))
-      return false;
-    return true;
-  }
-
-  @Override
-  public String toString() {
-    return s;
-  }
-
-  public static TypeArgument make(String string) throws UnimplementedError {
-    if (string.equals("*")) {
+  private static TypeArgument makeTypeArgument(String s) {
+    switch (s.charAt(0)) {
+    case '*':
       return WILDCARD;
-    } else {
-      Assertions.UNREACHABLE("implement me");
+    case '+':
+    case '-':
+      Assertions.UNREACHABLE();
       return null;
+    default:
+      TypeSignature sig = TypeSignature.make(s);
+      return new TypeArgument(sig);
     }
+  }
+
+  /**
+   * @param typeSigs
+   *          Strin TypeSignature*
+   * @return tokenize it
+   */
+  static String[] parseForTypeArguments(String typeArgs) {
+    ArrayList<String> args = new ArrayList<String>(10);
+
+    int i = 1;
+    while (true) {
+      switch (typeArgs.charAt(i++)) {
+      case TypeReference.ClassTypeCode: {
+        int off = i - 1;
+        int depth = 0;
+        while (typeArgs.charAt(i++) != ';' || depth > 0) {
+          if (typeArgs.charAt(i - 1) == '<') {
+            depth++;
+          }
+          if (typeArgs.charAt(i - 1) == '>') {
+            depth--;
+          }
+        }
+        args.add(typeArgs.substring(off, i));
+        continue;
+      }
+      case TypeReference.ArrayTypeCode: {
+        int off = i - 1;
+        while (typeArgs.charAt(i) == TypeReference.ArrayTypeCode) {
+          ++i;
+        }
+        if (typeArgs.charAt(i++) == TypeReference.ClassTypeCode) {
+          while (typeArgs.charAt(i++) != ';')
+            ;
+          args.add(typeArgs.substring(off, i - off - 1));
+        } else {
+          args.add(typeArgs.substring(off, i - off));
+        }
+        continue;
+      }
+      case (byte) 'T': { // type variable
+        int off = i - 1;
+        while (typeArgs.charAt(i++) != ';')
+          ;
+        args.add(typeArgs.substring(off, i));
+        continue;
+      }
+      case (byte) '>': // end of argument list
+        int size = args.size();
+        if (size == 0) {
+          return null;
+        }
+        Iterator<String> it = args.iterator();
+        String[] result = new String[size];
+        for (int j = 0; j < size; j++) {
+          result[j] = it.next();
+        }
+        return result;
+      default:
+        if (Assertions.verifyAssertions) {
+          Assertions._assert(false, "bad type argument list " + typeArgs);
+        }
+      }
+    }
+  }
+
+  public TypeSignature getFieldTypeSignature() {
+    return sig;
   }
 
 }

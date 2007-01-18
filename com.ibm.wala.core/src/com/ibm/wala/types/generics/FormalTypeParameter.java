@@ -1,0 +1,161 @@
+/*******************************************************************************
+ * Copyright (c) 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
+package com.ibm.wala.types.generics;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.debug.Assertions;
+
+/**
+ * Under construction.
+ * 
+ * FormalTypeParameter: 
+ *   Identifier 
+ *   ClassBound 
+ *   InterfaceBound*
+ * 
+ * ClassBound: 
+ *    : FieldTypeSignature?
+ * 
+ * InterfaceBound 
+ *    : FieldTypeSignature
+ * 
+ * FieldTypeSignature: 
+ *    ClassTypeSignature 
+ *    ArrayTypeSignature
+ *    TypeVariableSignature
+ * 
+ * @author sjfink
+ * 
+ */
+public class FormalTypeParameter extends Signature {
+
+  private final String id;
+
+  private final TypeSignature classBound;
+
+  private final TypeSignature[] interfaceBounds;
+
+  public FormalTypeParameter(String s) {
+    super(s);
+    id = parseForId(s);
+    classBound = parseForClassBound(s);
+    interfaceBounds = parseForInterfaceBounds(s);
+  }
+
+  private TypeSignature parseForClassBound(String s) {
+    int start = s.indexOf(':');
+    if (start == s.length() - 1) {
+      return null;
+    }
+    int end = s.indexOf(':', start + 1);
+    if (end == start + 1) {
+      return null;
+    }
+    if (end == -1) {
+      return TypeSignature.make(s.substring(start + 1));
+    } else {
+      return TypeSignature.make(s.substring(start + 1, end));
+    }
+  }
+
+  private TypeSignature[] parseForInterfaceBounds(String s) {
+    List<TypeSignature> list = new LinkedList<TypeSignature>();
+
+    int start = s.indexOf(':');
+    if (start == s.length() - 1) {
+      return null;
+    }
+    start = s.indexOf(':', start + 1);
+    while (start != -1) {
+      int end = s.indexOf(':', start + 1);
+      if (end == -1) {
+        list.add(TypeSignature.make(s.substring(start + 1)));
+      } else {
+        list.add(TypeSignature.make(s.substring(start + 1, end)));
+      }
+      start = s.indexOf(':', start + 1);
+    }
+    TypeSignature[] result = new TypeSignature[list.size()];
+    return list.toArray(result);
+  }
+
+  private String parseForId(String s) {
+    return s.substring(0, s.indexOf(':'));
+  }
+
+  public static FormalTypeParameter make(String string) {
+    return new FormalTypeParameter(string);
+  }
+
+  public TypeSignature getClassBound() {
+    return classBound;
+  }
+
+  public String getIdentifier() {
+    return id;
+  }
+
+  /**
+   * @param s a string that holds a sequence of formal type parameters beginning
+   * at index begin
+   * @return the index where the next formal type parameter ends (actually, end +1)
+   */  
+  static int formalTypeParameterEnds(String s, int begin) {
+    int result = begin;
+    while (s.charAt(result) != ':') {
+      result++;
+    }
+    do {
+      assert (s.charAt(result) == ':');
+      switch (s.charAt(++result)) {
+      case TypeReference.ClassTypeCode: {
+        while (s.charAt(result++) != ';')
+          ;
+        break;
+      }
+      case ':':
+        break;
+      default:
+        if (Assertions.verifyAssertions) {
+          Assertions._assert(false, "bad type signature list " + s + " " + (result - 1));
+        }
+      }
+    } while (s.charAt(result) == ':');
+    return result;
+  }
+
+  static String[] parseForFormalTypeParameters(String s) {
+    ArrayList<String> sigs = new ArrayList<String>(10);
+
+    int beginToken = 1;
+    while (s.charAt(beginToken) != '>') {
+      int endToken = FormalTypeParameter.formalTypeParameterEnds(s, beginToken);
+      sigs.add(s.substring(beginToken, endToken));
+      beginToken = endToken;
+    }
+    Iterator<String> it = sigs.iterator();
+    String[] result = new String[sigs.size()];
+    for (int j = 0; j < result.length; j++) {
+      result[j] = it.next();
+    }
+    return result;
+
+  }
+
+  public TypeSignature[] getInterfaceBounds() {
+    return interfaceBounds;
+  }
+}

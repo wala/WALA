@@ -29,6 +29,7 @@ import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
+import com.ibm.wala.shrikeCT.SignatureReader;
 import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader.UnimplementedException;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
@@ -36,6 +37,7 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
+import com.ibm.wala.types.generics.ClassSignature;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.ImmutableByteArray;
 import com.ibm.wala.util.ShrikeClassReaderHandle;
@@ -523,6 +525,7 @@ public final class ShrikeClass implements IClass {
 
   }
 
+
   private final HashMap<Atom, IField> fieldMap = new HashMap<Atom, IField>(5);
 
   /*
@@ -758,7 +761,7 @@ public final class ShrikeClass implements IClass {
   public void clearSoftCaches() {
     // toss optional information from each method.
     if (methodMap != null) {
-      for (Iterator<IMethod> it = getDeclaredMethods().iterator(); it.hasNext();) {
+      for (Iterator it = getDeclaredMethods().iterator(); it.hasNext();) {
         ShrikeCTMethod m = (ShrikeCTMethod) it.next();
         m.clearCaches();
       }
@@ -879,36 +882,33 @@ public final class ShrikeClass implements IClass {
     return result;
   }
 
-  // private SignatureReader getSignatureReader() throws
-  // InvalidClassFileException {
-  // ClassReader r = reader.get();
-  // ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
-  // r.initClassAttributeIterator(attrs);
-  //
-  // // search for the desired attribute
-  // SignatureReader result = null;
-  // try {
-  // for (; attrs.isValid(); attrs.advance()) {
-  // if (attrs.getName().toString().equals("Signature")) {
-  // result = new SignatureReader(attrs);
-  // break;
-  // }
-  // }
-  // } catch (InvalidClassFileException e) {
-  // Assertions.UNREACHABLE();
-  // }
-  // return result;
-  // }
+   private SignatureReader getSignatureReader() throws InvalidClassFileException {
+    ClassReader r = reader.get();
+    ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
+    r.initClassAttributeIterator(attrs);
 
-  // public ParameterizedTypeReference getGenericType() throws
-  // InvalidClassFileException {
-  // // TODO: cache this later?
-  // SignatureReader r = getSignatureReader();
-  // if (r == null) {
-  // return ParameterizedTypeReference.makeRaw(getReference());
-  // } else {
-  // System.err.println("parse for " + getReference());
-  // return StringStuff.parseForGenericType(r.getSignature());
-  // }
-  // }
+    // search for the desired attribute
+    SignatureReader result = null;
+    try {
+      for (; attrs.isValid(); attrs.advance()) {
+        if (attrs.getName().toString().equals("Signature")) {
+          result = new SignatureReader(attrs);
+          break;
+        }
+      }
+    } catch (InvalidClassFileException e) {
+      Assertions.UNREACHABLE();
+    }
+    return result;
+  }
+
+   public ClassSignature getClassSignature() throws InvalidClassFileException {
+    // TODO: cache this later?
+    SignatureReader r = getSignatureReader();
+    if (r == null) {
+      return null;
+    } else {
+      return ClassSignature.make(r.getSignature());
+    }
+  }
 }
