@@ -58,7 +58,7 @@ public class SimpleVector<T> implements IVector<T> {
    * 
    * @see com.ibm.wala.util.intset.IVector#set(int, int)
    */
-  public void set(int x, Object value) {
+  public void set(int x, T value) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(x >= 0);
     }
