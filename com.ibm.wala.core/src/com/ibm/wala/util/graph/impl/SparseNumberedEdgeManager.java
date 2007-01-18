@@ -177,8 +177,11 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   public void addEdge(T src, T dst) throws IllegalArgumentException {
     int x = nodeManager.getNumber(src);
     int y = nodeManager.getNumber(dst);
-    if (x < 0 || y < 0) {
-      throw new IllegalArgumentException();
+    if (x < 0) {
+      throw new IllegalArgumentException("src is not in graph");
+    }
+    if (y < 0) {
+      throw new IllegalArgumentException("dst is not in graph");
     }
     predecessors.add(y, x);
     successors.add(x, y);
