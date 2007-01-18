@@ -160,8 +160,7 @@ public class EMFBridge {
       IClass parent = it.next();
       EJavaClass parentClass = makeJavaClass(parent.getReference());
       if (!parent.isInterface()) {
-        for (Iterator it2 = cha.getImmediateSubclasses(parent); it2.hasNext();) {
-          IClass child = (IClass) it2.next();
+        for (IClass child: cha.getImmediateSubclasses(parent)) {
           if (!child.isInterface()) {
             EJavaClass childClass = makeJavaClass(child.getReference());
             result.addSubClass(parentClass, childClass);
@@ -192,8 +191,7 @@ public class EMFBridge {
       IClass parent = it.next();
       EJavaClass parentClass = makeJavaClass(parent.getReference());
       if (parent.isInterface()) {
-        for (Iterator it2 = cha.getImmediateSubclasses(parent); it2.hasNext();) {
-          IClass child = (IClass) it2.next();
+        for (IClass child: cha.getImmediateSubclasses(parent)) {
           if (child.isInterface()) {
             EJavaClass childClass = makeJavaClass(child.getReference());
             result.addSubClass(parentClass, childClass);

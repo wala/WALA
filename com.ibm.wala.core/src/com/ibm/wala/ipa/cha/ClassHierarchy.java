@@ -38,10 +38,13 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.CacheReference;
+import com.ibm.wala.util.Function;
+import com.ibm.wala.util.MapIterator;
 import com.ibm.wala.util.ReferenceCleanser;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -121,7 +124,7 @@ public class ClassHierarchy {
    * Return a set of IClasses that holds all superclasses of klass
    * 
    * @param klass
-   *            class in question
+   *          class in question
    * @return Set the result set
    */
   private Set<IClass> computeSuperclasses(IClass klass) throws ClassHierarchyException {
@@ -307,7 +310,7 @@ public class ClassHierarchy {
    * Find the possible receivers of a call to a method reference
    * 
    * @param ref
-   *            method reference
+   *          method reference
    * @return the set of IMethods that this call can resolve to.
    */
   public Iterator getPossibleTargets(MethodReference ref) {
@@ -330,7 +333,7 @@ public class ClassHierarchy {
    * Find the possible receivers of a call to a method reference
    * 
    * @param ref
-   *            method reference
+   *          method reference
    * @return the set of IMethods that this call can resolve to.
    */
   @SuppressWarnings("unchecked")
@@ -352,7 +355,7 @@ public class ClassHierarchy {
    * Find the possible receivers of a call to a method reference
    * 
    * @param ref
-   *            method reference
+   *          method reference
    * @return the set of IMethods that this call can resolve to.
    */
   private Set<IMethod> computePossibleTargets(IClass declaredClass, MethodReference ref) {
@@ -383,9 +386,9 @@ public class ClassHierarchy {
    * better not be an interface.
    * 
    * @param ref
-   *            method to invoke
+   *          method to invoke
    * @param klass
-   *            declaredClass of receiver
+   *          declaredClass of receiver
    * @return Set the set of method implementations that might receive the
    *         message
    */
@@ -457,9 +460,9 @@ public class ClassHierarchy {
    * declaredClass
    * 
    * @param receiverClass
-   *            type of receiver
+   *          type of receiver
    * @param selector
-   *            method signature
+   *          method signature
    * @return Method resolved method abstraction
    */
   public IMethod resolveMethod(IClass receiverClass, Selector selector) {
@@ -494,9 +497,9 @@ public class ClassHierarchy {
    * Does a particular class contain (implement) a particular method?
    * 
    * @param clazz
-   *            class in question
+   *          class in question
    * @param selector
-   *            method selector
+   *          method selector
    * @return the method if found, else null
    */
   private IMethod findMethod(IClass clazz, Selector selector) {
@@ -508,9 +511,9 @@ public class ClassHierarchy {
    * method
    * 
    * @param node
-   *            abstraction of class in question
+   *          abstraction of class in question
    * @param selector
-   *            method signature
+   *          method signature
    * @return Set set of IMethods that override the method
    */
   private Set<IMethod> computeOverriders(Node node, Selector selector) {
@@ -978,7 +981,7 @@ public class ClassHierarchy {
    * TODO: tune this if necessary
    * 
    * @param type
-   *            an interface
+   *          an interface
    * @return Set of IClass that represent implementors of the interface
    */
   public Set<IClass> getImplementors(TypeReference type) {
@@ -1036,23 +1039,13 @@ public class ClassHierarchy {
    * @param klass
    * @return the classes that immediately extend klass.
    */
-  public Iterator getImmediateSubclasses(IClass klass) {
-    Node node = findNode(klass);
-    final Iterator<Node> it = node.children.iterator();
-    return new Iterator() {
-      public void remove() {
-        Assertions.UNREACHABLE();
-      }
-
-      public boolean hasNext() {
-        return it.hasNext();
-      }
-
-      public Object next() {
-        Node n = it.next();
+  public Collection<IClass> getImmediateSubclasses(IClass klass) {
+    Function<Node, IClass> node2Class = new Function<Node, IClass>() {
+      public IClass apply(Node n) {
         return n.klass;
       }
     };
+    return new Iterator2Collection<IClass>(new MapIterator<Node, IClass>(findNode(klass).children.iterator(), node2Class));
   }
 
   /**
