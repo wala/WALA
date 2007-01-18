@@ -67,7 +67,7 @@ abstract public class WalaCGModel {
 
 		escope.setExclusionFileName("J2SEClassHierarchyExclusions.xml");
 
-		// generate a DOMO-consumable wrapper around the incoming scope object
+		// generate a WALA-consumable wrapper around the incoming scope object
 		EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
 		return scope;
 	}
