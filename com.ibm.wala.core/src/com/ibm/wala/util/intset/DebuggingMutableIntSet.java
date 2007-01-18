@@ -61,7 +61,14 @@ class DebuggingMutableIntSet implements MutableIntSet {
   /**
    */
   public int size() {
-    Assertions._assert(primaryImpl.size() == secondaryImpl.size());
+    if (primaryImpl.size() != secondaryImpl.size()) {
+      Assertions._assert(
+        primaryImpl.size() == secondaryImpl.size(),
+        "size " + primaryImpl.size() + " of " + primaryImpl +
+	" differs from " + 
+	"size " + secondaryImpl.size() + " of " + secondaryImpl);
+    }
+
     return primaryImpl.size();
   }
 
@@ -80,7 +87,11 @@ class DebuggingMutableIntSet implements MutableIntSet {
     boolean pr = primaryImpl.add(i);
     boolean sr = secondaryImpl.add(i);
 
-    Assertions._assert(pr == sr);
+    if (pr != sr) {
+      Assertions._assert(pr == sr, 
+        "adding " + i + " to " + primaryImpl + " returns " + pr + 
+	", but adding " + i + " to " + secondaryImpl + " returns " + sr);
+    }
 
     return pr;
   }
