@@ -40,5 +40,37 @@ public class MethodTypeSignature extends Signature {
     }
     return result;
   }
+  
+  public FormalTypeParameter[] getFormalTypeParameters() {
+    if (rawString().charAt(0) != '<') {
+      // no formal type parameters
+      return null;
+    }
+    int index = endOfFormalTypeParameters();
+    String[] args = FormalTypeParameter.parseForFormalTypeParameters(rawString().substring(0,index));
+    FormalTypeParameter[] result = new FormalTypeParameter[args.length];
+    for (int i = 0; i < args.length; i++) {
+      result[i] = FormalTypeParameter.make(args[i]);
+    }
+    return result;
+  }
+  
+  private int endOfFormalTypeParameters() {
+    if (rawString().charAt(0) != '<') {
+      return 0;
+    }
+    int i = 1;
+    int depth = 1;
+    while (depth > 0) {
+      if (rawString().charAt(i) == '>') {
+        depth--;
+      }
+      if (rawString().charAt(i) == '<') {
+        depth++;
+      }
+      i++;
+    }
+    return i;
+  }
 
 }

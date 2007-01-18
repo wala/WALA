@@ -19,7 +19,7 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * UNDER CONSTRUCTION.
  * 
- * <verbatim>
+ * <verbatim> 
  * TypeSignature: 
  *    FieldTypeSignature 
  *    BaseType (code for a primitive)
@@ -31,6 +31,7 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * TypeVariableSignature: 
  *    T identifier ;
+ * 
  * </verbatim>
  * 
  * @author sjfink
@@ -44,11 +45,33 @@ public abstract class TypeSignature extends Signature {
 
   public static TypeSignature make(String s) {
     assert (s.length() > 0);
-    if (s.charAt(0) == 'L') {
+    switch (s.charAt(0)) {
+    case TypeReference.VoidTypeCode:
+      Assertions.UNREACHABLE();
+      return null;
+    case TypeReference.BooleanTypeCode:
+      return BaseType.BOOLEAN;
+    case TypeReference.ByteTypeCode:
+      return BaseType.BYTE;
+    case TypeReference.ShortTypeCode:
+      return BaseType.SHORT;
+    case TypeReference.IntTypeCode:
+      return BaseType.INT;
+    case TypeReference.LongTypeCode:
+      return BaseType.LONG;
+    case TypeReference.FloatTypeCode:
+      return BaseType.FLOAT;
+    case TypeReference.DoubleTypeCode:
+      return BaseType.DOUBLE;
+    case TypeReference.CharTypeCode:
+      return BaseType.CHAR;
+    case 'L':
       return ClassTypeSignature.makeClassTypeSig(s);
-    } else if (s.charAt(0) == 'T') {
+    case 'T':
       return TypeVariableSignature.make(s);
-    } else {
+    case TypeReference.ArrayTypeCode:
+      return ArrayTypeSignature.make(s);
+    default:
       Assertions.UNREACHABLE(s);
       return null;
     }
@@ -57,6 +80,10 @@ public abstract class TypeSignature extends Signature {
   public abstract boolean isTypeVariable();
 
   public abstract boolean isClassTypeSignature();
+  
+  public abstract boolean isArrayTypeSignature();
+  
+  public abstract boolean isBaseType();
 
   /**
    * @param typeSigs
@@ -100,10 +127,10 @@ public abstract class TypeSignature extends Signature {
         int off = i - 1;
         int depth = 0;
         while (typeSigs.charAt(i++) != ';' || depth > 0) {
-          if (typeSigs.charAt(i-1) == '<') {
+          if (typeSigs.charAt(i - 1) == '<') {
             depth++;
           }
-          if (typeSigs.charAt(i-1) == '>') {
+          if (typeSigs.charAt(i - 1) == '>') {
             depth--;
           }
         }
@@ -112,16 +139,17 @@ public abstract class TypeSignature extends Signature {
       }
       case TypeReference.ArrayTypeCode: {
         int off = i - 1;
-        while (typeSigs.charAt(i) == TypeReference.ArrayTypeCode) {
-          ++i;
+        i++;
+        int depth = 0;
+        while (typeSigs.charAt(i++) != ';' || depth > 0) {
+          if (typeSigs.charAt(i - 1) == '<') {
+            depth++;
+          }
+          if (typeSigs.charAt(i - 1) == '>') {
+            depth--;
+          }
         }
-        if (typeSigs.charAt(i++) == TypeReference.ClassTypeCode) {
-          while (typeSigs.charAt(i++) != ';')
-            ;
-          sigs.add(typeSigs.substring(off, i - off - 1));
-        } else {
-          sigs.add(typeSigs.substring(off, i - off));
-        }
+        sigs.add(typeSigs.substring(off, i));
         continue;
       }
       case (byte) 'T': { // type variable
@@ -149,4 +177,5 @@ public abstract class TypeSignature extends Signature {
       }
     }
   }
+
 }

@@ -10,21 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.types.generics;
 
-/**
- * TypeVariableSignature: T identifier ;
- * 
- * @author sjfink
- * 
- */
-public class TypeVariableSignature extends TypeSignature {
+public class ArrayTypeSignature extends TypeSignature {
 
-  private TypeVariableSignature(String s) {
+  ArrayTypeSignature(String s) {
     super(s);
-    assert (s.charAt(s.length() - 1) == ';');
-  }
-
-  public static TypeVariableSignature make(String s) {
-    return new TypeVariableSignature(s);
+    assert(s.charAt(0) == '[');
   }
 
   @Override
@@ -34,20 +24,25 @@ public class TypeVariableSignature extends TypeSignature {
 
   @Override
   public boolean isTypeVariable() {
-    return true;
+    return false;
+  }
+  
+  public static ArrayTypeSignature make(String s) {
+    return new ArrayTypeSignature(s);
   }
 
   @Override
   public boolean isArrayTypeSignature() {
-    return false;
+    return true;
   }
-
-  public String getIdentifier() {
-    return rawString().substring(1, rawString().length() - 1);
+  
+  public TypeSignature getContents() {
+    return TypeSignature.make(rawString().substring(1));
   }
   
   @Override
   public boolean isBaseType() {
     return false;
   }
+
 }

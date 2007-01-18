@@ -48,6 +48,11 @@ public class ClassTypeSignature extends TypeSignature {
   public boolean isClassTypeSignature() {
     return true;
   }
+  
+  @Override
+  public boolean isArrayTypeSignature() {
+    return false;
+  }
 
   public TypeName getRawName() {
     String s = rawString().substring(0,rawString().length()-1);
@@ -79,6 +84,11 @@ public class ClassTypeSignature extends TypeSignature {
       i++;
     }
     return i;
+  }
+  
+  @Override
+  public boolean isBaseType() {
+    return false;
   }
 
 }

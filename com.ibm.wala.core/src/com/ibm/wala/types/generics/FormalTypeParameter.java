@@ -152,7 +152,6 @@ public class FormalTypeParameter extends Signature {
       result[j] = it.next();
     }
     return result;
-
   }
 
   public TypeSignature[] getInterfaceBounds() {
