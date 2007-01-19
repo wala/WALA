@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.types.generics;
 
+import java.util.ArrayList;
+
 /**
  * Under construction.
  * 
@@ -17,6 +19,9 @@ package com.ibm.wala.types.generics;
  *    (<FormalTypeParameter+>)? SuperclassSignature SuperinterfaceSignature*
  * 
  * SuperclassSignature:
+ *    ClassTypeSignature
+ *    
+ * SuperinterfaceSignature:
  *    ClassTypeSignature
  * 
  * @author sjfink
@@ -47,7 +52,11 @@ public class ClassSignature extends Signature {
   }
   
   public ClassTypeSignature getSuperclassSignature() {
-    String s = rawString().substring(endOfFormalTypeParameters());
+    return ClassTypeSignature.makeClassTypeSig(rawString().substring(endOfFormalTypeParameters(),endOfClassTypeSig(endOfFormalTypeParameters())));
+  }
+  
+  private int endOfClassTypeSig(int start) {
+    String s = rawString().substring(start);
     assert s.charAt(0) == 'L';
     int i = 1;
     int depth = 0;
@@ -60,7 +69,23 @@ public class ClassSignature extends Signature {
       }
       i++;
     }
-    return ClassTypeSignature.makeClassTypeSig(s.substring(0,i+1));
+    return start + i + 1;
+  }
+  
+  public ClassTypeSignature[] getSuperinterfaceSignatures() {
+    int start = endOfClassTypeSig(endOfFormalTypeParameters());
+    ArrayList<ClassTypeSignature> result = new ArrayList<ClassTypeSignature>();
+    while (start < rawString().length() - 1) {
+      int end = endOfClassTypeSig(start);
+      result.add(ClassTypeSignature.makeClassTypeSig(rawString().substring(start,end)));
+      start = end;
+    }
+    if (result.size() == 0) {
+      return null;
+    }
+    ClassTypeSignature[] arr = new ClassTypeSignature[result.size()];
+    return result.toArray(arr);
+    
   }
   
   private int endOfFormalTypeParameters() {
