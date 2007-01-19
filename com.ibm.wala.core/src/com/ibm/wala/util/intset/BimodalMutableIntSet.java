@@ -313,8 +313,10 @@ public class BimodalMutableIntSet implements MutableIntSet {
       BimodalMutableIntSet b = (BimodalMutableIntSet) that;
       return impl.isSubset(b.impl);
     } else {
-      Assertions.UNREACHABLE();
-      return false;
+      // slow!
+      BitVectorIntSet a = new BitVectorIntSet(this);
+      BitVectorIntSet b = new BitVectorIntSet(that);
+      return a.isSubset(b);
     }
   }
 
