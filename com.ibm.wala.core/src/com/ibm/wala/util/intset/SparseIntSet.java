@@ -411,7 +411,6 @@ public class SparseIntSet implements IntSet {
       public int next() {
         return elements[i++];
       }
-
     };
   }
 

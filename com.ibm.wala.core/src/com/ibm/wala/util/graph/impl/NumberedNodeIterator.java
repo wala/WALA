@@ -58,7 +58,7 @@ public class NumberedNodeIterator<T>implements Iterator<T> {
   /* (non-Javadoc)
    * @see java.util.Iterator#remove()
    */
-  public void remove() {
-    Assertions.UNREACHABLE();
+  public void remove() throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
 }

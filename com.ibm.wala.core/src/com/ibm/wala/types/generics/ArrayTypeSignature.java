@@ -12,9 +12,14 @@ package com.ibm.wala.types.generics;
 
 public class ArrayTypeSignature extends TypeSignature {
 
-  ArrayTypeSignature(String s) {
+  ArrayTypeSignature(String s) throws IllegalArgumentException {
     super(s);
-    assert(s.charAt(0) == '[');
+    if (s.length() == 0) {
+      throw new IllegalArgumentException();
+    }
+    if (s.charAt(0) != '[') {
+      throw new IllegalArgumentException();
+    }
   }
 
   @Override
@@ -27,7 +32,7 @@ public class ArrayTypeSignature extends TypeSignature {
     return false;
   }
   
-  public static ArrayTypeSignature make(String s) {
+  public static ArrayTypeSignature make(String s) throws IllegalArgumentException {
     return new ArrayTypeSignature(s);
   }
 

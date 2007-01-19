@@ -291,19 +291,22 @@ public class AnalysisScope {
     return arrayClassLoader;
   }
 
+  /**
+   * @return the rt.jar (1.4) or core.jar (1.5) file, or null if not found.
+   */
   private JarFile getRtJar() {
     for (Iterator MS = getModules(getPrimordialLoader()).iterator(); MS.hasNext();) {
       Module M = (Module) MS.next();
       if (M instanceof JarFileModule) {
         JarFile JF = ((JarFileModule) M).getJarFile();
-        if (JF.getName().endsWith(File.separator + "rt.jar"))
+        if (JF.getName().endsWith(File.separator + "rt.jar")) {
           return JF;
-        if (JF.getName().endsWith(File.separator + "core.jar"))
+        }
+        if (JF.getName().endsWith(File.separator + "core.jar")) {
           return JF;
+        }
       }
     }
-
-    Assertions.UNREACHABLE();
     return null;
   }
 

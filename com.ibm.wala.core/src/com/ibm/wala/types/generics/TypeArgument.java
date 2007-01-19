@@ -56,9 +56,13 @@ public class TypeArgument extends Signature {
     return false;
   }
 
-  public static TypeArgument[] make(String s) {
-    assert (s.charAt(0) == '<');
-    assert (s.charAt(s.length() - 1) == '>');
+  public static TypeArgument[] make(String s) throws IllegalArgumentException {
+    if (s.length() == 0 || s.charAt(0) != '<') {
+      throw new IllegalArgumentException(s);
+    }
+    if (s.charAt(s.length() - 1) != '>') {
+      throw new IllegalArgumentException(s);
+    }
     String[] args = parseForTypeArguments(s);
     TypeArgument[] result = new TypeArgument[args.length];
     for (int i = 0; i < result.length; i++) {

@@ -181,13 +181,16 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
   }
 
 
+
   /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated NOT
+   * @return
+   * @throws IllegalStateException
    */
-  public IStructuredSelection getSelection() {
+  public IStructuredSelection getSelection() throws IllegalStateException {
     GraphViewer viewer = (GraphViewer)getApplicationWindow();
+    if (viewer == null || viewer.viewer == null) {
+      throw new IllegalStateException();
+    }
     return (IStructuredSelection) viewer.viewer.getSelection();
   }
   

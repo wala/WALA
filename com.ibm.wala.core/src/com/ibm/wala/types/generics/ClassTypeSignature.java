@@ -29,13 +29,20 @@ import com.ibm.wala.types.TypeName;
  */
 public class ClassTypeSignature extends TypeSignature {
 
-  ClassTypeSignature(String s) {
+  ClassTypeSignature(String s) throws IllegalArgumentException {
     super(s);
-    assert (s.charAt(0) == 'L');
-    assert (s.charAt(s.length()-1) == ';');
+    if (s.length() == 0) {
+      throw new IllegalArgumentException();
+    }
+    if (s.charAt(0) != 'L') {
+      throw new IllegalArgumentException(s);
+    }
+    if (s.charAt(s.length()-1) != ';') {
+      throw new IllegalArgumentException(s);
+    }
   }
 
-  public static ClassTypeSignature makeClassTypeSig(String s) {
+  public static ClassTypeSignature makeClassTypeSig(String s) throws IllegalArgumentException {
     return new ClassTypeSignature(s);
   }
 

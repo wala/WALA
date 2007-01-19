@@ -30,7 +30,10 @@ public class SSAPhiInstruction extends SSAInstruction {
     this.params = params;
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+    if (defs != null && defs.length == 0) {
+      throw new IllegalArgumentException();
+    }
     return new SSAPhiInstruction(defs == null ? result : defs[0], uses == null ? params : uses);
   }
 
@@ -83,7 +86,10 @@ public class SSAPhiInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
-  public int getUse(int j) {
+  public int getUse(int j) throws IllegalArgumentException {
+    if (j >= params.length) {
+      throw new IllegalArgumentException("Bad use " + j);
+    }
     return params[j];
   }
 

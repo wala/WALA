@@ -207,9 +207,9 @@ public class PointsToMap {
    * @param s
    *          numbers of points-to-set variables
    */
-  public void unify(IntSet s) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(s.size() > 1);
+  public void unify(IntSet s) throws IllegalArgumentException {
+    if (s.size() <= 1) {
+      throw new IllegalArgumentException("Can't unify set of size " + s.size());
     }
     IntIterator it = s.intIterator();
     int i = it.next();

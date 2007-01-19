@@ -18,12 +18,17 @@ package com.ibm.wala.types.generics;
  */
 public class TypeVariableSignature extends TypeSignature {
 
-  private TypeVariableSignature(String s) {
+  private TypeVariableSignature(String s) throws IllegalArgumentException {
     super(s);
-    assert (s.charAt(s.length() - 1) == ';');
+    if (s.length() == 0) {
+      throw new IllegalArgumentException();
+    }
+    if (s.charAt(s.length() - 1) != ';') {
+      throw new IllegalArgumentException(s);
+    }
   }
 
-  public static TypeVariableSignature make(String s) {
+  public static TypeVariableSignature make(String s) throws IllegalArgumentException {
     return new TypeVariableSignature(s);
   }
 

@@ -13,8 +13,12 @@ package com.ibm.wala.util;
 import com.ibm.wala.util.collections.ArrayIterator;
 
 /**
- * Iterator that only returns non-null elements of the array hasNext() return
- * true when there is a non-null element, false otherwise next() returns the
+ * Iterator that only returns non-null elements of the array 
+ * 
+ * hasNext() return
+ * true when there is a non-null element, false otherwise 
+ * 
+ * next() returns the
  * current element and advances the counter up to the next non-null element or
  * beyond the limit of the array
  * 

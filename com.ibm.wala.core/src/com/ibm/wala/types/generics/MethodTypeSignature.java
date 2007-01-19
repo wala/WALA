@@ -23,12 +23,16 @@ package com.ibm.wala.types.generics;
  */
 public class MethodTypeSignature extends Signature {
   
-  public MethodTypeSignature(String s) {
+  private MethodTypeSignature(String s) {
     super(s);
   }
 
-  public static MethodTypeSignature make(String genericsSignature) {
+  public static MethodTypeSignature make(String genericsSignature) throws IllegalArgumentException {
+    if (genericsSignature.length() == 0) {
+      throw new IllegalArgumentException();
+    }
     return new MethodTypeSignature(genericsSignature);
+
   }
 
   public TypeSignature[] getArguments() {

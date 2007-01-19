@@ -74,6 +74,9 @@ public final class BitSet<T> {
    */
   public void clear(T o) {
     int n = map.getMappedIndex(o);
+    if (n == -1) {
+      return;
+    }
     vector.clear(n);
   }
 
@@ -82,6 +85,9 @@ public final class BitSet<T> {
    */
   public boolean contains(T o) {
     int n = map.getMappedIndex(o);
+    if (n == -1) {
+      return false;
+    }
     return vector.get(n);
   }
 

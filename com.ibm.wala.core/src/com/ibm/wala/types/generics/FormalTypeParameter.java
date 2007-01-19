@@ -48,7 +48,7 @@ public class FormalTypeParameter extends Signature {
 
   private final TypeSignature[] interfaceBounds;
 
-  public FormalTypeParameter(String s) {
+  public FormalTypeParameter(String s) throws IllegalArgumentException {
     super(s);
     id = parseForId(s);
     classBound = parseForClassBound(s);
@@ -92,11 +92,14 @@ public class FormalTypeParameter extends Signature {
     return list.toArray(result);
   }
 
-  private String parseForId(String s) {
+  private String parseForId(String s) throws IllegalArgumentException {
+    if (s.indexOf(':') == -1) {
+      throw new IllegalArgumentException(s);
+    }
     return s.substring(0, s.indexOf(':'));
   }
 
-  public static FormalTypeParameter make(String string) {
+  public static FormalTypeParameter make(String string) throws IllegalArgumentException{
     return new FormalTypeParameter(string);
   }
 
