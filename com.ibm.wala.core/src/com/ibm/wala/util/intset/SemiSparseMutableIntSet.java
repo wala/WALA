@@ -43,7 +43,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     copySet(set);
   }
 
-  private final void assertDisjoint() {
+  private final boolean assertDisjoint() {
     if (DEBUG) {
       if (densePart != null) {
         for (IntIterator sparseBits = sparsePart.intIterator(); 
@@ -51,14 +51,16 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 	{
 	  int bit = sparseBits.next();
 	  if (densePart.contains( bit )) {
-	    Assertions._assert(! densePart.contains( bit ), this.toString());
+	    return false;
 	  }
 	  if (inDenseRange(bit)) {
-	    Assertions._assert(! inDenseRange(bit), this.toString());
+	    return false;
 	  }
 	}
       }
-    }
+    } 
+
+    return true;
   }
 
   private void fixAfterSparseInsert() {
@@ -69,7 +71,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 	 (densePart!=null &&
 	  sparsePart.size() > FIX_SPARSE_RATIO*densePart.getSize())))
     {
-      assertDisjoint();
+      assert assertDisjoint() : this.toString();
 
       if (densePart == null) {
 	IntIterator sparseBits = sparsePart.intIterator();
@@ -108,14 +110,22 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
           densePart = new OffsetBitVector(maxOffset, maxMax-maxOffset);
           sparseBits = sparsePart.intIterator();
 	  int bit;
-          while ((bit = sparseBits.next()) < maxOffset)
-            ;
+          while ((bit = sparseBits.next()) < maxOffset) {
+	    // do nothing
+	  }
+            
 	  densePart.set(bit);
           for (int i = 1; i < maxCount; i++) {
             densePart.set(sparseBits.next());
           }
 	  sparsePart.removeAll(densePart);
         }
+
+	assert assertDisjoint() :
+	  this.toString() +
+	  ", maxOffset=" + maxOffset +
+	  ", maxMax=" + maxMax +
+	  ", maxCount=" + maxCount;
 
       } else {
 	IntIterator sparseBits = sparsePart.intIterator();
@@ -125,7 +135,6 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
         int newOffset = -1;
 	int newCount = -1;
         int newLength = -1;
-	boolean swallowTail = false;
 
         // push stuff just below dense part into it, if it saves space
         if (thisBit < densePart.getOffset()) {
@@ -180,7 +189,6 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 	    if ((32*count) > bits) {
 	      newLength = thisBit;
 	      newCount = count;
-	      swallowTail = ! sparseBits.hasNext();
 	    }
 	  }
 	  if (newLength > -1) {
@@ -208,7 +216,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 	      " for " + this);
 	  }
 
-	  if (swallowTail) {
+	  if (newLength != -1 && bits[index-1] == sparsePart.max()) {
 	    int base = densePart.getOffset();
 	    int currentSize = densePart.length() - base;
 	    float newSize = 1.1f * (bits[index-1] - base);
@@ -222,9 +230,15 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 	    densePart.set(bits[i]);
 	  }
 	}
-      }
 
-      assertDisjoint();
+	assert assertDisjoint() : 
+	  this.toString() + 
+	  ", densePart.length()=" + densePart.length() +
+	  ", newOffset=" + newOffset +
+	  ", newLength=" + newLength +
+	  ", newCount=" + newCount +
+	  ", moveCount=" + moveCount;
+      }
     }
   }
 
@@ -509,7 +523,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       }
     }
 
-    assertDisjoint();
+    assert assertDisjoint() : this.toString();
 
     return change;
   }
@@ -525,12 +539,12 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     if (densePart != null && inDenseRange(i)) {
       if (!densePart.get(i)) {
 	densePart.set(i);
-	assertDisjoint();
+	assert assertDisjoint() : this.toString();
 	return true;
       }
     } else if (! sparsePart.contains(i)) {
       sparsePart.add(i);
-      assertDisjoint();
+      assert assertDisjoint() : this.toString();
       fixAfterSparseInsert();
       return true;
     }
