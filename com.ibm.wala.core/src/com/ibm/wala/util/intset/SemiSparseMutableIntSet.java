@@ -189,7 +189,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 	}
 	
 	// actually move bits from sparse to dense
-	if (newOffset != -1 || newLength != -1) {
+	if (moveCount > 0) {
 	  int index = 0;
 	  int[] bits = new int[moveCount];
 	  for (sparseBits = sparsePart.intIterator(); sparseBits.hasNext();) {
