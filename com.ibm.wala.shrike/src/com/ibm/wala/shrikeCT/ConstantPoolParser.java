@@ -42,14 +42,20 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the offset of the constant pool data in the raw class file buffer
    */
-  public int getRawOffset() {
+  public int getRawOffset() throws IllegalStateException {
+    if (cpOffsets.length < 2) {
+      throw new IllegalStateException();
+    }
     return cpOffsets[1];
   }
 
   /**
    * @return the size of the constant pool data in the raw class file buffer
    */
-  public int getRawSize() {
+  public int getRawSize() throws IllegalStateException {
+    if (cpOffsets.length < 2) {
+      throw new IllegalStateException();
+    }
     return cpOffsets[cpOffsets.length - 1] - cpOffsets[1];
   }
 
@@ -71,7 +77,7 @@ public final class ConstantPoolParser implements ClassConstants {
    * @return the type of constant pool item i, or 0 if i is an unused constant
    *         pool item
    */
-  public byte getItemType(int i) {
+  public byte getItemType(int i) throws IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -87,7 +93,7 @@ public final class ConstantPoolParser implements ClassConstants {
    * @return the name of the Class at constant pool item i, in JVM format (e.g.,
    *         java/lang/Object)
    */
-  public String getCPClass(int i) throws InvalidClassFileException {
+  public String getCPClass(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -110,7 +116,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the String at constant pool item i
    */
-  public String getCPString(int i) throws InvalidClassFileException {
+  public String getCPString(int i) throws InvalidClassFileException , IllegalArgumentException{
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -145,7 +151,7 @@ public final class ConstantPoolParser implements ClassConstants {
    * @return the name of the class part of the FieldRef, MethodRef, or
    *         InterfaceMethodRef at constant pool item i
    */
-  public String getCPRefClass(int i) throws InvalidClassFileException {
+  public String getCPRefClass(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -164,7 +170,7 @@ public final class ConstantPoolParser implements ClassConstants {
    * @return the name part of the FieldRef, MethodRef, or InterfaceMethodRef at
    *         constant pool item i
    */
-  public String getCPRefName(int i) throws InvalidClassFileException {
+  public String getCPRefName(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -184,7 +190,7 @@ public final class ConstantPoolParser implements ClassConstants {
    *         constant pool item i, in JVM format (e.g., I, Z, or
    *         Ljava/lang/Object;)
    */
-  public String getCPRefType(int i) throws InvalidClassFileException {
+  public String getCPRefType(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -202,7 +208,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the name part of the NameAndType at constant pool item i
    */
-  public String getCPNATName(int i) throws InvalidClassFileException {
+  public String getCPNATName(int i) throws InvalidClassFileException,IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -221,7 +227,7 @@ public final class ConstantPoolParser implements ClassConstants {
    * @return the type part of the NameAndType at constant pool item i, in JVM
    *         format (e.g., I, Z, or Ljava/lang/Object;)
    */
-  public String getCPNATType(int i) throws InvalidClassFileException {
+  public String getCPNATType(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -239,7 +245,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the value of the Integer at constant pool item i
    */
-  public int getCPInt(int i) throws InvalidClassFileException {
+  public int getCPInt(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -253,7 +259,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the value of the Float at constant pool item i
    */
-  public float getCPFloat(int i) throws InvalidClassFileException {
+  public float getCPFloat(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -267,7 +273,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the value of the Long at constant pool item i
    */
-  public long getCPLong(int i) throws InvalidClassFileException {
+  public long getCPLong(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -281,7 +287,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the value of the Double at constant pool item i
    */
-  public double getCPDouble(int i) throws InvalidClassFileException {
+  public double getCPDouble(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }
@@ -300,7 +306,7 @@ public final class ConstantPoolParser implements ClassConstants {
   /**
    * @return the value of the Utf8 string at constant pool item i
    */
-  public String getCPUtf8(int i) throws InvalidClassFileException {
+  public String getCPUtf8(int i) throws InvalidClassFileException, IllegalArgumentException {
     if (i < 1 || i >= cpItems.length) {
       throw new IllegalArgumentException("Constant pool item #" + i + " out of range");
     }

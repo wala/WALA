@@ -340,7 +340,7 @@ public final class MethodEditor {
    * Allocate a fresh label. This must be called during a pass and not during
    * code emission.
    */
-  public int allocateLabel() {
+  public int allocateLabel() throws IllegalArgumentException {
     verifyState(DURING_PASS);
     return nextLabel++;
   }
@@ -492,7 +492,7 @@ public final class MethodEditor {
    * 
    * @return true iff non-trivial patches were applied
    */
-  public boolean applyPatches() {
+  public boolean applyPatches() throws IllegalArgumentException {
     verifyState(DURING_PASS);
     state = EMITTING_CODE;
 
