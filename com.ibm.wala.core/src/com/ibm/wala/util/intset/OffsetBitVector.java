@@ -112,7 +112,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     int subscript;
     if (bit < offset) {
       int newOffset = bit&~LOW_MASK;
-      expand(newOffset, length()-newOffset);
+      expand(newOffset, length()-1-newOffset);
       shiftBits = bit & LOW_MASK;
       subscript = 0;
     } else {
@@ -189,7 +189,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   public final void not() {
     if (offset != 0) {
-      expand(0, offset+length());
+      expand(0, offset+length()-1);
     }
     for (int i = 0; i < bits.length; i++) {
       bits[i] ^= MASK;
@@ -212,7 +212,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * Sets all bits.
    */
   public final void setAll() {
-    expand(0, length());
+    expand(0, length()-1);
     for (int i = 0; i < bits.length; i++) {
       bits[i] = MASK;
     }
