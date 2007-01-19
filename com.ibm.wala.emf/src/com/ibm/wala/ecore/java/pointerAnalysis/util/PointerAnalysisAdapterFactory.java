@@ -11,6 +11,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.graph.EGraph;
 import com.ibm.wala.ecore.java.pointerAnalysis.EArrayContents;
 import com.ibm.wala.ecore.java.pointerAnalysis.EHeapGraph;
@@ -31,6 +32,7 @@ import com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisPackage;
  * @see com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisPackage
  * @generated
  */
+@Internal
 public class PointerAnalysisAdapterFactory extends AdapterFactoryImpl {
   /**
    * The cached model package.

@@ -11,6 +11,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.graph.EGraph;
 import com.ibm.wala.ecore.graph.ETree;
 import com.ibm.wala.ecore.graph.GraphPackage;
@@ -23,6 +24,7 @@ import com.ibm.wala.ecore.graph.GraphPackage;
  * @see com.ibm.wala.ecore.graph.GraphPackage
  * @generated
  */
+@Internal
 public class GraphAdapterFactory extends AdapterFactoryImpl {
   /**
    * The cached model package.

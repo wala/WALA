@@ -11,6 +11,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.java.scope.EBuiltInModule;
 import com.ibm.wala.ecore.java.scope.EClassFile;
 import com.ibm.wala.ecore.java.scope.EClassLoader;
@@ -30,6 +31,7 @@ import com.ibm.wala.ecore.java.scope.JavaScopePackage;
  * @see com.ibm.wala.ecore.java.scope.JavaScopePackage
  * @generated
  */
+@Internal
 public class JavaScopeAdapterFactory extends AdapterFactoryImpl {
   /**
    * The cached model package.

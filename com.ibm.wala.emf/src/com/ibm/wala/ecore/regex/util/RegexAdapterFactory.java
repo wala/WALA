@@ -11,6 +11,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.regex.EPattern;
 import com.ibm.wala.ecore.regex.RegexPackage;
 
@@ -22,6 +23,7 @@ import com.ibm.wala.ecore.regex.RegexPackage;
  * @see com.ibm.wala.ecore.regex.RegexPackage
  * @generated
  */
+@Internal
 public class RegexAdapterFactory extends AdapterFactoryImpl {
   /**
    * The cached model package.

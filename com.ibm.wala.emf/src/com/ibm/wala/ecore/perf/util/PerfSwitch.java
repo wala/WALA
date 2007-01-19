@@ -11,6 +11,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.perf.EPhaseTiming;
 import com.ibm.wala.ecore.perf.PerfPackage;
 
@@ -27,6 +28,7 @@ import com.ibm.wala.ecore.perf.PerfPackage;
  * @see com.ibm.wala.ecore.perf.PerfPackage
  * @generated
  */
+@Internal
 public class PerfSwitch {
   /**
    * The cached model package

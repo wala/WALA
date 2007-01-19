@@ -11,6 +11,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.graph.EGraph;
 import com.ibm.wala.ecore.java.pointerAnalysis.EArrayContents;
 import com.ibm.wala.ecore.java.pointerAnalysis.EHeapGraph;
@@ -36,6 +37,7 @@ import com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisPackage;
  * @see com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisPackage
  * @generated
  */
+@Internal
 public class PointerAnalysisSwitch {
   /**
    * The cached model package

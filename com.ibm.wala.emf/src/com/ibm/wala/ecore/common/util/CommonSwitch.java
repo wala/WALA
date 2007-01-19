@@ -11,6 +11,7 @@ import java.util.List;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.common.CommonPackage;
 import com.ibm.wala.ecore.common.ECollection;
 import com.ibm.wala.ecore.common.EContainer;
@@ -33,6 +34,7 @@ import com.ibm.wala.ecore.common.EStringHolder;
  * @see com.ibm.wala.ecore.common.CommonPackage
  * @generated
  */
+@Internal
 public class CommonSwitch {
   /**
    * The cached model package

@@ -11,6 +11,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.graph.EGraph;
 import com.ibm.wala.ecore.java.callGraph.CallGraphPackage;
 import com.ibm.wala.ecore.java.callGraph.ECallGraph;
@@ -23,6 +24,7 @@ import com.ibm.wala.ecore.java.callGraph.ECallGraph;
  * @see com.ibm.wala.ecore.java.callGraph.CallGraphPackage
  * @generated
  */
+@Internal
 public class CallGraphAdapterFactory extends AdapterFactoryImpl {
   /**
    * The cached model package.

@@ -11,6 +11,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.perf.EPhaseTiming;
 import com.ibm.wala.ecore.perf.PerfPackage;
 
@@ -22,6 +23,7 @@ import com.ibm.wala.ecore.perf.PerfPackage;
  * @see com.ibm.wala.ecore.perf.PerfPackage
  * @generated
  */
+@Internal
 public class PerfAdapterFactory extends AdapterFactoryImpl {
   /**
    * The cached model package.

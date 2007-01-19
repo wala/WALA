@@ -11,6 +11,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.j2ee.scope.EEarFile;
 import com.ibm.wala.ecore.j2ee.scope.EJ2EEAnalysisScope;
 import com.ibm.wala.ecore.j2ee.scope.EWarFile;
@@ -27,6 +28,7 @@ import com.ibm.wala.ecore.java.scope.EModule;
  * @see com.ibm.wala.ecore.j2ee.scope.J2EEScopePackage
  * @generated
  */
+@Internal
 public class J2EEScopeAdapterFactory extends AdapterFactoryImpl {
   /**
    * The cached model package.

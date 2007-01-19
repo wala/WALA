@@ -11,6 +11,7 @@ import org.eclipse.emf.common.notify.Notifier;
 import org.eclipse.emf.common.notify.impl.AdapterFactoryImpl;
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.common.CommonPackage;
 import com.ibm.wala.ecore.common.ECollection;
 import com.ibm.wala.ecore.common.EContainer;
@@ -28,6 +29,7 @@ import com.ibm.wala.ecore.common.EStringHolder;
  * @see com.ibm.wala.ecore.common.CommonPackage
  * @generated
  */
+@Internal
 public class CommonAdapterFactory extends AdapterFactoryImpl {
   /**
    * The cached model package.
