@@ -40,7 +40,7 @@ import com.ibm.wala.ssa.SSAFieldAccessInstruction;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAInstanceofInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
@@ -78,9 +78,9 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
   private Statement[] returnStatements;
 
-  private final Map<SSAInvokeInstruction, Set<Statement>> callerParamStatements = HashMapFactory.make();
+  private final Map<SSAAbstractInvokeInstruction, Set<Statement>> callerParamStatements = HashMapFactory.make();
 
-  private final Map<SSAInvokeInstruction, Set<Statement>> callerReturnStatements = HashMapFactory.make();
+  private final Map<SSAAbstractInvokeInstruction, Set<Statement>> callerReturnStatements = HashMapFactory.make();
 
   private final HeapExclusions exclusions;
 
@@ -122,11 +122,11 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     createControlDependenceEdges(cOptions);
   }
 
-  public Set<Statement> getCallerParamStatements(SSAInvokeInstruction call) {
+  public Set<Statement> getCallerParamStatements(SSAAbstractInvokeInstruction call) {
     return callerParamStatements.get(call);
   }
 
-  public Set<Statement> getCallerReturnStatements(SSAInvokeInstruction call) {
+  public Set<Statement> getCallerReturnStatements(SSAAbstractInvokeInstruction call) {
     return callerReturnStatements.get(call);
   }
 
@@ -161,7 +161,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         } else {
           src = ssaInstruction2Statement(s);
           // add edges from call statements to parameter passing and return
-          if (s instanceof SSAInvokeInstruction) {
+          if (s instanceof SSAAbstractInvokeInstruction) {
             for (Statement st : callerParamStatements.get(s)) {
               addEdge(src, st);
             }
@@ -237,7 +237,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         SSAInstruction statement = statement2SSAInstruction(instructions, s);
         // note that data dependencies from invoke instructions will pass
         // interprocedurally
-        if (!(statement instanceof SSAInvokeInstruction)) {
+        if (!(statement instanceof SSAAbstractInvokeInstruction)) {
           if (dOptions.isTerminateAtCast() && (statement instanceof SSACheckCastInstruction)) {
             break;
           }
@@ -325,8 +325,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
           if (dOptions.isTerminateAtCast() && (pei.getInstruction() instanceof SSACheckCastInstruction)) {
             continue;
           }
-          if (pei.getInstruction() instanceof SSAInvokeInstruction) {
-            SSAInvokeInstruction call = (SSAInvokeInstruction) pei.getInstruction();
+          if (pei.getInstruction() instanceof SSAAbstractInvokeInstruction) {
+            SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) pei.getInstruction();
             Statement st = new ParamStatement.ExceptionalReturnCaller(node, call);
             addEdge(st, s);
           } else {
@@ -349,8 +349,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
               break;
             }
             if (d != null) {
-              if (d instanceof SSAInvokeInstruction) {
-                SSAInvokeInstruction call = (SSAInvokeInstruction) d;
+              if (d instanceof SSAAbstractInvokeInstruction) {
+                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) d;
                 if (vn == call.getException()) {
                   Statement st = new ParamStatement.ExceptionalReturnCaller(node, call);
                   addEdge(st, pac);
@@ -784,8 +784,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         addNode(new NormalStatement(node, i));
         visited.add(s);
       }
-      if (s instanceof SSAInvokeInstruction) {
-        addParamPassingStatements((SSAInvokeInstruction) s, mod, ref, dOptions);
+      if (s instanceof SSAAbstractInvokeInstruction) {
+        addParamPassingStatements((SSAAbstractInvokeInstruction) s, mod, ref, dOptions);
       }
     }
     return visited;
@@ -797,7 +797,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * 
    * @param dOptions
    */
-  private void addParamPassingStatements(SSAInvokeInstruction call, Map<CGNode, OrdinalSet<PointerKey>> mod,
+  private void addParamPassingStatements(SSAAbstractInvokeInstruction call, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions) {
 
     Collection<Statement> params = MapUtil.findOrCreateSet(callerParamStatements, call);
@@ -839,7 +839,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   /**
    * @return the set of all locations read by any callee at a call site.
    */
-  private OrdinalSet<PointerKey> unionHeapLocations(CGNode n, SSAInvokeInstruction call, Map<CGNode, OrdinalSet<PointerKey>> loc) {
+  private OrdinalSet<PointerKey> unionHeapLocations(CGNode n, SSAAbstractInvokeInstruction call, Map<CGNode, OrdinalSet<PointerKey>> loc) {
     BitVectorIntSet bv = new BitVectorIntSet();
     for (CGNode t : n.getPossibleTargets(call.getCallSite())) {
       bv.addAll(loc.get(t).getBackingSet());

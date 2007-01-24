@@ -12,7 +12,7 @@ package com.ibm.wala.ipa.slicer;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 
 public abstract class HeapStatement extends Statement {
 
@@ -26,9 +26,9 @@ public abstract class HeapStatement extends Statement {
 
 
   public final static class ParamCaller extends HeapStatement {
-    private final SSAInvokeInstruction call;
+    private final SSAAbstractInvokeInstruction call;
 
-    public ParamCaller(CGNode node, SSAInvokeInstruction call, PointerKey loc) {
+    public ParamCaller(CGNode node, SSAAbstractInvokeInstruction call, PointerKey loc) {
       super(node, loc);
       this.call = call;
     }
@@ -38,7 +38,7 @@ public abstract class HeapStatement extends Statement {
       return Kind.HEAP_PARAM_CALLER;
     }
 
-    public SSAInvokeInstruction getCall() {
+    public SSAAbstractInvokeInstruction getCall() {
       return call;
     }
 
@@ -97,9 +97,9 @@ public abstract class HeapStatement extends Statement {
   }
 
   public final static class ReturnCaller extends HeapStatement {
-    private final SSAInvokeInstruction call;
+    private final SSAAbstractInvokeInstruction call;
 
-    public ReturnCaller(CGNode node, SSAInvokeInstruction call, PointerKey loc) {
+    public ReturnCaller(CGNode node, SSAAbstractInvokeInstruction call, PointerKey loc) {
       super(node, loc);
       this.call = call;
     }
@@ -109,7 +109,7 @@ public abstract class HeapStatement extends Statement {
       return Kind.HEAP_RET_CALLER;
     }
 
-    public SSAInvokeInstruction getCall() {
+    public SSAAbstractInvokeInstruction getCall() {
       return call;
     }
 

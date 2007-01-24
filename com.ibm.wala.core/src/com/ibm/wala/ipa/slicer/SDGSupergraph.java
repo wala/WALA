@@ -17,7 +17,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.slicer.ParamStatement.ExceptionalReturnCaller;
 import com.ibm.wala.ipa.slicer.ParamStatement.NormalReturnCaller;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
@@ -71,19 +71,19 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     switch (r.getKind()) {
     case EXC_RET_CALLER: {
       ParamStatement.ExceptionalReturnCaller n = (ExceptionalReturnCaller) r;
-      SSAInvokeInstruction call = n.getCall();
+      SSAAbstractInvokeInstruction call = n.getCall();
       PDG pdg = getProcOf(r);
       return pdg.getCallerParamStatements(call).iterator();
     }
     case NORMAL_RET_CALLER: {
       ParamStatement.NormalReturnCaller n = (NormalReturnCaller) r;
-      SSAInvokeInstruction call = n.getCall();
+      SSAAbstractInvokeInstruction call = n.getCall();
       PDG pdg = getProcOf(r);
       return pdg.getCallerParamStatements(call).iterator();
     }
     case HEAP_RET_CALLER: {
       HeapStatement.ReturnCaller n = (HeapStatement.ReturnCaller) r;
-      SSAInvokeInstruction call = n.getCall();
+      SSAAbstractInvokeInstruction call = n.getCall();
       PDG pdg = getProcOf(r);
       return pdg.getCallerParamStatements(call).iterator();
     }
@@ -244,19 +244,19 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     switch (call.getKind()) {
     case PARAM_CALLER: {
       ParamStatement.ParamCaller n = (ParamStatement.ParamCaller) call;
-      SSAInvokeInstruction st = n.getCall();
+      SSAAbstractInvokeInstruction st = n.getCall();
       PDG pdg = getProcOf(call);
       return pdg.getCallerReturnStatements(st).iterator();
     }
     case HEAP_PARAM_CALLER: {
       HeapStatement.ParamCaller n = (HeapStatement.ParamCaller) call;
-      SSAInvokeInstruction st = n.getCall();
+      SSAAbstractInvokeInstruction st = n.getCall();
       PDG pdg = getProcOf(call);
       return pdg.getCallerReturnStatements(st).iterator();
     }
     case NORMAL: {
       NormalStatement n = (NormalStatement) call;
-      SSAInvokeInstruction st = (SSAInvokeInstruction) n.getInstruction();
+      SSAAbstractInvokeInstruction st = (SSAAbstractInvokeInstruction) n.getInstruction();
       PDG pdg = getProcOf(call);
       return pdg.getCallerReturnStatements(st).iterator();
     }
@@ -291,7 +291,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
         return false;
       } else {
         NormalStatement s = (NormalStatement) n;
-        return s.getInstruction() instanceof SSAInvokeInstruction;
+        return s.getInstruction() instanceof SSAAbstractInvokeInstruction;
       }
     default:
       Assertions.UNREACHABLE();

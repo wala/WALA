@@ -25,7 +25,7 @@ import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.util.CompoundIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -207,7 +207,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         return getPDG(N.getNode()).getPredNodes(N);
       case EXC_RET_CALLER: {
         ParamStatement.ExceptionalReturnCaller nrc = (ParamStatement.ExceptionalReturnCaller) N;
-        SSAInvokeInstruction call = nrc.getCall();
+        SSAAbstractInvokeInstruction call = nrc.getCall();
         Collection<Statement> result = new Iterator2Collection<Statement>(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
@@ -221,7 +221,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       }
       case NORMAL_RET_CALLER: {
         ParamStatement.NormalReturnCaller nrc = (ParamStatement.NormalReturnCaller) N;
-        SSAInvokeInstruction call = nrc.getCall();
+        SSAAbstractInvokeInstruction call = nrc.getCall();
         Collection<Statement> result = new Iterator2Collection<Statement>(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
@@ -235,7 +235,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       }
       case HEAP_RET_CALLER: {
         HeapStatement.ReturnCaller r = (HeapStatement.ReturnCaller) N;
-        SSAInvokeInstruction call = r.getCall();
+        SSAAbstractInvokeInstruction call = r.getCall();
         Collection<Statement> result = new Iterator2Collection<Statement>(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
@@ -263,7 +263,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                SSAInvokeInstruction call = (SSAInvokeInstruction) ir.getInstructions()[i];
+                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
                 int p = call.getUse(parameterIndex);
                 Statement s = new ParamStatement.ParamCaller(caller, call, p);
                 addNode(s);
@@ -292,7 +292,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                SSAInvokeInstruction call = (SSAInvokeInstruction) ir.getInstructions()[i];
+                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
                 Statement s = new HeapStatement.ParamCaller(caller, call, hpc.getLocation());
                 addNode(s);
                 result.add(s);
@@ -319,7 +319,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                SSAInvokeInstruction call = (SSAInvokeInstruction) ir.getInstructions()[i];
+                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
                 Statement s = pdg.ssaInstruction2Statement(call);
                 addNode(s);
                 result.add(s);
@@ -345,9 +345,9 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           return getPDG(N.getNode()).getSuccNodes(N);
         } else {
           NormalStatement ns = (NormalStatement) N;
-          if (ns.getInstruction() instanceof SSAInvokeInstruction) {
+          if (ns.getInstruction() instanceof SSAAbstractInvokeInstruction) {
             HashSet<Statement> result = HashSetFactory.make();
-            SSAInvokeInstruction call = (SSAInvokeInstruction) ns.getInstruction();
+            SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ns.getInstruction();
             for (CGNode t : N.getNode().getPossibleTargets(call.getCallSite())) {
               Statement s = new MethodEntryStatement(t);
               addNode(s);
@@ -379,7 +379,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                SSAInvokeInstruction call = (SSAInvokeInstruction) ir.getInstructions()[i];
+                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
                 Statement s = new ParamStatement.ExceptionalReturnCaller(caller, call);
                 addNode(s);
                 result.add(s);
@@ -401,7 +401,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                SSAInvokeInstruction call = (SSAInvokeInstruction) ir.getInstructions()[i];
+                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
                 Statement s = new ParamStatement.NormalReturnCaller(caller, call);
                 addNode(s);
                 result.add(s);
@@ -424,7 +424,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                SSAInvokeInstruction call = (SSAInvokeInstruction) ir.getInstructions()[i];
+                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
                 Statement s = new HeapStatement.ReturnCaller(caller, call, r.getLocation());
                 addNode(s);
                 result.add(s);
@@ -436,7 +436,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       }
       case PARAM_CALLER: {
         ParamStatement.ParamCaller pac = (ParamStatement.ParamCaller) N;
-        SSAInvokeInstruction call = pac.getCall();
+        SSAAbstractInvokeInstruction call = pac.getCall();
         Collection<Statement> result = HashSetFactory.make(5);
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence successors
@@ -454,7 +454,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       }
       case HEAP_PARAM_CALLER:
         HeapStatement.ParamCaller pc = (HeapStatement.ParamCaller) N;
-        SSAInvokeInstruction call = pc.getCall();
+        SSAAbstractInvokeInstruction call = pc.getCall();
         Collection<Statement> result = HashSetFactory.make(5);
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence successors
@@ -481,8 +481,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         } else {
           NormalStatement ns = (NormalStatement) src;
           if (dst instanceof MethodEntryStatement) {
-            if (ns.getInstruction() instanceof SSAInvokeInstruction) {
-              SSAInvokeInstruction call = (SSAInvokeInstruction) ns.getInstruction();
+            if (ns.getInstruction() instanceof SSAAbstractInvokeInstruction) {
+              SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ns.getInstruction();
               return src.getNode().getPossibleTargets(call.getCallSite()).contains(dst.getNode());
             } else {
               return false;

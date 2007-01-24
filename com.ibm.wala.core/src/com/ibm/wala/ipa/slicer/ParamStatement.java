@@ -11,7 +11,7 @@
 package com.ibm.wala.ipa.slicer;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 
 /**
  * Represents parameter-passing statement in the SDG
@@ -30,15 +30,15 @@ public abstract class ParamStatement extends Statement {
   }
   
   public interface CallStatementCarrier {
-    public SSAInvokeInstruction getCall();
+    public SSAAbstractInvokeInstruction getCall();
   }
 
   public static class ParamCaller extends ParamStatement implements ValueNumberCarrier, CallStatementCarrier {
-    private final SSAInvokeInstruction call;
+    private final SSAAbstractInvokeInstruction call;
 
     protected final int valueNumber;
 
-    public ParamCaller(CGNode node, SSAInvokeInstruction call, int valueNumber) {
+    public ParamCaller(CGNode node, SSAAbstractInvokeInstruction call, int valueNumber) {
       super(node);
       this.call = call;
       this.valueNumber = valueNumber;
@@ -49,7 +49,7 @@ public abstract class ParamStatement extends Statement {
       return Kind.PARAM_CALLER;
     }
 
-    public SSAInvokeInstruction getCall() {
+    public SSAAbstractInvokeInstruction getCall() {
       return call;
     }
 
@@ -118,11 +118,11 @@ public abstract class ParamStatement extends Statement {
   }
 
   public static class NormalReturnCaller extends ParamStatement implements ValueNumberCarrier, CallStatementCarrier {
-    private final SSAInvokeInstruction call;
+    private final SSAAbstractInvokeInstruction call;
 
     protected final int valueNumber;
 
-    public NormalReturnCaller(CGNode node, SSAInvokeInstruction call) {
+    public NormalReturnCaller(CGNode node, SSAAbstractInvokeInstruction call) {
       super(node);
       this.call = call;
       this.valueNumber = call.getDef();
@@ -133,7 +133,7 @@ public abstract class ParamStatement extends Statement {
       return Kind.NORMAL_RET_CALLER;
     }
 
-    public SSAInvokeInstruction getCall() {
+    public SSAAbstractInvokeInstruction getCall() {
       return call;
     }
 
@@ -163,11 +163,11 @@ public abstract class ParamStatement extends Statement {
   }
 
   public static class ExceptionalReturnCaller extends ParamStatement implements ValueNumberCarrier, CallStatementCarrier {
-    private final SSAInvokeInstruction call;
+    private final SSAAbstractInvokeInstruction call;
 
     protected final int valueNumber;
 
-    public ExceptionalReturnCaller(CGNode node, SSAInvokeInstruction call) {
+    public ExceptionalReturnCaller(CGNode node, SSAAbstractInvokeInstruction call) {
       super(node);
       this.call = call;
       this.valueNumber = call.getException();
@@ -178,7 +178,7 @@ public abstract class ParamStatement extends Statement {
       return Kind.EXC_RET_CALLER;
     }
 
-    public SSAInvokeInstruction getCall() {
+    public SSAAbstractInvokeInstruction getCall() {
       return call;
     }
 
