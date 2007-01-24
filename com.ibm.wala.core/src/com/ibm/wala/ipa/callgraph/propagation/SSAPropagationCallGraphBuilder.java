@@ -36,6 +36,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.ContextUtil;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
+import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
@@ -855,6 +856,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /**
+     * TODO: lift most of this logic to PropagationCallGraphBuilder
+     * 
      * Add a call to the class initializer from the root method.
      * 
      * @param klass
@@ -876,16 +879,16 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
 
         // add an invocation from the fake root method to the <clinit>
-        FakeRootMethod fakeRootMethod = (FakeRootMethod) callGraph.getFakeRootNode().getMethod();
+        FakeWorldClinitMethod fakeWorldClinitMethod = (FakeWorldClinitMethod) callGraph.getFakeWorldClinitNode().getMethod();
         MethodReference m = klass.getClassInitializer().getReference();
         CallSiteReference site = CallSiteReference.make(1, m, IInvokeInstruction.Dispatch.STATIC);
         IMethod targetMethod = options.getMethodTargetSelector().getCalleeTarget(callGraph.getFakeRootNode(), site, null);
         if (targetMethod != null) {
           CGNode target = getTargetForCall(callGraph.getFakeRootNode(), site, (InstanceKey) null);
           if (callGraph.getPredNodeCount(target) == 0) {
-            SSAAbstractInvokeInstruction s = fakeRootMethod.addInvocation(new int[0], site);
+            SSAAbstractInvokeInstruction s = fakeWorldClinitMethod.addInvocation(new int[0], site);
             PointerKey uniqueCatch = getPointerKeyForExceptionalReturnValue(callGraph.getFakeRootNode());
-            processResolvedCall(callGraph.getFakeRootNode(), s, target, computeInvariantParameters(s), uniqueCatch);
+            processResolvedCall(callGraph.getFakeWorldClinitNode(), s, target, computeInvariantParameters(s), uniqueCatch);
           }
         }
       }

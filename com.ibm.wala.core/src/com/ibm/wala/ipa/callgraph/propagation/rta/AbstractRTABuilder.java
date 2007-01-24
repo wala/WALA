@@ -31,6 +31,7 @@ import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
+import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
 import com.ibm.wala.ipa.callgraph.propagation.ClassBasedInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -213,16 +214,16 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       }
 
       // add an invocation from the fake root method to the <clinit>
-      FakeRootMethod fakeRootMethod = (FakeRootMethod) callGraph.getFakeRootNode().getMethod();
+      FakeWorldClinitMethod fakeWorldClinitMethod = (FakeWorldClinitMethod) callGraph.getFakeWorldClinitNode().getMethod();
       MethodReference m = klass.getClassInitializer().getReference();
       CallSiteReference site = CallSiteReference.make(1, m, IInvokeInstruction.Dispatch.STATIC);
       IMethod targetMethod = options.getMethodTargetSelector().getCalleeTarget(callGraph.getFakeRootNode(), site, null);
       if (targetMethod != null) {
         CGNode target = callGraph.getNode(targetMethod, Everywhere.EVERYWHERE);
         if (target == null) {
-          SSAInvokeInstruction s = fakeRootMethod.addInvocation(null, site);
+          SSAInvokeInstruction s = fakeWorldClinitMethod.addInvocation(null, site);
           target = callGraph.findOrCreateNode(targetMethod, Everywhere.EVERYWHERE);
-          processResolvedCall(callGraph.getFakeRootNode(), s.getCallSite(), target);
+          processResolvedCall(callGraph.getFakeWorldClinitNode(), s.getCallSite(), target);
         }
       }
     }

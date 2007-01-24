@@ -91,6 +91,13 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   protected CGNode makeFakeRootNode() {
     return findOrCreateNode(new FakeRootMethod(cha, options), Everywhere.EVERYWHERE);
   }
+  
+  /**
+   * subclasses may wish to override!
+   */
+  protected CGNode makeFakeWorldClinitNode() {
+    return findOrCreateNode(new FakeWorldClinitMethod(cha, options), Everywhere.EVERYWHERE);
+  }
 
   /**
    * Method findOrCreateNode.

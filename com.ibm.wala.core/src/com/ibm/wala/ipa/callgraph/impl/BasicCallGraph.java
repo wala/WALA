@@ -27,6 +27,8 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -54,6 +56,11 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * A fake root node for the graph
    */
   private CGNode fakeRoot;
+  
+  /**
+   * A node which handles all calls to class initializers
+   */
+  private CGNode fakeWorldClinit;
 
   /**
    * An object that handles context interpreter functions
@@ -92,11 +99,21 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    */
   public void init() {
     fakeRoot = makeFakeRootNode();
-    Key K = new Key(fakeRoot.getMethod(), fakeRoot.getContext());
-    registerNode(K, fakeRoot);
+    Key k = new Key(fakeRoot.getMethod(), fakeRoot.getContext());
+    registerNode(k, fakeRoot);
+    fakeWorldClinit = makeFakeWorldClinitNode();
+    k = new Key(fakeWorldClinit.getMethod(), fakeWorldClinit.getContext());
+    registerNode(k, fakeWorldClinit);
+    
+    // add a call from fakeRoot to fakeWorldClinit
+    CallSiteReference site = CallSiteReference.make(1, fakeWorldClinit.getMethod().getReference(), IInvokeInstruction.Dispatch.STATIC);
+    ((FakeRootMethod)fakeRoot.getMethod()).addInvocation(null, site);
+    fakeRoot.addTarget(site, fakeWorldClinit);
   }
 
   protected abstract CGNode makeFakeRootNode();
+  
+  protected abstract CGNode makeFakeWorldClinitNode();
 
   /**
    * Method findOrCreateNode. use with extreme care.
@@ -132,6 +149,10 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
 
   public CGNode getFakeRootNode() {
     return fakeRoot;
+  }
+  
+  public CGNode getFakeWorldClinitNode() {
+    return fakeWorldClinit;
   }
 
   /**
