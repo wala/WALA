@@ -780,6 +780,11 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     SSAInstruction[] instructions = ir.getInstructions();
     for (int i = 0; i < instructions.length; i++) {
       SSAInstruction s = instructions[i];
+
+      if (s instanceof SSAGetCaughtExceptionInstruction) {
+	continue;
+      }
+
       if (s != null) {
         addNode(new NormalStatement(node, i));
         visited.add(s);
