@@ -362,7 +362,8 @@ public class StringStuff {
 
   /**
    * Parse an array descriptor to obtain number of dimensions in corresponding
-   * array type. b: descriptor - something like "[Ljava/lang/String;" or "[[I"
+   * array type. 
+   * b: descriptor - something like "[Ljava/lang/String;" or "[[I"
    * 
    * @return dimensionality - something like "Ljava/lang/String;" or "I"
    */
@@ -473,6 +474,63 @@ public class StringStuff {
       // Convert to standard Java dot-notation
       readable = new StringBuffer(slashToDot(readable.toString()));
       readable = new StringBuffer(dollarToDot(readable.toString()));
+    }
+    // append trailing "[]" for each array dimension
+    for (int i = 0; i < numberOfDimensions; ++i) {
+      readable.append("[]");
+    }
+    return readable.toString();
+  }
+  
+  /**
+   * Convert a JVM encoded type name to a binary type name.
+   * 
+   * @param jvmType
+   *          a String containing a type name in JVM internal format.
+   * @return the same type name in readable (source code) format.
+   */
+  public static String jvmToBinaryName(String jvmType)throws IllegalArgumentException {
+    StringBuffer readable = new StringBuffer(); // human readable version
+    int numberOfDimensions = 0; // the number of array dimensions
+
+    if (jvmType.length() == 0) {
+      throw new IllegalArgumentException("ill-formed type : " + jvmType);
+    }
+    
+    // cycle through prefixes of '['
+    char prefix = jvmType.charAt(0);
+    while (prefix == '[') {
+      numberOfDimensions++;
+      prefix = jvmType.charAt(numberOfDimensions);
+    }
+    if (prefix == 'V') {
+      readable.append("void");
+    } else if (prefix == 'B') {
+      readable.append("byte");
+    } else if (prefix == 'C') {
+      readable.append("char");
+    } else if (prefix == 'D') {
+      readable.append("double");
+    } else if (prefix == 'F') {
+      readable.append("float");
+    } else if (prefix == 'I') {
+      readable.append("int");
+    } else if (prefix == 'J') {
+      readable.append("long");
+    } else if (prefix == 'S') {
+      readable.append("short");
+    } else if (prefix == 'Z') {
+      readable.append("boolean");
+    } else if (prefix == 'L') {
+      readable.append(jvmType.substring(numberOfDimensions + 1, // strip
+          // all
+          // leading
+          // '[' &
+          // 'L'
+          jvmType.length()) // Trim off the trailing ';'
+          );
+      // Convert to standard Java dot-notation
+      readable = new StringBuffer(slashToDot(readable.toString()));
     }
     // append trailing "[]" for each array dimension
     for (int i = 0; i < numberOfDimensions; ++i) {
