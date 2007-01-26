@@ -1605,7 +1605,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return;
     }
 
-    boolean needsFilter = !target.getMethod().isStatic() && needsFilterForReceiver(instruction, target);
+    boolean needsFilter = !instruction.getSite().isStatic() && needsFilterForReceiver(instruction, target);
     // we're a little sloppy for now ... we don't filter calls to
     // java.lang.Object.
     // TODO: we need much more precise filters than cones in order to handle
