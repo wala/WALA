@@ -15,6 +15,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.ShrikeCTMethod;
+import com.ibm.wala.classLoader.ShrikeClass;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -159,5 +164,31 @@ public class FormalTypeParameter extends Signature {
 
   public TypeSignature[] getInterfaceBounds() {
     return interfaceBounds;
+  }
+
+  public static FormalTypeParameter[] getTypeParameters(IClass klass) throws InvalidClassFileException {
+    if (klass instanceof ShrikeClass) {
+      ShrikeClass sc = (ShrikeClass) klass;
+      if (sc.getClassSignature() == null) {
+        return null;
+      } else {
+        return sc.getClassSignature().getFormalTypeParameters();
+      }
+    } else {
+      return null;
+    }
+  }
+
+  public static FormalTypeParameter[] getTypeParameters(IMethod method) throws InvalidClassFileException {
+    if (method instanceof ShrikeCTMethod) {
+      ShrikeCTMethod sm = (ShrikeCTMethod) method;
+      if (sm.getMethodTypeSignature() == null) {
+        return null;
+      } else {
+        return sm.getMethodTypeSignature().getFormalTypeParameters();
+      }
+    } else {
+      return null;
+    }
   }
 }

@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.types.generics;
 
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.ShrikeCTMethod;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
+
 
 
 /**
@@ -75,6 +79,19 @@ public class MethodTypeSignature extends Signature {
       i++;
     }
     return i;
+  }
+
+  public static TypeSignature[] getArguments(IMethod method) throws InvalidClassFileException {
+    if (method instanceof ShrikeCTMethod) {
+      ShrikeCTMethod sm = (ShrikeCTMethod) method;
+      if (sm.getMethodTypeSignature() == null) {
+        return null;
+      } else {
+        return sm.getMethodTypeSignature().getArguments();
+      }
+    } else {
+      return null;
+    }
   }
 
 }
