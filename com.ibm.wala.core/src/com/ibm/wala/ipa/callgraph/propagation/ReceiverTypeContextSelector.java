@@ -32,7 +32,7 @@ public class ReceiverTypeContextSelector implements ContextSelector {
 
   private final ClassHierarchy cha;
 
-  ReceiverTypeContextSelector(ClassHierarchy cha) {
+  public ReceiverTypeContextSelector(ClassHierarchy cha) {
     this.cha = cha;
   }
 
