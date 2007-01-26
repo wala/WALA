@@ -21,7 +21,7 @@ import com.ibm.wala.util.intset.IntSet;
  * @author sfink
  *
  */
-public class NumberedNodeIterator<T>implements Iterator<T> {
+public class NumberedNodeIterator<T> implements Iterator<T> {
   final IntIterator numbers;
   final NumberedNodeManager<T> nodeManager;
 

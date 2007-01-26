@@ -215,8 +215,9 @@ public final class Atom {
    */
   public final Atom parseForInnermostArrayElementDescriptor() {
     int i = 0;
-    while (val[i] == '[')
+    while (val[i] == '[') {
       i++;
+    }
     return findOrCreate(val, i, val.length - i);
   }
 
