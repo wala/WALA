@@ -28,9 +28,11 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
@@ -106,7 +108,8 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     
     // add a call from fakeRoot to fakeWorldClinit
     CallSiteReference site = CallSiteReference.make(1, fakeWorldClinit.getMethod().getReference(), IInvokeInstruction.Dispatch.STATIC);
-    ((FakeRootMethod)fakeRoot.getMethod()).addInvocation(null, site);
+    // note that the result of addInvocation is a different site, with a different program counter!
+    site = ((FakeRootMethod)fakeRoot.getMethod()).addInvocation(null, site).getCallSite();
     fakeRoot.addTarget(site, fakeWorldClinit);
   }
 
@@ -235,7 +238,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    */
   public String toString() {
     StringBuffer result = new StringBuffer("");
-    for (Iterator i = DFS.iterateDiscoverTime(this); i.hasNext();) {
+    for (Iterator i = DFS.iterateDiscoverTime(this, new NonNullSingletonIterator<CGNode>(getFakeRootNode())); i.hasNext();) {
       CGNode n = (CGNode) i.next();
       result.append(n + "\n");
       if (n.getMethod() != null) {
