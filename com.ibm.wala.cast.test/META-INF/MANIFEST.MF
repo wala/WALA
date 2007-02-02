@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Java Plug-in
+Bundle-SymbolicName: com.ibm.capa.ast.test
+Bundle-Version: 1.0.0
+Bundle-Vendor: IBM
+Bundle-Localization: plugin
+Require-Bundle: 
+ com.ibm.wala.core.tests,
+ com.ibm.wala.cast,
+ com.ibm.wala.core,
+ org.junit
+Eclipse-AutoStart: true
+Export-Package: com.ibm.wala.cast.test
+
