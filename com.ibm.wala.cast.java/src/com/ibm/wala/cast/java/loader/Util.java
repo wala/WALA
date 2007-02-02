@@ -1,0 +1,49 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
+package com.ibm.wala.cast.java.loader;
+
+
+import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.types.*;
+import com.ibm.wala.util.Atom;
+
+import java.util.*;
+
+public class Util {
+
+  public static Selector methodEntityToSelector(CAstEntity methodEntity) {
+    Atom name= Atom.findOrCreateUnicodeAtom(methodEntity.getName());
+    CAstType.Function signature= (CAstType.Function) methodEntity.getType();
+    // Use signature to determine # of args; (entity's args includes 'this')
+    TypeName retTypeName= 
+      TypeName.string2TypeName(signature.getReturnType().getName());
+    TypeName[] argTypeNames= 
+      (signature.getArgumentCount() == 0) ? 
+      null :
+      new TypeName[signature.getArgumentCount()];
+
+    int i= 0;
+    for(Iterator iter= signature.getArgumentTypes().iterator(); 
+	iter.hasNext(); i++)
+    {
+      CAstType argType= (CAstType) iter.next();
+      argTypeNames[i]= TypeName.string2TypeName(argType.getName());
+    }
+
+    Descriptor desc= Descriptor.findOrCreate(argTypeNames, retTypeName);
+    
+    return new Selector(name, desc);
+  }
+
+  public static Atom fieldEntityToAtom(CAstEntity fieldEntity) {
+    return Atom.findOrCreateUnicodeAtom(fieldEntity.getName());
+  }
+}
