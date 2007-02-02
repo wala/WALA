@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Java AST DOMO Test Plug-in
+Bundle-SymbolicName: com.ibm.domo.ast.java.test
+Bundle-Version: 1.0.0
+Bundle-Activator: com.ibm.wala.cast.java.test.TestPlugin
+Bundle-Vendor: IBM
+Bundle-Localization: plugin
+Require-Bundle: com.ibm.wala.core.tests,
+ com.ibm.domo.ast.java,
+ com.ibm.wala.cast,
+ com.ibm.wala.core,
+ org.eclipse.core.runtime,
+ org.junit
+Eclipse-AutoStart: true
+Export-Package: com.ibm.wala.cast.java.test
