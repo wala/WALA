@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  =======================================================================
+    CAPA Domo build file
+  =======================================================================
+-->
+<project name="com.ibm.wala.cast" default="build-everything" basedir=".">
+	<!-- Software version details -->
+	<property name="name" value="walacast" />
+	<property name="module_name" value="com.ibm.wala.cast" />
+	<property name="Name" value="walacast" />
+	<property name="version" value="1-alpha" />
+
+	<!-- Compilation switches -->
+	<property name="debug" value="true" />
+	<property name="deprecation" value="false" />
+	<property name="optimize" value="true" />
+	<property name="javacFailOnError" value="true" />
+	<property name="javacDebugInfo" value="on" />
+	<property name="javacVerbose" value="false" />
+
+
+	<!-- Set global properties for this build -->
+	<property name="src" value="source/java" />
+	<property name="src.tests" value="tests" />
+	<property name="build" value="build" />
+	<property name="build.result" value="${basedir}" />
+	<property name="build.tests" value="build/tests" />
+	<property name="build.javadocs" value="${build}/javadocs" />
+	<property name="publish.javadocs" value="javadocs/com.ibm.wala.cast" />
+	<property name="dist" value="dist" />
+	<property name="etc" value="etc" />
+	<property name="docs" value="docs" />
+	<property name="lib" value="lib" />
+	<property name="mainlib" value="../mainlib" />
+	<property name="sharedlib" value="../sharedlib" />
+
+	<import file="${sharedlib}/scripts/common-targets.xml"/>
+
+</project>

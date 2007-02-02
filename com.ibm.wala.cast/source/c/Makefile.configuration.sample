@@ -1,0 +1,15 @@
+#
+# global configuration.  adjust for your system.
+#
+
+# The root of the java SDK to use (must end in /)
+JAVA_SDK = /opt/sun-jdk-1.5.0.08/
+
+# Path .class files of the com.ibm.domo.ast Java code (must end in /)
+DOMO_AST_BIN = /my/workspace/path/com.ibm.domo.ast/bin/
+
+# Extra stuff needed in the classpath of javah (must start with path separator)
+JAVAH_CLASS_PATH = :/my/workspace/path/com.ibm.capa.ast/bin/
+
+# enable debugging flags
+TRACE =

@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: WALA CAst core Plug-in
+Bundle-SymbolicName: com.ibm.wala.cast
+Bundle-Version: 1.0.0
+Bundle-Activator: com.ibm.wala.cast.plugin.AstPlugin
+Bundle-Vendor: IBM
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.core.runtime,
+ com.ibm.wala.core
+Eclipse-AutoStart: true
+Export-Package: com.ibm.wala.cast.analysis.typeInference,
+ com.ibm.wala.cast.ipa.callgraph,
+ com.ibm.wala.cast.ir.cfg,
+ com.ibm.wala.cast.ir.ssa,
+ com.ibm.wala.cast.ir.ssa.analysis,
+ com.ibm.wala.cast.ir.translator,
+ com.ibm.wala.cast.loader,
+ com.ibm.wala.cast.plugin,
+ com.ibm.wala.cast.tree,
+ com.ibm.wala.cast.tree.impl,
+ com.ibm.wala.cast.tree.visit,
+ com.ibm.wala.cast.types,
+ com.ibm.wala.cast.util
+
