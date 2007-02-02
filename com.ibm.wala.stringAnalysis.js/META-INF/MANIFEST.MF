@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: String Analysis for JavaScript Plug-in
+Bundle-SymbolicName: com.ibm.domo.sa.js
+Bundle-Version: 1.0.0
+Bundle-Activator: com.ibm.wala.stringAnalysis.js.SAJsPlugin
+Bundle-Vendor: IBM
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.ibm.capa.util.automaton,
+ com.ibm.domo.js,
+ com.ibm.domo.sa,
+ com.ibm.wala.core
+Eclipse-AutoStart: true
+Export-Package: com.ibm.wala.stringAnalysis.js,
+ com.ibm.wala.stringAnalysis.js.ssa,
+ com.ibm.wala.stringAnalysis.js.translator,
+ com.ibm.wala.stringAnalysis.js.util
