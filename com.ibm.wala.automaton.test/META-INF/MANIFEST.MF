@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test Plug-in for Automaton
+Bundle-SymbolicName: com.ibm.capa.util.automaton.test
+Bundle-Version: 1.0.0
+Bundle-Activator: com.ibm.wala.automaton.test.TestPlugin
+Bundle-Vendor: IBM
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ com.ibm.capa.util.automaton,
+ org.junit
+Eclipse-AutoStart: true

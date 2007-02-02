@@ -1,0 +1,19 @@
+a1 = Automaton(){
+  init = <q1>;
+  final = {<qq>};
+  transitions = {
+    <q1>(a) -> <q2>;
+    <q2>(b) -> <q3>;
+    <q3>(c) -> <q4>;
+  }
+};
+
+a1 = Automaton(){
+  init = <q1>;
+  final = {<qq>};
+  transitions = {
+    <q1>(a) -> <q2>;
+    <q2>(b) -> <q3>;
+    <q3>(c) -> <q4>;
+  }
+};
