@@ -1,0 +1,107 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
+package com.ibm.wala.cast.js.test;
+
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
+
+
+import com.ibm.wala.cast.js.ipa.callgraph.*;
+import com.ibm.wala.cast.js.loader.*;
+import com.ibm.wala.cast.js.util.*;
+import com.ibm.wala.classLoader.*;
+import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.ipa.callgraph.propagation.*;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.*;
+import com.ibm.wala.ipa.cha.*;
+import com.ibm.wala.util.warnings.WarningSet;
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
+
+import junit.framework.Assert;
+
+public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
+
+  public static PropagationCallGraphBuilder makeScriptCGBuilder(String dir, String name) throws IOException {
+    JavaScriptLoaderFactory loaders = Util.makeLoaders();
+
+    URL script =
+      Util.class.getClassLoader().getResource(dir + File.separator + name);
+    if (script == null) {
+      script = Util.class.getClassLoader().getResource(dir + "/" + name);
+    }
+    Assertions._assert(script != null, "cannot find " + dir + " and " + name);
+
+    AnalysisScope scope;
+    if (script.openConnection() instanceof JarURLConnection) {
+      scope = makeScope(new URL[]{ script }, loaders );
+    } else {
+      scope = makeScope(new SourceFileModule[]{ makeSourceModule(script, dir, name) }, loaders );
+    }
+
+    return makeCG(loaders, true, scope);
+  }
+
+  public static CallGraph makeScriptCG(String dir, String name) throws IOException {
+    PropagationCallGraphBuilder b = makeScriptCGBuilder(dir, name);
+    CallGraph CG =  b.makeCallGraph( b.getOptions() );
+    dumpCG(b, CG);
+    return CG;
+  }
+
+  public static CallGraph makeScriptCG(SourceFileModule[] scripts) throws IOException {
+    PropagationCallGraphBuilder b = makeCGBuilder(scripts);
+    CallGraph CG = b.makeCallGraph( b.getOptions() );
+    dumpCG(b, CG);
+    return CG;
+  }
+
+  public static PropagationCallGraphBuilder makeHTMLCGBuilder(URL url) throws IOException {
+    SourceFileModule script = WebUtil.extractScriptFromHTML(url);
+    return makeCGBuilder(new SourceFileModule[]{ script });
+  }
+
+  public static CallGraph makeHTMLCG(URL url) throws IOException {
+    PropagationCallGraphBuilder b = makeHTMLCGBuilder(url);
+    CallGraph CG = b.makeCallGraph( b.getOptions() );
+    dumpCG(b, CG);
+    return CG;
+  }
+
+  public static PropagationCallGraphBuilder makeCGBuilder(SourceFileModule[] scripts) throws IOException {
+    JavaScriptLoaderFactory loaders = makeLoaders();
+    AnalysisScope scope = makeScope(scripts, loaders );
+    return makeCG(loaders, true, scope);
+  }
+
+  protected static 
+    PropagationCallGraphBuilder makeCG(JavaScriptLoaderFactory loaders,
+				       boolean keepIRs,
+				       AnalysisScope scope) 
+      throws IOException 
+  {
+    try {
+      WarningSet warnings = new WarningSet();
+      ClassHierarchy cha = makeHierarchy( scope, loaders, warnings );
+      Entrypoints roots = makeScriptRoots( cha );
+      AnalysisOptions options = makeOptions(scope, keepIRs, cha, roots, warnings);
+
+      JSCFABuilder builder = new JSZeroXCFABuilder(cha, warnings, options, null, null, null, ZeroXInstanceKeys.ALLOCATIONS);
+
+      return builder;
+    } catch (ClassHierarchyException e) {
+      Assert.assertTrue("internal error building class hierarchy", false); 
+      return null;
+    }
+  }
+}

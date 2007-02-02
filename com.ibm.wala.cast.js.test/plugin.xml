@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<plugin
+   id="com.ibm.domo.js.test"
+   name="DOMO JavaScript Test Plug-in"
+   version="1.0.0"
+   provider-name="IBM"
+   class="com.ibm.wala.cast.js.test.JavaScriptTestPlugin">
+
+   <runtime>
+      <library name="test.jar"/>
+   </runtime>
+
+   <requires>
+      <import plugin="com.ibm.domo.js"/>
+      <import plugin="com.ibm.wala.cast"/>
+      <import plugin="com.ibm.wala.core"/>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="com.ibm.wala.core.tests"/>
+      <import plugin="org.junit"/>
+   </requires>
+
+</plugin>
