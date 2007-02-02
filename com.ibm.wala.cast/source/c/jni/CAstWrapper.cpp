@@ -12,13 +12,13 @@
 
 #define __SIG( __nm ) "L" __nm ";"
 
-#define __CTN "com/ibm/wala/cast/CAst"
+#define __CTN "com/ibm/wala/cast/tree/CAst"
 #define __CTS __SIG(  __CTN )
 
-#define __CNN "com/ibm/wala/cast/CAstNode"
+#define __CNN "com/ibm/wala/cast/tree/CAstNode"
 #define __CNS __SIG( __CNN )
 
-#define __CRN "com/ibm/wala/cast/CAstMemberReference"
+#define __CRN "com/ibm/wala/cast/tree/CAstMemberReference"
 #define __CRS __SIG( __CRN )
 
 #define __OBJN "java/lang/Object"
@@ -85,7 +85,7 @@ CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject Ast)
   this->callReference = env->GetStaticObjectField(CAstMemberReference, ff);
   THROW_ANY_EXCEPTION(java_ex);
 
-  this->CAstPrinter = env->FindClass("com/ibm/wala/cast/tree/impl/CAstPrinter");
+  this->CAstPrinter = env->FindClass("com/ibm/wala/cast/util/CAstPrinter");
   this->castPrint = env->GetStaticMethodID(CAstPrinter, "print", "(Lcom/ibm/wala/cast/tree/CAstNode;)Ljava/lang/String;");
 
   this->hashSetInit = env->GetMethodID(HashSet, "<init>", "()V");

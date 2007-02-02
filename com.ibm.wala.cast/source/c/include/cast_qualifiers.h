@@ -7,7 +7,7 @@
 #elif defined( _CODE_QUALIFIERS )
 #define _CAstQualifier( __id )						\
 {									\
-  jfieldID f##__id = env->GetStaticFieldID(CAstQualifier, #__id, "Lcom/ibm/wala/cast/CAstQualifier;");	\
+  jfieldID f##__id = env->GetStaticFieldID(CAstQualifier, #__id, "Lcom/ibm/wala/cast/tree/CAstQualifier;");	\
   jobject o##__id = env->GetStaticObjectField(CAstNode, f##__id);	\
   CAstWrapper::__id = env->NewGlobalRef(o##__id);			\
   THROW_ANY_EXCEPTION(exp);						\

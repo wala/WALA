@@ -30,8 +30,7 @@ public class CAstQualifier {
   public static final CAstQualifier PRIVATE = new CAstQualifier("private");
   public static final CAstQualifier PROTECTED = new CAstQualifier("protected");
   public static final CAstQualifier PUBLIC = new CAstQualifier("public");
-  public static final CAstQualifier SYNCHRONIZED = 
-    new CAstQualifier("synchronized");
+  public static final CAstQualifier SYNCHRONIZED = new CAstQualifier("synchronized");
 
   static {
     sQualifiers.add(PUBLIC);
