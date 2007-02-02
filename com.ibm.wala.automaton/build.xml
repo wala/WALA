@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  =======================================================================
+    CAPA Util Automaton build file
+  =======================================================================
+-->
+<project name="com.ibm.capa.util.automaton" default="jar" basedir=".">
+    <!-- Software version details -->
+    <property name="name" value="capautilautomaton" />
+    <property name="module_name" value="com.ibm.capa.util.automaton" />
+    <property name="Name" value="CAPA Util Automaton" />
+    <property name="version" value="1-alpha" />
+
+    <!-- Compilation switches -->
+    <property name="debug" value="true" />
+    <property name="deprecation" value="false" />
+    <property name="optimize" value="true" />
+    <property name="javacFailOnError" value="true" />
+    <property name="javacDebugInfo" value="on" />
+    <property name="javacVerbose" value="false" />
+
+
+    <!-- Set global properties for this build -->
+    <property name="src" value="src" />
+    <property name="src.tests" value="tests" />
+    <property name="build" value="build" />
+    <property name="build.result" value="${basedir}" />
+    <property name="build.tests" value="${basedir}" />
+    <property name="build.javadocs" value="${build}/javadocs" />
+    <property name="publish.javadocs" value="javadocs/com.ibm.capa.util.automaton" />
+    <property name="dist" value="dist" />
+    <property name="etc" value="etc" />
+    <property name="docs" value="docs" />
+    <property name="lib" value="lib" />
+    <property name="mainlib" value="../mainlib" />
+    <property name="sharedlib" value="../sharedlib" />
+
+    <property name="cvsroot" value="/gsa/watgsa/home/d/o/dolby/cvs/CAstAnalysis"/>
+
+    <import file="${sharedlib}/scripts/common-targets.xml"/>        
+
+</project>
