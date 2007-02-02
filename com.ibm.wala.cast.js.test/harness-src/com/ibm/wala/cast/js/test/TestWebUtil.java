@@ -21,14 +21,14 @@ import junit.framework.*;
 public class TestWebUtil extends WalaTestCase {
 
   public void testAjaxslt() {
-    URL url = getClass().getClassLoader().getResource("ajaxslt-0.4/test/xslt.html");
+    URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
     Assert.assertTrue(url != null);
     Module mod = WebUtil.extractScriptFromHTML( url );
     Assert.assertTrue(mod != null);
   }
 
   public void testAjaxpath() {
-    URL url = getClass().getClassLoader().getResource("ajaxslt-0.4/test/xpath.html");
+    URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
     Assert.assertTrue(url != null);
     Module mod = WebUtil.extractScriptFromHTML( url );
     Assert.assertTrue(mod != null);
