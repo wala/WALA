@@ -4,11 +4,11 @@
     DOMO JavaScript Tests build file
   =======================================================================
 -->
-<project name="com.ibm.domo.js.test" default="build-everything" basedir=".">
+<project name="com.ibm.wala.cast.js.test" default="build-everything" basedir=".">
 	<!-- Software version details -->
-	<property name="name" value="domojstests" />
-	<property name="module_name" value="com.ibm.domo.js.test" />
-	<property name="Name" value="DOMO JS tests" />
+	<property name="name" value="walacastjstests" />
+	<property name="module_name" value="com.ibm.wala.cast.js.test" />
+	<property name="Name" value="WALA CAst JS tests" />
 	<property name="version" value="1-alpha" />
 
 	<!-- Compilation switches -->
@@ -39,17 +39,15 @@
     
 	<property name="testdata" value="../testdata/safe" />
 	<property name="resultdir" value="${build}/output/" />
-    	<property name="publish.javadocs" value="javadocs/com.ibm.domo.js.test" />
+    	<property name="publish.javadocs" value="javadocs/com.ibm.wala.cast.js.test" />
 
 	<property name="safescope" value="${sharedlib}/domojscore.jar" />
 	<property name="saferules" value="${specifications}/rules/rules.xml" />
 	<property name="saferesultdir" value="${resultdir}" />
-	<property name="saferesultfilename" value="domojscore.xml"/>
+	<property name="saferesultfilename" value="walacastjs.xml"/>
 
         <property name="excluded-tests-file" value="excluded-tests.txt" />
 
-        <property name="cvsroot" value="/gsa/watgsa/home/d/o/dolby/cvs/JTD"/>
- 		
 	<import file="${sharedlib}/scripts/common-tests-targets.xml"/>
 
 </project>
