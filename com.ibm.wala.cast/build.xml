@@ -22,6 +22,7 @@
 
 	<!-- Set global properties for this build -->
 	<property name="src" value="source/java" />
+	<property name="nativesourcedir" value="source/c" />
 	<property name="src.tests" value="tests" />
 	<property name="build" value="build" />
 	<property name="build.result" value="${basedir}" />
