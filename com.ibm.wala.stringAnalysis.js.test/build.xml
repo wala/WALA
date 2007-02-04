@@ -4,11 +4,11 @@
     CAPA Util build file
   =======================================================================
 -->
-<project name="com.ibm.domo.sa.js.test" default="jar" basedir=".">
+<project name="com.ibm.wala.stringAnalysis.js.test" default="jar" basedir=".">
     <!-- Software version details -->
-    <property name="name" value="domosajstest" />
-    <property name="module_name" value="com.ibm.domo.sa.js.test" />
-    <property name="Name" value="DOMO String Analysis for JavaScript" />
+    <property name="name" value="walasajstest" />
+    <property name="module_name" value="com.ibm.wala.stringAnalysis.js.test" />
+    <property name="Name" value="WALA String Analysis for JavaScript" />
     <property name="version" value="1-alpha" />
 
     <!-- Compilation switches -->
@@ -27,7 +27,7 @@
     <property name="build.result" value="${basedir}" />
     <property name="build.tests" value="${basedir}" />
     <property name="build.javadocs" value="${build}/javadocs" />
-    <property name="publish.javadocs" value="javadocs/com.ibm.domo.sa.js.test" />
+    <property name="publish.javadocs" value="javadocs/com.ibm.wala.stringAnalysis.js.test" />
     <property name="dist" value="dist" />
     <property name="etc" value="etc" />
     <property name="docs" value="docs" />
@@ -39,8 +39,6 @@
     <property name="specifications" value="../com.ibm.safe/specifications"/>
 
     <property name="excluded-tests-file" value="excluded-tests.txt" />
-
-    <property name="cvsroot" value="/gsa/watgsa/home/d/o/dolby/cvs/JTD"/>
 
     <import file="${sharedlib}/scripts/common-tests-targets.xml"/>        
 
