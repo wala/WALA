@@ -4,11 +4,11 @@
     DOMO String Analysis build file
   =======================================================================
 -->
-<project name="com.ibm.domo.sa" default="jar" basedir=".">
+<project name="com.ibm.wala.stringAnalysis" default="jar" basedir=".">
     <!-- Software version details -->
-    <property name="name" value="domosa" />
-    <property name="module_name" value="com.ibm.domo.sa" />
-    <property name="Name" value="DOMO String Analysis" />
+    <property name="name" value="walasa" />
+    <property name="module_name" value="com.ibm.wala.stringAnalysis" />
+    <property name="Name" value="WALA String Analysis" />
     <property name="version" value="1-alpha" />
 
     <!-- Compilation switches -->
@@ -27,15 +27,13 @@
     <property name="build.result" value="${basedir}" />
     <property name="build.tests" value="${basedir}" />
     <property name="build.javadocs" value="${build}/javadocs" />
-    <property name="publish.javadocs" value="javadocs/com.ibm.domo.sa" />
+    <property name="publish.javadocs" value="javadocs/com.ibm.wala.stringAnalysis" />
     <property name="dist" value="dist" />
     <property name="etc" value="etc" />
     <property name="docs" value="docs" />
     <property name="lib" value="lib" />
     <property name="mainlib" value="../mainlib" />
     <property name="sharedlib" value="../sharedlib" />
-
-    <property name="cvsroot" value="/gsa/watgsa/home/d/o/dolby/cvs/CAstAnalysis"/>
 
     <import file="${sharedlib}/scripts/common-targets.xml"/>        
 
