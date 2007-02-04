@@ -4,11 +4,11 @@
     CAPA Util build file
   =======================================================================
 -->
-<project name="com.ibm.capa.util.automaton.test" default="jar" basedir=".">
+<project name="com.ibm.wala.automaton.test" default="jar" basedir=".">
     <!-- Software version details -->
-    <property name="name" value="capautilautomatontest" />
-    <property name="module_name" value="com.ibm.capa.util.automaton.test" />
-    <property name="Name" value="CAPA Util Automaton Test" />
+    <property name="name" value="walaautomatontest" />
+    <property name="module_name" value="com.ibm.wala.automaton.test" />
+    <property name="Name" value="WALA Automaton Test" />
     <property name="version" value="1-alpha" />
 
     <!-- Compilation switches -->
@@ -27,7 +27,7 @@
     <property name="build.result" value="${basedir}" />
     <property name="build.tests" value="${build}" />
     <property name="build.javadocs" value="${build}/javadocs" />
-    <property name="publish.javadocs" value="javadocs/com.ibm.capa.util.automaton.test" />
+    <property name="publish.javadocs" value="javadocs/com.ibm.wala.automaton.test" />
     <property name="dist" value="dist" />
     <property name="etc" value="etc" />
     <property name="docs" value="docs" />
@@ -37,8 +37,6 @@
     
     <property name="templates" value="../com.ibm.safe/templates"/>
     <property name="specifications" value="../com.ibm.safe/specifications"/>
-
-    <property name="cvsroot" value="/gsa/watgsa/home/d/o/dolby/cvs/CAstAnalysis"/>
 
     <import file="${sharedlib}/scripts/common-tests-targets.xml"/>        
 
