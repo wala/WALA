@@ -4,11 +4,11 @@
     DOMO String Analysis for JavaScript build file
   =======================================================================
 -->
-<project name="com.ibm.domo.sa.js" default="jar" basedir=".">
+<project name="com.ibm.wala.stringAnalysis.js" default="jar" basedir=".">
     <!-- Software version details -->
-    <property name="name" value="domosajs" />
-    <property name="module_name" value="com.ibm.domo.sa.js" />
-    <property name="Name" value="DOMO String Analysis for JavaScript" />
+    <property name="name" value="walasajs" />
+    <property name="module_name" value="com.ibm.wala.stringAnalysis.js" />
+    <property name="Name" value="WALA String Analysis for JavaScript" />
     <property name="version" value="1-alpha" />
 
     <!-- Compilation switches -->
@@ -27,7 +27,7 @@
     <property name="build.result" value="${basedir}" />
     <property name="build.tests" value="${basedir}" />
     <property name="build.javadocs" value="${build}/javadocs" />
-    <property name="publish.javadocs" value="javadocs/com.ibm.domo.sa.js" />
+    <property name="publish.javadocs" value="javadocs/com.ibm.wala.stringAnalysis.js" />
     <property name="dist" value="dist" />
     <property name="etc" value="etc" />
     <property name="docs" value="docs" />
