@@ -16,7 +16,7 @@ import com.ibm.wala.util.debug.Assertions;
  * @author sfink
  *  
  */
-public final class BitVector extends BitVectorBase<BitVector> {
+public class BitVector extends BitVectorBase<BitVector> {
 
   private static final long serialVersionUID = 9087259335807761617L;
 
@@ -212,6 +212,15 @@ public final class BitVector extends BitVectorBase<BitVector> {
     return b;
   }
 
+  /**
+   * Return a new FixedSizeBitVector as the XOR of two others
+   */
+  public static BitVector xor(BitVector b1, BitVector b2) {
+    BitVector b = new BitVector(b1);
+    b.xor(b2);
+    return b;
+  }
+  
   /**
    * Logically XORs this bit set with the specified set of bits.
    * 
