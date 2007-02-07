@@ -190,11 +190,15 @@ public class Util {
    * @return set of all eligible Main classes in the class hierarchy
    */
   public static Entrypoints makeMainEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+    return makeMainEntrypoints(scope.getApplicationLoader(), cha);
+  }
+
+  public static Entrypoints makeMainEntrypoints(ClassLoaderReference clr, ClassHierarchy cha) {
     final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
     final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
     for (Iterator<IClass> it = cha.iterateAllClasses(); it.hasNext();) {
       IClass klass = it.next();
-      if (klass.getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
+      if (klass.getClassLoader().getReference().equals(clr)) {
         MethodReference mainRef = MethodReference.findOrCreate(klass.getReference(), mainMethod, Descriptor
             .findOrCreateUTF8("([Ljava/lang/String;)V"));
         IMethod m = klass.getMethod(mainRef.getSelector());
@@ -224,8 +228,7 @@ public class Util {
   /**
    * @return Entryponts for a set of J2SE Main classes
    */
-  public static Entrypoints makeMainEntrypoints(final ClassLoaderReference loaderRef, final ClassHierarchy cha,
-      final String[] classNames) {
+  public static Entrypoints makeMainEntrypoints(final ClassLoaderReference loaderRef, final ClassHierarchy cha, final String[] classNames) {
     for (int i = 0; i < classNames.length; i++) {
       if (classNames[i].indexOf("L") != 0) {
         Assertions.productionAssertion(false, "Expected class name to start with L " + classNames[i]);
