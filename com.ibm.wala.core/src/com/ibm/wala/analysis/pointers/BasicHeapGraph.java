@@ -50,7 +50,7 @@ import com.ibm.wala.util.intset.SparseIntSet;
  */
 public class BasicHeapGraph extends HeapGraph {
 
-  private final static boolean VERBOSE = true;
+  private final static boolean VERBOSE = false;
 
   private final static int VERBOSE_INTERVAL = 10000;
 
