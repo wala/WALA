@@ -30,6 +30,18 @@ public class WebUtil {
     outputDir = dir;
   }
   
+  public static SourceFileModule extractScriptFromHTML(String url) {
+    try {
+      if (! url.startsWith("file://")) {
+        url = "file://" + url;
+      }
+      return extractScriptFromHTML(new URL(url), defaultGenerator);
+    } catch (MalformedURLException e) {
+      Assertions.UNREACHABLE( e.toString() );
+      return null;
+    }
+  }
+  
   public static SourceFileModule extractScriptFromHTML(URL url) {
     return extractScriptFromHTML(url, defaultGenerator);
   }
