@@ -135,38 +135,10 @@ public class EclipseProjectSourceAnalysisEngine extends
     return cha;
   }
 
-  /**
-   * Builds the call graph for the analysis scope in effect, using all of entry points
-   * on the given entry set of "entry classes".
-   * <p>Prerequisite: you must have either supplied an IJavaProject at construction time,
-   * or called addSource/Compiled/SystemModule() to set up the analysis scope.
-   * @param entryClassNames an array of class names, each main method of which is to be
-   * used as an entry point during call graph construction.
-   */
-  public CallGraph buildDefaultCallGraph(String[] entryClassNames) {
-      buildAnalysisScope();
-      ClassHierarchy cha= buildClassHierarchy();
-      setClassHierarchy(cha);
-      Entrypoints entryPoints= Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE_REF, cha, entryClassNames);
-      AnalysisOptions options= getDefaultOptions(entryPoints);
-      CallGraphBuilder cgb= buildCallGraph(cha, options, true);
-      CallGraph cg= cgb.makeCallGraph(options);
-      return cg;
-  }
-
-  /**
-   * Builds the call graph for the analysis scope in effect, using all of the given entry points.
-   * <p>Prerequisite: you must have either supplied an IJavaProject at construction time,
-   * or called addSource/Compiled/SystemModule() to set up the analysis scope.
-   */
-  public CallGraph buildDefaultCallGraph(Entrypoints entryPoints) {
-      buildAnalysisScope();
-      ClassHierarchy cha= buildClassHierarchy();
-      setClassHierarchy(cha);
-      AnalysisOptions options= getDefaultOptions(entryPoints);
-      CallGraphBuilder cgb= buildCallGraph(cha, options, true);
-      CallGraph cg= cgb.makeCallGraph(options);
-      return cg;
+  protected Entrypoints 
+    makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) 
+  {
+    return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE_REF, cha);
   }
 
   public AnalysisOptions getDefaultOptions(Entrypoints entrypoints) {

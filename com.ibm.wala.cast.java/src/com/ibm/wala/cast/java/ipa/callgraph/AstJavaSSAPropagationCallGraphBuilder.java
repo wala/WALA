@@ -10,20 +10,22 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.ipa.callgraph;
 
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.analysis.typeInference.TypeInference;
+import com.ibm.wala.classLoader.*;
 import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder;
 import com.ibm.wala.cast.ir.ssa.*;
 import com.ibm.wala.cast.java.analysis.typeInference.AstJavaTypeInference;
-import com.ibm.wala.cast.java.ssa.AstJavaInstructionVisitor;
-import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
+import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl.JavaClass;
+import com.ibm.wala.cast.java.ssa.*;
 import com.ibm.wala.ipa.callgraph.*;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.*;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.ssa.DefUse;
-import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.*;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.intset.*;
 import com.ibm.wala.util.warnings.WarningSet;
 
 public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
@@ -45,6 +47,35 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
 
   protected boolean useObjectCatalog() {
     return false;
+  }
+
+  /////////////////////////////////////////////////////////////////////////////
+  //
+  // enclosing object pointer flow support
+  //
+  /////////////////////////////////////////////////////////////////////////////
+
+  public class EnclosingObjectReferenceKey extends AbstractFieldPointerKey {
+    private final IClass outer;
+
+    private EnclosingObjectReferenceKey(InstanceKey inner, IClass outer) {
+      super(inner);
+      this.outer = outer;
+    }
+    
+    public int hashCode() {
+      return getInstanceKey().hashCode() * outer.hashCode();
+    }
+
+    public boolean equals(Object o) {
+      return 
+        (o instanceof EnclosingObjectReferenceKey) 
+	                         &&
+	((EnclosingObjectReferenceKey)o).outer.equals(outer)
+	                         &&
+	((EnclosingObjectReferenceKey)o)
+	  .getInstanceKey().equals(getInstanceKey());
+    }
   }
 
   /////////////////////////////////////////////////////////////////////////////
@@ -81,6 +112,10 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
       super(vn);
     }
 
+    public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
+      Assertions.UNREACHABLE();
+    }
+
     public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
       bingo = true;
     }
@@ -104,6 +139,10 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
     {
       protected AstJavaPointerFlowVisitor(CGNode node, IR ir, BasicBlock bb) {
 	super(node, ir, bb);
+      }
+
+      public void visitEnclosingObjectReference(EnclosingObjectReference x) {
+	
       }
 
       public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
@@ -142,7 +181,60 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
     public AstJavaConstraintVisitor(ExplicitCallGraph.ExplicitNode node, IR ir, ExplicitCallGraph callGraph, DefUse du) {
       super(node, ir, callGraph, du);
     }
-    
+
+    public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
+      SymbolTable symtab = ir.getSymbolTable();
+      final PointerKey lvalKey = getPointerKeyForLocal(node, inst.getDef());
+      PointerKey objKey = getPointerKeyForLocal(node, 1);
+      final IClass cls = cha.lookupClass( inst.getEnclosingType() );
+
+      if (contentsAreInvariant(symtab, du, 1)) {
+        system.recordImplicitPointsToSet(objKey);
+	
+	InstanceKey[] objs = getInvariantContents(symtab, du, node, 1, AstJavaSSAPropagationCallGraphBuilder.this);
+
+	for(int i = 0; i < objs.length; i++) {
+	  PointerKey enclosing = new EnclosingObjectReferenceKey(objs[i], cls);
+	  system.newConstraint(lvalKey, assignOperator, enclosing);
+	}
+
+      } else {
+	PointsToSetVariable tv = system.findOrCreatePointsToSet( objKey );
+	tv.getValue().foreach(new IntSetAction() {
+	  public void act(int ptr) {
+	    InstanceKey iKey = system.getInstanceKey(ptr);
+	    PointerKey enclosing = new EnclosingObjectReferenceKey(iKey, cls);
+	    system.newConstraint(lvalKey, assignOperator, enclosing);
+	  }
+	});
+      }
+    }		      
+
+    public void visitNew(SSANewInstruction instruction) {
+      super.visitNew(instruction);
+      InstanceKey iKey =
+	getInstanceKeyForAllocation(node, instruction.getNewSite());
+
+      if (iKey != null) {
+	IClass klass = iKey.getConcreteType();
+
+        if (klass instanceof JavaClass) {
+	  IClass enclosingClass = ((JavaClass)klass).getEnclosingClass();
+	  if (enclosingClass != null) {
+	    Assertions._assert(
+	      cha.isSubclassOf(
+	        node.getMethod().getDeclaringClass(), 
+	        enclosingClass));
+
+	    PointerKey objKey = getPointerKeyForLocal(node, 1);
+	    PointerKey x = 
+	      new EnclosingObjectReferenceKey(iKey, enclosingClass);
+	    system.newConstraint(x, assignOperator, objKey);
+	  }
+	}
+      }
+    }
+
     public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
       visitInvokeInternal(instruction);
     }

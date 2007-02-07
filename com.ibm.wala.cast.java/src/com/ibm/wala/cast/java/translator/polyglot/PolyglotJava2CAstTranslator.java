@@ -591,21 +591,20 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 	}
 
 	public CAstNode visit(Special s, WalkContext wc) {
-	    Type owningType;
+	  if (s.qualifier() != null) {
+	    Type owningType= s.qualifier().type();
+	    TypeName owningTypeName =
+	      TypeName.string2TypeName(typeToTypeID(owningType));
+	    TypeReference owningTypeRef =
+	      TypeReference.findOrCreate(fClassLoaderRef, owningTypeName);
 
-	    if (s.qualifier() != null) {
-		owningType= s.qualifier().type();
-	    } else {
-		owningType= s.type();
+	    return makeNode(wc, fFactory, s, 
+	      s.kind() == Special.THIS ? CAstNode.THIS: CAstNode.SUPER,
+	      fFactory.makeConstant(owningTypeRef));
+	  } else {
+	    return makeNode(wc, fFactory, s, 
+	      s.kind() == Special.THIS ? CAstNode.THIS : CAstNode.SUPER);
 	    }
-
-	    TypeName owningTypeName = TypeName.string2TypeName(typeToTypeID(owningType));
-	    TypeReference owningTypeRef = TypeReference.findOrCreate(fClassLoaderRef, owningTypeName);
-
-	    // Figure out whether we want a new type of node specifically for refs to
-	    // outer class, e.g. CAstNode.OUTER_THIS.
-	    return makeNode(wc, fFactory, s, s.kind() == Special.THIS ? CAstNode.THIS : CAstNode.SUPER,
-		    fFactory.makeConstant(owningTypeRef));
 	}
 
 	public CAstNode visit(Unary u, WalkContext wc) {

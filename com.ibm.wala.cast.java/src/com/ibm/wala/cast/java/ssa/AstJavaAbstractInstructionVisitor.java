@@ -21,4 +21,8 @@ public class AstJavaAbstractInstructionVisitor
 
   }
 
+  public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
+
+  }
+
 }

@@ -19,6 +19,7 @@ import com.ibm.wala.ipa.cha.*;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.*;
+import com.ibm.wala.util.debug.Assertions;
 
 public class AstJavaTypeInference extends AstTypeInference {
 
@@ -42,6 +43,16 @@ public class AstJavaTypeInference extends AstTypeInference {
       }
     }
     
+    public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
+      TypeReference type = inst.getEnclosingType();
+      IClass klass = cha.lookupClass(type);
+      if (klass == null) {
+	Assertions.UNREACHABLE();
+      } else {
+        result = new DeclaredTypeOperator(new ConeType(klass, cha));
+      }
+    }
+
     public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
       TypeReference type = instruction.getDeclaredResultType();
       if (type.isReferenceType()) {

@@ -18,7 +18,7 @@ import java.util.Iterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
-import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
+import com.ibm.wala.cast.java.ssa.*;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
@@ -304,6 +304,17 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       CAstEntity parentType = getEnclosingType( type );
       // ((JavaSourceLoaderImpl)loader).defineType(type, composeEntityName(wc,type), parentType);
       ((JavaSourceLoaderImpl)loader).defineType(type, type.getType().getName(), parentType);
+    }
+
+    protected void leaveThis(CAstNode n, Context c, CAstVisitor visitor) {
+      if (n.getChildCount() == 0) {
+	super.leaveThis(n, c, visitor);
+      } else {
+	WalkContext wc = (WalkContext)c;
+	int result = wc.currentScope().allocateTempValue();
+	setValue(n, result);
+	wc.cfg().addInstruction(new EnclosingObjectReference(result, (TypeReference)n.getChild(0).getValue()));
+      }
     }
 
     protected boolean visitCast(CAstNode n, Context c, CAstVisitor visitor) {

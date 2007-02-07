@@ -127,6 +127,10 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 	declaredFields.put(Util.fieldEntityToAtom(fieldEntity), new JavaField(fieldEntity, JavaSourceLoaderImpl.this, this));
       }
 
+      public IClass getEnclosingClass() {
+	return enclosingClass;
+      }
+
       public String toString() {
 	if (enclosingClass == null) {
 	  return "<src-class: " + getName().toString() + ">";
