@@ -28,6 +28,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
+import com.ibm.wala.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
@@ -35,11 +36,11 @@ import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author unascribed
+ * @author Julian Dolby (dolby@us.ibm.com)
  *
  * TODO: document me
  */
-public abstract class EclipseProjectAnalysisEngine extends AbstractAnalysisEngine {
+public class EclipseProjectAnalysisEngine extends AbstractAnalysisEngine {
 
   protected final Set<Module> userEntries = new HashSet<Module>();
 
@@ -55,12 +56,14 @@ public abstract class EclipseProjectAnalysisEngine extends AbstractAnalysisEngin
     super();
     this.project = null;
     this.fRootPath = null;
+    setCallGraphBuilderFactory( new ZeroCFABuilderFactory() );
   }
 
   public EclipseProjectAnalysisEngine(IJavaProject project) {
     super();
     this.project = project;
     this.fRootPath = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+    setCallGraphBuilderFactory( new ZeroCFABuilderFactory() );
   }
 
   protected IPath makeAbsolute(IPath p) {

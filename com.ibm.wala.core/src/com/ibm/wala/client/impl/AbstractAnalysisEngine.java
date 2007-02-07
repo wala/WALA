@@ -23,14 +23,9 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.AnalysisEngine;
 import com.ibm.wala.client.CallGraphBuilderFactory;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraph;
-import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
+import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.ipa.callgraph.impl.*;
+import com.ibm.wala.ipa.callgraph.propagation.*;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -340,6 +335,27 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
 
   public AnalysisOptions getDefaultOptions(Entrypoints entrypoints) {
     return new AnalysisOptions(getScope(), entrypoints);
+  }
+
+  protected Entrypoints 
+    makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) 
+  {
+    return Util.makeMainEntrypoints(scope, cha);
+  }
+
+  /**
+   * Builds the call graph for the analysis scope in effect, 
+   * using all of the given entry points.
+   */
+  public CallGraph buildDefaultCallGraph() {
+    buildAnalysisScope();
+    ClassHierarchy cha= buildClassHierarchy();
+    setClassHierarchy(cha);
+    Entrypoints eps = makeDefaultEntrypoints(scope, cha);
+    AnalysisOptions options= getDefaultOptions(eps);
+    CallGraphBuilder cgb= buildCallGraph(cha, options, true);
+    CallGraph cg= cgb.makeCallGraph(options);
+    return cg;
   }
 
 }
