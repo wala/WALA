@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.jdt.core.JavaModelException;
 
-import com.ibm.wala.eclipse.cg.model.WalaCGModelWithMain;
+import com.ibm.wala.eclipse.cg.model.*;
 import com.ibm.wala.eclipse.util.JdtUtil;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.warnings.WalaException;
@@ -40,7 +40,7 @@ public class WalaCGModelTest extends TestCase {
 		String appJarFullPath = JdtUtil.getHelloWorldJar().getRawLocation().toString();
 
 		// compute the call graph
-		WalaCGModelWithMain model = new WalaCGModelWithMain(appJarFullPath);
+		WalaCGModel model = new WalaJarFileCGModelWithMain(appJarFullPath);
 		model.buildGraph();
 		
 		Collection roots = model.getRoots();
