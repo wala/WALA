@@ -20,8 +20,10 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
+import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -36,12 +38,9 @@ public class CGContentProvider implements ITreeContentProvider {
 
   protected Collection roots;
 
-  protected Map<Integer, IJavaElement> capaNodeIdToJavaElement = null;
-
-  public CGContentProvider(CallGraph g, Collection roots, Map<Integer, IJavaElement> capaNodeIdToJavaElement) {
+  public CGContentProvider(CallGraph g, Collection roots) {
     this.graph = g;
     this.roots = roots;
-    this.capaNodeIdToJavaElement = capaNodeIdToJavaElement;
   }
 
   /*
@@ -69,12 +68,23 @@ public class CGContentProvider implements ITreeContentProvider {
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
   public Object[] getChildren(Object parentElement) {
-
-    Collection<CGNode> result = new ArrayList<CGNode>();
-    for (Iterator<? extends CGNode> it = graph.getSuccNodes((CGNode) parentElement); it.hasNext();) {
-      CGNode capaNode = (CGNode) it.next();
-      result.add(capaNode);
+    Collection result = new ArrayList();
+    
+    if (parentElement instanceof CGNode) {
+    	for(Iterator it = ((CGNode)parentElement).iterateSites(); it.hasNext(); ) {
+    		CallSiteReference site = (CallSiteReference) it.next();
+    		if (! ((CGNode)parentElement).getPossibleTargets(site).isEmpty()) {
+    		  result.add(new Pair(parentElement, site));
+    		}
+    	}
+    
+    } else {
+      Pair pe = (Pair)parentElement;
+      for (Iterator it = ((CGNode)pe.fst).getPossibleTargets((CallSiteReference)pe.snd).iterator(); it.hasNext(); ) {
+        result.add(it.next());
+      }
     }
+    
     return result.toArray();
   }
 
@@ -95,7 +105,12 @@ public class CGContentProvider implements ITreeContentProvider {
    * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
    */
   public boolean hasChildren(Object element) {
-    return graph.getSuccNodeCount((CGNode) element) > 0;
+    if (element instanceof CGNode) {
+	  return ((CGNode)element).iterateSites().hasNext();
+    } else {
+      Pair pe = (Pair)element;
+      return !((CGNode)pe.fst).getPossibleTargets((CallSiteReference)pe.snd).isEmpty();
+    }
   }
 
   /*

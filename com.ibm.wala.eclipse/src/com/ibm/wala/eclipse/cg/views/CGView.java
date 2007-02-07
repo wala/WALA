@@ -15,8 +15,10 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.viewers.IOpenListener;
@@ -29,8 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
-import com.ibm.wala.eclipse.cg.model.WalaCGModel;
-import com.ibm.wala.eclipse.cg.model.WalaCGModelWithMain;
+import com.ibm.wala.eclipse.cg.model.*;
 import com.ibm.wala.eclipse.util.CapaToJavaEltConverter;
 import com.ibm.wala.eclipse.util.JdtUtil;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -73,8 +74,50 @@ public class CGView extends ViewPart {
   public void createPartControl(Composite parent) {
     IFile selectedJar = getSelectedJar();
     if( selectedJar != null ) {
-    	createViewer(parent, selectedJar);
+      createJarViewer(parent, selectedJar);
+
+    } else {
+      IFile selectedScript = getSelectedScript();
+      if( selectedScript != null ) {
+	createScriptViewer(parent, selectedScript);
+	
+      } else {
+	IJavaProject selectedProject = getSelectedProject();
+	if( selectedProject != null ) {
+	  createViewer(parent, selectedProject);
+           
+	} else {
+	  IType selectedType = getSelectedType();
+	  if( selectedType != null ) {
+	    createViewer(parent, selectedType);
+	  }
+	}
+      }
     }
+  }
+
+  private IType getSelectedType() {
+    ISelection currentSelection = getSite().getWorkbenchWindow().getSelectionService().getSelection();
+
+    if (currentSelection instanceof IStructuredSelection) {
+      Object selected = ((IStructuredSelection) currentSelection).getFirstElement();
+      if (selected instanceof IType) {
+        return (IType) selected;
+      }
+    }
+    return null;
+  }
+
+  private IJavaProject getSelectedProject() {
+    ISelection currentSelection = getSite().getWorkbenchWindow().getSelectionService().getSelection();
+    
+    if (currentSelection instanceof IStructuredSelection) {
+      Object selected = ((IStructuredSelection) currentSelection).getFirstElement();
+      if (selected instanceof IJavaProject) {
+	return (IJavaProject) selected;
+      }
+    }
+    return null;
   }
 
   private IFile getSelectedJar() {
@@ -89,26 +132,71 @@ public class CGView extends ViewPart {
     return null;
   }
 
-  private void createViewer(Composite parent, IFile jarFile) {
-    try {
-      // get the selected jar file
-      String applicationJar = jarFile.getRawLocation().toString();
-      IJavaProject project = JdtUtil.getJavaProject(jarFile);
+  private IFile getSelectedScript() {
+    ISelection currentSelection = getSite().getWorkbenchWindow().getSelectionService().getSelection();
 
-      // compute the call graph
-      WalaCGModel model = new WalaCGModelWithMain(applicationJar);
+    if (currentSelection instanceof IStructuredSelection) {
+      Object selected = ((IStructuredSelection) currentSelection).getFirstElement();
+      if (selected instanceof IFile && ((IFile) selected).getFileExtension().equals("html")) {
+        return (IFile) selected;
+      }
+    }
+    return null;
+  }
+
+  private void createJarViewer(Composite parent, IFile jarFile) {
+    // get the selected jar file
+    String applicationJar = jarFile.getRawLocation().toString();
+    IJavaProject project = JdtUtil.getJavaProject(jarFile);
+
+    // compute the call graph
+    WalaCGModel model = new WalaJarFileCGModelWithMain(applicationJar);
+    createViewer(parent, project, model);
+  }
+
+  private void createScriptViewer(Composite parent, IFile htmlFile) {
+    // get the selected script file
+    String scriptPathName = htmlFile.getRawLocation().toString();
+    IProject project = htmlFile.getProject();
+
+    // compute the call graph
+    WalaCGModel model = new WalaWebPageCGModel(scriptPathName);
+    createViewer(parent, null, model);
+  }
+
+  private void createViewer(Composite parent, IJavaProject project) {
+    // compute the call graph
+    WalaCGModel model = new WalaProjectCGModelWithMain(project);
+    createViewer(parent, project, model);
+  }
+
+  private void createViewer(Composite parent, IType type) {
+    IJavaProject project = type.getJavaProject(); 
+    
+    // compute the call graph
+    WalaCGModel model = new WalaProjectCGModelWithType(project, type);
+	createViewer(parent, project, model);
+  }
+
+  private void 
+    createViewer(Composite parent, 
+		 IJavaProject project,
+		 WalaCGModel model) 
+  {
+    try {
       model.buildGraph();
       Collection roots = model.getRoots();
       CallGraph graph = model.getGraph();
 
       // convert call graph nodes to Eclipse JDT elements
-      final Map<Integer, IJavaElement> capaNodeIdToJavaElement = CapaToJavaEltConverter.convert(
-    		  model.getGraph(), project);
+      final Map<Integer, IJavaElement> capaNodeIdToJavaElement =
+	CapaToJavaEltConverter.convert(model.getGraph(), project);
 
       // create the tree view
       viewer = new TreeViewer(parent);
-      viewer.setContentProvider(new CGContentProvider(graph, roots, capaNodeIdToJavaElement));
-      viewer.setLabelProvider(new CGJavaLabelProvider(capaNodeIdToJavaElement));
+      viewer.setContentProvider(new CGContentProvider(graph, roots));
+      viewer.setLabelProvider(
+	new CGJavaLabelProvider(capaNodeIdToJavaElement));
       viewer.setInput(getViewSite());
       viewer.addOpenListener(new IOpenListener() {
         // open the file when element in the tree is clicked

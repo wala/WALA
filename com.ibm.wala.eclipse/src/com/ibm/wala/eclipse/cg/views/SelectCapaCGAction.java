@@ -48,9 +48,6 @@ public class SelectCapaCGAction implements IObjectActionDelegate {
 			
 			if(view==null) {
 				try {
-//					IFile jarFile = (IFile)((IStructuredSelection)currentSelection).getFirstElement();
-//					String applicationJar = jarFile.getRawLocation().toString();
-//					String applicationJar2 = jarFile.getFullPath().toString();
 					view = (CGView)page.showView(CGView.ID);					
 				} catch (PartInitException e) {
 					e.printStackTrace();

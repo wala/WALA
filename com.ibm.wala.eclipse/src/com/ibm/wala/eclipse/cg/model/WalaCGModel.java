@@ -23,64 +23,12 @@ import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.SWTTreeViewer;
 
 
-abstract public class WalaCGModel {
+public interface WalaCGModel {
 
-	/**
-	 * Specifies the path of the jars files to be analyzed, each jar file separated by ';'
-	 */
-	protected String appJar;
+  void buildGraph() throws WalaException;
 
-	protected CallGraph callGraph;
+  CallGraph getGraph();
 
-	protected Collection roots;
+  Collection getRoots();
 
-	/**
-	 * @param appJar Specifies the path of the jars files to be analyzed, each jar file separated by ';'
-	 */	
-	public WalaCGModel(String appJar) {
-		this.appJar = appJar;
-	}
-
-	/**
-	 * @see CallGraphBuilderImpl.processImpl
-	 * warning: this is bypassing emf and may cause problems
-	 */
-	public void buildGraph() throws WalaException {
-		EMFScopeWrapper escope = createAnalysisScope();  
-		callGraph = createCallGraph(escope);	    
-		roots = inferRoots(callGraph);
-	}
-
-	public CallGraph getGraph() {
-		return callGraph;
-	}
-
-	public Collection getRoots() {
-		return roots;
-	}
-
-	/**
-	 * @see SWTCallGraph
-	 */
-	protected EMFScopeWrapper createAnalysisScope() throws WalaException {
-		EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar);
-
-		escope.setExclusionFileName("J2SEClassHierarchyExclusions.xml");
-
-		// generate a WALA-consumable wrapper around the incoming scope object
-		EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
-		return scope;
-	}
-
-	abstract protected CallGraph createCallGraph(EMFScopeWrapper escope) throws WalaException;
-
-	abstract protected Collection inferRoots(CallGraph cg) throws WalaException;
-
-	public ApplicationWindow makeUI(Graph graph, Collection<?> roots) throws WalaException {
-		final SWTTreeViewer v = new SWTTreeViewer();
-		v.setGraphInput(graph);
-		v.setRootsInput(roots);
-		v.run();
-		return v.getApplicationWindow();
-	}
 }

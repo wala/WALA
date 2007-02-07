@@ -6,12 +6,15 @@ Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.eclipse.Activator
 Bundle-Vendor: IBM
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.eclipse.core.resources,
- org.eclipse.jdt.core;visibility:=reexport,
+Require-Bundle: com.ibm.domo.ast.java,
+ com.ibm.domo.js,
+ com.ibm.wala.cast,
+ com.ibm.wala.core,
  org.eclipse.jdt.ui,
- com.ibm.wala.core
+ org.eclipse.jdt.core;visibility:=reexport,
+ org.eclipse.ui,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime
 Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.eclipse.cg.model,
  com.ibm.wala.eclipse.cg.views,

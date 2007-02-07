@@ -13,6 +13,32 @@
    <extension
          point="org.eclipse.ui.popupMenus">
       <objectContribution
+            objectClass="org.eclipse.jdt.core.IType"
+            id="com.ibm.wala.eclipse.contribution3">
+         <action
+               class="com.ibm.wala.eclipse.cg.views.SelectCapaCGAction"
+               enablesFor="1"
+               icon="icons/Wala-icon.jpg"
+               id="com.ibm.wala.eclipse.views.cfg.action3"
+               label="Open WALA Call Tree"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.jdt.core.IJavaProject"
+            id="com.ibm.wala.eclipse.contribution2">
+         <action
+               class="com.ibm.wala.eclipse.cg.views.SelectCapaCGAction"
+               enablesFor="1"
+               icon="icons/Wala-icon.jpg"
+               id="com.ibm.wala.eclipse.views.cfg.action2"
+               label="Open WALA Call Tree"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
             id="com.ibm.wala.eclipse.contribution1"
             nameFilter="*.jar"
             objectClass="org.eclipse.core.resources.IFile">
@@ -21,6 +47,21 @@
                enablesFor="1"
                icon="icons/Wala-icon.jpg"
                id="com.ibm.wala.eclipse.views.cfg.action1"
+               label="Open WALA Call Tree"/>
+      </objectContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="com.ibm.wala.eclipse.contribution4"
+            nameFilter="*.html"
+	    adaptable="true"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               class="com.ibm.wala.eclipse.cg.views.SelectCapaCGAction"
+               enablesFor="1"
+               icon="icons/Wala-icon.jpg"
+               id="com.ibm.wala.eclipse.views.cfg.action4"
                label="Open WALA Call Tree"/>
       </objectContribution>
    </extension>

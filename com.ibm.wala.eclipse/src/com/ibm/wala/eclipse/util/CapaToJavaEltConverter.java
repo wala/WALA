@@ -26,6 +26,7 @@ import org.eclipse.jdt.core.Signature;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 
 public class CapaToJavaEltConverter {
@@ -36,27 +37,30 @@ public class CapaToJavaEltConverter {
   public static Map<Integer, IJavaElement> convert(Graph graph, IJavaProject javaProject) throws JavaModelException {
 
     Map<Integer, IJavaElement> capaNodeToJdt = new HashMap<Integer, IJavaElement>();
-    Iterator capaIt = graph.iterateNodes();
-    List<IType> jdtClasses = getJdtClasses(javaProject);
+    if (javaProject != null) {
+      Iterator capaIt = graph.iterateNodes();
+      List<IType> jdtClasses = getJdtClasses(javaProject);
 
-    while (capaIt.hasNext()) {
-      CGNode capaMethod = (CGNode) capaIt.next();
-      String capaClassName = getLongClassName(capaMethod);
+      while (capaIt.hasNext()) {
+	CGNode capaMethod = (CGNode) capaIt.next();
+	String capaClassName = getLongClassName(capaMethod);
 
-      Iterator<IType> jdtClassesIt = jdtClasses.iterator();
-      while (jdtClassesIt.hasNext()) {
-        IType jdtClass = (IType) jdtClassesIt.next();
+	Iterator<IType> jdtClassesIt = jdtClasses.iterator();
+	while (jdtClassesIt.hasNext()) {
+	  IType jdtClass = (IType) jdtClassesIt.next();
 
-        String jdtClassName = getLongClassName(jdtClass);
-
-        if (capaClassName.equals(jdtClassName)) {
-
-          String capaMethodName = getMethodName(capaMethod);
-          String[] capaParamTypes = getParamTypes(capaMethod);
-          IMethod method = jdtClass.getMethod(capaMethodName, capaParamTypes);
-
-          capaNodeToJdt.put(capaMethod.getGraphNodeId(), method);
-        }
+	  String jdtClassName = getLongClassName(jdtClass);
+	  
+	  if (capaClassName.equals(jdtClassName)) {
+	      
+	    String capaMethodName = getMethodName(capaMethod);
+	    String[] capaParamTypes = getParamTypes(capaMethod);
+	    IMethod method = 
+	      jdtClass.getMethod(capaMethodName, capaParamTypes);
+	    
+	    capaNodeToJdt.put(capaMethod.getGraphNodeId(), method);
+	  }
+	}
       }
     }
     return capaNodeToJdt;
@@ -105,6 +109,43 @@ public class CapaToJavaEltConverter {
     return jdtMethod.getElementName();
   }
 
+  private static String typeName(TypeReference capaParamType) {
+    if (capaParamType.isArrayType()) {
+      // get the array element
+      return typeName(capaParamType.getArrayElementType()) + "[]";
+  
+    } else if (capaParamType.isPrimitiveType()) {
+      String capaType = capaParamType.getName().toString();
+      if (capaType.equals("C"))
+        return "char";
+      else if (capaType.equals("Z"))
+        return "boolean";
+      else if (capaType.equals("I"))
+        return "int";
+      else if (capaType.equals("B"))
+        return "byte";
+      else if (capaType.equals("D"))
+        return "double";
+      else if (capaType.equals("F"))
+        return "float";
+      else if (capaType.equals("J"))
+        return "long";
+      else if (capaType.equals("S"))
+        return "short";
+      else {
+        Assertions.UNREACHABLE();
+        return null;
+      }
+    } else if (capaParamType.isClassType()) {
+      return capaParamType.getName().toString().substring(capaParamType.getName().getPackage().length() + 2,
+          capaParamType.getName().toString().length());
+
+    } else {
+	  Assertions.UNREACHABLE();
+	  return null;
+    }
+  }
+
   private static String[] getParamTypes(CGNode capaMethod) {
 
     List<TypeReference> capaParams = getParams(capaMethod);
@@ -113,44 +154,7 @@ public class CapaToJavaEltConverter {
 
     // check the type of each param
     for (int i = 0; capaParamsIt.hasNext(); i++) {
-
-      TypeReference capaParamType = (TypeReference) capaParamsIt.next();
-      String type = "";
-      String arrayType = "";
-
-      // TODO should handle multi-dimenional arrays
-      // this assumes is 1-D array
-      if (capaParamType.isArrayType()) {
-        arrayType = "[]";
-
-        // get the array element
-        capaParamType = capaParamType.getArrayElementType();
-      }
-
-      if (capaParamType.isPrimitiveType()) {
-        String capaType = capaParamType.getName().toString();
-        if (capaType.equals("C"))
-          type = "char";
-        else if (capaType.equals("Z"))
-          type = "boolean";
-        else if (capaType.equals("I"))
-          type = "int";
-        else if (capaType.equals("B"))
-          type = "byte";
-        else if (capaType.equals("D"))
-          type = "double";
-        else if (capaType.equals("F"))
-          type = "float";
-        else if (capaType.equals("J"))
-          type = "long";
-        else if (capaType.equals("S"))
-          type = "short";
-      } else if (capaParamType.isClassType()) {
-        type = capaParamType.getName().toString().substring(capaParamType.getName().getPackage().length() + 2,
-            capaParamType.getName().toString().length());
-
-      }
-      result[i] = Signature.createTypeSignature(type + arrayType, false);
+       result[i] = Signature.createTypeSignature(typeName((TypeReference)capaParamsIt.next()), false);
     }
     return result;
   }
