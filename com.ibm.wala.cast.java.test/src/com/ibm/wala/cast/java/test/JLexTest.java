@@ -11,15 +11,25 @@
 package com.ibm.wala.cast.java.test;
 
 import com.ibm.wala.cast.java.client.EclipseProjectSourceAnalysisEngine;
+import com.ibm.wala.cast.java.ipa.callgraph.*;
+import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.ipa.callgraph.impl.*;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 
 public class JLexTest extends IRTests {
 
     public JLexTest() {
-	super("JLexTest");
+      super("JLexTest");
     }
 
-    protected EclipseProjectSourceAnalysisEngine getAnalysisEngine() {
-	return new EclipseProjectSourceAnalysisEngine();
+    protected EclipseProjectSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
+	return new EclipseProjectSourceAnalysisEngine() {
+          protected Entrypoints 
+            makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) 
+	  {
+	    return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE_REF, cha, new String[]{ "LJLex/Main" });
+	  }
+	};
     }
 
     protected String singleInputForTest() {

@@ -225,7 +225,7 @@ public abstract class IRTests extends WalaTestCase {
 	return new String[] { "L" + pkgName + "/" + getName().substring(4) };
     }
 
-    protected abstract EclipseProjectSourceAnalysisEngine getAnalysisEngine();
+    protected abstract EclipseProjectSourceAnalysisEngine getAnalysisEngine(String[] mainClassDescriptors);
 
     public void runTest(Collection/*<String>*/ sources, 
 			List/*<String>*/ libs,
@@ -234,11 +234,11 @@ public abstract class IRTests extends WalaTestCase {
 			SourceMapAssertions sa) 
     {
       try {
-	EclipseProjectSourceAnalysisEngine engine= getAnalysisEngine();
+	EclipseProjectSourceAnalysisEngine engine= getAnalysisEngine(mainClassDescriptors);
 
 	populateScope(engine, sources, libs);
 
-	CallGraph callGraph = engine.buildDefaultCallGraph(mainClassDescriptors);
+	CallGraph callGraph = engine.buildDefaultCallGraph();
 	
 	// If we've gotten this far, IR has been produced.
 	dumpIR(callGraph);

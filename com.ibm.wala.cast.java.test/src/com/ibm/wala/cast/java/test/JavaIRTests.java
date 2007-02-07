@@ -16,11 +16,11 @@ package com.ibm.wala.cast.java.test;
 import java.io.File;
 
 import com.ibm.wala.cast.java.client.EclipseProjectSourceAnalysisEngine;
-import com.ibm.wala.cast.java.ipa.callgraph.AstJavaZeroXCFABuilder;
+import com.ibm.wala.cast.java.ipa.callgraph.*;
 import com.ibm.wala.cast.java.translator.polyglot.IRTranslatorExtension;
 import com.ibm.wala.cast.java.translator.polyglot.JavaIRTranslatorExtension;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.ipa.callgraph.impl.*;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
@@ -30,8 +30,14 @@ public class JavaIRTests extends IRTests {
 	super(name);
     }
 
-    protected EclipseProjectSourceAnalysisEngine getAnalysisEngine() {
-	return new EclipseProjectSourceAnalysisEngine();
+    protected EclipseProjectSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
+	return new EclipseProjectSourceAnalysisEngine() {
+          protected Entrypoints 
+            makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) 
+	  {
+	    return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE_REF, cha, mainClassDescriptors);
+	  }
+	};
     }
 
     protected String singleInputForTest() {
