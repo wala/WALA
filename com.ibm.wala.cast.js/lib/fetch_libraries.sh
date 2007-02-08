@@ -1,7 +1,7 @@
 #!/bin/bash
 
-REAL_NAME=`realpath $0`
-MY_DIR=`dirname $REAL_NAME`
+#REAL_NAME=`realpath $0`
+MY_DIR=`pwd`
 
 TMP=$MY_DIR/tmp
 
