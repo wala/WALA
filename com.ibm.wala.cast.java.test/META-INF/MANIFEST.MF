@@ -12,5 +12,5 @@ Require-Bundle: com.ibm.wala.core.tests,
  com.ibm.wala.core,
  org.eclipse.core.runtime,
  org.junit
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.cast.java.test
