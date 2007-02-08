@@ -12,15 +12,8 @@ package com.ibm.wala.eclipse.cg.model;
 
 import java.util.Collection;
 
-import org.eclipse.jface.window.ApplicationWindow;
-
-import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
-import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
-import com.ibm.wala.emf.wrappers.JavaScopeUtil;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.viz.SWTTreeViewer;
 
 
 public interface WalaCGModel {

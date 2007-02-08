@@ -14,9 +14,7 @@ package com.ibm.wala.eclipse.cg.views;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Map;
 
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 
@@ -67,6 +65,7 @@ public class CGContentProvider implements ITreeContentProvider {
    * 
    * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   public Object[] getChildren(Object parentElement) {
     Collection result = new ArrayList();
     

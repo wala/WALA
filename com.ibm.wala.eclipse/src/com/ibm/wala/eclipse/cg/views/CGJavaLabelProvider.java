@@ -16,10 +16,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeBTMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public class CGJavaLabelProvider extends LabelProvider  {
 	

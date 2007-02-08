@@ -10,21 +10,22 @@
  *******************************************************************************/
 package com.ibm.wala.eclipse.cg.model;
 
+import java.util.Collection;
+import java.util.Collections;
+
+import org.eclipse.jdt.core.IJavaProject;
+
 import com.ibm.wala.cast.java.client.EclipseProjectSourceAnalysisEngine;
 import com.ibm.wala.cast.js.client.JavaScriptAnalysisEngine;
-import com.ibm.wala.cast.js.translator.*;
-import com.ibm.wala.cast.js.util.*;
-import com.ibm.wala.client.impl.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import com.ibm.wala.cast.js.util.WebUtil;
+import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.client.impl.AbstractAnalysisEngine;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.warnings.WalaException;
-
-import org.eclipse.jface.window.ApplicationWindow;
-import org.eclipse.jdt.core.*;
-
-import java.util.*;
 
 abstract public class WalaProjectCGModel implements WalaCGModel {
 

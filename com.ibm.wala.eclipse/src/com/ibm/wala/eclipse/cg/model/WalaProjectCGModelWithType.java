@@ -10,17 +10,18 @@
  *******************************************************************************/
 package com.ibm.wala.eclipse.cg.model;
 
+import java.util.Collection;
+
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
+
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.Entrypoints;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.graph.InferGraphRootsImpl;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
-
-import org.eclipse.jdt.core.*;
-
-import java.util.Collection;
 
 /**
  * 

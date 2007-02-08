@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
@@ -31,7 +30,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
-import com.ibm.wala.eclipse.cg.model.*;
+import com.ibm.wala.eclipse.cg.model.WalaCGModel;
+import com.ibm.wala.eclipse.cg.model.WalaJarFileCGModelWithMain;
+import com.ibm.wala.eclipse.cg.model.WalaProjectCGModelWithMain;
+import com.ibm.wala.eclipse.cg.model.WalaProjectCGModelWithType;
+import com.ibm.wala.eclipse.cg.model.WalaWebPageCGModel;
 import com.ibm.wala.eclipse.util.CapaToJavaEltConverter;
 import com.ibm.wala.eclipse.util.JdtUtil;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -157,7 +160,7 @@ public class CGView extends ViewPart {
   private void createScriptViewer(Composite parent, IFile htmlFile) {
     // get the selected script file
     String scriptPathName = htmlFile.getRawLocation().toString();
-    IProject project = htmlFile.getProject();
+//    IProject project = htmlFile.getProject();
 
     // compute the call graph
     WalaCGModel model = new WalaWebPageCGModel(scriptPathName);
