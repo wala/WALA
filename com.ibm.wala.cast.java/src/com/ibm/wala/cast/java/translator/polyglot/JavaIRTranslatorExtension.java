@@ -13,13 +13,9 @@
  */
 package com.ibm.wala.cast.java.translator.polyglot;
 
-import java.io.Reader;
-
-import com.ibm.wala.util.debug.Assertions;
-
-import polyglot.frontend.*;
+import polyglot.frontend.JLExtensionInfo;
+import polyglot.frontend.Job;
 import polyglot.frontend.goals.Goal;
-import polyglot.util.ErrorQueue;
 
 /**
  * A Polyglot extension descriptor for a test harness extension that generates DOMO IR for

@@ -13,29 +13,46 @@
  */
 package com.ibm.wala.cast.java.loader;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.ibm.wala.cast.ir.translator.*;
-import com.ibm.wala.cast.java.translator.*;
-import com.ibm.wala.cast.java.types.*;
-import com.ibm.wala.cast.loader.*;
-import com.ibm.wala.cast.loader.AstMethod.*;
-import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.ir.translator.AstTranslator;
+import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
+import com.ibm.wala.cast.loader.AstClass;
+import com.ibm.wala.cast.loader.AstField;
+import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
+import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstQualifier;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstType.Function;
 import com.ibm.wala.cfg.AbstractCFG;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.classLoader.ClassLoaderImpl;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.warnings.WarningSet;
 import com.ibm.wala.shrikeCT.ClassConstants;
-
-import java.io.*;
-import java.util.*;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * A DOMO ClassLoaderImpl that processes source file entities in the compile-time classpath.

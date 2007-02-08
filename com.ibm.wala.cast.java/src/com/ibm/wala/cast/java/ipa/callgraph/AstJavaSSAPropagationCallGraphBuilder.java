@@ -11,21 +11,34 @@
 package com.ibm.wala.cast.java.ipa.callgraph;
 
 import com.ibm.wala.analysis.typeInference.TypeInference;
-import com.ibm.wala.classLoader.*;
 import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder;
-import com.ibm.wala.cast.ir.ssa.*;
 import com.ibm.wala.cast.java.analysis.typeInference.AstJavaTypeInference;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl.JavaClass;
-import com.ibm.wala.cast.java.ssa.*;
-import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.cast.java.ssa.AstJavaInstructionVisitor;
+import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
+import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.callgraph.propagation.*;
+import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraph;
+import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
+import com.ibm.wala.ipa.callgraph.propagation.PointsToSetVariable;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.ssa.DefUse;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.intset.*;
+import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.warnings.WarningSet;
 
 public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {

@@ -10,7 +10,7 @@ Require-Bundle: com.ibm.wala.cast,
  com.ibm.wala.core,
  org.eclipse.jdt.core,
  org.eclipse.core.runtime
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.cast.java,
  com.ibm.wala.cast.java.analysis.typeInference,
  com.ibm.wala.cast.java.client,
