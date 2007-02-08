@@ -29,10 +29,10 @@ public class ComposedEntrypoints implements Entrypoints {
   private Set<Entrypoint> entrypoints = HashSetFactory.make();
   
   public ComposedEntrypoints(Entrypoints A, Entrypoints B) {
-    for (Iterator<Entrypoint> it = A.iterator(); it.hasNext(); ) {
+    for (Iterator<? extends Entrypoint> it = A.iterator(); it.hasNext(); ) {
       entrypoints.add(it.next());
     }
-    for (Iterator<Entrypoint> it = B.iterator(); it.hasNext(); ) {
+    for (Iterator<? extends Entrypoint> it = B.iterator(); it.hasNext(); ) {
       entrypoints.add(it.next());
     }
   }

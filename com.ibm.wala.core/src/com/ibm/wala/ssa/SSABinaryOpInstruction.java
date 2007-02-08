@@ -13,6 +13,7 @@ package com.ibm.wala.ssa;
 import java.util.Collection;
 
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Exceptions;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -131,7 +132,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     if (isPEI()) {
       return Exceptions.getArithmeticException();
     } else {

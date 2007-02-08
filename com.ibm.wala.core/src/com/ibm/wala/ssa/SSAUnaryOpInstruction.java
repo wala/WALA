@@ -13,6 +13,7 @@ package com.ibm.wala.ssa;
 import java.util.Collection;
 
 import com.ibm.wala.shrikeBT.UnaryOpInstruction;
+import com.ibm.wala.types.TypeReference;
 
 /**
  * @author sfink
@@ -53,7 +54,7 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return null;
   }
 }

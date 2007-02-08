@@ -27,6 +27,6 @@ public interface Entrypoints {
    * be considered entrypoints during call graph construction
    * @return an Iterator of Entrypoint
    */
-  public Iterator<Entrypoint> iterator();
+  public Iterator<? extends Entrypoint> iterator();
 
 }

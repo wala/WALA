@@ -152,7 +152,7 @@ public class SSANewInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return site.getDeclaredType().isArrayType() ? Exceptions.getNewArrayExceptions() : Exceptions.getNewScalarExceptions();
   }
 

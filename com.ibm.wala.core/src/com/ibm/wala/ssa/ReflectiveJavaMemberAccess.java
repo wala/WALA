@@ -12,6 +12,7 @@ package com.ibm.wala.ssa;
 
 import java.util.Collection;
 
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Exceptions;
 
 abstract class ReflectiveJavaMemberAccess extends ReflectiveMemberAccess {
@@ -30,7 +31,7 @@ abstract class ReflectiveJavaMemberAccess extends ReflectiveMemberAccess {
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return Exceptions.getNullPointerException();
   }
 }

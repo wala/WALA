@@ -13,6 +13,7 @@ package com.ibm.wala.ssa;
 import java.util.Collection;
 
 import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -226,7 +227,7 @@ public abstract class SSAInstruction implements IInstruction {
    * @return Colection<TypeReference> the set of exception types that an instruction might throw ...
    *         disregarding athrows and invokes.
    */
-  abstract public Collection getExceptionTypes();
+  abstract public Collection<TypeReference> getExceptionTypes();
 
   /**
    * @return true iff this instruction may fall through to the next

@@ -76,7 +76,7 @@ public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return Exceptions.getArrayAccessExceptions();
   }
 

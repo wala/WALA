@@ -510,8 +510,8 @@ public abstract class IR {
     return instructions[i.intValue()];
   }
 
-  public Iterator iterateCallSites() {
-    return new Iterator() {
+  public Iterator<CallSiteReference> iterateCallSites() {
+    return new Iterator<CallSiteReference>() {
       private final int limit = callSiteMapping.maxKeyValue();
 
       private int i = -1;
@@ -529,7 +529,7 @@ public abstract class IR {
         return i <= limit;
       }
 
-      public Object next() {
+      public CallSiteReference next() {
         int index = callSiteMapping.getRelated(i).max();
         advance();
         return ((SSAAbstractInvokeInstruction) instructions[index]).getSite();

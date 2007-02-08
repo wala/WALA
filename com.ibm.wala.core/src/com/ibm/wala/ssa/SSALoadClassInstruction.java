@@ -18,7 +18,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 public class SSALoadClassInstruction extends SSAInstruction {
 
-  private static final Collection loadClassExceptions = Collections.singleton(TypeReference.JavaLangClassNotFoundException);
+  private static final Collection<TypeReference> loadClassExceptions = Collections.singleton(TypeReference.JavaLangClassNotFoundException);
 
   private final int lval;
 
@@ -49,7 +49,7 @@ public class SSALoadClassInstruction extends SSAInstruction {
     return true;
   }
 
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return loadClassExceptions;
   }
 

@@ -13,6 +13,7 @@ package com.ibm.wala.ssa;
 import java.util.Collection;
 
 import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -133,7 +134,7 @@ public class SSAPhiInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return null;
   }
 }
