@@ -10,7 +10,17 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.translator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 import com.ibm.wala.cast.ir.ssa.AssignInstruction;
 import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
@@ -46,15 +56,21 @@ import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.ShiftInstruction;
 import com.ibm.wala.shrikeBT.UnaryOpInstruction;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.types.*;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
+import com.ibm.wala.ssa.SSALoadClassInstruction;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.collections.*;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
-import com.ibm.wala.util.graph.traverse.*;
 
 /**
  * @author Julian Dolby TODO: document me.

@@ -54,7 +54,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
   }
 
   private final Map specificStringKeys = new HashMap();
-  private final Map specificIndexKeys = new HashMap();
+//  private final Map specificIndexKeys = new HashMap();
     
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField f) {
     PointerKey fk = base.getPointerKeyForInstanceField(I, f);

@@ -11,16 +11,20 @@
 package com.ibm.wala.cast.loader;
 
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.types.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.collections.*;
-import com.ibm.wala.util.debug.Assertions;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.*;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.debug.Assertions;
 
 public abstract class AstDynamicPropertyClass extends AstClass {
   private final TypeReference defaultDescriptor;

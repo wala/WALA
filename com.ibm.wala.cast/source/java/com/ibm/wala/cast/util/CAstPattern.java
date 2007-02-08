@@ -10,12 +10,18 @@
  *****************************************************************************/
 package com.ibm.wala.cast.util;
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.impl.*;
-import com.ibm.wala.util.debug.*;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
-import java.lang.reflect.*;
-import java.util.*;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
 
 public class CAstPattern {
   private static boolean DEBUG_PARSER = false;
@@ -370,10 +376,10 @@ public class CAstPattern {
       this.patternString = patternString;
     }
 
-    private Parser(String patternString, int start) {
-      this(patternString);
-      this.start = start;
-    }
+//    private Parser(String patternString, int start) {
+//      this(patternString);
+//      this.start = start;
+//    }
 
     private String parseName(boolean internal) {
       if (patternString.charAt(start) == (internal?'{':'<')) {

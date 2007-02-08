@@ -10,10 +10,9 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
-import com.ibm.wala.cast.tree.*;
-
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class LineNumberPosition extends AbstractSourcePosition {
   private final URL url;

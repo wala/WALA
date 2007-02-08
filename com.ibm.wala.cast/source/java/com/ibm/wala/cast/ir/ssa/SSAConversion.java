@@ -10,20 +10,31 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
+
 import com.ibm.wala.cast.ir.ssa.AstIRFactory.AstIR;
 import com.ibm.wala.cast.ir.ssa.analysis.LiveAnalysis;
-import com.ibm.wala.cast.loader.*;
-import com.ibm.wala.cast.loader.AstMethod.*;
+import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
+import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.ssa.SSACFG;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.IR.SSA2LocalMap;
-import com.ibm.wala.util.collections.IntStack;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.intset.*;
-
-import java.util.*;
+import com.ibm.wala.util.intset.BitVector;
+import com.ibm.wala.util.intset.BitVectorIntSet;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
  * @author Julian Dolby

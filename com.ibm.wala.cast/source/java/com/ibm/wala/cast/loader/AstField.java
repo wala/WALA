@@ -11,14 +11,15 @@
 package com.ibm.wala.cast.loader;
 
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.debug.Assertions;
+import java.util.Collection;
 
-import java.util.*;
+import com.ibm.wala.cast.tree.CAstQualifier;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.Atom;
 
 public class AstField implements IField {
   private final Collection qualifiers;

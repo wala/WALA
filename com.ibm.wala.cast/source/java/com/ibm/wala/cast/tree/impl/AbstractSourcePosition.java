@@ -10,8 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.*;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 
 public abstract class AbstractSourcePosition implements Position {
     

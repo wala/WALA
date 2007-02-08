@@ -10,16 +10,22 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-import com.ibm.wala.cast.loader.*;
-import com.ibm.wala.cfg.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.ssa.SSAOptions.*;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSACFG;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.ssa.SSAOptions.DefaultValues;
 import com.ibm.wala.util.collections.IntStack;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.DominanceFrontiers;
 import com.ibm.wala.util.graph.Graph;
-
-import java.util.*;
 
 
 /**

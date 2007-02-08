@@ -11,18 +11,23 @@
 package com.ibm.wala.cast.loader;
 
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.types.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.shrikeCT.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.collections.*;
-import com.ibm.wala.util.debug.Assertions;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
 
-import java.net.*;
-import java.util.*;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.types.AstMethodReference;
+import com.ibm.wala.cast.types.AstTypeReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.shrikeCT.ClassConstants;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.Atom;
 
 abstract public class AstFunctionClass implements IClass, ClassConstants {
   private final IClassLoader loader;

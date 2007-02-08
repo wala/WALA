@@ -8,7 +8,7 @@ Bundle-Vendor: IBM
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  com.ibm.wala.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.cast.analysis.typeInference,
  com.ibm.wala.cast.ipa.callgraph,
  com.ibm.wala.cast.ir.cfg,

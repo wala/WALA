@@ -11,8 +11,9 @@
 package com.ibm.wala.cast.ir.ssa;
 
 
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.ssa.ReflectiveMemberAccess;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.ssa.ValueDecorator;
 
 public abstract class AbstractReflectivePut extends ReflectiveMemberAccess {
   private final int value;
