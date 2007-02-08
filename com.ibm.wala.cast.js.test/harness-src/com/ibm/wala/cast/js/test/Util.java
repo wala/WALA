@@ -10,25 +10,28 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.test;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
-
-
-import com.ibm.wala.cast.js.ipa.callgraph.*;
-import com.ibm.wala.cast.js.loader.*;
-import com.ibm.wala.cast.js.util.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.util.warnings.WarningSet;
-
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.JarURLConnection;
+import java.net.URL;
 
 import junit.framework.Assert;
+
+import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
+import com.ibm.wala.cast.js.ipa.callgraph.JSZeroXCFABuilder;
+import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
+import com.ibm.wala.cast.js.util.WebUtil;
+import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.warnings.WarningSet;
 
 public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
 
