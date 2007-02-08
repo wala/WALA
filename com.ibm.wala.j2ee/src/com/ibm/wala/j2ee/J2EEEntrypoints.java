@@ -75,7 +75,7 @@ public class J2EEEntrypoints implements Entrypoints {
    * 
    * @see com.ibm.wala.ipa.callgraph.Entrypoints#iterator()
    */
-  public Iterator<Entrypoint> iterator() {
+  public Iterator<? extends Entrypoint> iterator() {
     return entrypoints.iterator();
   }
 
