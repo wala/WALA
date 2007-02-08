@@ -10,22 +10,22 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.client;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.cast.ipa.callgraph.*;
-import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.cast.js.client.impl.*;
-import com.ibm.wala.cast.js.ipa.callgraph.*;
-import com.ibm.wala.cast.js.loader.*;
-import com.ibm.wala.cast.js.translator.*;
-import com.ibm.wala.cast.js.types.*;
-import com.ibm.wala.client.*;
-import com.ibm.wala.client.impl.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.cha.*;
+import java.io.IOException;
+import java.util.jar.JarFile;
 
-import java.io.*;
-import java.util.jar.*;
+import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
+import com.ibm.wala.cast.ir.ssa.AstIRFactory;
+import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
+import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.client.impl.AbstractAnalysisEngine;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.util.debug.Assertions;
 
 public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
 

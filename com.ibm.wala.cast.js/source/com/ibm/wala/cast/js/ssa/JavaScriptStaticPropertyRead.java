@@ -10,14 +10,13 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ssa;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.cast.js.types.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.*;
+import java.util.Collection;
 
-import java.util.*;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.ssa.SSAGetInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.util.Atom;
 
 public class JavaScriptStaticPropertyRead extends SSAGetInstruction {
 

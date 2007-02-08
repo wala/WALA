@@ -12,13 +12,14 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader.JavaScriptMethodObject;
-import com.ibm.wala.cast.js.types.*;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstMethod.LexicalParent;
-import com.ibm.wala.cast.types.*;
+import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.callgraph.propagation.*;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.types.Selector;
 
 public class JavaScriptScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 

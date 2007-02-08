@@ -11,24 +11,38 @@
 package com.ibm.wala.cast.js.loader;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.cast.js.translator.*;
-import com.ibm.wala.cast.js.types.*;
-import com.ibm.wala.cast.loader.*;
+import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.AstClass;
+import com.ibm.wala.cast.loader.AstDynamicPropertyClass;
+import com.ibm.wala.cast.loader.AstFunctionClass;
+import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.types.*;
+import com.ibm.wala.cast.tree.CAstQualifier;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.cha.*;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.types.*;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
 
 public class JavaScriptLoader implements IClassLoader {
   private final Map types = new HashMap();

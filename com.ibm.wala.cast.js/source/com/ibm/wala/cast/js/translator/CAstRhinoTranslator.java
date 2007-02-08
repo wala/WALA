@@ -11,12 +11,10 @@
 package com.ibm.wala.cast.js.translator;
 
 import java.io.IOException;
-import java.io.Reader;
 
-import com.ibm.wala.cast.ir.translator.TranslatorToIR;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.classLoader.ModuleEntry;
 
 public class CAstRhinoTranslator extends TranslatorBase {
     private final JSAstTranslator CAstToIR;

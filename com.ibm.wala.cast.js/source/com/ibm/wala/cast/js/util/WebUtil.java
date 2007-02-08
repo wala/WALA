@@ -10,13 +10,14 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.util;
 
-import java.io.*;
-import java.net.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.util.warnings.*;
 
 public class WebUtil {
   private static final String outputDir;
