@@ -10,13 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.eclipse.cg.model;
 
+import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.graph.InferGraphRootsImpl;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
-
 import org.eclipse.jdt.core.*;
 
 import java.util.Collection;
@@ -34,7 +32,7 @@ public class WalaProjectCGModelWithMain extends WalaProjectCGModel {
 
   protected Entrypoints getEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
     
-    return com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+    return com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE_REF, cha);
   }
 
   protected Collection inferRoots(CallGraph cg) throws WalaException {
