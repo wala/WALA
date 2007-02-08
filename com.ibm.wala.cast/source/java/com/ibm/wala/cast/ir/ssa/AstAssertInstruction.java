@@ -15,52 +15,53 @@ import java.util.Collection;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.ValueDecorator;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 public class AstAssertInstruction extends SSAInstruction {
-	private final int value;
-	private final boolean fromSpecification;
-	
-	public AstAssertInstruction(int value, boolean fromSpecification) {
-		this.value = value;
-		this.fromSpecification = fromSpecification;
-	}
-	
-	public int getNumberOfUses() {
-		return 1;
-	}
-	
-	public int getUse(int i) {
-		Assertions._assert(i == 0);
-		return value;
-	}
-	
-	public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-		return new AstAssertInstruction(uses==null? value: uses[0], fromSpecification);
-	}
+  private final int value;
 
-	public String toString(SymbolTable symbolTable, ValueDecorator d) {
-	    return "assert " + getValueString(symbolTable, d, value) +
-	      " (fromSpec: " + fromSpecification + ")";
-	}
+  private final boolean fromSpecification;
 
-	public void visit(IVisitor v) {
-		((AstInstructionVisitor)v).visitAssert(this);
-	}
+  public AstAssertInstruction(int value, boolean fromSpecification) {
+    this.value = value;
+    this.fromSpecification = fromSpecification;
+  }
 
-	public int hashCode() {
-		return 2177*value;
-	}
+  public int getNumberOfUses() {
+    return 1;
+  }
 
-	public Collection getExceptionTypes() {
-		return null;
-	}
+  public int getUse(int i) {
+    Assertions._assert(i == 0);
+    return value;
+  }
 
-	public boolean isFallThrough() {
-		return true;
-	}
+  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+    return new AstAssertInstruction(uses == null ? value : uses[0], fromSpecification);
+  }
 
-	public boolean isFromSpecification() {
-	    return fromSpecification;
-	}
+  public String toString(SymbolTable symbolTable, ValueDecorator d) {
+    return "assert " + getValueString(symbolTable, d, value) + " (fromSpec: " + fromSpecification + ")";
+  }
+
+  public void visit(IVisitor v) {
+    ((AstInstructionVisitor) v).visitAssert(this);
+  }
+
+  public int hashCode() {
+    return 2177 * value;
+  }
+
+  public Collection<TypeReference> getExceptionTypes() {
+    return null;
+  }
+
+  public boolean isFallThrough() {
+    return true;
+  }
+
+  public boolean isFromSpecification() {
+    return fromSpecification;
+  }
 }

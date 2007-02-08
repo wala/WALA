@@ -130,8 +130,8 @@ public class CAstAnalysisScope extends AnalysisScope {
   /**
    * @return an Iterator <ClassLoaderReference>over the loaders.
    */
-  public Iterator getLoaders() {
-    return new NonNullSingletonIterator( theLoader );
+  public Iterator<ClassLoaderReference> getLoaders() {
+    return new NonNullSingletonIterator<ClassLoaderReference>( theLoader );
   }
 
   /**

@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.tree.impl;
 
 import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.classLoader.IField;
 
 import java.util.*;
 
@@ -32,7 +33,7 @@ public class CAstCloner {
 
   }
 
-  private CAstNode copyNodes(CAstNode root, Map nodeMap) {
+  private CAstNode copyNodes(CAstNode root, Map<CAstNode, CAstNode> nodeMap) {
     if (root instanceof CAstOperator) {
       nodeMap.put(root, root);
       return root;
@@ -53,12 +54,12 @@ public class CAstCloner {
     }
   }
 
-  private CAstControlFlowMap copyFlow(Map nodeMap, CAstControlFlowMap orig) {
-    Collection oldSources = orig.getMappedNodes();
+  private CAstControlFlowMap copyFlow(Map<CAstNode, CAstNode> nodeMap, CAstControlFlowMap orig) {
+    Collection<CAstNode> oldSources = orig.getMappedNodes();
     CAstControlFlowRecorder newMap = new CAstControlFlowRecorder();
-    for(Iterator NS = nodeMap.keySet().iterator(); NS.hasNext(); ) {
-      CAstNode old = (CAstNode) NS.next();
-      CAstNode newNode = (CAstNode) nodeMap.get(old);
+    for(Iterator<CAstNode> NS = nodeMap.keySet().iterator(); NS.hasNext(); ) {
+      CAstNode old = NS.next();
+      CAstNode newNode = nodeMap.get(old);
       newMap.map(newNode, newNode);
       if (oldSources.contains(old)) {
 	if (orig.getTarget(old, null) != null) {
@@ -70,7 +71,7 @@ public class CAstCloner {
 	  }
 	}
 	
-	for(Iterator LS = orig.getTargetLabels(old).iterator(); LS.hasNext(); ) {
+	for(Iterator<IField> LS = orig.getTargetLabels(old).iterator(); LS.hasNext(); ) {
 	  Object label = LS.next();
 	  CAstNode oldTarget = orig.getTarget(old, label);
 	  if (nodeMap.containsKey(oldTarget)) {
@@ -86,15 +87,15 @@ public class CAstCloner {
   }
 
   private CAstSourcePositionMap 
-    copySource(Map nodeMap, CAstSourcePositionMap orig) 
+    copySource(Map<CAstNode, CAstNode> nodeMap, CAstSourcePositionMap orig) 
   {
     if (orig == null) {
       return null;
     } else {
       CAstSourcePositionRecorder newMap = new CAstSourcePositionRecorder();
-      for(Iterator NS = nodeMap.keySet().iterator(); NS.hasNext(); ) {
-	CAstNode old = (CAstNode) NS.next();
-	CAstNode newNode = (CAstNode) nodeMap.get(old);
+      for(Iterator<CAstNode> NS = nodeMap.keySet().iterator(); NS.hasNext(); ) {
+	CAstNode old = NS.next();
+	CAstNode newNode = nodeMap.get(old);
 	
 	if (orig.getPosition(old) != null) {
 	  newMap.setPosition(newNode, orig.getPosition(old));
@@ -109,7 +110,7 @@ public class CAstCloner {
 		    final CAstControlFlowMap cfg,
 		    final CAstSourcePositionMap pos) 
   {
-    final Map nodes = new HashMap();
+    final Map<CAstNode, CAstNode> nodes = new HashMap<CAstNode, CAstNode>();
     final CAstNode newRoot = copyNodes(root, nodes);
     return new Clone() {
       private CAstControlFlowMap theCfg = null;

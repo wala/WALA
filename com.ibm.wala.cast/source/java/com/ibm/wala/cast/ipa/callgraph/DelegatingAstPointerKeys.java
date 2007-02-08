@@ -37,7 +37,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     return base.getFilteredPointerKeyForLocal(node, valueNumber, filter);
   }
 
-  public PointerKey getPointerKeyForReturnValue(CGNode node){
+  public PointerKey getPointerKeyForReturnValue(CGNode node) {
     return base.getPointerKeyForReturnValue(node);
   }
 
@@ -53,16 +53,17 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     return new ObjectPropertyCatalogKey(I);
   }
 
-  private final Map specificStringKeys = new HashMap();
-//  private final Map specificIndexKeys = new HashMap();
-    
+  private final Map<IField, Set<PointerKey>> specificStringKeys = new HashMap<IField, Set<PointerKey>>();
+
+  // private final Map specificIndexKeys = new HashMap();
+
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField f) {
     PointerKey fk = base.getPointerKeyForInstanceField(I, f);
-    if (! specificStringKeys.containsKey(f)) {
-      specificStringKeys.put(f, new HashSet());
+    if (!specificStringKeys.containsKey(f)) {
+      specificStringKeys.put(f, new HashSet<PointerKey>());
     }
 
-    ((Set)specificStringKeys.get(f)).add(fk);
+    specificStringKeys.get(f).add(fk);
 
     return fk;
   }
@@ -71,35 +72,33 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     return base.getPointerKeyForArrayContents(I);
   }
 
-  public Iterator getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
-    List result = new LinkedList();
+  public Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) {
+    List<PointerKey> result = new LinkedList<PointerKey>();
 
     // FIXME: current only constant string are handled
     if (F instanceof ConstantKey) {
-      Object v = ((ConstantKey)F).getValue();
+      Object v = ((ConstantKey) F).getValue();
       if (v instanceof String) {
-	IField f = 
-	  I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom((String)v));
-	result.add( getPointerKeyForInstanceField(I, f) );
+        IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom((String) v));
+        result.add(getPointerKeyForInstanceField(I, f));
       }
     }
 
     result.add(ReflectedFieldPointerKey.mapped(new ConcreteTypeKey(F.getConcreteType()), I));
-    
+
     return result.iterator();
   }
 
-  public Iterator getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
+  public Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) {
     // FIXME: current only constant string are handled
     if (F instanceof ConstantKey) {
-      Object v = ((ConstantKey)F).getValue();
+      Object v = ((ConstantKey) F).getValue();
       if (v instanceof String) {
-	IField f =
-	  I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom((String)v));
-	return new NonNullSingletonIterator(getPointerKeyForInstanceField(I, f));
+        IField f = I.getConcreteType().getField(Atom.findOrCreateUnicodeAtom((String) v));
+        return new NonNullSingletonIterator<PointerKey>(getPointerKeyForInstanceField(I, f));
       }
     }
 
-    return new NonNullSingletonIterator(ReflectedFieldPointerKey.mapped(new ConcreteTypeKey(F.getConcreteType()), I));
+    return new NonNullSingletonIterator<PointerKey>(ReflectedFieldPointerKey.mapped(new ConcreteTypeKey(F.getConcreteType()), I));
   }
 }

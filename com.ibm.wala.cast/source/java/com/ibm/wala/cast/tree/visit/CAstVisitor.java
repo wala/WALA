@@ -68,7 +68,7 @@ public abstract class CAstVisitor {
    */
   protected Context makeUnwindContext(Context context, CAstNode n, CAstVisitor visitor) { return context; }
 
-  private final Map entityParents = new HashMap();
+  private final Map<CAstEntity, CAstEntity> entityParents = new HashMap<CAstEntity, CAstEntity>();
 
   /**
    * Get the parent entity for a given entity.
@@ -76,7 +76,7 @@ public abstract class CAstVisitor {
    * @return the parent entity for the given entity
    */
   protected CAstEntity getParent(CAstEntity entity) {
-    return (CAstEntity) entityParents.get(entity);
+    return entityParents.get(entity);
   }
 
   /**

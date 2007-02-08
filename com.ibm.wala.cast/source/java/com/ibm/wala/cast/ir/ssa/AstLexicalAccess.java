@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ir.ssa;
 import java.util.Collection;
 
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.types.TypeReference;
 
 public abstract class AstLexicalAccess extends SSAInstruction {
 
@@ -71,7 +72,7 @@ public abstract class AstLexicalAccess extends SSAInstruction {
     return true;
   }
 
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return null;
   }
 

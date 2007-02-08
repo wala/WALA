@@ -21,30 +21,29 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSAOptions.DefaultValues;
 import com.ibm.wala.util.collections.IntStack;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.DominanceFrontiers;
 import com.ibm.wala.util.graph.Graph;
 
-
 /**
  * Abstract core of traditional SSA conversion (Cytron et al.).
- *
- *  This implementation is abstract in the sense that it is designed
- * to work over the instrutions and CFG of a Domo IR, but it is
- * abstract with respect to several integral portions of the
- * traditional algorithm:
+ * 
+ * This implementation is abstract in the sense that it is designed to work over
+ * the instrutions and CFG of a Domo IR, but it is abstract with respect to
+ * several integral portions of the traditional algorithm:
  * <UL>
- *  <LI> The notion of uses and defs of a given instruction.
- *  <LI> Assignments (<def> := <use>) that are be copy-propagated away
- *  <LI> Which values are constants---i.e. have no definition.
- *  <LI> Any value numbers to be skipped during SSA construction
- *  <LI> Special initialization and exit block processing.
+ * <LI> The notion of uses and defs of a given instruction.
+ * <LI> Assignments (<def> := <use>) that are be copy-propagated away
+ * <LI> Which values are constants---i.e. have no definition.
+ * <LI> Any value numbers to be skipped during SSA construction
+ * <LI> Special initialization and exit block processing.
  * </UL>
- *
+ * 
  * @author Julian dolby (dolby@us.ibm.com)
- *
+ * 
  */
 public abstract class AbstractSSAConversion {
 
@@ -56,9 +55,7 @@ public abstract class AbstractSSAConversion {
 
   protected abstract int getUse(SSAInstruction inst, int index);
 
-
   protected abstract boolean isAssignInstruction(SSAInstruction inst);
-
 
   protected abstract int getMaxValueNumber();
 
@@ -68,14 +65,11 @@ public abstract class AbstractSSAConversion {
 
   protected abstract boolean isConstant(int valueNumber);
 
-
   protected abstract int getNextNewValueNumber();
-
 
   protected abstract void initializeVariables();
 
   protected abstract void repairExit();
-
 
   protected abstract void placeNewPhiAt(int value, SSACFG.BasicBlock Y);
 
@@ -87,34 +81,41 @@ public abstract class AbstractSSAConversion {
 
   protected abstract void repairPhiUse(SSACFG.BasicBlock BB, int phiIndex, int rvalIndex, int newRval);
 
-
   protected abstract void repairInstructionUses(SSAInstruction inst, int index, int[] newUses);
 
   protected abstract void repairInstructionDefs(SSAInstruction inst, int index, int[] newDefs, int[] newUses);
-
 
   protected abstract void pushAssignment(SSAInstruction inst, int index, int newRhs);
 
   protected abstract void popAssignment(SSAInstruction inst, int index);
 
-
   protected final SSACFG CFG;
+
   protected final DominanceFrontiers<IBasicBlock> DF;
+
   private final Graph dominatorTree;
+
   protected final int[] phiCounts;
+
   protected final SSAInstruction[] instructions;
+
   private final int flags[];
+
   protected final SymbolTable symbolTable;
+
   protected final DefaultValues defaultValues;
 
   protected IntStack S[];
+
   protected int C[];
+
   protected int valueMap[];
+
   private Set[] assignmentMap;
 
   protected AbstractSSAConversion(IR ir, SSAOptions options) {
     this.CFG = ir.getControlFlowGraph();
-    this.DF = new DominanceFrontiers(ir.getControlFlowGraph(), ir.getControlFlowGraph().entry());
+    this.DF = new DominanceFrontiers<IBasicBlock>(ir.getControlFlowGraph(), ir.getControlFlowGraph().entry());
     this.dominatorTree = DF.dominatorTree();
     this.flags = new int[2 * ir.getControlFlowGraph().getNumberOfNodes()];
     this.instructions = ir.getInstructions();
@@ -122,7 +123,6 @@ public abstract class AbstractSSAConversion {
     this.symbolTable = ir.getSymbolTable();
     this.defaultValues = options.getDefaultValues();
   }
-
 
   //
   // top-level control
@@ -132,7 +132,6 @@ public abstract class AbstractSSAConversion {
     placePhiNodes();
     renameVariables();
   }
-
 
   // 
   // initialization
@@ -149,22 +148,22 @@ public abstract class AbstractSSAConversion {
     for (Iterator BBs = CFG.iterateNodes(); BBs.hasNext();) {
       SSACFG.BasicBlock BB = (SSACFG.BasicBlock) BBs.next();
       if (BB.getFirstInstructionIndex() >= 0) {
-	for(Iterator IS = BB.iterateAllInstructions(); IS.hasNext(); ) {
-          SSAInstruction inst = (SSAInstruction)IS.next();
-	  if (inst != null) {
-	    for (int j = 0; j < getNumberOfDefs(inst); j++) {
+        for (Iterator IS = BB.iterateAllInstructions(); IS.hasNext();) {
+          SSAInstruction inst = (SSAInstruction) IS.next();
+          if (inst != null) {
+            for (int j = 0; j < getNumberOfDefs(inst); j++) {
               addDefiningBlock(assignmentMap, BB, getDef(inst, j));
-	    }
-	  }
+            }
+          }
         }
       }
     }
   }
 
-  private void addDefiningBlock(Set[] A, SSACFG.BasicBlock BB, int i) {
-    if (! skip(i)) {
+  private void addDefiningBlock(Set<SSACFG.BasicBlock>[] A, SSACFG.BasicBlock BB, int i) {
+    if (!skip(i)) {
       if (A[i] == null) {
-	A[i] = new LinkedHashSet(2);
+        A[i] = new LinkedHashSet<SSACFG.BasicBlock>(2);
       }
       A[i].add(BB);
     }
@@ -182,7 +181,7 @@ public abstract class AbstractSSAConversion {
       setWork(X, 0);
     }
 
-    Set W = new LinkedHashSet();
+    Set<BasicBlock> W = new LinkedHashSet<BasicBlock>();
     for (int V = 0; V < assignmentMap.length; V++) {
 
       // some things (e.g. constants) have no defs at all
@@ -191,7 +190,7 @@ public abstract class AbstractSSAConversion {
 
       // ignore values as requested
       if (skip(V))
-	continue;
+        continue;
 
       IterCount++;
 
@@ -202,15 +201,15 @@ public abstract class AbstractSSAConversion {
       }
 
       while (!W.isEmpty()) {
-        SSACFG.BasicBlock X = (SSACFG.BasicBlock) W.iterator().next();
+        SSACFG.BasicBlock X = W.iterator().next();
         W.remove(X);
         for (Iterator YS = DF.getDominanceFrontier(X); YS.hasNext();) {
           SSACFG.BasicBlock Y = (SSACFG.BasicBlock) YS.next();
           if (getHasAlready(Y) < IterCount) {
-	    if (isLive(Y, V)) {
+            if (isLive(Y, V)) {
               placeNewPhiAt(V, Y);
-	      phiCounts[Y.getGraphNodeId()]++;
-	    }
+              phiCounts[Y.getGraphNodeId()]++;
+            }
             setHasAlready(Y, IterCount);
             if (getWork(Y) < IterCount) {
               setWork(Y, IterCount);
@@ -238,15 +237,14 @@ public abstract class AbstractSSAConversion {
     flags[BB.getGraphNodeId() * 2] = v;
   }
 
-
   //
   // rename variables phase of traditional algorithm
   //
   private void renameVariables() {
     for (int V = 1; V <= getMaxValueNumber(); V++) {
-      if (! skip(V)) {
-	C[V] = 0;
-	S[V] = new IntStack();
+      if (!skip(V)) {
+        C[V] = 0;
+        S[V] = new IntStack();
       }
     }
 
@@ -262,27 +260,27 @@ public abstract class AbstractSSAConversion {
     // first loop
     for (int i = 0; i < phiCounts[id]; i++) {
       SSAPhiInstruction phi = getPhi(X, i);
-      if (! skipRepair(phi, -1)) {
-	setPhi(X, i, repairPhiDefs(phi, makeNewDefs(phi)));
+      if (!skipRepair(phi, -1)) {
+        setPhi(X, i, repairPhiDefs(phi, makeNewDefs(phi)));
       }
     }
     for (int i = Xf; i <= X.getLastInstructionIndex(); i++) {
       SSAInstruction inst = instructions[i];
       if (isAssignInstruction(inst)) {
-	int lhs = getDef(inst, 0);
-	int rhs = getUse(inst, 0);
-	int newRhs = skip(rhs)? rhs: top(rhs);
-        S[lhs].push( newRhs );
+        int lhs = getDef(inst, 0);
+        int rhs = getUse(inst, 0);
+        int newRhs = skip(rhs) ? rhs : top(rhs);
+        S[lhs].push(newRhs);
 
-	pushAssignment(inst, i, newRhs);
+        pushAssignment(inst, i, newRhs);
 
       } else {
-	if (! skipRepair(inst, i)) {
-	  int[] newUses = makeNewUses(inst);
-	  repairInstructionUses(inst, i, newUses);
-	  int[] newDefs = makeNewDefs(inst);
-	  repairInstructionDefs(inst, i, newDefs, newUses);
-	}
+        if (!skipRepair(inst, i)) {
+          int[] newUses = makeNewUses(inst);
+          repairInstructionUses(inst, i, newUses);
+          int[] newDefs = makeNewDefs(inst);
+          repairInstructionDefs(inst, i, newDefs, newUses);
+        }
       }
     }
 
@@ -295,10 +293,10 @@ public abstract class AbstractSSAConversion {
       int Y_id = Y.getGraphNodeId();
       int j = com.ibm.wala.cast.ir.cfg.Util.whichPred(CFG, Y, X);
       for (int i = 0; i < phiCounts[Y_id]; i++) {
-	SSAPhiInstruction phi = getPhi(Y, i);
-	int oldUse = getUse(phi, j);
-	int newUse = skip(oldUse) ? oldUse: top(oldUse);
-	repairPhiUse(Y, i, j, newUse);
+        SSAPhiInstruction phi = getPhi(Y, i);
+        int oldUse = getUse(phi, j);
+        int newUse = skip(oldUse) ? oldUse : top(oldUse);
+        repairPhiUse(Y, i, j, newUse);
       }
     }
 
@@ -309,31 +307,30 @@ public abstract class AbstractSSAConversion {
     for (int i = 0; i < phiCounts[id]; i++) {
       SSAInstruction A = getPhi(X, i);
       for (int j = 0; j < getNumberOfDefs(A); j++) {
-	if (! skip(getDef(A, j))) {
-	  S[valueMap[getDef(A, j)]].pop();
-	}
+        if (!skip(getDef(A, j))) {
+          S[valueMap[getDef(A, j)]].pop();
+        }
       }
     }
     for (int i = Xf; i <= X.getLastInstructionIndex(); i++) {
       SSAInstruction A = instructions[i];
       if (isAssignInstruction(A)) {
-	S[ getDef(A, 0) ].pop();
-	popAssignment(A, i);
+        S[getDef(A, 0)].pop();
+        popAssignment(A, i);
       } else if (A != null) {
-	for (int j = 0; j < getNumberOfDefs(A); j++) {
-	  if (! skip(getDef(A, j))) {
-	    S[valueMap[getDef(A, j)]].pop();
-	  }
-	}
+        for (int j = 0; j < getNumberOfDefs(A); j++) {
+          if (!skip(getDef(A, j))) {
+            S[valueMap[getDef(A, j)]].pop();
+          }
+        }
       }
     }
   }
-    
+
   private int[] makeNewUses(SSAInstruction inst) {
     int[] newUses = new int[getNumberOfUses(inst)];
     for (int j = 0; j < getNumberOfUses(inst); j++) {
-      newUses[j] = 
-	skip(getUse(inst, j))? getUse(inst, j): top(getUse(inst, j));
+      newUses[j] = skip(getUse(inst, j)) ? getUse(inst, j) : top(getUse(inst, j));
     }
 
     return newUses;
@@ -344,19 +341,19 @@ public abstract class AbstractSSAConversion {
 
     for (int j = 0; j < getNumberOfDefs(inst); j++) {
       if (skip(getDef(inst, j))) {
-	newDefs[j] = getDef(inst, j);
+        newDefs[j] = getDef(inst, j);
       } else {
-	int ii = getNextNewValueNumber();
+        int ii = getNextNewValueNumber();
 
-	if (valueMap.length <= ii) {
-	  int[] nvm = new int[valueMap.length * 2 + ii + 1];
-	  System.arraycopy(valueMap, 0, nvm, 0, valueMap.length);
-	  valueMap = nvm;
-	}
+        if (valueMap.length <= ii) {
+          int[] nvm = new int[valueMap.length * 2 + ii + 1];
+          System.arraycopy(valueMap, 0, nvm, 0, valueMap.length);
+          valueMap = nvm;
+        }
 
-	valueMap[ii] = getDef(inst, j);
-	S[getDef(inst, j)].push(ii);
-	newDefs[j] = ii;
+        valueMap[ii] = getDef(inst, j);
+        S[getDef(inst, j)].push(ii);
+        newDefs[j] = ii;
       }
     }
 
@@ -366,24 +363,21 @@ public abstract class AbstractSSAConversion {
   protected boolean skipRepair(SSAInstruction inst, int index) {
     if (inst == null)
       return true;
-    for(int i = 0; i < getNumberOfDefs(inst); i++)
-      if (! skip(getDef(inst, i))) return false;
-    for(int i = 0; i < getNumberOfUses(inst); i++)
-      if (! skip(getUse(inst, i))) return false;
+    for (int i = 0; i < getNumberOfDefs(inst); i++)
+      if (!skip(getDef(inst, i)))
+        return false;
+    for (int i = 0; i < getNumberOfUses(inst); i++)
+      if (!skip(getUse(inst, i)))
+        return false;
     return true;
   }
 
   protected void fail(int v) {
-    Assertions._assert(
-      isConstant(v) || !S[v].isEmpty(), 
-      "bad stack for " + v + " while SSA converting");
+    Assertions._assert(isConstant(v) || !S[v].isEmpty(), "bad stack for " + v + " while SSA converting");
   }
 
   protected boolean hasDefaultValue(int valueNumber) {
-    return 
-      (defaultValues != null)
-	            &&
-      (defaultValues.getDefaultValue(symbolTable, valueNumber) != -1);
+    return (defaultValues != null) && (defaultValues.getDefaultValue(symbolTable, valueNumber) != -1);
   }
 
   protected int getDefaultValue(int valueNumber) {
@@ -391,11 +385,11 @@ public abstract class AbstractSSAConversion {
   }
 
   protected int top(int v) {
-    if (! (isConstant(v) || !S[v].isEmpty())) {
+    if (!(isConstant(v) || !S[v].isEmpty())) {
       if (hasDefaultValue(v)) {
-	return getDefaultValue(v);
+        return getDefaultValue(v);
       } else {
-	fail(v);
+        fail(v);
       }
     }
 

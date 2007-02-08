@@ -62,7 +62,7 @@ public class AstCallGraph extends ExplicitCallGraph {
   }
 
   class AstCGNode extends ExplicitNode {
-    private Set callbacks;
+    private Set<Function> callbacks;
 
     private AstCGNode(IMethod method, Context context) {
       super(method, context);
@@ -73,8 +73,8 @@ public class AstCallGraph extends ExplicitCallGraph {
         boolean done = false;
         while (!done) {
           try {
-            for (Iterator x = callbacks.iterator(); x.hasNext();) {
-              ((Function) x.next()).apply(null);
+            for (Iterator<Function> x = callbacks.iterator(); x.hasNext();) {
+              x.next().apply(null);
             }
           } catch (ConcurrentModificationException e) {
             done = false;
@@ -87,12 +87,12 @@ public class AstCallGraph extends ExplicitCallGraph {
 
     public void addCallback(Function callback) {
       if (callbacks == null)
-        callbacks = new HashSet(1);
+        callbacks = new HashSet<Function>(1);
       callbacks.add(callback);
     }
 
     private void fireCallbacksTransitive() {
-      for(Iterator nodes = DFS.iterateFinishTime(AstCallGraph.this, new NonNullSingletonIterator<CGNode>(this));
+      for(Iterator<CGNode> nodes = DFS.iterateFinishTime(AstCallGraph.this, new NonNullSingletonIterator<CGNode>(this));
 	  nodes.hasNext(); )
       {
 	((AstCGNode)nodes.next()).fireCallbacks();

@@ -30,7 +30,7 @@ import com.ibm.wala.util.warnings.WarningSet;
 public class MiscellaneousHacksContextSelector implements ContextSelector 
 {
 
-  private final Set methodsToSpecialize;
+  private final Set<MethodReference> methodsToSpecialize;
 
   private final ContextSelector specialPolicy;
   private final ContextSelector basePolicy;
@@ -42,7 +42,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector
   {
     basePolicy = base;
     specialPolicy = special;
-    methodsToSpecialize = new HashSet();
+    methodsToSpecialize = new HashSet<MethodReference>();
     for(int i = 0; i < descriptors.length; i++) {
       String[] descr = descriptors[i];
       switch (descr.length) {

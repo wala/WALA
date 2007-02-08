@@ -22,11 +22,11 @@ public class CAstFunctions {
     if (f.accepts(tree)) {
       return tree;
     } else {
-      for(int i = 0; i < tree.getChildCount(); i++) {
-	CAstNode result = findIf(tree.getChild(i), f);
-	if (result != null) {
-	  return result;
-	}
+      for (int i = 0; i < tree.getChildCount(); i++) {
+        CAstNode result = findIf(tree.getChild(i), f);
+        if (result != null) {
+          return result;
+        }
       }
     }
 
@@ -36,36 +36,36 @@ public class CAstFunctions {
   public static Iterator iterateNodes(final CAstNode tree) {
     return new DFSDiscoverTimeIterator() {
 
-      private final Map pendingChildren = new HashMap();
+      private final Map<Object, Iterator> pendingChildren = new HashMap<Object, Iterator>();
 
       protected Iterator getPendingChildren(Object n) {
-	return (Iterator) pendingChildren.get(n);
+        return pendingChildren.get(n);
       }
 
       protected void setPendingChildren(Object v, Iterator iterator) {
-	pendingChildren.put(v, iterator);
+        pendingChildren.put(v, iterator);
       }
 
       protected Iterator getConnected(final Object n) {
-	return new Iterator() {
-	  private int i = 0;
+        return new Iterator() {
+          private int i = 0;
 
-	    public boolean hasNext() {
-	      return i < ((CAstNode)n).getChildCount(); 
-	    }
+          public boolean hasNext() {
+            return i < ((CAstNode) n).getChildCount();
+          }
 
-	    public Object next() {
-	      return ((CAstNode)n).getChild(i++);
-	    }
+          public Object next() {
+            return ((CAstNode) n).getChild(i++);
+          }
 
-	    public void remove() {
-	      throw new UnsupportedOperationException();
-	    }
-	  };
+          public void remove() {
+            throw new UnsupportedOperationException();
+          }
+        };
       }
 
       {
-	init(tree);
+        init(tree);
       }
     };
   }
@@ -73,5 +73,5 @@ public class CAstFunctions {
   public static Iterator findAll(CAstNode tree, Filter f) {
     return new FilterIterator(iterateNodes(tree), f);
   }
-  
+
 }

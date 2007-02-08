@@ -10,9 +10,14 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-import com.ibm.wala.ssa.*;
+import java.util.Collection;
+import java.util.Collections;
 
-import java.util.*;
+import com.ibm.wala.ssa.SSAAbstractUnaryInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.ssa.ValueDecorator;
+import com.ibm.wala.types.TypeReference;
 
 public class EachElementGetInstruction extends SSAAbstractUnaryInstruction {
     
@@ -34,7 +39,7 @@ public class EachElementGetInstruction extends SSAAbstractUnaryInstruction {
     ((AstInstructionVisitor) v).visitEachElementGet(this);
   }
 
-  public Collection getExceptionTypes() {
-    return Collections.EMPTY_SET;
+  public Collection<TypeReference> getExceptionTypes() {
+    return Collections.emptySet();
   }
 }

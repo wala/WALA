@@ -81,16 +81,16 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     return loader.lookupClass(superReference.getName(), getClassHierarchy());
   }
 
-  public Collection getDirectInterfaces() {
-    return Collections.EMPTY_SET;
+  public Collection<IClass> getDirectInterfaces() {
+    return Collections.emptySet();
   }
 
-  public Collection getAllImplementedInterfaces() {
-    return Collections.EMPTY_SET;
+  public Collection<IClass> getAllImplementedInterfaces() {
+    return Collections.emptySet();
   }
 
-  public Collection getAllAncestorInterfaces() {
-    return Collections.EMPTY_SET;
+  public Collection<IClass> getAllAncestorInterfaces() {
+    return Collections.emptySet();
   }
 
   public IMethod getMethod(Selector selector) {
@@ -137,27 +137,27 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     }
   }
 
-  public Collection getDeclaredInstanceFields() {
-    return Collections.EMPTY_SET;
+  public Collection<IField> getDeclaredInstanceFields() {
+    return Collections.emptySet();
   }
 
-  public Collection getDeclaredStaticFields() {
-    return Collections.EMPTY_SET;
+  public Collection<IField> getDeclaredStaticFields() {
+    return Collections.emptySet();
   }
 
-  public Collection getAllInstanceFields() {
-    return Collections.EMPTY_SET;
+  public Collection<IField> getAllInstanceFields() {
+    return Collections.emptySet();
   }
 
-  public Collection getAllStaticFields() {
-    return Collections.EMPTY_SET;
+  public Collection<IField> getAllStaticFields() {
+    return Collections.emptySet();
   }
 
-  public Collection getAllFields() {
-    return Collections.EMPTY_SET;
+  public Collection<IField> getAllFields() {
+    return Collections.emptySet();
   }
 
-  public Collection getAllMethods() {
+  public Collection<IMethod> getAllMethods() {
     return Collections.singleton(functionBody);
   }
 

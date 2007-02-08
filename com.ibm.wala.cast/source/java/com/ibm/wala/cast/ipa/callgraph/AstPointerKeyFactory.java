@@ -16,9 +16,9 @@ import java.util.*;
 
 public interface AstPointerKeyFactory extends PointerKeyFactory {
 
-  Iterator getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F);
+  Iterator<PointerKey> getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F);
 
-  Iterator getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F);
+  Iterator<PointerKey> getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F);
 
   PointerKey getPointerKeyForObjectCatalog(InstanceKey I);
 

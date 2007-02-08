@@ -10,16 +10,19 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.cast.loader.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.ssa.*;
+import java.util.Iterator;
+
+import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.ContextInsensitiveSSAInterpreter;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.warnings.WarningSet;
-
-import java.util.*;
 
 public class AstContextInsensitiveSSAContextInterpreter
   extends ContextInsensitiveSSAInterpreter 
@@ -33,7 +36,7 @@ public class AstContextInsensitiveSSAContextInterpreter
     return method instanceof AstMethod;
   }
 
-  public Iterator iterateCallSites(CGNode N, WarningSet warnings) {
+  public Iterator<CallSiteReference> iterateCallSites(CGNode N, WarningSet warnings) {
     IR ir = getIR(N, warnings);
     if (ir == null) {
       return EmptyIterator.instance();

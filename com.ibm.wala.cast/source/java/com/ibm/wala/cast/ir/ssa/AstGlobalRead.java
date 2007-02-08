@@ -12,8 +12,12 @@ package com.ibm.wala.cast.ir.ssa;
 
 import java.util.Collection;
 
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.types.*;
+import com.ibm.wala.ssa.SSAGetInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.ssa.ValueDecorator;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeReference;
 
 public class AstGlobalRead extends SSAGetInstruction {
 
@@ -38,7 +42,7 @@ public class AstGlobalRead extends SSAGetInstruction {
     return true;
   }
 
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return null;
   }
 

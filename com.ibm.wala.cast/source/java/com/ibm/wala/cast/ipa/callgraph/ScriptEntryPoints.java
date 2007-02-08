@@ -66,8 +66,8 @@ public abstract class ScriptEntryPoints implements Entrypoints {
     this.scriptType = scriptType;
   }
 
-  public Iterator iterator() {
-    Set ES = new HashSet();
+  public Iterator<ScriptEntryPoint> iterator() {
+    Set<ScriptEntryPoint> ES = new HashSet<ScriptEntryPoint>();
     Iterator classes = scriptType.getClassLoader().iterateAllClasses();
     while ( classes.hasNext() ) {
       IClass cls = (IClass)classes.next();

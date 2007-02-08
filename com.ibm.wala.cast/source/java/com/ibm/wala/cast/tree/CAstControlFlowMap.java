@@ -72,5 +72,5 @@ public interface CAstControlFlowMap {
    *  Returns an iterator of all CAstNodes for which this map contains
    * control flow mapping information.
    */
-  Collection getMappedNodes();
+  Collection<CAstNode> getMappedNodes();
 }

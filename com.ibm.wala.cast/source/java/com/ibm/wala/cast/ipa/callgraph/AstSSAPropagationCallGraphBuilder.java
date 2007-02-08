@@ -105,14 +105,14 @@ public abstract class AstSSAPropagationCallGraphBuilder
       .getPointerKeyForObjectCatalog(I);
   }
     
-  public Iterator
+  public Iterator<PointerKey>
     getPointerKeysForReflectedFieldRead(InstanceKey I, InstanceKey F) 
   {
     return ((AstPointerKeyFactory)pointerKeyFactory)
       .getPointerKeysForReflectedFieldRead(I, F);
   }
     
-  public Iterator
+  public Iterator<PointerKey>
     getPointerKeysForReflectedFieldWrite(InstanceKey I, InstanceKey F) 
   {
     return ((AstPointerKeyFactory)pointerKeyFactory)
@@ -290,10 +290,10 @@ public abstract class AstSSAPropagationCallGraphBuilder
 	if (AstTranslator.DEBUG_LEXICAL) 
 	  Trace.println("looking up lexical parent " + definer);
 	
-	for(Iterator DS = getLexicalDefiners(node, definer).iterator(); 
+	for(Iterator<CGNode> DS = getLexicalDefiners(node, definer).iterator(); 
 	    DS.hasNext(); ) 
 	{
-	  final CGNode D = (CGNode) DS.next();
+	  final CGNode D = DS.next();
 
 	  Iterator PS = new NumberedDFSDiscoverTimeIterator(callGraph, node) {
 	    /**
@@ -346,12 +346,12 @@ public abstract class AstSSAPropagationCallGraphBuilder
     public int hashCode() { return System.identityHashCode(this); }
   }
 
-  private Set getLexicalDefiners(final CGNode opNode, final String definer) {
+  private Set<CGNode> getLexicalDefiners(final CGNode opNode, final String definer) {
     if (definer == null) {
       return Collections.singleton(callGraph.getFakeRootNode());
 
     } else {
-      final Set result = new HashSet();
+      final Set<CGNode> result = new HashSet<CGNode>();
       PointerKey F = getPointerKeyForLocal(opNode, 1);
 
       IR ir = getCFAContextInterpreter().getIR(opNode, getWarnings());
@@ -391,7 +391,7 @@ public abstract class AstSSAPropagationCallGraphBuilder
     if (a == null) return b==null; else return a.equals(b);
   }
 
-  private Set discoveredUpwardFunargs = new HashSet();
+  private Set<PointerKey> discoveredUpwardFunargs = new HashSet<PointerKey>();
 
   private void addUpwardFunargConstraints(PointerKey lhs,
 					  String name,
@@ -680,21 +680,21 @@ public abstract class AstSSAPropagationCallGraphBuilder
 	  PointerKey objCatalog = getPointerKeyForObjectCatalog(objKeys[o]);
 	  for(int f = 0; f < fieldsKeys.length; f++) {
 	    if (isLoadOperation) {
-	      for(Iterator keys = 
+	      for(Iterator<PointerKey> keys = 
 		    getPointerKeysForReflectedFieldRead(objKeys[o], fieldsKeys[f]);
 		  keys.hasNext(); )
 	      {
-		PointerKey key = (PointerKey)keys.next();
+		PointerKey key = keys.next();
 		if (DEBUG_PROPERTIES) action.dump( key, true, true );
 		action.action( key );
 	      }
 	    } else {
 	      system.newConstraint(objCatalog, fieldsKeys[f]);
-	      for(Iterator keys = 
+	      for(Iterator<PointerKey> keys = 
 		    getPointerKeysForReflectedFieldWrite(objKeys[o],fieldsKeys[f]);
 		  keys.hasNext(); )
 	      {
-		PointerKey key = (PointerKey)keys.next();
+		PointerKey key = keys.next();
 		if (DEBUG_PROPERTIES) action.dump( key, true, true );
 		action.action( key );
 	      }
@@ -768,21 +768,21 @@ public abstract class AstSSAPropagationCallGraphBuilder
 			getPointerKeyForObjectCatalog(object);
 		      for(int f = 0; f < fieldsKeys.length; f++) {
 		        if (isLoadOperation) {
-			  for(Iterator keys = 
+			  for(Iterator<PointerKey> keys = 
 			        getPointerKeysForReflectedFieldRead(object, fieldsKeys[f]);
 			      keys.hasNext(); )
 			  {
-			    PointerKey key = (PointerKey)keys.next();
+			    PointerKey key = keys.next();
 			    if (DEBUG_PROPERTIES) action.dump(key, true, false);
 			    action.action( key );
 			  }
 			} else {
 			  system.newConstraint(objCatalog, fieldsKeys[f]);
-			  for(Iterator keys = 
+			  for(Iterator<PointerKey> keys = 
 			        getPointerKeysForReflectedFieldWrite(object,fieldsKeys[f]);
 			      keys.hasNext(); )
 			  {
-			    PointerKey key = (PointerKey)keys.next();
+			    PointerKey key = keys.next();
 			    if (DEBUG_PROPERTIES) action.dump(key, true, false);
 			    action.action( key );
 			  }

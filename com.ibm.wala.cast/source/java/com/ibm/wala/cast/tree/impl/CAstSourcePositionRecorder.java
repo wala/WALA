@@ -10,21 +10,25 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
-import com.ibm.wala.cast.tree.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 
 public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
  
-  private final HashMap positions = new HashMap();
+  private final HashMap<CAstNode, Position> positions = new HashMap<CAstNode, Position>();
 
   public Position getPosition(CAstNode n) {
-    return (Position) positions.get(n);
+    return positions.get(n);
   }
 
-  public Iterator getMappedNodes() {
+  public Iterator<CAstNode> getMappedNodes() {
     return positions.keySet().iterator();
   }
 
@@ -79,8 +83,8 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
   }
 
   public void addAll(CAstSourcePositionMap other) {
-    for(Iterator nodes = other.getMappedNodes(); nodes.hasNext(); ) {
-      CAstNode node = (CAstNode) nodes.next();
+    for(Iterator<CAstNode> nodes = other.getMappedNodes(); nodes.hasNext(); ) {
+      CAstNode node = nodes.next();
       setPosition(node, other.getPosition(node));
     }
   }

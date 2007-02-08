@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-
 import com.ibm.wala.cast.ir.translator.*;
 import com.ibm.wala.cast.loader.AstMethod.*;
 import com.ibm.wala.classLoader.*;
@@ -29,78 +28,83 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
   protected abstract boolean needsScopeMappingKey(InstanceKey base);
 
   private final PropagationCallGraphBuilder builder;
+
   private final InstanceKeyFactory basic;
 
   public class ScopeMappingInstanceKey implements InstanceKey {
     private final InstanceKey base;
+
     private final CGNode creator;
+
     private final ScopeMap map;
 
     private class ScopeMap extends HashMap {
 
       private static final long serialVersionUID = 3645910671551712906L;
 
-      private void scan(int level, int toDo, LexicalParent parents[], CGNode node, Set parentNodes) {
+      private void scan(int level, int toDo, LexicalParent parents[], CGNode node, Set<CGNode> parentNodes) {
         if (toDo > 0) {
-	  int restoreIndex = -1;
-	  LexicalParent restoreParent = null;
+          int restoreIndex = -1;
+          LexicalParent restoreParent = null;
 
-	  if (AstTranslator.DEBUG_LEXICAL)
-	    Trace.println(level + ": searching " + node + " for parents");
+          if (AstTranslator.DEBUG_LEXICAL)
+            Trace.println(level + ": searching " + node + " for parents");
 
-	  for(int i = 0; i < parents.length; i++) {
+          for (int i = 0; i < parents.length; i++) {
 
-	    if (parents[i] == null) continue;
+            if (parents[i] == null)
+              continue;
 
-	    if (AstTranslator.DEBUG_LEXICAL)
-	      Trace.println(level + ": searching " + parents[i]);
-	  
-	    if (node.getMethod() == parents[i].getMethod()) {
-	      if (containsKey(parents[i].getName())) 
-	        Assertions._assert(get(parents[i].getName()) == node);
-	      else {
-		put( parents[i].getName(), node );
-	        if (AstTranslator.DEBUG_LEXICAL) 
-		  Trace.println(level + ": Adding lexical parent " + parents[i].getName() + " for " + base + " at " + creator + "(toDo is now " + toDo +")");
-	      }
+            if (AstTranslator.DEBUG_LEXICAL)
+              Trace.println(level + ": searching " + parents[i]);
 
-	      toDo--;
-	      restoreIndex = i;
-	      restoreParent = parents[i];
-	      parents[i] = null;
-	    }
-	  }
-	  
-	  CallGraph CG = builder.getCallGraph();
-	  
-	  Assertions._assert(CG.getPredNodes(node).hasNext() || toDo==0);
+            if (node.getMethod() == parents[i].getMethod()) {
+              if (containsKey(parents[i].getName()))
+                Assertions._assert(get(parents[i].getName()) == node);
+              else {
+                put(parents[i].getName(), node);
+                if (AstTranslator.DEBUG_LEXICAL)
+                  Trace.println(level + ": Adding lexical parent " + parents[i].getName() + " for " + base + " at " + creator
+                      + "(toDo is now " + toDo + ")");
+              }
 
-	  for(Iterator PS = CG.getPredNodes(node); PS.hasNext(); ) {
-	    CGNode pred = (CGNode) PS.next();
-	    if (pred != creator && !parentNodes.contains(pred)) {
-	      parentNodes.add( pred );
-	      scan(level+1, toDo, parents, pred, parentNodes);
-	      parentNodes.remove(pred);
-	    }
-	  }
+              toDo--;
+              restoreIndex = i;
+              restoreParent = parents[i];
+              parents[i] = null;
+            }
+          }
 
-	  if (restoreIndex != -1) {
-	    parents[restoreIndex] = restoreParent;
-	  }
-	}
+          CallGraph CG = builder.getCallGraph();
+
+          Assertions._assert(CG.getPredNodes(node).hasNext() || toDo == 0);
+
+          for (Iterator PS = CG.getPredNodes(node); PS.hasNext();) {
+            CGNode pred = (CGNode) PS.next();
+            if (pred != creator && !parentNodes.contains(pred)) {
+              parentNodes.add(pred);
+              scan(level + 1, toDo, parents, pred, parentNodes);
+              parentNodes.remove(pred);
+            }
+          }
+
+          if (restoreIndex != -1) {
+            parents[restoreIndex] = restoreParent;
+          }
+        }
       }
-	
+
       private ScopeMap() {
         LexicalParent[] parents = getParents(base);
 
-	if (AstTranslator.DEBUG_LEXICAL)
-	  Trace.println("starting search for parents at " + creator);
+        if (AstTranslator.DEBUG_LEXICAL)
+          Trace.println("starting search for parents at " + creator);
 
-	scan( 0, parents.length, parents, creator, new HashSet(5));
+        scan(0, parents.length, parents, creator, new HashSet<CGNode>(5));
       }
-      
+
       CGNode getDefiningNode(String definer) {
-	return (CGNode) get(definer);
+        return (CGNode) get(definer);
       }
     }
 
@@ -115,21 +119,20 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     }
 
     CGNode getDefiningNode(String definer) {
-      return map.getDefiningNode( definer );
+      return map.getDefiningNode(definer);
     }
 
-    public int hashCode() { 
-      return base.hashCode()*creator.hashCode(); 
+    public int hashCode() {
+      return base.hashCode() * creator.hashCode();
     }
 
     public boolean equals(Object o) {
-      return (o instanceof ScopeMappingInstanceKey) &&
-	((ScopeMappingInstanceKey)o).base.equals(base) &&
-	((ScopeMappingInstanceKey)o).creator.equals(creator);
+      return (o instanceof ScopeMappingInstanceKey) && ((ScopeMappingInstanceKey) o).base.equals(base)
+          && ((ScopeMappingInstanceKey) o).creator.equals(creator);
     }
 
     public String toString() {
-      return "SMIK:"+base+"@"+creator;
+      return "SMIK:" + base + "@" + creator;
     }
   }
 
@@ -162,10 +165,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     return basic.getInstanceKeyForClassObject(type);
   }
 
-  public ScopeMappingInstanceKeys(
-    PropagationCallGraphBuilder builder,
-    InstanceKeyFactory basic)
-  {
+  public ScopeMappingInstanceKeys(PropagationCallGraphBuilder builder, InstanceKeyFactory basic) {
     this.basic = basic;
     this.builder = builder;
   }

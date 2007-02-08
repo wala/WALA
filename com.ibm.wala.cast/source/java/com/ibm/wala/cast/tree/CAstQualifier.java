@@ -16,7 +16,7 @@ package com.ibm.wala.cast.tree;
 import java.util.*;
 
 public class CAstQualifier {
-  public static final Set/* <CAstQualifier> */sQualifiers = new HashSet();
+  public static final Set/* <CAstQualifier> */<CAstQualifier>sQualifiers = new HashSet<CAstQualifier>();
     
   public static final CAstQualifier CONST = new CAstQualifier("const");
   public static final CAstQualifier STRICTFP = new CAstQualifier("strictfp");

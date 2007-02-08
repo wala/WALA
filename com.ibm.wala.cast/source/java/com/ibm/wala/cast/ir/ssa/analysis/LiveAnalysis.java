@@ -13,6 +13,7 @@ package com.ibm.wala.cast.ir.ssa.analysis;
 import java.util.Iterator;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorSolver;
 import com.ibm.wala.dataflow.graph.BitVectorUnion;
@@ -152,15 +153,15 @@ public class LiveAnalysis {
       }
     }
 
-    final BitVectorSolver S = new BitVectorSolver(new IKilldallFramework() {
-      private final Graph G = GraphInverter.invert(cfg);
+    final BitVectorSolver<IBasicBlock> S = new BitVectorSolver<IBasicBlock>(new IKilldallFramework<IBasicBlock>() {
+      private final Graph<IBasicBlock> G = GraphInverter.invert(cfg);
 
-      public Graph getFlowGraph() {
+      public Graph<IBasicBlock> getFlowGraph() {
         return G;
       }
 
-      public ITransferFunctionProvider getTransferFunctionProvider() {
-        return new ITransferFunctionProvider() {
+      public ITransferFunctionProvider<IBasicBlock> getTransferFunctionProvider() {
+        return new ITransferFunctionProvider<IBasicBlock>() {
 
           public boolean hasNodeTransferFunctions() {
             return true;
@@ -170,7 +171,7 @@ public class LiveAnalysis {
             return false;
           }
 
-          public UnaryOperator getNodeTransferFunction(Object node) {
+          public UnaryOperator getNodeTransferFunction(IBasicBlock node) {
             if (((SSACFG.BasicBlock) node).isExitBlock()) {
               return new ExitBlockGenKillOperator();
             } else {
@@ -178,7 +179,7 @@ public class LiveAnalysis {
             }
           }
 
-          public UnaryOperator getEdgeTransferFunction(Object s, Object d) {
+          public UnaryOperator getEdgeTransferFunction(IBasicBlock s, IBasicBlock d) {
             Assertions.UNREACHABLE();
             return null;
           }

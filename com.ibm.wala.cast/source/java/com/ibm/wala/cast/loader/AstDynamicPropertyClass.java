@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.loader;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,9 +17,11 @@ import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
@@ -29,15 +30,16 @@ import com.ibm.wala.util.debug.Assertions;
 public abstract class AstDynamicPropertyClass extends AstClass {
   private final TypeReference defaultDescriptor;
 
-  protected AstDynamicPropertyClass(CAstSourcePositionMap.Position sourcePosition, TypeName typeName, IClassLoader loader, short modifiers, Map declaredMethods, TypeReference defaultDescriptor) {
-    super(sourcePosition, typeName, loader, modifiers, new HashMap(), declaredMethods);
+  protected AstDynamicPropertyClass(CAstSourcePositionMap.Position sourcePosition, TypeName typeName, IClassLoader loader,
+      short modifiers, Map<Selector, IMethod> declaredMethods, TypeReference defaultDescriptor) {
+    super(sourcePosition, typeName, loader, modifiers, new HashMap<Atom, IField>(), declaredMethods);
     this.defaultDescriptor = defaultDescriptor;
   }
 
   public IField getField(final Atom name) {
     try {
       if (declaredFields.containsKey(name)) {
-        return (IField) declaredFields.get(name);
+        return declaredFields.get(name);
       } else if (getSuperclass() != null) {
         return getSuperclass().getField(name);
       } else {
@@ -88,11 +90,11 @@ public abstract class AstDynamicPropertyClass extends AstClass {
           }
 
           public ClassHierarchy getClassHierarchy() {
-	    return AstDynamicPropertyClass.this.getClassHierarchy();
+            return AstDynamicPropertyClass.this.getClassHierarchy();
           }
         });
 
-        return (IField) declaredFields.get(name);
+        return declaredFields.get(name);
       }
     } catch (ClassHierarchyException e) {
       Assertions.UNREACHABLE();

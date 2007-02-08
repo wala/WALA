@@ -53,6 +53,6 @@ public interface CAstSourcePositionMap {
    *  Returns an iterator of all CAstNodes for which this map contains
    * source mapping information.
    */
-  Iterator getMappedNodes();
+  Iterator<CAstNode> getMappedNodes();
 
 }

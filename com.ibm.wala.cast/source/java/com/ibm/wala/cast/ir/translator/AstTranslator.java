@@ -50,6 +50,7 @@ import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
@@ -331,7 +332,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
     private int lastIndex = -2;
 
-    private final List instructions = new ArrayList();
+    private final List<SSAInstruction> instructions = new ArrayList<SSAInstruction>();
 
     public int getNumber() {
       return getGraphNodeId();
@@ -389,7 +390,7 @@ public abstract class AstTranslator extends CAstVisitor {
       return "PreBB" + number + ":" + firstIndex + ".." + lastIndex;
     }
 
-    List instructions() {
+    List<SSAInstruction> instructions() {
       return instructions;
     }
 
@@ -401,7 +402,7 @@ public abstract class AstTranslator extends CAstVisitor {
       return null;
     }
 
-    public Iterator iterateAllInstructions() {
+    public Iterator<SSAInstruction> iterateAllInstructions() {
       return instructions.iterator();
     }
   }
@@ -452,12 +453,12 @@ public abstract class AstTranslator extends CAstVisitor {
     }
   }
 
-  public final class IncipientCFG extends SparseNumberedGraph {
+  public final class IncipientCFG extends SparseNumberedGraph<PreBasicBlock> {
 
     protected class Unwind {
-      private final Map unwindData = new LinkedHashMap();
+      private final Map<PreBasicBlock, UnwindState> unwindData = new LinkedHashMap<PreBasicBlock, UnwindState>();
 
-      private final Map code = new LinkedHashMap();
+      private final Map<Pair<UnwindState, Pair<PreBasicBlock, Boolean>>, PreBasicBlock> code = new LinkedHashMap<Pair<UnwindState, Pair<PreBasicBlock, Boolean>>, PreBasicBlock>();
 
       void setUnwindState(PreBasicBlock block, UnwindState context) {
         unwindData.put(block, context);
@@ -468,7 +469,7 @@ public abstract class AstTranslator extends CAstVisitor {
       }
 
       public PreBasicBlock findOrCreateCode(PreBasicBlock source, PreBasicBlock target, boolean exception) {
-        UnwindState sourceContext = (UnwindState) unwindData.get(source);
+        UnwindState sourceContext = unwindData.get(source);
 
         // no unwinding is needed, so jump to target block directly
         if (sourceContext == null)
@@ -477,16 +478,17 @@ public abstract class AstTranslator extends CAstVisitor {
         WalkContext astContext = sourceContext.astContext;
         UnwindState targetContext = null;
         if (target != null)
-          targetContext = (UnwindState) unwindData.get(target);
+          targetContext = unwindData.get(target);
 
         // in unwind context, but catch in same (or inner) unwind context
         if (targetContext != null && targetContext.covers(sourceContext))
           return target;
 
-        Pair key = new Pair(sourceContext, new Pair(target, exception ? Boolean.TRUE : Boolean.FALSE));
+        Pair<UnwindState, Pair<PreBasicBlock, Boolean>> key = new Pair<UnwindState, Pair<PreBasicBlock, Boolean>>(sourceContext,
+            new Pair<PreBasicBlock, Boolean>(target, exception ? Boolean.TRUE : Boolean.FALSE));
 
         if (code.containsKey(key)) {
-          return (PreBasicBlock) code.get(key);
+          return code.get(key);
 
         } else {
           int e = -1;
@@ -544,19 +546,19 @@ public abstract class AstTranslator extends CAstVisitor {
 
     private Unwind unwind = null;
 
-    private final List blocks = new ArrayList();
+    private final List<PreBasicBlock> blocks = new ArrayList<PreBasicBlock>();
 
-    private final Map nodeToBlock = new LinkedHashMap();
+    private final Map<CAstNode, PreBasicBlock> nodeToBlock = new LinkedHashMap<CAstNode, PreBasicBlock>();
 
-    private final Map delayedEdges = new LinkedHashMap();
+    private final Map<Object, Set<Pair<PreBasicBlock, Boolean>>> delayedEdges = new LinkedHashMap<Object, Set<Pair<PreBasicBlock, Boolean>>>();
 
     private final Object exitMarker = new Object();
 
-    private final Set deadBlocks = new LinkedHashSet();
+    private final Set<PreBasicBlock> deadBlocks = new LinkedHashSet<PreBasicBlock>();
 
-    private final Set normalToExit = new LinkedHashSet();
+    private final Set<PreBasicBlock> normalToExit = new LinkedHashSet<PreBasicBlock>();
 
-    private final Set exceptionalToExit = new LinkedHashSet();
+    private final Set<PreBasicBlock> exceptionalToExit = new LinkedHashSet<PreBasicBlock>();
 
     private Position[] linePositions = new Position[10];
 
@@ -620,11 +622,11 @@ public abstract class AstTranslator extends CAstVisitor {
     }
 
     private void addDelayedEdge(PreBasicBlock src, Object dst, boolean exception) {
-      Pair v = new Pair(src, exception ? Boolean.TRUE : Boolean.FALSE);
+      Pair<PreBasicBlock, Boolean> v = new Pair<PreBasicBlock, Boolean>(src, exception ? Boolean.TRUE : Boolean.FALSE);
       if (delayedEdges.containsKey(dst))
-        ((Set) delayedEdges.get(dst)).add(v);
+        delayedEdges.get(dst).add(v);
       else {
-        Set s = new LinkedHashSet();
+        Set<Pair<PreBasicBlock, Boolean>> s = new LinkedHashSet<Pair<PreBasicBlock, Boolean>>();
         s.add(v);
         delayedEdges.put(dst, s);
       }
@@ -637,7 +639,7 @@ public abstract class AstTranslator extends CAstVisitor {
     void makeExitBlock(PreBasicBlock bb) {
       bb.makeExitBlock();
 
-      for (Iterator ps = getPredNodes(bb); ps.hasNext();)
+      for (Iterator<? extends PreBasicBlock> ps = getPredNodes(bb); ps.hasNext();)
         normalToExit.add(ps.next());
 
       checkForRealizedExitEdges(bb);
@@ -649,14 +651,14 @@ public abstract class AstTranslator extends CAstVisitor {
 
     private void checkForRealizedEdges(CAstNode n) {
       if (delayedEdges.containsKey(n)) {
-        for (Iterator ss = ((Set) delayedEdges.get(n)).iterator(); ss.hasNext();) {
+        for (Iterator ss = delayedEdges.get(n).iterator(); ss.hasNext();) {
           Pair s = (Pair) ss.next();
           PreBasicBlock that = (PreBasicBlock) s.fst;
           boolean exception = ((Boolean) s.snd).booleanValue();
           if (unwind == null) {
             addEdge(that, nodeToBlock.get(n));
           } else {
-            PreBasicBlock target = (PreBasicBlock) nodeToBlock.get(n);
+            PreBasicBlock target = nodeToBlock.get(n);
             addEdge(that, unwind.findOrCreateCode(that, target, exception));
           }
         }
@@ -667,7 +669,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
     private void checkForRealizedExitEdges(PreBasicBlock n) {
       if (delayedEdges.containsKey(exitMarker)) {
-        for (Iterator ss = ((Set) delayedEdges.get(exitMarker)).iterator(); ss.hasNext();) {
+        for (Iterator ss = delayedEdges.get(exitMarker).iterator(); ss.hasNext();) {
           Pair s = (Pair) ss.next();
           PreBasicBlock that = (PreBasicBlock) s.fst;
           boolean exception = ((Boolean) s.snd).booleanValue();
@@ -704,12 +706,12 @@ public abstract class AstTranslator extends CAstVisitor {
 
     public void addPreEdge(CAstNode src, CAstNode dst, boolean exception) {
       Assertions._assert(nodeToBlock.containsKey(src));
-      addPreEdge((PreBasicBlock) nodeToBlock.get(src), dst, exception);
+      addPreEdge(nodeToBlock.get(src), dst, exception);
     }
 
     public void addPreEdge(PreBasicBlock src, CAstNode dst, boolean exception) {
       if (nodeToBlock.containsKey(dst)) {
-        PreBasicBlock target = (PreBasicBlock) nodeToBlock.get(dst);
+        PreBasicBlock target = nodeToBlock.get(dst);
         if (DEBUG_CFG)
           Trace.println("adding pre-edge " + src + " --> " + dst);
         if (unwind == null) {
@@ -726,7 +728,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
     public void addPreEdgeToExit(CAstNode src, boolean exception) {
       Assertions._assert(nodeToBlock.containsKey(src));
-      addPreEdgeToExit((PreBasicBlock) nodeToBlock.get(src), exception);
+      addPreEdgeToExit(nodeToBlock.get(src), exception);
     }
 
     public void addPreEdgeToExit(PreBasicBlock src, boolean exception) {
@@ -741,7 +743,7 @@ public abstract class AstTranslator extends CAstVisitor {
       addDelayedEdge(src, exitMarker, exception);
     }
 
-    public void addEdge(Object src, Object dst) {
+    public void addEdge(PreBasicBlock src, PreBasicBlock dst) {
       super.addEdge(src, dst);
       deadBlocks.remove(dst);
     }
@@ -751,7 +753,7 @@ public abstract class AstTranslator extends CAstVisitor {
     }
 
     public PreBasicBlock getBlock(CAstNode n) {
-      return (PreBasicBlock) nodeToBlock.get(n);
+      return nodeToBlock.get(n);
     }
 
     private void noteLinePosition(int instruction) {
@@ -798,24 +800,24 @@ public abstract class AstTranslator extends CAstVisitor {
 
     AstCFG(CAstEntity n, IncipientCFG icfg, SymbolTable symtab) {
       super(null);
-      List blocks = icfg.blocks;
+      List<PreBasicBlock> blocks = icfg.blocks;
 
       this.symtab = symtab;
       functionName = n.getName();
       instructionToBlockMap = new int[blocks.size()];
 
       for (int i = 0; i < blocks.size(); i++)
-        instructionToBlockMap[i] = ((PreBasicBlock) blocks.get(i)).getLastInstructionIndex();
+        instructionToBlockMap[i] = blocks.get(i).getLastInstructionIndex();
 
       for (int i = 0; i < blocks.size(); i++) {
-        PreBasicBlock block = (PreBasicBlock) blocks.get(i);
+        PreBasicBlock block = blocks.get(i);
         this.addNode(block);
         if (block.isCatchBlock()) {
           setCatchBlock(i);
         }
 
         if (DEBUG_CFG)
-          Trace.println("added " + blocks.get(i) + " to final CFG as " + getNumber((IBasicBlock) blocks.get(i)));
+          Trace.println("added " + blocks.get(i) + " to final CFG as " + getNumber(blocks.get(i)));
       }
       if (DEBUG_CFG)
         Trace.println(getMaxNumber() + " blocks total");
@@ -823,7 +825,7 @@ public abstract class AstTranslator extends CAstVisitor {
       init();
 
       for (int i = 0; i < blocks.size(); i++) {
-        PreBasicBlock src = (PreBasicBlock) blocks.get(i);
+        PreBasicBlock src = blocks.get(i);
         for (Iterator j = icfg.getSuccNodes(src); j.hasNext();) {
           PreBasicBlock dst = (PreBasicBlock) j.next();
           if (isCatchBlock(dst.getNumber()) || (dst.isExitBlock() && icfg.exceptionalToExit.contains(src))) {
@@ -843,9 +845,9 @@ public abstract class AstTranslator extends CAstVisitor {
       int x = 0;
       instructions = new SSAInstruction[icfg.currentInstruction];
       for (int i = 0; i < blocks.size(); i++) {
-        List bi = ((PreBasicBlock) blocks.get(i)).instructions();
+        List<SSAInstruction> bi = blocks.get(i).instructions();
         for (int j = 0; j < bi.size(); j++) {
-          instructions[x++] = (SSAInstruction) bi.get(j);
+          instructions[x++] = bi.get(j);
         }
       }
     }
@@ -944,7 +946,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
     Symbol lookup(String name);
 
-    Iterator getAllNames();
+    Iterator<String> getAllNames();
 
     int size();
 
@@ -987,9 +989,9 @@ public abstract class AstTranslator extends CAstVisitor {
   private abstract class AbstractScope implements Scope {
     private final Scope parent;
 
-    private final Map values = new LinkedHashMap();
+    private final Map<String, Symbol> values = new LinkedHashMap<String, Symbol>();
 
-    private final Map caseInsensitiveNames = new LinkedHashMap();
+    private final Map<String, String> caseInsensitiveNames = new LinkedHashMap<String, String>();
 
     protected abstract SymbolTable getUnderlyingSymtab();
 
@@ -997,7 +999,7 @@ public abstract class AstTranslator extends CAstVisitor {
       return getUnderlyingSymtab().getMaxValueNumber() + 1;
     }
 
-    public Iterator getAllNames() {
+    public Iterator<String> getAllNames() {
       return values.keySet().iterator();
     }
 
@@ -1061,7 +1063,7 @@ public abstract class AstTranslator extends CAstVisitor {
     }
 
     private final String mapName(String nm) {
-      String mappedName = (String) caseInsensitiveNames.get(nm.toLowerCase());
+      String mappedName = caseInsensitiveNames.get(nm.toLowerCase());
       return (mappedName == null) ? nm : mappedName;
     }
 
@@ -1081,7 +1083,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
     public Symbol lookup(String nm) {
       if (contains(nm)) {
-        return (Symbol) values.get(mapName(nm));
+        return values.get(mapName(nm));
       } else {
         Symbol scoped = parent.lookup(nm);
         if (scoped != null && getEntityScope() == this && (isGlobal(scoped) || isLexicallyScoped(scoped))) {
@@ -1089,7 +1091,7 @@ public abstract class AstTranslator extends CAstVisitor {
           if (scoped.getDefiningScope().isCaseInsensitive(nm)) {
             caseInsensitiveNames.put(nm.toLowerCase(), nm);
           }
-          return (Symbol) values.get(nm);
+          return values.get(nm);
         } else {
           return scoped;
         }
@@ -1097,7 +1099,7 @@ public abstract class AstTranslator extends CAstVisitor {
     }
 
     public boolean contains(String nm) {
-      String mappedName = (String) caseInsensitiveNames.get(nm.toLowerCase());
+      String mappedName = caseInsensitiveNames.get(nm.toLowerCase());
       return values.containsKey(mappedName == null ? nm : mappedName);
     }
 
@@ -1277,11 +1279,11 @@ public abstract class AstTranslator extends CAstVisitor {
   }
 
   private Scope makeGlobalScope() {
-    final Map globalSymbols = new LinkedHashMap();
-    final Map caseInsensitiveNames = new LinkedHashMap();
+    final Map<String, AbstractSymbol> globalSymbols = new LinkedHashMap<String, AbstractSymbol>();
+    final Map<String, String> caseInsensitiveNames = new LinkedHashMap<String, String>();
     return new Scope() {
       private final String mapName(String nm) {
-        String mappedName = (String) caseInsensitiveNames.get(nm.toLowerCase());
+        String mappedName = caseInsensitiveNames.get(nm.toLowerCase());
         return (mappedName == null) ? nm : mappedName;
       }
 
@@ -1301,7 +1303,7 @@ public abstract class AstTranslator extends CAstVisitor {
         return globalSymbols.size();
       }
 
-      public Iterator getAllNames() {
+      public Iterator<String> getAllNames() {
         return globalSymbols.keySet().iterator();
       }
 
@@ -1343,7 +1345,7 @@ public abstract class AstTranslator extends CAstVisitor {
             throw new Error("cannot find " + name);
           }
 
-        return (Symbol) globalSymbols.get(mapName(name));
+        return globalSymbols.get(mapName(name));
       }
 
       public void declare(final String name, boolean isFinal, boolean isCaseInsensitive, int vn) {
@@ -1373,11 +1375,11 @@ public abstract class AstTranslator extends CAstVisitor {
   }
 
   protected Scope makeTypeScope(final CAstEntity type, final Scope parent) {
-    final Map typeSymbols = new LinkedHashMap();
-    final Map caseInsensitiveNames = new LinkedHashMap();
+    final Map<String, AbstractSymbol> typeSymbols = new LinkedHashMap<String, AbstractSymbol>();
+    final Map<String, String> caseInsensitiveNames = new LinkedHashMap<String, String>();
     return new Scope() {
       private final String mapName(String nm) {
-        String mappedName = (String) caseInsensitiveNames.get(nm.toLowerCase());
+        String mappedName = caseInsensitiveNames.get(nm.toLowerCase());
         return (mappedName == null) ? nm : mappedName;
       }
 
@@ -1397,7 +1399,7 @@ public abstract class AstTranslator extends CAstVisitor {
         return typeSymbols.size();
       }
 
-      public Iterator getAllNames() {
+      public Iterator<String> getAllNames() {
         return typeSymbols.keySet().iterator();
       }
 
@@ -1431,7 +1433,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
       public Symbol lookup(String nm) {
         if (typeSymbols.containsKey(mapName(nm)))
-          return (Symbol) typeSymbols.get(mapName(nm));
+          return typeSymbols.get(mapName(nm));
         else {
           return parent.lookup(nm);
         }
@@ -1475,7 +1477,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
     Scope currentScope();
 
-    Set entityScopes();
+    Set<Scope> entityScopes();
 
     IncipientCFG cfg();
 
@@ -1520,7 +1522,7 @@ public abstract class AstTranslator extends CAstVisitor {
       return parent.currentScope();
     }
 
-    public Set entityScopes() {
+    public Set<Scope> entityScopes() {
       return parent.entityScopes();
     }
 
@@ -1601,7 +1603,7 @@ public abstract class AstTranslator extends CAstVisitor {
   private class CodeEntityContext extends EntityContext {
     private final Scope topEntityScope;
 
-    private final Set allEntityScopes;
+    private final Set<Scope> allEntityScopes;
 
     private final IncipientCFG cfg;
 
@@ -1612,7 +1614,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
       this.topEntityScope = entityScope;
 
-      this.allEntityScopes = new HashSet();
+      this.allEntityScopes = new HashSet<Scope>();
       this.allEntityScopes.add(entityScope);
 
       cfg = new IncipientCFG();
@@ -1630,7 +1632,7 @@ public abstract class AstTranslator extends CAstVisitor {
       return topEntityScope;
     }
 
-    public Set entityScopes() {
+    public Set<Scope> entityScopes() {
       return allEntityScopes;
     }
 
@@ -1762,14 +1764,14 @@ public abstract class AstTranslator extends CAstVisitor {
       }
 
       if (accesses != null) {
-        Set parents = new LinkedHashSet();
+        Set<String> parents = new LinkedHashSet<String>();
         for (Iterator ACS = accesses.iterator(); ACS.hasNext();) {
           Access AC = (Access) ACS.next();
           if (AC.variableDefiner != null) {
             parents.add(AC.variableDefiner);
           }
         }
-        scopingParents = (String[]) parents.toArray(new String[parents.size()]);
+        scopingParents = parents.toArray(new String[parents.size()]);
 
         if (DEBUG_LEXICAL) {
           Trace.println("scoping parents of " + scope.getEntity());
@@ -1810,7 +1812,7 @@ public abstract class AstTranslator extends CAstVisitor {
     }
   };
 
-  private final Map results = new LinkedHashMap();
+  private final Map<CAstNode, Integer> results = new LinkedHashMap<CAstNode, Integer>();
 
   protected boolean hasValue(CAstNode n) {
     return results.containsKey(n);
@@ -1823,18 +1825,18 @@ public abstract class AstTranslator extends CAstVisitor {
 
   public final int getValue(CAstNode n) {
     if (results.containsKey(n))
-      return ((Integer) results.get(n)).intValue();
+      return results.get(n).intValue();
     else {
       Trace.println("no value for " + n.getKind());
       return -1;
     }
   }
 
-  private final Map entityNames = new LinkedHashMap();
+  private final Map<CAstEntity, String> entityNames = new LinkedHashMap<CAstEntity, String>();
 
-  private final Map exposedNames = new LinkedHashMap();
+  private final Map<CAstEntity, LinkedHashSet<Pair<Pair<String, String>, Integer>>> exposedNames = new LinkedHashMap<CAstEntity, LinkedHashSet<Pair<Pair<String, String>, Integer>>>();
 
-  private final Map accesses = new LinkedHashMap();
+  private final Map<CAstEntity, LinkedHashSet<Access>> accesses = new LinkedHashMap<CAstEntity, LinkedHashSet<Access>>();
 
   private void addEntityName(CAstEntity e, String name) {
     entityNames.put(e, name);
@@ -1842,15 +1844,17 @@ public abstract class AstTranslator extends CAstVisitor {
 
   private void addAccess(CAstEntity e, Access access) {
     if (!accesses.containsKey(e))
-      accesses.put(e, new LinkedHashSet());
-    ((Set) accesses.get(e)).add(access);
+      accesses.put(e, new LinkedHashSet<Access>());
+    accesses.get(e).add(access);
   }
 
   private void addExposedName(CAstEntity entity, CAstEntity declaration, String name, int valueNumber) {
     if (!exposedNames.containsKey(entity))
-      exposedNames.put(entity, new LinkedHashSet());
+      exposedNames.put(entity, new LinkedHashSet<Pair<Pair<String, String>, Integer>>());
 
-    ((Set) exposedNames.get(entity)).add(new Pair(new Pair(name, getEntityName(declaration)), new Integer(valueNumber)));
+    exposedNames.get(entity).add(
+        new Pair<Pair<String, String>, Integer>(new Pair<String, String>(name, getEntityName(declaration)),
+            new Integer(valueNumber)));
   }
 
   private String getEntityName(CAstEntity e) {
@@ -1938,19 +1942,19 @@ public abstract class AstTranslator extends CAstVisitor {
     }
   }
 
-  private String[] makeNameMap(Set scopes) {
+  private String[] makeNameMap(Set<Scope> scopes) {
     // all scopes share the same underlying symtab, which is what
     // size really refers to.
-    String[] map = new String[((Scope) scopes.iterator().next()).size() + 1];
+    String[] map = new String[scopes.iterator().next().size() + 1];
 
     if (DEBUG_NAMES) {
       Trace.println("names array of size " + map.length);
     }
 
-    for (Iterator S = scopes.iterator(); S.hasNext();) {
-      Scope scope = (Scope) S.next();
-      for (Iterator I = scope.getAllNames(); I.hasNext();) {
-        String nm = (String) I.next();
+    for (Iterator<Scope> S = scopes.iterator(); S.hasNext();) {
+      Scope scope = S.next();
+      for (Iterator<String> I = scope.getAllNames(); I.hasNext();) {
+        String nm = I.next();
         Symbol v = (Symbol) scope.lookup(nm);
 
         // hack for new expression idiom in the Java translator
@@ -2088,20 +2092,19 @@ public abstract class AstTranslator extends CAstVisitor {
     String[] nms = makeNameMap(functionContext.entityScopes());
 
     /*
-    Set reachableBlocks = 
-      DFS.getReachableNodes(cfg, Collections.singleton(cfg.entry()));    
-    Assertions._assert(reachableBlocks.size() == cfg.getNumberOfNodes(),
-		       cfg.toString());
-    */
+     * Set reachableBlocks = DFS.getReachableNodes(cfg,
+     * Collections.singleton(cfg.entry()));
+     * Assertions._assert(reachableBlocks.size() == cfg.getNumberOfNodes(),
+     * cfg.toString());
+     */
 
     // (put here to allow subclasses to handle stuff in scoped entities)
-
     // assemble lexical information
-    patchLexicalAccesses(cfg.getInstructions(), (Set) accesses.get(n));
+    patchLexicalAccesses(cfg.getInstructions(), accesses.get(n));
     LexicalInformation LI =
     // TODO: Ask Julian if the below change is always correct
-    new AstLexicalInformation((AbstractScope) functionContext.currentScope(), cfg.getInstructions(), (Set) exposedNames.get(n),
-        (Set) accesses.get(n));
+    new AstLexicalInformation((AbstractScope) functionContext.currentScope(), cfg.getInstructions(), exposedNames.get(n), accesses
+        .get(n));
 
     DebuggingInformation DBG = new AstDebuggingInformation(line, nms);
 
@@ -2109,7 +2112,7 @@ public abstract class AstTranslator extends CAstVisitor {
     defineFunction(n, parentContext, cfg, symtab, katch, catchTypes, LI, DBG);
   }
 
-  private final Stack positions = new Stack();
+  private final Stack<Position> positions = new Stack<Position>();
 
   protected Context makeLocalContext(Context context, CAstNode n) {
     return new LocalContext((WalkContext) context, makeLocalScope(n, ((WalkContext) context).currentScope()));
@@ -2121,7 +2124,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
   // FIXME: should it be possible to override visit() instead to do the below
   // and then call super.visit?
-  private Map popPositionM = new LinkedHashMap();
+  private Map<CAstNode, Boolean> popPositionM = new LinkedHashMap<CAstNode, Boolean>();
 
   protected boolean enterNode(CAstNode n, Context c, CAstVisitor visitor) {
     WalkContext context = (WalkContext) c;
@@ -2146,7 +2149,7 @@ public abstract class AstTranslator extends CAstVisitor {
   protected void postProcessNode(CAstNode n, Context c, CAstVisitor visitor) {
     WalkContext context = (WalkContext) c;
     if (popPositionM.get(n) != null) {
-      context.cfg().setCurrentPosition((Position) positions.pop());
+      context.cfg().setCurrentPosition(positions.pop());
     }
   }
 
@@ -2178,7 +2181,7 @@ public abstract class AstTranslator extends CAstVisitor {
     int result = processFunctionExpr(n, c);
     CAstEntity fn = (CAstEntity) n.getChild(0).getValue();
     // FIXME: handle redefinitions of functions
-    if (! context.currentScope().contains(fn.getName())) {
+    if (!context.currentScope().contains(fn.getName())) {
       context.currentScope().declare(fn.getName(), true, false, result);
     }
   }
@@ -2667,7 +2670,7 @@ public abstract class AstTranslator extends CAstVisitor {
     int[] dims = gatherArrayDims(n);
     doArrayRead(context, temp, getValue(n.getChild(0)), n, dims);
     int rval = processAssignOp(n, v, a, temp, !pre, c);
-    setValue(n, pre? rval: temp);
+    setValue(n, pre ? rval : temp);
     doArrayWrite(context, getValue(n.getChild(0)), n, dims, rval);
   }
 
@@ -2694,7 +2697,7 @@ public abstract class AstTranslator extends CAstVisitor {
     int temp = context.currentScope().allocateTempValue();
     doFieldRead(context, temp, getValue(n.getChild(0)), n.getChild(1), n);
     int rval = processAssignOp(n, v, a, temp, !pre, c);
-    setValue(n, pre? rval: temp);
+    setValue(n, pre ? rval : temp);
     doFieldWrite(context, getValue(n.getChild(0)), n.getChild(1), n, rval);
   }
 
@@ -2729,8 +2732,7 @@ public abstract class AstTranslator extends CAstVisitor {
     else if (context.currentScope().isLexicallyScoped(ls)) {
       doLexicallyScopedWrite(context, nm, rval);
     } else {
-      Assertions._assert(rval != -1,
-        CAstPrinter.print(n, c.top().getSourceMap()));
+      Assertions._assert(rval != -1, CAstPrinter.print(n, c.top().getSourceMap()));
       doLocalWrite(context, nm, rval);
     }
   }
@@ -2776,8 +2778,8 @@ public abstract class AstTranslator extends CAstVisitor {
 
   private boolean isSimpleSwitch(CAstNode n, WalkContext context, CAstVisitor visitor) {
     CAstControlFlowMap ctrl = context.getControlFlow();
-    Collection caseLabels = ctrl.getTargetLabels(n);
-    for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
+    Collection<IField> caseLabels = ctrl.getTargetLabels(n);
+    for (Iterator<IField> kases = caseLabels.iterator(); kases.hasNext();) {
       Object x = kases.next();
 
       if (x == CAstControlFlowMap.SWITCH_DEFAULT)
@@ -2816,7 +2818,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
     boolean hasExplicitDefault = ctrl.getTarget(n, CAstControlFlowMap.SWITCH_DEFAULT) != null;
 
-    Collection caseLabels = ctrl.getTargetLabels(n);
+    Collection<IField> caseLabels = ctrl.getTargetLabels(n);
     int cases = caseLabels.size();
     if (hasExplicitDefault)
       cases--;
@@ -2839,7 +2841,7 @@ public abstract class AstTranslator extends CAstVisitor {
     context.cfg().newBlock(true);
 
     int cn = 0;
-    for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
+    for (Iterator<IField> kases = caseLabels.iterator(); kases.hasNext();) {
       Object x = kases.next();
       CAstNode target = ctrl.getTarget(n, x);
       if (x == CAstControlFlowMap.SWITCH_DEFAULT) {
@@ -2863,9 +2865,9 @@ public abstract class AstTranslator extends CAstVisitor {
     visitor.visit(switchValue, context, visitor);
     int v = getValue(switchValue);
 
-    Collection caseLabels = ctrl.getTargetLabels(n);
-    Map labelToBlock = new LinkedHashMap();
-    for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
+    Collection<IField> caseLabels = ctrl.getTargetLabels(n);
+    Map<Object, PreBasicBlock> labelToBlock = new LinkedHashMap<Object, PreBasicBlock>();
+    for (Iterator<IField> kases = caseLabels.iterator(); kases.hasNext();) {
       Object x = kases.next();
       if (x != CAstControlFlowMap.SWITCH_DEFAULT) {
         walkNodes((CAstNode) x, context);
@@ -2885,8 +2887,7 @@ public abstract class AstTranslator extends CAstVisitor {
     visitor.visit(switchBody, context, visitor);
     context.cfg().newBlock(true);
 
-    PreBasicBlock nextBlock = context.cfg().getCurrentBlock();
-    for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
+    for (Iterator<IField> kases = caseLabels.iterator(); kases.hasNext();) {
       Object x = kases.next();
       if (x != CAstControlFlowMap.SWITCH_DEFAULT) {
         CAstNode target = ctrl.getTarget(n, x);
@@ -2930,8 +2931,8 @@ public abstract class AstTranslator extends CAstVisitor {
     context.cfg().addPreNode(n, context.getUnwindState());
     context.cfg().newBlock(false);
 
-    Collection labels = context.getControlFlow().getTargetLabels(n);
-    for (Iterator iter = labels.iterator(); iter.hasNext();) {
+    Collection<IField> labels = context.getControlFlow().getTargetLabels(n);
+    for (Iterator<IField> iter = labels.iterator(); iter.hasNext();) {
       Object label = iter.next();
       CAstNode target = context.getControlFlow().getTarget(n, label);
       if (target == CAstControlFlowMap.EXCEPTION_TO_EXIT)
@@ -3080,17 +3081,16 @@ public abstract class AstTranslator extends CAstVisitor {
     ((WalkContext) c).cfg().addInstruction(new EachElementHasNextInstruction(result, getValue(n.getChild(0))));
   }
 
-  protected boolean visitTypeLiteralExpr(CAstNode n, Context c, CAstVisitor visitor) { 
+  protected boolean visitTypeLiteralExpr(CAstNode n, Context c, CAstVisitor visitor) {
     return false;
   }
 
   protected void leaveTypeLiteralExpr(CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext wc = (WalkContext)c;
+    WalkContext wc = (WalkContext) c;
     Assertions._assert(n.getChild(0).getKind() == CAstNode.CONSTANT);
     String typeNameStr = (String) n.getChild(0).getValue();
     TypeName typeName = TypeName.string2TypeName(typeNameStr);
-    TypeReference typeRef = 
-      TypeReference.findOrCreate(loader.getReference(), typeName);
+    TypeReference typeRef = TypeReference.findOrCreate(loader.getReference(), typeName);
 
     int result = wc.currentScope().allocateTempValue();
     setValue(n, result);
@@ -3131,7 +3131,7 @@ public abstract class AstTranslator extends CAstVisitor {
       return t.globalScope;
     }
 
-    public Set entityScopes() {
+    public Set<Scope> entityScopes() {
       return Collections.singleton(t.globalScope);
     }
 

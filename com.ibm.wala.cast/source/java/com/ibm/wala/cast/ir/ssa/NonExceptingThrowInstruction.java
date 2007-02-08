@@ -10,9 +10,12 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-import com.ibm.wala.ssa.*;
+import java.util.Collection;
+import java.util.Collections;
 
-import java.util.*;
+import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.types.TypeReference;
 
 public class NonExceptingThrowInstruction extends SSAAbstractThrowInstruction {
 
@@ -31,8 +34,8 @@ public class NonExceptingThrowInstruction extends SSAAbstractThrowInstruction {
     ((AstInstructionVisitor)v).visitNonExceptingThrow(this);
   }
 
-  public Collection getExceptionTypes() {
-    return Collections.EMPTY_SET;
+  public Collection<TypeReference> getExceptionTypes() {
+    return Collections.emptySet();
   }
 
 }
