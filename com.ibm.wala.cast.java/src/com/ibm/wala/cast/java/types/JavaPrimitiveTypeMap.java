@@ -15,55 +15,56 @@ package com.ibm.wala.cast.java.types;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.ibm.wala.cast.tree.CAstType;
+import com.ibm.wala.util.collections.HashMapFactory;
 
 public class JavaPrimitiveTypeMap {
-    public static final Map/*<String javaTypeName, JavaPrimitiveType javaTypeDesc>*/ primNameMap= new HashMap();
+  public static final Map<String, JavaPrimitiveType> primNameMap = HashMapFactory.make();
 
-    public static class JavaPrimitiveType implements CAstType.Primitive {
-        String fLongName;
-        String fShortName;
+  public static class JavaPrimitiveType implements CAstType.Primitive {
+    String fLongName;
 
-	private JavaPrimitiveType(String longName, String shortName) {
-	    fLongName= longName;
-	    fShortName= shortName;
-	}
+    String fShortName;
 
-	public String getName() {
-	    return fShortName;
-	}
-
-	public String getLongName() {
-	    return fLongName;
-	}
-
-	public Collection getSupertypes() {
-	    return Collections.EMPTY_LIST;
-	}
+    private JavaPrimitiveType(String longName, String shortName) {
+      fLongName = longName;
+      fShortName = shortName;
     }
 
-    public static String getShortName(String longName) {
-	return ((JavaPrimitiveType) primNameMap.get(longName)).getName();
+    public String getName() {
+      return fShortName;
     }
 
-    public static JavaPrimitiveType lookupType(String longName) {
-	return (JavaPrimitiveType) primNameMap.get(longName);
+    public String getLongName() {
+      return fLongName;
     }
 
-    public static final JavaPrimitiveType VoidType= new JavaPrimitiveType("void", "V");
-
-    static {
-        primNameMap.put("int", new JavaPrimitiveType("int", "I"));
-        primNameMap.put("long", new JavaPrimitiveType("long", "J"));
-        primNameMap.put("short", new JavaPrimitiveType("short", "S"));
-        primNameMap.put("char", new JavaPrimitiveType("char", "C"));
-        primNameMap.put("byte", new JavaPrimitiveType("byte", "B"));
-        primNameMap.put("boolean", new JavaPrimitiveType("boolean", "Z"));
-        primNameMap.put("float", new JavaPrimitiveType("float", "F"));
-        primNameMap.put("double", new JavaPrimitiveType("double", "D"));
-	primNameMap.put("void", VoidType);
+    public Collection getSupertypes() {
+      return Collections.EMPTY_LIST;
     }
+  }
+
+  public static String getShortName(String longName) {
+    return ((JavaPrimitiveType) primNameMap.get(longName)).getName();
+  }
+
+  public static JavaPrimitiveType lookupType(String longName) {
+    return (JavaPrimitiveType) primNameMap.get(longName);
+  }
+
+  public static final JavaPrimitiveType VoidType = new JavaPrimitiveType("void", "V");
+
+  static {
+    primNameMap.put("int", new JavaPrimitiveType("int", "I"));
+    primNameMap.put("long", new JavaPrimitiveType("long", "J"));
+    primNameMap.put("short", new JavaPrimitiveType("short", "S"));
+    primNameMap.put("char", new JavaPrimitiveType("char", "C"));
+    primNameMap.put("byte", new JavaPrimitiveType("byte", "B"));
+    primNameMap.put("boolean", new JavaPrimitiveType("boolean", "Z"));
+    primNameMap.put("float", new JavaPrimitiveType("float", "F"));
+    primNameMap.put("double", new JavaPrimitiveType("double", "D"));
+    primNameMap.put("void", VoidType);
+  }
 }

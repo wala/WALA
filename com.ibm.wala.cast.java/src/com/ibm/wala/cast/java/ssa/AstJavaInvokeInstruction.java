@@ -12,13 +12,14 @@ package com.ibm.wala.cast.java.ssa;
 
 import java.util.Collection;
 
-import com.ibm.wala.util.debug.Assertions;
-
-import com.ibm.wala.cast.ir.ssa.*;
+import com.ibm.wala.cast.ir.ssa.FixedParametersLexicalInvokeInstruction;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Exceptions;
+import com.ibm.wala.util.debug.Assertions;
 
 public class AstJavaInvokeInstruction extends FixedParametersLexicalInvokeInstruction {
 
@@ -59,7 +60,7 @@ public class AstJavaInvokeInstruction extends FixedParametersLexicalInvokeInstru
   /* (non-Javadoc)
    * @see com.ibm.domo.ssa.Instruction#getExceptionTypes()
    */
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return Exceptions.getNullPointerException();
   }
 

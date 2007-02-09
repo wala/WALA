@@ -52,8 +52,8 @@ public class EnclosingObjectReference extends SSAInstruction {
     return lval * type.hashCode();
   }
 
-  public Collection getExceptionTypes() {
-    return Collections.EMPTY_SET;
+  public Collection<TypeReference> getExceptionTypes() {
+    return Collections.emptySet();
   }
 
   public boolean isFallThrough() {

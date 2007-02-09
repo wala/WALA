@@ -93,7 +93,7 @@ public class PolyglotSourceModuleTranslator implements SourceModuleTranslator {
 	}
 
 	Compiler compiler= new PolyglotFrontEnd(fExtInfo);
-	List/*<SourceStream>*/ streams= new ArrayList();
+	List<StreamSource> streams= new ArrayList<StreamSource>();
 
 	// N.B.: 'modules' is a flat set of source file ModuleEntry's.
 	for(Iterator it= modules.iterator(); it.hasNext(); ) {

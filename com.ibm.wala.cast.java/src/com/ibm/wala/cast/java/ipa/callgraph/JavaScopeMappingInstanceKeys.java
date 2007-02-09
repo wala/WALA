@@ -27,41 +27,36 @@ import com.ibm.wala.util.debug.*;
 
 public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 
-  
-
-  public JavaScopeMappingInstanceKeys(ClassHierarchy cha,
-				      PropagationCallGraphBuilder builder, 
-				      InstanceKeyFactory basic)
-  {
+  public JavaScopeMappingInstanceKeys(ClassHierarchy cha, PropagationCallGraphBuilder builder, InstanceKeyFactory basic) {
     super(builder, basic);
-    
+
   }
 
   protected LexicalParent[] getParents(InstanceKey base) {
     IClass cls = base.getConcreteType();
     if (cls instanceof JavaClass) {
       try {
-	Set result = new HashSet();
+        Set<LexicalParent> result = new HashSet<LexicalParent>();
 
-	for(Iterator MS = cls.getAllMethods().iterator(); MS.hasNext(); ) {
-	  IMethod m = (IMethod)MS.next();
-	  if ((m instanceof AstMethod) && !m.isStatic()) {
-	    AstMethod M = (AstMethod)m;
-	    LexicalParent[] parents = M.getParents();
-	    for(int i = 0; i < parents.length; i++) {
-	      result.add( parents[i] );
-	    }
-	  }
-	}
-	
-	if (! result.isEmpty()) {
-	  if (AstTranslator.DEBUG_LEXICAL) 
-	    Trace.println(base + " has parents: " + result);
+        for (Iterator MS = cls.getAllMethods().iterator(); MS.hasNext();) {
+          IMethod m = (IMethod) MS.next();
+          if ((m instanceof AstMethod) && !m.isStatic()) {
+            AstMethod M = (AstMethod) m;
+            LexicalParent[] parents = M.getParents();
+            for (int i = 0; i < parents.length; i++) {
+              result.add(parents[i]);
+            }
+          }
+        }
 
-	  return (LexicalParent[]) result.toArray(new LexicalParent[result.size()]);
-	}
+        if (!result.isEmpty()) {
+          if (AstTranslator.DEBUG_LEXICAL)
+            Trace.println(base + " has parents: " + result);
+
+          return (LexicalParent[]) result.toArray(new LexicalParent[result.size()]);
+        }
       } catch (ClassHierarchyException e) {
-	Assertions.UNREACHABLE();
+        Assertions.UNREACHABLE();
       }
     }
 
@@ -73,7 +68,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 
   protected boolean needsScopeMappingKey(InstanceKey base) {
     boolean result = getParents(base).length > 0;
-    if (AstTranslator.DEBUG_LEXICAL) 
+    if (AstTranslator.DEBUG_LEXICAL)
       Trace.println("does " + base + " need scope mapping? " + result);
 
     return result;

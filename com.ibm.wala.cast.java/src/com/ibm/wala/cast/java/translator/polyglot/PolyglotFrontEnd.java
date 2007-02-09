@@ -48,7 +48,7 @@ public final class PolyglotFrontEnd extends Compiler {
 	try {
 	    try {
 		Scheduler scheduler= sourceExtension().scheduler();
-		List jobs= new ArrayList();
+		List<Job> jobs= new ArrayList<Job>();
 
 		// First, create a goal to compile every source file.
 		for(Iterator i= sources.iterator(); i.hasNext(); ) {
