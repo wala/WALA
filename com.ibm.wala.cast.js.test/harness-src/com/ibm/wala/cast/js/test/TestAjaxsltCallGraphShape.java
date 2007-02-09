@@ -23,8 +23,7 @@ public class TestAjaxsltCallGraphShape extends TestCallGraphShape {
   }
 
   public void setUp() {
-    Util.setTranslatorFactory(
-      new JavaScriptTranslatorFactory.CAstRhinoFactory());
+    Util.setTranslatorFactory(new JavaScriptTranslatorFactory.CAstRhinoFactory());
   }
 
   private static final Object[][] assertionsForAjaxslt = new Object[][] {
@@ -32,9 +31,8 @@ public class TestAjaxsltCallGraphShape extends TestCallGraphShape {
   };
 
   public void testAjaxslt() throws IOException {
-    URL url = 
-      getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
-    CallGraph CG = Util.makeHTMLCG( url );
+    URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
+    CallGraph CG = Util.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForAjaxslt);
   }
 
@@ -43,9 +41,8 @@ public class TestAjaxsltCallGraphShape extends TestCallGraphShape {
   };
 
   public void testAjaxpath() throws IOException {
-    URL url =
-      getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
-    CallGraph CG = Util.makeHTMLCG( url );
+    URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
+    CallGraph CG = Util.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForAjaxpath);
   }
 
