@@ -10,10 +10,15 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.classLoader.IField;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import java.util.*;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstControlFlowMap;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 
 public class CAstCloner {
 
@@ -71,7 +76,7 @@ public class CAstCloner {
 	  }
 	}
 	
-	for(Iterator<IField> LS = orig.getTargetLabels(old).iterator(); LS.hasNext(); ) {
+	for(Iterator LS = orig.getTargetLabels(old).iterator(); LS.hasNext(); ) {
 	  Object label = LS.next();
 	  CAstNode oldTarget = orig.getTarget(old, label);
 	  if (nodeMap.containsKey(oldTarget)) {

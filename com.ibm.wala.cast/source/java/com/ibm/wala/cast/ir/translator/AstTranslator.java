@@ -50,7 +50,6 @@ import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
@@ -2778,8 +2777,8 @@ public abstract class AstTranslator extends CAstVisitor {
 
   private boolean isSimpleSwitch(CAstNode n, WalkContext context, CAstVisitor visitor) {
     CAstControlFlowMap ctrl = context.getControlFlow();
-    Collection<IField> caseLabels = ctrl.getTargetLabels(n);
-    for (Iterator<IField> kases = caseLabels.iterator(); kases.hasNext();) {
+    Collection caseLabels = ctrl.getTargetLabels(n);
+    for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
       Object x = kases.next();
 
       if (x == CAstControlFlowMap.SWITCH_DEFAULT)
@@ -2818,7 +2817,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
     boolean hasExplicitDefault = ctrl.getTarget(n, CAstControlFlowMap.SWITCH_DEFAULT) != null;
 
-    Collection<IField> caseLabels = ctrl.getTargetLabels(n);
+    Collection caseLabels = ctrl.getTargetLabels(n);
     int cases = caseLabels.size();
     if (hasExplicitDefault)
       cases--;
@@ -2841,7 +2840,7 @@ public abstract class AstTranslator extends CAstVisitor {
     context.cfg().newBlock(true);
 
     int cn = 0;
-    for (Iterator<IField> kases = caseLabels.iterator(); kases.hasNext();) {
+    for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
       Object x = kases.next();
       CAstNode target = ctrl.getTarget(n, x);
       if (x == CAstControlFlowMap.SWITCH_DEFAULT) {
@@ -2865,9 +2864,9 @@ public abstract class AstTranslator extends CAstVisitor {
     visitor.visit(switchValue, context, visitor);
     int v = getValue(switchValue);
 
-    Collection<IField> caseLabels = ctrl.getTargetLabels(n);
+    Collection caseLabels = ctrl.getTargetLabels(n);
     Map<Object, PreBasicBlock> labelToBlock = new LinkedHashMap<Object, PreBasicBlock>();
-    for (Iterator<IField> kases = caseLabels.iterator(); kases.hasNext();) {
+    for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
       Object x = kases.next();
       if (x != CAstControlFlowMap.SWITCH_DEFAULT) {
         walkNodes((CAstNode) x, context);
@@ -2887,7 +2886,7 @@ public abstract class AstTranslator extends CAstVisitor {
     visitor.visit(switchBody, context, visitor);
     context.cfg().newBlock(true);
 
-    for (Iterator<IField> kases = caseLabels.iterator(); kases.hasNext();) {
+    for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
       Object x = kases.next();
       if (x != CAstControlFlowMap.SWITCH_DEFAULT) {
         CAstNode target = ctrl.getTarget(n, x);
@@ -2931,8 +2930,8 @@ public abstract class AstTranslator extends CAstVisitor {
     context.cfg().addPreNode(n, context.getUnwindState());
     context.cfg().newBlock(false);
 
-    Collection<IField> labels = context.getControlFlow().getTargetLabels(n);
-    for (Iterator<IField> iter = labels.iterator(); iter.hasNext();) {
+    Collection labels = context.getControlFlow().getTargetLabels(n);
+    for (Iterator iter = labels.iterator(); iter.hasNext();) {
       Object label = iter.next();
       CAstNode target = context.getControlFlow().getTarget(n, label);
       if (target == CAstControlFlowMap.EXCEPTION_TO_EXIT)
