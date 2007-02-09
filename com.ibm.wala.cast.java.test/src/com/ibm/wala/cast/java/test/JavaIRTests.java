@@ -59,37 +59,38 @@ public class JavaIRTests extends IRTests {
 			EdgeAssertions.make("Source#Simple1#instanceMethod1#()V", "Source#Simple1#instanceMethod2#()V")
 		),
 		// this needs soure positions to work too
-		sa);
+		sa,
+		true);
     }
 
     public void testTwoClasses() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testInterfaceTest1() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testInheritance1() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testArray1() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testArrayLiteral1() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testArrayLiteral2() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testInheritedField() {
@@ -97,81 +98,81 @@ public class JavaIRTests extends IRTests {
 		new GraphAssertions(
 			EdgeAssertions.make("Source#InheritedField#main#([Ljava/lang/String;)V", "Source#B#foo#()V"),
 			EdgeAssertions.make("Source#InheritedField#main#([Ljava/lang/String;)V", "Source#B#bar#()V")
-		), null);
+		), null, true);
     }
 
     public void testQualifiedStatic() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testStaticNesting() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testInnerClass() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testLocalClass() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testAnonymousClass() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testWhileTest1() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testSwitch1() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testException1() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testException2() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testFinally1() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testScoping1() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testScoping2() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testNonPrimaryTopLevel() {
 	runTest(singlePkgTestSrc("p"), rtJar, simplePkgTestEntryPoint("p"),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testMiniaturList() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 
     public void testMonitor() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
-		new GraphAssertions(), null);
+		new GraphAssertions(), null, true);
     }
 }

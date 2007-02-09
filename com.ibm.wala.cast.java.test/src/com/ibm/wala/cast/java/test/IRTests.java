@@ -232,17 +232,22 @@ public abstract class IRTests extends WalaTestCase {
 
   protected abstract EclipseProjectSourceAnalysisEngine getAnalysisEngine(String[] mainClassDescriptors);
 
-  public void runTest(Collection/* <String> */sources, List/* <String> */libs, String[] mainClassDescriptors, GraphAssertions ga,
-      SourceMapAssertions sa) {
+  public void runTest(Collection/* <String> */sources, 
+		      List/* <String> */libs,
+		      String[] mainClassDescriptors,
+		      GraphAssertions ga, 
+		      SourceMapAssertions sa,
+		      boolean assertReachable) {
     try {
       EclipseProjectSourceAnalysisEngine engine = getAnalysisEngine(mainClassDescriptors);
 
       populateScope(engine, sources, libs);
 
       CallGraph callGraph = engine.buildDefaultCallGraph();
+      Trace.println(callGraph.toString());
 
       // If we've gotten this far, IR has been produced.
-      dumpIR(callGraph);
+      dumpIR(callGraph, assertReachable);
 
       // Now check any assertions as to source mapping
       if (sa != null) {
@@ -256,36 +261,40 @@ public abstract class IRTests extends WalaTestCase {
     }
   }
 
-  private static void dumpIR(CallGraph cg) throws IOException {
+  private static void dumpIR(CallGraph cg, boolean assertReachable)
+    throws IOException 
+  {
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = cg.getClassHierarchy();
     IClassLoader sourceLoader = cha.getLoader(JavaSourceAnalysisScope.SOURCE_REF);
     for (Iterator iter = sourceLoader.iterateAllClasses(); iter.hasNext();) {
       IClass clazz = (IClass) iter.next();
 
-      System.out.println(clazz);
+      Trace.println(clazz);
       if (clazz.isInterface())
         continue;
 
       for (Iterator iterator = clazz.getDeclaredMethods().iterator(); iterator.hasNext();) {
         IMethod m = (IMethod) iterator.next();
         if (m.isAbstract())
-          System.out.println(m);
+          Trace.println(m);
         else {
           Iterator nodeIter = cg.getNodes(m.getReference()).iterator();
           if (!nodeIter.hasNext()) {
-            System.err.println("Source method " + m.getReference() + " not reachable?");
+	    Trace.println("Method " + m.getReference() + " not reachable?");
+	    if (assertReachable) {
+	      Assert.assertTrue(m.toString(), nodeIter.hasNext());
+	    }
             continue;
           }
           CGNode node = (CGNode) nodeIter.next();
-          System.out.println(cg.getInterpreter(node).getIR(node, warnings));
+          Trace.println(cg.getInterpreter(node).getIR(node, warnings));
         }
       }
     }
   }
 
   private static void checkCallGraphShape(CallGraph callGraph, GraphAssertions ga) throws IOException {
-    Trace.println(callGraph.toString());
     for (Iterator<EdgeAssertions> nodeIter = ga.nodeAssertions.iterator(); nodeIter.hasNext();) {
       EdgeAssertions ea = nodeIter.next();
 
@@ -293,11 +302,11 @@ public abstract class IRTests extends WalaTestCase {
       Set/* <CGNode> */srcNodes = callGraph.getNodes(srcMethod);
 
       if (srcNodes.size() == 0) {
-        System.err.println("Unreachable/non-existent method: " + srcMethod);
+        Trace.println("Unreachable/non-existent method: " + srcMethod);
         continue;
       }
       if (srcNodes.size() > 1) {
-        System.err.println("Context-sensitive call graph?");
+        Trace.println("Context-sensitive call graph?");
       }
 
       // Assume only one node for src method
@@ -309,7 +318,7 @@ public abstract class IRTests extends WalaTestCase {
         // Assume only one node for target method
         Set tgtNodes = callGraph.getNodes(tgtMethod);
         if (tgtNodes.size() == 0) {
-          System.err.println("Unreachable/non-existent method: " + tgtMethod);
+          Trace.println("Unreachable/non-existent method: " + tgtMethod);
           continue;
         }
         CGNode tgtNode = (CGNode) tgtNodes.iterator().next();
@@ -324,7 +333,7 @@ public abstract class IRTests extends WalaTestCase {
           }
         }
         if (!found)
-          System.err.println("Missing edge: " + srcMethod + " -> " + tgtMethod);
+          Trace.println("Missing edge: " + srcMethod + " -> " + tgtMethod);
       }
     }
   }

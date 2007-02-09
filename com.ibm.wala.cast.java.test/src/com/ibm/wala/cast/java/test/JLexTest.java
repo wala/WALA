@@ -40,7 +40,8 @@ public class JLexTest extends IRTests {
       runTest(singleTestSrc(), rtJar, 
 	      new String[]{ "LJLex/Main" },
 	      new GraphAssertions(),
-	      new SourceMapAssertions());
+	      new SourceMapAssertions(),
+	      false);
     }
 
     protected String singlePkgInputForTest(String pkgName) {
