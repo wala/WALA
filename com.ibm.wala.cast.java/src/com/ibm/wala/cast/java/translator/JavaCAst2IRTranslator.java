@@ -139,7 +139,12 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 	Assertions.UNREACHABLE("Real functions in Java??? I don't think so!");
     }
 
-    protected void doNewObject(WalkContext context, CAstNode newNode, int result, Object type, int[] arguments) {
+    protected void doNewObject(WalkContext context, 
+			       CAstNode newNode,
+			       int result, 
+			       Object type, 
+			       int[] arguments)
+    {
       TypeReference typeRef = (TypeReference) type;
 
       NewSiteReference site = 
