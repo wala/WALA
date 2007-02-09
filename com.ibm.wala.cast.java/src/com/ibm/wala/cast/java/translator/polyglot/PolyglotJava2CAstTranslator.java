@@ -900,7 +900,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 	  return
 	    fNodeFactory.Labeled(
 	      Position.COMPILER_GENERATED,
-	      "breakLabel"+loop.position().toString(),
+	      "breakLabel"+loop.position().toString().replace('.','_'),
 	      fNodeFactory.Empty(Position.COMPILER_GENERATED));
 	}
 
@@ -908,7 +908,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 	  return
 	    fNodeFactory.Labeled(
 	      Position.COMPILER_GENERATED,
-	      "continueLabel"+loop.position().toString(),
+	      "continueLabel"+loop.position().toString().replace('.','_'),
 	      fNodeFactory.Empty(Position.COMPILER_GENERATED));
 	}
 
@@ -994,7 +994,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 	}
 
 	public CAstNode visit(Switch s, WalkContext wc) {
-	    Node breakLabel= fNodeFactory.Labeled(Position.COMPILER_GENERATED, "break"+s.position().toString(), null);
+	    Node breakLabel= fNodeFactory.Labeled(Position.COMPILER_GENERATED, "break"+s.position().toString().replace('.','_'), fNodeFactory.Empty(Position.COMPILER_GENERATED));
 	    CAstNode breakAst= walkNodes(breakLabel, wc);
 	    String loopLabel = (String) wc.getLabelMap().get(s);
 	    WalkContext child= new SwitchContext(wc, loopLabel, breakLabel);
