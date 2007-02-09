@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ssa;
 
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 
@@ -173,7 +174,7 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
   /* (non-Javadoc)
    * @see com.ibm.domo.ssa.Instruction#getExceptionTypes()
    */
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return Util.typeErrorExceptions();
   }
 

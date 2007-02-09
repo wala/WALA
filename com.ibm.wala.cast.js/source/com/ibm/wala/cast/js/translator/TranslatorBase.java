@@ -18,39 +18,39 @@ import java.util.*;
 
 public abstract class TranslatorBase implements TranslatorToIR {
 
-    protected static final Set bootstrapFileNames;
+  protected static final Set<String> bootstrapFileNames;
 
-    private static String prologueFileName = "prologue.js";
+  private static String prologueFileName = "prologue.js";
 
-    public static void resetPrologueFile() {
-      prologueFileName = "prologue.js";
-    }
-	
-    public static void setPrologueFile(String name) {
-      prologueFileName = name;
-    }
+  public static void resetPrologueFile() {
+    prologueFileName = "prologue.js";
+  }
 
-    public static void addBootstrapFile(String fileName) {
-      bootstrapFileNames.add( fileName );
-    }
+  public static void setPrologueFile(String name) {
+    prologueFileName = name;
+  }
 
-    static {
-      bootstrapFileNames = new HashSet();
-      bootstrapFileNames.add( prologueFileName );
-    }
+  public static void addBootstrapFile(String fileName) {
+    bootstrapFileNames.add(fileName);
+  }
 
-    public abstract void translate(ModuleEntry M, String N) throws IOException;
+  static {
+    bootstrapFileNames = new HashSet<String>();
+    bootstrapFileNames.add(prologueFileName);
+  }
 
-    public void translate(Set modules) throws IOException {
-      translate(new SourceURLModule(getClass().getClassLoader().getResource(prologueFileName)), prologueFileName);
-      Iterator MS = modules.iterator();
-      while (MS.hasNext()) {
-      	ModuleEntry M = (ModuleEntry) MS.next();
-      	if (M instanceof SourceFileModule) {
-	  translate(M, ((SourceFileModule)M).getClassName());
-	} else {
-      	  translate(M, M.getName());
-      	}
+  public abstract void translate(ModuleEntry M, String N) throws IOException;
+
+  public void translate(Set modules) throws IOException {
+    translate(new SourceURLModule(getClass().getClassLoader().getResource(prologueFileName)), prologueFileName);
+    Iterator MS = modules.iterator();
+    while (MS.hasNext()) {
+      ModuleEntry M = (ModuleEntry) MS.next();
+      if (M instanceof SourceFileModule) {
+        translate(M, ((SourceFileModule) M).getClassName());
+      } else {
+        translate(M, M.getName());
       }
     }
+  }
 }

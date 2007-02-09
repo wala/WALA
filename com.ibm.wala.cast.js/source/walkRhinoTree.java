@@ -22,7 +22,7 @@ import org.mozilla.javascript.tools.ToolErrorReporter;
 
 class walkRhinoTree {
 
-    private final Map results = new HashMap();
+    private final Map<Node, Integer> results = new HashMap<Node, Integer>();
 
     private int nextValue = 1;
 
@@ -40,7 +40,7 @@ class walkRhinoTree {
     }
 
     private int getValue(Node n) {
-      return ((Integer)results.get(n)).intValue();
+      return results.get(n).intValue();
     }
 
     private interface Symbol {
@@ -62,7 +62,7 @@ class walkRhinoTree {
 
     private static abstract class AbstractScope implements Scope {
       private final Scope parent;
-      private final Map values = new HashMap();
+      private final Map<String, Symbol> values = new HashMap<String, Symbol>();
 
       public void declare(String nm) {
 	if (! contains(nm)) {
@@ -78,7 +78,7 @@ class walkRhinoTree {
 
       public Symbol lookup(String nm) {
 	if (contains(nm))
-	  return (Symbol)values.get(nm);
+	  return values.get(nm);
 	else
 	  return parent.lookup(nm);
       }

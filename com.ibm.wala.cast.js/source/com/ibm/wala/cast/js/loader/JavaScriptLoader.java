@@ -33,11 +33,13 @@ import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
@@ -45,13 +47,16 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 public class JavaScriptLoader implements IClassLoader {
-  private final Map types = new HashMap();
+  private final Map<TypeName,IClass> types = new HashMap<TypeName,IClass>();
+  
+  private static final Map<Selector,IMethod> emptyMap1 = Collections.emptyMap();
+  private static final Map<Atom,IField> emptyMap2 = Collections.emptyMap();
+
   private final JavaScriptTranslatorFactory translatorFactory;
+
   private final ClassHierarchy cha;
 
-  JavaScriptLoader(ClassHierarchy cha,
-		   JavaScriptTranslatorFactory translatorFactory) 
-  {
+  JavaScriptLoader(ClassHierarchy cha, JavaScriptTranslatorFactory translatorFactory) {
     this.cha = cha;
     this.translatorFactory = translatorFactory;
   }
@@ -59,18 +64,13 @@ public class JavaScriptLoader implements IClassLoader {
   class JavaScriptClass extends AstClass {
     private IClass superClass;
     
-    private JavaScriptClass(IClassLoader loader,
-			    TypeReference classRef, 			   
-			    TypeReference superRef, 
-			    CAstSourcePositionMap.Position sourcePosition) {
-      super(sourcePosition,
-	    classRef.getName(),
-	    loader,
-	    (short)0,
-	    Collections.EMPTY_MAP,
-	    Collections.EMPTY_MAP);
+
+
+    private JavaScriptClass(IClassLoader loader, TypeReference classRef, TypeReference superRef,
+        CAstSourcePositionMap.Position sourcePosition) {
+      super(sourcePosition, classRef.getName(), loader, (short) 0, emptyMap2, emptyMap1);
       types.put(classRef.getName(), this);
-      superClass = superRef==null? null: loader.lookupClass(superRef.getName(), cha);
+      superClass = superRef == null ? null : loader.lookupClass(superRef.getName(), cha);
     }
 
     public ClassHierarchy getClassHierarchy() {
@@ -82,27 +82,20 @@ public class JavaScriptLoader implements IClassLoader {
     }
 
     @Override
-    public Collection getDirectInterfaces() throws ClassHierarchyException {
-      return Collections.EMPTY_SET;
+    public Collection<IClass> getDirectInterfaces() throws ClassHierarchyException {
+      return Collections.emptySet();
     }
 
     @Override
-     public IClass getSuperclass() throws ClassHierarchyException {
+    public IClass getSuperclass() throws ClassHierarchyException {
       return superClass;
     }
   }
 
   class JavaScriptRootClass extends AstDynamicPropertyClass {
 
-    private JavaScriptRootClass(IClassLoader loader, 
-				CAstSourcePositionMap.Position sourcePosition) 
-    {
-      super(sourcePosition,
-	    JavaScriptTypes.Root.getName(),
-	    loader,
-	    (short)0,
-	    Collections.EMPTY_MAP,
-	    JavaScriptTypes.Root);
+    private JavaScriptRootClass(IClassLoader loader, CAstSourcePositionMap.Position sourcePosition) {
+      super(sourcePosition, JavaScriptTypes.Root.getName(), loader, (short) 0, emptyMap1, JavaScriptTypes.Root);
 
       types.put(JavaScriptTypes.Root.getName(), this);
     }
@@ -115,8 +108,8 @@ public class JavaScriptLoader implements IClassLoader {
       return "JS Root:" + getReference().toString();
     }
 
-    public Collection getDirectInterfaces() throws ClassHierarchyException {
-      return Collections.EMPTY_SET;
+    public Collection<IClass> getDirectInterfaces() throws ClassHierarchyException {
+      return Collections.emptySet();
     }
 
     public IClass getSuperclass() throws ClassHierarchyException {
@@ -126,14 +119,11 @@ public class JavaScriptLoader implements IClassLoader {
 
   class JavaScriptCodeBody extends AstFunctionClass {
 
-    public JavaScriptCodeBody(TypeReference codeName,
-			      TypeReference parent,
-			      IClassLoader loader,
-			      CAstSourcePositionMap.Position sourcePosition) 
-    {
+    public JavaScriptCodeBody(TypeReference codeName, TypeReference parent, IClassLoader loader,
+        CAstSourcePositionMap.Position sourcePosition) {
       super(codeName, parent, loader, sourcePosition);
       types.put(codeName.getName(), this);
-    }      
+    }
 
     public ClassHierarchy getClassHierarchy() {
       return cha;
@@ -144,34 +134,21 @@ public class JavaScriptLoader implements IClassLoader {
       return codeBody;
     }
   }
-      
-  private final Set functionQualifiers;
-  
-  {  
-    functionQualifiers = new HashSet();
+
+  private final Set<CAstQualifier> functionQualifiers;
+
+  {
+    functionQualifiers = new HashSet<CAstQualifier>();
     functionQualifiers.add(CAstQualifier.PUBLIC);
     functionQualifiers.add(CAstQualifier.FINAL);
   }
 
   public class JavaScriptMethodObject extends AstMethod {
 
-    JavaScriptMethodObject(JavaScriptCodeBody cls,
-			   AbstractCFG cfg,
-			   SymbolTable symtab,
-			   boolean hasCatchBlock,
-			   TypeReference[][] caughtTypes,
-			   LexicalInformation lexicalInfo,
-			   DebuggingInformation debugInfo)
-    {
-      super(cls, 
-	    functionQualifiers,
-	    cfg, 
-	    symtab, 
-	    AstMethodReference.fnReference(cls.getReference()),
-	    hasCatchBlock, 
-	    caughtTypes,
-	    lexicalInfo,
-	    debugInfo);
+    JavaScriptMethodObject(JavaScriptCodeBody cls, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
+        TypeReference[][] caughtTypes, LexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+      super(cls, functionQualifiers, cfg, symtab, AstMethodReference.fnReference(cls.getReference()), hasCatchBlock, caughtTypes,
+          lexicalInfo, debugInfo);
     }
 
     public ClassHierarchy getClassHierarchy() {
@@ -185,28 +162,34 @@ public class JavaScriptLoader implements IClassLoader {
     public TypeReference[] getDeclaredExceptions() {
       return null;
     }
-    
+
     public LexicalParent[] getParents() {
-      if (lexicalInfo == null) return new LexicalParent[ 0 ];
-	  
+      if (lexicalInfo == null)
+        return new LexicalParent[0];
+
       final String[] parents = lexicalInfo.getScopingParents();
 
-      if (parents == null) return new LexicalParent[ 0 ];
+      if (parents == null)
+        return new LexicalParent[0];
 
-      LexicalParent result[] =
-	new LexicalParent[ parents.length ];
-      
-      for(int i = 0; i < parents.length; i++) {
-	final int hack = i;
-	final AstMethod method = (AstMethod) lookupClass(parents[i], cha).getMethod(AstMethodReference.fnSelector);
-	result[i] = new LexicalParent() {
-	  public String getName() { return parents[hack]; }
-	  public AstMethod getMethod() { return method; }
-	};
+      LexicalParent result[] = new LexicalParent[parents.length];
 
-	Trace.println("parent " + result[i].getName() + " is " + result[i].getMethod());
+      for (int i = 0; i < parents.length; i++) {
+        final int hack = i;
+        final AstMethod method = (AstMethod) lookupClass(parents[i], cha).getMethod(AstMethodReference.fnSelector);
+        result[i] = new LexicalParent() {
+          public String getName() {
+            return parents[hack];
+          }
+
+          public AstMethod getMethod() {
+            return method;
+          }
+        };
+
+        Trace.println("parent " + result[i].getName() + " is " + result[i].getMethod());
       }
-      
+
       return result;
     }
 
@@ -233,92 +216,71 @@ public class JavaScriptLoader implements IClassLoader {
     }
   }
 
-  public IClass 
-    defineCodeBodyType(String name, 
-		       TypeReference P, 
-		       CAstSourcePositionMap.Position sourcePosition) 
-  {
-    return
-      new JavaScriptCodeBody(
-        TypeReference.findOrCreate(
-	  JavaScriptTypes.jsLoader, 
-	  TypeName.string2TypeName( name )),
-	P,
-	this,
-	sourcePosition);
+  public IClass defineCodeBodyType(String name, TypeReference P, CAstSourcePositionMap.Position sourcePosition) {
+    return new JavaScriptCodeBody(TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName(name)), P, this,
+        sourcePosition);
   }
 
-  public IClass 
-    defineFunctionType(String name, CAstSourcePositionMap.Position pos) 
-  {
+  public IClass defineFunctionType(String name, CAstSourcePositionMap.Position pos) {
     return defineCodeBodyType(name, JavaScriptTypes.Function, pos);
   }
 
-  public IClass
-    defineScriptType(String name, CAstSourcePositionMap.Position pos) 
-  {
+  public IClass defineScriptType(String name, CAstSourcePositionMap.Position pos) {
     return defineCodeBodyType(name, JavaScriptTypes.Script, pos);
   }
 
-  public IMethod defineCodeBodyCode(String clsName,
-				    AbstractCFG cfg,
-				    SymbolTable symtab,
-				    boolean hasCatchBlock,
-				    TypeReference[][] caughtTypes,
-				    LexicalInformation lexicalInfo,
-				    DebuggingInformation debugInfo)
-  {
+  public IMethod defineCodeBodyCode(String clsName, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
+      TypeReference[][] caughtTypes, LexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
     JavaScriptCodeBody C = (JavaScriptCodeBody) lookupClass(clsName, cha);
     Assertions._assert(C != null, clsName);
     return C.setCodeBody(new JavaScriptMethodObject(C, cfg, symtab, hasCatchBlock, caughtTypes, lexicalInfo, debugInfo));
   }
 
-  final JavaScriptRootClass ROOT =
-    new JavaScriptRootClass(this, null);
-  final JavaScriptClass UNDEFINED =
-    new JavaScriptClass(this, JavaScriptTypes.Undefined, JavaScriptTypes.Root, null);
-  final JavaScriptClass PRIMITIVES =
-    new JavaScriptClass(this, JavaScriptTypes.Primitives, JavaScriptTypes.Root, null);
-  final JavaScriptClass STRING =
-    new JavaScriptClass(this, JavaScriptTypes.String, JavaScriptTypes.Root, null);
-  final JavaScriptClass NULL =
-    new JavaScriptClass(this, JavaScriptTypes.Null, JavaScriptTypes.Root, null);
-  final JavaScriptClass BOOLEAN =
-    new JavaScriptClass(this, JavaScriptTypes.Boolean, JavaScriptTypes.Root, null);
-  final JavaScriptClass NUMBER =
-    new JavaScriptClass(this, JavaScriptTypes.Number, JavaScriptTypes.Root, null);
-  final JavaScriptClass DATE =
-    new JavaScriptClass(this, JavaScriptTypes.Date, JavaScriptTypes.Root, null);
-  final JavaScriptClass REGEXP =
-    new JavaScriptClass(this, JavaScriptTypes.RegExp, JavaScriptTypes.Root, null);
-  final JavaScriptClass ARRAY =
-    new JavaScriptClass(this, JavaScriptTypes.Array, JavaScriptTypes.Root, null);
-  final JavaScriptClass OBJECT =
-    new JavaScriptClass(this, JavaScriptTypes.Object, JavaScriptTypes.Root, null);
-  final JavaScriptClass TYPE_ERROR =
-    new JavaScriptClass(this, JavaScriptTypes.TypeError, JavaScriptTypes.Root, null);
-  final JavaScriptClass CODE_BODY =
-    new JavaScriptClass(this, JavaScriptTypes.CodeBody, JavaScriptTypes.Root, null);
-  final JavaScriptClass FUNCTION =
-    new JavaScriptClass(this, JavaScriptTypes.Function, JavaScriptTypes.CodeBody, null);
-  final JavaScriptClass SCRIPT =
-    new JavaScriptClass(this, JavaScriptTypes.Script, JavaScriptTypes.CodeBody, null);
+  final JavaScriptRootClass ROOT = new JavaScriptRootClass(this, null);
+
+  final JavaScriptClass UNDEFINED = new JavaScriptClass(this, JavaScriptTypes.Undefined, JavaScriptTypes.Root, null);
+
+  final JavaScriptClass PRIMITIVES = new JavaScriptClass(this, JavaScriptTypes.Primitives, JavaScriptTypes.Root, null);
+
+  final JavaScriptClass STRING = new JavaScriptClass(this, JavaScriptTypes.String, JavaScriptTypes.Root, null);
+
+  final JavaScriptClass NULL = new JavaScriptClass(this, JavaScriptTypes.Null, JavaScriptTypes.Root, null);
+
+  final JavaScriptClass BOOLEAN = new JavaScriptClass(this, JavaScriptTypes.Boolean, JavaScriptTypes.Root, null);
+
+  final JavaScriptClass NUMBER = new JavaScriptClass(this, JavaScriptTypes.Number, JavaScriptTypes.Root, null);
+
+  final JavaScriptClass DATE = new JavaScriptClass(this, JavaScriptTypes.Date, JavaScriptTypes.Root, null);
+
+  final JavaScriptClass REGEXP = new JavaScriptClass(this, JavaScriptTypes.RegExp, JavaScriptTypes.Root, null);
+
+  final JavaScriptClass ARRAY = new JavaScriptClass(this, JavaScriptTypes.Array, JavaScriptTypes.Root, null);
+
+  final JavaScriptClass OBJECT = new JavaScriptClass(this, JavaScriptTypes.Object, JavaScriptTypes.Root, null);
+
+  final JavaScriptClass TYPE_ERROR = new JavaScriptClass(this, JavaScriptTypes.TypeError, JavaScriptTypes.Root, null);
+
+  final JavaScriptClass CODE_BODY = new JavaScriptClass(this, JavaScriptTypes.CodeBody, JavaScriptTypes.Root, null);
+
+  final JavaScriptClass FUNCTION = new JavaScriptClass(this, JavaScriptTypes.Function, JavaScriptTypes.CodeBody, null);
+
+  final JavaScriptClass SCRIPT = new JavaScriptClass(this, JavaScriptTypes.Script, JavaScriptTypes.CodeBody, null);
 
   public IClass lookupClass(String className, ClassHierarchy cha) {
     Assertions._assert(this.cha == cha);
-    return (IClass) types.get( TypeName.string2TypeName(className) );
+    return (IClass) types.get(TypeName.string2TypeName(className));
   }
 
   public IClass lookupClass(TypeName className, ClassHierarchy cha) {
     Assertions._assert(this.cha == cha);
-    return (IClass) types.get( className );
+    return (IClass) types.get(className);
   }
 
   public ClassLoaderReference getReference() {
     return JavaScriptTypes.jsLoader;
   }
 
-  public Iterator iterateAllClasses() {
+  public Iterator<IClass> iterateAllClasses() {
     return types.values().iterator();
   }
 
@@ -331,7 +293,7 @@ public class JavaScriptLoader implements IClassLoader {
   }
 
   public int getNumberOfMethods() {
-      return types.size();
+    return types.size();
   }
 
   public String getSourceFileName(IClass klass) {
@@ -349,17 +311,17 @@ public class JavaScriptLoader implements IClassLoader {
   }
 
   public void removeAll(Collection toRemove) {
-    Set keys = new HashSet();
+    Set<TypeName> keys = new HashSet<TypeName>();
 
-    for(Iterator EE = types.entrySet().iterator(); EE.hasNext(); ) {
-      Map.Entry E = (Map.Entry)EE.next();
-      if (toRemove.contains( E.getValue() )) {
-	keys.add( E.getKey() );
+    for (Iterator<Map.Entry<TypeName,IClass>> EE = types.entrySet().iterator(); EE.hasNext();) {
+      Map.Entry<TypeName,IClass> E =  EE.next();
+      if (toRemove.contains(E.getValue())) {
+        keys.add(E.getKey());
       }
     }
 
-    for(Iterator KK = keys.iterator(); KK.hasNext(); ) {
-      types.remove( KK.next() );
+    for (Iterator KK = keys.iterator(); KK.hasNext();) {
+      types.remove(KK.next());
     }
   }
 

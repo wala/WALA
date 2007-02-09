@@ -423,14 +423,14 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 	  if (v.getValue() == null || v.size() == 0) {
 	    return new InstanceKey[0];
 	  } else {
-	    final Set temp = new HashSet();
+	    final Set<InstanceKey> temp = new HashSet<InstanceKey>();
 	    v.getValue().foreach(new IntSetAction() {
 	      public void act(int keyIndex) {
 		temp.add( system.getInstanceKey(keyIndex) );
 	      }
 	    });
 
-	    return (InstanceKey[])temp.toArray(new InstanceKey[temp.size()]);
+	    return temp.toArray(new InstanceKey[temp.size()]);
 	  }
 	}
       }

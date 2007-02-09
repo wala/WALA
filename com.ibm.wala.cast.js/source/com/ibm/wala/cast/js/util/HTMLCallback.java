@@ -23,15 +23,15 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   private int counter=0;
   private boolean script = false;
 
-  private final HashMap constructors = new HashMap();
+  private final HashMap<String, String> constructors = new HashMap<String, String>();
 	
-  protected final Stack stack;
+  protected final Stack<String> stack;
 
   public HTMLCallback(URL input, FileWriter out, FileWriter out2) {
     this.input = input;
     this.out = out;
     this.out2 = out2;
-    stack = new Stack();
+    stack = new Stack<String>();
     constructors.put("FORM", "DOMHTMLFormElement");
     constructors.put("TABLE", "DOMHTMLTableElement");
   }
@@ -71,7 +71,7 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   protected String createElement(HTML.Tag t, MutableAttributeSet a) {
     String tag = t.toString().toUpperCase();
     String varName = "node" + (counter++);
-    String cons = (String)constructors.get(tag);
+    String cons = constructors.get(tag);
     if(tag.equals("SCRIPT")) {
       Object value = a.getAttribute( HTML.Attribute.SRC );
 	

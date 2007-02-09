@@ -16,6 +16,7 @@ import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 
 public class JavaScriptStaticPropertyWrite extends SSAPutInstruction {
@@ -49,7 +50,7 @@ public class JavaScriptStaticPropertyWrite extends SSAPutInstruction {
   /* (non-Javadoc)
    * @see com.ibm.domo.ssa.Instruction#getExceptionTypes()
    */
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return Util.typeErrorExceptions();
   }
 

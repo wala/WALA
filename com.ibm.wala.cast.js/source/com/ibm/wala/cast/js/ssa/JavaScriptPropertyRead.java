@@ -10,11 +10,12 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ssa;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.ssa.*;
+import java.util.Collection;
 
-import java.util.*;
+import com.ibm.wala.cast.ir.ssa.AbstractReflectiveGet;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.debug.Assertions;
 
 public class JavaScriptPropertyRead extends AbstractReflectiveGet {
   public JavaScriptPropertyRead(int result, int objectRef, int memberRef) {
@@ -39,7 +40,7 @@ public class JavaScriptPropertyRead extends AbstractReflectiveGet {
   /* (non-Javadoc)
    * @see com.ibm.domo.ssa.Instruction#getExceptionTypes()
    */
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return Util.typeErrorExceptions();
   }
 

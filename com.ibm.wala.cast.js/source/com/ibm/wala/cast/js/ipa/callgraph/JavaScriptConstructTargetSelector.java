@@ -38,7 +38,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private final SSAContextInterpreter interpreter;
   private final WarningSet warnings;
 
-  private final Map constructors = new HashMap();
+  private final Map<Object, IMethod> constructors = new HashMap<Object, IMethod>();
 
   private class JavaScriptConstructor extends JavaScriptSummarizedFunction {
     private final String toStringExtra;
@@ -130,8 +130,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private IMethod makeValueConstructor(IClass cls, int nargs, Object value) {
     Assertions._assert(nargs == 0 || nargs == 1);
 
-    Object key = new Pair(cls, new Integer(nargs));
-    if (constructors.containsKey(key)) return (IMethod)constructors.get(key);
+    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    if (constructors.containsKey(key)) return constructors.get(key);
 
     else return 
       record(
@@ -175,8 +175,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private IMethod makeObjectConstructor(IClass cls, int nargs) {
     Assertions._assert(nargs == 0 || nargs == 1);
 
-    Object key = new Pair(cls, new Integer(nargs));
-    if (constructors.containsKey(key)) return (IMethod)constructors.get(key);
+    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    if (constructors.containsKey(key)) return constructors.get(key);
 
     else return 
       record(
@@ -189,8 +189,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private IMethod makeObjectCall(IClass cls, int nargs) {
     Assertions._assert(nargs == 0);
 
-    Object key = new Pair(cls, new Integer(nargs));
-    if (constructors.containsKey(key)) return (IMethod)constructors.get(key);
+    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    if (constructors.containsKey(key)) return constructors.get(key);
 
     else return 
       record(
@@ -253,8 +253,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeArrayConstructor(IClass cls, int nargs) {
-    Object key = new Pair(cls, new Integer(nargs));
-    if (constructors.containsKey(key)) return (IMethod)constructors.get(key);
+    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    if (constructors.containsKey(key)) return constructors.get(key);
 
     else return 
       record(
@@ -293,8 +293,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private IMethod makeStringCall(IClass cls, int nargs) {
     Assertions._assert(nargs == 0 || nargs == 1);
 
-    Object key = new Pair(cls, new Integer(nargs));
-    if (constructors.containsKey(key)) return (IMethod)constructors.get(key);
+    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    if (constructors.containsKey(key)) return constructors.get(key);
 
     else return 
       record(
@@ -333,8 +333,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private IMethod makeNumberCall(IClass cls, int nargs) {
     Assertions._assert(nargs == 0 || nargs == 1);
 
-    Object key = new Pair(cls, new Integer(nargs));
-    if (constructors.containsKey(key)) return (IMethod)constructors.get(key);
+    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    if (constructors.containsKey(key)) return constructors.get(key);
 
     else return 
       record(
@@ -345,7 +345,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 	
   private IMethod makeFunctionConstructor(IClass receiver, IClass cls) {
-    if (constructors.containsKey(cls)) return (IMethod)constructors.get(cls);
+    if (constructors.containsKey(cls)) return constructors.get(cls);
 
     MethodReference ref =
       JavaScriptMethods.makeCtorReference( receiver.getReference() );
@@ -452,8 +452,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeFunctionObjectConstructor(IClass cls, int nargs) {
-    Object key = new Pair(cls, new Integer(nargs));
-    if (constructors.containsKey(key)) return (IMethod)constructors.get(key);
+    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    if (constructors.containsKey(key)) return constructors.get(key);
 
     MethodReference ref = 
       JavaScriptMethods.makeCtorReference( cls.getReference() );
@@ -505,6 +505,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     }
   }
 
+  @SuppressWarnings("unused")
   private IMethod findOrCreateCallMethod(IR callerIR, SSAAbstractInvokeInstruction callStmt, IClass receiver, int nargs) {
     if (receiver.getReference().equals(JavaScriptTypes.Object))
       return makeObjectCall(receiver, nargs);

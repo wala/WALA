@@ -73,7 +73,6 @@ public class JSAstTranslator extends AstTranslator {
     }
 
   protected void declareFunction(CAstEntity N, WalkContext context) {
-    String fileName = context.file();
     String fnName = composeEntityName(context, N);
     if (N.getKind() == CAstEntity.SCRIPT_ENTITY) {
       ((JavaScriptLoader)loader).defineScriptType("L"+fnName, N.getPosition());

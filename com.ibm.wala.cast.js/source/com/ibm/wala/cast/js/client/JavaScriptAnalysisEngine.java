@@ -36,18 +36,17 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
   protected boolean keepIRs = true;
 
   public JavaScriptAnalysisEngine() {
-    setCallGraphBuilderFactory(
-      new com.ibm.wala.cast.js.client.impl.ZeroCFABuilderFactory() );
+    setCallGraphBuilderFactory(new com.ibm.wala.cast.js.client.impl.ZeroCFABuilderFactory());
   }
 
+  @SuppressWarnings("unchecked")
   protected void buildAnalysisScope() {
     try {
       loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
 
-      SourceFileModule[] files = (SourceFileModule[])
-        moduleFiles.toArray(new SourceFileModule[ moduleFiles.size() ]);
+      SourceFileModule[] files = (SourceFileModule[]) moduleFiles.toArray(new SourceFileModule[moduleFiles.size()]);
 
-      scope = new CAstAnalysisScope( files, loaderFactory );
+      scope = new CAstAnalysisScope(files, loaderFactory);
     } catch (IOException e) {
       Assertions.UNREACHABLE(e.toString());
     }
@@ -55,9 +54,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
 
   protected ClassHierarchy buildClassHierarchy() {
     try {
-      return 
-        ClassHierarchy.make(
-	  getScope(), loaderFactory, getWarnings(), JavaScriptTypes.Root);
+      return ClassHierarchy.make(getScope(), loaderFactory, getWarnings(), JavaScriptTypes.Root);
     } catch (ClassHierarchyException e) {
       Assertions.UNREACHABLE(e.toString());
       return null;
@@ -65,7 +62,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
   }
 
   public void setTranslatorFactory(JavaScriptTranslatorFactory factory) {
-      this.translatorFactory = factory;
+    this.translatorFactory = factory;
   }
 
   public void setJ2SELibraries(JarFile[] libs) {
@@ -77,23 +74,19 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
   }
 
   public AnalysisOptions getDefaultOptions(Entrypoints roots) {
-    final AnalysisOptions options = 
-      new AnalysisOptions(
-        scope, 
-	AstIRFactory.makeDefaultFactory(keepIRs), 
-	roots);
+    final AnalysisOptions options = new AnalysisOptions(scope, AstIRFactory.makeDefaultFactory(keepIRs), roots);
 
     options.setConstantType(String.class, JavaScriptTypes.String);
     options.setConstantType(Integer.class, JavaScriptTypes.Number);
     options.setConstantType(Float.class, JavaScriptTypes.Number);
     options.setConstantType(Double.class, JavaScriptTypes.Number);
     options.setConstantType(null, JavaScriptTypes.Null);
-    
-    options.setUseConstantSpecificKeys( true );
 
-    options.setUseStacksForLexicalScoping( true );
+    options.setUseConstantSpecificKeys(true);
 
-    options.getSSAOptions().setPreserveNames( true );    
+    options.setUseStacksForLexicalScoping(true);
+
+    options.getSSAOptions().setPreserveNames(true);
 
     return options;
   }

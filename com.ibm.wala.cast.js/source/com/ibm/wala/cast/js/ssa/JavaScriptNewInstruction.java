@@ -10,10 +10,12 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ssa;
 
-import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ssa.*;
-
 import java.util.Collection;
+
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.types.TypeReference;
 
 public class JavaScriptNewInstruction extends SSANewInstruction {
   
@@ -28,7 +30,7 @@ public class JavaScriptNewInstruction extends SSANewInstruction {
 	getNewSite());
   }
 
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return Util.typeErrorExceptions();
   }
 

@@ -10,12 +10,13 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ssa;
 
+import java.util.Collection;
+
 import com.ibm.wala.ssa.SSAAbstractUnaryInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.ValueDecorator;
-
-import java.util.Collection;
+import com.ibm.wala.types.TypeReference;
 
 public class JavaScriptTypeOfInstruction extends SSAAbstractUnaryInstruction {
 
@@ -35,7 +36,7 @@ public class JavaScriptTypeOfInstruction extends SSAAbstractUnaryInstruction {
     ((InstructionVisitor) v).visitTypeOf(this);
   }
 
-  public Collection getExceptionTypes() {
+  public Collection<TypeReference> getExceptionTypes() {
     return Util.noExceptions();
   }
 
