@@ -614,8 +614,8 @@ public final class MethodEditor {
         for (int j = 0; j < hs.length; j++) {
           ExceptionHandler h = hs[j];
           if (!adjustedHandlers.contains(h)) {
-            adjustedHandlers.add(h);
             h.handler = labelDefs[h.handler];
+            adjustedHandlers.add(h);
           }
         }
       }
