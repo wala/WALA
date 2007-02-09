@@ -93,7 +93,7 @@ public abstract class AbstractSSAConversion {
 
   protected final DominanceFrontiers<IBasicBlock> DF;
 
-  private final Graph dominatorTree;
+  private final Graph<IBasicBlock> dominatorTree;
 
   protected final int[] phiCounts;
 
@@ -111,7 +111,7 @@ public abstract class AbstractSSAConversion {
 
   protected int valueMap[];
 
-  private Set[] assignmentMap;
+  private Set<SSACFG.BasicBlock>[] assignmentMap;
 
   protected AbstractSSAConversion(IR ir, SSAOptions options) {
     this.CFG = ir.getControlFlowGraph();
@@ -143,6 +143,7 @@ public abstract class AbstractSSAConversion {
     makeAssignmentMap();
   }
 
+  @SuppressWarnings("unchecked")
   private void makeAssignmentMap() {
     this.assignmentMap = new Set[getMaxValueNumber() + 1];
     for (Iterator BBs = CFG.iterateNodes(); BBs.hasNext();) {

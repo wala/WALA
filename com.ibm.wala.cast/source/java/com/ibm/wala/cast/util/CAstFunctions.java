@@ -33,28 +33,28 @@ public class CAstFunctions {
     return null;
   }
 
-  public static Iterator iterateNodes(final CAstNode tree) {
-    return new DFSDiscoverTimeIterator() {
+  public static Iterator<CAstNode> iterateNodes(final CAstNode tree) {
+    return new DFSDiscoverTimeIterator<CAstNode>() {
 
-      private final Map<Object, Iterator> pendingChildren = new HashMap<Object, Iterator>();
+      private final Map<Object, Iterator<? extends CAstNode>> pendingChildren = new HashMap<Object, Iterator<? extends CAstNode>>();
 
-      protected Iterator getPendingChildren(Object n) {
+      protected Iterator<? extends CAstNode> getPendingChildren(CAstNode n) {
         return pendingChildren.get(n);
       }
 
-      protected void setPendingChildren(Object v, Iterator iterator) {
+      protected void setPendingChildren(CAstNode v, Iterator<? extends CAstNode> iterator) {
         pendingChildren.put(v, iterator);
       }
 
-      protected Iterator getConnected(final Object n) {
-        return new Iterator() {
+      protected Iterator<CAstNode> getConnected(final CAstNode n) {
+        return new Iterator<CAstNode>() {
           private int i = 0;
 
           public boolean hasNext() {
             return i < ((CAstNode) n).getChildCount();
           }
 
-          public Object next() {
+          public CAstNode next() {
             return ((CAstNode) n).getChild(i++);
           }
 
@@ -71,7 +71,7 @@ public class CAstFunctions {
   }
 
   public static Iterator findAll(CAstNode tree, Filter f) {
-    return new FilterIterator(iterateNodes(tree), f);
+    return new FilterIterator<CAstNode>(iterateNodes(tree), f);
   }
 
 }

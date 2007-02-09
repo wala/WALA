@@ -499,7 +499,7 @@ public class SSAConversion extends AbstractSSAConversion {
   protected void initializeVariables() {
     for (int V = 1; V <= getMaxValueNumber(); V++) {
       if (!skip(V)) {
-        R[V] = new Stack();
+        R[V] = new Stack<CopyPropagationRecord>();
       }
     }
 

@@ -59,6 +59,7 @@ public class CAstPattern {
       return (CAstNode) get(name);
     }
 
+    @SuppressWarnings("unchecked")
     public List<Object> getMultiple(String name) {
       if (!containsKey(name)) {
         return Collections.emptyList();
@@ -87,6 +88,7 @@ public class CAstPattern {
       }
     }
 
+    @SuppressWarnings("unchecked")
     private void add(String name, CAstNode result) {
       if (containsKey(name)) {
         Object o = get(name);

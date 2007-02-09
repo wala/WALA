@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-
 import com.ibm.wala.cast.ir.cfg.*;
 import com.ibm.wala.cast.ir.ssa.*;
 import com.ibm.wala.cfg.*;
@@ -62,7 +61,7 @@ public class AstCallGraph extends ExplicitCallGraph {
   }
 
   class AstCGNode extends ExplicitNode {
-    private Set<Function> callbacks;
+    private Set<Function<Object,Object>> callbacks;
 
     private AstCGNode(IMethod method, Context context) {
       super(method, context);
@@ -73,7 +72,7 @@ public class AstCallGraph extends ExplicitCallGraph {
         boolean done = false;
         while (!done) {
           try {
-            for (Iterator<Function> x = callbacks.iterator(); x.hasNext();) {
+            for (Iterator<Function<Object,Object>> x = callbacks.iterator(); x.hasNext();) {
               x.next().apply(null);
             }
           } catch (ConcurrentModificationException e) {
@@ -85,17 +84,16 @@ public class AstCallGraph extends ExplicitCallGraph {
       }
     }
 
-    public void addCallback(Function callback) {
+    public void addCallback(Function<Object,Object> callback) {
       if (callbacks == null)
-        callbacks = new HashSet<Function>(1);
+        callbacks = new HashSet<Function<Object,Object>>(1);
       callbacks.add(callback);
     }
 
     private void fireCallbacksTransitive() {
-      for(Iterator<CGNode> nodes = DFS.iterateFinishTime(AstCallGraph.this, new NonNullSingletonIterator<CGNode>(this));
-	  nodes.hasNext(); )
-      {
-	((AstCGNode)nodes.next()).fireCallbacks();
+      for (Iterator<CGNode> nodes = DFS.iterateFinishTime(AstCallGraph.this, new NonNullSingletonIterator<CGNode>(this)); nodes
+          .hasNext();) {
+        ((AstCGNode) nodes.next()).fireCallbacks();
       }
     }
 

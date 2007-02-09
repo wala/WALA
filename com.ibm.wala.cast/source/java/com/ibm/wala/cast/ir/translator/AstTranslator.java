@@ -1745,7 +1745,7 @@ public abstract class AstTranslator extends CAstVisitor {
       }
     }
 
-    AstLexicalInformation(Scope scope, IInstruction[] instrs, Set exposedNamesSet, Set accesses) {
+    AstLexicalInformation(Scope scope, IInstruction[] instrs, Set<Pair<Pair<String, String>, Integer>> exposedNamesSet, Set accesses) {
       Pair[] EN = null;
       if (exposedNamesSet != null) {
         EN = (Pair[]) exposedNamesSet.toArray(new Pair[exposedNamesSet.size()]);
@@ -1982,7 +1982,7 @@ public abstract class AstTranslator extends CAstVisitor {
     }
   }
 
-  private void patchLexicalAccesses(IInstruction[] instrs, Set accesses) {
+  private void patchLexicalAccesses(IInstruction[] instrs, Set<Access> accesses) {
     Access[] AC = accesses == null ? (Access[]) null : (Access[]) accesses.toArray(new Access[accesses.size()]);
     for (int i = 0; i < instrs.length; i++) {
       if (instrs[i] instanceof AstLexicalAccess && ((AstLexicalAccess) instrs[i]).getAccessCount() == 0) {

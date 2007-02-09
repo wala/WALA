@@ -10,16 +10,24 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.cast.ir.translator.*;
-import com.ibm.wala.cast.loader.AstMethod.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.types.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import com.ibm.wala.cast.ir.translator.AstTranslator;
+import com.ibm.wala.cast.loader.AstMethod.LexicalParent;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-
-import java.util.*;
 
 abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
@@ -38,7 +46,7 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
 
     private final ScopeMap map;
 
-    private class ScopeMap extends HashMap {
+    private class ScopeMap extends HashMap<String,CGNode> {
 
       private static final long serialVersionUID = 3645910671551712906L;
 

@@ -18,7 +18,7 @@ import com.ibm.wala.cast.tree.*;
 import java.util.*;
 
 public class CAstNodeTypeMapRecorder 
-    extends HashMap 
+    extends HashMap <CAstNode,CAstType>
     implements CAstNodeTypeMap
 {
   private static final long serialVersionUID= 7812144102027916961L;
