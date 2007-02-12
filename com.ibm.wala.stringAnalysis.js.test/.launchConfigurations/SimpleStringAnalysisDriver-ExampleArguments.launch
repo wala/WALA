@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.ibm.wala.stringAnalysis.js.examples.SimpleStringAnalysisDriver"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="com.ibm.wala.stringAnalysis.js.test"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="${project_loc}/src/com/ibm/wala/stringAnalysis/js/test/example/test.js rConcat1 strAstrBstrBstrB"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/com.ibm.wala.stringAnalysis.js.test"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
+</launchConfiguration>
