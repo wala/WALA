@@ -70,7 +70,7 @@ public class JSSSA2Rule extends SSA2Rule {
   
   protected void translateGet(SSAGetInstruction instruction, TranslationContext ctx, Collection rules) {
     String fieldName = instruction.getDeclaredField().getName().toString();
-    System.err.println("field name: " + fieldName);
+    // System.err.println("field name: " + fieldName);
     if (domProperties.contains(fieldName)) {
       IVariable recv = (IVariable) getValueSymbol(instruction.getRef(), instruction, ctx);
       IVariable left = (IVariable) getValueSymbol(instruction.getDef(0), instruction, ctx);
