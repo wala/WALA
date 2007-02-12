@@ -14,6 +14,7 @@ Require-Bundle: org.eclipse.ui,
  com.ibm.wala.core
 Eclipse-AutoStart: true
 Export-Package: com.ibm.wala.stringAnalysis.js,
+ com.ibm.wala.stringAnalysis.js.client,
  com.ibm.wala.stringAnalysis.js.ssa,
  com.ibm.wala.stringAnalysis.js.translator,
  com.ibm.wala.stringAnalysis.js.util
