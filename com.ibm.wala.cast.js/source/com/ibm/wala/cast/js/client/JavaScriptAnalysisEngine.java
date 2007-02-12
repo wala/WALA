@@ -15,14 +15,14 @@ import java.util.jar.JarFile;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
+import com.ibm.wala.cast.js.ipa.callgraph.*;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.client.impl.AbstractAnalysisEngine;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.*;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.debug.Assertions;
@@ -42,6 +42,10 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
   @SuppressWarnings("unchecked")
   protected void buildAnalysisScope() {
     try {
+      if (translatorFactory == null) {
+	translatorFactory = new JavaScriptTranslatorFactory.CAstRhinoFactory();
+      }
+
       loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
 
       SourceFileModule[] files = (SourceFileModule[]) moduleFiles.toArray(new SourceFileModule[moduleFiles.size()]);
@@ -71,6 +75,14 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
 
   public void setJ2SELibraries(Module[] libs) {
     Assertions.UNREACHABLE("Illegal to call setJ2SELibraries");
+  }
+
+  protected Entrypoints 
+    makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) 
+  { 
+    return new JavaScriptEntryPoints(
+      cha, 
+      cha.getLoader(JavaScriptTypes.jsLoader));
   }
 
   public AnalysisOptions getDefaultOptions(Entrypoints roots) {
