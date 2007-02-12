@@ -65,6 +65,11 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   protected AnalysisScope scope;
 
   /**
+   * A representation of the analysis options
+   */
+  protected AnalysisOptions options;
+
+  /**
    * An object to track analysis warnings
    */
   private WarningSet warnings = new WarningSet();
@@ -347,15 +352,17 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    * Builds the call graph for the analysis scope in effect, 
    * using all of the given entry points.
    */
-  public CallGraph buildDefaultCallGraph() {
+  public CallGraphBuilder defaultCallGraphBuilder() {
     buildAnalysisScope();
     ClassHierarchy cha= buildClassHierarchy();
     setClassHierarchy(cha);
     Entrypoints eps = makeDefaultEntrypoints(scope, cha);
-    AnalysisOptions options= getDefaultOptions(eps);
-    CallGraphBuilder cgb= buildCallGraph(cha, options, true);
-    CallGraph cg= cgb.makeCallGraph(options);
-    return cg;
+    options = getDefaultOptions(eps);
+    return buildCallGraph(cha, options, true);
+  }
+
+  public CallGraph buildDefaultCallGraph() {
+    return defaultCallGraphBuilder().makeCallGraph(options);
   }
 
 }
