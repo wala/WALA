@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.automaton.AutomatonPlugin
 Bundle-Vendor: IBM
 Bundle-Localization: plugin
-Require-Bundle: org.eclipse.ui,
+Require-Bundle: org.eclipse.jdt.ui,
+ org.eclipse.ui,
  org.eclipse.core.runtime
 Eclipse-AutoStart: true
 Export-Package: com.ibm.wala.automaton,
