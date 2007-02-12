@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-
 import com.ibm.wala.classLoader.*;
 import com.ibm.wala.ipa.callgraph.*;
 import com.ibm.wala.ipa.callgraph.propagation.*;
@@ -25,42 +24,40 @@ import java.util.*;
 public class Util {
 
   public static SourceFileModule makeSourceModule(URL script, String dir, String name) {
-    // DO NOT use File.separator here, since this name is matched against 
-    // URLs.  It seems that, in DOS, URL.getFile() does not return a 
-    // \-separated file name, but rather one with /'s.  Rather makes one 
+    // DO NOT use File.separator here, since this name is matched against
+    // URLs. It seems that, in DOS, URL.getFile() does not return a
+    // \-separated file name, but rather one with /'s. Rather makes one
     // wonder why the function is called get_File_ :(
     return makeSourceModule(script, dir + "/" + name);
   }
 
   public static SourceFileModule makeSourceModule(URL script, String scriptName) {
-    String hackedName =
-      script.getFile().replaceAll("%5c", "/").replaceAll("%20", " ");
+    String hackedName = script.getFile().replaceAll("%5c", "/").replaceAll("%20", " ");
 
-    File scriptFile = new File( hackedName );
+    File scriptFile = new File(hackedName);
 
-    Assertions._assert( hackedName.endsWith( scriptName ), 
-      scriptName + " does not match file " + script.getFile());
+    Assertions._assert(hackedName.endsWith(scriptName), scriptName + " does not match file " + script.getFile());
 
-    return new SourceFileModule( scriptFile, scriptName );
+    return new SourceFileModule(scriptFile, scriptName);
   }
 
   public static void dumpCG(PropagationCallGraphBuilder builder, CallGraph CG) {
-    Trace.println( CG );
+    Trace.println(CG);
 
-    for(Iterator x = CG.iterateNodes(); x.hasNext(); ) {
+    for (Iterator x = CG.iterateNodes(); x.hasNext();) {
       CGNode N = (CGNode) x.next();
       Trace.println("\nIR of node " + N);
-      IR ir = ((SSAContextInterpreter)CG.getInterpreter(N)).getIR(N, builder.getWarnings());
-      if (ir != null) { 
-	Trace.println( ir );
+      IR ir = ((SSAContextInterpreter) CG.getInterpreter(N)).getIR(N, builder.getWarnings());
+      if (ir != null) {
+        Trace.println(ir);
       } else {
-	Trace.println( "no IR!" );
+        Trace.println("no IR!");
       }
     }
 
     PointerAnalysis PA = builder.getPointerAnalysis();
-    for(Iterator x = PA.getPointerKeys().iterator(); x.hasNext(); ) {
-      PointerKey n = (PointerKey)x.next();
+    for (Iterator x = PA.getPointerKeys().iterator(); x.hasNext();) {
+      PointerKey n = (PointerKey) x.next();
       Trace.println(n + " --> " + PA.getPointsToSet(n));
     }
   }
