@@ -44,7 +44,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * 
- * This class performs intraprocedural type propagation on an SSA IR. 
+ * This class performs intraprocedural type propagation on an SSA IR.
  * 
  * @author sfink
  */
@@ -116,17 +116,17 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         v.setType(PrimitiveType.getPrimitive(t));
       }
     }
-    
+
     SymbolTable st = ir.getSymbolTable();
     if (st != null) {
-      for(int i = 0; i < st.getMaxValueNumber(); i++ ) {
-	if (st.isConstant(i)) {
-	  TypeVariable v = (TypeVariable) getVariable(i);
-	  v.setType(getConstantType(i));
-	}
+      for (int i = 0; i < st.getMaxValueNumber(); i++) {
+        if (st.isConstant(i)) {
+          TypeVariable v = (TypeVariable) getVariable(i);
+          v.setType(getConstantType(i));
+        }
       }
     }
-	  
+
     for (Iterator it = ir.iterateNormalInstructions(); it.hasNext();) {
       SSAInstruction s = (SSAInstruction) it.next();
       if (s instanceof SSAAbstractInvokeInstruction) {
@@ -417,10 +417,10 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         Assertions.UNREACHABLE("Unexpected type " + arrayType.getClass());
       }
       if (elementType.isPrimitiveType()) {
-	if (doPrimitives && t.getType() == TypeAbstraction.TOP) {
-	  t.setType(PrimitiveType.getPrimitive(elementType));
-	  return CHANGED;
-	}
+        if (doPrimitives && t.getType() == TypeAbstraction.TOP) {
+          t.setType(PrimitiveType.getPrimitive(elementType));
+          return CHANGED;
+        }
         return NOT_CHANGED;
       }
 
@@ -731,7 +731,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
   }
 
   public TypeAbstraction getConstantType(int valueNumber) {
-    if (ir.getSymbolTable().isStringConstant(valueNumber)) {	  
+    if (ir.getSymbolTable().isStringConstant(valueNumber)) {
       return new PointType(cha.lookupClass(TypeReference.JavaLangString), cha);
     } else {
       return getConstantPrimitiveType(valueNumber);

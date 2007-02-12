@@ -34,8 +34,8 @@ import com.ibm.wala.util.intset.SparseIntSet;
 /**
  * A demand-driven context-sensitive slicer.
  * 
- * This computes a context-sensitive slice, building an SDG
- * and finding realizable paths to a statement using tabulation.
+ * This computes a context-sensitive slice, building an SDG and finding
+ * realizable paths to a statement using tabulation.
  * 
  * This implementation uses a preliminary pointer analysis to compute data
  * dependence between heap locations in the SDG.
@@ -59,18 +59,35 @@ public class Slicer {
    * options to control data dependence edges in the SDG
    */
   public static enum DataDependenceOptions {
-    FULL("full", false, false, false, false), NO_BASE_PTRS("no_base_ptrs", true, false, false, false), NO_BASE_NO_HEAP(
-        "no_base_no_heap", true, true, false, false), NO_HEAP("no_heap", false, true, false, false), NONE("none", true, true, true,
-        true), REFLECTION("no_base_no_heap_no_cast", true, true, true, true);
+    FULL("full", false, false, false, false),
+    NO_BASE_PTRS("no_base_ptrs", true, false, false, false),
+    NO_BASE_NO_HEAP("no_base_no_heap", true, true, false, false),
+    NO_HEAP("no_heap", false, true, false, false),
+    NONE("none", true, true, true, true),
+    REFLECTION("no_base_no_heap_no_cast", true, true, true, true);
 
     private final String name;
 
+    /**
+     * ingore data dependence edges representing base pointers?
+     * e.g for a statement y = x.f,   ignore the data dependence edges for x
+     */
     private final boolean ignoreBasePtrs;
 
+    /**
+     * Ignore all data dependence edges to or from the heap?
+     */
     private final boolean ignoreHeap;
 
+    /**
+     * Ignore outgoing data dependence edges from a cast statments?
+     * [This is a special case option used for reflection processing]
+     */
     private final boolean terminateAtCast;
 
+    /**
+     * Ignore data dependence manifesting throw exception objects?
+     */
     private final boolean ignoreExceptions;
 
     DataDependenceOptions(String name, boolean ignoreBasePtrs, boolean ignoreHeap, boolean terminateAtCast, boolean ignoreExceptions) {
@@ -110,7 +127,8 @@ public class Slicer {
    * options to control control dependence edges in the sdg
    */
   public static enum ControlDependenceOptions {
-    FULL("full"), NONE("none");
+    FULL("full"),
+    NONE("none");
 
     private final String name;
 
