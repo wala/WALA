@@ -107,8 +107,8 @@ public class Grammars {
     }
   }
 
-  static private void collectUsedVariables(final IGrammar grammar, IVariable v, final Set s, final Set rules) {
-  }
+//  static private void collectUsedVariables(final IGrammar grammar, IVariable v, final Set s, final Set rules) {
+//  }
 
   /*
   static public IVariable createUniqueVariable(Set baseNames) {
@@ -154,8 +154,6 @@ public class Grammars {
     }
     final IMatchContext mctx = new MatchContext(m);
 
-    IVariable startSymbol = (IVariable) m.get(g.getStartSymbol());
-    final Set rules = new HashSet();
     g = g.copy(new DeepGrammarCopier(new DeepRuleCopier(new VariableReplacer(mctx))));
     return g;
   }
@@ -790,14 +788,14 @@ public class Grammars {
 
     static public class RegularApproximation {
       static private class VarMap {
-        private Map supMap;
-        private Map supUpMap;
+//        private Map supMap;
+//        private Map supUpMap;
         private IVariableFactory varFactory;
 
         public VarMap(IContextFreeGrammar cfg) {
           varFactory = new FreshVariableFactory(SimpleVariableFactory.defaultFactory, cfg);
-          supMap = new HashMap();
-          supUpMap = new HashMap();
+//          supMap = new HashMap();
+//          supUpMap = new HashMap();
         }
 
         private IVariable getVar(Map m, IVariable v, IVariable w) {
@@ -892,7 +890,6 @@ public class Grammars {
         for (Iterator i = rule.getRight().iterator(); i.hasNext(); ) {
           ISymbol s = (ISymbol) i.next();
           if (s instanceof IVariable) {
-            IVariable v = (IVariable) s;
             if (mvarsEx.contains(s)) {
               s = vmap.getSupVar((IVariable)s, (IVariable)s);
             }
@@ -1071,7 +1068,6 @@ public class Grammars {
             throw(new RuntimeException("should be normalized."));
           }
           IVariable rv = (IVariable) r.getRight(1);
-          IState ls = new State(AUtil.createUniqueName("s", stateNames));
           ITransition t = new Transition(varMap.get(lv), varMap.get(rv), input);
           transitions.add(t);
           break;
@@ -1151,10 +1147,10 @@ public class Grammars {
     private static Set<String> appendString(Set<String> s1, String str2) {
       return appendString(s1, AUtil.set(new String[]{str2}));
     }
-
-    private static Set<String> appendString(String str1, Set<String> s2) {
-      return appendString(AUtil.set(new String[]{str1}), s2);
-    }
+//
+//    private static Set<String> appendString(String str1, Set<String> s2) {
+//      return appendString(AUtil.set(new String[]{str1}), s2);
+//    }
     
     public static IContextFreeGrammar createCFG(List<ISymbol> symbols) {
       IVariable startVar = new Variable(variablePrefix + "1");

@@ -13,8 +13,6 @@ package com.ibm.wala.automaton.grammar.string;
 import java.util.Collection;
 import java.util.Iterator;
 
-import com.ibm.wala.automaton.string.*;
-
 public abstract class AbstractRuleCopier implements IRuleCopier {
     public abstract IProductionRule copy(IProductionRule rule);
 

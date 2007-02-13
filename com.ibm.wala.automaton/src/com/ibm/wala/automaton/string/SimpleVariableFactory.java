@@ -10,9 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.string;
 
-import java.util.Set;
-
-import com.ibm.wala.automaton.AUtil;
 
 public class SimpleVariableFactory implements IVariableFactory<IVariable> {
   public IVariable createSymbol(String name) {

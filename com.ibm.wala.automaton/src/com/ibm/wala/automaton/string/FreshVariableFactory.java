@@ -11,7 +11,7 @@
 package com.ibm.wala.automaton.string;
 
 import java.util.Set;
-import com.ibm.wala.automaton.AUtil;
+
 import com.ibm.wala.automaton.grammar.string.Grammars;
 import com.ibm.wala.automaton.grammar.string.IGrammar;
 

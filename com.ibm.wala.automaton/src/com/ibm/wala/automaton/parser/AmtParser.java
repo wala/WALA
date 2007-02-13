@@ -35,7 +35,7 @@ import com.ibm.wala.automaton.string.*;
 import com.ibm.wala.automaton.tree.*;
 
 
-
+@SuppressWarnings("unused")
 public class AmtParser {
 
 
@@ -765,6 +765,7 @@ public class AmtParser {
   private static final int YYNLSTATES = 113;
   private static final int YYINTERRTOK = 1;
   private static final int YYUNEXPECTED = 32767;
+
   private static final int YYDEFAULT = -32766;
 
   private static final int YYDEFAULTSTACK = 512;

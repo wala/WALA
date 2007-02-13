@@ -10,9 +10,10 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.tree;
 
-import java.util.*;
-
-import com.ibm.wala.automaton.string.*;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.IVariable;
+import com.ibm.wala.automaton.string.Variable;
+import com.ibm.wala.automaton.string.VariableWrapper;
 
 public class TreeVariable extends VariableWrapper implements ITreeVariable  {
     public TreeVariable(String name) {

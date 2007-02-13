@@ -10,10 +10,13 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.tree;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
-import com.ibm.wala.automaton.*;
-import com.ibm.wala.automaton.string.*;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.ISymbolCopier;
 
 public class TreeAutomatons {
     static public abstract class AbstractBinarizationCopier implements ISymbolCopier {

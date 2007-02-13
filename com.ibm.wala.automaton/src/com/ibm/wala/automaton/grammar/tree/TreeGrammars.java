@@ -10,12 +10,27 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.grammar.tree;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-import com.ibm.wala.automaton.AUtil;
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.automaton.tree.*;
+import com.ibm.wala.automaton.grammar.string.DeepRuleCopier;
+import com.ibm.wala.automaton.grammar.string.Grammars;
+import com.ibm.wala.automaton.grammar.string.IProductionRule;
+import com.ibm.wala.automaton.grammar.string.ProductionRule;
+import com.ibm.wala.automaton.grammar.string.SimpleRuleCopier;
+import com.ibm.wala.automaton.string.DeepSymbolCopier;
+import com.ibm.wala.automaton.string.FreshVariableFactory;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.IVariableFactory;
+import com.ibm.wala.automaton.string.SimpleVariableFactory;
+import com.ibm.wala.automaton.tree.BinaryTree;
+import com.ibm.wala.automaton.tree.BinaryTreeVariableFactory;
+import com.ibm.wala.automaton.tree.IBinaryTree;
+import com.ibm.wala.automaton.tree.IBinaryTreeVariable;
+import com.ibm.wala.automaton.tree.IParentBinaryTree;
 
 public class TreeGrammars extends Grammars {
   /**
@@ -212,13 +227,11 @@ public class TreeGrammars extends Grammars {
   }
 
   protected static void appendChildInternal(ITreeGrammar g, IBinaryTree s, IVariableFactory<IBinaryTreeVariable> varFactory) {
-    Map<IBinaryTreeVariable, IBinaryTreeVariable> varMap = new HashMap<IBinaryTreeVariable, IBinaryTreeVariable>();
     Set<IProductionRule> rules = new HashSet<IProductionRule>();
     IBinaryTreeVariable origStart = (IBinaryTreeVariable) g.getStartSymbol();
     IBinaryTreeVariable newStart = varFactory.createVariable(variablePrefix);
     for (Iterator<IProductionRule> i = g.getRules(origStart).iterator(); i.hasNext(); ) {
       IProductionRule r = i.next();
-      IBinaryTreeVariable v = (IBinaryTreeVariable) r.getLeft();
       IProductionRule newRule = r.copy(new DeepRuleCopier(DeepSymbolCopier.defaultCopier));
       newRule.setLeft(newStart);
       rules.add(newRule);

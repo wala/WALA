@@ -12,7 +12,6 @@ package com.ibm.wala.automaton.grammar.string;
 
 import java.util.Collection;
 
-import com.ibm.wala.automaton.AUtil;
 import com.ibm.wala.automaton.string.ISymbol;
 
 public class SimpleGrammarCopier implements IGrammarCopier {

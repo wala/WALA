@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.tree;
 
-import com.ibm.wala.automaton.string.IVariable;
 import com.ibm.wala.automaton.string.IVariableFactory;
 
 public class BinaryTreeVariableFactory implements IVariableFactory<IBinaryTreeVariable> {

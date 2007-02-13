@@ -9,7 +9,7 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.jdt.ui,
  org.eclipse.ui,
  org.eclipse.core.runtime
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.automaton,
  com.ibm.wala.automaton.grammar.string,
  com.ibm.wala.automaton.grammar.tree,

@@ -10,12 +10,21 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.grammar.tree;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-import com.ibm.wala.automaton.*;
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.automaton.tree.*;
+import com.ibm.wala.automaton.grammar.string.IProductionRule;
+import com.ibm.wala.automaton.grammar.string.ProductionRule;
+import com.ibm.wala.automaton.grammar.string.SimpleGrammarCopier;
+import com.ibm.wala.automaton.string.DeepSymbolCopier;
+import com.ibm.wala.automaton.string.IState;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.tree.BinaryTreeVariable;
+import com.ibm.wala.automaton.tree.IBinaryTree;
+import com.ibm.wala.automaton.tree.IBinaryTreeVariable;
+import com.ibm.wala.automaton.tree.StateBinaryTree;
+import com.ibm.wala.automaton.tree.TopDownTreeAutomaton;
 
 public class RTLTopDownTranslator extends RTLAbstractTranslator {
   public RTLTopDownTranslator(TopDownTreeAutomaton automaton) {

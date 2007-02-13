@@ -456,7 +456,6 @@ public class RTLComparator implements IRTLComparator {
     for( Iterator i = a.iterator(); i.hasNext(); ){
       IParentBinaryTree s = (IParentBinaryTree) i.next();
       IBinaryTree left2 = s.getLeft();
-      IBinaryTree right2 = s.getRight();
       if( check(left1, left2, ctx2) ){
         ctx.addContext(ctx2);
         return true;
@@ -464,7 +463,6 @@ public class RTLComparator implements IRTLComparator {
     }
     for( Iterator i = b.iterator(); i.hasNext(); ){
       IParentBinaryTree s = (IParentBinaryTree) i.next();
-      IBinaryTree left2 = s.getLeft();
       IBinaryTree right2 = s.getRight();
       if( check(right1, right2, ctx2) ){
         ctx.addContext(ctx2);

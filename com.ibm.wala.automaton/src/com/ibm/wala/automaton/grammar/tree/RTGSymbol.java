@@ -10,10 +10,14 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.grammar.tree;
 
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.regex.string.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.automaton.tree.*;
+import com.ibm.wala.automaton.grammar.string.IGrammarCopier;
+import com.ibm.wala.automaton.grammar.string.ProductionRule;
+import com.ibm.wala.automaton.string.IMatchContext;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.ISymbolCopier;
+import com.ibm.wala.automaton.string.ISymbolVisitor;
+import com.ibm.wala.automaton.tree.BinaryTreeVariable;
+import com.ibm.wala.automaton.tree.IBinaryTree;
 
 public class RTGSymbol implements IBinaryTree {
   private ITreeGrammar tg;

@@ -10,11 +10,17 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.grammar.string;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
-import com.ibm.wala.automaton.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.automaton.tree.IBinaryTreeVariable;
+import com.ibm.wala.automaton.AUtil;
+import com.ibm.wala.automaton.string.IVariable;
 
 public class SimpleGrammar<T extends IProductionRule> extends AbstractGrammar<T> implements ISimplify {
     // private Set<IProductionRule> rules;

@@ -10,9 +10,13 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.grammar.string;
 
-import com.ibm.wala.automaton.grammar.string.*;
 import com.ibm.wala.automaton.regex.string.StringPatternSymbol;
-import com.ibm.wala.automaton.string.*;
+import com.ibm.wala.automaton.string.IAutomaton;
+import com.ibm.wala.automaton.string.IMatchContext;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.ISymbolCopier;
+import com.ibm.wala.automaton.string.ISymbolVisitor;
+import com.ibm.wala.automaton.string.StringSymbol;
 
 public class CFGSymbol implements IGrammarSymbol<IContextFreeGrammar> {
   private IContextFreeGrammar cfg;
