@@ -11,13 +11,10 @@
 package com.ibm.wala.stringAnalysis.translator;
 
 import java.util.Collection;
-import java.util.List;
 
 import com.ibm.wala.automaton.grammar.string.IProductionRule;
 import com.ibm.wala.automaton.string.ISymbol;
 import com.ibm.wala.automaton.string.IVariable;
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.stringAnalysis.grammar.GR;

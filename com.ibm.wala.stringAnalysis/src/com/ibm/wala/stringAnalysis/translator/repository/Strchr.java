@@ -25,7 +25,6 @@ import com.ibm.wala.automaton.string.IMatchContext;
 import com.ibm.wala.automaton.string.IState;
 import com.ibm.wala.automaton.string.ISymbol;
 import com.ibm.wala.automaton.string.ITransition;
-import com.ibm.wala.automaton.string.IVariable;
 import com.ibm.wala.automaton.string.State;
 import com.ibm.wala.automaton.string.Transition;
 import com.ibm.wala.automaton.string.Variable;

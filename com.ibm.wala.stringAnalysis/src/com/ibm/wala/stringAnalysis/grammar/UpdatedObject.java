@@ -10,10 +10,13 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.grammar;
 
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.stringAnalysis.util.*;
+import com.ibm.wala.automaton.string.IMatchContext;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.IVariable;
+import com.ibm.wala.automaton.string.VariableWrapper;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.stringAnalysis.util.SAUtil;
 
 public class UpdatedObject extends VariableWrapper implements IVariable {
     private IR ir;

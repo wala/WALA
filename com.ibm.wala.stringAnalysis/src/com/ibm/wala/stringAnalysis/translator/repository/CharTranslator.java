@@ -21,7 +21,6 @@ import com.ibm.wala.automaton.string.CharSymbol;
 import com.ibm.wala.automaton.string.IMatchContext;
 import com.ibm.wala.automaton.string.ISymbol;
 import com.ibm.wala.automaton.string.StringSymbol;
-import com.ibm.wala.stringAnalysis.translator.repository.Homomorphism.Rule;
 
 public abstract class CharTranslator extends Homomorphism {
   public CharTranslator(int n) {

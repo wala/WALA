@@ -13,15 +13,31 @@
  */
 package com.ibm.wala.stringAnalysis.translator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.cfg.*;
-import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.automaton.grammar.string.IGrammar;
+import com.ibm.wala.automaton.grammar.string.IProductionRule;
+import com.ibm.wala.automaton.string.Automaton;
+import com.ibm.wala.automaton.string.IAutomaton;
+import com.ibm.wala.automaton.string.IState;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.ITransition;
+import com.ibm.wala.automaton.string.State;
+import com.ibm.wala.automaton.string.Symbol;
+import com.ibm.wala.automaton.string.Transition;
+import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
-import com.ibm.wala.stringAnalysis.grammar.*;
+import com.ibm.wala.stringAnalysis.grammar.GR;
 
 public class BB2GR implements IBB2Grammar {
   ISSA2Rule ssa2rule;

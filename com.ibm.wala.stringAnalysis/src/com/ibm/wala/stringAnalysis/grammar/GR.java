@@ -10,12 +10,29 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.grammar;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.automaton.grammar.string.ContextFreeGrammar;
+import com.ibm.wala.automaton.grammar.string.IProductionRule;
+import com.ibm.wala.automaton.grammar.string.ISimplify;
+import com.ibm.wala.automaton.grammar.string.SimpleGrammar;
+import com.ibm.wala.automaton.string.Automaton;
+import com.ibm.wala.automaton.string.IAutomaton;
+import com.ibm.wala.automaton.string.IState;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.ISymbolVisitor;
+import com.ibm.wala.automaton.string.ITransition;
+import com.ibm.wala.automaton.string.IVariable;
+import com.ibm.wala.automaton.string.State;
+import com.ibm.wala.automaton.string.Symbol;
+import com.ibm.wala.automaton.string.Transition;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.stringAnalysis.util.SAUtil;
 
 public class GR extends RegularlyControlledGrammar<GRule> {

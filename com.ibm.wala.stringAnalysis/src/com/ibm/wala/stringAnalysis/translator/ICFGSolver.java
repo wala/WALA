@@ -13,7 +13,6 @@ package com.ibm.wala.stringAnalysis.translator;
 import com.ibm.wala.automaton.grammar.string.IContextFreeGrammar;
 import com.ibm.wala.automaton.grammar.string.ISimplify;
 import com.ibm.wala.automaton.string.IVariable;
-import com.ibm.wala.stringAnalysis.grammar.IControlledGrammar;
 
 public interface ICFGSolver {
     IContextFreeGrammar solve(ISimplify grammar, IVariable startSymbol);

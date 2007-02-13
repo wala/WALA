@@ -11,8 +11,6 @@
 package com.ibm.wala.stringAnalysis.translator.repository;
 
 
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.string.*;
 
 public interface ITranslatorRepository {
     public ITranslator getTranslator(String funcName);

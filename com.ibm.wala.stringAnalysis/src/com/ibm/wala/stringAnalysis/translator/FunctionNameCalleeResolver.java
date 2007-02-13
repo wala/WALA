@@ -10,13 +10,16 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.translator;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.stringAnalysis.grammar.*;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.stringAnalysis.grammar.GR;
+import com.ibm.wala.stringAnalysis.grammar.GRule;
+import com.ibm.wala.stringAnalysis.grammar.InvocationSymbol;
 
 public class FunctionNameCalleeResolver implements ICalleeResolver {
     private IFunctionNameResolver functionNameResolver;

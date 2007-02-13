@@ -10,12 +10,18 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.grammar;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.stringAnalysis.util.*;
+import com.ibm.wala.automaton.string.IMatchContext;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.ISymbolCopier;
+import com.ibm.wala.automaton.string.ISymbolVisitor;
+import com.ibm.wala.automaton.string.StringSymbol;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.stringAnalysis.util.SAUtil;
 
 public class InvocationSymbol implements ISymbol {
   private List parameters;

@@ -10,13 +10,34 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.grammar;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.ibm.wala.automaton.AUtil.*;
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.stringAnalysis.util.*;
-import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.automaton.grammar.string.AbstractGrammar;
+import com.ibm.wala.automaton.grammar.string.ContextFreeGrammar;
+import com.ibm.wala.automaton.grammar.string.Grammars;
+import com.ibm.wala.automaton.grammar.string.IGrammar;
+import com.ibm.wala.automaton.grammar.string.IGrammarCopier;
+import com.ibm.wala.automaton.grammar.string.IProductionRule;
+import com.ibm.wala.automaton.grammar.string.SimpleGrammar;
+import com.ibm.wala.automaton.grammar.string.SimpleGrammarCopier;
+import com.ibm.wala.automaton.string.IAutomaton;
+import com.ibm.wala.automaton.string.ISTSCopier;
+import com.ibm.wala.automaton.string.IState;
+import com.ibm.wala.automaton.string.IStateTransitionSystem;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.ITransition;
+import com.ibm.wala.automaton.string.IVariable;
+import com.ibm.wala.automaton.string.SimpleSTSCopier;
+import com.ibm.wala.stringAnalysis.util.SAUtil;
 
 public class RegularlyControlledGrammar<T extends IProductionRule> extends AbstractGrammar<T> implements IRegularlyControlledGrammar<T> {
     private IAutomaton automaton;

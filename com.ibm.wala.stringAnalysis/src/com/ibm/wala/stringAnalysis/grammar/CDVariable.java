@@ -14,8 +14,6 @@ import com.ibm.wala.automaton.string.Variable;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.impl.BasicCallGraph;
-import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 
 public class CDVariable extends Variable {
     private int valueNumber;

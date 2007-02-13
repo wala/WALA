@@ -17,13 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.automaton.grammar.string.IContextFreeGrammar;
 import com.ibm.wala.automaton.grammar.string.IGrammar;
 import com.ibm.wala.automaton.grammar.string.IProductionRule;
 import com.ibm.wala.automaton.grammar.string.IRuleVisitor;
 import com.ibm.wala.automaton.grammar.string.ISimplify;
 import com.ibm.wala.automaton.string.ISymbol;
-import com.ibm.wala.automaton.string.ISymbolVisitor;
 import com.ibm.wala.automaton.string.IVariable;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;

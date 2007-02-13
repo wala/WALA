@@ -15,7 +15,6 @@ import java.util.HashSet;
 
 import com.ibm.wala.automaton.grammar.string.IProductionRule;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.stringAnalysis.grammar.GR;
 
 public abstract class SSA2RuleSelector extends SSA2RuleFilter {
   public SSA2RuleSelector(ISSA2Rule ssa2rule) {

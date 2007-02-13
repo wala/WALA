@@ -12,8 +12,6 @@ package com.ibm.wala.stringAnalysis.translator;
 
 import com.ibm.wala.automaton.grammar.string.IGrammar;
 import com.ibm.wala.cfg.IBasicBlock;
-import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
-import com.ibm.wala.ssa.IR;
 
 public interface IBB2Grammar {
     ISSA2Rule getSSA2Rule();

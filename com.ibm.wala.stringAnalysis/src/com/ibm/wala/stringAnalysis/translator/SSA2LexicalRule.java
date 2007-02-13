@@ -10,32 +10,24 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.translator;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.intset.OrdinalSet;
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.stringAnalysis.grammar.*;
-import com.ibm.wala.stringAnalysis.ssa.*;
-import com.ibm.wala.stringAnalysis.translator.SSA2Rule.BaseTranslatingProcessor;
-import com.ibm.wala.stringAnalysis.util.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.shrikeBT.BinaryOpInstruction;
+import com.ibm.wala.automaton.grammar.string.DeepGrammarCopier;
+import com.ibm.wala.automaton.grammar.string.DeepRuleCopier;
+import com.ibm.wala.automaton.grammar.string.IProductionRule;
+import com.ibm.wala.automaton.string.DeepSymbolCopier;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.IVariable;
+import com.ibm.wala.cast.ir.ssa.AstLexicalAccess;
+import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
+import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.stringAnalysis.grammar.GR;
+import com.ibm.wala.stringAnalysis.grammar.GRule;
+import com.ibm.wala.stringAnalysis.grammar.LexicalVariable;
 
 public class SSA2LexicalRule extends SSA2RuleFilter {
   private Map<ISymbol,LexicalVariable> lexicalMap;

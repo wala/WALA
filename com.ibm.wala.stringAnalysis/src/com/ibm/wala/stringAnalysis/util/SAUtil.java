@@ -10,11 +10,13 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.util;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import com.ibm.wala.automaton.AUtil;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.stringAnalysis.grammar.CDVariable;

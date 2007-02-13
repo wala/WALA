@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.ui,
  com.ibm.capa.util.automaton,
  com.ibm.wala.cast,
  com.ibm.wala.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.stringAnalysis,
  com.ibm.wala.stringAnalysis.grammar,
  com.ibm.wala.stringAnalysis.ssa,

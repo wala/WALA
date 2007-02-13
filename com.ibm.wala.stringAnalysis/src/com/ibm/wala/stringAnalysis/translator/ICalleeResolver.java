@@ -10,12 +10,13 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.translator;
 
-import java.util.*;
+import java.util.Set;
 
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.stringAnalysis.grammar.*;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.stringAnalysis.grammar.GR;
+import com.ibm.wala.stringAnalysis.grammar.GRule;
 
 public interface ICalleeResolver {
     public Set<GR> resolve(PropagationCallGraphBuilder builder, CallGraph cg, CGNode node, GR gr, GRule rule, CalleeMap calleeMap);

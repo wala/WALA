@@ -21,27 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.automaton.AUtil;
-import com.ibm.wala.automaton.AUtil.IElementMapper;
-import com.ibm.wala.automaton.grammar.string.IGrammar;
-import com.ibm.wala.automaton.grammar.string.IGrammarVisitor;
-import com.ibm.wala.automaton.grammar.string.IProductionRule;
-import com.ibm.wala.automaton.grammar.string.IRuleVisitor;
-import com.ibm.wala.automaton.string.Automatons;
-import com.ibm.wala.automaton.string.IAutomaton;
-import com.ibm.wala.automaton.string.IAutomatonVisitor;
 import com.ibm.wala.automaton.string.IState;
-import com.ibm.wala.automaton.string.IStateVisitor;
 import com.ibm.wala.automaton.string.ISymbol;
-import com.ibm.wala.automaton.string.ISymbolVisitor;
 import com.ibm.wala.automaton.string.ITransition;
 import com.ibm.wala.automaton.string.IVariable;
-import com.ibm.wala.automaton.string.State;
 import com.ibm.wala.automaton.string.Transition;
 import com.ibm.wala.cfg.IBasicBlock;
-import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -49,8 +34,9 @@ import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.stringAnalysis.grammar.ControlledGrammars;
 import com.ibm.wala.stringAnalysis.grammar.GR;
 import com.ibm.wala.stringAnalysis.grammar.IRegularlyControlledGrammar;
-import com.ibm.wala.stringAnalysis.grammar.RegularlyControlledGrammar;
 import com.ibm.wala.stringAnalysis.util.SAUtil;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
 
 public class IR2GR implements IIR2Grammar {
     IBB2Grammar bb2gr = null;

@@ -15,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;

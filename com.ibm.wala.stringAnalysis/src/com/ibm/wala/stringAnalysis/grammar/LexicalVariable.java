@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.grammar;
 
-import com.ibm.wala.automaton.string.ISymbol;
 import com.ibm.wala.automaton.string.Variable;
 
 public class LexicalVariable extends Variable {

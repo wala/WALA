@@ -10,18 +10,40 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.translator;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
-import com.ibm.wala.util.debug.*;
-import com.ibm.wala.automaton.*;
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.cfg.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.stringAnalysis.grammar.*;
-import com.ibm.wala.stringAnalysis.util.*;
+import com.ibm.wala.automaton.grammar.string.DeepRuleCopier;
+import com.ibm.wala.automaton.grammar.string.IGrammar;
+import com.ibm.wala.automaton.grammar.string.IProductionRule;
+import com.ibm.wala.automaton.grammar.string.ISimplify;
+import com.ibm.wala.automaton.grammar.string.ProductionRule;
+import com.ibm.wala.automaton.grammar.string.SimpleGrammar;
+import com.ibm.wala.automaton.grammar.string.SimpleRuleCopier;
+import com.ibm.wala.automaton.string.Automatons;
+import com.ibm.wala.automaton.string.IAutomaton;
+import com.ibm.wala.automaton.string.IMatchContext;
+import com.ibm.wala.automaton.string.IState;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.ITransition;
+import com.ibm.wala.automaton.string.IVariable;
+import com.ibm.wala.automaton.string.MatchContext;
+import com.ibm.wala.automaton.string.StringSymbol;
+import com.ibm.wala.automaton.string.VariableReplacer;
+import com.ibm.wala.stringAnalysis.grammar.GInvocationRule;
+import com.ibm.wala.stringAnalysis.grammar.GR;
+import com.ibm.wala.stringAnalysis.grammar.IRegularlyControlledGrammar;
+import com.ibm.wala.stringAnalysis.grammar.InvocationSymbol;
+import com.ibm.wala.stringAnalysis.grammar.UpdatedObject;
+import com.ibm.wala.stringAnalysis.util.SAUtil;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
 
 public class SideEffectSolver implements ISimplify {
   private IRegularlyControlledGrammar gr;
