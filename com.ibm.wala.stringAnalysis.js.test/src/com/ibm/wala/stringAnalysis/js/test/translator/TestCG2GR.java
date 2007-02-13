@@ -29,7 +29,6 @@ public class TestCG2GR extends TestJSTranslatorBase {
         CG2GR cg2gr = new CG2GR(ir2gr, new FunctionNameCalleeResolver(new JSFunctionNameResolver()));
         ISimplify g = cg2gr.translate(getCallGraphBuilder());
         assertTrue(g instanceof GR);
-        GR gr = (GR) g;
         //Trace.println("--- GR:");
         //Trace.println(SAUtil.prettyFormat(gr));
     }

@@ -76,7 +76,6 @@ public class TestGR2CFG extends TestJSTranslatorBase {
 
 
   public void testConditionalBranch() {
-    IVariable r2 = new LexicalVariable("r2");
     IContextFreeGrammar cfg = verifyCFG(new LexicalVariable("r2"), "astrA|bstrB");
     assertTrue(CFLReachability.containsSome(cfg, pattern("a" + "strA")));
     assertTrue(CFLReachability.containsSome(cfg, pattern("b" + "strB")));
@@ -125,7 +124,7 @@ public class TestGR2CFG extends TestJSTranslatorBase {
   public void testAssocArray1() {
     //TODO:
     //assertTrue(CFLReachability.containsAll(pattern("strA|strB|ASSOC"), cfg));
-    IContextFreeGrammar cfg = verifyCFG(new LexicalVariable("r21"), "ASSOC");
+    verifyCFG(new LexicalVariable("r21"), "ASSOC");
   }
 
   public void testSubstring1() {
@@ -197,7 +196,7 @@ public class TestGR2CFG extends TestJSTranslatorBase {
   }
 
   public void testSplit1() {
-    IContextFreeGrammar cfg = verifyCFG(new LexicalVariable("rSplit1"), "a|b|c|()");
+    verifyCFG(new LexicalVariable("rSplit1"), "a|b|c|()");
   }
 
   public void testProp1() {
@@ -207,10 +206,10 @@ public class TestGR2CFG extends TestJSTranslatorBase {
                 pattern("foo"),
                 Automatons.createAutomaton(new ISymbol[]{new NumberSymbol(123.0)}));
      */
-    IContextFreeGrammar cfg = verifyCFG(new LexicalVariable("rProp1"), pattern("foo"));
+    verifyCFG(new LexicalVariable("rProp1"), pattern("foo"));
   }
 
   public void testCyclic1() {
-    IContextFreeGrammar cfg = verifyCFG(new LexicalVariable("rCyclic1"), "(abcdefg)|(bcd)");
+    verifyCFG(new LexicalVariable("rCyclic1"), "(abcdefg)|(bcd)");
   }
 }

@@ -1,12 +1,11 @@
 package com.ibm.wala.stringAnalysis.js.examples;
 
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.stringAnalysis.js.client.*;
-import com.ibm.wala.util.debug.*;
+import java.io.File;
+import java.util.Collections;
 
-import java.io.*;
-import java.util.*;
+import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.stringAnalysis.js.client.JSStringAnalysisEngine;
+import com.ibm.wala.util.debug.Assertions;
 
 public class SimpleStringAnalysisDriver {
 
@@ -21,7 +20,7 @@ public class SimpleStringAnalysisDriver {
     JSStringAnalysisEngine engine = new JSStringAnalysisEngine();
     engine.setModuleFiles(
       Collections.singleton(new SourceFileModule(scriptFile, testName)));
-    CallGraph CG = engine.buildDefaultCallGraph();
+    engine.buildDefaultCallGraph();
     
     String variableName = args[1];
     String patternString = args[2];
