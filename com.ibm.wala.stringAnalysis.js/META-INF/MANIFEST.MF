@@ -12,7 +12,7 @@ Require-Bundle: org.eclipse.ui,
  com.ibm.domo.js,
  com.ibm.domo.sa,
  com.ibm.wala.core
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.stringAnalysis.js,
  com.ibm.wala.stringAnalysis.js.client,
  com.ibm.wala.stringAnalysis.js.ssa,

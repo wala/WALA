@@ -10,20 +10,22 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.js.util;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.swing.text.*;
-import javax.swing.text.html.*;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.HTML.Tag;
-import javax.swing.text.html.HTMLEditorKit.*;
+import javax.swing.text.html.HTMLEditorKit.ParserCallback;
 
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.cast.js.util.*;
+import com.ibm.wala.cast.js.util.Generator;
+import com.ibm.wala.cast.js.util.HTMLCallback;
 import com.ibm.wala.cast.js.util.Generator.CallbackFactory;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.stringAnalysis.util.*;
 
 public class WebUtil extends com.ibm.wala.cast.js.util.WebUtil {
   static public class SimpleDHTMLCallback extends HTMLCallback {

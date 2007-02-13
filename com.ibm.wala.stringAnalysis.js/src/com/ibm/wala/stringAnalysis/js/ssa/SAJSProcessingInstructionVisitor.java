@@ -10,11 +10,11 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.js.ssa;
 
-import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.cast.js.ssa.*;
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
+import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
+import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
+import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.stringAnalysis.ssa.SAProcessingInstructionVisitor;
-import com.ibm.wala.stringAnalysis.ssa.SAProcessingInstructionVisitor.Processor;
 
 public class SAJSProcessingInstructionVisitor 
   extends SAProcessingInstructionVisitor 

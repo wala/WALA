@@ -10,25 +10,26 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.js.translator;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.cast.js.loader.JSCallSiteReference;
-import com.ibm.wala.cast.js.ssa.*;
-import com.ibm.wala.cast.types.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.impl.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.stringAnalysis.grammar.*;
-import com.ibm.wala.stringAnalysis.js.ssa.*;
-import com.ibm.wala.stringAnalysis.ssa.*;
-import com.ibm.wala.stringAnalysis.translator.*;
-import com.ibm.wala.stringAnalysis.util.*;
-import com.ibm.wala.types.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import java.util.*;
+import com.ibm.wala.automaton.grammar.string.IProductionRule;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.IVariable;
+import com.ibm.wala.automaton.string.StringSymbol;
+import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
+import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
+import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
+import com.ibm.wala.ipa.callgraph.impl.FakeRootClass;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAGetInstruction;
+import com.ibm.wala.stringAnalysis.grammar.InvocationSymbol;
+import com.ibm.wala.stringAnalysis.js.ssa.SAJSProcessingInstructionVisitor;
+import com.ibm.wala.stringAnalysis.ssa.SAProcessingInstructionVisitor;
+import com.ibm.wala.stringAnalysis.translator.SSA2Rule;
+import com.ibm.wala.stringAnalysis.translator.TranslationContext;
+import com.ibm.wala.util.debug.Assertions;
 
 public class JSSSA2Rule extends SSA2Rule {
   public JSSSA2Rule(boolean approximateMembers) {

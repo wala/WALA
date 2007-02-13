@@ -10,11 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.js.translator;
 
-import java.util.*;
-
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.stringAnalysis.translator.*;
 import com.ibm.wala.stringAnalysis.translator.repository.CharAt;
 import com.ibm.wala.stringAnalysis.translator.repository.Concatenate;
 import com.ibm.wala.stringAnalysis.translator.repository.Split;
@@ -25,8 +20,6 @@ import com.ibm.wala.stringAnalysis.translator.repository.ToLocaleUpperCase;
 import com.ibm.wala.stringAnalysis.translator.repository.ToLowerCase;
 import com.ibm.wala.stringAnalysis.translator.repository.ToUpperCase;
 import com.ibm.wala.stringAnalysis.translator.repository.TranslatorRepository;
-import com.ibm.wala.stringAnalysis.util.SAUtil;
-import com.ibm.wala.util.debug.Trace;
 
 public class JSTranslatorRepository extends TranslatorRepository {
     public JSTranslatorRepository() {
