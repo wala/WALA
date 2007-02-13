@@ -90,9 +90,9 @@ public class JSStringAnalysisEngine extends JavaScriptAnalysisEngine {
     return a;
   }
 
-  private IContextFreeGrammar getCFG(IVariable v) {
-    return verifyCFG(v);
-  }
+//  private IContextFreeGrammar getCFG(IVariable v) {
+//    return verifyCFG(v);
+//  }
 	
   public IContextFreeGrammar getCFG(String variableName) {
     return verifyCFG(new LexicalVariable(variableName));
