@@ -55,7 +55,7 @@ public class TestAmtParser extends TestCase {
     }
 
     public void testPrefixedSymbol() {
-        Map m = parser.parse("$x = prefix:foo");
+        parser.parse("$x = prefix:foo");
         verifyVariable("x", new PrefixedSymbol(new StringSymbol("prefix"), new StringSymbol("foo")));
     }
     

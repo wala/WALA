@@ -18,7 +18,7 @@ import com.ibm.wala.automaton.test.tree.TreeJunitBase;
 
 public class TestTreeGrammar extends TreeJunitBase {
     public void testTreeGrammarNew() {
-        ITreeGrammar tg = TG(
+        TG(
                 BV(1),
                 new Object[]{
                     BV(1), BT("a", BV(2), BT("c")),

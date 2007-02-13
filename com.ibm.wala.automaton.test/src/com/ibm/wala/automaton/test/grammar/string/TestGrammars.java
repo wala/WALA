@@ -62,8 +62,6 @@ public class TestGrammars extends TestCase {
         new ProductionRule(new Variable("B"), new ISymbol[]{new Symbol("b")}),
       }
     );
-    Map m1 = new HashMap();
-    Map m2 = new HashMap();
     IContextFreeGrammar cfg = Grammars.createUnion(cfg1, cfg2);
     
     assertTrue(CFLReachability.containsSome(cfg1, new ISymbol[]{new Symbol("a"), new Symbol("a")}));
@@ -97,8 +95,6 @@ public class TestGrammars extends TestCase {
         new ProductionRule(new Variable("B"), new ISymbol[]{new Symbol("b")}),
       }
     );
-    Map m1 = new HashMap();
-    Map m2 = new HashMap();
     IContextFreeGrammar cfg = Grammars.createConcatenation(cfg1, cfg2);
     
     assertTrue(CFLReachability.containsSome(cfg1, new ISymbol[]{new Symbol("a"), new Symbol("a")}));
