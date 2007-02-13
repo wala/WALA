@@ -15,10 +15,15 @@ import java.util.Collection;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.internal.ui.javaeditor.EditorUtility;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.viewers.IOpenListener;
 import org.eclipse.jface.viewers.ISelection;
@@ -27,9 +32,14 @@ import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.OpenEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.ViewPart;
 
+import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.eclipse.cg.model.WalaCGModel;
 import com.ibm.wala.eclipse.cg.model.WalaJarFileCGModelWithMain;
 import com.ibm.wala.eclipse.cg.model.WalaProjectCGModelWithMain;
@@ -39,6 +49,7 @@ import com.ibm.wala.eclipse.util.CapaToJavaEltConverter;
 import com.ibm.wala.eclipse.util.JdtUtil;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
@@ -76,25 +87,25 @@ public class CGView extends ViewPart {
    */
   public void createPartControl(Composite parent) {
     IFile selectedJar = getSelectedJar();
-    if( selectedJar != null ) {
+    if (selectedJar != null) {
       createJarViewer(parent, selectedJar);
 
     } else {
       IFile selectedScript = getSelectedScript();
-      if( selectedScript != null ) {
-	createScriptViewer(parent, selectedScript);
-	
+      if (selectedScript != null) {
+        createScriptViewer(parent, selectedScript);
+
       } else {
-	IJavaProject selectedProject = getSelectedProject();
-	if( selectedProject != null ) {
-	  createViewer(parent, selectedProject);
-           
-	} else {
-	  IType selectedType = getSelectedType();
-	  if( selectedType != null ) {
-	    createViewer(parent, selectedType);
-	  }
-	}
+        IJavaProject selectedProject = getSelectedProject();
+        if (selectedProject != null) {
+          createViewer(parent, selectedProject);
+
+        } else {
+          IType selectedType = getSelectedType();
+          if (selectedType != null) {
+            createViewer(parent, selectedType);
+          }
+        }
       }
     }
   }
@@ -113,11 +124,11 @@ public class CGView extends ViewPart {
 
   private IJavaProject getSelectedProject() {
     ISelection currentSelection = getSite().getWorkbenchWindow().getSelectionService().getSelection();
-    
+
     if (currentSelection instanceof IStructuredSelection) {
       Object selected = ((IStructuredSelection) currentSelection).getFirstElement();
       if (selected instanceof IJavaProject) {
-	return (IJavaProject) selected;
+        return (IJavaProject) selected;
       }
     }
     return null;
@@ -160,7 +171,7 @@ public class CGView extends ViewPart {
   private void createScriptViewer(Composite parent, IFile htmlFile) {
     // get the selected script file
     String scriptPathName = htmlFile.getRawLocation().toString();
-//    IProject project = htmlFile.getProject();
+    // IProject project = htmlFile.getProject();
 
     // compute the call graph
     WalaCGModel model = new WalaWebPageCGModel(scriptPathName);
@@ -174,32 +185,26 @@ public class CGView extends ViewPart {
   }
 
   private void createViewer(Composite parent, IType type) {
-    IJavaProject project = type.getJavaProject(); 
-    
+    IJavaProject project = type.getJavaProject();
+
     // compute the call graph
     WalaCGModel model = new WalaProjectCGModelWithType(project, type);
-	createViewer(parent, project, model);
+    createViewer(parent, project, model);
   }
 
-  private void 
-    createViewer(Composite parent, 
-		 IJavaProject project,
-		 WalaCGModel model) 
-  {
+  private void createViewer(Composite parent, IJavaProject project, WalaCGModel model) {
     try {
       model.buildGraph();
       Collection roots = model.getRoots();
       CallGraph graph = model.getGraph();
 
       // convert call graph nodes to Eclipse JDT elements
-      final Map<Integer, IJavaElement> capaNodeIdToJavaElement =
-	CapaToJavaEltConverter.convert(model.getGraph(), project);
+      final Map<Integer, IJavaElement> capaNodeIdToJavaElement = CapaToJavaEltConverter.convert(model.getGraph(), project);
 
       // create the tree view
       viewer = new TreeViewer(parent);
       viewer.setContentProvider(new CGContentProvider(graph, roots));
-      viewer.setLabelProvider(
-	new CGJavaLabelProvider(capaNodeIdToJavaElement));
+      viewer.setLabelProvider(new CGJavaLabelProvider(capaNodeIdToJavaElement));
       viewer.setInput(getViewSite());
       viewer.addOpenListener(new IOpenListener() {
         // open the file when element in the tree is clicked
@@ -222,6 +227,31 @@ public class CGView extends ViewPart {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
               }
+            } else if (selectedElt instanceof Pair) {
+              Pair nodeAndCallSite = (Pair) selectedElt;
+              CGNode caller = (CGNode) nodeAndCallSite.fst;
+              CallSiteReference site = (CallSiteReference) nodeAndCallSite.snd;
+              IMethod method = caller.getMethod();
+
+              if (method instanceof AstMethod) {
+                Position sourcePos = ((AstMethod) method).getSourcePosition(site.getProgramCounter());
+                org.eclipse.jdt.core.IMethod jdtMethod = (org.eclipse.jdt.core.IMethod) capaNodeIdToJavaElement.get(caller
+                    .getGraphNodeId());
+                ICompilationUnit compilationUnit = jdtMethod.getCompilationUnit();
+                CompilationUnit ast = getASTRoot(compilationUnit);
+                int startPos = ast.getPosition(sourcePos.getFirstLine(), sourcePos.getFirstCol());
+                int endPos = ast.getPosition(sourcePos.getLastLine(), sourcePos.getLastCol());
+                try {
+                  IEditorPart editorPart = EditorUtility.openInEditor(jdtMethod);
+                  EditorUtility.revealInEditor(editorPart, startPos, endPos - startPos);
+                } catch (PartInitException e1) {
+                  // TODO Auto-generated catch block
+                  e1.printStackTrace();
+                } catch (JavaModelException e1) {
+                  // TODO Auto-generated catch block
+                  e1.printStackTrace();
+                }
+              }
             }
           }
         }
@@ -239,9 +269,17 @@ public class CGView extends ViewPart {
    * Passing the focus request to the viewer's control.
    */
   public void setFocus() {
-	  if( viewer != null && viewer.getControl() != null ) {
-		  viewer.getControl().setFocus();
-	  }
+    if (viewer != null && viewer.getControl() != null) {
+      viewer.getControl().setFocus();
+    }
+  }
+
+  private CompilationUnit getASTRoot(ICompilationUnit compilationUnit) {
+    ASTParser astParser = ASTParser.newParser(AST.JLS3);
+    astParser.setSource(compilationUnit);
+    astParser.setResolveBindings(true);
+    CompilationUnit astRoot = (CompilationUnit) astParser.createAST(null);
+    return astRoot;
   }
 
 }
