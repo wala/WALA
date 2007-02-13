@@ -18,15 +18,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.automaton.grammar.string.IGrammar;
 import com.ibm.wala.automaton.grammar.string.IProductionRule;
 import com.ibm.wala.automaton.string.Variable;
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
@@ -38,8 +34,7 @@ import com.ibm.wala.stringAnalysis.translator.IR2GR;
 import com.ibm.wala.stringAnalysis.translator.SSA2Rule;
 import com.ibm.wala.stringAnalysis.translator.TranslationContext;
 import com.ibm.wala.stringAnalysis.util.SAUtil;
-
-import junit.framework.TestCase;
+import com.ibm.wala.util.debug.Trace;
 
 public class TestIR2GR extends TestJSTranslatorBase {
     public void testTranslate() {

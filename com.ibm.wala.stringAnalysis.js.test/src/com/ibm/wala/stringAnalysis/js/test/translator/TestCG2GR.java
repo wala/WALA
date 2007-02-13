@@ -10,12 +10,15 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.js.test.translator;
 
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.stringAnalysis.grammar.*;
-import com.ibm.wala.stringAnalysis.js.translator.*;
-import com.ibm.wala.stringAnalysis.translator.*;
-import com.ibm.wala.stringAnalysis.util.*;
-import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.automaton.grammar.string.ISimplify;
+import com.ibm.wala.stringAnalysis.grammar.GR;
+import com.ibm.wala.stringAnalysis.js.translator.JSFunctionNameResolver;
+import com.ibm.wala.stringAnalysis.js.translator.JSSSA2Rule;
+import com.ibm.wala.stringAnalysis.translator.BB2GR;
+import com.ibm.wala.stringAnalysis.translator.CG2GR;
+import com.ibm.wala.stringAnalysis.translator.FunctionNameCalleeResolver;
+import com.ibm.wala.stringAnalysis.translator.IR2GR;
+import com.ibm.wala.stringAnalysis.translator.SSA2Rule;
 
 public class TestCG2GR extends TestJSTranslatorBase {
 

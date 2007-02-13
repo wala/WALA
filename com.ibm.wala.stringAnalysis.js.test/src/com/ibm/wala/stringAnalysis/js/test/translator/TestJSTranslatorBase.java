@@ -10,15 +10,14 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.js.test.translator;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.io.IOException;
+import java.net.URL;
 
+import com.ibm.wala.cast.js.test.Util;
+import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.stringAnalysis.test.translator.TestTranslatorBase;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.cast.js.test.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
 
 abstract public class TestJSTranslatorBase extends TestTranslatorBase {
     static private ClassLoader loader =

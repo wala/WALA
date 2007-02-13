@@ -10,13 +10,23 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.js.test.translator;
 
-import java.util.Iterator;
-
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.string.*;
-import com.ibm.wala.stringAnalysis.grammar.*;
-import com.ibm.wala.stringAnalysis.js.translator.*;
-import com.ibm.wala.stringAnalysis.translator.*;
+import com.ibm.wala.automaton.grammar.string.CFLReachability;
+import com.ibm.wala.automaton.grammar.string.Grammars;
+import com.ibm.wala.automaton.grammar.string.IContextFreeGrammar;
+import com.ibm.wala.automaton.grammar.string.ISimplify;
+import com.ibm.wala.automaton.string.IAutomaton;
+import com.ibm.wala.automaton.string.IVariable;
+import com.ibm.wala.stringAnalysis.grammar.GR;
+import com.ibm.wala.stringAnalysis.grammar.LexicalVariable;
+import com.ibm.wala.stringAnalysis.js.translator.JSFunctionNameResolver;
+import com.ibm.wala.stringAnalysis.js.translator.JSSSA2Rule;
+import com.ibm.wala.stringAnalysis.js.translator.JSTranslatorRepository;
+import com.ibm.wala.stringAnalysis.translator.BB2GR;
+import com.ibm.wala.stringAnalysis.translator.CG2GR;
+import com.ibm.wala.stringAnalysis.translator.FunctionNameCalleeResolver;
+import com.ibm.wala.stringAnalysis.translator.GR2CFG;
+import com.ibm.wala.stringAnalysis.translator.IR2GR;
+import com.ibm.wala.stringAnalysis.translator.ISSA2Rule;
 import com.ibm.wala.stringAnalysis.util.SAUtil;
 import com.ibm.wala.util.debug.Trace;
 
