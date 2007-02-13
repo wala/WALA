@@ -10,12 +10,15 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.test.grammar.tree;
 
-import com.ibm.wala.automaton.AUtil;
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.grammar.tree.*;
-import com.ibm.wala.automaton.string.*;
+import com.ibm.wala.automaton.grammar.tree.ITreeGrammar;
+import com.ibm.wala.automaton.grammar.tree.RTLTopDownTranslator;
+import com.ibm.wala.automaton.string.State;
 import com.ibm.wala.automaton.test.tree.TreeJunitBase;
-import com.ibm.wala.automaton.tree.*;
+import com.ibm.wala.automaton.tree.BinaryTree;
+import com.ibm.wala.automaton.tree.BinaryTreeVariable;
+import com.ibm.wala.automaton.tree.StateBinaryTree;
+import com.ibm.wala.automaton.tree.TopDownTreeAutomaton;
+import com.ibm.wala.automaton.tree.TreeTransition;
 
 public class TestRTLTopDownTranslator extends TreeJunitBase {
     public void testRTLTopDownTranslator1() {

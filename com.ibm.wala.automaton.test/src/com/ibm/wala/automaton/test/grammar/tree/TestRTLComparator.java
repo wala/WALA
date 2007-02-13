@@ -10,9 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.test.grammar.tree;
 
-import com.ibm.wala.automaton.grammar.tree.*;
-import com.ibm.wala.automaton.parser.*;
-import com.ibm.wala.automaton.regex.string.*;
+import com.ibm.wala.automaton.grammar.tree.ITreeGrammar;
+import com.ibm.wala.automaton.regex.string.StringPatternSymbol;
 import com.ibm.wala.automaton.string.CharSymbol;
 import com.ibm.wala.automaton.test.tree.TreeJunitBase;
 

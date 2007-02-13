@@ -10,4 +10,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  com.ibm.capa.util.automaton,
  org.junit
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true

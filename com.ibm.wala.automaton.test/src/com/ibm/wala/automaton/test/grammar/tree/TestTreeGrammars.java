@@ -10,13 +10,10 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.test.grammar.tree;
 
-import com.ibm.wala.automaton.AUtil;
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.grammar.tree.*;
-import com.ibm.wala.automaton.string.DeepSymbolCopier;
-import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.grammar.tree.ITreeGrammar;
+import com.ibm.wala.automaton.grammar.tree.TreeGrammars;
 import com.ibm.wala.automaton.test.tree.TreeJunitBase;
-import com.ibm.wala.automaton.tree.*;
+import com.ibm.wala.automaton.tree.BinaryTree;
 
 public class TestTreeGrammars extends TreeJunitBase {
   public void testTreeGrammarsNormalize1() {

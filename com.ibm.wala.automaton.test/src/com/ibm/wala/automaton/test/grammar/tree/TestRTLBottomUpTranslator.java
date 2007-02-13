@@ -10,13 +10,16 @@
  *****************************************************************************/
 package com.ibm.wala.automaton.test.grammar.tree;
 
-import java.util.*;
-
-import com.ibm.wala.automaton.*;
-import com.ibm.wala.automaton.grammar.tree.*;
-import com.ibm.wala.automaton.string.*;
+import com.ibm.wala.automaton.grammar.tree.ITreeGrammar;
+import com.ibm.wala.automaton.grammar.tree.RTLBottomUpTranslator;
+import com.ibm.wala.automaton.grammar.tree.TreeGrammars;
+import com.ibm.wala.automaton.string.State;
 import com.ibm.wala.automaton.test.tree.TreeJunitBase;
-import com.ibm.wala.automaton.tree.*;
+import com.ibm.wala.automaton.tree.BinaryTree;
+import com.ibm.wala.automaton.tree.BinaryTreeVariable;
+import com.ibm.wala.automaton.tree.BottomUpTreeAutomaton;
+import com.ibm.wala.automaton.tree.StateBinaryTree;
+import com.ibm.wala.automaton.tree.TreeTransition;
 
 public class TestRTLBottomUpTranslator extends TreeJunitBase {
     /*
