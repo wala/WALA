@@ -10,33 +10,19 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.test.grammar;
 
-import java.util.Collection;
-
-import com.ibm.wala.util.debug.Assertions;
-
 import com.ibm.wala.automaton.grammar.string.ContextFreeGrammar;
 import com.ibm.wala.automaton.grammar.string.IProductionRule;
-import com.ibm.wala.automaton.grammar.string.ProductionRule;
 import com.ibm.wala.automaton.string.Automaton;
 import com.ibm.wala.automaton.string.IAutomaton;
-import com.ibm.wala.automaton.string.IState;
 import com.ibm.wala.automaton.string.ISymbol;
 import com.ibm.wala.automaton.string.ITransition;
 import com.ibm.wala.automaton.string.State;
 import com.ibm.wala.automaton.string.Symbol;
 import com.ibm.wala.automaton.string.Transition;
-import com.ibm.wala.automaton.string.Variable;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInstructionFactory;
-import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.ValueDecorator;
-import com.ibm.wala.ssa.SSAInstruction.Visitor;
 import com.ibm.wala.stringAnalysis.grammar.GR;
 import com.ibm.wala.stringAnalysis.grammar.GRule;
 import com.ibm.wala.stringAnalysis.grammar.RegularlyControlledGrammar;
 import com.ibm.wala.stringAnalysis.util.SAUtil;
-
-import junit.framework.TestCase;
 
 public class TestGR extends GRJunitBase {
     public void testNew1() {

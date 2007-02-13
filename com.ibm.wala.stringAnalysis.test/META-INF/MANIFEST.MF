@@ -15,7 +15,7 @@ Require-Bundle: org.eclipse.ui,
  com.ibm.wala.cast,
  com.ibm.wala.core,
  com.ibm.wala.core.tests
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.stringAnalysis.test,
  com.ibm.wala.stringAnalysis.test.grammar,
  com.ibm.wala.stringAnalysis.test.translator,

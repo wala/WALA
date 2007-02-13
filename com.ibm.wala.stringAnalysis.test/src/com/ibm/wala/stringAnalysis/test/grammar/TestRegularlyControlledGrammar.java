@@ -16,21 +16,15 @@ import com.ibm.wala.automaton.grammar.string.IProductionRule;
 import com.ibm.wala.automaton.grammar.string.ProductionRule;
 import com.ibm.wala.automaton.string.Automaton;
 import com.ibm.wala.automaton.string.IAutomaton;
-import com.ibm.wala.automaton.string.IState;
 import com.ibm.wala.automaton.string.ISymbol;
 import com.ibm.wala.automaton.string.ITransition;
 import com.ibm.wala.automaton.string.State;
 import com.ibm.wala.automaton.string.Symbol;
 import com.ibm.wala.automaton.string.Transition;
 import com.ibm.wala.automaton.string.Variable;
-import com.ibm.wala.stringAnalysis.grammar.GR;
-import com.ibm.wala.stringAnalysis.grammar.GRule;
 import com.ibm.wala.stringAnalysis.grammar.IRegularlyControlledGrammar;
 import com.ibm.wala.stringAnalysis.grammar.RegularlyControlledGrammar;
-import com.ibm.wala.stringAnalysis.test.grammar.GRJunitBase.DummySSAInstruction;
 import com.ibm.wala.stringAnalysis.util.SAUtil;
-
-import junit.framework.TestCase;
 
 public class TestRegularlyControlledGrammar extends GRJunitBase {
     public void testNew1() {

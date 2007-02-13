@@ -10,13 +10,22 @@
  *****************************************************************************/
 package com.ibm.wala.stringAnalysis.test.translator;
 
-import java.util.*;
-
-import com.ibm.wala.automaton.grammar.string.*;
-import com.ibm.wala.automaton.regex.string.*;
-import com.ibm.wala.automaton.string.*;
+import com.ibm.wala.automaton.grammar.string.ContextFreeGrammar;
+import com.ibm.wala.automaton.grammar.string.Grammars;
+import com.ibm.wala.automaton.grammar.string.IContextFreeGrammar;
+import com.ibm.wala.automaton.grammar.string.IProductionRule;
+import com.ibm.wala.automaton.grammar.string.ProductionRule;
+import com.ibm.wala.automaton.grammar.string.SimpleGrammar;
+import com.ibm.wala.automaton.regex.string.IPattern;
+import com.ibm.wala.automaton.regex.string.SymbolPattern;
+import com.ibm.wala.automaton.regex.string.UnionPattern;
+import com.ibm.wala.automaton.string.CharSymbol;
+import com.ibm.wala.automaton.string.ISymbol;
+import com.ibm.wala.automaton.string.IVariable;
+import com.ibm.wala.automaton.string.Variable;
 import com.ibm.wala.stringAnalysis.test.SAJunitBase;
-import com.ibm.wala.stringAnalysis.translator.*;
+import com.ibm.wala.stringAnalysis.translator.RuleAdder;
+import com.ibm.wala.stringAnalysis.translator.VariableDefiner;
 
 public class TestTranslators extends SAJunitBase {
   public void testRuleAdder1() {
