@@ -84,7 +84,7 @@ public class Strstr extends Transducer {
     for (int i = 0; i < lastIndex - 1; i++) {
       IState nextState = new State("s" + (i + 1));
       final CharSymbol needleChar = needleChars[i];
-      final CharSymbol nextNeedleChar = needleChars[i + 1];
+//      final CharSymbol nextNeedleChar = needleChars[i + 1];
       ITransition ta = new FilteredTransition(state, nextState, v,
           new ISymbol[] {}, null, new FilteredTransition.ICondition() {
             public boolean accept(ISymbol symbol, IMatchContext ctx) {

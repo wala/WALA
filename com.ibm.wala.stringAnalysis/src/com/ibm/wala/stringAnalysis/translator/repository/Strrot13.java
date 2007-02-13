@@ -50,7 +50,7 @@ public class Strrot13 extends Transducer {
     ITransition t1 = new FilteredTransition(s0, s0, v, new ISymbol[] { v },
         new FilteredTransition.IFilter() {
           public List invoke(ISymbol symbol, List outputs) {
-            List resultOutputs = new ArrayList();
+//            List resultOutputs = new ArrayList();
             if (symbol instanceof CharSymbol) {
               char sym = ((CharSymbol) symbol).charValue();
               if (Character.isLetter(sym)) {

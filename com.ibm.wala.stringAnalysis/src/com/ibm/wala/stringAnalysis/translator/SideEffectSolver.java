@@ -313,10 +313,10 @@ public class SideEffectSolver implements ISimplify {
     }
   }
   
-  private Set<Env> translateSpecialRule(IGrammar g, IProductionRule rule, Env env, SolverContext ctx) {
-    Set<Env> envs = new HashSet<Env>();
-    return envs;
-  }
+//  private Set<Env> translateSpecialRule(IGrammar g, IProductionRule rule, Env env, SolverContext ctx) {
+//    Set<Env> envs = new HashSet<Env>();
+//    return envs;
+//  }
 
   private Set<Env> translateInvokeRule(IGrammar g, IProductionRule rule, Env env, SolverContext ctx) {
     Set<Env> envs = new HashSet<Env>();

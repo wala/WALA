@@ -28,7 +28,7 @@ import com.ibm.wala.automaton.string.Variable;
 import com.ibm.wala.stringAnalysis.translator.IConstraintSolver;
 
 public class Implode extends StringTranslator {
-  private IntRange ranges[];
+//  private IntRange ranges[];
 
   private int glueVarIndex;
 

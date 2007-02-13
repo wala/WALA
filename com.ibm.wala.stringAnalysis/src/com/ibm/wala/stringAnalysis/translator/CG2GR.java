@@ -102,7 +102,6 @@ public class CG2GR implements ICG2Grammar {
       }
       PointerKey pkey = cgbuilder.getPointerKeyForLocal(cnode.callee, invoke.getReceiver());
       OrdinalSet ikeys = cgbuilder.getPointerAnalysis().getPointsToSet(pkey);
-      Set callees = new HashSet();
       for (Iterator iterIKey = ikeys.iterator(); iterIKey.hasNext(); ) {
         InstanceKey nextIKey = (InstanceKey) iterIKey.next();
         CGNode nextNode = cgbuilder.getTargetForCall(cnode.callee, invoke.getCallSite(), nextIKey);

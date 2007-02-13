@@ -27,7 +27,6 @@ import com.ibm.wala.automaton.string.IAutomaton;
 import com.ibm.wala.automaton.string.IState;
 import com.ibm.wala.automaton.string.ISymbol;
 import com.ibm.wala.automaton.string.ITransition;
-import com.ibm.wala.automaton.string.NumberSymbol;
 import com.ibm.wala.automaton.string.State;
 import com.ibm.wala.automaton.string.StringSymbol;
 import com.ibm.wala.automaton.string.Transition;
@@ -53,12 +52,12 @@ public class Chunksplit extends Transducer {
   public IAutomaton getTransducer() {
     Variable v = new Variable("v");
 
-    int chunkLen = 76;
+//    int chunkLen = 76;
     List endStrList = new StringSymbol("\r\n").toCharSymbols();
 
     if (params.size() > chunkLenNumIndex) {
-      NumberSymbol chunkLenNum = (NumberSymbol) params.get(chunkLenNumIndex);
-      chunkLen = chunkLenNum.intValue();
+//      NumberSymbol chunkLenNum = (NumberSymbol) params.get(chunkLenNumIndex);
+//      chunkLen = chunkLenNum.intValue();
     }
     if (params.size() > endStrIndex) {
       Variable endStrVar = (Variable) params.get(endStrIndex);

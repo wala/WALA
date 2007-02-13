@@ -22,7 +22,6 @@ import java.util.Set;
 
 import com.ibm.wala.automaton.string.Automaton;
 import com.ibm.wala.automaton.string.Automatons;
-import com.ibm.wala.automaton.string.CharSymbol;
 import com.ibm.wala.automaton.string.FilteredTransition;
 import com.ibm.wala.automaton.string.IAutomaton;
 import com.ibm.wala.automaton.string.IMatchContext;
@@ -35,28 +34,28 @@ import com.ibm.wala.automaton.string.Transition;
 import com.ibm.wala.automaton.string.Variable;
 
 public class Split extends Transducer {
-  private int sepIndex;
+//  private int sepIndex;
 
-  private int limIndex;
+//  private int limIndex;
 
-  static private int defaultLimIndex = 2;
+//  static private int defaultLimIndex = 2;
 
   public Split(int target, int sepIndex, int limIndex) {
     super(target);
-    this.sepIndex = sepIndex;
-    this.limIndex = limIndex;
+//    this.sepIndex = sepIndex;
+//    this.limIndex = limIndex;
   }
 
   public Split(int target, int sepIndex) {
     super(target);
-    this.sepIndex = sepIndex;
-    this.limIndex = defaultLimIndex;
+//    this.sepIndex = sepIndex;
+//    this.limIndex = defaultLimIndex;
   }
 
   public Split(int sepIndex) {
     super();
-    this.sepIndex = sepIndex;
-    this.limIndex = defaultLimIndex;
+//    this.sepIndex = sepIndex;
+//    this.limIndex = defaultLimIndex;
   }
 
   public Split() {
@@ -64,7 +63,7 @@ public class Split extends Transducer {
   }
 
   public IAutomaton getTransducer() {
-    ISymbol sepSym = (ISymbol) params.get(sepIndex);
+//    ISymbol sepSym = (ISymbol) params.get(sepIndex);
     String sep = ":"; // TODO: should obtain this from 'sepSym'.
     // ISymbol limSym = (ISymbol) params.get(limIndex);
     IState s0 = new State("s0");
@@ -78,7 +77,6 @@ public class Split extends Transducer {
     IAutomaton a1 = Automatons.createAutomaton(sepChars);
 
     final ISymbol sepChars0 = (ISymbol) sepChars.get(0);
-    final CharSymbol c = new CharSymbol("c");
     ITransition t0 = new Transition(s0, s1, Transition.EpsilonSymbol);
     ITransition t1 = new FilteredTransition(s1, s1, new Variable("c"),
         new ISymbol[] { new Variable("c") }, null,

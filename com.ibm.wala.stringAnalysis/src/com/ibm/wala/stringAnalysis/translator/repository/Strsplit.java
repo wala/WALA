@@ -50,8 +50,8 @@ public class Strsplit extends Transducer {
     IState s0 = new State("s0");
     IState s1 = new State("s1");
     IState s2 = new State("s2");
-    IState s3 = new State("s3");
-    IState s4 = new State("s4");
+//    IState s3 = new State("s3");
+//    IState s4 = new State("s4");
 
     IState initState = s0;
     Set finalStates = new HashSet();

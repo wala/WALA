@@ -137,7 +137,6 @@ public class IR2GR implements IIR2Grammar {
     }
     
     private void translate(SSACFG cfg, IBasicBlock bb0, Map map) {
-        int n = cfg.getNumberOfNodes();
         IBasicBlock exitBB = cfg.exit();
         GR exitGR = (GR) map.get(exitBB);
         Set finalStates = exitGR.getAutomaton().getFinalStates();

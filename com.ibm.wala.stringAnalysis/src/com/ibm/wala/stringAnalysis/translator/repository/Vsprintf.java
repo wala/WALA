@@ -78,7 +78,6 @@ public class Vsprintf extends Transducer {
       finalStates.add(s1);
       finalStates.add(s2);
       finalStates.add(s3);
-      final String arg = args[i];
       ITransition t0 = new FilteredTransition(state, state, v,
           new ISymbol[] { v }, null, new FilteredTransition.ICondition() {
             public boolean accept(ISymbol symbol, IMatchContext ctx) {

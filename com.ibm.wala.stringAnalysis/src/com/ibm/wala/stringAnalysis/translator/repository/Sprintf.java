@@ -39,15 +39,15 @@ import com.ibm.wala.automaton.string.Variable;
 
 public class Sprintf extends Transducer {
 
-  private int argsVarIndex;
+//  private int argsVarIndex;
 
   public Sprintf(int target, int args1, int args2) {
     super(target);
-    this.argsVarIndex = args1;
+//    this.argsVarIndex = args1;
   }
 
   public Sprintf(int args1, int args2) {
-    this.argsVarIndex = args1;
+//    this.argsVarIndex = args1;
   }
 
   public IAutomaton getTransducer() {
@@ -127,7 +127,7 @@ public class Sprintf extends Transducer {
       ITransition t4 = new FilteredTransition(s1, s3, v, new ISymbol[] { v },
           new FilteredTransition.IFilter() {
             public List invoke(ISymbol symbol, List outputs) {
-              List newOutputs = new ArrayList();
+//              List newOutputs = new ArrayList();
               if (symbol.equals(typeSpecifier[0])) {
                 return formatStandardInteger(arg);
               }

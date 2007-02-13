@@ -353,7 +353,7 @@ public class ControlledGrammars extends Grammars {
       GRule rule = gr.getRule(input);
       if (rule instanceof GInvocationRule) {
         GInvocationRule invoke = (GInvocationRule) rule;
-        InvocationSymbol invokeSym = (InvocationSymbol) invoke.getRight(0);
+//        InvocationSymbol invokeSym = (InvocationSymbol) invoke.getRight(0);
         final Map<ISymbol,ISymbol> m = new HashMap<ISymbol,ISymbol>(invoke.getAliasMap());
         for (GR g : invoke.getGrammars()) {
           Set<ISymbol> retSyms = g.getReturnSymbols();

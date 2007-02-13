@@ -86,7 +86,7 @@ public class Htmlspecialchars extends Transducer {
     ITransition t0 = new FilteredTransition(s0, s0, v, new ISymbol[] { v },
         new FilteredTransition.IFilter() {
           public List invoke(ISymbol symbol, List outputs) {
-            List resultOutputs = new ArrayList();
+//            List resultOutputs = new ArrayList();
             CharSymbol c = (CharSymbol) outputs.get(0);
             if (c.equals(ampersandChar)) {
               return new StringSymbol("&amp;").toCharSymbols();

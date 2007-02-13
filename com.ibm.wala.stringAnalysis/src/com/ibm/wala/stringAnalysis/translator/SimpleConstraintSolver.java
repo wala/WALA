@@ -115,7 +115,7 @@ abstract public class SimpleConstraintSolver implements IConstraintSolver {
     final List newRules = new ArrayList();
     cfg.traverseRules(new IRuleVisitor(){
       public void onVisit(IProductionRule rule) {
-        IVariable var = rule.getLeft();
+//        IVariable var = rule.getLeft();
         List right = rule.getRight();
         if (!right.isEmpty() && (right.get(0) instanceof InvocationSymbol)) {
           InvocationSymbol invoke = (InvocationSymbol) right.get(0);

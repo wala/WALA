@@ -38,8 +38,8 @@ public class Addcslashes extends Transducer {
 
   private final CharSymbol backslashe = new CharSymbol("\\");
 
-  private final CharSymbol[] octChars = (CharSymbol[]) new StringSymbol(
-      "01234567").toCharSymbols().toArray(new CharSymbol[0]);
+//  private final CharSymbol[] octChars = (CharSymbol[]) new StringSymbol(
+//      "01234567").toCharSymbols().toArray(new CharSymbol[0]);
 
   public Addcslashes(int target, int charlist) {
     super(target);

@@ -160,7 +160,7 @@ public class RegularlyControlledGrammar<T extends IProductionRule> extends Abstr
      */
     public SimpleGrammar<IProductionRule> toSimple() {
         Set<IProductionRule> rules = new HashSet<IProductionRule>(ruleMap.values());
-        IState initState = automaton.getInitialState();
+//        IState initState = automaton.getInitialState();
         IVariable startVar = getStartSymbol();
         ContextFreeGrammar<IProductionRule> cfg = new ContextFreeGrammar<IProductionRule>(startVar, rules);
         return cfg;

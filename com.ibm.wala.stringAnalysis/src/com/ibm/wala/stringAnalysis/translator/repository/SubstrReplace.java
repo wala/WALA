@@ -115,7 +115,7 @@ public class SubstrReplace extends Transducer {
                 resultOutputs.add(finalRepIte.next());
               }
               resultOutputs.add(outputs.get(0));
-              Iterator ite = resultOutputs.iterator();
+//              Iterator ite = resultOutputs.iterator();
               return resultOutputs;
             }
           }, new FilteredTransition.ICondition() {
