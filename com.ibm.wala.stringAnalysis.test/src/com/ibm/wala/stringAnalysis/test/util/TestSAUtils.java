@@ -13,7 +13,7 @@ package com.ibm.wala.stringAnalysis.test.util;
 import com.ibm.wala.stringAnalysis.test.SAJunitBase;
 
 public class TestSAUtils extends SAJunitBase {
-    static private ClassLoader loader = TestSAUtils.class.getClassLoader();
+//    static private ClassLoader loader = TestSAUtils.class.getClassLoader();
     
     public void setUp() throws Exception {
         super.setUp();
