@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Java Source DOMO Front End
+Bundle-Name: Java Source WALA Front End
 Bundle-SymbolicName: com.ibm.wala.cast.java
 Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.cast.java.JavaSourcePlugin
@@ -9,7 +9,8 @@ Bundle-Localization: plugin
 Require-Bundle: com.ibm.wala.cast,
  com.ibm.wala.core,
  org.eclipse.jdt.core,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ polyglot
 Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.cast.java,
  com.ibm.wala.cast.java.analysis.typeInference,
@@ -20,24 +21,5 @@ Export-Package: com.ibm.wala.cast.java,
  com.ibm.wala.cast.java.ssa,
  com.ibm.wala.cast.java.translator,
  com.ibm.wala.cast.java.translator.polyglot,
- com.ibm.wala.cast.java.types,
- java_cup,
- java_cup.runtime,
- polyglot.ast,
- polyglot.ext.param,
- polyglot.ext.param.types,
- polyglot.frontend,
- polyglot.frontend.goals,
- polyglot.frontend.passes,
- polyglot.lex,
- polyglot.main,
- polyglot.parse,
- polyglot.qq,
- polyglot.types,
- polyglot.types.reflect,
- polyglot.util,
- polyglot.util.typedump,
- polyglot.visit
-Bundle-ClassPath: lib/java_cup.jar,
- lib/polyglot.jar,
- .
+ com.ibm.wala.cast.java.types
+Bundle-ClassPath: .
