@@ -34,7 +34,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 
   protected LexicalParent[] getParents(InstanceKey base) {
     IClass cls = base.getConcreteType();
-    if (cls instanceof JavaClass) {
+    if (isPossiblyLexicalClass(cls)) {
       try {
         Set<LexicalParent> result = new HashSet<LexicalParent>();
 
@@ -64,6 +64,10 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
       Trace.println(base + " has no parents");
 
     return new LexicalParent[0];
+  }
+
+  protected boolean isPossiblyLexicalClass(IClass cls) {
+    return cls instanceof JavaClass;
   }
 
   protected boolean needsScopeMappingKey(InstanceKey base) {
