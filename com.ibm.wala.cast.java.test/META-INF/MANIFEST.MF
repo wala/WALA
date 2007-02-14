@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Java AST DOMO Test Plug-in
+Bundle-Name: Java AST WALA Test Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast.java.test
 Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.cast.java.test.TestPlugin
