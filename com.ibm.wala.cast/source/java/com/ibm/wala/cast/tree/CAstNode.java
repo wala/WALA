@@ -117,6 +117,18 @@ public interface CAstNode {
   public static final int EXPR_LIST = 101;
   public static final int CALL = 102;
   public static final int GET_CAUGHT_EXCEPTION = 103;
+
+  /**
+   * Represents a block of sequentially-executed nodes, the last of which produces
+   * the value for the entire block (like progn from lisp).
+   * Children:
+   * <ul>
+   *   <li>node 1
+   *   <li>node 2
+   *   <li>...
+   *   <li>block value expression
+   * </ul>
+   */
   public static final int BLOCK_EXPR = 104;
   public static final int BINARY_EXPR = 105;
   public static final int UNARY_EXPR = 106;
