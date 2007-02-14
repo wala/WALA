@@ -18,9 +18,11 @@ import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author Julian Dolby
- * 
- * A simple assignment statement.   Only appears in the IR before SSA conversion
+ *  A simple assignment statement.  Only appears in the IR before SSA
+ * conversion, and temporarily when needed to undo copy propagation
+ * during processing of new lexical definitions and uses.
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
  *
  */
 public class AssignInstruction extends SSAUnaryOpInstruction {

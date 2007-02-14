@@ -19,6 +19,20 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.types.TypeReference;
 
+/**
+ *  This instruction represents iterating through the properties of
+ * its receiver object.  The use represents an object, and the l-value
+ * represents a boolean indicating whether the object has more
+ * properties.  This instruction does not currently take the
+ * previously-returned property as an argument, so it is a somewhat
+ * incomplete model as of now.
+ *
+ *  Iterating across the fields or properties of a given object is a
+ * common idiom in scripting languages, which is why the IR has
+ * first-class support for it.
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public class EachElementHasNextInstruction extends SSAAbstractUnaryInstruction {
     
   public EachElementHasNextInstruction(int lValue, int objectRef) {

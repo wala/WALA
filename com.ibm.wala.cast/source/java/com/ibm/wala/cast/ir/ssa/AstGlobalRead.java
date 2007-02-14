@@ -19,6 +19,11 @@ import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 
+/**
+ *  A read of a global variable denoted by a FieldReference
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public class AstGlobalRead extends SSAGetInstruction {
 
   public AstGlobalRead(int lhs, FieldReference global) {

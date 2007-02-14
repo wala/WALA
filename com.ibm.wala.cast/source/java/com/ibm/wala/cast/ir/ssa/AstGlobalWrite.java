@@ -19,6 +19,11 @@ import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 
+/**
+ *  A write of a global variable denoted by a FieldReference
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public class AstGlobalWrite extends SSAPutInstruction {
 
   public AstGlobalWrite(FieldReference global, int rhs) {

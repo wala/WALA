@@ -16,6 +16,19 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.*;
 import com.ibm.wala.util.debug.Assertions;
 
+/**
+ *  This abstract class adds to invoke instructions the ability to
+ * handle lexical uses and definitions during call graph construction.
+ * The lexical uses and definitions of these objects are initially
+ * empty, and get filled in by the AstSSAPropagationCallGraphBuilder,
+ * particularly its LexicalOperator objects.  This class is still
+ * abstract since the lexical scoping functionality is used by
+ * multiple languages, each of which has further specializations of
+ * invoke instructions.
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ *
+ */
 public abstract class AbstractLexicalInvoke 
   extends SSAAbstractInvokeInstruction
 {

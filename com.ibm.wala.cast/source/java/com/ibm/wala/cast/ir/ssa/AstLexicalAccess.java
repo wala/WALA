@@ -15,8 +15,20 @@ import java.util.Collection;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 
+/**
+ *  This abstract class provides helper functionality for recording
+ * lexical uses and/or definitions.  It is used in lexical read and
+ * write instructions
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public abstract class AstLexicalAccess extends SSAInstruction {
 
+  /**
+   * A single lexical access.
+   *
+   * @author Julian Dolby (dolby@us.ibm.com)
+   */
   public static class Access {
     public final String variableName;
     public final String variableDefiner; 

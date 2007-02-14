@@ -19,6 +19,18 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.types.TypeReference;
 
+/**
+ *  This instruction represents iterating through the properties of
+ * its receiver object.  The use represents an object, and the l-value
+ * represents one of a sequence of property names, suitable for yse
+ * with trhe appropriate AbstractReflectiveGet sub-class.  
+ *
+ *  Iterating across the fields or properties of a given object is a
+ * common idiom in scripting languages, which is why the IR has
+ * first-class support for it.
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public class EachElementGetInstruction extends SSAAbstractUnaryInstruction {
     
   public EachElementGetInstruction(int lValue, int objectRef) {

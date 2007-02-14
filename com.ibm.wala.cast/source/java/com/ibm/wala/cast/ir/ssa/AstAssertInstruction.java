@@ -18,6 +18,16 @@ import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
+/**
+ *  An assert statement, as found in a variety of languages.  It has a
+ * use which is the value being asserted to be true.  Additionally,
+ * there is flag which denotes whether the assertion is from a
+ * specification (the usual case) or is an assertion introduced by
+ * "compilation" of whatever sort (e.g. to add assertions regarding
+ * loop conditions needed by bounded model checking).
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public class AstAssertInstruction extends SSAInstruction {
   private final int value;
 

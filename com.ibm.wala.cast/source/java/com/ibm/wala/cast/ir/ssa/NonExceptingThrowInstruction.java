@@ -17,6 +17,12 @@ import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.TypeReference;
 
+/**
+ *  In some languages, the throw itself cannot throw exceptions other
+ * than the argument.  This instruction represents such throws.
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public class NonExceptingThrowInstruction extends SSAAbstractThrowInstruction {
 
   public NonExceptingThrowInstruction(int exception) {

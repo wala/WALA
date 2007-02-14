@@ -14,6 +14,14 @@ import com.ibm.wala.ssa.ReflectiveMemberAccess;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.ValueDecorator;
 
+/**
+ *  This abstract class represents field (a.k.a property) reads in
+ * which the field name is not a constant, but rather a computed
+ * value.  This is common in scripting languages, and so this base
+ * class is shared across all languages that need such accesses.
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public abstract class AbstractReflectiveGet extends ReflectiveMemberAccess {
   private final int result;
   

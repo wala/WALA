@@ -14,6 +14,14 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.classLoader.*;
 import com.ibm.wala.ssa.*;
 
+/**
+ *  This abstract instruction extends the abstract lexical invoke with
+ * functionality to support invocations with a fixed number of
+ * arguments---the only case in some languages and a common case even
+ * in scripting languages.
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public abstract class FixedParametersLexicalInvokeInstruction
     extends AbstractLexicalInvoke 
 {

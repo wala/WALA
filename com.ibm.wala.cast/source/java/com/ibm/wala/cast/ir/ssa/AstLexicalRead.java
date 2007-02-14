@@ -10,10 +10,20 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-
 import com.ibm.wala.ssa.*;
 import com.ibm.wala.util.debug.Assertions;
 
+/**
+ *  A set of lexical reads.  This instruction represents reads of a
+ * set of variables that are defined by a pair of variable name and
+ * defining code body (i.e. a method or function).  This instruction
+ * has one local value number definition for each lexical read, and
+ * the call graph builder ensures that these value numbers are kept
+ * consistent as lexical uses and definitions are discovered during
+ * call graph construction.
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public class AstLexicalRead extends AstLexicalAccess {
 
   public AstLexicalRead(Access[] accesses) {
