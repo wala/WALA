@@ -1,14 +1,14 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: String Analysis Plug-in
-Bundle-SymbolicName: com.ibm.domo.sa
+Bundle-SymbolicName: com.ibm.wala.stringAnalysis
 Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.stringAnalysis.SaPlugin
 Bundle-Vendor: IBM
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- com.ibm.capa.util.automaton,
+ com.ibm.wala.automaton,
  com.ibm.wala.cast,
  com.ibm.wala.core
 Eclipse-LazyStart: true
