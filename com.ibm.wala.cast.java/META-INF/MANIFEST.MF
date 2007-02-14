@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Java Source DOMO Front End
-Bundle-SymbolicName: com.ibm.domo.ast.java
+Bundle-SymbolicName: com.ibm.wala.cast.java
 Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.cast.java.JavaSourcePlugin
 Bundle-Vendor: rfuhrer@watson.ibm.com
