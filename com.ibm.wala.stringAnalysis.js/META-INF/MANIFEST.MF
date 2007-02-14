@@ -1,16 +1,16 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: String Analysis for JavaScript Plug-in
-Bundle-SymbolicName: com.ibm.domo.sa.js
+Bundle-SymbolicName: com.ibm.wala.stringAnalysis.js
 Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.stringAnalysis.js.SAJsPlugin
 Bundle-Vendor: IBM
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- com.ibm.capa.util.automaton,
- com.ibm.domo.js,
- com.ibm.domo.sa,
+ com.ibm.wala.automaton,
+ com.ibm.wala.cast.js,
+ com.ibm.wala.stringAnalysis,
  com.ibm.wala.core
 Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.stringAnalysis.js,
