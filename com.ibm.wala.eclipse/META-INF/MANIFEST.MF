@@ -6,8 +6,8 @@ Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.eclipse.Activator
 Bundle-Vendor: IBM
 Bundle-Localization: plugin
-Require-Bundle: com.ibm.domo.ast.java,
- com.ibm.domo.js,
+Require-Bundle: com.ibm.wala.cast.java,
+ com.ibm.wala.cast.js,
  com.ibm.wala.cast,
  com.ibm.wala.core,
  org.eclipse.jdt.ui,
