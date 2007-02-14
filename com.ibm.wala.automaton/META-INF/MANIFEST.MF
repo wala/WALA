@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Automaton Plug-in
-Bundle-SymbolicName: com.ibm.capa.util.automaton
+Bundle-SymbolicName: com.ibm.wala.automaton
 Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.automaton.AutomatonPlugin
 Bundle-Vendor: IBM
