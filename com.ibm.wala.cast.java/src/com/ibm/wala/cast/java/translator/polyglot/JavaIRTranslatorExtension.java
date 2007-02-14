@@ -13,6 +13,8 @@
  */
 package com.ibm.wala.cast.java.translator.polyglot;
 
+import com.ibm.wala.cast.java.translator.polyglot.PolyglotIdentityMapper;
+
 import polyglot.frontend.JLExtensionInfo;
 import polyglot.frontend.Job;
 import polyglot.frontend.goals.Goal;
@@ -24,13 +26,18 @@ import polyglot.frontend.goals.Goal;
  */
 public class JavaIRTranslatorExtension extends JLExtensionInfo implements IRTranslatorExtension {
     protected PolyglotSourceLoaderImpl fSourceLoader;
+    protected PolyglotIdentityMapper fMapper;
 
     public void setSourceLoader(PolyglotSourceLoaderImpl sourceLoader) {
 	fSourceLoader= sourceLoader;
+	fMapper= new PolyglotIdentityMapper(sourceLoader.getReference(), typeSystem());
     }
 
     public Goal getCompileGoal(Job job) {
 	return new IRGoal(job, fSourceLoader);
     }
 
+    public PolyglotIdentityMapper getIdentityMapper() {
+	return fMapper;
+    }
 }
