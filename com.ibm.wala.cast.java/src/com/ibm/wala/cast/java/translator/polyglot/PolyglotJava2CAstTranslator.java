@@ -103,7 +103,6 @@ import polyglot.types.FieldInstance;
 import polyglot.types.Flags;
 import polyglot.types.MethodInstance;
 import polyglot.types.ParsedClassType;
-import polyglot.types.PrimitiveType;
 import polyglot.types.ProcedureInstance;
 import polyglot.types.ReferenceType;
 import polyglot.types.SemanticException;
@@ -111,12 +110,9 @@ import polyglot.types.Type;
 import polyglot.types.TypeSystem;
 import polyglot.util.Position;
 
-import com.ibm.wala.cast.java.translator.polyglot.PolyglotIdentityMapper;
-import com.ibm.wala.cast.java.translator.polyglot.PolyglotJava2CAstTranslator.WalkContext;
 import com.ibm.wala.cast.java.loader.Util;
 import com.ibm.wala.cast.java.translator.JavaProcedureEntity;
 import com.ibm.wala.cast.java.translator.TranslatorToCAst;
-import com.ibm.wala.cast.java.types.JavaPrimitiveTypeMap;
 import com.ibm.wala.cast.java.types.JavaType;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
@@ -136,13 +132,11 @@ import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.IteratorPlusOne;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Pair;
@@ -333,8 +327,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
     public CAstNode visit(FieldDecl f, MethodContext ctorContext) {
       // Generate CAST node for the initializer (init())
-      Type targetType = f.memberInstance().container();
-      Type fieldType = f.type().type();
+//      Type targetType = f.memberInstance().container();
+//      Type fieldType = f.type().type();
       FieldReference fieldRef = fIdentityMapper.getFieldRef(f.fieldInstance());
       // We use null to indicate an OBJECT_REF to a static field, as the
       // FieldReference doesn't
@@ -452,6 +446,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         return makeNode(wc, fFactory, b, CAstNode.BINARY_EXPR, mapBinaryOpcode(operator), walkNodes(left, wc), walkNodes(right, wc));
     }
 
+    @SuppressWarnings("unchecked")
     private void handleThrowsFromCall(ProcedureInstance procedureInstance, Node callAstNode, WalkContext wc) {
       List<Type> throwTypes = procedureInstance.throwTypes();
       for (Iterator<Type> iter = new IteratorPlusOne<Type>(throwTypes.iterator(), fREType); iter.hasNext();) {
@@ -729,7 +724,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     public CAstNode visit(Field f, WalkContext wc) {
       Receiver target = f.target();
       Type targetType = target.type();
-      Type fieldType = f.type();
+//      Type fieldType = f.type();
 
       if (targetType.isArray()) {
         Assertions._assert(f.name().equals("length"));
