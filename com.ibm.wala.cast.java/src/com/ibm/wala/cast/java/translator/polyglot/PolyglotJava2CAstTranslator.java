@@ -99,6 +99,7 @@ import polyglot.ast.ConstructorCall.Kind;
 import polyglot.types.ArrayType;
 import polyglot.types.ClassType;
 import polyglot.types.ConstructorInstance;
+import polyglot.types.FieldInstance;
 import polyglot.types.Flags;
 import polyglot.types.MethodInstance;
 import polyglot.types.ParsedClassType;
@@ -110,6 +111,8 @@ import polyglot.types.Type;
 import polyglot.types.TypeSystem;
 import polyglot.util.Position;
 
+import com.ibm.wala.cast.java.translator.polyglot.PolyglotIdentityMapper;
+import com.ibm.wala.cast.java.translator.polyglot.PolyglotJava2CAstTranslator.WalkContext;
 import com.ibm.wala.cast.java.loader.Util;
 import com.ibm.wala.cast.java.translator.JavaProcedureEntity;
 import com.ibm.wala.cast.java.translator.TranslatorToCAst;
@@ -162,18 +165,9 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
   private TranslatingVisitor fTranslator;
 
-  protected final boolean DEBUG = true;
+  protected PolyglotIdentityMapper fIdentityMapper;
 
-  /**
-   * Map from Polyglot local ClassTypes to their enclosing methods. Used by
-   * localTypeToTypeID().<br>
-   * Needed since Polyglot doesn't provide this information. (It doesn't need
-   * to, since it doesn't need to generate unambiguous names for such entities --
-   * it hands the source off to javac to generate bytecode. It probably also
-   * wouldn't want to, since that would create back-pointers from Type objects
-   * in the TypeSystem to AST's.)
-   */
-  protected Map<Type,String> fLocalTypeMap = new LinkedHashMap<Type,String>();
+  protected final boolean DEBUG = true;
 
   final protected TranslatingVisitor getTranslator() {
     if (fTranslator == null)
@@ -200,26 +194,26 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     if (operator.equals(Unary.BIT_NOT))
       return CAstOperator.OP_BITNOT;
     if (operator.equals(Unary.NEG))
-      return CAstOperator.OP_SUB; // CAst will handle OP_SUB with only 1 arg
-    // properly !!! Hah!
+      return CAstOperator.OP_SUB; // CAst will handle OP_SUB with only 1
+    // arg properly !!! Hah!
     if (operator.equals(Unary.NOT))
       return CAstOperator.OP_NOT;
     if (operator.equals(Unary.POS))
-      return CAstOperator.OP_ADD; // CAst will throw away OP_ADD with only 1
-    // arg!!!
+      return CAstOperator.OP_ADD; // CAst will throw away OP_ADD with only
+    // 1 arg!!!
 
     if (operator.equals(Unary.POST_DEC))
-      return CAstOperator.OP_SUB; // translator will produce different CAstNode
-    // types for post dec
+      return CAstOperator.OP_SUB; // translator will produce different
+    // CAstNode types for post dec
     if (operator.equals(Unary.POST_INC))
-      return CAstOperator.OP_ADD; // translator will produce different CAstNode
-    // types for post inc
+      return CAstOperator.OP_ADD; // translator will produce different
+    // CAstNode types for post inc
     if (operator.equals(Unary.PRE_DEC))
-      return CAstOperator.OP_SUB; // translator will produce different CAstNode
-    // types for pre dec
+      return CAstOperator.OP_SUB; // translator will produce different
+    // CAstNode types for pre dec
     if (operator.equals(Unary.PRE_INC))
-      return CAstOperator.OP_ADD; // translator will produce different CAstNode
-    // types for pre inc
+      return CAstOperator.OP_ADD; // translator will produce different
+    // CAstNode types for pre inc
 
     Assertions.UNREACHABLE("Java2CAstTranslator.JavaTranslatingVisitorImpl.mapUnaryOpcode(): unrecognized unary operator.");
     return null;
@@ -310,11 +304,9 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         ClassType superClass = (ClassType) cd.constructorInstance().container().superType();
         ProcedureInstance defaultSuperCtor = findDefaultCtor(superClass);
         CAstNode[] bodyNodes = new CAstNode[inits.size() + body.statements().size() + 1];
-        CallSiteReference callSiteRef = CallSiteReference.make(0, referenceForMethod(defaultSuperCtor),
-            IInvokeInstruction.Dispatch.SPECIAL);
+        CallSiteReference callSiteRef = CallSiteReference.make(0, fIdentityMapper.getMethodRef(defaultSuperCtor), IInvokeInstruction.Dispatch.SPECIAL);
 
-        CAstNode superCall = makeNode(mc, fFactory, cd, CAstNode.CALL, makeNode(mc, fFactory, cd, CAstNode.SUPER), fFactory
-            .makeConstant(callSiteRef));
+        CAstNode superCall = makeNode(mc, fFactory, cd, CAstNode.CALL, makeNode(mc, fFactory, cd, CAstNode.SUPER), fFactory.makeConstant(callSiteRef));
 
         bodyNodes[0] = superCall;
         insertInitializers(mc, bodyNodes, 1);
@@ -343,14 +335,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       // Generate CAST node for the initializer (init())
       Type targetType = f.memberInstance().container();
       Type fieldType = f.type().type();
-      TypeReference targetTypeRef = TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(targetType));
-      TypeReference fieldTypeRef = TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(fieldType));
-      Atom fieldName = Atom.findOrCreateUnicodeAtom(f.name());
-      FieldReference fieldRef = FieldReference.findOrCreate(targetTypeRef, fieldName, fieldTypeRef);
+      FieldReference fieldRef = fIdentityMapper.getFieldRef(f.fieldInstance());
       // We use null to indicate an OBJECT_REF to a static field, as the
       // FieldReference doesn't
-      // hold enough info to determine this. In this case, (unlike field ref) we
-      // don't have a
+      // hold enough info to determine this. In this case, (unlike field ref)
+      // we don't have a
       // target expr to evaluate.
       CAstNode thisNode = f.flags().isStatic() ? null : makeNode(ctorContext, fFactory, f, CAstNode.THIS);
       CAstNode lhsNode = makeNode(ctorContext, fFactory, f, CAstNode.OBJECT_REF, thisNode, fFactory.makeConstant(fieldRef));
@@ -388,14 +377,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         Assertions._assert(false, "bad type " + ai.type() + " for " + ai + " at " + ai.position());
       }
 
-      TypeName newTypeName = TypeName.string2TypeName(typeToTypeID(ai.type()));
-      TypeReference newTypeRef = TypeReference.findOrCreate(fClassLoaderRef, newTypeName);
-
+      TypeReference newTypeRef = fIdentityMapper.getTypeRef(ai.type());
       CAstNode[] eltNodes = new CAstNode[ai.elements().size() + 1];
       int idx = 0;
 
-      eltNodes[idx++] = makeNode(wc, fFactory, ai, CAstNode.NEW, fFactory.makeConstant(newTypeRef), fFactory.makeConstant(ai
-          .elements().size()));
+      eltNodes[idx++] = makeNode(wc, fFactory, ai, CAstNode.NEW, fFactory.makeConstant(newTypeRef), fFactory.makeConstant(ai.elements().size()));
       for (Iterator iter = ai.elements().iterator(); iter.hasNext(); idx++) {
         Expr element = (Expr) iter.next();
         eltNodes[idx] = walkNodes(element, wc);
@@ -423,8 +409,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       if (la.operator() == Assign.ASSIGN)
         return makeNode(wc, fFactory, la, CAstNode.ASSIGN, walkNodes(la.left(), wc), walkNodes(la.right(), wc));
       else
-        return makeNode(wc, fFactory, la, CAstNode.ASSIGN_PRE_OP, walkNodes(la.left(), wc), walkNodes(la.right(), wc),
-            mapAssignOperator(la.operator()));
+        return makeNode(wc, fFactory, la, CAstNode.ASSIGN_PRE_OP, walkNodes(la.left(), wc), walkNodes(la.right(), wc), mapAssignOperator(la.operator()));
     }
 
     protected CAstOperator mapAssignOperator(Assign.Operator op) {
@@ -467,7 +452,6 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         return makeNode(wc, fFactory, b, CAstNode.BINARY_EXPR, mapBinaryOpcode(operator), walkNodes(left, wc), walkNodes(right, wc));
     }
 
-    @SuppressWarnings("unchecked")
     private void handleThrowsFromCall(ProcedureInstance procedureInstance, Node callAstNode, WalkContext wc) {
       List<Type> throwTypes = procedureInstance.throwTypes();
       for (Iterator<Type> iter = new IteratorPlusOne<Type>(throwTypes.iterator(), fREType); iter.hasNext();) {
@@ -500,12 +484,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       boolean isIntf = ((ClassType) methodOwner).flags().isInterface();
       Receiver target = c.target();
-      boolean isSpecial = methodInstance.flags().isPrivate()
-          || (target instanceof Special && ((Special) target).kind() == Special.SUPER);
+      boolean isSpecial = methodInstance.flags().isPrivate() || (target instanceof Special && ((Special) target).kind() == Special.SUPER);
 
       CAstNode[] children = new CAstNode[2 + methodInstance.formalTypes().size()]; // including
-      // the
-      // MethodReference
+                                                                                    // the
+                                                                                    // MethodReference
       int i = 0;
 
       if (!isStatic)
@@ -514,10 +497,10 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         children[i++] = makeNode(wc, fFactory, null, CAstNode.VOID);
 
       if (children[0] == null) {
-        Assertions._assert(children[0] != null, "no receiver for " + methodInstance + " in " + wc.getEnclosingMethodName());
+        Assertions._assert(children[0] != null, "no receiver for " + methodInstance + " in " + wc.getEnclosingMethod().signature());
       }
 
-      MethodReference methodRef = referenceForMethod(methodInstance);
+      MethodReference methodRef = fIdentityMapper.getMethodRef(methodInstance);
       int dummyPC = 0; // Just want to wrap the kind of call; the "rear end"
       // won't care about anything else...
       CallSiteReference callSiteRef;
@@ -548,21 +531,20 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       ConstructorInstance ctorInstance = cc.constructorInstance();
       ReferenceType methodOwner = ctorInstance.container();
       Assertions._assert(methodOwner.isClass());
-      MethodReference methodRef = referenceForMethod(ctorInstance);
+      MethodReference methodRef = fIdentityMapper.getMethodRef(ctorInstance);
 
       int dummyPC = 0; // Just want to wrap the kind of call; the "rear end"
       // won't care about anything else...
       CallSiteReference callSiteRef = CallSiteReference.make(dummyPC, methodRef, IInvokeInstruction.Dispatch.SPECIAL);
 
       CAstNode[] children = new CAstNode[1 + 1 + ctorInstance.formalTypes().size()]; // including
-      // the
-      // MethodReference
+                                                                                      // the
+                                                                                      // MethodReference
       int i = 0;
 
       CAstNode targetNode;
 
-      targetNode = (cc.kind() == ConstructorCall.THIS) ? makeNode(wc, fFactory, cc, CAstNode.THIS) : makeNode(wc, fFactory, cc,
-          CAstNode.SUPER);
+      targetNode = (cc.kind() == ConstructorCall.THIS) ? makeNode(wc, fFactory, cc, CAstNode.THIS) : makeNode(wc, fFactory, cc, CAstNode.SUPER);
 
       children[i++] = targetNode;
       children[i++] = fFactory.makeConstant(callSiteRef);
@@ -583,18 +565,16 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       Type castedTo = c.castType().type();
 
       // TODO maybe use a TypeReference below instead of a CAstType
-      return makeNode(wc, fFactory, c, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(castedTo)), walkNodes(arg,
-          wc));
+      return makeNode(wc, fFactory, c, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(castedTo)), walkNodes(arg, wc));
     }
 
     public CAstNode visit(Conditional c, WalkContext wc) {
-      return makeNode(wc, fFactory, c, CAstNode.IF_EXPR, walkNodes(c.cond(), wc), walkNodes(c.consequent(), wc), walkNodes(c
-          .alternative(), wc));
+      return makeNode(wc, fFactory, c, CAstNode.IF_EXPR, walkNodes(c.cond(), wc), walkNodes(c.consequent(), wc), walkNodes(c.alternative(), wc));
     }
 
     public CAstNode visit(Instanceof io, WalkContext wc) {
-      return makeNode(wc, fFactory, io, CAstNode.INSTANCEOF, fFactory.makeConstant(getTypeDict().getCAstTypeFor(
-          io.compareType().type())), walkNodes(io.expr(), wc));
+      return makeNode(wc, fFactory, io, CAstNode.INSTANCEOF, fFactory.makeConstant(getTypeDict().getCAstTypeFor(io.compareType().type())), walkNodes(io.expr(),
+          wc));
     }
 
     public CAstNode visit(BooleanLit bl, WalkContext wc) {
@@ -603,7 +583,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
     public CAstNode visit(ClassLit cl, WalkContext wc) {
       Type litType = cl.typeNode().type();
-      String typeName = typeToTypeID(litType);
+      String typeName = fIdentityMapper.typeToTypeID(litType);
       return makeNode(wc, fFactory, cl, CAstNode.TYPE_LITERAL_EXPR, fFactory.makeConstant(typeName));
     }
 
@@ -620,8 +600,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public CAstNode visit(IntLit il, WalkContext wc) {
-      return makeNode(wc, fFactory, il, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(il.type())), fFactory
-          .makeConstant((int) il.value()));
+      return makeNode(wc, fFactory, il, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(il.type())), fFactory.makeConstant((int) il.value()));
     }
 
     public CAstNode visit(StringLit sl, WalkContext wc) {
@@ -629,27 +608,29 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public CAstNode visit(New n, WalkContext wc) {
-      String newTypeNameStr;
       CAstEntity anonClass = null;
+      String newTypeNameStr;
+      TypeReference newTypeRef;
+      ConstructorInstance ctorInst = n.constructorInstance();
+      MethodReference ctorRef= fIdentityMapper.getMethodRef(ctorInst);
 
       if (n.body() != null) {
-        fLocalTypeMap.put(n.type(), wc.getEnclosingMethodName());
+        fIdentityMapper.mapLocalAnonTypeToMethod((ClassType) n.type(), wc.getEnclosingMethod());
 
         anonClass = walkEntity(n, wc);
 
         newTypeNameStr = anonClass.getType().getName();
+        TypeName newTypeName = TypeName.string2TypeName(newTypeNameStr);
+        Selector ctorSel= ctorRef.getSelector();
+        newTypeRef = TypeReference.findOrCreate(fClassLoaderRef, newTypeName);
+        ctorRef= MethodReference.findOrCreate(newTypeRef, ctorSel);
       } else {
-        newTypeNameStr = typeToTypeID(n.type());
+        newTypeRef = fIdentityMapper.getTypeRef(n.type());
       }
 
-      TypeName newTypeName = TypeName.string2TypeName(newTypeNameStr);
-      TypeReference newTypeRef = TypeReference.findOrCreate(fClassLoaderRef, newTypeName);
-      ConstructorInstance ctorInst = n.constructorInstance();
-      MethodReference ctorRef = referenceForMethod(newTypeRef, ctorInst);
-
       List/* <Expr> */args = n.arguments();
-
-      String tmpName = "ctor temp"; // this name is an illegal Java identifier
+      String tmpName = "ctor temp"; // this name is an illegal Java
+      // identifier
 
       CAstNode newNode = makeNode(wc, fFactory, n, CAstNode.NEW, fFactory.makeConstant(newTypeRef));
 
@@ -660,8 +641,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       // won't care about anything else...
       CallSiteReference callSiteRef = CallSiteReference.make(dummyPC, ctorRef, IInvokeInstruction.Dispatch.SPECIAL);
 
-      CAstNode[] argNodes = new CAstNode[args.size() + 2]; // args + recvr +
-      // ctor ref
+      CAstNode[] argNodes = new CAstNode[args.size() + 2]; // args + recvr
+      // + ctor ref
 
       int idx = 0;
       argNodes[idx++] = makeNode(wc, fFactory, n, CAstNode.VAR, fFactory.makeConstant(tmpName));
@@ -675,10 +656,9 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       handleThrowsFromCall(ctorInst, n, wc);
 
-      return makeNode(wc, fFactory, n, CAstNode.LOCAL_SCOPE, makeNode(wc, fFactory, n, CAstNode.BLOCK_EXPR, makeNode(wc, fFactory,
-          n, CAstNode.DECL_STMT, makeNode(wc, fFactory, n, CAstNode.VAR, fFactory.makeConstant(tmpName)), fFactory
-              .makeConstant(true), fFactory.makeConstant(false), newNode), callNode, makeNode(wc, fFactory, n, CAstNode.VAR,
-          fFactory.makeConstant(tmpName))));
+      return makeNode(wc, fFactory, n, CAstNode.LOCAL_SCOPE, makeNode(wc, fFactory, n, CAstNode.BLOCK_EXPR, makeNode(wc, fFactory, n, CAstNode.DECL_STMT,
+          makeNode(wc, fFactory, n, CAstNode.VAR, fFactory.makeConstant(tmpName)), fFactory.makeConstant(true), fFactory.makeConstant(false), newNode),
+          callNode, makeNode(wc, fFactory, n, CAstNode.VAR, fFactory.makeConstant(tmpName))));
     }
 
     public CAstNode visit(NewArray na, WalkContext wc) {
@@ -690,8 +670,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         return visit(ai, wc);
       } else {
         ArrayType arrayType = (ArrayType) newType;
-        TypeName arrayTypeName = TypeName.string2TypeName(typeToTypeID(arrayType));
-        TypeReference arrayTypeRef = TypeReference.findOrCreate(fClassLoaderRef, arrayTypeName);
+        TypeReference arrayTypeRef = fIdentityMapper.getTypeRef(arrayType);
 
         List/* <Expr> */dims = na.dims();
         CAstNode[] args = new CAstNode[dims.size() + 1];
@@ -709,11 +688,9 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     public CAstNode visit(Special s, WalkContext wc) {
       if (s.qualifier() != null) {
         Type owningType = s.qualifier().type();
-        TypeName owningTypeName = TypeName.string2TypeName(typeToTypeID(owningType));
-        TypeReference owningTypeRef = TypeReference.findOrCreate(fClassLoaderRef, owningTypeName);
+        TypeReference owningTypeRef = fIdentityMapper.getTypeRef(owningType);
 
-        return makeNode(wc, fFactory, s, s.kind() == Special.THIS ? CAstNode.THIS : CAstNode.SUPER, fFactory
-            .makeConstant(owningTypeRef));
+        return makeNode(wc, fFactory, s, s.kind() == Special.THIS ? CAstNode.THIS : CAstNode.SUPER, fFactory.makeConstant(owningTypeRef));
       } else {
         return makeNode(wc, fFactory, s, s.kind() == Special.THIS ? CAstNode.THIS : CAstNode.SUPER);
       }
@@ -722,12 +699,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     public CAstNode visit(Unary u, WalkContext wc) {
       if (isAssignOp(u.operator())) {
         if (u.operator().isPrefix())
-          return makeNode(wc, fFactory, u, CAstNode.ASSIGN_PRE_OP, walkNodes(u.expr(), wc), fFactory.makeConstant(1),
-              mapUnaryOpcode(u.operator()));
+          return makeNode(wc, fFactory, u, CAstNode.ASSIGN_PRE_OP, walkNodes(u.expr(), wc), fFactory.makeConstant(1), mapUnaryOpcode(u.operator()));
         else
-          return makeNode(wc, fFactory, u, CAstNode.ASSIGN_POST_OP, walkNodes(u.expr(), wc), fFactory.makeConstant(1),
-              mapUnaryOpcode(u.operator()));
-      } else if (u.operator() == Unary.POS) // drop useless unary plus operator
+          return makeNode(wc, fFactory, u, CAstNode.ASSIGN_POST_OP, walkNodes(u.expr(), wc), fFactory.makeConstant(1), mapUnaryOpcode(u.operator()));
+      } else if (u.operator() == Unary.POS) // drop useless unary plus
+        // operator
         return walkNodes(u.expr(), wc);
       else if (u.operator() == Unary.NEG) {
         CAstNode zero;
@@ -745,11 +721,9 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public CAstNode visit(ArrayAccess aa, WalkContext wc) {
-      TypeName eltTypeName = TypeName.string2TypeName(typeToTypeID(aa.type()));
-      TypeReference eltTypeRef = TypeReference.findOrCreate(fClassLoaderRef, eltTypeName);
+      TypeReference eltTypeRef = fIdentityMapper.getTypeRef(aa.type());
 
-      return makeNode(wc, fFactory, aa, CAstNode.ARRAY_REF, walkNodes(aa.array(), wc), fFactory.makeConstant(eltTypeRef),
-          walkNodes(aa.index(), wc));
+      return makeNode(wc, fFactory, aa, CAstNode.ARRAY_REF, walkNodes(aa.array(), wc), fFactory.makeConstant(eltTypeRef), walkNodes(aa.index(), wc));
     }
 
     public CAstNode visit(Field f, WalkContext wc) {
@@ -762,10 +736,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
         return makeNode(wc, fFactory, f, CAstNode.ARRAY_LENGTH, walkNodes(target, wc));
       }
-      TypeReference targetTypeRef = TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(targetType));
-      TypeReference fieldTypeRef = TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(fieldType));
-      Atom fieldName = Atom.findOrCreateUnicodeAtom(f.name());
-      FieldReference fieldRef = FieldReference.findOrCreate(targetTypeRef, fieldName, fieldTypeRef);
+      FieldReference fieldRef = fIdentityMapper.getFieldRef(f.fieldInstance());
       CAstNode targetNode = walkNodes(target, wc);
 
       if (f.fieldInstance().flags().isStatic()) {
@@ -775,13 +746,13 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         // followed by the OBJECT_REF with a null target child (which the
         // "back-end"
         // CAst -> IR translator interprets as a static ref).
-        return makeNode(wc, fFactory, f, CAstNode.BLOCK_EXPR, targetNode, makeNode(wc, fFactory, f, CAstNode.OBJECT_REF, makeNode(
-            wc, fFactory, null, CAstNode.VOID), fFactory.makeConstant(fieldRef)));
+        return makeNode(wc, fFactory, f, CAstNode.BLOCK_EXPR, targetNode, makeNode(wc, fFactory, f, CAstNode.OBJECT_REF, makeNode(wc, fFactory, null,
+            CAstNode.VOID), fFactory.makeConstant(fieldRef)));
       } else {
         Collection excTargets = wc.getCatchTargets(fNPEType);
         if (!excTargets.isEmpty()) {
-          // connect NPE exception edge to relevant catch targets (presumably
-          // only one)
+          // connect NPE exception edge to relevant catch targets
+          // (presumably only one)
           for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
             Pair catchPair = (Pair) iterator.next();
             wc.cfg().add(f, catchPair.snd, fNPEType);
@@ -874,8 +845,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public CAstNode visit(If i, WalkContext wc) {
-      return makeNode(wc, fFactory, i, CAstNode.IF_STMT, walkNodes(i.cond(), wc), walkNodes(i.consequent(), wc), walkNodes(i
-          .alternative(), wc));
+      return makeNode(wc, fFactory, i, CAstNode.IF_STMT, walkNodes(i.cond(), wc), walkNodes(i.consequent(), wc), walkNodes(i.alternative(), wc));
     }
 
     public CAstNode visit(Labeled l, WalkContext wc) {
@@ -886,8 +856,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       wc.getLabelMap().put(stmt, l.label());
 
-      CAstNode result = makeNode(wc, fFactory, l, CAstNode.LABEL_STMT, fFactory.makeConstant(l.label()), walkNodes(l.statement(),
-          wc));
+      CAstNode result = makeNode(wc, fFactory, l, CAstNode.LABEL_STMT, fFactory.makeConstant(l.label()), walkNodes(l.statement(), wc));
 
       wc.cfg().map(l, result);
 
@@ -897,7 +866,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public CAstNode visit(LocalClassDecl lcd, WalkContext wc) {
-      fLocalTypeMap.put(lcd.decl().type(), wc.getEnclosingMethodName());
+      fIdentityMapper.mapLocalAnonTypeToMethod(lcd.decl().type(), wc.getEnclosingMethod());
 
       CAstEntity classEntity = walkEntity(lcd.decl(), wc);
 
@@ -908,13 +877,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     private Node makeBreakTarget(Node loop) {
-      return fNodeFactory.Labeled(Position.COMPILER_GENERATED, "breakLabel" + loop.position().toString().replace('.', '_'),
-          fNodeFactory.Empty(Position.COMPILER_GENERATED));
+      return fNodeFactory.Labeled(Position.COMPILER_GENERATED, "breakLabel" + loop.position().toString().replace('.', '_'), fNodeFactory.Empty(Position.COMPILER_GENERATED));
     }
 
     private Node makeContinueTarget(Node loop) {
-      return fNodeFactory.Labeled(Position.COMPILER_GENERATED, "continueLabel" + loop.position().toString().replace('.', '_'),
-          fNodeFactory.Empty(Position.COMPILER_GENERATED));
+      return fNodeFactory.Labeled(Position.COMPILER_GENERATED, "continueLabel" + loop.position().toString().replace('.', '_'), fNodeFactory.Empty(Position.COMPILER_GENERATED));
     }
 
     public CAstNode visit(Do d, WalkContext wc) {
@@ -933,8 +900,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       CAstNode continueNode = walkNodes(continueTarget, wc);
 
-      return makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT, walkNodes(header, wc), makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT,
-          walkNodes(d.body(), lc), continueNode), loopGoto, walkNodes(breakTarget, wc));
+      return makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT, walkNodes(header, wc), makeNode(wc, fFactory, d, CAstNode.BLOCK_STMT, walkNodes(d.body(), lc),
+          continueNode), loopGoto, walkNodes(breakTarget, wc));
     }
 
     public CAstNode visit(For f, WalkContext wc) {
@@ -956,9 +923,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       CAstNode initsBlock = makeNode(wc, fFactory, f, CAstNode.BLOCK_STMT, inits);
       CAstNode itersBlock = makeNode(wc, fFactory, f, CAstNode.BLOCK_STMT, iters);
 
-      return makeNode(wc, fFactory, f, CAstNode.BLOCK_STMT, initsBlock, makeNode(wc, fFactory, f, CAstNode.LOOP, walkNodes(
-          f.cond(), wc), makeNode(wc, fFactory, f, CAstNode.BLOCK_STMT, walkNodes(f.body(), lc), walkNodes(continueTarget, wc),
-          itersBlock)), walkNodes(breakTarget, wc));
+      return makeNode(wc, fFactory, f, CAstNode.BLOCK_STMT, initsBlock, makeNode(wc, fFactory, f, CAstNode.LOOP, walkNodes(f.cond(), wc), makeNode(wc,
+          fFactory, f, CAstNode.BLOCK_STMT, walkNodes(f.body(), lc), walkNodes(continueTarget, wc), itersBlock)), walkNodes(breakTarget, wc));
 
     }
 
@@ -975,13 +941,12 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
        * The following loop is created sligtly differently than in jscore. It
        * doesn't have a specific target for continue.
        */
-      return makeNode(wc, fFactory, w, CAstNode.BLOCK_STMT, makeNode(wc, fFactory, w, CAstNode.LOOP, walkNodes(c, wc), makeNode(wc,
-          fFactory, w, CAstNode.BLOCK_STMT, walkNodes(b, lc), walkNodes(continueTarget, wc))), walkNodes(breakTarget, wc));
+      return makeNode(wc, fFactory, w, CAstNode.BLOCK_STMT, makeNode(wc, fFactory, w, CAstNode.LOOP, walkNodes(c, wc), makeNode(wc, fFactory, w,
+          CAstNode.BLOCK_STMT, walkNodes(b, lc), walkNodes(continueTarget, wc))), walkNodes(breakTarget, wc));
     }
 
     public CAstNode visit(Switch s, WalkContext wc) {
-      Node breakLabel = fNodeFactory.Labeled(Position.COMPILER_GENERATED, "break" + s.position().toString().replace('.', '_'),
-          fNodeFactory.Empty(Position.COMPILER_GENERATED));
+      Node breakLabel = fNodeFactory.Labeled(Position.COMPILER_GENERATED, "break" + s.position().toString().replace('.', '_'), null);
       CAstNode breakAst = walkNodes(breakLabel, wc);
       String loopLabel = (String) wc.getLabelMap().get(s);
       WalkContext child = new SwitchContext(wc, loopLabel, breakLabel);
@@ -1011,8 +976,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       }
 
       // Now produce the switch stmt itself
-      CAstNode switchAst = makeNode(wc, fFactory, s, CAstNode.SWITCH, walkNodes(cond, wc), makeNode(wc, fFactory, s,
-          CAstNode.BLOCK_STMT, caseNodes));
+      CAstNode switchAst = makeNode(wc, fFactory, s, CAstNode.SWITCH, walkNodes(cond, wc), makeNode(wc, fFactory, s, CAstNode.BLOCK_STMT, caseNodes));
 
       wc.cfg().map(s, switchAst);
       wc.cfg().map(breakLabel, breakAst);
@@ -1025,13 +989,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     public CAstNode visit(Synchronized s, WalkContext wc) {
       CAstNode exprNode = walkNodes(s.expr(), wc);
       String exprName = fFactory.makeUnique();
-      CAstNode declStmt = makeNode(wc, fFactory, s, CAstNode.DECL_STMT, makeNode(wc, fFactory, s, CAstNode.VAR, fFactory
-          .makeConstant(exprName)), fFactory.makeConstant(true), fFactory.makeConstant(false), exprNode);
-      CAstNode monitorEnterNode = makeNode(wc, fFactory, s, CAstNode.MONITOR_ENTER, makeNode(wc, fFactory, s, CAstNode.VAR,
-          fFactory.makeConstant(exprName)));
+      CAstNode declStmt = makeNode(wc, fFactory, s, CAstNode.DECL_STMT, makeNode(wc, fFactory, s, CAstNode.VAR, fFactory.makeConstant(exprName)), fFactory
+          .makeConstant(true), fFactory.makeConstant(false), exprNode);
+      CAstNode monitorEnterNode = makeNode(wc, fFactory, s, CAstNode.MONITOR_ENTER, makeNode(wc, fFactory, s, CAstNode.VAR, fFactory.makeConstant(exprName)));
       CAstNode bodyNodes = walkNodes(s.body(), wc);
-      CAstNode monitorExitNode = makeNode(wc, fFactory, s, CAstNode.MONITOR_EXIT, makeNode(wc, fFactory, s, CAstNode.VAR, fFactory
-          .makeConstant(exprName)));
+      CAstNode monitorExitNode = makeNode(wc, fFactory, s, CAstNode.MONITOR_EXIT, makeNode(wc, fFactory, s, CAstNode.VAR, fFactory.makeConstant(exprName)));
       CAstNode tryBody = makeNode(wc, fFactory, s, CAstNode.BLOCK_STMT, monitorEnterNode, bodyNodes);
       CAstNode bigBody = makeNode(wc, fFactory, s, CAstNode.UNWIND, tryBody, monitorExitNode);
 
@@ -1094,8 +1056,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       boolean isFinal = ld.flags().isFinal();
 
-      return makeNode(wc, fFactory, ld, CAstNode.DECL_STMT, makeNode(wc, fFactory, ld, CAstNode.VAR, fFactory.makeConstant(ld
-          .name())), fFactory.makeConstant(isFinal), fFactory.makeConstant(false), initNode);
+      return makeNode(wc, fFactory, ld, CAstNode.DECL_STMT, makeNode(wc, fFactory, ld, CAstNode.VAR, fFactory.makeConstant(ld.name())), fFactory
+          .makeConstant(isFinal), fFactory.makeConstant(false), initNode);
     }
 
     public CAstNode visit(Return r, WalkContext wc) {
@@ -1136,12 +1098,12 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
   }
 
   protected static final class CompilationUnitEntity implements CAstEntity {
-    private final SourceFile fFile;
+    private final String fName;
 
     private final List/* <CAstEntity> */fTopLevelDecls;
 
     public CompilationUnitEntity(SourceFile file, List/* <CAstEntity> */topLevelDecls) {
-      fFile = file;
+      fName = (file.package_() == null) ? "" : file.package_().package_().fullName().replace('.', '/');
       fTopLevelDecls = topLevelDecls;
     }
 
@@ -1150,8 +1112,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public String getName() {
-      return (fFile.package_() == null) ? "" : fFile.package_().package_().fullName().replace('.', '/');
-      // return fFile.source().path();
+      return fName;
     }
 
     public String getSignature() {
@@ -1231,10 +1192,13 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public String getName() {
+      // TODO Will the IdentityMapper do the right thing for anonymous
+      // classes?
+      // If so, we can delete most of the following logic...
       if (fType.isLocal() || fType.isAnonymous()) {
-        return anonLocalTypeToTypeID(fType);
+        return fIdentityMapper.anonLocalTypeToTypeID(fType);
       } else
-        return composeDOMOTypeDescriptor(fType);
+        return fIdentityMapper.getTypeRef(fType).getName().toString();
     }
 
     public Collection getSupertypes() {
@@ -1272,7 +1236,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
   }
 
   protected abstract static class CodeBodyEntity implements CAstEntity {
-    private final Map<CAstNode, Set<CAstEntity>> fEntities;
+    private final Map<CAstNode,Set<CAstEntity>> fEntities;
 
     public CodeBodyEntity(Map<CAstNode, CAstEntity> entities) {
       fEntities = new LinkedHashMap<CAstNode, Set<CAstEntity>>();
@@ -1407,7 +1371,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     private final String[] argumentNames;
 
     private ProcedureEntity(CAstNode pdast, TypeSystem system, ProcedureInstance pd, Type declaringType, String[] argumentNames,
-        Map<CAstNode, CAstEntity> entities, MethodContext mc) {
+        Map<CAstNode,CAstEntity> entities, MethodContext mc) {
       super(entities);
       fPdast = pdast;
       fSystem = system;
@@ -1417,8 +1381,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       fMc = mc;
     }
 
-    private ProcedureEntity(CAstNode pdast, TypeSystem system, ProcedureInstance pd, String[] argumentNames,
-        Map<CAstNode, CAstEntity> entities, MethodContext mc) {
+    private ProcedureEntity(CAstNode pdast, TypeSystem system, ProcedureInstance pd, String[] argumentNames, Map<CAstNode,CAstEntity> entities,
+        MethodContext mc) {
       this(pdast, system, pd, pd.container(), argumentNames, entities, mc);
     }
 
@@ -1482,8 +1446,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         private List<CAstType> fParameterTypes = null;
 
         public CAstType getReturnType() {
-          return fMc.getTypeDictionary().getCAstTypeFor(
-              (fPd instanceof MethodInstance) ? ((MethodInstance) fPd).returnType() : fSystem.Void());
+          return fMc.getTypeDictionary().getCAstTypeFor((fPd instanceof MethodInstance) ? ((MethodInstance) fPd).returnType() : fSystem.Void());
         }
 
         public List getArgumentTypes() {
@@ -1536,13 +1499,13 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
   }
 
   protected final class FieldEntity implements CAstEntity {
-    private final FieldDecl fFd;
+    private final FieldInstance fFI;
 
     private final WalkContext fContext;
 
     private FieldEntity(FieldDecl fd, WalkContext context) {
       super();
-      fFd = fd;
+      fFI = fd.fieldInstance();
       fContext = context;
     }
 
@@ -1551,11 +1514,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public String getName() {
-      return fFd.name();
+      return fFI.name();
     }
 
     public String getSignature() {
-      return fFd.name() + typeToTypeID(fFd.type().type());
+      return fFI.name() + fIdentityMapper.typeToTypeID(fFI.type());
     }
 
     public String[] getArgumentNames() {
@@ -1597,7 +1560,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public CAstSourcePositionMap.Position getPosition() {
-      return makePosition(fFd.position());
+      return makePosition(fFI.position());
     }
 
     public CAstNodeTypeMap getNodeTypeMap() {
@@ -1607,11 +1570,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public Collection getQualifiers() {
-      return mapFlagsToQualifiers(fFd.flags());
+      return mapFlagsToQualifiers(fFI.flags());
     }
 
     public CAstType getType() {
-      return fContext.getTypeDictionary().getCAstTypeFor(fFd.type().type());
+      return fContext.getTypeDictionary().getCAstTypeFor(fFI.type());
     }
   }
 
@@ -1634,7 +1597,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
     Node getFinally();
 
-    String getEnclosingMethodName();
+    ProcedureInstance getEnclosingMethod();
 
     Type getEnclosingType();
 
@@ -1694,8 +1657,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       return parent.getFinally();
     }
 
-    public String getEnclosingMethodName() {
-      return parent.getEnclosingMethodName();
+    public ProcedureInstance getEnclosingMethod() {
+      return parent.getEnclosingMethod();
     }
 
     public Type getEnclosingType() {
@@ -1772,11 +1735,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       return null;
     }
 
-    public String getEnclosingMethodName() {
+    public ProcedureInstance getEnclosingMethod() {
       // No one outside a method defining a local class can see it,
       // so it clearly can't escape through to the method's enclosing
       // type...
-      Assertions.UNREACHABLE("ClassContext.getEnclosingMethodName()");
+      Assertions.UNREACHABLE("ClassContext.getEnclosingMethod()");
       return null;
     }
 
@@ -1845,23 +1808,19 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
   }
 
   public class MethodContext extends CodeBodyContext {
-    final String methodName;
+    final ProcedureInstance fPI;
 
-    public MethodContext(String methodName, Map<CAstNode,CAstEntity> entities, WalkContext parent) {
+    public MethodContext(ProcedureInstance pi, Map<CAstNode,CAstEntity> entities, WalkContext parent) {
       super(parent, entities);
-      this.methodName = methodName;
-    }
-
-    public MethodContext(ProcedureInstance pd, Map<CAstNode,CAstEntity> entities, WalkContext parent) {
-      this(selectorForMethod(pd).toString(), entities, parent);
+      fPI = pi;
     }
 
     public Collection<Pair<Type,Object>> getCatchTargets(Type label) {
-      return Collections.singleton(new Pair<Type, Object>(fREType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
+      return Collections.singleton(new Pair<Type,Object>(fREType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
     }
 
-    public String getEnclosingMethodName() {
-      return methodName;
+    public ProcedureInstance getEnclosingMethod() {
+      return fPI;
     }
   }
 
@@ -1869,7 +1828,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     @SuppressWarnings("unused")
     private final Try tryNode;
 
-    Collection<Pair<Type, Object>> fCatchNodes = new ArrayList<Pair<Type, Object>>();
+    Collection<Pair<Type,Object>> fCatchNodes = new ArrayList<Pair<Type,Object>>();
 
     TryCatchContext(WalkContext parent, Try tryNode) {
       super(parent);
@@ -1877,7 +1836,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       for (Iterator catchIter = tryNode.catchBlocks().iterator(); catchIter.hasNext();) {
         Catch c = (Catch) catchIter.next();
-        Pair<Type, Object> p = new Pair<Type, Object>(c.catchType(), c);
+        Pair<Type,Object> p = new Pair<Type,Object>(c.catchType(), c);
 
         fCatchNodes.add(p);
       }
@@ -1964,8 +1923,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       return null;
     }
 
-    public String getEnclosingMethodName() {
-      Assertions.UNREACHABLE("RootContext.getEnclosingMethodName()");
+    public ProcedureInstance getEnclosingMethod() {
+      Assertions.UNREACHABLE("RootContext.getEnclosingMethod()");
       return null;
     }
 
@@ -2031,10 +1990,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
   }
 
-  public PolyglotJava2CAstTranslator(ClassLoaderReference clr, NodeFactory nf, TypeSystem ts) {
+  public PolyglotJava2CAstTranslator(ClassLoaderReference clr, NodeFactory nf, TypeSystem ts, PolyglotIdentityMapper identityMapper) {
     fClassLoaderRef = clr;
     fTypeSystem = ts;
     fNodeFactory = nf;
+    fIdentityMapper = identityMapper;
     try {
       fNPEType = fTypeSystem.typeForName("java.lang.NullPointerException");
       fREType = fTypeSystem.typeForName("java.lang.RuntimeException");
@@ -2068,7 +2028,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
     public URL getURL() {
       try {
-        return new URL("file:" + p.path());
+        String path= p.path();
+        return new URL("file:" + (path.length() == 0 ? p.file() : path));
       } catch (MalformedURLException e) {
         Assertions.UNREACHABLE(e.toString());
         return null;
@@ -2090,133 +2051,88 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
   }
 
-  private CAstNode makeNode(WalkContext wc, CAst Ast, Node n, int kind) {
+  private void setPos(WalkContext wc, CAstNode cn, Position p) {
+    if (p != null) {
+      wc.pos().setPosition(cn, makePosition(p));
+    }
+  }
+
+  protected CAstNode makeNode(WalkContext wc, CAst Ast, Node n, int kind) {
     CAstNode cn = Ast.makeNode(kind);
     setPos(wc, cn, n);
     return cn;
   }
 
-  private CAstNode makeNode(WalkContext wc, CAst Ast, Node n, int kind, CAstNode c[]) {
+  protected CAstNode makeNode(WalkContext wc, CAst Ast, Node n, int kind, CAstNode c[]) {
     CAstNode cn = Ast.makeNode(kind, c);
     setPos(wc, cn, n);
     return cn;
   }
 
-  private CAstNode makeNode(WalkContext wc, CAst Ast, Node n, int kind, CAstNode c) {
+  protected CAstNode makeNode(WalkContext wc, CAst Ast, Node n, int kind, CAstNode c) {
     CAstNode cn = Ast.makeNode(kind, c);
     setPos(wc, cn, n);
     return cn;
   }
 
-  private CAstNode makeNode(WalkContext wc, CAst Ast, Node n, int kind, CAstNode c1, CAstNode c2) {
+  protected CAstNode makeNode(WalkContext wc, CAst Ast, Node n, int kind, CAstNode c1, CAstNode c2) {
     CAstNode cn = Ast.makeNode(kind, c1, c2);
     setPos(wc, cn, n);
     return cn;
   }
 
-  private CAstNode makeNode(WalkContext wc, CAst Ast, Node n, int kind, CAstNode c1, CAstNode c2, CAstNode c3) {
+  protected CAstNode makeNode(WalkContext wc, CAst Ast, Node n, int kind, CAstNode c1, CAstNode c2, CAstNode c3) {
     CAstNode cn = Ast.makeNode(kind, c1, c2, c3);
     setPos(wc, cn, n);
     return cn;
   }
 
-  private CAstNode makeNode(WalkContext wc, CAst Ast, Node n, int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4) {
+  protected CAstNode makeNode(WalkContext wc, CAst Ast, Node n, int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4) {
     CAstNode cn = Ast.makeNode(kind, c1, c2, c3, c4);
     setPos(wc, cn, n);
     return cn;
   }
 
-  /**
-   * Translates the given Polyglot type to a name suitable for use in a DOMO
-   * TypeReference (i.e. a bytecode-compliant type name).
-   */
-  public String typeToTypeID(Type type) {
-    if (type.isPrimitive()) {
-      PrimitiveType ptype = (PrimitiveType) type;
-
-      return JavaPrimitiveTypeMap.getShortName(ptype.name());
-    } else if (type.isArray()) {
-      ArrayType atype = (ArrayType) type;
-      return "[" + typeToTypeID(atype.base());
-    } else if (type.isNull()) {
-      Assertions.UNREACHABLE("typeToTypeID() encountered a null type!");
-      return null;
-    }
-    Assertions._assert(type.isClass(), "typeToTypeID() encountered type that is neither primitive, array, nor class!");
-
-    ClassType ctype = (ClassType) type;
-
-    return (ctype.isLocal() || ctype.isAnonymous()) ? anonLocalTypeToTypeID(ctype) : composeDOMOTypeDescriptor(ctype);
+  protected CAstNode makeNode(WalkContext wc, Node n, int kind) {
+    return makeNode(wc, fFactory, n, kind);
   }
 
-  public String anonLocalTypeToTypeID(ClassType ctype) {
-    String enclosingName = (String) fLocalTypeMap.get(ctype);
+  protected CAstNode makeNode(WalkContext wc, Node n, int kind, CAstNode c[]) {
+    return makeNode(wc, fFactory, n, kind, c);
+  }
 
-    String outerTypeID = typeToTypeID(ctype.outer());
-    String shortName = (ctype.isAnonymous()) ? anonTypeName(ctype) : ctype.fullName();
+  protected CAstNode makeNode(WalkContext wc, Node n, int kind, CAstNode c) {
+    return makeNode(wc, fFactory, n, kind, c);
+  }
 
-    return outerTypeID + '/' + enclosingName + '/' + shortName;
+  protected CAstNode makeNode(WalkContext wc, Node n, int kind, CAstNode c1, CAstNode c2) {
+    return makeNode(wc, fFactory, n, kind, c1, c2);
+  }
+
+  protected CAstNode makeNode(WalkContext wc, Node n, int kind, CAstNode c1, CAstNode c2, CAstNode c3) {
+    return makeNode(wc, fFactory, n, kind, c1, c2, c3);
+  }
+
+  protected CAstNode makeNode(WalkContext wc, Node n, int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4) {
+    return makeNode(wc, fFactory, n, kind, c1, c2, c3, c4);
+  }
+
+  protected CAstNode makeNode(WalkContext wc, int kind, Position p) {
+    CAstNode cn = fFactory.makeNode(kind);
+    setPos(wc, cn, p);
+    return cn;
   }
 
   public CAstEntity translate(Object ast, String fileName) {
     return walkEntity((Node) ast, new RootContext(getTypeDict()));
   }
 
-  public String composeDOMOTypeDescriptor(ClassType ctype) {
-    return "L" + composeDOMOTypeName(ctype);
-  }
+  public interface IdentityMapper<T, M, F> {
+    MethodReference getMethodRef(M method);
 
-  public String composeDOMOTypeName(ClassType ctype) {
-    if (ctype.package_() != null) {
-      String packageName = ctype.package_().fullName();
+    TypeReference getTypeRef(T type);
 
-      Assertions._assert(ctype.fullName().startsWith(packageName));
-      return packageName.replace('.', '/') + "/" + ctype.fullName().substring(packageName.length() + 1).replace('.', '$');
-    } else {
-      return ctype.fullName().replace('.', '$');
-    }
-  }
-
-  private Selector selectorForMethod(ProcedureInstance procInstance) {
-
-    Atom name = (procInstance instanceof ConstructorInstance) ? MethodReference.initAtom : Atom
-        .findOrCreateUnicodeAtom(((MethodInstance) procInstance).name());
-
-    int numArgs = procInstance.formalTypes().size();
-    TypeName[] argTypeNames = (numArgs == 0) ? null : new TypeName[numArgs]; // Descriptor
-    // prefers
-    // null
-    // to
-    // an
-    // empty
-    // array
-    int i = 0;
-    for (Iterator iter = procInstance.formalTypes().iterator(); iter.hasNext(); i++) {
-      Type argType = (Type) iter.next();
-      argTypeNames[i] = TypeName.string2TypeName(typeToTypeID(argType));
-    }
-
-    Type retType = (procInstance instanceof ConstructorInstance) ? fTypeSystem.Void() : ((MethodInstance) procInstance)
-        .returnType();
-    TypeName retTypeName = TypeName.string2TypeName(typeToTypeID(retType));
-
-    Descriptor desc = Descriptor.findOrCreate(argTypeNames, retTypeName);
-
-    return new Selector(name, desc);
-  }
-
-  private MethodReference referenceForMethod(ProcedureInstance procInstance) {
-    TypeName ownerType = TypeName.string2TypeName(typeToTypeID(procInstance.container()));
-    TypeReference ownerTypeRef = TypeReference.findOrCreate(PolyglotJava2CAstTranslator.this.fClassLoaderRef, ownerType);
-    return referenceForMethod(ownerTypeRef, procInstance);
-  }
-
-  private MethodReference referenceForMethod(TypeReference ownerTypeRef, ProcedureInstance procInstance) {
-    // Handles both ConstructorInstance's and MethodInstance's
-
-    MethodReference methodRef = MethodReference.findOrCreate(ownerTypeRef, selectorForMethod(procInstance));
-
-    return methodRef;
+    FieldReference getFieldRef(F field);
   }
 
   protected static Collection mapFlagsToQualifiers(Flags flags) {
@@ -2251,8 +2167,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     return quals;
   }
 
-  protected void processClassMembers(List<ClassMember> members, DelegatingContext classContext,
-      List<CAstEntity> memberEntities) {
+  protected void processClassMembers(List<ClassMember> members, DelegatingContext classContext, List<CAstEntity> memberEntities) {
     // Collect all initializer-related gorp
     for (Iterator memberIter = members.iterator(); memberIter.hasNext();) {
       ClassMember member = (ClassMember) memberIter.next();
@@ -2306,7 +2221,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       CAstNode[] bodyNodes = new CAstNode[inits.size() + 1];
 
-      CallSiteReference callSiteRef = CallSiteReference.make(0, referenceForMethod(superCtor), IInvokeInstruction.Dispatch.SPECIAL);
+      CallSiteReference callSiteRef = CallSiteReference.make(0, fIdentityMapper.getMethodRef(superCtor), IInvokeInstruction.Dispatch.SPECIAL);
       CAstNode[] children = new CAstNode[fakeArguments.length + 1];
       children[0] = makeNode(mc, fFactory, n, CAstNode.SUPER);
       children[1] = fFactory.makeConstant(callSiteRef);
@@ -2323,7 +2238,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
   }
 
-  private String anonTypeName(ClassType ct) {
+  static String anonTypeName(ClassType ct) {
     Position pos = ct.position();
 
     return ct.fullName() + "$" + pos.line() + "$" + pos.column();
@@ -2362,7 +2277,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       return new ClassEntity(classContext, memberEntities, anonType, anonTypeName, n.position());
     } else if (rootNode instanceof ProcedureDecl) {
       final ProcedureDecl pd = (ProcedureDecl) rootNode;
-      final Map<CAstNode,CAstEntity> memberEntities = new LinkedHashMap<CAstNode,CAstEntity> ();
+      final Map<CAstNode,CAstEntity> memberEntities = new LinkedHashMap<CAstNode,CAstEntity>();
       final MethodContext mc = new MethodContext(pd.procedureInstance(), memberEntities, context);
 
       CAstNode pdAST = null;
