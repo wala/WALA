@@ -13,7 +13,15 @@
  */
 package com.ibm.wala.cast.java.translator.polyglot;
 
+import com.ibm.wala.cast.java.translator.polyglot.PolyglotIdentityMapper;
 
 public interface IRTranslatorExtension {
     void setSourceLoader(PolyglotSourceLoaderImpl jsli);
+
+    /**
+     * @return the identity mapper, for mapping AST nodes to WALA TypeReferences,
+     * MethodReferences and FieldReferences. Helps clients to correlate analysis
+     * results to AST nodes.
+     */
+    PolyglotIdentityMapper getIdentityMapper();
 }
