@@ -21,6 +21,7 @@ import polyglot.frontend.goals.AbstractGoal;
 import polyglot.frontend.goals.EndGoal;
 import polyglot.util.ErrorInfo;
 
+import com.ibm.wala.cast.java.translator.polyglot.PolyglotIdentityMapper;
 import com.ibm.wala.cast.java.loader.*;
 import com.ibm.wala.cast.java.translator.*;
 
@@ -54,7 +55,8 @@ public class IRGoal extends AbstractGoal implements EndGoal {
 	  new PolyglotJava2CAstTranslator(
 	    fSourceLoader.getReference(),
 	    extInfo.nodeFactory(),
-	    extInfo.typeSystem()),
+	    extInfo.typeSystem(),
+	    new PolyglotIdentityMapper(fSourceLoader.getReference(), this.job.extensionInfo().typeSystem())),
 	  fSourceLoader));
     }
 
