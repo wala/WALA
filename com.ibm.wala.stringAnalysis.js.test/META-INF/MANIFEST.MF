@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Test Plug-in
-Bundle-SymbolicName: com.ibm.domo.sa.js.test
+Bundle-SymbolicName: com.ibm.wala.stringAnalysis.js.test
 Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.stringAnalysis.js.test.TestPlugin
 Bundle-Vendor: IBM
@@ -9,13 +9,13 @@ Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.junit,
- com.ibm.domo.sa,
- com.ibm.capa.util.automaton,
- com.ibm.domo.js,
+ com.ibm.wala.stringAnalysis,
+ com.ibm.wala.automaton,
+ com.ibm.wala.cast.js,
  com.ibm.wala.cast,
- com.ibm.domo.sa.js,
- com.ibm.domo.sa.test,
- com.ibm.domo.js.test,
+ com.ibm.wala.stringAnalysis.js,
+ com.ibm.wala.stringAnalysis.test,
+ com.ibm.wala.cast.js.test,
  com.ibm.wala.core,
  com.ibm.wala.core.tests
 Eclipse-LazyStart: true
