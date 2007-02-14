@@ -62,7 +62,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  * @author rfuhrer
  */
 public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
-  public Map<CAstEntity,JavaClass> fTypeMap = HashMapFactory.make();
+  public Map<CAstEntity,IClass> fTypeMap = HashMapFactory.make();
 
   /**
    * DOMO representation of a Java class residing in a source file
