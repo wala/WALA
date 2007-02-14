@@ -112,7 +112,7 @@ public class EclipseProjectSourceAnalysisEngine extends
     }
   }
 
-  protected IRTranslatorExtension getTranslatorExtension() {
+  public IRTranslatorExtension getTranslatorExtension() {
     return new JavaIRTranslatorExtension();
   }
 
