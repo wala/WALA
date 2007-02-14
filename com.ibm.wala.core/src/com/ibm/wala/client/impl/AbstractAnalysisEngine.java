@@ -40,6 +40,10 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public abstract class AbstractAnalysisEngine implements AnalysisEngine {
 
+  public interface EntrypointBuilder {
+    Entrypoints createEntrypoints(AnalysisScope scope, ClassHierarchy cha);
+  }
+
   private final static String BASIC_FILE = "SyntheticJ2SEModel.xml";
 
   /**
@@ -118,6 +122,12 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    * Graph view of flow of pointers between heap abstractions
    */
   private HeapGraph heapGraph;
+
+  private EntrypointBuilder entrypointBuilder= new EntrypointBuilder() {
+    public Entrypoints createEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+      return makeDefaultEntrypoints(scope, cha);
+    }
+  };
 
   protected CallGraphBuilder getCallGraphBuilder(ClassHierarchy cha, AnalysisOptions options) {
     return getCallGraphBuilderFactory().make(options, cha, getScope(), getWarnings(), false);
@@ -348,6 +358,10 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return Util.makeMainEntrypoints(scope, cha);
   }
 
+  public void setEntrypointBuilder(EntrypointBuilder builder) {
+      entrypointBuilder= builder;
+  }
+
   /**
    * Builds the call graph for the analysis scope in effect, 
    * using all of the given entry points.
@@ -356,7 +370,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     buildAnalysisScope();
     ClassHierarchy cha= buildClassHierarchy();
     setClassHierarchy(cha);
-    Entrypoints eps = makeDefaultEntrypoints(scope, cha);
+    Entrypoints eps = entrypointBuilder.createEntrypoints(scope, cha);
     options = getDefaultOptions(eps);
     return buildCallGraph(cha, options, true);
   }
