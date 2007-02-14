@@ -139,7 +139,7 @@ public class ASTTraverser {
 	} else if (n instanceof Formal) {
 	    return tv.visit((Formal) n, wc);
 	} else {
-	    Assertions.UNREACHABLE("Unhandled node type in ASTTraverser.visit(): "+n.getClass());
+	    Assertions.UNREACHABLE("Unhandled node " + n + " of type " + n.getClass().getName() + " in ASTTraverser.visit().");
 	    return null;
 	}
     }
