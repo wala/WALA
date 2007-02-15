@@ -785,6 +785,7 @@ public class AmtParser {
   /*
    * Parser entry point
    */
+  @SuppressWarnings("unchecked")
   public int yyparse() {
     int yyn;
     int yyp;
