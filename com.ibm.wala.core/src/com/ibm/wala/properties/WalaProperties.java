@@ -14,12 +14,12 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collection;
 import java.util.Properties;
 
 import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.util.warnings.WalaException;
 
 public final class WalaProperties {
@@ -35,7 +35,6 @@ public final class WalaProperties {
   public final static String J2EE_DIR = "j2ee_runtime_dir"; //$NON-NLS-1$
 
   public final static String ECLIPSE_PLUGINS_DIR = "eclipse_plugins_dir"; //$NON-NLS-1$
-
 
   public static String[] getJ2SEJarFiles() {
     Properties p = null;
@@ -68,29 +67,13 @@ public final class WalaProperties {
   private static String[] getJarsInDirectory(String dir) {
     File f = new File(dir);
     Assertions.productionAssertion(f.isDirectory(), "not a directory: " + dir);
-    ArrayList<String> list = new ArrayList<String>();
-    addJarFilesFromDirectory(f, list);
-    String[] result = new String[list.size()];
+    Collection<File> col = FileUtil.listFiles(dir, ".*\\.jar$", true);
+    String[] result = new String[col.size()];
     int i = 0;
-    for (Iterator<String> it = list.iterator(); it.hasNext();) {
-      result[i++] = it.next();
+    for (File jarFile : col) {
+      result[i++] = jarFile.getAbsolutePath();
     }
     return result;
-
-  }
-
-  private static void addJarFilesFromDirectory(File f, ArrayList<String> list) {
-    File[] contents = f.listFiles();
-    for (int i = 0; i < contents.length; i++) {
-      if (contents[i].isDirectory()) {
-        addJarFilesFromDirectory(contents[i], list);
-      } else {
-        String s = contents[i].getAbsolutePath();
-        if (s.indexOf(".jar") > -1) {
-          list.add(s);
-        }
-      }
-    }
   }
 
   final static String PROPERTY_FILENAME = "wala.properties"; //$NON-NLS-1$

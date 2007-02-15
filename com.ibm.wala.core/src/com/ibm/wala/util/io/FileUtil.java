@@ -16,17 +16,13 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 
-import com.ibm.wala.util.warnings.WalaException;
-
 /**
+ * Simple utilities for accessing files.
  */
 public class FileUtil  {
   
-  /*
-   * (non-Javadoc)
-   * 
-   */
-  public static Collection<File> listFiles(String dir, String regex, boolean recurse) throws WalaException {
+
+  public static Collection<File> listFiles(String dir, String regex, boolean recurse) {
     File d = new File(dir);
     Pattern p = null;
     if (regex != null) {
@@ -51,4 +47,4 @@ public class FileUtil  {
     }
     return result;
   }
-} // FileListerImpl
+} 
