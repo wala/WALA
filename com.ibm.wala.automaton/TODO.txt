@@ -1,7 +1,0 @@
-* Rewrite all the method in a functional style.
-
-* Adapt to Java5.
-  - Use generics for collections and grammars.
-  - Use the new "for" syntax. E.g.: for(Type elem : collection){...}
-  - Use the "assert".
-  - Use the auto-boxing/unboxing.
