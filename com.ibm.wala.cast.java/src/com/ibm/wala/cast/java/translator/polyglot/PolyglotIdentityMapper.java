@@ -8,15 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import polyglot.types.ArrayType;
-import polyglot.types.ClassType;
-import polyglot.types.ConstructorInstance;
-import polyglot.types.FieldInstance;
-import polyglot.types.MethodInstance;
-import polyglot.types.PrimitiveType;
-import polyglot.types.ProcedureInstance;
-import polyglot.types.Type;
-import polyglot.types.TypeSystem;
+import polyglot.types.*;
 
 import com.ibm.wala.cast.java.translator.polyglot.PolyglotJava2CAstTranslator.IdentityMapper;
 import com.ibm.wala.cast.java.types.JavaPrimitiveTypeMap;
@@ -130,7 +122,7 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type,ProcedureInst
 
     private MethodReference referenceForMethod(ProcedureInstance procInstance) {
         // Handles both ConstructorInstance's and MethodInstance's
-        TypeName ownerType= TypeName.string2TypeName(typeToTypeID(procInstance.container()));
+        TypeName ownerType= TypeName.string2TypeName(typeToTypeID(((MemberInstance)procInstance).container()));
         TypeReference ownerTypeRef= TypeReference.findOrCreate(fClassLoaderRef, ownerType);
         MethodReference methodRef= MethodReference.findOrCreate(ownerTypeRef, selectorForMethod(procInstance));
 
