@@ -34,8 +34,8 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
 
   private final Graph<T> delegate;
 
-  public BasicOrderedMultiGraph(Graph<T> delegate) {
-    this.delegate = delegate;
+  public BasicOrderedMultiGraph() {
+    this.delegate = new SlowSparseNumberedGraph<T>();
   }
 
   /**

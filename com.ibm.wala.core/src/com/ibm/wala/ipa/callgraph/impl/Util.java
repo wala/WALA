@@ -196,8 +196,7 @@ public class Util {
   public static Entrypoints makeMainEntrypoints(ClassLoaderReference clr, ClassHierarchy cha) {
     final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
     final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
-    for (Iterator<IClass> it = cha.iterateAllClasses(); it.hasNext();) {
-      IClass klass = it.next();
+    for (IClass klass : cha) {
       if (klass.getClassLoader().getReference().equals(clr)) {
         MethodReference mainRef = MethodReference.findOrCreate(klass.getReference(), mainMethod, Descriptor
             .findOrCreateUTF8("([Ljava/lang/String;)V"));

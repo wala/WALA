@@ -74,8 +74,7 @@ public class ReferenceCleanser {
     }
     ClassHierarchy cha = getClassHierarchy();
     if (cha != null) {
-      for (Iterator<IClass> it = cha.iterateAllClasses(); it.hasNext();) {
-        IClass klass = it.next();
+      for (IClass klass : cha) {
         if (klass instanceof ShrikeClass) {
           ShrikeClass c = (ShrikeClass) klass;
           c.clearSoftCaches();

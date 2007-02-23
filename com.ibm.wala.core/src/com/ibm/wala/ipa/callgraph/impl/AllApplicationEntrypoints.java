@@ -36,8 +36,7 @@ public class AllApplicationEntrypoints extends BasicEntrypoints {
    */
   public AllApplicationEntrypoints(AnalysisScope scope, final ClassHierarchy cha) {
 
-    for (Iterator<IClass> classIt = cha.iterateAllClasses(); classIt.hasNext();) {
-      IClass klass = classIt.next();
+    for (IClass klass : cha) {
       if (!klass.isInterface()) {
         if (isApplicationClass(scope, klass)) {
           for (Iterator methodIt = klass.getDeclaredMethods().iterator(); methodIt.hasNext();) {

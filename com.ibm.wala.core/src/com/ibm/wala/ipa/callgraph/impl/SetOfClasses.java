@@ -35,8 +35,7 @@ public abstract class SetOfClasses {
    */
   public Iterator<IClass> iterator(ClassHierarchy hierarchy) {
     HashSet<IClass> result = HashSetFactory.make();
-    for (Iterator<IClass> it = hierarchy.iterateAllClasses(); it.hasNext();) {
-      IClass klass = it.next();
+    for (IClass klass : hierarchy) {
       if (contains(klass.getReference())) {
         result.add(klass);
       }

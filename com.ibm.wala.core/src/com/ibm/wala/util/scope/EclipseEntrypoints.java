@@ -68,8 +68,7 @@ public class EclipseEntrypoints extends BasicEntrypoints {
     Set<JarFile> rootJars = findRootJars(pluginName, pluginsDirName);
     // Build a set of root packages.
     Set rootPackages = findRootPackages(internalEntrypoints, rootJars);
-    for (Iterator classIt = cha.iterateAllClasses(); classIt.hasNext();) {
-      IClass klass = (IClass) classIt.next();
+    for (IClass klass : cha) {
       String className = StringStuff.jvmToReadableType(klass.getName().toString());
       if (className.contains("$")) {
         continue;

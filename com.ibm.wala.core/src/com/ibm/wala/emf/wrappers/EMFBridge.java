@@ -148,16 +148,14 @@ public class EMFBridge {
   public static com.ibm.wala.emf.wrappers.EClassHierarchyWrapper makeClassHierarchy(ClassHierarchy cha) {
     com.ibm.wala.emf.wrappers.EClassHierarchyWrapper result = new com.ibm.wala.emf.wrappers.EClassHierarchyWrapper();
     // create nodes
-    for (Iterator<IClass> it = cha.iterateAllClasses(); it.hasNext();) {
-      IClass klass = it.next();
+    for (IClass klass : cha) {
       if (!klass.isInterface()) {
         EJavaClass javaKlass = makeJavaClass(klass.getReference());
         result.addClass(javaKlass);
       }
     }
     // create edges
-    for (Iterator<IClass> it = cha.iterateAllClasses(); it.hasNext();) {
-      IClass parent = it.next();
+    for (IClass parent : cha) {
       EJavaClass parentClass = makeJavaClass(parent.getReference());
       if (!parent.isInterface()) {
         for (IClass child: cha.getImmediateSubclasses(parent)) {
@@ -179,16 +177,14 @@ public class EMFBridge {
   public static EInterfaceHierarchyWrapper makeInterfaceHierarchy(ClassHierarchy cha) {
     EInterfaceHierarchyWrapper result = new EInterfaceHierarchyWrapper();
     // create nodes
-    for (Iterator<IClass> it = cha.iterateAllClasses(); it.hasNext();) {
-      IClass klass = it.next();
+    for (IClass klass : cha) {
       if (klass.isInterface()) {
         EJavaClass javaKlass = makeJavaClass(klass.getReference());
         result.addInterface(javaKlass);
       }
     }
     // create edges
-    for (Iterator<IClass> it = cha.iterateAllClasses(); it.hasNext();) {
-      IClass parent = it.next();
+    for (IClass parent : cha) {
       EJavaClass parentClass = makeJavaClass(parent.getReference());
       if (parent.isInterface()) {
         for (IClass child: cha.getImmediateSubclasses(parent)) {
@@ -211,8 +207,7 @@ public class EMFBridge {
     com.ibm.wala.emf.wrappers.EClassHierarchyWrapper c = makeClassHierarchy(cha);
     com.ibm.wala.emf.wrappers.EInterfaceHierarchyWrapper i = makeInterfaceHierarchy(cha);
     ETypeHierarchyWrapper result = new ETypeHierarchyWrapper(c, i);
-    for (Iterator<IClass> it = cha.iterateAllClasses(); it.hasNext();) {
-      IClass klass = it.next();
+    for (IClass klass : cha) {
       EJavaClass eklass = makeJavaClass(klass.getReference());
       if (!klass.isInterface()) {
         try {

@@ -38,8 +38,7 @@ public class JUnitEntryPoints {
   public static Entrypoints make(ClassHierarchy cha) {
 
     final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
-    for (Iterator it = cha.iterateAllClasses(); it.hasNext();) {
-      IClass klass = (IClass) it.next();
+    for (IClass klass : cha) {
 
       if (klass.getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
 
@@ -95,8 +94,7 @@ public class JUnitEntryPoints {
     // TODO: improve this so that we don't need to check all the
     // classes and method to find a match
     try {
-      for (Iterator it = cha.iterateAllClasses(); it.hasNext();) {
-        IClass klass = (IClass) it.next();
+      for (IClass klass : cha) {
         TypeName klassType = klass.getName();
         if (klassType.equals(targetType) && isJUnitTestCase(klass)) {
           if (DEBUG) {

@@ -58,7 +58,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  * 
  * @author sfink
  */
-public class ClassHierarchy {
+public class ClassHierarchy implements Iterable<IClass> {
 
   private static final boolean DEBUG = false;
 
@@ -996,8 +996,7 @@ public class ClassHierarchy {
   /**
    * @return Iterator of IClass
    */
-  public Iterator<IClass> iterateAllClasses() {
-
+  public Iterator<IClass> iterator() {
     return map.keySet().iterator();
   }
 
