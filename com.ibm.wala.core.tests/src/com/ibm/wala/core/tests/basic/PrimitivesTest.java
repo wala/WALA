@@ -505,9 +505,9 @@ public class PrimitivesTest extends WalaTestCase {
   }
 
   public void testBinaryIntegerRelation() {
-    byte[] impl = new byte[] { BasicNonNegativeIntRelation.SIMPLE, BasicNonNegativeIntRelation.TWO_LEVEL,
-        BasicNonNegativeIntRelation.SIMPLE };
-    IBinaryNonNegativeIntRelation R = new BasicNonNegativeIntRelation(impl, BasicNonNegativeIntRelation.TWO_LEVEL);
+    byte[] impl = new byte[] { BasicNaturalRelation.SIMPLE, BasicNaturalRelation.TWO_LEVEL,
+        BasicNaturalRelation.SIMPLE };
+    IBinaryNaturalRelation R = new BasicNaturalRelation(impl, BasicNaturalRelation.TWO_LEVEL);
     R.add(3, 5);
     R.add(3, 7);
     R.add(3, 9);
