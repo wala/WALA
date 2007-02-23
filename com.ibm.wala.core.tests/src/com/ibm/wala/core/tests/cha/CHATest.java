@@ -114,8 +114,7 @@ public class CHATest extends WalaTestCase {
    */
   private void checkInterfaces(ClassHierarchy cha, ETypeHierarchyWrapper T) {
     try {
-      for (Iterator<IClass> it = cha.iterateAllClasses(); it.hasNext();) {
-        IClass klass = (IClass) it.next();
+      for (IClass klass : cha) {
         if (!klass.isInterface()) {
           EJavaClass eKlass = EMFBridge.makeJavaClass(klass.getReference());
           HashSet<EJavaClass> impls = new HashSet<EJavaClass>(5);

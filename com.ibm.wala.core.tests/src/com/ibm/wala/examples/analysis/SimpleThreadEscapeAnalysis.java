@@ -179,8 +179,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     HeapModel heapModel = pa.getHeapModel();
 
     // 1) static fields
-    for (Iterator<IClass> clss = cha.iterateAllClasses(); clss.hasNext();) {
-      IClass cls = (IClass) clss.next();
+    for (IClass cls : cha) {
       Collection<IField> staticFields = cls.getDeclaredStaticFields();
       for (Iterator<IField> sfs = staticFields.iterator(); sfs.hasNext();) {
         IField sf = (IField) sfs.next();
