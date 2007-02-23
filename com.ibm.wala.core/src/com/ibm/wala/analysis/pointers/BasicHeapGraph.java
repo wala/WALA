@@ -36,8 +36,8 @@ import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
-import com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
+import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
@@ -131,7 +131,7 @@ public class BasicHeapGraph extends HeapGraph {
       }
     };
 
-    final IBinaryNonNegativeIntRelation pred = computePredecessors(nodeMgr);
+    final IBinaryNaturalRelation pred = computePredecessors(nodeMgr);
     final IntFunction<Object> toNode = new IntFunction<Object>() {
       public Object apply(int i) {
         return nodeMgr.getNode(i);
@@ -281,9 +281,9 @@ public class BasicHeapGraph extends HeapGraph {
   /**
    * @return R, y \in R(x,y) if the node y is a predecessor of node x
    */
-  private IBinaryNonNegativeIntRelation computePredecessors(NumberedNodeManager<Object> nodeManager) {
-    BasicNonNegativeIntRelation R = new BasicNonNegativeIntRelation(new byte[] { BasicNonNegativeIntRelation.SIMPLE },
-        BasicNonNegativeIntRelation.SIMPLE);
+  private IBinaryNaturalRelation computePredecessors(NumberedNodeManager<Object> nodeManager) {
+    BasicNaturalRelation R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE },
+        BasicNaturalRelation.SIMPLE);
 
     // we split the following loops to improve temporal locality,
     // particularly for locals
@@ -293,7 +293,7 @@ public class BasicHeapGraph extends HeapGraph {
     return R;
   }
 
-  private void computePredecessorsForNonLocals(NumberedNodeManager<Object> nodeManager, BasicNonNegativeIntRelation R) {
+  private void computePredecessorsForNonLocals(NumberedNodeManager<Object> nodeManager, BasicNaturalRelation R) {
     // Note: we run this loop backwards on purpose, to avoid lots of resizing of
     // bitvectors
     // in the backing relation. i.e., we will add the biggest bits first.
@@ -321,7 +321,7 @@ public class BasicHeapGraph extends HeapGraph {
    * traverse locals in order, first by node, then by value number: attempt to
    * improve locality
    */
-  private void computePredecessorsForLocals(NumberedNodeManager<Object> nodeManager, BasicNonNegativeIntRelation R) {
+  private void computePredecessorsForLocals(NumberedNodeManager<Object> nodeManager, BasicNaturalRelation R) {
 
     ArrayList<LocalPointerKey> list = new ArrayList<LocalPointerKey>();
     for (Iterator it = nodeManager.iterateNodes(); it.hasNext();) {

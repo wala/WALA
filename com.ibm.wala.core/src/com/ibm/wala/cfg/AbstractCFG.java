@@ -28,7 +28,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.impl.DelegatingNumberedNodeManager;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.graph.impl.SparseNumberedEdgeManager;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.FixedSizeBitVector;
 import com.ibm.wala.util.intset.IntSet;
@@ -56,13 +56,13 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    * An object to track most normal edges in this cfg
    */
   private SparseNumberedEdgeManager<IBasicBlock> normalEdgeManager = new SparseNumberedEdgeManager<IBasicBlock>(nodeManager, 2,
-      BasicNonNegativeIntRelation.SIMPLE);
+      BasicNaturalRelation.SIMPLE);
 
   /**
    * An object to track not-to-exit exceptional edges in this cfg
    */
   private SparseNumberedEdgeManager<IBasicBlock> exceptionalEdgeManager = new SparseNumberedEdgeManager<IBasicBlock>(nodeManager,
-      0, BasicNonNegativeIntRelation.SIMPLE);
+      0, BasicNaturalRelation.SIMPLE);
 
   /**
    * Which basic blocks have a normal edge to exit()?

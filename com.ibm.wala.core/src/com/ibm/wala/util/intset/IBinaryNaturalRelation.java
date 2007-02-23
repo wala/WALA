@@ -17,7 +17,7 @@ import com.ibm.wala.util.debug.VerboseAction;
  * 
  * @author sfink
  */
-public interface IBinaryNonNegativeIntRelation extends VerboseAction, Iterable<IntPair> {
+public interface IBinaryNaturalRelation extends VerboseAction, Iterable<IntPair> {
   /**
    * Add (x,y) to the relation
    * 

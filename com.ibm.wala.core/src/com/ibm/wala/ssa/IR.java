@@ -25,7 +25,7 @@ import com.ibm.wala.util.CompoundIterator;
 import com.ibm.wala.util.StringStuff;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 
@@ -65,7 +65,7 @@ public abstract class IR {
   /**
    * Mapping from CallSiteReference program counters to instruction[] indices
    */
-  private final BasicNonNegativeIntRelation callSiteMapping = new BasicNonNegativeIntRelation();
+  private final BasicNaturalRelation callSiteMapping = new BasicNaturalRelation();
 
   /**
    * Mapping from NewSiteReference program counters to instruction[] indices

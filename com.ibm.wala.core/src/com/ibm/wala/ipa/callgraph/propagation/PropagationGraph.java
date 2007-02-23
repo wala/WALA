@@ -43,8 +43,8 @@ import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.impl.SparseNumberedEdgeManager;
 import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.heapTrace.HeapTracer;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
-import com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
+import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntPair;
 import com.ibm.wala.util.intset.IntSet;
@@ -70,7 +70,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
   /**
    * Track edges (equations) that are not represented implicitly
    */
-  private final EdgeManager<INodeWithNumber> edgeManager = new SparseNumberedEdgeManager<INodeWithNumber>(nodeManager, 2, BasicNonNegativeIntRelation.SIMPLE);
+  private final EdgeManager<INodeWithNumber> edgeManager = new SparseNumberedEdgeManager<INodeWithNumber>(nodeManager, 2, BasicNaturalRelation.SIMPLE);
 
   private final DelegateGraph delegateGraph = new DelegateGraph();
 
@@ -84,7 +84,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
    * i op j is an equation in the graph
    * 
    */
-  private final SmallMap<UnaryOperator,IBinaryNonNegativeIntRelation> implicitUnaryMap = new SmallMap<UnaryOperator,IBinaryNonNegativeIntRelation>();
+  private final SmallMap<UnaryOperator,IBinaryNaturalRelation> implicitUnaryMap = new SmallMap<UnaryOperator,IBinaryNaturalRelation>();
 
   /**
    * The inverse of relations in the implicit map
@@ -92,7 +92,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
    * for UnaryOperator op, let R be invImplicitMap.get(op) then (i,j) \in R
    * implies j op i is an equation in the graph
    */
-  private final SmallMap<UnaryOperator, IBinaryNonNegativeIntRelation> invImplicitUnaryMap = new SmallMap<UnaryOperator,IBinaryNonNegativeIntRelation>();
+  private final SmallMap<UnaryOperator, IBinaryNaturalRelation> invImplicitUnaryMap = new SmallMap<UnaryOperator,IBinaryNaturalRelation>();
 
   /**
    * Number of implicit unary equations registered
@@ -104,8 +104,8 @@ public class PropagationGraph extends AbstractFixedPointSystem {
    * @param key
    * @return a relation in map m corresponding to a key
    */
-  private IBinaryNonNegativeIntRelation findOrCreateRelation(Map<UnaryOperator, IBinaryNonNegativeIntRelation> m, UnaryOperator key) {
-    IBinaryNonNegativeIntRelation result = m.get(key);
+  private IBinaryNaturalRelation findOrCreateRelation(Map<UnaryOperator, IBinaryNaturalRelation> m, UnaryOperator key) {
+    IBinaryNaturalRelation result = m.get(key);
     if (result == null) {
       result = makeRelation((AbstractOperator) key);
       m.put(key, result);
@@ -116,17 +116,17 @@ public class PropagationGraph extends AbstractFixedPointSystem {
   /**
    * @return a Relation object to track implicit equations using the operator
    */
-  private IBinaryNonNegativeIntRelation makeRelation(AbstractOperator op) {
+  private IBinaryNaturalRelation makeRelation(AbstractOperator op) {
     byte[] implementation = null;
     if (op instanceof AssignOperator) {
       // lots of assignments.
-      implementation = new byte[] { BasicNonNegativeIntRelation.SIMPLE_SPACE_STINGY,
-          BasicNonNegativeIntRelation.SIMPLE_SPACE_STINGY };
+      implementation = new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY,
+          BasicNaturalRelation.SIMPLE_SPACE_STINGY };
     } else {
       // assume sparse assignments with any other operator.
-      implementation = new byte[] { BasicNonNegativeIntRelation.SIMPLE_SPACE_STINGY };
+      implementation = new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY };
     }
-    return new BasicNonNegativeIntRelation(implementation, BasicNonNegativeIntRelation.SIMPLE);
+    return new BasicNaturalRelation(implementation, BasicNaturalRelation.SIMPLE);
   }
 
   /**
@@ -266,11 +266,11 @@ public class PropagationGraph extends AbstractFixedPointSystem {
     if (DEBUG) {
       Trace.println("lhs rhs " + lhs + " " + rhs);
     }
-    IBinaryNonNegativeIntRelation R = findOrCreateRelation(implicitUnaryMap, (UnaryOperator) eq.getOperator());
+    IBinaryNaturalRelation R = findOrCreateRelation(implicitUnaryMap, (UnaryOperator) eq.getOperator());
     boolean b = R.add(lhs, rhs);
     if (b) {
       implicitUnaryCount++;
-      IBinaryNonNegativeIntRelation iR = findOrCreateRelation(invImplicitUnaryMap, (UnaryOperator) eq.getOperator());
+      IBinaryNaturalRelation iR = findOrCreateRelation(invImplicitUnaryMap, (UnaryOperator) eq.getOperator());
       iR.add(rhs, lhs);
     }
   }
@@ -284,9 +284,9 @@ public class PropagationGraph extends AbstractFixedPointSystem {
     if (DEBUG) {
       Trace.println("lhs rhs " + lhs + " " + rhs);
     }
-    IBinaryNonNegativeIntRelation R = findOrCreateRelation(implicitUnaryMap, (UnaryOperator) eq.getOperator());
+    IBinaryNaturalRelation R = findOrCreateRelation(implicitUnaryMap, (UnaryOperator) eq.getOperator());
     R.remove(lhs,rhs);
-    IBinaryNonNegativeIntRelation iR = findOrCreateRelation(invImplicitUnaryMap, (UnaryOperator) eq.getOperator());
+    IBinaryNaturalRelation iR = findOrCreateRelation(invImplicitUnaryMap, (UnaryOperator) eq.getOperator());
     iR.remove(rhs,lhs);
     implicitUnaryCount--;
   }
@@ -435,7 +435,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
       innerDelegate = null;
       while (outerKeyDelegate.hasNext()) {
         currentOperator = (UnaryOperator) outerKeyDelegate.next();
-        IBinaryNonNegativeIntRelation R = implicitUnaryMap.get(currentOperator);
+        IBinaryNaturalRelation R = implicitUnaryMap.get(currentOperator);
         Iterator it = R.iterator();
         if (it.hasNext()) {
           innerDelegate = it;
@@ -756,7 +756,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
     Iterator<AbstractStatement> result = (Iterator<AbstractStatement>) delegateGraph.getSuccNodes(v);
     for (int i = 0; i < invImplicitUnaryMap.size(); i++) {
       UnaryOperator op = (UnaryOperator) invImplicitUnaryMap.getKey(i);
-      IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) invImplicitUnaryMap.getValue(i);
+      IBinaryNaturalRelation R = (IBinaryNaturalRelation) invImplicitUnaryMap.getValue(i);
       IntSet s = R.getRelated(number);
       if (s != null) {
         result = new CompoundIterator<AbstractStatement>(new ImplicitUseIterator(op, v, s), result);
@@ -779,7 +779,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
     Iterator<AbstractStatement> result = (Iterator<AbstractStatement>) delegateGraph.getPredNodes(v);
     for (int i = 0; i < implicitUnaryMap.size(); i++) {
       UnaryOperator op = (UnaryOperator) implicitUnaryMap.getKey(i);
-      IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) implicitUnaryMap.getValue(i);
+      IBinaryNaturalRelation R = (IBinaryNaturalRelation) implicitUnaryMap.getValue(i);
       IntSet s = R.getRelated(number);
       if (s != null) {
         result = new CompoundIterator<AbstractStatement>(new ImplicitDefIterator(op, s, v), result);
@@ -803,7 +803,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
     int result = delegateGraph.getSuccNodeCount(v);
     for (Iterator it = invImplicitUnaryMap.keySet().iterator(); it.hasNext();) {
       UnaryOperator op = (UnaryOperator) it.next();
-      IBinaryNonNegativeIntRelation R = invImplicitUnaryMap.get(op);
+      IBinaryNaturalRelation R = invImplicitUnaryMap.get(op);
       IntSet s = R.getRelated(number);
       if (s != null) {
         result += s.size();
@@ -825,7 +825,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
     int result = delegateGraph.getPredNodeCount(v);
     for (Iterator it = implicitUnaryMap.keySet().iterator(); it.hasNext();) {
       UnaryOperator op = (UnaryOperator) it.next();
-      IBinaryNonNegativeIntRelation R = implicitUnaryMap.get(op);
+      IBinaryNaturalRelation R = implicitUnaryMap.get(op);
       IntSet s = R.getRelated(number);
       if (s != null) {
         result += s.size();
@@ -866,7 +866,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
       for (Iterator it = implicitUnaryMap.entrySet().iterator(); it.hasNext();) {
         count++;
         Map.Entry e = (Map.Entry) it.next();
-        IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) e.getValue();
+        IBinaryNaturalRelation R = (IBinaryNaturalRelation) e.getValue();
         Trace.println("entry " + count);
         R.performVerboseAction();
         HeapTracer.Result result = HeapTracer.traceHeap(Collections.singleton(R), false);
@@ -904,7 +904,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
     int lhs = eq.getLHS().getGraphNodeId();
     int rhs = eq.getRightHandSide().getGraphNodeId();
     UnaryOperator op = (UnaryOperator) eq.getOperator();
-    IBinaryNonNegativeIntRelation R = implicitUnaryMap.get(op);
+    IBinaryNaturalRelation R = implicitUnaryMap.get(op);
     if (R != null) {
       return R.contains(lhs, rhs);
     } else {

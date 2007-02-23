@@ -34,8 +34,8 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
-import com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
+import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
@@ -358,8 +358,8 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     /**
      * for each y, the {x | (x,y) is an edge)
      */
-    final IBinaryNonNegativeIntRelation predecessors = new BasicNonNegativeIntRelation(
-        new byte[] { BasicNonNegativeIntRelation.SIMPLE_SPACE_STINGY }, BasicNonNegativeIntRelation.SIMPLE);
+    final IBinaryNaturalRelation predecessors = new BasicNaturalRelation(
+        new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY }, BasicNaturalRelation.SIMPLE);
 
     public IntSet getSuccNodeNumbers(CGNode node) {
       ExplicitNode n = (ExplicitNode) node;

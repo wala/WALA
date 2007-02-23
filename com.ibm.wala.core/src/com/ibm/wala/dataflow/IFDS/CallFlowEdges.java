@@ -11,9 +11,9 @@
 package com.ibm.wala.dataflow.IFDS;
 
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVectorIntSet;
-import com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation;
+import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
@@ -39,7 +39,7 @@ public class CallFlowEdges {
    * TODO: more representation optimization. A special represention for triples?
    * sparse representations for CFG? exploit shorts for ints?
    */
-  private final SparseVector<IBinaryNonNegativeIntRelation> edges = new SparseVector<IBinaryNonNegativeIntRelation>(1, 1.1f);
+  private final SparseVector<IBinaryNaturalRelation> edges = new SparseVector<IBinaryNaturalRelation>(1, 1.1f);
 
   /**
    * a map from integer d1 -> int set.
@@ -74,11 +74,11 @@ public class CallFlowEdges {
       }
       s.add(c);
     } else {
-      IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) edges.get(c);
+      IBinaryNaturalRelation R = (IBinaryNaturalRelation) edges.get(c);
       if (R == null) {
         // we expect the first dimention of R to be dense, the second sparse
-        R = new BasicNonNegativeIntRelation(new byte[] { BasicNonNegativeIntRelation.SIMPLE_SPACE_STINGY },
-            BasicNonNegativeIntRelation.TWO_LEVEL);
+        R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
+            BasicNaturalRelation.TWO_LEVEL);
         edges.set(c, R);
       }
       R.add(d2, d1);
@@ -93,7 +93,7 @@ public class CallFlowEdges {
    */
   public IntSet getCallFlowSources(int c, int d2) {
     BitVectorIntSet s = (BitVectorIntSet) identityEdges.get(d2);
-    IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) edges.get(c);
+    IBinaryNaturalRelation R = (IBinaryNaturalRelation) edges.get(c);
     IntSet result = null;
     if (R == null) {
       if (s != null) {

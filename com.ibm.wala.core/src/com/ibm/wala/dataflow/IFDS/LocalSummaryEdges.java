@@ -13,8 +13,8 @@ package com.ibm.wala.dataflow.IFDS;
 import java.util.Iterator;
 
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
-import com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
+import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntPair;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
@@ -49,7 +49,7 @@ public class LocalSummaryEdges {
    * 
    * TODO: more representation optimization.
    */
-  private final SparseVector<IBinaryNonNegativeIntRelation> summaries = new SparseVector<IBinaryNonNegativeIntRelation>(1, 1.1f);
+  private final SparseVector<IBinaryNaturalRelation> summaries = new SparseVector<IBinaryNaturalRelation>(1, 1.1f);
 
   /**
    * Let (s_p,x) be an entry-exit pair, and let l := the long whose high word is
@@ -85,11 +85,11 @@ public class LocalSummaryEdges {
    */
   public void insertSummaryEdge(int s_p, int x, int d1, int d2) {
     int n = getIndexForEntryExitPair(s_p, x);
-    IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) summaries.get(n);
+    IBinaryNaturalRelation R = (IBinaryNaturalRelation) summaries.get(n);
     if (R == null) {
       // we expect R to usually be sparse
-      R = new BasicNonNegativeIntRelation(new byte[] { BasicNonNegativeIntRelation.SIMPLE_SPACE_STINGY },
-          BasicNonNegativeIntRelation.SIMPLE);
+      R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
+          BasicNaturalRelation.SIMPLE);
       summaries.set(n, R);
     }
     R.add(d1, d2);
@@ -112,7 +112,7 @@ public class LocalSummaryEdges {
    */
   public boolean contains(int s_p, int x, int d1, int d2) {
     int n = getIndexForEntryExitPair(s_p, x);
-    IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) summaries.get(n);
+    IBinaryNaturalRelation R = (IBinaryNaturalRelation) summaries.get(n);
     if (R == null) {
       return false;
     } else {
@@ -132,7 +132,7 @@ public class LocalSummaryEdges {
    */
   public IntSet getSummaryEdges(int s_p, int x, int d1) {
     int n = getIndexForEntryExitPair(s_p, x);
-    IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) summaries.get(n);
+    IBinaryNaturalRelation R = (IBinaryNaturalRelation) summaries.get(n);
     if (R == null) {
       return null;
     } else {
@@ -154,7 +154,7 @@ public class LocalSummaryEdges {
    */
   public IntSet getInvertedSummaryEdgesForTarget(int s_p, int x, int d2) {
     int n = getIndexForEntryExitPair(s_p, x);
-    IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) summaries.get(n);
+    IBinaryNaturalRelation R = (IBinaryNaturalRelation) summaries.get(n);
     if (R == null) {
       return null;
     } else {

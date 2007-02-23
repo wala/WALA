@@ -21,9 +21,9 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVectorIntSet;
-import com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation;
+import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
@@ -42,7 +42,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
    * delegateR(x,y) means that for at least one site, node number y delegates to
    * node number x.
    */
-  private final IBinaryNonNegativeIntRelation delegateR = new BasicNonNegativeIntRelation();
+  private final IBinaryNaturalRelation delegateR = new BasicNaturalRelation();
 
   /**
    * @param cha

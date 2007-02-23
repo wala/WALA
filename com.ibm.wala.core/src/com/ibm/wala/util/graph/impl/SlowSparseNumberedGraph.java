@@ -16,7 +16,7 @@ import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NodeManager;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
 
 /**
  * 
@@ -43,7 +43,7 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
    *          what is the "normal" number of out edges for a node?
    */
   public SlowSparseNumberedGraph(int normalOutCount) {
-    edgeManager = new SparseNumberedEdgeManager<T>(nodeManager, normalOutCount, BasicNonNegativeIntRelation.TWO_LEVEL);
+    edgeManager = new SparseNumberedEdgeManager<T>(nodeManager, normalOutCount, BasicNaturalRelation.TWO_LEVEL);
   }
 
   /*

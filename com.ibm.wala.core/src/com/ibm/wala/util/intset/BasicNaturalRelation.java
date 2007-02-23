@@ -25,7 +25,7 @@ import com.ibm.wala.util.debug.Trace;
  * 
  * @author sfink
  */
-public final class BasicNonNegativeIntRelation implements IBinaryNonNegativeIntRelation {
+public final class BasicNaturalRelation implements IBinaryNaturalRelation {
 
   private final static boolean VERBOSE = false;
 
@@ -74,7 +74,7 @@ public final class BasicNonNegativeIntRelation implements IBinaryNonNegativeIntR
    * implemented with a SimpleIntVector, and the 2nd and 3rd are implemented
    * with TwoLevelIntVector
    */
-  public BasicNonNegativeIntRelation(byte[] implementation, byte vectorImpl) {
+  public BasicNaturalRelation(byte[] implementation, byte vectorImpl) {
     smallStore = new IntVector[implementation.length];
     for (int i = 0; i < implementation.length; i++) {
       switch (implementation[i]) {
@@ -109,7 +109,7 @@ public final class BasicNonNegativeIntRelation implements IBinaryNonNegativeIntR
   /**
    * a Default contructor
    */
-  public BasicNonNegativeIntRelation() {
+  public BasicNaturalRelation() {
     this(new byte[] { SIMPLE }, TWO_LEVEL);
   }
 

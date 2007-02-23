@@ -16,9 +16,9 @@ import java.util.Iterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.graph.NumberedNodeManager;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVector;
-import com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation;
+import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 
@@ -41,7 +41,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
    *          an object to track nodes
    */
   public SparseNumberedEdgeManager(NumberedNodeManager<T> nodeManager) {
-    this(nodeManager, 0, BasicNonNegativeIntRelation.TWO_LEVEL);
+    this(nodeManager, 0, BasicNaturalRelation.TWO_LEVEL);
   }
 
   /**
@@ -56,13 +56,13 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   public SparseNumberedEdgeManager(NumberedNodeManager<T> nodeManager, int normalCase, byte delegateImpl) {
     this.nodeManager = nodeManager;
     if (normalCase == 0) {
-      successors = new BasicNonNegativeIntRelation(defaultImpl, delegateImpl);
-      predecessors = new BasicNonNegativeIntRelation(defaultImpl, delegateImpl);
+      successors = new BasicNaturalRelation(defaultImpl, delegateImpl);
+      predecessors = new BasicNaturalRelation(defaultImpl, delegateImpl);
     } else {
       byte[] impl = new byte[normalCase];
-      Arrays.fill(impl, BasicNonNegativeIntRelation.SIMPLE);
-      successors = new BasicNonNegativeIntRelation(impl, delegateImpl);
-      predecessors = new BasicNonNegativeIntRelation(impl, delegateImpl);
+      Arrays.fill(impl, BasicNaturalRelation.SIMPLE);
+      successors = new BasicNaturalRelation(impl, delegateImpl);
+      predecessors = new BasicNaturalRelation(impl, delegateImpl);
     }
   }
 
@@ -70,11 +70,11 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
    * The default implementation policy conservatively uses 2-level vectors, in
    * an attempt to somewhat optimize for space.
    */
-  private final static byte[] defaultImpl = new byte[] { BasicNonNegativeIntRelation.TWO_LEVEL };
+  private final static byte[] defaultImpl = new byte[] { BasicNaturalRelation.TWO_LEVEL };
 
-  private final IBinaryNonNegativeIntRelation successors;
+  private final IBinaryNaturalRelation successors;
 
-  private final IBinaryNonNegativeIntRelation predecessors;
+  private final IBinaryNaturalRelation predecessors;
 
   /*
    * (non-Javadoc)

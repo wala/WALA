@@ -47,10 +47,10 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.ObjectArrayMapping;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
-import com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation;
+import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
@@ -444,7 +444,7 @@ public class HeapReachingDefs {
      * HeapStatement.ReturnCaller for statement i, a NormalStatement
      * representing an invoke
      */
-    private final IBinaryNonNegativeIntRelation heapReturnCaller = new BasicNonNegativeIntRelation();
+    private final IBinaryNaturalRelation heapReturnCaller = new BasicNaturalRelation();
 
     public RD(CGNode node, ExpandedControlFlowGraph cfg, PointerAnalysis pa, OrdinalSetMapping<Statement> domain,
         Map<SSAInstruction, NormalStatement> ssaInstruction2Statement, HeapExclusions exclusions) {

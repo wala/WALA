@@ -14,7 +14,7 @@ import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.NodeManager;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
 
 /**
  A graph of numbered nodes, expected to have a fairly sparse edge structure.  
@@ -42,7 +42,7 @@ public class SparseNumberedGraph<T extends INodeWithNumber> extends AbstractNumb
    */
   public SparseNumberedGraph(int normalCase) {
     nodeManager = new DelegatingNumberedNodeManager<T>();
-    edgeManager = new SparseNumberedEdgeManager<T>(nodeManager, normalCase, BasicNonNegativeIntRelation.TWO_LEVEL);
+    edgeManager = new SparseNumberedEdgeManager<T>(nodeManager, normalCase, BasicNaturalRelation.TWO_LEVEL);
   }
   
   /**

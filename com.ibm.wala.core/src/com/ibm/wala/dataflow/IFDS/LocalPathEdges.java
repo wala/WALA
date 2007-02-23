@@ -14,9 +14,9 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVectorIntSet;
-import com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation;
+import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntPair;
 import com.ibm.wala.util.intset.IntSet;
@@ -58,7 +58,7 @@ public class LocalPathEdges {
    * TODO: more representation optimization. A special represention for triples?
    * sparse representations for CFG? exploit shorts for ints?
    */
-  private final SparseVector<IBinaryNonNegativeIntRelation> paths = new SparseVector<IBinaryNonNegativeIntRelation>(1, 1.1f);
+  private final SparseVector<IBinaryNaturalRelation> paths = new SparseVector<IBinaryNaturalRelation>(1, 1.1f);
 
   /**
    * If this is non-null, it holds a redundant representation of the paths
@@ -81,7 +81,7 @@ public class LocalPathEdges {
    * to be dense in the first dimension 2) we need to support getReachable(), so
    * we design lookup to get the d2's for an (n,d1) pair.
    */
-  private final SparseVector<IBinaryNonNegativeIntRelation> altPaths;
+  private final SparseVector<IBinaryNaturalRelation> altPaths;
 
   /**
    * a map from integer d1 -> int set.
@@ -105,7 +105,7 @@ public class LocalPathEdges {
    *          faster merge operations
    */
   public LocalPathEdges(boolean fastMerge) {
-    altPaths = fastMerge ? new SparseVector<IBinaryNonNegativeIntRelation>(1, 1.1f) : null;
+    altPaths = fastMerge ? new SparseVector<IBinaryNaturalRelation>(1, 1.1f) : null;
   }
 
   /**
@@ -126,21 +126,21 @@ public class LocalPathEdges {
       if (i == j) {
         addIdentityPathEdge(i, n);
       } else {
-        IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) paths.get(j);
+        IBinaryNaturalRelation R = (IBinaryNaturalRelation) paths.get(j);
         if (R == null) {
           // we expect the first dimention of R to be dense, the second sparse
-          R = new BasicNonNegativeIntRelation(new byte[] { BasicNonNegativeIntRelation.SIMPLE_SPACE_STINGY },
-              BasicNonNegativeIntRelation.TWO_LEVEL);
+          R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
+              BasicNaturalRelation.TWO_LEVEL);
           paths.set(j, R);
         }
         R.add(n, i);
 
         if (altPaths != null) {
-          IBinaryNonNegativeIntRelation R2 = (IBinaryNonNegativeIntRelation) altPaths.get(i);
+          IBinaryNaturalRelation R2 = (IBinaryNaturalRelation) altPaths.get(i);
           if (R2 == null) {
             // we expect the first dimention of R to be dense, the second sparse
-            R2 = new BasicNonNegativeIntRelation(new byte[] { BasicNonNegativeIntRelation.SIMPLE_SPACE_STINGY },
-                BasicNonNegativeIntRelation.TWO_LEVEL);
+            R2 = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
+                BasicNaturalRelation.TWO_LEVEL);
             altPaths.set(i, R2);
           }
           R2.add(n, j);
@@ -169,11 +169,11 @@ public class LocalPathEdges {
     s.add(n);
 
     if (altPaths != null) {
-      IBinaryNonNegativeIntRelation R2 = (IBinaryNonNegativeIntRelation) altPaths.get(i);
+      IBinaryNaturalRelation R2 = (IBinaryNaturalRelation) altPaths.get(i);
       if (R2 == null) {
         // we expect the first dimention of R to be dense, the second sparse
-        R2 = new BasicNonNegativeIntRelation(new byte[] { BasicNonNegativeIntRelation.SIMPLE_SPACE_STINGY },
-            BasicNonNegativeIntRelation.TWO_LEVEL);
+        R2 = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
+            BasicNaturalRelation.TWO_LEVEL);
         altPaths.set(i, R2);
       }
       R2.add(n, i);
@@ -202,11 +202,11 @@ public class LocalPathEdges {
     }
     z.add(n);
     if (altPaths != null) {
-      IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) altPaths.get(0);
+      IBinaryNaturalRelation R = (IBinaryNaturalRelation) altPaths.get(0);
       if (R == null) {
         // we expect the first dimention of R to be dense, the second sparse
-        R = new BasicNonNegativeIntRelation(new byte[] { BasicNonNegativeIntRelation.SIMPLE_SPACE_STINGY },
-            BasicNonNegativeIntRelation.TWO_LEVEL);
+        R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
+            BasicNaturalRelation.TWO_LEVEL);
         altPaths.set(0, R);
       }
       R.add(n, j);
@@ -235,7 +235,7 @@ public class LocalPathEdges {
    *         path edges. null if none found
    */
   public IntSet getInverse(int n, int d2) {
-    IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) paths.get(d2);
+    IBinaryNaturalRelation R = (IBinaryNaturalRelation) paths.get(d2);
     BitVectorIntSet s = (BitVectorIntSet) identityPaths.get(d2);
     BitVectorIntSet z = (BitVectorIntSet) zeroPaths.get(d2);
     if (R == null) {
@@ -334,7 +334,7 @@ public class LocalPathEdges {
           return false;
         }
       } else {
-        IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) paths.get(j);
+        IBinaryNaturalRelation R = (IBinaryNaturalRelation) paths.get(j);
         if (R == null) {
           return false;
         }
@@ -369,7 +369,7 @@ public class LocalPathEdges {
       Iterator contents = paths.iterator();
       for (IntIterator it = paths.iterateIndices(); it.hasNext();) {
         int d2 = it.next();
-        IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) contents.next();
+        IBinaryNaturalRelation R = (IBinaryNaturalRelation) contents.next();
         if (R != null && R.contains(n, d1)) {
           result.add(d2);
         }
@@ -402,7 +402,7 @@ public class LocalPathEdges {
    */
   private IntSet getReachableFast(int n, int d1) {
 
-    IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) altPaths.get(d1);
+    IBinaryNaturalRelation R = (IBinaryNaturalRelation) altPaths.get(d1);
     if (R != null) {
       return R.getRelated(n);
     }
@@ -424,7 +424,7 @@ public class LocalPathEdges {
       Iterator contents = paths.iterator();
       for (IntIterator it = paths.iterateIndices(); it.hasNext();) {
         int d2 = it.next();
-        IBinaryNonNegativeIntRelation R = (IBinaryNonNegativeIntRelation) contents.next();
+        IBinaryNaturalRelation R = (IBinaryNaturalRelation) contents.next();
         if (R != null && R.getRelatedCount(n) > 0) {
           result.add(d2);
         }
@@ -466,7 +466,7 @@ public class LocalPathEdges {
   public IntSet getReachedNodeNumbers() {
     MutableSparseIntSet result = new MutableSparseIntSet();
     if (paths.size() > 0) {
-      for (IBinaryNonNegativeIntRelation R : paths) {
+      for (IBinaryNaturalRelation R : paths) {
         for (IntPair p : R) {
           result.add(p.getX());
         }

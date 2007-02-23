@@ -41,7 +41,7 @@ import com.ibm.wala.ecore.java.ETypeHierarchy;
 import com.ibm.wala.ecore.java.JavaFactory;
 import com.ibm.wala.ecore.java.JavaPackage;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.intset.BasicNonNegativeIntRelation;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntPair;
 import com.ibm.wala.util.intset.IntSet;
@@ -57,7 +57,7 @@ import com.ibm.wala.util.intset.IntSet;
 public class ETypeHierarchyWrapper  {
   private final EClassHierarchyWrapper cha;
   private final EInterfaceHierarchyWrapper iface;
-  private final BasicNonNegativeIntRelation implementR = new BasicNonNegativeIntRelation();
+  private final BasicNaturalRelation implementR = new BasicNaturalRelation();
 
   /**
    * @param t
