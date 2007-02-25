@@ -815,6 +815,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
 
       IField f = getClassHierarchy().resolveField(field);
+      if (f == null && callGraph.getFakeRootNode().getMethod().getDeclaringClass().getReference().equals(field.getType())) {
+	f = callGraph.getFakeRootNode().getMethod().getDeclaringClass().getField(field.getName());
+      }
+
       if (f == null) {
         getWarnings().add(ResolutionFailure.create(node, field));
         return;

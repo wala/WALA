@@ -1,19 +1,17 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
-import java.util.Collection;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticClass;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.Selector;
-import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.*;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
+
+import java.util.*;
+
 
 /**
  *
@@ -25,8 +23,62 @@ public class FakeRootClass extends SyntheticClass {
   public static final TypeReference FAKE_ROOT_CLASS = TypeReference.findOrCreate(ClassLoaderReference.Primordial, TypeName
   .string2TypeName("Lcom/ibm/wala/FakeRootClass"));
 
+  private Map fakeRootStaticFields = null;
+
   FakeRootClass(ClassHierarchy cha) {
     super(FAKE_ROOT_CLASS, cha);
+  }
+
+  public void addStaticField(final Atom name, final TypeReference fieldType) {
+    if (fakeRootStaticFields == null) {
+      fakeRootStaticFields = new HashMap(2);
+    }
+
+    fakeRootStaticFields.put(name, new IField() {
+      public ClassHierarchy getClassHierarchy() {
+	return FakeRootClass.this.getClassHierarchy();
+      }
+
+      public TypeReference getFieldTypeReference() {
+	return fieldType;
+      }
+  
+      public IClass getDeclaringClass() {
+	return FakeRootClass.this;
+      }
+ 
+      public Atom getName() {
+	return name;
+      }
+
+      public boolean isStatic() {
+	return true;
+      }
+  
+      public boolean isVolatile() {
+	return false;
+      }
+
+      public FieldReference getFieldReference() {
+	return FieldReference.findOrCreate(FAKE_ROOT_CLASS, name, fieldType);
+      }
+					   
+      public boolean isFinal() {
+	return false;
+      }
+  
+      public boolean isPrivate() {
+	return true;
+      }
+
+      public boolean isProtected() {
+	return false;
+      }
+
+      public boolean isPublic() {
+	return false;
+      }
+    });
   }
 
   /*
@@ -99,9 +151,11 @@ public class FakeRootClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
   public IField getField(Atom name) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
+    if (fakeRootStaticFields != null) {
+      return (IField) fakeRootStaticFields.get(name);
+    } else {
+      return null;
+    }
   }
 
   /*
@@ -143,9 +197,11 @@ public class FakeRootClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getDeclaredStaticFields()
    */
   public Collection<IField> getDeclaredStaticFields() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
+    if (fakeRootStaticFields != null) {
+      return fakeRootStaticFields.values();
+    } else {
+      return Collections.EMPTY_SET;
+    }
   }
 
   /*
@@ -185,8 +241,7 @@ public class FakeRootClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
   public Collection<IField> getAllStaticFields() throws ClassHierarchyException {
-    Assertions.UNREACHABLE();
-    return null;
+    return getDeclaredStaticFields();
   }
 
   /*
@@ -205,8 +260,7 @@ public class FakeRootClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
   public Collection<IField> getAllFields() throws ClassHierarchyException {
-    Assertions.UNREACHABLE();
-    return null;
+    return getDeclaredStaticFields();
   }
 
   public boolean isPublic() {

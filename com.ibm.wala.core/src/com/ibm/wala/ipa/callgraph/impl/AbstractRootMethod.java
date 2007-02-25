@@ -26,15 +26,7 @@ import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.ssa.ConstantValue;
-import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.SSAArrayStoreInstruction;
-import com.ibm.wala.ssa.SSAGetInstruction;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
-import com.ibm.wala.ssa.SSANewInstruction;
-import com.ibm.wala.ssa.SSAOptions;
-import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -233,6 +225,12 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     int result = nextLocal++;
     statements.add(new SSAGetInstruction(result, ref));
     return result;
+  }
+
+  public int addCheckcast(TypeReference type, int rv) {
+    int lv = nextLocal++;
+    statements.add(SSAInstructionFactory.CheckCastInstruction(lv, rv, type));
+    return lv;
   }
 
   public RTAContextInterpreter getInterpreter() {

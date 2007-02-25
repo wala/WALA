@@ -56,6 +56,10 @@ public final class MethodReference extends MemberReference {
   public final static Descriptor runDesc = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
   public final static Selector runSelector = new Selector(runAtom, runDesc);
 
+  public final static Atom equalsAtom = Atom.findOrCreateUnicodeAtom("equals");
+  public final static Descriptor equalsDesc = Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)Z");
+  public final static Selector equalsSelector = new Selector(equalsAtom, equalsDesc);
+
   /**
    * types of parameters to this method.
    */

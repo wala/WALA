@@ -230,6 +230,14 @@ public final class TypeReference {
 
   public final static TypeReference JavaLangCloneable = findOrCreate(ClassLoaderReference.Primordial, JavaLangCloneableName);
 
+  private final static TypeName JavaLangSystemName = TypeName.string2TypeName("Ljava/lang/System");
+
+  public final static TypeReference JavaLangSystem = findOrCreate(ClassLoaderReference.Primordial, JavaLangSystemName);
+
+  private final static TypeName JavaLangIntegerName = TypeName.string2TypeName("Ljava/lang/Integer");
+
+  public final static TypeReference JavaLangInteger = findOrCreate(ClassLoaderReference.Primordial, JavaLangIntegerName);
+
   private final static TypeName JavaIoSerializableName = TypeName.string2TypeName("Ljava/io/Serializable");
 
   public final static TypeReference JavaIoSerializable = findOrCreate(ClassLoaderReference.Primordial, JavaIoSerializableName);
