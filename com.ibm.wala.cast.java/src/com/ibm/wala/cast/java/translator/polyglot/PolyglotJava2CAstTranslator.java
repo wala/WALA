@@ -75,6 +75,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
   protected Type fNPEType;
 
+  protected Type fCCEType;
+
   protected Type fREType; // RuntimeException
 
   protected final ClassLoaderReference fClassLoaderRef;
@@ -483,8 +485,23 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       Expr arg = c.expr();
       Type castedTo = c.castType().type();
 
-      // TODO maybe use a TypeReference below instead of a CAstType
-      return makeNode(wc, fFactory, c, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(castedTo)), walkNodes(arg, wc));
+      CAstNode ast = makeNode(wc, fFactory, c, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(castedTo)), walkNodes(arg, wc));
+
+      Collection excTargets = wc.getCatchTargets(fCCEType);
+      if (!excTargets.isEmpty()) {
+        // connect ClassCastException exception edge to relevant catch targets
+        // (presumably only one)
+        for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
+          Pair catchPair = (Pair) iterator.next();
+	  wc.cfg().add(c, catchPair.snd, fCCEType);
+	}
+      } else {
+        // connect exception edge to exit
+        wc.cfg().add(c, CAstControlFlowMap.EXCEPTION_TO_EXIT, fCCEType);
+      }
+      
+      wc.cfg().map(c, ast);
+      return ast;
     }
 
     public CAstNode visit(Conditional c, WalkContext wc) {
@@ -1920,6 +1937,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     fIdentityMapper = identityMapper;
     try {
       fNPEType = fTypeSystem.typeForName("java.lang.NullPointerException");
+      fCCEType = fTypeSystem.typeForName("java.lang.ClassCastException");
       fREType = fTypeSystem.typeForName("java.lang.RuntimeException");
     } catch (SemanticException e) {
       Assertions.UNREACHABLE("Couldn't find Polyglot type for NPE/RE!");

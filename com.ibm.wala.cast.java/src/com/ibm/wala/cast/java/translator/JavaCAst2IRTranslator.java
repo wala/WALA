@@ -348,6 +348,8 @@ public class JavaCAst2IRTranslator extends AstTranslator {
             result, 
             getValue(n.getChild(1)), 
             ref));
+
+	processExceptions(n, context);
       }
     }
     protected boolean visitInstanceOf(CAstNode n, Context c, CAstVisitor visitor) {
