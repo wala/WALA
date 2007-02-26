@@ -96,7 +96,6 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
   }
 
   public Iterator<? extends T> getSuccNodes(T N) {
-    Assertions.UNREACHABLE();
     return delegate.getSuccNodes(N);
   }
 
