@@ -11,7 +11,7 @@
 package com.ibm.wala.shrikeBT;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.IdentityHashMap;
 
 /**
  * The MethodEditor is the core of the ShrikeBT code rewriting mechanism. To
@@ -603,19 +603,19 @@ public final class MethodEditor {
     }
 
     // We want to update each exception handler array exactly once
-    HashSet<ExceptionHandler> adjustedHandlers = null;
+    IdentityHashMap<ExceptionHandler, Object> adjustedHandlers = null;
     for (int i = 0; i < handlers.length; i++) {
       ExceptionHandler[] hs = handlers[i];
       if (hs.length > 0 && (i == 0 || hs != handlers[i - 1])) {
         if (adjustedHandlers == null) {
-          adjustedHandlers = new HashSet<ExceptionHandler>();
+          adjustedHandlers = new IdentityHashMap<ExceptionHandler, Object>();
         }
 
         for (int j = 0; j < hs.length; j++) {
           ExceptionHandler h = hs[j];
-          if (!adjustedHandlers.contains(h)) {
-            h.handler = labelDefs[h.handler];
-            adjustedHandlers.add(h);
+          if (!adjustedHandlers.containsKey(h)) {
+            adjustedHandlers.put(h, null);
+            h.handler = labelDefs[h.handler]; // breaks invariant of ExceptionHandler: immutable!
           }
         }
       }
