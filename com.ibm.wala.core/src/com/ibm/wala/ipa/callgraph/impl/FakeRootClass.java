@@ -8,22 +8,22 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.*;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 import java.util.*;
 
-
 /**
- *
+ * 
  * A synthetic class for the fake root method
  * 
  * @author sfink
  */
 public class FakeRootClass extends SyntheticClass {
   public static final TypeReference FAKE_ROOT_CLASS = TypeReference.findOrCreate(ClassLoaderReference.Primordial, TypeName
-  .string2TypeName("Lcom/ibm/wala/FakeRootClass"));
+      .string2TypeName("Lcom/ibm/wala/FakeRootClass"));
 
-  private Map fakeRootStaticFields = null;
+  private Map<Atom,IField> fakeRootStaticFields = null;
 
   FakeRootClass(ClassHierarchy cha) {
     super(FAKE_ROOT_CLASS, cha);
@@ -31,52 +31,52 @@ public class FakeRootClass extends SyntheticClass {
 
   public void addStaticField(final Atom name, final TypeReference fieldType) {
     if (fakeRootStaticFields == null) {
-      fakeRootStaticFields = new HashMap(2);
+      fakeRootStaticFields = HashMapFactory.make(2);
     }
 
     fakeRootStaticFields.put(name, new IField() {
       public ClassHierarchy getClassHierarchy() {
-	return FakeRootClass.this.getClassHierarchy();
+        return FakeRootClass.this.getClassHierarchy();
       }
 
       public TypeReference getFieldTypeReference() {
-	return fieldType;
+        return fieldType;
       }
-  
+
       public IClass getDeclaringClass() {
-	return FakeRootClass.this;
+        return FakeRootClass.this;
       }
- 
+
       public Atom getName() {
-	return name;
+        return name;
       }
 
       public boolean isStatic() {
-	return true;
+        return true;
       }
-  
+
       public boolean isVolatile() {
-	return false;
+        return false;
       }
 
       public FieldReference getFieldReference() {
-	return FieldReference.findOrCreate(FAKE_ROOT_CLASS, name, fieldType);
+        return FieldReference.findOrCreate(FAKE_ROOT_CLASS, name, fieldType);
       }
-					   
+
       public boolean isFinal() {
-	return false;
+        return false;
       }
-  
+
       public boolean isPrivate() {
-	return true;
+        return true;
       }
 
       public boolean isProtected() {
-	return false;
+        return false;
       }
 
       public boolean isPublic() {
-	return false;
+        return false;
       }
     });
   }
@@ -200,7 +200,7 @@ public class FakeRootClass extends SyntheticClass {
     if (fakeRootStaticFields != null) {
       return fakeRootStaticFields.values();
     } else {
-      return Collections.EMPTY_SET;
+      return Collections.emptySet();
     }
   }
 

@@ -19,54 +19,34 @@ public class BasicLauncher extends Launcher {
 
   protected String cmd;
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * 
-   * @generated
-   */
-  public BasicLauncher() {
-    super();
+  public BasicLauncher(boolean captureOutput) {
+    super(captureOutput);
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * 
-   * @generated
-   */
   public String getCmd() {
     return cmd;
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * 
-   * @generated
-   */
   public void setCmd(String newCmd) {
     cmd = newCmd;
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * 
-   * @generated
-   */
   public String toString() {
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (cmd: ");
     result.append(cmd);
     result.append(", captureOutput: ");
-    result.append(captureOutput);
+    result.append(isCaptureOutput());
     result.append(", Output: ");
     result.append(output);
     result.append(')');
     return result.toString();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.capa.core.impl.EAnalysisEngineImpl#processImpl()
+  /**
+   * Launch the process and wait until it is finished.
+   * @throws WalaException
+   * @throws IllegalArgumentException
    */
   public void launch() throws WalaException, IllegalArgumentException {
     Process p = spawnProcess(getCmd());

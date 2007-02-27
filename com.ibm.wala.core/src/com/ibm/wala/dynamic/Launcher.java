@@ -23,113 +23,43 @@ import com.ibm.wala.util.warnings.WalaException;
 /**
  * Abstract base class for a process launcher
  */
-public abstract class Launcher  {
-  /**
-   * The default value of the '{@link #getWorkingDir() <em>Working Dir</em>}' attribute.
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @see #getWorkingDir()
-   * @generated
-   * @ordered
-   */
-  protected static final File WORKING_DIR_EDEFAULT = null;
+public abstract class Launcher {
 
-  /**
-   * The cached value of the '{@link #getWorkingDir() <em>Working Dir</em>}' attribute.
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @see #getWorkingDir()
-   * @generated
-   * @ordered
-   */
-  protected File workingDir = WORKING_DIR_EDEFAULT;
+  protected File workingDir = null;
 
-  /**
-   * The default value of the '{@link #getEnv() <em>Env</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getEnv()
-   * @generated
-   * @ordered
-   */
-  protected static final Map ENV_EDEFAULT = null;
+  protected Map env = null;
 
-  /**
-   * The cached value of the '{@link #getEnv() <em>Env</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getEnv()
-   * @generated
-   * @ordered
-   */
-  protected Map env = ENV_EDEFAULT;
+  protected byte[] output = null;
 
-/**
-   * The cached value of the '{@link #getOutput() <em>Output</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getOutput()
-   * @generated
-   * @ordered
-   */
-   protected byte[] output = null;
+  private final boolean captureOutput;
 
-  /**
-   * The cached value of the '{@link #isCaptureOutput() <em>Capture Output</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isCaptureOutput()
-   * @generated
-   * @ordered
-   */
-  protected boolean captureOutput = false;
-
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
   protected Launcher() {
     super();
+    this.captureOutput = false;
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
+  protected Launcher(boolean captureOutput) {
+    super();
+    this.captureOutput = captureOutput;
+  }
+
   public File getWorkingDir() {
     return workingDir;
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
   public void setWorkingDir(File newWorkingDir) {
     workingDir = newWorkingDir;
   }
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public Map getEnv() {
     return env;
   }
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public void setEnv(Map newEnv) {
     env = newEnv;
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
   public String toString() {
-
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (workingDir: ");
     result.append(workingDir);
@@ -139,16 +69,12 @@ public abstract class Launcher  {
     return result.toString();
   }
 
-  /**
-   * @param cmd
-   * @throws WalaException
-   */
   protected Process spawnProcess(String cmd) throws WalaException, IllegalArgumentException {
     if (cmd == null) {
       throw new IllegalArgumentException("cmd cannot be null");
     }
     System.out.println("spawning process " + cmd);
-    String[] env = getEnv()== null ? null : buildEnv(getEnv());
+    String[] env = getEnv() == null ? null : buildEnv(getEnv());
     try {
       Process p = Runtime.getRuntime().exec(cmd, env, getWorkingDir());
       return p;
@@ -161,8 +87,8 @@ public abstract class Launcher  {
   private String[] buildEnv(Map env) {
     String[] result = new String[env.size()];
     int i = 0;
-    for (Iterator it = env.entrySet().iterator(); it.hasNext(); ) {
-      Map.Entry e = (Map.Entry)it.next();
+    for (Iterator it = env.entrySet().iterator(); it.hasNext();) {
+      Map.Entry e = (Map.Entry) it.next();
       result[i++] = e.getKey() + "=" + e.getValue();
     }
     return result;
@@ -171,34 +97,33 @@ public abstract class Launcher  {
   protected Thread drainStdOut(Process p) {
     final BufferedInputStream output = new BufferedInputStream(p.getInputStream());
     Thread result = new Drainer(p) {
-       void drain() throws IOException {
-         drainAndPrint(output,System.out);
-       }
+      void drain() throws IOException {
+        drainAndPrint(output, System.out);
+      }
     };
     result.start();
     return result;
   }
-  
+
   protected Drainer captureStdOut(Process p) {
     final BufferedInputStream output = new BufferedInputStream(p.getInputStream());
     final ByteArrayOutputStream b = new ByteArrayOutputStream();
     Drainer result = new Drainer(p) {
-       void drain() throws IOException {
-         drainAndCatch(output,b);
-       }
+      void drain() throws IOException {
+        drainAndCatch(output, b);
+      }
     };
     result.setCapture(b);
     result.start();
     return result;
   }
-  
-  
+
   protected Thread drainStdErr(Process p) {
     final BufferedInputStream err = new BufferedInputStream(p.getErrorStream());
     Thread result = new Drainer(p) {
-       void drain() throws IOException {
-         drainAndPrint(err,System.err);
-       }
+      void drain() throws IOException {
+        drainAndPrint(err, System.err);
+      }
     };
     result.start();
     return result;
@@ -213,10 +138,11 @@ public abstract class Launcher  {
   abstract class Drainer extends Thread {
 
     private final Process p;
+
     private ByteArrayOutputStream capture;
 
     abstract void drain() throws IOException;
-    
+
     Drainer(Process p) {
       this.p = p;
     }
@@ -251,6 +177,7 @@ public abstract class Launcher  {
     public ByteArrayOutputStream getCapture() {
       return capture;
     }
+
     public void setCapture(ByteArrayOutputStream capture) {
       this.capture = capture;
     }
@@ -263,48 +190,25 @@ public abstract class Launcher  {
       p.print(new String(data));
     }
   }
-  
+
   private void drainAndCatch(BufferedInputStream s, ByteArrayOutputStream b) throws IOException {
     if (s.available() > 0) {
       byte[] data = new byte[s.available()];
       int nRead = s.read(data);
-      b.write(data,0,nRead);
+      b.write(data, 0, nRead);
     }
   }
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
+
   public boolean isCaptureOutput() {
     return captureOutput;
   }
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setCaptureOutput(boolean newCaptureOutput) {
-    captureOutput = newCaptureOutput;
-  }
-
-/**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-public byte[] getOutput() {
+  public byte[] getOutput() {
     return output;
   }
 
-/**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-public void setOutput(byte[] newOutput) {
+  protected void setOutput(byte[] newOutput) {
     output = newOutput;
   }
-} //Launcher
+}

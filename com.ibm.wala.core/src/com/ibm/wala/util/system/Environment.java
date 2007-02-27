@@ -31,12 +31,11 @@ public class Environment  {
    * @see com.ibm.capa.core.impl.EAnalysisEngineImpl#processImpl()
    */
   public static Map<String, String> readEnv() throws WalaException {
-    BasicLauncher b = new BasicLauncher();
+    BasicLauncher b = new BasicLauncher(true);
     if (File.separatorChar == '\\')
       b.setCmd("cmd.exe /Cset");
     else
       b.setCmd("printenv");
-    b.setCaptureOutput(true);
     b.launch();
     return parseOutput(b.getOutput());
   }
