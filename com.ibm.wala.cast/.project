@@ -26,7 +26,7 @@
 			<arguments>
 				<dictionary>
 					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/make DOMO.Ast.launch</value>
+					<value>&lt;project&gt;/.externalToolBuilders/make WALA.CAst.launch</value>
 				</dictionary>
 			</arguments>
 		</buildCommand>
