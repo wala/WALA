@@ -90,7 +90,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
    * 
    * @see com.ibm.wala.util.intset.OrdinalSetMapping#makeSingleton(int)
    */
-  public OrdinalSet makeSingleton(int i) throws UnimplementedError {
+  public OrdinalSet<T> makeSingleton(int i) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

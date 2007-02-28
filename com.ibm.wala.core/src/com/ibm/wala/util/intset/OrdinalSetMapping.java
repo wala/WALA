@@ -45,7 +45,7 @@ public interface OrdinalSetMapping<T> extends Iterable<T> {
    * @param i
    * @return an ordinal set which conains only getMappedObject(i)
    */
-  public OrdinalSet makeSingleton(int i);
+  public OrdinalSet<T> makeSingleton(int i);
   
   /**
    * Add an Object to the set of mapped objects.
