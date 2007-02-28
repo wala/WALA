@@ -65,4 +65,8 @@ public class IntPair {
   public String toString() {
     return "[" + x + "," + y + "]";
   }
+
+  public static IntPair make(int x, int y) {
+    return new IntPair(x,y);
+  }
 }
