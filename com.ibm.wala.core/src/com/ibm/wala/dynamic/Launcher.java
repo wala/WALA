@@ -30,6 +30,8 @@ public abstract class Launcher {
   protected Map env = null;
 
   protected byte[] output = null;
+  
+  private byte[] input = null;
 
   private final boolean captureOutput;
 
@@ -69,6 +71,13 @@ public abstract class Launcher {
     return result.toString();
   }
 
+  /**
+   * Spawn a process to execute the given command
+   * @param cmd
+   * @return an object representing the process
+   * @throws WalaException
+   * @throws IllegalArgumentException
+   */
   protected Process spawnProcess(String cmd) throws WalaException, IllegalArgumentException {
     if (cmd == null) {
       throw new IllegalArgumentException("cmd cannot be null");
@@ -210,5 +219,16 @@ public abstract class Launcher {
 
   protected void setOutput(byte[] newOutput) {
     output = newOutput;
+  }
+
+  public byte[] getInput() {
+    return input;
+  }
+
+  /**
+   * Set input which will be fed to the launched process's stdin
+   */
+  public void setInput(byte[] input) {
+    this.input = input;
   }
 }

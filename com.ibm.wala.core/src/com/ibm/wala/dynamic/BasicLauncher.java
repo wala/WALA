@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.dynamic;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
@@ -50,8 +53,19 @@ public class BasicLauncher extends Launcher {
    */
   public void launch() throws WalaException, IllegalArgumentException {
     Process p = spawnProcess(getCmd());
+
     Thread d1 = drainStdErr(p);
     Thread d2 = isCaptureOutput() ? captureStdOut(p) : drainStdOut(p);
+    if (getInput() != null) {
+      final BufferedOutputStream input = new BufferedOutputStream(p.getOutputStream());
+      try {
+        input.write(getInput(),0,getInput().length);
+        input.flush();
+      } catch (IOException e) {
+        e.printStackTrace();
+        throw new WalaException("error priming stdin", e);
+      }
+    }
     try {
       d1.join();
       d2.join();
