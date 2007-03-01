@@ -18,9 +18,9 @@ import java.util.Iterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 /**
- *
- * A bit set mapping based on an object array.
- * This is not terribly efficient, but is useful for prototyping.
+ * 
+ * A bit set mapping based on an object array. This is not terribly efficient,
+ * but is useful for prototyping.
  * 
  * @author sfink
  */
@@ -29,6 +29,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
   private static final int INITIAL_CAPACITY = 20;
 
   private Object[] array;
+
   private int nextIndex = 0;
 
   /**
@@ -64,8 +65,8 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     return (T) array[n];
   }
 
- 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    */
   public int getMappedIndex(Object o) {
     Integer I = map.get(o);
@@ -89,6 +90,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
 
   /**
    * Add an Object to the set of mapped objects.
+   * 
    * @return the integer to which the object is mapped.
    */
   public int add(T o) {
@@ -107,29 +109,35 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     return result;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#toString()
    */
   public String toString() {
     StringBuffer result = new StringBuffer();
-    for (int i = 0; i<nextIndex; i++) {
+    for (int i = 0; i < nextIndex; i++) {
       result.append(i).append("  ").append(array[i]).append("\n");
     }
     return result.toString();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.util.intset.OrdinalSetMapping#iterator()
    */
   public Iterator<T> iterator() {
     return map.keySet().iterator();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.util.intset.OrdinalSetMapping#makeSingleton(int)
    */
   public OrdinalSet<T> makeSingleton(int i) {
-    return new OrdinalSet<T>(SparseIntSet.singleton(i),this);
+    return new OrdinalSet<T>(SparseIntSet.singleton(i), this);
   }
 
   /**
@@ -142,7 +150,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
       map.remove(n);
     }
   }
-  
+
   public Collection<T> getObjects() {
     return Collections.unmodifiableCollection(map.keySet());
   }
@@ -156,8 +164,25 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
       throw new IllegalArgumentException("first element does not exist in map");
     }
     map.remove(a);
-    map.put(b,new Integer(i));
-    array[i] = b; 
+    map.put(b, new Integer(i));
+    array[i] = b;
+  }
+
+  /**
+   * Add an object to the set of mapped objects at index i.
+   */
+  public void put(int i, T o) {
+
+    Integer I = Integer.valueOf(i);
+    map.put(o, I);
+    if (i >= array.length) {
+      Object[] old = array;
+      array = new Object[2 * i];
+      System.arraycopy(old, 0, array, 0, old.length);
+    }
+    array[i] = o;
+    nextIndex = Math.max(nextIndex, i+1);
+
   }
 
 }
