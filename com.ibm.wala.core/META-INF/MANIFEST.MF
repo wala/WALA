@@ -63,6 +63,5 @@ Export-Package: .,
  com.ibm.wala.util.math,
  com.ibm.wala.util.perf,
  com.ibm.wala.util.scope,
- com.ibm.wala.util.system,
  com.ibm.wala.util.warnings,
  com.ibm.wala.viz
