@@ -603,7 +603,7 @@ public final class ShrikeClass implements IClass {
   public Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException {
     if (Assertions.verifyAssertions) {
       if (isInterface()) {
-        Assertions.UNREACHABLE("shouldn't ask for implemented interfaces of " + this);
+        Assertions.UNREACHABLE("shouldn't ask for implemented interfaces of an interface " + this);
       }
     }
     if (allInterfaces != null) {
