@@ -64,7 +64,7 @@ public class SlicerTest extends TestCase {
 
     CGNode main = findMainMethod(cg);
 
-    Statement s = findCallTo(main, "print");
+    Statement s = findCallTo(main, "println");
     System.err.println("Statement: " + s);
     // compute a data slice
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
@@ -85,7 +85,7 @@ public class SlicerTest extends TestCase {
 
     CGNode main = findMethod(cg, "baz");
 
-    Statement s = findCallTo(main, "print");
+    Statement s = findCallTo(main, "println");
     System.err.println("Statement: " + s);
     // compute a data slice
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
@@ -525,7 +525,8 @@ public class SlicerTest extends TestCase {
     for (Iterator<SSAInstruction> it = ir.iterateAllInstructions(); it.hasNext();) {
       SSAInstruction s = it.next();
       if (s instanceof SSAInvokeInstruction) {
-        if (s.toString().indexOf(methodName) > -1) {
+        SSAInvokeInstruction call = (SSAInvokeInstruction)s;
+        if (call.getCallSite().getDeclaredTarget().getName().toString().equals(methodName)) {
           IntSet indices = ir.getCallInstructionIndices(((SSAInvokeInstruction) s).getCallSite());
           Assertions.productionAssertion(indices.size()== 1, "expected 1 but got " + indices.size());
           return new NormalStatement(n, indices.intIterator().next());
