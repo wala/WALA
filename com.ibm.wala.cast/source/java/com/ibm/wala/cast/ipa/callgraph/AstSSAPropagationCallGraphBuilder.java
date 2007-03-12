@@ -309,18 +309,47 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       return NOT_CHANGED;
     }
 
-    abstract void action(PointerKey lexicalKey, int vn);
+    abstract protected void action(PointerKey lexicalKey, int vn);
 
     public String toString() {
       return "lexical op";
     }
 
     public boolean equals(Object o) {
-      return o == this;
+      if (! (o instanceof LexicalOperator)) {
+	return false;
+      } else {
+	LexicalOperator other = (LexicalOperator) o;
+
+	if (isLoad != other.isLoad) {
+	  return false;
+
+	} else if (! node.equals(other.node)) {
+	  return false;
+
+	} else if (accesses.length != other.accesses.length) {
+	  return false;
+
+	} else {
+	  for(int i = 0; i < accesses.length; i++) {
+	    if (! accesses[i].equals(other.accesses[i])) {
+	      return false;
+	    }
+	  }
+	    
+	  for(int i = 0; i < accesses.length; i++) {
+	    if (! accesses[i].equals(other.accesses[i])) {
+	      return false;
+	    }
+	  }
+
+	  return true;
+	}
+      }
     }
 
     public int hashCode() {
-      return System.identityHashCode(this);
+      return node.hashCode() * accesses[0].hashCode() * accesses.length;
     }
   }
 
@@ -906,17 +935,34 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         system.newSideEffect(op, function);
       }
 
-      ((AstCGNode) node).addCallback(new Function<Object,Object>() {
+      class LexicalScopingCallback implements Function<Object,Object> {
         public Object apply(Object ignore) {
           op.doLexicalPointerKeys();
           return null;
         }
-      });
+
+	private LexicalOperator getOperator() {
+	  return op;
+	}
+
+	public int hashCode() {
+	  return op.hashCode();
+	}
+
+	public boolean equals(Object o) {
+	  return
+	    (o instanceof LexicalScopingCallback) 
+	                     &&
+	    ((LexicalScopingCallback)o).getOperator().equals(op);
+	}
+      }
+
+      ((AstCGNode) node).addCallback(new LexicalScopingCallback());
     }
 
     public void visitAstLexicalRead(AstLexicalRead instruction) {
       visitLexical(new LexicalOperator((AstCGNode) node, instruction.getAccesses(), true) {
-        void action(PointerKey lexicalKey, int vn) {
+        protected void action(PointerKey lexicalKey, int vn) {
           PointerKey lval = getPointerKeyForLocal(node, vn);
           if (lexicalKey instanceof LocalPointerKey) {
             CGNode lnode = ((LocalPointerKey) lexicalKey).getNode();
@@ -943,7 +989,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     public void visitAstLexicalWrite(AstLexicalWrite instruction) {
       visitLexical(new LexicalOperator((AstCGNode) node, instruction.getAccesses(), false) {
-        void action(PointerKey lexicalKey, int vn) {
+        protected void action(PointerKey lexicalKey, int vn) {
           PointerKey rval = getPointerKeyForLocal(node, vn);
           if (contentsAreInvariant(symbolTable, du, vn)) {
             InstanceKey[] ik = getInvariantContents(symbolTable, du, node, vn, AstSSAPropagationCallGraphBuilder.this);

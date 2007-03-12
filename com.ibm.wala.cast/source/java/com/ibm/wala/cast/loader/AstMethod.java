@@ -31,6 +31,8 @@ public abstract class AstMethod implements IMethod {
 
   public interface DebuggingInformation {
 
+    Position getCodeBodyPosition();
+      
     Position getInstructionPosition(int instructionOffset);
       
     String[][] getSourceNamesForValues();
@@ -215,6 +217,10 @@ public abstract class AstMethod implements IMethod {
     } else {
       return pos.getFirstLine();
     }
+  }
+
+  public Position getSourcePosition() {
+    return debugInfo.getCodeBodyPosition();
   }
 
   public Position getSourcePosition(int instructionIndex) {

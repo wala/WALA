@@ -278,11 +278,18 @@ public abstract class AstTranslator extends CAstVisitor {
   }
 
   private static class AstDebuggingInformation implements DebuggingInformation {
+    private Position codeBodyPosition;
+
     private String[][] valueNumberNames;
 
     private Position[] instructionPositions;
 
-    AstDebuggingInformation(Position[] instructionPositions, String[] names) {
+    AstDebuggingInformation(Position codeBodyPosition,
+			    Position[] instructionPositions, 
+			    String[] names) 
+    {
+      this.codeBodyPosition = codeBodyPosition;
+
       this.instructionPositions = instructionPositions;
 
       valueNumberNames = new String[names.length][];
@@ -293,6 +300,10 @@ public abstract class AstTranslator extends CAstVisitor {
           valueNumberNames[i] = new String[0];
         }
       }
+    }
+
+    public Position getCodeBodyPosition() {
+      return codeBodyPosition;
     }
 
     public Position getInstructionPosition(int instructionOffset) {
@@ -1941,7 +1952,7 @@ public abstract class AstTranslator extends CAstVisitor {
     }
   }
 
-  private String[] makeNameMap(Set<Scope> scopes) {
+  private String[] makeNameMap(CAstEntity n, Set<Scope> scopes) {
     // all scopes share the same underlying symtab, which is what
     // size really refers to.
     String[] map = new String[scopes.iterator().next().size() + 1];
@@ -1960,8 +1971,15 @@ public abstract class AstTranslator extends CAstVisitor {
         if ("ctor temp".equals(nm))
           continue;
 
-        Assertions._assert(map[v.valueNumber()] == null || map[v.valueNumber()].equals(nm), "value number " + v.valueNumber()
-            + " mapped to multiple names in translator: " + nm + " and " + map[v.valueNumber()]);
+	// constants can flow to multiple variables
+	if (scope.isConstant( v.valueNumber() ))
+	  continue;
+
+        Assertions._assert(
+	  map[v.valueNumber()] == null || map[v.valueNumber()].equals(nm),
+	  "value number " + v.valueNumber() + 
+	  " mapped to multiple names in " + n.getName() + ": " +
+	  nm + " and " + map[v.valueNumber()]);
 
         map[v.valueNumber()] = nm;
 
@@ -2088,7 +2106,7 @@ public abstract class AstTranslator extends CAstVisitor {
     AbstractCFG cfg = new AstCFG(n, functionContext.cfg(), symtab);
     Position[] line = functionContext.cfg().getLinePositionMap();
     boolean katch = functionContext.cfg().hasCatchBlock();
-    String[] nms = makeNameMap(functionContext.entityScopes());
+    String[] nms = makeNameMap(n, functionContext.entityScopes());
 
     /*
      * Set reachableBlocks = DFS.getReachableNodes(cfg,
@@ -2105,7 +2123,7 @@ public abstract class AstTranslator extends CAstVisitor {
     new AstLexicalInformation((AbstractScope) functionContext.currentScope(), cfg.getInstructions(), exposedNames.get(n), accesses
         .get(n));
 
-    DebuggingInformation DBG = new AstDebuggingInformation(line, nms);
+    DebuggingInformation DBG = new AstDebuggingInformation(n.getPosition(), line, nms);
 
     // actually make code body
     defineFunction(n, parentContext, cfg, symtab, katch, catchTypes, LI, DBG);
@@ -2809,7 +2827,6 @@ public abstract class AstTranslator extends CAstVisitor {
   private void doSimpleSwitch(CAstNode n, WalkContext context, CAstVisitor visitor) {
     PreBasicBlock defaultHackBlock = null;
     CAstControlFlowMap ctrl = context.getControlFlow();
-    context.cfg().addPreNode(n, context.getUnwindState());
 
     CAstNode switchValue = n.getChild(0);
     visitor.visit(switchValue, context, visitor);
@@ -2826,18 +2843,21 @@ public abstract class AstTranslator extends CAstVisitor {
     int defaultBlock = context.cfg().getCurrentBlock().getGraphNodeId() + 1;
 
     context.cfg().addInstruction(SSAInstructionFactory.SwitchInstruction(v, defaultBlock, casesAndLabels));
+    context.cfg().addPreNode(n, context.getUnwindState());
     // PreBasicBlock switchB = context.cfg().getCurrentBlock();
     context.cfg().newBlock(true);
 
-    if (hasExplicitDefault) {
-      context.cfg().addInstruction(SSAInstructionFactory.GotoInstruction());
-      defaultHackBlock = context.cfg().getCurrentBlock();
-      context.cfg().newBlock(false);
-    }
+    context.cfg().addInstruction(SSAInstructionFactory.GotoInstruction());
+    defaultHackBlock = context.cfg().getCurrentBlock();
+    context.cfg().newBlock(false);
 
     CAstNode switchBody = n.getChild(1);
     visitor.visit(switchBody, context, visitor);
     context.cfg().newBlock(true);
+
+    if (! hasExplicitDefault) {
+      context.cfg().addEdge(defaultHackBlock, context.cfg().getCurrentBlock());
+    }
 
     int cn = 0;
     for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {

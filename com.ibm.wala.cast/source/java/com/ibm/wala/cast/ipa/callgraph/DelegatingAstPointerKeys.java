@@ -29,11 +29,7 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     return base.getPointerKeyForLocal(node, valueNumber);
   }
 
-  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, IClass filter) {
-    return base.getFilteredPointerKeyForLocal(node, valueNumber, filter);
-  }
-
-  public InstanceFilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, InstanceKey filter) {
+  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
     return base.getFilteredPointerKeyForLocal(node, valueNumber, filter);
   }
 

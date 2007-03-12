@@ -84,22 +84,48 @@ public class AstCallGraph extends ExplicitCallGraph {
       }
     }
 
-    public void addCallback(Function<Object,Object> callback) {
-      if (callbacks == null)
-        callbacks = new HashSet<Function<Object,Object>>(1);
-      callbacks.add(callback);
+    private boolean hasCallback(Function<Object,Object> callback) {
+      return callbacks != null && callbacks.contains(callback);
     }
 
-    private void fireCallbacksTransitive() {
-      for (Iterator<CGNode> nodes = DFS.iterateFinishTime(AstCallGraph.this, new NonNullSingletonIterator<CGNode>(this)); nodes
-          .hasNext();) {
-        ((AstCGNode) nodes.next()).fireCallbacks();
+    private boolean hasAllCallbacks(Set<Function<Object,Object>> callbacks) {
+      return callbacks != null && callbacks.containsAll(callbacks);
+    }
+
+    public void addCallback(Function<Object,Object> callback) {
+      if (! hasCallback(callback)) {
+	if (callbacks == null) {
+	  callbacks = new HashSet<Function<Object,Object>>(1);
+	}
+
+	callbacks.add(callback);
+
+	for(Iterator ps = getPredNodes(this); ps.hasNext(); ) {
+	  ((AstCGNode)ps.next()).addCallback(callback);
+	}
+      }
+    }
+
+    public void addAllCallbacks(Set<Function<Object,Object>> callback) {
+      if (! hasAllCallbacks(callbacks)) {
+	if (callbacks == null) {
+	  callbacks = new HashSet<Function<Object,Object>>(1);
+	}
+
+	callbacks.addAll(callbacks);
+
+	for(Iterator ps = getPredNodes(this); ps.hasNext(); ) {
+	  ((AstCGNode)ps.next()).addAllCallbacks(callbacks);
+	}
       }
     }
 
     public boolean addTarget(CallSiteReference site, CGNode node) {
       if (super.addTarget(site, node)) {
-        fireCallbacksTransitive();
+	if (((AstCGNode)node).callbacks != null) {
+	  ((AstCGNode)node).fireCallbacks();
+	  addAllCallbacks(((AstCGNode)node).callbacks);
+	}
         return true;
       } else {
         return false;
