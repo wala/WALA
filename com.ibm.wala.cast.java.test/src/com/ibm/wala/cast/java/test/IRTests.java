@@ -31,11 +31,7 @@ import junit.framework.Assert;
 
 import com.ibm.wala.cast.java.client.EclipseProjectSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.JarFileModule;
-import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.*;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -67,7 +63,6 @@ public abstract class IRTests extends WalaTestCase {
     rtJar = new LinkedList<String>();
     rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "rt.jar");
     rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "core.jar");
-    rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "vm.jar");
   }
 
   protected static class EdgeAssertions {
@@ -384,8 +379,13 @@ public abstract class IRTests extends WalaTestCase {
     for (Iterator iter = sources.iterator(); iter.hasNext();) {
       String srcFilePath = (String) iter.next();
       String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
-
-      engine.addSourceModule(new SourceFileModule(new File(srcFilePath), srcFileName));
+      File f = new File(srcFilePath);
+      Assert.assertTrue(f.exists());
+      if (f.isDirectory()) {
+	engine.addSourceModule(new SourceDirectoryTreeModule(f));
+      } else {
+	engine.addSourceModule(new SourceFileModule(f, srcFileName));
+      }
     }
   }
 }

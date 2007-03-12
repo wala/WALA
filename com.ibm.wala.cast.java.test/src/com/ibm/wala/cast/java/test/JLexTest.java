@@ -33,7 +33,7 @@ public class JLexTest extends IRTests {
     }
 
     protected String singleInputForTest() {
-	return "JLex/Main.java";
+	return "JLex";
     }
 
     public void testJLex() {

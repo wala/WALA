@@ -47,11 +47,11 @@ public class JavaIRTests extends IRTests {
 
     public void testSimple1() {
 	SourceMapAssertions sa = new SourceMapAssertions();
-	sa.addAssertion("Source#Simple1#doStuff#(I)V", new SourceMapAssertion("prod", 13));
-	sa.addAssertion("Source#Simple1#doStuff#(I)V", new SourceMapAssertion("j", 12));
-	sa.addAssertion("Source#Simple1#main#([Ljava/lang/String;)V", new SourceMapAssertion("s", 21));
-	sa.addAssertion("Source#Simple1#main#([Ljava/lang/String;)V", new SourceMapAssertion("i", 17));
-	sa.addAssertion("Source#Simple1#main#([Ljava/lang/String;)V", new SourceMapAssertion("sum", 18));
+	sa.addAssertion("Source#Simple1#doStuff#(I)V", new SourceMapAssertion("prod", 14));
+	sa.addAssertion("Source#Simple1#doStuff#(I)V", new SourceMapAssertion("j", 13));
+	sa.addAssertion("Source#Simple1#main#([Ljava/lang/String;)V", new SourceMapAssertion("s", 22));
+	sa.addAssertion("Source#Simple1#main#([Ljava/lang/String;)V", new SourceMapAssertion("i", 18));
+	sa.addAssertion("Source#Simple1#main#([Ljava/lang/String;)V", new SourceMapAssertion("sum", 19));
 
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
 		new GraphAssertions(
@@ -172,6 +172,11 @@ public class JavaIRTests extends IRTests {
     }
 
     public void testMonitor() {
+	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
+		new GraphAssertions(), null, true);
+    }
+
+    public void testStaticInit() {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
 		new GraphAssertions(), null, true);
     }
