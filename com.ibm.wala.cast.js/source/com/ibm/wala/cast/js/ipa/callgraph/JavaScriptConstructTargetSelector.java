@@ -345,7 +345,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 	
   private IMethod makeFunctionConstructor(IClass receiver, IClass cls) {
-    Pair tableKey = new Pair(receiver, cls);
+    Pair<IClass,IClass> tableKey = new Pair<IClass,IClass>(receiver, cls);
     if (constructors.containsKey(tableKey)) return constructors.get(tableKey);
 
     MethodReference ref =
