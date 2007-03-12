@@ -57,7 +57,7 @@ public abstract class IRTests extends WalaTestCase {
 
   protected static String testSrcPath = "." + File.separator + "testSrc";
 
-  protected static List<String>rtJar;
+  protected static List<String> rtJar;
 
   static {
     rtJar = new LinkedList<String>();
@@ -69,7 +69,7 @@ public abstract class IRTests extends WalaTestCase {
   protected static class EdgeAssertions {
     public final String srcDescriptor;
 
-    public final List/* <String> */<String>tgtDescriptors = new ArrayList<String>();
+    public final List/* <String> */<String> tgtDescriptors = new ArrayList<String>();
 
     public EdgeAssertions(String srcDescriptor) {
       this.srcDescriptor = srcDescriptor;
@@ -108,7 +108,7 @@ public abstract class IRTests extends WalaTestCase {
   }
 
   protected static class GraphAssertions {
-    public final Set/* <EdgeAssertions> */<EdgeAssertions>nodeAssertions = new HashSet<EdgeAssertions>();
+    public final Set/* <EdgeAssertions> */<EdgeAssertions> nodeAssertions = new HashSet<EdgeAssertions>();
 
     public GraphAssertions() {
     }
@@ -228,12 +228,8 @@ public abstract class IRTests extends WalaTestCase {
 
   protected abstract EclipseProjectSourceAnalysisEngine getAnalysisEngine(String[] mainClassDescriptors);
 
-  public void runTest(Collection/* <String> */sources, 
-		      List/* <String> */libs,
-		      String[] mainClassDescriptors,
-		      GraphAssertions ga, 
-		      SourceMapAssertions sa,
-		      boolean assertReachable) {
+  public void runTest(Collection/* <String> */sources, List/* <String> */libs, String[] mainClassDescriptors, GraphAssertions ga,
+      SourceMapAssertions sa, boolean assertReachable) {
     try {
       EclipseProjectSourceAnalysisEngine engine = getAnalysisEngine(mainClassDescriptors);
 
@@ -257,9 +253,7 @@ public abstract class IRTests extends WalaTestCase {
     }
   }
 
-  private static void dumpIR(CallGraph cg, boolean assertReachable)
-    throws IOException 
-  {
+  private static void dumpIR(CallGraph cg, boolean assertReachable) throws IOException {
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = cg.getClassHierarchy();
     IClassLoader sourceLoader = cha.getLoader(JavaSourceAnalysisScope.SOURCE_REF);
@@ -277,10 +271,10 @@ public abstract class IRTests extends WalaTestCase {
         else {
           Iterator nodeIter = cg.getNodes(m.getReference()).iterator();
           if (!nodeIter.hasNext()) {
-	    Trace.println("Method " + m.getReference() + " not reachable?");
-	    if (assertReachable) {
-	      Assert.assertTrue(m.toString(), nodeIter.hasNext());
-	    }
+            Trace.println("Method " + m.getReference() + " not reachable?");
+            if (assertReachable) {
+              Assert.assertTrue(m.toString(), nodeIter.hasNext());
+            }
             continue;
           }
           CGNode node = (CGNode) nodeIter.next();
@@ -383,9 +377,9 @@ public abstract class IRTests extends WalaTestCase {
       File f = new File(srcFilePath);
       Assert.assertTrue(f.exists());
       if (f.isDirectory()) {
-	engine.addSourceModule(new SourceDirectoryTreeModule(f));
+        engine.addSourceModule(new SourceDirectoryTreeModule(f));
       } else {
-	engine.addSourceModule(new SourceFileModule(f, srcFileName));
+        engine.addSourceModule(new SourceFileModule(f, srcFileName));
       }
     }
   }
