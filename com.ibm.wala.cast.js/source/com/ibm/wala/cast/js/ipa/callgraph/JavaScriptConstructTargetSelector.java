@@ -345,7 +345,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 	
   private IMethod makeFunctionConstructor(IClass receiver, IClass cls) {
-    if (constructors.containsKey(cls)) return constructors.get(cls);
+    Pair tableKey = new Pair(receiver, cls);
+    if (constructors.containsKey(tableKey)) return constructors.get(tableKey);
 
     MethodReference ref =
       JavaScriptMethods.makeCtorReference( receiver.getReference() );
@@ -376,9 +377,9 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     S.addStatement(SSAInstructionFactory.ReturnInstruction(5, false));
 
     if (receiver != cls)
-      return record(receiver, new JavaScriptConstructor(ref, S, receiver, "("+cls.getReference().getName()+")"));
+      return record(tableKey, new JavaScriptConstructor(ref, S, receiver, "("+cls.getReference().getName()+")"));
     else
-      return record(receiver, new JavaScriptConstructor(ref, S, receiver));
+      return record(tableKey, new JavaScriptConstructor(ref, S, receiver));
   }
 
   private int ctorCount = 0;
