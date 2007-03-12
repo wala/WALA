@@ -63,6 +63,7 @@ public abstract class IRTests extends WalaTestCase {
     rtJar = new LinkedList<String>();
     rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "rt.jar");
     rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "core.jar");
+    rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "vm.jar");
   }
 
   protected static class EdgeAssertions {
