@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.modref;
 
 import java.util.Iterator;
 
-import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;

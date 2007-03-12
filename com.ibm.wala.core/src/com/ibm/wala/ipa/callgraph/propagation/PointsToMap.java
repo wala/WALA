@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import java.util.Iterator;
 
-import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.debug.Assertions;

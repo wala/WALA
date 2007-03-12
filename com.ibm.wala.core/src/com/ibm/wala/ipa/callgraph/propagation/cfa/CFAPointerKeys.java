@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
-import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.ArrayInstanceKey;

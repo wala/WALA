@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.classLoader.ArrayClass;
-import com.ibm.wala.classLoader.IClass;
 
 /**
  * A pointer key which represents the contents of an array instance.

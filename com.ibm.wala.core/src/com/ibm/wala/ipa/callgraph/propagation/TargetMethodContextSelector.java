@@ -10,31 +10,30 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import com.ibm.wala.analysis.reflection.JavaTypeContext;
-import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.ContextItem;
+import com.ibm.wala.ipa.callgraph.ContextKey;
+import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.types.*;
+import com.ibm.wala.types.Selector;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
- *  This context selector selects a context based on whether the 
- * receiver type dispatches to a given method.
+ * This context selector selects a context based on whether the receiver type
+ * dispatches to a given method.
  * 
  * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class TargetMethodContextSelector implements ContextSelector {
 
-  private final ClassHierarchy cha;
-
   private final Selector selector;
 
   public TargetMethodContextSelector(Selector selector, ClassHierarchy cha) {
-    this.cha = cha;
     this.selector = selector;
   }
 
@@ -56,32 +55,30 @@ public class TargetMethodContextSelector implements ContextSelector {
     class MethodDispatchContext implements Context {
 
       private IMethod getTargetMethod() {
-	return M;
+        return M;
       }
 
       public ContextItem get(ContextKey name) {
         if (name.equals(ContextKey.FILTER)) {
-	  return new FilteredPointerKey.TargetMethodFilter(M);
-	} else {
-	    return null;
-	}
+          return new FilteredPointerKey.TargetMethodFilter(M);
+        } else {
+          return null;
+        }
       }
 
       public String toString() {
-	return "DispatchContext: " + M;
+        return "DispatchContext: " + M;
       }
 
-      public int hashCode() { 
-	return M.hashCode(); 
+      public int hashCode() {
+        return M.hashCode();
       }
-	
+
       public boolean equals(Object o) {
-	return 
-	  (o instanceof MethodDispatchContext)
-	                    &&
-	  ((MethodDispatchContext)o).getTargetMethod().equals(M);
+        return (o instanceof MethodDispatchContext) && ((MethodDispatchContext) o).getTargetMethod().equals(M);
       }
-    };
+    }
+    ;
 
     return new MethodDispatchContext();
   }

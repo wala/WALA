@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.callgraph;
 
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.debug.Assertions;
 
