@@ -37,6 +37,9 @@ public class ClassSignature extends Signature {
     return new ClassSignature(sig);
   }
 
+  /**
+   * @return the formal type parameters, or null if none
+   */
   public FormalTypeParameter[] getFormalTypeParameters() {
     if (rawString().charAt(0) != '<') {
       // no formal type parameters
