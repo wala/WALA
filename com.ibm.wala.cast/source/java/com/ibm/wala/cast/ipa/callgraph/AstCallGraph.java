@@ -10,20 +10,26 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.cast.ir.cfg.*;
-import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.cfg.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.impl.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.util.*;
-import com.ibm.wala.util.collections.*;
-import com.ibm.wala.util.graph.traverse.DFS;
-import com.ibm.wala.util.warnings.WarningSet;
+import java.util.ConcurrentModificationException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-import java.util.*;
+import com.ibm.wala.cast.ir.cfg.AstInducedCFG;
+import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
+import com.ibm.wala.cfg.InducedCFG;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.impl.Everywhere;
+import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
+import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.util.Function;
+import com.ibm.wala.util.warnings.WarningSet;
 
 public class AstCallGraph extends ExplicitCallGraph {
   private final WarningSet warnings;
