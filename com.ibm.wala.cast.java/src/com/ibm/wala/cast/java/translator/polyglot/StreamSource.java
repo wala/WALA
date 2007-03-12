@@ -29,7 +29,6 @@ import polyglot.frontend.FileSource;
  */
 public class StreamSource extends FileSource {
     private InputStream fStream;
-    private Reader fReader;
 
     public StreamSource(InputStream s, String fullPath) throws IOException {
 	super(new File(fullPath), true);
@@ -37,18 +36,11 @@ public class StreamSource extends FileSource {
     }
 
     public Reader open() throws IOException {
-	// If only the 'reader' base-class field wasn't a FileReader, we
-	// could assign that field and not have to save the reader in a
-	// separate redundant field and override close()...
-	if (fReader == null)
-	    fReader= new InputStreamReader(fStream);
-	return fReader;
+      if (reader == null) {
+	 reader = createReader(fStream);
+      }
+
+      return reader;
     }
 
-    public void close() throws IOException {
-	if (fReader != null) {
-	    fReader.close();
-	    fReader= null;
-	}
-    }
 }

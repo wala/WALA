@@ -29,6 +29,7 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.config.XMLSetOfClasses;
 
 public class EclipseProjectSourceAnalysisEngine extends
   EclipseProjectAnalysisEngine 
@@ -93,6 +94,11 @@ public class EclipseProjectSourceAnalysisEngine extends
   protected void buildAnalysisScope() {
     try {
       scope = new JavaSourceAnalysisScope();
+
+      if (getExclusionsFile() != null) {
+	ClassLoader loader = getClass().getClassLoader();
+	scope.setExclusions(new XMLSetOfClasses(getExclusionsFile(), loader));
+      }
 
       if (project != null) {
 	resolveClasspathEntries(project.getRawClasspath(), true);

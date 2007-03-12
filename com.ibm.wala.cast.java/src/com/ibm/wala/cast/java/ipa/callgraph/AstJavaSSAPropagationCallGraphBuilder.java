@@ -266,6 +266,14 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
 	    PointerKey objKey = getPointerKeyForLocal(node, 1);
 	    boolean needIndirection = false;
 
+	    Trace.println("class is " + klass + 
+			  ", enclosing is " + enclosingClass +
+			  ", method is " + node.getMethod());
+
+	    if (node.getMethod().isSynthetic()) {
+	      return;
+	    }
+
 	    while (! cha.isSubclassOf(currentCls, enclosingClass)) {
 	      Assertions._assert(currentCls instanceof JavaClass);
 	      currentCls = ((JavaClass)currentCls).getEnclosingClass();

@@ -3,10 +3,7 @@
  */
 package com.ibm.wala.cast.java.translator.polyglot;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import polyglot.types.*;
 
@@ -29,10 +26,10 @@ import com.ibm.wala.util.debug.Assertions;
  * WALA analysis results to the various AST nodes.
  * @author rfuhrer
  */
-public class PolyglotIdentityMapper implements IdentityMapper<Type,ProcedureInstance,FieldInstance> {
+public class PolyglotIdentityMapper implements IdentityMapper<Type,CodeInstance,FieldInstance> {
     private final Map<Type,TypeReference> fTypeMap= new HashMap<Type,TypeReference>();
     private final Map<FieldInstance,FieldReference> fFieldMap= new HashMap<FieldInstance,FieldReference>();
-    private final Map<ProcedureInstance,MethodReference> fMethodMap= new HashMap<ProcedureInstance,MethodReference>();
+    private final Map<CodeInstance,MethodReference> fMethodMap= new HashMap<CodeInstance,MethodReference>();
 
     /**
      * Map from Polyglot local ClassTypes to their enclosing methods. Used by localTypeToTypeID().<br>
@@ -41,7 +38,7 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type,ProcedureInst
      * off to javac to generate bytecode. It probably also wouldn't want to, since that would
      * create back-pointers from Type objects in the TypeSystem to AST's.)
      */
-    protected Map<ClassType,ProcedureInstance> fLocalTypeMap= new LinkedHashMap<ClassType,ProcedureInstance>();
+    protected Map<ClassType,CodeInstance> fLocalTypeMap= new LinkedHashMap<ClassType,CodeInstance>();
 
     private final ClassLoaderReference fClassLoaderRef;
     private final TypeSystem fTypeSystem;
@@ -69,7 +66,7 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type,ProcedureInst
         return fTypeMap.get(type);
     }
 
-    public MethodReference getMethodRef(ProcedureInstance method) {
+    public MethodReference getMethodRef(CodeInstance method) {
         if (!fMethodMap.containsKey(method)) {
     	MethodReference sel= referenceForMethod(method);
     	fMethodMap.put(method, sel);
@@ -78,7 +75,7 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type,ProcedureInst
         return fMethodMap.get(method);
     }
 
-    public void mapLocalAnonTypeToMethod(ClassType anonLocalType, ProcedureInstance owningProc) {
+    public void mapLocalAnonTypeToMethod(ClassType anonLocalType, CodeInstance owningProc) {
         fLocalTypeMap.put(anonLocalType, owningProc);
     }
 
@@ -100,27 +97,40 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type,ProcedureInst
         return typeRef;
     }
 
-    private Selector selectorForMethod(ProcedureInstance procInstance) {
-        Atom name= (procInstance instanceof ConstructorInstance) ? MethodReference.initAtom : Atom
-    	    .findOrCreateUnicodeAtom(((MethodInstance) procInstance).name());
+    private Selector selectorForMethod(CodeInstance procInstance) {
+      Atom name= 
+	(procInstance instanceof ConstructorInstance) ?
+	MethodReference.initAtom : 
+	(procInstance instanceof InitializerInstance) ?
+	  MethodReference.clinitName : 
+	  Atom.findOrCreateUnicodeAtom(((MethodInstance) procInstance).name());
 
-        int numArgs= procInstance.formalTypes().size();
-        TypeName[] argTypeNames= (numArgs == 0) ? null : new TypeName[numArgs]; // Descriptor prefers null to an empty array
-        int i= 0;
-        for(Iterator iter= procInstance.formalTypes().iterator(); iter.hasNext(); i++) {
-    	Type argType= (Type) iter.next();
-    	argTypeNames[i]= TypeName.string2TypeName(typeToTypeID(argType));
-        }
+      TypeName[] argTypeNames = null;
+      if (! (procInstance instanceof InitializerInstance)) {
+	List formalTypes = ((ProcedureInstance)procInstance).formalTypes();
+	int numArgs = formalTypes.size();
+	// Descriptor prefers null to an empty array
+	if (numArgs > 0) {
+	  argTypeNames = new TypeName[numArgs];
+      
+	  int i = 0;
+	  for(Iterator iter = formalTypes.iterator(); iter.hasNext(); i++)  {
+	    Type argType= (Type) iter.next();
+	    argTypeNames[i]= TypeName.string2TypeName(typeToTypeID(argType));
+	  }
+	}
+      }
 
-        Type retType= (procInstance instanceof ConstructorInstance) ? fTypeSystem.Void() : ((MethodInstance) procInstance).returnType();
-        TypeName retTypeName= TypeName.string2TypeName(typeToTypeID(retType));
+      Type retType= 
+	(procInstance instanceof MethodInstance) ? ((MethodInstance) procInstance).returnType() : fTypeSystem.Void();
+      TypeName retTypeName= TypeName.string2TypeName(typeToTypeID(retType));
 
-        Descriptor desc= Descriptor.findOrCreate(argTypeNames, retTypeName);
+      Descriptor desc= Descriptor.findOrCreate(argTypeNames, retTypeName);
 
-        return new Selector(name, desc);
+      return new Selector(name, desc);
     }
 
-    private MethodReference referenceForMethod(ProcedureInstance procInstance) {
+    private MethodReference referenceForMethod(CodeInstance procInstance) {
         // Handles both ConstructorInstance's and MethodInstance's
         TypeName ownerType= TypeName.string2TypeName(typeToTypeID(((MemberInstance)procInstance).container()));
         TypeReference ownerTypeRef= TypeReference.findOrCreate(fClassLoaderRef, ownerType);
@@ -153,7 +163,7 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type,ProcedureInst
     }
 
     public String anonLocalTypeToTypeID(ClassType ctype) {
-        ProcedureInstance procInstance= (ProcedureInstance) fLocalTypeMap.get(ctype);
+        CodeInstance procInstance= (CodeInstance) fLocalTypeMap.get(ctype);
 
         String outerTypeID= typeToTypeID(ctype.outer());
         String shortName= (ctype.isAnonymous()) ? PolyglotJava2CAstTranslator.anonTypeName(ctype) : ctype.fullName();

@@ -110,7 +110,11 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
         }
       }
 
-      Assertions._assert(result.size() == superTypeNames.size() - 1);
+      if (result.size() != (superTypeNames.size() - 1)) {
+	Assertions._assert(result.size() == superTypeNames.size() - 1,
+	  "found " + result + " interfaces for " + superTypeNames +
+	  " for " + this);
+      }
 
       return result;
     }

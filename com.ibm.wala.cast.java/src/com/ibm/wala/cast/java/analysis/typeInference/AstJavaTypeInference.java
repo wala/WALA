@@ -15,6 +15,7 @@ import com.ibm.wala.cast.analysis.typeInference.*;
 import com.ibm.wala.cast.ir.ssa.AstConstants;
 import com.ibm.wala.cast.java.ssa.*;
 import com.ibm.wala.classLoader.*;
+import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ipa.cha.*;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.ssa.*;
@@ -22,6 +23,8 @@ import com.ibm.wala.types.*;
 import com.ibm.wala.util.debug.Assertions;
 
 public class AstJavaTypeInference extends AstTypeInference {
+
+  protected final IClass stringClass;
 
   protected class AstJavaTypeOperatorFactory
       extends AstTypeOperatorFactory
@@ -31,14 +34,14 @@ public class AstJavaTypeInference extends AstTypeInference {
       if (doPrimitives) {
         BinaryOpInstruction.IOperator op = instruction.getOperator();
     	if (op == AstConstants.BinaryOp.EQ ||
-    		op == AstConstants.BinaryOp.NE ||
-    		op == AstConstants.BinaryOp.LT ||
-    		op == AstConstants.BinaryOp.GE ||
-    		op == AstConstants.BinaryOp.GT ||
-    		op == AstConstants.BinaryOp.LE) {
-    		result = new DeclaredTypeOperator(PrimitiveType.BOOLEAN);
+	    op == AstConstants.BinaryOp.NE ||
+	    op == AstConstants.BinaryOp.LT ||
+	    op == AstConstants.BinaryOp.GE ||
+	    op == AstConstants.BinaryOp.GT ||
+	    op == AstConstants.BinaryOp.LE) {
+	  result = new DeclaredTypeOperator(PrimitiveType.BOOLEAN);
     	} else {
-    		super.visitBinaryOp(instruction);
+	  result = new PrimAndStringOp();
     	}
       }
     }
@@ -74,30 +77,107 @@ public class AstJavaTypeInference extends AstTypeInference {
     }
   }
 
+  public class AstJavaTypeVarFactory extends TypeVarFactory {
+
+    public IVariable makeVariable(int valueNumber) {
+      SymbolTable st = ir.getSymbolTable();
+      if (st.isStringConstant(valueNumber)) {
+	IClass klass = cha.lookupClass(TypeReference.JavaLangString);
+	TypeAbstraction stringTypeAbs = new PointType(klass,cha);
+	return new TypeVariable(stringTypeAbs, 797 * valueNumber);
+      } else {
+	return super.makeVariable(valueNumber);
+      }
+    }
+
+  }
+
   public AstJavaTypeInference(IR ir, ClassHierarchy cha, boolean doPrimitives) {
     super(ir, cha, doPrimitives);
+    this.stringClass = cha.lookupClass(TypeReference.JavaLangString);
   }
 
   protected void initialize() {
-    init(ir, new TypeVarFactory(), new AstJavaTypeOperatorFactory());
+    init(ir, new AstJavaTypeVarFactory(), new AstJavaTypeOperatorFactory());
   }
 
   public TypeAbstraction getConstantPrimitiveType(int valueNumber) {
     SymbolTable st = ir.getSymbolTable();
- 	if (st.isIntegerConstant(valueNumber)) {
- 	  int val = ((Number)st.getConstantValue(valueNumber)).intValue();
- 	  if (val < 2) {
- 	    return PrimitiveType.BOOLEAN;
- 	  } else if (val < 256) {
- 		return PrimitiveType.BYTE;
- 	  } else if (val < 16384) {
- 		return PrimitiveType.SHORT; 
- 	  } else {
- 		return PrimitiveType.INT;
- 	  }
- 	} else {
+    if (st.isIntegerConstant(valueNumber)) {
+      int val = ((Number)st.getConstantValue(valueNumber)).intValue();
+      if (val < 2) {
+	return PrimitiveType.BOOLEAN;
+      } else if (val < 256) {
+	return PrimitiveType.BYTE;
+      } else if (val < 16384) {
+	return PrimitiveType.SHORT; 
+      } else {
+	return PrimitiveType.INT;
+      }
+    } else {
       return super.getConstantPrimitiveType(valueNumber);
- 	}
+    }
   }
+
+  protected class PrimAndStringOp extends PrimitivePropagateOperator {
+
+    private PrimAndStringOp() {
+    }
+
+    public byte evaluate(IVariable lhs, IVariable[] rhs) {
+      TypeAbstraction meet = null;
+
+      for (int i = 0; i < rhs.length; i++) {
+	if (rhs[i] != null) {
+	  TypeVariable r = (TypeVariable) rhs[i];
+	  TypeAbstraction ta = r.getType();
+	  if (ta instanceof PointType) {
+	    if (ta.getType().equals(stringClass)) {
+	      meet = new PointType(ta.getType(), cha);
+	      break;
+	    }
+	  } else if (ta instanceof ConeType) {
+	    if (ta.getType().equals(stringClass)) {
+	      meet = new PointType(ta.getType(), cha);
+	      break;
+	    }
+	  }
+	}
+      }
+
+      if (meet == null) {
+	return super.evaluate(lhs, rhs);
+      } else {
+	TypeVariable L = (TypeVariable) lhs;
+	TypeAbstraction lhsType = L.getType();
+
+	if (lhsType.equals(meet)) {
+	  return NOT_CHANGED;
+	} else {
+	  L.setType(meet);
+	  return CHANGED;
+	}
+      }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.dataflow.Operator#hashCode()
+     */
+    public int hashCode() {
+      return 71292;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
+     */
+    public boolean equals(Object o) {
+      return o != null && o.getClass().equals(getClass());
+    }
+  }
+
 }
 
