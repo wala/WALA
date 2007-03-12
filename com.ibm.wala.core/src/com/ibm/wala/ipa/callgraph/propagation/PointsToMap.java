@@ -263,7 +263,7 @@ public class PointsToMap {
     }
   }
 
-  private void upgradeToFilter(PointsToSetVariable p, IClass typeFilter) {
+  private void upgradeToFilter(PointsToSetVariable p, FilteredPointerKey.TypeFilter typeFilter) {
     if (p.getPointerKey() instanceof LocalPointerKey) {
       LocalPointerKey lpk = (LocalPointerKey) p.getPointerKey();
       LocalPointerKeyWithFilter f = new LocalPointerKeyWithFilter(lpk.getNode(), lpk.getValueNumber(), typeFilter);

@@ -16,11 +16,9 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.ArrayInstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceFieldKey;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceFilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKeyWithFilter;
-import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKeyWithInstanceFilter;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
@@ -41,7 +39,7 @@ public class CFAPointerKeys implements PointerKeyFactory {
     return new LocalPointerKey(node, valueNumber);
   }
 
-  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, IClass filter) {
+  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(filter != null);
       if (valueNumber <= 0) {
@@ -50,21 +48,6 @@ public class CFAPointerKeys implements PointerKeyFactory {
     }
     // TODO: add type filters!
     return new LocalPointerKeyWithFilter(node, valueNumber, filter);
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getFilteredPointerKeyForLocal(com.ibm.wala.ipa.callgraph.CGNode,
-   *      int, com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
-   */
-  public InstanceFilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, InstanceKey filter) {
-    if (Assertions.verifyAssertions) {
-      if (valueNumber <= 0) {
-        Assertions._assert(valueNumber > 0, "illegal value number: " + valueNumber + " in " + node);
-      }
-    }
-    return new LocalPointerKeyWithInstanceFilter(node, valueNumber, filter);
   }
 
   public PointerKey getPointerKeyForReturnValue(CGNode node) {

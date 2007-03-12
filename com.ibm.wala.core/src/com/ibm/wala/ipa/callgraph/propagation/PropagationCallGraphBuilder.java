@@ -374,15 +374,19 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    *         pointers that includes the local variable identified by the value
    *         number parameter.
    */
-  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, IClass filter) {
+  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(filter != null);
     }
     return pointerKeyFactory.getFilteredPointerKeyForLocal(node, valueNumber, filter);
   }
 
-  public InstanceFilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, InstanceKey filter) {
-    return pointerKeyFactory.getFilteredPointerKeyForLocal(node, valueNumber, filter);
+  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, IClass filter) {
+    return getFilteredPointerKeyForLocal(node, valueNumber, new FilteredPointerKey.SingleClassFilter(filter));
+  }
+
+  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, InstanceKey filter) {
+    return getFilteredPointerKeyForLocal(node, valueNumber, new FilteredPointerKey.SingleInstanceFilter(filter));
   }
 
   /**
@@ -550,7 +554,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     private TypedPointerKey(PointerKey base, IClass type) {
-      this.type = type;
+      this.type = type; 
       this.base = base;
       if (Assertions.verifyAssertions) {
         Assertions._assert(type != null);
@@ -563,8 +567,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey#getTypeFilter()
      */
-    public IClass getTypeFilter() {
-      return type;
+    public TypeFilter getTypeFilter() {
+      return new SingleClassFilter(type);
     }
 
     /*
@@ -700,21 +704,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       }
 
       boolean changed = false;
-      if (pk instanceof InstanceFilteredPointerKey) {
-        InstanceKey filter = ((InstanceFilteredPointerKey) pk).getInstanceFilter();
-        int idx = system.findOrCreateIndexForInstanceKey(filter);
+      FilteredPointerKey.TypeFilter filter = pk.getTypeFilter();
+      changed = filter.addFiltered(system, L, R);
 
-        if (R.contains(idx)) {
-          if (!L.contains(idx)) {
-            changed = true;
-            L.add(idx);
-          }
-        }
-      } else {
-        IClass filterType = pk.getTypeFilter();
-        IntSet f = getInstanceKeysForClass(filterType);
-        changed = (f == null) ? false : L.addAllInIntersection(R, f);
-      }
       // SJF: Do NOT propagate malleables through filters!
       // IntSet malleable = getMalleableInstances();
       // if (malleable != null) {
@@ -733,14 +725,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
               && R.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)) {
             System.err.println("Filter: FLOW FROM " + R.getPointerKey() + " TO " + L.getPointerKey());
             Trace.println("Filter: FLOW FROM " + R.getPointerKey() + " TO " + L.getPointerKey());
-            if (pk instanceof InstanceFilteredPointerKey) {
-              Trace.println("   was InstanceFilter");
-            } else {
-              IClass filterType = pk.getTypeFilter();
-              Trace.println("   filterType: " + filterType);
-              InstanceKey I = system.getInstanceKey(DEBUG_INSTANCE_KEY);
-              Trace.println("   I type: " + I.getConcreteType());
-            }
+	    Trace.println("   filter: " + filter);
+	    InstanceKey I = system.getInstanceKey(DEBUG_INSTANCE_KEY);
+	    Trace.println("   I type: " + I.getConcreteType());
           }
         }
       }
@@ -1815,11 +1802,11 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       PointsToSetVariable L = (PointsToSetVariable) lhs;
       PointsToSetVariable R = (PointsToSetVariable) rhs;
       FilteredPointerKey pk = (FilteredPointerKey) L.getPointerKey();
-      IClass filterType = pk.getTypeFilter();
+      FilteredPointerKey.TypeFilter filter = pk.getTypeFilter();
 
       boolean debug = false;
       if (DEBUG_FILTER) {
-        String S = "EVAL InverseFilter/" + filterType + " " + L.getPointerKey() + " " + R.getPointerKey();
+        String S = "EVAL InverseFilter/" + filter + " " + L.getPointerKey() + " " + R.getPointerKey();
         S += "\nEVAL      " + lhs + " " + rhs;
         debug = Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
       }
@@ -1827,11 +1814,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
         return NOT_CHANGED;
       }
 
-      IntSet f = getInstanceKeysForClass(filterType);
-      // SJF: this is horribly inefficient. we really don't want to do diffs in
-      // here.
-      // TODO: fix it. probably keep not(f) cached and use addAllInIntersection
-      boolean changed = (f == null) ? L.addAll(R) : L.addAll(IntSetUtil.diff(R.getValue(), f));
+      boolean changed = filter.addInverseFiltered(system, L, R);
 
       if (DEBUG_FILTER) {
         if (debug) {

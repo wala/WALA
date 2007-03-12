@@ -19,7 +19,6 @@ import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceFilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -44,11 +43,7 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
     return h.getClassHierarchy();
   }
 
-  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, IClass filter) {
-    return h.getFilteredPointerKeyForLocal(node, valueNumber, filter);
-  }
-
-  public InstanceFilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, InstanceKey filter) {
+  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
     return h.getFilteredPointerKeyForLocal(node, valueNumber, filter);
   }
 

@@ -57,6 +57,7 @@ public class Util {
   }
 
   public static IBasicBlock resolveSwitch(ControlFlowGraph G, IBasicBlock b, int c) {
+    Assertions._assert(endsWithSwitch(G, b));
     SSASwitchInstruction s = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = s.getCasesAndLabels();
     for (int i = 0; i < casesAndLabels.length; i += 2)
@@ -64,6 +65,26 @@ public class Util {
         return G.getBlockForInstruction(casesAndLabels[i + 1]);
 
     return G.getBlockForInstruction(s.getDefault());
+  }
+
+  public static boolean isSwitchDefault(ControlFlowGraph G, IBasicBlock b, IBasicBlock s) {
+    Assertions._assert(endsWithSwitch(G, b));
+    SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
+    return G.getBlockForInstruction(sw.getDefault()).equals(s);
+  }
+    
+  public static int getSwitchLabel(ControlFlowGraph G, IBasicBlock b, IBasicBlock s) {
+    Assertions._assert(endsWithSwitch(G, b));
+    SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
+    int[] casesAndLabels = sw.getCasesAndLabels();
+    for (int i = 0; i < casesAndLabels.length; i += 2) {
+      if (G.getBlockForInstruction(casesAndLabels[i + 1]).equals(s)) {
+	return casesAndLabels[i];
+      }
+    }
+    
+    Assertions.UNREACHABLE();
+    return -1;
   }
 
   public static IBasicBlock resolveBranch(ControlFlowGraph G, IBasicBlock bb, int c1, int c2) {

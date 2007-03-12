@@ -23,12 +23,12 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class ReturnValueKeyWithFilter extends ReturnValueKey implements FilteredPointerKey {
 
-  private final IClass typeFilter;
+  private final TypeFilter typeFilter;
 
   /**
    * 
    */
-  public ReturnValueKeyWithFilter(CGNode node, IClass typeFilter) {
+  public ReturnValueKeyWithFilter(CGNode node, TypeFilter typeFilter) {
     super(node);
     if (Assertions.verifyAssertions) {
       Assertions._assert(typeFilter != null);
@@ -42,7 +42,7 @@ public class ReturnValueKeyWithFilter extends ReturnValueKey implements Filtered
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerKey#getTypeFilter()
    */
-  public IClass getTypeFilter() {
+  public TypeFilter getTypeFilter() {
     return typeFilter;
   }
 

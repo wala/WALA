@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.callgraph;
 
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -34,14 +35,14 @@ public class ContextUtil {
       return null;
     } else {
       if (item instanceof PointType) {
-        return ((PointType)item).getIClass();
+	return ((PointType)item).getIClass();
       } else if (item instanceof InstanceKey) {
-        return ((InstanceKey)item).getConcreteType();
+	return ((InstanceKey)item).getConcreteType();
       } else {
-        Assertions.UNREACHABLE("Unexpected: " + item.getClass());
+	Assertions.UNREACHABLE("Unexpected: " + item.getClass());
         return null;
       }
     }
   }
-  
+
 }

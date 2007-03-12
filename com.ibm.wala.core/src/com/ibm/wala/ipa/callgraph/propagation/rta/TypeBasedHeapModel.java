@@ -29,7 +29,6 @@ import com.ibm.wala.ipa.callgraph.propagation.ClassBasedInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceFilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CFAPointerKeys;
@@ -136,7 +135,9 @@ public class TypeBasedHeapModel implements HeapModel {
       } else {
         TypeAbstraction t = ti.getType(i);
         if (t.getType() != null && t.getType().isReferenceType()) {
-          result.put(pointerKeys.getPointerKeyForLocal(node, i), pointerKeys.getFilteredPointerKeyForLocal(node, i, t.getType()));
+          result.put(
+	    pointerKeys.getPointerKeyForLocal(node, i), 
+	    pointerKeys.getFilteredPointerKeyForLocal(node, i, new FilteredPointerKey.SingleClassFilter(t.getType())));
         }
       }
     }
@@ -233,7 +234,7 @@ public class TypeBasedHeapModel implements HeapModel {
         ConcreteTypeKey c = (ConcreteTypeKey) result;
         if (c.getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
           // a string constant;
-          return pointerKeys.getFilteredPointerKeyForLocal(node, valueNumber, c.getConcreteType());
+          return pointerKeys.getFilteredPointerKeyForLocal(node, valueNumber, new FilteredPointerKey.SingleClassFilter(c.getConcreteType()));
         } else {
           Assertions.UNREACHABLE("need to handle " + result.getClass());
           return null;
@@ -245,12 +246,7 @@ public class TypeBasedHeapModel implements HeapModel {
     }
   }
 
-  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, IClass filter) {
-    Assertions.UNREACHABLE();
-    return null;
-  }
-
-  public InstanceFilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, InstanceKey filter) {
+  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
     Assertions.UNREACHABLE();
     return null;
   }

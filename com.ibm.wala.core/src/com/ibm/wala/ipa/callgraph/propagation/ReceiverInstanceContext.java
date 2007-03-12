@@ -39,6 +39,8 @@ public final class ReceiverInstanceContext implements Context {
   public ContextItem get(ContextKey name) {
     if (name == ContextKey.RECEIVER)
       return I;
+    else if (name == ContextKey.FILTER)
+      return new FilteredPointerKey.SingleInstanceFilter(I);
     else {
       Assertions.UNREACHABLE();
       return null;

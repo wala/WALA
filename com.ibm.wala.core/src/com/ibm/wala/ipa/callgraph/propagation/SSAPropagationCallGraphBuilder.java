@@ -33,6 +33,7 @@ import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextUtil;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
@@ -1627,14 +1628,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           InstanceKey[] ik = constParams[i];
           for (int j = 0; j < ik.length; j++) {
             if (needsFilter && (i == 0)) {
-              IClass C = getFilter(target);
+              FilteredPointerKey.TypeFilter C = getFilter(target);
               PointerKey formal = null;
               if (isRootType(C)) {
                 // TODO: we need much better filtering here ... see comments
                 // above.
                 formal = getPointerKeyForLocal(target, vn);
-              } else if (target.getContext() instanceof ReceiverInstanceContext) {
-                formal = getFilteredPointerKeyForLocal(target, vn, ((ReceiverInstanceContext) target.getContext()).getReceiver());
               } else {
                 formal = getFilteredPointerKeyForLocal(target, vn, C);
               }
@@ -1652,16 +1651,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           }
           PointerKey actual = getPointerKeyForLocal(caller, instruction.getUse(i));
           if (needsFilter && (i == 0)) {
-            IClass C = getFilter(target);
+            FilteredPointerKey.TypeFilter C = getFilter(target);
             if (isRootType(C)) {
               // TODO: we need much better filtering here ... see comments
               // above.
               PointerKey formal = getPointerKeyForLocal(target, vn);
               system.newConstraint(formal, assignOperator, actual);
-            } else if (target.getContext() instanceof ReceiverInstanceContext) {
-              InstanceFilteredPointerKey formal = getFilteredPointerKeyForLocal(target, vn, ((ReceiverInstanceContext) target
-                  .getContext()).getReceiver());
-              system.newConstraint(formal, filterOperator, actual);
             } else {
               FilteredPointerKey formal = getFilteredPointerKeyForLocal(target, vn, C);
               system.newConstraint(formal, filterOperator, actual);
@@ -1787,8 +1782,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   private boolean needsFilterForReceiver(SSAAbstractInvokeInstruction instruction, CGNode target) {
 
-    IClass concreteReceiverClass = ContextUtil.getConcreteClassFromContext(target.getContext());
-    if (concreteReceiverClass != null) {
+    FilteredPointerKey.TypeFilter f = (FilteredPointerKey.TypeFilter)
+      target.getContext().get(ContextKey.FILTER);
+
+    if (f != null) {
       // the context selects a particular concrete type for the receiver.
       // we need to filter, unless the declared receiver type implies the
       // concrete type (TODO: need to implement this optimization)
@@ -1824,6 +1821,14 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     return klass.getReference().equals(cha.getRootClass().getReference());
   }
 
+  private boolean isRootType(FilteredPointerKey.TypeFilter filter) {
+    if (filter instanceof FilteredPointerKey.SingleClassFilter) {
+      return isRootType(((FilteredPointerKey.SingleClassFilter)filter).getConcreteType());
+    } else {
+      return false;
+    }
+  }
+
   /**
    * @return true iff m is the root of a virtual method hierarchy; ie., m does
    *         NOT override a method in the superclass.
@@ -1850,15 +1855,17 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param target
    * @return an IClass which represents
    */
-  private IClass getFilter(CGNode target) {
-    IClass concreteReceiverClass = ContextUtil.getConcreteClassFromContext(target.getContext());
-    if (concreteReceiverClass != null) {
-      return concreteReceiverClass;
+  private FilteredPointerKey.TypeFilter getFilter(CGNode target) {
+    FilteredPointerKey.TypeFilter filter = (FilteredPointerKey.TypeFilter)
+      target.getContext().get(ContextKey.FILTER);
+
+    if (filter != null) {
+      return filter;
     } else {
       // the context does not select a particular concrete type for the
       // receiver.
       IClass C = getReceiverClass(target.getMethod());
-      return C;
+      return new FilteredPointerKey.SingleClassFilter(C);
     }
   }
 

@@ -296,7 +296,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
             Assertions.UNREACHABLE("fpk.getTypeFilter() is null");
           }
           if (!fpk.getTypeFilter().equals(((FilteredPointerKey) key).getTypeFilter())) {
-            Assertions.UNREACHABLE("Previously created different filter for " + key);
+	    Assertions.UNREACHABLE("Cannot use filter " + ((FilteredPointerKey) key).getTypeFilter() + " for " + key + ": previously created different filter "  + fpk.getTypeFilter());
           }
         }
       }

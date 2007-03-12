@@ -42,4 +42,16 @@ public interface ContextKey {
   public final static ContextKey RECEIVER = new ContextKey() {
   };
   
+  /**
+   * A property of contexts that might be generally useful: an identifier 
+   * for the type filters applied to the receiver object ... used for 
+   * filtering propagation across dynamic dispatched
+   * 
+   *  Implementations (ContextItems) for FILTER are to be instances of
+   * FilteredContextKey.TypeFilter
+   * 
+   */
+  public final static ContextKey FILTER = new ContextKey() {
+  };
+  
 }

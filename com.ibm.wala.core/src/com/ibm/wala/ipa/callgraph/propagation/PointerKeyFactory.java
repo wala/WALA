@@ -37,9 +37,7 @@ public interface PointerKeyFactory {
    *         number parameter.
    * 
    */
-  FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, IClass filter);
-
-  InstanceFilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, InstanceKey filter);
+  FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter);
 
   /**
    * @param node

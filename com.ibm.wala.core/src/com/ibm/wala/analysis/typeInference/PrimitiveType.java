@@ -21,21 +21,21 @@ public class PrimitiveType extends TypeAbstraction {
 
   private static Map<TypeReference, PrimitiveType> refernceToType = new HashMap<TypeReference, PrimitiveType>();
 
-  public static final PrimitiveType BOOLEAN = makePrimitive(TypeReference.Boolean);
+  public static final PrimitiveType BOOLEAN = makePrimitive(TypeReference.Boolean, 1);
 
-  public static final PrimitiveType CHAR = makePrimitive(TypeReference.Char);
+  public static final PrimitiveType CHAR = makePrimitive(TypeReference.Char, 16);
 
-  public static final PrimitiveType BYTE = makePrimitive(TypeReference.Byte);
+  public static final PrimitiveType BYTE = makePrimitive(TypeReference.Byte, 8);
 
-  public static final PrimitiveType SHORT = makePrimitive(TypeReference.Short);
+  public static final PrimitiveType SHORT = makePrimitive(TypeReference.Short, 16);
 
-  public static final PrimitiveType INT = makePrimitive(TypeReference.Int);
+  public static final PrimitiveType INT = makePrimitive(TypeReference.Int, 32);
 
-  public static final PrimitiveType LONG = makePrimitive(TypeReference.Long);
+  public static final PrimitiveType LONG = makePrimitive(TypeReference.Long, 64);
 
-  public static final PrimitiveType FLOAT = makePrimitive(TypeReference.Float);
+  public static final PrimitiveType FLOAT = makePrimitive(TypeReference.Float, 32);
 
-  public static final PrimitiveType DOUBLE = makePrimitive(TypeReference.Double);
+  public static final PrimitiveType DOUBLE = makePrimitive(TypeReference.Double, 64);
 
   private static HashMap<String, String> primitiveNameMap;
   static {
@@ -52,9 +52,11 @@ public class PrimitiveType extends TypeAbstraction {
   }
 
   private final TypeReference reference;
+  private final int size;
 
-  private PrimitiveType(TypeReference reference) {
+  private PrimitiveType(TypeReference reference, int size) {
     this.reference = reference;
+    this.size = size;
   }
 
   public TypeAbstraction meet(TypeAbstraction rhs) {
@@ -62,12 +64,19 @@ public class PrimitiveType extends TypeAbstraction {
       return this;
     } else if (rhs == this) {
       return this;
-    } else if (this == BOOLEAN) {
-      return rhs;
-    } else if (rhs == BOOLEAN) {
-      return this;
+    } else if (rhs instanceof PrimitiveType) {
+      if (size() > ((PrimitiveType)rhs).size()) {
+	return this;
+      } else {
+	return rhs;
+      }
+    } else {
+      return TOP;
     }
-    return TOP;
+  }
+
+  public int size() {
+    return size;
   }
 
   public int hashCode() {
@@ -86,8 +95,8 @@ public class PrimitiveType extends TypeAbstraction {
     return refernceToType.get(reference);
   }
 
-  private static PrimitiveType makePrimitive(TypeReference reference) {
-    PrimitiveType newType = new PrimitiveType(reference);
+  private static PrimitiveType makePrimitive(TypeReference reference, int size) {
+    PrimitiveType newType = new PrimitiveType(reference,size);
     refernceToType.put(reference, newType);
     return newType;
   }

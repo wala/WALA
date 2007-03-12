@@ -510,11 +510,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
      * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.detox.ipa.callgraph.CGNode,
      *      int)
      */
-    public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, IClass filter) {
-      return pointerKeys.getFilteredPointerKeyForLocal(node, valueNumber, filter);
-    }
-
-    public InstanceFilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, InstanceKey filter) {
+    public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
       return pointerKeys.getFilteredPointerKeyForLocal(node, valueNumber, filter);
     }
 

@@ -21,12 +21,12 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class LocalPointerKeyWithFilter extends LocalPointerKey implements FilteredPointerKey {
 
-  private final IClass typeFilter;
+  private final TypeFilter typeFilter;
 
   /**
    * 
    */
-  public LocalPointerKeyWithFilter(CGNode node, int valueNumber, IClass typeFilter) {
+  public LocalPointerKeyWithFilter(CGNode node, int valueNumber, TypeFilter typeFilter) {
     super(node,valueNumber);
     if (Assertions.verifyAssertions) {
       Assertions._assert(typeFilter != null);
@@ -40,7 +40,7 @@ public class LocalPointerKeyWithFilter extends LocalPointerKey implements Filter
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerKey#getTypeFilter()
    */
-  public IClass getTypeFilter() {
+  public TypeFilter getTypeFilter() {
     return typeFilter;
   }
 

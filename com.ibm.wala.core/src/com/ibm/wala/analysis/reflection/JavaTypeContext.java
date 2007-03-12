@@ -10,10 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.reflection;
 
-import com.ibm.wala.analysis.typeInference.TypeAbstraction;
+import com.ibm.wala.analysis.typeInference.*;
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -36,10 +38,19 @@ public class JavaTypeContext implements Context {
 
 
   public ContextItem get(ContextKey name) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(name == ContextKey.RECEIVER);
+    if (name == ContextKey.RECEIVER) {
+      return type;
+    } else if (name == ContextKey.FILTER) {
+      if (type instanceof PointType) {
+	IClass cls = ((PointType)type).getIClass();
+	return new FilteredPointerKey.SingleClassFilter(cls);
+      } else {
+	return null;
+      }
+    } else {
+      Assertions.UNREACHABLE();
+      return null;
     }
-    return type;
   }
 
   /* (non-Javadoc)

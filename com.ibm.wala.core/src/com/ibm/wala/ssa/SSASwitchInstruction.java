@@ -15,6 +15,7 @@ import java.util.Collection;
 
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.intset.IntIterator;
 
 /**
  * @author sfink
@@ -81,6 +82,16 @@ public class SSASwitchInstruction extends SSAInstruction {
   public int getDefault() { return defaultLabel; }
  
   public int[] getCasesAndLabels() { return casesAndLabels; }
+
+  public IntIterator iterateLabels() {
+    return new IntIterator() {
+      private int i = 0;
+
+      public boolean hasNext() { return i<casesAndLabels.length; }
+
+      public int next() { int v = casesAndLabels[i]; i+=2; return v; }
+    };
+  }
 
   public int hashCode() {
     return val * 1663 ^ 3499;

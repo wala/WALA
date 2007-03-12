@@ -32,6 +32,7 @@ import com.ibm.wala.ssa.SSAConversionInstruction;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstanceofInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
@@ -119,7 +120,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
 
     SymbolTable st = ir.getSymbolTable();
     if (st != null) {
-      for (int i = 0; i < st.getMaxValueNumber(); i++) {
+      for (int i = 0; i <= st.getMaxValueNumber(); i++) {
         if (st.isConstant(i)) {
           TypeVariable v = (TypeVariable) getVariable(i);
           v.setType(getConstantType(i));
@@ -339,9 +340,9 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
    * @author sfink
    * 
    */
-  private static final class PrimitivePropagateOperator extends AbstractOperator {
+  protected static class PrimitivePropagateOperator extends AbstractOperator {
 
-    private PrimitivePropagateOperator() {
+    protected PrimitivePropagateOperator() {
     }
 
     public byte evaluate(IVariable lhs, IVariable[] rhs) {
@@ -384,7 +385,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
     public boolean equals(Object o) {
-      return (o instanceof PrimitivePropagateOperator);
+      return o != null && o.getClass().equals(getClass());
     }
   }
 
@@ -587,9 +588,15 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       if (doPrimitives) {
         result = primitivePropagateOp;
       }
-
     }
 
+    public void visitInstanceof(SSAInstanceofInstruction instruction) {
+      if (doPrimitives) {
+	result = new DeclaredTypeOperator(PrimitiveType.BOOLEAN);
+      }
+      
+    }
+    
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
       TypeAbstraction type = meetDeclaredExceptionTypes(instruction, cha);
       result = new DeclaredTypeOperator(type);
