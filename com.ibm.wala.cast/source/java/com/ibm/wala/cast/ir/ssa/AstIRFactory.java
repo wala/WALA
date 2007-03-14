@@ -46,6 +46,7 @@ public class AstIRFactory implements IRFactory {
         if (oldcfg.isCatchBlock(i)) {
           ExceptionHandlerBasicBlock B = (ExceptionHandlerBasicBlock) ssacfg.getNode(i);
           B.setCatchInstruction((SSAGetCaughtExceptionInstruction) getInstructions()[B.getFirstInstructionIndex()]);
+	  getInstructions()[B.getFirstInstructionIndex()] = null;
         }
     }
 
@@ -76,9 +77,9 @@ public class AstIRFactory implements IRFactory {
     private AstIR(AstMethod method, SSAInstruction[] instructions, SymbolTable symbolTable, SSACFG cfg, SSAOptions options) {
       super(method, instructions, symbolTable, cfg, options);
 
-      setCatchInstructions(getControlFlowGraph(), method.cfg);
-
       localMap = SSAConversion.convert(method, this, options);
+
+      setCatchInstructions(getControlFlowGraph(), method.cfg);
 
       setupCatchTypes(getControlFlowGraph(), method.catchTypes);
 
