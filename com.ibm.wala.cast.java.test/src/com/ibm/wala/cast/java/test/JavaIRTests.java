@@ -180,4 +180,10 @@ public class JavaIRTests extends IRTests {
 	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
 		new GraphAssertions(), null, true);
     }
+
+    public void testThread1() {
+	runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(),
+		new GraphAssertions(), null, true);
+    }
+
 }
