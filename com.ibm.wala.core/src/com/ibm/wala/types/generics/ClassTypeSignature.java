@@ -10,7 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.types.generics;
 
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 
 /**
  * Under construction.
@@ -96,6 +100,11 @@ public class ClassTypeSignature extends TypeSignature {
   @Override
   public boolean isBaseType() {
     return false;
+  }
+  
+  public static IClass lookupClass(ClassHierarchy cha, ClassTypeSignature sig) {
+    TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, sig.getRawName());
+    return cha.lookupClass(t);
   }
 
 }

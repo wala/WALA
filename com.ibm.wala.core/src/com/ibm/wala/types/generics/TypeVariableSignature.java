@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.types.generics;
 
+import com.ibm.wala.classLoader.ShrikeClass;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.util.debug.Assertions;
+
 /**
  * TypeVariableSignature: T identifier ;
  * 
@@ -54,5 +58,33 @@ public class TypeVariableSignature extends TypeSignature {
   @Override
   public boolean isBaseType() {
     return false;
+  }
+
+  /**
+   * @param v
+   * @param klass
+   * @return -1 if there is no match
+   */
+  public static int getTypeVariablePosition(TypeVariableSignature v, ShrikeClass klass) {
+    try {
+      ClassSignature sig = klass.getClassSignature();
+      if (sig == null) {
+        return -1;
+      }
+      FormalTypeParameter[] fp = sig.getFormalTypeParameters();
+      for (int i = 0; i < fp.length; i++) {
+        FormalTypeParameter f = fp[i];
+        if (f.getIdentifier().equals(v.getIdentifier())) {
+          return i;
+        }
+      }
+      Assertions.UNREACHABLE();
+      return -1;
+    } catch (InvalidClassFileException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
+      return -1;
+    }
+  
   }
 }

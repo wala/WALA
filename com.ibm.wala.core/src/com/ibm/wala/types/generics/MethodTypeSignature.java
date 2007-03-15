@@ -39,9 +39,15 @@ public class MethodTypeSignature extends Signature {
 
   }
 
+  /**
+   * @return null if no arguments
+   */
   public TypeSignature[] getArguments() {
     String typeSig = rawString().replaceAll(".*\\(","\\(").replaceAll("\\).*", "\\)");
     String[] args = TypeSignature.parseForTypeSignatures(typeSig);
+    if (args == null) {
+      return null;
+    }
     TypeSignature[] result = new TypeSignature[args.length];
     for (int i = 0; i<args.length; i++) {
       result[i] = TypeSignature.make(args[i]);
