@@ -42,6 +42,9 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
   }
 
   public int getMappedIndex(T o) {
+    if (delegate.getMappedIndex(o) == -1) {
+      return -1;
+    }
     return offset + delegate.getMappedIndex(o);
   }
 
