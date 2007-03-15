@@ -73,4 +73,8 @@ public class Pair<T,U> {
   public String toString() {
     return "[" + fst + "," + snd +"]";
   }
+
+  public static <T,U> Pair<T, U> make(T x, U y) {
+    return new Pair<T, U>(x,y);
+  }
 }
