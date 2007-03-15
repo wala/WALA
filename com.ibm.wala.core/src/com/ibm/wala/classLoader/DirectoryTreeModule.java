@@ -11,16 +11,28 @@
 package com.ibm.wala.classLoader;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.debug.Trace;
+
+/**
+ * A module containing files under some directory.
+ * 
+ * @author julian (i think?)
+ * 
+ */
 public abstract class DirectoryTreeModule implements Module {
 
   protected final File root;
 
+  /**
+   * @param root a directory
+   */
   DirectoryTreeModule(File root) {
     this.root = root;
+    assert root.isDirectory();
   }
 
   protected abstract FileModule makeFile(File file);
@@ -28,13 +40,20 @@ public abstract class DirectoryTreeModule implements Module {
   protected abstract boolean includeFile(File file);
 
   private Set<ModuleEntry> getEntriesRecursive(File dir) {
-    Set<ModuleEntry> result = new HashSet<ModuleEntry>();
+    Set<ModuleEntry> result = HashSetFactory.make();
     File[] files = dir.listFiles();
-    for (int i = 0; i < files.length; i++) {
-      if (files[i].isDirectory())
-        result.addAll(getEntriesRecursive(files[i]));
-      else if (includeFile(files[i]))
-        result.add(makeFile(files[i]));
+    if (files != null) {
+      for (int i = 0; i < files.length; i++) {
+        if (files[i].isDirectory()) {
+          result.addAll(getEntriesRecursive(files[i]));
+        } else if (includeFile(files[i])) {
+          result.add(makeFile(files[i]));
+        }
+      }
+    } else {
+      // TODO: replace this with a real warning when the WarningSets are
+      // revamped
+      Trace.println("Warning: failed to retrieve files in " + dir);
     }
 
     return result;
