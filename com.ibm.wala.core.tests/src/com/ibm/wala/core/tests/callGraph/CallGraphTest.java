@@ -442,7 +442,7 @@ public class CallGraphTest extends WalaTestCase {
 
     // perform a little icfg exercise
     int count = 0;
-    for (Iterator<? extends BasicBlockInContext> it = icfg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends BasicBlockInContext> it = icfg.iterator(); it.hasNext();) {
       IBasicBlock bb = (IBasicBlock) it.next();
       if (icfg.hasCall((BasicBlockInContext) bb)) {
         count++;
@@ -476,8 +476,8 @@ public class CallGraphTest extends WalaTestCase {
    * @param subG
    */
   public static void checkGraphSubset(ECallGraphWrapper superG, ECallGraphWrapper subG) {
-    Set<EObject> nodeDiff = Util.setify(subG.iterateNodes());
-    nodeDiff.removeAll(Util.setify(superG.iterateNodes()));
+    Set<EObject> nodeDiff = Util.setify(subG.iterator());
+    nodeDiff.removeAll(Util.setify(superG.iterator()));
     Set<EObject> toRemove = HashSetFactory.make();
     for (Iterator<EObject> it = nodeDiff.iterator(); it.hasNext();) {
       EObject o = it.next();
@@ -543,7 +543,7 @@ public class CallGraphTest extends WalaTestCase {
 
     // remove other nodes
     toRemove = HashSetFactory.make();
-    for (Iterator<? extends EObject> it = G.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends EObject> it = G.iterator(); it.hasNext();) {
       EObject n = it.next();
       if (!c.contains(n)) {
         toRemove.add(n);
@@ -553,7 +553,7 @@ public class CallGraphTest extends WalaTestCase {
 
     // remove call site nodes with no targets (these won't appear in the dcg)
     toRemove = HashSetFactory.make();
-    for (Iterator<? extends EObject> it = G.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends EObject> it = G.iterator(); it.hasNext();) {
       EObject n = it.next();
       if (n instanceof ECallSite) {
         if (G.getSuccNodeCount(n) == 0) {
@@ -585,7 +585,7 @@ public class CallGraphTest extends WalaTestCase {
    */
   private static Set<CGNode> getSyntheticLeaves(CallGraph cg) {
     HashSet<CGNode> result = HashSetFactory.make();
-    for (Iterator<? extends CGNode> it = cg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
       CGNode node = (CGNode) it.next();
       if (!node.equals(cg.getFakeRootNode())) {
         if (node.getMethod().isSynthetic()) {

@@ -102,13 +102,13 @@ public class GVTypeHierarchy {
   public static Graph<EObject> typeHierarchy2Graph(ETypeHierarchy et) throws WalaException {
     ETypeHierarchyWrapper t = new ETypeHierarchyWrapper(et);
     EObjectGraphImpl dg = new EObjectGraphImpl();
-    for (Iterator<? extends EObject> it = t.getClasses().iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends EObject> it = t.getClasses().iterator(); it.hasNext();) {
       dg.addNode(it.next());
     }
-    for (Iterator<? extends EObject> it = t.getInterfaces().iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends EObject> it = t.getInterfaces().iterator(); it.hasNext();) {
       dg.addNode(it.next());
     }
-    for (Iterator<? extends EObject> it = t.getClasses().iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends EObject> it = t.getClasses().iterator(); it.hasNext();) {
       EJavaClass x = (EJavaClass) it.next();
       for (Iterator<? extends EObject> it2 = t.getClasses().getSuccNodes(x); it2.hasNext();) {
         dg.addEdge(x, it2.next());
@@ -117,7 +117,7 @@ public class GVTypeHierarchy {
         dg.addEdge(it2.next(), x);
       }
     }
-    for (Iterator<? extends EObject> it = t.getInterfaces().iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends EObject> it = t.getInterfaces().iterator(); it.hasNext();) {
       EJavaClass x = (EJavaClass) it.next();
       for (Iterator<? extends EObject> it2 = t.getInterfaces().getSuccNodes(x); it2.hasNext();) {
         dg.addEdge(x, it2.next());

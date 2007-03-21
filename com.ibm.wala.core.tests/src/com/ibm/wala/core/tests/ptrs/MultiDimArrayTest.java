@@ -76,7 +76,7 @@ public class MultiDimArrayTest extends WalaTestCase {
   }
   
   private final static CGNode findDoNothingNode(CallGraph cg) {
-    for (Iterator<? extends CGNode> it = cg.iterateNodes(); it.hasNext(); ) {
+    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext(); ) {
       CGNode n = it.next();
       if (n.getMethod().getName().toString().equals("doNothing")) {
         return n;

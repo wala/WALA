@@ -85,7 +85,7 @@ public class CompareCDGTest extends WalaTestCase {
     long cdgTime = 0;
     long bvTime = 0;
     String dotExe = "dot";
-    for (Iterator<? extends CGNode> it = g.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends CGNode> it = g.iterator(); it.hasNext();) {
       CGNode n = (CGNode) it.next();
       MethodReference mref = n.getMethod().getReference();
       Trace.println(mref.toString());
@@ -143,7 +143,7 @@ public class CompareCDGTest extends WalaTestCase {
 
   private static boolean compatible(SSACFG cfg, ControlDependenceGraph cdg, BVControlDependenceGraph bv) {
     boolean ret = true;
-    for (Iterator<? extends IBasicBlock> it = cfg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends IBasicBlock> it = cfg.iterator(); it.hasNext();) {
       SSACFG.BasicBlock ibb = (SSACFG.BasicBlock) it.next();
       int cCount = cdg.getPredNodeCount(ibb);
       int bCount = bv.getPredNodeCount(ibb);
@@ -338,7 +338,7 @@ public class CompareCDGTest extends WalaTestCase {
    */
   private static Vector<BasicBlock> checkCFG(SSACFG cfg, MethodReference mref) {
     Vector<SSACFG.BasicBlock> vec = new Vector<SSACFG.BasicBlock>();
-    for (Iterator<? extends IBasicBlock> it = cfg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends IBasicBlock> it = cfg.iterator(); it.hasNext();) {
       SSACFG.BasicBlock bb = (SSACFG.BasicBlock) it.next();
       if (cfg.getPredNodeCount(bb) == 0)
         vec.add(bb);

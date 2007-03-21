@@ -509,7 +509,7 @@ public class SlicerTest extends TestCase {
   
   public static CGNode findMethod(CallGraph cg, String name) {
     Atom a = Atom.findOrCreateUnicodeAtom(name);
-    for (Iterator<? extends CGNode> it = cg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
       CGNode n = it.next();
       if (n.getMethod().getName().equals(a)) {
         return n;
