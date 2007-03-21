@@ -98,7 +98,7 @@ public class PruneCallGraph {
     public OnPathSystem(CallGraph CG, Filter F) {
       this.CG = CG;
       this.filter = F;
-      this.nodes = new Iterator2Collection<CGNode>(CG.iterateNodes());
+      this.nodes = new Iterator2Collection<CGNode>(CG.iterator());
     }
 
     public BooleanVariable getVariable(CGNode n) {
