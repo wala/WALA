@@ -72,11 +72,11 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
       edgeLabels = HashMapFactory.make();
     }
 
-    for (Iterator<? extends IBasicBlock> ns = cfg.iterateNodes(); ns.hasNext();) {
+    for (Iterator<? extends IBasicBlock> ns = cfg.iterator(); ns.hasNext();) {
       controlDependence.put(ns.next(), new HashSet<IBasicBlock>(2));
     }
 
-    for (Iterator<? extends IBasicBlock> ns = cfg.iterateNodes(); ns.hasNext();) {
+    for (Iterator<? extends IBasicBlock> ns = cfg.iterator(); ns.hasNext();) {
       IBasicBlock y = ns.next();
       for (Iterator<IBasicBlock> ns2 = RDF.getDominanceFrontier(y); ns2.hasNext();) {
         IBasicBlock x = ns2.next();
@@ -106,7 +106,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
     return new EdgeManager<IBasicBlock>() {
       Map<IBasicBlock, Set<IBasicBlock>> backwardEdges = new HashMap<IBasicBlock, Set<IBasicBlock>>(forwardEdges.size());
       {
-        for (Iterator<? extends IBasicBlock> x = cfg.iterateNodes(); x.hasNext();) {
+        for (Iterator<? extends IBasicBlock> x = cfg.iterator(); x.hasNext();) {
           Set<IBasicBlock> s = HashSetFactory.make();
           backwardEdges.put(x.next(), s);
         }
@@ -175,7 +175,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
 
   public String toString() {
     StringBuffer sb = new StringBuffer();
-    for (Iterator<? extends IBasicBlock> ns = iterateNodes(); ns.hasNext();) {
+    for (Iterator<? extends IBasicBlock> ns = iterator(); ns.hasNext();) {
       IBasicBlock n = ns.next();
       sb.append(n.toString()).append("\n");
       for (Iterator ss = getSuccNodes(n); ss.hasNext();) {

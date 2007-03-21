@@ -778,8 +778,12 @@ public class SSACFG implements ControlFlowGraph{
    * 
    * @see com.ibm.wala.util.graph.Graph#iterateNodes()
    */
-  public Iterator<? extends IBasicBlock> iterateNodes() {
-    return Arrays.asList(basicBlocks).iterator();
+  public Iterator<IBasicBlock> iterator() {
+    ArrayList<IBasicBlock> list = new ArrayList<IBasicBlock>();
+    for (IBasicBlock b : basicBlocks) {
+      list.add(b);
+    }
+    return list.iterator();
   }
 
   /*

@@ -255,7 +255,7 @@ public class DFSVisit {
    *          the visitor to notify when nodes are discovered and finished
    */
   public static <T> void DFS(Graph<T> g, Visitor visitor) {
-    DFS(g, g.iterateNodes(), visitor);
+    DFS(g, g.iterator(), visitor);
   }
 
 }

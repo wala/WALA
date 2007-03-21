@@ -45,7 +45,7 @@ public class EMFBridge {
    */
   public static com.ibm.wala.emf.wrappers.ECallGraphWrapper makeCallGraph(CallGraph cg) {
     com.ibm.wala.emf.wrappers.ECallGraphWrapper result = new com.ibm.wala.emf.wrappers.ECallGraphWrapper();
-    for (Iterator it = cg.iterateNodes(); it.hasNext();) {
+    for (Iterator it = cg.iterator(); it.hasNext();) {
       CGNode n = (CGNode) it.next();
       EJavaMethod method = makeJavaMethod(n.getMethod().getReference());
       result.addNode(method);
@@ -56,7 +56,7 @@ public class EMFBridge {
         result.addEdge(method, eSite);
       }
     }
-    for (Iterator it = cg.iterateNodes(); it.hasNext();) {
+    for (Iterator it = cg.iterator(); it.hasNext();) {
       CGNode n = (CGNode) it.next();
       EJavaMethod method = makeJavaMethod(n.getMethod().getReference());
       for (Iterator it2 = n.iterateSites(); it2.hasNext();) {

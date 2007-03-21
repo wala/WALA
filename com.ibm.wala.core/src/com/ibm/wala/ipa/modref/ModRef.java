@@ -95,7 +95,7 @@ public class ModRef {
     BitVectorSolver<CGNode> solver = new BitVectorSolver<CGNode>(gr);
     solver.solve();
     Map<CGNode, OrdinalSet<PointerKey>> result = HashMapFactory.make();
-    for (Iterator<? extends CGNode> it = cg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
       CGNode n = it.next();
       BitVectorVariable bv = (BitVectorVariable) solver.getOut(n);
       result.put(n, new OrdinalSet<PointerKey>(bv.getValue(), gr.getLatticeValues()));
@@ -111,7 +111,7 @@ public class ModRef {
    */
   private static Map<CGNode, Collection<PointerKey>> scanForMod(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
     Map<CGNode, Collection<PointerKey>> result = HashMapFactory.make();
-    for (Iterator<? extends CGNode> it = cg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
       CGNode n = it.next();
       result.put(n, scanNodeForMod(n, pa, heapExclude));
     }
@@ -126,7 +126,7 @@ public class ModRef {
    */
   private static Map<CGNode, Collection<PointerKey>> scanForRef(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
     Map<CGNode, Collection<PointerKey>> result = HashMapFactory.make();
-    for (Iterator<? extends CGNode> it = cg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
       CGNode n = it.next();
       result.put(n, scanNodeForRef(n, pa, heapExclude));
     }

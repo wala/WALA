@@ -71,7 +71,7 @@ public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIter
    * @param G
    */
   public NumberedDFSDiscoverTimeIterator(NumberedGraph<T> G) {
-    this(G, G.iterateNodes());
+    this(G, G.iterator());
   }
 
   /**

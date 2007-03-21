@@ -154,7 +154,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    */
   private void createEdges() {
 
-    for (Iterator ns = cg.iterateNodes(); ns.hasNext();) {
+    for (Iterator ns = cg.iterator(); ns.hasNext();) {
       CGNode n = (CGNode) ns.next();
       if (relevant.accepts(n)) {
         // retrieve a cfg for node n.
@@ -168,7 +168,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
         }
         IInstruction[] instrs = cfg.getInstructions();
         // create edges for node n.
-        for (Iterator bbs = cfg.iterateNodes(); bbs.hasNext();) {
+        for (Iterator bbs = cfg.iterator(); bbs.hasNext();) {
           IBasicBlock bb = (IBasicBlock) bbs.next();
           // entry node gets edges from callers
           if (bb == cfg.entry()) {
@@ -188,7 +188,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * create the nodes. side effect: populates the hasCallVector
    */
   private void createNodes() {
-    for (Iterator ns = cg.iterateNodes(); ns.hasNext();) {
+    for (Iterator ns = cg.iterator(); ns.hasNext();) {
       CGNode n = (CGNode) ns.next();
       if (relevant.accepts(n)) {
         if (DEBUG_LEVEL > 0) {
@@ -531,7 +531,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    *          a control-flow graph
    */
   private void addNodeForEachBasicBlock(ControlFlowGraph cfg, CGNode N) {
-    for (Iterator bbs = cfg.iterateNodes(); bbs.hasNext();) {
+    for (Iterator bbs = cfg.iterator(); bbs.hasNext();) {
       IBasicBlock bb = (IBasicBlock) bbs.next();
       if (DEBUG_LEVEL > 0) {
         Trace.println("IPCFG Add basic block " + bb);
@@ -580,8 +580,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * 
    * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
    */
-  public Iterator<? extends BasicBlockInContext> iterateNodes() {
-    return G.iterateNodes();
+  public Iterator<BasicBlockInContext> iterator() {
+    return G.iterator();
   }
 
   /*

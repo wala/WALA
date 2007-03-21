@@ -45,7 +45,7 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
     Assertions.UNREACHABLE();
   }
 
-  public Iterator<ExplodedSupergraphNode<T>> iterateNodes() {
+  public Iterator<ExplodedSupergraphNode<T>> iterator() {
     Assertions.UNREACHABLE();
     return null;
   }

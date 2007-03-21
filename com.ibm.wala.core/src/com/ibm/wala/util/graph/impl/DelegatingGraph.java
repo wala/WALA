@@ -63,8 +63,8 @@ public class DelegatingGraph<T> implements Graph<T> {
     return delegate.hasEdge(src, dst);
   }
 
-  public Iterator<? extends T> iterateNodes() {
-    return delegate.iterateNodes();
+  public Iterator<T> iterator() {
+    return delegate.iterator();
   }
 
   public void removeAllIncidentEdges(T node) {

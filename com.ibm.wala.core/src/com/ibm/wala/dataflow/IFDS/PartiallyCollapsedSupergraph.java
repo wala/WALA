@@ -386,7 +386,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      */
     private void computeTransverseEdges() {
       // compute transverse edges that originate from basic blocks
-      for (Iterator it = partialIPFG.iterateNodes(); it.hasNext();) {
+      for (Iterator it = partialIPFG.iterator(); it.hasNext();) {
         IBasicBlock bb = (IBasicBlock) it.next();
         if (partialIPFG.hasCall((BasicBlockInContext) bb)) {
           Set targets = partialIPFG.getCallTargets(bb);
@@ -785,7 +785,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     NodeManager() {
       int firstNumber = partialIPFG.getMaxNumber() + 1;
       int nextNumber = firstNumber;
-      for (Iterator it = cg.iterateNodes(); it.hasNext();) {
+      for (Iterator it = cg.iterator(); it.hasNext();) {
         CGNode n = (CGNode) it.next();
         if (!noCollapse.contains(n)) {
           node2EntryIndex.put(n, new Integer(nextNumber - firstNumber));
@@ -842,8 +842,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      * 
      * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
      */
-    public Iterator<Object> iterateNodes() {
-      return new CompoundIterator<Object>(partialIPFG.iterateNodes(), collapsedNodes.iterator());
+    public Iterator<Object> iterator() {
+      return new CompoundIterator<Object>(partialIPFG.iterator(), collapsedNodes.iterator());
     }
 
     /*
@@ -917,7 +917,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      * 
      */
     private Iterator iterateUncollapsedNodes() {
-      return partialIPFG.iterateNodes();
+      return partialIPFG.iterator();
     }
 
     /*

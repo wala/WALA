@@ -70,10 +70,10 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
    */
   public static <T> SlowSparseNumberedGraph<T> duplicate(Graph<T> g) {
     SlowSparseNumberedGraph<T> result = new SlowSparseNumberedGraph<T>();
-    for (Iterator<? extends T> it = g.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
       result.addNode(it.next());
     }
-    for (Iterator<? extends T> it = g.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
       T n = it.next();
       for (Iterator<? extends T> it2 = g.getSuccNodes(n); it2.hasNext();) {
         result.addEdge(n, it2.next());

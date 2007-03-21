@@ -46,12 +46,12 @@ public class CFGSanitizer {
     ControlFlowGraph cfg = ir.getControlFlowGraph();
     Graph<IBasicBlock> G = new SlowSparseNumberedGraph<IBasicBlock>();
     // add all nodes to the graph
-    for (Iterator<? extends IBasicBlock> it = cfg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends IBasicBlock> it = cfg.iterator(); it.hasNext();) {
       G.addNode(it.next());
     }
 
     // add all edges to the graph, except those that go to exit
-    for (Iterator it = cfg.iterateNodes(); it.hasNext();) {
+    for (Iterator it = cfg.iterator(); it.hasNext();) {
       IBasicBlock b = (IBasicBlock) it.next();
       for (Iterator it2 = cfg.getSuccNodes(b); it2.hasNext();) {
         IBasicBlock b2 = (IBasicBlock) it2.next();

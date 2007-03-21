@@ -60,7 +60,7 @@ public class CallGraphStats {
   public static int countBytecodeBytes(CallGraph cg) {
     int ret = 0;
     HashSet<IMethod> counted = HashSetFactory.make();
-    for (Iterator<? extends CGNode> iter = cg.iterateNodes(); iter.hasNext();) {
+    for (Iterator<? extends CGNode> iter = cg.iterator(); iter.hasNext();) {
       CGNode node = iter.next();
       IMethod method = node.getMethod();
       if (counted.add(method)) {
@@ -84,7 +84,7 @@ public class CallGraphStats {
    */
   public static Set<MethodReference> collectMethods(CallGraph cg) {
     HashSet<MethodReference> result = HashSetFactory.make();
-    for (Iterator it = cg.iterateNodes(); it.hasNext();) {
+    for (Iterator it = cg.iterator(); it.hasNext();) {
       CGNode N = (CGNode) it.next();
       result.add(N.getMethod().getReference());
     }

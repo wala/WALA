@@ -143,7 +143,7 @@ public class DotUtil {
     // }
     outputNodes(labels, result, dotNodes);
 
-    for (Iterator<? extends T> it = g.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
       T n = it.next();
       for (Iterator<? extends T> it2 = g.getSuccNodes(n); it2.hasNext();) {
         T s = it2.next();
@@ -200,7 +200,7 @@ public class DotUtil {
    * 
    */
   private static <T> Collection<T> computeDotNodes(Graph<T> g) throws WalaException {
-    return new Iterator2Collection<T>(g.iterateNodes());
+    return new Iterator2Collection<T>(g.iterator());
     // if (!usingClusters()) {
     // return new Iterator2Collection(getGraphInput().iterateNodes());
     // } else {

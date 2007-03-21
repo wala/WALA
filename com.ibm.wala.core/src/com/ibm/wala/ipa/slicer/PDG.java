@@ -143,7 +143,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       return;
     }
     ControlDependenceGraph cdg = new ControlDependenceGraph(ir.getControlFlowGraph());
-    for (Iterator<? extends IBasicBlock> it = cdg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends IBasicBlock> it = cdg.iterator(); it.hasNext();) {
       IBasicBlock bb = it.next();
       if (bb.isExitBlock()) {
         // nothing should be control-dependent on the exit block.
@@ -188,7 +188,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     // the CDG does not represent control dependences from the entry node.
     // add these manually
     Statement methodEntry = new MethodEntryStatement(node);
-    for (Iterator<? extends IBasicBlock> it = cdg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends IBasicBlock> it = cdg.iterator(); it.hasNext();) {
       IBasicBlock bb = it.next();
       if (cdg.getPredNodeCount(bb) == 0) {
         // this is control dependent on the method entry.
@@ -227,7 +227,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
     DefUse DU = node.getCallGraph().getInterpreter(node).getDU(node, new WarningSet());
     SSAInstruction[] instructions = ir.getInstructions();
-    for (Iterator<? extends Statement> it = iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends Statement> it = iterator(); it.hasNext();) {
       Statement s = it.next();
       switch (s.getKind()) {
       case NORMAL:
@@ -479,7 +479,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         }
       }
     };
-    Collection<Statement> relevantStatements = new Iterator2Collection<Statement>(new FilterIterator<Statement>(iterateNodes(), f));
+    Collection<Statement> relevantStatements = new Iterator2Collection<Statement>(new FilterIterator<Statement>(iterator(), f));
 
     Map<Statement, OrdinalSet<Statement>> heapReachingDefs = dOptions.isIgnoreHeap() ? null : HeapReachingDefs.computeReachingDefs(
         node, ir, pa, mod, relevantStatements, new HeapExclusions(SetComplement.complement(new SingletonSet(t))));
@@ -571,7 +571,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         }
       }
     };
-    return new Iterator2Collection<NormalStatement>(new FilterIterator<NormalStatement>(iterateNodes(), filter));
+    return new Iterator2Collection<NormalStatement>(new FilterIterator<NormalStatement>(iterator(), filter));
   }
 
   /**
@@ -589,7 +589,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         }
       }
     };
-    return new Iterator2Collection<NormalStatement>(new FilterIterator<NormalStatement>(iterateNodes(), filter));
+    return new Iterator2Collection<NormalStatement>(new FilterIterator<NormalStatement>(iterator(), filter));
   }
 
   /**

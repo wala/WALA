@@ -128,9 +128,9 @@ public class SDGView implements ISDG {
     return notExcluded.accepts(dst) && notExcluded.accepts(src) && delegate.hasEdge(src, dst);
   }
 
-  public Iterator<? extends Statement> iterateNodes() {
+  public Iterator<Statement> iterator() {
     Assertions.UNREACHABLE();
-    return delegate.iterateNodes();
+    return delegate.iterator();
   }
 
   public Iterator<Statement> iterateNodes(IntSet s) {

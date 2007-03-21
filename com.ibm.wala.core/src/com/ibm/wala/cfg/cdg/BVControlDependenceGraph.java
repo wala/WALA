@@ -129,7 +129,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
   }
 
   private void buildParallelGraph() {
-    for (Iterator<? extends IBasicBlock> it = cfg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends IBasicBlock> it = cfg.iterator(); it.hasNext();) {
       IBasicBlock bb = it.next();
       BasicBlock cdgbb = new BasicBlock(bb);
       bbMap.put(bb, cdgbb);
@@ -141,7 +141,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
     exitnode = (BasicBlock) bbMap.get(cfg.exit());
     entryBlocks.add(entry);
 
-    for (Iterator<? extends IBasicBlock> it = cfg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends IBasicBlock> it = cfg.iterator(); it.hasNext();) {
       IBasicBlock bb = it.next();
       BasicBlock cdgbb = (BasicBlock) bbMap.get(bb);
 
@@ -316,7 +316,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
 
   public String toString() {
     StringBuffer sb = new StringBuffer();
-    for (Iterator<? extends IBasicBlock> ns = iterateNodes(); ns.hasNext();) {
+    for (Iterator<? extends IBasicBlock> ns = iterator(); ns.hasNext();) {
       IBasicBlock n = ns.next();
       sb.append(n.toString()).append("\n");
       for (Iterator<? extends IBasicBlock> ss = getSuccNodes(n); ss.hasNext();) {

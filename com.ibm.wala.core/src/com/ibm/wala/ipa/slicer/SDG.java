@@ -142,7 +142,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
    * force computation of all PDGs in the SDG
    */
   private void computeAllPDGs() {
-    for (Iterator<? extends CGNode> it = cg.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
       CGNode n = it.next();
       getPDG(n);
     }
@@ -159,9 +159,9 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   private class Nodes extends SlowNumberedNodeManager<Statement> {
 
     @Override
-    public Iterator<Statement> iterateNodes() {
+    public Iterator<Statement> iterator() {
       eagerConstruction();
-      return super.iterateNodes();
+      return super.iterator();
     }
 
     /**
@@ -169,7 +169,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
      * with extreme care. May break graph traversals that lazily add more nodes.
      */
     Iterator<? extends Statement> iterateLazyNodes() {
-      return super.iterateNodes();
+      return super.iterator();
     }
 
     @Override
@@ -623,7 +623,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     if (result == null) {
       result = new PDG(node, pa, mod, ref, dOptions, cOptions, heapExclude);
       pdgMap.put(node, result);
-      for (Iterator<? extends Statement> it = result.iterateNodes(); it.hasNext();) {
+      for (Iterator<? extends Statement> it = result.iterator(); it.hasNext();) {
         nodeMgr.addNode(it.next());
       }
     }

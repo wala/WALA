@@ -387,8 +387,8 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     return 0;
   }
 
-  public Iterator<? extends Statement> iterateNodes() {
-    return sdg.iterateNodes();
+  public Iterator<Statement> iterator() {
+    return sdg.iterator();
   }
 
   public void removeNode(Statement n) {

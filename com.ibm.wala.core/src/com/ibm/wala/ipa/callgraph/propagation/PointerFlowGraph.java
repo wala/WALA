@@ -86,7 +86,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
   }
 
   private void processAllNodes() {
-    for (Iterator it = cg.iterateNodes(); it.hasNext();) {
+    for (Iterator it = cg.iterator(); it.hasNext();) {
       CGNode node = (CGNode) it.next();
       if (!processedNodes.contains(node)) {
         processNode(node);
@@ -240,7 +240,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
 
   private void visit(CGNode node, IR ir) {
     // add edges induced by individual instructions
-    for (Iterator it = ir.getControlFlowGraph().iterateNodes(); it.hasNext();) {
+    for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
       SSACFG.BasicBlock bb = (SSACFG.BasicBlock) it.next();
       InstructionVisitor v = makeInstructionVisitor(node, ir, bb);
       for (Iterator it2 = bb.iterateAllInstructions(); it2.hasNext();) {
@@ -572,10 +572,10 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     return pa;
   }
 
-  public Iterator<? extends PointerKey> iterateNodes() {
+  public Iterator<PointerKey> iterator() {
     // give up on laziness
     processAllNodes();
-    return super.iterateNodes();
+    return super.iterator();
   }
 
 }

@@ -55,7 +55,7 @@ public class DeadAssignmentElimination {
    */
   private static void doTransformation(IR ir, DeadValueSystem solution) {
     ControlFlowGraph cfg = ir.getControlFlowGraph();
-    for (Iterator x = cfg.iterateNodes(); x.hasNext();) {
+    for (Iterator x = cfg.iterator(); x.hasNext();) {
       BasicBlock b = (BasicBlock) x.next();
       if (DEBUG) {
         Trace.println("eliminateDeadPhis: " + b);

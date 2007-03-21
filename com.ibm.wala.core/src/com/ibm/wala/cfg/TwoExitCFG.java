@@ -226,8 +226,8 @@ public class TwoExitCFG implements ControlFlowGraph {
    * 
    * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
    */
-  public Iterator<IBasicBlock> iterateNodes() {
-    return new IteratorPlusOne<IBasicBlock>(delegate.iterateNodes(), exceptionalExit);
+  public Iterator<IBasicBlock> iterator() {
+    return new IteratorPlusOne<IBasicBlock>(delegate.iterator(), exceptionalExit);
   }
 
   /*

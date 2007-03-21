@@ -272,7 +272,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   protected void addNodeInstructionConstraints(CGNode node, IR ir, DefUse du) {
     ConstraintVisitor v = makeVisitor((ExplicitCallGraph.ExplicitNode) node, ir, du, callGraph);
     ControlFlowGraph cfg = ir.getControlFlowGraph();
-    for (Iterator x = cfg.iterateNodes(); x.hasNext();) {
+    for (Iterator x = cfg.iterator(); x.hasNext();) {
       BasicBlock b = (BasicBlock) x.next();
       addBlockInstructionConstraints(node, cfg, b, v);
       if (wasChanged(node)) {

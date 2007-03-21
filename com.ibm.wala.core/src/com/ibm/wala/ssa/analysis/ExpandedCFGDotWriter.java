@@ -53,7 +53,7 @@ public class ExpandedCFGDotWriter {
     result.append("center=true;fontsize=12;node [fontsize=12];edge [fontsize=12]; \n");
 
     // create nodes for basic-blocks
-    for (Iterator it = cfg.iterateNodes(); it.hasNext();) {
+    for (Iterator it = cfg.iterator(); it.hasNext();) {
 
       SingleInstructionBasicBlock bb = (SingleInstructionBasicBlock) it.next();
       result.append(dotOutput(bb));
@@ -67,7 +67,7 @@ public class ExpandedCFGDotWriter {
 
     }
     // create edges
-    for (Iterator it = cfg.iterateNodes(); it.hasNext();) {
+    for (Iterator it = cfg.iterator(); it.hasNext();) {
       SingleInstructionBasicBlock bb = (SingleInstructionBasicBlock) it.next();
       for (Iterator succIt = cfg.getSuccNodes(bb); succIt.hasNext();) {
         SingleInstructionBasicBlock succ = (SingleInstructionBasicBlock) succIt.next();
@@ -88,7 +88,7 @@ public class ExpandedCFGDotWriter {
     result.append("center=true;fontsize=12;node [fontsize=12];edge [fontsize=12]; \n");
 
     // create nodes for basic-blocks
-    for (Iterator it = cfg.iterateNodes(); it.hasNext();) {
+    for (Iterator it = cfg.iterator(); it.hasNext();) {
 
       BasicBlock bb = (BasicBlock) it.next();
       result.append(dotOutput(bb));
@@ -102,7 +102,7 @@ public class ExpandedCFGDotWriter {
 
     }
     // create edges
-    for (Iterator it = cfg.iterateNodes(); it.hasNext();) {
+    for (Iterator it = cfg.iterator(); it.hasNext();) {
       BasicBlock bb = (BasicBlock) it.next();
       for (Iterator succIt = cfg.getSuccNodes(bb); succIt.hasNext();) {
         BasicBlock succ = (BasicBlock) succIt.next();

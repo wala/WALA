@@ -294,7 +294,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
 
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatements() {
-    Iterator<AbstractStatement> it = new FilterIterator(delegateGraph.iterateNodes(), new Filter() {
+    Iterator<AbstractStatement> it = new FilterIterator(delegateGraph.iterator(), new Filter() {
       public boolean accepts(Object x) {
         return x instanceof AbstractStatement;
       }
@@ -542,7 +542,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
      */
-    public Iterator<IVariable> iterateNodes() {
+    public Iterator<IVariable> iterator() {
       return getVariables();
     }
 
@@ -841,7 +841,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
    */
   @SuppressWarnings("unchecked")
   public Iterator<IVariable> getVariables() {
-    Iterator<IVariable> it = new FilterIterator(delegateGraph.iterateNodes(), new Filter() {
+    Iterator<IVariable> it = new FilterIterator(delegateGraph.iterator(), new Filter() {
       public boolean accepts(Object x) {
         return x instanceof IVariable;
       }
@@ -987,7 +987,7 @@ public class PropagationGraph extends AbstractFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
      */
-    public Iterator<IVariable> iterateNodes() {
+    public Iterator<IVariable> iterator() {
       return getVariables();
     }
 

@@ -68,7 +68,7 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
    * @param G
    */
   public SlowDFSDiscoverTimeIterator(Graph<T> G) {
-    init(G,G.iterateNodes());
+    init(G,G.iterator());
   }
 
 

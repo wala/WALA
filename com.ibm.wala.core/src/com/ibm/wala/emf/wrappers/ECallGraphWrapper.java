@@ -68,7 +68,7 @@ public class ECallGraphWrapper extends EObjectGraphImpl {
   @SuppressWarnings("unchecked")
   private void makeEdges(ECallGraph cg, EObjectDictionary nodes) {
     ERelation r = CommonFactory.eINSTANCE.createERelation();
-    for (Iterator it = iterateNodes(); it.hasNext();) {
+    for (Iterator it = iterator(); it.hasNext();) {
       EObject src = (EObject) it.next();
       for (Iterator it2 = getSuccNodes(src); it2.hasNext();) {
         EObject dst = (EObject) it2.next();
@@ -85,7 +85,7 @@ public class ECallGraphWrapper extends EObjectGraphImpl {
     EContainer debugContainer = null;
 
     EObjectDictionary d = new EObjectDictionary();
-    for (Iterator it = iterateNodes(); it.hasNext();) {
+    for (Iterator it = iterator(); it.hasNext();) {
       EObject o = (EObject) it.next();
       d.findOrAdd(o);
       if (o instanceof ECallSite) {

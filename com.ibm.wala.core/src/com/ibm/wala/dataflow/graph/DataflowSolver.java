@@ -77,7 +77,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
     Graph<T> G = problem.getFlowGraph();
     ITransferFunctionProvider functions = problem.getTransferFunctionProvider();
     // create a variable for each node.
-    for (Iterator<? extends T> it = G.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T N = it.next();
       IVariable v = makeNodeVariable(N, true);
       node2In.put(N, v);
@@ -198,7 +198,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
 
     // add meet operations
     int meetThreshold = (meet.isUnaryNoOp() ? 2 : 1);
-    for (Iterator<? extends T> it = G.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T node = it.next();
       int nPred = G.getPredNodeCount(node);
       if (nPred >= meetThreshold) {
@@ -214,7 +214,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
 
     // add node transfer operations, if requested
     if (functions.hasNodeTransferFunctions()) {
-      for (Iterator<? extends T> it = G.iterateNodes(); it.hasNext();) {
+      for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
         T node = it.next();
         UnaryOperator f = functions.getNodeTransferFunction(node);
         if (!f.isIdentity()) {
@@ -225,7 +225,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
 
     // add edge transfer operations, if requested
     if (functions.hasEdgeTransferFunctions()) {
-      for (Iterator<? extends T> it = G.iterateNodes(); it.hasNext();) {
+      for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
         T node = it.next();
         for (Iterator<? extends T> it2 = G.getSuccNodes(node); it2.hasNext();) {
           T succ = it2.next();
@@ -244,7 +244,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
    */
   private void shortCircuitIdentities(Graph<T> G, ITransferFunctionProvider<T> functions, UnionFind uf) {
     if (functions.hasNodeTransferFunctions()) {
-      for (Iterator<? extends T> it = G.iterateNodes(); it.hasNext();) {
+      for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
         T node = it.next();
         UnaryOperator f = functions.getNodeTransferFunction(node);
         if (f.isIdentity()) {
@@ -254,7 +254,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
     }
 
     if (functions.hasEdgeTransferFunctions()) {
-      for (Iterator<? extends T> it = G.iterateNodes(); it.hasNext();) {
+      for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
         T node = it.next();
         for (Iterator<? extends T> it2 = G.getSuccNodes(node); it2.hasNext();) {
           T succ = it2.next();
@@ -311,7 +311,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
    * @param G
    */
   private void shortCircuitUnaryMeets(Graph<T> G, ITransferFunctionProvider functions, UnionFind uf) {
-    for (Iterator<? extends T> it = G.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T node = it.next();
       int nPred = G.getPredNodeCount(node);
       if (nPred == 1) {

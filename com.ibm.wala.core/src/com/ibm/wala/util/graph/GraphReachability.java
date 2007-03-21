@@ -63,7 +63,7 @@ public class GraphReachability <T>{
    */
   public GraphReachability(Graph<T> g, Filter filter) {
     this.g = g;
-    Iterator<T> i = new FilterIterator<T>(g.iterateNodes(), filter);
+    Iterator<T> i = new FilterIterator<T>(g.iterator(), filter);
     domain = new MutableMapping<T>((new Iterator2Collection<T>(i)).toArray());
   }
 

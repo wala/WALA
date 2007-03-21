@@ -121,7 +121,7 @@ public class Dominators<T> {
         private final Map<T, Set<T>> nextMap = HashMapFactory.make();
 
         {
-          for (Iterator<? extends T> ns = G.iterateNodes(); ns.hasNext();) {
+          for (Iterator<? extends T> ns = G.iterator(); ns.hasNext();) {
             T n = ns.next();
             if (n != root) {
               T prev = getIdom(n);
@@ -556,7 +556,7 @@ public class Dominators<T> {
    * Print the nodes that dominate each basic node
    */
   private void printResults(Graph<T> G) {
-    for (Iterator<? extends T> i = G.iterateNodes(); i.hasNext();) {
+    for (Iterator<? extends T> i = G.iterator(); i.hasNext();) {
       T node = i.next();
       System.out.print("Dominators of " + node + ": ");
       for (Iterator j = dominators(node); j.hasNext();)

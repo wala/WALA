@@ -17,12 +17,12 @@ import java.util.Iterator;
  * 
  * @author sfink
  */
-public interface NodeManager<T> {
+public interface NodeManager<T> extends Iterable<T>{
 
   /**
    * @return an Iterator of the nodes in this graph
    */
-  public Iterator<? extends T> iterateNodes();
+  public Iterator<T> iterator();
 
   /**
    * @return the number of nodes in this graph

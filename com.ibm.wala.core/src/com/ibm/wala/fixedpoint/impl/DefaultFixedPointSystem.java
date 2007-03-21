@@ -117,7 +117,7 @@ public class DefaultFixedPointSystem extends AbstractFixedPointSystem {
    */
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatements() {
-    return new FilterIterator(graph.iterateNodes(), new Filter() {
+    return new FilterIterator(graph.iterator(), new Filter() {
       public boolean accepts(Object x) {
         return x instanceof AbstractStatement;
       }
@@ -322,7 +322,7 @@ public class DefaultFixedPointSystem extends AbstractFixedPointSystem {
    */
   @SuppressWarnings("unchecked")
   public Iterator<IVariable> getVariables() {
-    return new FilterIterator(graph.iterateNodes(), new Filter() {
+    return new FilterIterator(graph.iterator(), new Filter() {
       public boolean accepts(Object x) {
         return x instanceof IVariable;
       }

@@ -30,7 +30,7 @@ public class BasicNodeManager<T> implements NodeManager<T> {
   /* (non-Javadoc)
    * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
    */
-  public Iterator<T> iterateNodes() {
+  public Iterator<T> iterator() {
     return nodes.iterator();
   }
 

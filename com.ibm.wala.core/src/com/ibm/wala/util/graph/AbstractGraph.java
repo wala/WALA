@@ -34,8 +34,8 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    * 
    * @see com.ibm.wala.util.graph.Graph#iterateNodes()
    */
-  public Iterator<? extends T> iterateNodes() {
-    return getNodeManager().iterateNodes();
+  public Iterator<T> iterator() {
+    return getNodeManager().iterator();
   }
 
   /*
@@ -161,7 +161,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    */
   public String toString() {
     StringBuffer sb = new StringBuffer();
-    for (Iterator<? extends T> ns = iterateNodes(); ns.hasNext();) {
+    for (Iterator<? extends T> ns = iterator(); ns.hasNext();) {
       T n = ns.next();
       sb.append(n.toString()).append("\n");
       for (Iterator ss = getSuccNodes(n); ss.hasNext();) {

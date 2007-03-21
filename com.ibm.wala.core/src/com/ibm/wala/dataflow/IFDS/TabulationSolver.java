@@ -1004,7 +1004,7 @@ public class TabulationSolver<T, P> {
           return bb1.getNumber() - bb2.getNumber();
         }
       };
-      for (Iterator<? extends T> it = supergraph.iterateNodes(); it.hasNext();) {
+      for (Iterator<? extends T> it = supergraph.iterator(); it.hasNext();) {
         T n = it.next();
         if (reachableNodes.contains(n)) {
           P proc = supergraph.getProcOf(n);

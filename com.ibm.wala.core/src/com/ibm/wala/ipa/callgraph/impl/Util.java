@@ -86,8 +86,8 @@ public class Util {
     if (g1.getNumberOfNodes() != g2.getNumberOfNodes()) {
       return false;
     }
-    Set<T> n1 = setify(g1.iterateNodes());
-    Set<T> n2 = setify(g2.iterateNodes());
+    Set<T> n1 = setify(g1.iterator());
+    Set<T> n2 = setify(g2.iterator());
     if (!n1.equals(n2)) {
       return false;
     }
@@ -112,8 +112,8 @@ public class Util {
     if (g1.getNumberOfNodes() > g2.getNumberOfNodes()) {
       return false;
     }
-    Set<T> n1 = setify(g1.iterateNodes());
-    Set<T> n2 = setify(g2.iterateNodes());
+    Set<T> n1 = setify(g1.iterator());
+    Set<T> n2 = setify(g2.iterator());
     if (!n2.containsAll(n1)) {
       return false;
     }
@@ -270,7 +270,7 @@ public class Util {
    */
   public static Graph<MethodReference> squashCallGraph(final String name, final CallGraph cg) {
     final Set<MethodReference> nodes = HashSetFactory.make();
-    for (Iterator nodesI = cg.iterateNodes(); nodesI.hasNext();) {
+    for (Iterator nodesI = cg.iterator(); nodesI.hasNext();) {
       nodes.add(((CGNode) nodesI.next()).getMethod().getReference());
     }
 
@@ -293,7 +293,7 @@ public class Util {
        * 
        * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
        */
-      public Iterator<MethodReference> iterateNodes() {
+      public Iterator<MethodReference> iterator() {
         return nodes.iterator();
       }
 
@@ -451,8 +451,8 @@ public class Util {
    */
   public static <T> void checkGraphSubset(Graph<T> supG, Graph<T> subG) {
 
-    Set<T> nodeDiff = setify(subG.iterateNodes());
-    nodeDiff.removeAll(setify(supG.iterateNodes()));
+    Set<T> nodeDiff = setify(subG.iterator());
+    nodeDiff.removeAll(setify(supG.iterator()));
     if (!nodeDiff.isEmpty()) {
       Trace.println("supergraph: ");
       Trace.println(supG.toString());
@@ -465,7 +465,7 @@ public class Util {
       Assertions.productionAssertion(nodeDiff.isEmpty(), "bad superset, see tracefile\n");
     }
 
-    for (Iterator<? extends T> subNodes = subG.iterateNodes(); subNodes.hasNext();) {
+    for (Iterator<? extends T> subNodes = subG.iterator(); subNodes.hasNext();) {
       T m = subNodes.next();
 
       Set<T> succDiff = setify(subG.getSuccNodes(m));

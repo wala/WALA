@@ -826,7 +826,7 @@ public class SSABuilder extends AbstractIntStackMachine {
      * @param builder
      */
     private void finishLocalMap(SSABuilder builder) {
-      for (Iterator it = shrikeCFG.iterateNodes(); it.hasNext();) {
+      for (Iterator it = shrikeCFG.iterator(); it.hasNext();) {
         ShrikeCFG.BasicBlock bb = (ShrikeCFG.BasicBlock) it.next();
         MachineState S = builder.getIn(bb);
         int number = bb.getNumber();

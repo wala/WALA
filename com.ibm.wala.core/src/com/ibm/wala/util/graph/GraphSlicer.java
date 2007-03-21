@@ -33,7 +33,7 @@ public class GraphSlicer {
   public static <T> Collection<T> slice(Graph<T> g, Filter f) throws WalaException {
 
     HashSet<T> roots = new HashSet<T>();
-    for (Iterator<? extends T> it = g.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
       T o = it.next();
       if (f.accepts(o)) {
         roots.add(o);
@@ -56,13 +56,13 @@ public class GraphSlicer {
 
       int nodeCount = -1;
 
-      public Iterator<T> iterateNodes() {
-        return new FilterIterator<T>(g.iterateNodes(), f);
+      public Iterator<T> iterator() {
+        return new FilterIterator<T>(g.iterator(), f);
       }
 
       public int getNumberOfNodes() {
         if (nodeCount == -1) {
-          nodeCount = IteratorUtil.count(iterateNodes());
+          nodeCount = IteratorUtil.count(iterator());
         }
         return nodeCount;
       }

@@ -24,10 +24,10 @@ public class GraphPrint {
 
   public static <T> String genericToString(Graph<T> G) {
     SlowSparseNumberedGraph<T> sg = new SlowSparseNumberedGraph<T>();
-    for (Iterator<? extends T> it = G.iterateNodes(); it.hasNext(); ) {
+    for (Iterator<? extends T> it = G.iterator(); it.hasNext(); ) {
       sg.addNode(it.next());
     }
-    for (Iterator<? extends T> it = G.iterateNodes(); it.hasNext(); ) {
+    for (Iterator<? extends T> it = G.iterator(); it.hasNext(); ) {
       T n = it.next();
       for (Iterator<? extends T> it2 = G.getSuccNodes(n); it2.hasNext(); ) {
         T d = it2.next();

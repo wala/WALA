@@ -104,7 +104,7 @@ public class ShrikeCFG extends AbstractCFG {
    */
   private void computeI2BMapping() {
     instruction2Block = new int[getInstructions().length];
-    for (Iterator it = iterateNodes(); it.hasNext();) {
+    for (Iterator it = iterator(); it.hasNext();) {
       final BasicBlock b = (BasicBlock) it.next();
       for (int j = b.getFirstInstructionIndex(); j <= b.getLastInstructionIndex(); j++) {
         instruction2Block[j] = getNumber(b);
@@ -116,7 +116,7 @@ public class ShrikeCFG extends AbstractCFG {
    * Compute outgoing edges in the control flow graph.
    */
   private void computeEdges() {
-    for (Iterator it = iterateNodes(); it.hasNext();) {
+    for (Iterator it = iterator(); it.hasNext();) {
       BasicBlock b = (BasicBlock) it.next();
       if (b.equals(exit())) {
         continue;
@@ -499,7 +499,7 @@ public class ShrikeCFG extends AbstractCFG {
    */
   public String toString() {
     StringBuffer s = new StringBuffer("");
-    for (Iterator it = iterateNodes(); it.hasNext();) {
+    for (Iterator it = iterator(); it.hasNext();) {
       BasicBlock bb = (BasicBlock) it.next();
       s.append("BB").append(getNumber(bb)).append("\n");
       for (int j = bb.getFirstInstructionIndex(); j <= bb.getLastInstructionIndex(); j++) {

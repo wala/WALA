@@ -51,7 +51,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
   }
 
 
-  public Iterator<T> iterateNodes() {
+  public Iterator<T> iterator() {
     return map.iterator();
   }
 

@@ -168,8 +168,8 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
    * 
    * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
    */
-  public Iterator<? extends T> iterateNodes() {
-    return delegate.iterateNodes();
+  public Iterator<T> iterator() {
+    return delegate.iterator();
   }
 
   /*

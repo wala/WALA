@@ -76,7 +76,7 @@ public class GhostviewUtil {
 
   public static NodeDecorator makeIRDecorator(IR ir) {
     final HashMap<BasicBlock, String> labelMap = new HashMap<BasicBlock, String>();
-    for (Iterator it = ir.getControlFlowGraph().iterateNodes(); it.hasNext();) {
+    for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
       SSACFG.BasicBlock bb = (SSACFG.BasicBlock) it.next();
       labelMap.put(bb, getNodeLabel(ir, bb));
     }

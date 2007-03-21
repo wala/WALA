@@ -46,7 +46,7 @@ public class GraphIntegrity {
    * @param G
    */
   private static <T> void checkEdgeCounts(Graph<T> G) throws UnsoundGraphException {
-    for (Iterator<? extends T> it = G.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T N = it.next();
       int count1 = G.getSuccNodeCount(N);
       int count2 = 0;
@@ -74,7 +74,7 @@ public class GraphIntegrity {
    * @param G
    */
   private static <T> void checkEdges(Graph<T> G) throws UnsoundGraphException {
-    for (Iterator<? extends T> it = G.iterateNodes(); it.hasNext();) {
+    for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T N = it.next();
       if (!G.containsNode(N)) {
         throw new UnsoundGraphException(N + " is not contained in the the graph " + G.containsNode(N));
@@ -125,7 +125,7 @@ public class GraphIntegrity {
     try {
       n1 = G.getNumberOfNodes();
       n2 = 0;
-      for (Iterator it = G.iterateNodes(); it.hasNext();) {
+      for (Iterator it = G.iterator(); it.hasNext();) {
         Object n = it.next();
         if (DEBUG_LEVEL > 1) {
           Trace.println("n2 loop: " + n);
@@ -155,7 +155,7 @@ public class GraphIntegrity {
       throw new UnsoundGraphException("n1: " + n1 + " n2: " + n2);
     }
     if (n1 != n3) {
-      throw setDiffException("n1: " + n1 + " n3: " + n3, G.iterateNodes(), new BFSIterator<T>(G));
+      throw setDiffException("n1: " + n1 + " n3: " + n3, G.iterator(), new BFSIterator<T>(G));
     }
     if (n1 != n4) {
       throw new UnsoundGraphException("n1: " + n1 + " n4: " + n3);

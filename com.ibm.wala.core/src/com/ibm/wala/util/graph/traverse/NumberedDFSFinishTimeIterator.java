@@ -71,7 +71,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
    * @param G
    */
   NumberedDFSFinishTimeIterator(NumberedGraph<T> G) {
-    this(G, G.iterateNodes());
+    this(G, G.iterator());
   }
 
   Iterator getPendingChildren(T n) {

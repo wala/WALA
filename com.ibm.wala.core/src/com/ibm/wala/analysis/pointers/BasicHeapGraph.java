@@ -80,7 +80,7 @@ public class BasicHeapGraph extends HeapGraph {
 
     final OrdinalSetMapping<PointerKey> pointerKeys = getPointerKeys(P);
     final NumberedNodeManager<Object> nodeMgr = new NumberedNodeManager<Object>() {
-      public Iterator<Object> iterateNodes() {
+      public Iterator<Object> iterator() {
         return new CompoundIterator<Object>(pointerKeys.iterator(), P.getInstanceKeyMapping().iterator());
       }
 
@@ -324,7 +324,7 @@ public class BasicHeapGraph extends HeapGraph {
   private void computePredecessorsForLocals(NumberedNodeManager<Object> nodeManager, BasicNaturalRelation R) {
 
     ArrayList<LocalPointerKey> list = new ArrayList<LocalPointerKey>();
-    for (Iterator it = nodeManager.iterateNodes(); it.hasNext();) {
+    for (Iterator it = nodeManager.iterator(); it.hasNext();) {
       Object n = it.next();
       if (n instanceof LocalPointerKey) {
         list.add((LocalPointerKey) n);
@@ -398,8 +398,8 @@ public class BasicHeapGraph extends HeapGraph {
    * 
    * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
    */
-  public Iterator<? extends Object> iterateNodes() {
-    return G.iterateNodes();
+  public Iterator<Object> iterator() {
+    return G.iterator();
   }
 
   /*

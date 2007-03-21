@@ -62,7 +62,7 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
    * @param G
    */
   public SlowDFSFinishTimeIterator(Graph<T> G) {
-    this(G, G.iterateNodes());
+    this(G, G.iterator());
   }
 
 

@@ -43,7 +43,7 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
    */
   @SuppressWarnings("unchecked")
   public SCCIterator(Graph<T> G) {
-    this(G, (Iterator<T>) G.iterateNodes());
+    this(G, (Iterator<T>) G.iterator());
   }
 
   /**

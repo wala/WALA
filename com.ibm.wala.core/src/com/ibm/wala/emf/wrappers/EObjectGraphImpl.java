@@ -103,8 +103,8 @@ public class EObjectGraphImpl implements EObjectGraph {
 
   /* (non-Javadoc)
    */
-  public Iterator<? extends EObject> iterateNodes() {
-    return delegate.iterateNodes();
+  public Iterator<EObject> iterator() {
+    return delegate.iterator();
   }
 
   /* (non-Javadoc)
@@ -186,11 +186,11 @@ public class EObjectGraphImpl implements EObjectGraph {
   public EObject export() {
     EGraph result = GraphFactory.eINSTANCE.createEGraph();
     ECollection nodes = CommonFactory.eINSTANCE.createEContainer();
-    for (Iterator it = iterateNodes(); it.hasNext(); ) {
+    for (Iterator it = iterator(); it.hasNext(); ) {
       nodes.getContents().add(it.next());
     }
     ERelation edges = CommonFactory.eINSTANCE.createERelation();
-    for (Iterator it = iterateNodes(); it.hasNext(); ) {
+    for (Iterator it = iterator(); it.hasNext(); ) {
       EObject x = (EObject)it.next();
       for (Iterator it2 = getSuccNodes(x); it2.hasNext(); ) {
         EObject y = (EObject)it2.next();

@@ -76,7 +76,7 @@ public class BFSIterator<T> implements Iterator<T> {
    * @param G
    */
   public BFSIterator(Graph<T> G) {
-    this(G, G.iterateNodes());
+    this(G, G.iterator());
   }
 
   private void init(Graph<T> G, Iterator<? extends T> nodes) {

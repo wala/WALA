@@ -215,7 +215,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     entryBlock.setIsEntryBlock(true);
     basicBlockList.add(entryBlock);
 
-    for (Iterator it = cfg.iterateNodes(); it.hasNext();) {
+    for (Iterator it = cfg.iterator(); it.hasNext();) {
       BasicBlock bb = (BasicBlock) it.next();
       List blockInstrctions = getBlockInstructions(bb);
       Object[] blockInstructionArray = blockInstrctions.toArray();
@@ -258,7 +258,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    */
   private void createGraphEdges() {
 
-    for (Iterator it = cfg.iterateNodes(); it.hasNext();) {
+    for (Iterator it = cfg.iterator(); it.hasNext();) {
       BasicBlock bb = (BasicBlock) it.next();
 
       if (!basicBlockHasNonNullInstruction(bb) && bb.isEntryBlock()) {
@@ -882,7 +882,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     throw new UnsupportedOperationException();
   }
 
-  public Iterator<IBasicBlock> iterateNodes() {
+  public Iterator<IBasicBlock> iterator() {
     return Arrays.asList(basicBlocks).iterator();
   }
 

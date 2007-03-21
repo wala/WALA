@@ -265,7 +265,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     try {
       PrintWriter out = new PrintWriter(new FileOutputStream(file));
       out.println("digraph callgraph {");
-      for (Iterator it = iterateNodes(); it.hasNext();) {
+      for (Iterator it = iterator(); it.hasNext();) {
         CGNode n = (CGNode) it.next();
         for (Iterator it2 = getSuccNodes(n); it2.hasNext();) {
           CGNode m = (CGNode) it2.next();
@@ -385,9 +385,9 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * We override this since this class supports remove() on nodes, but the
    * superclass doesn't.
    * 
-   * @see com.ibm.wala.util.graph.Graph#iterateNodes()
+   * @see com.ibm.wala.util.graph.Graph#iterator()
    */
-  public Iterator<CGNode> iterateNodes() {
+  public Iterator<CGNode> iterator() {
     return nodes.values().iterator();
   }
 

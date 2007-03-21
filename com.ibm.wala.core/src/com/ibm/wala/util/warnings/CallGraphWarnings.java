@@ -94,7 +94,7 @@ public class CallGraphWarnings {
     if (cg.getNumberOfNodes() == 1) {
       result.add(NoEntrypointsFailure.INSTANCE);
     } else {
-      for (Iterator it = cg.iterateNodes(); it.hasNext();) {
+      for (Iterator it = cg.iterator(); it.hasNext();) {
         CGNode n = (CGNode) it.next();
         RTAContextInterpreter interp = cg.getInterpreter(n);
         addWarningsForNode(result, n, interp);

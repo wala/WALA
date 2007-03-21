@@ -220,7 +220,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
 
   public Iterator<IBasicBlock> getPredNodes(IBasicBlock N) {
     if (N.equals(exit())) {
-      return new FilterIterator<IBasicBlock>(iterateNodes(), new Filter() {
+      return new FilterIterator<IBasicBlock>(iterator(), new Filter() {
         public boolean accepts(Object o) {
           int i = getNumber((IBasicBlock) o);
           return normalToExit.get(i) || exceptionalToExit.get(i);
@@ -319,7 +319,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
 
   Iterator<IBasicBlock> iterateExceptionalPredecessors(IBasicBlock N) {
     if (N.equals(exit())) {
-      return new FilterIterator<IBasicBlock>(iterateNodes(), new Filter() {
+      return new FilterIterator<IBasicBlock>(iterator(), new Filter() {
         public boolean accepts(Object o) {
           int i = getNumber((IBasicBlock) o);
           return exceptionalToExit.get(i);
@@ -332,7 +332,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
 
   Iterator<IBasicBlock> iterateNormalPredecessors(IBasicBlock N) {
     if (N.equals(exit())) {
-      return new FilterIterator<IBasicBlock>(iterateNodes(), new Filter() {
+      return new FilterIterator<IBasicBlock>(iterator(), new Filter() {
         public boolean accepts(Object o) {
           int i = getNumber((IBasicBlock) o);
           return normalToExit.get(i);
@@ -395,8 +395,8 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return nodeManager.getNumberOfNodes();
   }
 
-  public Iterator<IBasicBlock> iterateNodes() {
-    return nodeManager.iterateNodes();
+  public Iterator<IBasicBlock> iterator() {
+    return nodeManager.iterator();
   }
 
   /**
@@ -501,7 +501,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    */
   public String toString() {
     StringBuffer s = new StringBuffer("");
-    for (Iterator it = iterateNodes(); it.hasNext();) {
+    for (Iterator it = iterator(); it.hasNext();) {
       IBasicBlock bb = (IBasicBlock) it.next();
       s.append("BB").append(getNumber(bb)).append("\n");
 

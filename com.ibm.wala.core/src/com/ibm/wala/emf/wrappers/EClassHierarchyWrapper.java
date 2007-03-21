@@ -70,7 +70,7 @@ public class EClassHierarchyWrapper extends EObjectTree {
   @SuppressWarnings("unchecked")
   private void makeEdges(EClassHierarchy cha) {
     ERelation r = CommonFactory.eINSTANCE.createERelation();
-    for (Iterator it = iterateNodes(); it.hasNext();) {
+    for (Iterator it = iterator(); it.hasNext();) {
       EObject src = (EObject) it.next();
       for (Iterator it2 = getSuccNodes(src); it2.hasNext();) {
         EObject dst = (EObject) it2.next();
@@ -90,7 +90,7 @@ public class EClassHierarchyWrapper extends EObjectTree {
    */
   private void makeNodes(EClassHierarchy cha) {
     EObjectDictionary d = new EObjectDictionary();
-    for (Iterator it = iterateNodes(); it.hasNext();) {
+    for (Iterator it = iterator(); it.hasNext();) {
       EObject o = (EObject) it.next();
       d.findOrAdd(o);
     }

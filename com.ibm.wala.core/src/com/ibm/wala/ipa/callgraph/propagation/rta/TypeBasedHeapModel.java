@@ -95,7 +95,7 @@ public class TypeBasedHeapModel implements HeapModel {
       IClass klass = it.next();
       pKeys.putAll(computePointerKeys(klass));
     }
-    for (Iterator it = cg.iterateNodes(); it.hasNext();) {
+    for (Iterator it = cg.iterator(); it.hasNext();) {
       CGNode node = (CGNode) it.next();
       initPKeysForNode(node);
     }
