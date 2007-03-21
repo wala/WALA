@@ -146,7 +146,7 @@ public abstract class AbstractSSAConversion {
   @SuppressWarnings("unchecked")
   private void makeAssignmentMap() {
     this.assignmentMap = new Set[getMaxValueNumber() + 1];
-    for (Iterator BBs = CFG.iterateNodes(); BBs.hasNext();) {
+    for (Iterator BBs = CFG.iterator(); BBs.hasNext();) {
       SSACFG.BasicBlock BB = (SSACFG.BasicBlock) BBs.next();
       if (BB.getFirstInstructionIndex() >= 0) {
         for (Iterator IS = BB.iterateAllInstructions(); IS.hasNext();) {
@@ -176,7 +176,7 @@ public abstract class AbstractSSAConversion {
   protected void placePhiNodes() {
     int IterCount = 0;
 
-    for (Iterator Xs = CFG.iterateNodes(); Xs.hasNext();) {
+    for (Iterator Xs = CFG.iterator(); Xs.hasNext();) {
       SSACFG.BasicBlock X = (SSACFG.BasicBlock) Xs.next();
       setHasAlready(X, 0);
       setWork(X, 0);

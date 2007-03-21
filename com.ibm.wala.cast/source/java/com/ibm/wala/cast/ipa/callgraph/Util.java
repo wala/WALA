@@ -44,7 +44,7 @@ public class Util {
   public static void dumpCG(PropagationCallGraphBuilder builder, CallGraph CG) {
     Trace.println(CG);
 
-    for (Iterator x = CG.iterateNodes(); x.hasNext();) {
+    for (Iterator x = CG.iterator(); x.hasNext();) {
       CGNode N = (CGNode) x.next();
       Trace.println("\nIR of node " + N);
       IR ir = ((SSAContextInterpreter) CG.getInterpreter(N)).getIR(N, builder.getWarnings());

@@ -184,7 +184,7 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
 
     public int getMaxNumber() {
       int max = -1;
-      for (Iterator<? extends IBasicBlock> NS = nodes.iterateNodes(); NS.hasNext();) {
+      for (Iterator<? extends IBasicBlock> NS = nodes.iterator(); NS.hasNext();) {
         IBasicBlock N = NS.next();
         if (subset.contains(N) && getNumber(N) > max) {
           max = getNumber(N);
@@ -206,8 +206,8 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
       return filterNodes(nodes.iterateNodes(s));
     }
 
-    public Iterator<IBasicBlock> iterateNodes() {
-      return filterNodes(nodes.iterateNodes());
+    public Iterator<IBasicBlock> iterator() {
+      return filterNodes(nodes.iterator());
     }
 
     public int getNumberOfNodes() {
