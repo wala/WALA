@@ -11,8 +11,6 @@
 
 package com.ibm.wala.cfg;
 
-import java.util.Iterator;
-
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.util.graph.INodeWithNumber;
