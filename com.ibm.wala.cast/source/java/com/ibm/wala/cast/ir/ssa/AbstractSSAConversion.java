@@ -149,7 +149,7 @@ public abstract class AbstractSSAConversion {
     for (Iterator BBs = CFG.iterator(); BBs.hasNext();) {
       SSACFG.BasicBlock BB = (SSACFG.BasicBlock) BBs.next();
       if (BB.getFirstInstructionIndex() >= 0) {
-        for (Iterator IS = BB.iterateAllInstructions(); IS.hasNext();) {
+        for (Iterator IS = BB.iterator(); IS.hasNext();) {
           SSAInstruction inst = (SSAInstruction) IS.next();
           if (inst != null) {
             for (int j = 0; j < getNumberOfDefs(inst); j++) {

@@ -66,6 +66,8 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.Function;
+import com.ibm.wala.util.MapIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -412,8 +414,13 @@ public abstract class AstTranslator extends CAstVisitor {
       return null;
     }
 
-    public Iterator<SSAInstruction> iterateAllInstructions() {
-      return instructions.iterator();
+    public Iterator<IInstruction> iterator() {
+      Function<SSAInstruction,IInstruction> kludge = new Function<SSAInstruction, IInstruction>() {
+        public IInstruction apply(SSAInstruction s) {
+          return s;
+        }
+      };
+      return new MapIterator<SSAInstruction, IInstruction>(instructions.iterator(),kludge);
     }
   }
 
