@@ -36,6 +36,7 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -151,7 +152,13 @@ public abstract class IRTests extends WalaTestCase {
       SSAInstruction[] insts = ir.getInstructions();
       for (int i = 0; i < insts.length; i++) {
         if (insts[i] != null) {
-          int ln = m.getLineNumber(i);
+          int ln = -1;
+          try {
+            ln = m.getLineNumber(i);
+          } catch (InvalidClassFileException e) {
+            e.printStackTrace();
+            Assertions.UNREACHABLE();
+          }
           if (ln == definingLineNumber) {
             Trace.println("  found " + insts[i] + " at " + ln);
             for (int j = 0; j < insts[i].getNumberOfDefs(); j++) {
