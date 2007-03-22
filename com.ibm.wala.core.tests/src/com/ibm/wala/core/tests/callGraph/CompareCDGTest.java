@@ -244,7 +244,7 @@ public class CompareCDGTest extends WalaTestCase {
       }
       Trace.println(") {");
 
-      Iterator<? extends IInstruction> it = ibb.iterateAllInstructions();
+      Iterator<? extends IInstruction> it = ibb.iterator();
       int j = 0;
       while (it.hasNext()) {
         SSAInstruction inst = (SSAInstruction) it.next();
@@ -302,7 +302,7 @@ public class CompareCDGTest extends WalaTestCase {
       }
       Trace.println(") {");
 
-      Iterator<? extends IInstruction> it = ibb.iterateAllInstructions();
+      Iterator<? extends IInstruction> it = ibb.iterator();
       int j = 0;
       while (it.hasNext()) {
         SSAInstruction inst = (SSAInstruction) it.next();
