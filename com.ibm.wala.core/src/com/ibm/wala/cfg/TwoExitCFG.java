@@ -509,7 +509,7 @@ public class TwoExitCFG implements ControlFlowGraph {
       return Collections.EMPTY_LIST.iterator();
     }
 
-    public Iterator<IInstruction> iterateAllInstructions() {
+    public Iterator<IInstruction> iterator() {
       return EmptyIterator.instance();
     }
 

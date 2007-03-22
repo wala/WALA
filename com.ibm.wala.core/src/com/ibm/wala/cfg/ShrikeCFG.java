@@ -489,7 +489,7 @@ public class ShrikeCFG extends AbstractCFG {
       return getGraphNodeId();
     }
 
-    public Iterator<IInstruction> iterateAllInstructions() {
+    public Iterator<IInstruction> iterator() {
       return new ArrayIterator<IInstruction>(getInstructions(),getFirstInstructionIndex(),getLastInstructionIndex());
     }
   }

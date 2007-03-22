@@ -105,7 +105,7 @@ public class LocalLiveRangeAnalysis {
     Collection<BasicBlock> result = HashSetFactory.make();
     outer: for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
       SSACFG.BasicBlock b = (SSACFG.BasicBlock) it.next();
-      for (Iterator it2 = b.iterateAllInstructions(); it2.hasNext();) {
+      for (Iterator it2 = b.iterator(); it2.hasNext();) {
         SSAInstruction x = (SSAInstruction) it2.next();
         if (s.contains(x)) {
           result.add(b);
@@ -134,7 +134,7 @@ public class LocalLiveRangeAnalysis {
     }
     for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
       SSACFG.BasicBlock b = (SSACFG.BasicBlock) it.next();
-      for (Iterator it2 = b.iterateAllInstructions(); it2.hasNext();) {
+      for (Iterator it2 = b.iterator(); it2.hasNext();) {
         SSAInstruction x = (SSAInstruction) it2.next();
         if (s.equals(x)) {
           return b;

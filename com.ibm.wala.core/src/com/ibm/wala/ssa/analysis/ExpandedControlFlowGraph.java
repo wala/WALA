@@ -602,7 +602,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    * @return true when basic block has non-null instruction, false otherwise.
    */
   private boolean basicBlockHasNonNullInstruction(BasicBlock bb) {
-    for (Iterator it = bb.iterateAllInstructions(); it.hasNext();) {
+    for (Iterator it = bb.iterator(); it.hasNext();) {
       SSAInstruction inst = (SSAInstruction) it.next();
       if (inst != null) {
         return true;
@@ -1156,8 +1156,9 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
       throw new UnsupportedOperationException("NYI");
     }
 
-    public Iterator<SSAInstruction> iterateAllInstructions() {
-      return Collections.singleton(instruction).iterator();
+    public Iterator<IInstruction> iterator() {
+      Collection<IInstruction> s = Collections.singleton((IInstruction)instruction);
+      return s.iterator();
     }
 
     public boolean equals(Object other) {

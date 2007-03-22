@@ -481,7 +481,7 @@ public class InducedCFG extends AbstractCFG {
       return InducedCFG.this.getNumber(this);
     }
     
-    public Iterator<IInstruction> iterateAllInstructions() {
+    public Iterator<IInstruction> iterator() {
       return new ArrayIterator<IInstruction>(getInstructions(),getFirstInstructionIndex(),getLastInstructionIndex());
     }
   }

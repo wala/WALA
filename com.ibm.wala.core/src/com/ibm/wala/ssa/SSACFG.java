@@ -492,8 +492,13 @@ public class SSACFG implements ControlFlowGraph{
       return result;
     }
 
-    public Iterator<? extends IInstruction> iterateAllInstructions() {
-      return getAllInstructions().iterator();
+    public Iterator<IInstruction> iterator() {
+      Function<SSAInstruction,IInstruction> kludge = new Function<SSAInstruction, IInstruction>() {
+        public IInstruction apply(SSAInstruction s) {
+          return s;
+        }
+      };
+      return new MapIterator<SSAInstruction, IInstruction>(getAllInstructions().iterator(),kludge);
     }
 
     /**

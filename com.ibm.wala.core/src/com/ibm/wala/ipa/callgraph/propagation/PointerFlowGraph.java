@@ -243,7 +243,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
       SSACFG.BasicBlock bb = (SSACFG.BasicBlock) it.next();
       InstructionVisitor v = makeInstructionVisitor(node, ir, bb);
-      for (Iterator it2 = bb.iterateAllInstructions(); it2.hasNext();) {
+      for (Iterator it2 = bb.iterator(); it2.hasNext();) {
         SSAInstruction i = (SSAInstruction) it2.next();
         if (i != null) {
           i.visit(v);

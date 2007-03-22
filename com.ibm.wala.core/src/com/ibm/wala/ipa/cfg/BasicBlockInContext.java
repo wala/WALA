@@ -59,8 +59,8 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
   /* (non-Javadoc)
    * @see com.ibm.wala.cfg.IBasicBlock#iterateAllInstructions()
    */
-  public Iterator<? extends IInstruction> iterateAllInstructions() {
-    return delegate.iterateAllInstructions();
+  public Iterator<IInstruction> iterator() {
+    return delegate.iterator();
   }
 
   /*

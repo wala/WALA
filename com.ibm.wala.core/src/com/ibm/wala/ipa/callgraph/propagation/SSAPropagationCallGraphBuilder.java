@@ -293,7 +293,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.
-    for (Iterator it = b.iterateAllInstructions(); it.hasNext();) {
+    for (Iterator it = b.iterator(); it.hasNext();) {
       SSAInstruction s = (SSAInstruction) it.next();
       if (s != null) {
         s.visit(v);

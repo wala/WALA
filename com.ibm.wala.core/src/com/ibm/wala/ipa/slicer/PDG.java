@@ -174,7 +174,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       // add edges for every control-dependent statement in the IR
       for (Iterator<? extends IBasicBlock> succ = cdg.getSuccNodes(bb); succ.hasNext();) {
         IBasicBlock bb2 = succ.next();
-        for (Iterator<? extends IInstruction> it2 = bb2.iterateAllInstructions(); it2.hasNext();) {
+        for (Iterator<? extends IInstruction> it2 = bb2.iterator(); it2.hasNext();) {
           SSAInstruction st = (SSAInstruction) it2.next();
           if (st != null) {
             Statement dest = ssaInstruction2Statement(st);
@@ -192,7 +192,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       IBasicBlock bb = it.next();
       if (cdg.getPredNodeCount(bb) == 0) {
         // this is control dependent on the method entry.
-        for (Iterator<? extends IInstruction> it2 = bb.iterateAllInstructions(); it2.hasNext();) {
+        for (Iterator<? extends IInstruction> it2 = bb.iterator(); it2.hasNext();) {
           SSAInstruction st = (SSAInstruction) it2.next();
           Statement dest = ssaInstruction2Statement(st);
           addEdge(methodEntry, dest);

@@ -22,7 +22,7 @@ import com.ibm.wala.util.graph.INodeWithNumber;
  * @author cahoon
  * @author Stephen Fink
  */
-public interface IBasicBlock extends INodeWithNumber {
+public interface IBasicBlock extends INodeWithNumber, Iterable<IInstruction> {
 
   /**
    * Get the index of the first instruction in the basic block.  The value
@@ -46,10 +46,6 @@ public interface IBasicBlock extends INodeWithNumber {
    */
   public int getLastInstructionIndex();
   
-  /**
-   * @return an Iterator of all instructions in this basic block
-   */
-  public Iterator<? extends IInstruction> iterateAllInstructions();
 
   /**
    * Return true if the basic block represents a catch block.
