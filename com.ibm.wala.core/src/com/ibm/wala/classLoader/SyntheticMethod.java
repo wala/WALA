@@ -13,6 +13,7 @@ package com.ibm.wala.classLoader;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
@@ -282,7 +283,7 @@ public class SyntheticMethod implements IMethod {
    * 
    * @see com.ibm.wala.classLoader.IMethod#getDeclaredExceptions()
    */
-  public TypeReference[] getDeclaredExceptions() {
+  public TypeReference[] getDeclaredExceptions() throws InvalidClassFileException {
     if (resolvedMethod == null) {
       return null;
     } else {

@@ -72,6 +72,9 @@ public class TypeVariableSignature extends TypeSignature {
         return -1;
       }
       FormalTypeParameter[] fp = sig.getFormalTypeParameters();
+      if (fp == null) {
+        return -1;
+      }
       for (int i = 0; i < fp.length; i++) {
         FormalTypeParameter f = fp[i];
         if (f.getIdentifier().equals(v.getIdentifier())) {

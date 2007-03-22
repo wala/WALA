@@ -11,6 +11,7 @@
 package com.ibm.wala.classLoader;
 
 import com.ibm.wala.ipa.callgraph.ContextItem;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
@@ -136,21 +137,24 @@ public interface IMethod extends IMember, ContextItem {
   /**
    * @return an array of the exception types declared by the throws clause for
    *         this method, or null if there are none
+   * @throws InvalidClassFileException 
    */
-  TypeReference[] getDeclaredExceptions();
+  TypeReference[] getDeclaredExceptions() throws InvalidClassFileException;
 
   /**
    * @return the source line number corresponding to a particular bytecode
    *         index, or -1 if the information is not available.
+   * @throws InvalidClassFileException 
    */
-  int getLineNumber(int bcIndex);
+  int getLineNumber(int bcIndex) throws InvalidClassFileException;
 
   /**
    * @return the (source code) name of the local variable of a given number at
    *         the specified program counter, or null if the information is not
    *         available.
+   * @throws InvalidClassFileException 
    */
-  String getLocalVariableName(int bcIndex, int localNumber);
+  String getLocalVariableName(int bcIndex, int localNumber) throws InvalidClassFileException;
 
   /**
    * something like:

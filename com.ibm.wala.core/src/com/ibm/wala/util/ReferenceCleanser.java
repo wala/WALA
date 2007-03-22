@@ -32,6 +32,8 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
  * 
  */
 public class ReferenceCleanser {
+  
+  private final static float OCCUPANCY_TRIGGER = 0.5f;
 
   private static WeakReference<ClassHierarchy> cha;
 
@@ -68,6 +70,10 @@ public class ReferenceCleanser {
    * A debugging aid. TODO: move this elsewhere
    */
   public static void clearSoftCaches() {
+    float occupancy = 1f - ((float)Runtime.getRuntime().freeMemory() / (float)Runtime.getRuntime().totalMemory());
+    if (occupancy < OCCUPANCY_TRIGGER) {
+      return;
+    }
     if (getAnalysisOptions() != null) {
       getAnalysisOptions().getSSACache().wipe();
       getAnalysisOptions().getCFGCache().wipe();

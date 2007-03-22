@@ -140,19 +140,8 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     bcInfo.localVariableMap = LocalVariableTableReader.makeVarMap(cr);
   }
 
-  public String getLocalVariableName(int bcIndex, int localNumber) {
-    if (bcInfo == null) {
-      try {
-        processBytecodes();
-      } catch (InvalidClassFileException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
-      }
-    }
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(bcInfo != null);
-    }
-    int[][] map = bcInfo.localVariableMap;
+  public String getLocalVariableName(int bcIndex, int localNumber) throws InvalidClassFileException {
+    int[][] map = getBCInfo().localVariableMap;
 
     if (localNumber > getMaxLocals()) {
       throw new IllegalArgumentException("illegal local number: " + localNumber + ", method " + getName() + " uses at most "
@@ -304,25 +293,19 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
 
   /**
    * @return raw "Signature" attribute from the bytecode
+   * @throws InvalidClassFileException 
    */
-  private String getGenericsSignature() {
-    if (bcInfo == null) {
-      try {
-        processBytecodes();
-      } catch (InvalidClassFileException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
-      }
-    }
-    return bcInfo.genericsSignature;
+  private String getGenericsSignature() throws InvalidClassFileException {
+    return getBCInfo().genericsSignature;
   }
 
   /**
    * UNDER CONSTRUCTION
    * 
    * @return
+   * @throws InvalidClassFileException 
    */
-  public MethodTypeSignature getMethodTypeSignature() {
+  public MethodTypeSignature getMethodTypeSignature() throws InvalidClassFileException {
     String sig = getGenericsSignature();
     return sig == null ? null : MethodTypeSignature.make(sig);
   }

@@ -56,14 +56,6 @@ public class ShrikeIRFactory implements IRFactory {
     // This should be a method from Shrike
     Assertions._assert(method instanceof ShrikeCTMethod);
 
-    // Set up some ShrikeCT mapping information before constructing SSA
-    try {
-      ((ShrikeCTMethod) method).processBytecodes();
-    } catch (InvalidClassFileException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-    }
-
     com.ibm.wala.shrikeBT.Instruction[] shrikeInstructions;
     try {
       shrikeInstructions = ((ShrikeCTMethod) method).getInstructions();

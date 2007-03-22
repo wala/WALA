@@ -22,6 +22,7 @@ import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeBT.InvokeInstruction;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -87,8 +88,14 @@ public class Exceptions implements Constants {
     case OP_invokestatic:
     case OP_invokeinterface:
       InvokeInstruction call = (InvokeInstruction) pei;
-      Collection<TypeReference> result = inferInvokeExceptions(ShrikeUtil.makeMethodReference(loader, call.getClassType(), call.getMethodName(),
-          call.getMethodSignature()), cha, warnings);
+      Collection<TypeReference> result = null;
+        try {
+          result = inferInvokeExceptions(ShrikeUtil.makeMethodReference(loader, call.getClassType(), call.getMethodName(),
+              call.getMethodSignature()), cha, warnings);
+        } catch (InvalidClassFileException e) {
+          e.printStackTrace();
+          Assertions.UNREACHABLE();
+        }
       return result;
     case OP_athrow:
       Assertions.UNREACHABLE("This class does not have the smarts to infer exception types for athrow");
@@ -101,8 +108,9 @@ public class Exceptions implements Constants {
   /**
    * @return Colection<TypeReference>, set of exception types a call to a
    *         declared target might throw.
+   * @throws InvalidClassFileException 
    */
-  public static Collection<TypeReference> inferInvokeExceptions(MethodReference target, ClassHierarchy cha, WarningSet warnings) {
+  public static Collection<TypeReference> inferInvokeExceptions(MethodReference target, ClassHierarchy cha, WarningSet warnings) throws InvalidClassFileException {
     ArrayList<TypeReference> set = new ArrayList<TypeReference>(runtimeExceptions);
     set.addAll(cha.getJavaLangErrorTypes());
 

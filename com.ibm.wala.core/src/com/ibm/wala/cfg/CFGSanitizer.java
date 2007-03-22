@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -79,7 +80,13 @@ public class CFGSanitizer {
         G.addEdge(b, exit);
       } else {
         // compute types of exceptions the pei may throw
-        TypeReference[] exceptions = computeExceptions(cha, s);
+        TypeReference[] exceptions = null;
+        try {
+          exceptions = computeExceptions(cha, s);
+        } catch (InvalidClassFileException e1) {
+          e1.printStackTrace();
+          Assertions.UNREACHABLE();
+        }
         // remove any exceptions that are caught by catch blocks
         for (Iterator it2 = cfg.getSuccNodes(b); it2.hasNext();) {
           IBasicBlock c = (IBasicBlock) it2.next();
@@ -108,7 +115,13 @@ public class CFGSanitizer {
           }
         }
         // check the remaining uncaught exceptions
-        TypeReference[] declared = ir.getMethod().getDeclaredExceptions();
+        TypeReference[] declared = null;
+        try {
+          declared = ir.getMethod().getDeclaredExceptions();
+        } catch (InvalidClassFileException e) {
+          e.printStackTrace();
+          Assertions.UNREACHABLE();
+        }
         if (declared != null && exceptions != null) {
           for (int i = 0; i < exceptions.length; i++) {
             boolean isDeclared = false;
@@ -139,7 +152,7 @@ public class CFGSanitizer {
     return G;
   }
 
-  private static TypeReference[] computeExceptions(ClassHierarchy cha, SSAInstruction s) {
+  private static TypeReference[] computeExceptions(ClassHierarchy cha, SSAInstruction s) throws InvalidClassFileException {
     Collection c = null;
     if (s instanceof SSAInvokeInstruction) {
       SSAInvokeInstruction call = (SSAInvokeInstruction) s;
@@ -159,4 +172,4 @@ public class CFGSanitizer {
     }
   }
 
-} // CFGSanitizerImpl
+} 

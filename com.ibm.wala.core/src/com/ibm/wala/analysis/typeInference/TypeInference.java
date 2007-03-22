@@ -22,6 +22,7 @@ import com.ibm.wala.fixedpoint.impl.NullaryOperator;
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
@@ -147,7 +148,13 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
 
         IMethod m = cha.resolveMethod(call.getDeclaredTarget());
         if (m != null) {
-          TypeReference[] x = m.getDeclaredExceptions();
+          TypeReference[] x = null;
+          try {
+            x = m.getDeclaredExceptions();
+          } catch (InvalidClassFileException e) {
+            e.printStackTrace();
+            Assertions.UNREACHABLE();
+          }
           if (x != null) {
             for (int i = 0; i < x.length; i++) {
               TypeReference tx = x[i];

@@ -916,6 +916,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       for (int i = basicBlock.getFirstInstructionIndex(); i <= basicBlock.getLastInstructionIndex(); i++) {
         currentInstructionIndex = i;
         instructions[i].visit(visitor);
+
         if (DEBUG) {
           Trace.println("After " + instructions[i] + " " + workingState);
         }
