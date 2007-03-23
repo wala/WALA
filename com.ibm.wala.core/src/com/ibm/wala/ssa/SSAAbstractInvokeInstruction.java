@@ -69,6 +69,10 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
   public boolean isDispatch() {
     return getSite().isDispatch();
   }
+  
+  public boolean isSpecial() {
+	return getSite().isSpecial();
+  }
 
   /**
    * @return the value number of the receiver of a virtual call
