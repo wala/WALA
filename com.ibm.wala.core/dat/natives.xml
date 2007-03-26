@@ -410,7 +410,7 @@
 					<putfield class="Ljava/lang/Thread" field="runnable"
 						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg1" />
 					<putfield class="Ljava/lang/Thread" field="target"
-						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg1" />
 				</method>
 				<method name="isAlive" descriptor="()Z"></method>
 				<method name="resume0" descriptor="()V" />
