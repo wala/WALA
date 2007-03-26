@@ -174,12 +174,15 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /**
+   * NB: Use iterators such as IR.iterateAllInstructions() instead
+   * of this method.  This will probably be deprecated someday.
+   * 
    * Return the instructions. Note that the CFG is created from the Shrike CFG
    * prior to creating the SSA instructions.
    * 
    * @return an array containing the SSA instructions.
    */
-  public IInstruction[] getInstructions() {
+  public SSAInstruction[] getInstructions() {
     return instructions;
   }
   private final Map<RefPathKey,SSAPiInstruction> piInstructions = new HashMap<RefPathKey,SSAPiInstruction>(2);
