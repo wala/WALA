@@ -15,6 +15,7 @@ import java.util.Iterator;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -34,6 +35,15 @@ public class AstContextInsensitiveSSAContextInterpreter
 
   public boolean understands(IMethod method, Context context) {
     return method instanceof AstMethod;
+  }
+
+  public Iterator<NewSiteReference> iterateNewSites(CGNode N, WarningSet warnings) {
+    IR ir = getIR(N, warnings);
+    if (ir == null) {
+      return EmptyIterator.instance();
+    } else {
+      return ir.iterateNewSites();
+    }
   }
 
   public Iterator<CallSiteReference> iterateCallSites(CGNode N, WarningSet warnings) {
