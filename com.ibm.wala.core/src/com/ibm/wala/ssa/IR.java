@@ -510,6 +510,10 @@ public abstract class IR {
     return instructions[i.intValue()];
   }
 
+  public Iterator<NewSiteReference> iterateNewSites() {
+    return newSiteMapping.keySet().iterator();
+  }
+
   public Iterator<CallSiteReference> iterateCallSites() {
     return new Iterator<CallSiteReference>() {
       private final int limit = callSiteMapping.maxKeyValue();

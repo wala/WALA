@@ -41,27 +41,35 @@ public class ArrayClassLoader {
    *          class loader to look up element type with
    */
   public IClass lookupClass(TypeName className, IClassLoader delegator, ClassHierarchy cha) {
+    ArrayClass arrayClass;
     if (DEBUG) {
       Assertions._assert(className.toString().startsWith("["));
     }
 
     TypeReference type = TypeReference.findOrCreate(delegator.getReference(), className);
-    ArrayClass arrayClass = arrayClasses.get(type);
-    if (arrayClass == null) {
-      TypeReference elementType = type.getArrayElementType();
-      if (elementType.isPrimitiveType()) {
-        TypeReference aRef = TypeReference.findOrCreateArrayOf(elementType);
-        arrayClass = arrayClasses.get(aRef);
-        IClassLoader primordial = getRootClassLoader(delegator);
-        if (arrayClass == null) {
-          arrayClasses.put(aRef, arrayClass = new ArrayClass(aRef, primordial, cha));
-        }
-      } else {
-        // check that the element class is loadable. If not, return null.
-        if (delegator.lookupClass(elementType.getName(), cha) == null) {
+    TypeReference elementType = type.getArrayElementType();
+    if (elementType.isPrimitiveType()) {
+      TypeReference aRef = TypeReference.findOrCreateArrayOf(elementType);
+      arrayClass = arrayClasses.get(aRef);
+      IClassLoader primordial = getRootClassLoader(delegator);
+      if (arrayClass == null) {
+        arrayClasses.put(aRef, arrayClass=new ArrayClass(aRef,primordial,cha));
+      }
+    } else {
+      arrayClass = arrayClasses.get(type);
+      if (arrayClass == null) {
+	// check that the element class is loadable. If not, return null.
+	IClass elementCls = delegator.lookupClass(elementType.getName(), cha);
+        if (elementCls == null) {
           return null;
         }
-        arrayClass = new ArrayClass(type, delegator, cha);
+	
+	TypeReference realType = TypeReference.findOrCreateArrayOf(elementCls.getReference());
+	arrayClass = arrayClasses.get(realType);
+	
+	if (arrayClass == null) {
+	  arrayClass = new ArrayClass(realType, elementCls.getClassLoader(), cha);
+	}
       }
       arrayClasses.put(type, arrayClass);
     }
