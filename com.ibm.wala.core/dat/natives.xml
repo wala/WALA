@@ -400,9 +400,17 @@
 				</method>
 				<method name="interrupt0" descriptor="()V"></method>
 				<method name="&lt;init&gt;" descriptor="()V">
+					<putfield class="Ljava/lang/Thread" field="runnable"
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
+					<putfield class="Ljava/lang/Thread" field="target"
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
 				</method>
 				<method name="&lt;init&gt;"
 					descriptor="(Ljava/lang/Runnable;)V">
+					<putfield class="Ljava/lang/Thread" field="runnable"
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg1" />
+					<putfield class="Ljava/lang/Thread" field="target"
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
 				</method>
 				<method name="isAlive" descriptor="()Z"></method>
 				<method name="resume0" descriptor="()V" />
@@ -412,7 +420,18 @@
 					<throw value="x" />
 				</method>
 				<method name="start" descriptor="()V">
-					<call type="interface" name="run"  class="Ljava/lang/Runnable" descriptor="()V" arg0="arg0" />
+					<putfield class="Ljava/lang/Thread" field="runnable"
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
+					<getfield class="Ljava/lang/Thread" field="runnable"
+						fieldType="Ljava/lang/Runnable" def="x" ref="arg0" />
+					<call type="interface" name="run"
+						class="Ljava/lang/Runnable" descriptor="()V" arg0="x" />
+					<putfield class="Ljava/lang/Thread" field="target"
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
+					<getfield class="Ljava/lang/Thread" field="target"
+						fieldType="Ljava/lang/Runnable" def="y" ref="arg0" />
+					<call type="interface" name="run"
+						class="Ljava/lang/Runnable" descriptor="()V" arg0="y" />
 				</method>
 				<method name="stop0" descriptor="()V" />
 				<method name="yield" descriptor="()V" static="true" />
