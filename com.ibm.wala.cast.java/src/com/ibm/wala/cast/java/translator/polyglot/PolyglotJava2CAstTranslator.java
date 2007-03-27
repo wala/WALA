@@ -1406,7 +1406,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public CAstSourcePositionMap.Position getPosition() {
-      return makePosition(fPd.position());
+      return getSourceMap().getPosition(fPdast);
     }
 
     public CAstNodeTypeMap getNodeTypeMap() {
