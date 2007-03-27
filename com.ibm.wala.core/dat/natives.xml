@@ -408,7 +408,7 @@
 				<method name="&lt;init&gt;"
 					descriptor="(Ljava/lang/Runnable;)V">
 					<putfield class="Ljava/lang/Thread" field="runnable"
-						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg1" />
+						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
 					<putfield class="Ljava/lang/Thread" field="target"
 						fieldType="Ljava/lang/Runnable" ref="arg0" value="arg0" />
 				</method>
