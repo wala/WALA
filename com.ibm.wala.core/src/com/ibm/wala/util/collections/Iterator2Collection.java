@@ -11,7 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Iterator;
 
 /**
@@ -28,7 +28,7 @@ public class Iterator2Collection<T> implements Collection<T> {
    * @param i
    */
   public Iterator2Collection(Iterator<? extends T> i) {
-    delegate = new HashSet<T>(5);
+    delegate = new LinkedHashSet<T>(5);
     while (i.hasNext()) {
       delegate.add(i.next());
     }
