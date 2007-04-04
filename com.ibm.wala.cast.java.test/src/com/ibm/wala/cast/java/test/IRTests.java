@@ -261,6 +261,7 @@ public abstract class IRTests extends WalaTestCase {
   }
 
   private static void dumpIR(CallGraph cg, boolean assertReachable) throws IOException {
+    Set unreachable = new HashSet();
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = cg.getClassHierarchy();
     IClassLoader sourceLoader = cha.getLoader(JavaSourceAnalysisScope.SOURCE_REF);
@@ -278,16 +279,18 @@ public abstract class IRTests extends WalaTestCase {
         else {
           Iterator nodeIter = cg.getNodes(m.getReference()).iterator();
           if (!nodeIter.hasNext()) {
-            Trace.println("Method " + m.getReference() + " not reachable?");
-            if (assertReachable) {
-              Assert.assertTrue(m.toString(), nodeIter.hasNext());
-            }
+	    Trace.println("Method " + m.getReference() + " not reachable?");
+	    unreachable.add( m );
             continue;
           }
           CGNode node = (CGNode) nodeIter.next();
           Trace.println(cg.getInterpreter(node).getIR(node, warnings));
         }
       }
+    }
+
+    if (assertReachable) {
+      Assert.assertTrue(unreachable.toString(), unreachable.isEmpty());
     }
   }
 
