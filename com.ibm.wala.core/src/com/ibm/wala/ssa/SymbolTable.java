@@ -239,8 +239,20 @@ public class SymbolTable {
     return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isTrueConstant();
   }
 
+  public boolean isZeroOrFalse(int v) {
+    return isZero(v) || isFalse(v);
+  }
+
+  public boolean isOneOrTrue(int v) {
+    return isOne(v) || isTrue(v);
+  }
+
   public boolean isFalse(int v) {
     return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isFalseConstant();
+  }
+
+  public boolean isBooleanOrZeroOneConstant(int v) {
+    return isBooleanConstant(v) || isZero(v) || isOne(v);
   }
 
   public boolean isBooleanConstant(int v) {

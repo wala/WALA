@@ -1188,9 +1188,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       int result = 0;
 
       // right for OPR_eq
-      if ((symbolTable.isZero(c.getUse(0)) && c.getUse(1) == v) || (symbolTable.isZero(c.getUse(1)) && c.getUse(0) == v)) {
+      if ((symbolTable.isZeroOrFalse(c.getUse(0)) && c.getUse(1) == v) || 
+	  (symbolTable.isZeroOrFalse(c.getUse(1)) && c.getUse(0) == v)) {
         result = -1;
-      } else if ((symbolTable.isOne(c.getUse(0)) && c.getUse(1) == v) || (symbolTable.isOne(c.getUse(1)) && c.getUse(0) == v)) {
+      } else if ((symbolTable.isOneOrTrue(c.getUse(0)) && c.getUse(1) == v) ||
+		 (symbolTable.isOneOrTrue(c.getUse(1)) && c.getUse(0) == v)) {
         result = 1;
       }
 

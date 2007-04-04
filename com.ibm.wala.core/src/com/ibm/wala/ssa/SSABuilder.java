@@ -708,7 +708,7 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     private void maybeInsertPi(SSAInstruction cond, int val1, int val2) {
       if ((addPiForInstanceOf) && (creators.length > val1) && (creators[val1] instanceof SSAInstanceofInstruction)
-          && (symbolTable.isBooleanConstant(val2))) {
+          && (symbolTable.isBooleanOrZeroOneConstant(val2))) {
         reuseOrCreatePi(creators[val1], creators[val1].getUse(0));
       } else if ((addPiForNullCheck) && (symbolTable.isNullConstant(val2))) {
         reuseOrCreatePi(cond, val1);
