@@ -17,6 +17,9 @@ package com.ibm.wala.ssa;
 public interface Value {
 
   public boolean isStringConstant();
+
   public boolean isNullConstant();
+
+  public int getDefaultValue(SymbolTable symtab);
   
 }

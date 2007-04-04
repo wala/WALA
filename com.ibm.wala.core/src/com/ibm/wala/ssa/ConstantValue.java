@@ -69,8 +69,23 @@ public class ConstantValue implements Value {
   /**
    * @return true iff this constant is "zero"
    */
+  public boolean isFalseConstant() {
+    return constant.equals(Boolean.FALSE);
+  }
+
+  /**
+   * @return true iff this constant is "zero"
+   */
+  public boolean isTrueConstant() {
+    return constant.equals(Boolean.TRUE);
+  }
+
+  /**
+   * @return true iff this constant is "zero"
+   */
   public boolean isZeroConstant() {
-    return (constant instanceof Number) && (((Number) constant).intValue() == 0);
+    return ( (constant instanceof Number) && 
+	     (((Number) constant).intValue() == 0) );
   }
 
   /**
@@ -84,7 +99,8 @@ public class ConstantValue implements Value {
    * @return true iff this constant is "one"
    */
   public boolean isOneConstant() {
-    return (constant instanceof Number) && (((Number) constant).intValue() == 1);
+    return ( (constant instanceof Number) &&
+	     (((Number) constant).intValue() == 1) );
   }
 
   @Override
@@ -103,6 +119,10 @@ public class ConstantValue implements Value {
   @Override
   public int hashCode() {
     return constant == null ? 74 : 91 * constant.hashCode();
+  }
+
+  public int getDefaultValue(SymbolTable st) {
+    return st.findOrCreateConstant( constant );
   }
 
 }

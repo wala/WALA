@@ -26,7 +26,7 @@ public class SSAOptions {
    * of the default that will get copy propagated away, this interface
    * is a way to specify what the default values are: this object will
    * be invoked whenever SSA conversion needs to read a value with an
-   * empty of definitions.
+   * no definition.
    *
    * @author Julian Dolby (dolby@us.ibm.com)
    *

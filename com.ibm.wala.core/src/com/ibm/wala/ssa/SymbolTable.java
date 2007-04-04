@@ -13,7 +13,7 @@ package com.ibm.wala.ssa;
 import java.util.HashMap;
 
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.*;
 
 /**
  * 
@@ -71,7 +71,7 @@ public class SymbolTable {
    *          instance of a Java 'boxed-primitive' class, String or NULL.
    * @return value number for constant.
    */
-  private int findOrCreateConstant(Object o) {
+  int findOrCreateConstant(Object o) {
     ConstantValue v = new ConstantValue(o);
     Integer result = constants.get(v);
     if (result == null) {
@@ -88,6 +88,22 @@ public class SymbolTable {
     values[vn] = val;
   }
 
+  public void setDefaultValue(int vn, final Object defaultValue) {
+    Assertions._assert(values[vn] == null);
+
+    Trace.println("setting default for " + vn + " to " + defaultValue);
+
+    values[vn] = new Value() {
+      public boolean isStringConstant() { return false; }
+
+      public boolean isNullConstant() { return false; }
+
+      public int getDefaultValue(SymbolTable symtab) {
+	return findOrCreateConstant( defaultValue );
+      }
+    };
+  }
+
   /**
    * Method getNullConstant.
    * 
@@ -95,6 +111,16 @@ public class SymbolTable {
    */
   public int getNullConstant() {
     return findOrCreateConstant(null);
+  }
+
+  /**
+   * Method getConstant.
+   * 
+   * @param i
+   * @return int
+   */
+  public int getConstant(boolean b) {
+    return findOrCreateConstant(new Boolean(b));
   }
 
   /**
@@ -209,12 +235,24 @@ public class SymbolTable {
     return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isOneConstant();
   }
 
+  public boolean isTrue(int v) {
+    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isTrueConstant();
+  }
+
+  public boolean isFalse(int v) {
+    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isFalseConstant();
+  }
+
   public boolean isBooleanConstant(int v) {
-    return isOne(v) || isZero(v);
+    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Boolean;
   }
 
   public boolean isIntegerConstant(int v) {
-    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof Integer;
+    return (values[v] instanceof ConstantValue) && (((ConstantValue) values[v]).getValue() instanceof Integer);
+  }
+
+  public boolean isLongConstant(int v) {
+    return (values[v] instanceof ConstantValue) && (((ConstantValue) values[v]).getValue() instanceof Long);
   }
 
   public boolean isFloatConstant(int v) {
