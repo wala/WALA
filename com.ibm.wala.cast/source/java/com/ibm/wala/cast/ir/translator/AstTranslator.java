@@ -1184,7 +1184,9 @@ public abstract class AstTranslator extends CAstVisitor {
       protected Symbol makeSymbol(final String nm, final boolean isFinal, final Object defaultInitValue, int vn, Scope definer) {
         final int v = vn == -1 ? getUnderlyingSymtab().newSymbol() : vn;
 	if (useDefaultInitValues() && defaultInitValue != null) {
-	  getUnderlyingSymtab().setDefaultValue(v, defaultInitValue);
+	  if (getUnderlyingSymtab().getValue(v) == null) {
+	    getUnderlyingSymtab().setDefaultValue(v, defaultInitValue);
+	  }
 	}
         return new AbstractSymbol(definer, isFinal, defaultInitValue) {
           public String toString() {
@@ -1274,7 +1276,9 @@ public abstract class AstTranslator extends CAstVisitor {
               vn = getUnderlyingSymtab().newSymbol();
             }
 	    if (useDefaultInitValues() && defaultInitValue != null) {
-	      getUnderlyingSymtab().setDefaultValue(vn, defaultInitValue);
+	      if (getUnderlyingSymtab().getValue(vn) == null) {
+		getUnderlyingSymtab().setDefaultValue(vn, defaultInitValue);
+	      }
 	    }
           }
 
@@ -1319,7 +1323,9 @@ public abstract class AstTranslator extends CAstVisitor {
       protected Symbol makeSymbol(final String nm, boolean isFinal, final Object defaultInitValue, int vn, Scope definer) {
         final int v = vn == -1 ? getUnderlyingSymtab().newSymbol() : vn;
 	if (useDefaultInitValues() && defaultInitValue != null) {
-	  getUnderlyingSymtab().setDefaultValue(v, defaultInitValue);
+	  if (getUnderlyingSymtab().getValue(v) == null) {
+	    getUnderlyingSymtab().setDefaultValue(v, defaultInitValue);
+	  }
 	}
         return new AbstractSymbol(definer, isFinal, defaultInitValue) {
           public String toString() {
