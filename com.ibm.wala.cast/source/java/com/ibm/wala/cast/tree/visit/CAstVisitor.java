@@ -474,8 +474,8 @@ public abstract class CAstVisitor {
     case CAstNode.DECL_STMT: {
       if (visitor.visitDeclStmt(n, context, visitor))
         break;
-      if (n.getChildCount() == 4)
-        visitor.visit(n.getChild(3), context, visitor);
+      if (n.getChildCount() == 2)
+        visitor.visit(n.getChild(1), context, visitor);
       visitor.leaveDeclStmt(n, context, visitor);
       break;
     }

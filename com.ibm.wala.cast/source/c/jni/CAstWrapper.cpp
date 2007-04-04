@@ -86,25 +86,51 @@ CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject Ast)
   THROW_ANY_EXCEPTION(java_ex);
 
   this->CAstPrinter = env->FindClass("com/ibm/wala/cast/util/CAstPrinter");
+  THROW_ANY_EXCEPTION(java_ex);
   this->castPrint = env->GetStaticMethodID(CAstPrinter, "print", "(Lcom/ibm/wala/cast/tree/CAstNode;)Ljava/lang/String;");
+  THROW_ANY_EXCEPTION(java_ex);
 
   this->hashSetInit = env->GetMethodID(HashSet, "<init>", "()V");
+  THROW_ANY_EXCEPTION(java_ex);
   this->hashSetAdd = env->GetMethodID(HashSet, "add", "(Ljava/lang/Object;)Z");
+  THROW_ANY_EXCEPTION(java_ex);
 
   this->linkedListInit = env->GetMethodID(LinkedList, "<init>", "()V");
+  THROW_ANY_EXCEPTION(java_ex);
   this->linkedListAdd = env->GetMethodID(LinkedList, "add", "(Ljava/lang/Object;)Z");
+  THROW_ANY_EXCEPTION(java_ex);
 
   jclass obj = env->FindClass( __OBJN );
+  THROW_ANY_EXCEPTION(java_ex);
   this->toString = env->GetMethodID(obj, "toString", "()Ljava/lang/String;");
+  THROW_ANY_EXCEPTION(java_ex);
   this->getClass = env->GetMethodID(obj, "getClass", "()Ljava/lang/Class;");
+  THROW_ANY_EXCEPTION(java_ex);
 
   jclass intcls = env->FindClass("java/lang/Integer");
+  THROW_ANY_EXCEPTION(java_ex);
   this->intValue = env->GetMethodID(intcls, "intValue", "()I");
+  THROW_ANY_EXCEPTION(java_ex);
 
   jclass castEntity = env->FindClass("com/ibm/wala/cast/tree/CAstEntity");
+  THROW_ANY_EXCEPTION(java_ex);
   this->_getEntityName = env->GetMethodID(castEntity, "getName", "()Ljava/lang/String;");
 
+  CAstSymbol = env->FindClass("com/ibm/wala/cast/tree/impl/CAstSymbolImpl");
   THROW_ANY_EXCEPTION(java_ex);
+  this->castSymbolInit1 = 
+    env->GetMethodID(CAstSymbol, "<init>", "(Ljava/lang/String;)V");
+  THROW_ANY_EXCEPTION(java_ex);
+  this->castSymbolInit2 = 
+    env->GetMethodID(CAstSymbol, "<init>", "(Ljava/lang/String;Z)V");
+  THROW_ANY_EXCEPTION(java_ex);
+  this->castSymbolInit3 = 
+    env->GetMethodID(CAstSymbol, "<init>", "(Ljava/lang/String;ZZ)V");
+  THROW_ANY_EXCEPTION(java_ex);
+  this->castSymbolInit4 = 
+    env->GetMethodID(CAstSymbol, "<init>", "(Ljava/lang/String;ZZLjava/lang/Object;)V");
+  THROW_ANY_EXCEPTION(java_ex);
+
 }
 
 #define _CPP_CONSTANTS 
@@ -458,3 +484,59 @@ const char *CAstWrapper::getEntityName(jobject entity) {
 
   return cstr2;
 }
+
+jobject CAstWrapper::makeSymbol(const char *name) {
+  char *safeName = strndup(name, strlen(name)+1);
+  jobject val = env->NewStringUTF( safeName );
+  delete safeName;
+
+  jobject s = env->NewObject(CAstSymbol, castSymbolInit1, val);
+  THROW_ANY_EXCEPTION(java_ex);
+
+  LOG(s);
+  return s;
+}
+
+jobject CAstWrapper::makeSymbol(const char *name, bool isFinal) {
+  char *safeName = strndup(name, strlen(name)+1);
+  jobject val = env->NewStringUTF( safeName );
+  delete safeName;
+
+  THROW_ANY_EXCEPTION(java_ex);
+
+  jobject s = env->NewObject(CAstSymbol, castSymbolInit2, val, isFinal);
+  LOG(s);
+  return s;
+}
+
+jobject 
+  CAstWrapper::makeSymbol(const char *name, bool isFinal, bool isCaseInsensitive) 
+{
+  char *safeName = strndup(name, strlen(name)+1);
+  jobject val = env->NewStringUTF( safeName );
+  delete safeName;
+
+  jobject s = env->NewObject(CAstSymbol, castSymbolInit3, val, isFinal, isCaseInsensitive);
+  THROW_ANY_EXCEPTION(java_ex);
+
+  LOG(s);
+  return s;
+}
+
+jobject 
+  CAstWrapper::makeSymbol(const char *name, 
+			  bool isFinal, 
+			  bool isCaseInsensitive, 
+			  jobject defaultValue) 
+{
+  char *safeName = strndup(name, strlen(name)+1);
+  jobject val = env->NewStringUTF( safeName );
+  delete safeName;
+
+  jobject s = env->NewObject(CAstSymbol, castSymbolInit4, val, isFinal, isCaseInsensitive, defaultValue);
+  THROW_ANY_EXCEPTION(java_ex);
+
+  LOG(s);
+  return s;
+}
+

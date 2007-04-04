@@ -50,6 +50,7 @@ private:
   jclass CAstNode;
   jclass CAstInterface;
   jclass CAstPrinter;
+  jclass CAstSymbol;
   jmethodID castPrint;
   jmethodID makeNode0;
   jmethodID makeNode1;
@@ -76,6 +77,10 @@ private:
   jmethodID getClass;
   jmethodID intValue;
   jmethodID _getEntityName;
+  jmethodID castSymbolInit1;
+  jmethodID castSymbolInit2;
+  jmethodID castSymbolInit3;
+  jmethodID castSymbolInit4;
 
   jobject callReference;
 
@@ -172,6 +177,14 @@ public:
   jobject getCallReference();
 
   const char *getEntityName(jobject);
+
+  jobject makeSymbol(const char *);
+
+  jobject makeSymbol(const char *, bool);
+
+  jobject makeSymbol(const char *, bool, bool);
+
+  jobject makeSymbol(const char *, bool, bool, jobject);
 
   void log(jobject);
 };
