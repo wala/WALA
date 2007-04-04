@@ -36,6 +36,10 @@ public class JSAstTranslator extends AstTranslator {
     super(loader);
   }
 
+  protected boolean useDefaultInitValues() {
+    return false;
+  }
+
   protected boolean hasImplicitGlobals() { 
     return true;
   }

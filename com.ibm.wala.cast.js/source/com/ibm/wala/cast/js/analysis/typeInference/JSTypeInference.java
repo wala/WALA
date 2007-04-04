@@ -53,10 +53,12 @@ public class JSTypeInference extends AstTypeInference {
       public IVariable makeVariable(int vn) {
 	if (ir.getSymbolTable().isStringConstant( vn )) {
 	  return new TypeVariable(make(JavaScriptTypes.String), 1331*vn);
-	} else if (ir.getSymbolTable().isNumberConstant( vn )) {
-	  return new TypeVariable(make(JavaScriptTypes.Number), 797*vn);
+	} else if (ir.getSymbolTable().isBooleanConstant( vn )) {
+	  return new TypeVariable(make(JavaScriptTypes.Boolean), 4197*vn);
 	} else if (ir.getSymbolTable().isNullConstant( vn )) {
 	  return new TypeVariable(make(JavaScriptTypes.Null), 4077*vn);
+	} else if (ir.getSymbolTable().isNumberConstant( vn )) {
+	  return new TypeVariable(make(JavaScriptTypes.Number), 797*vn);
 	} else {
 	  return super.makeVariable( vn );
 	}
@@ -70,6 +72,8 @@ public class JSTypeInference extends AstTypeInference {
     SymbolTable st = ir.getSymbolTable();
     if (st.isStringConstant(valueNumber)) {	  
       return new PointType(cha.lookupClass(JavaScriptTypes.String), cha);
+    } else if (st.isBooleanConstant( valueNumber )) {
+      return new PointType(cha.lookupClass(JavaScriptTypes.Boolean), cha);
     } else if (st.isNullConstant(valueNumber)) {	  
       return new PointType(cha.lookupClass(JavaScriptTypes.Null), cha);
     } else {

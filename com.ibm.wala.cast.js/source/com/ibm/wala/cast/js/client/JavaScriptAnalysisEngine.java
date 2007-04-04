@@ -88,6 +88,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
   public AnalysisOptions getDefaultOptions(Entrypoints roots) {
     final AnalysisOptions options = new AnalysisOptions(scope, AstIRFactory.makeDefaultFactory(keepIRs), roots);
 
+    options.setConstantType(Boolean.class, JavaScriptTypes.Boolean);
     options.setConstantType(String.class, JavaScriptTypes.String);
     options.setConstantType(Integer.class, JavaScriptTypes.Number);
     options.setConstantType(Float.class, JavaScriptTypes.Number);
