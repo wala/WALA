@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.XMLSetOfClasses;
 
@@ -148,10 +149,25 @@ public class EclipseProjectSourceAnalysisEngine extends
   }
 
   public AnalysisOptions getDefaultOptions(Entrypoints entrypoints) {
-    return 
+    AnalysisOptions options = 
       new AnalysisOptions(
         getScope(), 
 	AstIRFactory.makeDefaultFactory(true),
 	entrypoints);
+
+    SSAOptions ssaOptions = new SSAOptions();
+    ssaOptions.setDefaultValues(new SSAOptions.DefaultValues() {
+      public int getDefaultValue(SymbolTable symtab, int valueNumber) {
+	Value v = symtab.getValue(valueNumber);
+	if (v == null) {
+	  Assertions._assert(v != null, "no default for " + valueNumber);
+	}
+	return v.getDefaultValue(symtab);
+      }
+    });
+    
+    options.setSSAOptions(ssaOptions);
+
+    return options;
   }
 }

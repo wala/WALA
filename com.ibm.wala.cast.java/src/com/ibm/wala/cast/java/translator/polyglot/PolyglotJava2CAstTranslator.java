@@ -38,21 +38,8 @@ import com.ibm.wala.cast.java.loader.Util;
 import com.ibm.wala.cast.java.translator.JavaProcedureEntity;
 import com.ibm.wala.cast.java.translator.TranslatorToCAst;
 import com.ibm.wala.cast.java.types.JavaType;
-import com.ibm.wala.cast.tree.CAst;
-import com.ibm.wala.cast.tree.CAstControlFlowMap;
-import com.ibm.wala.cast.tree.CAstEntity;
-import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.CAstNodeTypeMap;
-import com.ibm.wala.cast.tree.CAstQualifier;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap;
-import com.ibm.wala.cast.tree.CAstType;
-import com.ibm.wala.cast.tree.CAstTypeDictionary;
-import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
-import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
-import com.ibm.wala.cast.tree.impl.CAstImpl;
-import com.ibm.wala.cast.tree.impl.CAstNodeTypeMapRecorder;
-import com.ibm.wala.cast.tree.impl.CAstOperator;
-import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
+import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.tree.impl.*;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -544,7 +531,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public CAstNode visit(IntLit il, WalkContext wc) {
-      return makeNode(wc, fFactory, il, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(il.type())), fFactory.makeConstant((int) il.value()));
+      return fFactory.makeConstant((int) il.value());
     }
 
     public CAstNode visit(StringLit sl, WalkContext wc) {
@@ -600,9 +587,15 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       handleThrowsFromCall(ctorInst, n, wc);
 
-      return makeNode(wc, fFactory, n, CAstNode.LOCAL_SCOPE, makeNode(wc, fFactory, n, CAstNode.BLOCK_EXPR, makeNode(wc, fFactory, n, CAstNode.DECL_STMT,
-          makeNode(wc, fFactory, n, CAstNode.VAR, fFactory.makeConstant(tmpName)), fFactory.makeConstant(true), fFactory.makeConstant(false), newNode),
-          callNode, makeNode(wc, fFactory, n, CAstNode.VAR, fFactory.makeConstant(tmpName))));
+      return 
+        makeNode(wc, fFactory, n, CAstNode.LOCAL_SCOPE, 
+	  makeNode(wc, fFactory, n, CAstNode.BLOCK_EXPR, 
+	    makeNode(wc, fFactory, n, CAstNode.DECL_STMT,
+	      fFactory.makeConstant(new CAstSymbolImpl(tmpName, true)),
+	      newNode),
+	    callNode, 
+	    makeNode(wc, fFactory, n, CAstNode.VAR, 
+	      fFactory.makeConstant(tmpName))));
     }
 
     public CAstNode visit(NewArray na, WalkContext wc) {
@@ -955,8 +948,10 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     public CAstNode visit(Synchronized s, WalkContext wc) {
       CAstNode exprNode = walkNodes(s.expr(), wc);
       String exprName = fFactory.makeUnique();
-      CAstNode declStmt = makeNode(wc, fFactory, s, CAstNode.DECL_STMT, makeNode(wc, fFactory, s, CAstNode.VAR, fFactory.makeConstant(exprName)), fFactory
-          .makeConstant(true), fFactory.makeConstant(false), exprNode);
+      CAstNode declStmt = 
+        makeNode(wc, fFactory, s, CAstNode.DECL_STMT, 
+	  fFactory.makeConstant(new CAstSymbolImpl(exprName, true)),
+	  exprNode);
       CAstNode monitorEnterNode = makeNode(wc, fFactory, s, CAstNode.MONITOR_ENTER, makeNode(wc, fFactory, s, CAstNode.VAR, fFactory.makeConstant(exprName)));
       CAstNode bodyNodes = walkNodes(s.body(), wc);
       CAstNode monitorExitNode = makeNode(wc, fFactory, s, CAstNode.MONITOR_EXIT, makeNode(wc, fFactory, s, CAstNode.VAR, fFactory.makeConstant(exprName)));
@@ -1009,7 +1004,6 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       Expr init = ld.init();
       Type type = ld.declType();
       CAstNode initNode;
-
       if (init == null) {
         if (type.isLongOrLess())
           initNode = fFactory.makeConstant(0);
@@ -1020,10 +1014,20 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       } else
         initNode = walkNodes(init, wc);
 
+      Object defaultValue;
+      if (type.isLongOrLess())
+	defaultValue = new Integer( 0 );
+      else if (type.isDouble() || type.isFloat())
+        defaultValue = new Double(0.0);
+      else
+	defaultValue = null;
+
       boolean isFinal = ld.flags().isFinal();
 
-      return makeNode(wc, fFactory, ld, CAstNode.DECL_STMT, makeNode(wc, fFactory, ld, CAstNode.VAR, fFactory.makeConstant(ld.name())), fFactory
-          .makeConstant(isFinal), fFactory.makeConstant(false), initNode);
+      return makeNode(wc, fFactory, ld, CAstNode.DECL_STMT, 
+        fFactory.makeConstant(
+	  new CAstSymbolImpl(ld.name(), isFinal, defaultValue)),
+	initNode);
     }
 
     public CAstNode visit(Return r, WalkContext wc) {

@@ -56,6 +56,10 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       return (JavaSourceLoaderImpl)loader; 
     }
 
+    protected boolean useDefaultInitValues() {
+      return true;
+    }
+
     //  Java does not have standalone global variables, and let's not 
     // adopt the nasty JavaScript practice of creating globals without 
     // explicit definitions

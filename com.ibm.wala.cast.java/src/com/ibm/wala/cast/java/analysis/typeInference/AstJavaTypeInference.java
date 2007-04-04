@@ -103,17 +103,8 @@ public class AstJavaTypeInference extends AstTypeInference {
 
   public TypeAbstraction getConstantPrimitiveType(int valueNumber) {
     SymbolTable st = ir.getSymbolTable();
-    if (st.isIntegerConstant(valueNumber)) {
-      int val = ((Number)st.getConstantValue(valueNumber)).intValue();
-      if (val < 2) {
-	return PrimitiveType.BOOLEAN;
-      } else if (val < 256) {
-	return PrimitiveType.BYTE;
-      } else if (val < 16384) {
-	return PrimitiveType.SHORT; 
-      } else {
-	return PrimitiveType.INT;
-      }
+    if (st.isBooleanConstant(valueNumber)) {
+      return PrimitiveType.BOOLEAN;
     } else {
       return super.getConstantPrimitiveType(valueNumber);
     }
