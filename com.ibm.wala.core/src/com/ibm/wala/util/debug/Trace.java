@@ -34,6 +34,11 @@ public class Trace {
   public synchronized static void setTraceFile(String fileName) {
     System.setProperty(TRACEFILE_KEY, fileName);
   }
+  
+  public static PrintStream getTraceStream() {
+    setTraceFile();
+    return out;
+  }
 
   /**
    * @return true iff we can print to the tracefile
