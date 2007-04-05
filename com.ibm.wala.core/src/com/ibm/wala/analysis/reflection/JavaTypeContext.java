@@ -19,9 +19,9 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- *
- * Implement a Context which corresponds to a given type abstraction.
- * Thus, this maps the name "TYPE" to a JavaTypeAbstraction.
+ * 
+ * Implement a Context which corresponds to a given type abstraction. Thus, this
+ * maps the name "TYPE" to a JavaTypeAbstraction.
  * 
  * @author sfink
  */
@@ -36,16 +36,15 @@ public class JavaTypeContext implements Context {
     this.type = type;
   }
 
-
   public ContextItem get(ContextKey name) {
     if (name == ContextKey.RECEIVER) {
       return type;
     } else if (name == ContextKey.FILTER) {
       if (type instanceof PointType) {
-	IClass cls = ((PointType)type).getIClass();
-	return new FilteredPointerKey.SingleClassFilter(cls);
+        IClass cls = ((PointType) type).getIClass();
+        return new FilteredPointerKey.SingleClassFilter(cls);
       } else {
-	return null;
+        return null;
       }
     } else {
       Assertions.UNREACHABLE();
@@ -53,22 +52,27 @@ public class JavaTypeContext implements Context {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#toString()
    */
   public String toString() {
     return "JavaTypeContext<" + type + ">";
   }
 
-  public int hashCode() { 
-    return 6367 * type.hashCode(); 
+  public int hashCode() {
+    return 6367 * type.hashCode();
   }
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
     if (getClass().equals(obj.getClass())) {
-      JavaTypeContext other = (JavaTypeContext)obj;
+      JavaTypeContext other = (JavaTypeContext) obj;
       return type.equals(other.type);
     } else {
       return false;
