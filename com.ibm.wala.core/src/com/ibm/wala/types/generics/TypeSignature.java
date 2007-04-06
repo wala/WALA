@@ -19,18 +19,12 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * UNDER CONSTRUCTION.
  * 
- * <verbatim> 
- * TypeSignature: 
- *    FieldTypeSignature 
- *    BaseType (code for a primitive)
+ * <verbatim> TypeSignature: FieldTypeSignature BaseType (code for a primitive)
  * 
- * FieldTypeSignature: 
- *    ClassTypeSignature 
- *    ArrayTypeSignature
- *    TypeVariableSignature
+ * FieldTypeSignature: ClassTypeSignature ArrayTypeSignature
+ * TypeVariableSignature
  * 
- * TypeVariableSignature: 
- *    T identifier ;
+ * TypeVariableSignature: T identifier ;
  * 
  * </verbatim>
  * 
@@ -80,9 +74,9 @@ public abstract class TypeSignature extends Signature {
   public abstract boolean isTypeVariable();
 
   public abstract boolean isClassTypeSignature();
-  
+
   public abstract boolean isArrayTypeSignature();
-  
+
   public abstract boolean isBaseType();
 
   /**
@@ -138,18 +132,32 @@ public abstract class TypeSignature extends Signature {
         continue;
       }
       case TypeReference.ArrayTypeCode: {
-        int off = i - 1;
-        i++;
-        int depth = 0;
-        while (typeSigs.charAt(i++) != ';' || depth > 0) {
-          if (typeSigs.charAt(i - 1) == '<') {
-            depth++;
+        System.err.println(typeSigs + " " + i);
+        
+        switch (typeSigs.charAt(i)) {
+        case TypeReference.BooleanTypeCode:
+        case TypeReference.ByteTypeCode:
+        case TypeReference.IntTypeCode:
+          sigs.add(typeSigs.substring(i-1, i+1));
+          break;
+        case 'T':
+        case TypeReference.ClassTypeCode:
+          int off = i - 1;
+          i++;
+          int depth = 0;
+          while (typeSigs.charAt(i++) != ';' || depth > 0) {
+            if (typeSigs.charAt(i - 1) == '<') {
+              depth++;
+            }
+            if (typeSigs.charAt(i - 1) == '>') {
+              depth--;
+            }
           }
-          if (typeSigs.charAt(i - 1) == '>') {
-            depth--;
-          }
+          sigs.add(typeSigs.substring(off, i));
+          break;
+        default:
+          Assertions.UNREACHABLE("BANG " + typeSigs.charAt(i));
         }
-        sigs.add(typeSigs.substring(off, i));
         continue;
       }
       case (byte) 'T': { // type variable
@@ -177,5 +185,4 @@ public abstract class TypeSignature extends Signature {
       }
     }
   }
-
 }

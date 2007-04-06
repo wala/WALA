@@ -130,8 +130,17 @@ public class FormalTypeParameter extends Signature {
       assert (s.charAt(result) == ':');
       switch (s.charAt(++result)) {
       case TypeReference.ClassTypeCode: {
-        while (s.charAt(result++) != ';')
-          ;
+        int depth = 0;
+        while (s.charAt(result) != ';' || depth > 0) {
+          if (s.charAt(result) == '<') {
+            depth++;
+          }
+          if (s.charAt(result) == '>') {
+            depth--;
+          }
+          result++;
+        }
+        result++;
         break;
       }
       case ':':

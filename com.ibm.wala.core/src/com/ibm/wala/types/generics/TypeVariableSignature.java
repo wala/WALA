@@ -81,7 +81,12 @@ public class TypeVariableSignature extends TypeSignature {
           return i;
         }
       }
-      Assertions.UNREACHABLE();
+//      System.err.println("sig : " + sig);
+//      System.err.println("fp : " + fp.length);
+//      for (FormalTypeParameter f : fp) {
+//        System.err.println(f);
+//      }
+//      Assertions.UNREACHABLE("did not find " + v + " in " + klass );
       return -1;
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
