@@ -132,8 +132,6 @@ public abstract class TypeSignature extends Signature {
         continue;
       }
       case TypeReference.ArrayTypeCode: {
-        System.err.println(typeSigs + " " + i);
-        
         switch (typeSigs.charAt(i)) {
         case TypeReference.BooleanTypeCode:
         case TypeReference.ByteTypeCode:
