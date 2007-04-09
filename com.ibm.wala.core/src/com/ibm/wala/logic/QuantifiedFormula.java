@@ -108,5 +108,9 @@ public class QuantifiedFormula implements IFormula {
   public String toString() {
     return getQuantifier() + " " + getBoundVar() + getBoundVar().getRange() + "." + getFormula();
   }
+  
+  public boolean isAtomic() {
+    return false;
+  }
 
 }

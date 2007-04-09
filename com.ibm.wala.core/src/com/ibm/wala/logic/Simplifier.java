@@ -125,13 +125,19 @@ public class Simplifier {
     return null;
   }
 
+  /**
+   * does the structure of formula f suggest an immediate substitution
+   * to simplify it?
+   * 
+   * @return a pair (p1, p2) meaning "substitute p2 for p1"
+   */
   private static Pair<ITerm, ITerm> suggestsSubstitution(IFormula f) {
     if (f.getKind().equals(IFormula.Kind.RELATION)) {
       RelationFormula r = (RelationFormula) f;
       if (r.getRelation().equals(BinaryRelation.EQUALS)) {
         ITerm lhs = r.getTerms().get(0);
         ITerm rhs = r.getTerms().get(1);
-        if (rhs.isAtomic()) {
+        if (rhs.getKind().equals(ITerm.Kind.CONSTANT) || rhs.getKind().equals(ITerm.Kind.VARIABLE)) {
           return Pair.make(lhs, rhs);
         } else {
           return null;

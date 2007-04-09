@@ -28,10 +28,7 @@ public class Variable implements ITerm, Comparable<Variable> {
     this.number = number;
     this.range = range;
   }
-  
-  public boolean isAtomic() {
-    return true;
-  }
+ 
 
   public Kind getKind() {
     return Kind.VARIABLE;

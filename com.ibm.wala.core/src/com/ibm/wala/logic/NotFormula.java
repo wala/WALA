@@ -45,4 +45,7 @@ public class NotFormula implements IFormula {
   public String toString() {
     return "not(" + f + ")";
   }
+  public boolean isAtomic() {
+    return false;
+  }
 }

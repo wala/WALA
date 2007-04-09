@@ -143,7 +143,8 @@ public class BinaryFormula implements IFormula {
   }
 
 
-
-
+  public boolean isAtomic() {
+    return false;
+  }
   
 }

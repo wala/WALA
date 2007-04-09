@@ -27,10 +27,6 @@ public class FunctionTerm implements ITerm {
     this.parameters = parameters;
   }
   
-  public boolean isAtomic() {
-    return false;
-  }
-  
   public Kind getKind() {
     return Kind.FUNCTION;
   }

@@ -159,5 +159,7 @@ public class RelationFormula implements IFormula {
     return result.toString();
   }
 
-
+  public boolean isAtomic() {
+    return true;
+  }
 }

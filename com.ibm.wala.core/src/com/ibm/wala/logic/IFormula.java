@@ -25,6 +25,8 @@ public interface IFormula {
   static enum Kind {
     RELATION, NEGATION, BINARY, QUANTIFIED
   }
+  
+  public boolean isAtomic();
 
   public Kind getKind();
   

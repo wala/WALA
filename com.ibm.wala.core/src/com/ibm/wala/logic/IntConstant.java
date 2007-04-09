@@ -21,10 +21,6 @@ public class IntConstant implements IConstant {
     this.val = val;
   }
   
-  public boolean isAtomic() {
-    return true;
-  }
-  
   public static IntConstant make(int val) {
     return new IntConstant(val);
   }

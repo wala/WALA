@@ -25,8 +25,6 @@ public interface ITerm {
     CONSTANT, VARIABLE, FUNCTION
   }
   
-  public boolean isAtomic();
-  
   public Kind getKind();
 
   public Collection<Variable> getFreeVariables();
