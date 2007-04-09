@@ -27,9 +27,7 @@ import com.ibm.wala.util.debug.Assertions;
  * Under construction.
  * 
  * FormalTypeParameter: 
- *   Identifier 
- *   ClassBound 
- *   InterfaceBound*
+ *   Identifier ClassBound InterfaceBound*
  * 
  * ClassBound: 
  *    : FieldTypeSignature?

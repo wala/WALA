@@ -19,12 +19,17 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * UNDER CONSTRUCTION.
  * 
- * <verbatim> TypeSignature: FieldTypeSignature BaseType (code for a primitive)
+ * <verbatim> TypeSignature: 
+ *    FieldTypeSignature 
+ *    BaseType (code for a primitive)
  * 
- * FieldTypeSignature: ClassTypeSignature ArrayTypeSignature
- * TypeVariableSignature
+ * FieldTypeSignature:
+ *   ClassTypeSignature 
+ *   ArrayTypeSignature
+ *   TypeVariableSignature
  * 
- * TypeVariableSignature: T identifier ;
+ * TypeVariableSignature: 
+ *    T identifier ;
  * 
  * </verbatim>
  * 
