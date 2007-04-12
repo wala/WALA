@@ -39,30 +39,26 @@ import com.ibm.wala.util.warnings.WarningSet;
 
 public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
 
-  protected
-    AstJavaSSAPropagationCallGraphBuilder(ClassHierarchy cha, 
-					  WarningSet warnings,
-					  AnalysisOptions options,
-					  PointerKeyFactory pointerKeyFactory)
-  {
+  protected AstJavaSSAPropagationCallGraphBuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+      PointerKeyFactory pointerKeyFactory) {
     super(cha, warnings, options, pointerKeyFactory);
   }
 
-  /////////////////////////////////////////////////////////////////////////////
+  // ///////////////////////////////////////////////////////////////////////////
   //
   // language specialization interface
   //
-  /////////////////////////////////////////////////////////////////////////////
+  // ///////////////////////////////////////////////////////////////////////////
 
   protected boolean useObjectCatalog() {
     return false;
   }
 
-  /////////////////////////////////////////////////////////////////////////////
+  // ///////////////////////////////////////////////////////////////////////////
   //
   // enclosing object pointer flow support
   //
-  /////////////////////////////////////////////////////////////////////////////
+  // ///////////////////////////////////////////////////////////////////////////
 
   public class EnclosingObjectReferenceKey extends AbstractFieldPointerKey {
     private final IClass outer;
@@ -71,27 +67,22 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
       super(inner);
       this.outer = outer;
     }
-    
+
     public int hashCode() {
       return getInstanceKey().hashCode() * outer.hashCode();
     }
 
     public boolean equals(Object o) {
-      return 
-        (o instanceof EnclosingObjectReferenceKey) 
-	                         &&
-	((EnclosingObjectReferenceKey)o).outer.equals(outer)
-	                         &&
-	((EnclosingObjectReferenceKey)o)
-	  .getInstanceKey().equals(getInstanceKey());
+      return (o instanceof EnclosingObjectReferenceKey) && ((EnclosingObjectReferenceKey) o).outer.equals(outer)
+          && ((EnclosingObjectReferenceKey) o).getInstanceKey().equals(getInstanceKey());
     }
   }
 
-  /////////////////////////////////////////////////////////////////////////////
+  // ///////////////////////////////////////////////////////////////////////////
   //
   // top-level node constraint generation
   //
-  /////////////////////////////////////////////////////////////////////////////
+  // ///////////////////////////////////////////////////////////////////////////
 
   protected TypeInference makeTypeInference(IR ir, ClassHierarchy cha) {
     TypeInference ti = new AstJavaTypeInference(ir, cha, false);
@@ -99,24 +90,21 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
 
     if (DEBUG_TYPE_INFERENCE) {
       Trace.println("IR of " + ir.getMethod());
-      Trace.println( ir );
+      Trace.println(ir);
       Trace.println("TypeInference of " + ir.getMethod());
-      for(int i = 0; i < ir.getSymbolTable().getMaxValueNumber(); i++) {
-	if (ti.isUndefined(i)) {
-	  Trace.println("  value " + i + " is undefined");
-	} else {
-	  Trace.println("  value " + i + " has type " + ti.getType(i));
-	}
+      for (int i = 0; i < ir.getSymbolTable().getMaxValueNumber(); i++) {
+        if (ti.isUndefined(i)) {
+          Trace.println("  value " + i + " is undefined");
+        } else {
+          Trace.println("  value " + i + " has type " + ti.getType(i));
+        }
       }
     }
 
     return ti;
   }
 
-  protected class AstJavaInterestingVisitor
-    extends AstInterestingVisitor 
-      implements AstJavaInstructionVisitor 
-  {
+  protected class AstJavaInterestingVisitor extends AstInterestingVisitor implements AstJavaInstructionVisitor {
     protected AstJavaInterestingVisitor(int vn) {
       super(vn);
     }
@@ -134,185 +122,170 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
     return new AstJavaInterestingVisitor(vn);
   }
 
-  /////////////////////////////////////////////////////////////////////////////
+  // ///////////////////////////////////////////////////////////////////////////
   //
   // specialized pointer analysis
   //
-  /////////////////////////////////////////////////////////////////////////////
+  // ///////////////////////////////////////////////////////////////////////////
 
   protected class AstJavaPointerFlowGraph extends AstPointerFlowGraph {
-    
-    protected class AstJavaPointerFlowVisitor
-      extends AstPointerFlowVisitor 
-      implements AstJavaInstructionVisitor
-    {
+
+    protected class AstJavaPointerFlowVisitor extends AstPointerFlowVisitor implements AstJavaInstructionVisitor {
       protected AstJavaPointerFlowVisitor(CGNode node, IR ir, BasicBlock bb) {
-	super(node, ir, bb);
+        super(node, ir, bb);
       }
 
       public void visitEnclosingObjectReference(EnclosingObjectReference x) {
-	
+
       }
 
       public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
-	  
+
       }
     }
 
     protected AstJavaPointerFlowGraph(PointerAnalysis pa, CallGraph cg) {
-      super(pa,cg);
+      super(pa, cg);
     }
 
     protected InstructionVisitor makeInstructionVisitor(CGNode node, IR ir, BasicBlock bb) {
-      return new AstJavaPointerFlowVisitor(node,ir, bb);
+      return new AstJavaPointerFlowVisitor(node, ir, bb);
     }
   }
 
   public PointerFlowGraphFactory getPointerFlowGraphFactory() {
     return new PointerFlowGraphFactory() {
       public PointerFlowGraph make(PointerAnalysis pa, CallGraph cg) {
-	return new AstJavaPointerFlowGraph(pa, cg);
+        return new AstJavaPointerFlowGraph(pa, cg);
       }
     };
   }
 
-  /////////////////////////////////////////////////////////////////////////////
+  // ///////////////////////////////////////////////////////////////////////////
   //
   // IR visitor specialization for AST-based Java
   //
-  /////////////////////////////////////////////////////////////////////////////
-  
-  protected class AstJavaConstraintVisitor 
-    extends AstConstraintVisitor 
-    implements AstJavaInstructionVisitor 
-  {
+  // ///////////////////////////////////////////////////////////////////////////
+
+  protected class AstJavaConstraintVisitor extends AstConstraintVisitor implements AstJavaInstructionVisitor {
 
     public AstJavaConstraintVisitor(ExplicitCallGraph.ExplicitNode node, IR ir, ExplicitCallGraph callGraph, DefUse du) {
       super(node, ir, callGraph, du);
     }
 
-    private void handleEnclosingObject(final PointerKey lvalKey, 
-				       final IClass cls, 
-				       final PointerKey objKey)
-    {
+    private void handleEnclosingObject(final PointerKey lvalKey, final IClass cls, final PointerKey objKey) {
       SymbolTable symtab = ir.getSymbolTable();
       int objVal;
       if (objKey instanceof LocalPointerKey) {
-	objVal = ((LocalPointerKey)objKey).getValueNumber();
+        objVal = ((LocalPointerKey) objKey).getValueNumber();
       } else {
-	objVal = 0;
+        objVal = 0;
       }
 
       if (objVal > 0 && contentsAreInvariant(symtab, du, objVal)) {
         system.recordImplicitPointsToSet(objKey);
-	
-	InstanceKey[] objs = getInvariantContents(symtab, du, node, objVal, AstJavaSSAPropagationCallGraphBuilder.this);
 
-	for(int i = 0; i < objs.length; i++) {
-	  PointerKey enclosing = new EnclosingObjectReferenceKey(objs[i], cls);
-	  system.newConstraint(lvalKey, assignOperator, enclosing);
-	}
-	
+        InstanceKey[] objs = getInvariantContents(symtab, du, node, objVal, AstJavaSSAPropagationCallGraphBuilder.this);
+
+        for (int i = 0; i < objs.length; i++) {
+          PointerKey enclosing = new EnclosingObjectReferenceKey(objs[i], cls);
+          system.newConstraint(lvalKey, assignOperator, enclosing);
+        }
+
       } else {
-	system.newSideEffect(
-          new UnaryOperator() {
-            public byte evaluate(IVariable lhs, IVariable rhs) {
-	      IntSetVariable tv = (IntSetVariable) rhs;
-	      if (tv.getValue() != null) {
-		tv.getValue().foreach(new IntSetAction() {
-	          public void act(int ptr) {
-		    InstanceKey iKey = system.getInstanceKey(ptr);
-		    PointerKey enclosing = 
-		      new EnclosingObjectReferenceKey(iKey, cls);
-		    system.newConstraint(lvalKey, assignOperator, enclosing);
-		  } 
-	        });
-	      }
-	      return NOT_CHANGED;
-	    }
-	    public int hashCode() {
-	      return System.identityHashCode(this);
-	    }
-	    public boolean equals(Object o) {
-	      return o==this;
-	    }
-	    public String toString() {
-	      return "enclosing objects of " + objKey;
-	    }
-	  },
-	  objKey);
+        system.newSideEffect(new UnaryOperator() {
+          public byte evaluate(IVariable lhs, IVariable rhs) {
+            IntSetVariable tv = (IntSetVariable) rhs;
+            if (tv.getValue() != null) {
+              tv.getValue().foreach(new IntSetAction() {
+                public void act(int ptr) {
+                  InstanceKey iKey = system.getInstanceKey(ptr);
+                  PointerKey enclosing = new EnclosingObjectReferenceKey(iKey, cls);
+                  system.newConstraint(lvalKey, assignOperator, enclosing);
+                }
+              });
+            }
+            return NOT_CHANGED;
+          }
+
+          public int hashCode() {
+            return System.identityHashCode(this);
+          }
+
+          public boolean equals(Object o) {
+            return o == this;
+          }
+
+          public String toString() {
+            return "enclosing objects of " + objKey;
+          }
+        }, objKey);
       }
     }
 
     public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
       PointerKey lvalKey = getPointerKeyForLocal(node, inst.getDef());
       PointerKey objKey = getPointerKeyForLocal(node, 1);
-      IClass cls = cha.lookupClass( inst.getEnclosingType() );
+      IClass cls = cha.lookupClass(inst.getEnclosingType());
       handleEnclosingObject(lvalKey, cls, objKey);
     }
 
     public void visitNew(SSANewInstruction instruction) {
       super.visitNew(instruction);
-      InstanceKey iKey =
-	getInstanceKeyForAllocation(node, instruction.getNewSite());
+      InstanceKey iKey = getInstanceKeyForAllocation(node, instruction.getNewSite());
 
       if (iKey != null) {
-	IClass klass = iKey.getConcreteType();
+        IClass klass = iKey.getConcreteType();
 
         if (klass instanceof JavaClass) {
-	  IClass enclosingClass = ((JavaClass)klass).getEnclosingClass();
-	  if (enclosingClass != null) {
-	    IClass currentCls = node.getMethod().getDeclaringClass();
-	    PointerKey objKey = getPointerKeyForLocal(node, 1);
-	    boolean needIndirection = false;
+          IClass enclosingClass = ((JavaClass) klass).getEnclosingClass();
+          if (enclosingClass != null) {
+            IClass currentCls = node.getMethod().getDeclaringClass();
+            PointerKey objKey = getPointerKeyForLocal(node, 1);
+            boolean needIndirection = false;
 
-	    Trace.println("class is " + klass + 
-			  ", enclosing is " + enclosingClass +
-			  ", method is " + node.getMethod());
+            Trace.println("class is " + klass + ", enclosing is " + enclosingClass + ", method is " + node.getMethod());
 
-	    if (node.getMethod().isSynthetic()) {
-	      return;
-	    }
+            if (node.getMethod().isSynthetic()) {
+              return;
+            }
 
-	    while (! cha.isSubclassOf(currentCls, enclosingClass)) {
-	      Assertions._assert(currentCls instanceof JavaClass);
-	      currentCls = ((JavaClass)currentCls).getEnclosingClass();
-	      needIndirection = true;
-	    }
+            while (!cha.isSubclassOf(currentCls, enclosingClass)) {
+              Assertions._assert(currentCls instanceof JavaClass);
+              currentCls = ((JavaClass) currentCls).getEnclosingClass();
+              needIndirection = true;
+            }
 
-	    while (enclosingClass != null) {
-	      PointerKey x = new EnclosingObjectReferenceKey(iKey, enclosingClass);
-	      if (needIndirection) {
-		handleEnclosingObject(x, currentCls, objKey);
-		Trace.println("at " + instruction + ": adding " + iKey + ", " + enclosingClass + " <-- " + objKey + ", " + currentCls);
-	      } else {
-		system.newConstraint(x, assignOperator, objKey);
-		Trace.println("at " + instruction + ": adding " + iKey + ", " + enclosingClass + " <-- " + objKey);	      
-	      }
+            while (enclosingClass != null) {
+              PointerKey x = new EnclosingObjectReferenceKey(iKey, enclosingClass);
+              if (needIndirection) {
+                handleEnclosingObject(x, currentCls, objKey);
+                Trace.println("at " + instruction + ": adding " + iKey + ", " + enclosingClass + " <-- " + objKey + ", "
+                    + currentCls);
+              } else {
+                system.newConstraint(x, assignOperator, objKey);
+                Trace.println("at " + instruction + ": adding " + iKey + ", " + enclosingClass + " <-- " + objKey);
+              }
 
-	      if (enclosingClass instanceof JavaClass) {
-		needIndirection = true;
-		enclosingClass = ((JavaClass)enclosingClass).getEnclosingClass();
-		currentCls = ((JavaClass)currentCls).getEnclosingClass();
-	      } else {
-		break;
-	      }
-	    }
-	  }
-	}
+              if (enclosingClass instanceof JavaClass) {
+                needIndirection = true;
+                enclosingClass = ((JavaClass) enclosingClass).getEnclosingClass();
+                currentCls = ((JavaClass) currentCls).getEnclosingClass();
+              } else {
+                break;
+              }
+            }
+          }
+        }
       }
     }
-      
+
     public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
       visitInvokeInternal(instruction);
     }
   }
 
-  protected ConstraintVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node, 
-					  IR ir, 
-					  DefUse du,
-					  ExplicitCallGraph callGraph)
-  {
+  protected ConstraintVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node, IR ir, DefUse du, ExplicitCallGraph callGraph) {
     return new AstJavaConstraintVisitor(node, ir, callGraph, du);
   }
 }
