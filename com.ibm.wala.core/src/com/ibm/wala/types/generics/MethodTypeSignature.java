@@ -22,6 +22,9 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
  * MethodTypeSignature:
  *    FormalTypeParameters? (TypeSignature*) ReturnType ThrowsSignature*
  * 
+ * ReturnType:
+ *    TypeSignature
+ *    
  * @author sjfink
  *
  */
@@ -53,6 +56,11 @@ public class MethodTypeSignature extends Signature {
       result[i] = TypeSignature.make(args[i]);
     }
     return result;
+  }
+  
+  public TypeSignature getReturnType() {
+    String rtString = rawString().substring(rawString().indexOf(')') + 1);
+    return TypeSignature.make(rtString);
   }
   
   public FormalTypeParameter[] getFormalTypeParameters() {
@@ -95,6 +103,15 @@ public class MethodTypeSignature extends Signature {
       } else {
         return sm.getMethodTypeSignature().getArguments();
       }
+    } else {
+      return null;
+    }
+  }
+  
+  public static MethodTypeSignature getMethodTypeSignature(IMethod method) throws InvalidClassFileException {
+    if (method instanceof ShrikeCTMethod) {
+      ShrikeCTMethod sm = (ShrikeCTMethod) method;
+      return sm.getMethodTypeSignature();
     } else {
       return null;
     }

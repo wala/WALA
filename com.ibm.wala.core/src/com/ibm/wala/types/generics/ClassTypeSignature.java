@@ -72,17 +72,23 @@ public class ClassTypeSignature extends TypeSignature {
   }
 
   public TypeArgument[] getTypeArguments() {
-    if (rawString().indexOf('<') == -1) {
+    // note: need to handle type arguments for raw signatures like the following:
+    // Ljava/util/IdentityHashMap<TK;TV;>.IdentityHashMapIterator<TV;>;
+    int lastDot = rawString().lastIndexOf('.');
+    if (rawString().indexOf('<',lastDot) == -1) {
       return null;
     } else {
-      int start = rawString().indexOf('<');
+      int start = rawString().indexOf('<',lastDot);
       int end = endOfTypeArguments();
       return TypeArgument.make(rawString().substring(start,end));
     }
   }
   
   private int endOfTypeArguments() {
-    int i = rawString().indexOf('<') + 1;
+    // note: need to handle type arguments for raw signatures like the following:
+    // Ljava/util/IdentityHashMap<TK;TV;>.IdentityHashMapIterator<TV;>;
+    int lastDot = rawString().lastIndexOf('.');
+    int i = rawString().indexOf('<',lastDot) + 1;
     assert (i > 0);
     int depth = 1;
     while (depth > 0) {

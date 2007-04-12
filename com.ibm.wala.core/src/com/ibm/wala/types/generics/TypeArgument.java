@@ -19,23 +19,25 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * UNDER CONSTRUCTION
  * 
- * <verbatim> 
- * TypeArgument: 
- *    WildcardIndicator? FieldTypeSignature 
- *    *
+ * <verbatim> TypeArgument: WildcardIndicator? FieldTypeSignature *
  * 
- * WildcardIndicator: 
- *    + 
- *    - 
- * </verbatim>
+ * WildcardIndicator: + - </verbatim>
  * 
  * @author sjfink
  * 
  */
 public class TypeArgument extends Signature {
 
+
   private final TypeSignature sig;
-  
+
+  private final WildcardIndicator w;
+
+  private static enum WildcardIndicator {
+    PLUS,
+    MINUS
+  }
+
   private final static TypeArgument WILDCARD = new TypeArgument("*") {
     public boolean isWildcard() {
       return true;
@@ -45,13 +47,15 @@ public class TypeArgument extends Signature {
   private TypeArgument(String s) {
     super(s);
     sig = null;
+    w = null;
   }
 
-  private TypeArgument(TypeSignature sig) {
+  private TypeArgument(TypeSignature sig, WildcardIndicator w) {
     super(sig.rawString());
     this.sig = sig;
+    this.w = w;
   }
-  
+
   public boolean isWildcard() {
     return false;
   }
@@ -75,19 +79,23 @@ public class TypeArgument extends Signature {
     switch (s.charAt(0)) {
     case '*':
       return WILDCARD;
-    case '+':
-    case '-':
-      Assertions.UNREACHABLE();
-      return null;
+    case '+': {
+      TypeSignature sig = TypeSignature.make(s.substring(1));
+      return new TypeArgument(sig, WildcardIndicator.PLUS);
+    }
+    case '-': {
+      TypeSignature sig = TypeSignature.make(s.substring(1));
+      return new TypeArgument(sig, WildcardIndicator.MINUS);
+    }
     default:
       TypeSignature sig = TypeSignature.make(s);
-      return new TypeArgument(sig);
+      return new TypeArgument(sig, null);
     }
   }
 
   /**
    * @param typeSigs
-   *          Strin TypeSignature*
+   *          TypeSignature*
    * @return tokenize it
    */
   static String[] parseForTypeArguments(String typeArgs) {
@@ -124,6 +132,7 @@ public class TypeArgument extends Signature {
         }
         continue;
       }
+      case (byte) '+':
       case (byte) 'T': { // type variable
         int off = i - 1;
         while (typeArgs.charAt(i++) != ';')
@@ -152,6 +161,18 @@ public class TypeArgument extends Signature {
 
   public TypeSignature getFieldTypeSignature() {
     return sig;
+  }
+  
+
+  @Override
+  public String toString() {
+    if (w == null) {
+      return sig.toString();
+    } else if (w.equals(WildcardIndicator.PLUS)) {
+      return "+" + sig.toString();
+    } else {
+      return "-" + sig.toString();
+    }
   }
 
 }

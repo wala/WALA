@@ -12,6 +12,10 @@ package com.ibm.wala.types.generics;
 
 import java.util.ArrayList;
 
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.ShrikeClass;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
+
 /**
  * Under construction.
  * 
@@ -107,5 +111,19 @@ public class ClassSignature extends Signature {
       i++;
     }
     return i;
+  }
+  
+  /**
+   * @param klass
+   * @return the class signature, or null if none
+   * @throws InvalidClassFileException
+   */
+  public static ClassSignature getClassSignature(IClass klass) throws InvalidClassFileException {
+    if (klass instanceof ShrikeClass) {
+      ShrikeClass sc = (ShrikeClass) klass;
+      return sc.getClassSignature();
+    } else {
+      return null;
+    }
   }
 }
