@@ -41,26 +41,22 @@ public class JSCallGraph extends AstCallGraph {
 
     public SSANewInstruction addAllocation(TypeReference T, WarningSet warnings) {
       if (cha.isSubclassOf(cha.lookupClass(T), cha.lookupClass(JavaScriptTypes.Root))) {
-	int instance = nextLocal++;
-	NewSiteReference ref = NewSiteReference.make(statements.size(), T);
-	SSANewInstruction result = new JavaScriptNewInstruction(instance, ref);
-	statements.add(result);
-	return result;
+        int instance = nextLocal++;
+        NewSiteReference ref = NewSiteReference.make(statements.size(), T);
+        SSANewInstruction result = new JavaScriptNewInstruction(instance, ref);
+        statements.add(result);
+        return result;
       } else {
-	 return super.addAllocation(T, warnings);
+        return super.addAllocation(T, warnings);
       }
     }
-      
-    public SSAAbstractInvokeInstruction addDirectCall(int function,
-						       int[] params,
-						       CallSiteReference site) 
-    {
+
+    public SSAAbstractInvokeInstruction addDirectCall(int function, int[] params, CallSiteReference site) {
       CallSiteReference newSite = CallSiteReference.make(statements.size(), site.getDeclaredTarget(), site.getInvocationCode());
-      
-      JavaScriptInvoke s = 
-	new JavaScriptInvoke(function, nextLocal++, params, nextLocal++, newSite);
+
+      JavaScriptInvoke s = new JavaScriptInvoke(function, nextLocal++, params, nextLocal++, newSite);
       statements.add(s);
-      
+
       return s;
     }
   }
