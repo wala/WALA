@@ -666,14 +666,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               for (int j = 0; j < vk.length; j++) {
                 system.findOrCreateIndexForInstanceKey(vk[j]);
                 if (vk[j].getConcreteType() != null) {
-                  if (contents.isInterface()) {
-                    if (getClassHierarchy().implementsInterface(vk[j].getConcreteType(), contents.getReference())) {
-                      system.newConstraint(p, vk[j]);
-                    }
-                  } else {
-                    if (getClassHierarchy().isSubclassOf(vk[j].getConcreteType(), contents)) {
-                      system.newConstraint(p, vk[j]);
-                    }
+                  if (getClassHierarchy().isAssignableFrom(contents, vk[j].getConcreteType())) {
+                    system.newConstraint(p, vk[j]);
                   }
                 }
               }
@@ -816,7 +810,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
       IField f = getClassHierarchy().resolveField(field);
       if (f == null && callGraph.getFakeRootNode().getMethod().getDeclaringClass().getReference().equals(field.getType())) {
-	f = callGraph.getFakeRootNode().getMethod().getDeclaringClass().getField(field.getName());
+        f = callGraph.getFakeRootNode().getMethod().getDeclaringClass().getField(field.getName());
       }
 
       if (f == null) {
@@ -1188,11 +1182,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       int result = 0;
 
       // right for OPR_eq
-      if ((symbolTable.isZeroOrFalse(c.getUse(0)) && c.getUse(1) == v) || 
-	  (symbolTable.isZeroOrFalse(c.getUse(1)) && c.getUse(0) == v)) {
+      if ((symbolTable.isZeroOrFalse(c.getUse(0)) && c.getUse(1) == v)
+          || (symbolTable.isZeroOrFalse(c.getUse(1)) && c.getUse(0) == v)) {
         result = -1;
-      } else if ((symbolTable.isOneOrTrue(c.getUse(0)) && c.getUse(1) == v) ||
-		 (symbolTable.isOneOrTrue(c.getUse(1)) && c.getUse(0) == v)) {
+      } else if ((symbolTable.isOneOrTrue(c.getUse(0)) && c.getUse(1) == v)
+          || (symbolTable.isOneOrTrue(c.getUse(1)) && c.getUse(0) == v)) {
         result = 1;
       }
 
@@ -1230,7 +1224,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         system.recordImplicitPointsToSet(dst);
       } else {
         if (com.ibm.wala.cfg.Util.endsWithConditionalBranch(CFG, getBasicBlock()) && CFG.getSuccNodeCount(getBasicBlock()) == 2) {
-          SSAConditionalBranchInstruction cond = (SSAConditionalBranchInstruction)com.ibm.wala.cfg.Util.getLastInstruction(CFG, getBasicBlock());
+          SSAConditionalBranchInstruction cond = (SSAConditionalBranchInstruction) com.ibm.wala.cfg.Util.getLastInstruction(CFG,
+              getBasicBlock());
           SSAInstruction cause = instruction.getCause();
           BasicBlock target = (BasicBlock) CFG.getNode(instruction.getSuccessor());
           if ((cause instanceof SSAInstanceofInstruction) && ((dir = booleanConstantTest(cond, cause.getDef())) != 0)) {
@@ -1783,8 +1778,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   private boolean needsFilterForReceiver(SSAAbstractInvokeInstruction instruction, CGNode target) {
 
-    FilteredPointerKey.TypeFilter f = (FilteredPointerKey.TypeFilter)
-      target.getContext().get(ContextKey.FILTER);
+    FilteredPointerKey.TypeFilter f = (FilteredPointerKey.TypeFilter) target.getContext().get(ContextKey.FILTER);
 
     if (f != null) {
       // the context selects a particular concrete type for the receiver.
@@ -1824,7 +1818,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   private boolean isRootType(FilteredPointerKey.TypeFilter filter) {
     if (filter instanceof FilteredPointerKey.SingleClassFilter) {
-      return isRootType(((FilteredPointerKey.SingleClassFilter)filter).getConcreteType());
+      return isRootType(((FilteredPointerKey.SingleClassFilter) filter).getConcreteType());
     } else {
       return false;
     }
@@ -1857,8 +1851,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @return an IClass which represents
    */
   private FilteredPointerKey.TypeFilter getFilter(CGNode target) {
-    FilteredPointerKey.TypeFilter filter = (FilteredPointerKey.TypeFilter)
-      target.getContext().get(ContextKey.FILTER);
+    FilteredPointerKey.TypeFilter filter = (FilteredPointerKey.TypeFilter) target.getContext().get(ContextKey.FILTER);
 
     if (filter != null) {
       return filter;

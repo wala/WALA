@@ -639,20 +639,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
           continue;
         }
       }
-      if (C.isInterface()) {
-        if (klass.isInterface()) {
-          if (cha.isSubclassOf(klass, C)) {
-            return true;
-          }
-        } else {
-          if (cha.implementsInterface(klass, T)) {
-            return true;
-          }
-        }
-      } else {
-        if (cha.isSubclassOf(klass, C)) {
-          return true;
-        }
+      if (cha.isAssignableFrom(C, klass)) {
+        return true;
       }
     }
     return false;

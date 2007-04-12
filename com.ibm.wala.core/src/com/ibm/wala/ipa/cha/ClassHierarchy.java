@@ -894,7 +894,6 @@ public class ClassHierarchy implements Iterable<IClass> {
     }
     Set impls = implementors.get(tClass);
     if (impls != null && impls.contains(c)) {
-      // case a)
       return true;
     }
     return false;
@@ -1119,6 +1118,29 @@ public class ClassHierarchy implements Iterable<IClass> {
 
     public static ClassExclusion create(TypeReference klass, String message) {
       return new ClassExclusion(klass, message);
+    }
+  }
+
+  /**
+   * Does an expression c1 x := c2 y typecheck?
+   * 
+   * i.e. is c2 a subtype of c1?
+   */
+  public boolean isAssignableFrom(IClass c1, IClass c2) {
+    assert c1 != null;
+    assert c2 != null;
+    if (c1.isInterface()) {
+      if (c2.isInterface()) {
+        return isSubclassOf(c2, c1);
+      } else {
+        return implementsInterface(c2, c1.getReference());
+      }
+    } else {
+      if (c2.isInterface()) {
+        return false;
+      } else {
+        return isSubclassOf(c2, c1);
+      }
     }
   }
 
