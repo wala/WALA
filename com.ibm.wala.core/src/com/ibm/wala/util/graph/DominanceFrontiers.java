@@ -21,7 +21,7 @@ import com.ibm.wala.util.graph.traverse.DFS;
 
 /**
  * 
- * An object the computes the dominance frontiers of a graph
+ * An object that computes the dominance frontiers of a graph
  * 
  * @author Julian Dolby
  */
