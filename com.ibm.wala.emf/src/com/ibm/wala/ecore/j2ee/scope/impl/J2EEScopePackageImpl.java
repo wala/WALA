@@ -10,6 +10,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.common.CommonPackage;
 import com.ibm.wala.ecore.common.impl.CommonPackageImpl;
 import com.ibm.wala.ecore.graph.GraphPackage;
@@ -38,6 +39,7 @@ import com.ibm.wala.ecore.regex.impl.RegexPackageImpl;
  * <!-- end-user-doc -->
  * @generated
  */
+@Internal
 public class J2EEScopePackageImpl extends EPackageImpl implements J2EEScopePackage {
   /**
    * <!-- begin-user-doc -->
