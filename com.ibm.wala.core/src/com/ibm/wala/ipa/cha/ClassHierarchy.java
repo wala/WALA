@@ -22,6 +22,7 @@ import java.util.Set;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
+import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -1056,17 +1057,17 @@ public class ClassHierarchy implements Iterable<IClass> {
     return make(scope, new ClassLoaderFactoryImpl(scope.getExclusions(), warnings), warnings);
   }
 
+  /**
+   * temporarily marking this internal to avoid infinite sleep with
+   * randomly chosen IProgressMonitor.
+   * TODO: nanny for testgen
+   */
+  @Internal
   public static ClassHierarchy make(AnalysisScope scope, WarningSet warnings, IProgressMonitor monitor)
       throws ClassHierarchyException {
     return make(scope, new ClassLoaderFactoryImpl(scope.getExclusions(), warnings), warnings, monitor);
   }
 
-  /**
-   * @param scope
-   * @param warnings
-   * @return a ClassHierarchy object representing the analysis scope
-   * @throws ClassHierarchyException
-   */
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings)
       throws ClassHierarchyException {
     return new ClassHierarchy(scope, factory, warnings, new NullProgressMonitor());
@@ -1137,7 +1138,7 @@ public class ClassHierarchy implements Iterable<IClass> {
       }
     } else {
       if (c2.isInterface()) {
-        return false;
+        return c1.equals(getRootClass());
       } else {
         return isSubclassOf(c2, c1);
       }
