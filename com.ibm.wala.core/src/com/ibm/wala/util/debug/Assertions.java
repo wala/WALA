@@ -90,6 +90,15 @@ public class Assertions {
   }
   
   /**
+   * Method UNREACHABLE.
+   * @param string
+   */
+  @Internal
+  public static void UNREACHABLE(Object o) {
+    throw new UnimplementedError(o == null ? "" : o.toString());
+  }
+  
+  /**
    * Method preconditon (convenience).
    * This is only a convenience method, identical to _assert.
    * Allows the programmer to distinguish preconditions from other assertions.
