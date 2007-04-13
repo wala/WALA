@@ -19,9 +19,17 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * UNDER CONSTRUCTION
  * 
- * <verbatim> TypeArgument: WildcardIndicator? FieldTypeSignature *
+ * <verbatim> 
+ * TypeArgument: 
+ *     WildcardIndicator? FieldTypeSignature 
+ *     *
  * 
- * WildcardIndicator: + - </verbatim>
+ * WildcardIndicator: 
+ *    + 
+ *    - 
+ *    
+ *    
+ * </verbatim>
  * 
  * @author sjfink
  * 
@@ -41,6 +49,9 @@ public class TypeArgument extends Signature {
   private final static TypeArgument WILDCARD = new TypeArgument("*") {
     public boolean isWildcard() {
       return true;
+    }
+    public String toString() {
+      return "*";
     }
   };
 
@@ -138,6 +149,11 @@ public class TypeArgument extends Signature {
         while (typeArgs.charAt(i++) != ';')
           ;
         args.add(typeArgs.substring(off, i));
+        continue;
+      }
+      case (byte) '*': {
+        // a wildcard
+        args.add("*");
         continue;
       }
       case (byte) '>': // end of argument list
