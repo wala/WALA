@@ -14,17 +14,18 @@ import java.io.Serializable;
 
 /**
  * @author sfink
- * @author Julian Dolby (dolby@us.ibm.com) 
+ * @author Julian Dolby (dolby@us.ibm.com)
  */
-abstract public class BitVectorBase<T extends BitVectorBase>
-    implements Cloneable, Serializable 
-{
+abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneable, Serializable {
 
   protected final static boolean DEBUG = false;
 
   protected final static int LOG_BITS_PER_UNIT = 5;
+
   protected final static int BITS_PER_UNIT = 32;
+
   protected final static int MASK = 0xffffffff;
+
   protected final static int LOW_MASK = 0x1f;
 
   protected int bits[];
@@ -66,7 +67,6 @@ abstract public class BitVectorBase<T extends BitVectorBase>
       bits[i] = 0;
     }
   }
-
 
   /**
    * Gets the hashcode.
@@ -153,16 +153,18 @@ abstract public class BitVectorBase<T extends BitVectorBase>
       { 0xFFFF0000 },
       { 0xFF000000, 0x0000FF00 },
       { 0xF0000000, 0x00F00000, 0x0000F000, 0x000000F0 },
-      { 0xC0000000, 0x0C000000, 0x00C00000, 0x000C0000, 0x0000C000, 0x00000C00, 0x000000C0, 0x0000000C},
-      { 0x80000000, 0x20000000, 0x08000000, 0x02000000, 0x00800000, 0x00200000, 0x00080000, 0x00020000, 0x00008000, 0x00002000, 0x00000800, 0x00000200, 0x00000080, 0x00000020, 0x00000008, 0x00000002 }
-  };
+      { 0xC0000000, 0x0C000000, 0x00C00000, 0x000C0000, 0x0000C000, 0x00000C00, 0x000000C0, 0x0000000C },
+      { 0x80000000, 0x20000000, 0x08000000, 0x02000000, 0x00800000, 0x00200000, 0x00080000, 0x00020000, 0x00008000, 0x00002000,
+          0x00000800, 0x00000200, 0x00000080, 0x00000020, 0x00000008, 0x00000002 } };
 
   public int max() {
     int lastWord = bits.length - 1;
 
-    while (lastWord >= 0 && bits[lastWord] == 0) lastWord--;
+    while (lastWord >= 0 && bits[lastWord] == 0)
+      lastWord--;
 
-    if (lastWord < 0) return -1;
+    if (lastWord < 0)
+      return -1;
 
     int count = lastWord * BITS_PER_UNIT;
 
@@ -178,7 +180,7 @@ abstract public class BitVectorBase<T extends BitVectorBase>
       }
     }
 
-    return count + (31-j);
+    return count + (31 - j);
   }
 
   /**
@@ -197,7 +199,7 @@ abstract public class BitVectorBase<T extends BitVectorBase>
           start++;
         } while (bit != 0);
       } else {
-	start += (BITS_PER_UNIT - (start&LOW_MASK));
+        start += (BITS_PER_UNIT - (start & LOW_MASK));
       }
 
       word++;

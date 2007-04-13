@@ -14,17 +14,14 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author Julian Dolby (dolby@us.ibm.com)
- *  
+ * 
  */
 public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
   int offset;
 
   private int wordDiff(int offset1, int offset2) {
-    return
-      (offset1>offset2)?
-      (offset1-offset2)>>LOG_BITS_PER_UNIT:  
-      - ((offset2-offset1)>>LOG_BITS_PER_UNIT);
+    return (offset1 > offset2) ? (offset1 - offset2) >> LOG_BITS_PER_UNIT : -((offset2 - offset1) >> LOG_BITS_PER_UNIT);
   }
 
   /**
@@ -36,7 +33,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     int[] oldbits = bits;
     bits = new int[subscript(newCapacity) + 1];
     for (int i = 0; i < oldbits.length; i++) {
-      bits[i-wordDiff] = oldbits[i];
+      bits[i - wordDiff] = oldbits[i];
     }
     offset = newOffset;
   }
@@ -45,17 +42,17 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param set
    */
   private void ensureCapacity(int newOffset, int newCapacity) {
-    if (newOffset < offset || newCapacity>(bits.length<< LOG_BITS_PER_UNIT)) {
+    if (newOffset < offset || newCapacity > (bits.length << LOG_BITS_PER_UNIT)) {
       expand(newOffset, newCapacity);
     }
   }
 
-//  private void ensureCapacity(OffsetBitVector set) {
-//    int newOffset = Math.min(offset, set.offset);
-//    int newCapacity = 
-//      Math.max(length(),set.length())-newOffset;
-//    ensureCapacity(newOffset, newCapacity);
-//  }
+  // private void ensureCapacity(OffsetBitVector set) {
+  // int newOffset = Math.min(offset, set.offset);
+  // int newCapacity =
+  // Math.max(length(),set.length())-newOffset;
+  // ensureCapacity(newOffset, newCapacity);
+  // }
 
   public OffsetBitVector() {
     this(0, 1);
@@ -68,7 +65,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    *          the size of the string
    */
   public OffsetBitVector(int offset, int nbits) {
-    offset = (offset&~LOW_MASK);
+    offset = (offset & ~LOW_MASK);
     this.offset = offset;
     this.bits = new int[subscript(nbits) + 1];
   }
@@ -90,7 +87,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
   }
 
   void growCapacity(float fraction) {
-    expand(offset, (int) (fraction*(bits.length<<LOG_BITS_PER_UNIT)));
+    expand(offset, (int) (fraction * (bits.length << LOG_BITS_PER_UNIT)));
   }
 
   public int getOffset() {
@@ -111,16 +108,16 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     int shiftBits;
     int subscript;
     if (bit < offset) {
-      int newOffset = bit&~LOW_MASK;
-      expand(newOffset, length()-1-newOffset);
+      int newOffset = bit & ~LOW_MASK;
+      expand(newOffset, length() - 1 - newOffset);
       shiftBits = bit & LOW_MASK;
       subscript = 0;
     } else {
-      bit -= offset;    
+      bit -= offset;
       shiftBits = bit & LOW_MASK;
       subscript = subscript(bit);
       if (subscript >= bits.length) {
-	expand(offset, bit);
+        expand(offset, bit);
       }
     }
 
@@ -180,8 +177,8 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @return min j >= start s.t get(j)
    */
   public int nextSetBit(int start) {
-    int nb = super.nextSetBit(Math.max(0, start-offset));
-    return nb == -1? -1: offset + nb;
+    int nb = super.nextSetBit(Math.max(0, start - offset));
+    return nb == -1 ? -1 : offset + nb;
   }
 
   /**
@@ -189,7 +186,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    */
   public final void not() {
     if (offset != 0) {
-      expand(0, offset+length()-1);
+      expand(0, offset + length() - 1);
     }
     for (int i = 0; i < bits.length; i++) {
       bits[i] ^= MASK;
@@ -212,7 +209,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * Sets all bits.
    */
   public final void setAll() {
-    expand(0, length()-1);
+    expand(0, length() - 1);
     for (int i = 0; i < bits.length; i++) {
       bits[i] = MASK;
     }
@@ -248,13 +245,13 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     }
 
     int wordDiff = wordDiff(offset, set.offset);
-    int maxWord = Math.min(bits.length, set.bits.length-wordDiff);
+    int maxWord = Math.min(bits.length, set.bits.length - wordDiff);
 
     int i = Math.max(0, -wordDiff);
 
-    for ( ; i < maxWord; i++) {
-      if ((bits[i] & set.bits[i+wordDiff]) != 0) {
-	return false;
+    for (; i < maxWord; i++) {
+      if ((bits[i] & set.bits[i + wordDiff]) != 0) {
+        return false;
       }
     }
 
@@ -274,73 +271,72 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     }
 
     int wordDiff = wordDiff(offset, set.offset);
-    int maxWord = Math.min(bits.length, set.bits.length-wordDiff);
+    int maxWord = Math.min(bits.length, set.bits.length - wordDiff);
 
     int i = 0;
 
     if (wordDiff < 0) {
-      for ( ; i < -wordDiff; i++) {
-	if (bits[i] != 0) {
-	  return false;
-	}
+      for (; i < -wordDiff; i++) {
+        if (bits[i] != 0) {
+          return false;
+        }
       }
     } else {
-      for(int j = 0; j < wordDiff; j++) {
-	if (set.bits[j] != 0) {
-	  return false;
-	}
+      for (int j = 0; j < wordDiff; j++) {
+        if (set.bits[j] != 0) {
+          return false;
+        }
       }
     }
 
-    for ( ; i < maxWord; i++) {
-      if (bits[i] != set.bits[i+wordDiff]) {
-	return false;
+    for (; i < maxWord; i++) {
+      if (bits[i] != set.bits[i + wordDiff]) {
+        return false;
       }
     }
 
-    for(int j = maxWord+wordDiff; j < set.bits.length; j++) {
+    for (int j = maxWord + wordDiff; j < set.bits.length; j++) {
       if (set.bits[j] != 0) {
-	return false;
+        return false;
       }
     }
 
-    for ( ; i < bits.length; i++) {
+    for (; i < bits.length; i++) {
       if (bits[i] != 0) {
-	return false;
-      }   
+        return false;
+      }
     }
 
     return true;
   }
 
   /*
-   * @param other
-   * @return true iff this is a subset of other
+   * @param other @return true iff this is a subset of other
    */
   public boolean isSubset(OffsetBitVector other) {
     if (this == other) { // should help alias analysis
       return true;
     }
     int wordDiff = wordDiff(offset, other.offset);
-    int maxWord = Math.min(bits.length, other.bits.length-wordDiff);
+    int maxWord = Math.min(bits.length, other.bits.length - wordDiff);
 
     int i = 0;
 
-    for ( ; i < -wordDiff; i++) {
+    for (; i < -wordDiff; i++) {
       if (bits[i] != 0) {
         return false;
       }
     }
 
-    for ( ; i < maxWord; i++) {
-      if ((bits[i] & ~other.bits[i+wordDiff]) != 0) {
+    for (; i < maxWord; i++) {
+      if ((bits[i] & ~other.bits[i + wordDiff]) != 0) {
         return false;
       }
     }
 
-    for ( ; i < bits.length; i++) {
+    for (; i < bits.length; i++) {
       if (bits[i] != 0) {
-	return false;
+        return false;
       }
     }
 
@@ -370,21 +366,21 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     }
 
     int wordDiff = wordDiff(offset, set.offset);
-    int maxWord = Math.min(bits.length, set.bits.length-wordDiff);
+    int maxWord = Math.min(bits.length, set.bits.length - wordDiff);
 
     int i = 0;
 
-    for ( ; i < -wordDiff; i++) {
+    for (; i < -wordDiff; i++) {
       bits[i] = 0;
     }
 
-    for ( ; i < maxWord; i++) {
-      bits[i] &= set.bits[i+wordDiff];
+    for (; i < maxWord; i++) {
+      bits[i] &= set.bits[i + wordDiff];
     }
 
-    for ( ; i < bits.length; i++) {
+    for (; i < bits.length; i++) {
       bits[i] = 0;
-    }   
+    }
   }
 
   /**
@@ -399,14 +395,13 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     }
 
     int newOffset = Math.min(offset, set.offset);
-    int newCapacity = 
-      Math.max(length(),set.length())-newOffset;
+    int newCapacity = Math.max(length(), set.length()) - newOffset;
     ensureCapacity(newOffset, newCapacity);
 
     int wordDiff = wordDiff(newOffset, set.offset);
 
     for (int i = 0; i < set.bits.length; i++) {
-      bits[i-wordDiff] |= set.bits[i];
+      bits[i - wordDiff] |= set.bits[i];
     }
   }
 
@@ -423,14 +418,13 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     }
 
     int newOffset = Math.min(offset, set.offset);
-    int newCapacity = 
-      Math.max(length(),set.length())-newOffset;
+    int newCapacity = Math.max(length(), set.length()) - newOffset;
     ensureCapacity(newOffset, newCapacity);
 
     int wordDiff = wordDiff(newOffset, set.offset);
 
     for (int i = 0; i < set.bits.length; i++) {
-      bits[i-wordDiff] ^= set.bits[i];
+      bits[i - wordDiff] ^= set.bits[i];
     }
   }
 
@@ -444,15 +438,15 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     }
 
     int wordDiff = wordDiff(offset, set.offset);
-    int maxWord = Math.min(bits.length, set.bits.length-wordDiff);
+    int maxWord = Math.min(bits.length, set.bits.length - wordDiff);
 
     int i = Math.max(0, -wordDiff);
 
-    for ( ; i < maxWord; i++) {
-      bits[i] &= ~set.bits[i+wordDiff];
+    for (; i < maxWord; i++) {
+      bits[i] &= ~set.bits[i + wordDiff];
     }
   }
-  
+
   /**
    * Return the NOT of a bit string
    */
