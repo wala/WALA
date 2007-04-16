@@ -1073,6 +1073,12 @@ public class ClassHierarchy implements Iterable<IClass> {
     return new ClassHierarchy(scope, factory, warnings, new NullProgressMonitor());
   }
 
+  /**
+   * temporarily marking this internal to avoid infinite sleep with
+   * randomly chosen IProgressMonitor.
+   * TODO: nanny for testgen
+   */
+  @Internal
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings, IProgressMonitor monitor)
       throws ClassHierarchyException {
     return new ClassHierarchy(scope, factory, warnings, monitor);
@@ -1083,6 +1089,12 @@ public class ClassHierarchy implements Iterable<IClass> {
     return new ClassHierarchy(scope, factory, warnings, rootDescriptor, new NullProgressMonitor());
   }
 
+  /**
+   * temporarily marking this internal to avoid infinite sleep with
+   * randomly chosen IProgressMonitor.
+   * TODO: nanny for testgen
+   */
+  @Internal
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings,
       TypeReference rootDescriptor, IProgressMonitor monitor) throws ClassHierarchyException {
     return new ClassHierarchy(scope, factory, warnings, rootDescriptor, monitor);
@@ -1143,6 +1155,13 @@ public class ClassHierarchy implements Iterable<IClass> {
         return isSubclassOf(c2, c1);
       }
     }
+  }
+
+  /**
+   * Does it look like an inner class? [TODO: is this definitive?]
+   */
+  public static boolean isInnerClass(IClass klass) {
+    return klass.getName().toString().indexOf("$") > -1;
   }
 
 }
