@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
-import com.ibm.wala.util.debug.Assertions;
+import java.util.NoSuchElementException;
+
 import com.ibm.wala.util.intset.IntIterator;
 
 /**
@@ -44,8 +45,7 @@ public final class EmptyIntIterator implements IntIterator {
   /* (non-Javadoc)
    * @see java.util.Iterator#next()
    */
-  public int next() {
-    Assertions.UNREACHABLE();
-    return -1;
+  public int next() throws NoSuchElementException {
+    throw new NoSuchElementException();
   }
 }
