@@ -402,7 +402,6 @@ public final class TypeReference {
    * type of for this array type.
    */
   public final TypeReference getArrayElementType() {
-
     TypeName element = name.parseForArrayElementName();
     return findOrCreate(classloader, element);
   }
