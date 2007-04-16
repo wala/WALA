@@ -1,5 +1,4 @@
 /*******************************************************************************
- * Copyright (c) 2002 - 2006 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,16 +10,24 @@
 package com.ibm.wala.util.io;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.regex.Pattern;
+
+import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * Simple utilities for accessing files.
  */
-public class FileUtil  {
-  
+public class FileUtil {
 
   public static Collection<File> listFiles(String dir, String regex, boolean recurse) {
     File d = new File(dir);
@@ -47,4 +54,53 @@ public class FileUtil  {
     }
     return result;
   }
-} 
+
+  public static void copy(String srcFileName, String destFileName) throws WalaException {
+    FileChannel src = null;
+    FileChannel dest = null;
+    try {
+      src = new FileInputStream(srcFileName).getChannel();
+      dest = new FileOutputStream(destFileName).getChannel();
+      long n = src.size();
+      MappedByteBuffer buf = src.map(FileChannel.MapMode.READ_ONLY, 0, n);
+      dest.write(buf);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+      throw new WalaException("Failed to copy " + srcFileName + " to " + destFileName);
+    } catch (IOException e) {
+      e.printStackTrace();
+      throw new WalaException("Failed to copy " + srcFileName + " to " + destFileName);
+    } finally {
+      if (dest != null) {
+        try {
+          dest.close();
+        } catch (IOException e1) {
+        }
+      }
+      if (src != null) {
+        try {
+          src.close();
+        } catch (IOException e1) {
+        }
+      }
+    }
+  }
+
+  public static void deleteContents(String directory) throws WalaException {
+    Collection fl = listFiles(directory, null, true);
+
+    for (Iterator it = fl.iterator(); it.hasNext();) {
+      File f = (File) it.next();
+      if (!f.isDirectory()) {
+        f.delete();
+      }
+    }
+    Collection f2 = listFiles(directory, null, true);
+
+    for (Iterator it = f2.iterator(); it.hasNext();) {
+      File f = (File) it.next();
+      f.delete();
+    }
+
+  }
+}
