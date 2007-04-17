@@ -62,7 +62,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  * @author rfuhrer
  */
 public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
-  public Map<CAstEntity,IClass> fTypeMap = HashMapFactory.make();
+  public Map<CAstEntity, IClass> fTypeMap = HashMapFactory.make();
 
   /**
    * DOMO representation of a Java class residing in a source file
@@ -111,9 +111,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
       }
 
       if (result.size() != (superTypeNames.size() - 1)) {
-	Assertions._assert(result.size() == superTypeNames.size() - 1,
-	  "found " + result + " interfaces for " + superTypeNames +
-	  " for " + this);
+        Assertions._assert(result.size() == superTypeNames.size() - 1, "found " + result + " interfaces for " + superTypeNames
+            + " for " + this);
       }
 
       return result;
@@ -392,8 +391,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
   public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, ClassHierarchy cha,
       WarningSet warnings) throws IOException {
-    super(loaderRef, cha.getScope().getArrayClassLoader(), parent, cha.getScope().getExclusions(), cha.getScope().getModules(
-        loaderRef), cha, warnings);
+    super(loaderRef, cha.getScope().getArrayClassLoader(), parent, cha.getScope().getExclusions(), cha, warnings);
   }
 
   public ClassHierarchy getClassHierarchy() {
