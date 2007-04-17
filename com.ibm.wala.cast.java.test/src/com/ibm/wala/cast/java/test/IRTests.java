@@ -37,7 +37,6 @@ import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.eclipse.util.EclipseProjectSourceAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -239,12 +238,12 @@ public abstract class IRTests extends WalaTestCase {
     return new String[] { "L" + pkgName + "/" + getName().substring(4) };
   }
 
-  protected abstract EclipseProjectSourceAnalysisEngine getAnalysisEngine(String[] mainClassDescriptors);
+  protected abstract TestSourceAnalysisEngine getAnalysisEngine(String[] mainClassDescriptors);
 
   public void runTest(Collection/* <String> */sources, List/* <String> */libs, String[] mainClassDescriptors, GraphAssertions ga,
       SourceMapAssertions sa, boolean assertReachable) {
     try {
-      EclipseProjectSourceAnalysisEngine engine = getAnalysisEngine(mainClassDescriptors);
+      TestSourceAnalysisEngine engine = getAnalysisEngine(mainClassDescriptors);
 
       populateScope(engine, sources, libs);
 
@@ -372,7 +371,7 @@ public abstract class IRTests extends WalaTestCase {
     return null;
   }
 
-  private static void populateScope(EclipseProjectSourceAnalysisEngine engine, Collection/* <String> */sources,
+  private static void populateScope(TestSourceAnalysisEngine engine, Collection/* <String> */sources,
       List/* <String> */libs) throws IOException {
 
     boolean foundLib = false;

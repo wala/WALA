@@ -10,41 +10,35 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.test;
 
-import com.ibm.wala.cast.java.ipa.callgraph.*;
-import com.ibm.wala.eclipse.util.EclipseProjectSourceAnalysisEngine;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.impl.*;
+import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 
 public class JLexTest extends IRTests {
 
-    public JLexTest() {
-      super("JLexTest");
-    }
+  public JLexTest() {
+    super("JLexTest");
+  }
 
-    protected EclipseProjectSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
-	return new EclipseProjectSourceAnalysisEngine() {
-          protected Entrypoints 
-            makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) 
-	  {
-	    return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE_REF, cha, new String[]{ "LJLex/Main" });
-	  }
-	};
-    }
+  protected TestSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
+    return new TestSourceAnalysisEngine() {
+      protected Entrypoints makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+        return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE_REF, cha, new String[] { "LJLex/Main" });
+      }
+    };
+  }
 
-    protected String singleInputForTest() {
-	return "JLex";
-    }
+  protected String singleInputForTest() {
+    return "JLex";
+  }
 
-    public void testJLex() {
-      runTest(singleTestSrc(), rtJar, 
-	      new String[]{ "LJLex/Main" },
-	      new GraphAssertions(),
-	      new SourceMapAssertions(),
-	      false);
-    }
+  public void testJLex() {
+    runTest(singleTestSrc(), rtJar, new String[] { "LJLex/Main" }, new GraphAssertions(), new SourceMapAssertions(), false);
+  }
 
-    protected String singlePkgInputForTest(String pkgName) {
-	return "";
-    }
+  protected String singlePkgInputForTest(String pkgName) {
+    return "";
+  }
 }
