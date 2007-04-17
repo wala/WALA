@@ -34,7 +34,12 @@ import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
- * abstract base class for analysis engine implementations
+ * Abstract base class for analysis engine implementations
+ * 
+ * Some clients choose to build on this, but many don't.
+ * I usually don't in new code; I usually don't find the re-use enabled
+ * by this class compelling.  I would probably nuke this except for
+ * some legacy code that uses it.
  * 
  * @author sfink
  */
@@ -44,11 +49,15 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     Entrypoints createEntrypoints(AnalysisScope scope, ClassHierarchy cha);
   }
 
-  private final static String BASIC_FILE = "SyntheticJ2SEModel.xml";
+  public final static String BASIC_FILE = "SyntheticJ2SEModel.xml";
 
   /**
-   * DEBUG_LEVEL: 0 No output 1 Print some simple stats and warning information
-   * 2 Detailed debugging
+   * DEBUG_LEVEL:
+   * <ul>
+   * <li>0 No output 
+   * <li>1 Print some simple stats and warning information 
+   * <li>2 Detailed debugging
+   * </ul>
    */
   protected static final int DEBUG_LEVEL = 1;
 
@@ -123,7 +132,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    */
   private HeapGraph heapGraph;
 
-  private EntrypointBuilder entrypointBuilder= new EntrypointBuilder() {
+  private EntrypointBuilder entrypointBuilder = new EntrypointBuilder() {
     public Entrypoints createEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
       return makeDefaultEntrypoints(scope, cha);
     }
@@ -352,23 +361,21 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return new AnalysisOptions(getScope(), entrypoints);
   }
 
-  protected Entrypoints 
-    makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) 
-  {
+  protected Entrypoints makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
     return Util.makeMainEntrypoints(scope, cha);
   }
 
   public void setEntrypointBuilder(EntrypointBuilder builder) {
-      entrypointBuilder= builder;
+    entrypointBuilder = builder;
   }
 
   /**
-   * Builds the call graph for the analysis scope in effect, 
-   * using all of the given entry points.
+   * Builds the call graph for the analysis scope in effect, using all of the
+   * given entry points.
    */
   public CallGraphBuilder defaultCallGraphBuilder() {
     buildAnalysisScope();
-    ClassHierarchy cha= buildClassHierarchy();
+    ClassHierarchy cha = buildClassHierarchy();
     setClassHierarchy(cha);
     Entrypoints eps = entrypointBuilder.createEntrypoints(scope, cha);
     options = getDefaultOptions(eps);
