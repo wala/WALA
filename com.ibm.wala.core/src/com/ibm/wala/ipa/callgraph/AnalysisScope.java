@@ -252,9 +252,14 @@ public class AnalysisScope {
    */
   public String toString() {
     StringBuffer result = new StringBuffer();
-    for (Iterator<ClassLoaderReference> it = loadersByName.values().iterator(); it.hasNext();) {
-      result.append(it.next());
+    for (ClassLoaderReference loader : loadersByName.values()) {
+      result.append(loader.getName());
       result.append("\n");
+      for (Module m : getModules(loader)) {
+        result.append(" ");
+        result.append(m);
+        result.append("\n");
+      }
     }
     result.append(getExclusionString());
     result.append("\n");
