@@ -11,6 +11,7 @@ Require-Bundle: com.ibm.wala.core.tests,
  com.ibm.wala.cast,
  com.ibm.wala.core,
  org.eclipse.core.runtime,
- org.junit
+ org.junit,
+ com.ibm.wala.eclipse
 Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.cast.java.test

@@ -29,10 +29,15 @@ import java.util.jar.JarFile;
 
 import junit.framework.Assert;
 
-import com.ibm.wala.cast.java.client.EclipseProjectSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.JarFileModule;
+import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
+import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.eclipse.util.EclipseProjectSourceAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -44,6 +49,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -261,7 +267,7 @@ public abstract class IRTests extends WalaTestCase {
   }
 
   private static void dumpIR(CallGraph cg, boolean assertReachable) throws IOException {
-    Set unreachable = new HashSet();
+    Set<IMethod> unreachable = HashSetFactory.make();
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = cg.getClassHierarchy();
     IClassLoader sourceLoader = cha.getLoader(JavaSourceAnalysisScope.SOURCE_REF);
@@ -279,8 +285,8 @@ public abstract class IRTests extends WalaTestCase {
         else {
           Iterator nodeIter = cg.getNodes(m.getReference()).iterator();
           if (!nodeIter.hasNext()) {
-	    Trace.println("Method " + m.getReference() + " not reachable?");
-	    unreachable.add( m );
+            Trace.println("Method " + m.getReference() + " not reachable?");
+            unreachable.add(m);
             continue;
           }
           CGNode node = (CGNode) nodeIter.next();

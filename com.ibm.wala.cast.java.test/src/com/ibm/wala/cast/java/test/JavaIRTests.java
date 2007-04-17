@@ -15,8 +15,8 @@ package com.ibm.wala.cast.java.test;
 
 import java.io.File;
 
-import com.ibm.wala.cast.java.client.EclipseProjectSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
+import com.ibm.wala.eclipse.util.EclipseProjectSourceAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoints;
 import com.ibm.wala.ipa.callgraph.impl.Util;

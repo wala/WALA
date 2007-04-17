@@ -10,8 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.test;
 
-import com.ibm.wala.cast.java.client.EclipseProjectSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.*;
+import com.ibm.wala.eclipse.util.EclipseProjectSourceAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.*;
 import com.ibm.wala.ipa.callgraph.impl.*;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
