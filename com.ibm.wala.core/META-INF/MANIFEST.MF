@@ -9,8 +9,7 @@ Bundle-Localization: plugin
 Require-Bundle: com.ibm.wala.emf;visibility:=reexport,
  com.ibm.wala.shrike;visibility:=reexport,
  org.eclipse.core.resources,
- org.eclipse.jface,
- org.eclipse.jdt.core
+ org.eclipse.jface
 Eclipse-LazyStart: true
 Export-Package: .,
  com.ibm.wala.analysis.pointers,
