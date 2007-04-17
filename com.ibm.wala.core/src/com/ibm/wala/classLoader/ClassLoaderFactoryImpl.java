@@ -93,7 +93,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
     String implClass = scope.getLoaderImpl(classLoaderReference);
     IClassLoader cl;
     if (implClass == null) {
-      cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, scope.getModules(classLoaderReference), cha, warnings);
+      cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha, warnings);
     } else
       try {
         Class impl = Class.forName(implClass);
@@ -102,7 +102,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
         cl = (IClassLoader) ctor.newInstance(new Object[] { classLoaderReference, parent, exclusions, cha, warnings });
       } catch (Exception e) {
         warnings.add(InvalidClassLoaderImplementation.create(implClass));
-        cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, scope.getModules(classLoaderReference), cha, warnings);
+        cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha, warnings);
       }
     cl.init(scope.getModules(classLoaderReference));
     return cl;
@@ -110,23 +110,27 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
 
   /**
    * @author sfink
-   *
+   * 
    * A waring when we fail to load an appropriate class loader implementation
    */
   private static class InvalidClassLoaderImplementation extends Warning {
 
     final String impl;
+
     InvalidClassLoaderImplementation(String impl) {
       super(Warning.SEVERE);
       this.impl = impl;
     }
+
     public String getMsg() {
       return getClass().toString() + " : " + impl;
     }
+
     public static InvalidClassLoaderImplementation create(String impl) {
       return new InvalidClassLoaderImplementation(impl);
     }
   }
+
   /**
    * @return the set of classes that will be ignored.
    */

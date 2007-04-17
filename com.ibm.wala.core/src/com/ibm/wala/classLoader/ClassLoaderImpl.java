@@ -96,7 +96,7 @@ public class ClassLoaderImpl implements IClassLoader {
    *          set of classes to exclude from loading
    */
   public ClassLoaderImpl(ClassLoaderReference loader, ArrayClassLoader arrayClassLoader, IClassLoader parent,
-      SetOfClasses exclusions, Set modules, ClassHierarchy cha, WarningSet warnings) {
+      SetOfClasses exclusions, ClassHierarchy cha, WarningSet warnings) {
 
     this.arrayClassLoader = arrayClassLoader;
     this.parent = parent;
