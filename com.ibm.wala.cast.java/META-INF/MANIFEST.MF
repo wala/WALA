@@ -6,19 +6,37 @@ Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.cast.java.JavaSourcePlugin
 Bundle-Vendor: rfuhrer@watson.ibm.com
 Bundle-Localization: plugin
-Require-Bundle: com.ibm.wala.cast,
- com.ibm.wala.core,
+Require-Bundle: com.ibm.wala.cast;visibility:=reexport,
+ com.ibm.wala.core;visibility:=reexport,
  org.eclipse.jdt.core,
  org.eclipse.core.runtime
 Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.cast.java,
  com.ibm.wala.cast.java.analysis.typeInference,
- com.ibm.wala.cast.java.client,
  com.ibm.wala.cast.java.client.impl,
  com.ibm.wala.cast.java.ipa.callgraph,
  com.ibm.wala.cast.java.loader,
  com.ibm.wala.cast.java.ssa,
  com.ibm.wala.cast.java.translator,
  com.ibm.wala.cast.java.translator.polyglot,
- com.ibm.wala.cast.java.types
-Bundle-ClassPath: .
+ com.ibm.wala.cast.java.types,
+ java_cup,
+ java_cup.runtime,
+ polyglot.ast,
+ polyglot.ext.param,
+ polyglot.ext.param.types,
+ polyglot.frontend,
+ polyglot.frontend.goals,
+ polyglot.frontend.passes,
+ polyglot.lex,
+ polyglot.main,
+ polyglot.parse,
+ polyglot.qq,
+ polyglot.types,
+ polyglot.types.reflect,
+ polyglot.util,
+ polyglot.util.typedump,
+ polyglot.visit
+Bundle-ClassPath: .,
+ lib/java_cup.jar,
+ lib/polyglot.jar

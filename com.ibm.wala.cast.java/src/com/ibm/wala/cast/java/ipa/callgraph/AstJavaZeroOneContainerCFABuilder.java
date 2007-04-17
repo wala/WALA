@@ -10,14 +10,14 @@
  *******************************************************************************/
 package com.ibm.wala.cast.java.ipa.callgraph;
 
-import com.ibm.wala.analysis.reflection.FactoryBypassInterpreter;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.*;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.ContainerContextSelector;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 

@@ -10,11 +10,12 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.client.impl;
 
-import com.ibm.wala.cast.java.ipa.callgraph.*;
+import com.ibm.wala.cast.java.ipa.callgraph.AstJavaZeroOneContainerCFABuilder;
 import com.ibm.wala.client.CallGraphBuilderFactory;
-import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.*;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
