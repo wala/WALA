@@ -12,14 +12,20 @@ package com.ibm.wala.classLoader;
 
 import java.io.File;
 
+/**
+ * a module representing a directory tree of source files.
+ * 
+ * @author julian dolby (?)
+ *
+ */
 public class SourceDirectoryTreeModule extends DirectoryTreeModule {
 
   public SourceDirectoryTreeModule(File root) {
-    super( root );
+    super(root);
   }
 
   protected boolean includeFile(File file) {
-	  return file.getName().endsWith("java");
+    return file.getName().endsWith("java");
   }
 
   protected FileModule makeFile(File file) {

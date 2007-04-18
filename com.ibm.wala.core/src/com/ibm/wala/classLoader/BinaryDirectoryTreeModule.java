@@ -12,6 +12,12 @@ package com.ibm.wala.classLoader;
 
 import java.io.File;
 
+/**
+ * Module representing a directory of .class files
+ * 
+ * @author julian (?)
+ *
+ */
 public class BinaryDirectoryTreeModule extends DirectoryTreeModule {
 
   public BinaryDirectoryTreeModule(File root) {

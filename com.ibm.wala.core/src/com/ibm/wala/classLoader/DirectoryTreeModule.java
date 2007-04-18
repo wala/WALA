@@ -66,4 +66,9 @@ public abstract class DirectoryTreeModule implements Module {
   public String getPath() {
     return root.getAbsolutePath();
   }
+
+  @Override
+  public String toString() {
+    return getClass() + ":" + getPath();
+  }
 }
