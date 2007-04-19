@@ -16,7 +16,7 @@ import com.ibm.wala.fixedpoint.impl.*;
 import com.ibm.wala.util.intset.*;
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.cast.ipa.callgraph.*;
-import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
+import com.ibm.wala.cast.ir.ssa.*;
 import com.ibm.wala.cast.js.analysis.typeInference.JSTypeInference;
 import com.ibm.wala.cast.js.ssa.*;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
@@ -29,7 +29,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.*;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.util.warnings.WarningSet;
-import com.ibm.wala.shrikeBT.BinaryOpInstruction;
+import com.ibm.wala.shrikeBT.*;
 
 import java.util.*;
 
@@ -177,6 +177,74 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     return new PointerFlowGraphFactory() {
       public PointerFlowGraph make(PointerAnalysis pa, CallGraph cg) {
 	return new JSPointerFlowGraph(pa, cg);
+      }
+    };
+  }
+
+  protected class JSPointerAnalysisImpl extends AstPointerAnalysisImpl {
+      
+    JSPointerAnalysisImpl(PropagationCallGraphBuilder builder, 
+			   CallGraph cg, 
+			   PointsToMap pointsToMap,
+			   MutableMapping<InstanceKey> instanceKeys, 
+			   PointerKeyFactory pointerKeys, 
+			   InstanceKeyFactory iKeyFactory) 
+    {
+      super(builder,
+	    cg, 
+	    pointsToMap, 
+	    instanceKeys, 
+	    pointerKeyFactory, 
+	    instanceKeyFactory);
+    }
+
+    protected class JSImplicitPointsToSetVisitor
+      extends AstImplicitPointsToSetVisitor 
+	implements com.ibm.wala.cast.js.ssa.InstructionVisitor 
+    {
+      JSImplicitPointsToSetVisitor(LocalPointerKey lpk) {
+	super(lpk);
+      }
+
+      public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
+
+      }
+
+      public void visitTypeOf(JavaScriptTypeOfInstruction instruction) {
+
+      }
+    
+      public void visitJavaScriptPropertyRead(JavaScriptPropertyRead instruction) {
+  
+      }
+
+      public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction) {
+
+      }
+    };
+
+    protected ImplicitPointsToSetVisitor
+      makeImplicitPointsToVisitor(LocalPointerKey lpk) 
+    {
+      return new JSImplicitPointsToSetVisitor(lpk);
+    }
+  };
+
+  protected PropagationSystem makeSystem(AnalysisOptions options) {
+    return new PropagationSystem(callGraph, 
+				 pointerKeyFactory,
+				 instanceKeyFactory, 
+				 options.getSupportRefinement(), 
+				 getWarnings()) {
+      public PointerAnalysis
+	makePointerAnalysis(PropagationCallGraphBuilder builder) 
+      {
+	return new JSPointerAnalysisImpl(builder, 
+					 cg,
+					 pointsToMap,
+					 instanceKeys, 
+					 pointerKeyFactory,
+					 instanceKeyFactory);
       }
     };
   }
@@ -535,6 +603,28 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       super(node, ir, callGraph, du);
     }
     
+    public void visitUnaryOp(SSAUnaryOpInstruction inst) {
+      if (inst.getOpcode() == UnaryOpInstruction.Operator.NEG) {
+	int lval = inst.getDef(0);
+	PointerKey lk = getPointerKeyForLocal(node, lval);
+      
+	IClass bool = cha.lookupClass(JavaScriptTypes.Boolean);
+	InstanceKey key = new ConcreteTypeKey( bool );
+
+	system.newConstraint(lk, key);
+      }
+    }
+
+    public void visitIsDefined(AstIsDefinedInstruction inst) {
+      int lval = inst.getDef(0);
+      PointerKey lk = getPointerKeyForLocal(node, lval);
+      
+      IClass bool = cha.lookupClass(JavaScriptTypes.Boolean);
+      InstanceKey key = new ConcreteTypeKey( bool );
+
+      system.newConstraint(lk, key);
+    }
+
     public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
       int lval = inst.getDef(0);
       PointerKey lk = getPointerKeyForLocal(node, lval);

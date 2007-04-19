@@ -26,6 +26,7 @@ import com.ibm.wala.cfg.*;
 import com.ibm.wala.classLoader.*;
 import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.*;
+import com.ibm.wala.util.Atom;
 
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 
@@ -173,30 +174,15 @@ public class JSAstTranslator extends AstTranslator {
 
     context.cfg().addInstruction(new AssignInstruction(x, receiver));
 
-    int u = doGlobalRead(context, "undefined");
-    context.cfg().newBlock( true );
-    PreBasicBlock iterB = context.cfg().getCurrentBlock();
-
-    if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String)
-    {
+    if (elt.getKind()==CAstNode.CONSTANT && elt.getValue() instanceof String) {
       context.cfg().addInstruction(
-        new JavaScriptStaticPropertyRead(result, x, (String)elt.getValue() ));
+        new JavaScriptStaticPropertyRead(result, x, (String)elt.getValue()));
     } else {
       context.cfg().addInstruction(
         new JavaScriptPropertyRead(result, x, getValue(elt) ));
     }
-
-    context.cfg().addInstruction(
-      new JavaScriptStaticPropertyRead(x, x, "prototype"));
-
-    context.cfg().addInstruction( 
-      SSAInstructionFactory.ConditionalBranchInstruction( 
-        ConditionalBranchInstruction.Operator.EQ, null, result, u));
-	  
-    context.cfg().addEdge(iterB, iterB);
-    context.cfg().newBlock( true );
   }
-
+    
   protected void doFieldWrite(WalkContext context, int receiver, CAstNode elt, CAstNode parent, int rval) {
     walkNodes(elt, context);
     if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String)
@@ -208,6 +194,15 @@ public class JSAstTranslator extends AstTranslator {
         new JavaScriptPropertyWrite(receiver, getValue(elt), rval));
     }
   }
+
+  private void 
+    doPrimitiveNew(WalkContext context, int resultVal, String typeName) 
+  {
+    doNewObject(context, null, resultVal, typeName + "Object", null);
+    int rval = context.currentScope().getConstantValue(typeName);
+    context.cfg().addInstruction(
+      new JavaScriptStaticPropertyWrite(resultVal, "class" , rval));
+  } 
 
   protected void doPrimitive(int resultVal, WalkContext context, CAstNode primitiveCall) {
     try {
@@ -259,13 +254,13 @@ public class JSAstTranslator extends AstTranslator {
 	doNewObject(context, null, resultVal, "Array", null);
 
       } else if (name.equals("NewString")) {
-	doNewObject(context, null, resultVal, "String", null);
+	doPrimitiveNew(context, resultVal, "String");
 
       } else if (name.equals("NewNumber")) {
-	doNewObject(context, null, resultVal, "Number", null);
+	doPrimitiveNew(context, resultVal, "Number");
 
       } else if (name.equals("NewRegExp")) {
-	doNewObject(context, null, resultVal, "RegExp", null);
+	doPrimitiveNew(context, resultVal, "RegExp");
 
       } else if (name.equals("NewFunction")) {
 	doNewObject(context, null, resultVal, "Function", null);
@@ -281,6 +276,30 @@ public class JSAstTranslator extends AstTranslator {
       }
     } catch (ClassCastException e) {
       throw new RuntimeException("Cannot translate primitive " + primitiveCall.getChild(0).getValue());
+    }
+  }
+
+  protected void doIsFieldDefined(WalkContext context, 
+				  int result, 
+				  int ref,
+				  CAstNode f) 
+  {
+    if (f.getKind() == CAstNode.CONSTANT && f.getValue() instanceof String) {
+      String field = (String) f.getValue();
+
+      FieldReference fieldRef =
+        FieldReference.findOrCreate(
+          JavaScriptTypes.Root,
+	  Atom.findOrCreateUnicodeAtom((String)field),
+	  JavaScriptTypes.Root);
+    
+      context.cfg()
+	.addInstruction(new AstIsDefinedInstruction(result, ref, fieldRef));
+
+    } else {
+
+      context.cfg()
+        .addInstruction(new AstIsDefinedInstruction(result, ref, getValue(f)));
     }
   }
 

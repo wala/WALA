@@ -33,21 +33,6 @@ public class JavaScriptTypes extends AstTypeReference {
   public static final TypeReference Null =
     TypeReference.findOrCreate(jsLoader, "LNull");
 
-  public static final TypeReference Boolean =
-    TypeReference.findOrCreate(jsLoader, "LBoolean");
-
-  public static final TypeReference String =
-    TypeReference.findOrCreate(jsLoader, "LString");
-
-  public static final TypeReference Number =
-    TypeReference.findOrCreate(jsLoader, "LNumber");
-
-  public static final TypeReference Date =
-    TypeReference.findOrCreate(jsLoader, "LDate");
-
-  public static final TypeReference RegExp =
-    TypeReference.findOrCreate(jsLoader, "LRegExp");
-
   public static final TypeReference Array =
     TypeReference.findOrCreate(jsLoader, "LArray");
 
@@ -68,5 +53,35 @@ public class JavaScriptTypes extends AstTypeReference {
 
   public static final TypeReference Primitives =
     TypeReference.findOrCreate(jsLoader, "LPrimitives");
+
+  public static final TypeReference Boolean =
+    TypeReference.findOrCreate(jsLoader, "LBoolean");
+
+  public static final TypeReference String =
+    TypeReference.findOrCreate(jsLoader, "LString");
+
+  public static final TypeReference Number =
+    TypeReference.findOrCreate(jsLoader, "LNumber");
+
+  public static final TypeReference Date =
+    TypeReference.findOrCreate(jsLoader, "LDate");
+
+  public static final TypeReference RegExp =
+    TypeReference.findOrCreate(jsLoader, "LRegExp");
+
+  public static final TypeReference BooleanObject =
+    TypeReference.findOrCreate(jsLoader, "LBooleanObject");
+
+  public static final TypeReference StringObject =
+    TypeReference.findOrCreate(jsLoader, "LStringObject");
+
+  public static final TypeReference NumberObject =
+    TypeReference.findOrCreate(jsLoader, "LNumberObject");
+
+  public static final TypeReference DateObject =
+    TypeReference.findOrCreate(jsLoader, "LDateObject");
+
+  public static final TypeReference RegExpObject =
+    TypeReference.findOrCreate(jsLoader, "LRegExpObject");
 
 }

@@ -22,7 +22,7 @@ import com.ibm.wala.types.TypeReference;
 public class JSTypeInference extends AstTypeInference {
 
   public JSTypeInference(IR ir, ClassHierarchy cha) {
-    super(ir, cha, true);
+    super(ir, cha, new PointType(cha.lookupClass(JavaScriptTypes.Boolean), cha), true);
   }
 
   protected void initialize() {

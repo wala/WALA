@@ -20,8 +20,10 @@ public class CAstRhinoTranslator extends TranslatorBase {
     private final JSAstTranslator CAstToIR;
 
     public void translate(ModuleEntry M, String N) throws IOException {
+      CAstImpl Ast = new CAstImpl();
       CAstToIR.translate(
-        new RhinoToAstTranslator(new CAstImpl(), M, N).translate(),
+	new PropertyReadExpander(Ast).rewrite(
+          new RhinoToAstTranslator(Ast, M, N).translate()),
 	N);
     }
 

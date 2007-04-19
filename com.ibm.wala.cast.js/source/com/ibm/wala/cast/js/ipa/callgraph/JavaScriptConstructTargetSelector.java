@@ -92,7 +92,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
         5,
 	NewSiteReference.make(
           S.getNextProgramCounter(),
-	  JavaScriptTypes.Object)));
+	  cls.getReference())));
 
     S.addStatement(new JavaScriptStaticPropertyWrite(5, "prototype", 4));
 
@@ -116,7 +116,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
         6,
 	NewSiteReference.make(
           S.getNextProgramCounter(),
-	  JavaScriptTypes.Object)));
+	  cls.getReference())));
 
     S.addStatement(new JavaScriptStaticPropertyWrite(6, "prototype", 5));
 
@@ -489,12 +489,12 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
       return makeObjectConstructor(receiver, nargs);
     else if (receiver.getReference().equals(JavaScriptTypes.Array))
       return makeArrayConstructor(receiver, nargs);
-    else if (receiver.getReference().equals(JavaScriptTypes.String))
+    else if (receiver.getReference().equals(JavaScriptTypes.StringObject))
       return makeValueConstructor(receiver, nargs, "");
-    else if (receiver.getReference().equals(JavaScriptTypes.Boolean)) {
+    else if (receiver.getReference().equals(JavaScriptTypes.BooleanObject)) {
       Assertions._assert(nargs == 1);
       return makeValueConstructor(receiver, nargs, null);
-    } else if (receiver.getReference().equals(JavaScriptTypes.Number))
+    } else if (receiver.getReference().equals(JavaScriptTypes.NumberObject))
       return makeValueConstructor(receiver, nargs, new Integer(0));
     else if (receiver.getReference().equals(JavaScriptTypes.Function))
       return makeFunctionConstructor(callerIR, callStmt, receiver, nargs);
@@ -512,9 +512,9 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
       return makeObjectCall(receiver, nargs);
     else if (receiver.getReference().equals(JavaScriptTypes.Array))
       return makeArrayConstructor(receiver, nargs);
-    else if (receiver.getReference().equals(JavaScriptTypes.String))
+    else if (receiver.getReference().equals(JavaScriptTypes.StringObject))
       return makeStringCall(receiver, nargs);
-    else if (receiver.getReference().equals(JavaScriptTypes.Number))
+    else if (receiver.getReference().equals(JavaScriptTypes.NumberObject))
         return makeNumberCall(receiver, nargs);
     else if (receiver.getReference().equals(JavaScriptTypes.Function))
       return makeFunctionConstructor(callerIR, callStmt, receiver, nargs);

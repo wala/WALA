@@ -1210,8 +1210,9 @@ public class RhinoToAstTranslator {
       CAstNode elt = walkNodes(element, context);
 
       if (baseVar != null) {
-        return Ast.makeNode(CAstNode.BLOCK_EXPR, Ast.makeNode(CAstNode.ASSIGN, baseVar, rcvr), Ast.makeNode(CAstNode.OBJECT_REF,
-            baseVar, elt));
+        return Ast.makeNode(CAstNode.BLOCK_EXPR, 
+	  Ast.makeNode(CAstNode.ASSIGN, baseVar, rcvr), 
+	  Ast.makeNode(CAstNode.OBJECT_REF, baseVar, elt));
       } else {
         return Ast.makeNode(CAstNode.OBJECT_REF, rcvr, elt);
       }
@@ -1313,6 +1314,8 @@ public class RhinoToAstTranslator {
   private final ModuleEntry sourceModule;
 
   private int anonymousCounter = 0;
+
+  private int receiverCounter = 0;
 
   public RhinoToAstTranslator(CAst Ast, ModuleEntry M, String scriptName) {
     this.Ast = Ast;
