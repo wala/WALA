@@ -153,6 +153,7 @@ public interface CAstNode {
   public static final int LIST_EXPR = 125;
   public static final int EMPTY_LIST_EXPR = 126;
   public static final int TYPE_LITERAL_EXPR = 127;
+  public static final int IS_DEFINED_EXPR = 128;
 
   // explicit lexical scopes
   public static final int LOCAL_SCOPE = 200;

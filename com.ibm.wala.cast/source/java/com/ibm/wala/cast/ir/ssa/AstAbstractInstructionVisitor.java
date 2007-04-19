@@ -49,5 +49,9 @@ public abstract class AstAbstractInstructionVisitor
 
   }
 
+  public void visitIsDefined(AstIsDefinedInstruction inst) {
+
+  }
+
 }
 

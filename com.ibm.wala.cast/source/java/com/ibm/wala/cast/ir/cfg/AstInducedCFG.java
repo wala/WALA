@@ -55,6 +55,10 @@ public class AstInducedCFG extends InducedCFG {
     public void visitEachElementGet(EachElementGetInstruction inst) {
 
     }
+
+    public void visitIsDefined(AstIsDefinedInstruction inst) {
+
+    }
   }
     
   protected class AstBranchVisitor extends BranchVisitor implements AstInstructionVisitor {
@@ -85,6 +89,9 @@ public class AstInducedCFG extends InducedCFG {
     }
 
     public void visitEachElementGet(EachElementGetInstruction inst) {
+    }
+
+    public void visitIsDefined(AstIsDefinedInstruction inst) {
     }
 
   }

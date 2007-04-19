@@ -46,9 +46,7 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.traverse.NumberedDFSDiscoverTimeIterator;
-import com.ibm.wala.util.intset.IntSetAction;
-import com.ibm.wala.util.intset.IntSetUtil;
-import com.ibm.wala.util.intset.MutableIntSet;
+import com.ibm.wala.util.intset.*;
 import com.ibm.wala.util.warnings.WarningSet;
 
 public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCallGraphBuilder {
@@ -145,6 +143,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
 
       }
+
+      public void visitIsDefined(AstIsDefinedInstruction inst) {
+
+      }
     }
 
     protected AstPointerFlowGraph(PointerAnalysis pa, CallGraph cg) {
@@ -164,6 +166,74 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     };
   }
 
+  protected class AstPointerAnalysisImpl extends PointerAnalysisImpl {
+
+    protected AstPointerAnalysisImpl(PropagationCallGraphBuilder builder, 
+			   CallGraph cg, 
+			   PointsToMap pointsToMap,
+			   MutableMapping<InstanceKey> instanceKeys, 
+			   PointerKeyFactory pointerKeys, 
+			   InstanceKeyFactory iKeyFactory) 
+    {
+      super(builder,
+	    cg, 
+	    pointsToMap, 
+	    instanceKeys, 
+	    pointerKeyFactory, 
+	    instanceKeyFactory);
+    }
+
+    protected class AstImplicitPointsToSetVisitor
+      extends ImplicitPointsToSetVisitor 
+      implements AstInstructionVisitor 
+    {
+      protected AstImplicitPointsToSetVisitor(LocalPointerKey lpk) {
+	super(lpk);
+      }
+
+      public void visitAstLexicalRead(AstLexicalRead instruction) {
+    
+      }
+
+      public void visitAstLexicalWrite(AstLexicalWrite instruction) {
+
+      }
+    
+      public void visitAstGlobalRead(AstGlobalRead instruction) {
+	pointsToSet =
+	  computeImplicitPointsToSetAtGet(
+	    node,
+	    instruction.getDeclaredField(),
+	    -1,
+	    true);
+      }
+    
+      public void visitAstGlobalWrite(AstGlobalWrite instruction) {
+
+      }
+
+      public void visitNonExceptingThrow(NonExceptingThrowInstruction inst) {
+		
+      }
+
+      public void visitAssert(AstAssertInstruction instruction) {
+	  
+      }    
+
+      public void visitEachElementGet(EachElementGetInstruction inst) {
+	    
+      }
+   
+      public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
+      
+      }
+
+      public void visitIsDefined(AstIsDefinedInstruction inst) {
+	  
+      }
+    }
+  };
+
   /////////////////////////////////////////////////////////////////////////////
   //
   // top-level node constraint generation
@@ -172,26 +242,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
   protected ExplicitCallGraph createEmptyCallGraph(ClassHierarchy cha, AnalysisOptions options) {
     return new AstCallGraph(cha, options, getWarnings());
-  }
-
-  protected TypeInference makeTypeInference(IR ir, ClassHierarchy cha) {
-    TypeInference ti = new AstTypeInference(ir, cha, false);
-    ti.solve();
-
-    if (DEBUG_TYPE_INFERENCE) {
-      Trace.println("IR of " + ir.getMethod());
-      Trace.println(ir);
-      Trace.println("TypeInference of " + ir.getMethod());
-      for (int i = 0; i < ir.getSymbolTable().getMaxValueNumber(); i++) {
-        if (ti.isUndefined(i)) {
-          Trace.println("  value " + i + " is undefined");
-        } else {
-          Trace.println("  value " + i + " has type " + ti.getType(i));
-        }
-      }
-    }
-
-    return ti;
   }
 
   protected class AstInterestingVisitor extends InterestingVisitor implements AstInstructionVisitor {
@@ -229,6 +279,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
     public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
 
+    }
+
+    public void visitIsDefined(AstIsDefinedInstruction inst) {
+ 
     }
   }
 
@@ -1125,6 +1179,9 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
     }
 
+    public void visitIsDefined(AstIsDefinedInstruction inst) {
+
+    }
   }
 
   protected ConstraintVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node, IR ir, DefUse du, ExplicitCallGraph callGraph) {

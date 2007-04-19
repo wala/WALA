@@ -725,6 +725,18 @@ public abstract class CAstVisitor {
       break;
     }
 
+    case CAstNode.IS_DEFINED_EXPR: {
+      if (visitor.visitIsDefinedExpr(n, context, visitor)) {
+	break;
+      }
+      visitor.visit(n.getChild(0), context, visitor);
+      if (n.getChildCount() == 2){
+	visitor.visit(n.getChild(1), context, visitor);
+      }
+      visitor.leaveIsDefinedExpr(n, context, visitor);
+      break;
+    }
+
     default: {
       if (!visitor.doVisit(n, context, visitor)) {
         Trace.println("looking at unhandled " + n + "(" + NT + ")" + " of " + n.getClass());
@@ -1588,4 +1600,12 @@ public abstract class CAstVisitor {
    * @param c a visitor-specific context
    */
   protected void leaveTypeLiteralExpr(CAstNode n, Context c, CAstVisitor visitor) { visitor.leaveNode(n, c, visitor); }
+
+  protected boolean visitIsDefinedExpr(CAstNode n, Context c, CAstVisitor visitor) { return visitor.visitNode(n, c, visitor); }
+  /**
+   * Leave an IS_DEFINED_EXPR node.
+   * @param n the node to process
+   * @param c a visitor-specific context
+   */
+  protected void leaveIsDefinedExpr(CAstNode n, Context c, CAstVisitor visitor) { visitor.leaveNode(n, c, visitor); }
 }

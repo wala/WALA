@@ -22,16 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import com.ibm.wala.cast.ir.ssa.AssignInstruction;
-import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
-import com.ibm.wala.cast.ir.ssa.AstConstants;
-import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
-import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
-import com.ibm.wala.cast.ir.ssa.AstLexicalAccess;
-import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
-import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
-import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
-import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
+import com.ibm.wala.cast.ir.ssa.*;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
@@ -261,6 +252,14 @@ public abstract class AstTranslator extends CAstVisitor {
       FieldReference global = makeGlobalRef(name);
       context.cfg().addInstruction(new AstGlobalWrite(global, rval));
     }
+  }
+
+  protected void doIsFieldDefined(WalkContext context, 
+				  int result, 
+				  int ref,
+				  CAstNode field) 
+  {
+    Assertions.UNREACHABLE();
   }
 
   protected FieldReference makeGlobalRef(String globalName) {
@@ -519,16 +518,22 @@ public abstract class AstTranslator extends CAstVisitor {
           }
 
           while (sourceContext != null && (targetContext == null || !targetContext.covers(sourceContext))) {
-            final CAstCloner.Clone ast = (new CAstCloner(new CAstImpl())).copy(sourceContext.unwindAst, sourceContext.astContext
-                .getControlFlow(), sourceContext.astContext.getSourceMap());
-            sourceContext.astVisitor.visit(ast.newRoot(), new DelegatingContext(sourceContext.astContext) {
-              public CAstSourcePositionMap getSourceMap() {
-                return ast.newPos();
-              }
+            final CAstRewriter.Rewrite ast = 
+	      (new CAstCloner(new CAstImpl()))
+		.copy(sourceContext.unwindAst, 
+		      sourceContext.astContext.getControlFlow(),
+		      sourceContext.astContext.getSourceMap(),
+		      sourceContext.astContext.top().getNodeTypeMap(),
+		      sourceContext.astContext.top().getAllScopedEntities());
+            sourceContext.astVisitor.visit(ast.newRoot(), 
+	      new DelegatingContext(sourceContext.astContext) {
+                public CAstSourcePositionMap getSourceMap() {
+                  return ast.newPos();
+                }
 
-              public CAstControlFlowMap getControlFlow() {
-                return ast.newCfg();
-              }
+                public CAstControlFlowMap getControlFlow() {
+                  return ast.newCfg();
+                }
             }, sourceContext.astVisitor);
 
             sourceContext = sourceContext.getParent();
@@ -2034,8 +2039,10 @@ public abstract class AstTranslator extends CAstVisitor {
         String nm = I.next();
         Symbol v = (Symbol) scope.lookup(nm);
 
-        // hack for new expression idiom in the Java translator
+        // hacks for idioms for internal names in the translators
         if ("ctor temp".equals(nm))
+          continue;
+        if (nm.startsWith("readTemp")) 
           continue;
 
 	// constants can flow to multiple variables
@@ -3181,6 +3188,22 @@ public abstract class AstTranslator extends CAstVisitor {
     setValue(n, result);
 
     wc.cfg().addInstruction(new SSALoadClassInstruction(result, typeRef));
+  }
+
+  protected boolean visitIsDefinedExpr(CAstNode n, Context c, CAstVisitor visitor) {
+    return false;
+  }
+
+  protected void leaveIsDefinedExpr(CAstNode n, Context c, CAstVisitor visitor) {
+    WalkContext wc = (WalkContext) c;
+    int ref = getValue( n.getChild(0) );
+    int result = wc.currentScope().allocateTempValue();
+    setValue(n, result);
+    if (n.getChildCount() == 1) {
+      wc.cfg().addInstruction(new AstIsDefinedInstruction(result, ref));
+    } else {
+      doIsFieldDefined(wc, result, ref, n.getChild(1));
+    }
   }
 
   protected final void walkEntities(CAstEntity N, Context c) {
