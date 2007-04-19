@@ -93,7 +93,7 @@ public class AstJavaTypeInference extends AstTypeInference {
   }
 
   public AstJavaTypeInference(IR ir, ClassHierarchy cha, boolean doPrimitives) {
-    super(ir, cha, doPrimitives);
+    super(ir, cha, PrimitiveType.BOOLEAN, doPrimitives);
     this.stringClass = cha.lookupClass(TypeReference.JavaLangString);
   }
 
