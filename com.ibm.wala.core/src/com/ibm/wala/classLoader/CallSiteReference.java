@@ -183,4 +183,29 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
   public boolean isDispatch() {
     return isVirtual() || isInterface();
   }
+
+  @Override
+  public int hashCode() {
+    final int PRIME = 31;
+    int result = super.hashCode();
+    result = PRIME * result + ((declaredTarget == null) ? 0 : declaredTarget.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (!super.equals(obj))
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    final CallSiteReference other = (CallSiteReference) obj;
+    if (declaredTarget == null) {
+      if (other.declaredTarget != null)
+        return false;
+    } else if (!declaredTarget.equals(other.declaredTarget))
+      return false;
+    return true;
+  }
 }
