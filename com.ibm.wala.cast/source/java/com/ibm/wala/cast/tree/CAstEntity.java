@@ -116,7 +116,7 @@ public interface CAstEntity {
    * the set of entities induced by that construct.  Entities induced by
    * no particular construct are mapped by the null key.
    */
-  Map getAllScopedEntities();
+  Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities();
 
   /**
    *  Some programming language constructs have a lexical structure.

@@ -10,9 +10,15 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
-import com.ibm.wala.cast.tree.*;
-
+import java.util.Collection;
 import java.util.Map;
+
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstControlFlowMap;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstNodeTypeMap;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 
 public class CAstCloner extends CAstRewriter<Object> {
 
@@ -48,7 +54,7 @@ public class CAstCloner extends CAstRewriter<Object> {
 		      final CAstControlFlowMap cfg,
 		      final CAstSourcePositionMap pos,
 		      final CAstNodeTypeMap types,
-		      final Map children) 
+		      final Map<CAstNode,Collection<CAstEntity>> children) 
   {
     return rewrite(root, cfg, pos, types, children);
   }

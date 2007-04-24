@@ -45,7 +45,7 @@ public class DelegatingEntity implements CAstEntity {
 	return base.getArgumentCount();
     }
 
-    public Map getAllScopedEntities() {
+    public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
 	return base.getAllScopedEntities();
     }
 
