@@ -1315,7 +1315,7 @@ public class RhinoToAstTranslator {
 
   private int anonymousCounter = 0;
 
-  private int receiverCounter = 0;
+//  private int receiverCounter = 0;
 
   public RhinoToAstTranslator(CAst Ast, ModuleEntry M, String scriptName) {
     this.Ast = Ast;

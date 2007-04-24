@@ -10,25 +10,38 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
+import com.ibm.wala.cast.ir.ssa.AssignInstruction;
+import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
+import com.ibm.wala.cast.ir.ssa.NonExceptingThrowInstruction;
+import com.ibm.wala.cast.ir.translator.AstTranslator;
+import com.ibm.wala.cast.js.loader.JSCallSiteReference;
+import com.ibm.wala.cast.js.loader.JavaScriptLoader;
+import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
+import com.ibm.wala.cast.js.ssa.JavaScriptNewInstruction;
+import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
+import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
+import com.ibm.wala.cast.js.ssa.JavaScriptStaticPropertyRead;
+import com.ibm.wala.cast.js.ssa.JavaScriptStaticPropertyWrite;
+import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
+import com.ibm.wala.cast.js.types.JavaScriptMethods;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
+import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstType;
+import com.ibm.wala.cast.tree.visit.CAstVisitor;
+import com.ibm.wala.cast.types.AstMethodReference;
+import com.ibm.wala.cfg.AbstractCFG;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-
-import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.cast.ir.translator.*;
-import com.ibm.wala.cast.js.loader.*;
-import com.ibm.wala.cast.js.ssa.*;
-import com.ibm.wala.cast.js.types.*;
-import com.ibm.wala.cast.loader.AstMethod.*;
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.visit.*;
-import com.ibm.wala.cast.types.*;
-import com.ibm.wala.cfg.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.Atom;
-
-import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 
 public class JSAstTranslator extends AstTranslator {
   private final static boolean DEBUG = true;
