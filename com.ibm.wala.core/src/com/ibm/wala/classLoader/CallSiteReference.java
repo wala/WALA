@@ -21,7 +21,7 @@ import com.ibm.wala.util.debug.Assertions;
  * Simple object that represents a static call site (ie., an invoke instruction
  * in the bytecode)
  * 
- * Note that the meaning of a call site reference depends on two things:
+ * Note that the identity of a call site reference depends on two things:
  * the program counter, and the containing IR.   Thus, it suffices to
  * defines equals() and hashCode() from ProgramCounter, since this class
  * does not maintain a pointer to the containing IR (or CGNode) anyway.
