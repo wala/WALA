@@ -143,6 +143,7 @@ public class TypeArgument extends Signature {
         }
         continue;
       }
+      case (byte) '-':
       case (byte) '+':
       case (byte) 'T': { // type variable
         int off = i - 1;

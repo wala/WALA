@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.types.generics;
 
+import java.util.StringTokenizer;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -65,10 +67,23 @@ public class ClassTypeSignature extends TypeSignature {
     return false;
   }
 
+  /**
+   * Return the name of the raw type for this signature
+   */
   public TypeName getRawName() {
-    String s = rawString().substring(0,rawString().length()-1);
-    s = s.replaceAll("<.*>","");
-    return TypeName.string2TypeName(s);
+    // note: need to handle type arguments for raw signatures like the following:
+    // Ljava/util/IdentityHashMap<TK;TV;>.IdentityHashMapIterator<TV;>;
+    StringBuffer s = new StringBuffer();
+    StringTokenizer t = new StringTokenizer(rawString(),".");
+    while (t.hasMoreTokens()) {
+      String x = t.nextToken();
+      s.append(x.replaceAll("<.*>","").replace(";",""));
+      if (t.hasMoreElements()) {
+        // note that '$' is the canonical separator for inner class names
+        s.append('$');
+      }
+    }
+    return TypeName.string2TypeName(s.toString());
   }
 
   public TypeArgument[] getTypeArguments() {

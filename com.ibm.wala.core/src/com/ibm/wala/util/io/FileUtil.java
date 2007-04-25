@@ -86,6 +86,10 @@ public class FileUtil {
     }
   }
 
+  /**
+   * delete all files (recursively) in a directory.
+   * This is dangerous. Use with care.
+   */
   public static void deleteContents(String directory) throws WalaException {
     Collection fl = listFiles(directory, null, true);
 
@@ -95,12 +99,14 @@ public class FileUtil {
         f.delete();
       }
     }
-    Collection f2 = listFiles(directory, null, true);
+    do {
+      Collection f2 = listFiles(directory, null, true);
 
-    for (Iterator it = f2.iterator(); it.hasNext();) {
-      File f = (File) it.next();
-      f.delete();
-    }
+      for (Iterator it = f2.iterator(); it.hasNext();) {
+        File f = (File) it.next();
+        f.delete();
+      }
+    } while (listFiles(directory, null, true).size() > 0);
 
   }
 }
