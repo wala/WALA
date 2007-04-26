@@ -23,7 +23,6 @@ import com.ibm.wala.ecore.common.ERelation;
 import com.ibm.wala.ecore.java.EInterfaceHierarchy;
 import com.ibm.wala.ecore.java.EJavaClass;
 import com.ibm.wala.ecore.java.JavaFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.traverse.DFS;
 
@@ -74,8 +73,10 @@ public class EInterfaceHierarchyWrapper extends EObjectGraphImpl {
    * TODO: refactor
    */
   @SuppressWarnings("unchecked")
-  public static EInterfaceHierarchyWrapper load(EInterfaceHierarchy h) {
-    Assertions.productionAssertion(h != null);
+  public static EInterfaceHierarchyWrapper load(EInterfaceHierarchy h) throws IllegalArgumentException {
+    if (h == null) {
+      throw new IllegalArgumentException("h cannot be null");
+    }
     EInterfaceHierarchyWrapper result = new EInterfaceHierarchyWrapper();
 
     for (Iterator<EObject> it = h.getNodes().getContents().iterator(); it.hasNext();) {

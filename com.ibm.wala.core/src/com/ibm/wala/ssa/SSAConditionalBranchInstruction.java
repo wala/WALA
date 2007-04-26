@@ -29,15 +29,17 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
 
   private final TypeReference type;
 
-  SSAConditionalBranchInstruction(ConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) {
+  SSAConditionalBranchInstruction(ConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) throws IllegalArgumentException {
     super();
     this.operator = operator;
     this.val1 = val1;
     this.val2 = val2;
     this.type = type;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(val1 > 0);
-      Assertions._assert(val2 > 0);
+    if (val1 <= 0) {
+      throw new IllegalArgumentException("Invalid val1: " + val1);
+    }
+    if (val2 <= 0) {
+      throw new IllegalArgumentException("Invalid val2: " + val2);
     }
   }
 

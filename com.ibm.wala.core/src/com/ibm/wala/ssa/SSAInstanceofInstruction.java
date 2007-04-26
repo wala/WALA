@@ -17,35 +17,38 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author sfink
- *
+ * 
  */
 public class SSAInstanceofInstruction extends SSAInstruction {
   private final int result;
+
   private final int ref;
+
   private final TypeReference checkedType;
+
   SSAInstanceofInstruction(int result, int ref, TypeReference checkedType) {
     super();
     this.result = result;
     this.ref = ref;
     this.checkedType = checkedType;
   }
+
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return
-      new SSAInstanceofInstruction(
-        defs==null? result: defs[0],
-	uses==null? ref: uses[0],
-	checkedType);
+    return new SSAInstanceofInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? ref : uses[0],
+        checkedType);
   }
 
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return getValueString(symbolTable, d, result) + " = instanceof " + getValueString(symbolTable, d, ref) + " " + checkedType;
   }
+
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
-  public void visit(IVisitor v) {
+  public void visit(IVisitor v) throws NullPointerException {
     v.visitInstanceof(this);
   }
+
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getDef()
    */
@@ -89,18 +92,25 @@ public class SSAInstanceofInstruction extends SSAInstruction {
   public int hashCode() {
     return ref * 677 ^ result * 3803;
   }
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   public boolean isFallThrough() {
     return true;
   }
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   public Collection<TypeReference> getExceptionTypes() {
     return null;
   }
+
   /**
    * @return Returns the ref.
    */

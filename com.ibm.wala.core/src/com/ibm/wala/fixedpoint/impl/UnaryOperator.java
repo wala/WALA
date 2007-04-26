@@ -13,6 +13,7 @@ package com.ibm.wala.fixedpoint.impl;
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * An operator of the form lhs = op (rhs)
@@ -49,7 +50,7 @@ public abstract class UnaryOperator extends AbstractOperator implements FixedPoi
    * (non-Javadoc)
    * 
    */
-  public byte evaluate(IVariable lhs, IVariable[] rhs) {
+  public byte evaluate(IVariable lhs, IVariable[] rhs) throws UnimplementedError {
     // this should never be called. Use the other, more efficient form.
     Assertions.UNREACHABLE();
     return 0;

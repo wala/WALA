@@ -22,9 +22,12 @@ public class FunctionTerm implements ITerm {
   private final List<ITerm> parameters;
   private final IFunction f;
   
-  private FunctionTerm(IFunction f, List<ITerm> parameters) {
+  private FunctionTerm(IFunction f, List<ITerm> parameters) throws IllegalArgumentException {
     this.f = f;
     this.parameters = parameters;
+    if (f == null) {
+      throw new IllegalArgumentException("f cannot be null");
+    }
   }
   
   public Kind getKind() {

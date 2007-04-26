@@ -161,7 +161,10 @@ public class ClassHierarchy implements Iterable<IClass> {
    * @throws ClassHierarchyException
    */
   private ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings, TypeReference rootDescriptor,
-      IProgressMonitor progressMonitor) throws ClassHierarchyException {
+      IProgressMonitor progressMonitor) throws ClassHierarchyException, IllegalArgumentException {
+    if (factory == null) {
+      throw new IllegalArgumentException();
+    }
     this.scope = scope;
     this.factory = factory;
     this.warnings = warnings;
@@ -1164,7 +1167,7 @@ public class ClassHierarchy implements Iterable<IClass> {
   /**
    * Does it look like an inner class? [TODO: is this definitive?]
    */
-  public static boolean isInnerClass(IClass klass) {
+  public static boolean isInnerClass(IClass klass) throws NullPointerException {
     return klass.getName().toString().indexOf("$") > -1;
   }
 

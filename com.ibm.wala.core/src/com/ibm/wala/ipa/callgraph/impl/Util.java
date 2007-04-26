@@ -135,7 +135,12 @@ public class Util {
    * Modify an options object to include bypass logic as specified by a an XML
    * file.
    */
-  public static void addBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, String xmlFile, ClassHierarchy cha) {
+  public static void addBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, String xmlFile, ClassHierarchy cha)
+      throws IllegalArgumentException {
+    if (cha == null) {
+      throw new IllegalArgumentException("cha cannot be null");
+    }
+
     InputStream s = cl.getResourceAsStream(xmlFile);
     XMLMethodSummaryReader summary = new XMLMethodSummaryReader(s, scope);
 
@@ -227,7 +232,8 @@ public class Util {
   /**
    * @return Entryponts for a set of J2SE Main classes
    */
-  public static Entrypoints makeMainEntrypoints(final ClassLoaderReference loaderRef, final ClassHierarchy cha, final String[] classNames) {
+  public static Entrypoints makeMainEntrypoints(final ClassLoaderReference loaderRef, final ClassHierarchy cha,
+      final String[] classNames) {
     for (int i = 0; i < classNames.length; i++) {
       if (classNames[i].indexOf("L") != 0) {
         Assertions.productionAssertion(false, "Expected class name to start with L " + classNames[i]);
@@ -718,7 +724,7 @@ public class Util {
 
     return new ZeroOneContainerCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec());
   }
-  
+
   /**
    * @param options
    *          options that govern call graph construction
@@ -743,10 +749,12 @@ public class Util {
 
     return new ZeroOneContainerCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec()) {
       @Override
-      protected ZeroXInstanceKeys makeInstanceKeys(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options, SSAContextInterpreter contextInterpreter) {
+      protected ZeroXInstanceKeys makeInstanceKeys(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+          SSAContextInterpreter contextInterpreter) {
         ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, warnings, ZeroXInstanceKeys.ALLOCATIONS);
         return zik;
-      }};
+      }
+    };
   }
 
   public static void addDefaultBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, ClassHierarchy cha) {

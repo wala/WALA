@@ -24,7 +24,10 @@ public class ClassHierarchyStats {
    * Dump stats about the class hierarchy to stdout.
    * @param cha
    */
-  public static void printStats(ClassHierarchy cha) {
+  public static void printStats(ClassHierarchy cha) throws IllegalArgumentException {
+    if (cha == null) {
+      throw new IllegalArgumentException("cha cannot be null");
+    }
     IClassLoader[] loaders = cha.getLoaders();
     for (int i = 0; i < loaders.length; i++) {
       System.out.println("loader: " + loaders[i]);

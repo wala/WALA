@@ -37,7 +37,8 @@ public class SSAConversionInstruction extends SSAInstruction {
   }
 
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new SSAConversionInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], fromType, toType);
+    return new SSAConversionInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? val : uses[0],
+        fromType, toType);
   }
 
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
@@ -47,7 +48,7 @@ public class SSAConversionInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
-  public void visit(IVisitor v) {
+  public void visit(IVisitor v) throws NullPointerException {
     v.visitConversion(this);
   }
 

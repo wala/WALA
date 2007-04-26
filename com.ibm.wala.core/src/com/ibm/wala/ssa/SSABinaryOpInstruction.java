@@ -41,21 +41,19 @@ public class SSABinaryOpInstruction extends SSAInstruction {
   }
 
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new SSABinaryOpInstruction(operator, defs == null ? result : defs[0], uses == null ? val1 : uses[0], uses == null ? val2
-        : uses[1]);
+    return new SSABinaryOpInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
+        uses == null ? val2 : uses[1]);
   }
 
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + 
-	" = binaryop(" + operator + ") " + 
-	getValueString(symbolTable, d, val1) + " , " +
-	getValueString(symbolTable, d, val2);
+    return getValueString(symbolTable, d, result) + " = binaryop(" + operator + ") " + getValueString(symbolTable, d, val1) + " , "
+        + getValueString(symbolTable, d, val2);
   }
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
-  public void visit(IVisitor v) {
+  public void visit(IVisitor v) throws NullPointerException {
     v.visitBinaryOp(this);
   }
 

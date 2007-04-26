@@ -143,7 +143,7 @@ public class AnalysisScope {
    * @param loader
    * @param file
    */
-  public void addSourceFileToScope(ClassLoaderReference loader, File file, String fileName) {
+  public void addSourceFileToScope(ClassLoaderReference loader, File file, String fileName) throws IllegalArgumentException  {
     Set<Module> s = MapUtil.findOrCreateSet(moduleMap, loader);
     s.add(new SourceFileModule(file, fileName));
   }

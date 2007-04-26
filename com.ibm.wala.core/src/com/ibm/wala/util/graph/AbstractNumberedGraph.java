@@ -48,6 +48,9 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(com.ibm.wala.util.graph.Node)
    */
   public int getNumber(T N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N cannot be null");
+    }
     return ((NumberedNodeManager<T>) getNodeManager()).getNumber(N);
   }
 

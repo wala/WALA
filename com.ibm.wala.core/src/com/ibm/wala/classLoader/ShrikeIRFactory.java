@@ -52,9 +52,12 @@ public class ShrikeIRFactory implements IRFactory {
    *      com.ibm.wala.ipa.cha.ClassHierarchy, com.ibm.wala.ssa.SSAOptions,
    *      com.ibm.wala.util.warnings.WarningSet)
    */
-  public IR makeIR(final IMethod method, Context C, final ClassHierarchy cha, final SSAOptions options, final WarningSet warnings) {
-    // This should be a method from Shrike
-    Assertions._assert(method instanceof ShrikeCTMethod);
+  public IR makeIR(final IMethod method, Context C, final ClassHierarchy cha, final SSAOptions options, final WarningSet warnings)
+      throws IllegalArgumentException {
+    
+    if (!(method instanceof ShrikeCTMethod)) {
+      throw new IllegalArgumentException("method must be a ShrikeCTMethod");
+    }
 
     com.ibm.wala.shrikeBT.Instruction[] shrikeInstructions;
     try {
@@ -84,34 +87,32 @@ public class ShrikeIRFactory implements IRFactory {
       }
 
       protected String instructionPosition(int instructionIndex) {
-	try {
-	  int bcIndex = 
-	    ((ShrikeCTMethod) method).getBytecodeIndex(instructionIndex);
-	  int lineNumber =
-	    ((ShrikeCTMethod) method).getLineNumber(bcIndex);
+        try {
+          int bcIndex = ((ShrikeCTMethod) method).getBytecodeIndex(instructionIndex);
+          int lineNumber = ((ShrikeCTMethod) method).getLineNumber(bcIndex);
 
-	  if (lineNumber == -1) {
-	    return "";
-	  } else {
-	    return "(line " + lineNumber + ")";
-	  }
-	} catch (InvalidClassFileException e) {
-	  return "";
-	}
+          if (lineNumber == -1) {
+            return "";
+          } else {
+            return "(line " + lineNumber + ")";
+          }
+        } catch (InvalidClassFileException e) {
+          return "";
+        }
       }
-  
+
       public SSA2LocalMap getLocalMap() {
-	return localMap;
+        return localMap;
       }
 
       {
-        SSABuilder builder = new SSABuilder((ShrikeCTMethod) method, cha, newCfg, shrikeCFG, newInstrs, symbolTable,
-            buildLocalMap, options.getUsePiNodes(), warnings);
+        SSABuilder builder = new SSABuilder((ShrikeCTMethod) method, cha, newCfg, shrikeCFG, newInstrs, symbolTable, buildLocalMap,
+            options.getUsePiNodes(), warnings);
         builder.build();
         if (buildLocalMap)
           localMap = builder.getLocalMap();
-	else
-	  localMap = null;
+        else
+          localMap = null;
 
         eliminateDeadPhis();
 

@@ -20,9 +20,12 @@ public class NotFormula implements IFormula {
 
   private final IFormula f;
 
-  private NotFormula(final IFormula f) {
+  private NotFormula(final IFormula f) throws IllegalArgumentException {
     super();
     this.f = f;
+    if (f == null) {
+      throw new IllegalArgumentException("f cannot be null");
+    }
   }
   
   public static NotFormula make(IFormula f) {

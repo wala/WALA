@@ -65,7 +65,11 @@ public class TypeVariableSignature extends TypeSignature {
    * @param klass
    * @return -1 if there is no match
    */
-  public static int getTypeVariablePosition(TypeVariableSignature v, ShrikeClass klass) {
+  public static int getTypeVariablePosition(TypeVariableSignature v, ShrikeClass klass) throws IllegalArgumentException {
+    if (klass == null) {
+      throw new IllegalArgumentException("klass cannot be null");
+    }
+    
     try {
       ClassSignature sig = klass.getClassSignature();
       if (sig == null) {

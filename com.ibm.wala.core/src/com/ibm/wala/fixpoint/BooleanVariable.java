@@ -42,7 +42,7 @@ public class BooleanVariable extends AbstractVariable {
 
   /* (non-Javadoc)
    */
-  public void copyState(IVariable v) {
+  public void copyState(IVariable v) throws NullPointerException {
     BooleanVariable other = (BooleanVariable) v;
     B = other.B;
   }

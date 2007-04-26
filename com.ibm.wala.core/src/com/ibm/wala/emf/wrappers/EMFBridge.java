@@ -43,7 +43,10 @@ public class EMFBridge {
    *          a WALA call graph
    * @return a EMF object representing a WALA callgraph
    */
-  public static com.ibm.wala.emf.wrappers.ECallGraphWrapper makeCallGraph(CallGraph cg) {
+  public static com.ibm.wala.emf.wrappers.ECallGraphWrapper makeCallGraph(CallGraph cg) throws IllegalArgumentException {
+    if (cg == null) {
+      throw new IllegalArgumentException("cg must not be null");
+    }
     com.ibm.wala.emf.wrappers.ECallGraphWrapper result = new com.ibm.wala.emf.wrappers.ECallGraphWrapper();
     for (Iterator it = cg.iterator(); it.hasNext();) {
       CGNode n = (CGNode) it.next();
@@ -95,7 +98,7 @@ public class EMFBridge {
 
   /**
    * @param m
-   *           method reference
+   *          method reference
    * @return corresponding EMF method
    */
   public static EJavaMethod makeJavaMethod(MethodReference m) {
@@ -145,7 +148,12 @@ public class EMFBridge {
    *          a WALA class hierarchy
    * @return a EMF class hierarchy
    */
-  public static com.ibm.wala.emf.wrappers.EClassHierarchyWrapper makeClassHierarchy(ClassHierarchy cha) {
+  public static com.ibm.wala.emf.wrappers.EClassHierarchyWrapper makeClassHierarchy(ClassHierarchy cha)
+      throws IllegalArgumentException {
+    if (cha == null) {
+      throw new IllegalArgumentException("cha must not be null");
+    }
+
     com.ibm.wala.emf.wrappers.EClassHierarchyWrapper result = new com.ibm.wala.emf.wrappers.EClassHierarchyWrapper();
     // create nodes
     for (IClass klass : cha) {
@@ -158,7 +166,7 @@ public class EMFBridge {
     for (IClass parent : cha) {
       EJavaClass parentClass = makeJavaClass(parent.getReference());
       if (!parent.isInterface()) {
-        for (IClass child: cha.getImmediateSubclasses(parent)) {
+        for (IClass child : cha.getImmediateSubclasses(parent)) {
           if (!child.isInterface()) {
             EJavaClass childClass = makeJavaClass(child.getReference());
             result.addSubClass(parentClass, childClass);
@@ -187,7 +195,7 @@ public class EMFBridge {
     for (IClass parent : cha) {
       EJavaClass parentClass = makeJavaClass(parent.getReference());
       if (parent.isInterface()) {
-        for (IClass child: cha.getImmediateSubclasses(parent)) {
+        for (IClass child : cha.getImmediateSubclasses(parent)) {
           if (child.isInterface()) {
             EJavaClass childClass = makeJavaClass(child.getReference());
             result.addSubClass(parentClass, childClass);

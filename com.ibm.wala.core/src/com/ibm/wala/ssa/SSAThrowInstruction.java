@@ -35,7 +35,7 @@ public class SSAThrowInstruction extends SSAAbstractThrowInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
-  public void visit(IVisitor v) {
+  public void visit(IVisitor v) throws NullPointerException {
     v.visitThrow(this);
   }
 

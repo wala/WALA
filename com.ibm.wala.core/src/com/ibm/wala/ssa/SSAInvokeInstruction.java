@@ -53,7 +53,10 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
         defs == null ? exception : defs[result == -1 ? 0 : 1], site);
   }
 
-  public static void assertParamsKosher(int result, int[] params, CallSiteReference site) {
+  public static void assertParamsKosher(int result, int[] params, CallSiteReference site) throws IllegalArgumentException{
+    if (site == null) {
+      throw new IllegalArgumentException("site cannot be null");
+    }
     if (!site.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
       if (result == -1) {
         Assertions._assert(result != -1, "bogus call to " + site);

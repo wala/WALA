@@ -69,8 +69,8 @@ public class Slicer {
     private final String name;
 
     /**
-     * ingore data dependence edges representing base pointers?
-     * e.g for a statement y = x.f,   ignore the data dependence edges for x
+     * ingore data dependence edges representing base pointers? e.g for a
+     * statement y = x.f, ignore the data dependence edges for x
      */
     private final boolean ignoreBasePtrs;
 
@@ -80,8 +80,8 @@ public class Slicer {
     private final boolean ignoreHeap;
 
     /**
-     * Ignore outgoing data dependence edges from a cast statments?
-     * [This is a special case option used for reflection processing]
+     * Ignore outgoing data dependence edges from a cast statments? [This is a
+     * special case option used for reflection processing]
      */
     private final boolean terminateAtCast;
 
@@ -147,7 +147,7 @@ public class Slicer {
    * @return the backward slice of s.
    */
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
     return computeSlice(null, s, cg, pa, dOptions, cOptions, true);
   }
 
@@ -157,7 +157,7 @@ public class Slicer {
    * @return the forward slice of s.
    */
   public static Collection<Statement> computeForwardSlice(Statement s, CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
     return computeSlice(null, s, cg, pa, dOptions, cOptions, false);
   }
 
@@ -165,7 +165,7 @@ public class Slicer {
    * Use the passed-in SDG
    */
   public static Collection<Statement> computeBackwardSlice(SDG sdg, Statement s, CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
     return computeSlice(sdg, s, cg, pa, dOptions, cOptions, true);
   }
 
@@ -173,7 +173,7 @@ public class Slicer {
    * Use the passed-in SDG
    */
   public static Collection<Statement> computeForwardSlice(SDG sdg, Statement s, CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
     return computeSlice(sdg, s, cg, pa, dOptions, cOptions, false);
   }
 
@@ -345,7 +345,8 @@ public class Slicer {
    *          a statement of interest
    * @return the backward slice of s.
    */
-  public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pointerAnalysis) {
+  public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pointerAnalysis)
+      throws IllegalArgumentException {
     return computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
   }
 

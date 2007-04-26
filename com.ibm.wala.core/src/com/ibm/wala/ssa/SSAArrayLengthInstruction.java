@@ -48,7 +48,7 @@ public class SSAArrayLengthInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
-  public void visit(IVisitor v) {
+  public void visit(IVisitor v) throws NullPointerException {
     v.visitArrayLength(this);
   }
 

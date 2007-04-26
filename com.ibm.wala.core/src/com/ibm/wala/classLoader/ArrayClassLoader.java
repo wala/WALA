@@ -40,10 +40,13 @@ public class ArrayClassLoader {
    * @param delegator
    *          class loader to look up element type with
    */
-  public IClass lookupClass(TypeName className, IClassLoader delegator, ClassHierarchy cha) {
+  public IClass lookupClass(TypeName className, IClassLoader delegator, ClassHierarchy cha) throws IllegalArgumentException {
     ArrayClass arrayClass;
     if (DEBUG) {
       Assertions._assert(className.toString().startsWith("["));
+    }
+    if (delegator == null) {
+      throw new IllegalArgumentException("delegator must not be null");
     }
 
     TypeReference type = TypeReference.findOrCreate(delegator.getReference(), className);

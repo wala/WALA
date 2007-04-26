@@ -113,8 +113,11 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     this(cg, pa, dOptions, cOptions, null);
   }
 
-  public SDG(CallGraph cg, PointerAnalysis pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions, HeapExclusions heapExclude) {
+  public SDG(CallGraph cg, PointerAnalysis pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions, HeapExclusions heapExclude) throws IllegalArgumentException {
     super();
+    if (dOptions == null) {
+      throw new IllegalArgumentException("dOptions must not be null");
+    }
     this.cg = cg;
     this.pa = pa;
     this.mod = dOptions.isIgnoreHeap() ? null : ModRef.computeMod(cg, pa, heapExclude);

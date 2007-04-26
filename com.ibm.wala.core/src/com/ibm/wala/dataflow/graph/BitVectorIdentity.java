@@ -30,10 +30,14 @@ public class BitVectorIdentity extends UnaryOperator {
 
   /* (non-Javadoc)
    */
-  public byte evaluate(IVariable lhs, IVariable rhs) {
+  public byte evaluate(IVariable lhs, IVariable rhs) throws IllegalArgumentException  {
     BitVectorVariable L = (BitVectorVariable) lhs;
     BitVectorVariable R = (BitVectorVariable) rhs;
 
+    if (L == null) {
+      throw new IllegalArgumentException("lhs cannot be null");
+    }
+    
     if (L.sameValue(R)) {
       return NOT_CHANGED;
     } else {

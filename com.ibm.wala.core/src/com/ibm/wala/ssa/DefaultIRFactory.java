@@ -32,7 +32,10 @@ public class DefaultIRFactory implements IRFactory {
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.IRFactory#makeCFG(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.ipa.cha.ClassHierarchy, com.ibm.wala.util.warnings.WarningSet)
    */
-  public ControlFlowGraph makeCFG(IMethod method, Context C, ClassHierarchy cha, WarningSet warnings) {
+  public ControlFlowGraph makeCFG(IMethod method, Context C, ClassHierarchy cha, WarningSet warnings) throws IllegalArgumentException {
+    if (method == null) {
+      throw new IllegalArgumentException("method cannot be null");
+    }
     if (method.isSynthetic()) {
       return syntheticFactory.makeCFG(method, C, cha, warnings);
     } else if (method instanceof ShrikeCTMethod) {
@@ -46,7 +49,10 @@ public class DefaultIRFactory implements IRFactory {
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.IRFactory#makeIR(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.ipa.cha.ClassHierarchy, com.ibm.wala.ssa.SSAOptions, com.ibm.wala.util.warnings.WarningSet)
    */
-  public IR makeIR(IMethod method, Context C, ClassHierarchy cha, SSAOptions options, WarningSet warnings) {
+  public IR makeIR(IMethod method, Context C, ClassHierarchy cha, SSAOptions options, WarningSet warnings) throws IllegalArgumentException{
+    if (method == null) {
+      throw new IllegalArgumentException("method cannot be null");
+    }
     if (method.isSynthetic()) {
       return syntheticFactory.makeIR(method, C, cha, options, warnings);
     } else if (method instanceof ShrikeCTMethod) {

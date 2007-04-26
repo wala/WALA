@@ -68,8 +68,11 @@ public class ShrikeCFG extends AbstractCFG {
   /**
    * Constructor for ControlFlowGraph.
    */
-  public ShrikeCFG(ShrikeCTMethod method, WarningSet warnings, ClassHierarchy cha) {
+  public ShrikeCFG(ShrikeCTMethod method, WarningSet warnings, ClassHierarchy cha) throws IllegalArgumentException {
     super(method);
+    if (method == null) {
+      throw new IllegalArgumentException("method cannot be null");
+    }
     this.method = method;
     this.hashBase = method.hashCode() * 9967;
     this.warnings = warnings;

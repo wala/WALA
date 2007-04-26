@@ -35,10 +35,13 @@ public class RelationFormula implements IFormula {
     return terms;
   }
 
-  private RelationFormula(final IRelation R, final List<ITerm> terms) {
+  private RelationFormula(final IRelation R, final List<ITerm> terms) throws IllegalArgumentException {
     super();
     this.R = R;
     this.terms = terms;
+    if (R == null) {
+      throw new IllegalArgumentException("R cannot be null");
+    }
   }
 
   public static RelationFormula make(BinaryRelation R, ITerm t1, ITerm t2) {

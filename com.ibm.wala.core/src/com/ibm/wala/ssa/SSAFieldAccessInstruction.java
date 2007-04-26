@@ -24,10 +24,13 @@ public abstract class SSAFieldAccessInstruction extends SSAInstruction {
 
   private final FieldReference field;
   private final int ref;
-  protected SSAFieldAccessInstruction(FieldReference field, int ref) {
+  protected SSAFieldAccessInstruction(FieldReference field, int ref) throws IllegalArgumentException {
     super();
     this.field = field;
     this.ref = ref;
+    if (field == null) {
+      throw new IllegalArgumentException("field cannot be null");
+    }
   }
 
   /**

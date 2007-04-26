@@ -49,11 +49,17 @@ public class ResolutionFailure extends MethodWarning {
     }
   }
 
-  public static ResolutionFailure create(CGNode node, Object ref) {
+  public static ResolutionFailure create(CGNode node, Object ref) throws IllegalArgumentException {
+    if (node == null) {
+      throw new IllegalArgumentException("node cannot be null");
+    }
     return new ResolutionFailure(node, ref);
   }
 
-  public static ResolutionFailure create(CGNode node, Object ref, String msg) {
+  public static ResolutionFailure create(CGNode node, Object ref, String msg) throws IllegalArgumentException {
+    if (node == null) {
+      throw new IllegalArgumentException("node cannot be null");
+    }
     return new ResolutionFailure(node, ref, msg);
   }
 

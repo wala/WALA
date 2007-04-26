@@ -20,45 +20,45 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author sfink
- *
+ * 
  */
 public class SSAGetInstruction extends SSAFieldAccessInstruction {
   private final int result;
+
   public SSAGetInstruction(int result, int ref, FieldReference field) {
-    super(field,ref);
+    super(field, ref);
     this.result = result;
-  }
-  public SSAGetInstruction(int result, FieldReference field) {
-    super(field,-1);
-    this.result = result;
-  }
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    if (isStatic())
-      return
-        new SSAGetInstruction(
-	  defs==null? result: defs[0],
-	  getDeclaredField());
-    else
-      return
-        new SSAGetInstruction(
-	  defs==null? result: defs[0],
-	  uses==null? getRef(): uses[0],
-	  getDeclaredField());
   }
 
-   public String toString(SymbolTable symbolTable, ValueDecorator d) {
+  public SSAGetInstruction(int result, FieldReference field) {
+    super(field, -1);
+    this.result = result;
+  }
+
+  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+    if (isStatic())
+      return new SSAGetInstruction(defs == null || defs.length == 0 ? result : defs[0], getDeclaredField());
+    else
+      return new SSAGetInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? getRef() : uses[0],
+          getDeclaredField());
+  }
+
+  public String toString(SymbolTable symbolTable, ValueDecorator d) {
     if (isStatic()) {
       return getValueString(symbolTable, d, result) + " = getstatic " + getDeclaredField();
     } else {
-      return getValueString(symbolTable, d, result) + " = getfield " + getDeclaredField() + " " + getValueString(symbolTable, d, getRef());
+      return getValueString(symbolTable, d, result) + " = getfield " + getDeclaredField() + " "
+          + getValueString(symbolTable, d, getRef());
     }
   }
+
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
-  public void visit(IVisitor v) {
+  public void visit(IVisitor v) throws NullPointerException {
     v.visitGet(this);
   }
+
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getDef()
    */
@@ -98,13 +98,19 @@ public class SSAGetInstruction extends SSAFieldAccessInstruction {
   public int hashCode() {
     return result * 2371 ^ 6521;
   }
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   public boolean isFallThrough() {
     return true;
   }
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   public Collection<TypeReference> getExceptionTypes() {

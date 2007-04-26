@@ -14,9 +14,9 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.INodeWithNumberedEdges;
+import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 
@@ -27,7 +27,7 @@ import com.ibm.wala.util.intset.IntSet;
  * @author sfink
  * 
  */
-public class DelegatingNumberedEdgeManager<T extends INodeWithNumber> implements EdgeManager<T> {
+public class DelegatingNumberedEdgeManager<T extends INodeWithNumber> implements NumberedEdgeManager<T> {
 
   private final DelegatingNumberedNodeManager<T> nodeManager;
 
@@ -81,7 +81,10 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumber> implements
    * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<T> getPredNodes(T N) {
+  public Iterator<T> getPredNodes(T N) throws IllegalArgumentException{
+    if (N == null) {
+      throw new IllegalArgumentException("N cannot be null");
+    }
     INodeWithNumberedEdges en = (INodeWithNumberedEdges) N;
     IntSet pred = en.getPredNumbers();
     Iterator<T> empty = EmptyIterator.instance();
@@ -93,7 +96,10 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumber> implements
    * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
-  public int getPredNodeCount(T N) {
+  public int getPredNodeCount(T N) throws IllegalArgumentException {
+    if (N == null) {
+      throw new IllegalArgumentException("N cannot be null");
+    }
     INodeWithNumberedEdges en = (INodeWithNumberedEdges) N;
     return en.getPredNumbers().size();
   }
@@ -104,6 +110,9 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumber> implements
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
   public Iterator<T> getSuccNodes(T N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N cannot be null");
+    }
     INodeWithNumberedEdges en = (INodeWithNumberedEdges) N;
     IntSet succ = en.getSuccNumbers();
     Iterator<T> empty = EmptyIterator.instance();
@@ -150,6 +159,9 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumber> implements
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
   public void removeIncomingEdges(T node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node cannot be null");
+    }
     INodeWithNumberedEdges n = (INodeWithNumberedEdges) node;
     n.removeIncomingEdges();
   }
@@ -160,6 +172,9 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumber> implements
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
   public void removeOutgoingEdges(T node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node cannot be null");
+    }
     INodeWithNumberedEdges n = (INodeWithNumberedEdges) node;
     n.removeOutgoingEdges();
   }
@@ -171,6 +186,16 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumber> implements
   public boolean hasEdge(T src, T dst) {
     Assertions.UNREACHABLE("implement me");
     return false;
+  }
+
+  public IntSet getPredNodeNumbers(T node) {
+    Assertions.UNREACHABLE("implement me");
+    return null;
+  }
+
+  public IntSet getSuccNodeNumbers(T node) {
+    Assertions.UNREACHABLE("implement me");
+    return null;
   }
 
 }

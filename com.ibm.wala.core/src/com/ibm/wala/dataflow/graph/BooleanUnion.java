@@ -58,7 +58,7 @@ public class BooleanUnion extends AbstractMeetOperator implements FixedPointCons
    * 
    * @see com.ibm.wala.dataflow.fixpoint.Operator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable[])
    */
-  public byte evaluate(IVariable lhs, IVariable[] rhs) {
+  public byte evaluate(IVariable lhs, IVariable[] rhs) throws NullPointerException {
     BooleanVariable L = (BooleanVariable) lhs;
     BooleanVariable U = new BooleanVariable(L.hashCode());
     U.copyState(L);

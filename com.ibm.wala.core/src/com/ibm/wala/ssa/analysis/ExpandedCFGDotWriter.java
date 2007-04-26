@@ -24,7 +24,10 @@ import com.ibm.wala.ssa.analysis.ExpandedControlFlowGraph.SingleInstructionBasic
  */
 public class ExpandedCFGDotWriter {
 
-  public static void write(String fileName, ExpandedControlFlowGraph cfg) {
+  public static void write(String fileName, ExpandedControlFlowGraph cfg) throws IllegalArgumentException {
+    if (cfg == null) {
+      throw new IllegalArgumentException("cfg cannot be null");
+    }
     StringBuffer result = new StringBuffer();
     result.append(dotOutput(cfg));
     try {
@@ -37,6 +40,9 @@ public class ExpandedCFGDotWriter {
   }
 
   public static void write(String fileName, SSACFG cfg) {
+    if (cfg == null) {
+      throw new IllegalArgumentException("cfg cannot be null");
+    }
     StringBuffer result = new StringBuffer();
     result.append(dotOutput(cfg));
     try {

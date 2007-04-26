@@ -31,7 +31,13 @@ public class CombinedTheory extends AbstractTheory {
     this.b = b;
   }
 
-  public static CombinedTheory make(ITheory a, ITheory b) {
+  public static CombinedTheory make(ITheory a, ITheory b) throws IllegalArgumentException {
+    if (a == null) {
+      throw new IllegalArgumentException("a cannot be null");
+    }
+    if (b == null) {
+      throw new IllegalArgumentException("b cannot be null");
+    }
     return new CombinedTheory(a, b);
   }
 
@@ -49,15 +55,15 @@ public class CombinedTheory extends AbstractTheory {
   public static ITheory make(ITheory t, BasicVocabulary v) {
     return make(t, new JustVocabulary(v));
   }
-  
+
   private final static class JustVocabulary extends AbstractTheory {
 
     private final IVocabulary v;
-    
+
     public JustVocabulary(IVocabulary v) {
       this.v = v;
     }
-    
+
     public Collection<IFormula> getSentences() {
       return Collections.emptySet();
     }
@@ -65,7 +71,7 @@ public class CombinedTheory extends AbstractTheory {
     public IVocabulary getVocabulary() {
       return v;
     }
-    
+
   }
 
 }

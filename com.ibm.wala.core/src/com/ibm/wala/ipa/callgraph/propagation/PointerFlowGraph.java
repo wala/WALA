@@ -80,9 +80,12 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
 
   private final static int WIPE_THRESHOLD = 1000;
 
-  protected PointerFlowGraph(PointerAnalysis pa, CallGraph cg) {
+  protected PointerFlowGraph(PointerAnalysis pa, CallGraph cg) throws IllegalArgumentException {
     this.pa = pa;
     this.cg = cg;
+    if (cg == null) {
+      throw new IllegalArgumentException("cg cannot be null");
+    }
   }
 
   private void processAllNodes() {

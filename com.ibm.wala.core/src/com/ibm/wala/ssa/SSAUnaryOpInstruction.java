@@ -17,7 +17,7 @@ import com.ibm.wala.types.TypeReference;
 
 /**
  * @author sfink
- *
+ * 
  */
 public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
 
@@ -29,11 +29,7 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
   }
 
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return
-      new SSAUnaryOpInstruction(
-        operator,
-	defs==null? result: defs[0],
-	uses==null? val: uses[0]);
+    return new SSAUnaryOpInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val : uses[0]);
   }
 
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
@@ -43,15 +39,17 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
-  public void visit(IVisitor v) {
+  public void visit(IVisitor v) throws NullPointerException {
     v.visitUnaryOp(this);
   }
 
   public UnaryOpInstruction.IOperator getOpcode() {
-  	return operator;
+    return operator;
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   public Collection<TypeReference> getExceptionTypes() {

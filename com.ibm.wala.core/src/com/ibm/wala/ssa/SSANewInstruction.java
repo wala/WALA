@@ -35,8 +35,11 @@ public class SSANewInstruction extends SSAInstruction {
   /**
    * Create a new instruction to allocate a scalar.
    */
-  public SSANewInstruction(int result, NewSiteReference site) {
+  public SSANewInstruction(int result, NewSiteReference site) throws IllegalArgumentException {
     super();
+    if (site == null) {
+      throw new IllegalArgumentException("site cannot be null");
+    }
     if (Assertions.verifyAssertions) {
       Assertions._assert(!site.getDeclaredType().isArrayType());
     }

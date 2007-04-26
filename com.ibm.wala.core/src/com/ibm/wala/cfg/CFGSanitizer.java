@@ -40,9 +40,11 @@ public class CFGSanitizer {
 
   /*
    */
-  public static Graph<IBasicBlock> sanitize(IR ir, ClassHierarchy cha) throws WalaException {
+  public static Graph<IBasicBlock> sanitize(IR ir, ClassHierarchy cha) throws IllegalArgumentException, WalaException {
  
-    Assertions._assert(ir != null, "IR is null");
+    if (ir == null) {
+      throw new IllegalArgumentException("ir cannot be null");
+    }
 
     ControlFlowGraph cfg = ir.getControlFlowGraph();
     Graph<IBasicBlock> G = new SlowSparseNumberedGraph<IBasicBlock>();
