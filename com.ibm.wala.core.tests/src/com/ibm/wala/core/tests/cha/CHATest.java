@@ -11,6 +11,7 @@
 package com.ibm.wala.core.tests.cha;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -94,7 +95,13 @@ public class CHATest extends WalaTestCase {
 
     System.err.println("read ...");
     // load it back into memory
-    ETypeHierarchyWrapper et2 = ETypeHierarchyWrapper.loadFromFile(fileName);
+    ETypeHierarchyWrapper et2 = null;
+    try {
+      et2 = ETypeHierarchyWrapper.loadFromFile(fileName);
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
+    }
     System.err.println("check ...");
     // check that they are isomorphic
     // TODO: add general utilities for isomorphism
