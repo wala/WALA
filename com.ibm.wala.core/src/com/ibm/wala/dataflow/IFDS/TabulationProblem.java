@@ -36,7 +36,7 @@ public interface TabulationProblem<T,P> {
 
   public TabulationDomain getDomain();
 
-  public IFlowFunctionMap getFunctionMap();
+  public IFlowFunctionMap<T> getFunctionMap();
 
   /**
    * @return the set of facts that are live on entry to the analysis. This set

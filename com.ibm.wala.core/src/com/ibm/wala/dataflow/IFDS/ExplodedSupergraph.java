@@ -34,9 +34,9 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
 
   private final ISupergraph<T,?> supergraph;
 
-  private final IFlowFunctionMap flowFunctions;
+  private final IFlowFunctionMap<T> flowFunctions;
 
-  public ExplodedSupergraph(ISupergraph<T,?> supergraph, IFlowFunctionMap flowFunctions) {
+  public ExplodedSupergraph(ISupergraph<T,?> supergraph, IFlowFunctionMap<T> flowFunctions) {
     this.supergraph = supergraph;
     this.flowFunctions = flowFunctions;
   }
@@ -91,8 +91,8 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
         }
       } else {
         // special logic for a return edge.  dest is a return site
-        for (Iterator it2 = supergraph.getCallSites(dest); it2.hasNext(); ) {
-          Object callBlock = it2.next();
+        for (Iterator<? extends T> it2 = supergraph.getCallSites(dest); it2.hasNext(); ) {
+          T callBlock = it2.next();
           IFlowFunction f = flowFunctions.getReturnFlowFunction(callBlock,src,dest);
           if (f instanceof IReversibleFlowFunction) {
             IReversibleFlowFunction rf = (IReversibleFlowFunction) f;
@@ -160,8 +160,8 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
         }
       } else {
         // special logic for a return edge.  dest is a return site
-        for (Iterator it2 = supergraph.getCallSites(dest); it2.hasNext(); ) {
-          Object callBlock = it2.next();
+        for (Iterator<? extends T> it2 = supergraph.getCallSites(dest); it2.hasNext(); ) {
+          T callBlock = it2.next();
           IUnaryFlowFunction f = (IUnaryFlowFunction) flowFunctions.getReturnFlowFunction(callBlock,src,dest);
           IntSet targets = f.getTargets(node.getFact());
           if (targets != null) {

@@ -49,8 +49,15 @@ public class FileProvider {
     super();
   }
 
+  /**
+   * @return null if there's a problem
+   */
   public static IWorkspace getWorkspace() {
-    return ResourcesPlugin.getWorkspace();
+    try {
+      return ResourcesPlugin.getWorkspace();
+    } catch (Throwable t) {
+      return null;
+    }
   }
 
   /**
@@ -59,30 +66,31 @@ public class FileProvider {
    *         if not found.
    */
   public static Module getJarFileModule(String fileName) throws IOException {
-//    try {
-//      return (CorePlugin.getDefault() == null) ? getJarFileFromClassLoader(fileName) : getFromPlugin(fileName);
-//    } catch (IOException e) {
-//      System.err.println("Problem with file " + fileName);
-//      throw e;
-//    }
-	  
-	  if(CorePlugin.getDefault() == null ) {
-		  return getJarFileFromClassLoader(fileName);
-	  }
-	  else {
-	    // try to load the path as a full path
-	    try {
-			IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-			IFile file =  workspaceRoot.getFile(new Path(fileName));
-			if( file != null ) {
-				return new JarFileModule(new JarFile(fileName, false));
-			} 
-	    } catch(Exception e) { }
-	    
-	    // otherwise load from plugin
-    	return getFromPlugin(fileName);
-	  }
-  	
+    // try {
+    // return (CorePlugin.getDefault() == null) ?
+    // getJarFileFromClassLoader(fileName) : getFromPlugin(fileName);
+    // } catch (IOException e) {
+    // System.err.println("Problem with file " + fileName);
+    // throw e;
+    // }
+
+    if (CorePlugin.getDefault() == null) {
+      return getJarFileFromClassLoader(fileName);
+    } else {
+      // try to load the path as a full path
+      try {
+        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+        IFile file = workspaceRoot.getFile(new Path(fileName));
+        if (file != null) {
+          return new JarFileModule(new JarFile(fileName, false));
+        }
+      } catch (Exception e) {
+      }
+
+      // otherwise load from plugin
+      return getFromPlugin(fileName);
+    }
+
   }
 
   /**

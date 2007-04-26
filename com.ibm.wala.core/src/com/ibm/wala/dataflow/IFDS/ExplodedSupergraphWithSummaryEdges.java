@@ -34,7 +34,7 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
    * @param flowFunctions
    * @param solver
    */
-  public ExplodedSupergraphWithSummaryEdges(ISupergraph<T,?> supergraph, IFlowFunctionMap flowFunctions, TabulationSolver<T,?> solver) {
+  public ExplodedSupergraphWithSummaryEdges(ISupergraph<T,?> supergraph, IFlowFunctionMap<T> flowFunctions, TabulationSolver<T,?> solver) {
     super(supergraph, flowFunctions);
     this.solver = solver;
   }

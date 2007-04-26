@@ -14,9 +14,11 @@ package com.ibm.wala.dataflow.IFDS;
  * 
  * A map from an edge in a supergraph to a flow function
  * 
+ * @param T type of node in the supergraph
+ * 
  * @author sfink
  */
-public interface IFlowFunctionMap {
+public interface IFlowFunctionMap<T> {
 
   /**
    * @param src
@@ -24,7 +26,7 @@ public interface IFlowFunctionMap {
    * @return the flow function for a "normal" edge in the supergraph from
    *         src->dest
    */
-  public IUnaryFlowFunction getNormalFlowFunction(Object src, Object dest);
+  public IUnaryFlowFunction getNormalFlowFunction(T src, T dest);
 
   /**
    * @param src
@@ -32,7 +34,7 @@ public interface IFlowFunctionMap {
    * @return the flow function for a "call" edge in the supergraph from
    *         src->dest
    */
-  public IUnaryFlowFunction getCallFlowFunction(Object src, Object dest);
+  public IUnaryFlowFunction getCallFlowFunction(T src, T dest);
 
   /**
    * @param call
@@ -42,7 +44,7 @@ public interface IFlowFunctionMap {
    * @return the flow function for a "return" edge in the supergraph from
    *         src->dest
    */
-  public IFlowFunction getReturnFlowFunction(Object call, Object src, Object dest);
+  public IFlowFunction getReturnFlowFunction(T call, T src, T dest);
 
 
   /**
@@ -51,7 +53,7 @@ public interface IFlowFunctionMap {
    * @return the flow function for a "call-to-return" edge in the supergraph
    *         from src->dest
    */
-  public IUnaryFlowFunction getCallToReturnFlowFunction(Object src, Object dest);
+  public IUnaryFlowFunction getCallToReturnFlowFunction(T src, T dest);
 
   /**
    * @param src
@@ -60,5 +62,5 @@ public interface IFlowFunctionMap {
    *         from src->dest, when the supergraph does not contain any callees of
    *         src. This happens via, e.g., slicing.
    */
-  public IUnaryFlowFunction getCallNoneToReturnFlowFunction(Object src, Object dest);
+  public IUnaryFlowFunction getCallNoneToReturnFlowFunction(T src, T dest);
 }

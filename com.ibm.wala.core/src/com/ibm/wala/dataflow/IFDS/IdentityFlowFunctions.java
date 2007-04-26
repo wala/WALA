@@ -16,11 +16,12 @@ package com.ibm.wala.dataflow.IFDS;
  *
  * @author sfink
  */
-public class IdentityFlowFunctions implements IFlowFunctionMap {
+public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
 
   private final static IdentityFlowFunctions SINGLETON = new IdentityFlowFunctions();
 
-  public static IdentityFlowFunctions singleton() {
+  @SuppressWarnings("unchecked")
+  public static <T> IdentityFlowFunctions<T> singleton() {
     return SINGLETON;
   }
 

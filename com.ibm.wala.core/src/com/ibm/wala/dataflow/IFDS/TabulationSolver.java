@@ -129,7 +129,7 @@ public class TabulationSolver<T, P> {
   /**
    * A map from an edge in a supergraph to a flow function
    */
-  protected final IFlowFunctionMap flowFunctionMap;
+  protected final IFlowFunctionMap<T> flowFunctionMap;
 
   /**
    * The problem being solved.

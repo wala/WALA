@@ -40,12 +40,6 @@ public interface OrdinalSetMapping<T> extends Iterable<T> {
    * @return the size of the domain of the bijection. 
    */
   public int getMappingSize();
-
-  /**
-   * @param i
-   * @return an ordinal set which conains only getMappedObject(i)
-   */
-  public OrdinalSet<T> makeSingleton(int i);
   
   /**
    * Add an Object to the set of mapped objects.

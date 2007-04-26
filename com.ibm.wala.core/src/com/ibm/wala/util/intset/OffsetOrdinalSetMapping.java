@@ -13,8 +13,6 @@ package com.ibm.wala.util.intset;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.ibm.wala.util.debug.Assertions;
-
 /**
  * An ordinal set mapping, backed a delegate, but adding an offset to each
  * index.
@@ -58,11 +56,6 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
 
   public boolean hasMappedIndex(T o) {
     return delegate.hasMappedIndex(o);
-  }
-
-  public OrdinalSet<T> makeSingleton(int i) {
-    Assertions.UNREACHABLE();
-    return null;
   }
 
   public Iterator<T> iterator() {

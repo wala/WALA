@@ -384,7 +384,7 @@ public class Slicer {
 
     private final ISupergraph<Statement, PDG> supergraph;
 
-    private final IFlowFunctionMap f;
+    private final IFlowFunctionMap<Statement> f;
 
     public SliceProblem(Statement s, CallGraph cg, ISDG sdg, boolean backward) {
       this.src = s;
@@ -408,7 +408,7 @@ public class Slicer {
      * 
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getFunctionMap()
      */
-    public IFlowFunctionMap getFunctionMap() {
+    public IFlowFunctionMap<Statement> getFunctionMap() {
       return f;
     }
 
