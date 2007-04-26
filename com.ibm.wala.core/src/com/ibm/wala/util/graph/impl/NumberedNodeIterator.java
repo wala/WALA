@@ -11,6 +11,7 @@
 package com.ibm.wala.util.graph.impl;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.NumberedNodeManager;
@@ -44,7 +45,7 @@ public class NumberedNodeIterator<T> implements Iterator<T> {
   /* (non-Javadoc)
    * @see java.util.Iterator#next()
    */
-  public T next() {
+  public T next() throws NoSuchElementException {
     int i  = numbers.next();
     T result = nodeManager.getNode(i);
     if (Assertions.verifyAssertions) {

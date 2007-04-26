@@ -22,7 +22,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.collections.Queue;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 
@@ -204,10 +203,5 @@ public class BFSPathFinder<T> {
    */
   protected Iterator<? extends T> getConnected(T n) {
     return G.getSuccNodes(n);
-  }
-
-  public int hashCode() {
-    Assertions.UNREACHABLE("define a custom hash code to avoid non-determinism");
-    return 0;
   }
 }

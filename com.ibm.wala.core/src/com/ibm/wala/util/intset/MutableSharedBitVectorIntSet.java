@@ -593,7 +593,9 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       }
       this.sharedPart = other.sharedPart;
     } else {
-      Assertions.UNREACHABLE();
+      // really slow.  optimize as needed.
+      clear();
+      addAll(set);
     }
 
     if (PARANOID) {
@@ -633,8 +635,16 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       }
       return result;
     } else {
-      Assertions.UNREACHABLE("Unexpected type " + set.getClass());
-      return false;
+      // really slow.   optimize as needed.
+      boolean result = false;
+      for (IntIterator it = set.intIterator(); it.hasNext(); ) {
+        int x = it.next();
+        if (!contains(x)) {
+          result = true;
+          add(x);
+        }
+      }
+      return result;
     }
   }
 

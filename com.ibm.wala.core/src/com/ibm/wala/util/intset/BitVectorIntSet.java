@@ -408,8 +408,14 @@ public final class BitVectorIntSet implements MutableIntSet {
     } else if (that instanceof SparseIntSet) {
       return isSubsetInternal((SparseIntSet) that);
     } else {
-      Assertions.UNREACHABLE("unexpected type " + that.getClass());
-      return false;
+      // really slow.  optimize as needed.
+      for (IntIterator it = intIterator(); it.hasNext(); ) {
+        int x = it.next();
+        if (!that.contains(x)) {
+          return false;
+        }
+      }
+      return true;
     }
   }
 

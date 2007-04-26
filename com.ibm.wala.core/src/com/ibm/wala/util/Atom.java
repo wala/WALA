@@ -87,7 +87,10 @@ public final class Atom {
     return findOrCreate(utf8);
   }
 
-  public static Atom findOrCreate(byte utf8[], int off, int len) {
+  public static Atom findOrCreate(byte utf8[], int off, int len) throws IllegalArgumentException {
+    if (len < 0) {
+      throw new IllegalArgumentException("len must be >= 0, " + len);
+    }
     byte val[] = new byte[len];
     for (int i = 0; i < len; ++i) {
       val[i] = utf8[off++];
@@ -149,6 +152,9 @@ public final class Atom {
    * <clinit> are used.
    */
   public final boolean isReservedMemberName() {
+    if (length() == 0) {
+      return false;
+    }
     return val[0] == '<';
   }
 
@@ -156,6 +162,9 @@ public final class Atom {
    * Is "this" atom a class descriptor?
    */
   public final boolean isClassDescriptor() {
+    if (length() == 0) {
+      return false;
+    }
     return val[0] == 'L';
   }
 
@@ -163,13 +172,19 @@ public final class Atom {
    * Is "this" atom an array descriptor?
    */
   public final boolean isArrayDescriptor() {
+    if (length() == 0) {
+      return false;
+    }
     return val[0] == '[';
   }
 
   /**
    * Is "this" atom a method descriptor?
    */
-  public final boolean isMethodDescriptor() {
+  public final boolean isMethodDescriptor() throws IllegalArgumentException {
+    if (length() == 0) {
+      return false;
+    }
     return val[0] == '(';
   }
 
@@ -191,8 +206,10 @@ public final class Atom {
    * 
    * @return array element descriptor - something like "I"
    */
-  public final Atom parseForArrayElementDescriptor() {
-
+  public final Atom parseForArrayElementDescriptor() throws IllegalArgumentException {
+    if (val.length == 0) {
+      throw new IllegalArgumentException("empty atom is not an array");
+    }
     return findOrCreate(val, 1, val.length - 1);
   }
 
@@ -203,17 +220,24 @@ public final class Atom {
    * 
    * @return dimensionality - something like "1" or "2"
    */
-  public final int parseForArrayDimensionality() {
-
-    for (int i = 0;; ++i)
-      if (val[i] != '[')
+  public final int parseForArrayDimensionality() throws IllegalArgumentException {
+    if (val.length == 0) {
+      throw new IllegalArgumentException("empty atom is not an array");
+    }
+    for (int i = 0;; ++i) {
+      if (val[i] != '[') {
         return i;
+      }
+    }
   }
 
   /**
    * Return the innermost element type reference for an array
    */
-  public final Atom parseForInnermostArrayElementDescriptor() {
+  public final Atom parseForInnermostArrayElementDescriptor() throws IllegalArgumentException {
+    if (val.length == 0) {
+      throw new IllegalArgumentException("empty atom is not an array");
+    }
     int i = 0;
     while (val[i] == '[') {
       i++;
@@ -304,8 +328,16 @@ public final class Atom {
     return this == obj;
   }
 
-  public byte getVal(int i) {
-    return val[i];
+  /**
+   * @param i
+   * @return
+   */
+  public byte getVal(int i) throws IllegalArgumentException {
+    try {
+      return val[i];
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("Illegal index: " + i + " length is " + val.length);
+    }
   }
 
   /**

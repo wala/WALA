@@ -25,10 +25,13 @@ public class SSAPhiInstruction extends SSAInstruction {
 
   private int[] params;
 
-  public SSAPhiInstruction(int result, int[] params) {
+  public SSAPhiInstruction(int result, int[] params) throws IllegalArgumentException {
     super();
     this.result = result;
     this.params = params;
+    if (params.length == 0) {
+      throw new IllegalArgumentException("can't have phi with no params");
+    }
   }
 
   public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {

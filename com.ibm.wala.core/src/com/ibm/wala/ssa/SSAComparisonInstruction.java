@@ -36,10 +36,13 @@ public class SSAComparisonInstruction extends SSAInstruction {
     this.val2 = val2;
   }
 
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    // TODO: Julian ... is this correct when defs == null or defs.length == 0?
-    return new SSAComparisonInstruction(opcode, defs == null || defs.length == 0 ? result : defs[0], uses == null
-        || uses.length == 0 ? val1 : uses[0], uses == null ? val2 : uses[1]);
+  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+    // TODO: Julian ... is this correct?
+    if (uses!= null && uses.length != 2) {
+      throw new IllegalArgumentException("expected 2 uses, got " + uses.length);
+    }
+    return new SSAComparisonInstruction(opcode, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
+        uses == null ? val2 : uses[1]);
   }
 
   public String toString(SymbolTable symbolTable, ValueDecorator d) {

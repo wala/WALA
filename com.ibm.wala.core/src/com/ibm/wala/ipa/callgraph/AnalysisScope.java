@@ -193,7 +193,10 @@ public class AnalysisScope {
   /**
    * @return the ClassLoaderReference specified by <code>name</code>.
    */
-  public ClassLoaderReference getLoader(Atom name) {
+  public ClassLoaderReference getLoader(Atom name) throws IllegalArgumentException  {
+    if (name.length() == 0) {
+      throw new IllegalArgumentException("empty atom is not a legal class loader name");
+    }
     if (Assertions.verifyAssertions) {
       if (name.getVal(0) > 'Z') {
         Assertions._assert(name.getVal(0) <= 'Z', "Classloader name improperly capitalised?  (" + name + ")");
@@ -315,9 +318,11 @@ public class AnalysisScope {
     return null;
   }
 
-  public String getJavaLibraryVersion() {
+  public String getJavaLibraryVersion() throws IllegalStateException {
     JarFile rtJar = getRtJar();
-    Assertions._assert(rtJar != null, "cannot find runtime libraries!");
+    if (rtJar == null) {
+      throw new IllegalStateException("cannot find runtime libraries");
+    }
     try {
       Manifest man = rtJar.getManifest();
       Assertions._assert(man != null, "runtime library has no manifest!");
@@ -334,11 +339,11 @@ public class AnalysisScope {
     }
   }
 
-  public boolean isJava15Libraries() {
+  public boolean isJava15Libraries() throws IllegalStateException {
     return getJavaLibraryVersion().startsWith("1.5");
   }
 
-  public boolean isJava14Libraries() {
+  public boolean isJava14Libraries() throws IllegalStateException {
     return getJavaLibraryVersion().startsWith("1.4");
   }
 

@@ -11,14 +11,13 @@
 package com.ibm.wala.types;
 
 import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- * Defines the meta-information that identifies a class loader.
- * This is effectively a "name" for a class loader.
+ * Defines the meta-information that identifies a class loader. This is
+ * effectively a "name" for a class loader.
  * 
  * @author sfink
- *
+ * 
  */
 public class ClassLoaderReference {
 
@@ -36,7 +35,7 @@ public class ClassLoaderReference {
    * Canonical reference to application class loader
    */
   public final static ClassLoaderReference Application = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Application"));
-  
+
   /**
    * A String which identifies this loader
    */
@@ -49,7 +48,9 @@ public class ClassLoaderReference {
 
   /**
    * Default constructor
-   * @param name String (actually Atom) name identifying the loader
+   * 
+   * @param name
+   *          String (actually Atom) name identifying the loader
    */
   public ClassLoaderReference(Atom name) {
     this.name = name;
@@ -70,7 +71,8 @@ public class ClassLoaderReference {
   }
 
   /**
-   * @param parent the parent of this loader in the loader hierarchy,
+   * @param parent
+   *          the parent of this loader in the loader hierarchy,
    */
   public void setParent(ClassLoaderReference parent) {
     this.parent = parent;
@@ -78,28 +80,32 @@ public class ClassLoaderReference {
 
   /**
    * Note: names for class loader references must be unique.
+   * 
    * @see java.lang.Object#equals(Object)
    */
   public boolean equals(Object obj) {
 
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(this.getClass().equals(obj.getClass()));
+    if (!getClass().equals(obj.getClass())) {
+      return false;
+    } else {
+      ClassLoaderReference o = (ClassLoaderReference) obj;
+      return name.equals(o.name);
     }
-    ClassLoaderReference o = (ClassLoaderReference) obj;
-    return name.equals(o.name);
 
   }
 
-
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#hashCode()
    */
   public int hashCode() {
     return name.hashCode();
   }
 
-
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#toString()
    */
   public String toString() {

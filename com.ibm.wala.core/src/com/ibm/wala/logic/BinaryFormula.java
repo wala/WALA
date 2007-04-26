@@ -35,8 +35,10 @@ public class BinaryFormula implements IFormula {
   }
 
 
-  public static IFormula and(Collection<IFormula> clauses) {
-    assert !clauses.isEmpty();
+  public static IFormula and(Collection<IFormula> clauses) throws IllegalArgumentException {
+    if (clauses.isEmpty()) {
+      throw new IllegalArgumentException("cannot and empty collection");
+    }
     Iterator<IFormula> it = clauses.iterator();
     IFormula result = it.next();
     while (it.hasNext()) {

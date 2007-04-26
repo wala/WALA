@@ -71,6 +71,10 @@ public class BinaryRelation implements IRelation {
    * build a constraint saying v \in s
    */
   public static IFormula makeSetConstraint(Variable v, IntSet s) {
+    if (s.isEmpty()) {
+      // a hack. TODO: support primitives for "true" and "false"
+      return RelationFormula.makeEquals(IntConstant.make(0), IntConstant.make(1));
+    }
     IntIterator it = s.intIterator();
     int first = it.next();
     IFormula result = RelationFormula.makeEquals(v, first);

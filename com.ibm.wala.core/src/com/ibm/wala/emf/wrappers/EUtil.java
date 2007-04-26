@@ -239,10 +239,15 @@ public class EUtil {
    * @throws WalaException
    *           if the resolution fails for some reason
    */
-  public static EPackage resolveEPackage(EClass klass) throws WalaException {
+  public static EPackage resolveEPackage(EClass klass) throws WalaException, IllegalArgumentException {
     // the data in the EComponent instance may not be fully resolved due to
     // weirdness in how ecore.xmi reads xmi files. We have to first consult
     // the registry to get the desired ePackage instance for klass.
+    
+    if (klass.getEPackage() == null) {
+      throw new IllegalArgumentException("klass with no EPackage " + klass);
+    }
+    
     EPackage ePackage = EPackage.Registry.INSTANCE.getEPackage(klass.getEPackage().getNsURI());
 
     // check that the package lookup succeeded

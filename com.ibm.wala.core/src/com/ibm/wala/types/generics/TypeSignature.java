@@ -42,7 +42,7 @@ public abstract class TypeSignature extends Signature {
     super(s);
   }
 
-  public static TypeSignature make(String s) {
+  public static TypeSignature make(String s) throws IllegalArgumentException {
     assert (s.length() > 0);
     switch (s.charAt(0)) {
     case TypeReference.VoidTypeCode:
@@ -71,8 +71,7 @@ public abstract class TypeSignature extends Signature {
     case TypeReference.ArrayTypeCode:
       return ArrayTypeSignature.make(s);
     default:
-      Assertions.UNREACHABLE(s);
-      return null;
+      throw new IllegalArgumentException("malformed TypeSignature string:" + s);
     }
   }
 
@@ -86,11 +85,15 @@ public abstract class TypeSignature extends Signature {
 
   /**
    * @param typeSigs
-   *          Strin TypeSignature*
+   *         TypeSignature*
    * @return tokenize it
    */
-  static String[] parseForTypeSignatures(String typeSigs) {
+  static String[] parseForTypeSignatures(String typeSigs) throws IllegalArgumentException{
     ArrayList<String> sigs = new ArrayList<String>(10);
+    if (typeSigs.length() < 2) {
+      // TODO: check this?
+      throw new IllegalArgumentException("illegal string of TypeSignature " + typeSigs);
+    }
 
     int i = 1;
     while (true) {

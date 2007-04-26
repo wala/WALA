@@ -216,8 +216,10 @@ public class IntSetUtil {
       SparseIntSet sis = (SparseIntSet) s;
       return SparseIntSet.add(sis, j);
     } else {
-      Assertions.UNREACHABLE("implement me");
-      return null;
+      // really slow.  optimize as needed.
+      MutableSparseIntSet result = new MutableSparseIntSet(s);
+      result.add(j);
+      return result;
     }
   }
 }
