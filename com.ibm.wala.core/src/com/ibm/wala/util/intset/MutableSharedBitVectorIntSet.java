@@ -17,7 +17,7 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * 
  * The shared bit vector implementation described by [Heintze 1999] TODO: much
- * optimization possible. 
+ * optimization possible.
  * 
  * @author sfink
  */
@@ -181,9 +181,9 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       BitVectorIntSet bv = new BitVectorIntSet(that);
       return intersection(bv);
     } else {
-      // really slow.  optimize as needed.
+      // really slow. optimize as needed.
       BitVectorIntSet result = new BitVectorIntSet();
-      for (IntIterator it = intIterator(); it.hasNext(); ) { 
+      for (IntIterator it = intIterator(); it.hasNext();) {
         int x = it.next();
         if (that.contains(x)) {
           result.add(x);
@@ -343,7 +343,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     } else if (that instanceof BitVectorIntSet) {
       return sameValue((BitVectorIntSet) that);
     } else if (that instanceof SemiSparseMutableIntSet) {
-        return that.sameValue(this);   	
+      return that.sameValue(this);
     } else {
       Assertions.UNREACHABLE("unexpected class " + that.getClass());
       return false;
@@ -471,12 +471,14 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   public boolean isSubset(IntSet that) {
     if (that instanceof MutableSharedBitVectorIntSet) {
       return isSubset((MutableSharedBitVectorIntSet) that);
-    } else if (that instanceof SparseIntSet) {
-      Assertions.UNREACHABLE("unexpected class " + that.getClass());
-      return false;
     } else {
-      Assertions.UNREACHABLE("unexpected class " + that.getClass());
-      return false;
+      // really slow. optimize as needed.
+      for (IntIterator it = intIterator(); it.hasNext();) {
+        if (!that.contains(it.next())) {
+          return false;
+        }
+      }
+      return true;
     }
   }
 
@@ -822,7 +824,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
           privatePart = null;
         }
         return true;
-      } 
+      }
     }
     if (sharedPart != null) {
       if (sharedPart.contains(i)) {
@@ -850,8 +852,8 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     } else if (set instanceof BitVectorIntSet) {
       intersectWithInternal(new MutableSharedBitVectorIntSet((BitVectorIntSet) set));
     } else {
-      // this is really slow.  optimize as needed.
-      for (IntIterator it = intIterator(); it.hasNext(); ) {
+      // this is really slow. optimize as needed.
+      for (IntIterator it = intIterator(); it.hasNext();) {
         int x = it.next();
         if (!set.contains(x)) {
           remove(x);
@@ -986,9 +988,10 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
    */
   public boolean containsAny(IntSet set) {
     if (set instanceof MutableSharedBitVectorIntSet) {
-      MutableSharedBitVectorIntSet other = (MutableSharedBitVectorIntSet)set;
+      MutableSharedBitVectorIntSet other = (MutableSharedBitVectorIntSet) set;
       if (sharedPart != null) {
-        // an optimization to make life easier on the underlying bitvectorintsets
+        // an optimization to make life easier on the underlying
+        // bitvectorintsets
         if (other.sharedPart != null && sharedPart.containsAny(other.sharedPart)) {
           return true;
         }

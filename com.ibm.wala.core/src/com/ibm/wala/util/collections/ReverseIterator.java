@@ -12,8 +12,7 @@ package com.ibm.wala.util.collections;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import com.ibm.wala.util.debug.Assertions;
+import java.util.NoSuchElementException;
 
 /**
  *
@@ -47,15 +46,18 @@ public class ReverseIterator<T> implements Iterator<T> {
   /* (non-Javadoc)
    * @see java.util.Iterator#next()
    */
-  public T next() {
+  public T next() throws NoSuchElementException {
+    if (!hasNext()) {
+      throw new NoSuchElementException();
+    }
     return list.get(nextIndex--);
   }
 
   /* (non-Javadoc)
    * @see java.util.Iterator#remove()
    */
-  public void remove() {
-    Assertions.UNREACHABLE();
+  public void remove() throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
 
 }

@@ -58,13 +58,15 @@ public class ClassSignature extends Signature {
     return result;
   }
   
-  public ClassTypeSignature getSuperclassSignature() {
+  public ClassTypeSignature getSuperclassSignature() throws IllegalArgumentException {
     return ClassTypeSignature.makeClassTypeSig(rawString().substring(endOfFormalTypeParameters(),endOfClassTypeSig(endOfFormalTypeParameters())));
   }
   
-  private int endOfClassTypeSig(int start) {
+  private int endOfClassTypeSig(int start) throws IllegalArgumentException {
     String s = rawString().substring(start);
-    assert s.charAt(0) == 'L';
+    if (s.charAt(0) != 'L') {
+      throw new IllegalArgumentException("malformed ClassSignature " + rawString());
+    }
     int i = 1;
     int depth = 0;
     while (depth > 0 || s.charAt(i) != ';') {
@@ -79,7 +81,7 @@ public class ClassSignature extends Signature {
     return start + i + 1;
   }
   
-  public ClassTypeSignature[] getSuperinterfaceSignatures() {
+  public ClassTypeSignature[] getSuperinterfaceSignatures() throws IllegalArgumentException {
     int start = endOfClassTypeSig(endOfFormalTypeParameters());
     ArrayList<ClassTypeSignature> result = new ArrayList<ClassTypeSignature>();
     while (start < rawString().length() - 1) {

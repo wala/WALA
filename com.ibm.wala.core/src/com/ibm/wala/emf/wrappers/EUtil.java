@@ -89,7 +89,7 @@ public class EUtil {
    *          an xml file
    * @return List<EObject> serialized in said file.
    */
-  public static List<EObject> readEObjects(String xmlFile, ClassLoader loader)  {
+  public static List<EObject> readEObjects(String xmlFile, ClassLoader loader) throws WalaException {
 
     URL url = loader.getResource(xmlFile);
     URI fileURI = null;
@@ -108,8 +108,7 @@ public class EUtil {
     try {
       resource.load(null);
     } catch (IOException e) {
-      e.printStackTrace();
-      assert false : "failure to load " + xmlFile + ".";
+      throw new WalaException("failure to load " + xmlFile + ".", e);
     }
 
     return resource.getContents();

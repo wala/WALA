@@ -389,8 +389,15 @@ public class SparseIntSet implements IntSet {
       temp.intersectWith(that);
       return temp;
     } else {
-      Assertions.UNREACHABLE("Unexpected: " + that.getClass());
-      return null;
+      // this is really slow.  optimize as needed.
+      MutableSparseIntSet temp = new MutableSparseIntSet();
+      for (IntIterator it = intIterator(); it.hasNext(); ) {
+        int x = it.next();
+        if (that.contains(x)) {
+          temp.add(x);
+        }
+      }
+      return temp;
     }
 
   }
@@ -492,8 +499,13 @@ public class SparseIntSet implements IntSet {
     } else if (that instanceof BitVectorIntSet) {
       return isSubsetInternal((BitVectorIntSet) that);
     } else {
-      Assertions.UNREACHABLE("Unexpected type " + that.getClass());
-      return false;
+      // really slow.  optimize as needed.
+      for (IntIterator it = intIterator(); it.hasNext(); ) {
+        if (!that.contains(it.next())) {
+          return false;
+        }
+      }
+      return true;
     }
   }
 

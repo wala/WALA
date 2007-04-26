@@ -11,6 +11,7 @@
 package com.ibm.wala.util;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  *
@@ -40,7 +41,7 @@ public class CompoundIterator<T> implements Iterator<T> {
   /**
    * @see java.util.Iterator#next()
    */
-  public T next() {
+  public T next() throws NoSuchElementException {
     if (A.hasNext()) {
       return A.next();
     } else {

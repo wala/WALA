@@ -15,6 +15,7 @@ import java.util.Map;
 
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.OrderedMultiGraph;
 import com.ibm.wala.util.intset.SimpleVector;
@@ -44,7 +45,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
    *      java.lang.Object)
    */
-  public void addEdge(T src, T dst) throws IllegalArgumentException{
+  public void addEdge(T src, T dst) throws IllegalArgumentException {
     delegate.addEdge(src, dst);
     SimpleVector<T> s = successorEdges.get(src);
     if (s == null) {
@@ -53,9 +54,8 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     }
     s.set(s.getMaxIndex() + 1, dst);
   }
-  
 
-  public void addEdge(int i, T src, T dst) throws IllegalArgumentException{
+  public void addEdge(int i, T src, T dst) throws IllegalArgumentException {
     delegate.addEdge(src, dst);
     SimpleVector<T> s = successorEdges.get(src);
     if (s == null) {
@@ -77,7 +77,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     return delegate.getNumberOfNodes();
   }
 
-  public int getPredNodeCount(T N) throws IllegalArgumentException{
+  public int getPredNodeCount(T N) throws IllegalArgumentException {
     return delegate.getPredNodeCount(N);
   }
 
@@ -86,15 +86,15 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
    * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
    */
-  public Iterator<? extends T> getPredNodes(T N) throws IllegalArgumentException{
+  public Iterator<? extends T> getPredNodes(T N) throws IllegalArgumentException {
     return delegate.getPredNodes(N);
   }
 
-  public int getSuccNodeCount(T N) throws IllegalArgumentException{
+  public int getSuccNodeCount(T N) throws IllegalArgumentException {
     return delegate.getSuccNodeCount(N);
   }
 
-  public Iterator<? extends T> getSuccNodes(T N) throws IllegalArgumentException{
+  public Iterator<? extends T> getSuccNodes(T N) throws IllegalArgumentException {
     return delegate.getSuccNodes(N);
   }
 
@@ -106,37 +106,37 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     return delegate.iterator();
   }
 
-  public void removeAllIncidentEdges(T node) {
+  public void removeAllIncidentEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     delegate.removeAllIncidentEdges(node);
   }
 
-  public void removeEdge(T src, T dst) {
+  public void removeEdge(T src, T dst) throws UnimplementedError {
     Assertions.UNREACHABLE();
     delegate.removeEdge(src, dst);
   }
 
-  public void removeIncomingEdges(T node) {
+  public void removeIncomingEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     delegate.removeIncomingEdges(node);
   }
 
-  public void removeNode(T n) {
+  public void removeNode(T n) throws UnimplementedError {
     Assertions.UNREACHABLE();
     delegate.removeNode(n);
   }
 
-  public void removeNodeAndEdges(T N) {
+  public void removeNodeAndEdges(T N) throws UnimplementedError {
     Assertions.UNREACHABLE();
     delegate.removeNodeAndEdges(N);
   }
 
-  public void removeOutgoingEdges(T node) {
+  public void removeOutgoingEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     delegate.removeOutgoingEdges(node);
   }
 
-  public T getSuccessor(T node, int i) throws IllegalArgumentException{
+  public T getSuccessor(T node, int i) throws IllegalArgumentException {
     SimpleVector<T> s = successorEdges.get(node);
     if (s == null) {
       throw new IllegalArgumentException("no successors for node " + node);
@@ -146,6 +146,5 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     }
     return s.get(i);
   }
-
 
 }

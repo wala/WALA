@@ -12,6 +12,7 @@ package com.ibm.wala.util.graph.traverse;
 
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import com.ibm.wala.util.collections.ReverseIterator;
@@ -65,7 +66,7 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
   /**
    * Find the next SCC in this enumeration
    */
-  public Set<T> next() {
+  public Set<T> next() throws NoSuchElementException {
     Set<T> currentSCC = new HashSet<T>();
 
     T v = rev.next();

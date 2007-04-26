@@ -71,7 +71,10 @@ public class GraphReachability <T>{
    * @param n
    * @return the set of interesting nodes reachable from n
    */
-  public OrdinalSet<T> getReachableSet(Object n) {
+  public OrdinalSet<T> getReachableSet(Object n) throws IllegalStateException {
+    if (solver == null) {
+      throw new IllegalStateException("must call solve() before calling getReachableSet()");
+    }
     BitVectorVariable v = (BitVectorVariable) solver.getOut(n);
     if (Assertions.verifyAssertions) {
       if (v == null) {

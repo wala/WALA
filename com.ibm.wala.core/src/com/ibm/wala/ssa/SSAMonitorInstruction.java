@@ -18,32 +18,35 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author sfink
- *
+ * 
  */
 public class SSAMonitorInstruction extends SSAInstruction {
   private final int ref;
+
   private final boolean isEnter;
+
   SSAMonitorInstruction(int ref, boolean isEnter) {
     super();
     this.ref = ref;
     this.isEnter = isEnter;
   }
+
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return
-      new SSAMonitorInstruction(
-        uses==null? ref: uses[0],
-	isEnter);
+    // todo: check that this is the intended behavior. julian?
+    return new SSAMonitorInstruction(uses == null || uses.length == 0 ? ref : uses[0], isEnter);
   }
 
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return "monitor " + getValueString(symbolTable, d, ref);
   }
+
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
   public void visit(IVisitor v) {
     v.visitMonitor(this);
   }
+
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
@@ -63,19 +66,28 @@ public class SSAMonitorInstruction extends SSAInstruction {
   public int hashCode() {
     return ref * 6173 ^ 4423;
   }
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
   public boolean isPEI() {
     return true;
   }
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   public boolean isFallThrough() {
     return true;
   }
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   public Collection<TypeReference> getExceptionTypes() {

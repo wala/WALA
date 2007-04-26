@@ -12,8 +12,6 @@ package com.ibm.wala.util;
 
 import java.util.Iterator;
 
-import com.ibm.wala.util.debug.Assertions;
-
 /**
  *
  * A utility to efficiently compose an iterator and a singleton
@@ -54,7 +52,7 @@ public class IteratorPlusOne<T> implements Iterator<T> {
   /* (non-Javadoc)
    * @see java.util.Iterator#remove()
    */
-  public void remove() {
-    Assertions.UNREACHABLE();
+  public void remove() throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
 }

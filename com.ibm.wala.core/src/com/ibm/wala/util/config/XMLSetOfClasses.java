@@ -19,11 +19,13 @@ import com.ibm.wala.emf.wrappers.EUtil;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.PatternSetUtil;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * 
  * An object which represents a set of classes read from an XML file.
-
+ * 
  * @author sfink
  */
 public class XMLSetOfClasses extends SetOfClasses {
@@ -31,13 +33,21 @@ public class XMLSetOfClasses extends SetOfClasses {
   private static final boolean DEBUG = false;
 
   private Pattern pattern;
+
   private String regex;
+
   private boolean needsCompile = true;
 
-  public XMLSetOfClasses(String xmlFile, ClassLoader loader)  {
+  public XMLSetOfClasses(String xmlFile, ClassLoader loader) {
     super();
 
-    EContainer c = (EContainer)EUtil.readEObjects(xmlFile, loader).get(0);
+    EContainer c = null;
+    try {
+      c = (EContainer) EUtil.readEObjects(xmlFile, loader).get(0);
+    } catch (WalaException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
+    }
 
     regex = PatternSetUtil.composeRegularExpression(c);
     needsCompile = true;

@@ -14,7 +14,6 @@ import java.util.Collection;
 
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * 
@@ -212,9 +211,8 @@ public abstract class SSAInstruction implements IInstruction {
    * @return value number representing the jth use in this instruction. -1 means
    *         TOP (i.e., the value doesn't matter)
    */
-  public int getUse(int j) {
-    Assertions.UNREACHABLE();
-    return -1;
+  public int getUse(int j) throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
 
   public abstract int hashCode();

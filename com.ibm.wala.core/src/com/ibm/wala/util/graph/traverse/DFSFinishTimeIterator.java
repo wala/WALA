@@ -11,6 +11,7 @@
 package com.ibm.wala.util.graph.traverse;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Stack;
 
 import com.ibm.wala.util.collections.EmptyIterator;
@@ -87,7 +88,10 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
    * @return the next graph node in finishing time order.
    */
   @SuppressWarnings("unchecked")
-  public T next() {
+  public T next() throws NoSuchElementException {
+    if (!hasNext()) {
+      throw new NoSuchElementException();
+    }
     if (empty()) {
       T v = theNextElement;
       setPendingChildren(v, getConnected(v));

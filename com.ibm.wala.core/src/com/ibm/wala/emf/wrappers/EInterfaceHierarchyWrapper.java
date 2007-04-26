@@ -10,24 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.emf.wrappers;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
-import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.XMLResource.XMLMap;
 
 import com.ibm.wala.ecore.common.CommonFactory;
 import com.ibm.wala.ecore.common.EContainer;
@@ -83,17 +70,11 @@ public class EInterfaceHierarchyWrapper extends EObjectGraphImpl {
     h.setNodes(c);
   }
 
-  public static EInterfaceHierarchyWrapper load(String fileName, ClassLoader loader) {
-    EInterfaceHierarchy h = loadFromFile(fileName, loader);
-    return load(h);
-  }
-
   /**
    * TODO: refactor
    */
   @SuppressWarnings("unchecked")
-  public static EInterfaceHierarchyWrapper load(EObject o) {
-    EInterfaceHierarchy h = (EInterfaceHierarchy) o;
+  public static EInterfaceHierarchyWrapper load(EInterfaceHierarchy h) {
     Assertions.productionAssertion(h != null);
     EInterfaceHierarchyWrapper result = new EInterfaceHierarchyWrapper();
 
@@ -105,38 +86,6 @@ public class EInterfaceHierarchyWrapper extends EObjectGraphImpl {
       result.addEdge(p.getX(), p.getY());
     }
     return result;
-  }
-
-  // TODO: refactor!!
-  @SuppressWarnings("unchecked")
-  private static EInterfaceHierarchy loadFromFile(String fileName, ClassLoader loader) {
-    // InputStream s = loader.getResourceAsStream(fileName);
-    File f = new File(fileName);
-    InputStream s = null;
-    try {
-      s = new FileInputStream(f);
-    } catch (FileNotFoundException e1) {
-      e1.printStackTrace();
-      Assertions.productionAssertion(f != null, " could not find " + fileName);
-    }
-
-    ResourceSet resSet = new ResourceSetImpl();
-    Resource r = resSet.createResource(URI.createURI("junk"));
-    Map<String, XMLMap> options = new HashMap<String, XMLMap>();
-    try {
-      r.load(s, options);
-    } catch (IOException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-    }
-    EList contents = r.getContents();
-    for (Iterator<EObject> it = contents.iterator(); it.hasNext();) {
-      Object o = it.next();
-      if (o instanceof EInterfaceHierarchy) {
-        return (EInterfaceHierarchy) o;
-      }
-    }
-    return null;
   }
 
   /**

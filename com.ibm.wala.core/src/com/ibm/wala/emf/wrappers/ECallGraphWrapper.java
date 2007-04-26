@@ -120,7 +120,7 @@ public class ECallGraphWrapper extends EObjectGraphImpl {
   }
 
   @SuppressWarnings("unchecked")
-  public static ECallGraphWrapper load(String fileName, ClassLoader loader) {
+  public static ECallGraphWrapper load(String fileName, ClassLoader loader) throws IllegalArgumentException {
     ECallGraph G = loadFromFile(fileName, loader);
     Assertions.productionAssertion(G != null);
     ECallGraphWrapper result = new ECallGraphWrapper();
@@ -136,7 +136,7 @@ public class ECallGraphWrapper extends EObjectGraphImpl {
   }
 
   @SuppressWarnings("unchecked")
-  private static ECallGraph loadFromFile(String fileName, ClassLoader loader) {
+  private static ECallGraph loadFromFile(String fileName, ClassLoader loader) throws IllegalArgumentException {
 
     Resource r = new XMIResourceImpl(URI.createURI(fileName));
     XMLResource.XMLMap xmlMap = new XMLMapImpl();
@@ -149,7 +149,9 @@ public class ECallGraphWrapper extends EObjectGraphImpl {
       // try again a different way
       // This is offensive. TODO: fix this.
       InputStream s = loader.getResourceAsStream(fileName);
-      Assertions.productionAssertion(s != null, "null resource for " + fileName);
+      if (s == null) {
+        throw new IllegalArgumentException("null resource for " + fileName);
+      }
       ResourceSet resSet = new ResourceSetImpl();
       r = resSet.createResource(URI.createURI("junk"));
       options = new HashMap<String, XMLMap>();

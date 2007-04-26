@@ -11,11 +11,11 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
-
+import java.util.NoSuchElementException;
 
 /**
- * A <code>FilterIterator</code> filters an
- * <code>Iterator</code> to generate a new one.
+ * A <code>FilterIterator</code> filters an <code>Iterator</code> to
+ * generate a new one.
  * 
  * @author Mauricio J. Serrano
  * @author John Whaley
@@ -23,20 +23,25 @@ import java.util.Iterator;
  */
 public class FilterIterator<T> implements java.util.Iterator<T> {
   final Iterator<?> i;
+
   final Filter f;
+
   private T next = null;
+
   private boolean done = false;
 
   /**
-   * @param i the original iterator
-   * @param f a filter which defines which elements belong to the generated iterator
+   * @param i
+   *          the original iterator
+   * @param f
+   *          a filter which defines which elements belong to the generated
+   *          iterator
    */
   public FilterIterator(Iterator<?> i, Filter f) {
     this.i = i;
     this.f = f;
     advance();
   }
-
 
   /**
    * update the internal state to prepare for the next access to this iterator
@@ -53,33 +58,42 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
     done = true;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.util.Iterator#next()
    */
   @SuppressWarnings("unchecked")
-  public T next() {
-    if (done)
+  public T next() throws NoSuchElementException {
+    if (done) {
       throw new java.util.NoSuchElementException();
+    }
     T o = (T) next;
     advance();
     return o;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.util.Iterator#hasNext()
    */
   public boolean hasNext() {
     return !done;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.util.Iterator#remove()
    */
-  public void remove() {
+  public void remove() throws UnsupportedOperationException {
     throw new java.lang.UnsupportedOperationException();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#toString()
    */
   public String toString() {

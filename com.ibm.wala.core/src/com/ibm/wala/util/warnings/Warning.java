@@ -49,11 +49,10 @@ public abstract class Warning implements Comparable {
    * (non-Javadoc)
    * 
    * @see java.lang.Comparable#compareTo(java.lang.Object)
+   * 
+   * @throws ClassCastException if o is not a Warning
    */
-  public int compareTo(Object o) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(o instanceof Warning);
-    }
+  public int compareTo(Object o) throws ClassCastException {
     Warning other = (Warning) o;
     if (level < other.level) {
       return -1;
@@ -70,11 +69,12 @@ public abstract class Warning implements Comparable {
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(obj instanceof Warning);
+    if (obj instanceof Warning) {
+      Warning other = (Warning) obj;
+      return (getMsg().equals(other.getMsg()) && getLevel() == other.getLevel());
+    } else {
+      return false;
     }
-    Warning other = (Warning) obj;
-    return (getMsg().equals(other.getMsg()) && getLevel() == other.getLevel());
   }
 
   /*

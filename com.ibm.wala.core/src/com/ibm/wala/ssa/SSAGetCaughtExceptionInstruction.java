@@ -17,21 +17,22 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author sfink
- *
+ * 
  */
 public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
   private final int exceptionValueNumber;
+
   private final int bbNumber;
+
   SSAGetCaughtExceptionInstruction(int bbNumber, int exceptionValueNumber) {
     super();
     this.exceptionValueNumber = exceptionValueNumber;
     this.bbNumber = bbNumber;
   }
+
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return
-      new SSAGetCaughtExceptionInstruction(
-        bbNumber,
-	defs==null? exceptionValueNumber: defs[0]);
+    // TODO: check that this is the intended behavior. Julian?
+    return new SSAGetCaughtExceptionInstruction(bbNumber, defs == null || defs.length == 0 ? exceptionValueNumber : defs[0]);
   }
 
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
@@ -47,8 +48,10 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
   public void visit(IVisitor v) {
     v.visitGetCaughtException(this);
   }
+
   /**
    * Returns the result.
+   * 
    * @return int
    */
   public int getException() {
@@ -77,6 +80,7 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
 
   /**
    * Returns the bb.
+   * 
    * @return BasicBlock
    */
   public int getBasicBlockNumber() {
@@ -87,14 +91,18 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
     return 2243 * exceptionValueNumber;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   public boolean isFallThrough() {
     return true;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   public Collection<TypeReference> getExceptionTypes() {

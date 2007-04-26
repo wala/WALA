@@ -17,7 +17,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author sfink
- *  
+ * 
  */
 public class SSAComparisonInstruction extends SSAInstruction {
   private final int result;
@@ -25,7 +25,7 @@ public class SSAComparisonInstruction extends SSAInstruction {
   private final int val1;
 
   private final int val2;
-  
+
   private final short opcode;
 
   SSAComparisonInstruction(short opcode, int result, int val1, int val2) {
@@ -38,8 +38,8 @@ public class SSAComparisonInstruction extends SSAInstruction {
 
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     // TODO: Julian ... is this correct when defs == null or defs.length == 0?
-    return new SSAComparisonInstruction(opcode, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0], uses == null ? val2
-        : uses[1]);
+    return new SSAComparisonInstruction(opcode, defs == null || defs.length == 0 ? result : defs[0], uses == null
+        || uses.length == 0 ? val1 : uses[0], uses == null ? val2 : uses[1]);
   }
 
   public String toString(SymbolTable symbolTable, ValueDecorator d) {

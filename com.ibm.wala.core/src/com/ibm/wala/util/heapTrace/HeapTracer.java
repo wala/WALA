@@ -92,7 +92,7 @@ public class HeapTracer {
       internalClasses.add(Class.forName("com.ibm.wala.util.collections.SmallMap"));
       internalClasses.add(Class.forName("com.ibm.wala.util.intset.SimpleVector"));
       internalClasses.add(Class.forName("com.ibm.wala.util.intset.SimpleIntVector"));
-      internalClasses.add(Class.forName("com.ibm.wala.util.intset.BasicNonNegativeIntRelation"));
+      internalClasses.add(Class.forName("com.ibm.wala.util.intset.BasicNaturalRelation"));
       internalClasses.add(Class.forName("com.ibm.wala.util.intset.SparseIntSet"));
       internalClasses.add(Class.forName("com.ibm.wala.util.intset.SparseVector"));
       internalClasses.add(Class.forName("com.ibm.wala.util.intset.MutableSharedBitVectorIntSet"));
@@ -101,6 +101,7 @@ public class HeapTracer {
       internalClasses.add(Class.forName("com.ibm.wala.util.graph.impl.DelegatingNumberedNodeManager"));
       internalClasses.add(Class.forName("com.ibm.wala.util.graph.impl.SparseNumberedEdgeManager"));
     } catch (ClassNotFoundException e) {
+      e.printStackTrace();
       Assertions.UNREACHABLE();
     }
   }

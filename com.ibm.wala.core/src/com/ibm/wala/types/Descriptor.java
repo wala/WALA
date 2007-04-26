@@ -44,6 +44,9 @@ public final class Descriptor {
    * @return the canonical representative for this descriptor value
    */
   public static Descriptor findOrCreate(TypeName[] parameters, TypeName returnType) {
+    if (parameters != null && parameters.length == 0) {
+      parameters = null;
+    }
     Key k = new Key(returnType, parameters);
     Descriptor result = map.get(k);
     if (result == null) {
