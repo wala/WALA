@@ -229,12 +229,15 @@ public abstract class OfflineInstrumenterBase {
    * Add a directory containing class files to instrument. All subdirectories
    * are also scanned.
    */
-  final public void addInputDirectory(File d) throws IOException {
+  final public void addInputDirectory(File d) throws IOException, IllegalArgumentException {
     File[] fs = d.listFiles(new FileFilter() {
       public boolean accept(File f) {
         return f.isDirectory() || f.getName().endsWith(".class");
       }
     });
+    if (fs == null) {
+      throw new IllegalArgumentException("bad directory " + d.getAbsolutePath());
+    }
     for (int i = 0; i < fs.length; i++) {
       File f = fs[i];
       if (f.isDirectory()) {
