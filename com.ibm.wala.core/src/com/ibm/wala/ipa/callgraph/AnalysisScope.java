@@ -154,7 +154,7 @@ public class AnalysisScope {
    * @param loader
    * @param file
    */
-  public void addClassFileToScope(ClassLoaderReference loader, File file) {
+  public void addClassFileToScope(ClassLoaderReference loader, File file) throws IllegalArgumentException {
     Set<Module> s = MapUtil.findOrCreateSet(moduleMap, loader);
     s.add(new ClassFileModule(file));
   }

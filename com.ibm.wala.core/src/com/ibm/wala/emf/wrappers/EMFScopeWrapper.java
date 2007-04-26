@@ -64,13 +64,11 @@ import com.ibm.wala.util.warnings.WalaException;
  * The generator emulates internal structure created by scope files such as the
  * following example:
  * 
- * <verbatim> 
- * <loaders loaderName="Primordial"> 
- * <modules xsi:type="com.ibm.wala.java.scope:BuiltInModule"/>
- * <modules xsi:type="com.ibm.wala.java.scope:BuiltInModule" id="primordial_jar_model"/>
- * </loaders>
- * <loaders loaderName="Application"> 
- * <modules url="$TESTDATA/Example.jar" xsi:type="com.ibm.wala.java.scope:JarFile"/>
+ * <verbatim> <loaders loaderName="Primordial"> <modules
+ * xsi:type="com.ibm.wala.java.scope:BuiltInModule"/> <modules
+ * xsi:type="com.ibm.wala.java.scope:BuiltInModule" id="primordial_jar_model"/>
+ * </loaders> <loaders loaderName="Application"> <modules
+ * url="$TESTDATA/Example.jar" xsi:type="com.ibm.wala.java.scope:JarFile"/>
  * </loaders> </verbatim>
  * 
  * @author Eran Yahav (yahave)
@@ -107,12 +105,11 @@ public class EMFScopeWrapper extends AnalysisScope {
     this.exclusionsFile = null;
   }
 
-
   public EMFScopeWrapper(String scopeFile, String exclusionsFile, ClassLoader loader, boolean scopeAsFile) {
     super();
     this.scopeFile = scopeFile;
     this.loader = loader;
-  
+
     if (DEBUG_LEVEL > 0) {
       Trace.println(getClass() + " ctor " + scopeFile);
     }
@@ -139,7 +136,6 @@ public class EMFScopeWrapper extends AnalysisScope {
   public EMFScopeWrapper(String scopeFile, String exclusionsFile, ClassLoader loader) {
     this(scopeFile, exclusionsFile, loader, false);
   }
-
 
   /**
    * add the default logic for synthetic bypass.
@@ -200,7 +196,12 @@ public class EMFScopeWrapper extends AnalysisScope {
       }
 
       public Object caseESourceFile(ESourceFile object) {
-        processSourceFile(object, loader);
+        try {
+          processSourceFile(object, loader);
+        } catch (IOException e) {
+          e.printStackTrace();
+          Assertions.UNREACHABLE(e.toString());
+        }
         return SUCCESS;
       }
 
@@ -212,18 +213,17 @@ public class EMFScopeWrapper extends AnalysisScope {
    * @param m
    * @param loader
    */
-  private void processSourceFile(ESourceFile m, ClassLoaderReference loader) {
+  private void processSourceFile(ESourceFile m, ClassLoaderReference loader) throws IOException {
     String fileName = m.getUrl();
     Assertions.productionAssertion(fileName != null, "null file name specified");
-    File file = new File(fileName);
-
+    File file = FileProvider.getFile(fileName);
     addSourceFileToScope(loader, file, fileName);
   }
 
   /**
    * @param m
    * @param loader
-   * @throws IOException 
+   * @throws IOException
    */
   private void processClassFile(EClassFile m, ClassLoaderReference loader) throws IOException {
     String fileName = m.getUrl();
@@ -412,12 +412,16 @@ public class EMFScopeWrapper extends AnalysisScope {
   public static EMFScopeWrapper generateJarScope(ClassLoader cl, String jarUrl, String exclusionsFile) throws WalaException {
     EClassLoader primordial = JavaScopeUtil.createPrimordialLoader();
     EClassLoader application = JavaScopeUtil.createJarApplicationLoader(jarUrl);
-  
+
     Collection<EClassLoader> loaders = new ArrayList<EClassLoader>();
     loaders.add(primordial);
     loaders.add(application);
-  
-    return generateScope(cl, loaders, exclusionsFile);
+
+    try {
+      return generateScope(cl, loaders, exclusionsFile);
+    } catch (Throwable e) {
+      throw new WalaException("problem generating scope", e);
+    }
   }
 
   /**
@@ -435,12 +439,16 @@ public class EMFScopeWrapper extends AnalysisScope {
   public static EMFScopeWrapper generateClassScope(ClassLoader cl, String classUrl, String exclusionsFile) throws WalaException {
     EClassLoader primordial = JavaScopeUtil.createPrimordialLoader();
     EClassLoader application = JavaScopeUtil.createClassApplicationLoader(classUrl);
-  
+
     Collection<EClassLoader> loaders = new ArrayList<EClassLoader>();
     loaders.add(primordial);
     loaders.add(application);
-  
-    return generateScope(cl, loaders, exclusionsFile);
+
+    try {
+      return generateScope(cl, loaders, exclusionsFile);
+    } catch (Throwable e) {
+      throw new WalaException("problem generating scope", e);
+    }
   }
 
   /**
@@ -455,21 +463,22 @@ public class EMFScopeWrapper extends AnalysisScope {
    * @return a new EMFScopeWrapper comprising of the given loaders, and taking
    *         the provided exclusion file into account
    */
-  static EMFScopeWrapper generateScope(ClassLoader cl, Collection<EClassLoader> loaders, String exclusionsFile) throws WalaException {
+  static EMFScopeWrapper generateScope(ClassLoader cl, Collection<EClassLoader> loaders, String exclusionsFile)
+      throws WalaException {
     EMFScopeWrapper csw = new EMFScopeWrapper(cl);
-  
+
     EJavaAnalysisScope jas = JavaScopeFactory.eINSTANCE.createEJavaAnalysisScope();
     jas.getLoaders().clear();
     jas.getLoaders().addAll(loaders);
-  
+
     csw.populate(jas);
-  
+
     csw.addDefaultBypassLoader();
-  
+
     if (exclusionsFile != null) {
       csw.setExclusions(new XMLSetOfClasses(exclusionsFile, cl));
     }
-  
+
     return csw;
   }
 
@@ -484,7 +493,6 @@ public class EMFScopeWrapper extends AnalysisScope {
     return generateScope(escope, new EMFScopeWrapper(EMFScopeWrapper.class.getClassLoader()));
   }
 
-
   private static EMFScopeWrapper generateScope(final EJavaAnalysisScope escope, final EMFScopeWrapper csw) {
     csw.populate(escope);
     csw.addDefaultBypassLoader();
@@ -492,7 +500,7 @@ public class EMFScopeWrapper extends AnalysisScope {
     if (exclusionsFile != null) {
       csw.setExclusions(new XMLSetOfClasses(exclusionsFile, EMFScopeWrapper.class.getClassLoader()));
     }
-  
+
     return csw;
   }
 }

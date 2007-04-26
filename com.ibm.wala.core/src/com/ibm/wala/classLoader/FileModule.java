@@ -30,8 +30,11 @@ public abstract class FileModule implements Module, ModuleEntry {
 
   private final File file;
 
-  public FileModule(File f) {
+  public FileModule(File f) throws IllegalArgumentException {
     this.file = f;
+    if (!f.exists()) {
+      throw new IllegalArgumentException("bad file " + f.getAbsolutePath());
+    }
   }
 
   public String getAbsolutePath() {

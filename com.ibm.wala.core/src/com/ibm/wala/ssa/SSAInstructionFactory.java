@@ -82,7 +82,7 @@ public final class SSAInstructionFactory {
   public static SSANewInstruction NewInstruction(int result, NewSiteReference site) {
     return new SSANewInstruction(result, site);
   }
-  public static SSAPhiInstruction PhiInstruction(int result, int[] params) {
+  public static SSAPhiInstruction PhiInstruction(int result, int[] params) throws IllegalArgumentException {
     return new SSAPhiInstruction(result, params);
   }
   public static SSAPutInstruction PutInstruction(int ref, int value, FieldReference field) {

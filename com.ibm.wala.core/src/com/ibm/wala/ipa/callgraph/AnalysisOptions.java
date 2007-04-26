@@ -21,7 +21,6 @@ import com.ibm.wala.ssa.SSACache;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.ReferenceCleanser;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * 
@@ -385,12 +384,13 @@ public class AnalysisOptions {
   }
 
   /**
-   * TODO: what is this and why is it here?
+   * Return he type reference which should represent the given constant. This is used
+   * in instance key selection to choose keys to represent string constants.
    */
-  public TypeReference getConstantType(Object S) {
+  public TypeReference getConstantType(Object S) throws IllegalArgumentException {
     Class<? extends Object> key = (S == null) ? null : S.getClass();
-    if (Assertions.verifyAssertions && !constantTypes.containsKey(key)) {
-      Assertions._assert(constantTypes.containsKey(key), "no type for " + S + " of type " + key);
+    if (!constantTypes.containsKey(key)) {
+      throw new IllegalArgumentException("no type for " + S + " of type " + key);
     }
 
     return constantTypes.get(key);
