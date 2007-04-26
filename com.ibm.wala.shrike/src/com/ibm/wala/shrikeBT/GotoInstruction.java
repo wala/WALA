@@ -52,8 +52,17 @@ public final class GotoInstruction extends Instruction {
     return label[0];
   }
 
-  public Instruction redirectTargets(int[] targetMap) {
-    return make(targetMap[label[0]]);
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.shrikeBT.Instruction#redirectTargets(int[])
+   */
+  public Instruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
+    try {
+      return make(targetMap[label[0]]);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("Illegal target map", e);
+    }
   }
 
   public boolean equals(Object o) {
@@ -76,7 +85,10 @@ public final class GotoInstruction extends Instruction {
   public void visit(Visitor v) {
     v.visitGoto(this);
   }
-    /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.domo.cfg.IInstruction#isPEI()
    */
   public boolean isPEI() {

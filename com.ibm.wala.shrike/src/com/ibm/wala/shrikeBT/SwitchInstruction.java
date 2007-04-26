@@ -17,6 +17,7 @@ import java.util.Arrays;
  */
 public final class SwitchInstruction extends Instruction {
   private int[] casesAndLabels;
+
   private int defaultLabel;
 
   protected SwitchInstruction(short opcode, int[] casesAndLabels, int defaultLabel) {
@@ -83,13 +84,17 @@ public final class SwitchInstruction extends Instruction {
     return r;
   }
 
-  public Instruction redirectTargets(int[] targetMap) {
-    int[] cs = new int[casesAndLabels.length];
-    for (int i = 0; i < cs.length; i += 2) {
-      cs[i] = casesAndLabels[i];
-      cs[i + 1] = targetMap[casesAndLabels[i + 1]];
+  public Instruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
+    try {
+      int[] cs = new int[casesAndLabels.length];
+      for (int i = 0; i < cs.length; i += 2) {
+        cs[i] = casesAndLabels[i];
+        cs[i + 1] = targetMap[casesAndLabels[i + 1]];
+      }
+      return make(cs, targetMap[defaultLabel]);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("Illegal target map", e);
     }
-    return make(cs, targetMap[defaultLabel]);
   }
 
   public boolean equals(Object o) {
@@ -127,7 +132,10 @@ public final class SwitchInstruction extends Instruction {
   public void visit(Visitor v) {
     v.visitSwitch(this);
   }
-    /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.domo.cfg.IInstruction#isPEI()
    */
   public boolean isPEI() {
