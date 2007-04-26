@@ -25,39 +25,37 @@ import java.util.*;
 public abstract class ScriptEntryPoints implements Entrypoints {
 
   private final ClassHierarchy cha;
+
   private final IClass scriptType;
 
   private class ScriptEntryPoint extends Entrypoint {
     ScriptEntryPoint(IMethod scriptCodeBody) {
-      super( scriptCodeBody );
+      super(scriptCodeBody);
     }
 
     public TypeReference[] getParameterTypes(int i) {
-      Assertions._assert(i == 0);      
-      return 
-	new TypeReference[]{ getMethod().getDeclaringClass().getReference() };
+      Assertions._assert(i == 0);
+      return new TypeReference[] { getMethod().getDeclaringClass().getReference() };
     }
-  
+
     public int getNumberOfParameters() {
       return 1;
     }
 
-    public SSAAbstractInvokeInstruction addCall(FakeRootMethod m,
-						WarningSet warnings) 
-    {
+    public SSAAbstractInvokeInstruction addCall(FakeRootMethod m, WarningSet warnings) {
       CallSiteReference site = makeSite(0);
 
       if (site == null) {
-	return null;
+        return null;
       }
 
       int functionVn = makeArgument(m, 0, warnings);
       int paramVns[] = new int[getNumberOfParameters() - 1];
       for (int j = 0; j < paramVns.length; j++) {
-	paramVns[j] = makeArgument(m, j+1, warnings);
+        paramVns[j] = makeArgument(m, j + 1, warnings);
       }
 
-      return ((ScriptFakeRoot)m).addDirectCall(functionVn, paramVns, site);
+      return ((ScriptFakeRoot) m).addDirectCall(functionVn, paramVns, site);
     }
   }
 
@@ -69,17 +67,16 @@ public abstract class ScriptEntryPoints implements Entrypoints {
   public Iterator<ScriptEntryPoint> iterator() {
     Set<ScriptEntryPoint> ES = new HashSet<ScriptEntryPoint>();
     Iterator<IClass> classes = scriptType.getClassLoader().iterateAllClasses();
-    while ( classes.hasNext() ) {
+    while (classes.hasNext()) {
       IClass cls = classes.next();
       if (cha.isSubclassOf(cls, scriptType)) {
-	for (Iterator<IMethod> methods = cls.getDeclaredMethods().iterator(); methods.hasNext();) {
-	  ES.add(new ScriptEntryPoint(((IMethod)methods.next())));
-	}
+        for (Iterator<IMethod> methods = cls.getDeclaredMethods().iterator(); methods.hasNext();) {
+          ES.add(new ScriptEntryPoint(((IMethod) methods.next())));
+        }
       }
     }
-    
+
     return ES.iterator();
   }
-    
+
 }
-	  
