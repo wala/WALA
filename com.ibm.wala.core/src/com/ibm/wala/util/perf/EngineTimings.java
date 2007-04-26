@@ -119,6 +119,10 @@ public class EngineTimings {
       System.out.println("Too many events reported");
       return;
     }
+    if (list.size() == 0) {
+      // no events
+      return;
+    }
 
     List<Phase> phases = collateTimings(list);
 
@@ -137,6 +141,10 @@ public class EngineTimings {
     ArrayList<Record> list = getMyBuffer();
     if (list.size() >= MAX_EVENTS) {
       System.out.println("Too many events reported");
+      return;
+    }
+    if (list.size() == 0) {
+      // no events
       return;
     }
     

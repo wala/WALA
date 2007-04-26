@@ -37,11 +37,14 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
 
   /**
    * Construct a depth-first enumerator starting with a particular node
-   * in a directred graph. 
+   * in a directed graph. 
    *
    * @param G the graph whose nodes to enumerate
    */
-  public SlowDFSFinishTimeIterator(Graph<T> G, T N) {
+  public SlowDFSFinishTimeIterator(Graph<T> G, T N) throws IllegalArgumentException {
+    if (!G.containsNode(N)) {
+      throw new IllegalArgumentException("source node not in graph: " + N);
+    }
     init(G, new NonNullSingletonIterator<T>(N));
   }
 

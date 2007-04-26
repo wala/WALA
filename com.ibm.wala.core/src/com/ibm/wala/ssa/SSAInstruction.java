@@ -31,6 +31,9 @@ public abstract class SSAInstruction implements IInstruction {
   protected SSAInstruction() {
   }
 
+  /**
+   * TODO: document me ... what do my parameters mean? (Julian?)
+   */
   public abstract SSAInstruction copyForSSA(int[] defs, int[] uses);
 
   /**

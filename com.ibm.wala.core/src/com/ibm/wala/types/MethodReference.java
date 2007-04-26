@@ -144,7 +144,10 @@ public final class MethodReference extends MemberReference {
    * @return ith parameter to the method.  This does NOT include the implicit
    * "this" pointer.
    */
-  public final TypeReference getParameterType(int i) {
+  public final TypeReference getParameterType(int i) throws IllegalArgumentException {
+    if (parameterTypes == null || i >= parameterTypes.length) {
+      throw new IllegalArgumentException("illegal parameter number " + i + " for " + this);
+    }
     return parameterTypes[i];
   }
   

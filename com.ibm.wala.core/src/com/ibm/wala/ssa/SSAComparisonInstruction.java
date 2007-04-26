@@ -37,7 +37,8 @@ public class SSAComparisonInstruction extends SSAInstruction {
   }
 
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new SSAComparisonInstruction(opcode, defs == null ? result : defs[0], uses == null ? val1 : uses[0], uses == null ? val2
+    // TODO: Julian ... is this correct when defs == null or defs.length == 0?
+    return new SSAComparisonInstruction(opcode, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0], uses == null ? val2
         : uses[1]);
   }
 

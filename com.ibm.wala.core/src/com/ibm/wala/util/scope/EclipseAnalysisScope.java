@@ -265,7 +265,7 @@ public class EclipseAnalysisScope extends AnalysisScope {
    *         plugin. This method returns <code>null</code> if no directory or
    *         JAR file was found for this plugin.
    */
-  public static File findPluginDirOrJAR(String libName, String pluginsDirName, File pluginDirectory) {
+  public static File findPluginDirOrJAR(String libName, String pluginsDirName, File pluginDirectory) throws IllegalArgumentException {
     String pathName = pluginsDirName + "/" + libName;
     File path = new File(pathName);
     if (path.isDirectory()) // libName corresponds to a real directory
@@ -274,6 +274,9 @@ public class EclipseAnalysisScope extends AnalysisScope {
     // plugins directory for a corresponding subdirectory containing
     // this plugin.
     File[] contents = pluginDirectory.listFiles();
+    if (contents == null) {
+      throw new IllegalArgumentException("bad plugin directory " + pluginDirectory.getAbsolutePath());
+    }
     for (int i = 0; i < contents.length; i++) {
       String subName = contents[i].getName();
       if (subName.startsWith(libName + "_"))
@@ -291,13 +294,16 @@ public class EclipseAnalysisScope extends AnalysisScope {
    * @return a Set of Strings, each of which represents the name of a JAR file
    *         in the given directory.
    */
-  public static Set<JarFile> findJars(File baseDir) {
+  public static Set<JarFile> findJars(File baseDir) throws IllegalArgumentException {
     FifoQueueNoDuplicates<File> workQueue = new FifoQueueNoDuplicates<File>();
     Set<JarFile> jars = HashSetFactory.make();
     workQueue.push(baseDir);
     while (!workQueue.isEmpty()) {
       File dir = (File) workQueue.pop();
       File[] contents = dir.listFiles();
+      if (contents == null) {
+        throw new IllegalArgumentException("bad file " + dir.getAbsolutePath());
+      }
       for (int i = 0; i < contents.length; i++) {
         if (contents[i].isDirectory()) {
           workQueue.push(contents[i]);

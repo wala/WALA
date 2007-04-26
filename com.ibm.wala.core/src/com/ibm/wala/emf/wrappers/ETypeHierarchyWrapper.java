@@ -54,9 +54,11 @@ import com.ibm.wala.util.intset.IntSet;
  * 
  * @author sfink
  */
-public class ETypeHierarchyWrapper  {
+public class ETypeHierarchyWrapper {
   private final EClassHierarchyWrapper cha;
+
   private final EInterfaceHierarchyWrapper iface;
+
   private final BasicNaturalRelation implementR = new BasicNaturalRelation();
 
   /**
@@ -72,11 +74,10 @@ public class ETypeHierarchyWrapper  {
       recordImplements(x, y);
     }
   }
- 
 
   /**
-   * Warning: this constructor does <em>NOT</em> set up the "implements" relation;
-   * the caller must do this separately.
+   * Warning: this constructor does <em>NOT</em> set up the "implements"
+   * relation; the caller must do this separately.
    * 
    * 
    * @param cha
@@ -108,7 +109,7 @@ public class ETypeHierarchyWrapper  {
     return t;
   }
 
-  public static ETypeHierarchyWrapper loadFromFile(String fileName) {
+  public static ETypeHierarchyWrapper loadFromFile(String fileName) throws FileNotFoundException {
     System.err.println("eload..");
     ETypeHierarchy t = eloadFromFile(fileName);
     Assertions.productionAssertion(t != null);
@@ -120,15 +121,9 @@ public class ETypeHierarchyWrapper  {
 
   // TODO: refactor!!!
   @SuppressWarnings("unchecked")
-  private static ETypeHierarchy eloadFromFile(String fileName) {
+  private static ETypeHierarchy eloadFromFile(String fileName) throws FileNotFoundException {
     File f = new File(fileName);
-    InputStream s = null;
-    try {
-      s = new FileInputStream(f);
-    } catch (FileNotFoundException e1) {
-      Assertions.productionAssertion(false, "failed to load file " + fileName);
-    }
-    Assertions.productionAssertion(s != null, "failed to load file " + fileName);
+    InputStream s = new FileInputStream(f);
 
     ResourceSet resSet = new ResourceSetImpl();
     Resource r = resSet.createResource(URI.createURI("junk"));
@@ -200,7 +195,8 @@ public class ETypeHierarchyWrapper  {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    */
   public EClass getTargetType() {
     return JavaPackage.eINSTANCE.getETypeHierarchy();

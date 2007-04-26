@@ -181,8 +181,15 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       BitVectorIntSet bv = new BitVectorIntSet(that);
       return intersection(bv);
     } else {
-      Assertions.UNREACHABLE("unexpected class " + that.getClass());
-      return null;
+      // really slow.  optimize as needed.
+      BitVectorIntSet result = new BitVectorIntSet();
+      for (IntIterator it = intIterator(); it.hasNext(); ) { 
+        int x = it.next();
+        if (that.contains(x)) {
+          result.add(x);
+        }
+      }
+      return result;
     }
   }
 
@@ -843,7 +850,13 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     } else if (set instanceof BitVectorIntSet) {
       intersectWithInternal(new MutableSharedBitVectorIntSet((BitVectorIntSet) set));
     } else {
-      Assertions.UNREACHABLE();
+      // this is really slow.  optimize as needed.
+      for (IntIterator it = intIterator(); it.hasNext(); ) {
+        int x = it.next();
+        if (!set.contains(x)) {
+          remove(x);
+        }
+      }
     }
     if (DEBUG) {
       if (privatePart != null && sharedPart != null)

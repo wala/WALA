@@ -408,7 +408,10 @@ public class SparseIntSet implements IntSet {
         return (i < size);
       }
 
-      public int next() {
+      public int next() throws NoSuchElementException {
+        if (elements == null) {
+          throw new NoSuchElementException();
+        }
         return elements[i++];
       }
     };

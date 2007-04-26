@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph.traverse;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
@@ -120,7 +121,10 @@ public class BFSIterator<T> implements Iterator<T> {
    *
    *  @return the next graph node in discover time order.
    */
-  public T next() {
+  public T next() throws NoSuchElementException {
+    if (index >= Q.size()) {
+      throw new NoSuchElementException();
+    }
     T result = Q.get(index);
     index++;
     if (hasNext()) {

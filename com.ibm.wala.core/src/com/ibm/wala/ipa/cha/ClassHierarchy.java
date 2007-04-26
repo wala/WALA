@@ -187,7 +187,11 @@ public class ClassHierarchy implements Iterable<IClass> {
     } finally {
       progressMonitor.done(); // In case an exception is thrown.
     }
-
+    
+    if (root == null) {
+      throw new ClassHierarchyException("failed to load root of class hierarchy");
+    }
+    
     // perform numbering for subclass tests.
     numberTree();
     ReferenceCleanser.registerClassHierarchy(this);
@@ -212,7 +216,7 @@ public class ClassHierarchy implements Iterable<IClass> {
       }
     }
     loader.removeAll(toRemove);
-    Assertions.postcondition(root != null, "failed to load root of class hierarchy");
+   
   }
 
   /**

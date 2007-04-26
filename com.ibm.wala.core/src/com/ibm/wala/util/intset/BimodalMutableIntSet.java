@@ -247,7 +247,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
    * 
    * @see com.ibm.wala.util.intset.IntSet#max()
    */
-  public int max() throws IllegalStateException{
+  public int max() throws IllegalStateException {
     return impl.max();
   }
 

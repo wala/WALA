@@ -11,48 +11,54 @@
 package com.ibm.wala.types;
 
 import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- *
- * A method selector; something like:
- * foo(Ljava/langString;)Ljava/lang/Class;
- *
- * @author sfink
- *
+ * 
+ * A method selector; something like: foo(Ljava/langString;)Ljava/lang/Class;
+ * 
  * TODO: Canonicalize these?
+ * 
+ * @author sfink
  * 
  */
 public final class Selector {
-  
+
   private final Atom name;
+
   private final Descriptor descriptor;
 
   public Selector(Atom name, Descriptor descriptor) {
     this.name = name;
     this.descriptor = descriptor;
   }
- 
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(this.getClass().equals(obj.getClass()));
+    // using instanceof is OK because Selector is final
+    if (obj instanceof Selector) {
+      Selector other = (Selector) obj;
+      return name.equals(other.name) && descriptor.equals(other.descriptor);
+    } else {
+      return false;
     }
-    Selector other = (Selector)obj;
-    return name.equals(other.name) && descriptor.equals(other.descriptor);
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   * Cache??
+  /*
+   * (non-Javadoc)
+   * 
+   * @see java.lang.Object#hashCode() Cache??
    */
   public int hashCode() {
     return 19 * name.hashCode() + descriptor.hashCode();
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#toString()
    */
   public String toString() {

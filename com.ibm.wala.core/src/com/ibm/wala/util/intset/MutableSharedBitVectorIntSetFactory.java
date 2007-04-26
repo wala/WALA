@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * 
@@ -57,8 +56,12 @@ public class MutableSharedBitVectorIntSetFactory implements MutableIntSetFactory
     } else if (x instanceof DebuggingMutableIntSet) {
       return new MutableSharedBitVectorIntSet(new SparseIntSet(x));
     } else {
-      Assertions.UNREACHABLE("unexpected type " + x.getClass());
-      return null;
+      // really slow.  optimize as needed.
+      MutableSharedBitVectorIntSet result = new MutableSharedBitVectorIntSet();
+      for (IntIterator it = x.intIterator(); it.hasNext(); ) {
+        result.add(it.next());
+      }
+      return result;
     }
   }
 
