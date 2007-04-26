@@ -16,11 +16,17 @@ package com.ibm.wala.shrikeBT;
  * if the relationship holds.
  */
 public final class ConditionalBranchInstruction extends Instruction {
-  
-  public interface IOperator {};
-  
+
+  public interface IOperator {
+  };
+
   public enum Operator implements IOperator {
-    EQ, NE, LT, GE, GT, LE; 
+    EQ,
+    NE,
+    LT,
+    GE,
+    GT,
+    LE;
 
     @Override
     public String toString() {
@@ -56,8 +62,11 @@ public final class ConditionalBranchInstruction extends Instruction {
     return make(opcode, label);
   }
 
-  //Relax from private to public by Xiangyu, to create ifeq
-  public static ConditionalBranchInstruction make(short opcode, int label) {
+  // Relax from private to public by Xiangyu, to create ifeq
+  public static ConditionalBranchInstruction make(short opcode, int label) throws IllegalArgumentException {
+    if (opcode < OP_ifeq || opcode > OP_if_acmpne) {
+      throw new IllegalArgumentException("Illegal opcode: " + opcode);
+    }
     return new ConditionalBranchInstruction(opcode, label);
   }
 
@@ -83,8 +92,12 @@ public final class ConditionalBranchInstruction extends Instruction {
     return label;
   }
 
-  public Instruction redirectTargets(int[] targetMap) {
-    return make(opcode, targetMap[label]);
+  public Instruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
+    try {
+      return make(opcode, targetMap[label]);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("bad target map", e);
+    }
   }
 
   public Operator getOperator() {
@@ -104,7 +117,7 @@ public final class ConditionalBranchInstruction extends Instruction {
   }
 
   public int getPoppedCount() {
-    //Xiangyu, to support if_eq (if_ne)...
+    // Xiangyu, to support if_eq (if_ne)...
     if (opcode >= Constants.OP_ifeq && opcode <= Constants.OP_ifle)
       return 1;
     return 2;
@@ -113,8 +126,10 @@ public final class ConditionalBranchInstruction extends Instruction {
   public void visit(Visitor v) {
     v.visitConditionalBranch(this);
   }
-  
-  /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.domo.cfg.IInstruction#isPEI()
    */
   public boolean isPEI() {
