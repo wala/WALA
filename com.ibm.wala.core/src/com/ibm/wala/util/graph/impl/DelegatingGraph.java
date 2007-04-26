@@ -27,7 +27,7 @@ public class DelegatingGraph<T> implements Graph<T> {
    this.delegate = delegate;
   }
 
-  public void addEdge(T src, T dst) {
+  public void addEdge(T src, T dst)throws IllegalArgumentException {
     delegate.addEdge(src, dst);
   }
 
@@ -43,19 +43,19 @@ public class DelegatingGraph<T> implements Graph<T> {
     return delegate.getNumberOfNodes();
   }
 
-  public int getPredNodeCount(T N) {
+  public int getPredNodeCount(T N) throws IllegalArgumentException{
     return delegate.getPredNodeCount(N);
   }
 
-  public Iterator<? extends T> getPredNodes(T N) {
+  public Iterator<? extends T> getPredNodes(T N) throws IllegalArgumentException{
     return delegate.getPredNodes(N);
   }
 
-  public int getSuccNodeCount(T N) {
+  public int getSuccNodeCount(T N) throws IllegalArgumentException {
     return delegate.getSuccNodeCount(N);
   }
 
-  public Iterator<? extends T> getSuccNodes(T N) {
+  public Iterator<? extends T> getSuccNodes(T N) throws IllegalArgumentException {
     return delegate.getSuccNodes(N);
   }
 
@@ -71,11 +71,11 @@ public class DelegatingGraph<T> implements Graph<T> {
     delegate.removeAllIncidentEdges(node);
   }
 
-  public void removeEdge(T src, T dst) {
+  public void removeEdge(T src, T dst)throws IllegalArgumentException {
     delegate.removeEdge(src, dst);
   }
 
-  public void removeIncomingEdges(T node) {
+  public void removeIncomingEdges(T node) throws IllegalArgumentException{
     delegate.removeIncomingEdges(node);
   }
 
@@ -83,7 +83,7 @@ public class DelegatingGraph<T> implements Graph<T> {
     delegate.removeNode(n);
   }
 
-  public void removeNodeAndEdges(T N) {
+  public void removeNodeAndEdges(T N)throws IllegalArgumentException {
     delegate.removeNodeAndEdges(N);
   }
 

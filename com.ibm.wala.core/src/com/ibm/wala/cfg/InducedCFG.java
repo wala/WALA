@@ -202,11 +202,11 @@ public class InducedCFG extends AbstractCFG {
 
     public void visitSwitch(SSASwitchInstruction instruction) {
       Assertions.UNREACHABLE("haven't implemented logic for switch yet.");
-      breakBasicBlock();
-      int[] targets = instruction.getTargets();
-      for (int i = 0; i < targets.length; i++) {
-        r[targets[i]] = true;
-      }
+//      breakBasicBlock();
+//      int[] targets = instruction.getTargets();
+//      for (int i = 0; i < targets.length; i++) {
+//        r[targets[i]] = true;
+//      }
     }
 
     public void visitReturn(SSAReturnInstruction instruction) {

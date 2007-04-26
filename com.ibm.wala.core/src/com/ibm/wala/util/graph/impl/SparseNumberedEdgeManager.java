@@ -155,7 +155,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
    * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
    */
-  public int getSuccNodeCount(T N) {
+  public int getSuccNodeCount(T N) throws IllegalArgumentException {
     return getSuccNodeCount(nodeManager.getNumber(N));
   }
 

@@ -39,11 +39,11 @@ public class EObjectGraphImpl implements EObjectGraph {
 
   /* (non-Javadoc)
    */
-  public void addEdge(EObject src, EObject dst) {
+  public void addEdge(EObject src, EObject dst) throws IllegalArgumentException{
     delegate.addEdge(src, dst);
   }
   
-  public void removeEdge(EObject src, EObject dst) {
+  public void removeEdge(EObject src, EObject dst)throws IllegalArgumentException {
     delegate.removeEdge(src, dst);
   }
 
@@ -73,25 +73,25 @@ public class EObjectGraphImpl implements EObjectGraph {
 
   /* (non-Javadoc)
    */
-  public int getPredNodeCount(EObject N) {
+  public int getPredNodeCount(EObject N) throws IllegalArgumentException{
     return delegate.getPredNodeCount(N);
   }
 
   /* (non-Javadoc)
    */
-  public Iterator<? extends EObject> getPredNodes(EObject N) {
+  public Iterator<? extends EObject> getPredNodes(EObject N) throws IllegalArgumentException{
     return delegate.getPredNodes(N);
   }
 
   /* (non-Javadoc)
    */
-  public int getSuccNodeCount(EObject N) {
+  public int getSuccNodeCount(EObject N) throws IllegalArgumentException{
     return delegate.getSuccNodeCount(N);
   }
 
   /* (non-Javadoc)
    */
-  public Iterator<? extends EObject> getSuccNodes(EObject N) {
+  public Iterator<? extends EObject> getSuccNodes(EObject N) throws IllegalArgumentException{
     return delegate.getSuccNodes(N);
   }
   /* (non-Javadoc)
@@ -109,7 +109,7 @@ public class EObjectGraphImpl implements EObjectGraph {
 
   /* (non-Javadoc)
    */
-  public void removeAllIncidentEdges(EObject node) {
+  public void removeAllIncidentEdges(EObject node)throws IllegalArgumentException {
     delegate.removeAllIncidentEdges(node);
   }
 
@@ -121,7 +121,7 @@ public class EObjectGraphImpl implements EObjectGraph {
 
   /* (non-Javadoc)
    */
-  public void removeNodeAndEdges(EObject N) {
+  public void removeNodeAndEdges(EObject N) throws IllegalArgumentException{
     delegate.removeNodeAndEdges(N);
   }
   /* (non-Javadoc)
@@ -133,13 +133,13 @@ public class EObjectGraphImpl implements EObjectGraph {
  
   /* (non-Javadoc)
    */
-  public void removeIncomingEdges(EObject node) {
+  public void removeIncomingEdges(EObject node) throws IllegalArgumentException {
     delegate.removeIncomingEdges(node);
   }
   /**
    * @param node
    */
-  public void removeOutgoingEdges(EObject node) {
+  public void removeOutgoingEdges(EObject node) throws IllegalArgumentException{
     delegate.removeOutgoingEdges(node);
   }
   /* (non-Javadoc)
@@ -213,13 +213,13 @@ public class EObjectGraphImpl implements EObjectGraph {
 
   /* (non-Javadoc)
    */
-  public IntSet getSuccNodeNumbers(EObject node) {
+  public IntSet getSuccNodeNumbers(EObject node) throws IllegalArgumentException{
     return delegate.getSuccNodeNumbers(node);
   }
 
   /* (non-Javadoc)
    */
-  public IntSet getPredNodeNumbers(EObject node) {
+  public IntSet getPredNodeNumbers(EObject node) throws IllegalArgumentException{
     return delegate.getPredNodeNumbers(node);
   }
   

@@ -219,7 +219,7 @@ public final class MethodReference extends MemberReference {
     }
   }
 
-  public static MethodReference findOrCreate(TypeReference t, String methodName, String descriptor) {
+  public static MethodReference findOrCreate(TypeReference t, String methodName, String descriptor) throws IllegalArgumentException {
     Descriptor d = Descriptor.findOrCreateUTF8(descriptor);
     return findOrCreate(t,Atom.findOrCreateUnicodeAtom(methodName),d);
   }

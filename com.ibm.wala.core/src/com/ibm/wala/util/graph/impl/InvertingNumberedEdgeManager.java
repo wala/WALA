@@ -28,27 +28,27 @@ public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
     this.original = original;
   }
 
-  public Iterator<? extends T> getPredNodes(T N) {
+  public Iterator<? extends T> getPredNodes(T N) throws IllegalArgumentException{
     return original.getSuccNodes(N);
   }
 
-  public int getPredNodeCount(T N) {
+  public int getPredNodeCount(T N) throws IllegalArgumentException{
     return original.getSuccNodeCount(N);
   }
 
-  public Iterator<? extends T> getSuccNodes(T N) {
+  public Iterator<? extends T> getSuccNodes(T N) throws IllegalArgumentException{
     return original.getPredNodes(N);
   }
 
-  public int getSuccNodeCount(T N) {
+  public int getSuccNodeCount(T N) throws IllegalArgumentException{
     return original.getPredNodeCount(N);
   }
 
-  public void addEdge(T src, T dst) {
+  public void addEdge(T src, T dst) throws IllegalArgumentException{
     original.addEdge(dst, src);
   }
 
-  public void removeEdge(T src, T dst) {
+  public void removeEdge(T src, T dst)throws IllegalArgumentException {
     original.removeEdge(dst, src);
   }
  
@@ -56,23 +56,23 @@ public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
     return original.hasEdge(dst, src);
   }
 
-  public void removeAllIncidentEdges(T node) {
+  public void removeAllIncidentEdges(T node) throws IllegalArgumentException{
     original.removeAllIncidentEdges(node);
   }
   
-  public void removeIncomingEdges(T node) {
+  public void removeIncomingEdges(T node) throws IllegalArgumentException{
     original.removeOutgoingEdges(node);
   }
   
-  public void removeOutgoingEdges(T node) {
+  public void removeOutgoingEdges(T node) throws IllegalArgumentException{
     original.removeIncomingEdges(node);
   }
 
-  public IntSet getSuccNodeNumbers(T node) {
+  public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException{
     return original.getPredNodeNumbers(node);
   }
 
-  public IntSet getPredNodeNumbers(T node) {
+  public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException{
     return original.getSuccNodeNumbers(node);
   }
 

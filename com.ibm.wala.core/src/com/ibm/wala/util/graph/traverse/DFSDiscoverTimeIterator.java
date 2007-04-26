@@ -17,6 +17,7 @@ import java.util.Stack;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * This class implements depth-first search over a NumberedGraph, return an
@@ -85,7 +86,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
    * 
    * @return the next graph node in discover time order.
    */
-  public T next() {
+  public T next() throws NoSuchElementException {
 
     if (empty()) {
       throw new NoSuchElementException();
@@ -145,8 +146,8 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
   /**
    * @see java.util.Iterator#remove()
    */
-  public void remove() {
-    Assertions.UNREACHABLE();
+  public void remove() throws UnimplementedError {
+    throw new UnimplementedError();
   }
 
   protected void visitEdge(T from, T to) {

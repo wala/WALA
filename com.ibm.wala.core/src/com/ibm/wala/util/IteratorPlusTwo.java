@@ -12,7 +12,7 @@ package com.ibm.wala.util;
 
 import java.util.Iterator;
 
-import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 public class IteratorPlusTwo<T> implements Iterator<T> {
   private final Iterator<T> it;
@@ -54,8 +54,8 @@ public class IteratorPlusTwo<T> implements Iterator<T> {
   /* (non-Javadoc)
    * @see java.util.Iterator#remove()
    */
-  public void remove() {
-    Assertions.UNREACHABLE();
+  public void remove() throws UnimplementedError {
+    throw new UnimplementedError();
   }
 
 }

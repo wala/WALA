@@ -146,7 +146,7 @@ public class BimodalMap<K, V> implements Map<K, V> {
    * @see java.util.Map#putAll(java.util.Map)
    */
   @SuppressWarnings("unchecked")
-  public void putAll(Map<? extends K, ? extends V> t) {
+  public void putAll(Map<? extends K, ? extends V> t) throws UnsupportedOperationException {
     if (backingStore == null) {
       int size = t.size();
       if (size > cutOff) {

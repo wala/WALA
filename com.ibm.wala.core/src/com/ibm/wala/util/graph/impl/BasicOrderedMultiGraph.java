@@ -44,7 +44,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
    *      java.lang.Object)
    */
-  public void addEdge(T src, T dst) {
+  public void addEdge(T src, T dst) throws IllegalArgumentException{
     delegate.addEdge(src, dst);
     SimpleVector<T> s = successorEdges.get(src);
     if (s == null) {
@@ -55,8 +55,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
   }
   
 
-  public void addEdge(int i, T src, T dst) {
-    // TODO Auto-generated method stub
+  public void addEdge(int i, T src, T dst) throws IllegalArgumentException{
     delegate.addEdge(src, dst);
     SimpleVector<T> s = successorEdges.get(src);
     if (s == null) {
@@ -78,7 +77,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     return delegate.getNumberOfNodes();
   }
 
-  public int getPredNodeCount(T N) {
+  public int getPredNodeCount(T N) throws IllegalArgumentException{
     return delegate.getPredNodeCount(N);
   }
 
@@ -87,15 +86,15 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
    * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
    */
-  public Iterator<? extends T> getPredNodes(T N) {
+  public Iterator<? extends T> getPredNodes(T N) throws IllegalArgumentException{
     return delegate.getPredNodes(N);
   }
 
-  public int getSuccNodeCount(T N) {
+  public int getSuccNodeCount(T N) throws IllegalArgumentException{
     return delegate.getSuccNodeCount(N);
   }
 
-  public Iterator<? extends T> getSuccNodes(T N) {
+  public Iterator<? extends T> getSuccNodes(T N) throws IllegalArgumentException{
     return delegate.getSuccNodes(N);
   }
 
@@ -137,7 +136,7 @@ public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
     delegate.removeOutgoingEdges(node);
   }
 
-  public T getSuccessor(T node, int i) {
+  public T getSuccessor(T node, int i) throws IllegalArgumentException{
     SimpleVector<T> s = successorEdges.get(node);
     if (s == null) {
       throw new IllegalArgumentException("no successors for node " + node);

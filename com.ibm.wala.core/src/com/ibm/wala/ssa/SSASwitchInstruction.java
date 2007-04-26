@@ -65,11 +65,11 @@ public class SSASwitchInstruction extends SSAInstruction {
     return val;
   }
 
-  public int[] getTargets() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
-  }
+//  public int[] getTargets() {
+//    // TODO Auto-generated method stub
+//    Assertions.UNREACHABLE();
+//    return null;
+//  }
 
   public int getTarget(int caseValue) {
      for(int i = 0; i < casesAndLabels.length; i+= 2)

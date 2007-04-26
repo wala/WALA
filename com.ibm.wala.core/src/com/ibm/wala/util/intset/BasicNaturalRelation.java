@@ -342,7 +342,10 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
    * 
    * @see com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation#getRelatedCount(int)
    */
-  public int getRelatedCount(int x) {
+  public int getRelatedCount(int x) throws IllegalArgumentException {
+    if (x < 0) {
+      throw new IllegalArgumentException("x must be greater than zero");
+    }
     if (Assertions.verifyAssertions) {
       Assertions._assert(x >= 0);
     }

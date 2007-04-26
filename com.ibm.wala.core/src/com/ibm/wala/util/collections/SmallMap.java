@@ -184,8 +184,8 @@ public class SmallMap<K,V> implements Map<K,V> {
    * 
    * @see java.util.Map#putAll(java.util.Map)
    */
-  public void putAll(Map<? extends K, ? extends V> t) {
-    Assertions.UNREACHABLE();
+  public void putAll(Map<? extends K, ? extends V> t) throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
 
   /*
