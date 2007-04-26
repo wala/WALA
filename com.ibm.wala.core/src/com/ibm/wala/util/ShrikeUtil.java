@@ -32,7 +32,6 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class ShrikeUtil implements BytecodeConstants {
 
-  
   private static HashMap<String, TypeReference> primitiveMap;
 
   static {
@@ -48,6 +47,7 @@ public class ShrikeUtil implements BytecodeConstants {
     primitiveMap.put("V", TypeReference.Void);
     primitiveMap.put(Constants.TYPE_null, TypeReference.Null);
   }
+
   /**
    * Method getInvocationCode.
    * 
@@ -74,7 +74,7 @@ public class ShrikeUtil implements BytecodeConstants {
    * @param type
    *          a type as a String returned by Shrike
    */
-  public static TypeReference makeTypeReference(ClassLoaderReference loader, String type) {
+  public static TypeReference makeTypeReference(ClassLoaderReference loader, String type) throws IllegalArgumentException {
 
     if (Assertions.verifyAssertions) {
       Assertions._assert(type != null);
@@ -97,17 +97,19 @@ public class ShrikeUtil implements BytecodeConstants {
     return TypeReference.findOrCreate(loader, T);
   }
 
-  public static FieldReference makeFieldReference(ClassLoaderReference loader, String classType, String fieldName, String fieldType) {
+  public static FieldReference makeFieldReference(ClassLoaderReference loader, String classType, String fieldName, String fieldType)
+      throws IllegalArgumentException {
     TypeReference c = makeTypeReference(loader, classType);
     TypeReference ft = makeTypeReference(loader, fieldType);
     Atom name = Atom.findOrCreateUnicodeAtom(fieldName);
     return FieldReference.findOrCreate(c, name, ft);
   }
 
-  public static MethodReference makeMethodReference(ClassLoaderReference loader, String methodClass, String methodName, String methodSignature) {
-    TypeReference t = makeTypeReference(loader,methodClass);
+  public static MethodReference makeMethodReference(ClassLoaderReference loader, String methodClass, String methodName,
+      String methodSignature) throws IllegalArgumentException {
+    TypeReference t = makeTypeReference(loader, methodClass);
     Atom name = Atom.findOrCreateUnicodeAtom(methodName);
     Descriptor d = Descriptor.findOrCreateUTF8(methodSignature);
-    return MethodReference.findOrCreate(t,name,d);
+    return MethodReference.findOrCreate(t, name, d);
   }
 }

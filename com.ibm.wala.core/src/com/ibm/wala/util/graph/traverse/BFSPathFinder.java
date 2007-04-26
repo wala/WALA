@@ -77,10 +77,12 @@ public class BFSPathFinder<T> {
    * @param G
    *          the graph whose nodes to enumerate
    */
-  public BFSPathFinder(Graph<T> G, T src, final T target) {
-
+  public BFSPathFinder(Graph<T> G, T src, final T target) throws IllegalArgumentException {
     this.G = G;
     this.roots = new NonNullSingletonIterator<T>(src);
+    if (!G.containsNode(src)) {
+      throw new IllegalArgumentException("src is not in graph " + src);
+    }
     this.filter = new Filter() {
       public boolean accepts(Object o) {
         return target.equals(o);

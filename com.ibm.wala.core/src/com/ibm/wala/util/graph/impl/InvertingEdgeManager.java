@@ -27,7 +27,7 @@ public class InvertingEdgeManager<T> implements EdgeManager<T> {
     this.original = original;
   }
 
-  public Iterator<? extends T> getPredNodes(T N) {
+  public Iterator<? extends T> getPredNodes(T N) throws IllegalArgumentException {
     return original.getSuccNodes(N);
   }
 

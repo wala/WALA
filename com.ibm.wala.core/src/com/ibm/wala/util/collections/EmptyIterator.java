@@ -12,8 +12,6 @@ package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 
-import com.ibm.wala.util.debug.Assertions;
-
 /**
  *
  * A singleton instance of an empty iterator; this is better than
@@ -53,8 +51,8 @@ public final class EmptyIterator<T> implements Iterator<T> {
   /* (non-Javadoc)
    * @see java.util.Iterator#remove()
    */
-  public void remove() {
-    Assertions.UNREACHABLE();
+  public void remove() throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
 
 }

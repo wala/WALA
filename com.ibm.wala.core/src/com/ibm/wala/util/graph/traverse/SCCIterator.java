@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.util.collections.ReverseIterator;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 
@@ -79,11 +78,12 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
     return currentSCC;
   }
 
-  /**
+
+  /* (non-Javadoc)
    * @see java.util.Iterator#remove()
    */
-  public void remove() {
-    Assertions.UNREACHABLE();
+  public void remove() throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
 
 }

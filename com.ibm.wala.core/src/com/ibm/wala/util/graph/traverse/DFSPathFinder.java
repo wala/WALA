@@ -63,7 +63,10 @@ public class DFSPathFinder<T> extends Stack<T> {
    *
    * @param G the graph whose nodes to enumerate
    */
-  public DFSPathFinder(Graph<T> G, T N, Filter f) {
+  public DFSPathFinder(Graph<T> G, T N, Filter f) throws IllegalArgumentException {
+    if (!G.containsNode(N)) {
+      throw new IllegalArgumentException("source node not in graph: " + N);
+    }
     this.G = G;
     this.roots = new NonNullSingletonIterator<T>(N);
     this.filter = f;

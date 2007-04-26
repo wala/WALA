@@ -15,6 +15,7 @@ import java.util.Stack;
 
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 
 /**
@@ -136,8 +137,8 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
   /**
    * @see java.util.Iterator#remove()
    */
-  public void remove() {
-    Assertions.UNREACHABLE();
+  public void remove() throws UnimplementedError {
+    throw new UnimplementedError();
   }
 
 }

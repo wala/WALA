@@ -67,7 +67,7 @@ public class DelegatingGraph<T> implements Graph<T> {
     return delegate.iterator();
   }
 
-  public void removeAllIncidentEdges(T node) {
+  public void removeAllIncidentEdges(T node) throws IllegalArgumentException {
     delegate.removeAllIncidentEdges(node);
   }
 
@@ -87,7 +87,7 @@ public class DelegatingGraph<T> implements Graph<T> {
     delegate.removeNodeAndEdges(N);
   }
 
-  public void removeOutgoingEdges(T node) {
+  public void removeOutgoingEdges(T node) throws IllegalArgumentException {
     delegate.removeOutgoingEdges(node);
   }
   

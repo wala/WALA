@@ -16,7 +16,6 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 
@@ -146,10 +145,5 @@ public class BFSIterator<T> implements Iterator<T> {
    */
   public void remove() throws UnimplementedError {
     throw new UnimplementedError();
-  }
-
-  public int hashCode() {
-    Assertions.UNREACHABLE("define a custom hash code to avoid non-determinism");
-    return 0;
   }
 }

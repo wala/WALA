@@ -10,10 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.model.java.lang;
 
+import com.ibm.wala.annotations.Internal;
+
 /**
  * @author sfink
-
  */
+@Internal
 public class System {
 
   /**
