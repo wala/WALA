@@ -23,8 +23,8 @@ import com.ibm.wala.types.TypeReference;
 
 /**
  * 
- * An entrypoint which chooses some valid (non-interface) concrete type for
- * each argument, if one is available.
+ * An entrypoint which chooses some valid (non-interface) concrete type for each
+ * argument, if one is available.
  * 
  * @author sfink
  */
@@ -41,24 +41,26 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
     TypeReference[][] result = new TypeReference[method.getNumberOfParameters()][];
     for (int i = 0; i < result.length; i++) {
       TypeReference t = method.getParameterType(i);
-      IClass klass = cha.lookupClass(t);
-      if (klass == null) {
-        t = null;
-      } else if (klass.isAbstract()) {
-        t = chooseAConcreteSubClass(klass);
-      } else if (klass.isInterface()) {
-        t = chooseAnImplementor(klass);
-      } else if (klass.isArrayClass()) {
-        ArrayClass arrayKlass = (ArrayClass) klass;
-        IClass innermost = arrayKlass.getInnermostElementClass();
-        if (innermost != null && innermost.isInterface()) {
-          TypeReference impl = chooseAnImplementor(innermost);
-          if (impl == null) {
-            t = null;
-          } else {
-            t = TypeReference.findOrCreateArrayOf(impl);
-            for (int dim = 1; dim < arrayKlass.getDimensionality(); dim++) {
-              t = TypeReference.findOrCreateArrayOf(t);
+      if (!t.isPrimitiveType()) {
+        IClass klass = cha.lookupClass(t);
+        if (klass == null) {
+          t = null;
+        } else if (klass.isAbstract()) {
+          t = chooseAConcreteSubClass(klass);
+        } else if (klass.isInterface()) {
+          t = chooseAnImplementor(klass);
+        } else if (klass.isArrayClass()) {
+          ArrayClass arrayKlass = (ArrayClass) klass;
+          IClass innermost = arrayKlass.getInnermostElementClass();
+          if (innermost != null && innermost.isInterface()) {
+            TypeReference impl = chooseAnImplementor(innermost);
+            if (impl == null) {
+              t = null;
+            } else {
+              t = TypeReference.findOrCreateArrayOf(impl);
+              for (int dim = 1; dim < arrayKlass.getDimensionality(); dim++) {
+                t = TypeReference.findOrCreateArrayOf(t);
+              }
             }
           }
         }

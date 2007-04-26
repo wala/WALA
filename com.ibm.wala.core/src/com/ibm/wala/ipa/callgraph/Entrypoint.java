@@ -65,12 +65,12 @@ public abstract class Entrypoint implements BytecodeConstants {
    * @return the call site reference, or null if failed to find entrypoint
    */
   public CallSiteReference makeSite(int programCounter) {
-    
+
     if (method.getSelector().equals(MethodReference.clinitSelector)) {
       Assertions._assert(method.isStatic());
       return CallSiteReference.make(programCounter, method.getReference(), IInvokeInstruction.Dispatch.STATIC);
     } else if (method.getSelector().equals(MethodReference.initSelector)) {
-      Assertions._assert(! method.isStatic());
+      Assertions._assert(!method.isStatic());
       return CallSiteReference.make(programCounter, method.getReference(), IInvokeInstruction.Dispatch.SPECIAL);
     } else {
       if (method.getDeclaringClass().isInterface()) {
@@ -96,7 +96,9 @@ public abstract class Entrypoint implements BytecodeConstants {
    */
   protected int makeArgument(FakeRootMethod m, int i, WarningSet warnings) {
     TypeReference[] p = getParameterTypes(i);
-    if (p.length == 1) {
+    if (p.length == 0) {
+      return -1;
+    } else if (p.length == 1) {
       SSANewInstruction n = m.addAllocation(p[0], warnings);
       return (n == null) ? -1 : n.getDef();
     } else {
@@ -120,13 +122,16 @@ public abstract class Entrypoint implements BytecodeConstants {
     }
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
     // assume these are managed canonically
     return this == obj;
   }
+
   /**
    * Add a call to this entrypoint from the fake root method
    * 
@@ -143,6 +148,10 @@ public abstract class Entrypoint implements BytecodeConstants {
     paramValues = new int[getNumberOfParameters()];
     for (int j = 0; j < paramValues.length; j++) {
       paramValues[j] = makeArgument(m, j, warnings);
+      if (paramValues[j] == -1) {
+        // there was a problem
+        return null;
+      }
     }
 
     return m.addInvocation(paramValues, site);
@@ -158,16 +167,18 @@ public abstract class Entrypoint implements BytecodeConstants {
   /**
    * @param i
    * @return types to allocate for parameter i; for non-static methods,
-   * parameter 0 is "this"
+   *         parameter 0 is "this"
    */
   public abstract TypeReference[] getParameterTypes(int i);
-  
+
   /**
    * @return number of parameters to this call, including "this" for non-statics
    */
   public abstract int getNumberOfParameters();
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see java.lang.Object#toString()
    */
   public String toString() {
@@ -178,7 +189,7 @@ public abstract class Entrypoint implements BytecodeConstants {
       result.append(",");
     }
     if (getNumberOfParameters() > 0) {
-      result.append(getParameterTypes(getNumberOfParameters()-1));
+      result.append(getParameterTypes(getNumberOfParameters() - 1));
     }
     result.append(")");
     return result.toString();
