@@ -98,7 +98,10 @@ public final class NewInstruction extends Instruction {
     return "New(" + type + "," + arrayBoundsCount + ")";
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws IllegalArgumentException {
+    if (v == null) {
+      throw new IllegalArgumentException();
+    }
     v.visitNew(this);
   }
 

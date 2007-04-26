@@ -75,7 +75,10 @@ public class LocalAllocator implements MethodData.Results {
   /**
    * Allocates a new local variable of the specified type.
    */
-  public static int allocate(MethodData info, int count) {
+  public static int allocate(MethodData info, int count) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     LocalAllocator l = (LocalAllocator) info.getInfo(key);
     if (l == null) {
       l = new LocalAllocator(info);
@@ -85,14 +88,14 @@ public class LocalAllocator implements MethodData.Results {
     return l.allocateLocals(count);
   }
 
-  public static int allocate(MethodData info, String type) {
+  public static int allocate(MethodData info, String type) throws IllegalArgumentException {
     return allocate(info, type == null ? 2 : Util.getWordSize(type));
   }
 
   /**
    * Allocates a new local that will fit any type.
    */
-  public static int allocate(MethodData info) {
+  public static int allocate(MethodData info) throws IllegalArgumentException {
     return allocate(info, null);
   }
 }

@@ -34,7 +34,7 @@ public final class ShiftInstruction extends Instruction {
     return r;
   }
 
-  public static ShiftInstruction make(String type, Operator operator) {
+  public static ShiftInstruction make(String type, Operator operator) throws IllegalArgumentException {
     int t = Util.getTypeIndex(type);
     if (t < 0 || t > TYPE_long_index) {
       throw new IllegalArgumentException("Cannot apply shift to type " + type);

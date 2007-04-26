@@ -186,7 +186,10 @@ public final class ClassWriter implements ClassConstants {
    *          but may slow down performance because the raw pool must be
    *          completely parsed
    */
-  public void setRawCP(ConstantPoolParser cp, boolean cacheEntries) throws InvalidClassFileException {
+  public void setRawCP(ConstantPoolParser cp, boolean cacheEntries) throws InvalidClassFileException, IllegalArgumentException {
+    if (cp == null) {
+      throw new IllegalArgumentException();
+    }
     if (rawCP != null) {
       throw new IllegalArgumentException("Cannot set raw constant pool twice");
     }

@@ -25,7 +25,7 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     this.opcode = opcode;
   }
 
-  public static InvokeInstruction make(String type, String className, String methodName, Dispatch mode) {
+  public static InvokeInstruction make(String type, String className, String methodName, Dispatch mode) throws NullPointerException {
     if (type == null) {
       throw new NullPointerException("type must not be null");
     }
@@ -34,6 +34,9 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     }
     if (methodName == null) {
       throw new NullPointerException("methodName must not be null");
+    }
+    if (mode == null) {
+      throw new NullPointerException("mode must not be null");
     }
     return new InvokeInstruction((short) (OP_invokevirtual + mode.ordinal()), type, className, methodName);
   }

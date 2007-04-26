@@ -327,7 +327,10 @@ public abstract class OfflineInstrumenterBase {
    * Read a list of class file names from a stream and add them to the list of
    * things to instrument.
    */
-  final public void readInputClasses(InputStream s) throws IOException {
+  final public void readInputClasses(InputStream s) throws IOException, IllegalArgumentException {
+    if (s == null) {
+      throw new IllegalArgumentException("illegal null inputStream");
+    }
     String str;
     BufferedReader r = new BufferedReader(new InputStreamReader(s));
     while ((str = r.readLine()) != null) {

@@ -52,30 +52,55 @@ public class InstructionTypeCounter implements MethodData.Results {
   private final static String key = InstructionTypeCounter.class.getName();
 
   private int countMonitors;
+
   private int countGets;
+
   private int countPuts;
+
   private int countArrayLoads;
+
   private int countArrayStores;
+
   private int countInvokes;
+
   private int countArrayLengths;
+
   private int countBinaryOps;
+
   private int countCheckCasts;
+
   private int countComparisons;
+
   private int countConditionalBranches;
+
   private int countConstants;
+
   private int countConversions;
+
   private int countDups;
+
   private int countGotos;
+
   private int countInstanceOfs;
+
   private int countLocalLoads;
+
   private int countLocalStores;
+
   private int countNews;
+
   private int countPops;
+
   private int countReturns;
+
   private int countShifts;
+
   private int countSwaps;
+
   private int countSwitches;
+
   private int countThrows;
+
   private int countUnaryOps;
 
   InstructionTypeCounter(MethodData info) {
@@ -233,107 +258,185 @@ public class InstructionTypeCounter implements MethodData.Results {
     return true;
   }
 
-  public static int getArrayLoadCount(MethodData info) {
+  public static int getArrayLoadCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countArrayLoads;
   }
 
-  public static int getArrayStoreCount(MethodData info) {
+  public static int getArrayStoreCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countArrayStores;
   }
 
-  public static int getGetCount(MethodData info) {
+  public static int getGetCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countGets;
   }
 
-  public static int getPutCount(MethodData info) {
+  public static int getPutCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countPuts;
   }
 
-  public static int getMonitorCount(MethodData info) {
+  public static int getMonitorCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countMonitors;
   }
 
-  public static int getInvokeCount(MethodData info) {
+  public static int getInvokeCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countInvokes;
   }
 
-  public static int getComparisonCount(MethodData info) {
+  public static int getComparisonCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countComparisons;
   }
 
-  public static int getArrayLengthCount(MethodData info) {
+  public static int getArrayLengthCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countArrayLengths;
   }
 
-  public static int getConstantCount(MethodData info) {
+  public static int getConstantCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countConstants;
   }
 
-  public static int getShiftCount(MethodData info) {
+  public static int getShiftCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countShifts;
   }
 
-  public static int getSwitchesCount(MethodData info) {
+  public static int getSwitchesCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countSwitches;
   }
 
-  public static int getSwapCount(MethodData info) {
+  public static int getSwapCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countSwaps;
   }
 
-  public static int getBinaryOpCount(MethodData info) {
+  public static int getBinaryOpCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countBinaryOps;
   }
 
-  public static int getCheckCastCount(MethodData info) {
+  public static int getCheckCastCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countCheckCasts;
   }
 
-  public static int getThrowCount(MethodData info) {
+  public static int getThrowCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countThrows;
   }
 
-  public static int getConditionalBranchCount(MethodData info) {
+  public static int getConditionalBranchCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countConditionalBranches;
   }
 
-  public static int getConversionCount(MethodData info) {
+  public static int getConversionCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countConversions;
   }
 
-  public static int getDupCount(MethodData info) {
+  public static int getDupCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countDups;
   }
 
-  public static int getGotoCount(MethodData info) {
+  public static int getGotoCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countGotos;
   }
 
-  public static int getReturnCount(MethodData info) {
+  public static int getReturnCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countReturns;
   }
 
-  public static int getInstanceOfCount(MethodData info) {
+  public static int getInstanceOfCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countInstanceOfs;
   }
 
-  public static int getLocalLoadCount(MethodData info) {
+  public static int getLocalLoadCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countLocalLoads;
   }
 
-  public static int getLocalStoreCount(MethodData info) {
+  public static int getLocalStoreCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countLocalStores;
   }
 
-  public static int getNewCount(MethodData info) {
+  public static int getNewCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countNews;
   }
 
-  public static int getPopCount(MethodData info) {
+  public static int getPopCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countPops;
   }
 
-  public static int getUnaryOpCount(MethodData info) {
+  public static int getUnaryOpCount(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     return getCounter(info).countUnaryOps;
   }
 

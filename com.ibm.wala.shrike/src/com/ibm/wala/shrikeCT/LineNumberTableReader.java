@@ -56,7 +56,11 @@ public final class LineNumberTableReader extends AttributeReader {
    *         that that byte belongs to, or null if there is no line number data
    *         in the Code
    */
-  public static int[] makeBytecodeToSourceMap(CodeReader code) throws InvalidClassFileException {
+  public static int[] makeBytecodeToSourceMap(CodeReader code) throws InvalidClassFileException, IllegalArgumentException {
+   
+    if (code == null) {
+      throw new IllegalArgumentException();
+    }
     int[] r = null;
     ClassReader cr = code.getClassReader();
 

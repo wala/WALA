@@ -49,17 +49,23 @@ public final class PopInstruction extends Instruction {
     return size;
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws IllegalArgumentException {
+    if (v == null) {
+      throw new IllegalArgumentException();
+    }
     v.visitPop(this);
   }
 
   public String toString() {
     return "Pop(" + size + ")";
   }
-      /* (non-Javadoc)
-     * @see com.ibm.domo.cfg.IInstruction#isPEI()
-     */
-    public boolean isPEI() {
-      return false;
-    }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.domo.cfg.IInstruction#isPEI()
+   */
+  public boolean isPEI() {
+    return false;
+  }
 }

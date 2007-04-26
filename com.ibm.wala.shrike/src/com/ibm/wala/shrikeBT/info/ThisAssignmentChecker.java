@@ -58,7 +58,10 @@ public class ThisAssignmentChecker implements MethodData.Results {
   /**
    * @return true iff 'this' is assigned to by the method
    */
-  public static boolean isThisAssigned(MethodData info) {
+  public static boolean isThisAssigned(MethodData info) throws IllegalArgumentException {
+    if (info == null) {
+      throw new IllegalArgumentException();
+    }
     ThisAssignmentChecker c = (ThisAssignmentChecker) info.getInfo(key);
     if (c == null) {
       c = new ThisAssignmentChecker(info);

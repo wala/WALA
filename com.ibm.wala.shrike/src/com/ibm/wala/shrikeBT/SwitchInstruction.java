@@ -129,7 +129,10 @@ public final class SwitchInstruction extends Instruction {
     return b.toString();
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws IllegalArgumentException {
+    if (v == null) {
+      throw new IllegalArgumentException();
+    }
     v.visitSwitch(this);
   }
 

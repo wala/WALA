@@ -54,7 +54,10 @@ final public class CTDecoder extends Decoder {
    * Build a ConstantPoolReader implementation to read the constant pool from
    * 'cr'.
    */
-  public static ConstantPoolReader makeConstantPoolReader(ClassReader cr) {
+  public static ConstantPoolReader makeConstantPoolReader(ClassReader cr) throws IllegalArgumentException {
+    if (cr == null) {
+      throw new IllegalArgumentException("illegal null cr");
+    }
     return new CPReader(cr.getCP());
   }
 

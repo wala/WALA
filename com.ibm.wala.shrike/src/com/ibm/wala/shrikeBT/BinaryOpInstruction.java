@@ -49,7 +49,7 @@ final public class BinaryOpInstruction extends Instruction {
     return r;
   }
 
-  public static BinaryOpInstruction make(String type, Operator operator) {
+  public static BinaryOpInstruction make(String type, Operator operator) throws IllegalArgumentException {
     int t = Util.getTypeIndex(type);
     if (t < 0) {
       throw new IllegalArgumentException("Invalid type for BinaryOp: " + type);

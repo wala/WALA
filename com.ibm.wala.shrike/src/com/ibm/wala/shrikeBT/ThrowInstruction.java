@@ -40,7 +40,10 @@ public final class ThrowInstruction extends Instruction {
     return 1;
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws IllegalArgumentException {
+    if (v == null) {
+      throw new IllegalArgumentException();
+    }
     v.visitThrow(this);
   }
 

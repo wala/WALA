@@ -41,7 +41,7 @@ public final class ConditionalBranchInstruction extends Instruction {
     this.label = label;
   }
 
-  public static ConditionalBranchInstruction make(String type, Operator operator, int label) {
+  public static ConditionalBranchInstruction make(String type, Operator operator, int label) throws IllegalArgumentException {
     int t = Util.getTypeIndex(type);
     short opcode;
 

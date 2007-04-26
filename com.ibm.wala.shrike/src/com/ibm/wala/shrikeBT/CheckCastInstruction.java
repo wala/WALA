@@ -58,6 +58,9 @@ final public class CheckCastInstruction extends Instruction {
   }
 
   public void visit(Visitor v) {
+    if (v == null) {
+      throw new IllegalArgumentException();
+    }
     v.visitCheckCast(this);
   }
 

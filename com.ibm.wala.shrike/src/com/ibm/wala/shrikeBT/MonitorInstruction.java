@@ -46,7 +46,10 @@ public final class MonitorInstruction extends Instruction {
     return 1;
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws IllegalArgumentException{
+    if (v == null) {
+      throw new IllegalArgumentException();
+    }
     v.visitMonitor(this);
   }
 

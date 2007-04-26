@@ -71,7 +71,7 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
    * result of out.emitClass(). You can add new fields and methods to 'code' (or
    * make other changes) before calling this method.
    */
-  public void outputModifiedClass(ClassInstrumenter out, ClassWriter code) throws IOException {
+  public void outputModifiedClass(ClassInstrumenter out, ClassWriter code) throws IllegalStateException, IOException {
     internalOutputModifiedClass(out, code);
   }
 
@@ -79,7 +79,10 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
    * Update the original class with some method changes. This method calls
    * out.emitClass() for you.
    */
-  public void outputModifiedClass(ClassInstrumenter out) throws IOException {
+  public void outputModifiedClass(ClassInstrumenter out) throws IllegalArgumentException, IOException {
+    if (out == null) {
+      throw new IllegalArgumentException();
+    }
     try {
       internalOutputModifiedClass(out, out.emitClass());
     } catch (InvalidClassFileException e) {

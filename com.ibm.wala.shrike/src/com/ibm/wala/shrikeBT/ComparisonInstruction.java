@@ -15,7 +15,9 @@ package com.ibm.wala.shrikeBT;
  */
 final public class ComparisonInstruction extends Instruction {
   public enum Operator {
-	CMP, CMPL, CMPG; 
+    CMP,
+    CMPL,
+    CMPG;
 
     @Override
     public String toString() {
@@ -28,6 +30,7 @@ final public class ComparisonInstruction extends Instruction {
   }
 
   private final static ComparisonInstruction preallocatedLCMP = new ComparisonInstruction((short) OP_lcmp);
+
   private final static ComparisonInstruction[] preallocatedFloatingCompares = preallocateFloatingCompares();
 
   private static ComparisonInstruction[] preallocateFloatingCompares() {
@@ -38,7 +41,7 @@ final public class ComparisonInstruction extends Instruction {
     return r;
   }
 
-  public static ComparisonInstruction make(String type, Operator operator) {
+  public static ComparisonInstruction make(String type, Operator operator) throws IllegalArgumentException {
     int t = Util.getTypeIndex(type);
     switch (t) {
     case TYPE_long_index:
@@ -124,10 +127,13 @@ final public class ComparisonInstruction extends Instruction {
   public String toString() {
     return "Comparison(" + getType() + "," + getOperator() + ")";
   }
-      /* (non-Javadoc)
-     * @see com.ibm.domo.cfg.IInstruction#isPEI()
-     */
-    public boolean isPEI() {
-      return false;
-    }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.domo.cfg.IInstruction#isPEI()
+   */
+  public boolean isPEI() {
+    return false;
+  }
 }

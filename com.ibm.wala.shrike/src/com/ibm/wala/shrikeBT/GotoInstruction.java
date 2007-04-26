@@ -82,7 +82,10 @@ public final class GotoInstruction extends Instruction {
     return "Goto(" + getLabel() + ")";
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws IllegalArgumentException {
+    if (v == null) {
+      throw new IllegalArgumentException();
+    }
     v.visitGoto(this);
   }
 

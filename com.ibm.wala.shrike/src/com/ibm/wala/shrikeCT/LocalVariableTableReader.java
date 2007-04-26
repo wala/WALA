@@ -63,7 +63,11 @@ public final class LocalVariableTableReader extends AttributeReader {
    *         typeIndex) for each local variable; a pair (0,0) indicates there is
    *         no information for that local variable at that offset
    */
-  public static int[][] makeVarMap(CodeReader code) throws InvalidClassFileException {
+  public static int[][] makeVarMap(CodeReader code) throws InvalidClassFileException, IllegalArgumentException{
+    if (code == null) {
+      throw new IllegalArgumentException();
+    }
+    
     int[][] r = null;
     ClassReader cr = code.getClassReader();
 

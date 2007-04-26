@@ -21,7 +21,11 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
  * @author roca@us.ibm.com
  */
 public class CTUtils {
-  public static void addClassToHierarchy(ClassHierarchyStore store, ClassReader cr) throws InvalidClassFileException {
+  public static void addClassToHierarchy(ClassHierarchyStore store, ClassReader cr) throws InvalidClassFileException,
+      IllegalArgumentException {
+    if (cr == null) {
+      throw new IllegalArgumentException();
+    }
     String[] superInterfaces = new String[cr.getInterfaceCount()];
     for (int i = 0; i < superInterfaces.length; i++) {
       superInterfaces[i] = CTDecoder.convertClassToType(cr.getInterfaceName(i));

@@ -40,7 +40,7 @@ public final class UnaryOpInstruction extends Instruction {
     return r;
   }
 
-  public static UnaryOpInstruction make(String type, Operator operator) {
+  public static UnaryOpInstruction make(String type, Operator operator) throws IllegalArgumentException {
     int t = Util.getTypeIndex(type);
     if (t < 0 || t > TYPE_double_index) {
       throw new IllegalArgumentException("Type " + type + " cannot have a unary operator applied");

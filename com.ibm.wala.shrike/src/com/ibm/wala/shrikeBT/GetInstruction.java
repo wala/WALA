@@ -133,7 +133,10 @@ public class GetInstruction extends Instruction {
         + ")";
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws IllegalArgumentException {
+    if (v == null) {
+      throw new IllegalArgumentException();
+    }
     v.visitGet(this);
   }
     /* (non-Javadoc)
