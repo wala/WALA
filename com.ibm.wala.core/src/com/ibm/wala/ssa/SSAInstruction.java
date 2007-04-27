@@ -31,7 +31,23 @@ public abstract class SSAInstruction implements IInstruction {
   }
 
   /**
-   * TODO: document me ... what do my parameters mean? (Julian?)
+   *  This method is meant to be used during SSA conversion for an IR
+   * that is not in SSA form. It creates a new SSAInstruction of the
+   * same type as the receiver, with a combination of the receiver's
+   * uses and defs and those from the method parameters. 
+   *
+   *  In particular, if the 'defs' parameter is null, then the new
+   * instruction has the same defs as the receiver.  If 'defs' is not
+   * null, it must be an array with a size equal to the number of
+   * defs that the receiver instruction has.  In this case, the new
+   * instruction has defs taken from the array.  The uses of the new
+   * instruction work in the same way with the 'uses' parameter.
+   *
+   *  Note that this only applies to CAst-based IR translation, since
+   * Java bytecode-based IR generation uses a different SSA
+   * construction mechanism.
+   *
+   * @see com.ibm.wala.cast.ir.ssa.SSAConversion
    */
   public abstract SSAInstruction copyForSSA(int[] defs, int[] uses);
 
