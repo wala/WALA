@@ -29,6 +29,11 @@ import com.ibm.wala.util.warnings.WalaException;
  */
 public class FileUtil {
 
+  /**
+   * List all the files in a directory that match a regular expression
+   * 
+   * @param recurse recurse to subdirectories?
+   */
   public static Collection<File> listFiles(String dir, String regex, boolean recurse) {
     File d = new File(dir);
     Pattern p = null;

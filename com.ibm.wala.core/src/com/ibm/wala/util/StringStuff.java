@@ -113,6 +113,10 @@ public class StringStuff {
       }
     }
   }
+  
+  public static final TypeName parseForReturnTypeName(String desc) throws IllegalArgumentException {
+    return parseForReturnTypeName(ImmutableByteArray.make(desc));
+  }
 
   /**
    * Parse method descriptor to obtain description of method's return type.
@@ -167,6 +171,10 @@ public class StringStuff {
       }
       return null;
     }
+  }
+  
+  public static final TypeName[] parseForParameterNames(String descriptor) throws IllegalArgumentException {
+    return parseForParameterNames(ImmutableByteArray.make(descriptor));
   }
 
   /**
@@ -578,4 +586,5 @@ public class StringStuff {
     }
     return dotForm.toString();
   }
+
 }

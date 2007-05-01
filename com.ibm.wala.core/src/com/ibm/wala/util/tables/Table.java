@@ -12,7 +12,9 @@ package com.ibm.wala.util.tables;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.Properties;
@@ -90,9 +92,23 @@ public class Table implements Cloneable {
    */
   private static Table readFromTextFile(File f) throws WalaException {
     try {
+      return readFromStream(new FileInputStream(f));
+    } catch (FileNotFoundException e) {
+      e.printStackTrace();
+      throw new WalaException("readFromTextFile failed");
+    }
+  }
+  
+  /**
+   * @param s
+   *          a stream  containing a table in text format, whitespace delimited
+   * @throws WalaException
+   */
+  public static Table readFromStream(InputStream s) throws WalaException {
+    try {
       Table result = new Table();
 
-      LineNumberReader reader = new LineNumberReader(new InputStreamReader(new FileInputStream(f)));
+      LineNumberReader reader = new LineNumberReader(new InputStreamReader(s));
 
       // LineNumberReader reader = new LineNumberReader(new
       // InputStreamReader(new FileInputStream(f)));
@@ -113,7 +129,7 @@ public class Table implements Cloneable {
       return result;
     } catch (IOException e) {
       e.printStackTrace();
-      throw new WalaException("Table.readFromTextFile " + f.getName(), e);
+      throw new WalaException("readFromStream failed");
     }
   }
 
