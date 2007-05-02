@@ -13,7 +13,7 @@ package com.ibm.wala.logic;
 import java.util.Collection;
 
 
-public class BasicTheory implements ITheory {
+public class BasicTheory extends AbstractTheory {
 
   private final IVocabulary vocab;
   private final Collection<? extends IFormula> sentences;

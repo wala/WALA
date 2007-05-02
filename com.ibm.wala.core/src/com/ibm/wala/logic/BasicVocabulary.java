@@ -24,7 +24,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  * @author sjfink
  *
  */
-public class BasicVocabulary<T> implements IVocabulary<T> {
+public class BasicVocabulary<T> extends AbstractVocabulary<T> {
 
   private final Collection<? extends IFunction> functions;
   private final Collection<? extends IRelation> relations;
@@ -55,6 +55,10 @@ public class BasicVocabulary<T> implements IVocabulary<T> {
   public static <T> BasicVocabulary make(Collection<IFunction> f) {
     Collection<IRelation> empty = Collections.emptySet();
     return new BasicVocabulary<T>(f, empty);
+  }
+  
+  public static <T> BasicVocabulary make(Collection<IFunction> f, Collection<IRelation> r) {
+    return new BasicVocabulary<T>(f, r);
   }
 
   public OrdinalSetMapping<T> getConstants() {
