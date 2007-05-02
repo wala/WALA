@@ -7,9 +7,7 @@ Bundle-Activator: com.ibm.wala.cast.java.JavaSourcePlugin
 Bundle-Vendor: rfuhrer@watson.ibm.com
 Bundle-Localization: plugin
 Require-Bundle: com.ibm.wala.cast;visibility:=reexport,
- com.ibm.wala.core;visibility:=reexport,
- org.eclipse.jdt.core,
- org.eclipse.core.runtime
+ com.ibm.wala.core;visibility:=reexport
 Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.cast.java,
  com.ibm.wala.cast.java.analysis.typeInference,
