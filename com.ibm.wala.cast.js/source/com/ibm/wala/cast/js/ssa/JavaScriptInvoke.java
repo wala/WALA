@@ -182,30 +182,30 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
     return site.hashCode() * function * 7529;
   }
 
-  public boolean equals(Object obj) {
-    if (obj instanceof JavaScriptInvoke) {
-      JavaScriptInvoke other = (JavaScriptInvoke)obj;
-      if (site.equals(other.site)) {
-	if (getNumberOfUses() == other.getNumberOfUses()) {
-	  for(int i = 0; i < getNumberOfUses(); i++) {
-	    if (getUse(i) != other.getUse(i)) {
-	      return false;
-	    }
-	  }
-
-	  if (getNumberOfDefs() == other.getNumberOfDefs()) {
-	    for(int i = 0; i < getNumberOfDefs(); i++) {
-	      if (getDef(i) != other.getDef(i)) {
-		return false;
-	      }
-	    }
-
-	    return true;
-	  }
-	}
-      }
-    }
-
-    return false;
-  }
+//  public boolean equals(Object obj) {
+//    if (obj instanceof JavaScriptInvoke) {
+//      JavaScriptInvoke other = (JavaScriptInvoke)obj;
+//      if (site.equals(other.site)) {
+//	if (getNumberOfUses() == other.getNumberOfUses()) {
+//	  for(int i = 0; i < getNumberOfUses(); i++) {
+//	    if (getUse(i) != other.getUse(i)) {
+//	      return false;
+//	    }
+//	  }
+//
+//	  if (getNumberOfDefs() == other.getNumberOfDefs()) {
+//	    for(int i = 0; i < getNumberOfDefs(); i++) {
+//	      if (getDef(i) != other.getDef(i)) {
+//		return false;
+//	      }
+//	    }
+//
+//	    return true;
+//	  }
+//	}
+//      }
+//    }
+//
+//    return false;
+//  }
 }
