@@ -257,7 +257,7 @@ public abstract class SSAInstruction implements IInstruction {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
-  public boolean equals(Object obj) {
+  public final boolean equals(Object obj) {
     return this == obj;
   }
 }

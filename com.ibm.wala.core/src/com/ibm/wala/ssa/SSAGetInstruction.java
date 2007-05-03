@@ -96,7 +96,7 @@ public class SSAGetInstruction extends SSAFieldAccessInstruction {
   }
 
   public int hashCode() {
-    return result * 2371 ^ 6521;
+    return result * 2371 + 6521;
   }
 
   /*

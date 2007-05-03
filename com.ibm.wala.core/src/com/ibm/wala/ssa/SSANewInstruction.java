@@ -158,19 +158,4 @@ public class SSANewInstruction extends SSAInstruction {
   public Collection<TypeReference> getExceptionTypes() {
     return site.getDeclaredType().isArrayType() ? Exceptions.getNewArrayExceptions() : Exceptions.getNewScalarExceptions();
   }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  public boolean equals(Object arg0) {
-    if (arg0 instanceof SSANewInstruction) {
-      SSANewInstruction other = (SSANewInstruction) arg0;
-      return result == other.result && site.equals(other.site);
-    } else {
-      return false;
-    }
-  }
-
 }

@@ -70,15 +70,6 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
     return 2;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  public boolean equals(Object obj) {
-    return this == obj;
-  }
-
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */

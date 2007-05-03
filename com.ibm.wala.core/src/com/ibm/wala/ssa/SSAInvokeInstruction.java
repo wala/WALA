@@ -134,19 +134,4 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
   public Collection<TypeReference> getExceptionTypes() {
     return Exceptions.getNullPointerException();
   }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
-  public boolean equals(Object obj) {
-    if (obj instanceof SSAInvokeInstruction) {
-      SSAInvokeInstruction other = (SSAInvokeInstruction) obj;
-      return site.equals(other.site) && result == other.result;
-    } else {
-      return false;
-    }
-  }
-
 }
