@@ -122,15 +122,6 @@ public abstract class AbstractLexicalInvoke
     return site.hashCode() * 7529;
   }
 
-  public boolean equals(Object obj) {
-    if (obj != null && getClass().equals(obj.getClass())) {
-      SSAAbstractInvokeInstruction other = (SSAAbstractInvokeInstruction)obj;
-      return site.equals(other.getCallSite());
-    } else {
-      return false;
-    }
-  }
-
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     StringBuffer s = new StringBuffer(super.toString(symbolTable, d));
 
