@@ -68,6 +68,11 @@ public final class TypeName {
   public static TypeName findOrCreate(ImmutableByteArray name) throws IllegalArgumentException {
     return findOrCreate(name, 0, name.length());
   }
+  
+  public static TypeName findOrCreate(String name) throws IllegalArgumentException {
+    ImmutableByteArray b = ImmutableByteArray.make(name);
+    return findOrCreate(b);
+  }
 
   public static TypeName findOrCreateClass(Atom packageName, Atom className) {
     if (Assertions.verifyAssertions) {

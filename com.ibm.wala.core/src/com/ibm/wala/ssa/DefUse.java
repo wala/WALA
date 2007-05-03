@@ -47,11 +47,17 @@ public class DefUse {
   private ArrayList<SSAInstruction> allInstructions = new ArrayList<SSAInstruction>();
 
   /**
+   * prevent the IR from being collected while this is live.
+   */
+  private final IR ir;
+  
+  /**
    * keep this package private: all calls should be through SSACache
    * @param ir
    *          an IR in SSA form.
    */
   public DefUse(final IR ir) {
+    this.ir = ir;
     SymbolTable st = ir.getSymbolTable();
 
     // set up mapping from integer -> instruction
@@ -149,5 +155,18 @@ public class DefUse {
    */
   public int getNumberOfUses(int v) {
     return uses[v] == null ? 0 : uses[v].size();
+  }
+  
+  /**
+   * Return the actual, honest-to-goodness IR object used to compute the
+   * DefUse information.   By doing this, you ensure that for any
+   * SSAInstruction returned by getUses() or getDefs(), the instruction
+   * actually == (equals()) an SSAInstruction in the IR.
+   * 
+   * This is pretty horrible.   TODO: Should think about redesigning instruction
+   * identity to avoid this.
+   */
+  public IR getIR() {
+    return ir;
   }
 }

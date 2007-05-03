@@ -18,6 +18,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.types.TypeReference;
@@ -76,6 +77,11 @@ public abstract class IR {
    * Mapping from PEI program counters to instruction[] indices
    */
   private Map<ProgramCounter, Integer> peiMapping = HashMapFactory.make();
+  
+  /**
+   * Mapping from SSAInstruction to Basic Block, computed lazily
+   */
+  private Map<SSAInstruction, IBasicBlock> instruction2Block;
 
   /**
    * subclasses must provide a source name mapping, if they want one
@@ -560,7 +566,29 @@ public abstract class IR {
     }
     return result;
   }
+  
+  /**
+   * This is space-inefficient.  Use with care.
+   * 
+   * Be very careful; note the strange identity semantics of SSAInstruction,
+   * using ==.  You can't mix SSAInstructions and IRs freely.
+   */
+  public IBasicBlock getBasicBlockForInstruction(SSAInstruction s) {
+    if (instruction2Block == null) {
+      mapInstructions2Blocks();
+    }
+    return instruction2Block.get(s);
+  }
 
+  private void mapInstructions2Blocks() {
+    instruction2Block = HashMapFactory.make();
+    for (IBasicBlock b : cfg) {
+      for (IInstruction s : b) {
+        instruction2Block.put((SSAInstruction)s, b);
+      }
+    }
+  }
+  
   /**
    * TODO: why do we need this? We should enforce instructions == null if
    * necessary, I think.
