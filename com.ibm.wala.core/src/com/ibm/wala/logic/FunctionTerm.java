@@ -61,7 +61,8 @@ public class FunctionTerm implements ITerm {
   }
   
 
-  public static ITerm make(IFunction f, List<ITerm> terms) {
+  public static FunctionTerm make(IFunction f, List<ITerm> terms) {
+	assert f.getNumberOfParameters() == terms.size();
     return new FunctionTerm(f, terms);
   }
   
