@@ -72,15 +72,14 @@ public class SlicerTest extends TestCase {
     dumpSlice(slice);
 
     int i = 0;
-    for(Iterator ss = slice.iterator(); ss.hasNext(); ) {
-      Statement st = (Statement) ss.next();
+    for (Statement st: slice) {
       if (st.getNode().getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
-	i++;
+        i++;
       }
     }
-    assertEquals(14, i);
+    assertEquals(16, i);
   }
-  
+
   public void testSlice2() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
     WarningSet warnings = new WarningSet();
@@ -101,7 +100,7 @@ public class SlicerTest extends TestCase {
     dumpSlice(slice);
     assertEquals(30, slice.size());
   }
-  
+
   public void testSlice3() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
     WarningSet warnings = new WarningSet();
@@ -122,7 +121,7 @@ public class SlicerTest extends TestCase {
     dumpSlice(slice);
     assertEquals(1, countAllocations(slice));
   }
-  
+
   public void testSlice4() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
     WarningSet warnings = new WarningSet();
@@ -143,7 +142,7 @@ public class SlicerTest extends TestCase {
     dumpSlice(slice);
     assertEquals(4, slice.size());
   }
-  
+
   public void testSlice5() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
     WarningSet warnings = new WarningSet();
@@ -481,9 +480,9 @@ public class SlicerTest extends TestCase {
   }
 
   public static void dumpSlice(Collection<Statement> slice) {
-    dumpSlice(slice,new PrintWriter(System.err));
+    dumpSlice(slice, new PrintWriter(System.err));
   }
-  
+
   public static void dumpSlice(Collection<Statement> slice, PrintWriter w) {
     w.println("SLICE:\n");
     int i = 1;
@@ -493,12 +492,12 @@ public class SlicerTest extends TestCase {
       w.flush();
     }
   }
-  
+
   public static void dumpSliceToFile(Collection<Statement> slice, String fileName) throws FileNotFoundException {
     File f = new File(fileName);
     FileOutputStream fo = new FileOutputStream(f);
     PrintWriter w = new PrintWriter(fo);
-    dumpSlice(slice,w);
+    dumpSlice(slice, w);
   }
 
   public static CGNode findMainMethod(CallGraph cg) {
@@ -514,7 +513,6 @@ public class SlicerTest extends TestCase {
     return null;
   }
 
-  
   public static CGNode findMethod(CallGraph cg, String name) {
     Atom a = Atom.findOrCreateUnicodeAtom(name);
     for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
@@ -527,16 +525,16 @@ public class SlicerTest extends TestCase {
     Assertions.UNREACHABLE("failed to find method " + name);
     return null;
   }
-  
+
   public static Statement findCallTo(CGNode n, String methodName) {
     IR ir = n.getCallGraph().getInterpreter(n).getIR(n, new WarningSet());
     for (Iterator<SSAInstruction> it = ir.iterateAllInstructions(); it.hasNext();) {
       SSAInstruction s = it.next();
       if (s instanceof SSAInvokeInstruction) {
-        SSAInvokeInstruction call = (SSAInvokeInstruction)s;
+        SSAInvokeInstruction call = (SSAInvokeInstruction) s;
         if (call.getCallSite().getDeclaredTarget().getName().toString().equals(methodName)) {
           IntSet indices = ir.getCallInstructionIndices(((SSAInvokeInstruction) s).getCallSite());
-          Assertions.productionAssertion(indices.size()== 1, "expected 1 but got " + indices.size());
+          Assertions.productionAssertion(indices.size() == 1, "expected 1 but got " + indices.size());
           return new NormalStatement(n, indices.intIterator().next());
         }
       }
