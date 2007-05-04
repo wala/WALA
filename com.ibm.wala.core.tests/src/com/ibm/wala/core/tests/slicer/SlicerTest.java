@@ -44,7 +44,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
-import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.*;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
@@ -70,7 +70,15 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(26, slice.size());
+
+    int i = 0;
+    for(Iterator ss = slice.iterator(); ss.hasNext(); ) {
+      Statement st = (Statement) ss.next();
+      if (st.getNode().getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
+	i++;
+      }
+    }
+    assertEquals(14, i);
   }
   
   public void testSlice2() throws ClassHierarchyException {
