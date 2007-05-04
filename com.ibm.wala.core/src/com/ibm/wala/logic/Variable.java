@@ -24,7 +24,7 @@ public class Variable implements ITerm, Comparable<Variable> {
    */
   private final IntPair range;
 
-  private Variable(int number, IntPair range) {
+  protected Variable(int number, IntPair range) {
     this.number = number;
     this.range = range;
   }
