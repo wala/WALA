@@ -86,6 +86,10 @@ public class RelationFormula implements IFormula {
   public static IFormula make(IRelation relation, List<ITerm> terms) {
     return new RelationFormula(relation, terms);
   }
+  
+  public static RelationFormula make(NullaryRelation R) {
+	  return new RelationFormula(R, new ArrayList<ITerm>());
+  }
 
   @Override
   public int hashCode() {
@@ -146,7 +150,8 @@ public class RelationFormula implements IFormula {
       result.append(terms.get(i));
       result.append(",");
     }
-    result.append(terms.get(R.getValence() - 1));
+    if (R.getValence() > 0) 
+    	result.append(terms.get(R.getValence() - 1));
     result.append(")");
     return result.toString();
   }
