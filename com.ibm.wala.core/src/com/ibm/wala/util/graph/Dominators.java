@@ -65,9 +65,12 @@ public class Dominators<T> {
    *          The root from which to compute dominators
    */
   @SuppressWarnings("unchecked")
-  public Dominators(Graph<T> G, T root) {
+  public Dominators(Graph<T> G, T root) throws IllegalArgumentException {
     this.G = G;
     this.root = root;
+    if (G.getNumberOfNodes() == 0) {
+      throw new IllegalArgumentException("G has no nodes");
+    }
     this.vertex = (T[]) new Object[G.getNumberOfNodes() + 1];
     this.infoMap = HashMapFactory.make(G.getNumberOfNodes());
     analyze();
