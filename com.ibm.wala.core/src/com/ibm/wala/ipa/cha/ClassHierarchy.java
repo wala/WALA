@@ -173,7 +173,7 @@ public class ClassHierarchy implements Iterable<IClass> {
       loaders = new IClassLoader[scope.getNumberOfLoaders()];
       int idx = 0;
 
-      progressMonitor.beginTask(null, scope.getNumberOfLoaders());
+      progressMonitor.beginTask("Build Class Hierarchy", scope.getNumberOfLoaders());
       for (Iterator<ClassLoaderReference> it = scope.getLoaders(); it.hasNext();) {
         if (progressMonitor.isCanceled()) {
           throw new CancelCHAConstructionException();
@@ -321,7 +321,7 @@ public class ClassHierarchy implements Iterable<IClass> {
    *          method reference
    * @return the set of IMethods that this call can resolve to.
    */
-  public Iterator getPossibleTargets(MethodReference ref) {
+  public Iterator<IMethod> getPossibleTargets(MethodReference ref) {
     IClassLoader loader;
     try {
       loader = factory.getLoader(ref.getDeclaringClass().getClassLoader(), this, scope);
@@ -333,7 +333,7 @@ public class ClassHierarchy implements Iterable<IClass> {
     if (declaredClass == null) {
       return EmptyIterator.instance();
     }
-    Set targets = findOrCreateTargetSet(declaredClass, ref);
+    Set<IMethod> targets = findOrCreateTargetSet(declaredClass, ref);
     return (targets.iterator());
   }
 
@@ -345,13 +345,13 @@ public class ClassHierarchy implements Iterable<IClass> {
    * @return the set of IMethods that this call can resolve to.
    */
   @SuppressWarnings("unchecked")
-  private Set findOrCreateTargetSet(IClass declaredClass, MethodReference ref) {
-    Map<MethodReference, Set> classCache = (Map<MethodReference, Set>) CacheReference.get(targetCache.get(declaredClass));
+  private Set<IMethod> findOrCreateTargetSet(IClass declaredClass, MethodReference ref) {
+    Map<MethodReference, Set<IMethod>> classCache = (Map<MethodReference, Set<IMethod>>) CacheReference.get(targetCache.get(declaredClass));
     if (classCache == null) {
       classCache = HashMapFactory.make(3);
       targetCache.put(declaredClass, CacheReference.make(classCache));
     }
-    Set result = classCache.get(ref);
+    Set<IMethod> result = classCache.get(ref);
     if (result == null) {
       result = computePossibleTargets(declaredClass, ref);
       classCache.put(ref, result);
