@@ -107,8 +107,12 @@ public class SSACache {
   
   /**
    * @return DefUse information for m, built according to the specified options.  null if unavailable
+   * @throws IllegalArgumentException  if ir is null
    */
   public synchronized DefUse findOrCreateDU(IR ir, Context C) {
+    if (ir == null) {
+      throw new IllegalArgumentException("ir is null");
+    }
     DefUse du = (DefUse)duCache.find(ir.getMethod(),C,ir.getOptions());
     if (du == null) {
       du = new DefUse(ir);

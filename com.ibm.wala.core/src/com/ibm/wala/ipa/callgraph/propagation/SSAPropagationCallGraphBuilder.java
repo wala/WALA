@@ -2008,6 +2008,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   }
 
   public static Set<TypeReference> getCaughtExceptionTypes(SSAGetCaughtExceptionInstruction instruction, IR ir) {
+    if (instruction == null) {
+      throw new IllegalArgumentException("instruction is null");
+    }
     Iterator<TypeReference> exceptionTypes = ((ExceptionHandlerBasicBlock) ir.getControlFlowGraph().getNode(
         instruction.getBasicBlockNumber())).getCaughtExceptionTypes();
     HashSet<TypeReference> types = HashSetFactory.make(10);

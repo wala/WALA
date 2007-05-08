@@ -216,9 +216,13 @@ public class MethodBypass {
    * type? By default, the answer is yes iff T is not abstract. However,
    * subclasses and summaries can override this to allow "special" abstract
    * classes to be allocatable as well.
+   * @throws IllegalArgumentException  if klass is null
    * 
    */
   public boolean isAllocatable(IClass klass) {
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
     if (!klass.isAbstract() && !klass.isInterface()) {
       return true;
     } else {

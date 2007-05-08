@@ -35,6 +35,9 @@ public class MethodTypeSignature extends Signature {
   }
 
   public static MethodTypeSignature make(String genericsSignature) throws IllegalArgumentException {
+    if (genericsSignature == null) {
+      throw new IllegalArgumentException("genericsSignature is null");
+    }
     if (genericsSignature.length() == 0) {
       throw new IllegalArgumentException();
     }

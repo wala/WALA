@@ -241,8 +241,12 @@ public class BitVector extends BitVectorBase<BitVector> {
    * 
    * @param other
    *          the set to check intersection with
+   * @throws IllegalArgumentException  if other is null
    */
   public final boolean intersectionEmpty(BitVector other) {
+    if (other == null) {
+      throw new IllegalArgumentException("other is null");
+    }
     int n = Math.min(bits.length, other.bits.length);
     for (int i = n - 1; i >= 0;) {
       if ((bits[i] & other.bits[i]) != 0) {

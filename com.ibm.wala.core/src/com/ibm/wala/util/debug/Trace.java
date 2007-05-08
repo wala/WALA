@@ -158,8 +158,12 @@ public class Trace {
   /**
    * @param string
    * @param c
+   * @throws IllegalArgumentException  if c is null
    */
   public static void printCollection(String string, Collection c) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
+    }
     println(string);
     if (c.isEmpty()) {
       println("none\n");

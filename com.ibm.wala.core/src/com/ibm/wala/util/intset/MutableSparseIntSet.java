@@ -456,6 +456,9 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
    *      com.ibm.wala.util.intset.IntSet)
    */
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
+    if (other == null) {
+      throw new IllegalArgumentException("other is null");
+    }
     // a hack. TODO: better algorithm
     if (other.size() < 5) {
       boolean result = false;

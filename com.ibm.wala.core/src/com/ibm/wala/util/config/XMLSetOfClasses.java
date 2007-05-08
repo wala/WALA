@@ -88,6 +88,9 @@ public class XMLSetOfClasses extends SetOfClasses {
    * @see com.ibm.wala.ipa.callgraph.impl.SetOfClasses#add(com.ibm.wala.classLoader.IClass)
    */
   public void add(IClass klass) {
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
     regex = regex + '|' + klass.getReference().getName().toString();
     needsCompile = true;
   }

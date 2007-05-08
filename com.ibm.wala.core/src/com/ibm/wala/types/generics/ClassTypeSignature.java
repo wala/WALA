@@ -124,6 +124,9 @@ public class ClassTypeSignature extends TypeSignature {
   }
   
   public static IClass lookupClass(ClassHierarchy cha, ClassTypeSignature sig) {
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, sig.getRawName());
     return cha.lookupClass(t);
   }

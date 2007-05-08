@@ -161,8 +161,12 @@ public abstract class UTF8Convert {
    *
    * @param bytes byte array to check
    * @returns true iff the given sequence is valid (pseudo-)utf8.
+   * @throws IllegalArgumentException  if bytes is null
    */
   public static boolean check(byte[] bytes) {
+    if (bytes == null) {
+      throw new IllegalArgumentException("bytes is null");
+    }
     for (int i = 0, n = bytes.length; i < n;) {
       byte b = bytes[i++];
       if (!ALLOW_NORMAL_UTF8)

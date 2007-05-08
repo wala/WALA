@@ -25,6 +25,9 @@ import com.ibm.wala.util.debug.Assertions;
 public class Util {
 
   public static SSAInstruction getLastInstruction(ControlFlowGraph G, IBasicBlock b) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     return (SSAInstruction) G.getInstructions()[b.getLastInstructionIndex()];
   }
 

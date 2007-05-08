@@ -88,8 +88,12 @@ public class CallGraphWarnings {
    * @param cg
    *          Call Graph
    * @return set of warnings inferred from the call graph.
+   * @throws IllegalArgumentException  if cg is null
    */
   public static WarningSet getWarnings(CallGraph cg) {
+    if (cg == null) {
+      throw new IllegalArgumentException("cg is null");
+    }
     WarningSet result = new WarningSet();
     if (cg.getNumberOfNodes() == 1) {
       result.add(NoEntrypointsFailure.INSTANCE);

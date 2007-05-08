@@ -446,8 +446,13 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /**
    * @param src
    * @param dst
+   * @throws IllegalArgumentException
+   *           if dst is null
    */
   public void addNormalEdge(IBasicBlock src, IBasicBlock dst) {
+    if (dst == null) {
+      throw new IllegalArgumentException("dst is null");
+    }
     if (dst.equals(exit())) {
       normalToExit.set(getNumber(src));
     } else if (getNumber(dst) == (getNumber(src) + 1)) {
@@ -460,8 +465,13 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /**
    * @param src
    * @param dst
+   * @throws IllegalArgumentException
+   *           if dst is null
    */
   public void addExceptionalEdge(IBasicBlock src, IBasicBlock dst) {
+    if (dst == null) {
+      throw new IllegalArgumentException("dst is null");
+    }
     if (dst.equals(exit())) {
       exceptionalToExit.set(getNumber(src));
     } else {

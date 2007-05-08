@@ -57,9 +57,13 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
   /**
    * This target selector searches the clas hierachy for the method matching the
    * signature of the call that is appropriate for the receiver type.
+   * @throws IllegalArgumentException  if call is null
    */
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference call, IClass receiver) {
 
+    if (call == null) {
+      throw new IllegalArgumentException("call is null");
+    }
     IClass klass;
     TypeReference targetType = call.getDeclaredTarget().getDeclaringClass();
 

@@ -803,6 +803,9 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    *      com.ibm.wala.util.warnings.WarningSet)
    */
   public DefUse getDU(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     return options.getSSACache().findOrCreateDU(m, node.getContext(), cha, options.getSSAOptions(), warnings);
   }

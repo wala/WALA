@@ -49,6 +49,9 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
 
 
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
+    if (allocation == null) {
+      throw new IllegalArgumentException("allocation is null");
+    }
     if (Malleable.isMalleable(allocation.getDeclaredType())) {
       return null;
     }

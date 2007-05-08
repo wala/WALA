@@ -348,8 +348,12 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * 
    * @param set
    *          the bit set to copy the bits from
+   * @throws IllegalArgumentException  if set is null
    */
   public final void copyBits(OffsetBitVector set) {
+    if (set == null) {
+      throw new IllegalArgumentException("set is null");
+    }
     super.copyBits(set);
     offset = set.offset;
   }

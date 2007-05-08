@@ -134,6 +134,7 @@ public class Util {
   /**
    * Modify an options object to include bypass logic as specified by a an XML
    * file.
+   * @throws IllegalArgumentException  if scope is null
    */
   public static void addBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, String xmlFile, ClassHierarchy cha)
       throws IllegalArgumentException {

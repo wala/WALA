@@ -34,8 +34,12 @@ public class CallSiteMap {
 
   /**
    * @param ir
+   * @throws IllegalArgumentException  if ir is null
    */
   public CallSiteMap(final IR ir) {
+    if (ir == null) {
+      throw new IllegalArgumentException("ir is null");
+    }
     Visitor v = new Visitor() {
       public void visitInvoke(SSAInvokeInstruction instruction) {
         CallSiteReference site = instruction.getCallSite();

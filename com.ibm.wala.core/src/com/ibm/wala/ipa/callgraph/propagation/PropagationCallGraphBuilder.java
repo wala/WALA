@@ -618,8 +618,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @param klass
    *          an Exception Class
    * @return true iff klass is a subclass of some element of the Set
+   * @throws IllegalArgumentException  if catchClasses is null
    */
   public static boolean catches(Set catchClasses, IClass klass, ClassHierarchy cha) {
+    if (catchClasses == null) {
+      throw new IllegalArgumentException("catchClasses is null");
+    }
     if (Assertions.verifyAssertions) {
       Assertions._assert(catchClasses.size() > 0);
       // Assertions._assert(cha.isSubclassOf(klass,

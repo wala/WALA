@@ -286,8 +286,12 @@ public class BimodalMutableIntSet implements MutableIntSet {
 
   /**
    * @param x
+   * @throws IllegalArgumentException  if x is null
    */
   public BimodalMutableIntSet(BimodalMutableIntSet x) {
+    if (x == null) {
+      throw new IllegalArgumentException("x is null");
+    }
     impl = IntSetUtil.makeMutableCopy(x.impl);
     if (Assertions.verifyAssertions) {
       Assertions._assert(impl instanceof BitVectorIntSet || impl instanceof MutableSparseIntSet);

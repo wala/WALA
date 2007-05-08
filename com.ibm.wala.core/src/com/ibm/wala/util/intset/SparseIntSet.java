@@ -461,9 +461,13 @@ public class SparseIntSet implements IntSet {
    * @param s
    * @param j
    * @return a new sparse int set which adds j to s
+   * @throws IllegalArgumentException  if s is null
    */
   public static SparseIntSet add(SparseIntSet s, int j) {
 
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     if (s.elements == null) {
       return SparseIntSet.singleton(j);
     }

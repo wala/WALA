@@ -185,8 +185,12 @@ public final class FixedSizeBitVector
   /**
    * Copies the values of the bits in the specified set into this set.
    * @param set the bit set to copy the bits from
+   * @throws IllegalArgumentException  if set is null
    */
   public void copyBits(FixedSizeBitVector set) {
+    if (set == null) {
+      throw new IllegalArgumentException("set is null");
+    }
     int setLength = set.bits.length;
     for (int i = setLength; i-- > 0;) {
       bits[i] = set.bits[i];

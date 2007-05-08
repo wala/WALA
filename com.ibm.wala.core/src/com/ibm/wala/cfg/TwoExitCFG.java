@@ -196,6 +196,9 @@ public class TwoExitCFG implements ControlFlowGraph {
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(java.lang.Object)
    */
   public int getNumber(IBasicBlock N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N is null");
+    }
     if (N.equals(exceptionalExit)) {
       return getMaxNumber();
     } else {

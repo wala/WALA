@@ -29,6 +29,12 @@ public class ComposedEntrypoints implements Entrypoints {
   private Set<Entrypoint> entrypoints = HashSetFactory.make();
   
   public ComposedEntrypoints(Entrypoints A, Entrypoints B) {
+    if (A == null) {
+      throw new IllegalArgumentException("A is null");
+    }
+    if (B == null) {
+      throw new IllegalArgumentException("B is null");
+    }
     for (Iterator<? extends Entrypoint> it = A.iterator(); it.hasNext(); ) {
       entrypoints.add(it.next());
     }

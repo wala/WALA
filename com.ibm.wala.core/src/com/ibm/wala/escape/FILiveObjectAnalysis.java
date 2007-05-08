@@ -201,6 +201,9 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
    * 
    */
   public boolean mayBeLive(InstanceKey ik, CGNode m, IntSet instructionIndices) {
+    if (instructionIndices == null) {
+      throw new IllegalArgumentException("instructionIndices is null");
+    }
     // TODO this sucks
     for (IntIterator it = instructionIndices.intIterator(); it.hasNext();) {
       int i = it.next();

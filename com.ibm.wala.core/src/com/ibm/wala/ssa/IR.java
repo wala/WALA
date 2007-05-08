@@ -468,8 +468,12 @@ public abstract class IR {
   /**
    * @param site
    * @return the invoke instructions corresponding to this call site
+   * @throws IllegalArgumentException  if site is null
    */
   public SSAAbstractInvokeInstruction[] getCalls(CallSiteReference site) {
+    if (site == null) {
+      throw new IllegalArgumentException("site is null");
+    }
     IntSet s = callSiteMapping.getRelated(site.getProgramCounter());
     SSAAbstractInvokeInstruction[] result = new SSAAbstractInvokeInstruction[s.size()];
     int index = 0;

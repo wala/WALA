@@ -81,8 +81,12 @@ public class CallGraphStats {
    * 
    * @param cg
    * @return a set of MethodReferences
+   * @throws IllegalArgumentException  if cg is null
    */
   public static Set<MethodReference> collectMethods(CallGraph cg) {
+    if (cg == null) {
+      throw new IllegalArgumentException("cg is null");
+    }
     HashSet<MethodReference> result = HashSetFactory.make();
     for (Iterator it = cg.iterator(); it.hasNext();) {
       CGNode N = (CGNode) it.next();

@@ -72,8 +72,12 @@ public final class ConcreteTypeKey implements InstanceKey {
    *          governing class hierarchy
    * @return a set of ConcreteTypeKeys that represent the exceptions the PEI may
    *         throw.
+   * @throws IllegalArgumentException  if pei is null
    */
   public static InstanceKey[] getInstanceKeysForPEI(SSAInstruction pei, ClassHierarchy cha) {
+    if (pei == null) {
+      throw new IllegalArgumentException("pei is null");
+    }
     Collection types = pei.getExceptionTypes();
     // TODO: institute a cache?
     if (types == null) {

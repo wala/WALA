@@ -165,9 +165,13 @@ public class EObjectGraphImpl implements EObjectGraph {
   /**
    * @param g an EMF implementation of a graph
    * @return an EObjectGraph with the same nodes and edges of g
+   * @throws IllegalArgumentException  if g is null
    */
   @SuppressWarnings("unchecked")
   public static EObjectGraph fromEMF(EGraph g) {
+    if (g == null) {
+      throw new IllegalArgumentException("g is null");
+    }
     EObjectGraphImpl result = new EObjectGraphImpl();
     for (Iterator<EObject> it = g.getNodes().getContents().iterator(); it.hasNext();) {
       result.addNode(it.next());

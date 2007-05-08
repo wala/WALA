@@ -29,8 +29,12 @@ public class FileSuffixes {
    * @param fileName
    *          name of a file
    * @return boolean
+   * @throws IllegalArgumentException  if fileName is null
    */
   public static boolean isClassFile(String fileName) {
+    if (fileName == null) {
+      throw new IllegalArgumentException("fileName is null");
+    }
     int suffixIndex = fileName.indexOf(CLASS_SUFFIX);
     if (suffixIndex > -1 && fileName.indexOf(CLASSPATH) == -1) {
       return true;

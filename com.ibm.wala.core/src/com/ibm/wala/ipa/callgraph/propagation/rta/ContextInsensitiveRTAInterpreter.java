@@ -63,6 +63,9 @@ public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInte
    * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateFieldsRead(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.util.warnings.WarningSet)
    */
   public Iterator iterateFieldsRead(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     try {
       return CodeScanner.iterateFieldsRead(node.getMethod(), warnings);
     } catch (InvalidClassFileException e) {

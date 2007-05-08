@@ -33,9 +33,13 @@ public class AllApplicationEntrypoints extends BasicEntrypoints {
    *          governing analyais scope
    * @param cha
    *          governing class hierarchy
+   * @throws IllegalArgumentException  if cha is null
    */
   public AllApplicationEntrypoints(AnalysisScope scope, final ClassHierarchy cha) {
 
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
     for (IClass klass : cha) {
       if (!klass.isInterface()) {
         if (isApplicationClass(scope, klass)) {

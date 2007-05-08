@@ -574,8 +574,12 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * @param other
    * @param filter
+   * @throws IllegalArgumentException  if other is null
    */
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
+    if (other == null) {
+      throw new IllegalArgumentException("other is null");
+    }
     boolean change = false;
     for (IntIterator bits = other.intIterator(); bits.hasNext();) {
       int bit = bits.next();

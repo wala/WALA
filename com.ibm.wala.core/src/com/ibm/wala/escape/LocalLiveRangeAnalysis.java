@@ -44,8 +44,12 @@ public class LocalLiveRangeAnalysis {
    * 
    * @param instructionIndex
    *          index of an instruction in the IR
+   * @throws IllegalArgumentException  if du is null
    */
   public static boolean isLive(int v, int instructionIndex, IR ir, DefUse du) {
+    if (du == null) {
+      throw new IllegalArgumentException("du is null");
+    }
     if (du.getNumberOfUses(v) == 0) {
       return false;
     }

@@ -63,8 +63,12 @@ public class ETypeHierarchyWrapper {
 
   /**
    * @param t
+   * @throws IllegalArgumentException  if t is null
    */
   public ETypeHierarchyWrapper(ETypeHierarchy t) {
+    if (t == null) {
+      throw new IllegalArgumentException("t is null");
+    }
     this.cha = EClassHierarchyWrapper.load(t.getClasses());
     this.iface = EInterfaceHierarchyWrapper.load(t.getInterfaces());
     for (Iterator it = t.getImplements().getContents().iterator(); it.hasNext();) {

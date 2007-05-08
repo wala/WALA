@@ -56,8 +56,12 @@ public class EObjectDictionary {
   /**
    * Populate this dictionary with the contents of an EContainer
    * @param c the EContainer
+   * @throws IllegalArgumentException  if c is null
    */
   public void load(EContainer c) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
+    }
     for (Iterator it = c.getContents().iterator(); it.hasNext();) {
       EObject o = (EObject) it.next();
       findOrAdd(o);

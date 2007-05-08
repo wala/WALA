@@ -32,8 +32,12 @@ public abstract class SetOfClasses {
    * contains.
    * @param hierarchy
    * @return Iterator of IClass
+   * @throws IllegalArgumentException  if hierarchy is null
    */
   public Iterator<IClass> iterator(ClassHierarchy hierarchy) {
+    if (hierarchy == null) {
+      throw new IllegalArgumentException("hierarchy is null");
+    }
     HashSet<IClass> result = HashSetFactory.make();
     for (IClass klass : hierarchy) {
       if (contains(klass.getReference())) {

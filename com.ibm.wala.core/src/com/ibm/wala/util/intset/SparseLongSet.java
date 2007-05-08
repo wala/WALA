@@ -304,8 +304,12 @@ public class SparseLongSet implements LongSet {
 
   /**
    * Reverse of toString(): "{2,3}" -> [2,3]
+   * @throws IllegalArgumentException  if str is null
    */
   public static long[] parseLongArray(String str) throws NumberFormatException, IllegalArgumentException {
+    if (str == null) {
+      throw new IllegalArgumentException("str is null");
+    }
     int len = str.length();
     if (len < 2) {
       throw new IllegalArgumentException("malformed input: " + str);

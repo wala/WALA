@@ -1040,6 +1040,9 @@ public class SSACFG implements ControlFlowGraph{
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getNormalPredecessors(IBasicBlock b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     IBasicBlock n = (IBasicBlock) cfg.getNode(b.getNumber());
     final Iterator i = cfg.getNormalPredecessors(n).iterator();
     Collection<IBasicBlock> c = new ArrayList<IBasicBlock>(getPredNodeCount(b));

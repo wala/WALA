@@ -53,6 +53,9 @@ public final class ImmutableByteArray {
   }
 
   public static ImmutableByteArray concat(byte b, ImmutableByteArray b1) {
+    if (b1 == null) {
+      throw new IllegalArgumentException("b1 is null");
+    }
     byte[] arr = new byte[b1.length() + 1];
     arr[0] = b;
     System.arraycopy(b1.b, 0, arr, 1, b1.b.length);

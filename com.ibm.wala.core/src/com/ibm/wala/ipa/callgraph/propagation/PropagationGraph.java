@@ -198,8 +198,12 @@ public class PropagationGraph extends AbstractFixedPointSystem {
 
   /**
    * @param eq
+   * @throws IllegalArgumentException  if eq is null
    */
   public void addStatement(GeneralStatement eq) {
+    if (eq == null) {
+      throw new IllegalArgumentException("eq is null");
+    }
     IVariable lhs = eq.getLHS();
     delegateGraph.addEquation(eq);
     delegateStatements.add(eq);

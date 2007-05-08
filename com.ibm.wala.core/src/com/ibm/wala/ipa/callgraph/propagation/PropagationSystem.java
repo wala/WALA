@@ -205,8 +205,12 @@ public class PropagationSystem extends DefaultFixedPointSolver {
   /**
    * @return a set of integers representing the instance keys that correspond to
    *         a given class, or null if there are none.
+   * @throws IllegalArgumentException  if klass is null
    */
   public IntSet getInstanceKeysForClass(IClass klass) {
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
     if (Assertions.verifyAssertions) {
       Assertions._assert(klass.getReference() != TypeReference.JavaLangObject);
     }

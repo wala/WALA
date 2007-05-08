@@ -46,6 +46,9 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
    * @see com.ibm.detox.ipa.util.CFAContextInterpreter#getIR()
    */
   public IR getIR(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     // Note: since this is context-insensitive, we cache an IR based on the
     // EVERYWHERE context
     return options.getSSACache().findOrCreateIR(node.getMethod(), Everywhere.EVERYWHERE, cha, options.getSSAOptions(), warnings);

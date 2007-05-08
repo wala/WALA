@@ -73,10 +73,14 @@ public class ZeroXCFABuilder extends CFABuilder {
    *          set of Strings that are names of XML files holding bypass logic
    *          specifications.
    * @return a 0-1-Opt-CFA Call Graph Builder.
+   * @throws IllegalArgumentException  if options is null
    */
   public static CFABuilder make(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
       String[] xmlFiles, WarningSet warnings, byte instancePolicy) {
 
+    if (options == null) {
+          throw new IllegalArgumentException("options is null");
+        }
     Util.addDefaultSelectors(options, cha, warnings);
     for (int i = 0; i < xmlFiles.length; i++) {
       Util.addBypassLogic(options, scope, cl, xmlFiles[i], cha);

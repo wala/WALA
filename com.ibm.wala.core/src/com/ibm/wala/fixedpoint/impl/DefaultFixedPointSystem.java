@@ -146,6 +146,9 @@ public class DefaultFixedPointSystem extends AbstractFixedPointSystem {
    * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#addEquation(com.ibm.wala.dataflow.fixpoint.GeneralEquation)
    */
   public void addStatement(GeneralStatement s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     IVariable[] rhs = s.getRHS();
     IVariable lhs = s.getLHS();
 
@@ -158,10 +161,11 @@ public class DefaultFixedPointSystem extends AbstractFixedPointSystem {
     }
     for (int i = 0; i < rhs.length; i++) {
       IVariable v = rhs[i];
-      if (v != null) {
-        variables.add(v);
-        graph.addNode(v);
-        graph.addEdge(v, s);
+      IVariable variable = v;
+      if (variable != null) {
+        variables.add(variable);
+        graph.addNode(variable);
+        graph.addEdge(variable, s);
       }
     }
 

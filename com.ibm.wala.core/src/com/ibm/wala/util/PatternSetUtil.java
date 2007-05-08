@@ -25,8 +25,12 @@ public class PatternSetUtil {
    * @param c a Container of EPattern
    * @return a regular expression that is the OR of a set of regular expressions
    * contained the EContainer
+   * @throws IllegalArgumentException  if c is null
    */
   public static String composeRegularExpression(EContainer c) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
+    }
     StringBuffer result = new StringBuffer();
     for (Iterator it = c.getContents().iterator(); it.hasNext(); ) {
       EPattern pattern = (EPattern)it.next();

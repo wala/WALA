@@ -101,6 +101,9 @@ public final class WalaProperties {
   }
 
   public static Properties loadPropertiesFromFile(ClassLoader loader, String fileName) throws IOException {
+    if (loader == null) {
+      throw new IllegalArgumentException("loader is null");
+    }
     final InputStream propertyStream = loader.getResourceAsStream(fileName);
     if (propertyStream == null) {
       throw new IOException("property_file_unreadable " + fileName);

@@ -90,6 +90,9 @@ public class CloneContextSelector implements ContextSelector {
   }
 
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
+    if (site == null) {
+      throw new IllegalArgumentException("site is null");
+    }
     if (!site.getDeclaredTarget().equals(CloneInterpreter.CLONE)) {
       return true;
     } else {

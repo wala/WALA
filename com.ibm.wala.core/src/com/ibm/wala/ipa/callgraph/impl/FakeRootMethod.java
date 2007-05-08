@@ -39,8 +39,12 @@ public class FakeRootMethod extends AbstractRootMethod {
    * @param m
    *          a method reference
    * @return true iff m is the fake root method.
+   * @throws IllegalArgumentException  if m is null
    */
   public static boolean isFakeRootMethod(MethodReference m) {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     return m.equals(rootMethod);
   }
   

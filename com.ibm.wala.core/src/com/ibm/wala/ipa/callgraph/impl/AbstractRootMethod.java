@@ -97,9 +97,13 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   /**
    * @return the invoke instructions added by this operation
+   * @throws IllegalArgumentException  if site is null
    */
   public SSAInvokeInstruction addInvocation(int[] params, CallSiteReference site) {
 
+    if (site == null) {
+      throw new IllegalArgumentException("site is null");
+    }
     CallSiteReference newSite = CallSiteReference.make(statements.size(), site.getDeclaredTarget(), site.getInvocationCode());
     SSAInvokeInstruction s = null;
     if (newSite.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
@@ -119,8 +123,12 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
    * 
    * @param T
    * @return instruction added, or null
+   * @throws IllegalArgumentException  if T is null
    */
   public SSANewInstruction addAllocation(TypeReference T, WarningSet warnings) {
+    if (T == null) {
+      throw new IllegalArgumentException("T is null");
+    }
     int instance = nextLocal++;
     SSANewInstruction result = null;
 

@@ -187,8 +187,12 @@ public class EUtil {
    * @param R
    *          a releation
    * @return a java.util.Map that holds the contents of the relation
+   * @throws IllegalArgumentException  if R is null
    */
   public static Map createMap(ERelation R) {
+    if (R == null) {
+      throw new IllegalArgumentException("R is null");
+    }
     HashMap result = new HashMap();
     for (Iterator it = R.getContents().iterator(); it.hasNext();) {
       EPair p = (EPair) it.next();

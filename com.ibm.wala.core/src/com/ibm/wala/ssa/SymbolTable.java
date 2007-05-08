@@ -292,8 +292,12 @@ public class SymbolTable {
    * 
    * @param rhs
    * @return int
+   * @throws IllegalArgumentException  if rhs is null
    */
   public int newPhi(int[] rhs) throws IllegalArgumentException {
+    if (rhs == null) {
+      throw new IllegalArgumentException("rhs is null");
+    }
     int result = getNewValueNumber();
     SSAPhiInstruction phi = new SSAPhiInstruction(result, (int[]) rhs.clone());
     values[result] = new PhiValue(phi);

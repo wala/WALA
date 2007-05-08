@@ -109,8 +109,12 @@ public class Exceptions implements Constants {
    * @return Colection<TypeReference>, set of exception types a call to a
    *         declared target might throw.
    * @throws InvalidClassFileException 
+   * @throws IllegalArgumentException  if target is null
    */
   public static Collection<TypeReference> inferInvokeExceptions(MethodReference target, ClassHierarchy cha, WarningSet warnings) throws InvalidClassFileException {
+    if (target == null) {
+      throw new IllegalArgumentException("target is null");
+    }
     ArrayList<TypeReference> set = new ArrayList<TypeReference>(runtimeExceptions);
     set.addAll(cha.getJavaLangErrorTypes());
 

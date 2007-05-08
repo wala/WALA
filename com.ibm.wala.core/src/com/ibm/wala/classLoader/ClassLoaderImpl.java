@@ -469,6 +469,9 @@ public class ClassLoaderImpl implements IClassLoader {
    * @see com.ibm.wala.classLoader.IClassLoader#getSourceFileName(com.ibm.wala.classLoader.IClass)
    */
   public String getSourceFileName(IClass klass) {
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
     return sourceMap.get(klass.getName());
   }
 

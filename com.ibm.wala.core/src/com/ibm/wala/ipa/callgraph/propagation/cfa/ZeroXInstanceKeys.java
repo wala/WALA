@@ -321,6 +321,9 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   }
 
   public boolean isStackTraceElement(IClass C) {
+    if (C == null) {
+      throw new IllegalArgumentException("C is null");
+    }
     return C.getReference().equals(TypeReference.JavaLangStackTraceElement);
   }
 

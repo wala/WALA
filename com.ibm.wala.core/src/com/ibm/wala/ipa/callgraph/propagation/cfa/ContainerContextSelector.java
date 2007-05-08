@@ -116,6 +116,9 @@ public class ContainerContextSelector implements ContextSelector {
   }
 
   public static boolean isArrayCopy(MethodReference m) {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     if (m.getDeclaringClass().equals(JavaLangSystem)) {
       if (m.getName().equals(arraycopyAtom)) {
         return true;

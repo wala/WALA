@@ -46,7 +46,7 @@ public class GhostviewUtil {
    */
   public static Process ghostviewIR(ClassHierarchy cha, IR ir, boolean sanitize, String psFile, String dotFile, String dotExe,
       String gvExe) throws WalaException {
-    return  ghostviewIR(cha, ir, sanitize, psFile, dotFile, dotExe, gvExe, null);
+    return ghostviewIR(cha, ir, sanitize, psFile, dotFile, dotExe, gvExe, null);
   }
 
   /**
@@ -56,15 +56,20 @@ public class GhostviewUtil {
    * @param ir
    * @return a handle to the ghostview process
    * @throws WalaException
+   * @throws IllegalArgumentException
+   *           if ir is null
    */
   public static Process ghostviewIR(ClassHierarchy cha, IR ir, boolean sanitize, String psFile, String dotFile, String dotExe,
       String gvExe, NodeDecorator annotations) throws WalaException {
 
+    if (ir == null) {
+      throw new IllegalArgumentException("ir is null");
+    }
     Graph<IBasicBlock> g = ir.getControlFlowGraph();
 
     NodeDecorator labels = makeIRDecorator(ir);
     if (annotations != null) {
-      labels = new ConcatenatingNodeDecorator(annotations,labels);
+      labels = new ConcatenatingNodeDecorator(annotations, labels);
     }
 
     g = CFGSanitizer.sanitize(ir, cha);
@@ -83,33 +88,37 @@ public class GhostviewUtil {
     NodeDecorator labels = new NodeDecorator() {
       public String getLabel(Object o) {
         return labelMap.get(o);
-      }};
+      }
+    };
     return labels;
   }
-  
+
   /**
    * @author sfink
    * 
-   * A node decorator which concatenates the labels from two other node decorators
+   * A node decorator which concatenates the labels from two other node
+   * decorators
    */
   private final static class ConcatenatingNodeDecorator implements NodeDecorator {
 
     private final NodeDecorator A;
+
     private final NodeDecorator B;
+
     ConcatenatingNodeDecorator(NodeDecorator A, NodeDecorator B) {
       this.A = A;
       this.B = B;
     }
-    
+
     public String getLabel(Object o) throws WalaException {
       return A.getLabel(o) + B.getLabel(o);
     }
-    
+
   }
 
   private static String getNodeLabel(IR ir, BasicBlock bb) {
     StringBuffer result = new StringBuffer();
-    
+
     int start = bb.getFirstInstructionIndex();
     int end = bb.getLastInstructionIndex();
     result.append("BB").append(bb.getNumber());

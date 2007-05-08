@@ -360,6 +360,9 @@ public final class Atom {
   }
 
   public static Atom concat(byte c, ImmutableByteArray b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     return concat(c, b.b);
   }
 

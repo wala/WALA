@@ -214,8 +214,12 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
    * 
    * @param set
    *          the bit set to copy the bits from
+   * @throws IllegalArgumentException  if set is null
    */
   public void copyBits(BitVectorBase set) {
+    if (set == null) {
+      throw new IllegalArgumentException("set is null");
+    }
     int setLength = set.bits.length;
     bits = new int[setLength];
     for (int i = setLength - 1; i >= 0;) {

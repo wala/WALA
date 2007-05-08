@@ -678,9 +678,13 @@ public class ClassHierarchy implements Iterable<IClass> {
    * 
    * @param A
    * @param B
+   * @throws IllegalArgumentException  if A is null
    */
   public IClass getLeastCommonSuperclass(IClass A, IClass B) {
 
+    if (A == null) {
+      throw new IllegalArgumentException("A is null");
+    }
     TypeReference tempA = A.getReference();
     if (A.equals(B)) {
       return A;

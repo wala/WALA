@@ -88,9 +88,13 @@ public class BinaryRelation implements IRelation {
   /**
    * Build constraints which ensure that the relation r fully defines the
    * relation R over the given range of integers.
+   * @throws IllegalArgumentException  if domain is null
    * 
    */
   public static Collection<IFormula> buildConstraints(IBinaryNaturalRelation r, BinaryRelation R, IntPair domain) {
+    if (domain == null) {
+      throw new IllegalArgumentException("domain is null");
+    }
     Set<IFormula> result = HashSetFactory.make();
     for (int i = domain.getX(); i <= domain.getY(); i++) {
       IntSet s = r.getRelated(i);

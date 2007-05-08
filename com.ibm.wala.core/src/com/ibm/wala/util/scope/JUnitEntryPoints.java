@@ -154,8 +154,12 @@ public class JUnitEntryPoints {
    * Check if the given method is a JUnit test method, assuming that it is
    * declared in a JUnit test class. A method is a JUnit test method if the name
    * has the prefix "test", or its name is "setUp" or "tearDown".
+   * @throws IllegalArgumentException  if m is null
    */
   public static boolean isJUnitMethod(IMethod m) {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     Atom method = m.getName();
     String methodName = method.toString();
     return methodName.startsWith("test") || methodName.equals("setUp") || methodName.equals("tearDown");

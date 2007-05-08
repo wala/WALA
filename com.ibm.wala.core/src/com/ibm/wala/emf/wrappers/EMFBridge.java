@@ -80,8 +80,12 @@ public class EMFBridge {
    * @param site
    *          a WALA name for a call site
    * @return an EMF call site
+   * @throws IllegalArgumentException  if site is null
    */
   public static ECallSite makeCallSite(EJavaMethod method, CallSiteReference site) {
+    if (site == null) {
+      throw new IllegalArgumentException("site is null");
+    }
     ECallSite result = JavaFactory.eINSTANCE.createECallSite();
     result.setBytecodeIndex(site.getProgramCounter());
     result.setJavaMethod(method);

@@ -195,6 +195,9 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
   }
 
   public static String lineBreak(String string, int wrap) {
+    if (string == null) {
+      throw new IllegalArgumentException("string is null");
+    }
     if (string.length() > wrap) {
       StringBuffer result = new StringBuffer();
       int start = 0;

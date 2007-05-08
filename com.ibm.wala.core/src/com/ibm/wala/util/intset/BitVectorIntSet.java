@@ -487,6 +487,9 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   public boolean containsAll(BitVectorIntSet other) {
+    if (other == null) {
+      throw new IllegalArgumentException("other is null");
+    }
     return other.isSubset(this);
   }
 }

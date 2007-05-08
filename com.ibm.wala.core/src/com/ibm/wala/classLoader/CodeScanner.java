@@ -114,6 +114,9 @@ public class CodeScanner {
   }
 
   public static Set getCaughtExceptions(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getCaughtExceptions(sm.getStatements(SSAOptions.defaultOptions(), warnings));

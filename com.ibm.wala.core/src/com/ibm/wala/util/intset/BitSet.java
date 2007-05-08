@@ -48,8 +48,12 @@ public final class BitSet<T> {
 
   /**
    * Add all elements in bitset B to this bit set
+   * @throws IllegalArgumentException  if B is null
    */
   public void addAll(BitSet B) {
+    if (B == null) {
+      throw new IllegalArgumentException("B is null");
+    }
     vector.or(B.vector);
   }
 

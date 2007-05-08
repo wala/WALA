@@ -394,9 +394,13 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   /**
    * This implementation is necessary because the underlying SparseNumberedGraph
    * may not support node membership tests.
+   * @throws IllegalArgumentException  if N is null
    * 
    */
   public boolean containsNode(CGNode N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N is null");
+    }
     return getNode(N.getMethod(), N.getContext()) != null;
   }
 

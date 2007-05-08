@@ -47,8 +47,12 @@ public class ContainerUtil {
   /**
    * @param C
    * @return true iff C is a container class from java.util
+   * @throws IllegalArgumentException  if C is null
    */
   public static boolean isContainer(IClass C, ClassHierarchy cha) {
+    if (C == null) {
+      throw new IllegalArgumentException("C is null");
+    }
     if (ClassLoaderReference.Primordial.equals(C.getClassLoader().getReference())&& 
         TypeReference.JavaUtilCollection.getName().getPackage().equals(C.getReference().getName().getPackage())) {
       if (C.isInterface()) {

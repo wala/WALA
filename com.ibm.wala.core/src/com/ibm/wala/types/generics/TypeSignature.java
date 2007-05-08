@@ -43,6 +43,9 @@ public abstract class TypeSignature extends Signature {
   }
 
   public static TypeSignature make(String s) throws IllegalArgumentException {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     assert (s.length() > 0);
     switch (s.charAt(0)) {
     case TypeReference.VoidTypeCode:

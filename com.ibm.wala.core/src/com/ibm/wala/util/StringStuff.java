@@ -402,8 +402,12 @@ public class StringStuff {
    * @param start
    * @param length
    * @return true iff the class returned by parseForClass is primitive
+   * @throws IllegalArgumentException  if name is null
    */
   public static boolean classIsPrimitive(ImmutableByteArray name, int start, int length) throws IllegalArgumentException {
+    if (name == null) {
+      throw new IllegalArgumentException("name is null");
+    }
     while (length > 0 && name.b[start] == '[') {
       start++;
       length--;

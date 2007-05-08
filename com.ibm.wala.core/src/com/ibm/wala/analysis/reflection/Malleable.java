@@ -30,6 +30,9 @@ public class Malleable {
 
 
   public static boolean isMalleable(TypeReference T) {
+    if (T == null) {
+      throw new IllegalArgumentException("T is null");
+    }
     return T.equals(Malleable) || T.equals(ExtMalleable);
   }
 }

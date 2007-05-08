@@ -51,8 +51,12 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   /**
    * @param s
+   * @throws IllegalArgumentException  if s is null
    */
   public MutableSharedBitVectorIntSet(SparseIntSet s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     if (s.size() == 0) {
       return;
     }
