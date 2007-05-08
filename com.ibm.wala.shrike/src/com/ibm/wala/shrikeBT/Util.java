@@ -78,8 +78,12 @@ public final class Util {
    * Compute the total number of JVM "stack words" occupied by the method
    * parameters for method signature "type". Any "this" parameter is not
    * included.
+   * @throws IllegalArgumentException  if type is null
    */
   public static int getParamsWordSize(String type) throws IllegalArgumentException {
+    if (type == null) {
+      throw new IllegalArgumentException("type is null");
+    }
     int index = 1;
     int count = 0;
 
@@ -96,8 +100,12 @@ public final class Util {
   /**
    * Convert a fully-qualified Java class name ('.' separated) into an internal
    * JVM type name ('/' separated, starting with 'L' and ending with ';').
+   * @throws IllegalArgumentException  if c is null
    */
   public static String makeType(String c) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
+    }
     if (c.startsWith("[")) {
       return c.replace('.', '/');
     } else if (!c.endsWith(";")) {
@@ -123,8 +131,12 @@ public final class Util {
 
   /**
    * Convert a JVM type name back into a Java class name.
+   * @throws IllegalArgumentException  if t is null
    */
   public static String makeClass(String t) throws IllegalArgumentException {
+    if (t == null) {
+      throw new IllegalArgumentException("t is null");
+    }
     if (t.startsWith("[")) {
       return t;
     } else if (!t.startsWith("L")) {
@@ -388,6 +400,9 @@ public final class Util {
   }
 
   public static Method findMethod(Class c, String name, Class[] paramTypes) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
+    }
     Method[] methods = c.getMethods();
     Method result = null;
     for (int i = 0; i < methods.length; i++) {

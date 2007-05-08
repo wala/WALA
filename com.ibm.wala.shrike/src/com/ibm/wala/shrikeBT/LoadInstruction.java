@@ -71,7 +71,7 @@ public final class LoadInstruction extends Instruction {
     return Util.getWordSize(getType());
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws NullPointerException {
     v.visitLocalLoad(this);
   }
 

@@ -105,7 +105,7 @@ public final class ConversionInstruction extends Instruction {
     return "Conversion(" + getFromType() + "," + getToType() + ")";
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws NullPointerException {
     v.visitConversion(this);
   }
       /* (non-Javadoc)

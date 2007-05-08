@@ -228,8 +228,12 @@ public abstract class OfflineInstrumenterBase {
   /**
    * Add a directory containing class files to instrument. All subdirectories
    * are also scanned.
+   * @throws IllegalArgumentException  if d is null
    */
   final public void addInputDirectory(File d) throws IOException, IllegalArgumentException {
+    if (d == null) {
+      throw new IllegalArgumentException("d is null");
+    }
     File[] fs = d.listFiles(new FileFilter() {
       public boolean accept(File f) {
         return f.isDirectory() || f.getName().endsWith(".class");
@@ -252,8 +256,12 @@ public abstract class OfflineInstrumenterBase {
    * Add something to instrument --- the name of a JAR file, a class file, a
    * directory or an entry within a jar file (as filename#entryname). If we
    * can't identify it, nothing is added and we return false.
+   * @throws IllegalArgumentException  if a is null
    */
   final public boolean addInputElement(String a) throws IOException {
+    if (a == null) {
+      throw new IllegalArgumentException("a is null");
+    }
     try {
       int poundIndex = a.indexOf('#');
       if (poundIndex > 0) {

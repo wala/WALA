@@ -44,7 +44,7 @@ public final class SwapInstruction extends Instruction {
     return "Swap()";
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws NullPointerException {
     v.visitSwap(this);
   }
     /* (non-Javadoc)

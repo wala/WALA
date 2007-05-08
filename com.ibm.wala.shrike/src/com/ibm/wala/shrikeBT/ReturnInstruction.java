@@ -30,6 +30,9 @@ public final class ReturnInstruction extends Instruction {
   }
 
   public static ReturnInstruction make(String type) throws IllegalArgumentException {
+    if (type == null) {
+      throw new IllegalArgumentException("type is null");
+    }
     if (type.equals(TYPE_void)) {
       return preallocatedVoid;
     } else {
@@ -66,7 +69,7 @@ public final class ReturnInstruction extends Instruction {
     return opcode == OP_return ? TYPE_void : indexedTypes[opcode - OP_ireturn];
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws NullPointerException {
     v.visitReturn(this);
   }
 

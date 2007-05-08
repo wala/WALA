@@ -156,7 +156,7 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     return Util.getWordSize(t, index + 1);
   }
 
-  final public void visit(Visitor v) {
+  final public void visit(Visitor v) throws NullPointerException {
     v.visitInvoke(this);
   }
 

@@ -58,6 +58,9 @@ public final class GotoInstruction extends Instruction {
    * @see com.ibm.wala.shrikeBT.Instruction#redirectTargets(int[])
    */
   public Instruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
+    if (targetMap == null) {
+      throw new IllegalArgumentException("targetMap is null");
+    }
     try {
       return make(targetMap[label[0]]);
     } catch (ArrayIndexOutOfBoundsException e) {

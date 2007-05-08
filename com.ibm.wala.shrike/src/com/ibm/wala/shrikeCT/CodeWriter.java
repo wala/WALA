@@ -26,8 +26,12 @@ public final class CodeWriter extends ClassWriter.Element {
 
   /**
    * Build an empty serializable Code attribute.
+   * @throws IllegalArgumentException  if w is null
    */
   public CodeWriter(ClassWriter w) {
+    if (w == null) {
+      throw new IllegalArgumentException("w is null");
+    }
     attrID = w.addCPUtf8("Code");
   }
 
@@ -95,8 +99,12 @@ public final class CodeWriter extends ClassWriter.Element {
 
   /**
    * Set the bytecodes for this Code attribute.
+   * @throws IllegalArgumentException  if code is null
    */
   public void setCode(byte[] code) throws IllegalArgumentException{
+    if (code == null) {
+      throw new IllegalArgumentException("code is null");
+    }
     if (code.length > 0xFFFF) {
       throw new IllegalArgumentException("Code array is too long: " + code.length);
     }
@@ -113,8 +121,12 @@ public final class CodeWriter extends ClassWriter.Element {
    * @param exnHandlers
    *          a flattened sequence of (startPC, endPC, catchClassIndex, catchPC)
    *          tuples
+   * @throws IllegalArgumentException  if exnHandlers is null
    */
   public void setRawHandlers(int[] exnHandlers) {
+    if (exnHandlers == null) {
+      throw new IllegalArgumentException("exnHandlers is null");
+    }
     if (exnHandlers.length % 4 != 0) {
       throw new IllegalArgumentException("Exception handlers array has bad length: " + exnHandlers.length);
     }

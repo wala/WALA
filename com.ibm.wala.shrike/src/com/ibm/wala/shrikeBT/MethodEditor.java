@@ -105,8 +105,12 @@ public final class MethodEditor {
   /**
    * Build an editor for the given method. This editor will write back its
    * changes to the method info.
+   * @throws IllegalArgumentException  if info is null
    */
   public MethodEditor(MethodData info) {
+    if (info == null) {
+      throw new IllegalArgumentException("info is null");
+    }
     methodInfo = info;
     instructionsToBytecodes = info.getInstructionsToBytecodes();
     instructions = info.getInstructions();
@@ -352,8 +356,12 @@ public final class MethodEditor {
    * 
    * When multiple 'start' patches are given, the last one added is first in
    * execution order.
+   * @throws IllegalArgumentException  if p is null
    */
   public void insertAtStart(Patch p) {
+    if (p == null) {
+      throw new IllegalArgumentException("p is null");
+    }
     verifyState(DURING_PASS);
     methodStartPatches = p.insert(methodStartPatches);
     patchCount++;
@@ -366,8 +374,12 @@ public final class MethodEditor {
    * 
    * When multiple 'before' patches are given, the last one added is first in
    * execution order.
+   * @throws IllegalArgumentException  if p is null
    */
   public void insertBefore(int i, Patch p) {
+    if (p == null) {
+      throw new IllegalArgumentException("p is null");
+    }
     verifyState(DURING_PASS);
     beforePatches[i] = p.insert(beforePatches[i]);
     patchCount++;
@@ -399,8 +411,9 @@ public final class MethodEditor {
    * instruction will cover the patch.
    * 
    * Multiple replacements are not allowed.
+   * @throws NullPointerException  if p is null
    */
-  public void replaceWith(int i, Patch p) {
+  public void replaceWith(int i, Patch p) throws NullPointerException {
     verifyState(DURING_PASS);
     if (replacementPatches[i] != null) {
       throw new IllegalArgumentException("Instruction " + i + " cannot be replaced more than once");
@@ -448,8 +461,12 @@ public final class MethodEditor {
    * code will not be executed normally, but it can emit label definitions that
    * other patches can branch to. No exception handlers cover this code (other
    * than exception handlers emitted by patch p itself).
+   * @throws IllegalArgumentException  if p is null
    */
   public void insertAfterBody(Patch p) {
+    if (p == null) {
+      throw new IllegalArgumentException("p is null");
+    }
     verifyState(DURING_PASS);
     afterMethodPatches = p.insert(afterMethodPatches);
     patchCount++;

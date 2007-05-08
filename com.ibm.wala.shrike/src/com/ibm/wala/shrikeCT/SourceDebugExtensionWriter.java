@@ -20,6 +20,9 @@ public class SourceDebugExtensionWriter extends ClassWriter.Element {
   private byte[] table;
 
   public SourceDebugExtensionWriter(ClassWriter w) {
+    if (w == null) {
+      throw new IllegalArgumentException("w is null");
+    }
     attrID = w.addCPUtf8("SourceDebugExtension");
   }
 
@@ -41,6 +44,9 @@ public class SourceDebugExtensionWriter extends ClassWriter.Element {
   }
 
   public void setRawTable(byte[] sourceDebug) {
+    if (sourceDebug == null) {
+      throw new IllegalArgumentException("sourceDebug is null");
+    }
     for (int i = 0; i < sourceDebug.length; i++) {
       if (sourceDebug[i] < 1 || sourceDebug[i] > 0xFFFF) {
         throw new IllegalArgumentException("Invalid CP index: " + sourceDebug[i]);
@@ -50,6 +56,9 @@ public class SourceDebugExtensionWriter extends ClassWriter.Element {
   }
 
   public void setDebugInfo(String sourceDebug) {
+    if (sourceDebug == null) {
+      throw new IllegalArgumentException("sourceDebug is null");
+    }
     try {
       byte[] bytes = sourceDebug.getBytes("UTF8");
       setRawTable(bytes);

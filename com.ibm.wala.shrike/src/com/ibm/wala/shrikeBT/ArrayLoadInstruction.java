@@ -81,7 +81,7 @@ final public class ArrayLoadInstruction extends Instruction {
     return Constants.indexedTypes[opcode - OP_iaload];
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws NullPointerException {
     v.visitArrayLoad(this);
   }
     /* (non-Javadoc)

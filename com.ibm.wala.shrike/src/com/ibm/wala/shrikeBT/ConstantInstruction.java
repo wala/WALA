@@ -505,7 +505,7 @@ public abstract class ConstantInstruction extends Instruction {
     return getType().hashCode() + 14411 * getValue().hashCode();
   }
 
-  final public void visit(Visitor v) {
+  final public void visit(Visitor v) throws NullPointerException {
     v.visitConstant(this);
   }
 

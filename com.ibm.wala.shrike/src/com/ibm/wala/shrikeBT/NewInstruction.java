@@ -28,8 +28,12 @@ public final class NewInstruction extends Instruction {
    * @param arrayBoundsCount
    *          the number of array dimensions to preconstruct (equal to the
    *          number of integer parameters this instruction expects)
+   * @throws IllegalArgumentException  if type is null
    */
   public static NewInstruction make(String type, int arrayBoundsCount) throws IllegalArgumentException {
+    if (type == null) {
+      throw new IllegalArgumentException("type is null");
+    }
     if (arrayBoundsCount < 0 || arrayBoundsCount > 255) {
       throw new IllegalArgumentException("Too many array bounds: " + arrayBoundsCount);
     } else {

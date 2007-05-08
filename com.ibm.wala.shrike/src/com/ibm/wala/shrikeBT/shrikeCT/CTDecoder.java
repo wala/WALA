@@ -41,8 +41,12 @@ final public class CTDecoder extends Decoder {
   /**
    * Convert the internal JVM class name to a JVM type name (e.g.,
    * java/lang/Object to Ljava/lang/Object;).
+   * @throws IllegalArgumentException  if s is null
    */
   public static String convertClassToType(String s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     if (s.length() > 0 && s.charAt(0) != '[') {
       return "L" + s + ";";
     } else {

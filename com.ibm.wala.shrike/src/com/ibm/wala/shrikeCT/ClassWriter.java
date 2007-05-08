@@ -884,8 +884,12 @@ public final class ClassWriter implements ClassConstants {
 
   /**
    * Set the byte at offset 'offset' in 'buf' to the unsigned 8-bit value in v.
+   * @throws IllegalArgumentException  if buf is null
    */
   public static void setUByte(byte[] buf, int offset, int v) throws IllegalArgumentException {
+    if (buf == null) {
+      throw new IllegalArgumentException("buf is null");
+    }
     if (offset >= buf.length) {
       throw new IllegalArgumentException("illegal offset " + offset);
     }
@@ -895,8 +899,12 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Set the 4 bytes at offset 'offset' in 'buf' to the signed 32-bit value in
    * v.
+   * @throws IllegalArgumentException  if buf is null
    */
   public static void setInt(byte[] buf, int offset, int v) throws IllegalArgumentException {
+    if (buf == null) {
+      throw new IllegalArgumentException("buf is null");
+    }
     if (offset >= buf.length) {
       throw new IllegalArgumentException("illegal offset " + offset);
     }
@@ -932,8 +940,12 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Set the 2 bytes at offset 'offset' in 'buf' to the unsigned 16-bit value in
    * v.
+   * @throws IllegalArgumentException  if buf is null
    */
   public static void setUShort(byte[] buf, int offset, int v) throws IllegalArgumentException {
+    if (buf == null) {
+      throw new IllegalArgumentException("buf is null");
+    }
     if (offset + 1 >= buf.length) {
       throw new IllegalArgumentException("buf is too short " + buf.length + " " + offset);
     }

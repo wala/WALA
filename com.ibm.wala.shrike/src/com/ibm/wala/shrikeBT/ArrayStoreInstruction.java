@@ -62,7 +62,7 @@ final public class ArrayStoreInstruction extends Instruction {
     return "ArrayStore(" + getType() + ")";
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws NullPointerException {
     v.visitArrayStore(this);
   }
   /* (non-Javadoc)

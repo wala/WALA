@@ -68,8 +68,12 @@ final public class ClassInstrumenter {
 
   /**
    * Create a class instrumenter from a preinitialized class reader.
+   * @throws IllegalArgumentException  if cr is null
    */
   public ClassInstrumenter(ClassReader cr) throws InvalidClassFileException {
+    if (cr == null) {
+      throw new IllegalArgumentException("cr is null");
+    }
     this.cr = cr;
     methods = new MethodData[cr.getMethodCount()];
     oldCode = new CodeReader[methods.length];
@@ -203,6 +207,9 @@ final public class ClassInstrumenter {
   }
 
   public void newMethod(MethodData md, ClassWriter classWriter, ClassWriter.Element rawLines) {
+    if (md == null) {
+      throw new IllegalArgumentException("md is null");
+    }
     CTCompiler compiler = new CTCompiler(classWriter, md);
     compiler.compile();
     CTCompiler.Output output = compiler.getOutput();
@@ -293,8 +300,12 @@ final public class ClassInstrumenter {
    * 
    * @param i
    *          the index of the method to replace
+   * @throws IllegalArgumentException  if md is null
    */
   public void replaceMethod(int i, MethodData md) {
+    if (md == null) {
+      throw new IllegalArgumentException("md is null");
+    }
     deletedMethods[i] = false;
     methods[i] = md;
     oldCode[i] = null;

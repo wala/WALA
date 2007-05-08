@@ -218,6 +218,9 @@ public class Analyzer {
   }
 
   final public void getReachableFromUpdate(int from, BitSet reachable, boolean followHandlers, BitSet mask) {
+    if (reachable == null) {
+      throw new IllegalArgumentException("reachable is null");
+    }
     reachable.clear();
     getReachableRecursive(from, reachable, followHandlers, mask);
   }
@@ -264,6 +267,9 @@ public class Analyzer {
   }
 
   final public void getReachingToUpdate(int to, BitSet reaching, BitSet mask) {
+    if (reaching == null) {
+      throw new IllegalArgumentException("reaching is null");
+    }
     getBackEdges();
     reaching.clear();
     getReachingBase(to, reaching, mask);

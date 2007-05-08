@@ -50,6 +50,9 @@ final public class BinaryOpInstruction extends Instruction {
   }
 
   public static BinaryOpInstruction make(String type, Operator operator) throws IllegalArgumentException {
+    if (operator == null) {
+      throw new IllegalArgumentException("operator is null");
+    }
     int t = Util.getTypeIndex(type);
     if (t < 0) {
       throw new IllegalArgumentException("Invalid type for BinaryOp: " + type);
@@ -114,7 +117,7 @@ final public class BinaryOpInstruction extends Instruction {
     return indexedTypes[t];
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws NullPointerException {
     v.visitBinaryOp(this);
   }
 

@@ -19,8 +19,12 @@ public final class ExceptionsWriter extends ClassWriter.Element {
 
   /**
    * Build an empty writer.
+   * @throws IllegalArgumentException  if w is null
    */
   public ExceptionsWriter(ClassWriter w) {
+    if (w == null) {
+      throw new IllegalArgumentException("w is null");
+    }
     attrID = w.addCPUtf8("Exceptions");
   }
 
@@ -47,8 +51,12 @@ public final class ExceptionsWriter extends ClassWriter.Element {
    * 
    * @param exceptions
    *          an array of indices to constant pool Class entries
+   * @throws IllegalArgumentException  if exceptions is null
    */
   public void setRawTable(int[] exceptions) {
+    if (exceptions == null) {
+      throw new IllegalArgumentException("exceptions is null");
+    }
     for (int i = 0; i < exceptions.length; i++) {
       if (exceptions[i] < 1 || exceptions[i] > 0xFFFF) {
         throw new IllegalArgumentException("Invalid CP index: " + exceptions[i]);

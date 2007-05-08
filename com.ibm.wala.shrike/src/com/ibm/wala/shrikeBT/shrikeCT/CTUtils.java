@@ -23,6 +23,9 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
 public class CTUtils {
   public static void addClassToHierarchy(ClassHierarchyStore store, ClassReader cr) throws InvalidClassFileException,
       IllegalArgumentException {
+    if (store == null) {
+      throw new IllegalArgumentException("store is null");
+    }
     if (cr == null) {
       throw new IllegalArgumentException();
     }

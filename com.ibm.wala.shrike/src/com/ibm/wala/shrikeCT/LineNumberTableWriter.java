@@ -21,8 +21,12 @@ public final class LineNumberTableWriter extends ClassWriter.Element {
 
   /**
    * Build an empty LineNumberTable.
+   * @throws IllegalArgumentException  if w is null
    */
   public LineNumberTableWriter(ClassWriter w) {
+    if (w == null) {
+      throw new IllegalArgumentException("w is null");
+    }
     attrID = w.addCPUtf8("LineNumberTable");
   }
 

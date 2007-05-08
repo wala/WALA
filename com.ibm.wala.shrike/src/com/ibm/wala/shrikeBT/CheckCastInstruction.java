@@ -22,6 +22,9 @@ final public class CheckCastInstruction extends Instruction {
   }
 
   public static CheckCastInstruction make(String type) {
+    if (type == null) {
+      throw new IllegalArgumentException("type is null");
+    }
     return new CheckCastInstruction(type.intern());
   }
 

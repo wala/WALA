@@ -555,8 +555,12 @@ public final class ClassReader implements ClassConstants {
 
   /**
    * Point iter at the list of attributes for field f.
+   * @throws IllegalArgumentException  if iter is null
    */
   public void initFieldAttributeIterator(int f, AttrIterator iter) {
+    if (iter == null) {
+      throw new IllegalArgumentException("iter is null");
+    }
     verifyFieldIndex(f);
     iter.init(this, fieldOffsets[f] + 6);
   }
@@ -649,16 +653,24 @@ public final class ClassReader implements ClassConstants {
 
   /**
    * Point iter at the list of attributes for method m.
+   * @throws IllegalArgumentException  if iter is null
    */
   public void initMethodAttributeIterator(int m, AttrIterator iter) {
+    if (iter == null) {
+      throw new IllegalArgumentException("iter is null");
+    }
     verifyMethodIndex(m);
     iter.init(this, methodOffsets[m] + 6);
   }
 
   /**
    * Point iter at the list of attributes for the class.
+   * @throws IllegalArgumentException  if iter is null
    */
   public void initClassAttributeIterator(AttrIterator iter) {
+    if (iter == null) {
+      throw new IllegalArgumentException("iter is null");
+    }
     iter.init(this, attrInfoOffset);
   }
 }

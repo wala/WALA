@@ -84,7 +84,7 @@ public final class StoreInstruction extends Instruction {
     return "LocalStore(" + getType() + "," + index + ")";
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws NullPointerException {
     v.visitLocalStore(this);
   }
     /* (non-Javadoc)

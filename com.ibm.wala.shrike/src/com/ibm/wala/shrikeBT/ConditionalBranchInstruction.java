@@ -93,6 +93,9 @@ public final class ConditionalBranchInstruction extends Instruction {
   }
 
   public Instruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
+    if (targetMap == null) {
+      throw new IllegalArgumentException("targetMap is null");
+    }
     try {
       return make(opcode, targetMap[label]);
     } catch (ArrayIndexOutOfBoundsException e) {
@@ -123,7 +126,7 @@ public final class ConditionalBranchInstruction extends Instruction {
     return 2;
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws NullPointerException {
     v.visitConditionalBranch(this);
   }
 

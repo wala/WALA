@@ -35,6 +35,9 @@ public final class ShiftInstruction extends Instruction {
   }
 
   public static ShiftInstruction make(String type, Operator operator) throws IllegalArgumentException {
+    if (operator == null) {
+      throw new IllegalArgumentException("operator is null");
+    }
     int t = Util.getTypeIndex(type);
     if (t < 0 || t > TYPE_long_index) {
       throw new IllegalArgumentException("Cannot apply shift to type " + type);
@@ -76,7 +79,7 @@ public final class ShiftInstruction extends Instruction {
     return indexedTypes[(opcode - OP_ishl) & 1];
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws NullPointerException {
     v.visitShift(this);
   }
 

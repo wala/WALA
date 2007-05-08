@@ -58,8 +58,12 @@ final public class CTCompiler extends Compiler {
   /**
    * Convert a JVM type to the internal JVM class name (e.g., Ljava/lang/Object;
    * to java/lang/Object)
+   * @throws IllegalArgumentException  if s is null
    */
   public static String convertTypeToClass(String s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     if (s.length() > 0 && s.charAt(0) == 'L') {
       return s.substring(1, s.length() - 1);
     } else {

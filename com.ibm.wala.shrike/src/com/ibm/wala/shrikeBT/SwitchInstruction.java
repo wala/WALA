@@ -49,8 +49,12 @@ public final class SwitchInstruction extends Instruction {
    *          order by case
    * @param defaultLabel
    *          the default label to branch to if no cases match
+   * @throws IllegalArgumentException  if casesAndLabels is null
    */
   public static SwitchInstruction make(int[] casesAndLabels, int defaultLabel) {
+    if (casesAndLabels == null) {
+      throw new IllegalArgumentException("casesAndLabels is null");
+    }
     short opcode = OP_tableswitch;
 
     for (int i = 2; i < casesAndLabels.length; i += 2) {
@@ -85,6 +89,9 @@ public final class SwitchInstruction extends Instruction {
   }
 
   public Instruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
+    if (targetMap == null) {
+      throw new IllegalArgumentException("targetMap is null");
+    }
     try {
       int[] cs = new int[casesAndLabels.length];
       for (int i = 0; i < cs.length; i += 2) {

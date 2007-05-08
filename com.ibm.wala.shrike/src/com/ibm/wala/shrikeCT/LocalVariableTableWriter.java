@@ -23,8 +23,12 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
 
   /**
    * Create a blank LocalVariableTable.
+   * @throws IllegalArgumentException  if w is null
    */
   public LocalVariableTableWriter(ClassWriter w) {
+    if (w == null) {
+      throw new IllegalArgumentException("w is null");
+    }
     attrID = w.addCPUtf8("LocalVariableTable");
   }
 

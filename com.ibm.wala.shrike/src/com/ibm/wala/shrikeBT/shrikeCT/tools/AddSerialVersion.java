@@ -34,8 +34,12 @@ public class AddSerialVersion {
    * 
    * When run as a program, just takes a list of class files as command line
    * arguments and computes their serialVersionUIDs.
+   * @throws IllegalArgumentException  if r is null
    */
   public static void addSerialVersionUID(ClassReader r, ClassWriter w) throws InvalidClassFileException {
+    if (r == null) {
+      throw new IllegalArgumentException("r is null");
+    }
     int numFields = r.getFieldCount();
     for (int i = 0; i < numFields; i++) {
       if (r.getFieldName(i).equals("serialVersionUID")) {
@@ -66,8 +70,12 @@ public class AddSerialVersion {
    * This method computes the serialVersionUID for class r. See the
    * specification at
    * http://java.sun.com/j2se/1.4.2/docs/guide/serialization/spec/class.html
+   * @throws IllegalArgumentException  if r is null
    */
   public static long computeSerialVersionUID(final ClassReader r) throws InvalidClassFileException {
+    if (r == null) {
+      throw new IllegalArgumentException("r is null");
+    }
     MessageDigest digest;
     try {
       digest = MessageDigest.getInstance("SHA");

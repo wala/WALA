@@ -125,7 +125,7 @@ public class PutInstruction extends Instruction {
         + ")";
   }
 
-  final public void visit(Visitor v) {
+  final public void visit(Visitor v) throws NullPointerException {
     v.visitPut(this);
   }
     /* (non-Javadoc)

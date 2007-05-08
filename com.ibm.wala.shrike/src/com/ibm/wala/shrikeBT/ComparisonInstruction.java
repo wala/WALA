@@ -120,7 +120,7 @@ final public class ComparisonInstruction extends Instruction {
     return 1;
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws NullPointerException {
     v.visitComparison(this);
   }
 

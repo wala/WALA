@@ -366,8 +366,12 @@ public class ClassPrinter {
 
   /**
    * Print a class.
+   * @throws IllegalArgumentException  if cr is null
    */
   public void doClass(final ClassReader cr) throws InvalidClassFileException, InvalidBytecodeException, IOException {
+    if (cr == null) {
+      throw new IllegalArgumentException("cr is null");
+    }
     w.write("Class: " + cr.getName() + "\n");
 
     if (printConstantPool) {

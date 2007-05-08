@@ -19,8 +19,12 @@ public final class InnerClassesWriter extends ClassWriter.Element {
 
   /**
    * Build an empty writer.
+   * @throws IllegalArgumentException  if w is null
    */
   public InnerClassesWriter(ClassWriter w) {
+    if (w == null) {
+      throw new IllegalArgumentException("w is null");
+    }
     attrID = w.addCPUtf8("InnerClasses");
   }
 
@@ -49,8 +53,12 @@ public final class InnerClassesWriter extends ClassWriter.Element {
 
   /**
    * Set the raw values that make up this attribute
+   * @throws IllegalArgumentException  if classes is null
    */
-  public void setRawTable(int[] classes) {
+  public void setRawTable(int[] classes) throws NullPointerException {
+    if (classes == null) {
+      throw new IllegalArgumentException("classes is null");
+    }
     if (classes.length % 4 != 0) {
       throw new IllegalArgumentException("Invalid raw table length: " + classes.length);
     }

@@ -21,8 +21,12 @@ public final class SourceFileWriter extends ClassWriter.Element {
 
   /**
    * Build an empty writer.
+   * @throws IllegalArgumentException  if w is null
    */
   public SourceFileWriter(ClassWriter w) {
+    if (w == null) {
+      throw new IllegalArgumentException("w is null");
+    }
     attrID = w.addCPUtf8("SourceFile");
   }
 

@@ -81,7 +81,7 @@ public final class UnaryOpInstruction extends Instruction {
     return indexedTypes[opcode - OP_ineg];
   }
 
-  public void visit(Visitor v) {
+  public void visit(Visitor v) throws NullPointerException  {
     v.visitUnaryOp(this);
   }
 

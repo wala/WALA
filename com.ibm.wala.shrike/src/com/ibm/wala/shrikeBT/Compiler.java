@@ -32,34 +32,50 @@ import com.ibm.wala.shrikeBT.analysis.Verifier;
 public abstract class Compiler implements Constants {
   // input
   private boolean isStatic;
+
   private String classType;
+
   private String signature;
+
   private Instruction[] instructions;
+
   private ExceptionHandler[][] handlers;
+
   private int[] instructionsToBytecodes;
 
   private static final int[] noRawHandlers = new int[0];
 
   private ClassHierarchyProvider hierarchy;
+
   private ConstantPoolReader presetConstants;
 
   // working
   private int[] instructionsToOffsets;
+
   private BitSet branchTargets;
+
   private byte[][] stackWords;
+
   private byte[] code;
 
   // working on breaking up overlarge methods
   private int allocatedLocals;
+
   private BitSet[] liveLocals;
+
   private int[][] backEdges;
+
   private String[][] localTypes;
+
   private String[][] stackTypes;
 
   // output
   private int maxLocals;
+
   private int maxStack;
+
   private Output mainMethod;
+
   private ArrayList<Output> auxMethods;
 
   /**
@@ -77,9 +93,23 @@ public abstract class Compiler implements Constants {
    *          the ShrikeBT exception handlers
    * @param instructionsToBytecodes
    *          the map from instructions to original bytecode offsets
+   * @throws IllegalArgumentException
+   *           if handlers is null
+   * @throws IllegalArgumentException
+   *           if instructions is null
+   * @throws IllegalArgumentException  if instructionsToBytecodes is null
    */
   public Compiler(boolean isStatic, String classType, String signature, Instruction[] instructions, ExceptionHandler[][] handlers,
       int[] instructionsToBytecodes) {
+    if (instructionsToBytecodes == null) {
+          throw new IllegalArgumentException("instructionsToBytecodes is null");
+        }
+    if (instructions == null) {
+      throw new IllegalArgumentException("instructions is null");
+    }
+    if (handlers == null) {
+      throw new IllegalArgumentException("handlers is null");
+    }
     if (instructions.length != handlers.length) {
       throw new IllegalArgumentException("Instructions/handlers length mismatch");
     }
@@ -268,13 +298,13 @@ public abstract class Compiler implements Constants {
     }
   }
 
-//  private static int getStackDelta(Instruction instr) {
-//    if (instr instanceof DupInstruction) {
-//      return ((DupInstruction) instr).getSize();
-//    } else {
-//      return (instr.getPushedWordSize() > 0 ? 1 : 0) - instr.getPoppedCount();
-//    }
-//  }
+  // private static int getStackDelta(Instruction instr) {
+  // if (instr instanceof DupInstruction) {
+  // return ((DupInstruction) instr).getSize();
+  // } else {
+  // return (instr.getPushedWordSize() > 0 ? 1 : 0) - instr.getPoppedCount();
+  // }
+  // }
 
   private void computeStackWordsAt(int i, int stackLen, byte[] stackWords, boolean[] visited) {
     while (!visited[i]) {
@@ -366,7 +396,9 @@ public abstract class Compiler implements Constants {
 
   abstract class Patch {
     int instrStart;
+
     int instrOffset;
+
     int targetLabel;
 
     Patch(int instrStart, int instrOffset, int targetLabel) {
@@ -554,7 +586,7 @@ public abstract class Compiler implements Constants {
           if (!fallToConditional) {
             break;
           }
-        //by Xiangyu
+          // by Xiangyu
         case OP_ifeq:
         case OP_ifge:
         case OP_ifgt:
@@ -605,7 +637,7 @@ public abstract class Compiler implements Constants {
           }
           break;
         }
-        //by Xiangyu
+          // by Xiangyu
 
         case OP_if_icmpeq:
         case OP_if_icmpge:
@@ -728,8 +760,8 @@ public abstract class Compiler implements Constants {
               int c = i1.getIntValue();
               int v = i0.getVarIndex();
               BinaryOpInstruction.Operator op = i2.getOperator();
-              if ((short) c == c && i3.getVarIndex() == v && (op == Operator.ADD || op == Operator.SUB) && i2.getType().equals(TYPE_int)
-                  && i3.getType().equals(TYPE_int)) {
+              if ((short) c == c && i3.getVarIndex() == v && (op == Operator.ADD || op == Operator.SUB)
+                  && i2.getType().equals(TYPE_int) && i3.getType().equals(TYPE_int)) {
                 if (v < 256 && (byte) c == c) {
                   code[curOffset - 1] = (byte) OP_iinc;
                   writeByte(curOffset, v);
@@ -1112,8 +1144,11 @@ public abstract class Compiler implements Constants {
 
   static class HelperPatch {
     int start;
+
     int length;
+
     Instruction[] code;
+
     ExceptionHandler[] handlers;
 
     HelperPatch(int start, int length, Instruction[] code, ExceptionHandler[] handlers) {
@@ -1708,12 +1743,19 @@ public abstract class Compiler implements Constants {
    */
   public final static class Output {
     private byte[] code;
+
     private int[] rawHandlers;
+
     private int[] newBytecodesToOldBytecodes;
+
     private String name;
+
     private String signature;
+
     private boolean isStatic;
+
     private int maxLocals;
+
     private int maxStack;
 
     Output(String name, String signature, byte[] code, int[] rawHandlers, int[] newBytecodesToOldBytecodes, int maxLocals,

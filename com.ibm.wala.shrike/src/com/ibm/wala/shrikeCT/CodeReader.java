@@ -88,8 +88,12 @@ public final class CodeReader extends AttributeReader {
 
   /**
    * Point iter at the list of attributes for this code.
+   * @throws IllegalArgumentException  if iter is null
    */
   public void initAttributeIterator(ClassReader.AttrIterator iter) {
+    if (iter == null) {
+      throw new IllegalArgumentException("iter is null");
+    }
     iter.init(cr, attr + 14 + codeLen + 2 + exnTableLen * 8);
   }
 }
