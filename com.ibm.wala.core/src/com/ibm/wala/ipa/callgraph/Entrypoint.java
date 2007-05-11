@@ -99,8 +99,12 @@ public abstract class Entrypoint implements BytecodeConstants {
     if (p.length == 0) {
       return -1;
     } else if (p.length == 1) {
-      SSANewInstruction n = m.addAllocation(p[0], warnings);
-      return (n == null) ? -1 : n.getDef();
+      if (p[0].isPrimitiveType()) {
+        return m.addLocal();
+      } else {
+        SSANewInstruction n = m.addAllocation(p[0], warnings);
+        return (n == null) ? -1 : n.getDef();
+      }
     } else {
       int[] values = new int[p.length];
       int countErrors = 0;

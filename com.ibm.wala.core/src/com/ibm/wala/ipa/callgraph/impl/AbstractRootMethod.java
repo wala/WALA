@@ -95,6 +95,10 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return new SyntheticIR(this, Everywhere.EVERYWHERE, makeControlFlowGraph(), instrs, options, constants, warnings);
   }
 
+  public int addLocal() {
+    return nextLocal++;
+  }
+  
   /**
    * @return the invoke instructions added by this operation
    * @throws IllegalArgumentException  if site is null
