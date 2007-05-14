@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Plugin;
 
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
@@ -88,7 +89,7 @@ public class FileProvider {
       }
 
       // otherwise load from plugin
-      return getFromPlugin(fileName);
+      return getFromPlugin(CorePlugin.getDefault(), fileName);
     }
 
   }
@@ -96,7 +97,7 @@ public class FileProvider {
   /**
    */
   public static File getFile(String fileName) throws IOException {
-    return (CorePlugin.getDefault() == null) ? getFileFromClassLoader(fileName) : getFileFromPlugin(fileName);
+    return (CorePlugin.getDefault() == null) ? getFileFromClassLoader(fileName) : getFileFromPlugin(CorePlugin.getDefault(), fileName);
   }
 
   /**
@@ -104,9 +105,9 @@ public class FileProvider {
    * @return the jar file packaged with this plug-in of the given name, or null
    *         if not found.
    */
-  private static File getFileFromPlugin(String fileName) throws IOException {
+  public static File getFileFromPlugin(Plugin p, String fileName) throws IOException {
 
-    URL url = getFileURLFromPlugin(fileName);
+    URL url = getFileURLFromPlugin(p, fileName);
     if (url == null) {
       throw new FileNotFoundException(fileName);
     }
@@ -118,8 +119,8 @@ public class FileProvider {
    * @return the jar file packaged with this plug-in of the given name, or null
    *         if not found.
    */
-  private static JarFileModule getFromPlugin(String fileName) throws IOException {
-    URL url = getFileURLFromPlugin(fileName);
+  private static JarFileModule getFromPlugin(Plugin p, String fileName) throws IOException {
+    URL url = getFileURLFromPlugin(p, fileName);
     return (url == null) ? null : new JarFileModule(new JarFile(filePathFromURL(url)));
   }
 
@@ -131,12 +132,12 @@ public class FileProvider {
    * @return the URL, or <code>null</code> if the file is not found
    * @throws IOException
    */
-  private static URL getFileURLFromPlugin(String fileName) throws IOException {
-    URL url = FileLocator.find(CorePlugin.getDefault().getBundle(), new Path(fileName), null);
+  private static URL getFileURLFromPlugin(Plugin p, String fileName) throws IOException {
+    URL url = FileLocator.find(p.getBundle(), new Path(fileName), null);
     if (url == null) {
       // try lib/fileName
       fileName = "lib/" + fileName;
-      url = FileLocator.find(CorePlugin.getDefault().getBundle(), new Path(fileName), null);
+      url = FileLocator.find(p.getBundle(), new Path(fileName), null);
       if (url == null) {
         // give up
         return null;

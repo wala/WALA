@@ -20,6 +20,8 @@ import java.io.LineNumberReader;
 import java.util.Properties;
 import java.util.StringTokenizer;
 
+import org.eclipse.core.runtime.Plugin;
+
 import com.ibm.wala.util.StringStuff;
 import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Assertions;
@@ -82,6 +84,18 @@ public class Table implements Cloneable {
    */
   public static Table readFromTextFile(String fileName) throws IOException, WalaException {
     File f = FileProvider.getFile(fileName);
+    return readFromTextFile(f);
+  }
+  
+  /**
+   * read from a text file obtained as a resource
+   * @param fileName
+   * @return
+   * @throws IOException
+   * @throws WalaException
+   */
+  public static Table readFromTextFile(Plugin p, String fileName) throws IOException, WalaException {
+    File f = FileProvider.getFileFromPlugin(p, fileName);
     return readFromTextFile(f);
   }
 
