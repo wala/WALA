@@ -20,14 +20,14 @@ import com.ibm.wala.types.TypeReference;
 public interface IField extends IMember {
 
   /**
-   * @return the type of the  declared type of the field
+   * @return the canonical TypeReference of the declared type of the field
    */
   public TypeReference getFieldTypeReference();
   
   /**
-   * @return FieldReference representing this field
+   * @return canonical FieldReference representing this field
    */
-  public FieldReference getFieldReference();
+  public FieldReference getReference();
   
   /**
    * Is this field final?

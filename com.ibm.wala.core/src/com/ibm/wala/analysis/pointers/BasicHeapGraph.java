@@ -257,7 +257,7 @@ public class BasicHeapGraph extends HeapGraph {
         try {
           for (Iterator<IField> it = klass.getAllInstanceFields().iterator(); it.hasNext();) {
             IField f = it.next();
-            if (!f.getFieldReference().getFieldType().isPrimitiveType()) {
+            if (!f.getReference().getFieldType().isPrimitiveType()) {
               PointerKey p = getHeapModel().getPointerKeyForInstanceField(I, f);
               if (p != null && nodeManager.containsNode(p)) {
                 result.add(nodeManager.getNumber(p));

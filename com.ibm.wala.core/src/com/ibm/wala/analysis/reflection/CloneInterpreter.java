@@ -221,9 +221,9 @@ public class CloneInterpreter implements SSAContextInterpreter {
         for (Iterator<IField> it = klass.getDeclaredInstanceFields().iterator(); it.hasNext();) {
           IField f = it.next();
           int tempValue = nextLocal++;
-          SSAGetInstruction G = new SSAGetInstruction(tempValue, 1, f.getFieldReference());
+          SSAGetInstruction G = new SSAGetInstruction(tempValue, 1, f.getReference());
           statements.add(G);
-          SSAPutInstruction P = new SSAPutInstruction(retValue, tempValue, f.getFieldReference());
+          SSAPutInstruction P = new SSAPutInstruction(retValue, tempValue, f.getReference());
           statements.add(P);
         }
         try {

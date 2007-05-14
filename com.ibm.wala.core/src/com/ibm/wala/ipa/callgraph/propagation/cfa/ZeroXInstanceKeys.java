@@ -337,7 +337,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
       } else {
         for (Iterator<IField> it = C.getDeclaredInstanceFields().iterator(); it.hasNext();) {
           IField f = it.next();
-          if (f.getFieldReference().getFieldType().isReferenceType()) {
+          if (f.getReference().getFieldType().isReferenceType()) {
             return false;
           }
         }

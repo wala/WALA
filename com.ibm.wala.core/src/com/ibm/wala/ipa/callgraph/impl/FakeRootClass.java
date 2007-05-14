@@ -59,7 +59,7 @@ public class FakeRootClass extends SyntheticClass {
         return false;
       }
 
-      public FieldReference getFieldReference() {
+      public FieldReference getReference() {
         return FieldReference.findOrCreate(FAKE_ROOT_CLASS, name, fieldType);
       }
 

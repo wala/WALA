@@ -84,11 +84,11 @@ public final class FieldImpl implements IField {
    * @see java.lang.Object#toString()
    */
   public String toString() {
-    FieldReference fr = getFieldReference();
+    FieldReference fr = getReference();
     return fr.toString();
   }
 
-  public FieldReference getFieldReference() {
+  public FieldReference getReference() {
     return FieldReference.findOrCreate(getDeclaringClass().getReference(), getName(), getFieldTypeReference());
   }
 
