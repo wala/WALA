@@ -605,21 +605,21 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
     public void visitGet(GetInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
-      FieldReference f = ShrikeUtil.makeFieldReference(loader, instruction.getClassType(), instruction.getFieldName(), instruction
+      FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(), instruction
           .getFieldType());
       fieldsRead.add(f);
     }
 
     public void visitPut(PutInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
-      FieldReference f = ShrikeUtil.makeFieldReference(loader, instruction.getClassType(), instruction.getFieldName(), instruction
+      FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(), instruction
           .getFieldType());
       fieldsWritten.add(f);
     }
 
     public void visitInvoke(InvokeInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
-      MethodReference m = ShrikeUtil.makeMethodReference(loader, instruction.getClassType(), instruction.getMethodName(),
+      MethodReference m = MethodReference.findOrCreate(loader, instruction.getClassType(), instruction.getMethodName(),
           instruction.getMethodSignature());
       int programCounter = 0;
       try {

@@ -17,9 +17,6 @@ import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.InvokeInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.Descriptor;
-import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -95,21 +92,5 @@ public class ShrikeUtil implements BytecodeConstants {
       }
     }
     return TypeReference.findOrCreate(loader, T);
-  }
-
-  public static FieldReference makeFieldReference(ClassLoaderReference loader, String classType, String fieldName, String fieldType)
-      throws IllegalArgumentException {
-    TypeReference c = makeTypeReference(loader, classType);
-    TypeReference ft = makeTypeReference(loader, fieldType);
-    Atom name = Atom.findOrCreateUnicodeAtom(fieldName);
-    return FieldReference.findOrCreate(c, name, ft);
-  }
-
-  public static MethodReference makeMethodReference(ClassLoaderReference loader, String methodClass, String methodName,
-      String methodSignature) throws IllegalArgumentException {
-    TypeReference t = makeTypeReference(loader, methodClass);
-    Atom name = Atom.findOrCreateUnicodeAtom(methodName);
-    Descriptor d = Descriptor.findOrCreateUTF8(methodSignature);
-    return MethodReference.findOrCreate(t, name, d);
   }
 }

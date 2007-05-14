@@ -25,10 +25,10 @@ import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.InvokeInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.Function;
 import com.ibm.wala.util.IndiscriminateFilter;
 import com.ibm.wala.util.MapIterator;
-import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -364,7 +364,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     CallSiteReference site = null;
     if (call instanceof InvokeInstruction) {
       InvokeInstruction c = (InvokeInstruction) call;
-      site = CallSiteReference.make(pc, ShrikeUtil.makeMethodReference(loader, c.getClassType(), c.getMethodName(), c
+      site = CallSiteReference.make(pc, MethodReference.findOrCreate(loader, c.getClassType(), c.getMethodName(), c
           .getMethodSignature()), call.getInvocationCode());
     } else {
       com.ibm.wala.ssa.SSAInvokeInstruction c = (com.ibm.wala.ssa.SSAInvokeInstruction) call;

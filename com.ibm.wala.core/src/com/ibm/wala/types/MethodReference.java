@@ -13,6 +13,7 @@ package com.ibm.wala.types;
 import java.util.HashMap;
 
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -101,6 +102,20 @@ public final class MethodReference extends MemberReference {
   public static synchronized MethodReference findOrCreate(TypeReference tref, Selector selector) {
     return findOrCreate(tref, selector.getName(), selector.getDescriptor());
   }
+  
+
+  public static MethodReference findOrCreate(TypeReference t, String methodName, String descriptor) throws IllegalArgumentException {
+    Descriptor d = Descriptor.findOrCreateUTF8(descriptor);
+    return findOrCreate(t,Atom.findOrCreateUnicodeAtom(methodName),d);
+  }
+  
+  public static MethodReference findOrCreate(ClassLoaderReference loader, String methodClass, String methodName,
+      String methodSignature) throws IllegalArgumentException {
+    TypeReference t = ShrikeUtil.makeTypeReference(loader, methodClass);
+    Atom name = Atom.findOrCreateUnicodeAtom(methodName);
+    Descriptor d = Descriptor.findOrCreateUTF8(methodSignature);
+    return findOrCreate(t, name, d);
+  }
 
   /**
    * @return the descriptor component of this member reference
@@ -185,6 +200,8 @@ public final class MethodReference extends MemberReference {
     return parameterTypes == null ? 0 : parameterTypes.length;
   }
 
+
+
   /**
    * An identifier/selector for methods.
    */
@@ -213,9 +230,5 @@ public final class MethodReference extends MemberReference {
     }
   }
 
-  public static MethodReference findOrCreate(TypeReference t, String methodName, String descriptor) throws IllegalArgumentException {
-    Descriptor d = Descriptor.findOrCreateUTF8(descriptor);
-    return findOrCreate(t,Atom.findOrCreateUnicodeAtom(methodName),d);
-  }
 
 }

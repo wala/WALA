@@ -501,12 +501,12 @@ public class SSABuilder extends AbstractIntStackMachine {
       public void visitGet(com.ibm.wala.shrikeBT.GetInstruction instruction) {
         int result = reuseOrCreateDef();
         if (instruction.isStatic()) {
-          FieldReference f = ShrikeUtil.makeFieldReference(loader, instruction.getClassType(), instruction.getFieldName(),
+          FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(),
               instruction.getFieldType());
           emitInstruction(new SSAGetInstruction(result, f));
         } else {
           int ref = workingState.pop();
-          FieldReference f = ShrikeUtil.makeFieldReference(loader, instruction.getClassType(), instruction.getFieldName(),
+          FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(),
               instruction.getFieldType());
           emitInstruction(new SSAGetInstruction(result, ref, f));
         }
@@ -541,7 +541,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         for (int i = n - 1; i >= 0; i--) {
           params[i] = workingState.pop();
         }
-        MethodReference m = ShrikeUtil.makeMethodReference(loader, instruction.getClassType(), instruction.getMethodName(),
+        MethodReference m = MethodReference.findOrCreate(loader, instruction.getClassType(), instruction.getMethodName(),
             instruction.getMethodSignature());
         IInvokeInstruction.Dispatch code = ShrikeUtil.getInvocationCode(instruction);
         CallSiteReference site = CallSiteReference.make(getCurrentProgramCounter(), m, code);
@@ -605,12 +605,12 @@ public class SSABuilder extends AbstractIntStackMachine {
       public void visitPut(com.ibm.wala.shrikeBT.PutInstruction instruction) {
         int value = workingState.pop();
         if (instruction.isStatic()) {
-          FieldReference f = ShrikeUtil.makeFieldReference(loader, instruction.getClassType(), instruction.getFieldName(),
+          FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(),
               instruction.getFieldType());
           emitInstruction(new SSAPutInstruction(value, f));
         } else {
           int ref = workingState.pop();
-          FieldReference f = ShrikeUtil.makeFieldReference(loader, instruction.getClassType(), instruction.getFieldName(),
+          FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(),
               instruction.getFieldType());
           emitInstruction(new SSAPutInstruction(ref, value, f));
         }

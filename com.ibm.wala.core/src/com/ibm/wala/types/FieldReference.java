@@ -13,6 +13,7 @@ package com.ibm.wala.types;
 import java.util.HashMap;
 
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -64,6 +65,17 @@ public final class FieldReference extends MemberReference {
     return val;
   }
 
+  /**
+   * Find or create the canonical MemberReference instance for the given tuple.
+   */
+  public static FieldReference findOrCreate(ClassLoaderReference loader, String classType, String fieldName, String fieldType)
+      throws IllegalArgumentException {
+    TypeReference c = ShrikeUtil.makeTypeReference(loader, classType);
+    TypeReference ft = ShrikeUtil.makeTypeReference(loader, fieldType);
+    Atom name = Atom.findOrCreateUnicodeAtom(fieldName);
+    return findOrCreate(c, name, ft);
+  }
+
   private FieldReference(Key key, TypeReference fieldType) {
     super(key.type, key.name, key.hashCode());
     this.fieldType = fieldType;
@@ -92,7 +104,8 @@ public final class FieldReference extends MemberReference {
    * @see java.lang.Object#toString()
    */
   public final String toString() {
-    return "< " + getDeclaringClass().getClassLoader().getName() + ", " + getDeclaringClass().getName() + ", " + getName() + ", " + fieldType + " >";
+    return "< " + getDeclaringClass().getClassLoader().getName() + ", " + getDeclaringClass().getName() + ", " + getName() + ", "
+        + fieldType + " >";
   }
 
   /**

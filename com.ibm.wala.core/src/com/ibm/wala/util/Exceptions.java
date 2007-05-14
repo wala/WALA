@@ -91,7 +91,7 @@ public class Exceptions implements Constants {
       InvokeInstruction call = (InvokeInstruction) pei;
       Collection<TypeReference> result = null;
         try {
-          result = inferInvokeExceptions(ShrikeUtil.makeMethodReference(loader, call.getClassType(), call.getMethodName(),
+          result = inferInvokeExceptions(MethodReference.findOrCreate(loader, call.getClassType(), call.getMethodName(),
               call.getMethodSignature()), cha, warnings);
         } catch (InvalidClassFileException e) {
           e.printStackTrace();
