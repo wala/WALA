@@ -25,7 +25,7 @@ public abstract class MemberImpl {
   private final String name;
 
   public MemberImpl(MemberReference m) {
-    this.declaringClass = new ClassImpl(m.getType().getName().toString(),m.getType().getClassLoader().getName().toString());
+    this.declaringClass = new ClassImpl(m.getDeclaringClass().getName().toString(),m.getDeclaringClass().getClassLoader().getName().toString());
     this.name = m.getName().toString();
   }
 

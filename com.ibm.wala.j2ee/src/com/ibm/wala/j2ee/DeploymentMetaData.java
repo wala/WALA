@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.jst.j2ee.ejb.EJBRelationshipRole;
 
 import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 
@@ -107,21 +108,21 @@ public interface DeploymentMetaData {
    * @param mr
    * @return boolean
    */
-  boolean isCMPGetter(MethodReference mr);
+  boolean isCMPGetter(MemberReference mr);
 
   /**
    * Method getCMPField.
    * @param mr
    * @return the CMP Field the method gets or sets.
    */
-  FieldReference getCMPField(MethodReference mr);
+  FieldReference getCMPField(MemberReference mr);
 
   /**
    * Method isCMPSetter.
    * @param mr
    * @return boolean
    */
-  boolean isCMPSetter(MethodReference mr);
+  boolean isCMPSetter(MemberReference mr);
 
   /**
    * Return the Set of MethodReferences corresponding to EJB finder methods.
@@ -148,13 +149,13 @@ public interface DeploymentMetaData {
    * @param method a finder
    * @return the type representing the bean that is returned by this finder
    */
-  TypeReference getFinderBeanType(MethodReference method);
+  TypeReference getFinderBeanType(MemberReference method);
 
   /**
    * @param ref
    * @return true iff ref is finder method
    */
-  boolean isFinder(MethodReference ref);
+  boolean isFinder(MemberReference ref);
 
   /**
    * @return Iterator<BeanMetaData> of all entity beans available
@@ -175,13 +176,13 @@ public interface DeploymentMetaData {
    * @param method
    * @return true iff method is a getter for a CMR.
    */
-  boolean isCMRGetter(MethodReference method);
+  boolean isCMRGetter(MemberReference method);
 
   /**
    * @param method
    * @return true iff method is a setter for a CMR.
    */
-  boolean isCMRSetter(MethodReference method);
+  boolean isCMRSetter(MemberReference method);
 
   /**
    * @param field a field that represents a CMR

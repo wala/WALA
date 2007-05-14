@@ -22,6 +22,7 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -46,7 +47,7 @@ public class J2EEContextSelector implements ContextSelector {
   private final static TypeReference CacheableCommandImplClass = TypeReference.findOrCreate(ClassLoaderReference.Extension,
       CacheableCommandImpl);
 
-  public final static MethodReference ExecuteMethod = MethodReference.findOrCreate(CacheableCommandImplClass, ExecuteAtom,
+  public final static MemberReference ExecuteMethod = MethodReference.findOrCreate(CacheableCommandImplClass, ExecuteAtom,
       ExecuteDesc);
 
   private final ReceiverTypeInferenceCache typeInference;

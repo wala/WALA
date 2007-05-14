@@ -31,6 +31,7 @@ import org.eclipse.jst.j2ee.ejb.TransactionType;
 
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -215,7 +216,7 @@ public class BeanMetaDataImpl implements BeanMetaData {
           System.err.println("PANIC: null type in attribute: " + attr);
           continue;
         }
-        MethodReference m = createGetterReference(attr, attr.getGetterName());
+        MemberReference m = createGetterReference(attr, attr.getGetterName());
         FieldReference f = createFieldReference(attr);
         result.put(m, f);
       }
@@ -225,7 +226,7 @@ public class BeanMetaDataImpl implements BeanMetaData {
           System.err.println("PANIC: null type in attribute: " + attr);
           continue;
         }
-        MethodReference m = createGetterReference(attr, attr.getGetterName());
+        MemberReference m = createGetterReference(attr, attr.getGetterName());
         FieldReference f = createFieldReference(attr);
         result.put(m, f);
       }
@@ -275,7 +276,7 @@ public class BeanMetaDataImpl implements BeanMetaData {
           System.err.println("PANIC: null type in attribute: " + attr);
           continue;
         }
-        MethodReference m = createSetterReference(attr, attr.getSetterName());
+        MemberReference m = createSetterReference(attr, attr.getSetterName());
         FieldReference f = createFieldReference(attr);
         result.put(m, f);
       }
@@ -285,7 +286,7 @@ public class BeanMetaDataImpl implements BeanMetaData {
           System.err.println("PANIC: null type in attribute: " + attr);
           continue;
         }
-        MethodReference m = createSetterReference(attr, attr.getSetterName());
+        MemberReference m = createSetterReference(attr, attr.getSetterName());
         FieldReference f = createFieldReference(attr);
         result.put(m, f);
       }

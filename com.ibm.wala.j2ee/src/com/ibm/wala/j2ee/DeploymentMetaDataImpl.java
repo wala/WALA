@@ -30,6 +30,7 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -423,7 +424,7 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   /**
    * @see com.ibm.wala.j2ee.DeploymentMetaData#getCMPField(MethodReference)
    */
-  public FieldReference getCMPField(MethodReference mr) {
+  public FieldReference getCMPField(MemberReference mr) {
     if (getters.get(mr) != null) {
       return getters.get(mr);
     } else {
@@ -434,14 +435,14 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
   /**
    * @see com.ibm.wala.j2ee.DeploymentMetaData#isCMPGetter(MethodReference)
    */
-  public boolean isCMPGetter(MethodReference mr) {
+  public boolean isCMPGetter(MemberReference mr) {
     return getters.keySet().contains(mr);
   }
 
   /**
    * @see com.ibm.wala.j2ee.DeploymentMetaData#isCMPSetter(MethodReference)
    */
-  public boolean isCMPSetter(MethodReference mr) {
+  public boolean isCMPSetter(MemberReference mr) {
     return setters.keySet().contains(mr);
   }
 
@@ -471,7 +472,7 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
    * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#getFinderBeanType(com.ibm.wala.classLoader.MethodReference)
    */
-  public TypeReference getFinderBeanType(MethodReference method) {
+  public TypeReference getFinderBeanType(MemberReference method) {
     BeanMetaData bean = finder2Bean.get(method);
     if (Assertions.verifyAssertions) {
       Assertions._assert(bean != null);
@@ -484,7 +485,7 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
    * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#isFinder(com.ibm.wala.classLoader.MethodReference)
    */
-  public boolean isFinder(MethodReference ref) {
+  public boolean isFinder(MemberReference ref) {
     if (DEBUG) {
       boolean result = finder2Bean.keySet().contains(ref);
       Trace.println("isFinder ? " + ref + " " + result);
@@ -524,7 +525,7 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
    * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#isCMRGetter(com.ibm.wala.classLoader.MethodReference)
    */
-  public boolean isCMRGetter(MethodReference method) {
+  public boolean isCMRGetter(MemberReference method) {
     return cmrGetters.keySet().contains(method);
   }
 
@@ -533,7 +534,7 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
    * 
    * @see com.ibm.wala.j2ee.DeploymentMetaData#isCMRGetter(com.ibm.wala.classLoader.MethodReference)
    */
-  public boolean isCMRSetter(MethodReference method) {
+  public boolean isCMRSetter(MemberReference method) {
     return cmrSetters.keySet().contains(method);
   }
 

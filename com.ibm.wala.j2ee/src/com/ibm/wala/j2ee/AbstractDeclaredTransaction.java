@@ -15,7 +15,7 @@ import org.eclipse.jst.j2ee.ejb.MethodElement;
 import org.eclipse.jst.j2ee.ejb.MethodElementKind;
 import org.eclipse.jst.j2ee.ejb.TransactionAttributeType;
 
-import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -139,7 +139,7 @@ public abstract class AbstractDeclaredTransaction implements Comparable<IDeclare
   /**
    * TODO: cache this?
    */
-  public abstract MethodReference getMethodReference();
+  public abstract MemberReference getMethodReference();
 
   public boolean isRequired() {
     return transactionType == TransactionAttributeType.REQUIRED;

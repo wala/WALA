@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.j2ee.util.TopLevelArchiveModule;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -159,7 +160,7 @@ public class AppClientEntrypoints implements Entrypoints {
    * @param m
    * @return true iff m is an entrypoint recorded by this class
    */
-  public boolean contains(MethodReference m) {
+  public boolean contains(MemberReference m) {
     return entrypoints.keySet().contains(m);
   }
 

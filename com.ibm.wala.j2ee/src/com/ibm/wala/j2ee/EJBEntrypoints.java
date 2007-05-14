@@ -35,6 +35,7 @@ import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
@@ -234,7 +235,7 @@ public class EJBEntrypoints implements Entrypoints, EJBConstants {
     Set<Entrypoint> toRemove = HashSetFactory.make();
     for (Iterator<Entrypoint> it = entrypoints.iterator(); it.hasNext();) {
       Entrypoint E = it.next();
-      MethodReference m = E.getMethod().getReference();
+      MemberReference m = E.getMethod().getReference();
       if (M.contains(m)) {
         toRemove.add(E);
       }
