@@ -37,7 +37,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
-import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.WalaException;
@@ -87,7 +87,7 @@ public class CompareCDGTest extends WalaTestCase {
     String dotExe = "dot";
     for (Iterator<? extends CGNode> it = g.iterator(); it.hasNext();) {
       CGNode n = (CGNode) it.next();
-      MethodReference mref = n.getMethod().getReference();
+      MemberReference mref = n.getMethod().getReference();
       Trace.println(mref.toString());
       // if(app.equals("Application"))
       {
@@ -336,7 +336,7 @@ public class CompareCDGTest extends WalaTestCase {
    * try { DotUtil.dotify(cdg, null, dotFile, psFile, dotExe); } catch
    * (WalaException e) { e.printStackTrace(); } } } } }
    */
-  private static Vector<BasicBlock> checkCFG(SSACFG cfg, MethodReference mref) {
+  private static Vector<BasicBlock> checkCFG(SSACFG cfg, MemberReference mref) {
     Vector<SSACFG.BasicBlock> vec = new Vector<SSACFG.BasicBlock>();
     for (Iterator<? extends IBasicBlock> it = cfg.iterator(); it.hasNext();) {
       SSACFG.BasicBlock bb = (SSACFG.BasicBlock) it.next();

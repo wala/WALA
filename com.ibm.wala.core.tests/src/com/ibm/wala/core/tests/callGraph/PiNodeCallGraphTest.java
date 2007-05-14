@@ -26,6 +26,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -68,7 +69,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
   private static final MethodReference thatBinaryRef = MethodReference.findOrCreate(thatRef,
       Atom.findOrCreateUnicodeAtom("binary"), Descriptor.findOrCreateUTF8("(" + whateverName + ";)V"));
 
-  private static final MethodReference unary2Ref = MethodReference.findOrCreate(whateverRef,
+  private static final MemberReference unary2Ref = MethodReference.findOrCreate(whateverRef,
       Atom.findOrCreateUnicodeAtom("unary2"), Descriptor.findOrCreateUTF8("()V"));
 
   private CallGraph doGraph(boolean usePiNodes) throws ClassHierarchyException {
