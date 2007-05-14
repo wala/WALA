@@ -66,17 +66,18 @@ public class Table implements Cloneable {
 
   /**
    * read from a direct (native) text file
-   * @param fileName
-   * @return
-   * @throws WalaException
+   * @throws IOException 
+   * @throws FileNotFoundException 
+   * 
    */
-  public static Table readFromDirectTextFile(String fileName) throws WalaException {
+  public static Table readFromDirectTextFile(String fileName) throws FileNotFoundException, IOException{
     File f = new File(fileName);
     return readFromTextFile(f);
   }
 
   /**
    * read from a text file obtained as a resource
+   * 
    * @param fileName
    * @return
    * @throws IOException
@@ -86,15 +87,16 @@ public class Table implements Cloneable {
     File f = FileProvider.getFile(fileName);
     return readFromTextFile(f);
   }
-  
+
   /**
    * read from a text file obtained as a resource
+   * 
    * @param fileName
    * @return
    * @throws IOException
    * @throws WalaException
    */
-  public static Table readFromTextFile(Plugin p, String fileName) throws IOException, WalaException {
+  public static Table readFromTextFile(Plugin p, String fileName) throws IOException {
     File f = FileProvider.getFileFromPlugin(p, fileName);
     return readFromTextFile(f);
   }
@@ -102,49 +104,40 @@ public class Table implements Cloneable {
   /**
    * @param f
    *          a file containing a table in text format, whitespace delimited
-   * @throws WalaException
+   * @throws IOException 
+   * @throws FileNotFoundException 
    */
-  private static Table readFromTextFile(File f) throws WalaException {
-    try {
-      return readFromStream(new FileInputStream(f));
-    } catch (FileNotFoundException e) {
-      e.printStackTrace();
-      throw new WalaException("readFromTextFile failed");
-    }
+  private static Table readFromTextFile(File f) throws FileNotFoundException, IOException {
+    return readFromStream(new FileInputStream(f));
   }
-  
+
   /**
    * @param s
-   *          a stream  containing a table in text format, whitespace delimited
-   * @throws WalaException
+   *          a stream containing a table in text format, whitespace delimited
+   * @throws IOException 
    */
-  public static Table readFromStream(InputStream s) throws WalaException {
-    try {
-      Table result = new Table();
+  public static Table readFromStream(InputStream s) throws IOException {
+    Table result = new Table();
 
-      LineNumberReader reader = new LineNumberReader(new InputStreamReader(s));
+    LineNumberReader reader = new LineNumberReader(new InputStreamReader(s));
 
-      // LineNumberReader reader = new LineNumberReader(new
-      // InputStreamReader(new FileInputStream(f)));
-      String line = readNextNonCommentLine(reader);
-      if (line == null) {
-        throw new IOException("first line expected to be column headings");
-      }
-      result.populateColumnHeadings(line);
-
-      line = readNextNonCommentLine(reader);
-      int row = 0;
-      while (line != null) {
-        result.populateRow(row, line);
-        line = readNextNonCommentLine(reader);
-        row++;
-      }
-
-      return result;
-    } catch (IOException e) {
-      e.printStackTrace();
-      throw new WalaException("readFromStream failed");
+    // LineNumberReader reader = new LineNumberReader(new
+    // InputStreamReader(new FileInputStream(f)));
+    String line = readNextNonCommentLine(reader);
+    if (line == null) {
+      throw new IOException("first line expected to be column headings");
     }
+    result.populateColumnHeadings(line);
+
+    line = readNextNonCommentLine(reader);
+    int row = 0;
+    while (line != null) {
+      result.populateRow(row, line);
+      line = readNextNonCommentLine(reader);
+      row++;
+    }
+
+    return result;
   }
 
   public static String readNextNonCommentLine(LineNumberReader reader) throws IOException {
@@ -180,7 +173,7 @@ public class Table implements Cloneable {
     StringTokenizer st = new StringTokenizer(line);
     int nColumns = st.countTokens();
     for (int i = 0; i < nColumns; i++) {
-      columnHeadings.set(i, (String)st.nextElement());
+      columnHeadings.set(i, (String) st.nextElement());
     }
   }
 
