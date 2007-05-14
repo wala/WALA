@@ -10,17 +10,22 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.cast.ipa.callgraph.AstCallGraph.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.impl.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.types.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+import com.ibm.wala.cast.ipa.callgraph.AstCallGraph.ScriptFakeRoot;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WarningSet;
-
-import java.util.*;
 
 public abstract class ScriptEntryPoints implements Entrypoints {
 
@@ -64,8 +69,8 @@ public abstract class ScriptEntryPoints implements Entrypoints {
     this.scriptType = scriptType;
   }
 
-  public Iterator<ScriptEntryPoint> iterator() {
-    Set<ScriptEntryPoint> ES = new HashSet<ScriptEntryPoint>();
+  public Iterator<Entrypoint> iterator() {
+    Set<Entrypoint> ES = new HashSet<Entrypoint>();
     Iterator<IClass> classes = scriptType.getClassLoader().iterateAllClasses();
     while (classes.hasNext()) {
       IClass cls = classes.next();
