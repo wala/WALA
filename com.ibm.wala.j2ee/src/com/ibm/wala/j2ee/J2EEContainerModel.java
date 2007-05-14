@@ -266,7 +266,7 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
       int nextLocal = code.getNumberOfParameters() + 1;
       Iterator<IField> fields = getDeclaredStaticFields().iterator();
       while (fields.hasNext()) {
-        FieldReference field = fields.next().getFieldReference();
+        FieldReference field = fields.next().getReference();
         TypeReference ejbType = field.getFieldType();
 
         // 1. create bean type representing pool objects
