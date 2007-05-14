@@ -36,6 +36,7 @@ import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -945,7 +946,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @param m
    * @return true if we know a priori that there will be many implementors of m
    */
-  private boolean hasManyImplementors(MethodReference m) {
+  private boolean hasManyImplementors(MemberReference m) {
     if (m.getDeclaringClass().equals(TypeReference.JavaLangObject)) {
       return true;
     }

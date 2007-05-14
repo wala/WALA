@@ -15,6 +15,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.Atom;
 
@@ -41,7 +42,7 @@ public class FakeRootMethod extends AbstractRootMethod {
    * @return true iff m is the fake root method.
    * @throws IllegalArgumentException  if m is null
    */
-  public static boolean isFakeRootMethod(MethodReference m) {
+  public static boolean isFakeRootMethod(MemberReference m) {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }

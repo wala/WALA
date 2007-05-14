@@ -23,6 +23,7 @@ import com.ibm.wala.ipa.callgraph.propagation.ReceiverInstanceContext;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -59,7 +60,7 @@ public class ContainerContextSelector implements ContextSelector {
 
   private final static Descriptor arraycopyDesc = Descriptor.findOrCreateUTF8("(Ljava/lang/Object;Ljava/lang/Object;)V");
 
-  public final static MethodReference synthArraycopy = MethodReference.findOrCreate(SyntheticSystem, arraycopyAtom, arraycopyDesc);
+  public final static MemberReference synthArraycopy = MethodReference.findOrCreate(SyntheticSystem, arraycopyAtom, arraycopyDesc);
 
   /**
    * The governing class hierarchy.
@@ -115,7 +116,7 @@ public class ContainerContextSelector implements ContextSelector {
     }
   }
 
-  public static boolean isArrayCopy(MethodReference m) {
+  public static boolean isArrayCopy(MemberReference m) {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }

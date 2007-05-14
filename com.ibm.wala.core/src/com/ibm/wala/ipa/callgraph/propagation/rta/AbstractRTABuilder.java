@@ -189,7 +189,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     if (DEBUG) {
       Trace.println("processFieldAccess: " + f);
     }
-    TypeReference t = f.getType();
+    TypeReference t = f.getDeclaringClass();
     IClass klass = getClassHierarchy().lookupClass(t);
     if (klass == null) {
       getWarnings().add(ResolutionFailure.create(node, t));

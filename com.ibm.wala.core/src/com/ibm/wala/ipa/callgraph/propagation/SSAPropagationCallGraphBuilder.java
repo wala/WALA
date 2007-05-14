@@ -809,7 +809,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
 
       IField f = getClassHierarchy().resolveField(field);
-      if (f == null && callGraph.getFakeRootNode().getMethod().getDeclaringClass().getReference().equals(field.getType())) {
+      if (f == null && callGraph.getFakeRootNode().getMethod().getDeclaringClass().getReference().equals(field.getDeclaringClass())) {
         f = callGraph.getFakeRootNode().getMethod().getDeclaringClass().getField(field.getName());
       }
 
@@ -824,9 +824,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         if (isStatic) {
           PointerKey fKey = getPointerKeyForStaticField(f);
           system.newConstraint(def, assignOperator, fKey);
-          IClass klass = getClassHierarchy().lookupClass(field.getType());
+          IClass klass = getClassHierarchy().lookupClass(field.getDeclaringClass());
           if (klass == null) {
-            getWarnings().add(ResolutionFailure.create(node, field.getType()));
+            getWarnings().add(ResolutionFailure.create(node, field.getDeclaringClass()));
           } else {
             // side effect of getstatic: may call class initializer
             if (DEBUG) {
@@ -999,10 +999,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         system.newConstraint(fKey, assignOperator, rvalKey);
       }
       if (DEBUG) {
-        Trace.guardedPrintln("visitPut class init " + field.getType() + " " + field, DEBUG_METHOD_SUBSTRING);
+        Trace.guardedPrintln("visitPut class init " + field.getDeclaringClass() + " " + field, DEBUG_METHOD_SUBSTRING);
       }
       // side effect of putstatic: may call class initializer
-      IClass klass = getClassHierarchy().lookupClass(field.getType());
+      IClass klass = getClassHierarchy().lookupClass(field.getDeclaringClass());
       if (klass == null) {
         getWarnings().add(FieldResolutionFailure.create(field));
       } else {

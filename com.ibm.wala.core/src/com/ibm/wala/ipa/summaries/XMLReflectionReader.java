@@ -32,6 +32,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -283,7 +284,7 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
   /* (non-Javadoc)
    * @see com.ibm.detox.ipa.callgraph.ReflectionSpecification#getTypeForNewInstance(com.ibm.wala.classLoader.MethodReference, int)
    */
-  public TypeAbstraction getTypeForNewInstance(MethodReference method, int bcIndex, ClassHierarchy cha) {
+  public TypeAbstraction getTypeForNewInstance(MemberReference method, int bcIndex, ClassHierarchy cha) {
     ReflectionSummary summary = summaries.get(method);
     if (summary != null) {
       return summary.getTypeForNewInstance(bcIndex,cha);
@@ -292,7 +293,7 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
     }
   }
 
-  public ReflectionSummary getSummary(MethodReference m) {
+  public ReflectionSummary getSummary(MemberReference m) {
     return summaries.get(m);
   }
 }

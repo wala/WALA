@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -97,7 +98,7 @@ public class MethodSummary {
    * 
    * @return MethodReference
    */
-  public MethodReference getMethod() {
+  public MemberReference getMethod() {
     return method;
   }
 

@@ -24,6 +24,7 @@ import com.ibm.wala.ipa.callgraph.impl.ClassHierarchyMethodTargetSelector;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -258,14 +259,14 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
    * @param m
    * @return true iff we can treat m as a no-op method
    */
-  private boolean canIgnore(MethodReference m) {
+  private boolean canIgnore(MemberReference m) {
     TypeReference T = m.getDeclaringClass();
     TypeName n = T.getName();
     Atom p = n.getPackage();
     return (ignoredPackages.contains(p));
   }
 
-  private MethodSummary findSummary(MethodReference m) {
+  private MethodSummary findSummary(MemberReference m) {
     MethodSummary result = methodSummaries.get(m);
     if (result != null) {
       if (DEBUG) {

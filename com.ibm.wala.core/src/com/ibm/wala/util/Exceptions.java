@@ -24,6 +24,7 @@ import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeBT.InvokeInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -143,9 +144,9 @@ public class Exceptions implements Constants {
    */
   private static class MethodResolutionFailure extends Warning {
 
-    final MethodReference method;
+    final MemberReference method;
 
-    MethodResolutionFailure(byte code, MethodReference method) {
+    MethodResolutionFailure(byte code, MemberReference method) {
       super(code);
       this.method = method;
     }
@@ -154,11 +155,11 @@ public class Exceptions implements Constants {
       return getClass().toString() + " : " + method;
     }
 
-    public static MethodResolutionFailure moderate(MethodReference method) {
+    public static MethodResolutionFailure moderate(MemberReference method) {
       return new MethodResolutionFailure(Warning.MODERATE, method);
     }
 
-    public static MethodResolutionFailure severe(MethodReference method) {
+    public static MethodResolutionFailure severe(MemberReference method) {
       return new MethodResolutionFailure(Warning.SEVERE, method);
     }
   }

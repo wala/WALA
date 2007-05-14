@@ -396,7 +396,7 @@ public class ClassHierarchy implements Iterable<IClass> {
    * @param ref
    *          method to invoke
    * @param klass
-   *          declaredClass of receiver
+   *          declaringClass of receiver
    * @return Set the set of method implementations that might receive the
    *         message
    */
@@ -448,7 +448,7 @@ public class ClassHierarchy implements Iterable<IClass> {
     if (Assertions.verifyAssertions) {
       Assertions._assert(f != null);
     }
-    IClass klass = lookupClass(f.getType());
+    IClass klass = lookupClass(f.getDeclaringClass());
     if (klass == null) {
       return null;
     }
@@ -465,7 +465,7 @@ public class ClassHierarchy implements Iterable<IClass> {
 
   /**
    * Return the unique receiver of an invocation of method on an object of type
-   * declaredClass
+   * declaringClass
    * 
    * @param receiverClass
    *          type of receiver

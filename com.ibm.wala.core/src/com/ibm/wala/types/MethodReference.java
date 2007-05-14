@@ -38,7 +38,7 @@ public final class MethodReference extends MemberReference {
 
   private final static Atom ctorNewInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
   private final static Descriptor ctorNewInstanceDesc = Descriptor.findOrCreateUTF8("([Ljava/lang/Object;)Ljava/lang/Object;");
-  public final static MethodReference JavaLangReflectCtorNewInstance =
+  public final static MemberReference JavaLangReflectCtorNewInstance =
     findOrCreate(TypeReference.JavaLangReflectConstructor, ctorNewInstanceAtom, ctorNewInstanceDesc);
 
   public final static Atom forNameAtom = Atom.findOrCreateUnicodeAtom("forName");
@@ -156,15 +156,6 @@ public final class MethodReference extends MemberReference {
   }
 
   /**
-   * Method getDeclaringClass.
-   */
-  public TypeReference getDeclaringClass() {
-    if (getType() == null)
-      throw new NullPointerException();
-    return getType();
-  }
-
-  /**
    * Method getSignature.
    * something like: 
    *   com.foo.bar.createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
@@ -172,7 +163,7 @@ public final class MethodReference extends MemberReference {
    */
   public String getSignature() {
     // TODO: check that we're not calling this often.
-    String s = getType().getName().toString().substring(1).replace('/', '.') + "." + getName() + getDescriptor();
+    String s = getDeclaringClass().getName().toString().substring(1).replace('/', '.') + "." + getName() + getDescriptor();
     return s;
   }
   /**

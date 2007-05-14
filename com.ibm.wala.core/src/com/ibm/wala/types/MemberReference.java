@@ -11,19 +11,24 @@
 package com.ibm.wala.types;
 
 import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.debug.Assertions;
 
+/**
+ * Abstract superclass of MethodReference and FieldReference
+ * 
+ * @author sjfink
+ *
+ */
 public abstract class MemberReference {
 
   /**
-   * The type reference
+   * The type that declares this member
    */
-  protected final TypeReference declaredClass;
+  private final TypeReference declaringClass;
 
   /**
    * The member name
    */
-  protected final Atom name;
+  private final Atom name;
 
   /**
    * Cached hash code for efficiency
@@ -36,19 +41,9 @@ public abstract class MemberReference {
    * @param hash
    */
   protected MemberReference(TypeReference type, Atom name, int hash) {
-    this.declaredClass = type;
+    this.declaringClass = type;
     this.name = name;
     this.hash = hash;
-  }
-
-  /**
-   * @return the type reference component of this member reference
-   */
-  public final TypeReference getType() {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(declaredClass != null);
-    }
-    return declaredClass;
   }
 
   /**
@@ -73,6 +68,17 @@ public abstract class MemberReference {
   public final boolean equals(Object other) {
     // These are canonical
     return this == other;
+  }
+
+  /**
+   * @return the type that declared this member
+   */
+  public TypeReference getDeclaringClass() {
+    if (declaringClass == null) {
+      // fail eagerly
+      throw new NullPointerException();
+    }
+    return declaringClass;
   }
 
 }

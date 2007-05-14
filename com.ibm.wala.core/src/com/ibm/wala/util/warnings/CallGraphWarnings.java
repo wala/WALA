@@ -21,7 +21,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.UnresolvedReflectionWarning;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
@@ -77,7 +77,7 @@ public class CallGraphWarnings {
    * @param m
    * @return true iff we can ignore unreachable warnings for m
    */
-  private static boolean canIgnore(MethodReference m) {
+  private static boolean canIgnore(MemberReference m) {
     TypeReference T = m.getDeclaringClass();
     TypeName n = T.getName();
     Atom p = n.getPackage();

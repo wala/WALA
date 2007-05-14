@@ -19,6 +19,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
@@ -127,7 +128,7 @@ public class MethodBypass {
     }
   }
 
-  private MethodSummary findSummary(MethodReference m) {
+  private MethodSummary findSummary(MemberReference m) {
     MethodSummary result = (MethodSummary) methodSummaries.get(m);
     if (result != null) {
       if (DEBUG) {

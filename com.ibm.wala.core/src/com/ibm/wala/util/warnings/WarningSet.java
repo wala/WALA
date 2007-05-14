@@ -19,7 +19,7 @@ import java.util.TreeSet;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.graph.traverse.BFSPathFinder;
 
@@ -79,7 +79,7 @@ public class WarningSet extends HashSet<Warning> {
       result.append(w);
       result.append("\n");
       if (w.getLevel() >= Warning.SEVERE && w instanceof MethodWarning) {
-        final MethodReference m = ((MethodWarning) w).getMethod();
+        final MemberReference m = ((MethodWarning) w).getMethod();
         Filter mFilter = new Filter() {
           public boolean accepts(Object o) {
             CGNode n = (CGNode)o;
@@ -115,7 +115,7 @@ public class WarningSet extends HashSet<Warning> {
       Warning w = (Warning) it.next();
       out.println(w);
       if (w.getLevel() >= Warning.SEVERE && w instanceof MethodWarning) {
-        final MethodReference m = ((MethodWarning) w).getMethod();
+        final MemberReference m = ((MethodWarning) w).getMethod();
         Filter mFilter = new Filter() {
           public boolean accepts(Object o) {
             CGNode n = (CGNode)o;

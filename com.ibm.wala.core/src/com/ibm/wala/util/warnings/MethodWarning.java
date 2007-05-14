@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.warnings;
 
-import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.MemberReference;
 
 /**
  *
@@ -20,21 +20,21 @@ import com.ibm.wala.types.MethodReference;
  */
 public abstract class MethodWarning extends Warning {
 
-  private final MethodReference method;
+  private final MemberReference method;
   /**
    * @param level
    */
-  public MethodWarning(byte level, MethodReference method) {
+  public MethodWarning(byte level, MemberReference method) {
     super(level);
     this.method = method;
   }
   
-  public MethodWarning(MethodReference method) {
+  public MethodWarning(MemberReference method) {
     super();
     this.method = method;
   }
 
-  public MethodReference getMethod() {
+  public MemberReference getMethod() {
     return method;
   }
 }

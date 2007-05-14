@@ -41,7 +41,7 @@ public final class FieldReference extends MemberReference {
    * @see com.ibm.wala.types.MemberReference#getSignature()
    */
   public String getSignature() {
-    return getType().getName() + "." + getName() + " " + getFieldType().getName();
+    return getDeclaringClass().getName() + "." + getName() + " " + getFieldType().getName();
   }
 
   /**
@@ -68,11 +68,11 @@ public final class FieldReference extends MemberReference {
     super(key.type, key.name, key.hashCode());
     this.fieldType = fieldType;
     if (DEBUG) {
-      if (name.toString().indexOf('.') > -1)
+      if (getName().toString().indexOf('.') > -1)
         throw new UnimplementedError();
       if (fieldType.toString().indexOf('.') > -1)
         Assertions.UNREACHABLE("Field name: " + fieldType.toString());
-      if (name.toString().length() == 0)
+      if (getName().toString().length() == 0)
         throw new UnimplementedError();
       if (fieldType.toString().length() == 0)
         throw new UnimplementedError();
@@ -92,7 +92,7 @@ public final class FieldReference extends MemberReference {
    * @see java.lang.Object#toString()
    */
   public final String toString() {
-    return "< " + declaredClass.getClassLoader().getName() + ", " + declaredClass.getName() + ", " + name + ", " + fieldType + " >";
+    return "< " + getDeclaringClass().getClassLoader().getName() + ", " + getDeclaringClass().getName() + ", " + getName() + ", " + fieldType + " >";
   }
 
   /**

@@ -52,6 +52,7 @@ import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -162,7 +163,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     XMLReflectionReader spec = (XMLReflectionReader) userSpec;
     if (spec != null && context instanceof CallerSiteContext) {
       CallerSiteContext site = (CallerSiteContext) context;
-      MethodReference m = site.getCaller().getMethod().getReference();
+      MemberReference m = site.getCaller().getMethod().getReference();
       ReflectionSummary summary = spec.getSummary(m);
       if (summary != null) {
         Set types = summary.getTypesForProgramLocation(site.getSite().getProgramCounter());
