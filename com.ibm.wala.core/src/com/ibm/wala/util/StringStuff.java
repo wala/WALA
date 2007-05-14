@@ -496,6 +496,7 @@ public class StringStuff {
   
   /**
    * Convert a JVM encoded type name to a binary type name.
+   * This version does not call dollarToDot.
    * 
    * @param jvmType
    *          a String containing a type name in JVM internal format.
