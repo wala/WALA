@@ -54,7 +54,7 @@ public class AstField implements IField {
     return ref.getFieldType();
   }
   
-  public FieldReference getFieldReference() {
+  public FieldReference getReference() {
     return ref;
   }
 

@@ -61,7 +61,7 @@ public abstract class AstDynamicPropertyClass extends AstClass {
             return defaultDescriptor;
           }
 
-          public FieldReference getFieldReference() {
+          public FieldReference getReference() {
             return FieldReference.findOrCreate(AstDynamicPropertyClass.this.getReference(), name, defaultDescriptor);
           }
 
