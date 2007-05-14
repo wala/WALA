@@ -11,7 +11,6 @@
 
 package com.ibm.wala.ipa.callgraph;
 
-import java.util.Iterator;
 
 /**
  *
@@ -21,12 +20,6 @@ import java.util.Iterator;
  * 
  * @author sfink
  */
-public interface Entrypoints {
-  /**
-   * Return an iterator of Entrypoint which represents the methods that should
-   * be considered entrypoints during call graph construction
-   * @return an Iterator of Entrypoint
-   */
-  public Iterator<? extends Entrypoint> iterator();
+public interface Entrypoints extends Iterable<Entrypoint>{
 
 }
