@@ -44,6 +44,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
@@ -2149,7 +2150,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
   }
 
   public interface IdentityMapper<T, M, F> {
-    MethodReference getMethodRef(M method);
+    MemberReference getMethodRef(M method);
 
     TypeReference getTypeRef(T type);
 
