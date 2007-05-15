@@ -42,11 +42,17 @@ import com.ibm.wala.shrikeCT.ClassWriter.Element;
  */
 final public class ClassInstrumenter {
   private boolean[] deletedMethods;
+
   private MethodData[] methods;
+
   private CodeReader[] oldCode;
+
   private ClassReader cr;
+
   private ConstantPoolReader cpr;
+
   private boolean createFakeLineNumbers = false;
+
   private int fakeLineOffset;
 
   /**
@@ -68,7 +74,9 @@ final public class ClassInstrumenter {
 
   /**
    * Create a class instrumenter from a preinitialized class reader.
-   * @throws IllegalArgumentException  if cr is null
+   * 
+   * @throws IllegalArgumentException
+   *           if cr is null
    */
   public ClassInstrumenter(ClassReader cr) throws InvalidClassFileException {
     if (cr == null) {
@@ -136,10 +144,10 @@ final public class ClassInstrumenter {
 
   private final static ExceptionHandler[] noHandlers = new ExceptionHandler[0];
 
-  //Xiangyu
-  //create a empty method body and then user can apply patches later on
+  // Xiangyu
+  // create a empty method body and then user can apply patches later on
   public MethodData createEmptyMethodData(String name, String sig, int access) {
-    //Instruction[] instructions=new Instruction[0];
+    // Instruction[] instructions=new Instruction[0];
     Instruction[] instructions = new Instruction[1];
     instructions[0] = ReturnInstruction.make(Constants.TYPE_void);
     ExceptionHandler[][] handlers = new ExceptionHandler[instructions.length][];
@@ -162,10 +170,21 @@ final public class ClassInstrumenter {
   /**
    * Xiangyu
    * 
-   *  
+   * @throws IllegalArgumentException
+   *           if classWriter is null
+   * @throws IllegalArgumentException
+   *           if instructions is null
+   * 
+   * 
    */
   public void newMethod(String name, String sig, ArrayList<Instruction> instructions, int access, ClassWriter classWriter,
       ClassWriter.Element rawLines) {
+    if (instructions == null) {
+      throw new IllegalArgumentException("instructions is null");
+    }
+    if (classWriter == null) {
+      throw new IllegalArgumentException("classWriter is null");
+    }
     Instruction[] ins = (Instruction[]) instructions.toArray(new Instruction[instructions.size()]);
     ExceptionHandler[][] handlers = new ExceptionHandler[ins.length][];
     Arrays.fill(handlers, noHandlers);
@@ -189,7 +208,7 @@ final public class ClassInstrumenter {
     code.setRawHandlers(output.getRawHandlers());
 
     LineNumberTableWriter lines = null;
-    //I guess it is the line numbers in the java files.
+    // I guess it is the line numbers in the java files.
     if (rawLines == null) {
       // add fake line numbers: just map each bytecode instruction to its own
       // 'line'
@@ -207,6 +226,9 @@ final public class ClassInstrumenter {
   }
 
   public void newMethod(MethodData md, ClassWriter classWriter, ClassWriter.Element rawLines) {
+    if (classWriter == null) {
+      throw new IllegalArgumentException("classWriter is null");
+    }
     if (md == null) {
       throw new IllegalArgumentException("md is null");
     }
@@ -220,16 +242,16 @@ final public class ClassInstrumenter {
     code.setRawHandlers(output.getRawHandlers());
 
     LineNumberTableWriter lines = null;
-    //I guess it is the line numbers in the java files.
+    // I guess it is the line numbers in the java files.
     if (rawLines == null) {
       // add fake line numbers: just map each bytecode instruction to its own
       // 'line'
 
-      //NOTE:Should not use md.getInstructions().length, because the
-      //the length of the created code can be smaller than the md's instruction
+      // NOTE:Should not use md.getInstructions().length, because the
+      // the length of the created code can be smaller than the md's instruction
       // length
 
-      //WRONG: int[] newLineMap = new int[md.getInstructions().length];
+      // WRONG: int[] newLineMap = new int[md.getInstructions().length];
       int[] newLineMap = new int[code.getCodeLength()];
       for (int i = 0; i < newLineMap.length; i++) {
         newLineMap[i] = i;
@@ -240,7 +262,7 @@ final public class ClassInstrumenter {
     }
     code.setAttributes(new ClassWriter.Element[] { rawLines == null ? lines : rawLines });
     Element[] elements = { code };
-    //System.out.println("Name:"+md.getName()+" Sig:"+md.getSignature());
+    // System.out.println("Name:"+md.getName()+" Sig:"+md.getSignature());
     classWriter.addMethod(md.getAccess(), md.getName(), md.getSignature(), elements);
   }
 
@@ -300,7 +322,8 @@ final public class ClassInstrumenter {
    * 
    * @param i
    *          the index of the method to replace
-   * @throws IllegalArgumentException  if md is null
+   * @throws IllegalArgumentException
+   *           if md is null
    */
   public void replaceMethod(int i, MethodData md) {
     if (md == null) {

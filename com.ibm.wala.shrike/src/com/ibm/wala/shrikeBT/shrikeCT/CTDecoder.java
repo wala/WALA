@@ -25,16 +25,18 @@ final public class CTDecoder extends Decoder {
 
   /**
    * Decode the code resource 'r'.
+   * @throws NullPointerException  if r is null
    */
-  public CTDecoder(CodeReader r) {
+  public CTDecoder(CodeReader r) throws NullPointerException {
     this(r, makeConstantPoolReader(r.getClassReader()));
   }
 
   /**
    * Decode the code resource 'r' using the predeclared constant pool reader
    * 'cpr' (obtained by makeConstantPoolReader below).
+   * @throws NullPointerException  if r is null
    */
-  public CTDecoder(CodeReader r, ConstantPoolReader cpr) {
+  public CTDecoder(CodeReader r, ConstantPoolReader cpr) throws NullPointerException {
     super(r.getBytecode(), r.getRawHandlers(), cpr);
   }
 

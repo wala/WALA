@@ -64,6 +64,7 @@ final public class ExceptionHandler {
   }
 
   public boolean equals(ExceptionHandler h) {
+    assert h != null;
     return h.handler == handler && (catchClass == null ? h.catchClass == null : catchClass.equals(h.catchClass));
   }
 

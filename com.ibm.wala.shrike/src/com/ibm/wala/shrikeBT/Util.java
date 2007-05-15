@@ -185,8 +185,12 @@ public final class Util {
   /**
    * Compute the JVM type name for an actual Java class. Names such as "int",
    * "void", etc are also converted to their JVM type names.
+   * @throws IllegalArgumentException  if c is null
    */
   public static String makeType(Class c) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
+    }
     String name = c.getName();
     String alias = typeAliases.get(name);
     if (alias != null) {
@@ -266,8 +270,12 @@ public final class Util {
   /**
    * Compute the promoted type that the JVM uses to manipulate values of type
    * "t" on its working stack.
+   * @throws IllegalArgumentException  if t is null
    */
   public static String getStackType(String t) {
+    if (t == null) {
+      throw new IllegalArgumentException("t is null");
+    }
     switch (t.charAt(0)) {
     case 'Z':
     case 'C':
@@ -321,8 +329,12 @@ public final class Util {
 
   /**
    * Get the return type from a method signature.
+   * @throws IllegalArgumentException  if s is null
    */
   public static String getReturnType(String s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     return s.substring(s.lastIndexOf(')') + 1);
   }
 
@@ -351,8 +363,12 @@ public final class Util {
   /**
    * Make an Instruction which loads the value of a field, given its name and
    * Java Class. The field type is obtained using reflection.
+   * @throws IllegalArgumentException  if c is null
    */
   public static GetInstruction makeGet(Class c, String name) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
+    }
     try {
       Field f = c.getField(name);
       return GetInstruction.make(makeType(f.getType()), makeType(c), name, (f.getModifiers() & Constants.ACC_STATIC) != 0);
@@ -366,8 +382,12 @@ public final class Util {
   /**
    * Make an Instruction which stores the value of a field, given its name and
    * Java Class. The field type is obtained using reflection.
+   * @throws IllegalArgumentException  if c is null
    */
   public static PutInstruction makePut(Class c, String name) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
+    }
     try {
       Field f = c.getField(name);
       return PutInstruction.make(makeType(f.getType()), makeType(c), name, (f.getModifiers() & Constants.ACC_STATIC) != 0);
@@ -421,8 +441,12 @@ public final class Util {
    * Make an Instruction which calls a method, given its name, Java Class, and a
    * list of parameter classes to use for overload resolution. Method
    * information is obtained using reflection.
+   * @throws IllegalArgumentException  if name is null
    */
   public static InvokeInstruction makeInvoke(Class c, String name, Class[] paramTypes) {
+    if (name == null) {
+      throw new IllegalArgumentException("name is null");
+    }
     InvokeInstruction result = null;
 
     if (name.equals("<init>")) {
@@ -461,6 +485,9 @@ public final class Util {
    * Make an Instruction which calls a method, given its name and Java Class.
    * Method information is obtained using reflection. If there is more than one
    * method with the given name, an error will be thrown.
+   * @throws IllegalArgumentException  if name is null
+   * @throws IllegalArgumentException  if name is null
+   * @throws IllegalArgumentException  if name is null
    */
   public static InvokeInstruction makeInvoke(Class c, String name) {
     return makeInvoke(c, name, null);
@@ -530,6 +557,9 @@ public final class Util {
   }
 
   public static byte[] readFully(InputStream s) throws IOException {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     byte[] bytes = new byte[s.available()];
     readFully(s, bytes);
     int b = s.read();

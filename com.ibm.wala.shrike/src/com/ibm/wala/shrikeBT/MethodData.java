@@ -100,8 +100,9 @@ public final class MethodData {
    * @param signature
    *          the method signature, in JVM type format (e.g.,
    *          (ILjava/lang/Object;)V)
+   * @throws NullPointerException  if d is null
    */
-  public MethodData(Decoder d, int access, String classType, String name, String signature) {
+  public MethodData(Decoder d, int access, String classType, String name, String signature) throws NullPointerException {
     this(access, classType, name, signature, d.getInstructions(), d.getHandlers(), d.getInstructionsToBytecodes());
   }
 

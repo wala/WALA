@@ -412,8 +412,12 @@ public final class MethodEditor {
    * 
    * Multiple replacements are not allowed.
    * @throws NullPointerException  if p is null
+   * @throws IllegalArgumentException  if p is null
    */
   public void replaceWith(int i, Patch p) throws NullPointerException {
+    if (p == null) {
+      throw new IllegalArgumentException("p is null");
+    }
     verifyState(DURING_PASS);
     if (replacementPatches[i] != null) {
       throw new IllegalArgumentException("Instruction " + i + " cannot be replaced more than once");

@@ -34,8 +34,9 @@ public class Disassembler {
 
   /**
    * Create a disassembler for a method.
+   * @throws NullPointerException  if data is null
    */
-  public Disassembler(MethodData data) {
+  public Disassembler(MethodData data) throws NullPointerException {
     this(data.getInstructions(), data.getHandlers(), data.getInstructionsToBytecodes());
   }
 

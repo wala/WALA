@@ -23,8 +23,12 @@ public final class ConstantValueWriter extends ClassWriter.Element {
 
   /**
    * Build an empty writer.
+   * @throws IllegalArgumentException  if w is null
    */
   public ConstantValueWriter(ClassWriter w) {
+    if (w == null) {
+      throw new IllegalArgumentException("w is null");
+    }
     this.w = w;
     attrID = w.addCPUtf8("ConstantValue");
   }

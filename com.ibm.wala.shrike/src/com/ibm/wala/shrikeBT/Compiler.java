@@ -129,7 +129,7 @@ public abstract class Compiler implements Constants {
    * Extract the data for the method to be compiled from the MethodData
    * container.
    */
-  public Compiler(MethodData info) {
+  protected Compiler(MethodData info) {
     this(info.getIsStatic(), info.getClassType(), info.getSignature(), info.getInstructions(), info.getHandlers(), info
         .getInstructionsToBytecodes());
   }

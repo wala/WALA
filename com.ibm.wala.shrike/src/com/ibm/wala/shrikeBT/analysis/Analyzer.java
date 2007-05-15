@@ -29,6 +29,8 @@ import com.ibm.wala.shrikeBT.Util;
  * @author roca
  */
 public class Analyzer {
+
+
   // inputs
   protected boolean isStatic;
   protected String classType;
@@ -662,7 +664,12 @@ public class Analyzer {
     return stacks;
   }
 
-  public Analyzer(MethodData info) {
+  protected Analyzer(MethodData info) {
     this(info.getIsStatic(), info.getClassType(), info.getSignature(), info.getInstructions(), info.getHandlers());
   }
+  
+  public static Analyzer createAnalyzer(MethodData info) {
+    return new Analyzer(info);
+  }
+  
 }
