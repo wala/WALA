@@ -25,7 +25,7 @@ import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -38,8 +38,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
   public static PropagationCallGraphBuilder makeScriptCGBuilder(String dir, String name) throws IOException {
     JavaScriptLoaderFactory loaders = Util.makeLoaders();
 
-    URL script =
-      Util.class.getClassLoader().getResource(dir + File.separator + name);
+    URL script = Util.class.getClassLoader().getResource(dir + File.separator + name);
     if (script == null) {
       script = Util.class.getClassLoader().getResource(dir + "/" + name);
     }
@@ -47,9 +46,9 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
 
     AnalysisScope scope;
     if (script.openConnection() instanceof JarURLConnection) {
-      scope = makeScope(new URL[]{ script }, loaders );
+      scope = makeScope(new URL[] { script }, loaders);
     } else {
-      scope = makeScope(new SourceFileModule[]{ makeSourceModule(script, dir, name) }, loaders );
+      scope = makeScope(new SourceFileModule[] { makeSourceModule(script, dir, name) }, loaders);
     }
 
     return makeCG(loaders, true, scope);
@@ -57,53 +56,49 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
 
   public static CallGraph makeScriptCG(String dir, String name) throws IOException {
     PropagationCallGraphBuilder b = makeScriptCGBuilder(dir, name);
-    CallGraph CG =  b.makeCallGraph( b.getOptions() );
+    CallGraph CG = b.makeCallGraph(b.getOptions());
     dumpCG(b, CG);
     return CG;
   }
 
   public static CallGraph makeScriptCG(SourceFileModule[] scripts) throws IOException {
     PropagationCallGraphBuilder b = makeCGBuilder(scripts);
-    CallGraph CG = b.makeCallGraph( b.getOptions() );
+    CallGraph CG = b.makeCallGraph(b.getOptions());
     dumpCG(b, CG);
     return CG;
   }
 
   public static PropagationCallGraphBuilder makeHTMLCGBuilder(URL url) throws IOException {
     SourceFileModule script = WebUtil.extractScriptFromHTML(url);
-    return makeCGBuilder(new SourceFileModule[]{ script });
+    return makeCGBuilder(new SourceFileModule[] { script });
   }
 
   public static CallGraph makeHTMLCG(URL url) throws IOException {
     PropagationCallGraphBuilder b = makeHTMLCGBuilder(url);
-    CallGraph CG = b.makeCallGraph( b.getOptions() );
+    CallGraph CG = b.makeCallGraph(b.getOptions());
     dumpCG(b, CG);
     return CG;
   }
 
   public static PropagationCallGraphBuilder makeCGBuilder(SourceFileModule[] scripts) throws IOException {
     JavaScriptLoaderFactory loaders = makeLoaders();
-    AnalysisScope scope = makeScope(scripts, loaders );
+    AnalysisScope scope = makeScope(scripts, loaders);
     return makeCG(loaders, true, scope);
   }
 
-  protected static 
-    PropagationCallGraphBuilder makeCG(JavaScriptLoaderFactory loaders,
-				       boolean keepIRs,
-				       AnalysisScope scope) 
-      throws IOException 
-  {
+  protected static PropagationCallGraphBuilder makeCG(JavaScriptLoaderFactory loaders, boolean keepIRs, AnalysisScope scope)
+      throws IOException {
     try {
       WarningSet warnings = new WarningSet();
-      ClassHierarchy cha = makeHierarchy( scope, loaders, warnings );
-      Entrypoints roots = makeScriptRoots( cha );
+      ClassHierarchy cha = makeHierarchy(scope, loaders, warnings);
+      Iterable<Entrypoint> roots = makeScriptRoots(cha);
       AnalysisOptions options = makeOptions(scope, keepIRs, cha, roots, warnings);
 
       JSCFABuilder builder = new JSZeroXCFABuilder(cha, warnings, options, null, null, null, ZeroXInstanceKeys.ALLOCATIONS);
 
       return builder;
     } catch (ClassHierarchyException e) {
-      Assert.assertTrue("internal error building class hierarchy", false); 
+      Assert.assertTrue("internal error building class hierarchy", false);
       return null;
     }
   }
