@@ -19,7 +19,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -41,7 +40,7 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * @author sfink
  */
-public class StrutsEntrypoints implements Entrypoints, EJBConstants {
+public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
 
   public final static Atom executeName = Atom.findOrCreateUnicodeAtom("execute");
 

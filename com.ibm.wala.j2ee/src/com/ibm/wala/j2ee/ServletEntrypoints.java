@@ -18,7 +18,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -41,7 +40,7 @@ import com.ibm.wala.util.debug.Trace;
  * 
  * @author sfink
  */
-public class ServletEntrypoints implements Entrypoints, EJBConstants {
+public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
 
   static final boolean DEBUG = false;
 

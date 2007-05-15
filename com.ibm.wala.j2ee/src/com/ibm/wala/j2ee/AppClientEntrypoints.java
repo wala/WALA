@@ -22,7 +22,6 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.j2ee.util.TopLevelArchiveModule;
@@ -44,7 +43,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  * 
  * @author sfink
  */
-public class AppClientEntrypoints implements Entrypoints {
+public class AppClientEntrypoints implements Iterable<Entrypoint> {
 
   static final boolean DEBUG = false;
 

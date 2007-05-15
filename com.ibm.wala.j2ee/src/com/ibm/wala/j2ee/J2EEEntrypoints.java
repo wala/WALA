@@ -13,7 +13,6 @@ package com.ibm.wala.j2ee;
 import java.util.Iterator;
 
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
 import com.ibm.wala.ipa.callgraph.impl.ComposedEntrypoints;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.Atom;
@@ -25,11 +24,11 @@ import com.ibm.wala.util.warnings.WarningSet;
  * 
  * @author sfink
  */
-public class J2EEEntrypoints implements Entrypoints {
+public class J2EEEntrypoints implements Iterable<Entrypoint> {
 
   private final static boolean USE_STRUTS_ACTIONS = true;
 
-  private Entrypoints entrypoints;
+  private Iterable<Entrypoint> entrypoints;
 
   private final AppClientEntrypoints appClientEntrypoints;
 
