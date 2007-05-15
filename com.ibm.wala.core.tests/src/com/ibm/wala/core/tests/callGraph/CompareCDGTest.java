@@ -27,7 +27,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CFABuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -388,7 +388,7 @@ public class CompareCDGTest extends WalaTestCase {
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
 
-    Entrypoints entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
     // //
@@ -404,7 +404,7 @@ public class CompareCDGTest extends WalaTestCase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JAVA_CUP);
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Entrypoints entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.JAVA_CUP_MAIN);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.JAVA_CUP_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     run(CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings));
@@ -414,7 +414,7 @@ public class CompareCDGTest extends WalaTestCase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.BCEL);
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Entrypoints entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
         .makeMainEntrypoints(scope, cha, TestConstants.BCEL_VERIFIER_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
@@ -425,7 +425,7 @@ public class CompareCDGTest extends WalaTestCase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JLEX);
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Entrypoints entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.JLEX_MAIN);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.JLEX_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     run(CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings));

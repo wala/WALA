@@ -13,7 +13,6 @@ package com.ibm.wala.examples.drivers;
 import java.io.File;
 import java.util.Properties;
 
-
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
@@ -22,7 +21,7 @@ import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.slicer.HeapStatement;
@@ -111,7 +110,7 @@ public class GVSDG {
       EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
       WarningSet warnings = new WarningSet();
       ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-      Entrypoints entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
+      Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
       CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cha, scope, warnings);

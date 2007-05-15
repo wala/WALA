@@ -33,7 +33,7 @@ import com.ibm.wala.emf.wrappers.EUtil;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
@@ -88,7 +88,7 @@ public class ExportCallGraphToXML {
       System.err.println("Build class hierarchy...");
       ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
 
-      Entrypoints entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
+      Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
       AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
       // //

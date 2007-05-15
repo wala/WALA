@@ -152,7 +152,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     //
     // entrypoints are where analysis starts
     //
-    Entrypoints roots = Util.makeMainEntrypoints(getScope(), cha, applicationMainClass);
+    Iterable<Entrypoint> roots = Util.makeMainEntrypoints(getScope(), cha, applicationMainClass);
 
     //
     // analysis options controls aspects of call graph construction

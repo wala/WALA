@@ -35,7 +35,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
 import com.ibm.wala.ipa.callgraph.impl.AllApplicationEntrypoints;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
@@ -132,7 +131,7 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.BCEL);
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Entrypoints entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
         .makeMainEntrypoints(scope, cha, TestConstants.BCEL_VERIFIER_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
@@ -146,7 +145,7 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JAVA_CUP);
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Entrypoints entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.JAVA_CUP_MAIN);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.JAVA_CUP_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     Trace.println("java_cup set up warnings:\n");
@@ -159,7 +158,7 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JLEX);
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Entrypoints entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.JLEX_MAIN);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.JLEX_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     Trace.println("JLex set up warnings:\n");
@@ -172,7 +171,7 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Entrypoints entrypoints = new AllApplicationEntrypoints(scope, cha);
+    Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     Trace.println("testCornerCases set up warnings:\n");
@@ -216,7 +215,7 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.HELLO);
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Entrypoints entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.HELLO_MAIN);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.HELLO_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     Trace.println("hello set up warnings:\n");
@@ -229,7 +228,7 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Entrypoints entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.RECURSE_MAIN);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.RECURSE_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     Trace.println("testRecursion set up warnings:\n");
@@ -242,7 +241,7 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.HELLO);
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Entrypoints entrypoints = new AllApplicationEntrypoints(scope, cha);
+    Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     Trace.println("hello all entrypoints set up warnings:\n");
@@ -255,7 +254,7 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.xml", "GUIExclusions.xml");
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Entrypoints entrypoints = makePrimordialPublicEntrypoints(scope, cha, "java/io");
+    Iterable<Entrypoint> entrypoints = makePrimordialPublicEntrypoints(scope, cha, "java/io");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     Trace.println("primordial set up warnings:\n");
@@ -264,7 +263,7 @@ public class CallGraphTest extends WalaTestCase {
     CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings);
   }
 
-  public static Entrypoints makePrimordialPublicEntrypoints(AnalysisScope scope, ClassHierarchy cha, String pkg) {
+  public static Iterable<Entrypoint> makePrimordialPublicEntrypoints(AnalysisScope scope, ClassHierarchy cha, String pkg) {
     final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
     for (IClass clazz : cha) {
 
@@ -277,7 +276,7 @@ public class CallGraphTest extends WalaTestCase {
         }
       }
     }
-    return new Entrypoints() {
+    return new Iterable<Entrypoint>() {
       public Iterator<Entrypoint> iterator() {
         return result.iterator();
       }
@@ -292,7 +291,7 @@ public class CallGraphTest extends WalaTestCase {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.xml", "GUIExclusions.xml");
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Entrypoints entrypoints = makePrimordialMainEntrypoints(scope, cha);
+    Iterable<Entrypoint> entrypoints = makePrimordialMainEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     Trace.println("primordial set up warnings:\n");
@@ -304,7 +303,7 @@ public class CallGraphTest extends WalaTestCase {
   /**
    * make main entrypoints, even in the primordial loader.
    */
-  public static Entrypoints makePrimordialMainEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+  public static Iterable<Entrypoint> makePrimordialMainEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
     final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
     final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
     for (IClass klass : cha) {
@@ -315,7 +314,7 @@ public class CallGraphTest extends WalaTestCase {
         result.add(new DefaultEntrypoint(m, cha));
       }
     }
-    return new Entrypoints() {
+    return new Iterable<Entrypoint>() {
       public Iterator<Entrypoint> iterator() {
         return result.iterator();
       }

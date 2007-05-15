@@ -15,7 +15,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.Stopwatch;
@@ -34,7 +34,7 @@ public class CallGraphTestUtil {
 
 //  private static final String reflectionFile = Config.SPECJVM_REFLECTION;
 
-  public static AnalysisOptions makeAnalysisOptions(AnalysisScope scope, Entrypoints entrypoints) {
+  public static AnalysisOptions makeAnalysisOptions(AnalysisScope scope, Iterable<Entrypoint> entrypoints) {
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
 
 //    InputStream rStream = CallGraphTestUtil.class.getClassLoader().getResourceAsStream(reflectionFile);
