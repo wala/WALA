@@ -66,8 +66,9 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
   /**
    * Constructor SlowDFSDiscoverTimeIterator.
    * @param G
+   * @throws NullPointerException  if G is null
    */
-  public SlowDFSDiscoverTimeIterator(Graph<T> G) {
+  public SlowDFSDiscoverTimeIterator(Graph<T> G) throws NullPointerException {
     init(G,G.iterator());
   }
 

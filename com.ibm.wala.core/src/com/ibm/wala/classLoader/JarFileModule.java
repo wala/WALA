@@ -87,6 +87,9 @@ public class JarFileModule implements Module {
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object arg0) {
+    if (arg0 == null) {
+      return false;
+    }
     if (getClass().equals(arg0.getClass())) {
       JarFileModule other = (JarFileModule) arg0;
       return file.equals(other.file);

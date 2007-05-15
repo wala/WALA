@@ -320,8 +320,12 @@ public class ClassHierarchy implements Iterable<IClass> {
    * @param ref
    *          method reference
    * @return the set of IMethods that this call can resolve to.
+   * @throws IllegalArgumentException  if ref is null
    */
   public Iterator<IMethod> getPossibleTargets(MethodReference ref) {
+    if (ref == null) {
+      throw new IllegalArgumentException("ref is null");
+    }
     IClassLoader loader;
     try {
       loader = factory.getLoader(ref.getDeclaringClass().getClassLoader(), this, scope);
@@ -430,8 +434,12 @@ public class ClassHierarchy implements Iterable<IClass> {
    * 
    * @param m
    * @return IMethod, or null if no appropriate receiver is found.
+   * @throws IllegalArgumentException  if m is null
    */
   public IMethod resolveMethod(MethodReference m) {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     IClass receiver = lookupClass(m.getDeclaringClass());
     if (receiver == null) {
       return null;
@@ -458,8 +466,16 @@ public class ClassHierarchy implements Iterable<IClass> {
   /**
    * @return the canonical FieldReference that represents a given field , or
    *         null if none found
+   * @throws IllegalArgumentException  if f is null
+   * @throws IllegalArgumentException  if klass is null
    */
   public IField resolveField(IClass klass, FieldReference f) {
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
+    if (f == null) {
+      throw new IllegalArgumentException("f is null");
+    }
     return klass.getField(f.getName());
   }
 
@@ -821,6 +837,9 @@ public class ClassHierarchy implements Iterable<IClass> {
   private final static ClassLoaderReference syntheticLoaderRef = new ClassLoaderReference(syntheticLoaderName);
 
   public boolean isSyntheticClass(IClass c) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
+    }
     return c.getClassLoader() == getLoader(syntheticLoaderRef);
   }
 
@@ -1066,8 +1085,9 @@ public class ClassHierarchy implements Iterable<IClass> {
    * @param warnings
    * @return a ClassHierarchy object representing the analysis scope
    * @throws ClassHierarchyException
+   * @throws NullPointerException  if scope is null
    */
-  public static ClassHierarchy make(AnalysisScope scope, WarningSet warnings) throws ClassHierarchyException {
+  public static ClassHierarchy make(AnalysisScope scope, WarningSet warnings) throws NullPointerException, ClassHierarchyException {
     return make(scope, new ClassLoaderFactoryImpl(scope.getExclusions(), warnings), warnings);
   }
 

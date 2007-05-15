@@ -168,8 +168,12 @@ public class TabulationSolver<T, P> {
   /**
    * @param p
    *          a description of the dataflow problem to solve
+   * @throws IllegalArgumentException  if p is null
    */
   public TabulationSolver(TabulationProblem<T, P> p) {
+    if (p == null) {
+      throw new IllegalArgumentException("p is null");
+    }
     this.supergraph = p.getSupergraph();
     if (!DEBUG_IDENTITY_FLOW) {
       this.flowFunctionMap = p.getFunctionMap();

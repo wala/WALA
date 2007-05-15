@@ -41,10 +41,16 @@ public class ZeroContainerCFABuilder extends CFABuilder {
    *          application-specific logic to interpret a method in context
    * @param reflect
    *          reflection specification
+   * @throws IllegalArgumentException
+   *           if options is null
    */
   public ZeroContainerCFABuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
+
     super(cha, warnings, options);
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
 
     setInstanceKeys(new ZeroXInstanceKeys(options, cha, null, warnings, ZeroXInstanceKeys.NONE));
 

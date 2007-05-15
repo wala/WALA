@@ -294,6 +294,9 @@ public class TwoExitCFG implements ControlFlowGraph {
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
    */
   public int getPredNodeCount(IBasicBlock N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N is null");
+    }
     ensureEdgesReady();
     if (N.equals(delegate.exit())) {
       return normalPred.populationCount();
@@ -310,6 +313,9 @@ public class TwoExitCFG implements ControlFlowGraph {
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
    */
   public Iterator<? extends IBasicBlock> getSuccNodes(IBasicBlock N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N is null");
+    }
     if (DEBUG_LEVEL > 1) {
       Trace.println("TwoExitCFG: getSuccNodes " + N);
     }
@@ -334,6 +340,9 @@ public class TwoExitCFG implements ControlFlowGraph {
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
    */
   public int getSuccNodeCount(IBasicBlock N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N is null");
+    }
     if (N.equals(exceptionalExit)) {
       return 0;
     } else {
@@ -613,6 +622,9 @@ public class TwoExitCFG implements ControlFlowGraph {
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getNormalSuccessors(IBasicBlock b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     if (b.equals(exceptionalExit)) {
       return Collections.emptySet();
     } else {

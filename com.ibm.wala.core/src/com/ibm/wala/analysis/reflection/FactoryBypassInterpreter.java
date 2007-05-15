@@ -199,6 +199,9 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    *      com.ibm.wala.ipa.callgraph.Context)
    */
   public boolean understands(CGNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     return getTypesForContext(node.getContext()) != null;
   }
 
@@ -623,6 +626,12 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    *      com.ibm.wala.classLoader.IClass)
    */
   public boolean recordFactoryType(CGNode node, IClass klass) {
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     return recordType(node.getContext(), klass.getReference());
   }
 

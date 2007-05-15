@@ -77,7 +77,7 @@ public class Variable implements ITerm, Comparable<Variable> {
     return Collections.singleton(this);
   }
 
-  public int compareTo(Variable o) {
+  public int compareTo(Variable o) throws NullPointerException {
     return this.getNumber() - o.getNumber();
   }
 }

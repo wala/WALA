@@ -144,6 +144,9 @@ public class CloneInterpreter implements SSAContextInterpreter {
    *      com.ibm.detox.ipa.callgraph.Context)
    */
   public boolean understands(CGNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     return (node.getMethod().getReference().equals(CLONE) && ContextUtil.getConcreteClassFromContext(node.getContext()) != null);
   }
 

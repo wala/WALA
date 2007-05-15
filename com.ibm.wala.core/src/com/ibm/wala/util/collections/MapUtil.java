@@ -57,7 +57,8 @@ public class MapUtil {
    *          a mapping from Object -> WeakHashMap
    * @param key
    * @return the WeakHashMap corresponding to key in M; create one if needed
-   * @throws IllegalArgumentException  if M is null
+   * @throws IllegalArgumentException
+   *           if M is null
    */
   public static <K, V> WeakHashMap<K, V> findOrCreateWeakHashMap(Map<Object, WeakHashMap<K, V>> M, Object key) {
     if (M == null) {
@@ -75,8 +76,12 @@ public class MapUtil {
    * @param m
    *          a map from key -> Set <value>
    * @return inverted map, value -> Set <key>
+   * @throws IllegalArgumentException  if m is null
    */
   public static <K, V> Map<V, Set<K>> inverseMap(Map<K, Set<V>> m) {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     Map<V, Set<K>> result = HashMapFactory.make(m.size());
     for (Iterator<Map.Entry<K, Set<V>>> it = m.entrySet().iterator(); it.hasNext();) {
       Map.Entry<K, Set<V>> E = it.next();
@@ -92,6 +97,9 @@ public class MapUtil {
   }
 
   public static <K, V> Map<Set<K>, V> groupKeysByValue(Map<K, V> m) {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     Map<Set<K>, V> result = HashMapFactory.make();
     Map<V, Set<K>> valueToKeys = HashMapFactory.make();
     for (Iterator<Map.Entry<K, V>> it = m.entrySet().iterator(); it.hasNext();) {

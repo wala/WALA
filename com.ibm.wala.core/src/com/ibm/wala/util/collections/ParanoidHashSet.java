@@ -46,9 +46,9 @@ public class ParanoidHashSet<T> extends HashSet<T> {
 
   /**
    * @param s
-   * @throws IllegalArgumentException  if s is null
+   * @throws NullPointerException  if s is null
    */
-  public ParanoidHashSet(Set<T> s) {
+  public ParanoidHashSet(Set<T> s) throws NullPointerException {
     super(s.size());
     hcFreq = new HashMap<Integer, Set<T>>(s.size());
     for (Iterator<T> it = s.iterator(); it.hasNext();) {

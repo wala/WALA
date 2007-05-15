@@ -34,6 +34,9 @@ public class ExceptionReturnValueKey extends ReturnValueKey {
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     return (obj.getClass() == ExceptionReturnValueKey.class) && super.internalEquals(obj);
   }
 

@@ -38,6 +38,9 @@ public class CGEdge {
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (Assertions.verifyAssertions) {
       Assertions._assert(this.getClass().equals(obj.getClass()));
     }

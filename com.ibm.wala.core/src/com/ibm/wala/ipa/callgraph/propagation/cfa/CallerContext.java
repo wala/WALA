@@ -50,6 +50,9 @@ public class CallerContext implements Context {
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       CallerContext other = (CallerContext)obj;
       return caller.equals(other.caller);

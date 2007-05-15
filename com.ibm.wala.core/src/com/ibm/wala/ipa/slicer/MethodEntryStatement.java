@@ -27,6 +27,9 @@ public class MethodEntryStatement extends Statement {
 
   @Override
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       MethodEntryStatement other = (MethodEntryStatement)obj;
       return getNode().equals(other.getNode());

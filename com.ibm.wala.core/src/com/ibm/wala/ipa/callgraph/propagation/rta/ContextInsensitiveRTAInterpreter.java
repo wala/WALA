@@ -52,6 +52,9 @@ public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInte
    * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#getCallSites(com.ibm.wala.classLoader.IMethod, com.ibm.detox.ipa.callgraph.Context, com.ibm.wala.util.warnings.WarningSet)
    */
   public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     try {
       return CodeScanner.iterateCallSites(node.getMethod(), warnings);
     } catch (InvalidClassFileException e) {
@@ -82,6 +85,9 @@ public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInte
    * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateFieldsWritten(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.util.warnings.WarningSet)
    */
   public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     try {
       return CodeScanner.iterateFieldsWritten(node.getMethod(), warnings);
     } catch (InvalidClassFileException e) {

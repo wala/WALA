@@ -46,8 +46,12 @@ public class CodeScanner {
   /**
    * @return iterator of call site references.
    * @throws InvalidClassFileException
+   * @throws IllegalArgumentException  if m is null
    */
   public static Iterator<CallSiteReference> iterateCallSites(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getCallSites(sm.getStatements(SSAOptions.defaultOptions(), warnings)).iterator();
@@ -59,8 +63,12 @@ public class CodeScanner {
   /**
    * @return iterator of FieldReference
    * @throws InvalidClassFileException
+   * @throws IllegalArgumentException  if m is null
    */
   public static Iterator<FieldReference> iterateFieldsRead(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getFieldsRead(sm.getStatements(SSAOptions.defaultOptions(), warnings)).iterator();
@@ -72,8 +80,12 @@ public class CodeScanner {
   /**
    * @return iterator of FieldReference
    * @throws InvalidClassFileException
+   * @throws IllegalArgumentException  if m is null
    */
   public static Iterator<FieldReference> iterateFieldsWritten(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getFieldsWritten(sm.getStatements(SSAOptions.defaultOptions(), warnings)).iterator();
@@ -85,8 +97,12 @@ public class CodeScanner {
   /**
    * @return iterator of TypeReference.
    * @throws InvalidClassFileException
+   * @throws IllegalArgumentException  if m is null
    */
   public static Iterator<NewSiteReference> iterateNewSites(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return getNewSites(sm.getStatements(SSAOptions.defaultOptions(), warnings)).iterator();
@@ -96,6 +112,9 @@ public class CodeScanner {
   }
 
   public static boolean hasObjectArrayLoad(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return hasObjectArrayLoad(sm.getStatements(SSAOptions.defaultOptions(), warnings));
@@ -133,8 +152,12 @@ public class CodeScanner {
    * 
    * @return iterator of TypeReference
    * @throws InvalidClassFileException
+   * @throws IllegalArgumentException  if m is null
    */
   public static Iterator iterateCastTypes(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
       return iterateCastTypes(sm.getStatements(SSAOptions.defaultOptions(), warnings));

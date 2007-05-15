@@ -67,8 +67,12 @@ public class DFS {
    * @param G
    *          the graph containing n
    * @return Set
+   * @throws IllegalArgumentException  if C is null
    */
   public static <T> Set<T> getReachableNodes(Graph<T> G, Collection<? extends T> C) {
+    if (C == null) {
+      throw new IllegalArgumentException("C is null");
+    }
     HashSet<T> result = HashSetFactory.make();
     Iterator<T> dfs = iterateFinishTime(G, C.iterator());
     while (dfs.hasNext()) {

@@ -80,8 +80,12 @@ public class TypeBasedHeapModel implements HeapModel {
   /**
    * @param klasses
    *          Collection<IClass>
+   * @throws IllegalArgumentException  if cg is null
    */
   public TypeBasedHeapModel(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) {
+    if (cg == null) {
+      throw new IllegalArgumentException("cg is null");
+    }
     iKeyFactory = new ClassBasedInstanceKeys(options, cg.getClassHierarchy(), new WarningSet());
     this.klasses = klasses;
     this.cg = cg;

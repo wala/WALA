@@ -342,9 +342,13 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
   /**
    * Add a constraint for an allocate
+   * @throws IllegalArgumentException  if newSite is null
    */
   public void visitNew(CGNode node, NewSiteReference newSite) {
 
+    if (newSite == null) {
+      throw new IllegalArgumentException("newSite is null");
+    }
     if (Malleable.isMalleable(newSite.getDeclaredType())) {
       return;
     }

@@ -45,6 +45,9 @@ public class StringStuff {
   }
 
   public static void padWithSpaces(StringBuffer b, int length) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     if (b.length() < length) {
       for (int i = b.length(); i < length; i++) {
         b.append(" ");
@@ -133,9 +136,13 @@ public class StringStuff {
    * @param b
    *          method descriptor - something like "(III)V"
    * @return type description
+   * @throws IllegalArgumentException  if b is null
    */
   public static final TypeName parseForReturnTypeName(ImmutableByteArray b) throws IllegalArgumentException {
 
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     if (b.length() <= 2) {
       throw new IllegalArgumentException("invalid descriptor: " + b);
 
@@ -189,9 +196,13 @@ public class StringStuff {
    * Parse method descriptor to obtain descriptions of method's parameters.
    * 
    * @return parameter descriptions, or null if there are no parameters
+   * @throws IllegalArgumentException  if b is null
    */
   public static final TypeName[] parseForParameterNames(ImmutableByteArray b) throws IllegalArgumentException {
 
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     if (b.length() <= 2) {
       throw new IllegalArgumentException("invalid descriptor: " + b);
 
@@ -306,8 +317,12 @@ public class StringStuff {
    * 
    * @return an ImmutableByteArray that represents the package, or null if it's
    *         the unnamed package
+   * @throws IllegalArgumentException  if name is null
    */
   public static ImmutableByteArray parseForPackage(ImmutableByteArray name) {
+    if (name == null) {
+      throw new IllegalArgumentException("name is null");
+    }
     return parseForPackage(name, 0, name.length());
   }
 
@@ -322,8 +337,12 @@ public class StringStuff {
    * @param length
    * @return an ImmutableByteArray that represents the package, or null if it's
    *         the unnamed package
+   * @throws IllegalArgumentException  if name is null
    */
   public static ImmutableByteArray parseForClass(ImmutableByteArray name, int start, int length) throws IllegalArgumentException {
+    if (name == null) {
+      throw new IllegalArgumentException("name is null");
+    }
     if (name.length() == 0) {
       throw new IllegalArgumentException("invalid class name: zero length");
     }
@@ -355,8 +374,12 @@ public class StringStuff {
    * 
    * @return an ImmutableByteArray that represents the package, or null if it's
    *         the unnamed package
+   * @throws IllegalArgumentException  if name is null
    */
   public static ImmutableByteArray parseForClass(ImmutableByteArray name) throws IllegalArgumentException {
+    if (name == null) {
+      throw new IllegalArgumentException("name is null");
+    }
     return parseForClass(name, 0, name.length());
   }
 
@@ -382,9 +405,13 @@ public class StringStuff {
    * b: descriptor - something like "[Ljava/lang/String;" or "[[I"
    * 
    * @return dimensionality - something like "Ljava/lang/String;" or "I"
+   * @throws IllegalArgumentException  if b is null
    */
   public static ImmutableByteArray parseForInnermostArrayElementDescriptor(ImmutableByteArray b, int start, int length) {
 
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     int i = start;
     for (; i < start + length; ++i) {
       if (b.b[i] != '[') {
@@ -399,8 +426,12 @@ public class StringStuff {
    * array type. b: descriptor - something like "[Ljava/lang/String;" or "[[I"
    * 
    * @return dimensionality - something like "Ljava/lang/String;" or "I"
+   * @throws IllegalArgumentException  if a is null
    */
   public static ImmutableByteArray parseForInnermostArrayElementDescriptor(Atom a) {
+    if (a == null) {
+      throw new IllegalArgumentException("a is null");
+    }
     ImmutableByteArray b = new ImmutableByteArray(a.val);
     return parseForInnermostArrayElementDescriptor(b, 0, b.length());
   }
@@ -429,8 +460,12 @@ public class StringStuff {
   /**
    * @param methodSig
    *          something like "java_cup.lexer.advance()V"
+   * @throws IllegalArgumentException  if methodSig is null
    */
   public static MethodReference makeMethodReference(String methodSig) throws IllegalArgumentException {
+    if (methodSig == null) {
+      throw new IllegalArgumentException("methodSig is null");
+    }
     if (methodSig.lastIndexOf('.') < 0) {
       throw new IllegalArgumentException("ill-formed sig " + methodSig);
     }
@@ -450,8 +485,12 @@ public class StringStuff {
    * @param jvmType
    *          a String containing a type name in JVM internal format.
    * @return the same type name in readable (source code) format.
+   * @throws IllegalArgumentException  if jvmType is null
    */
   public static String jvmToReadableType(final String jvmType)throws IllegalArgumentException {
+    if (jvmType == null) {
+      throw new IllegalArgumentException("jvmType is null");
+    }
     StringBuffer readable = new StringBuffer(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
 

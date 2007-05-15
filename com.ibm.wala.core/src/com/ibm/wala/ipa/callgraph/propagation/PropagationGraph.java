@@ -753,6 +753,9 @@ public class PropagationGraph extends AbstractFixedPointSystem {
    */
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatementsThatUse(IVariable v) {
+    if (v == null) {
+      throw new IllegalArgumentException("v is null");
+    }
     int number = v.getGraphNodeId();
     if (number == -1) {
       return EmptyIterator.instance();
@@ -776,6 +779,9 @@ public class PropagationGraph extends AbstractFixedPointSystem {
    */
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatementsThatDef(IVariable v) {
+    if (v == null) {
+      throw new IllegalArgumentException("v is null");
+    }
     int number = v.getGraphNodeId();
     if (number == -1) {
       return EmptyIterator.instance();

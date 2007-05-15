@@ -69,8 +69,12 @@ public class FileSuffixes {
    * @param fileName
    *          name of a file
    * @return boolean
+   * @throws IllegalArgumentException  if fileName is null
    */
   public static boolean isJarFile(String fileName) {
+    if (fileName == null) {
+      throw new IllegalArgumentException("fileName is null");
+    }
     int suffixIndex = fileName.indexOf(JAR_SUFFIX);
     if (suffixIndex > -1) {
       return true;
@@ -85,8 +89,12 @@ public class FileSuffixes {
    * @param fileName
    *          name of a file
    * @return boolean
+   * @throws IllegalArgumentException  if fileName is null
    */
   public static boolean isWarFile(String fileName) {
+    if (fileName == null) {
+      throw new IllegalArgumentException("fileName is null");
+    }
     int suffixIndex = fileName.indexOf(WAR_SUFFIX);
     if (suffixIndex > -1) {
       return true;
@@ -102,8 +110,12 @@ public class FileSuffixes {
    * 
    * @param fileName
    *          the file name
+   * @throws IllegalArgumentException  if fileName is null
    */
   public static String stripSuffix(String fileName) {
+    if (fileName == null) {
+      throw new IllegalArgumentException("fileName is null");
+    }
     int suffixIndex = fileName.indexOf(CLASS_SUFFIX);
     suffixIndex = (suffixIndex > -1) ? suffixIndex : fileName.indexOf(".java");
     if (suffixIndex > -1) {

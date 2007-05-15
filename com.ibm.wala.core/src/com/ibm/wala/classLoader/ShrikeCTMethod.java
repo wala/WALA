@@ -54,7 +54,11 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
   private final ClassHierarchy cha;
 
   public ShrikeCTMethod(IClass klass, int index) {
+
     super(klass);
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
     this.shrikeMethodIndex = index;
     this.cha = klass.getClassHierarchy();
   }

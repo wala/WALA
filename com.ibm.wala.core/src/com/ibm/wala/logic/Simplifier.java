@@ -158,8 +158,12 @@ public class Simplifier {
 
   /**
    * in formula f, substitute the term t2 for all free occurences of t1
+   * @throws IllegalArgumentException  if formula is null
    */
   public static IFormula substitute(IFormula formula, ITerm t1, ITerm t2) {
+    if (formula == null) {
+      throw new IllegalArgumentException("formula is null");
+    }
     switch (formula.getKind()) {
     case BINARY:
       BinaryFormula b = (BinaryFormula) formula;
@@ -217,6 +221,9 @@ public class Simplifier {
   }
 
   public static Collection<Variable> getFreeVariables(Collection<? extends IFormula> constraints) {
+    if (constraints == null) {
+      throw new IllegalArgumentException("constraints is null");
+    }
     Collection<Variable> free = HashSetFactory.make();
     for (IFormula f : constraints) {
       free.addAll(f.getFreeVariables());

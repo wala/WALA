@@ -33,6 +33,9 @@ public final class CallSite {
   }
 
   public boolean equals(Object o) {
+    if (o == null) {
+      return false;
+    }
     if (Assertions.verifyAssertions) {
       Assertions._assert(getClass().equals(o.getClass()));
     }

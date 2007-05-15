@@ -149,16 +149,21 @@ public class OrdinalSet<T> implements Iterable<T> {
 
   /**
    * @param instances
+   * @throws NullPointerException  if instances is null
    */
-  public static <T> Collection<T> toCollection(OrdinalSet<T> instances) {
+  public static <T> Collection<T> toCollection(OrdinalSet<T> instances) throws NullPointerException {
     return new Iterator2Collection<T>(instances.iterator());
   }
 
   /**
    * Precondition: the ordinal set mapping has an index for every element of c
    * Convert a "normal" collection to an OrdinalSet, based on the given mapping.
+   * @throws IllegalArgumentException  if c is null
    */
   public static <T> OrdinalSet<T> toOrdinalSet(Collection<T> c, OrdinalSetMapping<T> m) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
+    }
     MutableSparseIntSet s = new MutableSparseIntSet();
     for (Iterator<T> it = c.iterator(); it.hasNext();) {
       int index = m.getMappedIndex(it.next());

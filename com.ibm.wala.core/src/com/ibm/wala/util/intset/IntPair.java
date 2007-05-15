@@ -44,6 +44,9 @@ public class IntPair {
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (obj.getClass() == this.getClass()) {
       IntPair p = (IntPair) obj;
       return p.getX() == x && p.getY() == y;

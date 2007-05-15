@@ -36,6 +36,9 @@ public class RTASelectorKey implements PointerKey {
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object arg0) {
+    if (arg0 == null) {
+      return false;
+    }
     if (arg0.getClass().equals(getClass())) {
       RTASelectorKey other = (RTASelectorKey)arg0;
       return selector.equals(other.selector);

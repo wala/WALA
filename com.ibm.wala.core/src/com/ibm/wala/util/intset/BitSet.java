@@ -121,8 +121,12 @@ public final class BitSet<T> {
 
   /**
    * Does this object hold the same bits as other?
+   * @throws IllegalArgumentException  if other is null
    */
   public boolean sameBits(BitSet other) {
+    if (other == null) {
+      throw new IllegalArgumentException("other is null");
+    }
     //		if (Assertions.verifyAssertions) {
     //      Assertions._assert(map.equals(other.map));
     //    }
@@ -195,16 +199,24 @@ public final class BitSet<T> {
   /**
    * Perform intersection of two bitsets
    * @param other the other bitset in the operation
+   * @throws IllegalArgumentException  if other is null
    */
   public void intersect(BitSet other) {
+    if (other == null) {
+      throw new IllegalArgumentException("other is null");
+    }
     vector.and(other.vector);
   }
 
   /**
    * Perform the difference of two bit sets
    * @param other
+   * @throws IllegalArgumentException  if other is null
    */
   public void difference(BitSet other) {
+    if (other == null) {
+      throw new IllegalArgumentException("other is null");
+    }
     vector.and(BitVector.not(other.vector));
   }
 

@@ -26,7 +26,14 @@ public class InstanceFieldKeyWithFilter extends InstanceFieldKey implements Filt
   private final IClass filter;
 
   public InstanceFieldKeyWithFilter(ClassHierarchy cha, InstanceKey instance, IField field) {
+
     super(instance, field);
+    if (field == null) {
+      throw new IllegalArgumentException("field is null");
+    }
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
     IClass fieldType = cha.lookupClass(field.getFieldTypeReference());
     if (fieldType == null) {
       // TODO: assertions.unreachable()

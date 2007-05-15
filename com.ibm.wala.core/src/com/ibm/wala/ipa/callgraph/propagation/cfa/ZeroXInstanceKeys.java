@@ -316,6 +316,9 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   }
 
   public static boolean isStringish(IClass C) {
+    if (C == null) {
+      throw new IllegalArgumentException("C is null");
+    }
     return C.getReference().equals(TypeReference.JavaLangString) || C.getReference().equals(JavaLangStringBuffer);
   }
 

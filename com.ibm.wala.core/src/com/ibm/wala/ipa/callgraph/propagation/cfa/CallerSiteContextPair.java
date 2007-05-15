@@ -62,6 +62,9 @@ public class CallerSiteContextPair extends CallerSiteContext {
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       CallerSiteContextPair other = (CallerSiteContextPair)obj;
       return getCaller().equals(other.getCaller())

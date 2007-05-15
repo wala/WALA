@@ -78,10 +78,14 @@ public class JUnitEntryPoints {
 
   /**
    * Construct JUnit entrypoints for the specified test method in a scope.
+   * @throws IllegalArgumentException  if cha is null
    */
   public static Iterable<Entrypoint> makeOne(ClassHierarchy cha, String targetPackageName, String targetSimpleClassName,
       String targetMethodName) {
 
+    if (cha == null) {
+          throw new IllegalArgumentException("cha is null");
+        }
     // assume test methods don't have parameters
     final Atom targetPackageAtom = Atom.findOrCreateAsciiAtom(targetPackageName);
     final Atom targetSimpleClassAtom = Atom.findOrCreateAsciiAtom(targetSimpleClassName);
@@ -134,8 +138,12 @@ public class JUnitEntryPoints {
   /**
    * Check if the given class is a JUnit test class. A JUnit test class is a
    * subclass of junit.framework.TestCase or junit.framework.TestSuite.
+   * @throws IllegalArgumentException  if klass is null
    */
   public static boolean isJUnitTestCase(IClass klass) throws ClassHierarchyException {
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
     final Atom junitPackage = Atom.findOrCreateAsciiAtom("junit/framework");
     final Atom junitClass = Atom.findOrCreateAsciiAtom("TestCase");
     final Atom junitSuite = Atom.findOrCreateAsciiAtom("TestSuite");

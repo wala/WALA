@@ -83,9 +83,13 @@ public class SSACFG implements ControlFlowGraph{
    * Constructor CFG.
    * 
    * @param cfg
+   * @throws IllegalArgumentException  if method is null
    */
   public SSACFG(IMethod method, AbstractCFG cfg, SSAInstruction[] instructions, WarningSet warnings) {
 
+    if (method == null) {
+      throw new IllegalArgumentException("method is null");
+    }
     this.warnings = warnings;
     this.cfg = cfg;
     if (DEBUG) {
@@ -971,6 +975,9 @@ public class SSACFG implements ControlFlowGraph{
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getExceptionalSuccessors(final IBasicBlock b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     final IBasicBlock n = (IBasicBlock) cfg.getNode(b.getNumber());
     final Iterator i = cfg.getExceptionalSuccessors(n).iterator();
     final Collection<IBasicBlock> c = new HashSet<IBasicBlock>(getSuccNodeCount(b));
@@ -1001,8 +1008,12 @@ public class SSACFG implements ControlFlowGraph{
 
   /**
    * has exceptional edge src -> dest
+   * @throws IllegalArgumentException  if dest is null
    */
   public boolean hasExceptionalEdge(IBasicBlock src, IBasicBlock dest) {
+    if (dest == null) {
+      throw new IllegalArgumentException("dest is null");
+    }
     if (dest.isExitBlock()) {
       int srcNum = getNumber(src);
       return cfg.getExceptionalToExit().get(srcNum);
@@ -1012,8 +1023,12 @@ public class SSACFG implements ControlFlowGraph{
 
   /**
    * has normal edge src -> dest
+   * @throws IllegalArgumentException  if dest is null
    */
   public boolean hasNormalEdge(IBasicBlock src, IBasicBlock dest) {
+    if (dest == null) {
+      throw new IllegalArgumentException("dest is null");
+    }
     if (dest.isExitBlock()) {
       int srcNum = getNumber(src);
       return cfg.getNormalToExit().get(srcNum);
@@ -1027,6 +1042,9 @@ public class SSACFG implements ControlFlowGraph{
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getNormalSuccessors(IBasicBlock b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     IBasicBlock n = (IBasicBlock) cfg.getNode(b.getNumber());
     final Iterator i = cfg.getNormalSuccessors(n).iterator();
     Collection<IBasicBlock> c = new ArrayList<IBasicBlock>(getSuccNodeCount(b));

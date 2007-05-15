@@ -61,6 +61,9 @@ public class CallerContextPair extends CallerContext {
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       CallerContextPair other = (CallerContextPair)obj;
       return getCaller().equals(other.getCaller()) && baseContext.equals(other.baseContext);

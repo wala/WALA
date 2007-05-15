@@ -32,7 +32,11 @@ public class OneCFABuilder extends CFABuilder {
 
   public OneCFABuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
+
     super(cha, warnings, options);
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
 
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha, warnings));
 

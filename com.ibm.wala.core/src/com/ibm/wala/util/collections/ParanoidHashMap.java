@@ -31,8 +31,9 @@ public class ParanoidHashMap<K,V> extends HashMap<K,V> {
 
   /**
    * @param t
+   * @throws NullPointerException  if t is null
    */
-  public ParanoidHashMap(Map<K,V> t) {
+  public ParanoidHashMap(Map<K,V> t) throws NullPointerException {
     super(t.size());
     putAll(t);
   }

@@ -25,6 +25,9 @@ import com.ibm.wala.util.debug.Assertions;
 public class Util {
 
   public static SSAInstruction getLastInstruction(ControlFlowGraph G, IBasicBlock b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -40,6 +43,9 @@ public class Util {
   }
 
   public static IBasicBlock getFallThruBlock(ControlFlowGraph G, IBasicBlock b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -51,6 +57,9 @@ public class Util {
   }
 
   public static IBasicBlock getTrueSuccessor(ControlFlowGraph G, IBasicBlock b) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     IBasicBlock fs = getFalseSuccessor(G, b);
     for (Iterator ss = G.getSuccNodes(b); ss.hasNext();) {
       IBasicBlock s = (IBasicBlock) ss.next();
@@ -74,6 +83,9 @@ public class Util {
   }
 
   public static boolean isSwitchDefault(ControlFlowGraph G, IBasicBlock b, IBasicBlock s) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     Assertions._assert(endsWithSwitch(G, b));
     SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
     return G.getBlockForInstruction(sw.getDefault()).equals(s);
@@ -139,6 +151,9 @@ public class Util {
    *      com.ibm.wala.cfg.IBasicBlock)
    */
   public static int whichPred(ControlFlowGraph cfg, IBasicBlock a, IBasicBlock b) {
+    if (cfg == null) {
+      throw new IllegalArgumentException("cfg is null");
+    }
     int i = 0;
     for (Iterator it = cfg.getPredNodes(b); it.hasNext();) {
       if (it.next().equals(a)) {

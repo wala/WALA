@@ -115,8 +115,12 @@ public class Exceptions implements Constants {
    *         declared target might throw.
    * @throws InvalidClassFileException 
    * @throws IllegalArgumentException  if target is null
+   * @throws IllegalArgumentException  if cha is null
    */
   public static Collection<TypeReference> inferInvokeExceptions(MethodReference target, ClassHierarchy cha, WarningSet warnings) throws InvalidClassFileException {
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
     if (target == null) {
       throw new IllegalArgumentException("target is null");
     }
@@ -186,8 +190,12 @@ public class Exceptions implements Constants {
    * </ul>
    * 
    * TODO: move this elsewhere.
+   * @throws IllegalArgumentException  if pei is null
    */
   public static Collection<TypeReference> getIndependentExceptionTypes(Instruction pei) {
+    if (pei == null) {
+      throw new IllegalArgumentException("pei is null");
+    }
     switch (pei.getOpcode()) {
     case OP_iaload:
     case OP_laload:
@@ -248,8 +256,12 @@ public class Exceptions implements Constants {
   /**
    * TODO: move this elsewhere. Move it into shrike and develop new way to track
    * peis.
+   * @throws IllegalArgumentException  if s is null
    */
   public static boolean isPEI(Instruction s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     switch (s.getOpcode()) {
     case OP_iaload:
     case OP_laload:

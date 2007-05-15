@@ -120,6 +120,9 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
    * 
    */
   public int getPredNodeCount(ExplodedSupergraphNode<T> node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     T dest = node.getSupergraphNode();
     int count = 0;
     for (Iterator<? extends T> it = supergraph.getPredNodes(dest); it.hasNext();) {
@@ -148,6 +151,9 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
    * 
    */
   public Iterator<ExplodedSupergraphNode<T>> getSuccNodes(ExplodedSupergraphNode<T>  node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     T src = node.getSupergraphNode();
     HashSet<ExplodedSupergraphNode<T>> result = HashSetFactory.make(supergraph.getSuccNodeCount(src));
     for (Iterator<? extends T> it = supergraph.getSuccNodes(src); it.hasNext();) {
@@ -207,6 +213,9 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
    * 
    */
   public int getSuccNodeCount(ExplodedSupergraphNode<T> node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     T src = node.getSupergraphNode();
     int count = 0;
     for (Iterator<? extends T> it = supergraph.getSuccNodes(src); it.hasNext();) {

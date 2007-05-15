@@ -118,8 +118,16 @@ public class Util {
 
   /**
    * Is g1 a subset of g2? Not terribly efficient
+   * @throws IllegalArgumentException  if g1 is null
+   * @throws IllegalArgumentException  if g2 is null
    */
   public static <T> boolean isSubset(Graph<T> g1, Graph<T> g2) {
+    if (g2 == null) {
+      throw new IllegalArgumentException("g2 is null");
+    }
+    if (g1 == null) {
+      throw new IllegalArgumentException("g1 is null");
+    }
     if (g1.getNumberOfNodes() > g2.getNumberOfNodes()) {
       return false;
     }
@@ -223,6 +231,9 @@ public class Util {
   }
 
   public static Iterable<Entrypoint> makeMainEntrypoints(ClassLoaderReference clr, ClassHierarchy cha) {
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
     final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
     final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
     for (IClass klass : cha) {
@@ -479,9 +490,13 @@ public class Util {
    * @param supG
    * @param subG
    * @throws IllegalArgumentException  if subG is null
+   * @throws IllegalArgumentException  if supG is null
    */
   public static <T> void checkGraphSubset(Graph<T> supG, Graph<T> subG) {
 
+    if (supG == null) {
+      throw new IllegalArgumentException("supG is null");
+    }
     if (subG == null) {
       throw new IllegalArgumentException("subG is null");
     }

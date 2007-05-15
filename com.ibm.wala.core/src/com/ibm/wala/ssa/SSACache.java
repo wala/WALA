@@ -62,9 +62,13 @@ public class SSACache {
    *          an option to track analysis warnings
    * @return an IR for m, built according to the specified options. null if m is
    *         abstract or native.
+   * @throws IllegalArgumentException  if m is null
    */
   public synchronized IR findOrCreateIR(final IMethod m, final Context C, final ClassHierarchy cha, final SSAOptions options, final WarningSet warnings) {
 
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     if (m.isAbstract() || m.isNative()) {
       return null;
     }

@@ -71,6 +71,9 @@ public class JavaTypeContext implements Context {
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       JavaTypeContext other = (JavaTypeContext) obj;
       return type.equals(other.type);

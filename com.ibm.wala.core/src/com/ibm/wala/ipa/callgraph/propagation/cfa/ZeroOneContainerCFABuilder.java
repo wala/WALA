@@ -42,10 +42,15 @@ public class ZeroOneContainerCFABuilder extends CFABuilder {
    *          application-specific logic to interpret a method in context
    * @param reflect
    *          reflection specification
+   * @throws IllegalArgumentException  if options is null
    */
   public ZeroOneContainerCFABuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
+
     super(cha, warnings, options);
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
 
     ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);

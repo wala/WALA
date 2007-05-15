@@ -58,9 +58,13 @@ public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIter
    *
    * @param G the graph whose nodes to enumerate
    * @param nodes the set of nodes from which to start searching
+   * @throws IllegalArgumentException  if G is null
    */
   @SuppressWarnings("unchecked")
   public NumberedDFSDiscoverTimeIterator(NumberedGraph<T> G, Iterator<? extends T> nodes) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     this.G = G;
     pendingChildren = new Iterator[G.getMaxNumber() + 1];
     init(G,nodes);
@@ -69,8 +73,9 @@ public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIter
   /**
    * Constructor DFSFinishTimeIterator.
    * @param G
+   * @throws NullPointerException  if G is null
    */
-  public NumberedDFSDiscoverTimeIterator(NumberedGraph<T> G) {
+  public NumberedDFSDiscoverTimeIterator(NumberedGraph<T> G) throws NullPointerException {
     this(G, G.iterator());
   }
 

@@ -88,9 +88,13 @@ public class EUtil {
    * @param xmlFile
    *          an xml file
    * @return List<EObject> serialized in said file.
+   * @throws IllegalArgumentException  if loader is null
    */
   public static List<EObject> readEObjects(String xmlFile, ClassLoader loader) throws WalaException {
 
+    if (loader == null) {
+      throw new IllegalArgumentException("loader is null");
+    }
     URL url = loader.getResource(xmlFile);
     URI fileURI = null;
     if (url != null) {
@@ -137,8 +141,12 @@ public class EUtil {
    *          set of EObjects
    * @param fileName
    * @throws WalaException
+   * @throws IllegalArgumentException  if set is null
    */
   public static void saveToFile(Collection<EObject> set, String fileName) throws WalaException {
+    if (set == null) {
+      throw new IllegalArgumentException("set is null");
+    }
     // save the xmi file
     ResourceSet resSet = new ResourceSetImpl();
     Resource r = resSet.createResource(URI.createFileURI(fileName));
@@ -246,12 +254,16 @@ public class EUtil {
    * @return a resolved instance of the EPackage for the class
    * @throws WalaException
    *           if the resolution fails for some reason
+   * @throws IllegalArgumentException  if klass is null
    */
   public static EPackage resolveEPackage(EClass klass) throws WalaException, IllegalArgumentException {
     // the data in the EComponent instance may not be fully resolved due to
     // weirdness in how ecore.xmi reads xmi files. We have to first consult
     // the registry to get the desired ePackage instance for klass.
     
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
     if (klass.getEPackage() == null) {
       throw new IllegalArgumentException("klass with no EPackage " + klass);
     }
@@ -275,8 +287,12 @@ public class EUtil {
    * @return a resolved instance of the EPackage for the class
    * @throws WalaException
    *           if the resolution fails for some reason
+   * @throws IllegalArgumentException  if p is null
    */
   public static EPackage resolveEPackage(EPackage p) throws WalaException {
+    if (p == null) {
+      throw new IllegalArgumentException("p is null");
+    }
     // the data in the EComponent instance may not be fully resolved due to
     // weirdness in how ecore.xmi reads xmi files. We have to first consult
     // the registry to get the desired ePackage instance for klass.
@@ -300,8 +316,12 @@ public class EUtil {
    * @return a resolved (not proxy) version of the EClass
    * @throws WalaException
    *           if the resolution fails for some reason
+   * @throws IllegalArgumentException  if klass1 is null
    */
   public static EClass resolveEClass(EClass klass1) throws WalaException {
+    if (klass1 == null) {
+      throw new IllegalArgumentException("klass1 is null");
+    }
     // check that we can resolve the klass metadata
     if (klass1.getEPackage() == null) {
       throw new WalaException("ill-formed EClass " + klass1);
@@ -327,8 +347,12 @@ public class EUtil {
    * @param R
    * @param key
    * @return the subset r \in R s.t. r.X.equals(key)
+   * @throws IllegalArgumentException  if R is null
    */
   public static ERelation pruneRelationForKey(ERelation R, EObject key) {
+    if (R == null) {
+      throw new IllegalArgumentException("R is null");
+    }
     Map m = createMap(R);
     Set s = (Set) m.get(key);
     m = new HashMap(1);
@@ -344,8 +368,12 @@ public class EUtil {
    * @param R
    * @param f
    * @return the subset r \in R s.t. r.X.equals(some y s.t. f.accepts(y))
+   * @throws IllegalArgumentException  if R is null
    */
   public static ERelation pruneRelationForKey(ERelation R, Filter f) {
+    if (R == null) {
+      throw new IllegalArgumentException("R is null");
+    }
     Map m = createMap(R);
     Map newM = new HashMap();
     for (FilterIterator it = new FilterIterator(m.keySet().iterator(),f); it.hasNext(); ) {

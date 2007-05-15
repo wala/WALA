@@ -105,6 +105,9 @@ public class ConstantValue implements Value {
 
   @Override
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (obj.getClass().equals(getClass())) {
       ConstantValue other = (ConstantValue)obj;
       if (constant == null) {

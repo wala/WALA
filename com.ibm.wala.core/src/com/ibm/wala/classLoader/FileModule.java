@@ -68,6 +68,9 @@ public abstract class FileModule implements Module, ModuleEntry {
    * @see com.ibm.wala.classLoader.FileModule#equals(java.lang.Object)
    */
   public boolean equals(Object o) {
+    if (o == null) {
+      return false;
+    }
     if (o.getClass().equals(getClass())) {
       FileModule other = (FileModule) o;
       return getName().equals(other.getName());

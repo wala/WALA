@@ -34,6 +34,9 @@ public class PiStatement extends Statement {
 
   @Override
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       PiStatement other = (PiStatement) obj;
       return getNode().equals(other.getNode()) && pi.equals(other.pi);

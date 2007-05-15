@@ -138,8 +138,12 @@ public final class TypeName {
    * @param s
    *          a String like Ljava/lang/Object
    * @return the corresponding TypeName
+   * @throws IllegalArgumentException  if s is null
    */
   public static TypeName string2TypeName(String s) throws IllegalArgumentException {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     byte[] val = s.getBytes();
 
     return findOrCreate(new ImmutableByteArray(val));

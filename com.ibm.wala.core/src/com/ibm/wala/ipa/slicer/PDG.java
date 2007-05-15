@@ -101,11 +101,16 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * @param ref
    *          the set of heap locations which may be read (transitively) by this
    *          node. These are logically parameters in the SDG.
+   * @throws IllegalArgumentException  if node is null
    */
   public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
       HeapExclusions exclusions) {
+
     super();
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     this.node = node;
     this.h = pa == null ? null : new DelegatingExtendedHeapModel(pa.getHeapModel());
     this.pa = pa;
@@ -873,6 +878,9 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
   @Override
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       return node.equals(((PDG) obj).node);
     } else {

@@ -50,9 +50,18 @@ public class SSANewInstruction extends SSAInstruction {
 
   /**
    * Create a new instruction to allocate an array.
+   * @throws IllegalArgumentException  if site is null
+   * @throws IllegalArgumentException  if params is null
    */
   public SSANewInstruction(int result, NewSiteReference site, int[] params) {
+
     super();
+    if (params == null) {
+      throw new IllegalArgumentException("params is null");
+    }
+    if (site == null) {
+      throw new IllegalArgumentException("site is null");
+    }
     if (Assertions.verifyAssertions) {
       Assertions._assert(site.getDeclaredType().isArrayType());
     }

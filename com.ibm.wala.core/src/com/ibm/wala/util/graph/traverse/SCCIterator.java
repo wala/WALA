@@ -40,9 +40,10 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
    * 
    * @param G
    *          The graph over which to construct SCCs
+   * @throws NullPointerException  if G is null
    */
   @SuppressWarnings("unchecked")
-  public SCCIterator(Graph<T> G) {
+  public SCCIterator(Graph<T> G) throws NullPointerException {
     this(G, (Iterator<T>) G.iterator());
   }
 

@@ -46,6 +46,9 @@ public class DotUtil {
    * 
    */
   public static void spawnDot(String dotExe, String psFile, File dotFile) throws WalaException {
+    if (dotFile == null) {
+      throw new IllegalArgumentException("dotFile is null");
+    }
     String[] cmdarray = { dotExe, "-Tps", "-o", psFile, "-v", dotFile.getAbsolutePath() };
     System.out.println("spawning process " + Arrays.toString(cmdarray));
     try {

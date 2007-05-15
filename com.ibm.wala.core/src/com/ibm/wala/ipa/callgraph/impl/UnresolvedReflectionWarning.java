@@ -16,7 +16,7 @@ import com.ibm.wala.util.warnings.MethodWarning;
 
 public class UnresolvedReflectionWarning extends MethodWarning {
 
-  public UnresolvedReflectionWarning(CGNode node) {
+  public UnresolvedReflectionWarning(CGNode node) throws NullPointerException {
     super(SEVERE,node.getMethod().getReference());
     
   }

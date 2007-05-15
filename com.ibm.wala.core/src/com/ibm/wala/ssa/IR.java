@@ -487,8 +487,12 @@ public abstract class IR {
   /**
    * @param site
    * @return the instruction indices corresponding to this call site
+   * @throws IllegalArgumentException  if site is null
    */
   public IntSet getCallInstructionIndices(CallSiteReference site) {
+    if (site == null) {
+      throw new IllegalArgumentException("site is null");
+    }
     return callSiteMapping.getRelated(site.getProgramCounter());
   }
 
@@ -559,8 +563,12 @@ public abstract class IR {
    * @param site
    *          a call site in this method
    * @return the basic block corresponding to this instruction
+   * @throws IllegalArgumentException  if site is null
    */
   public IBasicBlock[] getBasicBlocksForCall(final CallSiteReference site) {
+    if (site == null) {
+      throw new IllegalArgumentException("site is null");
+    }
     final IntSet s = callSiteMapping.getRelated(site.getProgramCounter());
     final IBasicBlock[] result = new IBasicBlock[s.size()];
     int index = 0;

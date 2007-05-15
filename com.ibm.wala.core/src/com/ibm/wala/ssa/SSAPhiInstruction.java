@@ -26,7 +26,11 @@ public class SSAPhiInstruction extends SSAInstruction {
   private int[] params;
 
   public SSAPhiInstruction(int result, int[] params) throws IllegalArgumentException {
+
     super();
+    if (params == null) {
+      throw new IllegalArgumentException("params is null");
+    }
     this.result = result;
     this.params = params;
     if (params.length == 0) {

@@ -452,8 +452,12 @@ public class ExplodedSupergraphPath<T> {
   /**
    * Create a brief(er) summary of a path, which includes only call and return
    * nodes
+   * @throws IllegalArgumentException  if path is null
    */
   public static <T> void pruneForCallReturn(ISupergraph<T,?> supergraph, ExplodedSupergraphPath<T> path) {
+    if (path == null) {
+      throw new IllegalArgumentException("path is null");
+    }
     pruneListForCallReturn(supergraph, path.outermostList);
     for (Iterator<List<ExplodedSupergraphNode<T>>> it = path.edge2SLVP.values().iterator(); it.hasNext();) {
       List<ExplodedSupergraphNode<T>> l = it.next();

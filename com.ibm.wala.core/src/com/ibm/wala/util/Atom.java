@@ -114,10 +114,16 @@ public final class Atom {
   }
 
   public static synchronized Atom findOrCreate(ImmutableByteArray b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     return findOrCreate(b.b);
   }
 
   public static synchronized Atom findOrCreate(ImmutableByteArray b, int start, int length) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     return findOrCreate(b.b, start, length);
   }
 
@@ -371,6 +377,9 @@ public final class Atom {
   }
 
   public static boolean isArrayDescriptor(ImmutableByteArray b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     if (b.length() == 0) {
       return false;
     }

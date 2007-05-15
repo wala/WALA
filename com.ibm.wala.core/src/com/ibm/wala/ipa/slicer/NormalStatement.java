@@ -43,6 +43,9 @@ public class NormalStatement extends Statement {
 
   @Override
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       NormalStatement other = (NormalStatement) obj;
       return getNode().equals(other.getNode()) && instructionIndex == other.instructionIndex;

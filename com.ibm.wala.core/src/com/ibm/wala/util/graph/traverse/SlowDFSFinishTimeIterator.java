@@ -61,10 +61,9 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
   }
 
   /**
-   * Constructor DFSFinishTimeIterator.
-   * @param G
+   * @throws NullPointerException  if G is null
    */
-  public SlowDFSFinishTimeIterator(Graph<T> G) {
+  public SlowDFSFinishTimeIterator(Graph<T> G) throws NullPointerException {
     this(G, G.iterator());
   }
 
@@ -72,11 +71,7 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
   Iterator<? extends T> getPendingChildren(Object n) {
     return pendingChildren.get(n);
   }
-  /**
-   * Method setPendingChildren.
-   * @param v
-   * @param iterator
-   */
+  
   void setPendingChildren(T v, Iterator<? extends T> iterator) {
     pendingChildren.put(v, iterator);
   }

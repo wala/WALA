@@ -28,6 +28,9 @@ public final class ImmutableByteArray {
   }
 
   public ImmutableByteArray(byte[] b, int start, int length) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     this.b = new byte[length];
     if (Assertions.verifyAssertions) {
       Assertions._assert(b.length >= start + length, "illegal");

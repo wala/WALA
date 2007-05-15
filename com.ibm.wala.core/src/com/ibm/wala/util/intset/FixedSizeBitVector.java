@@ -165,8 +165,12 @@ public final class FixedSizeBitVector
   /**
    * Logically XORs this bit set with the specified set of bits.
    * @param set the bit set to be XORed with
+   * @throws IllegalArgumentException  if set is null
    */
   public void xor(FixedSizeBitVector set) {
+    if (set == null) {
+      throw new IllegalArgumentException("set is null");
+    }
     int setLength = set.bits.length;
     for (int i = setLength; i-- > 0;) {
       bits[i] ^= set.bits[i];

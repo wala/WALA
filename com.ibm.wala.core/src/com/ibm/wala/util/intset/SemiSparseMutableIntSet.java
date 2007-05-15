@@ -363,8 +363,12 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * @return true iff <code>this</code> has the same value as
    *         <code>that</code>.
+   * @throws IllegalArgumentException  if that is null
    */
   public boolean sameValue(IntSet that) {
+    if (that == null) {
+      throw new IllegalArgumentException("that is null");
+    }
     if (size() != that.size()) {
       return false;
     }

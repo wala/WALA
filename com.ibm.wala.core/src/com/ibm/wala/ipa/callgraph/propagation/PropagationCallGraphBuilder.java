@@ -255,6 +255,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#makeCallGraph(com.ibm.wala.ipa.callgraph.AnalysisOptions)
    */
   public CallGraph makeCallGraph(AnalysisOptions options) {
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
     system = makeSystem(options);
 
     if (DEBUG_GENERAL) {
@@ -423,8 +426,16 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @return the PointerKey that acts as a representation for the class of
    *         pointers that includes the given instance field. null if there's
    *         some problem.
+   * @throws IllegalArgumentException  if I is null
+   * @throws IllegalArgumentException  if field is null
    */
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
+    if (field == null) {
+      throw new IllegalArgumentException("field is null");
+    }
+    if (I == null) {
+      throw new IllegalArgumentException("I is null");
+    }
     IClass t = field.getDeclaringClass();
     IClass C = I.getConcreteType();
     if (!(C instanceof SyntheticClass)) {

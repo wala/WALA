@@ -27,8 +27,9 @@ public class ResolutionFailure extends MethodWarning {
   /**
    * @param node
    * @param ref
+   * @throws NullPointerException  if node is null
    */
-  public ResolutionFailure(CGNode node, Object ref, String message) {
+  public ResolutionFailure(CGNode node, Object ref, String message) throws NullPointerException {
     super(Warning.SEVERE, node.getMethod().getReference());
     this.message = message;
     this.ref = ref;
@@ -67,6 +68,9 @@ public class ResolutionFailure extends MethodWarning {
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       ResolutionFailure other = (ResolutionFailure)obj;
       return (getMethod().equals(other.getMethod()) && getLevel()==other.getLevel() && ref.equals(other.ref));

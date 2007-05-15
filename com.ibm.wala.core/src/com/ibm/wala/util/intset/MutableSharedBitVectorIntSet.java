@@ -941,6 +941,12 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   public static boolean sameSharedPart(MutableSharedBitVectorIntSet a, MutableSharedBitVectorIntSet b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
+    if (a == null) {
+      throw new IllegalArgumentException("a is null");
+    }
     return a.sharedPart == b.sharedPart;
   }
 

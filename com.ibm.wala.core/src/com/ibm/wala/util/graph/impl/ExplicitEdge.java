@@ -32,6 +32,9 @@ public class ExplicitEdge {
     return src.hashCode() * 947 + dest.hashCode();
   }
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       ExplicitEdge other = (ExplicitEdge)obj;
       return src.equals(other.src) && dest.equals(other.dest);

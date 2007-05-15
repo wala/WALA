@@ -34,6 +34,9 @@ public class GetCaughtExceptionStatement extends Statement {
   
   @Override
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       GetCaughtExceptionStatement other = (GetCaughtExceptionStatement) obj;
       return getNode().equals(other.getNode()) && st.equals(other.st);

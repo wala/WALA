@@ -104,8 +104,12 @@ public class EMFBridge {
    * @param m
    *          method reference
    * @return corresponding EMF method
+   * @throws IllegalArgumentException  if m is null
    */
   public static EJavaMethod makeJavaMethod(MethodReference m) {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     try {
       EJavaMethod result = JavaFactory.eINSTANCE.createEJavaMethod();
       EJavaClass klass = makeJavaClass(m.getDeclaringClass());
@@ -121,6 +125,9 @@ public class EMFBridge {
   }
 
   public static EJavaClass makeJavaClass(TypeReference t) {
+    if (t == null) {
+      throw new IllegalArgumentException("t is null");
+    }
     EJavaClass klass = JavaFactory.eINSTANCE.createEJavaClass();
     String className = t.getName().toUnicodeString();
     // strip a leading "L"
@@ -218,8 +225,12 @@ public class EMFBridge {
    * @param cha
    *          a WALA class hierarchy
    * @return a EMF type hierarchy
+   * @throws IllegalArgumentException  if cha is null
    */
   public static ETypeHierarchyWrapper makeTypeHierarchy(ClassHierarchy cha) {
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
     com.ibm.wala.emf.wrappers.EClassHierarchyWrapper c = makeClassHierarchy(cha);
     com.ibm.wala.emf.wrappers.EInterfaceHierarchyWrapper i = makeInterfaceHierarchy(cha);
     ETypeHierarchyWrapper result = new ETypeHierarchyWrapper(c, i);

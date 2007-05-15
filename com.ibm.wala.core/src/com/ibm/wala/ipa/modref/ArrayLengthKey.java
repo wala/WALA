@@ -27,6 +27,9 @@ public class ArrayLengthKey extends AbstractFieldPointerKey {
 
   @Override
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       ArrayLengthKey other = (ArrayLengthKey)obj;
       return getInstanceKey().equals(other.getInstanceKey());

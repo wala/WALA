@@ -190,8 +190,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param type
    * @return the instance key that represents the exception of type _type_
    *         thrown by a particular PEI.
+   * @throws IllegalArgumentException  if ikFactory is null
    */
   public static InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter x, TypeReference type, InstanceKeyFactory ikFactory) {
+    if (ikFactory == null) {
+      throw new IllegalArgumentException("ikFactory is null");
+    }
     return ikFactory.getInstanceKeyForPEI(node, x, type);
   }
 
@@ -507,8 +511,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /**
    * @return a List of Instructions that may transfer control to bb via an
    *         exceptional edge
+   * @throws IllegalArgumentException  if ir is null
    */
   public static List<ProgramCounter> getIncomingPEIs(IR ir, IBasicBlock bb) {
+    if (ir == null) {
+      throw new IllegalArgumentException("ir is null");
+    }
     if (DEBUG) {
       Trace.println("getIncomingPEIs " + bb);
     }
@@ -1685,6 +1693,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   public boolean hasNoInterestingUses(int vn, DefUse du) {
 
+    if (du == null) {
+      throw new IllegalArgumentException("du is null");
+    }
     // todo: enhance this by solving a dead-code elimination
     // problem.
     InterestingVisitor v = makeInterestingVisitor(vn);

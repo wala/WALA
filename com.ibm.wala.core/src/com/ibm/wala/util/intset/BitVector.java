@@ -234,8 +234,12 @@ public class BitVector extends BitVectorBase<BitVector> {
    * 
    * @param set
    *          the bit set to be XORed with
+   * @throws IllegalArgumentException  if set is null
    */
   public final void xor(BitVector set) {
+    if (set == null) {
+      throw new IllegalArgumentException("set is null");
+    }
     ensureCapacity(set);
     int n = Math.min(bits.length, set.bits.length);
     for (int i = n - 1; i >= 0;) {

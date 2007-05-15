@@ -279,8 +279,12 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    *          the variable set by this equation
    * @param operator
    *          the step operator
+   * @throws IllegalArgumentException  if lhs is null
    */
   public void newStatement(final IVariable lhs, final NullaryOperator operator, final boolean toWorkList, final boolean eager) {
+    if (lhs == null) {
+      throw new IllegalArgumentException("lhs is null");
+    }
     // add to the list of graph
     lhs.setOrderNumber(nextOrderNumber++);
     final NullaryStatement s = new BasicNullaryStatement(lhs, operator);
@@ -331,8 +335,12 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    * @param rhs
    *          first operand on the rhs
    * @return true iff the system changes
+   * @throws IllegalArgumentException  if operator is null
    */
   public boolean newStatement(IVariable lhs, UnaryOperator operator, IVariable rhs, boolean toWorkList, boolean eager) {
+    if (operator == null) {
+      throw new IllegalArgumentException("operator is null");
+    }
     // add to the list of graph
     UnaryStatement s = operator.makeEquation(lhs, rhs);
     if (getFixedPointSystem().containsStatement(s)) {

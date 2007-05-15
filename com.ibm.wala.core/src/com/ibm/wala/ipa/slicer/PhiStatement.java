@@ -34,6 +34,9 @@ public class PhiStatement extends Statement {
   
   @Override
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       PhiStatement other = (PhiStatement) obj;
       return getNode().equals(other.getNode()) && phi.equals(other.phi);

@@ -158,6 +158,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   public int getNumberOfNormalIn(IBasicBlock N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N is null");
+    }
     if (Assertions.verifyAssertions) {
       Assertions._assert(!N.equals(exit()));
     }
@@ -172,6 +175,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   public int getNumberOfExceptionalIn(IBasicBlock N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N is null");
+    }
     if (Assertions.verifyAssertions) {
       Assertions._assert(!N.equals(exit()));
     }
@@ -217,11 +223,14 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return getNumberOfNormalOut(getNumber(N));
   }
 
-  public int getNumberOfExceptionalOut(IBasicBlock N) {
+  public int getNumberOfExceptionalOut(final IBasicBlock N) {
     return getNumberOfExceptionalOut(getNumber(N));
   }
 
   public Iterator<IBasicBlock> getPredNodes(IBasicBlock N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N is null");
+    }
     if (N.equals(exit())) {
       return new FilterIterator<IBasicBlock>(iterator(), new Filter() {
         public boolean accepts(Object o) {
@@ -261,6 +270,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   public int getSuccNodeCount(IBasicBlock N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N is null");
+    }
     if (N.equals(exit())) {
       return 0;
     }
@@ -419,6 +431,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    * 
    */
   public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {
+    if (dst == null) {
+      throw new IllegalArgumentException("dst is null");
+    }
     int x = getNumber(src);
     if (dst.equals(exit())) {
       return normalToExit.get(x) || exceptionalToExit.get(x);
@@ -429,6 +444,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   public boolean hasExceptionalEdge(IBasicBlock src, IBasicBlock dst) {
+    if (dst == null) {
+      throw new IllegalArgumentException("dst is null");
+    }
     int x = getNumber(src);
     if (dst.equals(exit())) {
       return exceptionalToExit.get(x);
@@ -437,6 +455,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   public boolean hasNormalEdge(IBasicBlock src, IBasicBlock dst) {
+    if (dst == null) {
+      throw new IllegalArgumentException("dst is null");
+    }
     int x = getNumber(src);
     if (dst.equals(exit())) {
       return normalToExit.get(x);
@@ -571,6 +592,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getExceptionalSuccessors(IBasicBlock b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     return new Iterator2Collection<IBasicBlock>(iterateExceptionalSuccessors(b.getNumber()));
   }
 

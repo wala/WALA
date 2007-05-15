@@ -337,9 +337,13 @@ public class ClassLoaderImpl implements IClassLoader {
    * Initialize internal data structures
    * 
    * @throws IOException
+   * @throws IllegalArgumentException  if modules is null
    */
   public void init(Set modules) throws IOException {
 
+    if (modules == null) {
+      throw new IllegalArgumentException("modules is null");
+    }
     // use tree set to keep things sorted ... for deterministic class loading
     TreeSet<Module> archives = new TreeSet<Module>(ToStringComparator.instance());
     for (Iterator i = modules.iterator(); i.hasNext();) {
@@ -484,6 +488,9 @@ public class ClassLoaderImpl implements IClassLoader {
    * @see com.ibm.wala.classLoader.IClassLoader#removeAll(java.util.Collection)
    */
   public void removeAll(Collection<IClass> toRemove) {
+    if (toRemove == null) {
+      throw new IllegalArgumentException("toRemove is null");
+    }
     for (Iterator<IClass> it = toRemove.iterator(); it.hasNext();) {
       IClass klass = it.next();
       loadedClasses.remove(klass.getName());

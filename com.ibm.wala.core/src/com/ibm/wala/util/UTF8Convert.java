@@ -60,8 +60,12 @@ public abstract class UTF8Convert {
    * @param utf8 (pseudo-)utf8 byte array
    * @throws UTFDataFormatException if the (pseudo-)utf8 byte array is not valid (pseudo-)utf8
    * @returns unicode string
+   * @throws IllegalArgumentException  if utf8 is null
    */
   public static String fromUTF8(byte[] utf8) throws UTFDataFormatException {
+    if (utf8 == null) {
+      throw new IllegalArgumentException("utf8 is null");
+    }
     char[] result = new char[utf8.length];
     int result_index = 0;
     for (int i = 0, n = utf8.length; i < n;) {
@@ -117,8 +121,12 @@ public abstract class UTF8Convert {
    *
    * @param s String to convert
    * @returns array containing sequence of (pseudo-)utf8 formatted bytes
+   * @throws IllegalArgumentException  if s is null
    */
   public static byte[] toUTF8(String s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     byte[] result = new byte[utfLength(s)];
     int result_index = 0;
     for (int i = 0, n = s.length(); i < n; ++i) {
@@ -141,8 +149,12 @@ public abstract class UTF8Convert {
 
   /**
    * Returns the length of a string's UTF encoded form.
+   * @throws IllegalArgumentException  if s is null
    */
   public static int utfLength(String s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     int utflen = 0;
     for (int i = 0, n = s.length(); i < n; ++i) {
       int c = s.charAt(i);

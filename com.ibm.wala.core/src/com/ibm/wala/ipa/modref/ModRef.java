@@ -330,6 +330,9 @@ public class ModRef {
 
   public static Collection<PointerKey> getRef(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s,
       HeapExclusions hexcl) {
+    if (s == null) {
+          throw new IllegalArgumentException("s is null");
+        }
     Collection<PointerKey> result = HashSetFactory.make(2);
     RefVisitor v = new RefVisitor(n, result, pa, h);
     s.visit(v);

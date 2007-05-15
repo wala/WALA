@@ -29,8 +29,12 @@ public class NumberedNodeIterator<T> implements Iterator<T> {
   /**
    * @param s
    * @param nodeManager
+   * @throws IllegalArgumentException  if s is null
    */
   public NumberedNodeIterator(IntSet s, NumberedNodeManager<T> nodeManager) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     this.numbers = s.intIterator();
     this.nodeManager = nodeManager;
   }

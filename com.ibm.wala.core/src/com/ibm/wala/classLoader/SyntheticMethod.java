@@ -185,6 +185,9 @@ public class SyntheticMethod implements IMethod {
    * @see java.lang.Object#equals(Object)
    */
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (getClass().equals(obj.getClass())) {
       SyntheticMethod other = (SyntheticMethod) obj;
       return (method.equals(other.method));
