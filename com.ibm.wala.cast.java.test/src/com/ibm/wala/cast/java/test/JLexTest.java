@@ -13,7 +13,7 @@ package com.ibm.wala.cast.java.test;
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 
@@ -25,7 +25,7 @@ public class JLexTest extends IRTests {
 
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
     return new JavaSourceAnalysisEngine() {
-      protected Entrypoints makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+      protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
         return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE_REF, cha, new String[] { "LJLex/Main" });
       }
     };
