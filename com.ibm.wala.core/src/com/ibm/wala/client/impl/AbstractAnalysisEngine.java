@@ -23,9 +23,15 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.AnalysisEngine;
 import com.ibm.wala.client.CallGraphBuilderFactory;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.impl.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraph;
+import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -46,7 +52,7 @@ import com.ibm.wala.util.warnings.WarningSet;
 public abstract class AbstractAnalysisEngine implements AnalysisEngine {
 
   public interface EntrypointBuilder {
-    Entrypoints createEntrypoints(AnalysisScope scope, ClassHierarchy cha);
+    Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, ClassHierarchy cha);
   }
 
   public final static String BASIC_FILE = "SyntheticJ2SEModel.xml";
@@ -133,7 +139,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   private HeapGraph heapGraph;
 
   private EntrypointBuilder entrypointBuilder = new EntrypointBuilder() {
-    public Entrypoints createEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+    public Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
       return makeDefaultEntrypoints(scope, cha);
     }
   };
@@ -357,11 +363,11 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     this.exclusionsFile = exclusionsFile;
   }
 
-  public AnalysisOptions getDefaultOptions(Entrypoints entrypoints) {
+  public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> entrypoints) {
     return new AnalysisOptions(getScope(), entrypoints);
   }
 
-  protected Entrypoints makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
     return Util.makeMainEntrypoints(scope, cha);
   }
 
@@ -377,7 +383,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     buildAnalysisScope();
     ClassHierarchy cha = buildClassHierarchy();
     setClassHierarchy(cha);
-    Entrypoints eps = entrypointBuilder.createEntrypoints(scope, cha);
+    Iterable<Entrypoint> eps = entrypointBuilder.createEntrypoints(scope, cha);
     options = getDefaultOptions(eps);
     return buildCallGraph(cha, options, true);
   }

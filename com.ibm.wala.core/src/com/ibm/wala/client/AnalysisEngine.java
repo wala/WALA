@@ -15,7 +15,7 @@ import java.util.jar.JarFile;
 
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 
 public interface AnalysisEngine {
 
@@ -63,5 +63,5 @@ public interface AnalysisEngine {
   /**
    * Get the default analysis options appropriate for this engine
    */
-  AnalysisOptions getDefaultOptions(Entrypoints entrypoints);
+  AnalysisOptions getDefaultOptions(Iterable<Entrypoint> entrypoints);
 }

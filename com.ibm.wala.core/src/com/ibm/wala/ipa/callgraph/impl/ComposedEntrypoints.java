@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
@@ -24,11 +23,11 @@ import com.ibm.wala.util.collections.HashSetFactory;
  * @author sfink
  *
  */
-public class ComposedEntrypoints implements Entrypoints {
+public class ComposedEntrypoints implements Iterable<Entrypoint> {
 
   private Set<Entrypoint> entrypoints = HashSetFactory.make();
   
-  public ComposedEntrypoints(Entrypoints A, Entrypoints B) {
+  public ComposedEntrypoints(Iterable<Entrypoint> A, Iterable<Entrypoint> B) {
     if (A == null) {
       throw new IllegalArgumentException("A is null");
     }

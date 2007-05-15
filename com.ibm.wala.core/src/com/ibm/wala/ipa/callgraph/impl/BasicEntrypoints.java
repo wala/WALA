@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
@@ -23,7 +22,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
  * 
  * @author sfink
  */
-public class BasicEntrypoints implements Entrypoints {
+public class BasicEntrypoints implements Iterable<Entrypoint> {
 
   private HashSet<Entrypoint> entrypoints = HashSetFactory.make();
 

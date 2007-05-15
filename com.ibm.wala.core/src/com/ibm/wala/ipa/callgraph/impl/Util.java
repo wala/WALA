@@ -27,7 +27,6 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CFABuilder;
@@ -219,11 +218,11 @@ public class Util {
    * @param cha
    * @return set of all eligible Main classes in the class hierarchy
    */
-  public static Entrypoints makeMainEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+  public static Iterable<Entrypoint> makeMainEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
     return makeMainEntrypoints(scope.getApplicationLoader(), cha);
   }
 
-  public static Entrypoints makeMainEntrypoints(ClassLoaderReference clr, ClassHierarchy cha) {
+  public static Iterable<Entrypoint> makeMainEntrypoints(ClassLoaderReference clr, ClassHierarchy cha) {
     final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
     final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
     for (IClass klass : cha) {
@@ -236,7 +235,7 @@ public class Util {
         }
       }
     }
-    return new Entrypoints() {
+    return new Iterable<Entrypoint>() {
       public Iterator<Entrypoint> iterator() {
         return result.iterator();
       }
@@ -246,18 +245,18 @@ public class Util {
   /**
    * @return Entrypoints object for a Main J2SE class
    */
-  public static Entrypoints makeMainEntrypoints(AnalysisScope scope, final ClassHierarchy cha, String className) {
+  public static Iterable<Entrypoint> makeMainEntrypoints(AnalysisScope scope, final ClassHierarchy cha, String className) {
     return makeMainEntrypoints(scope, cha, new String[] { className });
   }
 
-  public static Entrypoints makeMainEntrypoints(final AnalysisScope scope, final ClassHierarchy cha, final String[] classNames) {
+  public static Iterable<Entrypoint> makeMainEntrypoints(final AnalysisScope scope, final ClassHierarchy cha, final String[] classNames) {
     return makeMainEntrypoints(scope.getApplicationLoader(), cha, classNames);
   }
 
   /**
    * @return Entryponts for a set of J2SE Main classes
    */
-  public static Entrypoints makeMainEntrypoints(final ClassLoaderReference loaderRef, final ClassHierarchy cha,
+  public static Iterable<Entrypoint> makeMainEntrypoints(final ClassLoaderReference loaderRef, final ClassHierarchy cha,
       final String[] classNames) {
     for (int i = 0; i < classNames.length; i++) {
       if (classNames[i].indexOf("L") != 0) {
@@ -268,7 +267,7 @@ public class Util {
       }
     }
 
-    return new Entrypoints() {
+    return new Iterable<Entrypoint>() {
       public Iterator<Entrypoint> iterator() {
         final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
         return new Iterator<Entrypoint>() {

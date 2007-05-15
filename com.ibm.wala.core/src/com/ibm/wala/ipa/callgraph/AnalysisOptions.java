@@ -49,7 +49,7 @@ public class AnalysisOptions {
   /**
    * An object that identifies the entrypoints for the call graph
    */
-  private Entrypoints entrypoints;
+  private Iterable<Entrypoint> entrypoints;
 
   /**
    * An object which represents the user specification for reflection
@@ -194,13 +194,13 @@ public class AnalysisOptions {
    * @param scope
    * @param e
    */
-  public AnalysisOptions(AnalysisScope scope, IRFactory factory, Entrypoints e) {
+  public AnalysisOptions(AnalysisScope scope, IRFactory factory, Iterable<Entrypoint> e) {
     this(factory);
     this.analysisScope = scope;
     this.entrypoints = e;
   }
 
-  public AnalysisOptions(AnalysisScope scope, Entrypoints e) {
+  public AnalysisOptions(AnalysisScope scope, Iterable<Entrypoint> e) {
     this(scope, new DefaultIRFactory(), e);
   }
 
@@ -228,7 +228,7 @@ public class AnalysisOptions {
    * 
    * @return Entrypoints
    */
-  public Entrypoints getEntrypoints() {
+  public Iterable<Entrypoint> getEntrypoints() {
     return entrypoints;
   }
 
