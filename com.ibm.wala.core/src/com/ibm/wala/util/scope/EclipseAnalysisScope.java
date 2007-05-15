@@ -264,8 +264,12 @@ public class EclipseAnalysisScope extends AnalysisScope {
    * @return a File representing the directory or JAR file containing the
    *         plugin. This method returns <code>null</code> if no directory or
    *         JAR file was found for this plugin.
+   * @throws IllegalArgumentException  if pluginDirectory is null
    */
   public static File findPluginDirOrJAR(String libName, String pluginsDirName, File pluginDirectory) throws IllegalArgumentException {
+    if (pluginDirectory == null) {
+      throw new IllegalArgumentException("pluginDirectory is null");
+    }
     String pathName = pluginsDirName + "/" + libName;
     File path = new File(pathName);
     if (path.isDirectory()) // libName corresponds to a real directory

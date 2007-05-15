@@ -442,8 +442,12 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
    * TODO optimize
    * 
    * @param set
+   * @throws IllegalArgumentException  if set is null
    */
   public void removeAll(MutableSparseIntSet set) {
+    if (set == null) {
+      throw new IllegalArgumentException("set is null");
+    }
     for (IntIterator it = set.intIterator(); it.hasNext();) {
       remove(it.next());
     }

@@ -41,8 +41,12 @@ public class UnaryFunction implements IFunction {
   /**
    * Build constraints which ensure that the function f defines the relation R.
    * @param domain 
+   * @throws IllegalArgumentException  if domain is null
    */
   public static Collection<IFormula> buildConstraints(IBinaryNaturalRelation R, UnaryFunction f, IntPair domain) {
+    if (domain == null) {
+      throw new IllegalArgumentException("domain is null");
+    }
     Set<IFormula> result = HashSetFactory.make();
     for (int i = domain.getX(); i <= domain.getY(); i++) {
       IntSet s = R.getRelated(i);

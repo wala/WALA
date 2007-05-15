@@ -48,6 +48,9 @@ public class CallerSiteContextPair extends CallerSiteContext {
    * @see com.ibm.detox.ipa.callgraph.Context#get(com.ibm.detox.ipa.callgraph.ContextKey)
    */
   public ContextItem get(ContextKey name) {
+    if (name == null) {
+      throw new IllegalArgumentException("name is null");
+    }
     if (name.equals(ContextKey.CALLER) || name.equals(ContextKey.CALLSITE)) {
       return super.get(name);
     } else {

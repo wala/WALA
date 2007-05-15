@@ -135,6 +135,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    * 
    */
   public int getPredNodeCount(IBasicBlock N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N is null");
+    }
     if (N.equals(exit())) {
       // TODO: cache if necessary
       FixedSizeBitVector x = FixedSizeBitVector.or(normalToExit, exceptionalToExit);
@@ -577,6 +580,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getNormalSuccessors(IBasicBlock b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     return new Iterator2Collection<IBasicBlock>(iterateNormalSuccessors(b.getNumber()));
   }
 

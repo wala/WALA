@@ -253,8 +253,12 @@ public class DFSVisit {
    *          the graph to traverse
    * @param visitor
    *          the visitor to notify when nodes are discovered and finished
+   * @throws IllegalArgumentException  if g is null
    */
   public static <T> void DFS(Graph<T> g, Visitor visitor) {
+    if (g == null) {
+      throw new IllegalArgumentException("g is null");
+    }
     DFS(g, g.iterator(), visitor);
   }
 

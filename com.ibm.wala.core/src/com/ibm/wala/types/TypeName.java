@@ -66,6 +66,9 @@ public final class TypeName {
   }
 
   public static TypeName findOrCreate(ImmutableByteArray name) throws IllegalArgumentException {
+    if (name == null) {
+      throw new IllegalArgumentException("name is null");
+    }
     return findOrCreate(name, 0, name.length());
   }
   

@@ -970,12 +970,12 @@ public class SSACFG implements ControlFlowGraph{
    * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
-  public Collection<IBasicBlock> getExceptionalSuccessors(IBasicBlock b) {
-    IBasicBlock n = (IBasicBlock) cfg.getNode(b.getNumber());
+  public Collection<IBasicBlock> getExceptionalSuccessors(final IBasicBlock b) {
+    final IBasicBlock n = (IBasicBlock) cfg.getNode(b.getNumber());
     final Iterator i = cfg.getExceptionalSuccessors(n).iterator();
-    Collection<IBasicBlock> c = new HashSet<IBasicBlock>(getSuccNodeCount(b));
+    final Collection<IBasicBlock> c = new HashSet<IBasicBlock>(getSuccNodeCount(b));
     for (; i.hasNext();) {
-      IBasicBlock s = (IBasicBlock) i.next();
+      final IBasicBlock s = (IBasicBlock) i.next();
       c.add(basicBlocks[cfg.getNumber(s)]);
     }
     return c;
@@ -987,6 +987,9 @@ public class SSACFG implements ControlFlowGraph{
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getExceptionalPredecessors(IBasicBlock b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     IBasicBlock n = (IBasicBlock) cfg.getNode(b.getNumber());
     Function<IBasicBlock,IBasicBlock> f = new Function<IBasicBlock,IBasicBlock>() {
       public IBasicBlock apply(IBasicBlock object) {

@@ -30,8 +30,9 @@ public abstract class CFABuilder extends SSAPropagationCallGraphBuilder {
   /**
    * @param cha
    * @param warnings
+   * @throws NullPointerException  if options is null
    */
-  public CFABuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options) {
+  public CFABuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options) throws NullPointerException {
     super(cha, warnings, options, new CFAPointerKeys(), options.usePreTransitiveSolver());
   }
 

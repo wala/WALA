@@ -155,6 +155,9 @@ public class CloneInterpreter implements SSAContextInterpreter {
    *      com.ibm.wala.util.warnings.WarningSet)
    */
   public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
     }

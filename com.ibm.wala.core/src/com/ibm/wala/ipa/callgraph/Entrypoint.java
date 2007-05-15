@@ -50,6 +50,9 @@ public abstract class Entrypoint implements BytecodeConstants {
   }
 
   public Entrypoint(MethodReference method, ClassHierarchy cha) {
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
     IMethod m = cha.resolveMethod(method);
     if (Assertions.verifyAssertions && m == null) {
       Assertions.UNREACHABLE("could not resolve " + method);

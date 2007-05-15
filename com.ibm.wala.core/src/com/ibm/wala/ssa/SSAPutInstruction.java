@@ -53,8 +53,12 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
+   * @throws IllegalArgumentException  if v is null
    */
   public void visit(IVisitor v) {
+    if (v == null) {
+      throw new IllegalArgumentException("v is null");
+    }
     v.visitPut(this);
   }
 

@@ -40,8 +40,12 @@ public final class FixedSizeBitVector
   /**
    * Creates a copy of a Bit String
    * @param s the string to copy
+   * @throws IllegalArgumentException  if s is null
    */
   public FixedSizeBitVector(FixedSizeBitVector s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     bits = new int[s.bits.length];
     this.nbits = s.nbits;
     copyBits(s);

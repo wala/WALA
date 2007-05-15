@@ -160,6 +160,9 @@ public class BypassSyntheticClassLoader implements IClassLoader {
    * @see com.ibm.wala.classLoader.IClassLoader#removeAll(java.util.Collection)
    */
   public void removeAll(Collection<IClass> toRemove) {
+    if (toRemove == null) {
+      throw new IllegalArgumentException("toRemove is null");
+    }
     for (Iterator<IClass> it = toRemove.iterator(); it.hasNext();) {
       IClass klass = it.next();
       syntheticClasses.remove(klass.getName());

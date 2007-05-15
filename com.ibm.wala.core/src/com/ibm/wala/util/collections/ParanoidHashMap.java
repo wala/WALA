@@ -70,6 +70,9 @@ public class ParanoidHashMap<K,V> extends HashMap<K,V> {
    * @see java.util.Map#putAll(java.util.Map)
    */
   public void putAll(Map<? extends K,? extends V> arg0) {
+    if (arg0 == null) {
+      throw new IllegalArgumentException("arg0 is null");
+    }
     for (Iterator<?> it = arg0.entrySet().iterator(); it.hasNext();) {
       Map.Entry<? extends K,? extends V> E = (Entry<? extends K, ? extends V>) it.next();
       put(E.getKey(), E.getValue());

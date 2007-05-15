@@ -139,8 +139,12 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    * 
    * @param ir -
    *          method's IR (just to avoid re-getting it)
+   * @throws IllegalArgumentException  if ir is null
    */
   public ExpandedControlFlowGraph(IR ir) {
+    if (ir == null) {
+      throw new IllegalArgumentException("ir is null");
+    }
     this.cfg = ir.getControlFlowGraph();
     this.ir = ir;
     if (DEBUG) {

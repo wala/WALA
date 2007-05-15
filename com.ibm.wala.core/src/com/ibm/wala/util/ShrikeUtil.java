@@ -50,8 +50,12 @@ public class ShrikeUtil implements BytecodeConstants {
    * 
    * @param instruction
    * @return byte
+   * @throws IllegalArgumentException  if instruction is null
    */
   public static IInvokeInstruction.Dispatch getInvocationCode(InvokeInstruction instruction) {
+    if (instruction == null) {
+      throw new IllegalArgumentException("instruction is null");
+    }
     switch (instruction.getInvocationMode()) {
     case Constants.OP_invokestatic:
       return IInvokeInstruction.Dispatch.STATIC;

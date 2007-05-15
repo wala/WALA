@@ -59,8 +59,16 @@ public class EclipseEntrypoints extends BasicEntrypoints {
    *          <code>false</code> because internal packages are not supposed to
    *          be invoked from external bundles.
    * @throws WalaException 
+   * @throws IllegalArgumentException  if cha is null
+   * @throws IllegalArgumentException  if scope is null
    */
   public EclipseEntrypoints(EclipseAnalysisScope scope, final ClassHierarchy cha, boolean internalEntrypoints) throws WalaException {
+    if (scope == null) {
+      throw new IllegalArgumentException("scope is null");
+    }
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
     String pluginName = scope.getPluginName();
     String pluginsDirName = scope.getPluginsDirName();
     

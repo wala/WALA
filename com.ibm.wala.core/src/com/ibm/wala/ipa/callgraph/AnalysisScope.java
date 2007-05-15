@@ -192,8 +192,12 @@ public class AnalysisScope {
 
   /**
    * @return the ClassLoaderReference specified by <code>name</code>.
+   * @throws IllegalArgumentException  if name is null
    */
   public ClassLoaderReference getLoader(Atom name) throws IllegalArgumentException  {
+    if (name == null) {
+      throw new IllegalArgumentException("name is null");
+    }
     if (name.length() == 0) {
       throw new IllegalArgumentException("empty atom is not a legal class loader name");
     }

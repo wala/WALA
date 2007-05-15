@@ -24,6 +24,9 @@ import com.ibm.wala.util.warnings.WarningSet;
 public class SyntheticIRFactory implements IRFactory {
 
   public ControlFlowGraph makeCFG(IMethod method, Context C, ClassHierarchy cha, WarningSet warnings) {
+    if (method == null) {
+      throw new IllegalArgumentException("method is null");
+    }
     Assertions._assert(method.isSynthetic());
     SyntheticMethod sm = (SyntheticMethod) method;
     return sm.makeControlFlowGraph();

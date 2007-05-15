@@ -205,8 +205,12 @@ public class PointsToMap {
    * 
    * @param s
    *          numbers of points-to-set variables
+   * @throws IllegalArgumentException  if s is null
    */
   public void unify(IntSet s) throws IllegalArgumentException {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     if (s.size() <= 1) {
       throw new IllegalArgumentException("Can't unify set of size " + s.size());
     }

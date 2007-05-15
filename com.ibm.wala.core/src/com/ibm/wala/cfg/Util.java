@@ -40,6 +40,9 @@ public class Util {
   }
 
   public static IBasicBlock getFallThruBlock(ControlFlowGraph G, IBasicBlock b) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     return G.getBlockForInstruction(b.getLastInstructionIndex() + 1);
   }
 

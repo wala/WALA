@@ -72,8 +72,9 @@ public class BasicHeapGraph extends HeapGraph {
   /**
    * @param P
    *          governing pointer analysis
+   * @throws NullPointerException  if P is null
    */
-  public BasicHeapGraph(final PointerAnalysis P, final CallGraph callGraph) {
+  public BasicHeapGraph(final PointerAnalysis P, final CallGraph callGraph) throws NullPointerException {
     super(P.getHeapModel());
     this.pointerAnalysis = P;
     this.callGraph = callGraph;

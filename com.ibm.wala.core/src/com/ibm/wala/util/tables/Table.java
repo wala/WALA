@@ -141,6 +141,9 @@ public class Table implements Cloneable {
   }
 
   public static String readNextNonCommentLine(LineNumberReader reader) throws IOException {
+    if (reader == null) {
+      throw new IllegalArgumentException("reader is null");
+    }
     String line = reader.readLine();
     while (line != null && isCommented(line)) {
       line = reader.readLine();

@@ -34,9 +34,13 @@ public class JUnitEntryPoints {
   /**
    * Construct JUnit entrypoints for all the JUnit test methods in the given
    * scope.
+   * @throws IllegalArgumentException  if cha is null
    */
   public static Entrypoints make(ClassHierarchy cha) {
 
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
     final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
     for (IClass klass : cha) {
 

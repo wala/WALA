@@ -80,6 +80,9 @@ public class GhostviewUtil {
   }
 
   public static NodeDecorator makeIRDecorator(IR ir) {
+    if (ir == null) {
+      throw new IllegalArgumentException("ir is null");
+    }
     final HashMap<BasicBlock, String> labelMap = new HashMap<BasicBlock, String>();
     for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
       SSACFG.BasicBlock bb = (SSACFG.BasicBlock) it.next();

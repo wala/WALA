@@ -73,16 +73,28 @@ public class Util {
    * @param options
    * @param cha
    * @param warn
+   * @throws IllegalArgumentException  if options is null
    */
   public static void addDefaultSelectors(AnalysisOptions options, ClassHierarchy cha, WarningSet warn) {
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
     options.setSelector(new ClassHierarchyMethodTargetSelector(cha, warn));
     options.setSelector(new ClassHierarchyClassTargetSelector(cha));
   }
 
   /**
    * Not terribly efficient
+   * @throws IllegalArgumentException  if g1 is null
+   * @throws IllegalArgumentException  if g2 is null
    */
   public static <T> boolean areEqual(Graph<T> g1, Graph<T> g2) {
+    if (g2 == null) {
+      throw new IllegalArgumentException("g2 is null");
+    }
+    if (g1 == null) {
+      throw new IllegalArgumentException("g1 is null");
+    }
     if (g1.getNumberOfNodes() != g2.getNumberOfNodes()) {
       return false;
     }
@@ -135,9 +147,21 @@ public class Util {
    * Modify an options object to include bypass logic as specified by a an XML
    * file.
    * @throws IllegalArgumentException  if scope is null
+   * @throws IllegalArgumentException  if cl is null
+   * @throws IllegalArgumentException  if options is null
+   * @throws IllegalArgumentException  if scope is null
    */
   public static void addBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, String xmlFile, ClassHierarchy cha)
       throws IllegalArgumentException {
+    if (scope == null) {
+          throw new IllegalArgumentException("scope is null");
+        }
+    if (options == null) {
+          throw new IllegalArgumentException("options is null");
+        }
+    if (cl == null) {
+          throw new IllegalArgumentException("cl is null");
+        }
     if (cha == null) {
       throw new IllegalArgumentException("cha cannot be null");
     }
@@ -455,9 +479,13 @@ public class Util {
   /**
    * @param supG
    * @param subG
+   * @throws IllegalArgumentException  if subG is null
    */
   public static <T> void checkGraphSubset(Graph<T> supG, Graph<T> subG) {
 
+    if (subG == null) {
+      throw new IllegalArgumentException("subG is null");
+    }
     Set<T> nodeDiff = setify(subG.iterator());
     nodeDiff.removeAll(setify(supG.iterator()));
     if (!nodeDiff.isEmpty()) {

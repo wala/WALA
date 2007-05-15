@@ -280,10 +280,10 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    * @param operator
    *          the step operator
    */
-  public void newStatement(IVariable lhs, NullaryOperator operator, boolean toWorkList, boolean eager) {
+  public void newStatement(final IVariable lhs, final NullaryOperator operator, final boolean toWorkList, final boolean eager) {
     // add to the list of graph
     lhs.setOrderNumber(nextOrderNumber++);
-    NullaryStatement s = new BasicNullaryStatement(lhs, operator);
+    final NullaryStatement s = new BasicNullaryStatement(lhs, operator);
     if (getFixedPointSystem().containsStatement(s)) {
       return;
     }
@@ -389,9 +389,13 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    *          second operand on the rhs
    * @param op3
    *          third operand on the rhs
+   * @throws IllegalArgumentException  if lhs is null
    */
   public void newStatement(IVariable lhs, AbstractOperator operator, IVariable op1, IVariable op2, IVariable op3,
       boolean toWorkList, boolean eager) {
+    if (lhs == null) {
+          throw new IllegalArgumentException("lhs is null");
+        }
     // add to the list of graph
     lhs.setOrderNumber(nextOrderNumber++);
     GeneralStatement s = new GeneralStatement(lhs, operator, op1, op2, op3);

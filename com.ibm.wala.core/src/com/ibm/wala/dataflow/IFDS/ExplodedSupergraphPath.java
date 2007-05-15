@@ -440,8 +440,12 @@ public class ExplodedSupergraphPath<T> {
   /**
    * Create a brief(er) summary of a path, which excludes call/return pairs in
    * which no state transitions occur
+   * @throws IllegalArgumentException  if path is null
    */
   public static <T> void pruneBoringCalls(ISupergraph supergraph, ExplodedSupergraphPath<T> path) {
+    if (path == null) {
+      throw new IllegalArgumentException("path is null");
+    }
     path.skipBoringCalls = true;
   }
 

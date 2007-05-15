@@ -65,6 +65,9 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
   }
 
   public void visit(IVisitor v) {
+    if (v == null) {
+      throw new IllegalArgumentException("v is null");
+    }
     v.visitPi(this);
   }
 

@@ -793,8 +793,12 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * 
    * @param s
    *          numbers of points-to-set variables
+   * @throws IllegalArgumentException  if s is null
    */
   public void unify(IntSet s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     // cache the variables represented
     HashSet<PointsToSetVariable> cache = HashSetFactory.make(s.size());
     for (IntIterator it = s.intIterator(); it.hasNext();) {

@@ -63,6 +63,9 @@ public class IFDSExplorerImpl  {
    */
   public static void viewIFDS(CallGraph cg, TabulationResult r) throws WalaException {
     
+    if (r == null) {
+      throw new IllegalArgumentException("r is null");
+    }
     assert gvExe != null;
     assert dotExe != null;
     

@@ -45,8 +45,12 @@ public class HeapExclusions {
   /**
    * @param result
    * @return the PointerKeys that are not exluded
+   * @throws IllegalArgumentException  if s is null
    */
   public Collection<PointerKey> filter(Collection<PointerKey> s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     HashSet<PointerKey> result = HashSetFactory.make();
     for (PointerKey p : s) {
       if (p instanceof AbstractFieldPointerKey) {

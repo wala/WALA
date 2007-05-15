@@ -35,8 +35,16 @@ public class BytecodeStream implements BytecodeConstants {
   /**
    * @param m the method containing the bytecodes
    * @param bc the array of bytecodes
+   * @throws IllegalArgumentException  if bc is null
+   * @throws IllegalArgumentException  if m is null
    */
   public BytecodeStream(IMethod m, byte[] bc) {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
+    if (bc == null) {
+      throw new IllegalArgumentException("bc is null");
+    }
     method = m;
     declaringClass = m.getDeclaringClass();
     bcodes = bc;

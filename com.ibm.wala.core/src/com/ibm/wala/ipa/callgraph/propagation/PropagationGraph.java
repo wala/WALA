@@ -797,9 +797,13 @@ public class PropagationGraph extends AbstractFixedPointSystem {
    * Note that this implementation consults the implicit relation for each and
    * every operator cached. This will be inefficient if there are many implicit
    * operators.
+   * @throws IllegalArgumentException  if v is null
    * 
    */
   public int getNumberOfStatementsThatUse(IVariable v) {
+    if (v == null) {
+      throw new IllegalArgumentException("v is null");
+    }
     int number = v.getGraphNodeId();
     if (number == -1) {
       return 0;
@@ -822,6 +826,9 @@ public class PropagationGraph extends AbstractFixedPointSystem {
    * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#getNumberOfStatementsThatUse(com.ibm.wala.dataflow.fixpoint.AbstractVariable)
    */
   public int getNumberOfStatementsThatDef(IVariable v) {
+    if (v == null) {
+      throw new IllegalArgumentException("v is null");
+    }
     int number = v.getGraphNodeId();
     if (number == -1) {
       return 0;

@@ -70,8 +70,12 @@ public final class Atom {
    *          atom value, as string literal whose characters are from ascii
    *          subset of unicode (not including null)
    * @return atom
+   * @throws IllegalArgumentException  if str is null
    */
   public static Atom findOrCreateAsciiAtom(String str) {
+    if (str == null) {
+      throw new IllegalArgumentException("str is null");
+    }
     byte[] ascii = str.getBytes();
     return findOrCreate(ascii);
   }

@@ -57,8 +57,12 @@ public class MapUtil {
    *          a mapping from Object -> WeakHashMap
    * @param key
    * @return the WeakHashMap corresponding to key in M; create one if needed
+   * @throws IllegalArgumentException  if M is null
    */
   public static <K, V> WeakHashMap<K, V> findOrCreateWeakHashMap(Map<Object, WeakHashMap<K, V>> M, Object key) {
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
     WeakHashMap<K, V> result = M.get(key);
     if (result == null) {
       result = new WeakHashMap<K, V>(2);

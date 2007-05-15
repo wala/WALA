@@ -32,6 +32,9 @@ public class GraphSlicer {
    */
   public static <T> Collection<T> slice(Graph<T> g, Filter f) throws WalaException {
 
+    if (g == null) {
+      throw new IllegalArgumentException("g is null");
+    }
     HashSet<T> roots = new HashSet<T>();
     for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
       T o = it.next();

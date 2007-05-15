@@ -61,9 +61,14 @@ public class InducedCFG extends AbstractCFG {
    * TODO: we do not yet support induced CFGS with exception handlers.
    * 
    * @param instructions
+   * @throws IllegalArgumentException  if instructions is null
    */
   public InducedCFG(SSAInstruction[] instructions, IMethod method, Context context) {
+
     super(method);
+    if (instructions == null) {
+      throw new IllegalArgumentException("instructions is null");
+    }
     this.context = context;
     this.instructions = instructions;
     if (DEBUG) {

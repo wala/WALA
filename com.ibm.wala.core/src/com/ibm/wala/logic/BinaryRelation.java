@@ -69,8 +69,12 @@ public class BinaryRelation implements IRelation {
 
   /**
    * build a constraint saying v \in s
+   * @throws IllegalArgumentException  if s is null
    */
   public static IFormula makeSetConstraint(Variable v, IntSet s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     if (s.isEmpty()) {
       // a hack. TODO: support primitives for "true" and "false"
       return RelationFormula.makeEquals(IntConstant.make(0), IntConstant.make(1));

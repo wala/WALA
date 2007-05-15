@@ -76,6 +76,9 @@ public class FactoryContextSelector implements ContextSelector {
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#getBoundOnNumberOfTargets(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
    */
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod callee) {
+    if (callee == null) {
+      throw new IllegalArgumentException("callee is null");
+    }
     if (callee.isSynthetic()) {
       SyntheticMethod s = (SyntheticMethod) callee;
       if (s.isFactoryMethod()) {

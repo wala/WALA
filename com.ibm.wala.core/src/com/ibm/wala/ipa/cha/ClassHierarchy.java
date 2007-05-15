@@ -733,6 +733,9 @@ public class ClassHierarchy implements Iterable<IClass> {
   }
 
   public TypeReference getLeastCommonSuperclass(TypeReference A, TypeReference B) {
+    if (A == null) {
+      throw new IllegalArgumentException("A is null");
+    }
     if (A.equals(B))
       return A;
     IClass AClass = lookupClass(A);

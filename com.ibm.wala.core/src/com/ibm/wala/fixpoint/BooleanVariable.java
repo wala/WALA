@@ -49,6 +49,9 @@ public class BooleanVariable extends AbstractVariable {
 
 
   public boolean sameValue(BooleanVariable other) {
+    if (other == null) {
+      throw new IllegalArgumentException("other is null");
+    }
     return B == other.B;
   }
 

@@ -50,8 +50,12 @@ public class BitVector extends BitVectorBase<BitVector> {
    * 
    * @param s
    *          the string to copy
+   * @throws IllegalArgumentException  if s is null
    */
   public BitVector(BitVector s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     bits = new int[s.bits.length];
     copyBits(s);
   }
@@ -182,8 +186,12 @@ public class BitVector extends BitVectorBase<BitVector> {
    * 
    * @param set
    * @return the number of bits added to this.
+   * @throws IllegalArgumentException  if set is null
    */
   public final int orWithDelta(BitVector set) {
+    if (set == null) {
+      throw new IllegalArgumentException("set is null");
+    }
     int delta = 0;
 
     ensureCapacity(set);

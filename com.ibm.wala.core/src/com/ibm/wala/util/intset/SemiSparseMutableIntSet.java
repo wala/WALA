@@ -385,8 +385,12 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   /**
    * @return true iff <code>this</code> is a subset of <code>that</code>.
+   * @throws IllegalArgumentException  if that is null
    */
   public boolean isSubset(IntSet that) {
+    if (that == null) {
+      throw new IllegalArgumentException("that is null");
+    }
     if (size() > that.size()) {
       return false;
     }
@@ -649,6 +653,9 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   }
 
   public static SemiSparseMutableIntSet diff(SemiSparseMutableIntSet A, SemiSparseMutableIntSet B) {
+    if (A == null) {
+      throw new IllegalArgumentException("A is null");
+    }
     if (A.densePart == null) {
 
       if (B.densePart == null) {

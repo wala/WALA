@@ -29,6 +29,9 @@ public class SliceFunctions implements IFlowFunctionMap<Statement> {
   }
 
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(Statement src, Statement dest) {
+    if (src == null) {
+      throw new IllegalArgumentException("src is null");
+    }
     Statement s = (Statement) src;
     switch (s.getKind()) {
     case NORMAL_RET_CALLER:

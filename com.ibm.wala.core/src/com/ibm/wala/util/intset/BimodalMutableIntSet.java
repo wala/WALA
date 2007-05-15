@@ -362,8 +362,12 @@ public class BimodalMutableIntSet implements MutableIntSet {
 
   /**
    * TODO: optimize ME!
+   * @throws IllegalArgumentException  if that is null
    */
   public boolean removeAll(IntSet that) {
+    if (that == null) {
+      throw new IllegalArgumentException("that is null");
+    }
     boolean result = false;
     for (IntIterator it = that.intIterator(); it.hasNext();) {
       result |= remove(it.next());
@@ -374,8 +378,12 @@ public class BimodalMutableIntSet implements MutableIntSet {
 
   /**
    * TODO: optimize ME!
+   * @throws IllegalArgumentException  if that is null
    */
   public boolean containsAll(BimodalMutableIntSet that) {
+    if (that == null) {
+      throw new IllegalArgumentException("that is null");
+    }
     for (IntIterator it = that.intIterator(); it.hasNext();) {
       if (!contains(it.next())) {
         return false;

@@ -82,6 +82,9 @@ public class CloneContextSelector implements ContextSelector {
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#contextIsIrrelevant(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference)
    */
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
+    if (site == null) {
+      throw new IllegalArgumentException("site is null");
+    }
     if (!site.getDeclaredTarget().equals(CloneInterpreter.CLONE)) {
       return true;
     } else {

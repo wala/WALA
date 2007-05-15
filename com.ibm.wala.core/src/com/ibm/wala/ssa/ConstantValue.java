@@ -122,6 +122,9 @@ public class ConstantValue implements Value {
   }
 
   public int getDefaultValue(SymbolTable st) {
+    if (st == null) {
+      throw new IllegalArgumentException("st is null");
+    }
     return st.findOrCreateConstant( constant );
   }
 

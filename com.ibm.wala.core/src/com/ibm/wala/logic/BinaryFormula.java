@@ -36,6 +36,9 @@ public class BinaryFormula implements IFormula {
 
 
   public static IFormula and(Collection<IFormula> clauses) throws IllegalArgumentException {
+    if (clauses == null) {
+      throw new IllegalArgumentException("clauses is null");
+    }
     if (clauses.isEmpty()) {
       throw new IllegalArgumentException("cannot and empty collection");
     }

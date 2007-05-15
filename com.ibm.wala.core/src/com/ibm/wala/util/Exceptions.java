@@ -79,9 +79,13 @@ public class Exceptions implements Constants {
    * <li>this method ignores linkage errors
    * <li>this method ignores IllegalMonitorState exceptions
    * </ul>
+   * @throws IllegalArgumentException  if pei is null
    * 
    */
   public static Collection<TypeReference> getExceptionTypes(ClassLoaderReference loader, Instruction pei, ClassHierarchy cha, WarningSet warnings) {
+    if (pei == null) {
+      throw new IllegalArgumentException("pei is null");
+    }
     switch (pei.getOpcode()) {
 
     case OP_invokevirtual:

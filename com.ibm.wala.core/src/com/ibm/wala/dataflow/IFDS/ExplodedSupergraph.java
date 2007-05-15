@@ -71,6 +71,9 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
   }
 
   public Iterator<ExplodedSupergraphNode<T>> getPredNodes(ExplodedSupergraphNode<T> node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     T dest = node.getSupergraphNode();
     HashSet<ExplodedSupergraphNode<T>> result = HashSetFactory.make(supergraph.getPredNodeCount(dest));
     for (Iterator<? extends T> it = supergraph.getPredNodes(dest); it.hasNext();) {

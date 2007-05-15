@@ -29,6 +29,9 @@ import com.ibm.wala.util.intset.IntPair;
 public class Simplifier {
 
   public static ITheory eliminateQuantifiers(ITheory t) {
+    if (t == null) {
+      throw new IllegalArgumentException("t is null");
+    }
     Collection<IFormula> sentences = HashSetFactory.make();
     for (IFormula s : t.getSentences()) {
       sentences.addAll(eliminateQuantifiers(s));
@@ -54,6 +57,9 @@ public class Simplifier {
   }
 
   public static Collection<? extends IFormula> eliminateQuantifiers(Collection<? extends IFormula> s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     Collection<IFormula> result = HashSetFactory.make();
     for (IFormula f : s) {
       result.addAll(eliminateQuantifiers(f));

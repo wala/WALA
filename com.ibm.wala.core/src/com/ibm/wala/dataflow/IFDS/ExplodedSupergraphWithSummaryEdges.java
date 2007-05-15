@@ -46,6 +46,9 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
    * @see com.ibm.wala.dataflow.IFDS.ExplodedSupergraph#getSuccNodes(java.lang.Object)
    */
   public Iterator<ExplodedSupergraphNode<T>> getSuccNodes(ExplodedSupergraphNode<T> src) {
+    if (src == null) {
+      throw new IllegalArgumentException("src is null");
+    }
     HashSet<ExplodedSupergraphNode<T>> result = HashSetFactory.make(5);
     result.addAll(new Iterator2Collection<ExplodedSupergraphNode<T>>(super.getSuccNodes(src)));
 
@@ -71,6 +74,9 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
    * @see com.ibm.wala.dataflow.IFDS.ExplodedSupergraph#getPredNodes(java.lang.Object)
    */
   public Iterator<ExplodedSupergraphNode<T>> getPredNodes(ExplodedSupergraphNode<T> dest) {
+    if (dest == null) {
+      throw new IllegalArgumentException("dest is null");
+    }
     HashSet<ExplodedSupergraphNode<T>> result = HashSetFactory.make(5);
     result.addAll(new Iterator2Collection<ExplodedSupergraphNode<T>>(super.getPredNodes(dest)));
 

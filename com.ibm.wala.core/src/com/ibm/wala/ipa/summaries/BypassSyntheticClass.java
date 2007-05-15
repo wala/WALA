@@ -38,8 +38,12 @@ public class BypassSyntheticClass extends SyntheticClass {
    * @param T
    *          a type reference
    * @return a synthetic class name to represent the synthetic form of this type
+   * @throws IllegalArgumentException  if T is null
    */
   public static TypeName getName(TypeReference T) {
+    if (T == null) {
+      throw new IllegalArgumentException("T is null");
+    }
     String s = "L$" + T.getName().toString().substring(1);
     return TypeName.string2TypeName(s);
   }
@@ -51,7 +55,7 @@ public class BypassSyntheticClass extends SyntheticClass {
 
   private final IClassLoader loader;
 
-  public BypassSyntheticClass(IClass realType, IClassLoader loader, ClassHierarchy cha) {
+  public BypassSyntheticClass(IClass realType, IClassLoader loader, ClassHierarchy cha) throws NullPointerException, NullPointerException {
     super(TypeReference.findOrCreate(loader.getReference(), getName(realType.getReference())), cha);
     this.loader = loader;
     this.realType = realType;

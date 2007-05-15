@@ -26,6 +26,9 @@ public class InferGraphRootsImpl {
    * 
    */
   public static <T> Collection<T> inferRoots(Graph<T> g) throws WalaException {
+    if (g == null) {
+      throw new IllegalArgumentException("g is null");
+    }
     HashSet<T> s = new HashSet<T>();
     for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
       T node = it.next();

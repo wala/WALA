@@ -19,17 +19,22 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- *
+ * 
  * An entrypoint whose parameter types are the declared types.
  * 
  * @author sfink
  */
 public class DefaultEntrypoint extends Entrypoint {
   private final TypeReference[][] paramTypes;
+
   private final ClassHierarchy cha;
 
   public DefaultEntrypoint(IMethod method, ClassHierarchy cha) {
+
     super(method);
+    if (method == null) {
+      throw new IllegalArgumentException("method is null");
+    }
     this.cha = cha;
     paramTypes = makeParameterTypes(method);
     if (Assertions.verifyAssertions) {
@@ -39,6 +44,9 @@ public class DefaultEntrypoint extends Entrypoint {
 
   public DefaultEntrypoint(MethodReference method, ClassHierarchy cha) {
     super(method, cha);
+    if (method == null) {
+      throw new IllegalArgumentException("method is null");
+    }
     this.cha = cha;
     paramTypes = makeParameterTypes(getMethod());
     if (Assertions.verifyAssertions) {
@@ -59,10 +67,12 @@ public class DefaultEntrypoint extends Entrypoint {
   }
 
   protected TypeReference[] makeParameterTypes(IMethod method, int i) {
-    return new TypeReference[] { method.getParameterType(i)};
+    return new TypeReference[] { method.getParameterType(i) };
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.ipa.callgraph.Entrypoint#getParameterTypes(int)
    */
   public TypeReference[] getParameterTypes(int i) {
@@ -73,7 +83,9 @@ public class DefaultEntrypoint extends Entrypoint {
     paramTypes[i] = types;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.wala.ipa.callgraph.Entrypoint#getNumberOfParameters()
    */
   public int getNumberOfParameters() {

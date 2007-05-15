@@ -34,14 +34,18 @@ public final class BitSet<T> {
 
   /**
    * Constructor: create an empty set corresponding to a given mapping
+   * @throws IllegalArgumentException  if map is null
    */
   public BitSet(OrdinalSetMapping<T> map) {
+    if (map == null) {
+      throw new IllegalArgumentException("map is null");
+    }
     int length = map.getMappingSize();
     vector = new BitVector(length);
     this.map = map;
   }
 
-  public BitSet(BitSet<T> B) {
+  public BitSet(BitSet<T> B) throws NullPointerException {
     this(B.map);
     addAll(B);
   }
@@ -105,8 +109,12 @@ public final class BitSet<T> {
   /**
    * Method copy.  Copies the bits in the bit vector, but only assigns the object map.  No need to create
    * a new object/bit bijection object.
+   * @throws IllegalArgumentException  if other is null
    */
   public void copyBits(BitSet<T> other) {
+    if (other == null) {
+      throw new IllegalArgumentException("other is null");
+    }
     vector.copyBits(other.vector);
     map = other.map;
   }
@@ -197,9 +205,6 @@ public final class BitSet<T> {
    * @param other
    */
   public void difference(BitSet other) {
-    //		if (Assertions.verifyAssertions) {
-    //			Assertions._assert(map.equals(other.map));
-    //		}
     vector.and(BitVector.not(other.vector));
   }
 

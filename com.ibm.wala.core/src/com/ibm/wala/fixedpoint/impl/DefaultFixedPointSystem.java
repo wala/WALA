@@ -180,6 +180,9 @@ public class DefaultFixedPointSystem extends AbstractFixedPointSystem {
    * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#addEquation(com.ibm.wala.dataflow.fixpoint.UnaryEquation)
    */
   public void addStatement(UnaryStatement s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     IVariable lhs = s.getLHS();
     IVariable rhs = s.getRightHandSide();
 
@@ -204,6 +207,9 @@ public class DefaultFixedPointSystem extends AbstractFixedPointSystem {
    * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#addEquation(com.ibm.wala.dataflow.fixpoint.UnaryEquation)
    */
   public void addStatement(NullaryStatement s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     IVariable lhs = s.getLHS();
 
     graph.addNode(s);

@@ -216,6 +216,9 @@ public class ContainerContextSelector implements ContextSelector {
    *      com.ibm.wala.classLoader.IMethod)
    */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey receiver) {
+    if (targetMethod == null) {
+      throw new IllegalArgumentException("targetMethod is null");
+    }
     if (isArrayCopy(targetMethod.getReference())) {
       return true;
     } else {

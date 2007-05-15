@@ -240,9 +240,13 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
   /**
    * Add a constraint for a call instruction
+   * @throws IllegalArgumentException  if site is null
    */
   public void visitInvoke(CGNode node, CallSiteReference site) {
 
+    if (site == null) {
+      throw new IllegalArgumentException("site is null");
+    }
     if (DEBUG) {
       Trace.println("visitInvoke: " + site);
     }

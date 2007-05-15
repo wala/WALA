@@ -182,6 +182,9 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
    *      com.ibm.wala.ssa.NewInstruction)
    */
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
+    if (allocation == null) {
+      throw new IllegalArgumentException("allocation is null");
+    }
     TypeReference t = allocation.getDeclaredType();
     IClass C = cha.lookupClass(t);
 

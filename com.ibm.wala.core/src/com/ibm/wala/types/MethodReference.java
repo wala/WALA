@@ -98,8 +98,12 @@ public final class MethodReference extends MemberReference {
    * the given tuple.
    * @param tref the type reference
    * @param selector the selector for the method
+   * @throws IllegalArgumentException  if selector is null
    */
   public static synchronized MethodReference findOrCreate(TypeReference tref, Selector selector) {
+    if (selector == null) {
+      throw new IllegalArgumentException("selector is null");
+    }
     return findOrCreate(tref, selector.getName(), selector.getDescriptor());
   }
   

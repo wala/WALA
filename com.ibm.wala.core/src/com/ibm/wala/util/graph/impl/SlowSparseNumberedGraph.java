@@ -75,6 +75,9 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
   }
 
   public static <T> void copyInto(Graph<T> g, Graph<T> into) {
+    if (g == null) {
+      throw new IllegalArgumentException("g is null");
+    }
     for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
       into.addNode(it.next());
     }

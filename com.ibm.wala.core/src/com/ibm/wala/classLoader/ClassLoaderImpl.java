@@ -397,6 +397,9 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   public IClass lookupClass(TypeName className, ClassHierarchy cha) {
+    if (className == null) {
+      throw new IllegalArgumentException("className is null");
+    }
     if (DEBUG_LEVEL > 1) {
       Trace.println(this + ": lookupClass " + className);
     }

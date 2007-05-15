@@ -43,9 +43,13 @@ public class DFS {
    *          collection of nodes to start from
    * @param filter
    *          only traverse nodes that need this filter
+   * @throws IllegalArgumentException  if C is null
    */
   @SuppressWarnings("serial")
   public static <T> Collection<T> getReachableNodes(final Graph<T> G, Collection<? extends T> C, final Filter filter) {
+    if (C == null) {
+      throw new IllegalArgumentException("C is null");
+    }
     Iterator<T> dfs = new SlowDFSFinishTimeIterator<T>(G, C.iterator()) {
 
       @SuppressWarnings("unchecked")

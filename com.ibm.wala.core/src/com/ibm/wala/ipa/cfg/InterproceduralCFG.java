@@ -857,8 +857,12 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @param object
    *          node in the IPCFG that ends in a call
    * @return the nodes that are return sites for this call.
+   * @throws IllegalArgumentException  if bb is null
    */
   public Iterator<BasicBlockInContext> getReturnSites(BasicBlockInContext bb) {
+    if (bb == null) {
+      throw new IllegalArgumentException("bb is null");
+    }
     final CGNode node = bb.getNode();
 
     // a successor node is a return site if it is in the same
@@ -876,6 +880,9 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   public Iterator<BasicBlockInContext> getCallSites(BasicBlockInContext bb) {
+    if (bb == null) {
+      throw new IllegalArgumentException("bb is null");
+    }
     ControlFlowGraph cfg = getCFG((IBasicBlock) bb);
     Iterator<? extends IBasicBlock> it = cfg.getPredNodes(bb.getDelegate());
     final CGNode node = bb.getNode();

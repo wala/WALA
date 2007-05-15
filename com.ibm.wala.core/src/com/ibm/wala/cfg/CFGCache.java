@@ -65,9 +65,13 @@ public class CFGCache {
    *          an option to track analysis warnings
    * @return an IR for m, built according to the specified options. null if m is
    *         abstract or native.
+   * @throws IllegalArgumentException  if m is null
    */
   public synchronized ControlFlowGraph findOrCreate(IMethod m, Context C, ClassHierarchy cha, WarningSet warnings) {
 
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
     if (m.isAbstract() || m.isNative()) {
       return null;
     }

@@ -41,8 +41,12 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   /**
    * @param set
+   * @throws IllegalArgumentException  if set is null
    */
   public MutableSharedBitVectorIntSet(MutableSharedBitVectorIntSet set) {
+    if (set == null) {
+      throw new IllegalArgumentException("set is null");
+    }
     if (set.privatePart != null) {
       this.privatePart = new MutableSparseIntSet(set.privatePart);
     }

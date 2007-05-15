@@ -76,6 +76,9 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
    */
   public IClass getAllocatedTarget(CGNode caller, NewSiteReference site) {
 
+    if (site == null) {
+      throw new IllegalArgumentException("site is null");
+    }
     TypeReference nominalRef = site.getDeclaredType();
     if (DEBUG) {
       Trace.println("BypassClassTargetSelector getAllocatedTarget: " + nominalRef);

@@ -60,8 +60,12 @@ public class GraphReachability <T>{
    *          call graph to analyze
    * @param filter
    *          "interesting" node definition
+   * @throws IllegalArgumentException  if g is null
    */
   public GraphReachability(Graph<T> g, Filter filter) {
+    if (g == null) {
+      throw new IllegalArgumentException("g is null");
+    }
     this.g = g;
     Iterator<T> i = new FilterIterator<T>(g.iterator(), filter);
     domain = new MutableMapping<T>((new Iterator2Collection<T>(i)).toArray());

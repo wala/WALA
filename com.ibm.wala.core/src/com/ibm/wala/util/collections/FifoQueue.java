@@ -58,8 +58,12 @@ public class FifoQueue<T> {
    * 
    * @param collection
    *          is the Collection of Object instances to be enqueue.
+   * @throws IllegalArgumentException  if collection is null
    */
   public FifoQueue(Collection<T> collection) {
+    if (collection == null) {
+      throw new IllegalArgumentException("collection is null");
+    }
     push(collection.iterator());
   }
 

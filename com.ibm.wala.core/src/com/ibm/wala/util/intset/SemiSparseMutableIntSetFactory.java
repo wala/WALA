@@ -20,8 +20,12 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory {
 
   /**
    * @param set
+   * @throws IllegalArgumentException  if set is null
    */
   public MutableIntSet make(int[] set) {
+    if (set == null) {
+      throw new IllegalArgumentException("set is null");
+    }
     if (set.length == 0) {
       return new BitVectorIntSet();
     } else {

@@ -46,6 +46,7 @@ public class ParanoidHashSet<T> extends HashSet<T> {
 
   /**
    * @param s
+   * @throws IllegalArgumentException  if s is null
    */
   public ParanoidHashSet(Set<T> s) {
     super(s.size());

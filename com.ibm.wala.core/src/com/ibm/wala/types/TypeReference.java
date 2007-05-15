@@ -361,6 +361,9 @@ public final class TypeReference {
   }
 
   public static TypeReference findOrCreateArrayOf(TypeReference t) {
+    if (t == null) {
+      throw new IllegalArgumentException("t is null");
+    }
     TypeName name = t.getName();
     if (t.isPrimitiveType()) {
       return findOrCreate(ClassLoaderReference.Primordial, name.getArrayTypeForElementType());

@@ -29,8 +29,12 @@ public class CallGraphStats {
 
   /**
    * Constructor for CallGraphStats.
+   * @throws IllegalArgumentException  if cg is null
    */
   public static String getStats(CallGraph cg) {
+    if (cg == null) {
+      throw new IllegalArgumentException("cg is null");
+    }
     Set<CGNode> reachableNodes = DFS.getReachableNodes(cg, Collections.singleton(cg.getFakeRootNode()));
     int nNodes = 0;
     int nEdges = 0;
@@ -56,8 +60,12 @@ public class CallGraphStats {
   /**
    * @param cg
    * @return the number of bytecode bytes
+   * @throws IllegalArgumentException  if cg is null
    */
   public static int countBytecodeBytes(CallGraph cg) {
+    if (cg == null) {
+      throw new IllegalArgumentException("cg is null");
+    }
     int ret = 0;
     HashSet<IMethod> counted = HashSetFactory.make();
     for (Iterator<? extends CGNode> iter = cg.iterator(); iter.hasNext();) {

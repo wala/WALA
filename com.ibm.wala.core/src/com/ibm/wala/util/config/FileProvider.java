@@ -232,8 +232,12 @@ public class FileProvider {
    * 
    * @param url
    * @return the path name for the url
+   * @throws IllegalArgumentException  if url is null
    */
   public static String filePathFromURL(URL url) {
+    if (url == null) {
+      throw new IllegalArgumentException("url is null");
+    }
     URI uri = null;
     try {
       uri = new URI(url.toString());

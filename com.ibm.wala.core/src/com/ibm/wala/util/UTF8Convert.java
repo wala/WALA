@@ -205,6 +205,9 @@ public abstract class UTF8Convert {
   }
 
   public static String fromUTF8(ImmutableByteArray s){
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     try {
       return fromUTF8(s.b);
     } catch (UTFDataFormatException e) {

@@ -39,9 +39,13 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
 
   /**
    * Constructor for MutableMapping.
+   * @throws IllegalArgumentException  if array is null
    */
   @SuppressWarnings("unchecked")
   public MutableMapping(final Object[] array) {
+    if (array == null) {
+      throw new IllegalArgumentException("array is null");
+    }
     this.array = new Object[2 * array.length];
     for (int i = 0; i < array.length; i++) {
       this.array[i] = array[i];

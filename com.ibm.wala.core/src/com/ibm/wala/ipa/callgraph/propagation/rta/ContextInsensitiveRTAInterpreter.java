@@ -36,6 +36,9 @@ public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInte
    * @see com.ibm.detox.ipa.callgraph.MethodContextInterpreter#getAllocationStatements(com.ibm.wala.classLoader.IMethod, com.ibm.detox.ipa.callgraph.Context)
    */
   public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     try {
       return CodeScanner.iterateNewSites(node.getMethod(), warnings);
     } catch (InvalidClassFileException e) {

@@ -55,8 +55,12 @@ public class DefUse {
    * keep this package private: all calls should be through SSACache
    * @param ir
    *          an IR in SSA form.
+   * @throws IllegalArgumentException  if ir is null
    */
   public DefUse(final IR ir) {
+    if (ir == null) {
+      throw new IllegalArgumentException("ir is null");
+    }
     this.ir = ir;
     SymbolTable st = ir.getSymbolTable();
 

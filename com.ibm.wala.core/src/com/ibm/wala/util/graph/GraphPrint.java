@@ -23,6 +23,9 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 public class GraphPrint {
 
   public static <T> String genericToString(Graph<T> G) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     SlowSparseNumberedGraph<T> sg = new SlowSparseNumberedGraph<T>();
     for (Iterator<? extends T> it = G.iterator(); it.hasNext(); ) {
       sg.addNode(it.next());

@@ -208,8 +208,12 @@ public class EUtil {
    * @param R
    * @param M
    *          Map <EObject -> EObject>
+   * @throws IllegalArgumentException  if M is null
    */
   public static void populateRelation(ERelation R, Map M) {
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
     for (Iterator it = M.entrySet().iterator(); it.hasNext();) {
       Map.Entry e = (Map.Entry) it.next();
       Object k = e.getKey();

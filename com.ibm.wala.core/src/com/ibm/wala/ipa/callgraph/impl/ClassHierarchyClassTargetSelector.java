@@ -40,6 +40,9 @@ public class ClassHierarchyClassTargetSelector implements ClassTargetSelector {
    *      com.ibm.wala.classLoader.NewSiteReference)
    */
   public IClass getAllocatedTarget(CGNode caller, NewSiteReference site) {
+    if (site == null) {
+      throw new IllegalArgumentException("site is null");
+    }
     IClass klass = cha.lookupClass(site.getDeclaredType());
     if (klass == null) {
       return null;

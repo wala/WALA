@@ -75,8 +75,9 @@ public class BFSIterator<T> implements Iterator<T> {
   /**
    * Constructor DFSFinishTimeIterator.
    * @param G
+   * @throws NullPointerException  if G is null
    */
-  public BFSIterator(Graph<T> G) {
+  public BFSIterator(Graph<T> G) throws NullPointerException {
     this(G, G.iterator());
   }
 

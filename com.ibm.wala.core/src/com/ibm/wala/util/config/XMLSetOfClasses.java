@@ -59,6 +59,9 @@ public class XMLSetOfClasses extends SetOfClasses {
   }
 
   public boolean contains(TypeReference klass) {
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
     return contains(klass.getName().toString());
   }
 

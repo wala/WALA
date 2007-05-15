@@ -60,8 +60,12 @@ public class StringStuff {
    * 
    * @param dString
    * @return String
+   * @throws IllegalArgumentException  if dString is null
    */
   public static String deployment2CanonicalTypeString(String dString) {
+    if (dString == null) {
+      throw new IllegalArgumentException("dString is null");
+    }
     dString = dString.replace('.', '/');
     int arrayIndex = dString.indexOf("[]");
     if (arrayIndex > -1) {
@@ -91,8 +95,12 @@ public class StringStuff {
    * 
    * @param dString
    * @return String
+   * @throws IllegalArgumentException  if dString is null
    */
   public static String deployment2CanonicalDescriptorTypeString(String dString) {
+    if (dString == null) {
+      throw new IllegalArgumentException("dString is null");
+    }
     dString = dString.replace('.', '/');
     int arrayIndex = dString.indexOf("[]");
     if (arrayIndex > -1) {
@@ -443,7 +451,7 @@ public class StringStuff {
    *          a String containing a type name in JVM internal format.
    * @return the same type name in readable (source code) format.
    */
-  public static String jvmToReadableType(String jvmType)throws IllegalArgumentException {
+  public static String jvmToReadableType(final String jvmType)throws IllegalArgumentException {
     StringBuffer readable = new StringBuffer(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
 
@@ -501,8 +509,12 @@ public class StringStuff {
    * @param jvmType
    *          a String containing a type name in JVM internal format.
    * @return the same type name in readable (source code) format.
+   * @throws IllegalArgumentException  if jvmType is null
    */
   public static String jvmToBinaryName(String jvmType)throws IllegalArgumentException {
+    if (jvmType == null) {
+      throw new IllegalArgumentException("jvmType is null");
+    }
     StringBuffer readable = new StringBuffer(); // human readable version
     int numberOfDimensions = 0; // the number of array dimensions
 

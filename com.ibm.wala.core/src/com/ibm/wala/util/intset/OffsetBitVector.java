@@ -75,8 +75,12 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * 
    * @param s
    *          the string to copy
+   * @throws IllegalArgumentException  if s is null
    */
   public OffsetBitVector(OffsetBitVector s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     offset = s.offset;
     bits = new int[s.bits.length];
     System.arraycopy(s.bits, 0, bits, 0, s.bits.length);

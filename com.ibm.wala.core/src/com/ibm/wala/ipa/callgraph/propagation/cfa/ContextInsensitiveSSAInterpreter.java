@@ -96,6 +96,9 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
    *      com.ibm.wala.util.warnings.WarningSet)
    */
   public DefUse getDU(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     // Note: since this is context-insensitive, we cache an IR based on the
     // EVERYWHERE context
     return options.getSSACache().findOrCreateDU(node.getMethod(), Everywhere.EVERYWHERE, cha, options.getSSAOptions(), warnings);

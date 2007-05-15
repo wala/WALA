@@ -71,11 +71,19 @@ public class HeapReachingDefs {
   /**
    * For each statement s, return the set of statements that may def the heap
    * value read by s.
+   * @throws IllegalArgumentException  if pa is null
+   * @throws IllegalArgumentException  if statements is null
    * 
    */
   public static Map<Statement, OrdinalSet<Statement>> computeReachingDefs(CGNode node, IR ir, PointerAnalysis pa,
       Map<CGNode, OrdinalSet<PointerKey>> mod, Collection<Statement> statements, HeapExclusions exclusions) {
 
+    if (statements == null) {
+          throw new IllegalArgumentException("statements is null");
+        }
+    if (pa == null) {
+          throw new IllegalArgumentException("pa is null");
+        }
     if (VERBOSE) {
       System.err.println("Reaching Defs " + node);
       System.err.println(statements.size());

@@ -97,9 +97,13 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   /**
    * Check to see if a particular call site should be bypassed, before checking
    * normal resolution of the receiver.
+   * @throws IllegalArgumentException  if site is null
    */
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass dispatchType) {
 
+    if (site == null) {
+      throw new IllegalArgumentException("site is null");
+    }
     MethodReference ref = site.getDeclaredTarget();
     IMethod resolved = null;
 

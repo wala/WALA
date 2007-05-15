@@ -327,8 +327,12 @@ public class SparseIntSet implements IntSet {
 
   /**
    * Reverse of toString(): "{2,3}" -> [2,3]
+   * @throws IllegalArgumentException  if str is null
    */
   public static int[] parseIntArray(String str) throws NumberFormatException {
+    if (str == null) {
+      throw new IllegalArgumentException("str is null");
+    }
     int len = str.length();
     if (len == 0 || str.charAt(0) != '{' || str.charAt(len - 1) != '}') {
       throw new NumberFormatException(str);

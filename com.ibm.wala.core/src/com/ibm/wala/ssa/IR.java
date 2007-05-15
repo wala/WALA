@@ -560,12 +560,12 @@ public abstract class IR {
    *          a call site in this method
    * @return the basic block corresponding to this instruction
    */
-  public IBasicBlock[] getBasicBlocksForCall(CallSiteReference site) {
-    IntSet s = callSiteMapping.getRelated(site.getProgramCounter());
-    IBasicBlock[] result = new IBasicBlock[s.size()];
+  public IBasicBlock[] getBasicBlocksForCall(final CallSiteReference site) {
+    final IntSet s = callSiteMapping.getRelated(site.getProgramCounter());
+    final IBasicBlock[] result = new IBasicBlock[s.size()];
     int index = 0;
-    for (IntIterator it = s.intIterator(); it.hasNext();) {
-      int i = it.next();
+    for (final IntIterator it = s.intIterator(); it.hasNext();) {
+      final int i = it.next();
       result[index++] = getControlFlowGraph().getBlockForInstruction(i);
     }
     return result;
@@ -648,6 +648,9 @@ public abstract class IR {
   }
 
   public IBasicBlock getBasicBlockForCatch(SSAGetCaughtExceptionInstruction instruction) {
+    if (instruction == null) {
+      throw new IllegalArgumentException("instruction is null");
+    }
     int bb = instruction.getBasicBlockNumber();
     return cfg.getBasicBlock(bb);
   }

@@ -444,8 +444,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @return the PointerKey that acts as a representation for the class of
    *         pointers that includes the given array contents, or null if none
    *         found.
+   * @throws IllegalArgumentException  if I is null
    */
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
+    if (I == null) {
+      throw new IllegalArgumentException("I is null");
+    }
     if (Assertions.verifyAssertions) {
       IClass C = I.getConcreteType();
       if (!C.isArrayClass()) {

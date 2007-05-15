@@ -47,6 +47,9 @@ public class CallerContextPair extends CallerContext {
    * @see com.ibm.detox.ipa.callgraph.Context#get(com.ibm.detox.ipa.callgraph.ContextKey)
    */
   public ContextItem get(ContextKey name) {
+    if (name == null) {
+      throw new IllegalArgumentException("name is null");
+    }
     if (name.equals(ContextKey.CALLER)) {
       return super.get(name);
     } else {

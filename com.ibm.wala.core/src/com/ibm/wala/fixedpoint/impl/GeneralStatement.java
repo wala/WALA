@@ -139,9 +139,13 @@ public class GeneralStatement extends AbstractStatement {
    *          the equation operator
    * @param rhs
    *          the operands of the right-hand side in order
+   * @throws IllegalArgumentException  if rhs is null
    */
   public GeneralStatement(IVariable lhs, AbstractOperator operator, IVariable[] rhs) {
     super();
+    if (rhs == null) {
+      throw new IllegalArgumentException("rhs is null");
+    }
     this.operator = operator;
     this.lhs = lhs;
     this.rhs = (IVariable[]) rhs.clone();

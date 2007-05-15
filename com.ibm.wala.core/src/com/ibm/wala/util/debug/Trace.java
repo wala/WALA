@@ -95,8 +95,12 @@ public class Trace {
 
   /**
    * @param o
+   * @throws IllegalArgumentException  if o is null
    */
   public static synchronized void println(Object o) {
+    if (o == null) {
+      throw new IllegalArgumentException("o is null");
+    }
     Trace.println(o.toString());
   }
 

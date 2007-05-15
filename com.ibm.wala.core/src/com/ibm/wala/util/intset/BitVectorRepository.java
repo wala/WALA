@@ -46,8 +46,12 @@ public class BitVectorRepository {
    * @return the BitVector in this repository which is the canonical shared
    *         subset representative of value; the result will have the same bits
    *         as value, except it may exclude up to SUBSET_DELTA bits.
+   * @throws IllegalArgumentException  if value is null
    */
   public static BitVectorIntSet findOrCreateSharedSubset(BitVectorIntSet value) {
+    if (value == null) {
+      throw new IllegalArgumentException("value is null");
+    }
     if (STATS) {
       queries++;
       if (queries % STATS_WINDOW == 0) {

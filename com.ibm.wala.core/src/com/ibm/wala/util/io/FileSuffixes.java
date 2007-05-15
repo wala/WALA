@@ -49,8 +49,12 @@ public class FileSuffixes {
    * @param fileName
    *          name of a file
    * @return boolean
+   * @throws IllegalArgumentException  if fileName is null
    */
   public static boolean isSourceFile(String fileName) {
+    if (fileName == null) {
+      throw new IllegalArgumentException("fileName is null");
+    }
     int suffixIndex = fileName.indexOf(".java");
     if (suffixIndex > -1 && fileName.indexOf(CLASSPATH) == -1) {
       return true;

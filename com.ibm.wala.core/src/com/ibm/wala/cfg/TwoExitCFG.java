@@ -276,6 +276,9 @@ public class TwoExitCFG implements ControlFlowGraph {
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
    */
   public Iterator<? extends IBasicBlock> getPredNodes(IBasicBlock N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N is null");
+    }
     if (N.equals(exceptionalExit)) {
       return delegate.getExceptionalPredecessors(delegate.exit()).iterator();
     } else if (N.equals(delegate.exit())) {
@@ -581,6 +584,9 @@ public class TwoExitCFG implements ControlFlowGraph {
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getExceptionalSuccessors(IBasicBlock b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     if (b.equals(exceptionalExit)) {
       return Collections.emptySet();
     } else {

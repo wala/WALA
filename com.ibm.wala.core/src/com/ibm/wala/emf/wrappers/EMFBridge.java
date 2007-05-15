@@ -185,8 +185,12 @@ public class EMFBridge {
    * @param cha
    *          a WALA class hierarchy
    * @return a EMF interface hierarchy
+   * @throws IllegalArgumentException  if cha is null
    */
   public static EInterfaceHierarchyWrapper makeInterfaceHierarchy(ClassHierarchy cha) {
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
     EInterfaceHierarchyWrapper result = new EInterfaceHierarchyWrapper();
     // create nodes
     for (IClass klass : cha) {

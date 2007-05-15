@@ -90,8 +90,12 @@ public class OrdinalSet<T> implements Iterable<T> {
 
   /**
    * @return a new OrdinalSet instances
+   * @throws IllegalArgumentException  if A is null
    */
   public static <T> OrdinalSet<T> intersect(OrdinalSet<T> A, OrdinalSet<T> B) {
+    if (A == null) {
+      throw new IllegalArgumentException("A is null");
+    }
     if (Assertions.verifyAssertions) {
       if (A.size() != 0 && B.size() != 0) {
         Assertions._assert(A.mapping.equals(B.mapping));
