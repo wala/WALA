@@ -43,7 +43,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
   protected void buildAnalysisScope() {
     try {
       if (translatorFactory == null) {
-	translatorFactory = new JavaScriptTranslatorFactory.CAstRhinoFactory();
+        translatorFactory = new JavaScriptTranslatorFactory.CAstRhinoFactory();
       }
 
       loaderFactory = new JavaScriptLoaderFactory(translatorFactory);
@@ -77,15 +77,11 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
     Assertions.UNREACHABLE("Illegal to call setJ2SELibraries");
   }
 
-  protected Entrypoints 
-    makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) 
-  { 
-    return new JavaScriptEntryPoints(
-      cha, 
-      cha.getLoader(JavaScriptTypes.jsLoader));
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+    return new JavaScriptEntryPoints(cha, cha.getLoader(JavaScriptTypes.jsLoader));
   }
 
-  public AnalysisOptions getDefaultOptions(Entrypoints roots) {
+  public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> roots) {
     final AnalysisOptions options = new AnalysisOptions(scope, AstIRFactory.makeDefaultFactory(keepIRs), roots);
 
     options.setConstantType(Boolean.class, JavaScriptTypes.Boolean);

@@ -28,9 +28,8 @@ import com.ibm.wala.util.warnings.WarningSet;
 
 public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
 
-  private static JavaScriptTranslatorFactory translatorFactory =
-    new JavaScriptTranslatorFactory.CAstRhinoFactory();
-  
+  private static JavaScriptTranslatorFactory translatorFactory = new JavaScriptTranslatorFactory.CAstRhinoFactory();
+
   public static void setTranslatorFactory(JavaScriptTranslatorFactory translatorFactory) {
     Util.translatorFactory = translatorFactory;
   }
@@ -39,15 +38,9 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
     return translatorFactory;
   }
 
-  public static AnalysisOptions 
-    makeOptions(AnalysisScope scope,
-		boolean keepIRs,
-		ClassHierarchy cha,
-		Entrypoints roots,
-		final WarningSet warnings)
-  {
-    final AnalysisOptions options = 
-      new AnalysisOptions(scope, AstIRFactory.makeDefaultFactory(keepIRs), roots);
+  public static AnalysisOptions makeOptions(AnalysisScope scope, boolean keepIRs, ClassHierarchy cha, Iterable<Entrypoint> roots,
+      final WarningSet warnings) {
+    final AnalysisOptions options = new AnalysisOptions(scope, AstIRFactory.makeDefaultFactory(keepIRs), roots);
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
     options.setSelector(new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()));
@@ -58,64 +51,46 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
     options.setConstantType(Float.class, JavaScriptTypes.Number);
     options.setConstantType(Double.class, JavaScriptTypes.Number);
     options.setConstantType(null, JavaScriptTypes.Null);
-    
-    options.setUseConstantSpecificKeys( true );
 
-    options.setUseStacksForLexicalScoping( true );
+    options.setUseConstantSpecificKeys(true);
 
-    options.getSSAOptions().setPreserveNames( true );    
+    options.setUseStacksForLexicalScoping(true);
+
+    options.getSSAOptions().setPreserveNames(true);
 
     return options;
   }
-    
+
   public static JavaScriptLoaderFactory makeLoaders() {
     return new JavaScriptLoaderFactory(translatorFactory);
   }
 
-  public static AnalysisScope 
-    makeScope(String[] files, JavaScriptLoaderFactory loaders)
-      throws IOException 
-  {
-    return new CAstAnalysisScope( files, loaders );
+  public static AnalysisScope makeScope(String[] files, JavaScriptLoaderFactory loaders) throws IOException {
+    return new CAstAnalysisScope(files, loaders);
   }
 
-  public static AnalysisScope 
-    makeScope(SourceFileModule[] files, JavaScriptLoaderFactory loaders)
-      throws IOException 
-  {
-    return new CAstAnalysisScope( files, loaders );
+  public static AnalysisScope makeScope(SourceFileModule[] files, JavaScriptLoaderFactory loaders) throws IOException {
+    return new CAstAnalysisScope(files, loaders);
   }
 
-  public static AnalysisScope 
-    makeScope(URL[] files, JavaScriptLoaderFactory loaders)
-      throws IOException 
-  {
-    return new CAstAnalysisScope( files, loaders );
+  public static AnalysisScope makeScope(URL[] files, JavaScriptLoaderFactory loaders) throws IOException {
+    return new CAstAnalysisScope(files, loaders);
   }
 
-  public static ClassHierarchy 
-    makeHierarchy(AnalysisScope scope,
-		  ClassLoaderFactory loaders,
-		  WarningSet warnings) 
-      throws ClassHierarchyException
-  {
-    return ClassHierarchy.make(
-      scope,
-      loaders,
-      warnings,
-      JavaScriptTypes.Root);
+  public static ClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders, WarningSet warnings)
+      throws ClassHierarchyException {
+    return ClassHierarchy.make(scope, loaders, warnings, JavaScriptTypes.Root);
   }
 
-  public static Entrypoints makeScriptRoots(ClassHierarchy cha) { 
-    return new JavaScriptEntryPoints(
-      cha,
-      cha.getLoader( JavaScriptTypes.jsLoader ));
+  public static Iterable<Entrypoint> makeScriptRoots(ClassHierarchy cha) {
+    return new JavaScriptEntryPoints(cha, cha.getLoader(JavaScriptTypes.jsLoader));
   }
 
   public static Collection getNodes(CallGraph CG, String funName) {
     boolean ctor = funName.startsWith("ctor:");
-    TypeReference TR = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName( "L"+(ctor?funName.substring(5):funName) ));
-    MethodReference MR = ctor? JavaScriptMethods.makeCtorReference(TR): AstMethodReference.fnReference(TR);
+    TypeReference TR = TypeReference.findOrCreate(JavaScriptTypes.jsLoader, TypeName.string2TypeName("L"
+        + (ctor ? funName.substring(5) : funName)));
+    MethodReference MR = ctor ? JavaScriptMethods.makeCtorReference(TR) : AstMethodReference.fnReference(TR);
     return CG.getNodes(MR);
   }
 }

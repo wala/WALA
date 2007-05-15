@@ -15,7 +15,7 @@ import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
@@ -28,7 +28,7 @@ class dumpCallGraph {
       JavaScriptLoaderFactory loaders = Util.makeLoaders();
       AnalysisScope scope = Util.makeScope( args, loaders );
       ClassHierarchy cha = Util.makeHierarchy( scope, loaders, warnings );
-      Entrypoints roots = Util.makeScriptRoots( cha );
+      Iterable<Entrypoint> roots = Util.makeScriptRoots( cha );
       AnalysisOptions options = Util.makeOptions(scope, false, cha, roots, warnings);
 
       JSCFABuilder builder = new JSZeroXCFABuilder(cha, warnings, options, null, null, null, ZeroXInstanceKeys.ALLOCATIONS);
