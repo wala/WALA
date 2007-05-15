@@ -25,7 +25,7 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.impl.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.callgraph.Entrypoints;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -146,11 +146,11 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     return cha;
   }
 
-  protected Entrypoints makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
     return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE_REF, cha);
   }
 
-  public AnalysisOptions getDefaultOptions(Entrypoints entrypoints) {
+  public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> entrypoints) {
     AnalysisOptions options = new AnalysisOptions(getScope(), AstIRFactory.makeDefaultFactory(true), entrypoints);
 
     SSAOptions ssaOptions = new SSAOptions();
