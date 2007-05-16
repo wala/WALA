@@ -27,11 +27,14 @@ public class PointType extends TypeAbstraction {
 
   /**
    * Private constructor ... only for internal use.
+   * @throws IllegalArgumentException  if type is null
    */
   public PointType(IClass type, ClassHierarchy cha) {
+    if (type == null) {
+      throw new IllegalArgumentException("type is null");
+    }
     this.type = type;
     if (Assertions.verifyAssertions) {
-      Assertions._assert(type != null);
       Assertions._assert(type.getReference().isReferenceType());
     }
     this.cha = cha;

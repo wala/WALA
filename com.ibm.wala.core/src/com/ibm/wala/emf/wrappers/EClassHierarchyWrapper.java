@@ -89,10 +89,13 @@ public class EClassHierarchyWrapper extends EObjectTree {
   /**
    * @param o an EClassHierarchy
    * @return a ClassHierarchy populated according to the contents of o
+   * @throws IllegalArgumentException  if cha is null
    */
   @SuppressWarnings("unchecked")
   public static EClassHierarchyWrapper load(EClassHierarchy cha) {
-    Assertions.productionAssertion(cha != null);
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
     EClassHierarchyWrapper result = new EClassHierarchyWrapper();
     
     for (Iterator<EObject> it = cha.getNodes().getContents().iterator(); it.hasNext(); ) {

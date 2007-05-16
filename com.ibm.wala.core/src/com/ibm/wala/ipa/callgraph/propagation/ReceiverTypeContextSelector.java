@@ -18,7 +18,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -45,8 +44,8 @@ public class ReceiverTypeContextSelector implements ContextSelector {
    *      com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(receiver != null, "Can't choose context for null receiver!");
+    if (receiver == null) {
+      throw new IllegalArgumentException("receiver is null");
     }
     PointType P = new PointType(receiver.getConcreteType(), cha);
     return new JavaTypeContext(P);

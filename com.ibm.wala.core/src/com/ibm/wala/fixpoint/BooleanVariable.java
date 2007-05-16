@@ -11,7 +11,6 @@
 package com.ibm.wala.fixpoint;
 
 import com.ibm.wala.fixedpoint.impl.AbstractVariable;
-import com.ibm.wala.util.debug.Assertions;
 
 
 /**
@@ -70,12 +69,11 @@ public class BooleanVariable extends AbstractVariable {
 
   /**
    * @param other
+   * @throws IllegalArgumentException  if other is null
    */
   public void or(BooleanVariable other) {
-    if (Assertions.verifyAssertions) {
-      if (other == null) {
-        Assertions.UNREACHABLE("other cannot be null");
-      }
+    if (other == null) {
+      throw new IllegalArgumentException("other is null");
     }
     B = B | other.B;
   }

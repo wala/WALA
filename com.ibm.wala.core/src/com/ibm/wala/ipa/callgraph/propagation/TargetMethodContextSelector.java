@@ -19,7 +19,6 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.Selector;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -46,8 +45,8 @@ public class TargetMethodContextSelector implements ContextSelector {
    *      com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey R) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(R != null, "Can't choose dispatch for null receiver!");
+    if (R == null) {
+      throw new IllegalArgumentException("R is null");
     }
 
     final IMethod M = R.getConcreteType().getMethod(selector);

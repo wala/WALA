@@ -29,10 +29,13 @@ public class ConeType extends TypeAbstraction {
 
   /**
    * default constructor
+   * @throws IllegalArgumentException  if type is null
    */
   public ConeType(IClass type, ClassHierarchy cha) {
+    if (type == null) {
+      throw new IllegalArgumentException("type is null");
+    }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(type != null);
       Assertions._assert(type.getReference().isReferenceType());
     }
     this.type = type;

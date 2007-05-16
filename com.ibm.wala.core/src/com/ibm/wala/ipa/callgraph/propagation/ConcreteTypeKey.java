@@ -26,8 +26,10 @@ public final class ConcreteTypeKey implements InstanceKey {
   private final IClass type;
 
   public ConcreteTypeKey(IClass type) {
+    if (type == null) {
+      throw new IllegalArgumentException("type is null");
+    }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(type != null);
       if (type.isInterface()) {
         Assertions.UNREACHABLE("unexpected interface: " + type);
       }

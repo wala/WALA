@@ -252,8 +252,10 @@ public class SparseIntSet implements IntSet {
 
   public static int[] diffInternal(SparseIntSet A, SparseIntSet B) {
 
+    if (A == null) {
+      throw new IllegalArgumentException("A is null");
+    }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(A != null);
       Assertions._assert(B != null);
     }
 

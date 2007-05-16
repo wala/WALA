@@ -171,10 +171,11 @@ public class MethodBypass {
    * 
    * @param target
    * @return Object
+   * @throws IllegalArgumentException  if target is null
    */
   public SyntheticMethod getBypass(IMethod target) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(target != null);
+    if (target == null) {
+      throw new IllegalArgumentException("target is null");
     }
     return getBypass(target.getReference());
   }

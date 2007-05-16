@@ -152,11 +152,14 @@ public final class ShrikeClass implements IClass {
    * @param cha
    * @param warnings
    * @throws InvalidClassFileException
+   * @throws IllegalArgumentException
+   *           if reader is null
    */
   public ShrikeClass(ShrikeClassReaderHandle reader, IClassLoader loader, ClassHierarchy cha, WarningSet warnings)
       throws InvalidClassFileException {
-    if (reader == null)
-      throw new NullPointerException();
+    if (reader == null) {
+      throw new IllegalArgumentException("reader is null");
+    }
     this.reader = reader;
     this.loader = loader;
     this.cha = cha;
@@ -506,8 +509,8 @@ public final class ShrikeClass implements IClass {
     // didn't find it yet. special logic for interfaces
     try {
       if (isInterface() || isAbstract()) {
-        final Iterator<IClass> it = (isInterface()) ? getAllAncestorInterfaces().iterator() :
-                                                      getAllImplementedInterfaces().iterator();
+        final Iterator<IClass> it = (isInterface()) ? getAllAncestorInterfaces().iterator() : getAllImplementedInterfaces()
+            .iterator();
         // try each superinterface
         while (it.hasNext()) {
           IClass k = (IClass) it.next();
@@ -524,7 +527,6 @@ public final class ShrikeClass implements IClass {
     return null;
 
   }
-
 
   private final HashMap<Atom, IField> fieldMap = new HashMap<Atom, IField>(5);
 
@@ -882,7 +884,7 @@ public final class ShrikeClass implements IClass {
     return result;
   }
 
-   private SignatureReader getSignatureReader() throws InvalidClassFileException {
+  private SignatureReader getSignatureReader() throws InvalidClassFileException {
     ClassReader r = reader.get();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
     r.initClassAttributeIterator(attrs);
@@ -902,7 +904,7 @@ public final class ShrikeClass implements IClass {
     return result;
   }
 
-   public ClassSignature getClassSignature() throws InvalidClassFileException {
+  public ClassSignature getClassSignature() throws InvalidClassFileException {
     // TODO: cache this later?
     SignatureReader r = getSignatureReader();
     if (r == null) {

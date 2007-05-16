@@ -72,7 +72,8 @@ public class Util {
    * @param options
    * @param cha
    * @param warn
-   * @throws IllegalArgumentException  if options is null
+   * @throws IllegalArgumentException
+   *           if options is null
    */
   public static void addDefaultSelectors(AnalysisOptions options, ClassHierarchy cha, WarningSet warn) {
     if (options == null) {
@@ -84,8 +85,11 @@ public class Util {
 
   /**
    * Not terribly efficient
-   * @throws IllegalArgumentException  if g1 is null
-   * @throws IllegalArgumentException  if g2 is null
+   * 
+   * @throws IllegalArgumentException
+   *           if g1 is null
+   * @throws IllegalArgumentException
+   *           if g2 is null
    */
   public static <T> boolean areEqual(Graph<T> g1, Graph<T> g2) {
     if (g2 == null) {
@@ -118,8 +122,11 @@ public class Util {
 
   /**
    * Is g1 a subset of g2? Not terribly efficient
-   * @throws IllegalArgumentException  if g1 is null
-   * @throws IllegalArgumentException  if g2 is null
+   * 
+   * @throws IllegalArgumentException
+   *           if g1 is null
+   * @throws IllegalArgumentException
+   *           if g2 is null
    */
   public static <T> boolean isSubset(Graph<T> g1, Graph<T> g2) {
     if (g2 == null) {
@@ -153,22 +160,27 @@ public class Util {
   /**
    * Modify an options object to include bypass logic as specified by a an XML
    * file.
-   * @throws IllegalArgumentException  if scope is null
-   * @throws IllegalArgumentException  if cl is null
-   * @throws IllegalArgumentException  if options is null
-   * @throws IllegalArgumentException  if scope is null
+   * 
+   * @throws IllegalArgumentException
+   *           if scope is null
+   * @throws IllegalArgumentException
+   *           if cl is null
+   * @throws IllegalArgumentException
+   *           if options is null
+   * @throws IllegalArgumentException
+   *           if scope is null
    */
   public static void addBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, String xmlFile, ClassHierarchy cha)
       throws IllegalArgumentException {
     if (scope == null) {
-          throw new IllegalArgumentException("scope is null");
-        }
+      throw new IllegalArgumentException("scope is null");
+    }
     if (options == null) {
-          throw new IllegalArgumentException("options is null");
-        }
+      throw new IllegalArgumentException("options is null");
+    }
     if (cl == null) {
-          throw new IllegalArgumentException("cl is null");
-        }
+      throw new IllegalArgumentException("cl is null");
+    }
     if (cha == null) {
       throw new IllegalArgumentException("cha cannot be null");
     }
@@ -225,8 +237,13 @@ public class Util {
    * @param scope
    * @param cha
    * @return set of all eligible Main classes in the class hierarchy
+   * @throws IllegalArgumentException
+   *           if scope is null
    */
   public static Iterable<Entrypoint> makeMainEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+    if (scope == null) {
+      throw new IllegalArgumentException("scope is null");
+    }
     return makeMainEntrypoints(scope.getApplicationLoader(), cha);
   }
 
@@ -260,7 +277,11 @@ public class Util {
     return makeMainEntrypoints(scope, cha, new String[] { className });
   }
 
-  public static Iterable<Entrypoint> makeMainEntrypoints(final AnalysisScope scope, final ClassHierarchy cha, final String[] classNames) {
+  public static Iterable<Entrypoint> makeMainEntrypoints(final AnalysisScope scope, final ClassHierarchy cha,
+      final String[] classNames) {
+    if (scope == null) {
+      throw new IllegalArgumentException("scope is null");
+    }
     return makeMainEntrypoints(scope.getApplicationLoader(), cha, classNames);
   }
 
@@ -308,8 +329,13 @@ public class Util {
    * @param cg
    * @return a graph whose nodes are MethodReferences, and whose edges represent
    *         calls between MethodReferences
+   * @throws IllegalArgumentException
+   *           if cg is null
    */
   public static Graph<MethodReference> squashCallGraph(final String name, final CallGraph cg) {
+    if (cg == null) {
+      throw new IllegalArgumentException("cg is null");
+    }
     final Set<MethodReference> nodes = HashSetFactory.make();
     for (Iterator nodesI = cg.iterator(); nodesI.hasNext();) {
       nodes.add(((CGNode) nodesI.next()).getMethod().getReference());
@@ -489,8 +515,10 @@ public class Util {
   /**
    * @param supG
    * @param subG
-   * @throws IllegalArgumentException  if subG is null
-   * @throws IllegalArgumentException  if supG is null
+   * @throws IllegalArgumentException
+   *           if subG is null
+   * @throws IllegalArgumentException
+   *           if supG is null
    */
   public static <T> void checkGraphSubset(Graph<T> supG, Graph<T> subG) {
 
@@ -589,10 +617,15 @@ public class Util {
    * @param customInterpreter
    *          user-defined context interpreter, or null if none
    * @return a 0-CFA Call Graph Builder.
+   * @throws IllegalArgumentException
+   *           if options is null
    */
   public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
     addDefaultSelectors(options, cha, warnings);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
@@ -612,10 +645,15 @@ public class Util {
    * @param warnings
    *          an object which tracks analysis warnings
    * @return a 1-CFA Call Graph Builder.
+   * @throws IllegalArgumentException
+   *           if options is null
    */
   public static CallGraphBuilder makeOneCFABuilder(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl,
       AnalysisScope scope, WarningSet warnings) {
 
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
     addDefaultSelectors(options, cha, warnings);
     addDefaultBypassLogic(options, scope, cl, cha);
     ContextSelector appSelector = null;
@@ -660,10 +698,15 @@ public class Util {
    * @param customInterpreter
    *          user-defined context interpreter, or null if none
    * @return a 0-1-CFA Call Graph Builder.
+   * @throws IllegalArgumentException
+   *           if options is null
    */
   public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
     addDefaultSelectors(options, cha, warnings);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
@@ -706,10 +749,15 @@ public class Util {
    * @param customInterpreter
    *          user-defined context interpreter, or null if none
    * @return a 0-1-CFA Call Graph Builder.
+   * @throws IllegalArgumentException
+   *           if options is null
    */
   public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
     addDefaultSelectors(options, cha, warnings);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
@@ -731,10 +779,15 @@ public class Util {
    *          an object which tracks analysis warnings
    * @return a 0-CFA Call Graph Builder augmented with extra logic for
    *         containers
+   * @throws IllegalArgumentException
+   *           if options is null
    */
   public static CFABuilder makeZeroContainerCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings) {
 
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
     addDefaultSelectors(options, cha, warnings);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
@@ -756,10 +809,15 @@ public class Util {
    *          an object which tracks analysis warnings
    * @return a 0-1-CFA Call Graph Builder augmented with extra logic for
    *         containers
+   * @throws IllegalArgumentException
+   *           if options is null
    */
   public static CFABuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings) {
 
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
     addDefaultSelectors(options, cha, warnings);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
@@ -781,10 +839,15 @@ public class Util {
    *          an object which tracks analysis warnings
    * @return a 0-1-CFA Call Graph Builder augmented with extra logic for
    *         containers
+   * @throws IllegalArgumentException
+   *           if options is null
    */
   public static CFABuilder makeVanillaZeroOneContainerCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings) {
 
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
     addDefaultSelectors(options, cha, warnings);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;

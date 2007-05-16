@@ -32,8 +32,10 @@ public class SetType extends TypeAbstraction {
   private final int hashCode;
   
   public SetType(PointType[] points) {
+    if (points == null) {
+      throw new IllegalArgumentException("points is null");
+    }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(points != null);
       Assertions._assert(points.length > 0);
     }
     types = HashSetFactory.make(points.length);

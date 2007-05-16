@@ -78,8 +78,12 @@ public class TwoExitCFG implements ControlFlowGraph {
   /**
    * @param delegate
    *          A "normal" cfg with one exit node
+   * @throws IllegalArgumentException  if delegate is null
    */
   public TwoExitCFG(ControlFlowGraph delegate) {
+    if (delegate == null) {
+      throw new IllegalArgumentException("delegate is null");
+    }
     if (Assertions.verifyAssertions) {
       Assertions._assert(!(delegate instanceof TwoExitCFG), "bad recursion");
     }

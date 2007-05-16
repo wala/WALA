@@ -451,10 +451,11 @@ public class ClassHierarchy implements Iterable<IClass> {
   /**
    * @return the canonical FieldReference that represents a given field , or
    *         null if none found
+   * @throws IllegalArgumentException  if f is null
    */
   public IField resolveField(FieldReference f) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(f != null);
+    if (f == null) {
+      throw new IllegalArgumentException("f is null");
     }
     IClass klass = lookupClass(f.getDeclaringClass());
     if (klass == null) {
@@ -767,10 +768,11 @@ public class ClassHierarchy implements Iterable<IClass> {
    * Load a class using one of the loaders specified for this class hierarchy
    * 
    * @return null if can't find the class.
+   * @throws IllegalArgumentException  if A is null
    */
   public IClass lookupClass(TypeReference A) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(A != null, "lookupClass(null) is illegal");
+    if (A == null) {
+      throw new IllegalArgumentException("A is null");
     }
     ClassLoaderReference loaderRef = A.getClassLoader();
     for (int i = 0; i < loaders.length; i++) {
@@ -845,10 +847,13 @@ public class ClassHierarchy implements Iterable<IClass> {
 
   /**
    * Is c a subclass of T?
+   * @throws IllegalArgumentException  if c is null
    */
   public boolean isSubclassOf(IClass c, IClass T) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
+    }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(c != null, "null c");
       Assertions._assert(T != null, "null T");
     }
 

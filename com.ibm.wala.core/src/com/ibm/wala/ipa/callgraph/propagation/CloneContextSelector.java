@@ -18,7 +18,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -65,8 +64,8 @@ public class CloneContextSelector implements ContextSelector {
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#mayUnderstand(com.ibm.detox.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
    */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(targetMethod != null);
+    if (targetMethod == null) {
+      throw new IllegalArgumentException("targetMethod is null");
     }
     return targetMethod.getReference().equals(CloneInterpreter.CLONE);
   }

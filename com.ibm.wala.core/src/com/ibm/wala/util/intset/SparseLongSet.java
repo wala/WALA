@@ -228,11 +228,14 @@ public class SparseLongSet implements LongSet {
 
   /**
    * Compute the asymmetric difference of two sets, a \ b.
+   * @throws IllegalArgumentException  if A is null
    */
   public static SparseLongSet diff(SparseLongSet A, SparseLongSet B) {
 
+    if (A == null) {
+      throw new IllegalArgumentException("A is null");
+    }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(A != null);
       Assertions._assert(B != null);
     }
 

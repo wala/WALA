@@ -253,7 +253,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    */
   public void setJ2SELibraries(JarFile[] libs) {
     if (libs == null) {
-      Assertions.UNREACHABLE("Illegal to setJ2SELibraries(null)");
+      throw new IllegalArgumentException("libs is null");
     }
     this.j2seLibs = new Module[libs.length];
     for (int i = 0; i < libs.length; i++) {
@@ -268,7 +268,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    */
   public void setJ2SELibraries(Module[] libs) {
     if (libs == null) {
-      Assertions.UNREACHABLE("Illegal to setJ2SELibraries(null)");
+      throw new IllegalArgumentException("libs is null");
     }
     this.j2seLibs = new Module[libs.length];
     for (int i = 0; i < libs.length; i++) {
