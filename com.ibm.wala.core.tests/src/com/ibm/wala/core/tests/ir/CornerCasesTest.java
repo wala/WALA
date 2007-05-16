@@ -75,7 +75,7 @@ public class CornerCasesTest extends WalaTestCase {
         .findOrCreateUTF8("()Ljava/lang/Object;")));
     assertTrue(m != null);
     IR ir = options.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, cha, options.getSSAOptions(), warnings);
-    new TypeInference(ir, cha);
+    new TypeInference(ir);
 
     Trace.print(warnings.toString());
   }
