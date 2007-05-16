@@ -113,6 +113,11 @@ public final class WalaProperties {
     return result;
   }
 
+  /**
+   * @deprecated beause when running under eclipse, there may be no such directory.
+   * Need to handle that case.
+   */
+  @Deprecated
   public static String getWalaHomeDir() {
     final String envProperty = System.getProperty("WALA_HOME"); //$NON-NLS-1$
     if (envProperty != null)
