@@ -10,35 +10,24 @@
  *******************************************************************************/
 package com.ibm.wala.util.tables;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.util.Properties;
-import java.util.StringTokenizer;
-
-import org.eclipse.core.runtime.Plugin;
+import java.util.Map;
 
 import com.ibm.wala.util.StringStuff;
-import com.ibm.wala.util.config.FileProvider;
-import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.intset.SimpleVector;
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * @author sfink
  * @author Eran Yahav
+ * @author Alexey Loginov
  */
-public class Table implements Cloneable {
+public class Table<T> implements Cloneable {
 
-  // table is implemented as a SimpleVector of rows. Each row is a SimpleVector.
-  private final SimpleVector<SimpleVector> rows = new SimpleVector<SimpleVector>();
+  // table is implemented as a SimpleVector of rows. Each row is a SimpleVector<T>.
+  protected final SimpleVector<SimpleVector<T>> rows = new SimpleVector<SimpleVector<T>>();
 
   // SimpleVector<String> ... headings of columns
-  private final SimpleVector<String> columnHeadings = new SimpleVector<String>();
+  protected final SimpleVector<String> columnHeadings = new SimpleVector<String>();
 
   /**
    * create an empty table
@@ -49,7 +38,7 @@ public class Table implements Cloneable {
   /**
    * create an empty table with the same column headings as t
    */
-  public Table(Table t) {
+  public Table(Table<T> t) {
     for (int i = 0; i < t.getNumberOfColumns(); i++) {
       columnHeadings.set(i, t.getColumnHeading(i));
     }
@@ -61,122 +50,6 @@ public class Table implements Cloneable {
   public Table(String[] columns) {
     for (int i = 0; i < columns.length; i++) {
       columnHeadings.set(i, columns[i]);
-    }
-  }
-
-  /**
-   * read from a direct (native) text file
-   * @throws IOException 
-   * @throws FileNotFoundException 
-   * 
-   */
-  public static Table readFromDirectTextFile(String fileName) throws FileNotFoundException, IOException{
-    File f = new File(fileName);
-    return readFromTextFile(f);
-  }
-
-  /**
-   * read from a text file obtained as a resource
-   * 
-   * @param fileName
-   * @return
-   * @throws IOException
-   * @throws WalaException
-   */
-  public static Table readFromTextFile(String fileName) throws IOException, WalaException {
-    File f = FileProvider.getFile(fileName);
-    return readFromTextFile(f);
-  }
-
-  /**
-   * read from a text file obtained as a resource
-   * 
-   * @param fileName
-   * @return
-   * @throws IOException
-   * @throws WalaException
-   */
-  public static Table readFromTextFile(Plugin p, String fileName) throws IOException {
-    File f = FileProvider.getFileFromPlugin(p, fileName);
-    return readFromTextFile(f);
-  }
-
-  /**
-   * @param f
-   *          a file containing a table in text format, whitespace delimited
-   * @throws IOException 
-   * @throws FileNotFoundException 
-   */
-  private static Table readFromTextFile(File f) throws FileNotFoundException, IOException {
-    return readFromStream(new FileInputStream(f));
-  }
-
-  /**
-   * @param s
-   *          a stream containing a table in text format, whitespace delimited
-   * @throws IOException 
-   */
-  public static Table readFromStream(InputStream s) throws IOException {
-    Table result = new Table();
-
-    LineNumberReader reader = new LineNumberReader(new InputStreamReader(s));
-
-    // LineNumberReader reader = new LineNumberReader(new
-    // InputStreamReader(new FileInputStream(f)));
-    String line = readNextNonCommentLine(reader);
-    if (line == null) {
-      throw new IOException("first line expected to be column headings");
-    }
-    result.populateColumnHeadings(line);
-
-    line = readNextNonCommentLine(reader);
-    int row = 0;
-    while (line != null) {
-      result.populateRow(row, line);
-      line = readNextNonCommentLine(reader);
-      row++;
-    }
-
-    return result;
-  }
-
-  public static String readNextNonCommentLine(LineNumberReader reader) throws IOException {
-    if (reader == null) {
-      throw new IllegalArgumentException("reader is null");
-    }
-    String line = reader.readLine();
-    while (line != null && isCommented(line)) {
-      line = reader.readLine();
-    }
-    return line;
-  }
-
-  private static boolean isCommented(String line) {
-    return line.charAt(0) == Constants.COMMENT;
-  }
-
-  private void populateRow(int row, String line) {
-    StringTokenizer st = new StringTokenizer(line);
-    int nColumns = st.countTokens();
-    Assertions.productionAssertion(nColumns == getNumberOfColumns(), "expected " + getNumberOfColumns() + " got " + nColumns
-        + " row " + row);
-    SimpleVector<Object> r = new SimpleVector<Object>();
-    rows.set(row, r);
-    for (int i = 0; i < nColumns; i++) {
-      r.set(i, st.nextElement());
-    }
-
-  }
-
-  /**
-   * @param line
-   *          a whitespace-delimited string of column names
-   */
-  private void populateColumnHeadings(String line) {
-    StringTokenizer st = new StringTokenizer(line);
-    int nColumns = st.countTokens();
-    for (int i = 0; i < nColumns; i++) {
-      columnHeadings.set(i, (String) st.nextElement());
     }
   }
 
@@ -205,8 +78,8 @@ public class Table implements Cloneable {
     return result.toString();
   }
 
-  public Object getElement(int row, int column) {
-    SimpleVector r = (SimpleVector) rows.get(row);
+  public T getElement(int row, int column) {
+    SimpleVector<T> r = rows.get(row);
     return r.get(column);
   }
 
@@ -214,7 +87,7 @@ public class Table implements Cloneable {
    * Note that column indices start at zero
    */
   public String getColumnHeading(int i) {
-    return (String) columnHeadings.get(i);
+    return columnHeadings.get(i);
   }
 
   private int[] computeColumnWidths() {
@@ -238,28 +111,19 @@ public class Table implements Cloneable {
     return rows.getMaxIndex() + 1;
   }
 
-  public Properties row2Properties(int row) {
-    Properties result = new Properties();
+  public Map<String,T> row2Map(int row) {
+    Map<String,T> result = HashMapFactory.make();
     for (int j = 0; j < getNumberOfColumns(); j++) {
       result.put(getColumnHeading(j), getElement(row, j));
     }
     return result;
   }
 
-  public void addRow(Properties p) {
-    SimpleVector<Object> r = new SimpleVector<Object>();
+  public void addRow(Map<String,T> p) {
+    SimpleVector<T> r = new SimpleVector<T>();
     rows.set(rows.getMaxIndex() + 1, r);
     for (int i = 0; i < getNumberOfColumns(); i++) {
-      r.set(i, p.getProperty(getColumnHeading(i)));
+      r.set(i, (T) p.get(getColumnHeading(i)));
     }
-  }
-
-  @Override
-  public Object clone() throws CloneNotSupportedException {
-    Table result = new Table(this);
-    for (int i = 0; i < getNumberOfRows(); i++) {
-      result.addRow(row2Properties(i));
-    }
-    return result;
   }
 }

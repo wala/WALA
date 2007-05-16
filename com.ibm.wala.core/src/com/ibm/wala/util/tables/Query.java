@@ -12,7 +12,7 @@ package com.ibm.wala.util.tables;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Properties;
+import java.util.Map;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 
@@ -22,16 +22,16 @@ import com.ibm.wala.util.collections.HashSetFactory;
  * @author sjfink
  *
  */
-public class Query {
+public class Query<T> {
 
   /**
-   * SELECT * from t where column="value"
+   * SELECT * from t where column=value
    */
-  public static Collection<Properties> selectStarWhereEquals(Table t, String column, String value) {
-    Collection<Properties> result = new ArrayList<Properties>();
+  public static <T> Collection<Map<String,T>> selectStarWhereEquals(Table<T> t, String column, T value) {
+    Collection<Map<String,T>> result = new ArrayList<Map<String,T>>();
     for (int i = 0 ; i < t.getNumberOfRows(); i++) {
-      Properties p = t.row2Properties(i);
-      if (p.getProperty(column).equals(value)) {
+      Map<String,T> p = t.row2Map(i);
+      if (p.get(column).equals(value)) {
         result.add(p);
       }
     }
@@ -39,21 +39,30 @@ public class Query {
   }
 
   /**
-   * SELECT attribute FROM t where column="value"
+   * SELECT attribute FROM t where column=value
    */
-  public static Collection<String> selectWhereEquals(Table t, String attribute, String column, String value) {
-    Collection<Properties> rows = selectStarWhereEquals(t, column, value);
-    Collection<String> result = HashSetFactory.make();
-    for (Properties p : rows) {
-      result.add(p.getProperty(attribute));
+  public static <T> Collection<T> selectWhereEquals(Table<T> t, String attribute, String column, T value) {
+    Collection<Map<String,T>> rows = selectStarWhereEquals(t, column, value);
+    Collection<T> result = HashSetFactory.make();
+    for (Map<String,T> p : rows) {
+      result.add(p.get(attribute));
     }
     return result;
   }
 
-  public static Table viewWhereEquals(Table t, String column, String value) {
-    Collection<Properties> c = selectStarWhereEquals(t, column, value);
-    Table result = new Table(t);
-    for (Properties p : c) {
+  public static <T> Table<T> viewWhereEquals(Table<T> t, String column, T value) {
+    Collection<Map<String,T>> c = selectStarWhereEquals(t, column, value);
+    Table<T> result = new Table<T>(t);
+    for (Map<String,T> p : c) {
+      result.addRow(p);
+    }
+    return result;
+  }
+
+  public static StringTable viewWhereEquals(StringTable t, String column, String value) {
+    Collection<Map<String,String>> c = selectStarWhereEquals(t, column, value);
+    StringTable result = new StringTable(t);
+    for (Map<String,String> p : c) {
       result.addRow(p);
     }
     return result;
