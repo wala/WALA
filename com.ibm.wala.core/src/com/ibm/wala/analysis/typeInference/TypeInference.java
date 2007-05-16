@@ -84,19 +84,16 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
    */
   protected final boolean doPrimitives;
 
-  public TypeInference(IR ir, ClassHierarchy cha, boolean doPrimitives) {
-    if (cha == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
-    this.cha = cha;
+  public TypeInference(IR ir, boolean doPrimitives) {
+    this.cha = ir.getMethod().getClassHierarchy();
     this.ir = ir;
     this.doPrimitives = doPrimitives;
     this.BOTTOM = new ConeType(cha.getRootClass(), cha);
     initialize();
   }
 
-  public TypeInference(IR ir, ClassHierarchy cha) {
-    this(ir, cha, false);
+  public TypeInference(IR ir) {
+    this(ir, false);
   }
 
   protected void initialize() {

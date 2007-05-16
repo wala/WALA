@@ -128,7 +128,7 @@ public class TypeBasedHeapModel implements HeapModel {
     if (s == null) {
       return Collections.emptyMap();
     }
-    TypeInference ti = new TypeInference(ir, cg.getClassHierarchy());
+    TypeInference ti = new TypeInference(ir);
     ti.solve();
 
     for (int i = 1; i <= s.getMaxValueNumber(); i++) {
