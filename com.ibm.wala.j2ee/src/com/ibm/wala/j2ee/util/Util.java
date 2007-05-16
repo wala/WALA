@@ -284,6 +284,9 @@ public class Util {
   public static void addJ2EEBypassLogic(AnalysisOptions options, AnalysisScope scope, DeploymentMetaData dmd, ClassHierarchy cha,
       ReceiverTypeInferenceCache typeInference, WarningSet warn) {
 
+    if (cha == null) {
+          throw new IllegalArgumentException("cha is null");
+        }
     MethodTargetSelector ms = new J2EEMethodTargetSelector(scope, options.getMethodTargetSelector(), dmd, cha, typeInference, warn);
     options.setSelector(ms);
 
