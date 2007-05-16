@@ -69,13 +69,13 @@ public final class MethodData {
     this.instructionsToBytecodes = instructionsToBytecodes;
 
     if (instructions == null) {
-      throw new NullPointerException("Instruction array cannot be null");
+      throw new IllegalArgumentException("Instruction array cannot be null");
     }
     if (handlers == null) {
-      throw new NullPointerException("Handler array cannot be null");
+      throw new IllegalArgumentException("Handler array cannot be null");
     }
     if (instructionsToBytecodes == null) {
-      throw new NullPointerException("InstructionToBytecodes array cannot be null");
+      throw new IllegalArgumentException("InstructionToBytecodes array cannot be null");
     }
     if (instructions.length != handlers.length) {
       throw new IllegalArgumentException("Handlers array must be the same length as the instructions");

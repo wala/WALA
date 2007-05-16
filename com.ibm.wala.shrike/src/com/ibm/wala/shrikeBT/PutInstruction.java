@@ -75,13 +75,13 @@ public class PutInstruction extends Instruction {
 
   public static PutInstruction make(String type, String className, String fieldName, boolean isStatic) {
     if (type == null) {
-      throw new NullPointerException("type must not be null");
+      throw new IllegalArgumentException("type must not be null");
     }
     if (className == null) {
-      throw new NullPointerException("className must not be null");
+      throw new IllegalArgumentException("className must not be null");
     }
     if (fieldName == null) {
-      throw new NullPointerException("fieldName must not be null");
+      throw new IllegalArgumentException("fieldName must not be null");
     }
     return new PutInstruction(isStatic ? OP_putstatic : OP_putfield, type, className, fieldName);
   }
