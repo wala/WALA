@@ -1065,6 +1065,8 @@ public abstract class AstTranslator extends CAstVisitor {
         return getUnderlyingSymtab().getConstant((Boolean) o);
       } else if (o instanceof Character) {
         return getUnderlyingSymtab().getConstant(((Character) o).charValue());
+      } else if (o instanceof Byte)  {
+      	return getUnderlyingSymtab().getConstant(((Byte) o).byteValue());
       } else if (o == null) {
         return getUnderlyingSymtab().getNullConstant();
       } else if (o == CAstControlFlowMap.SWITCH_DEFAULT) {
