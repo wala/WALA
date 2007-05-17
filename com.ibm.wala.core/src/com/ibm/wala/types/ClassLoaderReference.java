@@ -53,6 +53,9 @@ public class ClassLoaderReference {
    *          String (actually Atom) name identifying the loader
    */
   public ClassLoaderReference(Atom name) {
+    if (name == null) {
+      throw new IllegalArgumentException("name is null");
+    }
     this.name = name;
   }
 
@@ -71,6 +74,7 @@ public class ClassLoaderReference {
   }
 
   /**
+   * TODO: I hate that this exists.
    * @param parent
    *          the parent of this loader in the loader hierarchy,
    */

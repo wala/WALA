@@ -20,7 +20,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * 
- *
+ * 
  */
 public class Util {
 
@@ -90,24 +90,24 @@ public class Util {
     SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
     return G.getBlockForInstruction(sw.getDefault()).equals(s);
   }
-    
+
   public static int getSwitchLabel(ControlFlowGraph G, IBasicBlock b, IBasicBlock s) {
     Assertions._assert(endsWithSwitch(G, b));
     SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = sw.getCasesAndLabels();
     for (int i = 0; i < casesAndLabels.length; i += 2) {
       if (G.getBlockForInstruction(casesAndLabels[i + 1]).equals(s)) {
-	return casesAndLabels[i];
+        return casesAndLabels[i];
       }
     }
-    
+
     Assertions.UNREACHABLE();
     return -1;
   }
 
   public static IBasicBlock resolveBranch(ControlFlowGraph G, IBasicBlock bb, int c1, int c2) {
     SSAConditionalBranchInstruction c = (SSAConditionalBranchInstruction) getLastInstruction(G, bb);
-    switch ((ConditionalBranchInstruction.Operator)c.getOperator()) {
+    switch ((ConditionalBranchInstruction.Operator) c.getOperator()) {
     case EQ:
       if (c1 == c2)
         return getTrueSuccessor(G, bb);
