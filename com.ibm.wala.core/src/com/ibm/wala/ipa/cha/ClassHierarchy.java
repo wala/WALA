@@ -1177,10 +1177,16 @@ public class ClassHierarchy implements Iterable<IClass> {
    * Does an expression c1 x := c2 y typecheck?
    * 
    * i.e. is c2 a subtype of c1?
+   * @throws IllegalArgumentException  if c1 is null
+   * @throws IllegalArgumentException  if c2 is null
    */
   public boolean isAssignableFrom(IClass c1, IClass c2) {
-    assert c1 != null;
-    assert c2 != null;
+    if (c2 == null) {
+      throw new IllegalArgumentException("c2 is null");
+    }
+    if (c1 == null) {
+      throw new IllegalArgumentException("c1 is null");
+    }
     if (c1.isInterface()) {
       if (c2.isInterface()) {
         return isSubclassOf(c2, c1);

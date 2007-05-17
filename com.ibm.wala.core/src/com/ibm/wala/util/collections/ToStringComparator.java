@@ -27,7 +27,7 @@ public class ToStringComparator<T> implements Comparator<T> {
   /* (non-Javadoc)
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
-  public int compare(T o1, T o2) {
+  public int compare(T o1, T o2) throws NullPointerException {
     return o1.toString().compareTo(o2.toString());
   }
   

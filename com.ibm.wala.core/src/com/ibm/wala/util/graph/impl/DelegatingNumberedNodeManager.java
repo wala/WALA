@@ -43,6 +43,9 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
    * @see com.ibm.wala.util.graph.NumberedGraph#getNumber(com.ibm.wala.util.graph.Node)
    */
   public int getNumber(T N) {
+    if (N == null) {
+      throw new IllegalArgumentException("N is null");
+    }
     INodeWithNumber n = (INodeWithNumber) N;
     return n.getGraphNodeId();
   }
@@ -124,8 +127,12 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
    * graph. Use with extreme care.
    * 
    * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
+   * @throws IllegalArgumentException  if n is null
    */
   public void addNode(T n) {
+    if (n == null) {
+      throw new IllegalArgumentException("n is null");
+    }
     INodeWithNumber N = (INodeWithNumber) n;
     int number = N.getGraphNodeId();
     if (number == -1) {
@@ -165,6 +172,9 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
   public void removeNode(T n) {
+    if (n == null) {
+      throw new IllegalArgumentException("n is null");
+    }
     INodeWithNumber N = (INodeWithNumber) n;
     int number = N.getGraphNodeId();
     if (nodes[number] != null) {
@@ -196,6 +206,9 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
    */
   public boolean containsNode(T n) {
+    if (n == null) {
+      throw new IllegalArgumentException("n is null");
+    }
     INodeWithNumber N = (INodeWithNumber) n;
     int number = N.getGraphNodeId();
     if (number == -1) {

@@ -19,8 +19,11 @@ public abstract class HeapStatement extends Statement {
   private final PointerKey loc;
 
   public HeapStatement(CGNode node, PointerKey loc) {
+
     super(node);
-    assert loc != null;
+    if (loc == null) {
+      throw new IllegalArgumentException("loc is null");
+    }
     this.loc = loc;
   }
 

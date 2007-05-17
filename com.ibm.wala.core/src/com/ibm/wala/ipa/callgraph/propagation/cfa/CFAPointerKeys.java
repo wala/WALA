@@ -65,7 +65,9 @@ public class CFAPointerKeys implements PointerKeyFactory {
   }
 
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
-    assert field != null;
+    if (field == null) {
+      throw new IllegalArgumentException("field is null");
+    }
     return new InstanceFieldKey(I, field);
   }
 

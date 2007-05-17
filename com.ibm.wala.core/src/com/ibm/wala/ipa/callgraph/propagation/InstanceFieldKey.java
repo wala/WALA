@@ -21,10 +21,15 @@ public class InstanceFieldKey extends AbstractFieldPointerKey {
   private final IField field;
 
   public InstanceFieldKey(InstanceKey instance, IField field) {
+
     super(instance);
+    if (field == null) {
+      throw new IllegalArgumentException("field is null");
+    }
+    if (instance == null) {
+      throw new IllegalArgumentException("instance is null");
+    }
     this.field = field;
-    assert instance != null;
-    assert field != null;
   }
 
   public boolean equals(Object obj) {

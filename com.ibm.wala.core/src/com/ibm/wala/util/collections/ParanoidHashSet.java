@@ -78,6 +78,9 @@ public class ParanoidHashSet<T> extends HashSet<T> {
    * @see java.util.Collection#add(java.lang.Object)
    */
   public boolean add(T arg0) {
+    if (arg0 == null) {
+      throw new IllegalArgumentException("arg0 is null");
+    }
     if (arg0.hashCode() == System.identityHashCode(arg0)) {
       Assertions._assert(false, arg0.getClass().toString());
     }

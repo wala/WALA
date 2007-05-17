@@ -43,9 +43,13 @@ public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIter
    * in a directed graph. 
    *
    * @param G the graph whose nodes to enumerate
+   * @throws IllegalArgumentException  if G is null
    */
   @SuppressWarnings("unchecked")
   public NumberedDFSDiscoverTimeIterator(NumberedGraph<T> G, T N) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     this.G = G;
     pendingChildren = new Iterator[G.getMaxNumber() + 1];
     init(G, new NonNullSingletonIterator<T>(N));

@@ -27,8 +27,12 @@ public class MapUtil {
    *          a mapping from Object -> Set
    * @param key
    * @return the Set corresponding to key in M; create one if needed
+   * @throws IllegalArgumentException  if M is null
    */
   public static <K, T> Set<T> findOrCreateSet(Map<K, Set<T>> M, K key) {
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
     Set<T> result = M.get(key);
     if (result == null) {
       result = HashSetFactory.make(2);
@@ -42,8 +46,12 @@ public class MapUtil {
    *          a mapping from Object -> Map
    * @param key
    * @return the Map corresponding to key in M; create one if needed
+   * @throws IllegalArgumentException  if M is null
    */
   public static <K, K2, V> Map<K2, V> findOrCreateMap(Map<K, Map<K2, V>> M, K key) {
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
     Map<K2, V> result = M.get(key);
     if (result == null) {
       result = HashMapFactory.make(2);

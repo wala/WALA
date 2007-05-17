@@ -63,9 +63,13 @@ public class Dominators<T> {
    *          The graph
    * @param root
    *          The root from which to compute dominators
+   * @throws IllegalArgumentException  if G is null
    */
   @SuppressWarnings("unchecked")
   public Dominators(Graph<T> G, T root) throws IllegalArgumentException {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     this.G = G;
     this.root = root;
     if (G.getNumberOfNodes() == 0) {

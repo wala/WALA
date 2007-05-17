@@ -75,8 +75,12 @@ public class BFSPathFinder<T> {
    * 
    * @param G
    *          the graph whose nodes to enumerate
+   * @throws IllegalArgumentException  if G is null
    */
   public BFSPathFinder(Graph<T> G, T src, final T target) throws IllegalArgumentException {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     this.G = G;
     this.roots = new NonNullSingletonIterator<T>(src);
     if (!G.containsNode(src)) {

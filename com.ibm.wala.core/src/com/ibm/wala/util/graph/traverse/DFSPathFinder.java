@@ -62,8 +62,12 @@ public class DFSPathFinder<T> extends Stack<T> {
    * in a directed graph. 
    *
    * @param G the graph whose nodes to enumerate
+   * @throws IllegalArgumentException  if G is null
    */
   public DFSPathFinder(Graph<T> G, T N, Filter f) throws IllegalArgumentException {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     if (!G.containsNode(N)) {
       throw new IllegalArgumentException("source node not in graph: " + N);
     }

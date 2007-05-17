@@ -67,7 +67,9 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
   }
 
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
-    assert I != null;
+    if (I == null) {
+      throw new IllegalArgumentException("I is null");
+    }
     return h.getPointerKeyForArrayContents(I);
   }
 
@@ -76,7 +78,9 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
   }
 
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
-    assert field != null;
+    if (field == null) {
+      throw new IllegalArgumentException("field is null");
+    }
     return h.getPointerKeyForInstanceField(I, field);
   }
 
