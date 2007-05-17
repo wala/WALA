@@ -30,7 +30,6 @@ import java.util.jar.JarFile;
 import junit.framework.Assert;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
-import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -38,6 +37,7 @@ import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -270,7 +270,7 @@ public abstract class IRTests extends WalaTestCase {
     Set<IMethod> unreachable = HashSetFactory.make();
     WarningSet warnings = new WarningSet();
     ClassHierarchy cha = cg.getClassHierarchy();
-    IClassLoader sourceLoader = cha.getLoader(JavaSourceAnalysisScope.SOURCE_REF);
+    IClassLoader sourceLoader = cha.getLoader(EclipseProjectPath.SOURCE_REF);
     for (Iterator iter = sourceLoader.iterateAllClasses(); iter.hasNext();) {
       IClass clazz = (IClass) iter.next();
 
