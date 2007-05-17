@@ -15,10 +15,10 @@ package com.ibm.wala.cast.java.translator.polyglot;
 
 import java.io.IOException;
 
-import com.ibm.wala.cast.java.ipa.callgraph.*;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -26,21 +26,22 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.warnings.WarningSet;
 
 public class PolyglotClassLoaderFactory extends ClassLoaderFactoryImpl {
- 
-    final protected IRTranslatorExtension fExtInfo;
 
-    public PolyglotClassLoaderFactory(SetOfClasses exclusions, WarningSet warnings, IRTranslatorExtension extInfo) {
-	super(exclusions, warnings);
-	fExtInfo= extInfo;
-    }
+  final protected IRTranslatorExtension fExtInfo;
 
-    protected IClassLoader makeNewClassLoader(ClassLoaderReference classLoaderReference, ClassHierarchy cha, IClassLoader parent, AnalysisScope scope) throws IOException {
- 	if (classLoaderReference.equals(JavaSourceAnalysisScope.SOURCE_REF)) {
-	    ClassLoaderImpl cl = new PolyglotSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, getWarnings(), fExtInfo);
-	    cl.init( scope.getModules( classLoaderReference ));
-	    return cl;
-	} else {
-	    return super.makeNewClassLoader(classLoaderReference, cha, parent, scope);
-	}
+  public PolyglotClassLoaderFactory(SetOfClasses exclusions, WarningSet warnings, IRTranslatorExtension extInfo) {
+    super(exclusions, warnings);
+    fExtInfo = extInfo;
+  }
+
+  protected IClassLoader makeNewClassLoader(ClassLoaderReference classLoaderReference, ClassHierarchy cha, IClassLoader parent,
+      AnalysisScope scope) throws IOException {
+    if (classLoaderReference.equals(EclipseProjectPath.SOURCE_REF)) {
+      ClassLoaderImpl cl = new PolyglotSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, getWarnings(), fExtInfo);
+      cl.init(scope.getModules(classLoaderReference));
+      return cl;
+    } else {
+      return super.makeNewClassLoader(classLoaderReference, cha, parent, scope);
     }
+  }
 }

@@ -13,27 +13,23 @@
  */
 package com.ibm.wala.cast.java.ipa.callgraph;
 
+import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.Atom;
 
 public class JavaSourceAnalysisScope extends AnalysisScope {
 
-    public static final Atom SOURCE= Atom.findOrCreateUnicodeAtom("Source");
+  public JavaSourceAnalysisScope() {
+    EclipseProjectPath.SOURCE_REF.setParent(getLoader(APPLICATION));
+    getLoader(SYNTHETIC).setParent(EclipseProjectPath.SOURCE_REF);
 
-    public static final ClassLoaderReference SOURCE_REF= new ClassLoaderReference(SOURCE);
+    loadersByName.put(EclipseProjectPath.SOURCE, EclipseProjectPath.SOURCE_REF);
 
-    public JavaSourceAnalysisScope() {
-	SOURCE_REF.setParent(getLoader(APPLICATION));
-	getLoader(SYNTHETIC).setParent(SOURCE_REF);
+    setLoaderImpl(getLoader(SYNTHETIC), "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
+    setLoaderImpl(EclipseProjectPath.SOURCE_REF, "com.ibm.domo.ast.java.translator.polyglot.PolyglotSourceLoaderImpl");
+  }
 
-	loadersByName.put(SOURCE, SOURCE_REF);
-
-	setLoaderImpl(getLoader(SYNTHETIC), "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
-	setLoaderImpl(SOURCE_REF, "com.ibm.domo.ast.java.translator.polyglot.PolyglotSourceLoaderImpl");
-    }
-
-    public ClassLoaderReference getSourceLoader() {
-	return getLoader(SOURCE);
-    }
+  public ClassLoaderReference getSourceLoader() {
+    return getLoader(EclipseProjectPath.SOURCE);
+  }
 }

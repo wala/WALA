@@ -23,6 +23,7 @@ import com.ibm.wala.cast.java.translator.polyglot.PolyglotClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.impl.AbstractAnalysisEngine;
+import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -147,7 +148,7 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
   }
 
   protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
-    return Util.makeMainEntrypoints(JavaSourceAnalysisScope.SOURCE_REF, cha);
+    return Util.makeMainEntrypoints(EclipseProjectPath.SOURCE_REF, cha);
   }
 
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> entrypoints) {
