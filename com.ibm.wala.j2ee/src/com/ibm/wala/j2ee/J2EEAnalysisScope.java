@@ -134,8 +134,12 @@ public class J2EEAnalysisScope extends EMFScopeWrapper {
    * 
    * @param scope
    *          an analysis scope.
+   * @throws IllegalArgumentException  if scope is null
    */
   public void addToApplicationLoader(AnalysisScope scope) {
+    if (scope == null) {
+      throw new IllegalArgumentException("scope is null");
+    }
     ClassLoaderReference app = scope.getApplicationLoader();
     for (Iterator it = scope.getModules(app).iterator(); it.hasNext();) {
       Module M = (Module) it.next();
