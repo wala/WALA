@@ -11,7 +11,6 @@
 package com.ibm.wala.core.tests.cha;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -25,7 +24,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -83,8 +81,7 @@ public class GetTargetsTest extends WalaTestCase {
   public void testCell() {
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lcell/Cell");
     MethodReference m = MethodReference.findOrCreate(t, "<init>", "(Ljava/lang/Object;)V");
-    Iterator<IMethod> it = cha.getPossibleTargets(m);
-    Collection<IMethod> c = new Iterator2Collection<IMethod>(it);
+    Collection<IMethod> c = cha.getPossibleTargets(m);
     for (IMethod method : c) {
       System.err.println(method);
     }
