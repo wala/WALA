@@ -921,7 +921,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       if (nImplementations > CUTOFF) {
         return -1;
       }
-      Iterator possibleTargets = getClassHierarchy().getPossibleTargets(site.getDeclaredTarget());
+      Iterator possibleTargets = getClassHierarchy().getPossibleTargets(site.getDeclaredTarget()).iterator();
       int result = 0;
       for (Iterator it = possibleTargets; it.hasNext();) {
         IMethod t = (IMethod) it.next();
@@ -979,7 +979,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     Integer I = cachedBoundMap.get(m);
     if (I == null) {
       int i = 0;
-      for (Iterator it = getClassHierarchy().getPossibleTargets(m); it.hasNext();) {
+      for (Iterator it = getClassHierarchy().getPossibleTargets(m).iterator(); it.hasNext();) {
         i++;
         it.next();
       }

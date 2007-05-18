@@ -15,19 +15,19 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.ibm.wala.fixedpoint.impl.AbstractFixedPointSystem;
 import com.ibm.wala.fixedpoint.impl.AbstractOperator;
 import com.ibm.wala.fixedpoint.impl.AbstractStatement;
+import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSystem;
 import com.ibm.wala.fixedpoint.impl.GeneralStatement;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixedpoint.impl.UnaryStatement;
 import com.ibm.wala.fixpoint.IFixedPointStatement;
+import com.ibm.wala.fixpoint.IFixedPointSystem;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
-import com.ibm.wala.util.collections.ReverseIterator;
 import com.ibm.wala.util.collections.SmallMap;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -39,9 +39,7 @@ import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.DelegatingNumberedNodeManager;
-import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.impl.SparseNumberedEdgeManager;
-import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.heapTrace.HeapTracer;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
@@ -56,7 +54,7 @@ import com.ibm.wala.util.intset.IntSet;
  * 
  * @author sfink
  */
-public class PropagationGraph extends AbstractFixedPointSystem {
+public class PropagationGraph implements IFixedPointSystem {
 
   private final static boolean DEBUG = false;
 
@@ -506,10 +504,8 @@ public class PropagationGraph extends AbstractFixedPointSystem {
   public void reorder() {
     VariableGraphView graph = new VariableGraphView();
 
-    Iterator<IVariable> finishTime = DFS.iterateFinishTime(graph);
-    Iterator<IVariable> rev = new ReverseIterator<IVariable>(finishTime);
-    Graph<IVariable> G_T = GraphInverter.invert(graph);
-    Iterator<IVariable> order = DFS.iterateFinishTime(G_T, rev);
+    Iterator<IVariable> order = DefaultFixedPointSystem.reverseSCCTopOrder(graph);
+    
     int number = 0;
     while (order.hasNext()) {
       Object elt = order.next();

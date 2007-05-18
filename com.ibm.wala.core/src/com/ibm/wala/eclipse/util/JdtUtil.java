@@ -13,6 +13,7 @@ package com.ibm.wala.eclipse.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -26,6 +27,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeParameter;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.Signature;
@@ -113,8 +115,6 @@ public class JdtUtil {
     return JavaCore.create(jdtHandle);
   }
 
- 
-
   public static IType[] getClasses(ICompilationUnit cu) {
     try {
       return cu.getAllTypes();
@@ -154,7 +154,6 @@ public class JdtUtil {
     return javaProject;
   }
 
-
   /**
    * compute the java projects in the active workspace
    */
@@ -180,7 +179,7 @@ public class JdtUtil {
   /**
    * Find the IType in the workspace corresponding to a class name.
    * 
-   * TODO: this is too slow.  find a better way.
+   * TODO: this is too slow. find a better way.
    * 
    * @return null if not found
    */
@@ -227,12 +226,53 @@ public class JdtUtil {
     if (type == null) {
       return null;
     }
-    IMethod m = type.getMethod(parseForName(selector, type), parseForParameterTypes(selector));
+    String name = parseForName(selector, type);
+    String[] paramTypes = parseForParameterTypes(selector);
+    IMethod m = type.getMethod(name, paramTypes);
     IMethod[] methods = type.findMethods(m);
     if (methods != null && methods.length == 1) {
       return methods[0];
     } else {
-      return null;
+      // methods is null. probably got screwed by generics.
+      // i spent 5 hours trying to figure out how to fix this correctly
+      // and failed. implementing a miserable hack instead.
+      // Need to consult a guru to figure out how to do this.
+      try {
+        List<IMethod> matches = new ArrayList<IMethod>();
+        ITypeParameter[] tp = type.getTypeParameters();
+        Collection<String> typeParameterNames = HashSetFactory.make(tp.length);
+        for (ITypeParameter p : tp) {
+          typeParameterNames.add(p.getElementName());
+        }
+        METHODS: for (IMethod x : type.getMethods()) {
+          if (x.getElementName().equals(name)) {
+            if (x.getParameterTypes().length == paramTypes.length) {
+              for (int i = 0; i < x.getParameterTypes().length ; i++) {
+                String s1 = Signature.getTypeErasure(Signature.getSignatureSimpleName(x.getParameterTypes()[i]));
+                String s2 = Signature.getTypeErasure(Signature.getSignatureSimpleName(paramTypes[i]));
+                if (typeParameterNames.contains(s1)) {
+                  // s1 is a type parameter to the class.  optimistically assume the types match.
+                } else {
+                  if (!s1.equals(s2)) {
+                    // no match
+                    continue METHODS;
+                  }
+                }
+              }
+              matches.add(x);
+            }
+          }
+        }
+        if (matches.size() == 1) {
+          return matches.get(0);
+        } else {
+          System.err.println("findJavaMethodInWorkspace FAILED TO MATCH " + m);
+          return null;
+        }
+      } catch (JavaModelException e) {
+        e.printStackTrace();
+        return null;
+      }
     }
   }
 

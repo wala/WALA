@@ -15,6 +15,8 @@ import com.ibm.wala.util.graph.Graph;
 /**
  *
  * A dataflow framework in the style of Kildall, POPL 73
+ * This represents a dataflow problem induced over a graph.
+ * @param T type of nodes in the graph
  * 
  * @author sfink
  * 

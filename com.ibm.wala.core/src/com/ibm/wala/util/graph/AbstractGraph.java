@@ -114,6 +114,12 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    * (non-Javadoc)
    */
   public boolean hasEdge(T src, T dst) {
+    if (src == null) {
+      throw new IllegalArgumentException("src is null");
+    }
+    if (dst == null) {
+      throw new IllegalArgumentException("dst is null");
+    }
     return getEdgeManager().hasEdge(src, dst);
   }
 

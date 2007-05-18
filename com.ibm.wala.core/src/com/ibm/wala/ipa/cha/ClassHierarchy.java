@@ -42,7 +42,6 @@ import com.ibm.wala.util.CacheReference;
 import com.ibm.wala.util.Function;
 import com.ibm.wala.util.MapIterator;
 import com.ibm.wala.util.ReferenceCleanser;
-import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -322,7 +321,7 @@ public class ClassHierarchy implements Iterable<IClass> {
    * @return the set of IMethods that this call can resolve to.
    * @throws IllegalArgumentException  if ref is null
    */
-  public Iterator<IMethod> getPossibleTargets(MethodReference ref) {
+  public Collection<IMethod> getPossibleTargets(MethodReference ref) {
     if (ref == null) {
       throw new IllegalArgumentException("ref is null");
     }
@@ -335,10 +334,11 @@ public class ClassHierarchy implements Iterable<IClass> {
     IClass declaredClass;
     declaredClass = loader.lookupClass(ref.getDeclaringClass().getName(), this);
     if (declaredClass == null) {
-      return EmptyIterator.instance();
+      return Collections.emptySet();
     }
-    Set<IMethod> targets = findOrCreateTargetSet(declaredClass, ref);
-    return (targets.iterator());
+    Set<IMethod> targets = HashSetFactory.make();
+    targets.addAll(findOrCreateTargetSet(declaredClass, ref));
+    return (targets);
   }
 
   /**

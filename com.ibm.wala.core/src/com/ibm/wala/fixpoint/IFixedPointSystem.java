@@ -17,17 +17,7 @@ import java.util.Iterator;
  * {@link IFixedPointSolver}
  */
 public interface IFixedPointSystem {
-  /**
-   * adds a {@link IFixedPointSystemListener}to the list of listeners to which
-   * changes to this {@link IFixedPointSystem}should be reported.
-   */
-  void addListener(IFixedPointSystemListener l);
 
-  /**
-   * removes a {@link IFixedPointSystemListener}to the list of listeners to
-   * which changes to this {@link IFixedPointSystem}should be reported.
-   */
-  void removeListener(IFixedPointSystemListener l);
 
   /**
    * removes a given statement
