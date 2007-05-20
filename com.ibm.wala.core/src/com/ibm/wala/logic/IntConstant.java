@@ -17,7 +17,7 @@ import java.util.Collections;
 public class IntConstant implements IConstant {
   private final int val;
   
-  private IntConstant(int val) {
+  protected IntConstant(int val) {
     this.val = val;
   }
   
