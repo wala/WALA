@@ -212,8 +212,10 @@ public class JdtUtil {
       e.printStackTrace();
     }
     if (kludge.size() == 1) {
+      System.err.println("Found " + className);
       return (IType) kludge.iterator().next();
     } else {
+      System.err.println("Failed to find " + className);
       return null;
     }
 
@@ -256,11 +258,12 @@ public class JdtUtil {
         METHODS: for (IMethod x : type.getMethods()) {
           if (x.getElementName().equals(name)) {
             if (x.getParameterTypes().length == paramTypes.length) {
-              for (int i = 0; i < x.getParameterTypes().length ; i++) {
+              for (int i = 0; i < x.getParameterTypes().length; i++) {
                 String s1 = Signature.getTypeErasure(Signature.getSignatureSimpleName(x.getParameterTypes()[i]));
                 String s2 = Signature.getTypeErasure(Signature.getSignatureSimpleName(paramTypes[i]));
                 if (typeParameterNames.contains(s1)) {
-                  // s1 is a type parameter to the class.  optimistically assume the types match.
+                  // s1 is a type parameter to the class. optimistically assume
+                  // the types match.
                 } else {
                   if (!s1.equals(s2)) {
                     // no match
