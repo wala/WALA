@@ -74,8 +74,12 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
 
   /**
    * @param s
+   * @throws IllegalArgumentException  if s is null
    */
   public MutableSharedBitVectorIntSet(BitVectorIntSet s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     copyValue(s);
 
     if (PARANOID) {

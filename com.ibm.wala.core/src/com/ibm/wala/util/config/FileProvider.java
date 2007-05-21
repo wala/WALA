@@ -104,9 +104,13 @@ public class FileProvider {
    * @param fileName
    * @return the jar file packaged with this plug-in of the given name, or null
    *         if not found.
+   * @throws IllegalArgumentException  if p is null
    */
   public static File getFileFromPlugin(Plugin p, String fileName) throws IOException {
 
+    if (p == null) {
+      throw new IllegalArgumentException("p is null");
+    }
     URL url = getFileURLFromPlugin(p, fileName);
     if (url == null) {
       throw new FileNotFoundException(fileName);

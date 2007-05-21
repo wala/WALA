@@ -40,6 +40,9 @@ public class RTABuilderFactory implements CallGraphBuilderFactory {
 			       WarningSet warnings,
 			       boolean keepPointsTo)
   {
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
     return Util.makeRTABuilder(options, cha, scope, warnings);
   }
 }

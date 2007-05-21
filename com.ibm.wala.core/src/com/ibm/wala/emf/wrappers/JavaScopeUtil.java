@@ -147,6 +147,9 @@ public class JavaScopeUtil {
 
   public static EJavaAnalysisScope makeAnalysisScope(String classpath) throws WalaException {
 
+    if (classpath == null) {
+      throw new IllegalArgumentException("classpath is null");
+    }
     // create an EJavaAnalysisScope and deposit it into the output PAS
     EJavaAnalysisScope scope = JavaScopeFactory.eINSTANCE.createEJavaAnalysisScope();
 

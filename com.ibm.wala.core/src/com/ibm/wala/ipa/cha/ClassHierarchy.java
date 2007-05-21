@@ -224,8 +224,12 @@ public class ClassHierarchy implements Iterable<IClass> {
   /**
    * @param klass
    * @return true if the add succeeded; false if it failed for some reason
+   * @throws IllegalArgumentException  if klass is null
    */
   public boolean addClass(IClass klass) {
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
     if (DEBUG) {
       Trace.println("Attempt to add class " + klass);
     }
@@ -489,10 +493,11 @@ public class ClassHierarchy implements Iterable<IClass> {
    * @param selector
    *          method signature
    * @return Method resolved method abstraction
+   * @throws IllegalArgumentException  if receiverClass is null
    */
   public IMethod resolveMethod(IClass receiverClass, Selector selector) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(receiverClass != null);
+    if (receiverClass == null) {
+      throw new IllegalArgumentException("receiverClass is null");
     }
     IMethod result = findMethod(receiverClass, selector);
     if (result != null) {

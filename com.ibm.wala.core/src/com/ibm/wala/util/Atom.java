@@ -86,8 +86,12 @@ public final class Atom {
    * @param utf8
    *          atom value, as utf8 encoded bytes
    * @return atom
+   * @throws IllegalArgumentException  if utf8 is null
    */
   public static Atom findOrCreateUtf8Atom(byte[] utf8) {
+    if (utf8 == null) {
+      throw new IllegalArgumentException("utf8 is null");
+    }
     return findOrCreate(utf8);
   }
 
@@ -103,6 +107,9 @@ public final class Atom {
   }
 
   public static synchronized Atom findOrCreate(byte[] bytes) {
+    if (bytes == null) {
+      throw new IllegalArgumentException("bytes is null");
+    }
     AtomKey key = new AtomKey(bytes);
     Atom val = dictionary.get(key);
     if (val != null) {

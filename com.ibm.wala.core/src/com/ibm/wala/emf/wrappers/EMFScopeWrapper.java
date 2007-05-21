@@ -488,8 +488,12 @@ public class EMFScopeWrapper extends AnalysisScope {
    * @param escope
    * @return a new EMFScopeWrapper comprising the given scope
    * @throws WalaException
+   * @throws IllegalArgumentException  if escope is null
    */
   public static EMFScopeWrapper generateScope(EJavaAnalysisScope escope) throws WalaException {
+    if (escope == null) {
+      throw new IllegalArgumentException("escope is null");
+    }
     return generateScope(escope, new EMFScopeWrapper(EMFScopeWrapper.class.getClassLoader()));
   }
 

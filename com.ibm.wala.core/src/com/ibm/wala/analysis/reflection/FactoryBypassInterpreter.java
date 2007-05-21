@@ -223,6 +223,9 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
   public Iterator<SSAInstruction> getInvokeStatements(CGNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     return m.getInvokeStatements().iterator();
   }
@@ -689,6 +692,9 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
   public Set getCaughtExceptions(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
       return CodeScanner.getCaughtExceptions(m, warnings);

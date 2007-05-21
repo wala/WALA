@@ -80,11 +80,17 @@ public class JdtUtil {
   }
 
   public static String getClassName(IType type) {
+    if (type == null) {
+      throw new IllegalArgumentException("type is null");
+    }
     String className = type.getElementName();
     return className;
   }
 
   public static String getMethodSignature(IMethod method) {
+    if (method == null) {
+      throw new IllegalArgumentException("method is null");
+    }
     try {
       String methodParamReturnInfo = method.getSignature();
       String methodName = method.getElementName();
@@ -116,6 +122,9 @@ public class JdtUtil {
   }
 
   public static IType[] getClasses(ICompilationUnit cu) {
+    if (cu == null) {
+      throw new IllegalArgumentException("cu is null");
+    }
     try {
       return cu.getAllTypes();
     } catch (JavaModelException e) {

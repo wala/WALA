@@ -200,9 +200,13 @@ public class Util {
   /**
    * @return the Set of CGNodes in the call graph that are reachable without
    *         traversing any entrypoint node
+   * @throws IllegalArgumentException  if cg is null
    */
   public static Collection<CGNode> computeDarkEntrypointNodes(final CallGraph cg, final Collection<CGNode> entrypoints) {
 
+    if (cg == null) {
+      throw new IllegalArgumentException("cg is null");
+    }
     final class DarkIterator extends SlowDFSDiscoverTimeIterator<CGNode> {
 
       private static final long serialVersionUID = -7554905808017614372L;

@@ -11,11 +11,11 @@
 package com.ibm.wala.types.generics;
 
 /**
- * Base class for wrappers around Strings that represent Signature
- * annotations according to Java 5.0 JVM spec enhancements.
+ * Base class for wrappers around Strings that represent Signature annotations
+ * according to Java 5.0 JVM spec enhancements.
  * 
  * @author sjfink
- *
+ * 
  */
 public abstract class Signature {
 
@@ -23,6 +23,9 @@ public abstract class Signature {
 
   public Signature(final String s) {
     super();
+    if (s == null) {
+      throw new IllegalArgumentException("s cannot be null");
+    }
     this.s = s;
   }
 

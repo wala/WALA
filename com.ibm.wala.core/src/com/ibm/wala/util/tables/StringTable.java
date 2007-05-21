@@ -85,8 +85,12 @@ public class StringTable extends Table<String> implements Cloneable {
    * @return
    * @throws IOException
    * @throws WalaException
+   * @throws IllegalArgumentException  if p is null
    */
   public static StringTable readFromTextFile(Plugin p, String fileName) throws IOException {
+    if (p == null) {
+      throw new IllegalArgumentException("p is null");
+    }
     File f = FileProvider.getFileFromPlugin(p, fileName);
     return readFromTextFile(f);
   }

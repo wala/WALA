@@ -56,8 +56,12 @@ public class BFSIterator<T> implements Iterator<T> {
    * in a directed graph. 
    *
    * @param G the graph whose nodes to enumerate
+   * @throws IllegalArgumentException  if G is null
    */
   public BFSIterator(Graph<T> G, T N) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     init(G, new NonNullSingletonIterator<T>(N));
   }
 
@@ -67,8 +71,12 @@ public class BFSIterator<T> implements Iterator<T> {
    * enumeration. 
    *
    * @param nodes the set of nodes from which to start searching
+   * @throws IllegalArgumentException  if G is null
    */
   public BFSIterator(Graph<T> G, Iterator<? extends T> nodes) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     init(G, nodes);
   }
 

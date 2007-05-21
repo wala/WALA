@@ -103,6 +103,9 @@ public abstract class IR {
    *          governing ssa construction options
    */
   protected IR(IMethod method, SSAInstruction[] instructions, SymbolTable symbolTable, SSACFG cfg, SSAOptions options) {
+    if (method == null) {
+      throw new IllegalArgumentException("method is null");
+    }
     this.method = method;
     this.instructions = instructions;
     this.symbolTable = symbolTable;

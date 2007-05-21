@@ -103,6 +103,9 @@ public class FormalTypeParameter extends Signature {
   }
 
   public static FormalTypeParameter make(String string) throws IllegalArgumentException{
+    if (string == null) {
+      throw new IllegalArgumentException("string is null");
+    }
     return new FormalTypeParameter(string);
   }
 

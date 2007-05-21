@@ -35,8 +35,12 @@ public class DotUtil {
    * @param g
    * @param labels
    * @throws WalaException
+   * @throws IllegalArgumentException  if g is null
    */
   public static <T> void dotify(Graph<T> g, NodeDecorator labels, String dotFile, String psFile, String dotExe) throws WalaException {
+    if (g == null) {
+      throw new IllegalArgumentException("g is null");
+    }
     File f = DotUtil.writeDotFile(g, labels, dotFile);
     spawnDot(dotExe, psFile, f);
   }
@@ -95,6 +99,9 @@ public class DotUtil {
    */
   public static <T> File writeDotFile(Graph<T> g, NodeDecorator labels, String dotfile) throws WalaException {
 
+    if (g == null) {
+      throw new IllegalArgumentException("g is null");
+    }
     StringBuffer dotStringBuffer = dotOutput(g, labels);
 
     // retrieve the filename parameter to this component, a String

@@ -49,6 +49,9 @@ public class ClassTypeSignature extends TypeSignature {
   }
 
   public static ClassTypeSignature makeClassTypeSig(String s) throws IllegalArgumentException {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     return new ClassTypeSignature(s);
   }
 

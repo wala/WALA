@@ -53,6 +53,9 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
   }
 
   public static PrunedCFG make(final ControlFlowGraph cfg, final EdgeFilter filter) {
+    if (cfg == null) {
+      throw new IllegalArgumentException("cfg is null");
+    }
     return new PrunedCFG(cfg, filter);
   }
 

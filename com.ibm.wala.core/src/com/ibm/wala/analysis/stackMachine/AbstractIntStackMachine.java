@@ -110,6 +110,9 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   final public static boolean OPTIMISTIC = true;
 
   protected AbstractIntStackMachine(final ShrikeCFG G) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     maxStackHeight = G.getMaxStackHeight();
     maxLocals = G.getMaxLocals();
     this.cfg = G;

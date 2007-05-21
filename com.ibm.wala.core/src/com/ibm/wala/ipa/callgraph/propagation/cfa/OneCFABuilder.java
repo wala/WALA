@@ -34,9 +34,7 @@ public class OneCFABuilder extends CFABuilder {
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
 
     super(cha, warnings, options);
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+
 
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha, warnings));
 

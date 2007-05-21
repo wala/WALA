@@ -37,6 +37,9 @@ public class GraphIntegrity {
   static final int DEBUG_LEVEL = 0;
 
   public static <T> void check(Graph<T> G) throws UnsoundGraphException {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     checkNodeCount(G);
     checkEdges(G);
     checkEdgeCounts(G);

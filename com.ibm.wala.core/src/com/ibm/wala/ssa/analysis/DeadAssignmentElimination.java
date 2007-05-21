@@ -40,8 +40,12 @@ public class DeadAssignmentElimination {
   /**
    * eliminate dead phis from an ir
    * @param ir
+   * @throws IllegalArgumentException  if ir is null
    */
   public static void perform(IR ir) {
+    if (ir == null) {
+      throw new IllegalArgumentException("ir is null");
+    }
     DefUse DU = new DefUse(ir);
     DeadValueSystem system = new DeadValueSystem(ir, DU);
     system.solve();

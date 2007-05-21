@@ -121,6 +121,9 @@ public class ECallGraphWrapper extends EObjectGraphImpl {
 
   @SuppressWarnings("unchecked")
   public static ECallGraphWrapper load(String fileName, ClassLoader loader) throws IllegalArgumentException {
+    if (fileName == null) {
+      throw new IllegalArgumentException("fileName is null");
+    }
     ECallGraph G = loadFromFile(fileName, loader);
     Assertions.productionAssertion(G != null);
     ECallGraphWrapper result = new ECallGraphWrapper();

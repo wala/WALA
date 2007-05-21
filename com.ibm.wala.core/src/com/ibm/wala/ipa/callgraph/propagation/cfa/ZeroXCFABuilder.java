@@ -37,9 +37,6 @@ public class ZeroXCFABuilder extends CFABuilder {
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
 
     super(cha, warnings, options);
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
 
     this.instancePolicy = instancePolicy;
 

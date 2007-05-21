@@ -33,6 +33,9 @@ public class TypeVariableSignature extends TypeSignature {
   }
 
   public static TypeVariableSignature make(String s) throws IllegalArgumentException {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     return new TypeVariableSignature(s);
   }
 

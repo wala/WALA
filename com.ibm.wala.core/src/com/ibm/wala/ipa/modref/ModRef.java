@@ -55,9 +55,13 @@ public class ModRef {
   /**
    * For each call graph node, what heap locations (as determined by a heap
    * model) may it write, including its callees transitively
+   * @throws IllegalArgumentException  if cg is null
    * 
    */
   public static Map<CGNode, OrdinalSet<PointerKey>> computeMod(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
+    if (cg == null) {
+      throw new IllegalArgumentException("cg is null");
+    }
     Map<CGNode, Collection<PointerKey>> scan = scanForMod(cg, pa, heapExclude);
     return transitiveClosure(cg, scan);
   }
@@ -65,9 +69,13 @@ public class ModRef {
   /**
    * For each call graph node, what heap locations (as determined by a heap
    * model) may it read, including its callees transitively
+   * @throws IllegalArgumentException  if cg is null
    * 
    */
   public static Map<CGNode, OrdinalSet<PointerKey>> computeRef(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
+    if (cg == null) {
+      throw new IllegalArgumentException("cg is null");
+    }
     Map<CGNode, Collection<PointerKey>> scan = scanForRef(cg, pa, heapExclude);
     return transitiveClosure(cg, scan);
   }

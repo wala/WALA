@@ -744,8 +744,12 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @param B
    * @return the set of CGNodes that B may call, according to the governing call
    *         graph.
+   * @throws IllegalArgumentException  if B is null
    */
   public Set<CGNode> getCallTargets(IBasicBlock B) {
+    if (B == null) {
+      throw new IllegalArgumentException("B is null");
+    }
     if (Assertions.verifyAssertions) {
       Assertions._assert(B instanceof BasicBlockInContext);
     }

@@ -651,6 +651,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalPredecessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getExceptionalPredecessors(IBasicBlock b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     return new Iterator2Collection<IBasicBlock>(iterateExceptionalPredecessors(b));
   }
 
@@ -660,6 +663,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalPredecessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getNormalPredecessors(IBasicBlock b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     return new Iterator2Collection<IBasicBlock>(iterateNormalPredecessors(b));
   }
 

@@ -170,9 +170,13 @@ public class EUtil {
    * @param o
    *          an object to serialize
    * @return the serialized form of o as an array
+   * @throws IllegalArgumentException  if o is null
    */
   public static byte[] saveToArray(EObject o) {
 
+    if (o == null) {
+      throw new IllegalArgumentException("o is null");
+    }
     o = EcoreUtil.copy(o);
     // save the xmi file
     ResourceSet resSet = new ResourceSetImpl();

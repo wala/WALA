@@ -611,8 +611,12 @@ public class StringStuff {
    *          dots ('.').
    * @return a String object obtained by replacing the forward slashes ('/') in
    *         the String passed as argument with ('.').
+   * @throws IllegalArgumentException  if path is null
    */
   public static String slashToDot(String path) {
+    if (path == null) {
+      throw new IllegalArgumentException("path is null");
+    }
     StringBuffer dotForm = new StringBuffer(path);
     // replace all '/' in the path with '.'
     for (int i = 0; i < dotForm.length(); ++i) {
@@ -631,8 +635,12 @@ public class StringStuff {
    *          ('.').
    * @return a String object obtained by replacing the dollar signs ('S') in the
    *         String passed as argument with ('.').
+   * @throws IllegalArgumentException  if path is null
    */
   public static String dollarToDot(String path) {
+    if (path == null) {
+      throw new IllegalArgumentException("path is null");
+    }
     StringBuffer dotForm = new StringBuffer(path);
     // replace all '$' in the path with '.'
     for (int i = 0; i < dotForm.length(); ++i) {

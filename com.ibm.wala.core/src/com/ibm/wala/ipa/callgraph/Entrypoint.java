@@ -41,10 +41,12 @@ public abstract class Entrypoint implements BytecodeConstants {
    *          the method to be called for this entrypoint
    */
   protected Entrypoint(IMethod method) {
+    if (method == null) {
+      throw new IllegalArgumentException("method is null");
+    }
     this.method = method;
 
     if (Assertions.verifyAssertions) {
-      Assertions._assert(method != null, "null method");
       Assertions._assert(method.getDeclaringClass() != null, "null declaring class");
     }
   }

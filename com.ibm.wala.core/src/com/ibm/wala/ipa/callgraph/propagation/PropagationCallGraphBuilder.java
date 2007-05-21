@@ -218,6 +218,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    */
   protected PropagationCallGraphBuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
       PointerKeyFactory pointerKeyFactory) {
+    if (cha == null) {
+      throw new IllegalArgumentException("cha is null");
+    }
+    if (options == null) {
+      throw new IllegalArgumentException("options is null");
+    }
     this.cha = cha;
     this.warnings = warnings;
     this.options = options;
