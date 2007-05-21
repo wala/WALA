@@ -156,4 +156,12 @@ public class Iterator2Collection<T> implements Collection<T> {
     return delegate.toArray(a);
   }
 
+  public boolean equals(Object o) {
+    return delegate.equals(o);
+  }
+
+  public int hashCode() {
+    return delegate.hashCode();
+  }
+
 }
