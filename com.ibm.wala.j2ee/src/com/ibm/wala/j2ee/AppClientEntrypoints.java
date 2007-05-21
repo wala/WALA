@@ -71,8 +71,12 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
    *          scope of analysis
    * @param cha
    *          loaded class hierarchy
+   * @throws IllegalArgumentException  if scope is null
    */
   public AppClientEntrypoints(J2EEAnalysisScope scope, ClassHierarchy cha, WarningSet warnings) {
+    if (scope == null) {
+      throw new IllegalArgumentException("scope is null");
+    }
     this.cha = cha;
     this.scope = scope;
     this.warnings = warnings;
