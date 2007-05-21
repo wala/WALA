@@ -198,7 +198,7 @@ final public class ClassInstrumenter {
     } catch (InvalidClassFileException ex) {
       ex.printStackTrace();
     }
-    CTCompiler compiler = new CTCompiler(classWriter, md);
+    CTCompiler compiler = CTCompiler.make(classWriter, md);
     compiler.compile();
     CTCompiler.Output output = compiler.getOutput();
     CodeWriter code = new CodeWriter(classWriter);
@@ -232,7 +232,7 @@ final public class ClassInstrumenter {
     if (md == null) {
       throw new IllegalArgumentException("md is null");
     }
-    CTCompiler compiler = new CTCompiler(classWriter, md);
+    CTCompiler compiler = CTCompiler.make(classWriter, md);
     compiler.compile();
     CTCompiler.Output output = compiler.getOutput();
     CodeWriter code = new CodeWriter(classWriter);
@@ -388,7 +388,7 @@ final public class ClassInstrumenter {
         if (md == null || !md.getHasChanged()) {
           w.addRawMethod(new ClassWriter.RawElement(cr.getBytes(), cr.getMethodRawOffset(i), cr.getMethodRawSize(i)));
         } else {
-          CTCompiler comp = new CTCompiler(w, md);
+          CTCompiler comp = CTCompiler.make(w, md);
           comp.setPresetConstants(cpr);
 
           try {

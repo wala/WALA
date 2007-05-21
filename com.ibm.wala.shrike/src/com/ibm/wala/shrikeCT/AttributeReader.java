@@ -28,6 +28,9 @@ public abstract class AttributeReader {
    *          the name the attribute must have
    */
   protected AttributeReader(ClassReader.AttrIterator attr, String expectedName) throws InvalidClassFileException {
+    if (attr == null) {
+      throw new IllegalArgumentException("attr cannot be null");
+    }
     attr.verifyValid();
     this.cr = attr.cr;
     this.attr = attr.offset;

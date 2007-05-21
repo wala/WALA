@@ -26,10 +26,11 @@ final public class CTCompiler extends Compiler {
   /**
    * Compile 'md' into the class given by 'cw'.
    */
-  public CTCompiler(ClassWriter cw, MethodData md) {
+  private CTCompiler(ClassWriter cw, MethodData md) {
     super(md);
     this.cw = cw;
   }
+  
 
   protected int allocateConstantPoolInteger(int v) {
     return cw.addCPInt(v);
@@ -70,6 +71,14 @@ final public class CTCompiler extends Compiler {
       return s;
     }
   }
+
+  public static CTCompiler make(ClassWriter cw, MethodData md) {
+    if (md == null) {
+      throw new IllegalArgumentException("md is null");
+    }
+    return new CTCompiler(cw, md);
+  }
+
 
   protected int allocateConstantPoolField(String c, String name, String type) {
     return cw.addCPFieldRef(convertTypeToClass(c), name, type);

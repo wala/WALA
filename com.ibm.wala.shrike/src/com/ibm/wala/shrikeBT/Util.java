@@ -38,8 +38,12 @@ public final class Util {
 
   /**
    * @return the JVM "stack word size" for the given JVM type
+   * @throws IllegalArgumentException  if s is null
    */
   public static byte getWordSize(String s) {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     return getWordSize(s, 0);
   }
 

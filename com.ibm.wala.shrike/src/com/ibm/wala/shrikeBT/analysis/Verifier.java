@@ -266,8 +266,9 @@ public final class Verifier extends Analyzer {
 
   /**
    * Initialize a verifier.
+   * @throws NullPointerException  if info is null
    */
-  public Verifier(MethodData info) {
+  public Verifier(MethodData info) throws NullPointerException {
     super(info);
   }
 

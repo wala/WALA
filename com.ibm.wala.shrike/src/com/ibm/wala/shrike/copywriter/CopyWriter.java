@@ -159,7 +159,7 @@ public class CopyWriter {
       decoder.decode();
       MethodData md = new MethodData(decoder, cr.getMethodAccessFlags(m), CTDecoder.convertClassToType(cr.getName()), cr
           .getMethodName(m), cr.getMethodType(m));
-      CTCompiler compiler = new CTCompiler(w, md);
+      CTCompiler compiler = CTCompiler.make(w, md);
       compiler.compile();
       if (compiler.getAuxiliaryMethods().length > 0)
         throw new Error("Where did this auxiliary method come from?");

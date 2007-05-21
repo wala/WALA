@@ -669,6 +669,9 @@ public class Analyzer {
   }
   
   public static Analyzer createAnalyzer(MethodData info) {
+    if (info == null) {
+      throw new IllegalArgumentException("info is null");
+    }
     return new Analyzer(info);
   }
   
