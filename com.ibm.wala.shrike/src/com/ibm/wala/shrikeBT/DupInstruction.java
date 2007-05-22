@@ -94,7 +94,7 @@ public final class DupInstruction extends Instruction {
     return "Dup(" + size + "," + delta + ")";
   }
 
-  public void visit(Visitor v) throws IllegalArgumentException {
+  public void visit(Visitor v)  {
     if (v == null) {
       throw new IllegalArgumentException("illegal null visitor");
     }
