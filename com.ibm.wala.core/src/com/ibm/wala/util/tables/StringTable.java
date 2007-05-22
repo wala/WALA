@@ -58,9 +58,13 @@ public class StringTable extends Table<String> implements Cloneable {
    * read from a direct (native) text file
    * @throws IOException 
    * @throws FileNotFoundException 
+   * @throws IllegalArgumentException  if fileName is null
    * 
    */
   public static StringTable readFromDirectTextFile(String fileName) throws FileNotFoundException, IOException{
+    if (fileName == null) {
+      throw new IllegalArgumentException("fileName is null");
+    }
     File f = new File(fileName);
     return readFromTextFile(f);
   }
@@ -109,8 +113,12 @@ public class StringTable extends Table<String> implements Cloneable {
    * @param s
    *          a stream containing a table in text format, whitespace delimited
    * @throws IOException 
+   * @throws IllegalArgumentException  if s is null
    */
   public static StringTable readFromStream(InputStream s) throws IOException {
+    if (s == null) {
+      throw new IllegalArgumentException("s is null");
+    }
     StringTable result = new StringTable();
 
     LineNumberReader reader = new LineNumberReader(new InputStreamReader(s));

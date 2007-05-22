@@ -114,6 +114,9 @@ public class ETypeHierarchyWrapper {
   }
 
   public static ETypeHierarchyWrapper loadFromFile(String fileName) throws FileNotFoundException {
+    if (fileName == null) {
+      throw new IllegalArgumentException("fileName is null");
+    }
     System.err.println("eload..");
     ETypeHierarchy t = eloadFromFile(fileName);
     Assertions.productionAssertion(t != null);

@@ -33,8 +33,12 @@ public class FileUtil {
    * List all the files in a directory that match a regular expression
    * 
    * @param recurse recurse to subdirectories?
+   * @throws IllegalArgumentException  if dir is null
    */
   public static Collection<File> listFiles(String dir, String regex, boolean recurse) {
+    if (dir == null) {
+      throw new IllegalArgumentException("dir is null");
+    }
     File d = new File(dir);
     Pattern p = null;
     if (regex != null) {

@@ -259,8 +259,12 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
 
   /**
    * Dump this callgraph to the specified file in dotty(1) format.
+   * @throws IllegalArgumentException  if filename is null
    */
   public void dump(String filename) {
+    if (filename == null) {
+      throw new IllegalArgumentException("filename is null");
+    }
     File file = new File(filename);
     try {
       PrintWriter out = new PrintWriter(new FileOutputStream(file));

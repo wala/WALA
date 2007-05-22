@@ -57,8 +57,9 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
   /**
    * @param klasses
    *          Collection<IClass>
+   * @throws AssertionError  if klasses is null
    */
-  public TypeBasedPointerAnalysis(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) {
+  public TypeBasedPointerAnalysis(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) throws AssertionError {
     super(cg, makeInstanceKeys(klasses));
     this.klasses = klasses;
     heapModel = new TypeBasedHeapModel(options, klasses, cg);
@@ -69,6 +70,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
    *          Collection<IClass>
    */
   private static MutableMapping<InstanceKey> makeInstanceKeys(Collection<IClass> c) {
+    assert c != null;
     MutableMapping<InstanceKey> result = new MutableMapping<InstanceKey>();
     for (Iterator<IClass> it = c.iterator(); it.hasNext();) {
       IClass klass = it.next();

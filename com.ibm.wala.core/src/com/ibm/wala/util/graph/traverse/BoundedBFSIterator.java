@@ -73,8 +73,12 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
    * 
    * @param G
    *          the graph whose nodes to enumerate
+   * @throws IllegalArgumentException  if G is null
    */
   public BoundedBFSIterator(Graph<T> G, T N, int k) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     this.k = k;
     boundary = new int[k];
     init(G, new NonNullSingletonIterator<T>(N));
@@ -88,8 +92,12 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
    *          the graph whose nodes to enumerate
    * @param nodes
    *          the set of nodes from which to start searching
+   * @throws IllegalArgumentException  if G is null
    */
   public BoundedBFSIterator(Graph<T> G, Iterator <? extends T> nodes, int k) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     this.k = k;
     boundary = new int[k];
     init(G, nodes);

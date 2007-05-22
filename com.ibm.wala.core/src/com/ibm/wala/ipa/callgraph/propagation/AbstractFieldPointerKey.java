@@ -15,8 +15,10 @@ public abstract class AbstractFieldPointerKey extends AbstractPointerKey impleme
   final protected InstanceKey instance;
 
   protected AbstractFieldPointerKey(InstanceKey container) {
+    if (container == null) {
+      throw new IllegalArgumentException("container is null");
+    }
     this.instance = container;
-    assert container != null;
   }
 
   public InstanceKey getInstanceKey() {

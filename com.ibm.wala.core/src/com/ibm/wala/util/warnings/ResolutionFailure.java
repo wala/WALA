@@ -35,7 +35,7 @@ public class ResolutionFailure extends MethodWarning {
     this.ref = ref;
   }
 
-  public ResolutionFailure(CGNode node, Object ref) {
+  private ResolutionFailure(CGNode node, Object ref) {
     this(node, ref, null);
   }
 
@@ -54,7 +54,7 @@ public class ResolutionFailure extends MethodWarning {
     if (node == null) {
       throw new IllegalArgumentException("node cannot be null");
     }
-    return new ResolutionFailure(node, ref);
+    return make(node, ref);
   }
 
   public static ResolutionFailure create(CGNode node, Object ref, String msg) throws IllegalArgumentException {
@@ -62,6 +62,13 @@ public class ResolutionFailure extends MethodWarning {
       throw new IllegalArgumentException("node cannot be null");
     }
     return new ResolutionFailure(node, ref, msg);
+  }
+
+  public static ResolutionFailure make(CGNode node, Object ref) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
+    return new ResolutionFailure(node, ref);
   }
 
   /* (non-Javadoc)

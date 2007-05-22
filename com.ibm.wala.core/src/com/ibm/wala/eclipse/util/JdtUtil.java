@@ -51,11 +51,17 @@ import com.ibm.wala.util.debug.Assertions;
 public class JdtUtil {
 
   public static String getFilePath(IJavaElement javaElt) {
+    if (javaElt == null) {
+      throw new IllegalArgumentException("javaElt is null");
+    }
     String filePath = javaElt.getPath().toString();
     return filePath;
   }
 
   public static String getPackageName(ICompilationUnit cu) {
+    if (cu == null) {
+      throw new IllegalArgumentException("cu is null");
+    }
     try {
       IPackageDeclaration[] pkgDecl = cu.getPackageDeclarations();
 
@@ -72,6 +78,9 @@ public class JdtUtil {
   }
 
   public static String getFullyQualifiedClassName(IType type) {
+    if (type == null) {
+      throw new IllegalArgumentException("type is null");
+    }
     ICompilationUnit cu = (ICompilationUnit) type.getParent();
     String packageName = getPackageName(cu);
     String className = type.getElementName();
@@ -112,8 +121,12 @@ public class JdtUtil {
    * 
    * @param javaElt
    * @return
+   * @throws IllegalArgumentException  if javaElt is null
    */
   public static String getJdtHandleString(IJavaElement javaElt) {
+    if (javaElt == null) {
+      throw new IllegalArgumentException("javaElt is null");
+    }
     return javaElt.getHandleIdentifier();
   }
 
@@ -134,6 +147,9 @@ public class JdtUtil {
   }
 
   public static IJavaProject getProject(IJavaElement javaElt) {
+    if (javaElt == null) {
+      throw new IllegalArgumentException("javaElt is null");
+    }
     IJavaProject javaProject = javaElt.getJavaProject();
     return javaProject;
   }
@@ -156,6 +172,9 @@ public class JdtUtil {
   }
 
   public static IJavaProject getJavaProject(IFile appJar) {
+    if (appJar == null) {
+      throw new IllegalArgumentException("appJar is null");
+    }
     String projectName = appJar.getProject().getName();
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
     IJavaModel javaModel = JavaCore.create(workspaceRoot);

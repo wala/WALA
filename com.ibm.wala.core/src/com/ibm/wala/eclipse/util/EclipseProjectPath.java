@@ -112,6 +112,9 @@ public class EclipseProjectPath {
   }
 
   public static EclipseProjectPath make(IPath workspaceRootPath, IJavaProject project) {
+    if (workspaceRootPath == null) {
+      throw new IllegalArgumentException("workspaceRootPath is null");
+    }
     return new EclipseProjectPath(workspaceRootPath, project);
   }
 

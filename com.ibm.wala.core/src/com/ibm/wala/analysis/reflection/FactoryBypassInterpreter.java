@@ -188,6 +188,9 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    *      com.ibm.wala.util.warnings.WarningSet)
    */
   public int getNumberOfStatements(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     return m.allInstructions.size();
   }
@@ -654,6 +657,9 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    *      com.ibm.wala.util.warnings.WarningSet)
    */
   public Iterator iterateFieldsRead(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
       return CodeScanner.iterateFieldsRead(m, warnings);
@@ -671,6 +677,9 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    *      com.ibm.wala.util.warnings.WarningSet)
    */
   public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
       return CodeScanner.iterateFieldsWritten(m, warnings);
@@ -706,6 +715,9 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
   public boolean hasObjectArrayLoad(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
       return CodeScanner.hasObjectArrayLoad(m, warnings);
@@ -717,6 +729,9 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
   public boolean hasObjectArrayStore(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
       return CodeScanner.hasObjectArrayStore(m, warnings);
@@ -728,6 +743,9 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
   public Iterator iterateCastTypes(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
       return CodeScanner.iterateCastTypes(m, warnings);

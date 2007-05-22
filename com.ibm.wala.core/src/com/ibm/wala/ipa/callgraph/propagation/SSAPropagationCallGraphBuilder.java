@@ -175,9 +175,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   private final boolean usePreTransitiveSolver;
 
   protected SSAPropagationCallGraphBuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
-      PointerKeyFactory pointerKeyFactory, boolean preTransitive) {
+      PointerKeyFactory pointerKeyFactory) {
     super(cha, warnings, options, pointerKeyFactory);
-    this.usePreTransitiveSolver = preTransitive;
+    this.usePreTransitiveSolver = options.usePreTransitiveSolver();
   }
 
   public SSAContextInterpreter getCFAContextInterpreter() {

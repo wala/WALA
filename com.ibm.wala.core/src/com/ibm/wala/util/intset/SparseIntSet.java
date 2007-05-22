@@ -67,6 +67,9 @@ public class SparseIntSet implements IntSet {
    * @param backingArray
    */
   protected SparseIntSet(int[] backingArray) {
+    if (backingArray == null) {
+      throw new IllegalArgumentException("backingArray is null");
+    }
     elements = backingArray;
     this.size = backingArray.length;
   }

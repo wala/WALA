@@ -67,6 +67,9 @@ public class SparseLongSet implements LongSet {
    * @param backingArray
    */
   protected SparseLongSet(long[] backingArray) {
+    if (backingArray == null) {
+      throw new IllegalArgumentException("backingArray is null");
+    }
     elements = backingArray;
     this.size = backingArray.length;
   }

@@ -39,9 +39,10 @@ public class SyntheticIR extends IR {
    *          a Map giving information on constant values for the symbol table
    * @param warnings
    *          an object to track analysis warnings with
+   * @throws AssertionError  if method is null
    */
   public SyntheticIR(IMethod method, Context context, AbstractCFG cfg, SSAInstruction[] instructions, SSAOptions options,
-      Map<Integer, ConstantValue> constants, WarningSet warnings) {
+      Map<Integer, ConstantValue> constants, WarningSet warnings) throws AssertionError {
     super(method, instructions, makeSymbolTable(method, instructions, constants), new SSACFG(method, cfg, instructions, warnings),
         options);
 
@@ -55,6 +56,7 @@ public class SyntheticIR extends IR {
    *          Map: valune number (Integer) -> ConstantValue
    */
   private static SymbolTable makeSymbolTable(IMethod method, SSAInstruction[] instructions, Map<Integer, ConstantValue> constants) {
+    assert method != null;
     SymbolTable symbolTable = new SymbolTable(method.getNumberOfParameters());
 
     // simulate allocation of value numbers
