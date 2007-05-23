@@ -26,7 +26,7 @@ public class JavaSourceAnalysisScope extends AnalysisScope {
     loadersByName.put(EclipseProjectPath.SOURCE, EclipseProjectPath.SOURCE_REF);
 
     setLoaderImpl(getLoader(SYNTHETIC), "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
-    setLoaderImpl(EclipseProjectPath.SOURCE_REF, "com.ibm.domo.ast.java.translator.polyglot.PolyglotSourceLoaderImpl");
+    setLoaderImpl(EclipseProjectPath.SOURCE_REF, "com.ibm.wala.cast.java.translator.polyglot.PolyglotSourceLoaderImpl");
   }
 
   public ClassLoaderReference getSourceLoader() {
