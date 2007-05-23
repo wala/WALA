@@ -49,7 +49,7 @@ public class AstJavaInvokeInstruction extends FixedParametersLexicalInvokeInstru
     this(-1, params, exception, site);
   }
 
-  private AstJavaInvokeInstruction(int result, int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites) {
+  protected AstJavaInvokeInstruction(int result, int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites) {
     super(result, params, exception, site, lexicalReads, lexicalWrites);
     if (Assertions.verifyAssertions) {
       SSAInvokeInstruction.assertParamsKosher(result, params, site);
