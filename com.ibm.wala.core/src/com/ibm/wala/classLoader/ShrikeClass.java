@@ -550,6 +550,19 @@ public final class ShrikeClass implements IClass {
           return f;
         }
       }
+      // try superinterfaces
+      try {
+        Collection<IClass> ifaces = isInterface() ? getAllAncestorInterfaces() : getAllImplementedInterfaces();
+        for (IClass i : ifaces) {
+          f = i.getField(name);
+          if (f != null) {
+            fieldMap.put(name, f);
+            return f;
+          }
+        }
+      } catch (ClassHierarchyException e) {
+        // skip
+      }
     }
 
     return null;
