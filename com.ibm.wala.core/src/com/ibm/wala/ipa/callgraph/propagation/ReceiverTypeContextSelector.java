@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -29,10 +28,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class ReceiverTypeContextSelector implements ContextSelector {
 
-  private final ClassHierarchy cha;
-
-  public ReceiverTypeContextSelector(ClassHierarchy cha) {
-    this.cha = cha;
+  public ReceiverTypeContextSelector() {
   }
 
   /*

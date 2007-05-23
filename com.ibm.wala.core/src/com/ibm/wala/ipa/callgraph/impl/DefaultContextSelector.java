@@ -40,7 +40,7 @@ public class DefaultContextSelector implements ContextSelector {
     FactoryContextSelector R = new FactoryContextSelector(cha, methodTargetSelector);
     ContextInsensitiveSelector S = new ContextInsensitiveSelector();
     ContextSelector s = new DelegatingContextSelector(R, S);
-    delegate = new DelegatingContextSelector(new CloneContextSelector(cha),s);
+    delegate = new DelegatingContextSelector(new CloneContextSelector(),s);
   }
 
   /*

@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -31,8 +30,8 @@ public class CloneContextSelector implements ContextSelector {
 
   private final ReceiverTypeContextSelector selector;
   
-  public CloneContextSelector(ClassHierarchy cha) {
-    this.selector = new ReceiverTypeContextSelector(cha);
+  public CloneContextSelector() {
+    this.selector = new ReceiverTypeContextSelector();
   }
 
   /* (non-Javadoc)
