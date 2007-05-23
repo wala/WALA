@@ -52,7 +52,7 @@ public class AstJavaTypeInference extends AstTypeInference {
       if (klass == null) {
 	Assertions.UNREACHABLE();
       } else {
-        result = new DeclaredTypeOperator(new ConeType(klass, cha));
+        result = new DeclaredTypeOperator(new ConeType(klass));
       }
     }
 
@@ -65,7 +65,7 @@ public class AstJavaTypeInference extends AstTypeInference {
           // be pessimistic
           result = new DeclaredTypeOperator(BOTTOM);
 	    } else {
-          result = new DeclaredTypeOperator(new ConeType(klass, cha));
+          result = new DeclaredTypeOperator(new ConeType(klass));
 	    }
       } else {
         if (doPrimitives && type.isPrimitiveType()) {
@@ -83,7 +83,7 @@ public class AstJavaTypeInference extends AstTypeInference {
       SymbolTable st = ir.getSymbolTable();
       if (st.isStringConstant(valueNumber)) {
 	IClass klass = cha.lookupClass(TypeReference.JavaLangString);
-	TypeAbstraction stringTypeAbs = new PointType(klass,cha);
+	TypeAbstraction stringTypeAbs = new PointType(klass);
 	return new TypeVariable(stringTypeAbs, 797 * valueNumber);
       } else {
 	return super.makeVariable(valueNumber);
@@ -124,12 +124,12 @@ public class AstJavaTypeInference extends AstTypeInference {
 	  TypeAbstraction ta = r.getType();
 	  if (ta instanceof PointType) {
 	    if (ta.getType().equals(stringClass)) {
-	      meet = new PointType(ta.getType(), cha);
+	      meet = new PointType(ta.getType());
 	      break;
 	    }
 	  } else if (ta instanceof ConeType) {
 	    if (ta.getType().equals(stringClass)) {
-	      meet = new PointType(ta.getType(), cha);
+	      meet = new PointType(ta.getType());
 	      break;
 	    }
 	  }
