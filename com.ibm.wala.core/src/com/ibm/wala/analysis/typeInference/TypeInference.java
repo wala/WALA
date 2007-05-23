@@ -91,7 +91,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     this.cha = ir.getMethod().getClassHierarchy();
     this.ir = ir;
     this.doPrimitives = doPrimitives;
-    this.BOTTOM = new ConeType(cha.getRootClass(), cha);
+    this.BOTTOM = new ConeType(cha.getRootClass());
     initialize();
   }
 
@@ -112,7 +112,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       if (t.isReferenceType()) {
         IClass klass = cha.lookupClass(t);
         if (klass != null) {
-          v.setType(new ConeType(klass, cha));
+          v.setType(new ConeType(klass));
         } else {
           v.setType(ConeType.TOP);
           // v.setType(BOTTOM);
@@ -147,7 +147,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         if (Assertions.verifyAssertions) {
           Assertions._assert(klass != null);
         }
-        v.setType(new PointType(klass, cha));
+        v.setType(new PointType(klass));
 
         IMethod m = cha.resolveMethod(call.getDeclaredTarget());
         if (m != null) {
@@ -163,7 +163,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
               TypeReference tx = x[i];
               IClass tc = cha.lookupClass(tx);
               if (tc != null) {
-                v.setType(v.getType().meet(new ConeType(tc, cha)));
+                v.setType(v.getType().meet(new ConeType(tc)));
               }
             }
           }
@@ -451,7 +451,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
           if (Assertions.verifyAssertions) {
             Assertions._assert(klass != null);
           }
-          t.setType(new ConeType(klass, cha));
+          t.setType(new ConeType(klass));
           return CHANGED;
         }
       } else {
@@ -460,7 +460,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         // Assertions._assert(klass != null);
         // }
         if (klass != null) {
-          t.setType(new ConeType(klass, cha));
+          t.setType(new ConeType(klass));
         } else {
           t.setType(ConeType.TOP);
         }
@@ -535,7 +535,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
           // be pessimistic
           result = new DeclaredTypeOperator(BOTTOM);
         } else {
-          result = new DeclaredTypeOperator(new ConeType(klass, cha));
+          result = new DeclaredTypeOperator(new ConeType(klass));
         }
       }
     }
@@ -549,7 +549,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
           // be pessimistic
           result = new DeclaredTypeOperator(BOTTOM);
         } else {
-          result = new DeclaredTypeOperator(new ConeType(klass, cha));
+          result = new DeclaredTypeOperator(new ConeType(klass));
         }
       } else if (doPrimitives && type.isPrimitiveType()) {
         result = new DeclaredTypeOperator(PrimitiveType.getPrimitive(type));
@@ -566,7 +566,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         // be pessimistic
         result = new DeclaredTypeOperator(BOTTOM);
       } else {
-        result = new DeclaredTypeOperator(new PointType(klass, cha));
+        result = new DeclaredTypeOperator(new PointType(klass));
       }
     }
 
@@ -578,7 +578,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         // be pessimistic
         result = new DeclaredTypeOperator(BOTTOM);
       } else {
-        result = new DeclaredTypeOperator(new ConeType(klass, cha));
+        result = new DeclaredTypeOperator(new ConeType(klass));
       }
     }
 
@@ -631,7 +631,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         // be pessimistic
         result = BOTTOM;
       } else {
-        result = new ConeType(klass, cha);
+        result = new ConeType(klass);
       }
       while (it.hasNext()) {
         t = (TypeReference) it.next();
@@ -639,7 +639,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         if (tClass == null) {
           result = BOTTOM;
         } else {
-          result = result.meet(new ConeType(tClass, cha));
+          result = result.meet(new ConeType(tClass));
         }
       }
       return result;
@@ -749,7 +749,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
 
   public TypeAbstraction getConstantType(int valueNumber) {
     if (ir.getSymbolTable().isStringConstant(valueNumber)) {
-      return new PointType(cha.lookupClass(TypeReference.JavaLangString), cha);
+      return new PointType(cha.lookupClass(TypeReference.JavaLangString));
     } else {
       return getConstantPrimitiveType(valueNumber);
     }

@@ -18,20 +18,21 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * 
- * Absraction of a Java type.  These are immutable.
+ * Absraction of a Java type. These are immutable.
  * 
  * @author sfink
  */
 public class ConeType extends TypeAbstraction {
 
   private final IClass type;
-  private final ClassHierarchy cha;
 
   /**
    * default constructor
-   * @throws IllegalArgumentException  if type is null
+   * 
+   * @throws IllegalArgumentException
+   *           if type is null
    */
-  public ConeType(IClass type, ClassHierarchy cha) {
+  public ConeType(IClass type) {
     if (type == null) {
       throw new IllegalArgumentException("type is null");
     }
@@ -39,7 +40,6 @@ public class ConeType extends TypeAbstraction {
       Assertions._assert(type.getReference().isReferenceType());
     }
     this.type = type;
-    this.cha = cha;
   }
 
   public TypeAbstraction meet(TypeAbstraction rhs) {
@@ -50,10 +50,10 @@ public class ConeType extends TypeAbstraction {
       if (type.equals(other.type)) {
         return this;
       } else if (type.isArrayClass() || other.type.isArrayClass()) {
-        // give up on arrays.  We don't care anyway.
-        return new ConeType(cha.getRootClass(), cha);
+        // give up on arrays. We don't care anyway.
+        return new ConeType(type.getClassHierarchy().getRootClass());
       } else {
-        return new ConeType(cha.getLeastCommonSuperclass(this.type, other.type), cha);
+        return new ConeType(type.getClassHierarchy().getLeastCommonSuperclass(this.type, other.type));
       }
     } else if (rhs instanceof PointType) {
       return rhs.meet(this);
@@ -74,6 +74,7 @@ public class ConeType extends TypeAbstraction {
 
   /**
    * Method getType.
+   * 
    * @return TypeReference
    */
   public IClass getType() {
@@ -90,8 +91,8 @@ public class ConeType extends TypeAbstraction {
     if (other == TOP)
       return false;
     if (Assertions.verifyAssertions) {
-      if (!cha.equals(other.cha)) {
-        Assertions._assert(cha.equals(other.cha), "different chas " + this +" " + other);
+      if (!type.getClassHierarchy().equals(other.type.getClassHierarchy())) {
+        Assertions.UNREACHABLE("different chas " + this + " " + other);
       }
     }
     return type.equals(other.type);
@@ -116,10 +117,10 @@ public class ConeType extends TypeAbstraction {
    * @return an Iteration of IClass that implement this interface
    */
   public Iterator iterateImplementors() {
-    return cha.getImplementors(getType().getReference()).iterator();
+    return type.getClassHierarchy().getImplementors(getType().getReference()).iterator();
   }
 
   public ClassHierarchy getClassHierarchy() {
-    return cha;
+    return type.getClassHierarchy();
   }
 }

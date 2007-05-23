@@ -614,7 +614,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   private TypeAbstraction typeRef2TypeAbstraction(TypeReference type) {
     IClass klass = cha.lookupClass(type);
     if (klass != null) {
-      return new ConeType(klass, cha);
+      return new ConeType(klass);
       // if (klass.isAbstract() || klass.isInterface()) {
       // return new ConeType(klass, cha);
       // } else {

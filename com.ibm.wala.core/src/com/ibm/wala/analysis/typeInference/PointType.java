@@ -11,7 +11,6 @@
 package com.ibm.wala.analysis.typeInference;
 
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -23,13 +22,12 @@ import com.ibm.wala.util.debug.Assertions;
 public class PointType extends TypeAbstraction {
 
   private final IClass type;
-  private final ClassHierarchy cha;
 
   /**
    * Private constructor ... only for internal use.
    * @throws IllegalArgumentException  if type is null
    */
-  public PointType(IClass type, ClassHierarchy cha) {
+  public PointType(IClass type) {
     if (type == null) {
       throw new IllegalArgumentException("type is null");
     }
@@ -37,7 +35,6 @@ public class PointType extends TypeAbstraction {
     if (Assertions.verifyAssertions) {
       Assertions._assert(type.getReference().isReferenceType());
     }
-    this.cha = cha;
   }
 
   public TypeAbstraction meet(TypeAbstraction rhs) {
@@ -50,28 +47,28 @@ public class PointType extends TypeAbstraction {
           return this;
         } else if (type.isArrayClass() || other.type.isArrayClass()) {
           // give up on arrays. We don't care anyway.
-          return new ConeType(cha.getRootClass(), cha);
+          return new ConeType(type.getClassHierarchy().getRootClass());
         } else {
-          return new ConeType(cha.getLeastCommonSuperclass(this.type, other.type), cha);
+          return new ConeType(type.getClassHierarchy().getLeastCommonSuperclass(this.type, other.type));
         }
       } else if (rhs instanceof ConeType) {
         ConeType other = (ConeType) rhs;
         TypeReference T = other.getType().getReference();
         if (type.isArrayClass() || T.isArrayType()) {
           // give up on arrays. We don't care anyway.
-          return new ConeType(cha.getRootClass(), cha);
+          return new ConeType(type.getClassHierarchy().getRootClass());
         }
         IClass typeKlass = type;
-        if (cha.isSubclassOf(typeKlass, other.getType())) {
+        if (type.getClassHierarchy().isSubclassOf(typeKlass, other.getType())) {
           return other;
         } else if (other.isInterface()) {
-          if (cha.implementsInterface(typeKlass, T)) {
+          if (type.getClassHierarchy().implementsInterface(typeKlass, T)) {
             return other;
           }
         }
         // if we get here, we need to do cha-based superclass and return a cone.
         // TODO: avoid the allocation
-        return other.meet(new ConeType(other.getType(), cha));
+        return other.meet(new ConeType(other.getType()));
       } else {
         Assertions.UNREACHABLE("Unexpected type: " + rhs.getClass());
         return null;
@@ -104,8 +101,8 @@ public class PointType extends TypeAbstraction {
     }
     PointType other = (PointType) obj;
     if (Assertions.verifyAssertions) {
-      if (!cha.equals(other.cha)) {
-        Assertions._assert(cha.equals(other.cha), "different chas " + this + " " + other);
+      if (!type.getClassHierarchy().equals(other.type.getClassHierarchy())) {
+        Assertions.UNREACHABLE("different chas " + this + " " + other);
       }
     }
     return type.equals(other.type);

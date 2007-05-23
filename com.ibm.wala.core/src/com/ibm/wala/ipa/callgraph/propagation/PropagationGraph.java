@@ -504,7 +504,7 @@ public class PropagationGraph implements IFixedPointSystem {
   public void reorder() {
     VariableGraphView graph = new VariableGraphView();
 
-    Iterator<IVariable> order = DefaultFixedPointSystem.reverseSCCTopOrder(graph);
+    Iterator<IVariable> order = DefaultFixedPointSystem.makeSCCTopOrder(graph);
     
     int number = 0;
     while (order.hasNext()) {

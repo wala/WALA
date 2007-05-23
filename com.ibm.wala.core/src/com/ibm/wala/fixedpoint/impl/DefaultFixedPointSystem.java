@@ -249,7 +249,7 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
       checkGraph();
     }
 
-    Iterator<INodeWithNumber> order = reverseSCCTopOrder(graph);
+    Iterator<INodeWithNumber> order = makeSCCTopOrder(graph);
     int number = 0;
     while (order.hasNext()) {
       Object elt = order.next();
@@ -262,16 +262,16 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
 
   /**
    * Build an Iterator over all the nodes in the graph, in an order
-   * such that SCCs are visited in reverse topological order.
+   * such that SCCs are visited in topological order.
    */
-  public static <T> Iterator<T> reverseSCCTopOrder(Graph<T> graph) {
+  public static <T> Iterator<T> makeSCCTopOrder(Graph<T> graph) {
     // the following code ensures a topological order over SCCs.
     // note that the first two lines of the following give a topological
     // order for dags, but that can get screwed up by cycles.  so 
     // instead, we use Tarjan's SCC algorithm, which happens to 
     // visit nodes in an order consistent with a top. order over SCCs.
     
-    // finish time is post-orderat 
+    // finish time is post-order 
     // note that if you pay attention only to the first representative
     // of each SCC discovered, we have a top. order of these SCC
     // representatives

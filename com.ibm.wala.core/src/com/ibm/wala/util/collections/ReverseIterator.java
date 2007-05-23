@@ -60,4 +60,8 @@ public class ReverseIterator<T> implements Iterator<T> {
     throw new UnsupportedOperationException();
   }
 
+  public static <T> Iterator<T> reverse(Iterator<T> it) {
+    return new ReverseIterator<T>(it);
+  }
+
 }

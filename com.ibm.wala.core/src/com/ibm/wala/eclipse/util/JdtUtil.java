@@ -399,10 +399,7 @@ public class JdtUtil {
     }
   }
 
-  /**
-   * @param sigs
-   * @return
-   */
+
   private static String[] toArray(ArrayList<String> sigs) {
     int size = sigs.size();
     if (size == 0) {

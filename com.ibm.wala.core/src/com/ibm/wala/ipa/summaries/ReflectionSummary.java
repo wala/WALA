@@ -71,7 +71,7 @@ public class ReflectionSummary {
             Assertions._assert(klass != null, "null type for " + T);
           }
         }
-        p[i] = new PointType(klass, cha);
+        p[i] = new PointType(klass);
       }
       return new SetType(p);
     }
