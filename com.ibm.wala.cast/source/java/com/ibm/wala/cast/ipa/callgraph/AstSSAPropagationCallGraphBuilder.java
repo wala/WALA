@@ -102,7 +102,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
   protected AstSSAPropagationCallGraphBuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
       PointerKeyFactory pointerKeyFactory) {
-    super(cha, warnings, options, pointerKeyFactory, options.usePreTransitiveSolver());
+    super(cha, warnings, options, pointerKeyFactory);
   }
 
   public SSAContextInterpreter makeDefaultContextInterpreters(SSAContextInterpreter appContextInterpreter, AnalysisOptions options,

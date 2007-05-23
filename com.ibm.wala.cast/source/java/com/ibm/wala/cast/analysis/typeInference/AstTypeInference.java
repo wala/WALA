@@ -21,14 +21,14 @@ public abstract class AstTypeInference extends TypeInference {
 
   protected class AstTypeOperatorFactory extends TypeOperatorFactory implements AstInstructionVisitor {
     public void visitAstLexicalRead(AstLexicalRead inst) {
-      result = new DeclaredTypeOperator(new ConeType(cha.getRootClass(), cha));
+      result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
     }
 
     public void visitAstLexicalWrite(AstLexicalWrite inst) {
     }
 
     public void visitAstGlobalRead(AstGlobalRead instruction) {
-      result = new DeclaredTypeOperator(new ConeType(cha.getRootClass(), cha));
+      result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
     }
 
     public void visitAstGlobalWrite(AstGlobalWrite instruction) {
@@ -41,7 +41,7 @@ public abstract class AstTypeInference extends TypeInference {
     }
 
     public void visitEachElementGet(EachElementGetInstruction inst) {
-      result = new DeclaredTypeOperator(new ConeType(cha.getRootClass(), cha));
+      result = new DeclaredTypeOperator(new ConeType(cha.getRootClass()));
     }
 
     public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
