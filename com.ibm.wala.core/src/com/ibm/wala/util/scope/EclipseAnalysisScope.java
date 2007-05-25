@@ -56,6 +56,7 @@ import com.ibm.wala.util.warnings.WalaException;
  * @author Marco Pistoia
  * @author Stephen Fink
  */
+@Deprecated
 public class EclipseAnalysisScope extends AnalysisScope {
 
   public static final boolean DEBUG = true;
@@ -587,7 +588,7 @@ public class EclipseAnalysisScope extends AnalysisScope {
     return delegate.getLoaderImpl(ref);
   }
 
-  public Iterator<ClassLoaderReference> getLoaders() {
+  public Collection<ClassLoaderReference> getLoaders() {
     return delegate.getLoaders();
   }
 

@@ -173,12 +173,12 @@ public class ClassHierarchy implements Iterable<IClass> {
       int idx = 0;
 
       progressMonitor.beginTask("Build Class Hierarchy", scope.getNumberOfLoaders());
-      for (Iterator<ClassLoaderReference> it = scope.getLoaders(); it.hasNext();) {
+      for (ClassLoaderReference ref : scope.getLoaders()) {
         if (progressMonitor.isCanceled()) {
           throw new CancelCHAConstructionException();
         }
 
-        IClassLoader icl = factory.getLoader(it.next(), this, scope);
+        IClassLoader icl = factory.getLoader(ref, this, scope);
         loaders[idx++] = icl;
         addAllClasses(icl, progressMonitor);
 

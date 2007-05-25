@@ -181,10 +181,7 @@ public class StringStuff {
         return TypeName.findOrCreate(b, i, b.length() - i);
       }
     default:
-      if (Assertions.verifyAssertions) {
-        Assertions._assert(false, "unexpected type in descriptor " + b);
-      }
-      return null;
+      throw new IllegalArgumentException("unexpected type in descriptor " + b);
     }
   }
   
@@ -650,5 +647,29 @@ public class StringStuff {
     }
     return dotForm.toString();
   }
+  /**
+   * Convert '$' to '.' in names.
+   * 
+   * @param a
+   *          String object in which dollar signs('$') must be converted to dots
+   *          ('.').
+   * @return a String object obtained by replacing the dollar signs ('S') in the
+   *         String passed as argument with ('.').
+   * @throws IllegalArgumentException  if path is null
+   */
+  public static String dotToDollar(String path) {
+    if (path == null) {
+      throw new IllegalArgumentException("path is null");
+    }
+    StringBuffer dotForm = new StringBuffer(path);
+    // replace all '.' in the path with '$'
+    for (int i = 0; i < dotForm.length(); ++i) {
+      if (dotForm.charAt(i) == '.') {
+        dotForm.setCharAt(i, '$'); // replace '$' with '.'
+      }
+    }
+    return dotForm.toString();
+  }
+
 
 }

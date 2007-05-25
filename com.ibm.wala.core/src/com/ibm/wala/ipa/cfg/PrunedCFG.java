@@ -44,14 +44,6 @@ import com.ibm.wala.util.intset.MutableIntSet;
  */
 public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements ControlFlowGraph {
 
-  public interface EdgeFilter {
-
-    boolean hasNormalEdge(IBasicBlock src, IBasicBlock dst);
-
-    boolean hasExceptionalEdge(IBasicBlock src, IBasicBlock dst);
-
-  }
-
   public static PrunedCFG make(final ControlFlowGraph cfg, final EdgeFilter filter) {
     if (cfg == null) {
       throw new IllegalArgumentException("cfg is null");

@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.callgraph;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -233,8 +234,8 @@ public class AnalysisScope {
   /**
    * @return an Iterator <ClassLoaderReference>over the loaders.
    */
-  public Iterator<ClassLoaderReference> getLoaders() {
-    return loadersByName.values().iterator();
+  public Collection<ClassLoaderReference> getLoaders() {
+    return Collections.unmodifiableCollection(loadersByName.values());
   }
 
   /**

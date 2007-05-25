@@ -42,6 +42,7 @@ import com.ibm.wala.util.warnings.WalaException;
  * @author pistoia
  * @author sfink
  */
+@Deprecated
 public class EclipseEntrypoints extends BasicEntrypoints {
 
   private final static boolean DEBUG = false;
