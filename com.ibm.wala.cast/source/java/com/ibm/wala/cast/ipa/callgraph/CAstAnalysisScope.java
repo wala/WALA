@@ -20,14 +20,16 @@ package com.ibm.wala.cast.ipa.callgraph;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
+import java.util.Collection;
+import java.util.Collections;
 
-import com.ibm.wala.cast.loader.*;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
+import com.ibm.wala.classLoader.ArrayClassLoader;
+import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 
 public class CAstAnalysisScope extends AnalysisScope {
@@ -128,10 +130,9 @@ public class CAstAnalysisScope extends AnalysisScope {
   }
 
   /**
-   * @return an Iterator <ClassLoaderReference>over the loaders.
    */
-  public Iterator<ClassLoaderReference> getLoaders() {
-    return new NonNullSingletonIterator<ClassLoaderReference>( theLoader );
+  public Collection<ClassLoaderReference> getLoaders() {
+    return Collections.singleton(theLoader);
   }
 
   /**
