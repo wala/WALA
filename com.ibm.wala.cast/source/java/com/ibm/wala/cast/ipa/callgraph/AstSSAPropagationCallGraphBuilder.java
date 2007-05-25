@@ -580,7 +580,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       AbstractLexicalInvoke I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
 
       // find existing explicit lexical use
-      for (int i = I.getNumberOfParameters(); i < I.getNumberOfUses(); i++) {
+      for (int i = I.getNumberOfParameters(); i <= I.getLastLexicalUse(); i++) {
         Access A = I.getLexicalUse(i);
         if (A.variableName.equals(name) && isEqual(A.variableDefiner, definer)) {
           return getPointerKeyForLocal(n, A.valueNumber);
