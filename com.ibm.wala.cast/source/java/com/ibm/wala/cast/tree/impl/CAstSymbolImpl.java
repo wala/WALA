@@ -59,4 +59,7 @@ public class CAstSymbolImpl implements CAstSymbol {
 
   public Object defaultInitValue() { return _defaultInitValue; }
 
+  public String toString() {
+      return _name;
+  }
 }
