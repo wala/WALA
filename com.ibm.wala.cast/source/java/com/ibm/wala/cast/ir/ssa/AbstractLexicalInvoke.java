@@ -62,6 +62,14 @@ public abstract class AbstractLexicalInvoke
       return getNumberOfParameters() + lexicalReads.length;
   }
 
+  public final int getLastLexicalUse() {
+      if (lexicalReads == null) {
+	  return -1;
+      } else {
+	  return getNumberOfParameters() + lexicalReads.length - 1;
+      }
+  }
+  
   public int getUse(int j) {
     Assertions._assert(j >= getNumberOfParameters());
     Assertions._assert(lexicalReads != null);
