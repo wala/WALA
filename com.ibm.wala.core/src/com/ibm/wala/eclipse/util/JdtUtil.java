@@ -212,7 +212,8 @@ public class JdtUtil {
    * @return null if not found
    */
   public static IType findJavaClassInWorkspace(String className) {
-    SearchPattern p = SearchPattern.createPattern(className, IJavaSearchConstants.CLASS, IJavaSearchConstants.DECLARATIONS,
+    
+    SearchPattern p = SearchPattern.createPattern(className, IJavaSearchConstants.CLASS_AND_INTERFACE, IJavaSearchConstants.DECLARATIONS,
         SearchPattern.R_EXACT_MATCH);
     IJavaSearchScope scope = SearchEngine.createWorkspaceScope();
     SearchEngine engine = new SearchEngine();
@@ -243,6 +244,8 @@ public class JdtUtil {
   /**
    * Find the IMethod in the workspace corresponding to a method selector.
    * 
+   * TODO: this is way too slow.   figure out something better.
+   * 
    * @return null if not found
    */
   public static IMethod findJavaMethodInWorkspace(String klass, String selector) {
@@ -269,11 +272,7 @@ public class JdtUtil {
       // Need to consult a guru to figure out how to do this.
       try {
         List<IMethod> matches = new ArrayList<IMethod>();
-        ITypeParameter[] tp = type.getTypeParameters();
-        Collection<String> typeParameterNames = HashSetFactory.make(tp.length);
-        for (ITypeParameter p : tp) {
-          typeParameterNames.add(p.getElementName());
-        }
+        Collection<String> typeParameterNames = getTypeParameterNames(type);
         METHODS: for (IMethod x : type.getMethods()) {
           if (x.getElementName().equals(name)) {
             if (x.getParameterTypes().length == paramTypes.length) {
@@ -305,6 +304,20 @@ public class JdtUtil {
         return null;
       }
     }
+  }
+
+  /**
+   * @param type
+   * @return
+   * @throws JavaModelException
+   */
+  public static Collection<String> getTypeParameterNames(IType type) throws JavaModelException {
+    ITypeParameter[] tp = type.getTypeParameters();
+    Collection<String> typeParameterNames = HashSetFactory.make(tp.length);
+    for (ITypeParameter p : tp) {
+      typeParameterNames.add(p.getElementName());
+    }
+    return typeParameterNames;
   }
 
   public static String parseForName(String selector, IType type) {
@@ -449,6 +462,30 @@ public class JdtUtil {
       System.err.println("RETURNED " + kludge.size() + " " + kludge);
       return null;
     }
+  }
+
+  /**
+   *Use the search engine to find all methods in a java element
+   */
+  public static Collection<IMethod> findMethods(IJavaElement elt) {
+    final Collection<IMethod> result = HashSetFactory.make();
+    SearchPattern p = SearchPattern.createPattern("*", IJavaSearchConstants.METHOD, IJavaSearchConstants.DECLARATIONS,
+        SearchPattern.R_PATTERN_MATCH);
+    IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new IJavaElement[] {elt}, IJavaSearchScope.SOURCES);
+    SearchEngine engine = new SearchEngine();
+    SearchRequestor requestor = new SearchRequestor() {
+      @Override
+      public void acceptSearchMatch(SearchMatch match) throws CoreException {
+        result.add((IMethod) match.getElement());
+      }
+    };
+    try {
+      engine.search(p, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, requestor, null);
+    } catch (CoreException e) {
+      e.printStackTrace();
+    }
+    
+    return result;
   }
 
 }
