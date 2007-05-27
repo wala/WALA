@@ -17,12 +17,16 @@ package com.ibm.wala.logic;
 import java.util.Collection;
 import java.util.Collections;
 
-public class NullConstant implements IConstant {
+public class NullConstant extends IntConstant implements IConstant {
 	
-	static NullConstant SINGLE = new NullConstant();
+	// static NullConstant SINGLE = (NullConstant) new IntConstant(0);
 	
+    private NullConstant() {
+      super(0);
+    }
+    
 	public static NullConstant make() {
-		return SINGLE;
+		return new NullConstant();
 	}
 
 	public Collection<Variable> getFreeVariables() {
