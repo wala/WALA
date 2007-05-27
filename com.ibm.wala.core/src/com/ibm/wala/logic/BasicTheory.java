@@ -18,7 +18,7 @@ public class BasicTheory extends AbstractTheory {
   private final IVocabulary vocab;
   private final Collection<? extends IFormula> sentences;
   
-  private BasicTheory(IVocabulary vocab, Collection<? extends IFormula> sentences) {
+  protected BasicTheory(IVocabulary vocab, Collection<? extends IFormula> sentences) {
     this.vocab = vocab;
     this.sentences = sentences;
   }
