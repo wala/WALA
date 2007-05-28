@@ -832,8 +832,9 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
 
   /**
    * unsupported operation
+   * @throws UnsupportedOperationException  unconditionally
    */
-  public void addEdge(IBasicBlock src, IBasicBlock dst) {
+  public void addEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -918,8 +919,9 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    * unsupported operation
    * 
    * @param n
+   * @throws UnsupportedOperationException  unconditionally
    */
-  public void addNode(IBasicBlock n) {
+  public void addNode(IBasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

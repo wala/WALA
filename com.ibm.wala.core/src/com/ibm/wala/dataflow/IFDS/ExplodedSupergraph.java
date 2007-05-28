@@ -249,9 +249,8 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
 
   }
 
-  public void removeOutgoingEdges(ExplodedSupergraphNode node) {
-    Assertions.UNREACHABLE();
-
+  public void removeOutgoingEdges(ExplodedSupergraphNode node) throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
 
   /*

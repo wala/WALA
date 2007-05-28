@@ -561,8 +561,9 @@ public class BytecodeStream implements BytecodeConstants {
    * @see #getConstantIndex()
    * @see #getWideConstantIndex()
    * @see #getIntConstant(int)
+   * @throws UnimplementedError  unconditionally
    */
-  public final byte getConstantType(int index) {
+  public final byte getConstantType(int index) throws UnimplementedError {
     throw new UnimplementedError();
     //    byte desc = declaringClass.getLiteralDescription(index);
     //    return desc;
@@ -575,8 +576,9 @@ public class BytecodeStream implements BytecodeConstants {
    * @see #getConstantIndex()
    * @see #getWideConstantIndex()
    * @see #getConstantType(int)
+   * @throws UnimplementedError  unconditionally
    */
-  public final int getIntConstant(int index) {
+  public final int getIntConstant(int index) throws UnimplementedError {
     throw new UnimplementedError();
     //    int offset = declaringClass.getLiteralOffset(index) >> 2;
     //    int val = Statics.getSlotContentsAsInt(offset);

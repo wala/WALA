@@ -155,6 +155,9 @@ public class JdtUtil {
   }
 
   public static String getProjectName(IJavaProject javaProject) {
+    if (javaProject == null) {
+      throw new IllegalArgumentException("javaProject is null");
+    }
     return javaProject.getElementName();
   }
 
@@ -321,6 +324,9 @@ public class JdtUtil {
   }
 
   public static String parseForName(String selector, IType type) {
+    if (selector == null) {
+      throw new IllegalArgumentException("selector is null");
+    }
     String result = selector.substring(0, selector.indexOf('('));
     if (result.equals("<init>")) {
       return type.getElementName();
@@ -331,6 +337,9 @@ public class JdtUtil {
 
   public static final String[] parseForParameterTypes(String selector) throws IllegalArgumentException {
 
+    if (selector == null) {
+      throw new IllegalArgumentException("selector is null");
+    }
     String d = selector.substring(selector.indexOf('('));
     if (d.length() <= 2) {
       throw new IllegalArgumentException("invalid descriptor: " + d);

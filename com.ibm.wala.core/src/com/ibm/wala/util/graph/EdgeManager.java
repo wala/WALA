@@ -66,10 +66,11 @@ public interface EdgeManager<T> {
    */
   public int getSuccNodeCount(T N);
   public void addEdge(T src, T dst);
-  public void removeEdge(T src, T dst);
-  public void removeAllIncidentEdges(T node);
-  public void removeIncomingEdges(T node);
-  public void removeOutgoingEdges(T node);
+  
+  public void removeEdge(T src, T dst) throws UnsupportedOperationException;
+  public void removeAllIncidentEdges(T node) throws UnsupportedOperationException;
+  public void removeIncomingEdges(T node) throws UnsupportedOperationException;
+  public void removeOutgoingEdges(T node) throws UnsupportedOperationException;
   
   public boolean hasEdge(T src, T dst);
 

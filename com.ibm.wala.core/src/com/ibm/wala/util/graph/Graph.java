@@ -19,8 +19,7 @@ package com.ibm.wala.util.graph;
 public interface Graph<T> extends NodeManager<T>, EdgeManager<T> {
   /**
    * remove a node and all its incident edges
-   * @param N
    */
-  public void removeNodeAndEdges(T N);
+  public void removeNodeAndEdges(T N) throws UnsupportedOperationException;
 
 }

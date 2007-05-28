@@ -18,7 +18,7 @@ package com.ibm.wala.dataflow.IFDS;
  * @author sfink
  */
 public class ExplodedSupergraphNode<T> {
-
+  
   private final T supergraphNode;
 
   private final int fact;

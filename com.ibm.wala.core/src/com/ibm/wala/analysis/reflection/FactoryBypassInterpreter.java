@@ -216,6 +216,9 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    *      com.ibm.wala.util.warnings.WarningSet)
    */
   public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     HashSet<NewSiteReference> result = HashSetFactory.make(5);
     for (Iterator<SSAInstruction> it = m.getAllocationStatements().iterator(); it.hasNext();) {
