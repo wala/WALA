@@ -106,6 +106,9 @@ public abstract class AbstractDeclaredTransaction implements Comparable<IDeclare
    * @see java.lang.Object#equals(java.lang.Object)
    */
   public boolean equals(Object obj) {
+    if (obj == null) {
+      return false;
+    }
     if (this.getClass() != obj.getClass())
       return false;
     AbstractDeclaredTransaction other = (AbstractDeclaredTransaction) obj;

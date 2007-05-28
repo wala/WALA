@@ -37,6 +37,9 @@ public class FieldImpl extends MemberImpl implements IField {
    * @see com.ibm.wala.j2ee.client.impl.MemberImpl#equals(java.lang.Object)
    */
   public boolean equals(Object arg0) {
+    if (arg0 == null) {
+      return false;
+    }
     if (getClass().equals(arg0.getClass())) {
       FieldImpl other = (FieldImpl)arg0;
       return getName().equals(other.getName()) && getClassLoaderName().equals(other.getClassLoaderName());

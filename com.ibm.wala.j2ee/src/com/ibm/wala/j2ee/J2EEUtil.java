@@ -144,10 +144,14 @@ public class J2EEUtil {
    * 
    * @param method the Method in question
    * @return String a String representation of the signature.
+   * @throws IllegalArgumentException  if method is null
    */
   @SuppressWarnings("unchecked")
   public static String buildDescriptor(Method method) {
 
+    if (method == null) {
+      throw new IllegalArgumentException("method is null");
+    }
     StringBuffer sb = new StringBuffer();
 
     sb.append("(");
