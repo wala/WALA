@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeBT;
 
+import com.ibm.wala.annotations.NonNull;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 
@@ -62,6 +63,7 @@ public final class MethodEditor {
 
   /** Records which original bytecode instruction each Instruction belongs to. */
   private int[] instructionsToBytecodes;
+  @NonNull
   private Instruction[] instructions;
   private ExceptionHandler[][] handlers;
 
