@@ -34,7 +34,7 @@ public class SSALoadClassInstruction extends SSAInstruction {
   }
 
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, lval) + " = load_const: " + typeRef;
+    return getValueString(symbolTable, d, lval) + " = load_class: " + typeRef;
   }
 
   public void visit(IVisitor v) {
