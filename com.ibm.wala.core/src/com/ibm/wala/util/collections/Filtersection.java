@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import com.ibm.wala.annotations.NonNull;
+
 /**
  *
  * intersection of two filters
@@ -18,6 +20,7 @@ package com.ibm.wala.util.collections;
  */
 public class Filtersection implements Filter {
   
+  @NonNull
   final private Filter a;
   final private Filter b;
   

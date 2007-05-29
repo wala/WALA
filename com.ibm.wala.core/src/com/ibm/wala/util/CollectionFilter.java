@@ -13,6 +13,7 @@ package com.ibm.wala.util;
 
 import java.util.Collection;
 
+import com.ibm.wala.annotations.NonNull;
 import com.ibm.wala.util.collections.Filter;
 
 /**
@@ -23,6 +24,7 @@ import com.ibm.wala.util.collections.Filter;
  */
 public class CollectionFilter implements Filter {
 
+  @NonNull
   private final Collection<? extends Object> S;
    
   public CollectionFilter(Collection<? extends Object> S) {

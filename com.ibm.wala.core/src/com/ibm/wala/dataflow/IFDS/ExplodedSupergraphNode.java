@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.IFDS;
 
+import com.ibm.wala.annotations.NonNull;
+
 /**
  * A node in the exploded supergraph
  * 
@@ -19,6 +21,7 @@ package com.ibm.wala.dataflow.IFDS;
  */
 public class ExplodedSupergraphNode<T> {
   
+  @NonNull
   private final T supergraphNode;
 
   private final int fact;
