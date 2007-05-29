@@ -17,7 +17,7 @@ package com.ibm.wala.shrikeCT;
  * InvalidClassFileException.
  */
 public final class ClassReader implements ClassConstants {
-  private byte[] bytes;
+  private final byte[] bytes;
   private int[] methodOffsets;
   private int[] fieldOffsets;
   private ConstantPoolParser cpParser;

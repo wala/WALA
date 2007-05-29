@@ -29,7 +29,7 @@ public final class MethodOptimizer {
   private MethodData data;
   private Instruction[] instructions;
   private ExceptionHandler[][] handlers;
-  private MethodEditor editor;
+  private final MethodEditor editor;
   // The value at index [i][N] is the index of the only instruction which pushes
   // a value onto
   // the stack which is #N popped by instruction i, or -2 if there is no such
@@ -69,7 +69,7 @@ public final class MethodOptimizer {
     }
   }
 
-  public int findUniqueStackDef(int instr, int stack) throws UnoptimizableCodeException {
+  public int findUniqueStackDef(final int instr, final int stack) throws UnoptimizableCodeException {
     instructions = editor.getInstructions();
     handlers = editor.getHandlers();
     checkConsistentStackSizes();

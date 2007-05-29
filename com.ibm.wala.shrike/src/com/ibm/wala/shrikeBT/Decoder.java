@@ -134,8 +134,8 @@ public abstract class Decoder implements Constants {
   private ConstantPoolReader constantPool;
 
   // Holds the input to decode
-  private byte[] code;
-  private int[] rawHandlers;
+  private final byte[] code;
+  private final int[] rawHandlers;
 
   // Temporary working data
   private int[] decodedOffset;

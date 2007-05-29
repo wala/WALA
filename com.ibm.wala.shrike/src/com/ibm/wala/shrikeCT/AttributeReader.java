@@ -15,7 +15,7 @@ package com.ibm.wala.shrikeCT;
  * access to the contents of attributes.
  */
 public abstract class AttributeReader {
-  protected ClassReader cr;
+  protected final ClassReader cr;
   protected int attr;
   protected int length;
 

@@ -37,7 +37,7 @@ public abstract class Compiler implements Constants {
 
   private String signature;
 
-  private Instruction[] instructions;
+  private final Instruction[] instructions;
 
   private ExceptionHandler[][] handlers;
 
