@@ -15,6 +15,7 @@ import org.eclipse.jst.j2ee.ejb.MethodElement;
 import org.eclipse.jst.j2ee.ejb.MethodElementKind;
 import org.eclipse.jst.j2ee.ejb.TransactionAttributeType;
 
+import com.ibm.wala.annotations.NonNull;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -30,6 +31,7 @@ public abstract class AbstractDeclaredTransaction implements Comparable<IDeclare
   /**
    * The governing entity bean.
    */
+  @NonNull
   private final EnterpriseBean bean;
 
   /**
