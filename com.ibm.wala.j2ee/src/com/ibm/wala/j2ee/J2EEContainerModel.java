@@ -230,7 +230,7 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
     staticFieldMap = HashMapFactory.make();
     for (Iterator<FieldReference> fs = staticFieldRefs.iterator(); fs.hasNext();) {
       FieldReference f = fs.next();
-      staticFieldMap.put(f.getName(), new FieldImpl(this, f, ClassConstants.ACC_STATIC));
+      staticFieldMap.put(f.getName(), new FieldImpl(this, f, ClassConstants.ACC_STATIC, null));
     }
   }
 
