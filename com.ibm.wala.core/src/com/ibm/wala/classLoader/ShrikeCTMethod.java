@@ -314,6 +314,9 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     return sig == null ? null : MethodTypeSignature.make(sig);
   }
 
+  /**
+   * read the runtime-invisible annotations from the class file
+   */
   public Collection<Annotation> getRuntimeInvisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
     RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader();
     if (r != null) {

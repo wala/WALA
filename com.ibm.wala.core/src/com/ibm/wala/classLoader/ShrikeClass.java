@@ -30,6 +30,7 @@ import com.ibm.wala.shrikeCT.ClassReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
+import com.ibm.wala.shrikeCT.ClassReader.AttrIterator;
 import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader.UnimplementedException;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
@@ -190,11 +191,20 @@ public final class ShrikeClass implements IClass {
         int accessFlags = cr.getFieldAccessFlags(i);
         Atom name = Atom.findOrCreateUnicodeAtom(cr.getFieldName(i));
         ImmutableByteArray b = ImmutableByteArray.make(cr.getFieldType(i));
+        Collection<Annotation> annotations = null;
+        try {
+          annotations = getRuntimeInvisibleAnnotations(i);
+          annotations = annotations.isEmpty() ? null : annotations;
+        } catch (UnimplementedException e) {
+          e.printStackTrace();
+          // keep going
+        }
+      
 
         if ((accessFlags & ClassConstants.ACC_STATIC) == 0) {
-          addFieldToList(instanceList, name, b, accessFlags);
+          addFieldToList(instanceList, name, b, accessFlags, annotations);
         } else {
-          addFieldToList(staticList, name, b, accessFlags);
+          addFieldToList(staticList, name, b, accessFlags, annotations);
         }
       }
       instanceFields = new IField[instanceList.size()];
@@ -215,7 +225,7 @@ public final class ShrikeClass implements IClass {
     }
   }
 
-  private void addFieldToList(List<FieldImpl> L, Atom name, ImmutableByteArray fieldType, int accessFlags) {
+  private void addFieldToList(List<FieldImpl> L, Atom name, ImmutableByteArray fieldType, int accessFlags, Collection<Annotation> annotations) {
     TypeName T = null;
     if (fieldType.get(fieldType.length() - 1) == ';') {
       T = TypeName.findOrCreate(fieldType, 0, fieldType.length() - 1);
@@ -224,7 +234,7 @@ public final class ShrikeClass implements IClass {
     }
     TypeReference type = TypeReference.findOrCreate(getClassLoader().getReference(), T);
     FieldReference fr = FieldReference.findOrCreate(getReference(), name, type);
-    FieldImpl f = new FieldImpl(this, fr, accessFlags);
+    FieldImpl f = new FieldImpl(this, fr, accessFlags, annotations);
     L.add(f);
   }
 
@@ -897,6 +907,45 @@ public final class ShrikeClass implements IClass {
     return result;
   }
 
+  private RuntimeInvisibleAnnotationsReader getRuntimeInvisibleAnnotationsReader(int fieldIndex) throws InvalidClassFileException {
+    ClassReader.AttrIterator iter = new AttrIterator();
+    reader.get().initFieldAttributeIterator(fieldIndex, iter);
+
+    // search for the desired attribute
+    RuntimeInvisibleAnnotationsReader result = null;
+    try {
+      for (; iter.isValid(); iter.advance()) {
+        if (iter.getName().toString().equals("RuntimeInvisibleAnnotations")) {
+          result = new RuntimeInvisibleAnnotationsReader(iter);
+          break;
+        }
+      }
+    } catch (InvalidClassFileException e) {
+      Assertions.UNREACHABLE();
+    }
+    return result;
+  }
+  
+  /**
+   * read the runtime-invisible annotations from the class file
+   */
+  public Collection<Annotation> getRuntimeInvisibleAnnotations(int fieldIndex) throws InvalidClassFileException, UnimplementedException {
+    RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader(fieldIndex);
+    if (r != null) {
+      int[] offsets = r.getAnnotationOffsets();
+      Collection<Annotation> result = HashSetFactory.make();
+      for (int i : offsets) {
+        String type = r.getAnnotationType(i);
+        type = type.replaceAll(";","");
+        TypeReference t = TypeReference.findOrCreate(getClassLoader().getReference(), type);
+        result.add(Annotation.make(t));
+      }
+      return result;
+    } else {
+      return Collections.emptySet();
+    }
+  }
+  
   private SignatureReader getSignatureReader() throws InvalidClassFileException {
     ClassReader r = reader.get();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();

@@ -10,10 +10,14 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -31,14 +35,14 @@ public final class FieldImpl implements IField {
   private final FieldReference fieldRef;
 
   private final int accessFlags;
+  
+  private final Collection<Annotation> annotations;
 
-  /**
-   * constructor when the field type is not a primitive
-   */
-  public FieldImpl(IClass declaringClass, FieldReference canonicalRef, int accessFlags) {
+  public FieldImpl(IClass declaringClass, FieldReference canonicalRef, int accessFlags, Collection<Annotation> annotations) {
     this.declaringClass = declaringClass;
     this.fieldRef = canonicalRef;
     this.accessFlags = accessFlags;
+    this.annotations = annotations;
     if (Assertions.verifyAssertions) {
       Assertions._assert(declaringClass != null);
       Assertions._assert(fieldRef != null);
@@ -136,6 +140,10 @@ public final class FieldImpl implements IField {
 
   public ClassHierarchy getClassHierarchy() {
     return declaringClass.getClassHierarchy();
+  }
+
+  public Collection<Annotation> getAnnotations() {
+    return annotations == null ? null : Collections.unmodifiableCollection(annotations);
   }
 
  

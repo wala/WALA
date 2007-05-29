@@ -12,7 +12,9 @@ package com.ibm.wala.util;
 
 import java.util.Collection;
 
+import com.ibm.wala.classLoader.FieldImpl;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeClass;
@@ -22,13 +24,15 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.debug.Assertions;
 
-public class InternalUtils {
+public class Annotations {
   public static final TypeName INTERNAL = TypeName.findOrCreateClassName("com/ibm/wala/annotations", "Internal");
 
+  public static final TypeName NONNULL = TypeName.findOrCreateClassName("com/ibm/wala/annotations", "NonNull");
+
   /**
-   * Does a particular method have the WALA "internal" annotation?
+   * Does a particular method have a particular annotation?
    */
-  public static boolean hasInternalAnnotation(IMethod m) {
+  public static boolean hasAnnotation(IMethod m, TypeName type) {
     if (m instanceof ShrikeCTMethod) {
       Collection<Annotation> annotations = null;
       try {
@@ -41,7 +45,7 @@ public class InternalUtils {
         Assertions.UNREACHABLE();
       }
       for (Annotation a : annotations) {
-        if (a.getType().getName().equals(INTERNAL)) {
+        if (a.getType().getName().equals(type)) {
           return true;
         }
       }
@@ -50,9 +54,9 @@ public class InternalUtils {
   }
 
   /**
-   * Does a particular class have the WALA "internal" annotation?
+   * Does a particular class have a particular annotation?
    */
-  public static boolean hasInternalAnnotation(IClass c) {
+  public static boolean hasAnnotation(IClass c, TypeName type) {
     if (c instanceof ShrikeClass) {
       Collection<Annotation> annotations = null;
       try {
@@ -65,8 +69,23 @@ public class InternalUtils {
         Assertions.UNREACHABLE();
       }
       for (Annotation a : annotations) {
-        if (a.getType().getName().equals(INTERNAL)) {
+        if (a.getType().getName().equals(type)) {
           return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  public static boolean hasAnnotation(IField field, TypeName type) {
+    if (field instanceof FieldImpl) {
+      FieldImpl f = (FieldImpl) field;
+      Collection<Annotation> annotations = f.getAnnotations();
+      if (annotations != null) {
+        for (Annotation a : annotations) {
+          if (a.getType().getName().equals(type)) {
+            return true;
+          }
         }
       }
     }
