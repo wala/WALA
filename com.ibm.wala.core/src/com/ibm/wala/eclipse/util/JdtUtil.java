@@ -214,11 +214,14 @@ public class JdtUtil {
    * 
    * @return null if not found
    */
-  public static IType findJavaClassInWorkspace(String className) {
+  public static IType findJavaClassInProjects(String className, Collection<IJavaProject> projects) {
     
     SearchPattern p = SearchPattern.createPattern(className, IJavaSearchConstants.CLASS_AND_INTERFACE, IJavaSearchConstants.DECLARATIONS,
         SearchPattern.R_EXACT_MATCH);
-    IJavaSearchScope scope = SearchEngine.createWorkspaceScope();
+    IJavaElement[] arr = new IJavaElement[projects.size()];
+    projects.toArray(arr);
+    IJavaSearchScope scope = SearchEngine.createJavaSearchScope(arr , false);
+//    IJavaSearchScope scope = SearchEngine.createWorkspaceScope();
     SearchEngine engine = new SearchEngine();
     final Collection<IJavaElement> kludge = HashSetFactory.make();
     SearchRequestor requestor = new SearchRequestor() {
@@ -251,11 +254,11 @@ public class JdtUtil {
    * 
    * @return null if not found
    */
-  public static IMethod findJavaMethodInWorkspace(String klass, String selector) {
+  public static IMethod findJavaMethodInProjects(String klass, String selector, Collection<IJavaProject> projects) {
 
     IType type = null;
     try {
-      type = findJavaClassInWorkspace(klass);
+      type = findJavaClassInProjects(klass, projects);
     } catch (Throwable t) {
       return null;
     }
@@ -443,6 +446,7 @@ public class JdtUtil {
    * 
    * @return null if not found
    */
+  @Deprecated
   public static IMethod findJavaMethodInWorkspaceBrokenForInnerClasses(String methodSig) {
     // dammit ... this doesn't work for inner classes.
 
