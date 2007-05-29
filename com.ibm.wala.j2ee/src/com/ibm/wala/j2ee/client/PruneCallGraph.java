@@ -57,8 +57,12 @@ public class PruneCallGraph {
    *          a filter which may accept some nodes in a call graph
    * @return the Set of nodes N s.t. there exists some path from the fake root
    *         node of G to some node M that contains N, where F accepts node M.
+   * @throws IllegalArgumentException  if G is null
    */
   public static Set<CGNode> computeNodesOnPathToAccept(CallGraph G, Filter F) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     OnPathSystem S = new OnPathSystem(G, F);
     S.solve();
     Set<CGNode> reachable = DFS.getReachableNodes(G, Collections.singleton(G.getFakeRootNode()));
