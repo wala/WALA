@@ -100,13 +100,6 @@ public class CloneInterpreter implements SSAContextInterpreter {
    */
   private Map<TypeReference, IR> IRCache = HashMapFactory.make();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#getIR(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.detox.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public IR getIR(CGNode node, WarningSet warnings) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -123,13 +116,6 @@ public class CloneInterpreter implements SSAContextInterpreter {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#getNumberOfStatements(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.detox.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public int getNumberOfStatements(CGNode node, WarningSet warnings) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
@@ -138,8 +124,6 @@ public class CloneInterpreter implements SSAContextInterpreter {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#understands(com.ibm.wala.classLoader.IMethod,
    *      com.ibm.detox.ipa.callgraph.Context)
    */
@@ -151,8 +135,6 @@ public class CloneInterpreter implements SSAContextInterpreter {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#getAllocatedTypes(com.ibm.wala.classLoader.IMethod,
    *      com.ibm.detox.ipa.callgraph.Context,
    *      com.ibm.wala.util.warnings.WarningSet)
@@ -168,13 +150,6 @@ public class CloneInterpreter implements SSAContextInterpreter {
     return new NonNullSingletonIterator<NewSiteReference>(NewSiteReference.make(NEW_PC, cls.getReference()));
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#getCallSites(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.detox.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
@@ -266,8 +241,6 @@ public class CloneInterpreter implements SSAContextInterpreter {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.IClass)
    */
@@ -276,8 +249,6 @@ public class CloneInterpreter implements SSAContextInterpreter {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
    */
   public void setWarnings(WarningSet newWarnings) {
@@ -285,8 +256,6 @@ public class CloneInterpreter implements SSAContextInterpreter {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateFieldsRead(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.util.warnings.WarningSet)
    */
@@ -295,76 +264,35 @@ public class CloneInterpreter implements SSAContextInterpreter {
     return CodeScanner.getFieldsRead(statements).iterator();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateFieldsWritten(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings) {
     SSAInstruction[] statements = getIR(node, warnings).getInstructions();
     return CodeScanner.getFieldsWritten(statements).iterator();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#getCaughtExceptions(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public Set getCaughtExceptions(CGNode node, WarningSet warnings) {
     SSAInstruction[] statements = getIR(node, warnings).getInstructions();
     return CodeScanner.getCaughtExceptions(statements);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#hasObjectArrayLoad(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public boolean hasObjectArrayLoad(CGNode node, WarningSet warnings) {
     SSAInstruction[] statements = getIR(node, warnings).getInstructions();
     return CodeScanner.hasObjectArrayLoad(statements);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#hasObjectArrayStore(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public boolean hasObjectArrayStore(CGNode node, WarningSet warnings) {
     SSAInstruction[] statements = getIR(node, warnings).getInstructions();
     return CodeScanner.hasObjectArrayStore(statements);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateCastTypes(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator iterateCastTypes(CGNode node, WarningSet warnings) {
     SSAInstruction[] statements = getIR(node, warnings).getInstructions();
     return CodeScanner.iterateCastTypes(statements);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.cfg.CFGProvider#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   public ControlFlowGraph getCFG(CGNode N, WarningSet warnings) {
     return getIR(N, warnings).getControlFlowGraph();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getDU(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public DefUse getDU(CGNode node, WarningSet warnings) {
     return new DefUse(getIR(node, warnings));
   }

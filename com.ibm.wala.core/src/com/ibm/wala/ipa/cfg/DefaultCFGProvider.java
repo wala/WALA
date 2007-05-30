@@ -25,11 +25,6 @@ public class DefaultCFGProvider implements CFGProvider {
   private final CallGraph callGraph;
   private final CFGCache cfgCache;
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.ipcf.CFGProvider#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   public ControlFlowGraph getCFG(CGNode n, WarningSet warnings) {
 
     RTAContextInterpreter interp = callGraph.getInterpreter(n);

@@ -279,8 +279,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     private Map<String, Integer> symbolTable = null;
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.xml.sax.ContentHandler#startElement(java.lang.String,
      *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
@@ -369,8 +367,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.xml.sax.ContentHandler#endElement(java.lang.String,
      *      java.lang.String, java.lang.String)
      */

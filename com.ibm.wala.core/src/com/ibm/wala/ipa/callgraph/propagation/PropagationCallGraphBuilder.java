@@ -51,7 +51,7 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
- *  
+ * 
  * This abstract base class provides the general algorithm for a call graph
  * builder that relies on propagation through an iterative dataflow solver
  * 
@@ -256,8 +256,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#makeCallGraph(com.ibm.wala.ipa.callgraph.AnalysisOptions)
    */
   public CallGraph makeCallGraph(AnalysisOptions options) {
@@ -433,8 +431,10 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @return the PointerKey that acts as a representation for the class of
    *         pointers that includes the given instance field. null if there's
    *         some problem.
-   * @throws IllegalArgumentException  if I is null
-   * @throws IllegalArgumentException  if field is null
+   * @throws IllegalArgumentException
+   *           if I is null
+   * @throws IllegalArgumentException
+   *           if field is null
    */
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
     if (field == null) {
@@ -462,7 +462,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @return the PointerKey that acts as a representation for the class of
    *         pointers that includes the given array contents, or null if none
    *         found.
-   * @throws IllegalArgumentException  if I is null
+   * @throws IllegalArgumentException
+   *           if I is null
    */
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
     if (I == null) {
@@ -578,7 +579,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     private TypedPointerKey(PointerKey base, IClass type) {
-      this.type = type; 
+      this.type = type;
       this.base = base;
       if (Assertions.verifyAssertions) {
         Assertions._assert(type != null);
@@ -587,19 +588,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey#getTypeFilter()
      */
     public TypeFilter getTypeFilter() {
       return new SingleClassFilter(type);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
       // instanceof is OK because this class is final
@@ -611,29 +605,16 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
       return 67931 * base.hashCode() + type.hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "{ " + base + " type: " + type + "}";
     }
 
-    /**
-     * @return Returns the base.
-     */
     public PointerKey getBase() {
       return base;
     }
@@ -645,7 +626,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @param klass
    *          an Exception Class
    * @return true iff klass is a subclass of some element of the Set
-   * @throws IllegalArgumentException  if catchClasses is null
+   * @throws IllegalArgumentException
+   *           if catchClasses is null
    */
   public static boolean catches(Set catchClasses, IClass klass, ClassHierarchy cha) {
     if (catchClasses == null) {
@@ -745,9 +727,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
               && R.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)) {
             System.err.println("Filter: FLOW FROM " + R.getPointerKey() + " TO " + L.getPointerKey());
             Trace.println("Filter: FLOW FROM " + R.getPointerKey() + " TO " + L.getPointerKey());
-	    Trace.println("   filter: " + filter);
-	    InstanceKey I = system.getInstanceKey(DEBUG_INSTANCE_KEY);
-	    Trace.println("   I type: " + I.getConcreteType());
+            Trace.println("   filter: " + filter);
+            InstanceKey I = system.getInstanceKey(DEBUG_INSTANCE_KEY);
+            Trace.println("   I type: " + I.getConcreteType());
           }
         }
       }
@@ -756,29 +738,17 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
     public boolean isComplex() {
       return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "Filter ";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
       // these objects are canonicalized for the duration of a
@@ -786,11 +756,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return this == obj;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 88651;
@@ -832,8 +797,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.detox.ipa.callgraph.CallGraphBuilder#getPointerAnalysis()
    */
   public PointerAnalysis getPointerAnalysis() {
@@ -1190,21 +1153,11 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return (byte) (NOT_CHANGED | sideEffectMask);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 9871 + super.hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       return super.equals(o);
@@ -1216,8 +1169,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
     public boolean isComplex() {
@@ -1295,30 +1246,15 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return (byte) (NOT_CHANGED | sideEffectMask);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 9859 + super.hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
-     */
     public boolean isComplex() {
       return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       return super.equals(o);
@@ -1417,21 +1353,11 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return value;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 9857 * getField().hashCode() + getFixedSet().hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       if (o instanceof GetFieldOperator) {
@@ -1455,8 +1381,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
     public boolean isComplex() {
@@ -1484,8 +1408,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
     public boolean isComplex() {
@@ -1550,21 +1472,11 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return value;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 9857 * getField().hashCode() + getFixedSet().hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       if (o.getClass().equals(getClass())) {
@@ -1644,21 +1556,11 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return (byte) (NOT_CHANGED | sideEffectMask);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return field.hashCode() + 9839 * instance.hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       if (o instanceof InstancePutFieldOperator) {
@@ -1670,8 +1572,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
     public boolean isComplex() {
@@ -1746,21 +1646,11 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return (byte) (NOT_CHANGED | sideEffectMask);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 9839 * instance.hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       if (o instanceof InstanceArrayStoreOperator) {
@@ -1772,8 +1662,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
     public boolean isComplex() {
@@ -1824,19 +1712,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       super();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "InverseFilter";
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
     @Override

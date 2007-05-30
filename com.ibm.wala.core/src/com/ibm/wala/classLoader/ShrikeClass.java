@@ -249,8 +249,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#isAbstract()
    */
   public boolean isAbstract() {
@@ -374,8 +372,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
    */
   public Collection<IClass> getDirectInterfaces() {
@@ -468,8 +464,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.types.Selector)
    */
   public IMethod getMethod(Selector selector) {
@@ -542,8 +536,6 @@ public final class ShrikeClass implements IClass {
   private final HashMap<Atom, IField> fieldMap = new HashMap<Atom, IField>(5);
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getField(com.ibm.wala.util.Atom)
    */
   public IField getField(Atom name) {
@@ -609,8 +601,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getReference()
    */
   public TypeReference getReference() {
@@ -618,8 +608,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
    */
   public String getSourceFileName() {
@@ -715,8 +703,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
   public Collection<IMethod> getDeclaredMethods() {
@@ -732,8 +718,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#isArrayClass()
    */
   public boolean isArrayClass() {
@@ -749,8 +733,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredFields()
    */
   public Collection<IField> getDeclaredInstanceFields() {
@@ -758,8 +740,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredFields()
    */
   public Collection<IField> getDeclaredStaticFields() {
@@ -767,8 +747,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getName()
    */
   public TypeName getName() {
@@ -776,8 +754,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#isReferenceType()
    */
   public boolean isReferenceType() {
@@ -806,8 +782,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
   public Collection<IField> getAllInstanceFields() throws ClassHierarchyException {
@@ -821,8 +795,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
   public Collection<IField> getAllStaticFields() throws ClassHierarchyException {
@@ -836,8 +808,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
   public Collection<IMethod> getAllMethods() throws ClassHierarchyException {
@@ -858,8 +828,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
   public Collection<IField> getAllFields() throws ClassHierarchyException {

@@ -28,8 +28,6 @@ public class BitVectorIdentity extends UnaryOperator {
   private BitVectorIdentity() {
   }
 
-  /* (non-Javadoc)
-   */
   @Override
   public byte evaluate(IVariable lhs, IVariable rhs) throws IllegalArgumentException  {
     BitVectorVariable L = (BitVectorVariable) lhs;
@@ -47,35 +45,22 @@ public class BitVectorIdentity extends UnaryOperator {
     }
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "Id ";
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.Operator#hashCode()
-   */
   @Override
   public int hashCode() {
     return 9902;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object o) {
     return (o instanceof BitVectorIdentity);
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.fixpoint.UnaryOperator#isIdentity()
    */
   @Override

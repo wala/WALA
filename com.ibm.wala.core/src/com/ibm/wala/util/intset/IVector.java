@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-
 /**
  * 
  * simple interface for a vector.
@@ -19,10 +18,8 @@ package com.ibm.wala.util.intset;
  * 
  * @author sfink
  */
-public interface IVector<T> extends Iterable<T>{
+public interface IVector<T> extends Iterable<T> {
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
   public abstract T get(int x);
@@ -35,12 +32,10 @@ public interface IVector<T> extends Iterable<T>{
   public abstract void set(int x, T value);
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
    */
   public abstract void performVerboseAction();
-  
+
   /**
    * @return max i s.t get(i) != null
    */

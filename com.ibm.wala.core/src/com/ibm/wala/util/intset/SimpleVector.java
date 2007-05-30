@@ -30,15 +30,10 @@ public class SimpleVector<T> implements IVector<T> {
   
   int maxIndex = -1;
 
-  /**
-   * 
-   */
   public SimpleVector() {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
   @SuppressWarnings("unchecked")
@@ -54,8 +49,6 @@ public class SimpleVector<T> implements IVector<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IVector#set(int, int)
    */
   public void set(int x, T value) {
@@ -87,8 +80,6 @@ public class SimpleVector<T> implements IVector<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntVector#reportStats()
    */
   public void performVerboseAction() {
@@ -110,8 +101,6 @@ public class SimpleVector<T> implements IVector<T> {
   }
 
 
-  /* (non-Javadoc)
-   */
   @SuppressWarnings("unchecked")
   public Iterator<T> iterator() {
     return (Iterator<T>) Arrays.asList(store).iterator();

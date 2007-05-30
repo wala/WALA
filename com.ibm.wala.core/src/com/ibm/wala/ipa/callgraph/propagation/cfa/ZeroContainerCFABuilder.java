@@ -66,8 +66,6 @@ public class ZeroContainerCFABuilder extends CFABuilder {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#getDefaultDispatchBoundHeuristic()
    */
   @Override

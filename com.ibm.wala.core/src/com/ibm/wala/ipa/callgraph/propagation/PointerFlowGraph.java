@@ -106,19 +106,11 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   @Override
   public NodeManager<PointerKey> getNodeManager() {
     return delegate.getNodeManager();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   @Override
   protected EdgeManager<PointerKey> getEdgeManager() {
     return edgeManager;
@@ -280,8 +272,6 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitArrayLoad(com.ibm.wala.ssa.SSAArrayLoadInstruction)
      */
     @Override
@@ -313,8 +303,6 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitArrayStore(com.ibm.wala.ssa.SSAArrayStoreInstruction)
      */
     @Override
@@ -346,8 +334,6 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitCheckCast(com.ibm.wala.ssa.SSACheckCastInstruction)
      */
     @Override
@@ -362,8 +348,6 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitCheckCast(com.ibm.wala.ssa.SSACheckCastInstruction)
      */
     @Override
@@ -376,8 +360,6 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitReturn(com.ibm.wala.ssa.SSAReturnInstruction)
      */
     @Override
@@ -400,8 +382,6 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitGet(com.ibm.wala.ssa.SSAGetInstruction)
      */
     @Override
@@ -436,8 +416,6 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitPut(com.ibm.wala.ssa.PutInstruction)
      */
     @Override
@@ -478,8 +456,6 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitInvoke(com.ibm.wala.ssa.InvokeInstruction)
      */
     @Override
@@ -529,8 +505,6 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitThrow(com.ibm.wala.ssa.ThrowInstruction)
      */
     @Override
@@ -540,8 +514,6 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitGetCaughtException(com.ibm.wala.ssa.GetCaughtExceptionInstruction)
      */
     @Override

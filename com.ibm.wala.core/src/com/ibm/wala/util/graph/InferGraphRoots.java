@@ -19,12 +19,8 @@ import com.ibm.wala.util.warnings.WalaException;
 /**
  *  TODO: Move this somewhere.
  */
-public class InferGraphRootsImpl {
+public class InferGraphRoots {
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public static <T> Collection<T> inferRoots(Graph<T> g) throws WalaException {
     if (g == null) {
       throw new IllegalArgumentException("g is null");
@@ -38,4 +34,4 @@ public class InferGraphRootsImpl {
     }
     return s;
   }
-} // InferGraphRootsImpl
+}

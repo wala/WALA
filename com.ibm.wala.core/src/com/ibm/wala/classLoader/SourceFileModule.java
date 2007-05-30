@@ -37,19 +37,12 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry 
     this.fileName = clonedFrom.fileName;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "SourceFileModule:" + getFile().toString();
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
    */
   public boolean isClassFile() {
@@ -57,8 +50,6 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry 
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
    */
   public String getClassName() {
@@ -66,8 +57,6 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry 
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
    */
   public boolean isSourceFile() {

@@ -22,20 +22,10 @@ public class IdentityFlowFunction implements IReversibleFlowFunction {
 
   private final static IdentityFlowFunction singleton = new IdentityFlowFunction();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.IFlowFunction#eval(int)
-   */
   public SparseIntSet getTargets(int i) {
     return SparseIntSet.singleton(i);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.IFlowFunction#eval(int)
-   */
   public SparseIntSet getSources(int i) {
     return SparseIntSet.singleton(i);
   }
@@ -44,11 +34,6 @@ public class IdentityFlowFunction implements IReversibleFlowFunction {
     return singleton;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "Identify Flow";

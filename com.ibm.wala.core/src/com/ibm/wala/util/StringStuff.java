@@ -602,10 +602,7 @@ public class StringStuff {
 
   /**
    * Convert '/' to '.' in names.
-   * 
-   * @param a
-   *          String object in which forward slashes ('/') must be converted to
-   *          dots ('.').
+
    * @return a String object obtained by replacing the forward slashes ('/') in
    *         the String passed as argument with ('.').
    * @throws IllegalArgumentException  if path is null
@@ -627,8 +624,7 @@ public class StringStuff {
   /**
    * Convert '$' to '.' in names.
    * 
-   * @param a
-   *          String object in which dollar signs('$') must be converted to dots
+   * @param path a string object in which dollar signs('$') must be converted to dots
    *          ('.').
    * @return a String object obtained by replacing the dollar signs ('S') in the
    *         String passed as argument with ('.').
@@ -650,7 +646,7 @@ public class StringStuff {
   /**
    * Convert '$' to '.' in names.
    * 
-   * @param a
+   * @param path
    *          String object in which dollar signs('$') must be converted to dots
    *          ('.').
    * @return a String object obtained by replacing the dollar signs ('S') in the

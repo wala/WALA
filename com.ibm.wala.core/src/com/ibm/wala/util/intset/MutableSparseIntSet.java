@@ -454,8 +454,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSet#addAllInIntersection(com.ibm.wala.util.intset.IntSet,
    *      com.ibm.wala.util.intset.IntSet)
    */

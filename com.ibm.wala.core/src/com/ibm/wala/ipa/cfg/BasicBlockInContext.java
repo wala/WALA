@@ -39,8 +39,6 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.IBasicBlock#getFirstInstructionIndex()
    */
   public int getFirstInstructionIndex() {
@@ -48,15 +46,13 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.IBasicBlock#getLastInstructionIndex()
    */
   public int getLastInstructionIndex() {
     return delegate.getLastInstructionIndex();
   }
   
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.cfg.IBasicBlock#iterateAllInstructions()
    */
   public Iterator<IInstruction> iterator() {
@@ -64,8 +60,6 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.IBasicBlock#getMethod()
    */
   public IMethod getMethod() {
@@ -73,8 +67,6 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.IBasicBlock#getNumber()
    */
   public int getNumber() {
@@ -82,8 +74,6 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.IBasicBlock#isCatchBlock()
    */
   public boolean isCatchBlock() {
@@ -91,8 +81,6 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
    */
   public boolean isEntryBlock() {
@@ -100,19 +88,12 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
    */
   public boolean isExitBlock() {
     return delegate.isExitBlock();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object arg0) {
     if (arg0 instanceof BasicBlockInContext) {
@@ -123,33 +104,19 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return delegate.hashCode() + 229 * node.hashCode();
   }
 
-  /**
-   * @return Returns the delegate.
-   */
   public IBasicBlock getDelegate() {
     return delegate;
   }
 
-  /**
-   * @return Returns the node.
-   */
   public CGNode getNode() {
     return node;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return delegate.toString() + "(node:" + node.getGraphNodeId() + ")";

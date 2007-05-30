@@ -12,9 +12,8 @@ package com.ibm.wala.fixpoint;
 
 import com.ibm.wala.fixedpoint.impl.AbstractVariable;
 
-
 /**
- *
+ * 
  * A boolean variable for dataflow analysis.
  * 
  * @author sfink
@@ -22,6 +21,7 @@ import com.ibm.wala.fixedpoint.impl.AbstractVariable;
 public class BooleanVariable extends AbstractVariable {
 
   private boolean B;
+
   private final int hash;
 
   /**
@@ -32,20 +32,18 @@ public class BooleanVariable extends AbstractVariable {
   }
 
   /**
-   * @param b initial value for this variable
+   * @param b
+   *          initial value for this variable
    */
   public BooleanVariable(boolean b, int hash) {
     this.B = b;
     this.hash = hash;
   }
 
-  /* (non-Javadoc)
-   */
   public void copyState(IVariable v) throws NullPointerException {
     BooleanVariable other = (BooleanVariable) v;
     B = other.B;
   }
-
 
   public boolean sameValue(BooleanVariable other) {
     if (other == null) {
@@ -54,15 +52,13 @@ public class BooleanVariable extends AbstractVariable {
     return B == other.B;
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return hash + (B ? "[TRUE]" : "[FALSE]");
   }
+
   /**
-   * @return the value of this variable 
+   * @return the value of this variable
    */
   public boolean getValue() {
     return B;
@@ -70,7 +66,8 @@ public class BooleanVariable extends AbstractVariable {
 
   /**
    * @param other
-   * @throws IllegalArgumentException  if other is null
+   * @throws IllegalArgumentException
+   *           if other is null
    */
   public void or(BooleanVariable other) {
     if (other == null) {
@@ -79,23 +76,15 @@ public class BooleanVariable extends AbstractVariable {
     B = B | other.B;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.AbstractVariable#hashCode()
-   */
   @Override
   public int hashCode() {
     return hash;
   }
 
-  /**
-   * @param b
-   */
   public void set(boolean b) {
     B = b;
   }
 
-  /* (non-Javadoc)
-   */
   @Override
   public boolean equals(Object obj) {
     return this == obj;

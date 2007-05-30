@@ -84,14 +84,6 @@ public class ContainerContextSelector implements ContextSelector {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference,
-   *      com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
-   */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
 
     if (DEBUG) {
@@ -195,26 +187,12 @@ public class ContainerContextSelector implements ContextSelector {
     return (n == null) ? null : n.getContext();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#getBoundOnNumberOfTargets(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference,
-   *      com.ibm.wala.classLoader.IMethod)
-   */
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
     // if we understand this call, we don't know how many target contexts we may
     // create.
     return -1;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#mayUnderstand(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference,
-   *      com.ibm.wala.classLoader.IMethod)
-   */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey receiver) {
     if (targetMethod == null) {
       throw new IllegalArgumentException("targetMethod is null");
@@ -278,36 +256,19 @@ public class ContainerContextSelector implements ContextSelector {
     return ContainerUtil.isContainer(C, cha);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
   public void setWarnings(WarningSet newWarnings) {
     // no-op, this object not bound to warnings
 
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#contextIsIrrelevant(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference)
-   */
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
     return false;
   }
 
-  /**
-   * @return Returns the cha.
-   */
   protected ClassHierarchy getClassHierarchy() {
     return cha;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#contextIsIrrelevant(com.ibm.wala.types.MethodReference)
-   */
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
     return false;
   }

@@ -37,8 +37,6 @@ public final class FieldReference extends MemberReference {
   private final TypeReference fieldType;
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.types.MemberReference#getSignature()
    */
   @Override
@@ -99,11 +97,6 @@ public final class FieldReference extends MemberReference {
     return fieldType;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public final String toString() {
     return "< " + getDeclaringClass().getClassLoader().getName() + ", " + getDeclaringClass().getName() + ", " + getName() + ", "

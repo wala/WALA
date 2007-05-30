@@ -34,9 +34,6 @@ public class CloneContextSelector implements ContextSelector {
     this.selector = new ReceiverTypeContextSelector();
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#getCalleeTarget(com.ibm.detox.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
-   */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     if (receiver == null) {
       return null;
@@ -52,16 +49,10 @@ public class CloneContextSelector implements ContextSelector {
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#getBoundOnNumberOfTargets(com.ibm.detox.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
-   */
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference reference, IMethod targetMethod) {
     return -1;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#mayUnderstand(com.ibm.detox.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
-   */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
     if (targetMethod == null) {
       throw new IllegalArgumentException("targetMethod is null");
@@ -69,16 +60,10 @@ public class CloneContextSelector implements ContextSelector {
     return targetMethod.getReference().equals(CloneInterpreter.CLONE);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
   public void setWarnings(WarningSet newWarnings) {
     // no-op, this object not bound to warnings
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#contextIsIrrelevant(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference)
-   */
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
     if (site == null) {
       throw new IllegalArgumentException("site is null");

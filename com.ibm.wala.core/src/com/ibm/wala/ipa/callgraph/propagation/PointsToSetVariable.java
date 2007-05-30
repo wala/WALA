@@ -13,10 +13,9 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.util.debug.Assertions;
 
-
 /**
  * @author sfink
- *
+ * 
  */
 public class PointsToSetVariable extends IntSetVariable {
   private PointerKey pointerKey;
@@ -35,27 +34,26 @@ public class PointsToSetVariable extends IntSetVariable {
   public PointerKey getPointerKey() {
     return pointerKey;
   }
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
+
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof PointsToSetVariable) {
-      return pointerKey.equals(((PointsToSetVariable)obj).pointerKey);
+      return pointerKey.equals(((PointsToSetVariable) obj).pointerKey);
     } else {
       return false;
     }
   }
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.fixpoint.IntSetVariable#hashCode()
-   */
+
   @Override
   public int hashCode() {
     return pointerKey.hashCode();
   }
+
   /**
    * Use this with extreme care, to add filters to this variable..
-   * @param pointerKey The pointerKey to set.
+   * 
+   * @param pointerKey
+   *          The pointerKey to set.
    */
   void setPointerKey(PointerKey pointerKey) {
     // check that we haven't modified the hash code!!! this is crucial
@@ -64,9 +62,7 @@ public class PointsToSetVariable extends IntSetVariable {
     }
     this.pointerKey = pointerKey;
   }
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
+
   @Override
   public String toString() {
     return pointerKey.toString() + ":" + super.toString();

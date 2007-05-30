@@ -232,7 +232,7 @@ public class GSViewLauncherImpl  {
 
   private WalaException exception = null;
   
-  /* (non-Javadoc)
+  /* 
    * @see java.lang.Runnable#run()
    */
   public void run() {

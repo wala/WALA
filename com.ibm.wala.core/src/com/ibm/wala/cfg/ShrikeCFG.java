@@ -446,8 +446,6 @@ public class ShrikeCFG extends AbstractCFG {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
      */
     public boolean isExitBlock() {
@@ -455,8 +453,6 @@ public class ShrikeCFG extends AbstractCFG {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
      */
     public boolean isEntryBlock() {
@@ -464,19 +460,12 @@ public class ShrikeCFG extends AbstractCFG {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#getMethod()
      */
     public IMethod getMethod() {
       return ShrikeCFG.this.getMethod();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
       return hashBase + getNumber();
@@ -489,8 +478,6 @@ public class ShrikeCFG extends AbstractCFG {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#getNumber()
      */
     public int getNumber() {
@@ -551,8 +538,6 @@ public class ShrikeCFG extends AbstractCFG {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
    */
   public int getProgramCounter(int index) {
@@ -568,7 +553,7 @@ public class ShrikeCFG extends AbstractCFG {
   /**
    * @author sfink
    * 
-   * A waring when we fail to resolve the type of an exception
+   * A warning when we fail to resolve the type of an exception
    */
   private static class FailedExceptionResolutionWarning extends Warning {
 

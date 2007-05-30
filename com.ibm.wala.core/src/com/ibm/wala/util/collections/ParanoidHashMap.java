@@ -20,42 +20,33 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * 
- * a debugging aid.  This implementation complains if you stick an object in here which
- * appears to use System.identityHashCode()
+ * a debugging aid. This implementation complains if you stick an object in here
+ * which appears to use System.identityHashCode()
  * 
  * @author sfink
  */
 @Internal
-public class ParanoidHashMap<K,V> extends HashMap<K,V> {
+public class ParanoidHashMap<K, V> extends HashMap<K, V> {
   public static final long serialVersionUID = 909018793791787198L;
 
   /**
    * @param t
-   * @throws NullPointerException  if t is null
+   * @throws NullPointerException
+   *           if t is null
    */
-  public ParanoidHashMap(Map<K,V> t) throws NullPointerException {
+  public ParanoidHashMap(Map<K, V> t) throws NullPointerException {
     super(t.size());
     putAll(t);
   }
 
-
-  /**
-   * @param size
-   */
   public ParanoidHashMap(int size) {
     super(size);
   }
 
-  /**
-   * 
-   */
   public ParanoidHashMap() {
   }
 
-
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#put(java.lang.Object, java.lang.Object)
    */
   @Override
@@ -67,17 +58,15 @@ public class ParanoidHashMap<K,V> extends HashMap<K,V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#putAll(java.util.Map)
    */
   @Override
-  public void putAll(Map<? extends K,? extends V> arg0) {
+  public void putAll(Map<? extends K, ? extends V> arg0) {
     if (arg0 == null) {
       throw new IllegalArgumentException("arg0 is null");
     }
     for (Iterator<?> it = arg0.entrySet().iterator(); it.hasNext();) {
-      Map.Entry<? extends K,? extends V> E = (Entry<? extends K, ? extends V>) it.next();
+      Map.Entry<? extends K, ? extends V> E = (Entry<? extends K, ? extends V>) it.next();
       put(E.getKey(), E.getValue());
     }
   }

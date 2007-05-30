@@ -51,8 +51,6 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   @Override

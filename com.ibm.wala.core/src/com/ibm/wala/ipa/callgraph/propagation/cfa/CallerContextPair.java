@@ -43,9 +43,6 @@ public class CallerContextPair extends CallerContext {
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.detox.ipa.callgraph.Context#get(com.ibm.detox.ipa.callgraph.ContextKey)
-   */
   @Override
   public ContextItem get(ContextKey name) {
     if (name == null) {
@@ -58,9 +55,6 @@ public class CallerContextPair extends CallerContext {
     }
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -74,17 +68,11 @@ public class CallerContextPair extends CallerContext {
     }
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return 8377 * getCaller().hashCode() + baseContext.hashCode();
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "Caller: " + getCaller() + ",Base:" + baseContext;

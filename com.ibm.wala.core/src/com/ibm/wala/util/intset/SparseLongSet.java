@@ -136,18 +136,10 @@ public class SparseLongSet implements LongSet {
     return LongSetUtil.binarySearch(elements, x, 0, size - 1);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public final int size() {
     return size;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public final boolean isEmpty() {
     return size == 0;
   }
@@ -172,10 +164,6 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public boolean sameValue(LongSet that) {
     if (that instanceof SparseLongSet) {
       return sameValueInternal((SparseLongSet) that);
@@ -231,7 +219,9 @@ public class SparseLongSet implements LongSet {
 
   /**
    * Compute the asymmetric difference of two sets, a \ b.
-   * @throws IllegalArgumentException  if A is null
+   * 
+   * @throws IllegalArgumentException
+   *           if A is null
    */
   public static SparseLongSet diff(SparseLongSet A, SparseLongSet B) {
 
@@ -290,11 +280,6 @@ public class SparseLongSet implements LongSet {
     return new SparseLongSet(ar);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer sb = new StringBuffer(6 * size);
@@ -311,7 +296,9 @@ public class SparseLongSet implements LongSet {
 
   /**
    * Reverse of toString(): "{2,3}" -> [2,3]
-   * @throws IllegalArgumentException  if str is null
+   * 
+   * @throws IllegalArgumentException
+   *           if str is null
    */
   public static long[] parseLongArray(String str) throws NumberFormatException, IllegalArgumentException {
     if (str == null) {
@@ -358,8 +345,6 @@ public class SparseLongSet implements LongSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#intersect(com.ibm.wala.util.intset.IntSet)
    */
   public LongSet intersection(LongSet that) {
@@ -412,8 +397,6 @@ public class SparseLongSet implements LongSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
    */
   public boolean isSubset(LongSet that) {
@@ -426,8 +409,6 @@ public class SparseLongSet implements LongSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
    */
   public boolean containsAny(LongSet set) {

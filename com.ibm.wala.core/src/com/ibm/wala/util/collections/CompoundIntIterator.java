@@ -36,15 +36,11 @@ public class CompoundIntIterator implements IntIterator {
   }
 
 
-  /* (non-Javadoc)
-   */
   public boolean hasNext() {
     return A.hasNext() || B.hasNext();
   }
 
 
-  /* (non-Javadoc)
-   */
   public int next() {
     if (A.hasNext()) {
       return A.next();
@@ -53,9 +49,6 @@ public class CompoundIntIterator implements IntIterator {
     }
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     Assertions.UNREACHABLE("define a custom hash code to avoid non-determinism");

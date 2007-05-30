@@ -101,19 +101,12 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
     paramTypes = makeParameterTypes(method);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.Entrypoint#getParameterTypes(int)
-   */
   @Override
   public TypeReference[] getParameterTypes(int i) {
     return paramTypes[i];
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.Entrypoint#getNumberOfParameters()
    */
   @Override

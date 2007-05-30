@@ -93,8 +93,6 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override
@@ -103,8 +101,6 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   @Override

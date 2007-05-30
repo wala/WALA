@@ -25,8 +25,6 @@ import com.ibm.wala.util.intset.IntSet;
 public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implements NumberedGraph<T> {
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getMaxNumber()
    */
   public int getMaxNumber() {
@@ -34,8 +32,6 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getNode(int)
    */
   public T getNode(int number) {
@@ -43,8 +39,6 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(com.ibm.wala.util.graph.Node)
    */
   public int getNumber(T N) {
@@ -55,22 +49,16 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
   public Iterator<T> iterateNodes(final IntSet s) {
     return new NumberedNodeIterator<T>(s, this);
   }
   
-  /* (non-Javadoc)
-   */
   public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
     return ((NumberedEdgeManager<T>) getEdgeManager()).getPredNodeNumbers(node);
   }
 
-  /* (non-Javadoc)
-   */
   public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
     return ((NumberedEdgeManager<T>) getEdgeManager()).getSuccNodeNumbers(node);
   }

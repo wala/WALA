@@ -240,20 +240,10 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
       }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#hasNext()
-     */
     public boolean hasNext() {
       return nextX != -1;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#next()
-     */
     public IntPair next() {
       IntPair result = null;
       if (nextIndex == smallStore.length) {
@@ -273,11 +263,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
       return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#remove()
-     */
     public void remove() {
       Assertions.UNREACHABLE();
     }
@@ -297,8 +282,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation#getRelated(int)
    */
   public IntSet getRelated(int x) {
@@ -342,8 +325,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation#getRelatedCount(int)
    */
   public int getRelatedCount(int x) throws IllegalArgumentException {
@@ -371,12 +352,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation#remove(int,
-   *      int)
-   */
   public void remove(int x, int y) {
     if (usingDelegate(x)) {
       // TODO: switch representation back to small store?
@@ -404,11 +379,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation#removeAll(int)
-   */
   public void removeAll(int x) {
     for (int i = 0; i < smallStore.length; i++) {
       smallStore[i].set(x, EMPTY_CODE);
@@ -417,8 +387,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
    */
   public void performVerboseAction() {
@@ -448,12 +416,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.intset.IBinaryNonNegativeIntRelation#contains(int,
-   *      int)
-   */
   public boolean contains(int x, int y) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(x >= 0);
@@ -475,11 +437,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     return maxX;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer();

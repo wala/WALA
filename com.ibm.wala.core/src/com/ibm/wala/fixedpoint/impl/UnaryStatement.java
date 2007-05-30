@@ -109,9 +109,6 @@ public abstract class UnaryStatement extends AbstractStatement {
     this.rhs = rhs;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.AbstractEquation#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object o) {
     if (o instanceof UnaryStatement) {
@@ -150,9 +147,6 @@ public abstract class UnaryStatement extends AbstractStatement {
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.AbstractEquation#hashCode()
-   */
   @Override
   public int hashCode() {
     int result = getOperator().hashCode() * 1381;
@@ -165,8 +159,6 @@ public abstract class UnaryStatement extends AbstractStatement {
     return result;
   }
   
-  /* (non-Javadoc)
-   */
   public IVariable[] getRHS() {
     // This should never be called ...use the more efficient getRightHandSide instead
     Assertions.UNREACHABLE();

@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.summaries;
 
-           
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -42,9 +40,9 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
- *
- * This class reads reflection summaries from an XML Stream.
- * TODO: share part of the implementation with XMLMethodSummaryReader
+ * 
+ * This class reads reflection summaries from an XML Stream. TODO: share part of
+ * the implementation with XMLMethodSummaryReader
  * 
  * @author sfink
  * 
@@ -52,11 +50,12 @@ import com.ibm.wala.util.debug.Trace;
 public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecification {
 
   static final boolean DEBUG = false;
+
   private AnalysisScope scope;
 
   /**
-   * Method summaries collected for methods.
-   * Mapping MethodReference -> ReflectionSummary
+   * Method summaries collected for methods. Mapping MethodReference ->
+   * ReflectionSummary
    */
   private HashMap<MethodReference, ReflectionSummary> summaries = HashMapFactory.make();
 
@@ -64,11 +63,17 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
   // Define XML element names
   //
   private final static int E_CLASSLOADER = 0;
+
   private final static int E_METHOD = 1;
+
   private final static int E_CLASS = 2;
+
   private final static int E_PACKAGE = 3;
+
   private final static int E_REFLECTION_SPEC = 4;
+
   private final static int E_NEW_INSTANCE = 5;
+
   private final static int E_TYPE = 6;
 
   private final static Map<String, Integer> elementMap = HashMapFactory.make(7);
@@ -86,7 +91,9 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
   // Define XML attribute names
   //
   private final static String A_NAME = "name";
+
   private final static String A_DESCRIPTOR = "descriptor";
+
   private final static String A_BCINDEX = "bcIndex";
 
   /**
@@ -110,14 +117,14 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
     if (Assertions.verifyAssertions) {
       Assertions._assert(xml != null, "Null xml stream");
     }
-    
+
     SAXParserFactory factory = SAXParserFactory.newInstance();
-    factory.newSAXParser().parse(new InputSource(xml),handler);
+    factory.newSAXParser().parse(new InputSource(xml), handler);
   }
 
   /**
-   * @return Method summaries collected for methods.
-   * Mapping MethodReference -> ReflectionSummary
+   * @return Method summaries collected for methods. Mapping MethodReference ->
+   *         ReflectionSummary
    */
   public Map<MethodReference, ReflectionSummary> getSummaries() {
     return summaries;
@@ -125,7 +132,7 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
 
   /**
    * @author sfink
-   *
+   * 
    * SAX parser logic for XML method summaries
    */
   private class SAXHandler extends DefaultHandler {
@@ -133,25 +140,31 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
      * The class loader reference for the element being processed
      */
     private ClassLoaderReference governingLoader = null;
+
     /**
      * The method summary for the element being processed
      */
     private ReflectionSummary governingMethod = null;
+
     /**
      * The declaring class for the element begin processed
      */
     private TypeReference governingClass = null;
+
     /**
      * The package for the element being processed
      */
     private Atom governingPackage = null;
+
     /**
-     * The current bytecode index of the current newInstance call being processed
+     * The current bytecode index of the current newInstance call being
+     * processed
      */
     private int bcIndex = -1;
 
-    /* (non-Javadoc)
-     * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
+    /*
+     * @see org.xml.sax.ContentHandler#startElement(java.lang.String,
+     *      java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
     @Override
     public void startElement(String uri, String name, String qName, Attributes atts) {
@@ -160,41 +173,41 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
         Assertions.UNREACHABLE("Invalid element: " + qName);
       }
       switch (element.intValue()) {
-        case E_CLASSLOADER :
-          {
-            String clName = atts.getValue(A_NAME);
-            governingLoader = classLoaderName2Ref(clName);
-          }
-          break;
-        case E_METHOD :
-          startMethod(atts);
-          break;
-        case E_CLASS :
-          String cname = atts.getValue(A_NAME);
-          startClass(cname);
-          break;
-        case E_TYPE :
-          String tName = atts.getValue(A_NAME);
-          processType(tName);
-          break;
-        case E_NEW_INSTANCE :
-          String bcIndexString = atts.getValue(A_BCINDEX);
-          bcIndex = Integer.parseInt(bcIndexString);
-          break;
-        case E_PACKAGE :
-          governingPackage = Atom.findOrCreateUnicodeAtom(atts.getValue(A_NAME).replace('.', '/'));
-          break;
-        case E_REFLECTION_SPEC :
-          break;
-        default :
-          Assertions.UNREACHABLE("Unexpected element: " + name);
-          break;
+      case E_CLASSLOADER: {
+        String clName = atts.getValue(A_NAME);
+        governingLoader = classLoaderName2Ref(clName);
+      }
+        break;
+      case E_METHOD:
+        startMethod(atts);
+        break;
+      case E_CLASS:
+        String cname = atts.getValue(A_NAME);
+        startClass(cname);
+        break;
+      case E_TYPE:
+        String tName = atts.getValue(A_NAME);
+        processType(tName);
+        break;
+      case E_NEW_INSTANCE:
+        String bcIndexString = atts.getValue(A_BCINDEX);
+        bcIndex = Integer.parseInt(bcIndexString);
+        break;
+      case E_PACKAGE:
+        governingPackage = Atom.findOrCreateUnicodeAtom(atts.getValue(A_NAME).replace('.', '/'));
+        break;
+      case E_REFLECTION_SPEC:
+        break;
+      default:
+        Assertions.UNREACHABLE("Unexpected element: " + name);
+        break;
       }
     }
 
     /**
-     * record that the currently active newInstance may allocate a particular concrete
-     * type.
+     * record that the currently active newInstance may allocate a particular
+     * concrete type.
+     * 
      * @param tName
      */
     private void processType(String tName) {
@@ -207,8 +220,9 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
       governingClass = className2Ref(clName);
     }
 
-    /* (non-Javadoc)
-     * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
+    /*
+     * @see org.xml.sax.ContentHandler#endElement(java.lang.String,
+     *      java.lang.String, java.lang.String)
      */
     @Override
     public void endElement(String uri, String name, String qName) {
@@ -217,34 +231,34 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
         Assertions.UNREACHABLE("Invalid element: " + name);
       }
       switch (element.intValue()) {
-        case E_CLASSLOADER :
-          governingLoader = null;
-          break;
-        case E_METHOD :
-          governingMethod = null;
-          break;
-        case E_CLASS :
-          governingClass = null;
-          break;
-        case E_NEW_INSTANCE :
-          bcIndex = -1;
-          break;
-        case E_PACKAGE :
-          governingPackage = null;
-          break;
-        case E_TYPE :
-        case E_REFLECTION_SPEC :
-          break;
-        default :
-          Assertions.UNREACHABLE("Unexpected element: " + name);
-          break;
+      case E_CLASSLOADER:
+        governingLoader = null;
+        break;
+      case E_METHOD:
+        governingMethod = null;
+        break;
+      case E_CLASS:
+        governingClass = null;
+        break;
+      case E_NEW_INSTANCE:
+        bcIndex = -1;
+        break;
+      case E_PACKAGE:
+        governingPackage = null;
+        break;
+      case E_TYPE:
+      case E_REFLECTION_SPEC:
+        break;
+      default:
+        Assertions.UNREACHABLE("Unexpected element: " + name);
+        break;
       }
     }
 
     /**
-     * Begin processing of a method.
-     * 1. Set the governing method.
-     * 2. Initialize the nextLocal variable
+     * Begin processing of a method. 1. Set the governing method. 2. Initialize
+     * the nextLocal variable
+     * 
      * @param atts
      */
     private void startMethod(Attributes atts) {
@@ -263,33 +277,20 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
       summaries.put(ref, governingMethod);
     }
 
-    /**
-     * Method classLoaderName2Ref.
-     * @param clName
-     * @return ClassLoaderReference
-     */
     private ClassLoaderReference classLoaderName2Ref(String clName) {
       return scope.getLoader(Atom.findOrCreateUnicodeAtom(clName));
     }
-    /**
-     * Method classLoaderName2Ref.
-     * @param clName
-     * @return ClassLoaderReference
-     */
+
     private TypeReference className2Ref(String clName) {
       clName = clName.replace('.', '/');
       return TypeReference.findOrCreate(governingLoader, TypeName.string2TypeName(clName));
     }
   }
 
-
-  /* (non-Javadoc)
-   * @see com.ibm.detox.ipa.callgraph.ReflectionSpecification#getTypeForNewInstance(com.ibm.wala.classLoader.MethodReference, int)
-   */
   public TypeAbstraction getTypeForNewInstance(MemberReference method, int bcIndex, ClassHierarchy cha) {
     ReflectionSummary summary = summaries.get(method);
     if (summary != null) {
-      return summary.getTypeForNewInstance(bcIndex,cha);
+      return summary.getTypeForNewInstance(bcIndex, cha);
     } else {
       return null;
     }

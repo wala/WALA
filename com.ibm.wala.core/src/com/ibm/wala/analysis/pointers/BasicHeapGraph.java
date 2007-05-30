@@ -370,8 +370,6 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(com.ibm.wala.util.graph.Node)
    */
   public int getNumber(Object N) {
@@ -379,8 +377,6 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getNode(int)
    */
   public Object getNode(int number) {
@@ -388,8 +384,6 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getMaxNumber()
    */
   public int getMaxNumber() {
@@ -397,8 +391,6 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
    */
   public Iterator<Object> iterator() {
@@ -406,8 +398,6 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
    */
   public int getNumberOfNodes() {
@@ -415,8 +405,6 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
    */
   public Iterator<? extends Object> getPredNodes(Object N) {
@@ -424,8 +412,6 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
   public int getPredNodeCount(Object N) {
@@ -433,8 +419,6 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
   public Iterator<? extends Object> getSuccNodes(Object N) {
@@ -442,8 +426,6 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(com.ibm.wala.util.graph.Node)
    */
   public int getSuccNodeCount(Object N) {
@@ -451,8 +433,6 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#addNode(com.ibm.wala.util.graph.Node)
    */
   public void addNode(Object n) {
@@ -461,18 +441,12 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
   public void removeNode(Object n) {
     Assertions.UNREACHABLE();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void addEdge(Object from, Object to) {
     Assertions.UNREACHABLE();
   }
@@ -481,10 +455,6 @@ public class BasicHeapGraph extends HeapGraph {
     Assertions.UNREACHABLE();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public boolean hasEdge(Object from, Object to) {
     Assertions.UNREACHABLE();
     return false;
@@ -495,19 +465,12 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
    */
   public boolean containsNode(Object N) {
     return G.containsNode(N);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
@@ -534,18 +497,12 @@ public class BasicHeapGraph extends HeapGraph {
     return result.toString();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void removeIncomingEdges(Object node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
   }
 
-  /*
-   * (non-Javadoc)
-   */
+
   public void removeOutgoingEdges(Object node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();

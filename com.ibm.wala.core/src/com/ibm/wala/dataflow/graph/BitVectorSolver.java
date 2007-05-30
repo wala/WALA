@@ -25,12 +25,6 @@ public class BitVectorSolver<T> extends DataflowSolver<T> {
     super(problem);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.graph.IterativeSolver#makeVariable(java.lang.Object,
-   *      boolean)
-   */
   @Override
   protected IVariable makeNodeVariable(T n, boolean IN) {
     return new BitVectorVariable();

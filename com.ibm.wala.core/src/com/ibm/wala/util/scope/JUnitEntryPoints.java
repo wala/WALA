@@ -22,8 +22,6 @@ import com.ibm.wala.util.debug.Trace;
  * methods are those invoked by the JUnit framework reflectively The entry
  * points can be used to specify entry points of a call graph (through
  * 
- * @link com.ibm.domo.ipa.callgraph.AnalysisOptions).
- * 
  * @author aying
  */
 public class JUnitEntryPoints {

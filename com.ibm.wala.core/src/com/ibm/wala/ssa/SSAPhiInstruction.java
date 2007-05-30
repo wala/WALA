@@ -143,8 +143,6 @@ public class SSAPhiInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override
@@ -153,8 +151,6 @@ public class SSAPhiInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   @Override

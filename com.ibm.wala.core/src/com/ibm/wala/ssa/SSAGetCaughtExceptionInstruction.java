@@ -104,8 +104,6 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override
@@ -114,8 +112,6 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   @Override

@@ -24,9 +24,6 @@ public class ReturnValueKeyWithFilter extends ReturnValueKey implements Filtered
 
   private final TypeFilter typeFilter;
 
-  /**
-   * 
-   */
   public ReturnValueKeyWithFilter(CGNode node, TypeFilter typeFilter) {
     super(node);
     if (Assertions.verifyAssertions) {
@@ -35,12 +32,6 @@ public class ReturnValueKeyWithFilter extends ReturnValueKey implements Filtered
     this.typeFilter = typeFilter;
   }
 
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.PointerKey#getTypeFilter()
-   */
   public TypeFilter getTypeFilter() {
     return typeFilter;
   }

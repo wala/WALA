@@ -75,7 +75,7 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
     return val * 1663 ^ result * 4027;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override

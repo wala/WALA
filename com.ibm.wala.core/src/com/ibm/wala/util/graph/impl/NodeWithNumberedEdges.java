@@ -25,20 +25,10 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
 
   private BimodalMutableIntSet succNumbers;
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.IVariable#getUseNumbers()
-   */
   public IntSet getSuccNumbers() {
     return succNumbers;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.IVariable#getDefNumbers()
-   */
   public IntSet getPredNumbers() {
     return predNumbers;
   }
@@ -103,25 +93,17 @@ public class NodeWithNumberedEdges extends NodeWithNumber implements INodeWithNu
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.INodeWithNumberedEdges#removeAllIncidentEdges()
    */
   public void removeAllIncidentEdges() throws UnimplementedError {
     Assertions.UNREACHABLE("Implement me");
   }
 
-  /*
-   * (non-Javadoc)
-   */
   public void removeIncomingEdges() throws UnimplementedError {
     Assertions.UNREACHABLE("Implement me");
 
   }
 
-  /*
-   * (non-Javadoc)
-   */
   public void removeOutgoingEdges() throws UnimplementedError {
     Assertions.UNREACHABLE("Implement me");
 

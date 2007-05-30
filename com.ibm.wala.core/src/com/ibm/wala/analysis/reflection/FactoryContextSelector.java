@@ -42,7 +42,7 @@ public class FactoryContextSelector implements ContextSelector {
     this.methodTargetSelector = methodTargetSelector;
   }
   
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
    */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
@@ -58,7 +58,7 @@ public class FactoryContextSelector implements ContextSelector {
     return null;
   }
   
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#mayUnderstand(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
@@ -75,7 +75,7 @@ public class FactoryContextSelector implements ContextSelector {
   }
 
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#getBoundOnNumberOfTargets(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
    */
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod callee) {
@@ -91,14 +91,14 @@ public class FactoryContextSelector implements ContextSelector {
     return -1;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
    */
   public void setWarnings(WarningSet newWarnings) {
     // this object is not bound to a WarningSet
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.classLoader.CallSiteReference)
    */
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
@@ -120,7 +120,7 @@ public class FactoryContextSelector implements ContextSelector {
     }
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.types.MethodReference)
    */
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {

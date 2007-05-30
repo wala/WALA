@@ -29,16 +29,10 @@ public class IteratorPlusOne<T> implements Iterator<T> {
     this.xtra = xtra;
   }
     
-  /* (non-Javadoc)
-   * @see java.util.Iterator#hasNext()
-   */
   public boolean hasNext() {
     return it.hasNext() || (xtra != null);
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#next()
-   */
   public T next() {
     if (it.hasNext()) {
       return it.next();
@@ -49,9 +43,6 @@ public class IteratorPlusOne<T> implements Iterator<T> {
     }
   }
   
-  /* (non-Javadoc)
-   * @see java.util.Iterator#remove()
-   */
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

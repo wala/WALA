@@ -77,8 +77,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   private final IBinaryNaturalRelation predecessors;
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
    */
   public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
@@ -92,8 +90,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
    */
   public int getPredNodeCount(T N) throws IllegalArgumentException {
@@ -105,8 +101,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
    */
   public Iterator<T> getSuccNodes(T N) throws IllegalArgumentException {
@@ -120,8 +114,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
    */
   public Iterator<T> getSuccNodes(int number) {
@@ -130,9 +122,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     return (s == null) ? empty : nodeManager.iterateNodes(s);
   }
 
-  /*
-   * (non-Javadoc)
-   */
   public IntSet getSuccNodeNumbers(T node) throws IllegalArgumentException {
     if (nodeManager.getNumber(node) < 0) {
       throw new IllegalArgumentException("Node not in graph " + node);
@@ -140,9 +129,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     return successors.getRelated(nodeManager.getNumber(node));
   }
 
-  /*
-   * (non-Javadoc)
-   */
   public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
     if (nodeManager.getNumber(node) < 0) {
       throw new IllegalArgumentException("Node not in graph " + node);
@@ -151,8 +137,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
    */
   public int getSuccNodeCount(T N) throws IllegalArgumentException {
@@ -160,8 +144,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
    */
   public int getSuccNodeCount(int number) {
@@ -169,8 +151,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
    *      java.lang.Object)
    */
@@ -188,9 +168,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
     hasSuccessor.set(x);
   }
 
-  /*
-   * (non-Javadoc)
-   */
   public boolean hasEdge(T src, T dst) {
     int x = nodeManager.getNumber(src);
     int y = nodeManager.getNumber(dst);
@@ -201,8 +178,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
   public void removeAllIncidentEdges(T node) throws IllegalArgumentException {
@@ -235,8 +210,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
   public void removeIncomingEdges(T node) throws IllegalArgumentException {
@@ -275,8 +248,6 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
   public void removeOutgoingEdges(T node) throws IllegalArgumentException {
@@ -299,18 +270,12 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
   /**
    * This is implemented as a shortcut for efficiency
    * 
-   * @param node
    * @return true iff that node has any successors
    */
   public boolean hasAnySuccessor(int node) {
     return hasSuccessor.get(node);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "Successors relation:\n" + successors;

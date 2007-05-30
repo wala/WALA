@@ -23,6 +23,7 @@ import com.ibm.wala.util.math.Logs;
 public class TwoLevelIntVector implements IntVector {
 
   private static final int PAGE_SIZE = 4096;
+
   private static final int LOG_PAGE_SIZE = Logs.log2(PAGE_SIZE);
 
   /**
@@ -38,8 +39,6 @@ public class TwoLevelIntVector implements IntVector {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
   public int get(int x) {
@@ -56,7 +55,7 @@ public class TwoLevelIntVector implements IntVector {
   }
 
   private int toLocalIndex(int x, int page) {
-    return  x - getFirstIndexOnPage(page);
+    return x - getFirstIndexOnPage(page);
   }
 
   private int getFirstIndexOnPage(int page) {
@@ -68,34 +67,34 @@ public class TwoLevelIntVector implements IntVector {
   }
 
   /*
-   * TODO: this can be optimized (non-Javadoc)
+   * TODO: this can be optimized
    * 
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   public void set(int x, int value) {
     int page = getPageNumber(x);
     IntVector v = findOrCreatePage(page);
-    int localX = toLocalIndex(x,page);
-    v.set(localX,value);
+    int localX = toLocalIndex(x, page);
+    v.set(localX, value);
   }
 
   private IntVector findOrCreatePage(int page) {
     if (page >= data.size()) {
       SparseIntVector v = new SparseIntVector(defaultValue);
-      data.setSize(page+1);
-      data.add(page,v);
+      data.setSize(page + 1);
+      data.add(page, v);
       return v;
     } else {
       SparseIntVector v = data.get(page);
       if (v == null) {
         v = new SparseIntVector(defaultValue);
-        data.set(page,v);
+        data.set(page, v);
       }
       return v;
     }
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
    */
   public void performVerboseAction() {

@@ -75,50 +75,25 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
     this(1);
   }
   
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     return graph.equals(obj);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return graph.hashCode();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return graph.toString();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#removeEquation(com.ibm.wala.dataflow.fixpoint.AbstractEquation)
-   */
   public void removeStatement(IFixedPointStatement s) {
     graph.removeNodeAndEdges(s);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#getEquations()
-   */
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatements() {
     return new FilterIterator(graph.iterator(), new Filter() {
@@ -128,10 +103,6 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
     });
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void addStatement(IFixedPointStatement statement) {
     if (statement instanceof UnaryStatement) {
       addStatement((UnaryStatement) statement);
@@ -144,11 +115,6 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#addEquation(com.ibm.wala.dataflow.fixpoint.GeneralEquation)
-   */
   public void addStatement(GeneralStatement s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
@@ -178,11 +144,6 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#addEquation(com.ibm.wala.dataflow.fixpoint.UnaryEquation)
-   */
   public void addStatement(UnaryStatement s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
@@ -205,11 +166,6 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#addEquation(com.ibm.wala.dataflow.fixpoint.UnaryEquation)
-   */
   public void addStatement(NullaryStatement s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
@@ -236,17 +192,10 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#getEquation(int)
-   */
   public AbstractStatement getStep(int number) {
     return (AbstractStatement) graph.getNode(number);
   }
 
-  /*
-   */
   public void reorder() {
     if (DEBUG) {
       checkGraph();
@@ -301,56 +250,26 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#getEquationsThatUse(com.ibm.wala.dataflow.fixpoint.IVariable)
-   */
   public Iterator getStatementsThatUse(IVariable v) {
     return (graph.containsNode(v) ? graph.getSuccNodes(v) : EmptyIterator.instance());
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#getEquationsThatDef(com.ibm.wala.dataflow.fixpoint.IVariable)
-   */
   public Iterator getStatementsThatDef(IVariable v) {
     return (graph.containsNode(v) ? graph.getPredNodes(v) : EmptyIterator.instance());
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#getVariable(int)
-   */
   public IVariable getVariable(int n) {
     return (IVariable) graph.getNode(n);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#getNumberOfEquationsThatUse(com.ibm.wala.dataflow.fixpoint.AbstractVariable)
-   */
   public int getNumberOfStatementsThatUse(IVariable v) {
     return (graph.containsNode(v) ? graph.getSuccNodeCount(v) : 0);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#getNumberOfEquationsThatUse(com.ibm.wala.dataflow.fixpoint.AbstractVariable)
-   */
   public int getNumberOfStatementsThatDef(IVariable v) {
     return (graph.containsNode(v) ? graph.getPredNodeCount(v) : 0);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#getVariables()
-   */
   @SuppressWarnings("unchecked")
   public Iterator<IVariable> getVariables() {
     return new FilterIterator(graph.iterator(), new Filter() {
@@ -373,20 +292,10 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
     return graph.getPredNodeCount(n);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#containsEquations(com.ibm.wala.dataflow.fixpoint.AbstractEquation)
-   */
   public boolean containsStatement(IFixedPointStatement s) {
     return equations.contains(s);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#containsEquations(com.ibm.wala.dataflow.fixpoint.AbstractEquation)
-   */
   public boolean containsVariable(IVariable v) {
     return variables.contains(v);
   }

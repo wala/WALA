@@ -66,9 +66,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     return key;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
+  /**
    * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForMultiNewArray(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.NewSiteReference, int)
    * 
@@ -112,11 +110,6 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     return key;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.underConstruction.DataflowCallGraphBuilder#getInstanceKeyForStringConstant(java.lang.String)
-   */
   public InstanceKey getInstanceKeyForConstant(Object S) {
     if (!options.hasConstantType(S)) {
       return null;

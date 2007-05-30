@@ -81,9 +81,6 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
   }
 
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#remove()
-   */
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

@@ -47,8 +47,6 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
    */
   @Override
@@ -57,8 +55,6 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
    */
   @Override
@@ -67,7 +63,6 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
   }
 
   /**
-   * @param g
    * @return a graph with the same nodes and edges as g
    */
   public static <T> SlowSparseNumberedGraph<T> duplicate(Graph<T> g) {

@@ -37,16 +37,10 @@ public class NonNullSingletonIterator<T> implements Iterator<T> {
     this.it = o;
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#hasNext()
-   */
   public boolean hasNext() {
     return it != null;
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#next()
-   */
   public T next() {
     if (it == null) {
       throw new NoSuchElementException();
@@ -57,9 +51,6 @@ public class NonNullSingletonIterator<T> implements Iterator<T> {
     }
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#remove()
-   */
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

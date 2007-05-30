@@ -71,8 +71,6 @@ public class DefaultEntrypoint extends Entrypoint {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.Entrypoint#getParameterTypes(int)
    */
   @Override
@@ -85,8 +83,6 @@ public class DefaultEntrypoint extends Entrypoint {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.Entrypoint#getNumberOfParameters()
    */
   @Override

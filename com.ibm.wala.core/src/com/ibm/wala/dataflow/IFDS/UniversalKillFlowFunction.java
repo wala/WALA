@@ -24,20 +24,10 @@ public class UniversalKillFlowFunction implements IReversibleFlowFunction {
 
   private final static UniversalKillFlowFunction singleton = new UniversalKillFlowFunction();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.IFlowFunction#eval(int)
-   */
   public SparseIntSet getTargets(int i) {
     return (i == 0) ? SparseIntSet.singleton(0) : null;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.IFlowFunction#eval(int)
-   */
   public SparseIntSet getSources(int i) {
     return (i == 0) ? SparseIntSet.singleton(0) : null;
   }
@@ -49,9 +39,6 @@ public class UniversalKillFlowFunction implements IReversibleFlowFunction {
     return singleton;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "Universal Kill";

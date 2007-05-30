@@ -91,8 +91,6 @@ public class ZeroXCFABuilder extends CFABuilder {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#getDefaultDispatchBoundHeuristic()
    */
   @Override

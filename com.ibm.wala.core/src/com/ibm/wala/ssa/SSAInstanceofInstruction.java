@@ -104,8 +104,6 @@ public class SSAInstanceofInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override
@@ -114,8 +112,6 @@ public class SSAInstanceofInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   @Override
@@ -123,9 +119,6 @@ public class SSAInstanceofInstruction extends SSAInstruction {
     return null;
   }
 
-  /**
-   * @return Returns the ref.
-   */
   public int getRef() {
     return ref;
   }

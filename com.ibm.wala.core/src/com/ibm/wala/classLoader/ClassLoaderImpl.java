@@ -451,8 +451,6 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClassLoader#getNumberOfClasses()
    */
   public int getNumberOfClasses() {
@@ -460,8 +458,6 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClassLoader#getNumberOfMethods()
    */
   public int getNumberOfMethods() {
@@ -474,8 +470,6 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClassLoader#getSourceFileName(com.ibm.wala.classLoader.IClass)
    */
   public String getSourceFileName(IClass klass) {
@@ -486,8 +480,6 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClassLoader#removeAll(java.util.Collection)
    */
   public void removeAll(Collection<IClass> toRemove) {

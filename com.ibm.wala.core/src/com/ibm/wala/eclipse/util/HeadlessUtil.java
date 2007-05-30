@@ -31,8 +31,6 @@ public class HeadlessUtil {
    * create a Properties object representing the properties set by the command
    * line args. if args[i] is "-foo" and args[i+1] is "bar", then the result
    * will define a property with key "foo" and value "bar"
-   * 
-   * @throws WalaException
    */
   public static Properties parseCommandLine(String[] cmdLine) {
     Properties p = null;

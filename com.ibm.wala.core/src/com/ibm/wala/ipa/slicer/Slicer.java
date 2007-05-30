@@ -395,8 +395,6 @@ public class Slicer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getDomain()
      */
     public TabulationDomain getDomain() {
@@ -405,8 +403,6 @@ public class Slicer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getFunctionMap()
      */
     public IFlowFunctionMap<Statement> getFunctionMap() {
@@ -414,8 +410,6 @@ public class Slicer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getMergeFunction()
      */
     public IMergeFunction getMergeFunction() {
@@ -423,8 +417,6 @@ public class Slicer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getReachableOnEntry()
      */
     public SparseIntSet getReachableOnEntry() {
@@ -432,8 +424,6 @@ public class Slicer {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getSupergraph()
      */
     public ISupergraph<Statement, PDG> getSupergraph() {

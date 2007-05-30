@@ -40,15 +40,9 @@ public abstract class NodeKey extends AbstractLocalPointerKey {
     return node;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public abstract boolean equals(Object obj);
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public abstract int hashCode();
 

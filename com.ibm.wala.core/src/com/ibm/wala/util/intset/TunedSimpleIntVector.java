@@ -33,15 +33,11 @@ public class TunedSimpleIntVector extends SimpleIntVector {
     this.expansion = expansion;
   }
 
-  /* (non-Javadoc)
-   */
   @Override
   float getGrowthFactor() {
     return expansion;
   }
 
-  /* (non-Javadoc)
-   */
   @Override
   int getInitialSize() {
     return initialSize;

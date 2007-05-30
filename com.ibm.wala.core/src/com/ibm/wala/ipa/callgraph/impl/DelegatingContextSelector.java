@@ -41,9 +41,6 @@ public class DelegatingContextSelector implements ContextSelector {
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.detox.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.detox.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
-   */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
 
     if (DEBUG) {
@@ -65,9 +62,6 @@ public class DelegatingContextSelector implements ContextSelector {
     return C;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#getBoundOnNumberOfTargets(com.ibm.detox.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
-   */
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
     if (A.mayUnderstand(caller,site,targetMethod,null)) {
       return A.getBoundOnNumberOfTargets(caller,site,targetMethod);
@@ -76,9 +70,6 @@ public class DelegatingContextSelector implements ContextSelector {
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#mayUnderstand(com.ibm.detox.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
-   */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
     if (A != null) {
       if (A.mayUnderstand(caller,site,targetMethod, instance)) {
@@ -88,9 +79,6 @@ public class DelegatingContextSelector implements ContextSelector {
     return B.mayUnderstand(caller,site,targetMethod, instance);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
   public void setWarnings(WarningSet newWarnings) {
     if (A != null) {
       A.setWarnings(newWarnings);
@@ -98,16 +86,10 @@ public class DelegatingContextSelector implements ContextSelector {
    B.setWarnings(newWarnings);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#contextIsIrrelevant(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference)
-   */
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
     return A.contextIsIrrelevant(node,site) && B.contextIsIrrelevant(node,site);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationContextSelector#contextIsIrrelevant(com.ibm.wala.types.MethodReference)
-   */
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
     return A.allSitesDispatchIdentically(node,site) && B.allSitesDispatchIdentically(node,site);
   }

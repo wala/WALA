@@ -48,19 +48,12 @@ public class ConstantValue implements Value {
     return constant;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "#" + constant;
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Value#isStringConstant()
    */
   public boolean isStringConstant() {

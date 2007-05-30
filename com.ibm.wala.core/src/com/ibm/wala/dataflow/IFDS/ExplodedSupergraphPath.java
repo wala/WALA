@@ -213,10 +213,6 @@ public class ExplodedSupergraphPath<T> {
       // Trace.printCollection("exclusions", exclusions);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     */
     @Override
     protected Iterator<ExplodedSupergraphNode<T>> getConnected(final ExplodedSupergraphNode<T> n) {
 
@@ -238,10 +234,6 @@ public class ExplodedSupergraphPath<T> {
       return supergraph.getProcOf(a.getSupergraphNode()).equals(supergraph.getProcOf(b.getSupergraphNode()));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     */
     @Override
     public List<ExplodedSupergraphNode<T>> find() {
       List<ExplodedSupergraphNode<T>> L = super.find();
@@ -277,10 +269,6 @@ public class ExplodedSupergraphPath<T> {
       this.esg = esg;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     */
     @Override
     protected Iterator<ExplodedSupergraphNode<T>> getConnected(ExplodedSupergraphNode<T> n) {
       ExplodedSupergraphNode src = n;
@@ -397,11 +385,6 @@ public class ExplodedSupergraphPath<T> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
 

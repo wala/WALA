@@ -65,10 +65,6 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
     this.cg = cg;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public boolean mayEscape(MethodReference allocMethod, int allocPC, MethodReference m) throws WalaException {
 
     // nodes:= set of call graph nodes representing method m
@@ -85,10 +81,6 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
     return mayEscape(allocN, allocPC, nodes);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public boolean mayEscape(CGNode allocNode, int allocPC, CGNode node) throws WalaException {
     return mayEscape(Collections.singleton(allocNode), allocPC, Collections.singleton(node));
   }

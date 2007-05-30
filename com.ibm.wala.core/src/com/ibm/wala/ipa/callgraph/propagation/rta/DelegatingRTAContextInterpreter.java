@@ -40,8 +40,6 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#understands(com.ibm.wala.classLoader.IMethod,
    *      com.ibm.detox.ipa.callgraph.Context)
    */
@@ -53,13 +51,6 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#getAllocatedTypes(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.detox.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
     if (A != null) {
       if (A.understands(node)) {
@@ -72,13 +63,6 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     return B.iterateNewSites(node, warnings);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#getCallSites(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.detox.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
     if (A != null) {
       if (A.understands(node)) {
@@ -91,12 +75,6 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     return B.iterateCallSites(node, warnings);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateFieldsRead(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator iterateFieldsRead(CGNode node, WarningSet warnings) {
     if (A != null) {
       if (A.understands(node)) {
@@ -109,12 +87,6 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     return B.iterateFieldsRead(node, warnings);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateFieldsWritten(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings) {
     if (A != null) {
       if (A.understands(node)) {
@@ -136,11 +108,6 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
   public void setWarnings(WarningSet newWarnings) {
     if (A != null) {
       A.setWarnings(newWarnings);

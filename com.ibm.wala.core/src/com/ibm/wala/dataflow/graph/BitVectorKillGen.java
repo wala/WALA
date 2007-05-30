@@ -30,9 +30,6 @@ public class BitVectorKillGen extends UnaryOperator {
     this.gen = new BitVectorIntSet(gen);
   }
 
-  /*
-   * (non-Javadoc)
-   */
   @Override
   public byte evaluate(IVariable lhs, IVariable rhs) {
     BitVectorVariable L = (BitVectorVariable) lhs;
@@ -54,29 +51,16 @@ public class BitVectorKillGen extends UnaryOperator {
     }
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "GenKill";
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.Operator#hashCode()
-   */
   @Override
   public int hashCode() {
     return 9901 * kill.hashCode() + 1213 * gen.hashCode();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object o) {
     if (o instanceof BitVectorKillGen) {

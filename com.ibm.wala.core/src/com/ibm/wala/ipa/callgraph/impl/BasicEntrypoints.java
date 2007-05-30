@@ -26,11 +26,6 @@ public class BasicEntrypoints implements Iterable<Entrypoint> {
 
   private HashSet<Entrypoint> entrypoints = HashSetFactory.make();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.Entrypoints#iterator()
-   */
   public Iterator<Entrypoint> iterator() {
     return entrypoints.iterator();
   }

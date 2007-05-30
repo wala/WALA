@@ -31,11 +31,6 @@ public class PhiValue implements Value {
     this.phi = phi;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "v" + phi.getDef();
@@ -49,15 +44,13 @@ public class PhiValue implements Value {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Value#isStringConstant()
    */
   public boolean isStringConstant() {
     return false;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ssa.Value#isNullConstant()
    */
   public boolean isNullConstant() {

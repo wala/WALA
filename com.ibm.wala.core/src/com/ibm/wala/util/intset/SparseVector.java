@@ -17,22 +17,23 @@ import com.ibm.wala.util.debug.Trace;
 
 /**
  * 
- * a vector implementation designed for low occupancy. Note that get() from
- * this vector is a binary search.
+ * a vector implementation designed for low occupancy. Note that get() from this
+ * vector is a binary search.
  * 
  * This should only be used for small sets ... insertion and deletion are linear
  * in size of set.
  * 
  * @author sfink
  */
-public class SparseVector<T> implements IVector<T>  {
+public class SparseVector<T> implements IVector<T> {
 
   private final static int DEF_INITIAL_SIZE = 5;
-  
+
   /**
    * if indices[i] = x, then data[i] == get(x)
    */
   private MutableSparseIntSet indices = new MutableSparseIntSet();
+
   private Object[] data;
 
   /**
@@ -42,19 +43,17 @@ public class SparseVector<T> implements IVector<T>  {
     data = new Object[DEF_INITIAL_SIZE];
     indices = new MutableSparseIntSet();
   }
-  
+
   /**
    * @param initialSize
    * @param expansion
    */
   public SparseVector(int initialSize, float expansion) {
     data = new Object[DEF_INITIAL_SIZE];
-    indices = new TunedMutableSparseIntSet(initialSize,expansion);
+    indices = new TunedMutableSparseIntSet(initialSize, expansion);
   }
-  
+
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
   @SuppressWarnings("unchecked")
@@ -86,7 +85,7 @@ public class SparseVector<T> implements IVector<T>  {
   }
 
   private void ensureCapacity(int capacity) {
-    if (data.length  < capacity + 1) {
+    if (data.length < capacity + 1) {
       Object[] old = data;
       data = new Object[1 + (int) (capacity * indices.getExpansionFactor())];
       System.arraycopy(old, 0, data, 0, old.length);
@@ -94,8 +93,6 @@ public class SparseVector<T> implements IVector<T>  {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
    */
   public void performVerboseAction() {
@@ -105,13 +102,14 @@ public class SparseVector<T> implements IVector<T>  {
 
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.util.intset.IVector#iterator()
    */
   public Iterator<T> iterator() {
     return new Iterator<T>() {
 
       int i = 0;
+
       public boolean hasNext() {
         return i < indices.size();
       }
@@ -125,7 +123,7 @@ public class SparseVector<T> implements IVector<T>  {
         // TODO Auto-generated method stub
         Assertions.UNREACHABLE();
       }
-      
+
     };
   }
 
@@ -139,14 +137,14 @@ public class SparseVector<T> implements IVector<T>  {
   public int size() {
     return indices.size();
   }
-  
+
   public IntIterator iterateIndices() {
     return indices.intIterator();
   }
 
   /**
-   *  This iteration _will_ cover all indices even when remove
-   * is called while the iterator is active.
+   * This iteration _will_ cover all indices even when remove is called while
+   * the iterator is active.
    */
   public IntIterator safeIterateIndices() {
     return new MutableSparseIntSet(indices).intIterator();

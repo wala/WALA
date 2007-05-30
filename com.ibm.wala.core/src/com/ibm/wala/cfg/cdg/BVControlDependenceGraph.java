@@ -114,17 +114,11 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
     return csrc.getLabels(cdst);
   }
 
-  /*
-   * (non-Javadoc)
-   */
   @Override
   public NodeManager<IBasicBlock> getNodeManager() {
     return cfg;
   }
 
-  /*
-   * (non-Javadoc)
-   */
   @Override
   public EdgeManager<IBasicBlock> getEdgeManager() {
     return edgeManager;

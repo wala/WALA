@@ -40,11 +40,6 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     this.cha = cha;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.util.CFAContextInterpreter#getIR()
-   */
   public IR getIR(CGNode node, WarningSet warnings) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -54,33 +49,16 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     return options.getSSACache().findOrCreateIR(node.getMethod(), Everywhere.EVERYWHERE, cha, options.getSSAOptions(), warnings);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.underConstruction.CFAContextInterpreter#getNumberOfStatements(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.detox.ipa.callgraph.Context)
-   */
   public int getNumberOfStatements(CGNode node, WarningSet warnings) {
     IR ir = getIR(node, warnings);
     return (ir == null) ? -1 : ir.getInstructions().length;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.IClass)
-   */
   @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
     return false;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.cfg.CFGProvider#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   public ControlFlowGraph getCFG(CGNode N, WarningSet warnings) {
     IR ir = getIR(N, warnings);
     if (ir == null) {
@@ -90,12 +68,6 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getDU(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public DefUse getDU(CGNode node, WarningSet warnings) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");

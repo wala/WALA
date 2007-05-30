@@ -63,8 +63,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCallSites(java.lang.Object)
    */
   public Iterator<? extends Statement> getCallSites(Statement r) {
@@ -94,8 +92,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCalledNodes(java.lang.Object)
    */
   public Iterator<? extends Statement> getCalledNodes(Statement call) {
@@ -117,8 +113,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getEntriesForProcedure(java.lang.Object)
    */
   public Statement[] getEntriesForProcedure(PDG procedure) {
@@ -134,8 +128,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getExitsForProcedure(java.lang.Object)
    */
   public Statement[] getExitsForProcedure(PDG procedure) {
@@ -151,8 +143,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlock(java.lang.Object,
    *      int)
    */
@@ -161,8 +151,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlockNumber(java.lang.Object)
    */
   public int getLocalBlockNumber(Statement n) {
@@ -171,8 +159,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMain()
    */
   public PDG getMain() {
@@ -180,8 +166,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainEntry()
    */
   public Statement getMainEntry() {
@@ -190,8 +174,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainExit()
    */
   public Statement getMainExit() {
@@ -202,8 +184,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getNormalSuccessors(java.lang.Object)
    */
   public Iterator<Statement> getNormalSuccessors(Statement call) {
@@ -216,8 +196,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getNumberOfBlocks(java.lang.Object)
    */
   public int getNumberOfBlocks(PDG procedure) {
@@ -226,8 +204,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getProcOf(java.lang.Object)
    */
   public PDG getProcOf(Statement n) {
@@ -236,8 +212,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getReturnSites(java.lang.Object)
    */
   public Iterator<? extends Statement> getReturnSites(Statement call) {
@@ -267,8 +241,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isCall(java.lang.Object)
    */
   public boolean isCall(Statement n) {
@@ -489,8 +461,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object)
    */
   public IntSet getSuccNodeNumbers(Statement node) {

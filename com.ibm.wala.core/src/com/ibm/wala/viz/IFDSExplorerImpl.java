@@ -22,7 +22,7 @@ import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.graph.InferGraphRootsImpl;
+import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.warnings.WalaException;
 
@@ -52,15 +52,11 @@ public class IFDSExplorerImpl  {
     dotExe = newDotExe;
   }
 
-  /**
-   */
   public static void setGvExe(String newGvExe) {
     gvExe = newGvExe;
   }
 
 
-  /* (non-Javadoc)
-   */
   public static void viewIFDS(CallGraph cg, TabulationResult r) throws WalaException {
     
     if (r == null) {
@@ -86,7 +82,7 @@ public class IFDSExplorerImpl  {
     final SWTTreeViewer v = new SWTTreeViewer();
     v.setGraphInput(cg);
     v.setBlockInput(true);
-    Collection<CGNode> roots = InferGraphRootsImpl.inferRoots(cg);
+    Collection<CGNode> roots = InferGraphRoots.inferRoots(cg);
     v.setRootsInput(roots);
     v.getPopUpActions().add(new ViewAnnotatedIRAction(v,cg,psFile,dotFile,dotExe,gvExe, new IFDSAnnotator(r)));
     v.run();

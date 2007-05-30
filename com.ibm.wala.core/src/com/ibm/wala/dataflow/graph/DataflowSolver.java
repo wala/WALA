@@ -71,8 +71,6 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
 
   protected abstract IVariable makeEdgeVariable(T src, T dst);
 
-  /* (non-Javadoc)
-   */
   @Override
   protected void initializeVariables() {
     Graph<T> G = problem.getFlowGraph();
@@ -98,11 +96,6 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowSystem#initializeWorkList()
-   */
   @Override
   protected void initializeWorkList() {
     buildEquations(true, false);

@@ -33,12 +33,6 @@ public class ClassHierarchyClassTargetSelector implements ClassTargetSelector {
     this.cha = cha;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.callgraph.ClassTargetSelector#getAllocatedTarget(com.ibm.detox.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.NewSiteReference)
-   */
   public IClass getAllocatedTarget(CGNode caller, NewSiteReference site) {
     if (site == null) {
       throw new IllegalArgumentException("site is null");

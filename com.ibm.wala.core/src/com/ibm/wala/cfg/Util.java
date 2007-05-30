@@ -145,8 +145,6 @@ public class Util {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#whichPred(com.ibm.wala.cfg.IBasicBlock,
    *      com.ibm.wala.cfg.IBasicBlock)
    */

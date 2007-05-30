@@ -23,8 +23,6 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public abstract class NullaryOperator extends AbstractOperator implements FixedPointConstants {
 
-  /* (non-Javadoc)
-   */
   @Override
   public byte evaluate(IVariable lhs, IVariable[] rhs) {
     // don't call this

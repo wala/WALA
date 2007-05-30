@@ -42,10 +42,9 @@ import com.ibm.wala.util.warnings.WarningSet;
  * 
  * Abstract base class for analysis engine implementations
  * 
- * Some clients choose to build on this, but many don't.
- * I usually don't in new code; I usually don't find the re-use enabled
- * by this class compelling.  I would probably nuke this except for
- * some legacy code that uses it.
+ * Some clients choose to build on this, but many don't. I usually don't in new
+ * code; I usually don't find the re-use enabled by this class compelling. I
+ * would probably nuke this except for some legacy code that uses it.
  * 
  * @author sfink
  */
@@ -60,8 +59,8 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * DEBUG_LEVEL:
    * <ul>
-   * <li>0 No output 
-   * <li>1 Print some simple stats and warning information 
+   * <li>0 No output
+   * <li>1 Print some simple stats and warning information
    * <li>2 Detailed debugging
    * </ul>
    */
@@ -163,11 +162,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return builder;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.websphere.AppAnalysisEngine#setModuleFiles(java.util.List)
-   */
   public void setModuleFiles(Collection moduleFiles) {
     this.moduleFiles = moduleFiles;
   }
@@ -246,11 +240,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.atk.AppAnalysisEngine#setJ2SELibrary(java.util.jar.JarFile)
-   */
   public void setJ2SELibraries(JarFile[] libs) {
     if (libs == null) {
       throw new IllegalArgumentException("libs is null");
@@ -261,11 +250,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.atk.AppAnalysisEngine#setJ2SELibrary(java.util.jar.JarFile)
-   */
   public void setJ2SELibraries(Module[] libs) {
     if (libs == null) {
       throw new IllegalArgumentException("libs is null");
@@ -276,11 +260,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.atk.AppAnalysisEngine#setClosedWorld(boolean)
-   */
   public void setClosedWorld(boolean b) {
     this.closedWorld = b;
   }

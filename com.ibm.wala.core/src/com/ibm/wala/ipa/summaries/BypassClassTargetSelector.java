@@ -69,8 +69,6 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.ClassTargetSelector#getAllocatedTarget(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.NewSiteReference)
    */

@@ -132,10 +132,6 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return exit;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public int getPredNodeCount(IBasicBlock N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
@@ -428,10 +424,6 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     Assertions.UNREACHABLE();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {
     if (dst == null) {
       throw new IllegalArgumentException("dst is null");
@@ -506,8 +498,6 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
    */
   public void removeNodeAndEdges(IBasicBlock N) {
@@ -515,8 +505,6 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
   public void removeNode(IBasicBlock n) {
@@ -524,8 +512,6 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
    */
   public boolean containsNode(IBasicBlock N) {
@@ -581,8 +567,6 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
   public void removeAllIncidentEdges(IBasicBlock node) {
@@ -590,8 +574,6 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getExceptionalSuccessors(IBasicBlock b) {
@@ -602,8 +584,6 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getNormalSuccessors(IBasicBlock b) {
@@ -614,27 +594,17 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
   public Iterator<IBasicBlock> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<IBasicBlock>(s, this);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void removeIncomingEdges(IBasicBlock node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void removeOutgoingEdges(IBasicBlock node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
@@ -649,8 +619,6 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalPredecessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getExceptionalPredecessors(IBasicBlock b) {
@@ -661,8 +629,6 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalPredecessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getNormalPredecessors(IBasicBlock b) {
@@ -672,10 +638,6 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return new Iterator2Collection<IBasicBlock>(iterateNormalPredecessors(b));
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public IntSet getPredNodeNumbers(IBasicBlock node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
@@ -683,8 +645,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * TODO: optimize this. (non-Javadoc)
-   * 
+   * TODO: optimize this.
    */
   public IntSet getSuccNodeNumbers(IBasicBlock node) {
     int number = getNumber(node);

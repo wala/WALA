@@ -164,8 +164,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#contains(int)
    */
   public boolean contains(int i) {
@@ -179,8 +177,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
    */
   public IntSet intersection(IntSet that) {
@@ -206,8 +202,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
    */
   public IntSet intersection(MutableSharedBitVectorIntSet that) {
@@ -221,8 +215,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#isEmpty()
    */
   public boolean isEmpty() {
@@ -230,8 +222,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#size()
    */
   public int size() {
@@ -242,8 +232,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#iterator()
    */
   public IntIterator intIterator() {
@@ -256,8 +244,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
    */
   public void foreach(IntSetAction action) {
@@ -270,8 +256,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet,
    *      com.ibm.wala.util.intset.IntSetAction)
    */
@@ -284,8 +268,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet,
    *      com.ibm.wala.util.intset.IntSetAction)
    */
@@ -310,8 +292,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#foreachExcluding(com.ibm.wala.util.intset.IntSet,
    *      com.ibm.wala.util.intset.IntSetAction)
    */
@@ -325,8 +305,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#max()
    */
   public int max() {
@@ -341,8 +319,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
    */
   public boolean sameValue(IntSet that) {
@@ -363,8 +339,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
    */
   private boolean sameValue(SparseIntSet that) {
@@ -404,8 +378,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
    */
   private boolean sameValue(MutableSharedBitVectorIntSet that) {
@@ -476,8 +448,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
    */
   public boolean isSubset(IntSet that) {
@@ -495,8 +465,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
    */
   private boolean isSubset(MutableSharedBitVectorIntSet that) {
@@ -591,8 +559,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSet#copySet(com.ibm.wala.util.intset.IntSet)
    */
   public void copySet(IntSet set) {
@@ -616,8 +582,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSet#addAll(com.ibm.wala.util.intset.IntSet)
    */
   public boolean addAll(IntSet set) {
@@ -797,8 +761,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSet#add(int)
    */
   public boolean add(int i) {
@@ -834,8 +796,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSet#remove(int)
    */
   public boolean remove(int i) {
@@ -864,8 +824,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSet#intersectWith(com.ibm.wala.util.intset.IntSet)
    */
   public void intersectWith(IntSet set) {
@@ -954,11 +912,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     return a.sharedPart == b.sharedPart;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return makeSparseCopy().toString();
@@ -1011,8 +964,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
    */
   public boolean containsAny(IntSet set) {
@@ -1044,8 +995,6 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSet#addAllExcluding(com.ibm.wala.util.intset.IntSet,
    *      com.ibm.wala.util.intset.IntSet)
    */

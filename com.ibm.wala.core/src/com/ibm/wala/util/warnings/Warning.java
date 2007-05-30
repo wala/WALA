@@ -46,8 +46,6 @@ public abstract class Warning implements Comparable {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.lang.Comparable#compareTo(java.lang.Object)
    * 
    * @throws ClassCastException if o is not a Warning
@@ -63,11 +61,6 @@ public abstract class Warning implements Comparable {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (obj instanceof Warning) {
@@ -78,21 +71,11 @@ public abstract class Warning implements Comparable {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return 1499 * getMsg().hashCode() + getLevel();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer();

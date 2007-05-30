@@ -202,9 +202,6 @@ public class ETypeHierarchyWrapper {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   */
   public EClass getTargetType() {
     return JavaPackage.eINSTANCE.getETypeHierarchy();
   }

@@ -98,41 +98,21 @@ public final class TypeName {
     this.key = key;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     return this == obj;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return key.hashCode();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return key.toString();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   public String toUnicodeString() {
     return key.toUnicodeString();
   }
@@ -266,11 +246,6 @@ public final class TypeName {
        */
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
       if (obj instanceof TypeNameKey) {
@@ -284,8 +259,6 @@ public final class TypeName {
 
     /**
      * TODO: cache for efficiency?
-     * 
-     * @see java.lang.Object#hashCode()
      */
     @Override
     public int hashCode() {
@@ -296,11 +269,6 @@ public final class TypeName {
       return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       StringBuffer result = new StringBuffer();
@@ -319,11 +287,6 @@ public final class TypeName {
       return result.toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     public String toUnicodeString() {
       try {
         StringBuffer result = new StringBuffer();

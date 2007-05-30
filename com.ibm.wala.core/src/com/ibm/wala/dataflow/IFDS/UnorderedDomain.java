@@ -18,7 +18,7 @@ import com.ibm.wala.util.intset.MutableMapping;
  */
 public class UnorderedDomain extends MutableMapping<Object> implements TabulationDomain {
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.dataflow.IFDS.TabulationDomain#isWeakerThan(int, int)
    */
   public boolean isWeakerThan(int d1, int d2) {

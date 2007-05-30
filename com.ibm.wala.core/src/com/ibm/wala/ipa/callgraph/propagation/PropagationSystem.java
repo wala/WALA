@@ -239,11 +239,6 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.DataflowSystem#initializeVariables()
-   */
   @Override
   protected void initializeVariables() {
     // don't have to do anything; all variables initialized
@@ -611,11 +606,6 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     newStatement(null, op, v1, v2, true, true);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.DataflowSystem#initializeWorkList()
-   */
   @Override
   protected void initializeWorkList() {
     addAllStatementsToWorkList();
@@ -631,10 +621,6 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     return pointerAnalysis;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   @Override
   public void performVerboseAction() {
     super.performVerboseAction();
@@ -689,18 +675,12 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   @Override
   public IFixedPointSystem getFixedPointSystem() {
     return flowGraph;
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys()
    */
   public Iterator iteratePointerKeys() {
@@ -752,20 +732,12 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     return pointsToMap.isTransitiveRoot(key);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   @Override
   protected void periodicMaintenance() {
     super.periodicMaintenance();
     ReferenceCleanser.clearSoftCaches();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   @Override
   public int getVerboseInterval() {
     return verboseInterval;
@@ -779,10 +751,6 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     this.verboseInterval = verboseInterval;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   @Override
   public int getPeriodicMaintainInterval() {
     return periodicMaintainInterval;

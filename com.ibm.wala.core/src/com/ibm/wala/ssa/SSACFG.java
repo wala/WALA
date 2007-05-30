@@ -271,8 +271,6 @@ public class SSACFG implements ControlFlowGraph{
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.ISSABasicBlock#iteratePhis()
      */
     public Iterator<? extends SSAInstruction> iteratePhis() {
@@ -520,8 +518,6 @@ public class SSACFG implements ControlFlowGraph{
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.INodeWithNumber#getGraphNodeId()
      */
     public int getGraphNodeId() {
@@ -529,8 +525,6 @@ public class SSACFG implements ControlFlowGraph{
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.INodeWithNumber#setGraphNodeId(int)
      */
     public void setGraphNodeId(int number) {
@@ -550,11 +544,6 @@ public class SSACFG implements ControlFlowGraph{
       return SSACFG.this;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object arg0) {
       if (arg0 instanceof BasicBlock) {
@@ -577,19 +566,12 @@ public class SSACFG implements ControlFlowGraph{
       return method;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
       return cfg.getNode(getNumber()).hashCode() * 6271;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
      */
     public boolean isExitBlock() {
@@ -597,8 +579,6 @@ public class SSACFG implements ControlFlowGraph{
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
      */
     public boolean isEntryBlock() {
@@ -704,8 +684,6 @@ public class SSACFG implements ControlFlowGraph{
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.CFG.BasicBlock#getAllInstructions()
      */
     @Override
@@ -717,9 +695,6 @@ public class SSACFG implements ControlFlowGraph{
 
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
@@ -750,8 +725,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#entry()
    */
   public SSACFG.BasicBlock entry() {
@@ -759,8 +732,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#exit()
    */
   public SSACFG.BasicBlock exit() {
@@ -768,8 +739,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedGraph#getNumber(com.ibm.wala.util.graph.Node)
    */
   public int getNumber(IBasicBlock N) {
@@ -778,8 +747,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedGraph#getNode(int)
    */
   public IBasicBlock getNode(int number) {
@@ -787,8 +754,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedGraph#getMaxNumber()
    */
   public int getMaxNumber() {
@@ -796,8 +761,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#iterateNodes()
    */
   public Iterator<IBasicBlock> iterator() {
@@ -809,8 +772,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#getNumberOfNodes()
    */
   public int getNumberOfNodes() {
@@ -818,8 +779,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#getPredNodes(com.ibm.wala.util.graph.Node)
    */
   public Iterator<IBasicBlock> getPredNodes(IBasicBlock N) {
@@ -844,8 +803,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
   public int getPredNodeCount(IBasicBlock N) {
@@ -855,8 +812,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
   public Iterator<IBasicBlock> getSuccNodes(IBasicBlock N) {
@@ -881,8 +836,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#getSuccNodeCount(com.ibm.wala.util.graph.Node)
    */
   public int getSuccNodeCount(IBasicBlock N) {
@@ -892,20 +845,12 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedGraph#addNode(com.ibm.wala.util.graph.Node)
    */
   public void addNode(IBasicBlock n) {
     Assertions.UNREACHABLE("external agents shouldn't be adding nodes");
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node,
-   *      com.ibm.wala.util.graph.Node)
-   */
   public void addEdge(IBasicBlock src, IBasicBlock dst) {
     Assertions.UNREACHABLE("external agents shouldn't be adding edges");
 
@@ -917,8 +862,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
   public void removeAllIncidentEdges(IBasicBlock node) {
@@ -927,8 +870,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
    */
   public void removeNodeAndEdges(IBasicBlock N) {
@@ -938,8 +879,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
   public void removeNode(IBasicBlock n) {
@@ -948,8 +887,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
    */
   public int getProgramCounter(int index) {
@@ -958,8 +895,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#containsNode(com.ibm.wala.util.graph.Node)
    */
   public boolean containsNode(IBasicBlock N) {
@@ -971,8 +906,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getMethod()
    */
   public IMethod getMethod() {
@@ -980,8 +913,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getExceptionalSuccessors(final IBasicBlock b) {
@@ -999,8 +930,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getExceptionalPredecessors(IBasicBlock b) {
@@ -1047,8 +976,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getNormalSuccessors(IBasicBlock b) {
@@ -1066,8 +993,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getNormalPredecessors(IBasicBlock b) {
@@ -1085,32 +1010,20 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
   public Iterator<IBasicBlock> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<IBasicBlock>(s, this);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void removeIncomingEdges(IBasicBlock node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
-
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void removeOutgoingEdges(IBasicBlock node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
-
   }
 
   public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {
@@ -1119,10 +1032,6 @@ public class SSACFG implements ControlFlowGraph{
     return false;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public IntSet getSuccNodeNumbers(IBasicBlock node) {
     BasicBlock b = (BasicBlock) node;
     IBasicBlock n = cfg.getNode(b.getNumber());
@@ -1136,8 +1045,6 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /**
-   * @author sfink
-   * 
    * A warning for when we fail to resolve the type for a checkcast
    */
   private static class ExceptionLoadFailure extends Warning {

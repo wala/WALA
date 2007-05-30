@@ -15,7 +15,7 @@ import java.util.Iterator;
 import com.ibm.wala.util.intset.IntIterator;
 
 /**
- * An <code>MapIterator</code> maps an
+ * An <code>IntMapIterator</code> maps an
  * <code>Iterator</code> contents to produce a new Iterator
  * 
  * @author sfink
@@ -24,40 +24,24 @@ public class IntMapIterator<T> implements Iterator<T> {
   final IntIterator i;
   final IntFunction<T> f;
 
-  /**
-   * @param i
-   * @param f
-   */
   public IntMapIterator(IntIterator i, IntFunction<T> f) {
     this.i = i;
     this.f = f;
   }
 
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#next()
-   */
   public T next() {
     return f.apply(i.next());
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#hasNext()
-   */
   public boolean hasNext() {
     return i.hasNext();
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#remove()
-   */
   public void remove() {
     throw new java.lang.UnsupportedOperationException();
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "map: " + f + " of " + i;

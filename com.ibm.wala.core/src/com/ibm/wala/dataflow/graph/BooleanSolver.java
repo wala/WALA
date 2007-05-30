@@ -18,19 +18,10 @@ import com.ibm.wala.fixpoint.IVariable;
  */
 public class BooleanSolver<T> extends DataflowSolver<T> {
 
-  /**
-   * @param problem
-   */
   public BooleanSolver(IKilldallFramework<T> problem) {
     super(problem);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.graph.IterativeSolver#makeVariable(java.lang.Object,
-   *      boolean)
-   */
   @Override
   protected IVariable makeNodeVariable(Object n, boolean IN) {
     return new BooleanVariable(n.hashCode() * 97381 + (IN ? 0 : 1));

@@ -32,18 +32,12 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
     this.memberRef = memberRef;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ssa.SSAInstruction#toString(com.ibm.wala.ssa.SymbolTable,
-   *      com.ibm.wala.ssa.ValueDecorator)
-   */
   @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return "fieldref " + getValueString(symbolTable, d, objectRef) + "." + getValueString(symbolTable, d, memberRef);
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
   @Override
@@ -61,15 +55,12 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
     return memberRef;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return 6311 * memberRef ^ 2371 * objectRef;
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#isFallThrough()
    */
   @Override

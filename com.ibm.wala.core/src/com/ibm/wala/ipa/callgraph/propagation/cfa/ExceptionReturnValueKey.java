@@ -17,9 +17,6 @@ import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
  * A key which represents the return value for a node
  */
 public class ExceptionReturnValueKey extends ReturnValueKey {
-  /**
-   * @param node
-   */
   ExceptionReturnValueKey(CGNode node) {
     super(node);
   }
@@ -29,11 +26,6 @@ public class ExceptionReturnValueKey extends ReturnValueKey {
     return "[Exc-Ret-V:" + getNode() + "]";
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -42,11 +34,6 @@ public class ExceptionReturnValueKey extends ReturnValueKey {
     return (obj.getClass() == ExceptionReturnValueKey.class) && super.internalEquals(obj);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return 1201 * super.internalHashCode();

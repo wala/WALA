@@ -47,29 +47,14 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
       this.delegate = delegate;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#hasNext()
-     */
     public boolean hasNext() {
       return delegate.hasNext();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#next()
-     */
     public T next() {
       return nodeManager.getNode(delegate.next());
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#remove()
-     */
     public void remove() {
       // TODO Auto-generated method stub
       Assertions.UNREACHABLE();
@@ -77,8 +62,6 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
    */
   public Iterator<T> getPredNodes(T N) throws IllegalArgumentException {
@@ -101,8 +84,6 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
   public int getPredNodeCount(T N) throws IllegalArgumentException {
@@ -114,8 +95,6 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
   public Iterator<T> getSuccNodes(T N) {
@@ -129,8 +108,6 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(com.ibm.wala.util.graph.Node)
    */
   public int getSuccNodeCount(T N) {
@@ -142,8 +119,6 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node,
    *      com.ibm.wala.util.graph.Node)
    */
@@ -159,8 +134,6 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
   public void removeAllIncidentEdges(T node) {
@@ -172,8 +145,6 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
   public void removeIncomingEdges(T node) {
@@ -185,8 +156,6 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
   public void removeOutgoingEdges(T node) {
@@ -197,9 +166,6 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
     n.removeOutgoingEdges();
   }
 
-  /*
-   * (non-Javadoc)
-   */
   public boolean hasEdge(T src, T dst) {
     return getSuccNodeNumbers(src).contains(dst.getGraphNodeId());
   }

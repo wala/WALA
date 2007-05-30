@@ -43,46 +43,25 @@ public class DefaultContextSelector implements ContextSelector {
     delegate = new DelegatingContextSelector(new CloneContextSelector(),s);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.detox.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference,
-   *      com.ibm.wala.classLoader.IMethod)
-   */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     return delegate.getCalleeTarget(caller, site, callee, receiver);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.callgraph.ContextSelector#getBoundOnNumberOfTargets(com.ibm.detox.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference,
-   *      com.ibm.wala.classLoader.IMethod)
-   */
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
     return delegate.getBoundOnNumberOfTargets(caller, site, targetMethod);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
   public void setWarnings(WarningSet newWarnings) {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.classLoader.CallSiteReference)
    */
   public boolean contextIsIrrelevant(CGNode caller, CallSiteReference site) {
     return delegate.contextIsIrrelevant(caller, site);
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.types.MethodReference)
    */
   public boolean allSitesDispatchIdentically(CGNode caller, CallSiteReference site) {

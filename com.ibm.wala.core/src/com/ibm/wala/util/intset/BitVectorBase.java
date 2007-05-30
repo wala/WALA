@@ -144,8 +144,6 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#contains(int)
    */
   public boolean contains(int i) {

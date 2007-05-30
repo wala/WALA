@@ -217,21 +217,11 @@ public class BasicRTABuilder extends AbstractRTABuilder {
       return "Dispatch";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return caller.hashCode() + 8707 * site.hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       if (o instanceof DispatchOperator) {
@@ -244,8 +234,6 @@ public class BasicRTABuilder extends AbstractRTABuilder {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.AbstractRTABuilder#makeDispatchOperator(com.ibm.wala.classLoader.CallSiteReference,
    *      com.ibm.wala.ipa.callgraph.CGNode)
    */
@@ -255,8 +243,6 @@ public class BasicRTABuilder extends AbstractRTABuilder {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#getDefaultDispatchBoundHeuristic()
    */
   @Override

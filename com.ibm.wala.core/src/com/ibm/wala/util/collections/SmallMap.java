@@ -38,9 +38,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   private Object[] keysAndValues;
 
   /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.Map#size()
    */
   public int size() {
     if (keysAndValues == null) {
@@ -53,7 +50,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   /**
    * Use with care.
    * 
-   * @param i
    * @return the ith key
    */
   public Object getKey(int i) throws IllegalStateException {
@@ -77,8 +73,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#isEmpty()
    */
   public boolean isEmpty() {
@@ -86,8 +80,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#containsKey(java.lang.Object)
    */
   public boolean containsKey(Object key) {
@@ -100,8 +92,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#containsValue(java.lang.Object)
    */
   public boolean containsValue(Object value) {
@@ -117,8 +107,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#get(java.lang.Object)
    */
   @SuppressWarnings("unchecked")
@@ -145,8 +133,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#put(java.lang.Object, java.lang.Object)
    */
   @SuppressWarnings("unchecked")
@@ -171,8 +157,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#remove(java.lang.Object)
    */
   public V remove(Object key) throws UnsupportedOperationException {
@@ -180,8 +164,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#putAll(java.util.Map)
    */
   public void putAll(Map<? extends K, ? extends V> t) throws UnsupportedOperationException {
@@ -189,8 +171,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#clear()
    */
   public void clear() {
@@ -198,8 +178,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#keySet()
    */
   @SuppressWarnings("unchecked")
@@ -213,8 +191,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#values()
    */
   @SuppressWarnings("unchecked")
@@ -231,8 +207,6 @@ public class SmallMap<K,V> implements Map<K,V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#entrySet()
    */
   public Set<Map.Entry<K,V>> entrySet() throws UnimplementedError {

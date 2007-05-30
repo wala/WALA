@@ -24,15 +24,17 @@ import com.ibm.wala.util.debug.Trace;
  * 
  * @author sfink
  */
-public class SparseLongIntVector  {
+public class SparseLongIntVector {
 
   private final static int INITIAL_SIZE = 5;
+
   private final double EXPANSION = 1.5;
 
   /**
    * if indices[i] = x, then data[i] == get(x)
    */
   private MutableSparseLongSet indices = new MutableSparseLongSet();
+
   private int[] data = new int[INITIAL_SIZE];
 
   private final int defaultValue;
@@ -42,8 +44,6 @@ public class SparseLongIntVector  {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
   public int get(long x) {
@@ -56,7 +56,7 @@ public class SparseLongIntVector  {
   }
 
   /*
-   * TODO: this can be optimized (non-Javadoc)
+   * TODO: this can be optimized
    * 
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
@@ -74,7 +74,7 @@ public class SparseLongIntVector  {
   }
 
   private void ensureCapacity(int capacity) {
-    if (data.length  < capacity + 1) {
+    if (data.length < capacity + 1) {
       int[] old = data;
       data = new int[1 + (int) (capacity * EXPANSION)];
       System.arraycopy(old, 0, data, 0, old.length);
@@ -82,8 +82,6 @@ public class SparseLongIntVector  {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
    */
   public void performVerboseAction() {

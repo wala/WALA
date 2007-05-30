@@ -11,8 +11,8 @@
 package com.ibm.wala.util.intset;
 
 /**
- *
- * A pair of ints.  Note that an IntPair has value semantics.
+ * 
+ * A pair of ints. Note that an IntPair has value semantics.
  * 
  * @author sfink
  */
@@ -40,9 +40,6 @@ public class IntPair {
     return y;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -56,23 +53,17 @@ public class IntPair {
     return false;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return 8377 * x + y;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "[" + x + "," + y + "]";
   }
 
   public static IntPair make(int x, int y) {
-    return new IntPair(x,y);
+    return new IntPair(x, y);
   }
 }

@@ -13,14 +13,14 @@ package com.ibm.wala.ipa.callgraph.impl;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.util.warnings.MethodWarning;
 
-
 public class UnresolvedReflectionWarning extends MethodWarning {
 
   public UnresolvedReflectionWarning(CGNode node) throws NullPointerException {
-    super(SEVERE,node.getMethod().getReference());
-    
+    super(SEVERE, node.getMethod().getReference());
+
   }
-  /* (non-Javadoc)
+
+  /*
    * @see com.ibm.wala.util.Warning#getMsg()
    */
   @Override

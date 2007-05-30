@@ -245,11 +245,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         }
       }
 
-      /*
-       * (non-Javadoc)
-       * 
-       * @see com.ibm.wala.dataflow.fixpoint.DataflowSystem#initializeVariables()
-       */
       @Override
       protected void initializeVariables() {
         super.initializeVariables();
@@ -293,8 +288,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.dataflow.graph.AbstractMeetOperator#isUnaryNoOp()
      */
     @Override
@@ -302,11 +295,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.fixpoint.Operator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable[])
-     */
     @Override
     public byte evaluate(IVariable lhs, IVariable[] rhs) {
       MachineState L = (MachineState) lhs;
@@ -318,21 +306,11 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.fixpoint.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 72223 * meeter.hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.fixpoint.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       if (o instanceof MeetOperator) {
@@ -343,11 +321,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.fixpoint.Operator#toString()
-     */
     @Override
     public String toString() {
       return "MEETER";
@@ -836,11 +809,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       return stackHeight;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.AbstractVariable#hashCode()
-     */
     @Override
     public int hashCode() {
       return hash;

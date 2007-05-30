@@ -137,8 +137,6 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   @Override

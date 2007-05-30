@@ -28,12 +28,12 @@ import com.ibm.wala.util.intset.IntSet;
  * 
  * Nodes in the Graph are PointerKeys and InstanceKeys.
  * 
- * There is an edge from a PointerKey P to an InstanceKey I iff the PointerAnalysis
- * indicates that P may point to I.
+ * There is an edge from a PointerKey P to an InstanceKey I iff the
+ * PointerAnalysis indicates that P may point to I.
  * 
- * There is an edge from an InstanceKey I to a PointerKey P iff
- *    - P represents a field of an object instance modelled by I, or
- *    - P represents the array contents of array instance I.
+ * There is an edge from an InstanceKey I to a PointerKey P iff - P represents a
+ * field of an object instance modelled by I, or - P represents the array
+ * contents of array instance I.
  * 
  * @author sfink
  * 
@@ -41,16 +41,16 @@ import com.ibm.wala.util.intset.IntSet;
 public abstract class HeapGraph implements NumberedGraph<Object> {
 
   private final HeapModel hm;
-  
+
   protected HeapGraph(HeapModel hm) {
     this.hm = hm;
   }
-  
-  /* (non-Javadoc)
+
+  /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
   public Iterator<Object> iterateNodes(IntSet s) {
-    return new NumberedNodeIterator<Object>(s,this);
+    return new NumberedNodeIterator<Object>(s, this);
   }
 
   public Collection<Object> getReachableInstances(Set<Object> roots) {
@@ -61,7 +61,8 @@ public abstract class HeapGraph implements NumberedGraph<Object> {
     };
     return DFS.getReachableNodes(this, roots, f);
   }
-  /* (non-Javadoc)
+
+  /*
    * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
    */
   public void removeNodeAndEdges(Object N) {

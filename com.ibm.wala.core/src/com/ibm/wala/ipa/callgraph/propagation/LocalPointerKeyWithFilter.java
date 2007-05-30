@@ -22,9 +22,6 @@ public class LocalPointerKeyWithFilter extends LocalPointerKey implements Filter
 
   private final TypeFilter typeFilter;
 
-  /**
-   * 
-   */
   public LocalPointerKeyWithFilter(CGNode node, int valueNumber, TypeFilter typeFilter) {
     super(node,valueNumber);
     if (Assertions.verifyAssertions) {
@@ -34,11 +31,6 @@ public class LocalPointerKeyWithFilter extends LocalPointerKey implements Filter
   }
 
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.PointerKey#getTypeFilter()
-   */
   public TypeFilter getTypeFilter() {
     return typeFilter;
   }

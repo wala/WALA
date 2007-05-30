@@ -82,8 +82,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getName()
    */
   public TypeName getName() {
@@ -91,8 +89,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getModifiers()
    */
   public int getModifiers() {
@@ -102,8 +98,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getSuperclass()
    */
   public IClass getSuperclass() {
@@ -113,8 +107,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces()
    */
   public Collection<IClass> getAllImplementedInterfaces() {
@@ -124,8 +116,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllAncestorInterfaces()
    */
   public Collection<IClass> getAllAncestorInterfaces() {
@@ -135,8 +125,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
   public IMethod getMethod(Selector selector) {
@@ -146,8 +134,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
   public IField getField(Atom name) {
@@ -159,8 +145,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
    */
   public IMethod getClassInitializer() {
@@ -170,8 +154,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
   public Collection<IMethod> getDeclaredMethods() {
@@ -181,8 +163,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredInstanceFields()
    */
   public Collection<IField> getDeclaredInstanceFields() {
@@ -192,8 +172,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredStaticFields()
    */
   public Collection<IField> getDeclaredStaticFields() {
@@ -205,8 +183,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#isReferenceType()
    */
   public boolean isReferenceType() {
@@ -214,8 +190,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
    */
   public Collection<IClass> getDirectInterfaces() {
@@ -225,8 +199,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
   public Collection<IField> getAllInstanceFields() throws ClassHierarchyException {
@@ -236,8 +208,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
   public Collection<IField> getAllStaticFields() throws ClassHierarchyException {
@@ -245,8 +215,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
   public Collection<IMethod> getAllMethods() throws ClassHierarchyException {
@@ -255,8 +223,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
   public Collection<IField> getAllFields() throws ClassHierarchyException {

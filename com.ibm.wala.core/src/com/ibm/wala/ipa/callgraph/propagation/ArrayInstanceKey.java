@@ -41,8 +41,6 @@ public final class ArrayInstanceKey extends AbstractFieldPointerKey implements F
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerKey#getTypeFilter()
    */
   public TypeFilter getTypeFilter() {

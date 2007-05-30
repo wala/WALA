@@ -115,10 +115,6 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
     return result.iterator();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public int getPredNodeCount(ExplodedSupergraphNode<T> node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -146,10 +142,6 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
     return count;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public Iterator<ExplodedSupergraphNode<T>> getSuccNodes(ExplodedSupergraphNode<T>  node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -208,10 +200,6 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public int getSuccNodeCount(ExplodedSupergraphNode<T> node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -253,10 +241,6 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
     throw new UnsupportedOperationException();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public boolean hasEdge(ExplodedSupergraphNode<T> src, ExplodedSupergraphNode<T> dst) {
     for (Iterator it = getSuccNodes(src); it.hasNext();) {
       if (it.next().equals(dst)) {

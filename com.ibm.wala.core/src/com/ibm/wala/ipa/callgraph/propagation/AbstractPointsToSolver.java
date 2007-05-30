@@ -26,10 +26,6 @@ public abstract class AbstractPointsToSolver implements IPointsToSolver {
   
   private final ReflectionHandler reflectionHandler;
 
-  /**
-   * @param system
-   * @param builder
-   */
   public AbstractPointsToSolver(PropagationSystem system, PropagationCallGraphBuilder builder) {
     this.system = system;
     this.builder = builder;
@@ -37,8 +33,6 @@ public abstract class AbstractPointsToSolver implements IPointsToSolver {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
    */
   public abstract void solve();

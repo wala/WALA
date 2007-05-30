@@ -38,8 +38,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   private int numberOfNodes = 0;
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedGraph#getNumber(com.ibm.wala.util.graph.Node)
    */
   public int getNumber(T N) {
@@ -50,19 +48,12 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
     return n.getGraphNodeId();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.graph.NumberedGraph#getNode(int)
-   */
   @SuppressWarnings("unchecked")
   public T getNode(int number) {
     return (T) nodes[number];
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedGraph#getMaxNumber()
    */
   public int getMaxNumber() {
@@ -70,8 +61,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#iterateNodes()
    */
   public Iterator<T> iterator() {
@@ -114,8 +103,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#getNumberOfNodes()
    */
   public int getNumberOfNodes() {
@@ -127,7 +114,8 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
    * graph. Use with extreme care.
    * 
    * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
-   * @throws IllegalArgumentException  if n is null
+   * @throws IllegalArgumentException
+   *           if n is null
    */
   public void addNode(T n) {
     if (n == null) {
@@ -167,8 +155,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
   public void removeNode(T n) {
@@ -183,11 +169,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("Nodes:\n");
@@ -202,8 +183,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
    */
   public boolean containsNode(T n) {
@@ -230,8 +209,6 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
   public Iterator<T> iterateNodes(IntSet s) {

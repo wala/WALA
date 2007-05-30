@@ -48,11 +48,6 @@ public abstract class UnarySideEffect extends UnaryOperator {
     return fixedSet;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object o) {
     if (o == null) {
@@ -66,11 +61,6 @@ public abstract class UnarySideEffect extends UnaryOperator {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return 8059 * fixedSet.hashCode();

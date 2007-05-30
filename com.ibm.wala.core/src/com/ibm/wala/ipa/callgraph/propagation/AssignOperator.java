@@ -26,12 +26,6 @@ import com.ibm.wala.util.debug.Trace;
  */
 class AssignOperator extends UnaryOperator implements IPointerOperator {
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.UnaryOperator#makeEquation(com.ibm.wala.dataflow.fixpoint.IVariable,
-   *      com.ibm.wala.dataflow.fixpoint.IVariable, int)
-   */
   @Override
   public UnaryStatement makeEquation(IVariable lhs, IVariable rhs) {
     return new AssignEquation(lhs, rhs);
@@ -73,28 +67,18 @@ class AssignOperator extends UnaryOperator implements IPointerOperator {
     return "Assign";
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.Operator#hashCode()
-   */
   @Override
   public int hashCode() {
     return 9883;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-   */
   @Override
   public final boolean equals(Object o) {
     // this is a singleton
     return (this == o);
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
    */
   public boolean isComplex() {

@@ -17,7 +17,7 @@ import com.ibm.wala.annotations.NonNull;
 import com.ibm.wala.util.collections.Filter;
 
 /**
- *
+ * 
  * A filter defined by set membership
  * 
  * @author sfink
@@ -26,11 +26,12 @@ public class CollectionFilter implements Filter {
 
   @NonNull
   private final Collection<? extends Object> S;
-   
+
   public CollectionFilter(Collection<? extends Object> S) {
     this.S = S;
   }
-  /* (non-Javadoc)
+
+  /*
    * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
    */
   public boolean accepts(Object o) {

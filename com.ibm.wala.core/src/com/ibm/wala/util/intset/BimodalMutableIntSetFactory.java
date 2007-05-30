@@ -39,8 +39,6 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
    */
   public MutableIntSet makeCopy(IntSet x) {
@@ -48,8 +46,6 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
    */
   public MutableIntSet make() {

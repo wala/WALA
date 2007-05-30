@@ -18,39 +18,38 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author sfink
- *
+ * 
  */
 public class SSAReturnInstruction extends SSAInstruction {
-  
+
   /**
-   * value number of the result.  By convention result == -1 means
-   * returns void.
+   * value number of the result. By convention result == -1 means returns void.
    */
   private final int result;
+
   private final boolean isPrimitive;
+
   public SSAReturnInstruction(int result, boolean isPrimitive) {
     super();
     this.result = result;
     this.isPrimitive = isPrimitive;
   }
+
   public SSAReturnInstruction() {
     super();
     this.result = -1;
     this.isPrimitive = false;
   }
+
   @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     if (result == -1)
-      return
-	new SSAReturnInstruction();
+      return new SSAReturnInstruction();
     else
-      return
-        new SSAReturnInstruction(
-          uses==null? result: uses[0],
-	  isPrimitive);
+      return new SSAReturnInstruction(uses == null ? result : uses[0], isPrimitive);
   }
 
-   @Override
+  @Override
   public String toString(SymbolTable table, ValueDecorator d) {
     if (result == -1) {
       return "return";
@@ -58,9 +57,11 @@ public class SSAReturnInstruction extends SSAInstruction {
       return "return " + getValueString(table, d, result);
     }
   }
+
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException  if v is null
+   * @throws IllegalArgumentException
+   *           if v is null
    */
   @Override
   public void visit(IVisitor v) {
@@ -69,12 +70,13 @@ public class SSAReturnInstruction extends SSAInstruction {
     }
     v.visitReturn(this);
   }
+
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
   @Override
   public int getNumberOfUses() {
-    return (result == -1)? 0: 1;
+    return (result == -1) ? 0 : 1;
   }
 
   /**
@@ -86,6 +88,7 @@ public class SSAReturnInstruction extends SSAInstruction {
       Assertions._assert(j == 0);
     return result;
   }
+
   /**
    * @return true iff this return instruction returns a primitive value
    */
@@ -105,14 +108,16 @@ public class SSAReturnInstruction extends SSAInstruction {
   public int hashCode() {
     return result * 8933;
   }
-  /* (non-Javadoc)
+
+  /*
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override
   public boolean isFallThrough() {
     return false;
   }
-  /* (non-Javadoc)
+
+  /*
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   @Override

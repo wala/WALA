@@ -73,8 +73,6 @@ public class ParanoidHashSet<T> extends HashSet<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#add(java.lang.Object)
    */
   @Override

@@ -35,8 +35,6 @@ public class ShrikeIRFactory implements IRFactory {
   public final static boolean buildLocalMap = true;
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.IRFactory#makeCFG(com.ibm.wala.classLoader.IMethod,
    *      com.ibm.wala.ipa.cha.ClassHierarchy,
    *      com.ibm.wala.util.warnings.WarningSet)
@@ -46,8 +44,6 @@ public class ShrikeIRFactory implements IRFactory {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.IRFactory#makeIR(com.ibm.wala.classLoader.IMethod,
    *      com.ibm.wala.ipa.cha.ClassHierarchy, com.ibm.wala.ssa.SSAOptions,
    *      com.ibm.wala.util.warnings.WarningSet)

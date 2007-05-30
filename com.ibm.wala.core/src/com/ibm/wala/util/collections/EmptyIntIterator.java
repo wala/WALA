@@ -35,16 +35,10 @@ public final class EmptyIntIterator implements IntIterator {
   private EmptyIntIterator() {
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#hasNext()
-   */
   public boolean hasNext() {
     return false;
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#next()
-   */
   public int next() throws NoSuchElementException {
     throw new NoSuchElementException();
   }

@@ -44,8 +44,6 @@ public class InstanceFieldKeyWithFilter extends InstanceFieldKey implements Filt
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerKey#getTypeFilter()
    */
   public TypeFilter getTypeFilter() {

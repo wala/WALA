@@ -184,7 +184,6 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
 
 
   /**
-   * @return
    * @throws IllegalStateException
    */
   public IStructuredSelection getSelection() throws IllegalStateException {
@@ -224,8 +223,6 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -256,8 +253,6 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
     private class GraphContentProvider implements ITreeContentProvider {
 
       /*
-       * (non-Javadoc)
-       * 
        * @see org.eclipse.jface.viewers.IContentProvider#dispose()
        */
       public void dispose() {
@@ -265,8 +260,6 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer,
        *      java.lang.Object, java.lang.Object)
        */
@@ -275,8 +268,6 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
        */
       @SuppressWarnings("unchecked")
@@ -291,8 +282,6 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
        */
       public Object getParent(Object element) {
@@ -302,8 +291,6 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
        */
       @SuppressWarnings("unchecked")
@@ -312,8 +299,6 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
        */
       public Object[] getElements(Object inputElement) {

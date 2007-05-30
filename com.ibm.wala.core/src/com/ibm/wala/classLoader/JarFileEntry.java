@@ -18,7 +18,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.FileSuffixes;
 
 /**
- *
+ * 
  * An entry in a Jar file.
  * 
  * @author sfink
@@ -26,29 +26,32 @@ import com.ibm.wala.util.io.FileSuffixes;
 public class JarFileEntry implements ModuleEntry {
 
   private final String entryName;
+
   private final JarFileModule jarFileModule;
+
   private final JarFile jarFile;
+
   JarFileEntry(String entryName, JarFileModule jarFile) {
     this.entryName = entryName;
     this.jarFileModule = jarFile;
     this.jarFile = jarFile.getJarFile();
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.classLoader.ModuleEntry#getName()
    */
   public String getName() {
     return entryName;
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
    */
   public boolean isClassFile() {
     return FileSuffixes.isClassFile(getName());
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
    */
   public InputStream getInputStream() {
@@ -62,7 +65,7 @@ public class JarFileEntry implements ModuleEntry {
     }
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.classLoader.ModuleEntry#getSize()
    */
   public long getSize() {
@@ -70,27 +73,24 @@ public class JarFileEntry implements ModuleEntry {
     return jarFile.getEntry(entryName).getSize();
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     // TODO Auto-generated method stub
     return jarFile.getName() + ":" + getName();
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
    */
   public boolean isModuleFile() {
     return FileSuffixes.isJarFile(getName()) || FileSuffixes.isWarFile(getName());
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.classLoader.ModuleEntry#asModule()
    */
   public Module asModule() {
-    return new NestedJarFileModule(jarFileModule,jarFile.getEntry(entryName));
+    return new NestedJarFileModule(jarFileModule, jarFile.getEntry(entryName));
   }
 
   public JarFile getJarFile() {
@@ -98,26 +98,24 @@ public class JarFileEntry implements ModuleEntry {
   }
 
   @Override
-  public int hashCode() { 
+  public int hashCode() {
     return entryName.hashCode() * 5059 + jarFile.hashCode();
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
    */
   public String getClassName() {
     return FileSuffixes.stripSuffix(getName());
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
    */
   public boolean isSourceFile() {
     return FileSuffixes.isSourceFile(getName());
   }
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
+
   @Override
   public boolean equals(Object obj) {
     return this == obj;

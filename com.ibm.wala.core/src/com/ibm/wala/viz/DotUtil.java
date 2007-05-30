@@ -44,11 +44,7 @@ public class DotUtil {
     File f = DotUtil.writeDotFile(g, labels, dotFile);
     spawnDot(dotExe, psFile, f);
   }
-
-  /*
-   * (non-Javadoc)
-   * 
-   */
+  
   public static void spawnDot(String dotExe, String psFile, File dotFile) throws WalaException {
     if (dotFile == null) {
       throw new IllegalArgumentException("dotFile is null");
@@ -93,10 +89,6 @@ public class DotUtil {
     }
   }
   
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public static <T> File writeDotFile(Graph<T> g, NodeDecorator labels, String dotfile) throws WalaException {
 
     if (g == null) {

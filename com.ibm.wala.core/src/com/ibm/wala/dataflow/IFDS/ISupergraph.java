@@ -26,8 +26,8 @@ import com.ibm.wala.util.graph.NumberedGraph;
  * Additionally, due to expectional control flow, each method might have
  * multiple exits or multiple entries.
  * 
- * @param T type of node in the supergraph
- * @param P type of a procedure (like a box in an RSM)
+ * T type of node in the supergraph
+ * P type of a procedure (like a box in an RSM)
  * 
  * @author sfink
  */

@@ -64,16 +64,10 @@ public class ArrayIterator<T> implements Iterator<T> {
     this.last = last;
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#hasNext()
-   */
   public boolean hasNext() {
     return _cnt <= last;
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#next()
-   */
   public T next() throws NoSuchElementException {
     if (_cnt >= _elts.length) {
       throw new NoSuchElementException();
@@ -81,9 +75,6 @@ public class ArrayIterator<T> implements Iterator<T> {
     return _elts[_cnt++];
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#remove()
-   */
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

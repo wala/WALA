@@ -175,12 +175,6 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     return (policy & SMUSH_PRIMITIVE_HOLDERS) > 0;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.underConstruction.DataflowCallGraphBuilder#getInstanceKeyForAllocation(com.ibm.detox.ipa.callgraph.CGNode,
-   *      com.ibm.wala.ssa.NewInstruction)
-   */
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     if (allocation == null) {
       throw new IllegalArgumentException("allocation is null");
@@ -250,12 +244,6 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     return count;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.underConstruction.DataflowCallGraphBuilder#getInstanceKeyForMultiNewArray(com.ibm.detox.ipa.callgraph.CGNode,
-   *      com.ibm.wala.ssa.NewInstruction, int)
-   */
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     if (allocationPolicy()) {
       return siteBased.getInstanceKeyForMultiNewArray(node, allocation, dim);
@@ -264,18 +252,11 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.underConstruction.DataflowCallGraphBuilder#getInstanceKeyForStringConstant(java.lang.String)
-   */
   public InstanceKey getInstanceKeyForConstant(Object S) {
     return classBased.getInstanceKeyForConstant(S);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getStringConstantForInstanceKey(com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
   public String getStringConstantForInstanceKey(InstanceKey I) {
@@ -283,8 +264,6 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForPEI(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.ProgramCounter,
    *      com.ibm.wala.types.TypeReference)

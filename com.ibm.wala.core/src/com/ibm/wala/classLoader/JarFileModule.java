@@ -49,19 +49,12 @@ public class JarFileModule implements Module {
     return file.getName();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "JarFileModule:" + file.getName();
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.Module#getEntries()
    */
   public Iterator<ModuleEntry> getEntries() {
@@ -73,21 +66,11 @@ public class JarFileModule implements Module {
     return result.iterator();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return file.hashCode();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object arg0) {
     if (arg0 == null) {

@@ -26,14 +26,6 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class ZeroContainerCFABuilderFactory implements CallGraphBuilderFactory {
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.client.CallGraphBuilderFactory#make(com.ibm.wala.ipa.callgraph.AnalysisOptions,
-   *      com.ibm.wala.ipa.cha.ClassHierarchy, java.lang.ClassLoader,
-   *      com.ibm.wala.j2ee.J2EEAnalysisScope,
-   *      com.ibm.wala.util.warnings.WarningSet, boolean)
-   */
   public CallGraphBuilder make(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope, WarningSet warnings,
       boolean keepPointsTo) {
     return Util.makeZeroContainerCFABuilder(options, cha, scope, warnings);

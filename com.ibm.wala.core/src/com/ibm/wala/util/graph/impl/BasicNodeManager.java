@@ -18,7 +18,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.graph.NodeManager;
 
 /**
- *
+ * 
  * Simple implementation of a Node Manager.
  * 
  * @author sfink
@@ -27,35 +27,32 @@ public class BasicNodeManager<T> implements NodeManager<T> {
 
   private HashSet<T> nodes = HashSetFactory.make();
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
-   */
   public Iterator<T> iterator() {
     return nodes.iterator();
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
    */
   public int getNumberOfNodes() {
     return nodes.size();
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.util.graph.NodeManager#addNode(com.ibm.wala.util.graph.Node)
    */
   public void addNode(T n) {
     nodes.add(n);
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
   public void removeNode(T n) {
     nodes.remove(n);
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
    */
   public boolean containsNode(T N) {

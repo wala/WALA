@@ -14,7 +14,7 @@ package com.ibm.wala.util;
 import com.ibm.wala.util.collections.Filter;
 
 /**
- *
+ * 
  * A filter that accepts everything.
  * 
  * @author sfink
@@ -22,12 +22,12 @@ import com.ibm.wala.util.collections.Filter;
 public class IndiscriminateFilter implements Filter {
 
   private final static IndiscriminateFilter INSTANCE = new IndiscriminateFilter();
-  
+
   public static IndiscriminateFilter singleton() {
     return INSTANCE;
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
    */
   public boolean accepts(Object o) {

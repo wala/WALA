@@ -172,11 +172,6 @@ public class MethodSummary {
     return method.getReturnType();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "[Summary: " + method + "]";

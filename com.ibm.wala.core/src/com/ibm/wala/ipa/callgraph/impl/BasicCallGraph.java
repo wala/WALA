@@ -225,19 +225,10 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
       return context;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.detox.ipa.callgraph.CGNode#addTarget(com.ibm.wala.classLoader.CallSiteReference,
-     *      com.ibm.detox.ipa.callgraph.CGNode)
-     */
     public abstract boolean addTarget(CallSiteReference reference, CGNode target);
 
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("");
@@ -293,18 +284,12 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     return s.replace(" > Context: ", "\\n");
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   @Override
   public void removeNodeAndEdges(CGNode N) {
     Assertions.UNREACHABLE();
   }
 
   /**
-   * Method findNode.
-   * 
    * @param method
    * @return NodeImpl, or null if none found
    */
@@ -313,12 +298,6 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     return getNode(key);
   }
 
-  /**
-   * @author sfink
-   * 
-   * TODO To change the template for this generated type comment go to Window -
-   * Preferences - Java - Code Style - Code Templates
-   */
   protected final static class Key {
     private final IMethod m;
 
@@ -347,11 +326,6 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
       return (m.equals(other.m) && C.equals(other.C));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "{" + m + "," + C + "}";
@@ -359,11 +333,6 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
 
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.callgraph.CallGraph#getNodes(com.ibm.wala.classLoader.MethodReference)
-   */
   public Set<CGNode> getNodes(MethodReference m) {
     IMethod im = getClassHierarchy().resolveMethod(m);
     if (im == null) {
@@ -374,11 +343,6 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     return (result == null) ? empty : result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.CallGraph#getInterpreter(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   public SSAContextInterpreter getInterpreter(CGNode node) {
     return interpreter;
   }
@@ -426,10 +390,6 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     this.interpreter = interpreter;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   @Override
   protected NodeManager<CGNode> getNodeManager() {
     return nodeManager;

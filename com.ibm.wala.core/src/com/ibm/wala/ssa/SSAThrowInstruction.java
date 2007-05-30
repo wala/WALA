@@ -41,7 +41,7 @@ public class SSAThrowInstruction extends SSAAbstractThrowInstruction {
     v.visitThrow(this);
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   @Override

@@ -62,8 +62,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getClassLoader()
    */
   @Override
@@ -72,8 +70,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getSuperclass()
    */
   public IClass getSuperclass() throws ClassHierarchyException {
@@ -89,8 +85,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllInterfaces()
    */
   public Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException {
@@ -105,8 +99,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllInterfaces()
    */
   public Collection<IClass> getAllAncestorInterfaces() throws ClassHierarchyException {
@@ -119,8 +111,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
   public IMethod getMethod(Selector selector) {
@@ -128,8 +118,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
   public IField getField(Atom name) {
@@ -137,8 +125,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
    */
   @Override
@@ -147,8 +133,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
    */
   public IMethod getClassInitializer() {
@@ -156,8 +140,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
   public Collection<IMethod> getDeclaredMethods() {
@@ -165,8 +147,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredInstanceFields()
    */
   public Collection<IField> getDeclaredInstanceFields() {
@@ -174,8 +154,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDeclaredStaticFields()
    */
   public Collection<IField> getDeclaredStaticFields() {
@@ -183,19 +161,12 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#isInterface()
    */
   public boolean isSyntheticImplentor() {
     return realType.isInterface();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "<Synthetic " + (realType.isInterface() ? "Implementor" : "Subclass") + " " + realType.toString() + ">";
@@ -205,11 +176,6 @@ public class BypassSyntheticClass extends SyntheticClass {
     return realType;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object arg0) {
     if (arg0 == null) {
@@ -222,19 +188,12 @@ public class BypassSyntheticClass extends SyntheticClass {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return realType.hashCode() * 1621;
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getModifiers()
    */
   public int getModifiers() {
@@ -244,8 +203,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getName()
    */
   public TypeName getName() {
@@ -253,8 +210,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#isReferenceType()
    */
   public boolean isReferenceType() {
@@ -262,8 +217,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
    */
   public Collection<IClass> getDirectInterfaces() {
@@ -273,29 +226,27 @@ public class BypassSyntheticClass extends SyntheticClass {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
   public Collection<IField> getAllInstanceFields() throws ClassHierarchyException {
     return realType.getAllInstanceFields();
   }
   
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
   public Collection<IField> getAllStaticFields() throws ClassHierarchyException {
     return realType.getAllStaticFields();
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
   public Collection<IMethod> getAllMethods() throws ClassHierarchyException {
 	return realType.getAllMethods();
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
   public Collection<IField> getAllFields() throws ClassHierarchyException {

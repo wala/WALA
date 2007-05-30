@@ -67,8 +67,6 @@ public class XMLSetOfClasses extends SetOfClasses {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.impl.SetOfClasses#contains(java.lang.String)
    */
   @Override
@@ -88,8 +86,6 @@ public class XMLSetOfClasses extends SetOfClasses {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.impl.SetOfClasses#add(com.ibm.wala.classLoader.IClass)
    */
   @Override

@@ -75,8 +75,6 @@ public class ViewIRAction extends Action {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see org.eclipse.jface.action.IAction#run()
    */
   @Override

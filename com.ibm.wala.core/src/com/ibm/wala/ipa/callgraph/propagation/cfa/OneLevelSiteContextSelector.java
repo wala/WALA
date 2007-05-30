@@ -39,13 +39,6 @@ public class OneLevelSiteContextSelector implements ContextSelector {
     this.baseSelector = baseSelector;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.detox.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference,
-   *      com.ibm.wala.classLoader.IMethod)
-   */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     Context baseContext = baseSelector.getCalleeTarget(caller, site, callee, receiver);
     if (baseContext.equals(Everywhere.EVERYWHERE)) {
@@ -59,29 +52,15 @@ public class OneLevelSiteContextSelector implements ContextSelector {
     return baseSelector.mayUnderstand(caller, site, targetMethod, instance);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.callgraph.ContextSelector#getBoundOnNumberOfTargets(com.ibm.detox.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference,
-   *      com.ibm.wala.classLoader.IMethod)
-   */
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
     return baseSelector.getBoundOnNumberOfTargets(caller, site, targetMethod);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
   public void setWarnings(WarningSet newWarnings) {
     baseSelector.setWarnings(newWarnings);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.CallSiteReference)
    */
@@ -90,8 +69,6 @@ public class OneLevelSiteContextSelector implements ContextSelector {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#allSitesDispatchIdentically(com.ibm.wala.types.MethodReference)
    */
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {

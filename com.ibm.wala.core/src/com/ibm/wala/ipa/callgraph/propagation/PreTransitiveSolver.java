@@ -57,8 +57,6 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
    */
   @Override

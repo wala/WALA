@@ -351,10 +351,7 @@ public final class Atom {
     return this == obj;
   }
 
-  /**
-   * @param i
-   * @return
-   */
+
   public byte getVal(int i) throws IllegalArgumentException {
     try {
       return val[i];

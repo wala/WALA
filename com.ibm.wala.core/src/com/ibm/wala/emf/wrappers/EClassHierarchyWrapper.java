@@ -88,7 +88,6 @@ public class EClassHierarchyWrapper extends EObjectTree {
 
 
   /**
-   * @param o an EClassHierarchy
    * @return a ClassHierarchy populated according to the contents of o
    * @throws IllegalArgumentException  if cha is null
    */

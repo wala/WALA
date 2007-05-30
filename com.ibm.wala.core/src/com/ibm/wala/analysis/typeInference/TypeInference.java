@@ -217,21 +217,11 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       return true;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 9931 * type.hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       if (o instanceof DeclaredTypeOperator) {
@@ -282,21 +272,11 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       return "phi meet";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 9929;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       return (o instanceof PhiOperator);
@@ -339,21 +319,11 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       return "pi";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 9929 * 13;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       return (o instanceof PiOperator);
@@ -388,29 +358,16 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       }
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "propagate";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 99292;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       return o != null && o.getClass().equals(getClass());
@@ -496,21 +453,11 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       return "getElementType " + load;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return 9923 * load.hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       if (o instanceof GetElementType) {
@@ -727,11 +674,6 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       return type.toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.AbstractVariable#hashCode()
-     */
     @Override
     public int hashCode() {
       return hash;

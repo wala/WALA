@@ -15,37 +15,32 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- *
- * An iterator that reverses an input iterator.
- * Not very efficient.
+ * 
+ * An iterator that reverses an input iterator. Not very efficient.
  * 
  * @author sfink
  */
 public class ReverseIterator<T> implements Iterator<T> {
 
   final ArrayList<T> list = new ArrayList<T>();
+
   int nextIndex;
-  
+
   /**
-   * @param other the iterator to reverse
+   * @param other
+   *          the iterator to reverse
    */
   public ReverseIterator(Iterator<T> other) {
     while (other.hasNext()) {
       list.add(other.next());
-    } 
+    }
     nextIndex = list.size() - 1;
   }
-  
-  /* (non-Javadoc)
-   * @see java.util.Iterator#hasNext()
-   */
+
   public boolean hasNext() {
     return nextIndex > -1;
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#next()
-   */
   public T next() throws NoSuchElementException {
     if (!hasNext()) {
       throw new NoSuchElementException();
@@ -53,9 +48,6 @@ public class ReverseIterator<T> implements Iterator<T> {
     return list.get(nextIndex--);
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#remove()
-   */
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

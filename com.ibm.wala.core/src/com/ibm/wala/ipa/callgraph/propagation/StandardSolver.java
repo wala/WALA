@@ -30,8 +30,6 @@ public class StandardSolver extends AbstractPointsToSolver {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
    */
   @Override

@@ -48,13 +48,6 @@ public class SparseIntSet implements IntSet {
    */
   protected int size = 0;
 
-  /*****************************************************************************
-   * * * Constructors & Factories *
-   ****************************************************************************/
-
-  /**
-   * @param size
-   */
   protected SparseIntSet(int size) {
     elements = new int[size];
     this.size = size;
@@ -63,8 +56,6 @@ public class SparseIntSet implements IntSet {
   /**
    * Subclasses should use this with extreme care. Do not allow the backing
    * array to escape elsewhere.
-   * 
-   * @param backingArray
    */
   protected SparseIntSet(int[] backingArray) {
     if (backingArray == null) {
@@ -98,9 +89,6 @@ public class SparseIntSet implements IntSet {
     this.size = S.size;
   }
 
-  /**
-   * @param S
-   */
   public SparseIntSet(IntSet S) {
     if (S instanceof SparseIntSet) {
       cloneState((SparseIntSet) S);
@@ -130,7 +118,6 @@ public class SparseIntSet implements IntSet {
   }
 
   /**
-   * @param x
    * @return index i s.t. elements[i] == x, or -1 if not found.
    */
   public final int getIndex(int x) {
@@ -140,25 +127,14 @@ public class SparseIntSet implements IntSet {
     return IntSetUtil.binarySearch(elements, x, 0, size - 1);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public final int size() {
     return size;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public final boolean isEmpty() {
     return size == 0;
   }
 
-  /**
-   * @param idx
-   */
   public final int elementAt(int idx) throws NoSuchElementException {
     if (elements == null || idx >= size) {
       throw new NoSuchElementException("Index: " + idx);
@@ -166,9 +142,6 @@ public class SparseIntSet implements IntSet {
     return elements[idx];
   }
 
-  /**
-   * @param that
-   */
   private boolean sameValueInternal(SparseIntSet that) {
     if (size != that.size) {
       return false;
@@ -182,10 +155,6 @@ public class SparseIntSet implements IntSet {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public boolean sameValue(IntSet that) {
     if (that instanceof SparseIntSet) {
       return sameValueInternal((SparseIntSet) that);
@@ -247,14 +216,12 @@ public class SparseIntSet implements IntSet {
 
   /**
    * Compute the asymmetric difference of two sets, a \ b.
-   * 
    */
   public static SparseIntSet diff(SparseIntSet A, SparseIntSet B) {
     return new SparseIntSet(diffInternal(A, B));
   }
 
   public static int[] diffInternal(SparseIntSet A, SparseIntSet B) {
-
     if (A == null) {
       throw new IllegalArgumentException("A is null");
     }
@@ -312,11 +279,6 @@ public class SparseIntSet implements IntSet {
     return ar;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer sb = new StringBuffer(6 * size);
@@ -379,11 +341,6 @@ public class SparseIntSet implements IntSet {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.intset.IntSet#intersect(com.ibm.wala.util.intset.IntSet)
-   */
   public IntSet intersection(IntSet that) {
     if (that instanceof SparseIntSet) {
       MutableSparseIntSet temp = new MutableSparseIntSet(this);
@@ -413,8 +370,6 @@ public class SparseIntSet implements IntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#iterator()
    */
   public IntIterator intIterator() {
@@ -445,8 +400,6 @@ public class SparseIntSet implements IntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
    */
   public void foreach(IntSetAction action) {
@@ -455,8 +408,6 @@ public class SparseIntSet implements IntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
    */
   public void foreachExcluding(IntSet X, IntSetAction action) {
@@ -468,8 +419,6 @@ public class SparseIntSet implements IntSet {
   }
 
   /**
-   * @param s
-   * @param j
    * @return a new sparse int set which adds j to s
    * @throws IllegalArgumentException  if s is null
    */
@@ -503,8 +452,6 @@ public class SparseIntSet implements IntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
    */
   public boolean isSubset(IntSet that) {
@@ -533,8 +480,6 @@ public class SparseIntSet implements IntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
    */
   public boolean containsAny(IntSet set) {

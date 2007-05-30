@@ -16,9 +16,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
  * A key which represents the return value for a node
  */
 public class ReturnValueKey extends NodeKey {
-  /**
-   * @param node
-   */
   public ReturnValueKey(CGNode node) {
     super(node);
   }
@@ -28,24 +25,13 @@ public class ReturnValueKey extends NodeKey {
     return "[Ret-V:" + getNode() + "]";
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     return (obj instanceof ReturnValueKey) && super.internalEquals(obj);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return 1283 * super.internalHashCode();
   }
-
 }

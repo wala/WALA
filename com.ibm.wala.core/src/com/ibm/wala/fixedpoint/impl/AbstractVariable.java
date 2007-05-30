@@ -21,34 +21,20 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
 public abstract class AbstractVariable extends NodeWithNumber implements IVariable {
 
   private int orderNumber;
- 
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     // we assume the solver manages these canonically
     return this == obj;
   }
-  
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public abstract int hashCode();
-  
-  
-  /**
-   * @return Returns the orderNumber.
-   */
+
   public int getOrderNumber() {
     return orderNumber;
   }
-  /**
-   * @param orderNumber The orderNumber to set.
-   */
+
   public void setOrderNumber(int orderNumber) {
     this.orderNumber = orderNumber;
   }

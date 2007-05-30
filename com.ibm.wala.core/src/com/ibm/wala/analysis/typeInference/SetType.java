@@ -49,9 +49,6 @@ public class SetType extends TypeAbstraction {
   }
 
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.analysis.typeInference.TypeAbstraction#meet(com.ibm.wala.analysis.typeInference.TypeAbstraction)
-   */
   @Override
   public TypeAbstraction meet(TypeAbstraction rhs) {
     // TODO Auto-generated method stub
@@ -59,9 +56,6 @@ public class SetType extends TypeAbstraction {
     return null;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.analysis.typeInference.TypeAbstraction#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     // TODO: make SetTypes of size 1 equal PointTypes.
@@ -83,9 +77,6 @@ public class SetType extends TypeAbstraction {
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.analysis.typeInference.TypeAbstraction#hashCode()
-   */
   @Override
   public int hashCode() {
     return hashCode;

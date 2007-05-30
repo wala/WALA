@@ -48,8 +48,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#size()
    */
   public int size() {
@@ -57,8 +55,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#isEmpty()
    */
   public boolean isEmpty() {
@@ -66,8 +62,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#containsKey(java.lang.Object)
    */
   public boolean containsKey(Object key) {
@@ -75,8 +69,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#containsValue(java.lang.Object)
    */
   public boolean containsValue(Object value) {
@@ -84,8 +76,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#get(java.lang.Object)
    */
   public V get(Object key) {
@@ -93,8 +83,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#put(java.lang.Object, java.lang.Object)
    */
   public V put(K key, V value) {
@@ -132,8 +120,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#remove(java.lang.Object)
    */
   public V remove(Object key) {
@@ -141,8 +127,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#putAll(java.util.Map)
    */
   @SuppressWarnings("unchecked")
@@ -176,8 +160,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#clear()
    */
   public void clear() {
@@ -185,8 +167,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#keySet()
    */
   @SuppressWarnings("unchecked")
@@ -195,8 +175,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#values()
    */
   @SuppressWarnings("unchecked")
@@ -205,8 +183,6 @@ public class BimodalMap<K, V> implements Map<K, V> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Map#entrySet()
    */
   @SuppressWarnings("unchecked")

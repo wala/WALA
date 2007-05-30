@@ -89,11 +89,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     H = makeHeapModel();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("PointerAnalysis:\n");
@@ -113,8 +108,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getPointsToSet(com.ibm.wala.ipa.callgraph.propagation.PointerKey)
    */
   public OrdinalSet<InstanceKey> getPointsToSet(PointerKey key) {
@@ -440,8 +433,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getHeapModel()
    */
   public HeapModel getHeapModel() {
@@ -451,8 +442,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   private class HModel implements HeapModel {
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys()
      */
     public Iterator iteratePointerKeys() {
@@ -460,8 +449,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForAllocation(com.ibm.detox.ipa.callgraph.CGNode,
      *      com.ibm.wala.ssa.NewInstruction)
      */
@@ -470,8 +457,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForMultiNewArray(com.ibm.detox.ipa.callgraph.CGNode,
      *      com.ibm.wala.ssa.NewInstruction, int)
      */
@@ -480,8 +465,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForStringConstant(java.lang.String)
      */
     public InstanceKey getInstanceKeyForConstant(Object S) {
@@ -504,8 +487,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.detox.ipa.callgraph.CGNode,
      *      int)
      */
@@ -514,8 +495,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.detox.ipa.callgraph.CGNode,
      *      int)
      */
@@ -524,8 +503,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForReturnValue(com.ibm.detox.ipa.callgraph.CGNode)
      */
     public PointerKey getPointerKeyForReturnValue(CGNode node) {
@@ -533,8 +510,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForExceptionalReturnValue(com.ibm.detox.ipa.callgraph.CGNode)
      */
     public PointerKey getPointerKeyForExceptionalReturnValue(CGNode node) {
@@ -542,8 +517,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForStaticField(com.ibm.wala.classLoader.FieldReference)
      */
     public PointerKey getPointerKeyForStaticField(IField f) {
@@ -551,8 +524,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForInstance(com.ibm.wala.ipa.callgraph.propagation.InstanceKey,
      *      com.ibm.wala.classLoader.FieldReference)
      */
@@ -562,8 +533,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForArrayContents(com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
      */
     public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
@@ -576,8 +545,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#iteratePointerKeys()
    */
   public Collection<PointerKey> getPointerKeys() {

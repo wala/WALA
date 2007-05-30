@@ -108,11 +108,6 @@ public class OrdinalSet<T> implements Iterable<T> {
     return new OrdinalSet<T>(isect, A.mapping);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return new Iterator2Collection<T>(iterator()).toString();

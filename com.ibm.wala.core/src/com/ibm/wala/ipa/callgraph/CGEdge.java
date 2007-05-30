@@ -14,29 +14,29 @@ package com.ibm.wala.ipa.callgraph;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- *
+ * 
  * An explicit representation of an edge in a call graph.
  * 
- * NB: We do NOT enforce that any particular call graph implementation
- * actually contains CGEdge objects.  In fact, the CGEdge is currently
- * not mentioned anywhere else in the callgraph API.  This class is just
- * provided since some clients might find it a useful utility.
- *
- * This abstraction does not include a call site reference, so this
- * edge might actually represent several distinct call sites.
+ * NB: We do NOT enforce that any particular call graph implementation actually
+ * contains CGEdge objects. In fact, the CGEdge is currently not mentioned
+ * anywhere else in the callgraph API. This class is just provided since some
+ * clients might find it a useful utility.
+ * 
+ * This abstraction does not include a call site reference, so this edge might
+ * actually represent several distinct call sites.
  * 
  * @author sfink
  */
 public class CGEdge {
   private final CGNode src;
+
   private final CGNode dest;
+
   public CGEdge(CGNode src, CGNode dest) {
     this.src = src;
     this.dest = dest;
   }
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
+
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -48,17 +48,12 @@ public class CGEdge {
     CGEdge other = (CGEdge) obj;
     return src.equals(other.src) && dest.equals(other.dest);
   }
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
+
   @Override
   public int hashCode() {
     return 4027 * src.hashCode() + dest.hashCode();
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "[" + src.toString() + "," + dest.toString() + "]";

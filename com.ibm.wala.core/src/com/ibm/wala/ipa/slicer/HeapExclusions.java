@@ -43,7 +43,6 @@ public class HeapExclusions {
   }
 
   /**
-   * @param result
    * @return the PointerKeys that are not exluded
    * @throws IllegalArgumentException  if s is null
    */

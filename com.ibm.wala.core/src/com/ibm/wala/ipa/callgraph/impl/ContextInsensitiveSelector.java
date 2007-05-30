@@ -31,35 +31,26 @@ public class ContextInsensitiveSelector implements ContextSelector {
     return true;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.detox.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.detox.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
-   */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     return Everywhere.EVERYWHERE;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.detox.ipa.callgraph.ContextSelector#getBoundOnNumberOfTargets(com.ibm.detox.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
-   */
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
     return 1;
   }
   
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
   public void setWarnings(WarningSet newWarnings) {
     // this object is not bound to a WarningSet
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.classLoader.CallSiteReference)
    */
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
     return true;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.types.MethodReference)
    */
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {

@@ -188,7 +188,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
   }
 
   /*
-   * TODO: cache for efficiency? (non-Javadoc)
+   * TODO: cache for efficiency? 
    * 
    * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
    */
@@ -319,7 +319,6 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
   /**
    * UNDER CONSTRUCTION
    * 
-   * @return
    * @throws InvalidClassFileException 
    */
   public MethodTypeSignature getMethodTypeSignature() throws InvalidClassFileException {

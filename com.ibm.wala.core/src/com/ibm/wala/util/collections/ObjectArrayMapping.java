@@ -45,9 +45,6 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   */
   public T getMappedObject(int n) throws NoSuchElementException {
     if (n >= array.length) {
       throw new NoSuchElementException("n too big: " + n);
@@ -55,9 +52,6 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     return array[n];
   }
 
-  /*
-   * (non-Javadoc)
-   */
   public int getMappedIndex(Object o) {
     if (map.get(o) == null) {
       return -1;
@@ -69,25 +63,15 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     return map.get(o) != null;
   }
 
-  /*
-   * (non-Javadoc)
-   */
   public int getMappingSize() {
     return array.length;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.intset.OrdinalSetMapping#iterator()
-   */
   public Iterator<T> iterator() {
     return map.keySet().iterator();
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.OrdinalSetMapping#makeSingleton(int)
    */
   public OrdinalSet<T> makeSingleton(int i) throws UnimplementedError {

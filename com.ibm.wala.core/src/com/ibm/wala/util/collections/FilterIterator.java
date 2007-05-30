@@ -58,11 +58,6 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
     done = true;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.Iterator#next()
-   */
   @SuppressWarnings("unchecked")
   public T next() throws NoSuchElementException {
     if (done) {
@@ -73,29 +68,14 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
     return o;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.Iterator#hasNext()
-   */
   public boolean hasNext() {
     return !done;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.util.Iterator#remove()
-   */
   public void remove() throws UnsupportedOperationException {
     throw new java.lang.UnsupportedOperationException();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "filter " + f + " of " + i;

@@ -750,8 +750,6 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
   }
   
   /**
-   * @param index
-   *          an instruction index
    * @return the basic block which contains this instruction.
    */
   public IBasicBlock getBlockForInstruction(SSAInstruction s) {

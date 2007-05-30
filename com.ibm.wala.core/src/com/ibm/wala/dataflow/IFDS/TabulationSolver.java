@@ -912,21 +912,11 @@ public class TabulationSolver<T, P> {
       return result.toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
       return s_p.hashCode() + d1 * 401 + n.hashCode() * 409 + d2 * 419;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object arg0) {
       if (getClass().equals(arg0.getClass())) {
@@ -992,11 +982,6 @@ public class TabulationSolver<T, P> {
       return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
 
@@ -1040,8 +1025,6 @@ public class TabulationSolver<T, P> {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.dataflow.IFDS.TabulationResult#getProblem()
      */
     public TabulationProblem getProblem() {
@@ -1049,8 +1032,6 @@ public class TabulationSolver<T, P> {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.dataflow.IFDS.TabulationResult#getSupergraphNodesReached()
      */
     public Collection<T> getSupergraphNodesReached() {
@@ -1081,10 +1062,6 @@ public class TabulationSolver<T, P> {
       super(100);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     */
     @Override
     protected boolean compareElements(Object elt1, Object elt2) {
       PathEdge p1 = (PathEdge) elt1;

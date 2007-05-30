@@ -75,7 +75,8 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * 
    * @param s
    *          the string to copy
-   * @throws IllegalArgumentException  if s is null
+   * @throws IllegalArgumentException
+   *           if s is null
    */
   public OffsetBitVector(OffsetBitVector s) {
     if (s == null) {
@@ -248,7 +249,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
   /**
    * Check if the intersection of the two sets is empty
    * 
-   * @param other
+   * @param set
    *          the set to check intersection with
    */
   @Override
@@ -363,7 +364,8 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * 
    * @param set
    *          the bit set to copy the bits from
-   * @throws IllegalArgumentException  if set is null
+   * @throws IllegalArgumentException
+   *           if set is null
    */
   public final void copyBits(OffsetBitVector set) {
     if (set == null) {
@@ -450,9 +452,6 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     }
   }
 
-  /**
-   * @param vector
-   */
   @Override
   public void andNot(OffsetBitVector set) {
     if (this == set) {

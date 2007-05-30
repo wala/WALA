@@ -33,8 +33,6 @@ public class WarningSet extends HashSet<Warning> {
   public static final long serialVersionUID = 998857762163892376L;
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#add(java.lang.Object)
    */
   @Override
@@ -43,11 +41,6 @@ public class WarningSet extends HashSet<Warning> {
   }
   private final static int MAX_PATHS = 200;
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     TreeSet<Warning> T = new TreeSet<Warning>(new DescendingComparator());
@@ -140,15 +133,10 @@ public class WarningSet extends HashSet<Warning> {
   }
 
   /**
-   * 
-   * @author sfink
-   * 
    * This comparator reverses the "natural" notion of severity in Warnings.
    */
   public static class DescendingComparator implements Comparator<Warning> {
     /*
-     * (non-Javadoc)
-     * 
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     public int compare(Warning w1, Warning w2) {

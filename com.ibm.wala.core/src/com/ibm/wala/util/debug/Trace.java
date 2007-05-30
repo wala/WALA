@@ -113,14 +113,8 @@ public class Trace {
     }
   }
 
-  /**
-   * @param string
-   * @param args
-   */
   public static synchronized void format(String format, Object ... args) {
-    /**
-     * @param string
-     */
+
     if (setTraceFile()) {
       out.format(format, args);
     }

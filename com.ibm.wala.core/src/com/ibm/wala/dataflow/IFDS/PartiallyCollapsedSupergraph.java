@@ -54,7 +54,7 @@ import com.ibm.wala.util.perf.EngineTimings;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
- *
+ * 
  * A Supergraph customized for the case when some nodes are "collapsible",
  * meaning the result for every basic block in a collapsible node is identical.
  * This graph is an InterproceduralCFG for uncollapsable nodes, hooked up to
@@ -62,7 +62,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  * 
  * @author sfink
  */
-public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implements ISupergraph<Object,CGNode> {
+public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implements ISupergraph<Object, CGNode> {
 
   /**
    * DEBUG_LEVEL:
@@ -177,8 +177,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
    */
   @Override
@@ -187,8 +185,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
    */
   @Override
@@ -197,19 +193,12 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.j2ee.transactions.ISupergraph#getFakeRootNode()
    */
   public CGNode getMain() {
     return cg.getFakeRootNode();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.ISupergraph#getEntryForProcedure(java.lang.Object)
-   */
   public Object getEntryForProcedure(Object p) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(p != null);
@@ -224,21 +213,11 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.ISupergraph#getEntryForProcedure(java.lang.Object)
-   */
   public Object[] getEntries(Object n) {
     Object p = getProcOf(n);
     return new Object[] { getEntryForProcedure(p) };
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.ISupergraph#getExits
-   */
   public Object[] getExitsForProcedure(CGNode node) {
     if (noCollapse.contains(node)) {
       ControlFlowGraph cfg = partialIPFG.getCFG(node);
@@ -254,11 +233,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.ISupergraph#isCall(java.lang.Object)
-   */
   public boolean isCall(Object object) {
     if (object instanceof IBasicBlock) {
       IBasicBlock b = (IBasicBlock) object;
@@ -278,11 +252,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.ISupergraph#isExit(java.lang.Object)
-   */
   public boolean isEntry(Object object) {
     if (object instanceof IBasicBlock) {
       IBasicBlock b = (IBasicBlock) object;
@@ -292,11 +261,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.ISupergraph#isExit(java.lang.Object)
-   */
   public boolean isExit(Object object) {
     if (object instanceof IBasicBlock) {
       IBasicBlock b = (IBasicBlock) object;
@@ -306,21 +270,11 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.ISupergraph#getCalledNodes(java.lang.Object)
-   */
   @SuppressWarnings("unchecked")
   public Iterator<Object> getCalledNodes(Object n) {
     return new FilterIterator<Object>(edgeManager.getSuccNodes(n), isEntry);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.ISupergraph#getReturnSite(java.lang.Object)
-   */
   public Iterator<? extends Object> getReturnSites(Object object) {
     if (object instanceof IBasicBlock) {
       return partialIPFG.getReturnSites((BasicBlockInContext) object);
@@ -330,11 +284,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCallSites(java.lang.Object)
-   */
   public Iterator<? extends Object> getCallSites(Object object) {
     if (object instanceof IBasicBlock) {
       return partialIPFG.getCallSites((BasicBlockInContext) object);
@@ -344,11 +293,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.ISupergraph#getProcOf(java.lang.Object)
-   */
   public CGNode getProcOf(Object n) {
     if (n instanceof IBasicBlock) {
       if (Assertions.verifyAssertions) {
@@ -362,9 +306,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  /**
-   * @author sfink
-   */
   private class EdgeManager implements NumberedEdgeManager<Object> {
 
     /**
@@ -480,8 +421,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
      */
     @SuppressWarnings("unchecked")
@@ -528,10 +467,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     */
     public IntSet getPredNodeNumbers(Object node) {
       if (node instanceof IBasicBlock) {
         Set incoming = incomingTransverseEdges.get(node);
@@ -585,8 +520,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
      */
     @SuppressWarnings("unchecked")
@@ -596,8 +529,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
      */
     public Iterator<? extends Object> getSuccNodes(Object N) {
@@ -641,8 +572,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
      */
     public IntSet getSuccNodeNumbers(Object N) {
@@ -711,8 +640,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
      */
 
@@ -723,8 +650,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
      *      java.lang.Object)
      */
@@ -737,8 +662,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
      */
     public void removeAllIncidentEdges(Object node) {
@@ -746,23 +669,15 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     */
     public void removeIncomingEdges(Object node) {
       // TODO Auto-generated method stub
       Assertions.UNREACHABLE();
 
     }
 
-    /*
-     * (non-Javadoc)
-     */
     public void removeOutgoingEdges(Object node) {
       // TODO Auto-generated method stub
       Assertions.UNREACHABLE();
-
     }
 
   }
@@ -841,8 +756,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
      */
     public Iterator<Object> iterator() {
@@ -850,8 +763,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
      */
     public int getNumberOfNodes() {
@@ -859,8 +770,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
      */
     public void addNode(Object n) {
@@ -869,8 +778,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
      */
     public void removeNode(Object n) {
@@ -879,8 +786,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
      */
     public boolean containsNode(Object N) {
@@ -891,11 +796,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       StringBuffer result = new StringBuffer();
@@ -917,17 +817,10 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       return collapsedNodes.iterator();
     }
 
-    /**
-     * 
-     */
     private Iterator iterateUncollapsedNodes() {
       return partialIPFG.iterator();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     */
     public int getNumber(Object N) {
       if (N instanceof CollapsedNode) {
         return ((CollapsedNode) N).number;
@@ -942,10 +835,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     */
     public int getMaxNumber() {
       return partialIPFG.getMaxNumber() + collapsedNodes.size();
     }
@@ -958,8 +847,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getEntriesForProcedure(java.lang.Object)
    */
   public Object[] getEntriesForProcedure(CGNode object) {
@@ -970,8 +857,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainEntry()
    */
   public Object getMainEntry() {
@@ -979,8 +864,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainExit()
    */
   public Object getMainExit() {
@@ -1000,8 +883,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isReturn(java.lang.Object)
    */
   public boolean isReturn(Object object) {
@@ -1025,8 +906,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object,
    *      java.lang.Object)
    */
@@ -1055,8 +934,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getNumberOfBlocks(java.lang.Object)
    */
   public int getNumberOfBlocks(CGNode procedure) {
@@ -1075,8 +952,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlockNumber(java.lang.Object)
    */
   public int getLocalBlockNumber(Object n) {
@@ -1088,8 +963,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlock(java.lang.Object,
    *      int)
    */
@@ -1102,10 +975,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public int getNumber(Object N) {
     return nodeManager.getNumber(N);
   }
@@ -1116,10 +985,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     return null;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public int getMaxNumber() {
     return nodeManager.getMaxNumber();
   }
@@ -1130,18 +995,10 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     return null;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public IntSet getSuccNodeNumbers(Object node) {
     return edgeManager.getSuccNodeNumbers(node);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public IntSet getPredNodeNumbers(Object node) {
     return edgeManager.getPredNodeNumbers(node);
   }

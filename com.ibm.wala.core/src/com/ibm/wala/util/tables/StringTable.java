@@ -73,7 +73,6 @@ public class StringTable extends Table<String> implements Cloneable {
    * read from a text file obtained as a resource
    * 
    * @param fileName
-   * @return
    * @throws IOException
    * @throws WalaException
    */
@@ -86,9 +85,6 @@ public class StringTable extends Table<String> implements Cloneable {
    * read from a text file obtained as a resource
    * 
    * @param fileName
-   * @return
-   * @throws IOException
-   * @throws WalaException
    * @throws IllegalArgumentException  if p is null
    */
   public static StringTable readFromTextFile(Plugin p, String fileName) throws IOException {

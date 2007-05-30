@@ -7,7 +7,7 @@
  *
  * Contributors:
  *     IBM Corporation - initial API and implementation
- *******************************************************************************/                                                                         
+ *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
 import java.util.Collections;
@@ -68,7 +68,8 @@ public class PropagationGraph implements IFixedPointSystem {
   /**
    * Track edges (equations) that are not represented implicitly
    */
-  private final EdgeManager<INodeWithNumber> edgeManager = new SparseNumberedEdgeManager<INodeWithNumber>(nodeManager, 2, BasicNaturalRelation.SIMPLE);
+  private final EdgeManager<INodeWithNumber> edgeManager = new SparseNumberedEdgeManager<INodeWithNumber>(nodeManager, 2,
+      BasicNaturalRelation.SIMPLE);
 
   private final DelegateGraph delegateGraph = new DelegateGraph();
 
@@ -82,7 +83,7 @@ public class PropagationGraph implements IFixedPointSystem {
    * i op j is an equation in the graph
    * 
    */
-  private final SmallMap<UnaryOperator,IBinaryNaturalRelation> implicitUnaryMap = new SmallMap<UnaryOperator,IBinaryNaturalRelation>();
+  private final SmallMap<UnaryOperator, IBinaryNaturalRelation> implicitUnaryMap = new SmallMap<UnaryOperator, IBinaryNaturalRelation>();
 
   /**
    * The inverse of relations in the implicit map
@@ -90,7 +91,7 @@ public class PropagationGraph implements IFixedPointSystem {
    * for UnaryOperator op, let R be invImplicitMap.get(op) then (i,j) \in R
    * implies j op i is an equation in the graph
    */
-  private final SmallMap<UnaryOperator, IBinaryNaturalRelation> invImplicitUnaryMap = new SmallMap<UnaryOperator,IBinaryNaturalRelation>();
+  private final SmallMap<UnaryOperator, IBinaryNaturalRelation> invImplicitUnaryMap = new SmallMap<UnaryOperator, IBinaryNaturalRelation>();
 
   /**
    * Number of implicit unary equations registered
@@ -118,8 +119,7 @@ public class PropagationGraph implements IFixedPointSystem {
     byte[] implementation = null;
     if (op instanceof AssignOperator) {
       // lots of assignments.
-      implementation = new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY,
-          BasicNaturalRelation.SIMPLE_SPACE_STINGY };
+      implementation = new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY, BasicNaturalRelation.SIMPLE_SPACE_STINGY };
     } else {
       // assume sparse assignments with any other operator.
       implementation = new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY };
@@ -168,8 +168,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
      */
     @Override
@@ -178,8 +176,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
      */
     @Override
@@ -199,7 +195,8 @@ public class PropagationGraph implements IFixedPointSystem {
 
   /**
    * @param eq
-   * @throws IllegalArgumentException  if eq is null
+   * @throws IllegalArgumentException
+   *           if eq is null
    */
   public void addStatement(GeneralStatement eq) {
     if (eq == null) {
@@ -240,7 +237,7 @@ public class PropagationGraph implements IFixedPointSystem {
       delegateGraph.addEdge(rhs, eq);
     }
   }
- 
+
   /**
    * @return true iff this equation should be represented implicitly in this
    *         data structure
@@ -251,7 +248,6 @@ public class PropagationGraph implements IFixedPointSystem {
     return (op instanceof AssignOperator || op instanceof PropagationCallGraphBuilder.FilterOperator);
   }
 
-
   public void removeVariable(PointsToSetVariable p) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(getNumberOfStatementsThatDef(p) == 0);
@@ -259,7 +255,7 @@ public class PropagationGraph implements IFixedPointSystem {
     }
     delegateGraph.removeNode(p);
   }
-  
+
   private void addImplicitStatement(UnaryStatement eq) {
     if (DEBUG) {
       Trace.println("addImplicitStatement " + eq);
@@ -279,7 +275,7 @@ public class PropagationGraph implements IFixedPointSystem {
       iR.add(rhs, lhs);
     }
   }
-  
+
   private void removeImplicitStatement(UnaryStatement eq) {
     if (DEBUG) {
       Trace.println("removeImplicitStatement " + eq);
@@ -290,12 +286,11 @@ public class PropagationGraph implements IFixedPointSystem {
       Trace.println("lhs rhs " + lhs + " " + rhs);
     }
     IBinaryNaturalRelation R = findOrCreateRelation(implicitUnaryMap, (UnaryOperator) eq.getOperator());
-    R.remove(lhs,rhs);
+    R.remove(lhs, rhs);
     IBinaryNaturalRelation iR = findOrCreateRelation(invImplicitUnaryMap, (UnaryOperator) eq.getOperator());
-    iR.remove(rhs,lhs);
+    iR.remove(rhs, lhs);
     implicitUnaryCount--;
   }
-
 
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatements() {
@@ -326,20 +321,10 @@ public class PropagationGraph implements IFixedPointSystem {
       this.defs = defs.intIterator();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#hasNext()
-     */
     public boolean hasNext() {
       return defs.hasNext();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#next()
-     */
     public AbstractStatement next() {
       int l = defs.next();
       IVariable lhs = (IVariable) delegateGraph.getNode(l);
@@ -351,11 +336,6 @@ public class PropagationGraph implements IFixedPointSystem {
       return temp;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#remove()
-     */
     public void remove() {
       // TODO Auto-generated method stub
       Assertions.UNREACHABLE();
@@ -381,20 +361,10 @@ public class PropagationGraph implements IFixedPointSystem {
       this.uses = uses.intIterator();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#hasNext()
-     */
     public boolean hasNext() {
       return uses.hasNext();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#next()
-     */
     public AbstractStatement next() {
       int r = uses.next();
       IVariable rhs = (IVariable) delegateGraph.getNode(r);
@@ -405,11 +375,6 @@ public class PropagationGraph implements IFixedPointSystem {
       return temp;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#remove()
-     */
     public void remove() {
       // TODO Auto-generated method stub
       Assertions.UNREACHABLE();
@@ -449,20 +414,10 @@ public class PropagationGraph implements IFixedPointSystem {
       }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#hasNext()
-     */
     public boolean hasNext() {
       return innerDelegate != null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#next()
-     */
     public AbstractStatement next() {
       IntPair p = (IntPair) innerDelegate.next();
       int lhs = p.getX();
@@ -475,11 +430,6 @@ public class PropagationGraph implements IFixedPointSystem {
       return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#remove()
-     */
     public void remove() {
       // TODO Auto-generated method stub
       Assertions.UNREACHABLE();
@@ -487,28 +437,20 @@ public class PropagationGraph implements IFixedPointSystem {
     }
   }
 
-  /**
-   * @param eq
-   */
   public void removeStatement(IFixedPointStatement eq) {
     if (useImplicitRepresentation(eq)) {
-      removeImplicitStatement((UnaryStatement)eq);
+      removeImplicitStatement((UnaryStatement) eq);
     } else {
       delegateStatements.remove(eq);
       delegateGraph.removeNodeAndEdges(eq);
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#reorder()
-   */
   public void reorder() {
     VariableGraphView graph = new VariableGraphView();
 
     Iterator<IVariable> order = DefaultFixedPointSystem.makeSCCTopOrder(graph);
-    
+
     int number = 0;
     while (order.hasNext()) {
       Object elt = order.next();
@@ -532,8 +474,6 @@ public class PropagationGraph implements IFixedPointSystem {
   private class VariableGraphView extends AbstractNumberedGraph<IVariable> {
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
      */
     @Override
@@ -542,8 +482,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
      */
     @Override
@@ -552,8 +490,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
      */
     @Override
@@ -562,8 +498,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
      */
     @Override
@@ -573,8 +507,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
      */
     @Override
@@ -584,8 +516,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
      */
     @Override
@@ -595,8 +525,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
      */
     @Override
@@ -637,8 +565,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
      */
     public int getPredNodeCount(INodeWithNumber N) {
@@ -656,8 +582,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
      */
     @Override
@@ -696,8 +620,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
      */
     @Override
@@ -714,8 +636,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
      *      java.lang.Object)
      */
@@ -725,8 +645,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(java.lang.Object)
      */
     @Override
@@ -735,8 +653,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
      */
     @Override
@@ -746,8 +662,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
      */
     @Override
@@ -760,9 +674,6 @@ public class PropagationGraph implements IFixedPointSystem {
 
   }
 
-  /*
-   * (non-Javadoc)
-   */
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatementsThatUse(IVariable v) {
     if (v == null) {
@@ -784,11 +695,6 @@ public class PropagationGraph implements IFixedPointSystem {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#getStatementsThatDef(com.ibm.wala.dataflow.fixpoint.IVariable)
-   */
   @SuppressWarnings("unchecked")
   public Iterator<AbstractStatement> getStatementsThatDef(IVariable v) {
     if (v == null) {
@@ -815,7 +721,9 @@ public class PropagationGraph implements IFixedPointSystem {
    * Note that this implementation consults the implicit relation for each and
    * every operator cached. This will be inefficient if there are many implicit
    * operators.
-   * @throws IllegalArgumentException  if v is null
+   * 
+   * @throws IllegalArgumentException
+   *           if v is null
    * 
    */
   public int getNumberOfStatementsThatUse(IVariable v) {
@@ -838,11 +746,6 @@ public class PropagationGraph implements IFixedPointSystem {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#getNumberOfStatementsThatUse(com.ibm.wala.dataflow.fixpoint.AbstractVariable)
-   */
   public int getNumberOfStatementsThatDef(IVariable v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -863,11 +766,6 @@ public class PropagationGraph implements IFixedPointSystem {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#getVariables()
-   */
   @SuppressWarnings("unchecked")
   public Iterator<IVariable> getVariables() {
     Iterator<IVariable> it = new FilterIterator(delegateGraph.iterator(), new Filter() {
@@ -879,8 +777,6 @@ public class PropagationGraph implements IFixedPointSystem {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
    */
   public void performVerboseAction() {
@@ -905,11 +801,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#containsStatement(com.ibm.wala.dataflow.fixpoint.AbstractStatement)
-   */
   public boolean containsStatement(IFixedPointStatement eq) {
     if (useImplicitRepresentation(eq)) {
       UnaryStatement ueq = (UnaryStatement) eq;
@@ -941,19 +832,10 @@ public class PropagationGraph implements IFixedPointSystem {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowGraph#containsVariable(com.ibm.wala.dataflow.fixpoint.IVariable)
-   */
   public boolean containsVariable(IVariable v) {
     return delegateGraph.containsNode(v);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void addStatement(IFixedPointStatement statement) {
     if (statement instanceof UnaryStatement) {
       addStatement((UnaryStatement) statement);
@@ -963,7 +845,6 @@ public class PropagationGraph implements IFixedPointSystem {
       Assertions.UNREACHABLE("unexpected: " + statement.getClass());
     }
   }
-
 
   /**
    * A graph of just the variables in the system. v1 -> v2 iff there exists an
@@ -1005,8 +886,6 @@ public class PropagationGraph implements IFixedPointSystem {
     abstract boolean isInteresting(AbstractStatement eq);
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
      */
     @Override
@@ -1015,8 +894,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
      */
     @Override
@@ -1025,8 +902,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
      */
     @Override
@@ -1035,8 +910,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
      */
     @Override
@@ -1046,8 +919,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
      */
     @Override
@@ -1057,8 +928,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
      */
     @Override
@@ -1068,8 +937,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
      */
     @Override
@@ -1110,8 +977,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
      */
     @Override
@@ -1128,8 +993,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
      */
     @Override
@@ -1170,17 +1033,12 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
      */
     @Override
     public int getSuccNodeCount(IVariable N) {
       IVariable v = N;
-      
-      
-      
-      
+
       int result = 0;
       for (Iterator eqs = getStatementsThatUse(v); eqs.hasNext();) {
         AbstractStatement eq = (AbstractStatement) eqs.next();
@@ -1192,8 +1050,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
      *      java.lang.Object)
      */
@@ -1203,8 +1059,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(java.lang.Object)
      */
     @Override
@@ -1213,8 +1067,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
      */
     @Override
@@ -1224,8 +1076,6 @@ public class PropagationGraph implements IFixedPointSystem {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
      */
     @Override

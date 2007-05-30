@@ -109,12 +109,7 @@ public class Simplifier {
     return false;
   }
 
-  /**
-   * @param s
-   * @param alreadyUsed
-   * @param substitution
-   * @return
-   */
+
   private static Pair<ITerm, ITerm> getNextSubCandidate(Collection<IFormula> s, ITheory t, Collection<IFormula> alreadyUsed) {
     Collection<IFormula> candidates = HashSetFactory.make();
     candidates.addAll(s);

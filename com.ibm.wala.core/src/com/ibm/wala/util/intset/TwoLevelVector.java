@@ -36,8 +36,6 @@ public class TwoLevelVector<T> implements IVector<T> {
   private int maxPage = -1;
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
   public T get(int x) {
@@ -62,7 +60,7 @@ public class TwoLevelVector<T> implements IVector<T> {
   }
 
   /*
-   * TODO: this can be optimized (non-Javadoc)
+   * TODO: this can be optimized
    * 
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
@@ -96,8 +94,6 @@ public class TwoLevelVector<T> implements IVector<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
    */
   public void performVerboseAction() {
@@ -105,8 +101,6 @@ public class TwoLevelVector<T> implements IVector<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IVector#iterator()
    */
   public Iterator<T> iterator() {

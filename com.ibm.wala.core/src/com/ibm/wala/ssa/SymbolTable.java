@@ -113,52 +113,22 @@ public class SymbolTable {
     return findOrCreateConstant(null);
   }
 
-  /**
-   * Method getConstant.
-   * 
-   * @param i
-   * @return int
-   */
   public int getConstant(boolean b) {
     return findOrCreateConstant(new Boolean(b));
   }
 
-  /**
-   * Method getConstant.
-   * 
-   * @param i
-   * @return int
-   */
   public int getConstant(int i) {
     return findOrCreateConstant(new Integer(i));
   }
 
-  /**
-   * Method getConstant.
-   * 
-   * @param l
-   * @return int
-   */
   public int getConstant(long l) {
     return findOrCreateConstant(new Long(l));
   }
 
-  /**
-   * Method getConstant.
-   * 
-   * @param f
-   * @return int
-   */
   public int getConstant(float f) {
     return findOrCreateConstant(new Float(f));
   }
 
-  /**
-   * Method getConstant.
-   * 
-   * @param d
-   * @return int
-   */
   public int getConstant(double d) {
     return findOrCreateConstant(new Double(d));
   }
@@ -288,10 +258,6 @@ public class SymbolTable {
   }
 
   /**
-   * Method newPhi.
-   * 
-   * @param rhs
-   * @return int
    * @throws IllegalArgumentException  if rhs is null
    */
   public int newPhi(int[] rhs) throws IllegalArgumentException {

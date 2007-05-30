@@ -42,9 +42,6 @@ public class ComposedEntrypoints implements Iterable<Entrypoint> {
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.Entrypoints#iterator()
-   */
   public Iterator<Entrypoint> iterator() {
     return entrypoints.iterator();
   }

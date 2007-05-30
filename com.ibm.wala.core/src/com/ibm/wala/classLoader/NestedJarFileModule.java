@@ -108,8 +108,6 @@ public class NestedJarFileModule implements Module {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.Module#getEntries()
    */
   public Iterator<ModuleEntry> getEntries() {
@@ -158,8 +156,6 @@ public class NestedJarFileModule implements Module {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.classLoader.ModuleEntry#getName()
      */
     public String getName() {
@@ -167,15 +163,13 @@ public class NestedJarFileModule implements Module {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
      */
     public boolean isClassFile() {
       return FileSuffixes.isClassFile(getName());
     }
 
-    /* (non-Javadoc)
+    /* 
      * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
      */
     public InputStream getInputStream() {
@@ -186,14 +180,14 @@ public class NestedJarFileModule implements Module {
       return NestedJarFileModule.this.getEntrySize(name);
     }
 
-    /* (non-Javadoc)
+    /* 
      * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
      */
     public boolean isModuleFile() {
       return false;
     }
 
-    /* (non-Javadoc)
+    /*
      * @see com.ibm.wala.classLoader.ModuleEntry#asModule()
      */
     public Module asModule() {
@@ -201,19 +195,12 @@ public class NestedJarFileModule implements Module {
       return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "nested entry: " + name;
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
      */
     public String getClassName() {
@@ -221,8 +208,6 @@ public class NestedJarFileModule implements Module {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
      */
     public boolean isSourceFile() {
@@ -231,11 +216,6 @@ public class NestedJarFileModule implements Module {
 
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "Nested Jar File:" + entry.getName();

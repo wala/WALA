@@ -25,41 +25,38 @@ public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
     return SINGLETON;
   }
 
-  /**
-   * 
-   */
   private IdentityFlowFunctions() {
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getNormalFlowFunction(java.lang.Object, java.lang.Object)
    */
   public IUnaryFlowFunction getNormalFlowFunction(Object src, Object dest) {
     return IdentityFlowFunction.identity();
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallFlowFunction(java.lang.Object, java.lang.Object)
    */
   public IUnaryFlowFunction getCallFlowFunction(Object src, Object dest) {
     return IdentityFlowFunction.identity();
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getReturnFlowFunction(java.lang.Object, java.lang.Object, java.lang.Object)
    */
   public IFlowFunction getReturnFlowFunction(Object call, Object src, Object dest) {
     return IdentityFlowFunction.identity();
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallToReturnFlowFunction(java.lang.Object, java.lang.Object)
    */
   public IUnaryFlowFunction getCallToReturnFlowFunction(Object src, Object dest) {
     return IdentityFlowFunction.identity();
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallNoneToReturnFlowFunction(java.lang.Object, java.lang.Object)
    */
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(Object src, Object dest) {

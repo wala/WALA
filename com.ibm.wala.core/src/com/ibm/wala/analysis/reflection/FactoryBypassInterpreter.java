@@ -147,8 +147,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#getIR(com.ibm.wala.classLoader.IMethod,
    *      com.ibm.wala.ipa.callgraph.Context,
    *      com.ibm.wala.util.warnings.WarningSet)
@@ -181,8 +179,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#getNumberOfStatements(com.ibm.wala.classLoader.IMethod,
    *      com.ibm.wala.ipa.callgraph.Context,
    *      com.ibm.wala.util.warnings.WarningSet)
@@ -196,8 +192,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#understands(com.ibm.wala.classLoader.IMethod,
    *      com.ibm.wala.ipa.callgraph.Context)
    */
@@ -208,13 +202,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     return getTypesForContext(node.getContext()) != null;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#getNewSites(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -236,13 +223,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     return m.getInvokeStatements().iterator();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#getCallSites(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.detox.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
     final Iterator<SSAInstruction> I = getInvokeStatements(node);
     return new Iterator<CallSiteReference>() {
@@ -578,8 +558,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.classLoader.IMethod#getIR(com.ibm.wala.util.WarningSet)
      */
     @Override
@@ -637,8 +615,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.IClass)
    */
@@ -653,8 +629,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
    */
   public void setWarnings(WarningSet newWarnings) {
@@ -662,8 +636,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateFieldsRead(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.util.warnings.WarningSet)
    */
@@ -681,12 +653,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateFieldsWritten(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -767,11 +733,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.cfg.CFGProvider#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   public ControlFlowGraph getCFG(CGNode N, WarningSet warnings) {
     return getIR(N, warnings).getControlFlowGraph();
   }
@@ -847,12 +808,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getDU(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   public DefUse getDU(CGNode node, WarningSet warnings) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");

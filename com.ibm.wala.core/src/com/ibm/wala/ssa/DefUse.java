@@ -131,23 +131,14 @@ public class DefUse {
       it = uses.intIterator();
     }
 
-    /* (non-Javadoc)
-     * @see java.util.Iterator#hasNext()
-     */
     public boolean hasNext() {
       return it.hasNext();
     }
 
-    /* (non-Javadoc)
-     * @see java.util.Iterator#next()
-     */
     public SSAInstruction next() {
       return allInstructions.get(it.next());
     }
 
-    /* (non-Javadoc)
-     * @see java.util.Iterator#remove()
-     */
     public void remove() {
       Assertions.UNREACHABLE();
     }

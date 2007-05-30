@@ -219,8 +219,6 @@ public class SyntheticMethod implements IMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#hasExceptionHandler()
    */
   public boolean hasExceptionHandler() {
@@ -240,8 +238,6 @@ public class SyntheticMethod implements IMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.WarningSet)
    */
   public SSAInstruction[] getStatements(SSAOptions options, WarningSet warnings) {
@@ -249,8 +245,6 @@ public class SyntheticMethod implements IMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getIR(com.ibm.wala.util.WarningSet)
    */
   public IR makeIR(SSAOptions options, WarningSet warnings) {
@@ -259,8 +253,6 @@ public class SyntheticMethod implements IMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getParameterType(int)
    */
   public TypeReference getParameterType(int i) {
@@ -285,8 +277,6 @@ public class SyntheticMethod implements IMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getDeclaredExceptions()
    */
   public TypeReference[] getDeclaredExceptions() throws InvalidClassFileException {
@@ -306,8 +296,6 @@ public class SyntheticMethod implements IMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)
    */
   public int getLineNumber(int bcIndex) {
@@ -319,8 +307,6 @@ public class SyntheticMethod implements IMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getSignature()
    */
   public String getSignature() {
@@ -328,8 +314,6 @@ public class SyntheticMethod implements IMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getSelector()
    */
   public Selector getSelector() {
@@ -337,8 +321,6 @@ public class SyntheticMethod implements IMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getLocalVariableName(int, int)
    */
   public String getLocalVariableName(int bcIndex, int localNumber) {
@@ -347,8 +329,6 @@ public class SyntheticMethod implements IMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
    */
   public boolean hasLocalVariableTable() {
@@ -356,8 +336,6 @@ public class SyntheticMethod implements IMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.warnings.WarningSet)
    */
   public SSAInstruction[] getStatements(WarningSet warnings) {
@@ -365,7 +343,7 @@ public class SyntheticMethod implements IMethod {
   }
 
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.classLoader.IMethod#getReturnType()
    */
   public TypeReference getReturnType() {

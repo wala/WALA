@@ -78,8 +78,6 @@ public class SSAMonitorInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
   @Override
@@ -88,8 +86,6 @@ public class SSAMonitorInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override
@@ -98,8 +94,6 @@ public class SSAMonitorInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   @Override

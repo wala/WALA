@@ -32,19 +32,11 @@ public abstract class DefaultFixedPointSolver extends AbstractFixedPointSolver {
     graph = new DefaultFixedPointSystem(expectedOut);
   }
   
-  /**
-   * default constructor 
-   */
   public DefaultFixedPointSolver() {
     super();
     graph = new DefaultFixedPointSystem();
   }
   
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.DataflowSystem#getDataflowGraph()
-   */
   public IFixedPointSystem getFixedPointSystem() {
     return graph;
   }

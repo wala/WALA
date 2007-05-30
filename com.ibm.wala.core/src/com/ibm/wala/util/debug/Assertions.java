@@ -88,11 +88,7 @@ public class Assertions {
   public static void UNREACHABLE(String string) {
     throw new UnimplementedError(string);
   }
-  
-  /**
-   * Method UNREACHABLE.
-   * @param string
-   */
+
   @Internal
   public static void UNREACHABLE(Object o) {
     throw new UnimplementedError(o == null ? "" : o.toString());

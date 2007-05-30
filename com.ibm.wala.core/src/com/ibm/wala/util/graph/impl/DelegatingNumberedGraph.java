@@ -15,16 +15,16 @@ import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.INodeWithNumberedEdges;
 import com.ibm.wala.util.graph.NodeManager;
 
-
 /**
  * @author sfink
  */
 public class DelegatingNumberedGraph<T extends INodeWithNumberedEdges> extends AbstractNumberedGraph<T> {
 
   private DelegatingNumberedNodeManager<T> nodeManager = new DelegatingNumberedNodeManager<T>();
+
   private DelegatingNumberedEdgeManager<T> edgeManager = new DelegatingNumberedEdgeManager<T>(nodeManager);
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
    */
   @Override
@@ -32,7 +32,7 @@ public class DelegatingNumberedGraph<T extends INodeWithNumberedEdges> extends A
     return nodeManager;
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
    */
   @Override

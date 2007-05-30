@@ -84,8 +84,6 @@ public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   @Override

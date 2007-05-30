@@ -55,17 +55,11 @@ public abstract class MemberReference {
 
   public abstract String getSignature();
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public final int hashCode() {
     return hash;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public final boolean equals(Object other) {
     // These are canonical

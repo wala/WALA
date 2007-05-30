@@ -45,29 +45,17 @@ public abstract class FileModule implements Module, ModuleEntry {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.Module#getEntries()
    */
   public Iterator<ModuleEntry> getEntries() {
     return new NonNullSingletonIterator<ModuleEntry>(this);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return file.hashCode();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.classLoader.FileModule#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object o) {
     if (o == null) {
@@ -82,8 +70,6 @@ public abstract class FileModule implements Module, ModuleEntry {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.ModuleEntry#getName()
    */
   public String getName() {
@@ -91,8 +77,6 @@ public abstract class FileModule implements Module, ModuleEntry {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
    */
   public InputStream getInputStream() {
@@ -106,8 +90,6 @@ public abstract class FileModule implements Module, ModuleEntry {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
    */
   public boolean isModuleFile() {

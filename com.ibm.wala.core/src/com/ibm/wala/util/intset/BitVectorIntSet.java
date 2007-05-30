@@ -52,8 +52,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSet#copySet(com.ibm.wala.util.intset.IntSet)
    */
   public void copySet(IntSet set) {
@@ -91,8 +89,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
 
-  /* (non-Javadoc)
-   */
   public boolean addAll(IntSet set) {
     if (set instanceof BitVectorIntSet) {
       BitVector B = ((BitVectorIntSet) set).bitVector;
@@ -124,8 +120,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSet#add(int)
    */
   public boolean add(int i) {
@@ -140,8 +134,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSet#remove(int)
    */
   public boolean remove(int i) {
@@ -156,8 +148,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSet#intersectWith(com.ibm.wala.util.intset.IntSet)
    */
   public void intersectWith(IntSet set) {
@@ -170,8 +160,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
    */
   public IntSet intersection(IntSet that) {
@@ -182,8 +170,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#isEmpty()
    */
   public boolean isEmpty() {
@@ -191,8 +177,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#size()
    */
   public int size() {
@@ -223,8 +207,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
    */
   public void foreach(IntSetAction action) {
@@ -248,8 +230,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#foreach(com.ibm.wala.util.intset.IntSetAction)
    */
   public void foreachExcluding(IntSet X, IntSetAction action) {
@@ -309,31 +289,16 @@ public final class BitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     return this == obj;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return hash;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.intset.IntSet#contains(int)
-   */
   public boolean contains(int i) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(i >= 0);
@@ -345,18 +310,12 @@ public final class BitVectorIntSet implements MutableIntSet {
     return bitVector.max();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return bitVector.toString();
   }
 
   /**
-   * @param n
    * @return min j >= n s.t get(j)
    */
   public int nextSetBit(int n) {
@@ -364,8 +323,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
    */
   public boolean sameValue(IntSet that) {
@@ -401,8 +358,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
    */
   public boolean isSubset(IntSet that) {
@@ -422,15 +377,10 @@ public final class BitVectorIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * @param set
-   */
   private boolean isSubsetInternal(SparseIntSet set) {
     return toSparseIntSet().isSubset(set);
   }
 
-  /**
-   */
   public BitVector getBitVector() {
     return bitVector;
   }
@@ -462,8 +412,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
    */
   public boolean containsAny(IntSet set) {
@@ -482,8 +430,6 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.MutableIntSet#addAllInIntersection(com.ibm.wala.util.intset.IntSet,
    *      com.ibm.wala.util.intset.IntSet)
    */

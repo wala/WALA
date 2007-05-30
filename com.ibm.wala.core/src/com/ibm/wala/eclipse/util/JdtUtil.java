@@ -120,7 +120,6 @@ public class JdtUtil {
    * 'FooProject' and source folder 'src' the handle would be '=FooProject/src<fooPackage.barPackage{FooClass.java[FooClass~fooMethod~I'
    * 
    * @param javaElt
-   * @return
    * @throws IllegalArgumentException  if javaElt is null
    */
   public static String getJdtHandleString(IJavaElement javaElt) {
@@ -313,8 +312,6 @@ public class JdtUtil {
   }
 
   /**
-   * @param type
-   * @return
    * @throws JavaModelException
    */
   public static Collection<String> getTypeParameterNames(IType type) throws JavaModelException {

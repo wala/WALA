@@ -36,29 +36,17 @@ public class BitVectorUnion extends AbstractMeetOperator implements FixedPointCo
     return "UNION";
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.Operator#hashCode()
-   */
   @Override
   public int hashCode() {
     return 9901;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object o) {
     return (o instanceof BitVectorUnion);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.fixpoint.Operator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable[])
    */
   @Override

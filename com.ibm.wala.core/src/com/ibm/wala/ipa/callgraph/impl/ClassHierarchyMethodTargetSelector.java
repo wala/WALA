@@ -133,17 +133,11 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.MethodTargetSelector#mightReturnSyntheticMethod(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference)
-   */
   public boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site) {
     return false;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ipa.callgraph.MethodTargetSelector#mightReturnSyntheticMethod(com.ibm.wala.types.MethodReference)
    */
   public boolean mightReturnSyntheticMethod(MethodReference declaredTarget) {

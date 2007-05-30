@@ -181,8 +181,6 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.CGNode#getPossibleSites(com.ibm.wala.ipa.callgraph.CGNode)
      */
     public Iterator<CallSiteReference> getPossibleSites(final CGNode to) {
@@ -235,8 +233,6 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.detox.ipa.callgraph.CGNode#getNumberOfTargets(com.ibm.wala.classLoader.CallSiteReference)
      */
     public int getNumberOfTargets(CallSiteReference site) {
@@ -252,8 +248,6 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.CGNode#iterateSites()
      */
     public Iterator<CallSiteReference> iterateSites() {
@@ -261,8 +255,6 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.impl.BasicCallGraph.NodeImpl#removeTarget(com.ibm.wala.ipa.callgraph.CGNode)
      */
     public void removeTarget(CGNode target) {
@@ -293,11 +285,6 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.ipa.callgraph.impl.BasicCallGraph.NodeImpl#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
       // we can use object equality since these objects are canonical as created
@@ -305,20 +292,12 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       return this == obj;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.ipa.callgraph.impl.BasicCallGraph.NodeImpl#hashCode()
-     */
     @Override
     public int hashCode() {
       // TODO: cache?
       return getMethod().hashCode() * 8681 + getContext().hashCode();
     }
 
-    /**
-     * @return Returns the allTargets.
-     */
     public MutableSharedBitVectorIntSet getAllTargetNumbers() {
       return allTargets;
     }
@@ -338,18 +317,12 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.CallGraph#getClassHierarchy()
    */
   public ClassHierarchy getClassHierarchy() {
     return cha;
   }
 
-  /**
-   * 
-   * 
-   */
   protected class ExplicitEdgeManager implements NumberedEdgeManager<CGNode> {
 
     IntFunction<CGNode> toNode = new IntFunction<CGNode>() {

@@ -69,9 +69,6 @@ public class Pair<T,U> {
     };
   }
   
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "[" + fst + "," + snd +"]";

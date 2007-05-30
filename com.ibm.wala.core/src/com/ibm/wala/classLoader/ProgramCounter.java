@@ -64,19 +64,11 @@ public class ProgramCounter implements IProgramCounter {
     return (obj instanceof ProgramCounter) && ((ProgramCounter) obj).programCounter == programCounter;
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return programCounter;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "PC@" + programCounter;

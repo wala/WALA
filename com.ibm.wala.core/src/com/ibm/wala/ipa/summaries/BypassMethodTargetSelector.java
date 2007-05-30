@@ -242,8 +242,6 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.summaries.MethodSummary#getStatements()
      */
     @Override
@@ -315,8 +313,6 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.MethodTargetSelector#mightReturnSyntheticMethod(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.CallSiteReference)
    */
@@ -334,8 +330,6 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.MethodTargetSelector#mightReturnSyntheticMethod(com.ibm.wala.types.MethodReference)
    */
   public boolean mightReturnSyntheticMethod(MethodReference declaredTarget) {

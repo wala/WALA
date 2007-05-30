@@ -598,8 +598,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitArrayLoad(com.ibm.wala.ssa.SSAArrayLoadInstruction)
      */
     @Override
@@ -637,8 +635,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitArrayStore(com.ibm.wala.ssa.SSAArrayStoreInstruction)
      */
     @Override
@@ -711,8 +707,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitCheckCast(com.ibm.wala.ssa.SSACheckCastInstruction)
      */
     @Override
@@ -773,8 +767,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitReturn(com.ibm.wala.ssa.SSAReturnInstruction)
      */
     @Override
@@ -799,8 +791,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitGet(com.ibm.wala.ssa.SSAGetInstruction)
      */
     @Override
@@ -917,8 +907,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitPut(com.ibm.wala.ssa.PutInstruction)
      */
     @Override
@@ -1027,8 +1015,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitInvoke(com.ibm.wala.ssa.InvokeInstruction)
      */
     @Override
@@ -1096,8 +1082,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitNew(com.ibm.wala.ssa.NewInstruction)
      */
     @Override
@@ -1167,8 +1151,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitThrow(com.ibm.wala.ssa.ThrowInstruction)
      */
     @Override
@@ -1178,8 +1160,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitGetCaughtException(com.ibm.wala.ssa.GetCaughtExceptionInstruction)
      */
     @Override
@@ -1231,8 +1211,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitPi(com.ibm.wala.ssa.SSAPiInstruction)
      */
     @Override
@@ -1377,8 +1355,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     private MutableIntSet previousReceivers = IntSetUtil.getDefaultIntSetFactory().make();
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.dataflow.fixpoint.UnaryOperator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable,
      *      com.ibm.wala.dataflow.fixpoint.IVariable)
      */
@@ -1516,21 +1492,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return "Dispatch to " + call + " in node " + node;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#hashCode()
-     */
     @Override
     public int hashCode() {
       return node.hashCode() + 90289 * call.hashCode();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object o) {
       // note that these are not necessarily canonical, since
@@ -1550,8 +1516,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
     public boolean isComplex() {
@@ -2041,8 +2005,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys()
    */
   public Iterator iteratePointerKeys() {
@@ -2065,20 +2027,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     return types;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForPEI(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.ProgramCounter,
-   *      com.ibm.wala.types.TypeReference)
-   */
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
     return getInstanceKeyForPEI(node, instr, type, instanceKeyFactory);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#makeSolver()
    */
   @Override

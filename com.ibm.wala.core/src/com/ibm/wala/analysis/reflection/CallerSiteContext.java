@@ -36,14 +36,14 @@ public class CallerSiteContext implements Context {
     this.site = site;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ipa.callgraph.Context#get(com.ibm.wala.ipa.callgraph.ContextKey)
    */
   public ContextItem get(ContextKey name) {
     return null;
   }
     
-  /* (non-Javadoc)
+  /* 
    * @see java.lang.Object#toString()
    */
   @Override
@@ -59,7 +59,7 @@ public class CallerSiteContext implements Context {
     return site;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
@@ -75,7 +75,7 @@ public class CallerSiteContext implements Context {
     }
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see java.lang.Object#hashCode()
    */
   @Override

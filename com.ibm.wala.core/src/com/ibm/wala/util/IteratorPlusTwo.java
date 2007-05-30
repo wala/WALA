@@ -27,16 +27,10 @@ public class IteratorPlusTwo<T> implements Iterator<T> {
     this.xtra2 = xtra2;
   }
   
-  /* (non-Javadoc)
-   * @see java.util.Iterator#hasNext()
-   */
   public boolean hasNext() {
     return it.hasNext() || (xtra1 != null) || (xtra2 != null);
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#next()
-   */
   public T next() {
     if (it.hasNext()) {
       return it.next();
@@ -51,9 +45,6 @@ public class IteratorPlusTwo<T> implements Iterator<T> {
     }
   }
    
-  /* (non-Javadoc)
-   * @see java.util.Iterator#remove()
-   */
   public void remove() throws UnimplementedError {
     throw new UnimplementedError();
   }

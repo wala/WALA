@@ -17,13 +17,14 @@ import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 
 /**
- A graph of numbered nodes, expected to have a fairly sparse edge structure.  
+ * A graph of numbered nodes, expected to have a fairly sparse edge structure.
  * 
  * @author sfink
  */
 public class SparseNumberedGraph<T extends INodeWithNumber> extends AbstractNumberedGraph<T> {
 
   private final DelegatingNumberedNodeManager<T> nodeManager;
+
   private final SparseNumberedEdgeManager<T> edgeManager;
 
   /**
@@ -33,28 +34,25 @@ public class SparseNumberedGraph<T extends INodeWithNumber> extends AbstractNumb
     nodeManager = new DelegatingNumberedNodeManager<T>();
     edgeManager = new SparseNumberedEdgeManager<T>(nodeManager);
   }
-  
+
   /**
-  /**
-   * If normalCase == n, the s edge manager will eagerly allocated n words
-   * to hold out edges for each node. (performance optimization for time)
-   * @param normalCase what is the "normal" number of out edges for a node?  
+   * If normalCase == n, the s edge manager will eagerly allocated n words to
+   * hold out edges for each node. (performance optimization for time)
+   * 
+   * @param normalCase
+   *          what is the "normal" number of out edges for a node?
    */
   public SparseNumberedGraph(int normalCase) {
     nodeManager = new DelegatingNumberedNodeManager<T>();
     edgeManager = new SparseNumberedEdgeManager<T>(nodeManager, normalCase, BasicNaturalRelation.TWO_LEVEL);
   }
-  
-  /**
-   * @param nodeManager
-   * @param edgeManager
-   */
+
   public SparseNumberedGraph(DelegatingNumberedNodeManager<T> nodeManager, SparseNumberedEdgeManager<T> edgeManager) {
-  	this.nodeManager = nodeManager;
-  	this.edgeManager = edgeManager;
+    this.nodeManager = nodeManager;
+    this.edgeManager = edgeManager;
   }
-  
-  /* (non-Javadoc)
+
+  /*
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
    */
   @Override
@@ -62,7 +60,7 @@ public class SparseNumberedGraph<T extends INodeWithNumber> extends AbstractNumb
     return nodeManager;
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
    */
   @Override

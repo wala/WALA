@@ -53,11 +53,6 @@ public class Table<T> implements Cloneable {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     int[] format = computeColumnWidths();

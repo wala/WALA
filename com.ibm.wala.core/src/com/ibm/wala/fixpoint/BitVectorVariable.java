@@ -32,8 +32,6 @@ public class BitVectorVariable extends AbstractVariable {
     this.hash = DeterministicHashCode.get();
   }
 
-  /* (non-Javadoc)
-   */
   public void copyState(IVariable v) {
     BitVectorVariable other = (BitVectorVariable) v;
     if (V == null) {
@@ -121,26 +119,17 @@ public class BitVectorVariable extends AbstractVariable {
     return V;
   }
 
-  /**
-   * @param i
-   */
   public void clear(int i) {
     if (V != null) {
       V.remove(i);
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.AbstractVariable#hashCode()
-   */
   @Override
   public int hashCode() {
     return hash;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     return this == obj;

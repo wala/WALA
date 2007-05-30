@@ -38,7 +38,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  * 
  * @author sfink
  */
-public class GraphReachability <T>{
+public class GraphReachability<T> {
 
   /**
    * Governing graph
@@ -60,7 +60,8 @@ public class GraphReachability <T>{
    *          call graph to analyze
    * @param filter
    *          "interesting" node definition
-   * @throws IllegalArgumentException  if g is null
+   * @throws IllegalArgumentException
+   *           if g is null
    */
   public GraphReachability(Graph<T> g, Filter filter) {
     if (g == null) {
@@ -100,7 +101,7 @@ public class GraphReachability <T>{
 
     ITransferFunctionProvider<T> functions = new ITransferFunctionProvider<T>() {
 
-      /* (non-Javadoc)
+      /*
        * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getNodeTransferFunction(java.lang.Object)
        */
       public UnaryOperator getNodeTransferFunction(T n) {
@@ -112,29 +113,30 @@ public class GraphReachability <T>{
         }
       }
 
-      /* (non-Javadoc)
+      /*
        * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#hasNodeTransferFunctions()
        */
       public boolean hasNodeTransferFunctions() {
         return true;
       }
 
-      /* (non-Javadoc)
-       * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getEdgeTransferFunction(java.lang.Object, java.lang.Object)
+      /*
+       * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getEdgeTransferFunction(java.lang.Object,
+       *      java.lang.Object)
        */
       public UnaryOperator getEdgeTransferFunction(Object from, Object to) {
         Assertions.UNREACHABLE();
         return null;
       }
 
-      /* (non-Javadoc)
+      /*
        * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#hasEdgeTransferFunctions()
        */
       public boolean hasEdgeTransferFunctions() {
         return false;
       }
 
-      /* (non-Javadoc)
+      /*
        * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getMeetOperator()
        */
       public AbstractMeetOperator getMeetOperator() {
@@ -142,7 +144,7 @@ public class GraphReachability <T>{
       }
     };
 
-    BitVectorFramework<T,T> f = new BitVectorFramework<T,T>(GraphInverter.invert(g), functions, domain);
+    BitVectorFramework<T, T> f = new BitVectorFramework<T, T>(GraphInverter.invert(g), functions, domain);
     solver = new BitVectorSolver<T>(f);
     return solver.solve();
   }

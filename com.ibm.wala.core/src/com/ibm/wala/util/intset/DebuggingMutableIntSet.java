@@ -269,8 +269,6 @@ class DebuggingMutableIntSet implements MutableIntSet {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntSet#intIterator()
    */
   public IntIterator intIterator() {

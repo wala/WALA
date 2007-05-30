@@ -567,8 +567,6 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(com.ibm.wala.util.graph.Node)
    */
   public void removeNodeAndEdges(BasicBlockInContext N) {
@@ -576,8 +574,6 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
    */
   public Iterator<BasicBlockInContext> iterator() {
@@ -585,8 +581,6 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
    */
   public int getNumberOfNodes() {
@@ -594,8 +588,6 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#addNode(com.ibm.wala.util.graph.Node)
    */
   public void addNode(BasicBlockInContext n) {
@@ -604,8 +596,6 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#removeNode(com.ibm.wala.util.graph.Node)
    */
   public void removeNode(BasicBlockInContext n) {
@@ -614,62 +604,46 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
    */
   public Iterator<? extends BasicBlockInContext> getPredNodes(BasicBlockInContext N) {
-
     return G.getPredNodes(N);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
   public int getPredNodeCount(BasicBlockInContext N) {
-
     return G.getPredNodeCount(N);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
   public Iterator<? extends BasicBlockInContext> getSuccNodes(BasicBlockInContext N) {
-
     return G.getSuccNodes(N);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(com.ibm.wala.util.graph.Node)
    */
   public int getSuccNodeCount(BasicBlockInContext N) {
-
     return G.getSuccNodeCount(N);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node,
    *      com.ibm.wala.util.graph.Node)
    */
   public void addEdge(BasicBlockInContext src, BasicBlockInContext dst) {
     Assertions.UNREACHABLE();
   }
-  
+
   public void removeEdge(BasicBlockInContext src, BasicBlockInContext dst) {
     Assertions.UNREACHABLE();
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
   public void removeAllIncidentEdges(BasicBlockInContext node) {
@@ -677,19 +651,12 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
 
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return G.toString();
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#containsNode(com.ibm.wala.util.graph.Node)
    */
   public boolean containsNode(BasicBlockInContext N) {
@@ -737,7 +704,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @param B
    * @return the set of CGNodes that B may call, according to the governing call
    *         graph.
-   * @throws IllegalArgumentException  if B is null
+   * @throws IllegalArgumentException
+   *           if B is null
    */
   public Set<CGNode> getCallTargets(IBasicBlock B) {
     if (B == null) {
@@ -768,57 +736,32 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void removeIncomingEdges(BasicBlockInContext node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
 
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void removeOutgoingEdges(BasicBlockInContext node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
 
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public boolean hasEdge(BasicBlockInContext src, BasicBlockInContext dst) {
-
     return G.hasEdge(src, dst);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public int getNumber(BasicBlockInContext N) {
     return G.getNumber(N);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public BasicBlockInContext getNode(int number) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
     return null;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public int getMaxNumber() {
     return G.getMaxNumber();
   }
@@ -828,18 +771,10 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     return null;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public IntSet getSuccNodeNumbers(BasicBlockInContext node) {
     return G.getSuccNodeNumbers(node);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public IntSet getPredNodeNumbers(BasicBlockInContext node) {
     return G.getPredNodeNumbers(node);
   }
@@ -851,10 +786,11 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   /**
-   * @param object
+   * @param bb
    *          node in the IPCFG that ends in a call
    * @return the nodes that are return sites for this call.
-   * @throws IllegalArgumentException  if bb is null
+   * @throws IllegalArgumentException
+   *           if bb is null
    */
   public Iterator<BasicBlockInContext> getReturnSites(BasicBlockInContext bb) {
     if (bb == null) {
@@ -883,13 +819,13 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     ControlFlowGraph cfg = getCFG(bb);
     Iterator<? extends IBasicBlock> it = cfg.getPredNodes(bb.getDelegate());
     final CGNode node = bb.getNode();
-    Function<IBasicBlock,BasicBlockInContext> toContext = new Function<IBasicBlock,BasicBlockInContext>() {
+    Function<IBasicBlock, BasicBlockInContext> toContext = new Function<IBasicBlock, BasicBlockInContext>() {
       public BasicBlockInContext apply(IBasicBlock object) {
         IBasicBlock bb = object;
         return new BasicBlockInContext(node, bb);
       }
     };
-    MapIterator<IBasicBlock,BasicBlockInContext> m = new MapIterator<IBasicBlock,BasicBlockInContext>(it, toContext);
+    MapIterator<IBasicBlock, BasicBlockInContext> m = new MapIterator<IBasicBlock, BasicBlockInContext>(it, toContext);
     return new FilterIterator<BasicBlockInContext>(m, isCall);
   }
 

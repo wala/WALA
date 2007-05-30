@@ -39,16 +39,10 @@ public class NumberedNodeIterator<T> implements Iterator<T> {
     this.nodeManager = nodeManager;
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#hasNext()
-   */
   public boolean hasNext() {
     return numbers.hasNext();
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#next()
-   */
   public T next() throws NoSuchElementException {
     int i  = numbers.next();
     T result = nodeManager.getNode(i);
@@ -60,9 +54,6 @@ public class NumberedNodeIterator<T> implements Iterator<T> {
     return result;
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#remove()
-   */
   public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }

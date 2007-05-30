@@ -34,19 +34,12 @@ public class Iterator2Collection<T> implements Collection<T> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return delegate.toString();
   }
   
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#size()
    */
   public int size() {
@@ -54,8 +47,6 @@ public class Iterator2Collection<T> implements Collection<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#clear()
    */
   public void clear() {
@@ -63,8 +54,6 @@ public class Iterator2Collection<T> implements Collection<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#isEmpty()
    */
   public boolean isEmpty() {
@@ -72,8 +61,6 @@ public class Iterator2Collection<T> implements Collection<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#toArray()
    */
   public Object[] toArray() {
@@ -81,8 +68,6 @@ public class Iterator2Collection<T> implements Collection<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#add(java.lang.Object)
    */
   public boolean add(T arg0) {
@@ -90,8 +75,6 @@ public class Iterator2Collection<T> implements Collection<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#contains(java.lang.Object)
    */
   public boolean contains(Object arg0) {
@@ -99,8 +82,6 @@ public class Iterator2Collection<T> implements Collection<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#remove(java.lang.Object)
    */
   public boolean remove(Object arg0) {
@@ -108,8 +89,6 @@ public class Iterator2Collection<T> implements Collection<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#addAll(java.util.Collection)
    */
   public boolean addAll(Collection<? extends T> arg0) {
@@ -117,8 +96,6 @@ public class Iterator2Collection<T> implements Collection<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#containsAll(java.util.Collection)
    */
   public boolean containsAll(Collection arg0) {
@@ -126,8 +103,6 @@ public class Iterator2Collection<T> implements Collection<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#removeAll(java.util.Collection)
    */
   public boolean removeAll(Collection arg0) {
@@ -135,8 +110,6 @@ public class Iterator2Collection<T> implements Collection<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#retainAll(java.util.Collection)
    */
   public boolean retainAll(Collection arg0) {
@@ -144,8 +117,6 @@ public class Iterator2Collection<T> implements Collection<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Collection#iterator()
    */
   public Iterator<T> iterator() {

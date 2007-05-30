@@ -15,7 +15,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 
 /**
- *
+ * 
  * Abstract base class for GetInstruction and PutInstruction
  * 
  * @author sfink
@@ -23,7 +23,9 @@ import com.ibm.wala.types.TypeReference;
 public abstract class SSAFieldAccessInstruction extends SSAInstruction {
 
   private final FieldReference field;
+
   private final int ref;
+
   protected SSAFieldAccessInstruction(FieldReference field, int ref) throws IllegalArgumentException {
     super();
     this.field = field;
@@ -34,14 +36,13 @@ public abstract class SSAFieldAccessInstruction extends SSAInstruction {
   }
 
   /**
-   * Method getDeclaredFieldType
    * @return TypeReference
    */
   public TypeReference getDeclaredFieldType() {
     return field.getFieldType();
   }
+
   /**
-   * Method getDeclaredFieldType
    * @return TypeReference
    */
   public FieldReference getDeclaredField() {
@@ -51,11 +52,12 @@ public abstract class SSAFieldAccessInstruction extends SSAInstruction {
   public int getRef() {
     return ref;
   }
-  
+
   public boolean isStatic() {
     return ref == -1;
   }
-  /* (non-Javadoc)
+
+  /*
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
   @Override

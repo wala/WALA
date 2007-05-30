@@ -40,8 +40,6 @@ public class SparseIntVector implements IntVector {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
   public int get(int x) {
@@ -54,7 +52,7 @@ public class SparseIntVector implements IntVector {
   }
 
   /*
-   * TODO: this can be optimized (non-Javadoc)
+   * TODO: this can be optimized 
    * 
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
@@ -80,8 +78,6 @@ public class SparseIntVector implements IntVector {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.debug.VerboseAction#performVerboseAction()
    */
   public void performVerboseAction() {

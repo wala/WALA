@@ -60,12 +60,6 @@ public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
     this.classBased = new ClassBasedInstanceKeys(options, cha, warnings);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.underConstruction.DataflowCallGraphBuilder#getInstanceKeyForAllocation(com.ibm.detox.ipa.callgraph.CGNode,
-   *      com.ibm.wala.ssa.NewInstruction)
-   */
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
@@ -87,12 +81,6 @@ public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
     return key;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.underConstruction.DataflowCallGraphBuilder#getInstanceKeyForMultiNewArray(com.ibm.detox.ipa.callgraph.CGNode,
-   *      com.ibm.wala.ssa.NewInstruction, int)
-   */
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
@@ -104,11 +92,6 @@ public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
     return key;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.underConstruction.DataflowCallGraphBuilder#getInstanceKeyForStringConstant(java.lang.String)
-   */
   public InstanceKey getInstanceKeyForConstant(Object S) {
     if (options.getUseConstantSpecificKeys())
       return new ConstantKey(S, cha.lookupClass(options.getConstantType(S)));

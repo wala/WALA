@@ -47,11 +47,6 @@ public final class ReceiverInstanceContext implements Context {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "ReceiverInstanceContext<" + I + ">";
@@ -62,11 +57,6 @@ public final class ReceiverInstanceContext implements Context {
     return I.hashCode() * 8747;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final.

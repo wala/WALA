@@ -37,19 +37,10 @@ public abstract class UnaryOperator extends AbstractOperator implements FixedPoi
     return new BasicUnaryStatement(lhs, this, rhs);
   }
 
-  /**
-   * Method isIdentity.
-   * 
-   * @return boolean
-   */
   public boolean isIdentity() {
     return false;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   @Override
   public byte evaluate(IVariable lhs, IVariable[] rhs) throws UnimplementedError {
     // this should never be called. Use the other, more efficient form.

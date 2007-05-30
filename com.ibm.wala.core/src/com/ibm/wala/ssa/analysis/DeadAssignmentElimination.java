@@ -159,17 +159,11 @@ public class DeadAssignmentElimination {
       }
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.dataflow.DataflowSystem#initializeVariables()
-     */
     @Override
     protected void initializeVariables() {
       //do nothing: all variables are initialized to false (TOP), meaning "not live"
     }
 
-    /* (non-Javadoc)
-     * @see com.ibm.wala.dataflow.DataflowSystem#initializeWorkList()
-     */
     @Override
     protected void initializeWorkList() {
       addAllStatementsToWorkList();

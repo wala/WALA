@@ -65,11 +65,6 @@ public final class ImmutableByteArray {
     return new ImmutableByteArray(arr);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return new String(b);

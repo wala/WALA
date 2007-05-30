@@ -130,75 +130,38 @@ public class TwoExitCFG implements ControlFlowGraph {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.cfg.ControlFlowGraph#entry()
-   */
   public IBasicBlock entry() {
     return delegate.entry();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.cfg.ControlFlowGraph#exit()
-   */
   public IBasicBlock exit() {
     Assertions.UNREACHABLE("Don't call me");
     return null;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getCatchBlocks()
-   */
   public BitVector getCatchBlocks() {
     return delegate.getCatchBlocks();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getBlockForInstruction(int)
-   */
   public IBasicBlock getBlockForInstruction(int index) {
     return delegate.getBlockForInstruction(index);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getInstructions()
-   */
   public IInstruction[] getInstructions() {
     return delegate.getInstructions();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
-   */
   public int getProgramCounter(int index) {
     return delegate.getProgramCounter(index);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
    */
   public void removeNodeAndEdges(IBasicBlock N) {
     Assertions.UNREACHABLE();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.graph.NumberedNodeManager#getNumber(java.lang.Object)
-   */
   public int getNumber(IBasicBlock N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
@@ -211,8 +174,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getNode(int)
    */
   public IBasicBlock getNode(int number) {
@@ -220,8 +181,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#getMaxNumber()
    */
   public int getMaxNumber() {
@@ -229,8 +188,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
    */
   public Iterator<IBasicBlock> iterator() {
@@ -238,8 +195,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
    */
   public int getNumberOfNodes() {
@@ -247,8 +202,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
    */
   public void addNode(IBasicBlock n) {
@@ -257,8 +210,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
    */
   public void removeNode(IBasicBlock n) {
@@ -266,8 +217,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
    */
   public boolean containsNode(IBasicBlock N) {
@@ -275,8 +224,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
    */
   public Iterator<? extends IBasicBlock> getPredNodes(IBasicBlock N) {
@@ -293,8 +240,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
    */
   public int getPredNodeCount(IBasicBlock N) {
@@ -312,8 +257,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
    */
   public Iterator<? extends IBasicBlock> getSuccNodes(IBasicBlock N) {
@@ -339,8 +282,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
    */
   public int getSuccNodeCount(IBasicBlock N) {
@@ -361,8 +302,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
    *      java.lang.Object)
    */
@@ -374,20 +313,11 @@ public class TwoExitCFG implements ControlFlowGraph {
     Assertions.UNREACHABLE();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {
     Assertions.UNREACHABLE();
     return false;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
-   */
   public void removeAllIncidentEdges(IBasicBlock node) {
     Assertions.UNREACHABLE();
 
@@ -405,8 +335,6 @@ public class TwoExitCFG implements ControlFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#getFirstInstructionIndex()
      */
     public int getFirstInstructionIndex() {
@@ -415,8 +343,6 @@ public class TwoExitCFG implements ControlFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#getLastInstructionIndex()
      */
     public int getLastInstructionIndex() {
@@ -424,8 +350,6 @@ public class TwoExitCFG implements ControlFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#isCatchBlock()
      */
     public boolean isCatchBlock() {
@@ -434,8 +358,6 @@ public class TwoExitCFG implements ControlFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
      */
     public boolean isExitBlock() {
@@ -443,8 +365,6 @@ public class TwoExitCFG implements ControlFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
      */
     public boolean isEntryBlock() {
@@ -452,8 +372,6 @@ public class TwoExitCFG implements ControlFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#getMethod()
      */
     public IMethod getMethod() {
@@ -461,8 +379,6 @@ public class TwoExitCFG implements ControlFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.INodeWithNumber#getGraphNodeId()
      */
     public int getGraphNodeId() {
@@ -471,8 +387,6 @@ public class TwoExitCFG implements ControlFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.graph.INodeWithNumber#setGraphNodeId(int)
      */
     public void setGraphNodeId(int number) {
@@ -480,8 +394,6 @@ public class TwoExitCFG implements ControlFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -494,29 +406,17 @@ public class TwoExitCFG implements ControlFlowGraph {
       }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
       return delegate.exit().hashCode() * 8467;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "Exceptional Exit[ " + getMethod() + "]";
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#getNumber()
      */
     public int getNumber() {
@@ -543,8 +443,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getMethod()
    */
   public IMethod getMethod() {
@@ -561,29 +459,14 @@ public class TwoExitCFG implements ControlFlowGraph {
       this.it = it;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#remove()
-     */
     public void remove() {
       Assertions.UNREACHABLE();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#hasNext()
-     */
     public boolean hasNext() {
       return it.hasNext();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#next()
-     */
     public IBasicBlock next() {
       IBasicBlock n = (IBasicBlock) it.next();
       if (n.getNumber() == delegateExitNumber) {
@@ -595,8 +478,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getExceptionalSuccessors(IBasicBlock b) {
@@ -624,8 +505,6 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
   public Collection<IBasicBlock> getNormalSuccessors(IBasicBlock b) {
@@ -653,11 +532,6 @@ public class TwoExitCFG implements ControlFlowGraph {
     return exceptionalExit;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("Two-Exit CFG");
@@ -666,28 +540,18 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
   public Iterator<IBasicBlock> iterateNodes(IntSet s) {
     return new NumberedNodeIterator<IBasicBlock>(s, this);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void removeIncomingEdges(IBasicBlock node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
 
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void removeOutgoingEdges(IBasicBlock node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();

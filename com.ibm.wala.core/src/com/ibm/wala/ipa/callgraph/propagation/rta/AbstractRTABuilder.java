@@ -389,8 +389,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   protected abstract void updateSetsForNewClass(IClass klass, InstanceKey iKey, CGNode node, NewSiteReference ns);
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#customInit()
    */
   @Override
@@ -415,8 +413,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#makeSolver()
    */
   @Override
@@ -424,22 +420,12 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     return new StandardSolver(system, this);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.impl.IterativeCallGraphBuilder#makeContextSelector()
-   */
   protected ContextSelector makeContextSelector(ContextSelector appContextSelector) {
     ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     return contextSelector;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.impl.IterativeCallGraphBuilder#makeContextInterpreter(com.ibm.wala.util.warnings.WarningSet)
-   */
   protected SSAContextInterpreter makeContextInterpreter(SSAContextInterpreter appContextInterpreter,
       ReflectionSpecification reflect, WarningSet warnings) {
 
@@ -461,8 +447,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#createEmptyCallGraph(com.ibm.wala.ipa.cha.ClassHierarchy,
    *      com.ibm.wala.ipa.callgraph.AnalysisOptions)
    */
@@ -472,8 +456,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#makeSystem(com.ibm.wala.ipa.callgraph.AnalysisOptions)
    */
   @Override
@@ -485,7 +467,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
   
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#getPointerAnalysis()
    */
   @Override

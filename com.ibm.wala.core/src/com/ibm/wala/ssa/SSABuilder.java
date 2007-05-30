@@ -571,8 +571,6 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitLocalStore(com.ibm.wala.shrikeBT.StoreInstruction)
        */
       @Override

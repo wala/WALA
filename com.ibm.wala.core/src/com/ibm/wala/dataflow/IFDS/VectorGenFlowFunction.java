@@ -29,20 +29,10 @@ public class VectorGenFlowFunction implements IReversibleFlowFunction {
     this.gen = gen;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.IFlowFunction#eval(int)
-   */
   public SparseIntSet getTargets(int i) {
     return (i == 0) ? gen : gen.contains(i) ? null : SparseIntSet.singleton(i);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.transactions.IFlowFunction#eval(int)
-   */
   public SparseIntSet getSources(int i) {
     return (gen.contains(i)) ? SparseIntSet.singleton(0) : SparseIntSet.singleton(i);
   }
@@ -55,9 +45,6 @@ public class VectorGenFlowFunction implements IReversibleFlowFunction {
     return new VectorGenFlowFunction(gen);
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "VectorGen: " + gen;

@@ -224,17 +224,11 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
     return edgeLabels.get(new Pair<Object, Object>(from, to));
   }
 
-  /*
-   * (non-Javadoc)
-   */
   @Override
   public NodeManager<IBasicBlock> getNodeManager() {
     return cfg;
   }
 
-  /*
-   * (non-Javadoc)
-   */
   @Override
   public EdgeManager<IBasicBlock> getEdgeManager() {
     return edgeManager;

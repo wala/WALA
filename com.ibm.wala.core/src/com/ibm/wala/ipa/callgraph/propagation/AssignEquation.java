@@ -33,21 +33,11 @@ public final class AssignEquation extends UnaryStatement implements VerboseActio
     super(lhs, rhs);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.fixpoint.AbstractEquation#getOperator()
-   */
   @Override
   public AbstractOperator getOperator() {
     return PropagationCallGraphBuilder.assignOperator;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object o) {
     if (o instanceof AssignEquation) {
@@ -58,10 +48,6 @@ public final class AssignEquation extends UnaryStatement implements VerboseActio
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void performVerboseAction() {
     if (DEBUG) {
       IntSetVariable lhs = (IntSetVariable) getLHS();

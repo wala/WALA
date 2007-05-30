@@ -117,8 +117,6 @@ public class SSACheckCastInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
   @Override
@@ -127,8 +125,6 @@ public class SSACheckCastInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override
@@ -137,8 +133,6 @@ public class SSACheckCastInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   @Override
@@ -146,11 +140,6 @@ public class SSACheckCastInstruction extends SSAInstruction {
     return Exceptions.getClassCastException();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return super.toString() + " " + declaredResultType;

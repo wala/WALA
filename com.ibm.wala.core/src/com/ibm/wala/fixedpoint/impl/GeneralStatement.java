@@ -171,21 +171,11 @@ public class GeneralStatement extends AbstractStatement {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return hashCode;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object o) {
     if (o == null) {
@@ -218,17 +208,11 @@ public class GeneralStatement extends AbstractStatement {
     return false;
   }
 
-  /**
-   * @return Returns the operator.
-   */
   @Override
   public AbstractOperator getOperator() {
     return operator;
   }
 
-  /*
-   * (non-Javadoc)
-   */
   public IVariable[] getRHS() {
     return rhs;
   }

@@ -668,21 +668,11 @@ public class ClassHierarchy implements Iterable<IClass> {
       return result.toString();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#hashCode()
-     */
     @Override
     public int hashCode() {
       return klass.hashCode() * 929;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object obj) {
       return this == obj;
@@ -690,20 +680,11 @@ public class ClassHierarchy implements Iterable<IClass> {
 
   }
 
-  /**
-   * Returns the factory.
-   * 
-   * @return ClassLoaderFactory
-   */
   public ClassLoaderFactory getFactory() {
     return factory;
   }
 
   /**
-   * Method getLeastCommonSuperclass.
-   * 
-   * @param A
-   * @param B
    * @throws IllegalArgumentException  if A is null
    */
   public IClass getLeastCommonSuperclass(IClass A, IClass B) {

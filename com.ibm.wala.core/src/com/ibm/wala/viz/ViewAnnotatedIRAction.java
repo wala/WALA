@@ -35,7 +35,7 @@ public class ViewAnnotatedIRAction extends ViewIRAction {
     this.dec = dec;
   }
   
-  /* (non-Javadoc)
+  /* 
    * @see org.eclipse.jface.action.IAction#run()
    */
   @Override

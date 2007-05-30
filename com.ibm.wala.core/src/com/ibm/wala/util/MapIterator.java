@@ -22,40 +22,24 @@ public class MapIterator<X,Y> implements Iterator<Y> {
   final Iterator<? extends X> i;
   final Function<X,Y> f;
 
-  /**
-   * @param i
-   * @param f
-   */
   public MapIterator(Iterator<? extends X> i, Function<X,Y> f) {
     this.i = i;
     this.f = f;
   }
 
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#next()
-   */
   public Y next() {
     return f.apply(i.next());
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#hasNext()
-   */
   public boolean hasNext() {
     return i.hasNext();
   }
 
-  /* (non-Javadoc)
-   * @see java.util.Iterator#remove()
-   */
   public void remove() {
     throw new java.lang.UnsupportedOperationException();
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "map: " + f + " of " + i;

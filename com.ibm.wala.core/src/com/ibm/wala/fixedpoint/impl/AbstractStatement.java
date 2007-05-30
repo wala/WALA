@@ -39,11 +39,6 @@ public abstract class AbstractStatement extends NodeWithNumber implements IFixed
   @Override
   public abstract boolean equals(Object o);
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("");
@@ -66,9 +61,6 @@ public abstract class AbstractStatement extends NodeWithNumber implements IFixed
     return result.toString();
   }
   
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.fixpoint.AbstractEquation#getOrderNumber()
-   */
   public final int getOrderNumber() {
     IVariable lhs = getLHS();
     return (lhs == null) ? 0 : lhs.getOrderNumber();

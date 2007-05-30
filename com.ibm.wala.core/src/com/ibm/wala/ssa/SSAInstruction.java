@@ -46,8 +46,6 @@ public abstract class SSAInstruction implements IInstruction {
    *  Note that this only applies to CAst-based IR translation, since
    * Java bytecode-based IR generation uses a different SSA
    * construction mechanism.
-   *
-   * @see com.ibm.wala.cast.ir.ssa.SSAConversion
    */
   public abstract SSAInstruction copyForSSA(int[] defs, int[] uses);
 
@@ -59,11 +57,6 @@ public abstract class SSAInstruction implements IInstruction {
    */
   public abstract String toString(SymbolTable symbolTable, ValueDecorator d);
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return toString(null, null);

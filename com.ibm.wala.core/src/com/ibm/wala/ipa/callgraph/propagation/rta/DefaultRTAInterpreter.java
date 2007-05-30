@@ -50,9 +50,6 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     defaultInterpreter = new ContextInsensitiveSSAInterpreter(options, cha);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.detox.ipa.callgraph.MethodContextInterpreterProvider#getNodeInterpreter(com.ibm.detox.ipa.callgraph.CGNode)
-   */
   private RTAContextInterpreter getNodeInterpreter(CGNode node) {
     
     if (node.getMethod() instanceof FakeRootMethod) {
@@ -66,9 +63,6 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     } 
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#getAllocatedTypes(com.ibm.wala.classLoader.IMethod, com.ibm.detox.ipa.callgraph.Context, com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -76,9 +70,6 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     return getNodeInterpreter(node).iterateNewSites(node,warnings);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#getCallSites(com.ibm.wala.classLoader.IMethod, com.ibm.detox.ipa.callgraph.Context, com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -86,9 +77,6 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     return getNodeInterpreter(node).iterateCallSites(node,warnings);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateFieldsRead(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator iterateFieldsRead(CGNode node, WarningSet warnings) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -96,9 +84,6 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     return getNodeInterpreter(node).iterateFieldsRead(node, warnings);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateFieldsWritten(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.util.warnings.WarningSet)
-   */
   public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -107,9 +92,6 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
   }
 
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#understands(com.ibm.wala.classLoader.IMethod, com.ibm.detox.ipa.callgraph.Context)
-   */
   public boolean understands(CGNode node) {
     return true;
   }
@@ -119,9 +101,6 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     return false;
   }
   
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
   public void setWarnings(WarningSet newWarnings) {
     this.warnings = newWarnings;
   }

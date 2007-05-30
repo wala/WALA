@@ -62,8 +62,6 @@ public final class ConcreteTypeKey implements InstanceKey {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKey#getConcreteType()
    */
   public IClass getConcreteType() {

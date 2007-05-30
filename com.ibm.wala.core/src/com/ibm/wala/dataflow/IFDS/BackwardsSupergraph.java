@@ -51,8 +51,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMain()
    */
   public P getMain() {
@@ -62,8 +60,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isCall(java.lang.Object)
    */
   public boolean isCall(T n) {
@@ -71,14 +67,10 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /**
-   * @author sfink
-   * 
    * a filter that accepts only exit nodes from the original graph.
    */
   private class ExitFilter implements Filter {
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
      */
     @SuppressWarnings("unchecked")
@@ -126,8 +118,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getReturnSites(java.lang.Object)
    */
   public Iterator<? extends T> getReturnSites(T c) {
@@ -135,8 +125,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isExit(java.lang.Object)
    */
   public boolean isExit(T n) {
@@ -144,8 +132,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getProcOf(java.lang.Object)
    */
   public P getProcOf(T n) {
@@ -153,8 +139,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
    */
   public void removeNodeAndEdges(Object N) {
@@ -163,18 +147,11 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
 
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
-   */
   public Iterator<T> iterator() {
     return delegate.iterator();
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
    */
   public int getNumberOfNodes() {
@@ -182,8 +159,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
    */
   public void addNode(Object n) {
@@ -192,8 +167,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
    */
   public void removeNode(Object n) {
@@ -203,8 +176,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
    */
   public boolean containsNode(T N) {
@@ -212,8 +183,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
    */
   public Iterator<? extends T> getPredNodes(T N) {
@@ -221,8 +190,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
    */
   public int getPredNodeCount(T N) {
@@ -230,8 +197,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
    */
   public Iterator<? extends T> getSuccNodes(T N) {
@@ -239,15 +204,11 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
   
   
-  /* (non-Javadoc)
-   */
   public boolean hasEdge(T src, T dst) {
     return delegate.hasEdge(dst,src);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
    */
   public int getSuccNodeCount(T N) {
@@ -255,8 +216,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
    *      java.lang.Object)
    */
@@ -271,8 +230,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
   public void removeAllIncidentEdges(Object node) {
@@ -282,8 +239,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getEntriesForProcedure(java.lang.Object)
    */
   public T[] getEntriesForProcedure(P object) {
@@ -291,8 +246,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
   
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getEntriesForProcedure(java.lang.Object)
    */
   public T[] getExitsForProcedure(P object) {
@@ -300,8 +253,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainEntry()
    */
   public T getMainEntry() {
@@ -309,8 +260,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainExit()
    */
   public T getMainExit() {
@@ -318,8 +267,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isReturn(java.lang.Object)
    */
   public boolean isReturn(T n) {
@@ -329,8 +276,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCallSites(java.lang.Object)
    */
   public Iterator<? extends T> getCallSites(T r) {
@@ -338,8 +283,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isEntry(java.lang.Object)
    */
   public boolean isEntry(T n) {
@@ -347,8 +290,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object,
    *      java.lang.Object)
    */
@@ -369,55 +310,44 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "Backwards of delegate\n" + delegate;
   }
 
-  /* (non-Javadoc)
-   */
   public void removeIncomingEdges(Object node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
     
   }
 
-  /* (non-Javadoc)
-   */
   public void removeOutgoingEdges(T node) {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
     
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getNumberOfBlocks(java.lang.Object)
    */
   public int getNumberOfBlocks(P procedure) {
     return delegate.getNumberOfBlocks(procedure);
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlockNumber(java.lang.Object)
    */
   public int getLocalBlockNumber(T n) {
     return delegate.getLocalBlockNumber(n);
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlock(java.lang.Object, int)
    */
   public T getLocalBlock(P procedure, int i) {
     return delegate.getLocalBlock(procedure,i);
   }
 
-  /* (non-Javadoc)
-   */
   public int getNumber(T N) {
     return delegate.getNumber(N);
   }
@@ -436,8 +366,6 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
     return null;
   }
 
-  /* (non-Javadoc)
-   */
   public IntSet getSuccNodeNumbers(T node) {
     return delegate.getPredNodeNumbers(node);
   }

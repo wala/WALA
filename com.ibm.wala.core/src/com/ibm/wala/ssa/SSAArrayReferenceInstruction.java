@@ -75,8 +75,6 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
   @Override
@@ -85,8 +83,6 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override

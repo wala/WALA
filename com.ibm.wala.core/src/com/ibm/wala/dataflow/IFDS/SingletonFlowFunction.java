@@ -30,9 +30,6 @@ public class SingletonFlowFunction implements IReversibleFlowFunction {
 		this.dest = dest;
 	}
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.j2ee.transactions.IFlowFunction#eval(int)
-   */
   public SparseIntSet getTargets(int i) {
   	if (i == 0) {
       return SparseIntSet.add(zeroSet,dest);
@@ -41,9 +38,6 @@ public class SingletonFlowFunction implements IReversibleFlowFunction {
   	}
   }
   
-  /* (non-Javadoc)
-   * @see com.ibm.wala.j2ee.transactions.IFlowFunction#eval(int)
-   */
   public SparseIntSet getSources(int i) {
    	if (i == dest || i == 0) { 
       return zeroSet;

@@ -306,11 +306,6 @@ public class InducedCFG extends AbstractCFG {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getBlockForInstruction(int)
-   */
   public IBasicBlock getBlockForInstruction(int index) {
     if (i2block[index] == null) {
       Assertions.productionAssertion(false, "unexpected null for " + index);
@@ -318,11 +313,6 @@ public class InducedCFG extends AbstractCFG {
     return i2block[index];
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionHandlers()
-   */
   public Set getExceptionHandlers() {
     // TODO: support exception handlers
     return Collections.EMPTY_SET;
@@ -332,11 +322,6 @@ public class InducedCFG extends AbstractCFG {
   // implementation! right now it's clone-and-owned :(
   private class BasicBlock extends NodeWithNumber implements IBasicBlock {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#equals(java.lang.Object)
-     */
     @Override
     public boolean equals(Object arg0) {
       if (getClass().equals(arg0.getClass())) {
@@ -410,11 +395,6 @@ public class InducedCFG extends AbstractCFG {
       }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.cfg.IBasicBlock#getFirstInstructionIndex()
-     */
     public int getFirstInstructionIndex() {
       return start;
     }
@@ -439,11 +419,6 @@ public class InducedCFG extends AbstractCFG {
       }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.cfg.IBasicBlock#isCatchBlock()
-     */
     public boolean isCatchBlock() {
       // TODO: support induced CFG with catch blocks.
       return false;
@@ -463,8 +438,6 @@ public class InducedCFG extends AbstractCFG {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
      */
     public boolean isExitBlock() {
@@ -472,8 +445,6 @@ public class InducedCFG extends AbstractCFG {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
      */
     public boolean isEntryBlock() {
@@ -481,8 +452,6 @@ public class InducedCFG extends AbstractCFG {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#getMethod()
      */
     public IMethod getMethod() {
@@ -498,8 +467,6 @@ public class InducedCFG extends AbstractCFG {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.cfg.IBasicBlock#getNumber()
      */
     public int getNumber() {

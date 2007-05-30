@@ -172,10 +172,6 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
     return globalChange;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public void performVerboseAction() {
     System.err.println("Evaluated " + nEvaluated);
     System.err.println("Created   " + nCreated);
@@ -217,11 +213,6 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
     getFixedPointSystem().removeStatement(s);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("Fixed Point Sytem:\n");

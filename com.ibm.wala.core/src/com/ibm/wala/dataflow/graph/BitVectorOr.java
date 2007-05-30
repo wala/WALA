@@ -27,8 +27,6 @@ public class BitVectorOr extends UnaryOperator {
   }
   
 
-  /* (non-Javadoc)
-   */
   @Override
   public byte evaluate(IVariable lhs, IVariable rhs) {
     BitVectorVariable L = (BitVectorVariable) lhs;
@@ -46,25 +44,16 @@ public class BitVectorOr extends UnaryOperator {
     }
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "U " + v;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.Operator#hashCode()
-   */
   @Override
   public int hashCode() {
     return 9901 * v.hashCode();
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object o) {
     if (o instanceof BitVectorOr) {

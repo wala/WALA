@@ -527,8 +527,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getMaxLocals()
    */
   public abstract int getMaxLocals();
@@ -586,11 +584,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       return info.pcMap[instructionIndex];
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitMonitor(com.ibm.wala.shrikeBT.MonitorInstruction)
-     */
     @Override
     public void visitMonitor(MonitorInstruction instruction) {
       hasMonitorOp = true;
@@ -661,8 +654,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLoad(com.ibm.wala.shrikeBT.ArrayLoadInstruction)
      */
     @Override
@@ -671,8 +662,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayStore(com.ibm.wala.shrikeBT.ArrayStoreInstruction)
      */
     @Override
@@ -748,8 +737,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#hasExceptionHandler()
    */
   public abstract boolean hasExceptionHandler();
@@ -792,8 +779,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   protected abstract String computeGenericsSignature() throws InvalidClassFileException; 
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)
    */
   public int getLineNumber(int bcIndex) throws InvalidClassFileException {
@@ -825,8 +810,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getSignature()
    */
   public String getSignature() {
@@ -834,8 +817,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getSelector()
    */
   public Selector getSelector() {
@@ -843,15 +824,13 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getLocalVariableName(int, int)
    */
 
   public abstract String getLocalVariableName(int bcIndex, int localNumber) throws InvalidClassFileException;
 
   /*
-   * TODO: cache for efficiency? (non-Javadoc)
+   * TODO: cache for efficiency? 
    * 
    * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
    */

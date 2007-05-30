@@ -65,11 +65,6 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     this.options = options;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.warnings.WarningSet)
-   */
   @Override
   public SSAInstruction[] getStatements(SSAOptions options, WarningSet warnings) {
     SSAInstruction[] result = new SSAInstruction[statements.size()];
@@ -80,12 +75,6 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.classLoader.SyntheticMethod#makeIR(com.ibm.wala.ssa.SSAOptions,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
   @Override
   public IR makeIR(SSAOptions options, WarningSet warnings) {
     SSAInstruction instrs[] = getStatements(options, warnings);
@@ -301,11 +290,6 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
         return false;
       }
 
-      /*
-       * (non-Javadoc)
-       * 
-       * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-       */
       public void setWarnings(WarningSet newWarnings) {
         // this object is not bound to a WarningSet
       }

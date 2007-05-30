@@ -32,11 +32,6 @@ public final class Selector {
     this.descriptor = descriptor;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     // using instanceof is OK because Selector is final
@@ -48,21 +43,11 @@ public final class Selector {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode() Cache??
-   */
   @Override
   public int hashCode() {
     return 19 * name.hashCode() + descriptor.hashCode();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return name.toString() + descriptor.toString();

@@ -132,8 +132,6 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
   @Override
@@ -142,8 +140,6 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override

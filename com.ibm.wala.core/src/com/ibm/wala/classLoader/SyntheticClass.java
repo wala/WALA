@@ -44,35 +44,35 @@ public abstract class SyntheticClass implements IClass {
     return cha.getLoader(ClassLoaderReference.Primordial);
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.classLoader.IClass#isInterface()
    */
   public boolean isInterface() {
     return false;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.classLoader.IClass#isAbstract()
    */
   public boolean isAbstract() {
     return false;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.classLoader.IClass#getReference()
    */
   public TypeReference getReference() {
     return T;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
    */
   public String getSourceFileName() {
     return null;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.classLoader.IClass#isArrayClass()
    */
   public boolean isArrayClass() {

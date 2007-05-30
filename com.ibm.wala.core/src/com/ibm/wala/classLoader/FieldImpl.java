@@ -50,8 +50,6 @@ public final class FieldImpl implements IField {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMember#getDeclaringClass()
    */
   public IClass getDeclaringClass() {
@@ -59,8 +57,6 @@ public final class FieldImpl implements IField {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
   @Override
@@ -74,21 +70,11 @@ public final class FieldImpl implements IField {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return 87049 * declaringClass.hashCode() + fieldRef.hashCode();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     FieldReference fr = getReference();
@@ -100,8 +86,6 @@ public final class FieldImpl implements IField {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMember#getName()
    */
   public Atom getName() {
@@ -109,8 +93,6 @@ public final class FieldImpl implements IField {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IField#getFieldTypeReference()
    */
   public TypeReference getFieldTypeReference() {

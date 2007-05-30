@@ -151,11 +151,6 @@ public class JavaLauncher extends Launcher {
     return java;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.capa.core.EAnalysisEngine#processImpl()
-   */
   public void launch() throws WalaException {
 
     String cp = makeClasspath();

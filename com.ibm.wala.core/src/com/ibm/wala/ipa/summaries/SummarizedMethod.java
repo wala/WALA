@@ -60,8 +60,6 @@ public class SummarizedMethod extends SyntheticMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.SyntheticMethod#getPoison()
    */
   @Override
@@ -70,8 +68,6 @@ public class SummarizedMethod extends SyntheticMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.SyntheticMethod#getPoisonLevel()
    */
   @Override
@@ -80,8 +76,6 @@ public class SummarizedMethod extends SyntheticMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.SyntheticMethod#hasPoison()
    */
   @Override
@@ -90,8 +84,6 @@ public class SummarizedMethod extends SyntheticMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.WarningSet)
    */
   @Override
@@ -103,7 +95,6 @@ public class SummarizedMethod extends SyntheticMethod {
   }
 
   // /*
-  // * (non-Javadoc)
   // *
   // * @see com.ibm.wala.classLoader.IMethod#getIR(com.ibm.wala.util.WarningSet)
   // */
@@ -131,11 +122,6 @@ public class SummarizedMethod extends SyntheticMethod {
   // }
   // return result;
   // }
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.classLoader.IMethod#getIR(com.ibm.wala.util.WarningSet)
-   */
   @Override
   public IR makeIR(SSAOptions options, WarningSet warnings) {
     SSAInstruction instrs[] = getStatements(options, warnings);
@@ -143,8 +129,6 @@ public class SummarizedMethod extends SyntheticMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getNumberOfParameters()
    */
   @Override
@@ -153,8 +137,6 @@ public class SummarizedMethod extends SyntheticMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#isStatic()
    */
   @Override
@@ -163,8 +145,6 @@ public class SummarizedMethod extends SyntheticMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getParameterType(int)
    */
   @Override

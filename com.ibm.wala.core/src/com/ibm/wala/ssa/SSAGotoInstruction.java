@@ -16,26 +16,28 @@ import com.ibm.wala.types.TypeReference;
 
 /**
  * @author sfink
- *
+ * 
  */
 public class SSAGotoInstruction extends SSAInstruction {
 
   SSAGotoInstruction() {
     super();
   }
+
   @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return
-      new SSAGotoInstruction();
+    return new SSAGotoInstruction();
   }
 
   @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return "goto";
   }
+
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException  if v is null
+   * @throws IllegalArgumentException
+   *           if v is null
    */
   @Override
   public void visit(IVisitor v) {
@@ -47,16 +49,18 @@ public class SSAGotoInstruction extends SSAInstruction {
 
   @Override
   public int hashCode() {
-      return 1409; // XXX weak!
+    return 1409; // XXX weak!
   }
-  /* (non-Javadoc)
+
+  /*
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override
   public boolean isFallThrough() {
     return false;
   }
-  /* (non-Javadoc)
+
+  /*
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
   @Override

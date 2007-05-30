@@ -347,11 +347,6 @@ public class Util {
     }
 
     return new Graph<MethodReference>() {
-      /*
-       * (non-Javadoc)
-       * 
-       * @see java.lang.Object#toString()
-       */
       @Override
       public String toString() {
         StringBuffer result = new StringBuffer();
@@ -362,8 +357,6 @@ public class Util {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
        */
       public Iterator<MethodReference> iterator() {
@@ -371,8 +364,6 @@ public class Util {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
        */
       public boolean containsNode(MethodReference N) {
@@ -380,8 +371,6 @@ public class Util {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
        */
       public int getNumberOfNodes() {
@@ -389,8 +378,6 @@ public class Util {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
        */
       public Iterator<MethodReference> getPredNodes(MethodReference N) {
@@ -404,8 +391,6 @@ public class Util {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
        */
       public int getPredNodeCount(MethodReference N) {
@@ -416,8 +401,6 @@ public class Util {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
        */
       public Iterator<MethodReference> getSuccNodes(MethodReference N) {
@@ -431,8 +414,6 @@ public class Util {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
        */
       public int getSuccNodeCount(MethodReference N) {
@@ -443,8 +424,6 @@ public class Util {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
        */
       public void addNode(MethodReference n) {
@@ -452,8 +431,6 @@ public class Util {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
        */
       public void removeNode(MethodReference n) {
@@ -461,8 +438,6 @@ public class Util {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
        *      java.lang.Object)
        */
@@ -475,8 +450,6 @@ public class Util {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(java.lang.Object)
        */
       public void removeAllIncidentEdges(MethodReference node) {
@@ -484,8 +457,6 @@ public class Util {
       }
 
       /*
-       * (non-Javadoc)
-       * 
        * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
        */
       public void removeNodeAndEdges(MethodReference N) {
@@ -779,8 +750,6 @@ public class Util {
    *          options that govern call graph construction
    * @param cha
    *          governing class hierarchy
-   * @param cl
-   *          classloader that can find WALA resources
    * @param scope
    *          representation of the analysis scope
    * @param warnings
@@ -809,8 +778,6 @@ public class Util {
    *          options that govern call graph construction
    * @param cha
    *          governing class hierarchy
-   * @param cl
-   *          classloader that can find WALA resources
    * @param scope
    *          representation of the analysis scope
    * @param warnings
@@ -839,8 +806,6 @@ public class Util {
    *          options that govern call graph construction
    * @param cha
    *          governing class hierarchy
-   * @param cl
-   *          classloader that can find WALA resources
    * @param scope
    *          representation of the analysis scope
    * @param warnings

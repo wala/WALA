@@ -53,7 +53,7 @@ public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
     return 7529 * exception ^ 823;
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
   @Override
@@ -61,7 +61,7 @@ public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
     return true;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override

@@ -44,23 +44,20 @@ public class ClassFileModule extends FileModule implements Module, ModuleEntry {
   }
 
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "ClassFileModule:" + getFile();
   }
 
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
    */
   public boolean isClassFile() {
     return true;
   }
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.classLoader.ModuleEntry#getClassName()
    */
   public String getClassName() {
@@ -68,7 +65,7 @@ public class ClassFileModule extends FileModule implements Module, ModuleEntry {
   }
 
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.classLoader.ModuleEntry#isSourceFile()
    */
   public boolean isSourceFile() {

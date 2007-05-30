@@ -80,10 +80,6 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     this.expensiveIntraproceduralAnalysis = expensiveIntraproceduralAnalysis;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex) throws WalaException {
     NewSiteReference site = TrivialMethodEscape.findAlloc(callGraph, allocMethod, allocPC);
     InstanceKey ik = heapGraph.getHeapModel().getInstanceKeyForAllocation(allocMethod, site);
@@ -196,10 +192,6 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     return DFS.getReachableNodes(callGraph, localRootNodes);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   */
   public boolean mayBeLive(InstanceKey ik, CGNode m, IntSet instructionIndices) {
     if (instructionIndices == null) {
       throw new IllegalArgumentException("instructionIndices is null");

@@ -20,9 +20,9 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
- *
- * This is a context selector that adds one level of calling context to 
- * a base context selector.
+ * 
+ * This is a context selector that adds one level of calling context to a base
+ * context selector.
  * 
  * @author sfink
  */
@@ -31,16 +31,14 @@ public class OneLevelContextSelector implements ContextSelector {
   private final ContextSelector baseSelector;
 
   /**
-   * @param baseSelector a context selector which provides the context to analyze
-   * a method in, but without one level of calling context.
+   * @param baseSelector
+   *          a context selector which provides the context to analyze a method
+   *          in, but without one level of calling context.
    */
   public OneLevelContextSelector(ContextSelector baseSelector) {
     this.baseSelector = baseSelector;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.detox.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.detox.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
-   */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     Context baseContext = baseSelector.getCalleeTarget(caller, site, callee, receiver);
     if (baseContext.equals(Everywhere.EVERYWHERE)) {
@@ -54,29 +52,18 @@ public class OneLevelContextSelector implements ContextSelector {
     return baseSelector.mayUnderstand(caller, site, targetMethod, instance);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.detox.ipa.callgraph.ContextSelector#getBoundOnNumberOfTargets(com.ibm.detox.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
-   */
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
     return baseSelector.getBoundOnNumberOfTargets(caller, site, targetMethod);
   }
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
+
   public void setWarnings(WarningSet newWarnings) {
     baseSelector.setWarnings(newWarnings);
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference)
-   */
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return baseSelector.contextIsIrrelevant(node,site);
+    return baseSelector.contextIsIrrelevant(node, site);
   }
-  
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference)
-   */
+
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
     return false;
   }

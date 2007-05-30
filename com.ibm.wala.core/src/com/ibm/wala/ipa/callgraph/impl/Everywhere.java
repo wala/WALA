@@ -15,9 +15,9 @@ import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 
 /**
- *
- * An object that represent the context everywhere; used
- * for context-insensitive analysis
+ * 
+ * An object that represent the context everywhere; used for context-insensitive
+ * analysis
  * 
  * @author sfink
  */
@@ -35,26 +35,19 @@ public class Everywhere implements Context {
     return null;
   }
 
-  
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "Everywhere";
   }
 
   /**
-   *  Don't use default hashCode (java.lang.Object) as it's
-   *  nondeterministic.
+   * Don't use default hashCode (java.lang.Object) as it's nondeterministic.
    */
   @Override
-  public int hashCode() { 
-    return 9851; 
+  public int hashCode() {
+    return 9851;
   }
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
+
   @Override
   public boolean equals(Object obj) {
     return this == obj;

@@ -27,22 +27,20 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T> {
 
-  private final TabulationSolver<T,?> solver;
+  private final TabulationSolver<T, ?> solver;
 
   /**
    * @param supergraph
    * @param flowFunctions
    * @param solver
    */
-  public ExplodedSupergraphWithSummaryEdges(ISupergraph<T,?> supergraph, IFlowFunctionMap<T> flowFunctions, TabulationSolver<T,?> solver) {
+  public ExplodedSupergraphWithSummaryEdges(ISupergraph<T, ?> supergraph, IFlowFunctionMap<T> flowFunctions,
+      TabulationSolver<T, ?> solver) {
     super(supergraph, flowFunctions);
     this.solver = solver;
   }
-  
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.IFDS.ExplodedSupergraph#getSuccNodes(java.lang.Object)
    */
   @Override
@@ -69,9 +67,7 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
     return result.iterator();
   }
 
-
-
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.dataflow.IFDS.ExplodedSupergraph#getPredNodes(java.lang.Object)
    */
   @Override
@@ -98,8 +94,7 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
     return result.iterator();
   }
 
-
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.dataflow.IFDS.ExplodedSupergraph#getPredNodeCount(java.lang.Object)
    */
   @Override
@@ -107,16 +102,11 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
     return new Iterator2Collection<ExplodedSupergraphNode<T>>(getPredNodes(N)).size();
   }
 
-
-
-
-
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.dataflow.IFDS.ExplodedSupergraph#getSuccNodeCount(java.lang.Object)
    */
   @Override
   public int getSuccNodeCount(ExplodedSupergraphNode<T> N) {
     return new Iterator2Collection<ExplodedSupergraphNode<T>>(getSuccNodes(N)).size();
   }
-
 }

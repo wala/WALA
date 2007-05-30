@@ -25,6 +25,7 @@ import com.ibm.wala.util.debug.Assertions;
 public class RTASelectorKey implements PointerKey {
 
   private final Selector selector;
+
   RTASelectorKey(Selector selector) {
     this.selector = selector;
   }
@@ -33,31 +34,26 @@ public class RTASelectorKey implements PointerKey {
   public int hashCode() {
     return 131 * selector.hashCode();
   }
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
+
   @Override
   public boolean equals(Object arg0) {
     if (arg0 == null) {
       return false;
     }
     if (arg0.getClass().equals(getClass())) {
-      RTASelectorKey other = (RTASelectorKey)arg0;
+      RTASelectorKey other = (RTASelectorKey) arg0;
       return selector.equals(other.selector);
     } else {
       return false;
     }
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "RTAKey:" + selector.toString();
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerKey#getTypeFilter()
    */
   public IClass getTypeFilter() {
@@ -65,5 +61,5 @@ public class RTASelectorKey implements PointerKey {
     Assertions.UNREACHABLE();
     return null;
   }
-  
+
 }

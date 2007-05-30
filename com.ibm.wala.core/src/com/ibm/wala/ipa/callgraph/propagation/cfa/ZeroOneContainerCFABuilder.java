@@ -76,8 +76,6 @@ public class ZeroOneContainerCFABuilder extends CFABuilder {
   }
   
   /**
-   * @param cha
-   * @param keys
    * @return an object which creates contexts for call graph nodes based on the container disambiguation policy
    */
   protected ContextSelector makeContainerContextSelector(ClassHierarchy cha, ZeroXInstanceKeys keys) {
@@ -85,8 +83,6 @@ public class ZeroOneContainerCFABuilder extends CFABuilder {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#getDefaultDispatchBoundHeuristic()
    */
   @Override

@@ -28,7 +28,7 @@ public class BasicFramework<T> implements IKilldallFramework<T> {
     this.transferFunctionProvider = transferFunctionProvider;
   } 
 
-  /* (non-Javadoc)
+  /* 
    * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getFlowGraph()
    */
   public Graph<T> getFlowGraph() {
@@ -36,8 +36,6 @@ public class BasicFramework<T> implements IKilldallFramework<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getTransferFunctionMap()
    */
   public ITransferFunctionProvider<T> getTransferFunctionProvider() {

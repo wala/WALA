@@ -70,8 +70,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitNode#getAllTargetNumbers()
      */
     @Override
@@ -91,8 +89,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.CGNode#getPossibleTargets(com.ibm.wala.classLoader.CallSiteReference)
      */
     @Override
@@ -139,11 +135,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
       return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.detox.ipa.callgraph.CGNode#getNumberOfTargets(com.ibm.wala.classLoader.CallSiteReference)
-     */
     @Override
     public int getNumberOfTargets(CallSiteReference site) {
       Object result = targets.get(site.getProgramCounter());
@@ -168,8 +159,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph#makeNode(com.ibm.wala.classLoader.IMethod,
    *      com.ibm.wala.ipa.callgraph.Context)
    */
@@ -181,8 +170,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
   private class DelegatingEdgeManager extends ExplicitEdgeManager {
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#addEdge(java.lang.Object,
      *      java.lang.Object)
      */
@@ -197,8 +184,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#removeAllIncidentEdges(java.lang.Object)
      */
     @Override
@@ -207,8 +192,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#removeIncomingEdges(java.lang.Object)
      */
     @Override
@@ -217,8 +200,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#removeOutgoingEdges(java.lang.Object)
      */
     @Override
@@ -227,8 +208,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#hasEdge(java.lang.Object,
      *      java.lang.Object)
      */
@@ -244,8 +223,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#getPredNodeCount(java.lang.Object)
      */
     @Override
@@ -255,8 +232,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitEdgeManager#getPredNodeNumbers(java.lang.Object)
      */
     @Override
@@ -287,8 +262,6 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph#makeEdgeManger()
    */
   @Override

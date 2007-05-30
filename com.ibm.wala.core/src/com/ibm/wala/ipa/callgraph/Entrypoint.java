@@ -131,11 +131,6 @@ public abstract class Entrypoint implements BytecodeConstants {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
   @Override
   public boolean equals(Object obj) {
     // assume these are managed canonically
@@ -186,11 +181,6 @@ public abstract class Entrypoint implements BytecodeConstants {
    */
   public abstract int getNumberOfParameters();
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer(method.toString());
@@ -206,11 +196,6 @@ public abstract class Entrypoint implements BytecodeConstants {
     return result.toString();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
     return method.hashCode() * 1009;

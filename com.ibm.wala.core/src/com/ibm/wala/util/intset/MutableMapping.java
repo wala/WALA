@@ -69,9 +69,6 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     return (T) array[n];
   }
 
-  /*
-   * (non-Javadoc)
-   */
   public int getMappedIndex(Object o) {
     Integer I = map.get(o);
     if (I == null) {
@@ -86,8 +83,6 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     return map.get(o) != null;
   }
 
-  /**
-   */
   public int getMappingSize() {
     return nextIndex;
   }
@@ -113,11 +108,6 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     return result;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
@@ -128,8 +118,6 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.OrdinalSetMapping#iterator()
    */
   public Iterator<T> iterator() {
@@ -137,8 +125,6 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.OrdinalSetMapping#makeSingleton(int)
    */
   public OrdinalSet<T> makeSingleton(int i) {

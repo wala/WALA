@@ -28,9 +28,6 @@ public abstract class IntSetVariable extends AbstractVariable {
 
   private MutableIntSet V;
 
-
-  /* (non-Javadoc)
-   */
   public void copyState(IVariable v) {
     IntSetVariable other = (IntSetVariable) v;
     if (V == null) {
@@ -149,11 +146,6 @@ public abstract class IntSetVariable extends AbstractVariable {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.dataflow.AbstractVariable#hashCode()
-   */
   @Override
   public abstract int hashCode();
 

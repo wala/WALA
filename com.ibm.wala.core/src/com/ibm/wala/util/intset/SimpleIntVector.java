@@ -24,8 +24,9 @@ import com.ibm.wala.util.debug.Trace;
 public class SimpleIntVector implements IntVector {
 
   private final static float GROWTH_FACTOR = 1.5f;
+
   private final static int INITIAL_SIZE = 1;
-  
+
   int[] store;
 
   final int defaultValue;
@@ -38,7 +39,7 @@ public class SimpleIntVector implements IntVector {
     store = new int[getInitialSize()];
     store[0] = defaultValue;
   }
-  
+
   /**
    * @param defaultValue
    * @param initialSize
@@ -54,7 +55,7 @@ public class SimpleIntVector implements IntVector {
   int getInitialSize() {
     return INITIAL_SIZE;
   }
-  
+
   /**
    */
   float getGrowthFactor() {
@@ -62,8 +63,6 @@ public class SimpleIntVector implements IntVector {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
   public int get(int x) {
@@ -78,8 +77,6 @@ public class SimpleIntVector implements IntVector {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   public void set(int x, int value) {
@@ -109,30 +106,30 @@ public class SimpleIntVector implements IntVector {
   private void ensureCapacity(int capacity) {
     if (capacity >= store.length) {
       int[] old = store;
-      store = new int[1 + (int)(getGrowthFactor() * capacity)];
+      store = new int[1 + (int) (getGrowthFactor() * capacity)];
       Arrays.fill(store, defaultValue);
       System.arraycopy(old, 0, store, 0, old.length);
     }
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.util.intset.IntVector#reportStats()
    */
   public void performVerboseAction() {
     Trace.println("size:       " + store.length);
-    Trace.println("occupancy:  " + computeOccupancy()); 
+    Trace.println("occupancy:  " + computeOccupancy());
   }
-  
+
   /**
    * @return the percentage of entries in delegateStore that are non-null
    */
   private double computeOccupancy() {
     int count = 0;
-    for (int i = 0; i<store.length; i++) {
+    for (int i = 0; i < store.length; i++) {
       if (store[i] != -1) {
         count++;
       }
     }
-    return (double)count/(double)store.length;
+    return (double) count / (double) store.length;
   }
 }
