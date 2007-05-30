@@ -37,6 +37,7 @@ final public class ArrayLoadInstruction extends Instruction {
     return preallocated[i];
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof ArrayLoadInstruction) {
       ArrayLoadInstruction i = (ArrayLoadInstruction) o;
@@ -46,18 +47,22 @@ final public class ArrayLoadInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return opcode + 9109101;
   }
 
+  @Override
   public int getPoppedCount() {
     return 2;
   }
 
+  @Override
   public String toString() {
     return "ArrayLoad(" + getType() + ")";
   }
 
+  @Override
   public String getPushedType(String[] types) {
     if (types == null) {
       return getType();
@@ -73,6 +78,7 @@ final public class ArrayLoadInstruction extends Instruction {
     }
   }
 
+  @Override
   public byte getPushedWordSize() {
     return Util.getWordSize(getType());
   }
@@ -81,6 +87,7 @@ final public class ArrayLoadInstruction extends Instruction {
     return Constants.indexedTypes[opcode - OP_iaload];
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException {
     v.visitArrayLoad(this);
   }

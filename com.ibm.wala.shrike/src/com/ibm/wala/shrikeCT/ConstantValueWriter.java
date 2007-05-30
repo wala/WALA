@@ -79,11 +79,13 @@ public final class ConstantValueWriter extends ClassWriter.Element {
     }
   }
 
+  @Override
   public int getSize() {
     verify();
     return 8;
   }
 
+  @Override
   public int copyInto(byte[] buf, int offset) throws IllegalArgumentException {
     verify();
     ClassWriter.setUShort(buf, offset, attrID);

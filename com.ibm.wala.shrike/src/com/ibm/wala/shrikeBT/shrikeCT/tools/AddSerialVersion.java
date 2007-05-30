@@ -56,12 +56,15 @@ public class AddSerialVersion {
    * This class implements a stream that just discards everything written to it.
    */
   public static final class SinkOutputStream extends OutputStream {
+    @Override
     public void write(int b) {
     }
 
+    @Override
     public void write(byte[] b) {
     }
 
+    @Override
     public void write(byte[] b, int off, int len) {
     }
   }
@@ -112,13 +115,13 @@ public class AddSerialVersion {
       }
       Arrays.sort(fields, 0, fieldCount, new Comparator<Integer>() {
         public int compare(Integer o1, Integer o2) {
-          String name1 = fieldNames[((Integer) o1).intValue()];
-          String name2 = fieldNames[((Integer) o2).intValue()];
+          String name1 = fieldNames[o1.intValue()];
+          String name2 = fieldNames[o2.intValue()];
           return name1.compareTo(name2);
         }
       });
       for (int i = 0; i < fieldCount; i++) {
-        int f = ((Integer) fields[i]).intValue();
+        int f = fields[i].intValue();
         out.writeUTF(fieldNames[f]);
         out.writeInt(r.getFieldAccessFlags(f));
         out.writeUTF(r.getFieldType(f));
@@ -147,8 +150,8 @@ public class AddSerialVersion {
       }
       Arrays.sort(methods, 0, methodCount, new Comparator<Integer>() {
         public int compare(Integer o1, Integer o2) {
-          int m1 = ((Integer) o1).intValue();
-          int m2 = ((Integer) o2).intValue();
+          int m1 = o1.intValue();
+          int m2 = o2.intValue();
           if (methodKinds[m1] != methodKinds[m2]) {
             return methodKinds[m1] - methodKinds[m2];
           }
@@ -158,7 +161,7 @@ public class AddSerialVersion {
         }
       });
       for (int i = 0; i < methodCount; i++) {
-        int m = ((Integer) methods[i]).intValue();
+        int m = methods[i].intValue();
         out.writeUTF(r.getMethodName(m));
         out.writeInt(r.getMethodAccessFlags(m));
         out.writeUTF(r.getMethodType(m));

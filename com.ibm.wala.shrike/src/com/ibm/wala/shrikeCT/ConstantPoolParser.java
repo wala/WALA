@@ -413,7 +413,7 @@ public final class ConstantPoolParser implements ClassConstants {
   }
 
   private long getLong(int i) {
-    return ((long) getInt(i) << 32) + ((long) getInt(i + 4) & 0xFFFFFFFFL);
+    return ((long) getInt(i) << 32) + (getInt(i + 4) & 0xFFFFFFFFL);
   }
 
   private float getFloat(int i) {

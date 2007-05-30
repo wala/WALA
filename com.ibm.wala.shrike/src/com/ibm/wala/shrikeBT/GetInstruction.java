@@ -39,6 +39,7 @@ public class GetInstruction extends Instruction {
       this.cp = cp;
     }
 
+    @Override
     ConstantPoolReader getLazyConstantPool() {
       return cp;
     }
@@ -47,6 +48,7 @@ public class GetInstruction extends Instruction {
       return index;
     }
 
+    @Override
     public String getClassType() {
       if (classType == null) {
         classType = cp.getConstantPoolMemberClassType(index);
@@ -54,6 +56,7 @@ public class GetInstruction extends Instruction {
       return classType;
     }
 
+    @Override
     public String getFieldName() {
       if (fieldName == null) {
         fieldName = cp.getConstantPoolMemberName(index);
@@ -61,6 +64,7 @@ public class GetInstruction extends Instruction {
       return fieldName;
     }
 
+    @Override
     public String getFieldType() {
       if (type == null) {
         type = cp.getConstantPoolMemberType(index);
@@ -86,6 +90,7 @@ public class GetInstruction extends Instruction {
     return new GetInstruction(isStatic ? OP_getstatic : OP_getfield, type, className, fieldName);
   }
 
+  @Override
   final public boolean equals(Object o) {
     if (o instanceof GetInstruction) {
       GetInstruction i = (GetInstruction) o;
@@ -112,27 +117,33 @@ public class GetInstruction extends Instruction {
     return opcode == OP_getstatic;
   }
 
+  @Override
   final public int hashCode() {
     return getClassType().hashCode() + 11113 * getFieldType().hashCode() + 398011 * getFieldName().hashCode() + opcode;
   }
 
+  @Override
   final public int getPoppedCount() {
     return isStatic() ? 0 : 1;
   }
 
+  @Override
   final public String getPushedType(String[] types) {
     return getFieldType();
   }
 
+  @Override
   final public byte getPushedWordSize() {
     return Util.getWordSize(getFieldType());
   }
 
+  @Override
   public String toString() {
     return "Get(" + getFieldType() + "," + (isStatic() ? "STATIC" : "NONSTATIC") + "," + getClassType() + "," + getFieldName()
         + ")";
   }
 
+  @Override
   public void visit(Visitor v) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException();

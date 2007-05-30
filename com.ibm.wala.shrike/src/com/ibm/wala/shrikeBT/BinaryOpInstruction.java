@@ -15,14 +15,22 @@ package com.ibm.wala.shrikeBT;
  * the result all have the same type.
  */
 final public class BinaryOpInstruction extends Instruction {
-  public interface IOperator {}
-  
+  public interface IOperator {
+  }
+
   public enum Operator implements IOperator {
-    ADD, SUB, MUL, DIV, REM, AND, OR, XOR; 
+    ADD,
+    SUB,
+    MUL,
+    DIV,
+    REM,
+    AND,
+    OR,
+    XOR;
 
     @Override
     public String toString() {
-    	return super.toString().toLowerCase();
+      return super.toString().toLowerCase();
     }
   }
 
@@ -31,6 +39,7 @@ final public class BinaryOpInstruction extends Instruction {
   }
 
   private final static BinaryOpInstruction[] arithmeticOps = preallocateArithmeticOps();
+
   private final static BinaryOpInstruction[] logicalOps = preallocateLogicalOps();
 
   private static BinaryOpInstruction[] preallocateArithmeticOps() {
@@ -71,6 +80,7 @@ final public class BinaryOpInstruction extends Instruction {
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof BinaryOpInstruction) {
       BinaryOpInstruction i = (BinaryOpInstruction) o;
@@ -91,18 +101,22 @@ final public class BinaryOpInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return opcode + 13901901;
   }
 
+  @Override
   public int getPoppedCount() {
     return 2;
   }
 
+  @Override
   public String getPushedType(String[] types) {
     return getType();
   }
 
+  @Override
   public byte getPushedWordSize() {
     return Util.getWordSize(getType());
   }
@@ -117,17 +131,22 @@ final public class BinaryOpInstruction extends Instruction {
     return indexedTypes[t];
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException {
     v.visitBinaryOp(this);
   }
 
+  @Override
   public String toString() {
     return "BinaryOp(" + getType() + "," + getOperator() + ")";
   }
-    /* (non-Javadoc)
+
+  /*
+   * (non-Javadoc)
+   * 
    * @see com.ibm.domo.cfg.IInstruction#isPEI()
    */
   public boolean isPEI() {
-		return opcode == Constants.OP_idiv;
+    return opcode == Constants.OP_idiv;
   }
 }

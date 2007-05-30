@@ -28,6 +28,7 @@ public final class InnerClassesWriter extends ClassWriter.Element {
     attrID = w.addCPUtf8("InnerClasses");
   }
 
+  @Override
   public int getSize() {
     return table == null ? 8 : 8 + table.length * 2;
   }
@@ -37,6 +38,7 @@ public final class InnerClassesWriter extends ClassWriter.Element {
    * 
    * @return the number of bytes copies, which must be equal to getSize()
    */
+  @Override
   public int copyInto(byte[] buf, int offset) throws IllegalArgumentException {
     ClassWriter.setUShort(buf, offset, attrID);
     ClassWriter.setInt(buf, offset + 2, getSize() - 6);

@@ -70,6 +70,7 @@ public final class ConditionalBranchInstruction extends Instruction {
     return new ConditionalBranchInstruction(opcode, label);
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof ConditionalBranchInstruction) {
       ConditionalBranchInstruction i = (ConditionalBranchInstruction) o;
@@ -79,10 +80,12 @@ public final class ConditionalBranchInstruction extends Instruction {
     }
   }
 
+  @Override
   public String toString() {
     return "ConditionalBranch(" + getType() + "," + getOperator() + "," + label + ")";
   }
 
+  @Override
   public int[] getBranchTargets() {
     int[] r = { label };
     return r;
@@ -92,6 +95,7 @@ public final class ConditionalBranchInstruction extends Instruction {
     return label;
   }
 
+  @Override
   public Instruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
     if (targetMap == null) {
       throw new IllegalArgumentException("targetMap is null");
@@ -115,10 +119,12 @@ public final class ConditionalBranchInstruction extends Instruction {
     return opcode < OP_if_acmpeq ? TYPE_int : TYPE_Object;
   }
 
+  @Override
   public int hashCode() {
     return 30190 * opcode + 384101 * label;
   }
 
+  @Override
   public int getPoppedCount() {
     // Xiangyu, to support if_eq (if_ne)...
     if (opcode >= Constants.OP_ifeq && opcode <= Constants.OP_ifle)
@@ -126,6 +132,7 @@ public final class ConditionalBranchInstruction extends Instruction {
     return 2;
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException {
     v.visitConditionalBranch(this);
   }

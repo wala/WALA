@@ -81,6 +81,7 @@ public final class Verifier extends Analyzer {
     VerifyVisitor() {
     }
 
+    @Override
     public void setState(int offset, List<PathElement> path, String[] curStack, String[] curLocals) {
       curIndex = offset;
       curPath = path;
@@ -88,6 +89,7 @@ public final class Verifier extends Analyzer {
       this.curLocals = curLocals;
     }
 
+    @Override
     public boolean shouldContinue() {
       return ex == null;
     }
@@ -110,14 +112,17 @@ public final class Verifier extends Analyzer {
       }
     }
 
+    @Override
     public void visitConstant(ConstantInstruction instruction) {
       // make sure that constants are checked
       instruction.getValue();
     }
 
+    @Override
     public void visitGoto(GotoInstruction instruction) {
     }
 
+    @Override
     public void visitLocalLoad(LoadInstruction instruction) {
       String t = curLocals[instruction.getVarIndex()];
       if (t == null) {
@@ -129,59 +134,72 @@ public final class Verifier extends Analyzer {
       }
     }
 
+    @Override
     public void visitLocalStore(StoreInstruction instruction) {
       checkStackSubtype(0, instruction.getType());
     }
 
+    @Override
     public void visitArrayLoad(ArrayLoadInstruction instruction) {
       checkStackSubtype(0, Constants.TYPE_int);
       checkArrayStackSubtype(1, instruction.getType());
     }
 
+    @Override
     public void visitArrayStore(ArrayStoreInstruction instruction) {
       checkStackSubtype(0, instruction.getType());
       checkStackSubtype(1, Constants.TYPE_int);
       checkArrayStackSubtype(2, instruction.getType());
     }
 
+    @Override
     public void visitPop(PopInstruction instruction) {
     }
 
+    @Override
     public void visitDup(DupInstruction instruction) {
     }
 
+    @Override
     public void visitBinaryOp(BinaryOpInstruction instruction) {
       checkStackSubtype(0, instruction.getType());
       checkStackSubtype(1, instruction.getType());
     }
 
+    @Override
     public void visitUnaryOp(UnaryOpInstruction instruction) {
       checkStackSubtype(0, instruction.getType());
     }
 
+    @Override
     public void visitShift(ShiftInstruction instruction) {
       checkStackSubtype(0, Constants.TYPE_int);
       checkStackSubtype(1, instruction.getType());
     }
 
+    @Override
     public void visitConversion(ConversionInstruction instruction) {
       checkStackSubtype(0, instruction.getFromType());
     }
 
+    @Override
     public void visitComparison(ComparisonInstruction instruction) {
       checkStackSubtype(0, instruction.getType());
       checkStackSubtype(1, instruction.getType());
     }
 
+    @Override
     public void visitConditionalBranch(ConditionalBranchInstruction instruction) {
       checkStackSubtype(0, instruction.getType());
       checkStackSubtype(1, instruction.getType());
     }
 
+    @Override
     public void visitSwitch(SwitchInstruction instruction) {
       checkStackSubtype(0, Constants.TYPE_int);
     }
 
+    @Override
     public void visitReturn(ReturnInstruction instruction) {
       if (instruction.getType() != Constants.TYPE_void) {
         checkStackSubtype(0, instruction.getType());
@@ -189,6 +207,7 @@ public final class Verifier extends Analyzer {
       }
     }
 
+    @Override
     public void visitGet(GetInstruction instruction) {
       // make sure constant pool entries are dereferenced
       String classType = instruction.getClassType();
@@ -198,6 +217,7 @@ public final class Verifier extends Analyzer {
       }
     }
 
+    @Override
     public void visitPut(PutInstruction instruction) {
       // make sure constant pool entries are dereferenced
       String classType = instruction.getClassType();
@@ -209,6 +229,7 @@ public final class Verifier extends Analyzer {
       }
     }
 
+    @Override
     public void visitInvoke(InvokeInstruction instruction) {
       // make sure constant pool entries are dereferenced
       String classType = instruction.getClassType();
@@ -222,6 +243,7 @@ public final class Verifier extends Analyzer {
       }
     }
 
+    @Override
     public void visitNew(NewInstruction instruction) {
       for (int i = 0; i < instruction.getArrayBoundsCount(); i++) {
         checkStackSubtype(i, Constants.TYPE_int);
@@ -230,26 +252,31 @@ public final class Verifier extends Analyzer {
       instruction.getType();
     }
 
+    @Override
     public void visitArrayLength(ArrayLengthInstruction instruction) {
       if (!curStack[0].equals(Constants.TYPE_null) && !Util.isArrayType(curStack[0])) {
         ex = new FailureException(curIndex, "Expected array type at stack 0, got " + curStack[0], curPath);
       }
     }
 
+    @Override
     public void visitThrow(ThrowInstruction instruction) {
       checkStackSubtype(0, Constants.TYPE_Throwable);
     }
 
+    @Override
     public void visitMonitor(MonitorInstruction instruction) {
       checkStackSubtype(0, Constants.TYPE_Object);
     }
 
+    @Override
     public void visitCheckCast(CheckCastInstruction instruction) {
       checkStackSubtype(0, Constants.TYPE_Object);
       // make sure constant is dereferenced
       instruction.getType();
     }
 
+    @Override
     public void visitInstanceof(InstanceofInstruction instruction) {
       checkStackSubtype(0, Constants.TYPE_Object);
       // make sure constant is dereferenced

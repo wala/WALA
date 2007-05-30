@@ -36,6 +36,7 @@ public class LocalAllocator implements MethodData.Results {
     final int[] max = { Util.getParamsWordSize(info.getSignature()) + (info.getIsStatic() ? 0 : 1) };
 
     Instruction.Visitor visitor = new Instruction.Visitor() {
+      @Override
       public void visitLocalLoad(LoadInstruction instruction) {
         int v = instruction.getVarIndex() + Util.getWordSize(instruction.getType());
         if (v > max[0]) {
@@ -43,6 +44,7 @@ public class LocalAllocator implements MethodData.Results {
         }
       }
 
+      @Override
       public void visitLocalStore(StoreInstruction instruction) {
         int v = instruction.getVarIndex() + Util.getWordSize(instruction.getType());
         if (v > max[0]) {

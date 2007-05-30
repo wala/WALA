@@ -44,6 +44,7 @@ public final class ReturnInstruction extends Instruction {
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof ReturnInstruction) {
       ReturnInstruction i = (ReturnInstruction) o;
@@ -53,14 +54,17 @@ public final class ReturnInstruction extends Instruction {
     }
   }
 
+  @Override
   public boolean isFallThrough() {
     return false;
   }
 
+  @Override
   public int hashCode() {
     return opcode + 31111;
   }
 
+  @Override
   public int getPoppedCount() {
     return opcode == OP_return ? 0 : 1;
   }
@@ -69,10 +73,12 @@ public final class ReturnInstruction extends Instruction {
     return opcode == OP_return ? TYPE_void : indexedTypes[opcode - OP_ireturn];
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException {
     v.visitReturn(this);
   }
 
+  @Override
   public String toString() {
     return "Return(" + getType() + ")";
   }

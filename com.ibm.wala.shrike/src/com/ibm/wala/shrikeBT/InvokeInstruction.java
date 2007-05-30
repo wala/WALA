@@ -55,6 +55,7 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
       this.cp = cp;
     }
 
+    @Override
     ConstantPoolReader getLazyConstantPool() {
       return cp;
     }
@@ -63,6 +64,7 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
       return index;
     }
 
+    @Override
     public String getClassType() {
       if (classType == null) {
         classType = cp.getConstantPoolMemberClassType(index);
@@ -70,6 +72,7 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
       return classType;
     }
 
+    @Override
     public String getMethodName() {
       if (methodName == null) {
         methodName = cp.getConstantPoolMemberName(index);
@@ -77,6 +80,7 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
       return methodName;
     }
 
+    @Override
     public String getMethodSignature() {
       if (type == null) {
         type = cp.getConstantPoolMemberType(index);
@@ -92,6 +96,7 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     return new Lazy((short) mode, cp, index);
   }
 
+  @Override
   final public boolean equals(Object o) {
     if (o instanceof InvokeInstruction) {
       InvokeInstruction i = (InvokeInstruction) o;
@@ -133,14 +138,17 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     }
   }
 
+  @Override
   final public int hashCode() {
     return getMethodSignature().hashCode() + 9011 * getClassType().hashCode() + 317 * getMethodName().hashCode() + opcode * 3188;
   }
 
+  @Override
   final public int getPoppedCount() {
     return (opcode == Constants.OP_invokestatic ? 0 : 1) + Util.getParamsCount(getMethodSignature());
   }
 
+  @Override
   final public String getPushedType(String[] types) {
     String t = Util.getReturnType(getMethodSignature());
     if (t.equals(Constants.TYPE_void)) {
@@ -150,16 +158,19 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     }
   }
 
+  @Override
   final public byte getPushedWordSize() {
     String t = getMethodSignature();
     int index = t.lastIndexOf(')');
     return Util.getWordSize(t, index + 1);
   }
 
+  @Override
   final public void visit(Visitor v) throws NullPointerException {
     v.visitInvoke(this);
   }
 
+  @Override
   final public String toString() {
     return "Invoke(" + getInvocationModeString() + "," + getClassType() + "," + getMethodName() + "," + getMethodSignature() + ")";
   }

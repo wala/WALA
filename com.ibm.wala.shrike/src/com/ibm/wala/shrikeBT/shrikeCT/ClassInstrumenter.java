@@ -185,7 +185,7 @@ final public class ClassInstrumenter {
     if (classWriter == null) {
       throw new IllegalArgumentException("classWriter is null");
     }
-    Instruction[] ins = (Instruction[]) instructions.toArray(new Instruction[instructions.size()]);
+    Instruction[] ins = instructions.toArray(new Instruction[instructions.size()]);
     ExceptionHandler[][] handlers = new ExceptionHandler[ins.length][];
     Arrays.fill(handlers, noHandlers);
     int[] i2b = new int[ins.length];

@@ -24,6 +24,7 @@ public final class SwapInstruction extends Instruction {
     return preallocated;
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof SwapInstruction) {
       return true;
@@ -32,18 +33,22 @@ public final class SwapInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return 84323111;
   }
 
+  @Override
   public int getPoppedCount() {
     return 2;
   }
 
+  @Override
   public String toString() {
     return "Swap()";
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException {
     v.visitSwap(this);
   }

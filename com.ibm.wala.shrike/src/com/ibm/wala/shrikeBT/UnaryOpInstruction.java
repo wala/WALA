@@ -48,6 +48,7 @@ public final class UnaryOpInstruction extends Instruction {
     return preallocated[t];
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof UnaryOpInstruction) {
       UnaryOpInstruction i = (UnaryOpInstruction) o;
@@ -61,18 +62,22 @@ public final class UnaryOpInstruction extends Instruction {
     return Operator.NEG;
   }
 
+  @Override
   public int hashCode() {
     return opcode;
   }
 
+  @Override
   public int getPoppedCount() {
     return 1;
   }
 
+  @Override
   public String getPushedType(String[] types) {
     return getType();
   }
 
+  @Override
   public byte getPushedWordSize() {
     return Util.getWordSize(getType());
   }
@@ -81,10 +86,12 @@ public final class UnaryOpInstruction extends Instruction {
     return indexedTypes[opcode - OP_ineg];
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException  {
     v.visitUnaryOp(this);
   }
 
+  @Override
   public String toString() {
     return "UnaryOp(" + getType() + "," + getOperator() + ")";
   }

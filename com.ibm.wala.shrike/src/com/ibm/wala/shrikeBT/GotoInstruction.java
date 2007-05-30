@@ -40,10 +40,12 @@ public final class GotoInstruction extends Instruction {
     }
   }
 
+  @Override
   public boolean isFallThrough() {
     return false;
   }
 
+  @Override
   public int[] getBranchTargets() {
     return label;
   }
@@ -57,6 +59,7 @@ public final class GotoInstruction extends Instruction {
    * 
    * @see com.ibm.wala.shrikeBT.Instruction#redirectTargets(int[])
    */
+  @Override
   public Instruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
     if (targetMap == null) {
       throw new IllegalArgumentException("targetMap is null");
@@ -68,6 +71,7 @@ public final class GotoInstruction extends Instruction {
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof GotoInstruction) {
       GotoInstruction i = (GotoInstruction) o;
@@ -77,14 +81,17 @@ public final class GotoInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return label[0] * 1348091 + 18301;
   }
 
+  @Override
   public String toString() {
     return "Goto(" + getLabel() + ")";
   }
 
+  @Override
   public void visit(Visitor v) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException();

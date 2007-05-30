@@ -24,22 +24,27 @@ public final class ThrowInstruction extends Instruction {
     return preallocated;
   }
 
+  @Override
   public boolean equals(Object o) {
     return o instanceof ThrowInstruction;
   }
 
+  @Override
   public boolean isFallThrough() {
     return false;
   }
 
+  @Override
   public int hashCode() {
     return 99651;
   }
 
+  @Override
   public int getPoppedCount() {
     return 1;
   }
 
+  @Override
   public void visit(Visitor v) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException();
@@ -47,6 +52,7 @@ public final class ThrowInstruction extends Instruction {
     v.visitThrow(this);
   }
 
+  @Override
   public String toString() {
     return "Throw()";
   }

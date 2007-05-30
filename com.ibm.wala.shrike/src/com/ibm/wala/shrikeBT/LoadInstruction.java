@@ -63,18 +63,22 @@ public final class LoadInstruction extends Instruction {
     }
   }
 
+  @Override
   public String getPushedType(String[] types) {
     return getType();
   }
 
+  @Override
   public byte getPushedWordSize() {
     return Util.getWordSize(getType());
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException {
     v.visitLocalLoad(this);
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof LoadInstruction) {
       LoadInstruction i = (LoadInstruction) o;
@@ -84,10 +88,12 @@ public final class LoadInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return opcode + index * 19801901;
   }
 
+  @Override
   public String toString() {
     return "LocalLoad(" + getType() + "," + index + ")";
   }

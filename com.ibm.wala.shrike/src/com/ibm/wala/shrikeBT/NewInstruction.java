@@ -65,6 +65,7 @@ public final class NewInstruction extends Instruction {
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof NewInstruction) {
       NewInstruction i = (NewInstruction) o;
@@ -78,18 +79,22 @@ public final class NewInstruction extends Instruction {
     return arrayBoundsCount;
   }
 
+  @Override
   public int hashCode() {
     return 13111143 * type.hashCode() + arrayBoundsCount;
   }
 
+  @Override
   public int getPoppedCount() {
     return arrayBoundsCount;
   }
 
+  @Override
   public String getPushedType(String[] types) {
     return type;
   }
 
+  @Override
   public byte getPushedWordSize() {
     return 1;
   }
@@ -98,10 +103,12 @@ public final class NewInstruction extends Instruction {
     return type;
   }
 
+  @Override
   public String toString() {
     return "New(" + type + "," + arrayBoundsCount + ")";
   }
 
+  @Override
   public void visit(Visitor v) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException();

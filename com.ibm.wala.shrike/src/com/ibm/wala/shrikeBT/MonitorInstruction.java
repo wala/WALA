@@ -25,6 +25,7 @@ public final class MonitorInstruction extends Instruction {
     return entering ? enter : exit;
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof MonitorInstruction) {
       MonitorInstruction i = (MonitorInstruction) o;
@@ -38,14 +39,17 @@ public final class MonitorInstruction extends Instruction {
     return opcode == OP_monitorenter;
   }
 
+  @Override
   public int hashCode() {
     return opcode + 1911;
   }
 
+  @Override
   public int getPoppedCount() {
     return 1;
   }
 
+  @Override
   public void visit(Visitor v) throws IllegalArgumentException{
     if (v == null) {
       throw new IllegalArgumentException();
@@ -53,6 +57,7 @@ public final class MonitorInstruction extends Instruction {
     v.visitMonitor(this);
   }
 
+  @Override
   public String toString() {
     return "Monitor(" + (isEnter() ? "ENTER" : "EXIT") + ")";
   }

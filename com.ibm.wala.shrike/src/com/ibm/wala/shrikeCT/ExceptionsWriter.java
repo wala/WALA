@@ -28,10 +28,12 @@ public final class ExceptionsWriter extends ClassWriter.Element {
     attrID = w.addCPUtf8("Exceptions");
   }
 
+  @Override
   public int getSize() {
     return table == null ? 8 : 8 + table.length * 2;
   }
 
+  @Override
   public int copyInto(byte[] buf, int offset) throws IllegalArgumentException {
     ClassWriter.setUShort(buf, offset, attrID);
     ClassWriter.setInt(buf, offset + 2, getSize() - 6);

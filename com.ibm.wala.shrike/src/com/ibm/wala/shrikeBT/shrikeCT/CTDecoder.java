@@ -74,6 +74,7 @@ final public class CTDecoder extends Decoder {
       this.cp = cp;
     }
 
+    @Override
     public int getConstantPoolItemType(int index) {
       return cp.getItemType(index);
     }
@@ -83,6 +84,7 @@ final public class CTDecoder extends Decoder {
       return new Error("Invalid class file: " + e.getMessage());
     }
 
+    @Override
     public int getConstantPoolInteger(int index) {
       try {
         return cp.getCPInt(index);
@@ -91,6 +93,7 @@ final public class CTDecoder extends Decoder {
       }
     }
 
+    @Override
     public float getConstantPoolFloat(int index) {
       try {
         return cp.getCPFloat(index);
@@ -99,6 +102,7 @@ final public class CTDecoder extends Decoder {
       }
     }
 
+    @Override
     public long getConstantPoolLong(int index) {
       try {
         return cp.getCPLong(index);
@@ -107,6 +111,7 @@ final public class CTDecoder extends Decoder {
       }
     }
 
+    @Override
     public double getConstantPoolDouble(int index) {
       try {
         return cp.getCPDouble(index);
@@ -115,6 +120,7 @@ final public class CTDecoder extends Decoder {
       }
     }
 
+    @Override
     public String getConstantPoolString(int index) {
       try {
         return cp.getCPString(index);
@@ -123,6 +129,7 @@ final public class CTDecoder extends Decoder {
       }
     }
 
+    @Override
     public String getConstantPoolClassType(int index) {
       try {
         return convertClassToType(cp.getCPClass(index));
@@ -131,6 +138,7 @@ final public class CTDecoder extends Decoder {
       }
     }
 
+    @Override
     public String getConstantPoolMemberClassType(int index) {
       try {
         return convertClassToType(cp.getCPRefClass(index));
@@ -139,6 +147,7 @@ final public class CTDecoder extends Decoder {
       }
     }
 
+    @Override
     public String getConstantPoolMemberName(int index) {
       try {
         return cp.getCPRefName(index);
@@ -147,6 +156,7 @@ final public class CTDecoder extends Decoder {
       }
     }
 
+    @Override
     public String getConstantPoolMemberType(int index) {
       try {
         return cp.getCPRefType(index);

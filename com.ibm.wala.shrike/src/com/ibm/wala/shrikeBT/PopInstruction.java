@@ -32,6 +32,7 @@ public final class PopInstruction extends Instruction {
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof PopInstruction) {
       PopInstruction i = (PopInstruction) o;
@@ -41,14 +42,17 @@ public final class PopInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return size + 8431890;
   }
 
+  @Override
   public int getPoppedCount() {
     return size;
   }
 
+  @Override
   public void visit(Visitor v) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException();
@@ -56,6 +60,7 @@ public final class PopInstruction extends Instruction {
     v.visitPop(this);
   }
 
+  @Override
   public String toString() {
     return "Pop(" + size + ")";
   }

@@ -16,6 +16,7 @@ package com.ibm.wala.shrikeBT;
  */
 public final class ConversionInstruction extends Instruction {
   private String fromType;
+
   private String toType;
 
   protected ConversionInstruction(short opcode) {
@@ -64,6 +65,7 @@ public final class ConversionInstruction extends Instruction {
     }
   }
 
+  @Override
   public int getPoppedCount() {
     return 1;
   }
@@ -80,14 +82,17 @@ public final class ConversionInstruction extends Instruction {
     return toType;
   }
 
+  @Override
   public String getPushedType(String[] types) {
     return getToType();
   }
 
+  @Override
   public byte getPushedWordSize() {
     return Util.getWordSize(getToType());
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof ConversionInstruction) {
       ConversionInstruction i = (ConversionInstruction) o;
@@ -97,21 +102,27 @@ public final class ConversionInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return opcode * 143111;
   }
 
+  @Override
   public String toString() {
     return "Conversion(" + getFromType() + "," + getToType() + ")";
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException {
     v.visitConversion(this);
   }
-      /* (non-Javadoc)
-     * @see com.ibm.domo.cfg.IInstruction#isPEI()
-     */
-    public boolean isPEI() {
-      return false;
-    }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.domo.cfg.IInstruction#isPEI()
+   */
+  public boolean isPEI() {
+    return false;
+  }
 }

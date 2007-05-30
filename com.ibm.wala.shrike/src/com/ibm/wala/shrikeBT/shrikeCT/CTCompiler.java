@@ -32,26 +32,32 @@ final public class CTCompiler extends Compiler {
   }
   
 
+  @Override
   protected int allocateConstantPoolInteger(int v) {
     return cw.addCPInt(v);
   }
 
+  @Override
   protected int allocateConstantPoolFloat(float v) {
     return cw.addCPFloat(v);
   }
 
+  @Override
   protected int allocateConstantPoolLong(long v) {
     return cw.addCPLong(v);
   }
 
+  @Override
   protected int allocateConstantPoolDouble(double v) {
     return cw.addCPDouble(v);
   }
 
+  @Override
   protected int allocateConstantPoolString(String v) {
     return cw.addCPString(v);
   }
 
+  @Override
   protected int allocateConstantPoolClassType(String c) {
     return cw.addCPClass(convertTypeToClass(c));
   }
@@ -80,18 +86,22 @@ final public class CTCompiler extends Compiler {
   }
 
 
+  @Override
   protected int allocateConstantPoolField(String c, String name, String type) {
     return cw.addCPFieldRef(convertTypeToClass(c), name, type);
   }
 
+  @Override
   protected int allocateConstantPoolMethod(String c, String name, String sig) {
     return cw.addCPMethodRef(convertTypeToClass(c), name, sig);
   }
 
+  @Override
   protected int allocateConstantPoolInterfaceMethod(String c, String name, String sig) {
     return cw.addCPInterfaceMethodRef(convertTypeToClass(c), name, sig);
   }
 
+  @Override
   protected String createHelperMethod(boolean isStatic, String sig) {
     long r = Math.abs((new Random()).nextLong());
     String name = "_helper_" + r;

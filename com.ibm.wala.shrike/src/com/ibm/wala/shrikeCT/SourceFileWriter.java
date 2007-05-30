@@ -36,11 +36,13 @@ public final class SourceFileWriter extends ClassWriter.Element {
     }
   }
 
+  @Override
   public int getSize() throws IllegalArgumentException {
     verify();
     return 8;
   }
 
+  @Override
   public int copyInto(byte[] buf, int offset) throws IllegalArgumentException {
     verify();
     ClassWriter.setUShort(buf, offset, attrID);

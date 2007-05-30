@@ -36,10 +36,12 @@ public abstract class ConstantInstruction extends Instruction {
       return preallocated;
     }
 
+    @Override
     public Object getValue() {
       return null;
     }
 
+    @Override
     public String getType() {
       return TYPE_null;
     }
@@ -76,10 +78,12 @@ public abstract class ConstantInstruction extends Instruction {
       }
     }
 
+    @Override
     final public Object getValue() {
       return new Integer(getIntValue());
     }
 
+    @Override
     final public String getType() {
       return TYPE_int;
     }
@@ -101,6 +105,7 @@ public abstract class ConstantInstruction extends Instruction {
       this.isSet = false;
     }
 
+    @Override
     public int getIntValue() {
       if (!isSet) {
         value = cp.getConstantPoolInteger(index);
@@ -109,10 +114,12 @@ public abstract class ConstantInstruction extends Instruction {
       return value;
     }
 
+    @Override
     public ConstantPoolReader getLazyConstantPool() {
       return cp;
     }
 
+    @Override
     public int getCPIndex() {
       return index;
     }
@@ -141,10 +148,12 @@ public abstract class ConstantInstruction extends Instruction {
       }
     }
 
+    @Override
     final public Object getValue() {
       return new Long(getLongValue());
     }
 
+    @Override
     final public String getType() {
       return TYPE_long;
     }
@@ -166,6 +175,7 @@ public abstract class ConstantInstruction extends Instruction {
       this.isSet = false;
     }
 
+    @Override
     public long getLongValue() {
       if (!isSet) {
         value = cp.getConstantPoolLong(index);
@@ -174,10 +184,12 @@ public abstract class ConstantInstruction extends Instruction {
       return value;
     }
 
+    @Override
     public ConstantPoolReader getLazyConstantPool() {
       return cp;
     }
 
+    @Override
     public int getCPIndex() {
       return index;
     }
@@ -206,10 +218,12 @@ public abstract class ConstantInstruction extends Instruction {
       }
     }
 
+    @Override
     final public Object getValue() {
       return new Float(getFloatValue());
     }
 
+    @Override
     final public String getType() {
       return TYPE_float;
     }
@@ -231,6 +245,7 @@ public abstract class ConstantInstruction extends Instruction {
       this.isSet = false;
     }
 
+    @Override
     public float getFloatValue() {
       if (!isSet) {
         value = cp.getConstantPoolFloat(index);
@@ -239,10 +254,12 @@ public abstract class ConstantInstruction extends Instruction {
       return value;
     }
 
+    @Override
     public ConstantPoolReader getLazyConstantPool() {
       return cp;
     }
 
+    @Override
     public int getCPIndex() {
       return index;
     }
@@ -271,10 +288,12 @@ public abstract class ConstantInstruction extends Instruction {
       }
     }
 
+    @Override
     final public Object getValue() {
       return new Double(getDoubleValue());
     }
 
+    @Override
     final public String getType() {
       return TYPE_double;
     }
@@ -296,6 +315,7 @@ public abstract class ConstantInstruction extends Instruction {
       this.isSet = false;
     }
 
+    @Override
     public double getDoubleValue() {
       if (!isSet) {
         value = cp.getConstantPoolDouble(index);
@@ -304,10 +324,12 @@ public abstract class ConstantInstruction extends Instruction {
       return value;
     }
 
+    @Override
     public ConstantPoolReader getLazyConstantPool() {
       return cp;
     }
 
+    @Override
     public int getCPIndex() {
       return index;
     }
@@ -325,10 +347,12 @@ public abstract class ConstantInstruction extends Instruction {
       return new ConstString(OP_ldc_w, v);
     }
 
+    @Override
     public Object getValue() {
       return value;
     }
 
+    @Override
     final public String getType() {
       return TYPE_String;
     }
@@ -344,6 +368,7 @@ public abstract class ConstantInstruction extends Instruction {
       this.index = index;
     }
 
+    @Override
     public Object getValue() {
       if (value == null) {
         value = cp.getConstantPoolString(index);
@@ -351,10 +376,12 @@ public abstract class ConstantInstruction extends Instruction {
       return value;
     }
 
+    @Override
     public ConstantPoolReader getLazyConstantPool() {
       return cp;
     }
 
+    @Override
     public int getCPIndex() {
       return index;
     }
@@ -372,10 +399,12 @@ public abstract class ConstantInstruction extends Instruction {
       return new ConstClass(OP_ldc_w, v);
     }
 
+    @Override
     public Object getValue() {
       return typeName;
     }
 
+    @Override
     final public String getType() {
       return TYPE_Class;
     }
@@ -391,6 +420,7 @@ public abstract class ConstantInstruction extends Instruction {
       this.index = index;
     }
 
+    @Override
     public Object getValue() {
       if (typeName == null) {
         typeName = cp.getConstantPoolClassType(index);
@@ -398,10 +428,12 @@ public abstract class ConstantInstruction extends Instruction {
       return typeName;
     }
 
+    @Override
     public ConstantPoolReader getLazyConstantPool() {
       return cp;
     }
 
+    @Override
     public int getCPIndex() {
       return index;
     }
@@ -462,7 +494,7 @@ public abstract class ConstantInstruction extends Instruction {
   }
 
   public static ConstantInstruction makeClass(String s) {
-    return (ConstantInstruction) ConstClass.makeInternal(s);
+    return ConstClass.makeInternal(s);
   }
 
   static ConstantInstruction make(ConstantPoolReader cp, int index) {
@@ -484,6 +516,7 @@ public abstract class ConstantInstruction extends Instruction {
     }
   }
 
+  @Override
   final public boolean equals(Object o) {
     if (o instanceof ConstantInstruction) {
       ConstantInstruction i = (ConstantInstruction) o;
@@ -493,18 +526,22 @@ public abstract class ConstantInstruction extends Instruction {
     }
   }
 
+  @Override
   final public String getPushedType(String[] types) {
     return getType();
   }
 
+  @Override
   final public byte getPushedWordSize() {
     return Util.getWordSize(getType());
   }
 
+  @Override
   final public int hashCode() {
     return getType().hashCode() + 14411 * getValue().hashCode();
   }
 
+  @Override
   final public void visit(Visitor v) throws NullPointerException {
     v.visitConstant(this);
   }
@@ -540,6 +577,7 @@ public abstract class ConstantInstruction extends Instruction {
     }
   }
 
+  @Override
   final public String toString() {
     return "Constant(" + getType() + "," + quote(getValue()) + ")";
   }

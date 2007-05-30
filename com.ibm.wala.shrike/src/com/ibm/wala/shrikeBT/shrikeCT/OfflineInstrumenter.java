@@ -31,6 +31,7 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
   public OfflineInstrumenter() {
   }
 
+  @Override
   protected Object makeClassFromStream(BufferedInputStream s) throws IOException {
     byte[] bytes = new byte[s.available()];
     Util.readFully(s, bytes);
@@ -41,6 +42,7 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
     }
   }
 
+  @Override
   protected String getClassName(Object cl) {
     try {
       return ((ClassInstrumenter) cl).getReader().getName().replace('/', '.');
@@ -49,6 +51,7 @@ final public class OfflineInstrumenter extends OfflineInstrumenterBase {
     }
   }
 
+  @Override
   protected void writeClassTo(Object cl, Object mods, OutputStream s) throws IOException {
     ClassInstrumenter ci = (ClassInstrumenter) cl;
     ClassWriter cw = (ClassWriter) mods;

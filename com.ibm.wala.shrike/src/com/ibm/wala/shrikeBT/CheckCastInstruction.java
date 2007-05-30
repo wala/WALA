@@ -28,6 +28,7 @@ final public class CheckCastInstruction extends Instruction {
     return new CheckCastInstruction(type.intern());
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof CheckCastInstruction) {
       CheckCastInstruction i = (CheckCastInstruction) o;
@@ -37,10 +38,12 @@ final public class CheckCastInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return 131111 + type.hashCode();
   }
 
+  @Override
   public int getPoppedCount() {
     return 1;
   }
@@ -52,14 +55,17 @@ final public class CheckCastInstruction extends Instruction {
     return type;
   }
 
+  @Override
   public String getPushedType(String[] types) {
     return type;
   }
 
+  @Override
   public byte getPushedWordSize() {
     return 1;
   }
 
+  @Override
   public void visit(Visitor v) {
     if (v == null) {
       throw new IllegalArgumentException();
@@ -67,6 +73,7 @@ final public class CheckCastInstruction extends Instruction {
     v.visitCheckCast(this);
   }
 
+  @Override
   public String toString() {
     return "CheckCast(" + type + ")";
   }

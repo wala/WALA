@@ -78,14 +78,17 @@ public final class ClassWriter implements ClassConstants {
       this.s = s;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o instanceof CWString && ((CWString) o).s.equals(s);
     }
 
+    @Override
     public int hashCode() {
       return s.hashCode() + 3901;
     }
 
+    @Override
     byte getType() {
       return CONSTANT_String;
     }
@@ -98,14 +101,17 @@ public final class ClassWriter implements ClassConstants {
       this.c = c;
     }
 
+    @Override
     public boolean equals(Object o) {
       return o instanceof CWClass && ((CWClass) o).c.equals(c);
     }
 
+    @Override
     public int hashCode() {
       return c.hashCode() + 1431;
     }
 
+    @Override
     byte getType() {
       return CONSTANT_Class;
     }
@@ -124,6 +130,7 @@ public final class ClassWriter implements ClassConstants {
       this.t = t;
     }
 
+    @Override
     public boolean equals(Object o) {
       if (o instanceof CWRef) {
         CWRef r = (CWRef) o;
@@ -133,10 +140,12 @@ public final class ClassWriter implements ClassConstants {
       }
     }
 
+    @Override
     public int hashCode() {
       return type + (c.hashCode() << 5) + (n.hashCode() << 3) + t.hashCode();
     }
 
+    @Override
     byte getType() {
       return type;
     }
@@ -151,6 +160,7 @@ public final class ClassWriter implements ClassConstants {
       this.t = t;
     }
 
+    @Override
     public boolean equals(Object o) {
       if (o instanceof CWNAT) {
         CWNAT r = (CWNAT) o;
@@ -160,10 +170,12 @@ public final class ClassWriter implements ClassConstants {
       }
     }
 
+    @Override
     public int hashCode() {
       return (n.hashCode() << 3) + t.hashCode();
     }
 
+    @Override
     byte getType() {
       return CONSTANT_NameAndType;
     }
@@ -511,10 +523,12 @@ public final class ClassWriter implements ClassConstants {
       this.len = len;
     }
 
+    @Override
     public int getSize() {
       return len;
     }
 
+    @Override
     public int copyInto(byte[] dest, int destOffset) {
       System.arraycopy(buf, offset, dest, destOffset, len);
       return destOffset + len;
@@ -595,6 +609,7 @@ public final class ClassWriter implements ClassConstants {
       this.attributes = attributes;
     }
 
+    @Override
     public int getSize() {
       int size = 8;
       if (attributes != null) {
@@ -605,6 +620,7 @@ public final class ClassWriter implements ClassConstants {
       return size;
     }
 
+    @Override
     public int copyInto(byte[] buf, int offset) {
       setUShort(buf, offset, access);
       setUShort(buf, offset + 2, name);

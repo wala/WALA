@@ -116,15 +116,18 @@ public abstract class OfflineInstrumenterBase {
       name = je;
     }
 
+    @Override
     public InputStream open() throws IOException {
       JarFile cachedJar = openCachedJar(file);
       return cachedJar.getInputStream(cachedJar.getEntry(name));
     }
 
+    @Override
     public String toString() {
       return file.getPath() + "#" + name;
     }
 
+    @Override
     public boolean isClass() {
       return name.endsWith(".class");
     }
@@ -169,10 +172,12 @@ public abstract class OfflineInstrumenterBase {
       file = f;
     }
 
+    @Override
     public InputStream open() throws IOException {
       return new FileInputStream(file);
     }
 
+    @Override
     public String toString() {
       return file.getPath();
     }

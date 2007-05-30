@@ -371,7 +371,7 @@ public abstract class Decoder implements Constants {
     if (retAddr > 0) {
       RetInfo r = retInfo[retAddr];
       r.sub = subAddr;
-      decodeAt(retToAddr, r.stackLen, (byte[]) r.stackWords.clone());
+      decodeAt(retToAddr, r.stackLen, r.stackWords.clone());
     }
   }
 
@@ -743,7 +743,7 @@ public abstract class Decoder implements Constants {
             int t = targets[i];
 
             if (t >= 0) {
-              decodeAt(t, stackLen, (byte[]) stackWords.clone());
+              decodeAt(t, stackLen, stackWords.clone());
             }
           }
 
@@ -874,7 +874,7 @@ public abstract class Decoder implements Constants {
     newCodeIndex++;
 
     int subStart = newCodeIndex;
-    int[] map = (int[]) callerMap.clone();
+    int[] map = callerMap.clone();
     int sub = JSRs[callSite];
 
     // emit the subroutine code

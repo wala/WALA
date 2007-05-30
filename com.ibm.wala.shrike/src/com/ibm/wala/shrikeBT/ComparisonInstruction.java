@@ -29,7 +29,7 @@ final public class ComparisonInstruction extends Instruction {
     this.opcode = opcode;
   }
 
-  private final static ComparisonInstruction preallocatedLCMP = new ComparisonInstruction((short) OP_lcmp);
+  private final static ComparisonInstruction preallocatedLCMP = new ComparisonInstruction(OP_lcmp);
 
   private final static ComparisonInstruction[] preallocatedFloatingCompares = preallocateFloatingCompares();
 
@@ -62,6 +62,7 @@ final public class ComparisonInstruction extends Instruction {
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof ComparisonInstruction) {
       ComparisonInstruction i = (ComparisonInstruction) o;
@@ -104,26 +105,32 @@ final public class ComparisonInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return opcode + 1391901;
   }
 
+  @Override
   public int getPoppedCount() {
     return 2;
   }
 
+  @Override
   public String getPushedType(String[] types) {
     return Constants.TYPE_boolean;
   }
 
+  @Override
   public byte getPushedWordSize() {
     return 1;
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException {
     v.visitComparison(this);
   }
 
+  @Override
   public String toString() {
     return "Comparison(" + getType() + "," + getOperator() + ")";
   }

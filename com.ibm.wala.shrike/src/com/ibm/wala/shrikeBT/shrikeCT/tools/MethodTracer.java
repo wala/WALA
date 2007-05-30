@@ -102,6 +102,7 @@ public class MethodTracer {
             + ci.getReader().getMethodName(i);
 
         me.insertAtStart(new MethodEditor.Patch() {
+          @Override
           public void emitTo(MethodEditor.Output w) {
             w.emit(getSysErr);
             w.emit(ConstantInstruction.makeString(msg0));
@@ -117,6 +118,7 @@ public class MethodTracer {
                   + ci.getReader().getMethodName(i) + ":" + k + " to target " + Util.makeClass(instr.getClassType()) + "."
                   + instr.getMethodName();
               me.insertBefore(k, new MethodEditor.Patch() {
+                @Override
                 public void emitTo(MethodEditor.Output w) {
                   w.emit(getSysErr);
                   w.emit(ConstantInstruction.makeString(msg));

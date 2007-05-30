@@ -54,6 +54,7 @@ public final class CodeWriter extends ClassWriter.Element {
     return code.length;
   }
 
+  @Override
   public int getSize() throws IllegalArgumentException {
     verify();
 
@@ -66,6 +67,7 @@ public final class CodeWriter extends ClassWriter.Element {
     return size;
   }
 
+  @Override
   public int copyInto(byte[] buf, int offset) throws IllegalArgumentException {
     verify();
 

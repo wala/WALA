@@ -75,10 +75,12 @@ public final class SwitchInstruction extends Instruction {
     return new SwitchInstruction(opcode, casesAndLabels, defaultLabel);
   }
 
+  @Override
   public boolean isFallThrough() {
     return false;
   }
 
+  @Override
   public int[] getBranchTargets() {
     int[] r = new int[casesAndLabels.length / 2 + 1];
     r[0] = defaultLabel;
@@ -88,6 +90,7 @@ public final class SwitchInstruction extends Instruction {
     return r;
   }
 
+  @Override
   public Instruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
     if (targetMap == null) {
       throw new IllegalArgumentException("targetMap is null");
@@ -104,6 +107,7 @@ public final class SwitchInstruction extends Instruction {
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof SwitchInstruction) {
       SwitchInstruction i = (SwitchInstruction) o;
@@ -113,6 +117,7 @@ public final class SwitchInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     int h = defaultLabel * 1348091 + 111311;
     for (int i = 0; i < casesAndLabels.length; i++) {
@@ -121,10 +126,12 @@ public final class SwitchInstruction extends Instruction {
     return h;
   }
 
+  @Override
   public int getPoppedCount() {
     return 1;
   }
 
+  @Override
   public String toString() {
     StringBuffer b = new StringBuffer("Switch(");
     b.append(defaultLabel);
@@ -136,6 +143,7 @@ public final class SwitchInstruction extends Instruction {
     return b.toString();
   }
 
+  @Override
   public void visit(Visitor v) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException();

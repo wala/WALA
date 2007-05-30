@@ -39,6 +39,7 @@ public class PutInstruction extends Instruction {
       this.cp = cp;
     }
 
+    @Override
     ConstantPoolReader getLazyConstantPool() {
       return cp;
     }
@@ -47,6 +48,7 @@ public class PutInstruction extends Instruction {
       return index;
     }
 
+    @Override
     public String getClassType() {
       if (classType == null) {
         classType = cp.getConstantPoolMemberClassType(index);
@@ -54,6 +56,7 @@ public class PutInstruction extends Instruction {
       return classType;
     }
 
+    @Override
     public String getFieldName() {
       if (fieldName == null) {
         fieldName = cp.getConstantPoolMemberName(index);
@@ -61,6 +64,7 @@ public class PutInstruction extends Instruction {
       return fieldName;
     }
 
+    @Override
     public String getFieldType() {
       if (type == null) {
         type = cp.getConstantPoolMemberType(index);
@@ -86,6 +90,7 @@ public class PutInstruction extends Instruction {
     return new PutInstruction(isStatic ? OP_putstatic : OP_putfield, type, className, fieldName);
   }
 
+  @Override
   final public boolean equals(Object o) {
     if (o instanceof PutInstruction) {
       PutInstruction i = (PutInstruction) o;
@@ -112,19 +117,23 @@ public class PutInstruction extends Instruction {
     return opcode == OP_putstatic;
   }
 
+  @Override
   final public int hashCode() {
     return getClassType().hashCode() + 9011 * getClassType().hashCode() + 317 * getFieldName().hashCode() + opcode;
   }
 
+  @Override
   final public int getPoppedCount() {
     return isStatic() ? 1 : 2;
   }
 
+  @Override
   final public String toString() {
     return "Put(" + getFieldType() + "," + (isStatic() ? "STATIC" : "NONSTATIC") + "," + getClassType() + "," + getFieldName()
         + ")";
   }
 
+  @Override
   final public void visit(Visitor v) throws NullPointerException {
     v.visitPut(this);
   }

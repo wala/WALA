@@ -46,6 +46,7 @@ public final class ShiftInstruction extends Instruction {
     return preallocated[(operator.ordinal() - Operator.SHL.ordinal()) * 2 + t];
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof ShiftInstruction) {
       ShiftInstruction i = (ShiftInstruction) o;
@@ -59,18 +60,22 @@ public final class ShiftInstruction extends Instruction {
     return Operator.values()[(opcode - OP_ishl) / 2];
   }
 
+  @Override
   public int hashCode() {
     return opcode;
   }
 
+  @Override
   public int getPoppedCount() {
     return 2;
   }
 
+  @Override
   public String getPushedType(String[] types) {
     return getType();
   }
 
+  @Override
   public byte getPushedWordSize() {
     return Util.getWordSize(getType());
   }
@@ -79,10 +84,12 @@ public final class ShiftInstruction extends Instruction {
     return indexedTypes[(opcode - OP_ishl) & 1];
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException {
     v.visitShift(this);
   }
 
+  @Override
   public String toString() {
     return "Shift(" + getType() + "," + getOperator() + ")";
   }

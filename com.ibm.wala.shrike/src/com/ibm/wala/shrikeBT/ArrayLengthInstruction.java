@@ -24,30 +24,37 @@ final public class ArrayLengthInstruction extends Instruction {
     return preallocated;
   }
 
+  @Override
   public boolean equals(Object o) {
     return o instanceof ArrayLengthInstruction;
   }
 
+  @Override
   public int hashCode() {
     return 3180901;
   }
 
+  @Override
   public int getPoppedCount() {
     return 1;
   }
 
+  @Override
   public String getPushedType(String[] types) {
     return Constants.TYPE_int;
   }
 
+  @Override
   public byte getPushedWordSize() {
     return 1;
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException {
     v.visitArrayLength(this);
   }
 
+  @Override
   public String toString() {
     return "ArrayLength()";
   }

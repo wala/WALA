@@ -136,106 +136,132 @@ public class InstructionTypeCounter implements MethodData.Results {
     countUnaryOps = 0;
 
     Instruction.Visitor visitor = new Instruction.Visitor() {
+      @Override
       public void visitArrayLength(ArrayLengthInstruction instruction) {
         countArrayLengths++;
       }
 
+      @Override
       public void visitBinaryOp(BinaryOpInstruction instruction) {
         countBinaryOps++;
       }
 
+      @Override
       public void visitCheckCast(CheckCastInstruction instruction) {
         countCheckCasts++;
       }
 
+      @Override
       public void visitComparison(ComparisonInstruction instruction) {
         countComparisons++;
       }
 
+      @Override
       public void visitConditionalBranch(ConditionalBranchInstruction instruction) {
         countConditionalBranches++;
       }
 
+      @Override
       public void visitConstant(ConstantInstruction instruction) {
         countConstants++;
       }
 
+      @Override
       public void visitConversion(ConversionInstruction instruction) {
         countConversions++;
       }
 
+      @Override
       public void visitDup(DupInstruction instruction) {
         countDups++;
       }
 
+      @Override
       public void visitGoto(GotoInstruction instruction) {
         countGotos++;
       }
 
+      @Override
       public void visitInstanceof(InstanceofInstruction instruction) {
         countInstanceOfs++;
       }
 
+      @Override
       public void visitLocalLoad(LoadInstruction instruction) {
         countLocalLoads++;
       }
 
+      @Override
       public void visitLocalStore(StoreInstruction instruction) {
         countLocalStores++;
       }
 
+      @Override
       public void visitNew(NewInstruction instruction) {
         countNews++;
       }
 
+      @Override
       public void visitPop(PopInstruction instruction) {
         countPops++;
       }
 
+      @Override
       public void visitReturn(ReturnInstruction instruction) {
         countReturns++;
       }
 
+      @Override
       public void visitShift(ShiftInstruction instruction) {
         countShifts++;
       }
 
+      @Override
       public void visitSwap(SwapInstruction instruction) {
         countSwaps++;
       }
 
+      @Override
       public void visitSwitch(SwitchInstruction instruction) {
         countSwitches++;
       }
 
+      @Override
       public void visitThrow(ThrowInstruction instruction) {
         countThrows++;
       }
 
+      @Override
       public void visitUnaryOp(UnaryOpInstruction instruction) {
         countUnaryOps++;
       }
 
+      @Override
       public void visitArrayLoad(ArrayLoadInstruction instruction) {
         countArrayLoads++;
       }
 
+      @Override
       public void visitArrayStore(ArrayStoreInstruction instruction) {
         countArrayStores++;
       }
 
+      @Override
       public void visitGet(GetInstruction instruction) {
         countGets++;
       }
 
+      @Override
       public void visitPut(PutInstruction instruction) {
         countPuts++;
       }
 
+      @Override
       public void visitMonitor(MonitorInstruction instruction) {
         countMonitors++;
       }
 
+      @Override
       public void visitInvoke(InvokeInstruction instruction) {
         countInvokes++;
       }

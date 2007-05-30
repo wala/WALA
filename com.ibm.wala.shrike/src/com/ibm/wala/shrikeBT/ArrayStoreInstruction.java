@@ -37,6 +37,7 @@ final public class ArrayStoreInstruction extends Instruction {
     return preallocated[i];
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof ArrayStoreInstruction) {
       ArrayStoreInstruction i = (ArrayStoreInstruction) o;
@@ -46,10 +47,12 @@ final public class ArrayStoreInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return opcode + 148791;
   }
 
+  @Override
   public int getPoppedCount() {
     return 3;
   }
@@ -58,10 +61,12 @@ final public class ArrayStoreInstruction extends Instruction {
     return Decoder.indexedTypes[opcode - OP_iastore];
   }
 
+  @Override
   public String toString() {
     return "ArrayStore(" + getType() + ")";
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException {
     v.visitArrayStore(this);
   }

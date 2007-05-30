@@ -190,10 +190,12 @@ public abstract class Compiler implements Constants {
         }
       }
 
+      @Override
       public void visitGoto(GotoInstruction instruction) {
         visitTargets(instruction);
       }
 
+      @Override
       public void visitLocalStore(StoreInstruction instruction) {
         localsUsed.set(instruction.getVarIndex());
         String t = instruction.getType();
@@ -202,10 +204,12 @@ public abstract class Compiler implements Constants {
         }
       }
 
+      @Override
       public void visitConditionalBranch(ConditionalBranchInstruction instruction) {
         visitTargets(instruction);
       }
 
+      @Override
       public void visitSwitch(SwitchInstruction instruction) {
         visitTargets(instruction);
       }
@@ -365,7 +369,7 @@ public abstract class Compiler implements Constants {
               + ")");
         }
         if (!visited[t]) {
-          computeStackWordsAt(bt[j], stackLen, (byte[]) stackWords.clone(), visited);
+          computeStackWordsAt(bt[j], stackLen, stackWords.clone(), visited);
         }
       }
 
@@ -373,7 +377,7 @@ public abstract class Compiler implements Constants {
       for (int j = 0; j < hs.length; j++) {
         int t = hs[j].handler;
         if (!visited[t]) {
-          byte[] newWords = (byte[]) stackWords.clone();
+          byte[] newWords = stackWords.clone();
           newWords[0] = 1;
           computeStackWordsAt(t, 1, newWords, visited);
         }
@@ -415,6 +419,7 @@ public abstract class Compiler implements Constants {
       super(instrStart, instrOffset, targetLabel);
     }
 
+    @Override
     boolean apply() {
       int delta = instructionsToOffsets[targetLabel] - instrStart;
       if ((short) delta == delta) {
@@ -431,6 +436,7 @@ public abstract class Compiler implements Constants {
       super(instrStart, instrOffset, targetLabel);
     }
 
+    @Override
     boolean apply() {
       writeInt(instrOffset, instructionsToOffsets[targetLabel] - instrStart);
       return true;
@@ -489,6 +495,7 @@ public abstract class Compiler implements Constants {
     final int[] instrRef = new int[1];
 
     Instruction.Visitor noOpcodeHandler = new Instruction.Visitor() {
+      @Override
       public void visitPop(PopInstruction instruction) {
         int count = instruction.getPoppedCount();
         int offset = curOffsetRef[0];
@@ -504,6 +511,7 @@ public abstract class Compiler implements Constants {
         curOffsetRef[0] = offset;
       }
 
+      @Override
       public void visitDup(DupInstruction instruction) {
         int size = instruction.getSize();
         int delta = instruction.getDelta();
@@ -527,6 +535,7 @@ public abstract class Compiler implements Constants {
         curOffsetRef[0] = offset;
       }
 
+      @Override
       public void visitSwap(SwapInstruction instruction) {
         int offset = curOffsetRef[0];
         int stackLen = stackLenRef[0];
@@ -1538,7 +1547,7 @@ public abstract class Compiler implements Constants {
       }
 
       // make sure at most one local is defined and live on exit
-      BitSet liveAtEnd = (BitSet) liveLocals[start + len];
+      BitSet liveAtEnd = liveLocals[start + len];
       boolean multipleDefs = false;
       int localDefed = -1;
       int firstDef = -1;

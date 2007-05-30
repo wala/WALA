@@ -63,6 +63,7 @@ public final class StoreInstruction extends Instruction {
     }
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof StoreInstruction) {
       StoreInstruction i = (StoreInstruction) o;
@@ -72,18 +73,22 @@ public final class StoreInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return opcode + index * 148091891;
   }
 
+  @Override
   public int getPoppedCount() {
     return 1;
   }
 
+  @Override
   public String toString() {
     return "LocalStore(" + getType() + "," + index + ")";
   }
 
+  @Override
   public void visit(Visitor v) throws NullPointerException {
     v.visitLocalStore(this);
   }

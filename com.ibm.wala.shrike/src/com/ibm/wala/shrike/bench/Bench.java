@@ -122,6 +122,7 @@ public class Bench {
               + ci.getReader().getMethodName(m);
           final int noTraceLabel = me.allocateLabel();
           me.insertAtStart(new MethodEditor.Patch() {
+            @Override
             public void emitTo(MethodEditor.Output w) {
               w.emit(GetInstruction.make(Constants.TYPE_boolean, CTDecoder.convertClassToType(className), fieldName, true));
               w.emit(ConstantInstruction.make(0));
@@ -141,6 +142,7 @@ public class Bench {
             if (instr[i] instanceof ReturnInstruction) {
               final int noTraceLabel = me.allocateLabel();
               me.insertBefore(i, new MethodEditor.Patch() {
+                @Override
                 public void emitTo(MethodEditor.Output w) {
                   w.emit(GetInstruction.make(Constants.TYPE_boolean, CTDecoder.convertClassToType(className), fieldName, true));
                   w.emit(ConstantInstruction.make(0));
@@ -159,6 +161,7 @@ public class Bench {
               + ci.getReader().getMethodName(m);
           final int noTraceLabel = me.allocateLabel();
           me.addMethodExceptionHandler(null, new MethodEditor.Patch() {
+            @Override
             public void emitTo(Output w) {
               w.emit(GetInstruction.make(Constants.TYPE_boolean, CTDecoder.convertClassToType(className), fieldName, true));
               w.emit(ConstantInstruction.make(0));

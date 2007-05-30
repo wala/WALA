@@ -230,6 +230,7 @@ public final class MethodOptimizer {
 
             if (!killed) {
               editor.insertBefore(j, new MethodEditor.Patch() {
+                @Override
                 public void emitTo(Output w) {
                   w.emit(PopInstruction.make(1));
                   w.emit(li);
@@ -268,12 +269,14 @@ public final class MethodOptimizer {
           final int newVar = LocalAllocator.allocate(data, type);
           // put a store to the newVar right after the source
           editor.insertAfter(source, new MethodEditor.Patch() {
+            @Override
             public void emitTo(Output w) {
               w.emit(StoreInstruction.make(type, newVar));
             }
           });
           // load newVar before storing to correct variable
           editor.insertBefore(i, new MethodEditor.Patch() {
+            @Override
             public void emitTo(Output w) {
               w.emit(LoadInstruction.make(type, newVar));
             }
@@ -281,11 +284,13 @@ public final class MethodOptimizer {
         } else {
           // remove store instruction
           editor.replaceWith(i, new MethodEditor.Patch() {
+            @Override
             public void emitTo(Output w) {
             }
           });
           // replace it right after the source
           editor.insertAfter(source, new MethodEditor.Patch() {
+            @Override
             public void emitTo(Output w) {
               w.emit(s);
             }

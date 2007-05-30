@@ -25,6 +25,7 @@ public final class InstanceofInstruction extends Instruction {
     return new InstanceofInstruction(type);
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof InstanceofInstruction) {
       InstanceofInstruction i = (InstanceofInstruction) o;
@@ -34,10 +35,12 @@ public final class InstanceofInstruction extends Instruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return 31980190 + type.hashCode();
   }
 
+  @Override
   public int getPoppedCount() {
     return 1;
   }
@@ -46,14 +49,17 @@ public final class InstanceofInstruction extends Instruction {
     return type;
   }
 
+  @Override
   public String getPushedType(String[] types) {
     return TYPE_boolean;
   }
 
+  @Override
   public byte getPushedWordSize() {
     return 1;
   }
 
+  @Override
   public void visit(Visitor v) throws IllegalArgumentException{
     if (v == null) {
       throw new IllegalArgumentException();
@@ -61,6 +67,7 @@ public final class InstanceofInstruction extends Instruction {
     v.visitInstanceof(this);
   }
 
+  @Override
   public String toString() {
     return "Instanceof(" + type + ")";
   }

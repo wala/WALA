@@ -403,8 +403,8 @@ public class Analyzer {
     String[] locals;
 
     PathElement(int index, String[] stack, String[] locals) {
-      this.stack = (String[]) stack.clone();
-      this.locals = (String[]) locals.clone();
+      this.stack = stack.clone();
+      this.locals = locals.clone();
       this.index = index;
     }
 
@@ -501,11 +501,13 @@ public class Analyzer {
       System.arraycopy(locals[i], 0, curLocals, 0, curLocalsSize[0]);
 
       Instruction.Visitor localsUpdate = new Instruction.Visitor() {
+        @Override
         public void visitLocalLoad(LoadInstruction instruction) {
           String t = curLocals[instruction.getVarIndex()];
           curStack[0] = t;
         }
 
+        @Override
         public void visitLocalStore(StoreInstruction instruction) {
           int index = instruction.getVarIndex();
           curLocals[index] = curStack[0];

@@ -61,10 +61,12 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
     rawTable = table;
   }
 
+  @Override
   public int getSize() {
     return 8 + rawTable.length * 2;
   }
 
+  @Override
   public int copyInto(byte[] buf, int offset) throws IllegalArgumentException {
     ClassWriter.setUShort(buf, offset, attrID);
     ClassWriter.setInt(buf, offset + 2, 2 + rawTable.length * 2);

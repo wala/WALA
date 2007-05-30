@@ -26,10 +26,12 @@ public class SourceDebugExtensionWriter extends ClassWriter.Element {
     attrID = w.addCPUtf8("SourceDebugExtension");
   }
 
+  @Override
   public int getSize() {
     return table == null ? 6 : 6 + table.length;
   }
 
+  @Override
   public int copyInto(byte[] buf, int offset) throws IllegalArgumentException  {
     ClassWriter.setUShort(buf, offset, attrID);
     ClassWriter.setInt(buf, offset + 2, getSize() - 6);

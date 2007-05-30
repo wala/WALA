@@ -83,6 +83,7 @@ public class AddBytecodeDebug {
             if (!putDumperAt[offset]) {
               putDumperAt[offset] = true;
               me.insertBefore(offset, new MethodEditor.Patch() {
+                @Override
                 public void emitTo(Output w) {
                   w.emit(DupInstruction.make(0));
                   w.emit(Util.makeInvoke(Throwable.class, "printStackTrace", new Class[0]));

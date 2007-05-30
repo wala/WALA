@@ -73,10 +73,12 @@ final public class ExceptionHandler {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 1069 * handler + ((catchClass == null) ? 0 :  catchClass.hashCode());
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof ExceptionHandler) {
       return equals((ExceptionHandler) o);

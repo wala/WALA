@@ -65,6 +65,7 @@ public final class DupInstruction extends Instruction {
     return make(1, delta);
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o instanceof DupInstruction) {
       DupInstruction i = (DupInstruction) o;
@@ -82,18 +83,22 @@ public final class DupInstruction extends Instruction {
     return delta;
   }
 
+  @Override
   public int hashCode() {
     return size + 8431890 + 10 * delta;
   }
 
+  @Override
   public int getPoppedCount() {
     return size + delta;
   }
 
+  @Override
   public String toString() {
     return "Dup(" + size + "," + delta + ")";
   }
 
+  @Override
   public void visit(Visitor v)  {
     if (v == null) {
       throw new IllegalArgumentException("illegal null visitor");

@@ -121,14 +121,17 @@ public class Mangler {
           me.beginPass();
 
           me.visitInstructions(new MethodEditor.Visitor() {
+            @Override
             public void visitGet(GetInstruction instruction) {
               if (doGet && !instruction.isStatic()) {
                 insertBefore(new MethodEditor.Patch() {
+                  @Override
                   public void emitTo(Output w) {
                     w.emit(DupInstruction.make(0));
                   }
                 });
                 insertAfter(new MethodEditor.Patch() {
+                  @Override
                   public void emitTo(Output w) {
                     w.emit(SwapInstruction.make());
                     w.emit(Util.makePut(Slots.class, "o"));
@@ -137,9 +140,11 @@ public class Mangler {
               }
             }
 
+            @Override
             public void visitPut(PutInstruction instruction) {
               if (doPut && !instruction.isStatic()) {
                 insertBefore(new MethodEditor.Patch() {
+                  @Override
                   public void emitTo(Output w) {
                     w.emit(SwapInstruction.make());
                     w.emit(DupInstruction.make(1));
@@ -147,6 +152,7 @@ public class Mangler {
                   }
                 });
                 insertAfter(new MethodEditor.Patch() {
+                  @Override
                   public void emitTo(Output w) {
                     w.emit(Util.makePut(Slots.class, "o"));
                   }
@@ -154,10 +160,12 @@ public class Mangler {
               }
             }
 
+            @Override
             public void visitArrayStore(final ArrayStoreInstruction instruction) {
               if (doArrayStore) {
                 final int label = me.allocateLabel();
                 insertBefore(new MethodEditor.Patch() {
+                  @Override
                   public void emitTo(Output w) {
                     String t = Util.getStackType(instruction.getType());
                     w.emit(StoreInstruction.make(t, tmpAny));
@@ -176,6 +184,7 @@ public class Mangler {
                   }
                 });
                 insertAfter(new MethodEditor.Patch() {
+                  @Override
                   public void emitTo(Output w) {
                     w.emit(Util.makePut(Slots.class, "o"));
                     w.emit(LoadInstruction.make(Constants.TYPE_int, tmpInt));

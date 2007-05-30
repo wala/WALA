@@ -128,11 +128,13 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
   /**
    * Subclasses must implement toString.
    */
+  @Override
   public abstract String toString();
 
   /**
    * We're immutable so there's no need to clone any Instruction object.
    */
+  @Override
   final public Object clone() {
     return this;
   }
