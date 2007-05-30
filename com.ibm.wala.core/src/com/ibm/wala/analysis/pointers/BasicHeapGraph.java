@@ -214,8 +214,8 @@ public class BasicHeapGraph extends HeapGraph {
   private OrdinalSetMapping<PointerKey> getPointerKeys(PointerAnalysis pointerAnalysis) {
     MutableMapping<PointerKey> result = new MutableMapping<PointerKey>();
 
-    for (Iterator it = pointerAnalysis.getPointerKeys().iterator(); it.hasNext();) {
-      PointerKey p = (PointerKey) it.next();
+    for (Iterator<PointerKey> it = pointerAnalysis.getPointerKeys().iterator(); it.hasNext();) {
+      PointerKey p = it.next();
       result.add(p);
     }
     return result;
@@ -225,10 +225,10 @@ public class BasicHeapGraph extends HeapGraph {
   private int[] computeSuccNodeNumbers(Object N, NumberedNodeManager<Object> nodeManager) {
     if (N instanceof PointerKey) {
       PointerKey P = (PointerKey) N;
-      OrdinalSet S = pointerAnalysis.getPointsToSet(P);
+      OrdinalSet<InstanceKey> S = pointerAnalysis.getPointsToSet(P);
       int[] result = new int[S.size()];
       int i = 0;
-      for (Iterator it = S.iterator(); it.hasNext();) {
+      for (Iterator<InstanceKey> it = S.iterator(); it.hasNext();) {
         result[i] = nodeManager.getNumber(it.next());
         i++;
       }
@@ -327,7 +327,7 @@ public class BasicHeapGraph extends HeapGraph {
   private void computePredecessorsForLocals(NumberedNodeManager<Object> nodeManager, BasicNaturalRelation R) {
 
     ArrayList<LocalPointerKey> list = new ArrayList<LocalPointerKey>();
-    for (Iterator it = nodeManager.iterator(); it.hasNext();) {
+    for (Iterator<Object> it = nodeManager.iterator(); it.hasNext();) {
       Object n = it.next();
       if (n instanceof LocalPointerKey) {
         list.add((LocalPointerKey) n);

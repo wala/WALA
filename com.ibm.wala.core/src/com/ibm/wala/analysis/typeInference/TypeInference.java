@@ -133,17 +133,17 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       }
     }
 
-    for (Iterator it = ir.iterateNormalInstructions(); it.hasNext();) {
-      SSAInstruction s = (SSAInstruction) it.next();
+    for (Iterator<SSAInstruction> it = ir.iterateNormalInstructions(); it.hasNext();) {
+      SSAInstruction s = it.next();
       if (s instanceof SSAAbstractInvokeInstruction) {
         SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
         TypeVariable v = (TypeVariable) getVariable(call.getException());
-        Collection defaultExceptions = call.getExceptionTypes();
+        Collection<TypeReference> defaultExceptions = call.getExceptionTypes();
         if (Assertions.verifyAssertions) {
           Assertions._assert(defaultExceptions.size() == 1);
         }
         // t should be NullPointerException
-        TypeReference t = (TypeReference) defaultExceptions.iterator().next();
+        TypeReference t = defaultExceptions.iterator().next();
         IClass klass = cha.lookupClass(t);
         if (Assertions.verifyAssertions) {
           Assertions._assert(klass != null);

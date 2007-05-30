@@ -96,8 +96,8 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
       cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha, warnings);
     } else
       try {
-        Class impl = Class.forName(implClass);
-        Constructor ctor = impl.getDeclaredConstructor(new Class[] { ClassLoaderReference.class, IClassLoader.class,
+        Class<?> impl = Class.forName(implClass);
+        Constructor<?> ctor = impl.getDeclaredConstructor(new Class[] { ClassLoaderReference.class, IClassLoader.class,
             SetOfClasses.class, ClassHierarchy.class, WarningSet.class });
         cl = (IClassLoader) ctor.newInstance(new Object[] { classLoaderReference, parent, exclusions, cha, warnings });
       } catch (Exception e) {

@@ -26,6 +26,8 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.TreeSet;
 
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -73,7 +75,7 @@ public class HeapTracer {
   /**
    * Map: Class -> Integer, the size of each class
    */
-  private final HashMap<Class, Integer> sizeMap = new HashMap<Class, Integer>();
+  private final HashMap<Class<?>, Integer> sizeMap = HashMapFactory.make();
 
   private static final Object DUMMY = new Object();
 
@@ -81,7 +83,7 @@ public class HeapTracer {
    * Classes that we should understand because they're internal to a container
    * object
    */
-  private static final HashSet<Class> internalClasses = new HashSet<Class>();
+  private static final HashSet<Class<?>> internalClasses = HashSetFactory.make();
   static {
     try {
       internalClasses.add(Class.forName("java.lang.String"));

@@ -45,7 +45,7 @@ public class WarningSet extends HashSet<Warning> {
   public String toString() {
     TreeSet<Warning> T = new TreeSet<Warning>(new DescendingComparator());
     T.addAll(this);
-    Iterator it = T.iterator();
+    Iterator<Warning> it = T.iterator();
     StringBuffer result = new StringBuffer();
     for (int i = 1; i <= size(); i++) {
       result.append(i).append(". ");
@@ -62,7 +62,7 @@ public class WarningSet extends HashSet<Warning> {
   public String toString(CallGraph cg) {
     TreeSet<Warning> T = new TreeSet<Warning>(new DescendingComparator());
     T.addAll(this);
-    Iterator it = T.iterator();
+    Iterator<Warning> it = T.iterator();
     StringBuffer result = new StringBuffer();
     int nPaths = 0;
     if (size() == 0) {
@@ -70,7 +70,7 @@ public class WarningSet extends HashSet<Warning> {
     }
     for (int i = 1; i <= size(); i++) {
       result.append(i).append(". ");
-      Warning w = (Warning) it.next();
+      Warning w = it.next();
       result.append(w);
       result.append("\n");
       if (w.getLevel() >= Warning.SEVERE && w instanceof MethodWarning) {
@@ -82,13 +82,13 @@ public class WarningSet extends HashSet<Warning> {
           }
         };
         if (nPaths++ < MAX_PATHS) {
-          BFSPathFinder p = new BFSPathFinder<CGNode>(cg, cg.getFakeRootNode(), mFilter);
-          List L = p.find();
+          BFSPathFinder<CGNode> p = new BFSPathFinder<CGNode>(cg, cg.getFakeRootNode(), mFilter);
+          List<CGNode> L = p.find();
           if (L == null) {
             result.append("   No path found\n");
           } else {
             result.append("   Path:\n");
-            for (Iterator it2 = L.iterator(); it2.hasNext();) {
+            for (Iterator<CGNode> it2 = L.iterator(); it2.hasNext();) {
               result.append("      ").append(it2.next());
               result.append("\n");
             }
@@ -103,11 +103,11 @@ public class WarningSet extends HashSet<Warning> {
   public void dump(CallGraph cg, PrintStream out) {
     TreeSet<Warning> T = new TreeSet<Warning>(new DescendingComparator());
     T.addAll(this);
-    Iterator it = T.iterator();
+    Iterator<Warning> it = T.iterator();
     for (int i = 1; i <= size(); i++) {
       out.print(i);
       out.print(". ");
-      Warning w = (Warning) it.next();
+      Warning w = it.next();
       out.println(w);
       if (w.getLevel() >= Warning.SEVERE && w instanceof MethodWarning) {
         final MemberReference m = ((MethodWarning) w).getMethod();
@@ -117,13 +117,13 @@ public class WarningSet extends HashSet<Warning> {
             return n.getMethod().getReference().equals(m);
           }
         };
-        BFSPathFinder p = new BFSPathFinder<CGNode>(cg, cg.getFakeRootNode(), mFilter);
-        List L = p.find();
+        BFSPathFinder<CGNode> p = new BFSPathFinder<CGNode>(cg, cg.getFakeRootNode(), mFilter);
+        List<CGNode> L = p.find();
         if (L == null) {
           out.println("   No path found");
         } else {
           out.println("   Path:");
-          for (Iterator it2 = L.iterator(); it2.hasNext();) {
+          for (Iterator<CGNode> it2 = L.iterator(); it2.hasNext();) {
             out.print("      ");
             out.println(it2.next());
           }

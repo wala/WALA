@@ -356,7 +356,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
 
             addStatementsForSetOfTypes(implementors.iterator());
           } else {
-            Collection subclasses = cha.computeSubClasses(ref);
+            Collection<IClass> subclasses = cha.computeSubClasses(ref);
             if (DEBUG) {
               Trace.println("Subclasses for " + T + " " + subclasses);
             }

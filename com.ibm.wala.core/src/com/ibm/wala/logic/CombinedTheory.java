@@ -52,7 +52,7 @@ public class CombinedTheory extends AbstractTheory {
     return CombinedVocabulary.make(a.getVocabulary(), b.getVocabulary());
   }
 
-  public static ITheory make(ITheory t, BasicVocabulary v) {
+  public static ITheory make(ITheory t, BasicVocabulary<?> v) {
     return make(t, new JustVocabulary(v));
   }
 

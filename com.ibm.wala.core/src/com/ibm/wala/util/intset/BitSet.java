@@ -54,7 +54,7 @@ public final class BitSet<T> {
    * Add all elements in bitset B to this bit set
    * @throws IllegalArgumentException  if B is null
    */
-  public void addAll(BitSet B) {
+  public void addAll(BitSet<?> B) {
     if (B == null) {
       throw new IllegalArgumentException("B is null");
     }
@@ -124,20 +124,15 @@ public final class BitSet<T> {
    * Does this object hold the same bits as other?
    * @throws IllegalArgumentException  if other is null
    */
-  public boolean sameBits(BitSet other) {
+  public boolean sameBits(BitSet<?> other) {
     if (other == null) {
       throw new IllegalArgumentException("other is null");
     }
-    //		if (Assertions.verifyAssertions) {
-    //      Assertions._assert(map.equals(other.map));
-    //    }
     return vector.equals(other.vector);
   }
 
   /**
-   * Method iterator.
    * Not very efficient.
-   * @return Iterator
    */
   public Iterator iterator() {
     return new Iterator() {
@@ -202,7 +197,7 @@ public final class BitSet<T> {
    * @param other the other bitset in the operation
    * @throws IllegalArgumentException  if other is null
    */
-  public void intersect(BitSet other) {
+  public void intersect(BitSet<?> other) {
     if (other == null) {
       throw new IllegalArgumentException("other is null");
     }
@@ -214,7 +209,7 @@ public final class BitSet<T> {
    * @param other
    * @throws IllegalArgumentException  if other is null
    */
-  public void difference(BitSet other) {
+  public void difference(BitSet<T> other) {
     if (other == null) {
       throw new IllegalArgumentException("other is null");
     }

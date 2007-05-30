@@ -98,21 +98,21 @@ public class Iterator2Collection<T> implements Collection<T> {
   /*
    * @see java.util.Collection#containsAll(java.util.Collection)
    */
-  public boolean containsAll(Collection arg0) {
+  public boolean containsAll(Collection<?> arg0) {
     return delegate.containsAll(arg0);
   }
 
   /*
    * @see java.util.Collection#removeAll(java.util.Collection)
    */
-  public boolean removeAll(Collection arg0) {
+  public boolean removeAll(Collection<?> arg0) {
     return delegate.removeAll(arg0);
   }
 
   /*
    * @see java.util.Collection#retainAll(java.util.Collection)
    */
-  public boolean retainAll(Collection arg0) {
+  public boolean retainAll(Collection<?> arg0) {
     return delegate.retainAll(arg0);
   }
 

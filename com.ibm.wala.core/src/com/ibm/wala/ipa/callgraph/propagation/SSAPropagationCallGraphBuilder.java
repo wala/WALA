@@ -40,6 +40,7 @@ import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -278,7 +279,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   protected void addNodeInstructionConstraints(CGNode node, IR ir, DefUse du) {
     ConstraintVisitor v = makeVisitor((ExplicitCallGraph.ExplicitNode) node, ir, du, callGraph);
     ControlFlowGraph cfg = ir.getControlFlowGraph();
-    for (Iterator x = cfg.iterator(); x.hasNext();) {
+    for (Iterator<IBasicBlock> x = cfg.iterator(); x.hasNext();) {
       BasicBlock b = (BasicBlock) x.next();
       addBlockInstructionConstraints(node, cfg, b, v);
       if (wasChanged(node)) {
@@ -299,7 +300,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.
-    for (Iterator it = b.iterator(); it.hasNext();) {
+    for (Iterator<IInstruction> it = b.iterator(); it.hasNext();) {
       SSAInstruction s = (SSAInstruction) it.next();
       if (s != null) {
         s.visit(v);
@@ -328,7 +329,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         continue;
       }
       int n = 0;
-      for (Iterator back = cfg.getPredNodes(sb); back.hasNext(); n++) {
+      for (Iterator<? extends IBasicBlock> back = cfg.getPredNodes(sb); back.hasNext(); n++) {
         if (back.next() == b) {
           break;
         }
@@ -336,7 +337,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       if (DEBUG && Assertions.verifyAssertions) {
         Assertions._assert(n < cfg.getPredNodeCount(sb));
       }
-      for (Iterator phis = sb.iteratePhis(); phis.hasNext();) {
+      for (Iterator<? extends SSAInstruction> phis = sb.iteratePhis(); phis.hasNext();) {
         SSAPhiInstruction phi = (SSAPhiInstruction) phis.next();
         if (phi == null) {
           continue;
@@ -438,10 +439,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       // Account for those exceptions for which we do not actually have a
       // points-to set for
       // the pei, but just instance keys
-      Collection types = pei.getExceptionTypes();
+      Collection<TypeReference> types = pei.getExceptionTypes();
       if (types != null) {
-        for (Iterator it2 = types.iterator(); it2.hasNext();) {
-          TypeReference type = (TypeReference) it2.next();
+        for (Iterator<TypeReference> it2 = types.iterator(); it2.hasNext();) {
+          TypeReference type = it2.next();
           if (type != null) {
             InstanceKey ik = getInstanceKeyForPEI(node, peiLoc, type, instanceKeyFactory);
             if (Assertions.verifyAssertions) {
