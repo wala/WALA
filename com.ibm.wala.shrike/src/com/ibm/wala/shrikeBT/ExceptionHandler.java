@@ -22,18 +22,19 @@ package com.ibm.wala.shrikeBT;
  * entire block of code:
  * 
  * <pre>
- * 
- *  ExceptionHandler[] hs = {
- *    new ExceptionHandler(110, &quot;Ljava.lang.NullPointerException;&quot;),
- *    new ExceptionHandler(220, &quot;Ljava.io.IOException;&quot;);
- *  };
- *  for (int i = 0; i &lt; 100; i++) {
- *    handlers[i] = hs;
- *  }
+ *  
+ *   ExceptionHandler[] hs = {
+ *     new ExceptionHandler(110, &quot;Ljava.lang.NullPointerException;&quot;),
+ *     new ExceptionHandler(220, &quot;Ljava.io.IOException;&quot;);
+ *   };
+ *   for (int i = 0; i &lt; 100; i++) {
+ *     handlers[i] = hs;
+ *   }
  * </pre>
  */
 final public class ExceptionHandler {
   int handler;
+
   String catchClass;
 
   /**
@@ -70,12 +71,9 @@ final public class ExceptionHandler {
     return h.handler == handler && (catchClass == null ? h.catchClass == null : catchClass.equals(h.catchClass));
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public int hashCode() {
-    return 1069 * handler + ((catchClass == null) ? 0 :  catchClass.hashCode());
+    return 1069 * handler + ((catchClass == null) ? 0 : catchClass.hashCode());
   }
 
   @Override

@@ -15,7 +15,9 @@ package com.ibm.wala.shrikeBT;
  */
 public class GetInstruction extends Instruction {
   protected String type;
+
   protected String classType;
+
   protected String fieldName;
 
   GetInstruction(short opcode, String type, String classType, String fieldName) {
@@ -31,6 +33,7 @@ public class GetInstruction extends Instruction {
 
   final static class Lazy extends GetInstruction {
     private ConstantPoolReader cp;
+
     private int index;
 
     Lazy(short opcode, ConstantPoolReader cp, int index) {
@@ -150,9 +153,7 @@ public class GetInstruction extends Instruction {
     }
     v.visitGet(this);
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return true;
   }

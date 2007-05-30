@@ -58,9 +58,7 @@ final public class ArrayLengthInstruction extends Instruction {
   public String toString() {
     return "ArrayLength()";
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return true;
   }

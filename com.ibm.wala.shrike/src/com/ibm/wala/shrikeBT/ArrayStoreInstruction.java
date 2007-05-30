@@ -70,9 +70,7 @@ final public class ArrayStoreInstruction extends Instruction {
   public void visit(Visitor v) throws NullPointerException {
     v.visitArrayStore(this);
   }
-  /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return true;
   }

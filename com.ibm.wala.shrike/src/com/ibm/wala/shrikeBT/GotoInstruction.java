@@ -54,11 +54,6 @@ public final class GotoInstruction extends Instruction {
     return label[0];
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.shrikeBT.Instruction#redirectTargets(int[])
-   */
   @Override
   public Instruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
     if (targetMap == null) {
@@ -99,11 +94,6 @@ public final class GotoInstruction extends Instruction {
     v.visitGoto(this);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
   public boolean isPEI() {
     return false;
   }

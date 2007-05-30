@@ -97,9 +97,7 @@ public final class LoadInstruction extends Instruction {
   public String toString() {
     return "LocalLoad(" + getType() + "," + index + ")";
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return false;
   }

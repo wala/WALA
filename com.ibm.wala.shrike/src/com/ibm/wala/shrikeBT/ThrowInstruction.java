@@ -56,9 +56,7 @@ public final class ThrowInstruction extends Instruction {
   public String toString() {
     return "Throw()";
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return true;
   }

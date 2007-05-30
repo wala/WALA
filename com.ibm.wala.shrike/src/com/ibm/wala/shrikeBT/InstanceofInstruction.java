@@ -60,7 +60,7 @@ public final class InstanceofInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws IllegalArgumentException{
+  public void visit(Visitor v) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException();
     }
@@ -71,9 +71,7 @@ public final class InstanceofInstruction extends Instruction {
   public String toString() {
     return "Instanceof(" + type + ")";
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return false;
   }

@@ -141,11 +141,6 @@ final public class BinaryOpInstruction extends Instruction {
     return "BinaryOp(" + getType() + "," + getOperator() + ")";
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
   public boolean isPEI() {
     return opcode == Constants.OP_idiv;
   }

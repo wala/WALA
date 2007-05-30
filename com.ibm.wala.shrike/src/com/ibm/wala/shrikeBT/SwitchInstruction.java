@@ -49,7 +49,8 @@ public final class SwitchInstruction extends Instruction {
    *          order by case
    * @param defaultLabel
    *          the default label to branch to if no cases match
-   * @throws IllegalArgumentException  if casesAndLabels is null
+   * @throws IllegalArgumentException
+   *           if casesAndLabels is null
    */
   public static SwitchInstruction make(int[] casesAndLabels, int defaultLabel) {
     if (casesAndLabels == null) {
@@ -151,11 +152,6 @@ public final class SwitchInstruction extends Instruction {
     v.visitSwitch(this);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
   public boolean isPEI() {
     return false;
   }

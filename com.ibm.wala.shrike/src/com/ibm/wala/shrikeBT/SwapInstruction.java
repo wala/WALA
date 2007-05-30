@@ -52,9 +52,7 @@ public final class SwapInstruction extends Instruction {
   public void visit(Visitor v) throws NullPointerException {
     v.visitSwap(this);
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return false;
   }

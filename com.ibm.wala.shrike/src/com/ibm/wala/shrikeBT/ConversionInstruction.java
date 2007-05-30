@@ -117,11 +117,6 @@ public final class ConversionInstruction extends Instruction {
     v.visitConversion(this);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
   public boolean isPEI() {
     return false;
   }

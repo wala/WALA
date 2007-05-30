@@ -15,7 +15,9 @@ package com.ibm.wala.shrikeBT;
  */
 public class PutInstruction extends Instruction {
   protected String type;
+
   protected String classType;
+
   protected String fieldName;
 
   PutInstruction(short opcode, String type, String classType, String fieldName) {
@@ -31,6 +33,7 @@ public class PutInstruction extends Instruction {
 
   final static class Lazy extends PutInstruction {
     private ConstantPoolReader cp;
+
     private int index;
 
     Lazy(short opcode, ConstantPoolReader cp, int index) {
@@ -137,9 +140,7 @@ public class PutInstruction extends Instruction {
   final public void visit(Visitor v) throws NullPointerException {
     v.visitPut(this);
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return true;
   }

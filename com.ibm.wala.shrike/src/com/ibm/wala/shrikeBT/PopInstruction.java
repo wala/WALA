@@ -65,11 +65,6 @@ public final class PopInstruction extends Instruction {
     return "Pop(" + size + ")";
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
   public boolean isPEI() {
     return false;
   }

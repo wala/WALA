@@ -28,7 +28,8 @@ public final class NewInstruction extends Instruction {
    * @param arrayBoundsCount
    *          the number of array dimensions to preconstruct (equal to the
    *          number of integer parameters this instruction expects)
-   * @throws IllegalArgumentException  if type is null
+   * @throws IllegalArgumentException
+   *           if type is null
    */
   public static NewInstruction make(String type, int arrayBoundsCount) throws IllegalArgumentException {
     if (type == null) {
@@ -116,11 +117,6 @@ public final class NewInstruction extends Instruction {
     v.visitNew(this);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
   public boolean isPEI() {
     return true;
   }

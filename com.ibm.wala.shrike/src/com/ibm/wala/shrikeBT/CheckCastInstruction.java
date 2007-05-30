@@ -77,9 +77,7 @@ final public class CheckCastInstruction extends Instruction {
   public String toString() {
     return "CheckCast(" + type + ")";
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return true;
   }

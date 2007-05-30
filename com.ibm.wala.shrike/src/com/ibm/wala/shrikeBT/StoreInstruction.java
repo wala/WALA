@@ -92,9 +92,7 @@ public final class StoreInstruction extends Instruction {
   public void visit(Visitor v) throws NullPointerException {
     v.visitLocalStore(this);
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return false;
   }

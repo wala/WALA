@@ -19,6 +19,7 @@ public final class MonitorInstruction extends Instruction {
   }
 
   private final static MonitorInstruction enter = new MonitorInstruction(OP_monitorenter);
+
   private final static MonitorInstruction exit = new MonitorInstruction(OP_monitorexit);
 
   public static MonitorInstruction make(boolean entering) {
@@ -50,7 +51,7 @@ public final class MonitorInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws IllegalArgumentException{
+  public void visit(Visitor v) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException();
     }
@@ -61,9 +62,7 @@ public final class MonitorInstruction extends Instruction {
   public String toString() {
     return "Monitor(" + (isEnter() ? "ENTER" : "EXIT") + ")";
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return true;
   }

@@ -19,6 +19,7 @@ public final class ReturnInstruction extends Instruction {
   }
 
   private static final ReturnInstruction[] preallocated = preallocate();
+
   private static final ReturnInstruction preallocatedVoid = new ReturnInstruction(OP_return);
 
   private static ReturnInstruction[] preallocate() {
@@ -82,9 +83,7 @@ public final class ReturnInstruction extends Instruction {
   public String toString() {
     return "Return(" + getType() + ")";
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return false;
   }

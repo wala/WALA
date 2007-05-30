@@ -18,6 +18,7 @@ package com.ibm.wala.shrikeBT;
  */
 public final class DupInstruction extends Instruction {
   private int size;
+
   private byte delta;
 
   protected DupInstruction(byte size, byte delta) {
@@ -99,15 +100,13 @@ public final class DupInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v)  {
+  public void visit(Visitor v) {
     if (v == null) {
       throw new IllegalArgumentException("illegal null visitor");
     }
     v.visitDup(this);
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return false;
   }

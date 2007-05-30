@@ -15,7 +15,9 @@ package com.ibm.wala.shrikeBT;
  */
 public class InvokeInstruction extends Instruction implements IInvokeInstruction {
   protected String type;
+
   protected String classType;
+
   protected String methodName;
 
   InvokeInstruction(short opcode, String type, String classType, String methodName) {
@@ -47,6 +49,7 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
 
   final static class Lazy extends InvokeInstruction {
     private ConstantPoolReader cp;
+
     private int index;
 
     Lazy(short opcode, ConstantPoolReader cp, int index) {
@@ -175,20 +178,10 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
     return "Invoke(" + getInvocationModeString() + "," + getClassType() + "," + getMethodName() + "," + getMethodSignature() + ")";
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
   public boolean isPEI() {
     return true;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.domo.cfg.IInvokeInstruction#getInvocationCode()
-   */
   public Dispatch getInvocationCode() {
     switch (opcode) {
     case Constants.OP_invokestatic:

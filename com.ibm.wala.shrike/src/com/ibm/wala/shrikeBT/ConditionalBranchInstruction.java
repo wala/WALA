@@ -137,11 +137,6 @@ public final class ConditionalBranchInstruction extends Instruction {
     v.visitConditionalBranch(this);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
   public boolean isPEI() {
     return false;
   }

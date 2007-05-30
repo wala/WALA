@@ -17,7 +17,9 @@ package com.ibm.wala.shrikeBT;
  */
 public final class ShiftInstruction extends Instruction {
   public enum Operator implements BinaryOpInstruction.IOperator {
-    SHL, SHR, USHR;
+    SHL,
+    SHR,
+    USHR;
   }
 
   protected ShiftInstruction(short opcode) {
@@ -93,9 +95,7 @@ public final class ShiftInstruction extends Instruction {
   public String toString() {
     return "Shift(" + getType() + "," + getOperator() + ")";
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return false;
   }

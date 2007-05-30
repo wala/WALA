@@ -95,7 +95,9 @@ public abstract class ConstantInstruction extends Instruction {
 
   final static class LazyInt extends ConstInt {
     private ConstantPoolReader cp;
+
     private int index;
+
     private boolean isSet;
 
     protected LazyInt(short opcode, ConstantPoolReader cp, int index) {
@@ -165,7 +167,9 @@ public abstract class ConstantInstruction extends Instruction {
 
   final static class LazyLong extends ConstLong {
     private ConstantPoolReader cp;
+
     private int index;
+
     private boolean isSet;
 
     protected LazyLong(short opcode, ConstantPoolReader cp, int index) {
@@ -235,7 +239,9 @@ public abstract class ConstantInstruction extends Instruction {
 
   final static class LazyFloat extends ConstFloat {
     private ConstantPoolReader cp;
+
     private int index;
+
     private boolean isSet;
 
     protected LazyFloat(short opcode, ConstantPoolReader cp, int index) {
@@ -305,7 +311,9 @@ public abstract class ConstantInstruction extends Instruction {
 
   final static class LazyDouble extends ConstDouble {
     private ConstantPoolReader cp;
+
     private int index;
+
     private boolean isSet;
 
     protected LazyDouble(short opcode, ConstantPoolReader cp, int index) {
@@ -360,6 +368,7 @@ public abstract class ConstantInstruction extends Instruction {
 
   final static class LazyString extends ConstString {
     private ConstantPoolReader cp;
+
     private int index;
 
     protected LazyString(short opcode, ConstantPoolReader cp, int index) {
@@ -412,6 +421,7 @@ public abstract class ConstantInstruction extends Instruction {
 
   final static class LazyClass extends ConstClass {
     private ConstantPoolReader cp;
+
     private int index;
 
     protected LazyClass(short opcode, ConstantPoolReader cp, int index) {
@@ -581,10 +591,7 @@ public abstract class ConstantInstruction extends Instruction {
   final public String toString() {
     return "Constant(" + getType() + "," + quote(getValue()) + ")";
   }
-  
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return false;
   }

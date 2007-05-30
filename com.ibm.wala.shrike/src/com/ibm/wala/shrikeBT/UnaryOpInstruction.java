@@ -15,17 +15,18 @@ package com.ibm.wala.shrikeBT;
  * the operand.
  */
 public final class UnaryOpInstruction extends Instruction {
-  public interface IOperator {}
-  
+  public interface IOperator {
+  }
+
   public static enum Operator implements IOperator {
     NEG;
 
     @Override
     public String toString() {
-    	return super.toString().toLowerCase();
+      return super.toString().toLowerCase();
     }
   }
-	
+
   protected UnaryOpInstruction(short opcode) {
     this.opcode = opcode;
   }
@@ -87,7 +88,7 @@ public final class UnaryOpInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws NullPointerException  {
+  public void visit(Visitor v) throws NullPointerException {
     v.visitUnaryOp(this);
   }
 
@@ -95,9 +96,7 @@ public final class UnaryOpInstruction extends Instruction {
   public String toString() {
     return "UnaryOp(" + getType() + "," + getOperator() + ")";
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
+
   public boolean isPEI() {
     return false;
   }

@@ -91,9 +91,6 @@ final public class ArrayLoadInstruction extends Instruction {
   public void visit(Visitor v) throws NullPointerException {
     v.visitArrayLoad(this);
   }
-    /* (non-Javadoc)
-   * @see com.ibm.domo.cfg.IInstruction#isPEI()
-   */
   public boolean isPEI() {
     return true;
   }
