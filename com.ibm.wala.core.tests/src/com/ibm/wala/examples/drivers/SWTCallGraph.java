@@ -31,7 +31,7 @@ import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.GraphIntegrity;
-import com.ibm.wala.util.graph.InferGraphRootsImpl;
+import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.util.perf.EngineTimings;
@@ -137,7 +137,7 @@ public class SWTCallGraph {
       // create and run the viewer
       final SWTTreeViewer v = new SWTTreeViewer();
       v.setGraphInput(cg);
-      v.setRootsInput(InferGraphRootsImpl.inferRoots(cg));
+      v.setRootsInput(InferGraphRoots.inferRoots(cg));
       v.getPopUpActions().add(new ViewIRAction(v, cg, psFile, dotFile, dotExe, gvExe));
       v.run();
       return v.getApplicationWindow();

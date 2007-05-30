@@ -25,7 +25,7 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.InferGraphRootsImpl;
+import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.util.warnings.WarningSet;
@@ -65,7 +65,7 @@ public class SWTPointsTo {
       // create and run the viewer
       final SWTTreeViewer v = new SWTTreeViewer();
       v.setGraphInput(g);
-      v.setRootsInput(InferGraphRootsImpl.inferRoots(g));
+      v.setRootsInput(InferGraphRoots.inferRoots(g));
       v.run();
       return v.getApplicationWindow();
 

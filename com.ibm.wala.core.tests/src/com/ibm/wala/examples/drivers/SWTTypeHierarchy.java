@@ -17,7 +17,7 @@ import org.eclipse.jface.window.ApplicationWindow;
 
 import com.ibm.wala.ecore.java.ETypeHierarchy;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.InferGraphRootsImpl;
+import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.viz.SWTTreeViewer;
 
 /**
@@ -58,7 +58,7 @@ public class SWTTypeHierarchy {
       // create and run the viewer
       final SWTTreeViewer v =new SWTTreeViewer();
       v.setGraphInput(g);
-      Collection<EObject> roots = InferGraphRootsImpl.inferRoots(g);
+      Collection<EObject> roots = InferGraphRoots.inferRoots(g);
       if (roots.size() < 1) {
         System.err.println("PANIC: roots.size()=" + roots.size());
         System.exit(-1);
