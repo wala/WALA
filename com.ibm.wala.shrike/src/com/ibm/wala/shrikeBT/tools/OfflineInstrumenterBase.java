@@ -36,15 +36,21 @@ import java.util.zip.ZipEntry;
  */
 public abstract class OfflineInstrumenterBase {
   private int inputIndex;
+
   private HashSet<String> entryNames = new HashSet<String>();
+
   private ArrayList<Input> inputs = new ArrayList<Input>();
+
   private BitSet ignoringInputs = new BitSet();
+
   private File outputFile;
+
   private boolean passUnmodifiedClasses = false;
 
   private JarOutputStream outputJar;
 
   private JarFile cachedJar;
+
   private File cachedJarFile;
 
   private ManifestBuilder manifestBuilder;
@@ -106,6 +112,7 @@ public abstract class OfflineInstrumenterBase {
    */
   final class JarInput extends Input {
     private File file;
+
     private String name;
 
     /**
@@ -206,8 +213,8 @@ public abstract class OfflineInstrumenterBase {
    */
   final public void addInputJar(File f) throws IOException {
     JarFile jf = new JarFile(f);
-    for (Enumeration e = jf.entries(); e.hasMoreElements();) {
-      JarEntry entry = (JarEntry) e.nextElement();
+    for (Enumeration<JarEntry> e = jf.entries(); e.hasMoreElements();) {
+      JarEntry entry = e.nextElement();
       if (!entry.isDirectory()) {
         String name = entry.getName();
         inputs.add(new JarInput(f, name));
@@ -233,7 +240,9 @@ public abstract class OfflineInstrumenterBase {
   /**
    * Add a directory containing class files to instrument. All subdirectories
    * are also scanned.
-   * @throws IllegalArgumentException  if d is null
+   * 
+   * @throws IllegalArgumentException
+   *           if d is null
    */
   final public void addInputDirectory(File d) throws IOException, IllegalArgumentException {
     if (d == null) {
@@ -261,7 +270,9 @@ public abstract class OfflineInstrumenterBase {
    * Add something to instrument --- the name of a JAR file, a class file, a
    * directory or an entry within a jar file (as filename#entryname). If we
    * can't identify it, nothing is added and we return false.
-   * @throws IllegalArgumentException  if a is null
+   * 
+   * @throws IllegalArgumentException
+   *           if a is null
    */
   final public boolean addInputElement(String a) throws IOException {
     if (a == null) {
@@ -519,7 +530,7 @@ public abstract class OfflineInstrumenterBase {
    * entry to the JAR file *after* the unmodified classes. This will only ever
    * be called once per output JAR.
    */
-  final public void writeUnmodifiedClasses() throws IOException, IllegalStateException  {
+  final public void writeUnmodifiedClasses() throws IOException, IllegalStateException {
     passUnmodifiedClasses = false;
     makeOutputJar();
     for (int i = 0; i < inputs.size(); i++) {

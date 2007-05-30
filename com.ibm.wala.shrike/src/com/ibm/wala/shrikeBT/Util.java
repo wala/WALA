@@ -191,7 +191,7 @@ public final class Util {
    * "void", etc are also converted to their JVM type names.
    * @throws IllegalArgumentException  if c is null
    */
-  public static String makeType(Class c) {
+  public static String makeType(Class<?> c) {
     if (c == null) {
       throw new IllegalArgumentException("c is null");
     }
@@ -353,7 +353,7 @@ public final class Util {
   /**
    * Given a Java Method, compute the VM-style type signature.
    */
-  public static String computeSignature(Class[] params, Class result) {
+  public static String computeSignature(Class[] params, Class<?> result) {
     StringBuffer buf = new StringBuffer();
     buf.append("(");
     for (int i = 0; i < params.length; i++) {
@@ -369,7 +369,7 @@ public final class Util {
    * Java Class. The field type is obtained using reflection.
    * @throws IllegalArgumentException  if c is null
    */
-  public static GetInstruction makeGet(Class c, String name) {
+  public static GetInstruction makeGet(Class<?> c, String name) {
     if (c == null) {
       throw new IllegalArgumentException("c is null");
     }
@@ -388,7 +388,7 @@ public final class Util {
    * Java Class. The field type is obtained using reflection.
    * @throws IllegalArgumentException  if c is null
    */
-  public static PutInstruction makePut(Class c, String name) {
+  public static PutInstruction makePut(Class<?> c, String name) {
     if (c == null) {
       throw new IllegalArgumentException("c is null");
     }
@@ -419,11 +419,11 @@ public final class Util {
     }
   }
 
-  public static Method findMethod(Class c, String name) {
+  public static Method findMethod(Class<?> c, String name) {
     return findMethod(c, name, null);
   }
 
-  public static Method findMethod(Class c, String name, Class[] paramTypes) {
+  public static Method findMethod(Class<?> c, String name, Class[] paramTypes) {
     if (c == null) {
       throw new IllegalArgumentException("c is null");
     }
@@ -447,7 +447,7 @@ public final class Util {
    * information is obtained using reflection.
    * @throws IllegalArgumentException  if name is null
    */
-  public static InvokeInstruction makeInvoke(Class c, String name, Class[] paramTypes) {
+  public static InvokeInstruction makeInvoke(Class<?> c, String name, Class[] paramTypes) {
     if (name == null) {
       throw new IllegalArgumentException("name is null");
     }
@@ -456,7 +456,7 @@ public final class Util {
     if (name.equals("<init>")) {
       Constructor[] cs = c.getConstructors();
       for (int i = 0; i < cs.length; i++) {
-        Constructor con = cs[i];
+        Constructor<?> con = cs[i];
         if (paramTypes == null || Arrays.equals(con.getParameterTypes(), paramTypes)) {
           if (result != null) {
             throw new IllegalArgumentException("Constructor " + makeName(name, paramTypes) + " is ambiguous in class " + c);
@@ -490,10 +490,8 @@ public final class Util {
    * Method information is obtained using reflection. If there is more than one
    * method with the given name, an error will be thrown.
    * @throws IllegalArgumentException  if name is null
-   * @throws IllegalArgumentException  if name is null
-   * @throws IllegalArgumentException  if name is null
    */
-  public static InvokeInstruction makeInvoke(Class c, String name) {
+  public static InvokeInstruction makeInvoke(Class<?> c, String name) {
     return makeInvoke(c, name, null);
   }
 

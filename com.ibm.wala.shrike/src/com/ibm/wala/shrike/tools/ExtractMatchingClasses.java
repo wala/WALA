@@ -52,8 +52,8 @@ public class ExtractMatchingClasses {
       matches[i] = new JarFile(match[i]);
     }
 
-    for (Enumeration e = inJar.entries(); e.hasMoreElements();) {
-      JarEntry entry = (JarEntry) e.nextElement();
+    for (Enumeration<JarEntry> e = inJar.entries(); e.hasMoreElements();) {
+      JarEntry entry =  e.nextElement();
 
       if (matchEntry(matches, entry)) {
         outJar.putNextEntry(entry);
