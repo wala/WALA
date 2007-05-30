@@ -27,18 +27,23 @@ public abstract class TypeAbstraction implements ContextItem {
    * Canonical element representing TOP for a dataflow lattice
    */
   public final static TypeAbstraction TOP = new TypeAbstraction() {
+    @Override
     public TypeAbstraction meet(TypeAbstraction rhs) {
       return rhs;
     }
+    @Override
     public String toString() {
       return "JavaTypeAbstraction.TOP";
     }
+    @Override
     public int hashCode() {
       return 17;
     }
+    @Override
     public boolean equals(Object other) {
       return this == other;
     }
+    @Override
     public IClass getType() { 
       return null;
     }
@@ -49,11 +54,13 @@ public abstract class TypeAbstraction implements ContextItem {
   /**
    * @see java.lang.Object#equals(Object)
    */
+  @Override
   public abstract boolean equals(Object obj);
 
   /**
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public abstract int hashCode();
 
   /**

@@ -59,6 +59,7 @@ public class ProgramCounter implements IProgramCounter {
    * 
    * @see java.lang.Object#equals(Object)
    */
+  @Override
   public boolean equals(Object obj) {
     return (obj instanceof ProgramCounter) && ((ProgramCounter) obj).programCounter == programCounter;
   }
@@ -66,6 +67,7 @@ public class ProgramCounter implements IProgramCounter {
   /**
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return programCounter;
   }
@@ -75,6 +77,7 @@ public class ProgramCounter implements IProgramCounter {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "PC@" + programCounter;
   }

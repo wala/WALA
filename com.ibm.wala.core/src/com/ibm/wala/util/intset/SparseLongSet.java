@@ -90,7 +90,7 @@ public class SparseLongSet implements LongSet {
    * @param S
    */
   private void cloneState(SparseLongSet S) {
-    elements = (long[]) S.elements.clone();
+    elements = S.elements.clone();
     this.size = S.size;
   }
 
@@ -295,6 +295,7 @@ public class SparseLongSet implements LongSet {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer sb = new StringBuffer(6 * size);
     sb.append("{ ");

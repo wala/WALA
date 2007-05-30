@@ -42,6 +42,7 @@ public class ConeType extends TypeAbstraction {
     this.type = type;
   }
 
+  @Override
   public TypeAbstraction meet(TypeAbstraction rhs) {
     if (rhs == TOP) {
       return this;
@@ -68,6 +69,7 @@ public class ConeType extends TypeAbstraction {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "cone:" + type.toString();
   }
@@ -77,6 +79,7 @@ public class ConeType extends TypeAbstraction {
    * 
    * @return TypeReference
    */
+  @Override
   public IClass getType() {
     return type;
   }
@@ -84,6 +87,7 @@ public class ConeType extends TypeAbstraction {
   /**
    * @see java.lang.Object#equals(Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof ConeType))
       return false;
@@ -101,6 +105,7 @@ public class ConeType extends TypeAbstraction {
   /**
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 39 * type.hashCode();
   }

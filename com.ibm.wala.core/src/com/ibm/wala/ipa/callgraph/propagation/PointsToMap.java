@@ -52,6 +52,7 @@ public class PointsToMap {
    * A hack: used to represent points-to-sets that are represented implicitly
    */
   final static Object IMPLICIT = new Object() {
+    @Override
     public String toString() {
       return "IMPLICIT points-to set";
     }
@@ -61,6 +62,7 @@ public class PointsToMap {
    * A hack: used to represent points-to-sets that are unified with another
    */
   final static Object UNIFIED = new Object() {
+    @Override
     public String toString() {
       return "UNIFIED points-to set";
     }

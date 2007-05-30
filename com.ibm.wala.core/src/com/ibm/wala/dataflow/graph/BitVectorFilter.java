@@ -31,6 +31,7 @@ public class BitVectorFilter extends UnaryOperator {
   /*
    * (non-Javadoc)
    */
+  @Override
   public byte evaluate(IVariable lhs, IVariable rhs) {
     BitVectorVariable L = (BitVectorVariable) lhs;
     BitVectorVariable R = (BitVectorVariable) rhs;
@@ -61,6 +62,7 @@ public class BitVectorFilter extends UnaryOperator {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "U - " + mask;
   }
@@ -70,6 +72,7 @@ public class BitVectorFilter extends UnaryOperator {
    * 
    * @see com.ibm.wala.dataflow.Operator#hashCode()
    */
+  @Override
   public int hashCode() {
     return 29 * mask.hashCode();
   }
@@ -79,6 +82,7 @@ public class BitVectorFilter extends UnaryOperator {
    * 
    * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object o) {
     if (o instanceof BitVectorFilter) {
       BitVectorFilter other = (BitVectorFilter) o;

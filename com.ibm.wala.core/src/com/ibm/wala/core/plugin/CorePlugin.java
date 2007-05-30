@@ -35,6 +35,7 @@ public class CorePlugin extends Plugin {
    * This method is called upon plug-in activation
    * @throws IllegalArgumentException  if context is null
    */
+  @Override
   public void start(BundleContext context) throws Exception {
     if (context == null) {
       throw new IllegalArgumentException("context is null");
@@ -45,6 +46,7 @@ public class CorePlugin extends Plugin {
   /**
    * This method is called when the plug-in is stopped
    */
+  @Override
   public void stop(BundleContext context) throws Exception {
     super.stop(context);
     plugin = null;

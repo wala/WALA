@@ -56,6 +56,7 @@ public class CompoundIntIterator implements IntIterator {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     Assertions.UNREACHABLE("define a custom hash code to avoid non-determinism");
     return 0;

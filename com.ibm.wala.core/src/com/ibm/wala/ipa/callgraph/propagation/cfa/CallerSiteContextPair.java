@@ -47,6 +47,7 @@ public class CallerSiteContextPair extends CallerSiteContext {
   /* (non-Javadoc)
    * @see com.ibm.detox.ipa.callgraph.Context#get(com.ibm.detox.ipa.callgraph.ContextKey)
    */
+  @Override
   public ContextItem get(ContextKey name) {
     if (name == null) {
       throw new IllegalArgumentException("name is null");
@@ -61,6 +62,7 @@ public class CallerSiteContextPair extends CallerSiteContext {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (obj == null) {
       return false;
@@ -78,6 +80,7 @@ public class CallerSiteContextPair extends CallerSiteContext {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return super.hashCode() + baseContext.hashCode();
   }
@@ -85,6 +88,7 @@ public class CallerSiteContextPair extends CallerSiteContext {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return super.toString() + ",Base:" + baseContext;
   }

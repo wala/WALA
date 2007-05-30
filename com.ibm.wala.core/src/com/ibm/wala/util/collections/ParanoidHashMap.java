@@ -58,6 +58,7 @@ public class ParanoidHashMap<K,V> extends HashMap<K,V> {
    * 
    * @see java.util.Map#put(java.lang.Object, java.lang.Object)
    */
+  @Override
   public V put(K arg0, V arg1) {
     if (arg0 != null && arg0.hashCode() == System.identityHashCode(arg0)) {
       Assertions._assert(false, arg0.getClass().toString());
@@ -70,6 +71,7 @@ public class ParanoidHashMap<K,V> extends HashMap<K,V> {
    * 
    * @see java.util.Map#putAll(java.util.Map)
    */
+  @Override
   public void putAll(Map<? extends K,? extends V> arg0) {
     if (arg0 == null) {
       throw new IllegalArgumentException("arg0 is null");

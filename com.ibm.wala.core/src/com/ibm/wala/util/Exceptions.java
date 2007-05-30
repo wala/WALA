@@ -159,6 +159,7 @@ public class Exceptions implements Constants {
       this.method = method;
     }
 
+    @Override
     public String getMsg() {
       return getClass().toString() + " : " + method;
     }

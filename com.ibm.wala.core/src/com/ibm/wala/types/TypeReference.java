@@ -460,6 +460,7 @@ public final class TypeReference {
     return !isPrimitiveType();
   }
 
+  @Override
   public final int hashCode() {
     return name.hashCode();
   }
@@ -473,10 +474,12 @@ public final class TypeReference {
    * TypeReference are <bf>NOT</bf> equal(), but they both represent the IClass
    * which is named <Primordial,java.lang.Object>
    */
+  @Override
   public final boolean equals(Object other) {
     return (this == other);
   }
 
+  @Override
   public final String toString() {
     return "<" + classloader.getName() + "," + name + ">";
   }
@@ -502,10 +505,12 @@ public final class TypeReference {
       this.name = name;
     }
 
+    @Override
     public final int hashCode() {
       return name.hashCode();
     }
 
+    @Override
     public final boolean equals(Object other) {
       Key that = (Key) other;
       return (name.equals(that.name) && classloader.equals(that.classloader));

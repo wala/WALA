@@ -23,6 +23,7 @@ public final class ConstantKey implements InstanceKey {
     this.value = value;
     this.valueClass = valueClass;
   }
+  @Override
   public boolean equals(Object obj) {
     if (obj instanceof ConstantKey) {
       ConstantKey other = (ConstantKey) obj;
@@ -31,9 +32,11 @@ public final class ConstantKey implements InstanceKey {
       return false;
     }
   }
+  @Override
   public int hashCode() {
     return value==null? 65535: 1877*value.hashCode();
   }
+  @Override
   public String toString() {
     if (value == null)
       return "[ConstantKey:null]";

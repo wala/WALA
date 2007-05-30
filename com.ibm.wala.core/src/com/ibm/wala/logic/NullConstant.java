@@ -18,26 +18,29 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class NullConstant extends IntConstant implements IConstant {
-	
-	// static NullConstant SINGLE = (NullConstant) new IntConstant(0);
-	
-    private NullConstant() {
-      super(0);
-    }
-    
-	public static NullConstant make() {
-		return new NullConstant();
-	}
 
-	public Collection<Variable> getFreeVariables() {
-		return Collections.emptySet();
-	}
+  // static NullConstant SINGLE = (NullConstant) new IntConstant(0);
 
-	public Kind getKind() {
-		return Kind.CONSTANT;
-	}
+  private NullConstant() {
+    super(0);
+  }
 
-	public String toString() {
-		return "null";
-	}
+  public static NullConstant make() {
+    return new NullConstant();
+  }
+
+  @Override
+  public Collection<Variable> getFreeVariables() {
+    return Collections.emptySet();
+  }
+
+  @Override
+  public Kind getKind() {
+    return Kind.CONSTANT;
+  }
+
+  @Override
+  public String toString() {
+    return "null";
+  }
 }

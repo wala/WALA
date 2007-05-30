@@ -34,6 +34,7 @@ public class StandardSolver extends AbstractPointsToSolver {
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
    */
+  @Override
   public void solve() {
     
     EngineTimings.startVirtual("StandardSolver.solve()");

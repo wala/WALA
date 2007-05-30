@@ -116,6 +116,7 @@ public class CallGraphWarnings {
     NoEntrypointsFailure() {
       super(Warning.SEVERE);
     }
+    @Override
     public String getMsg() {
       return getClass().toString();
     }
@@ -166,6 +167,7 @@ public class CallGraphWarnings {
       poison = ((SyntheticMethod)node.getMethod()).getPoison();
     }
 
+    @Override
     public String getMsg() {
       return getClass() + " " + poison;
     }
@@ -190,6 +192,7 @@ public class CallGraphWarnings {
      * 
      * @see com.ibm.wala.util.Warning#getMsg()
      */
+    @Override
     public String getMsg() {
       return "Native method " + getMethod();
     }
@@ -225,6 +228,7 @@ public class CallGraphWarnings {
      * 
      * @see com.ibm.wala.util.Warning#getMsg()
      */
+    @Override
     public String getMsg() {
       return "No callee for " + site + " in node " + getMethod();
     }
@@ -234,6 +238,7 @@ public class CallGraphWarnings {
      * 
      * @see com.ibm.wala.util.warnings.Warning#severityString()
      */
+    @Override
     protected String severityString() {
       return "Unreachable call";
     }

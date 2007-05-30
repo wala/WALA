@@ -94,6 +94,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer("PointerAnalysis:\n");
     for (Iterator it = pointsToMap.iterateKeys(); it.hasNext();) {
@@ -162,34 +163,42 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       this.node = lpk.getNode();
     }
 
+    @Override
     public void visitNew(SSANewInstruction instruction) {
       pointsToSet = OrdinalSet.empty();
     }
 
+    @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
       pointsToSet = computeImplicitPointsToSetAtCall(lpk, node, instruction);
     }
 
+    @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
       pointsToSet = computeImplicitPointsToSetAtCheckCast(node, instruction);
     }
 
+    @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
       pointsToSet = computeImplicitPointsToSetAtCatch(node, instruction);
     }
 
+    @Override
     public void visitGet(SSAGetInstruction instruction) {
       pointsToSet = computeImplicitPointsToSetAtGet(node, instruction);
     }
 
+    @Override
     public void visitPhi(SSAPhiInstruction instruction) {
       pointsToSet = computeImplicitPointsToSetAtPhi(node, instruction);
     }
 
+    @Override
     public void visitPi(SSAPiInstruction instruction) {
       pointsToSet = computeImplicitPointsToSetAtPi(node, instruction);
     }
 
+    @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
       pointsToSet = computeImplicitPointsToSetAtALoad(node, instruction);
     }

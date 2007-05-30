@@ -36,11 +36,13 @@ public class SSAConversionInstruction extends SSAInstruction {
     this.toType = toType;
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     return new SSAConversionInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? val : uses[0],
         fromType, toType);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return getValueString(symbolTable, d, result) + " = conversion " + getValueString(symbolTable, d, val);
   }
@@ -48,6 +50,7 @@ public class SSAConversionInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
+  @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitConversion(this);
   }
@@ -55,14 +58,17 @@ public class SSAConversionInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getDef()
    */
+  @Override
   public boolean hasDef() {
     return true;
   }
 
+  @Override
   public int getDef() {
     return result;
   }
 
+  @Override
   public int getDef(int i) {
     Assertions._assert(i == 0);
     return result;
@@ -71,10 +77,12 @@ public class SSAConversionInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
+  @Override
   public int getNumberOfUses() {
     return 1;
   }
 
+  @Override
   public int getNumberOfDefs() {
     return 1;
   }
@@ -90,12 +98,14 @@ public class SSAConversionInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions)
       Assertions._assert(j == 0);
     return val;
   }
 
+  @Override
   public int hashCode() {
     return 6311 * result ^ val;
   }
@@ -105,6 +115,7 @@ public class SSAConversionInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
+  @Override
   public boolean isFallThrough() {
     return true;
   }
@@ -114,6 +125,7 @@ public class SSAConversionInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return null;
   }

@@ -74,7 +74,7 @@ public class CallFlowEdges {
       }
       s.add(c);
     } else {
-      IBinaryNaturalRelation R = (IBinaryNaturalRelation) edges.get(c);
+      IBinaryNaturalRelation R = edges.get(c);
       if (R == null) {
         // we expect the first dimention of R to be dense, the second sparse
         R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
@@ -93,7 +93,7 @@ public class CallFlowEdges {
    */
   public IntSet getCallFlowSources(int c, int d2) {
     BitVectorIntSet s = (BitVectorIntSet) identityEdges.get(d2);
-    IBinaryNaturalRelation R = (IBinaryNaturalRelation) edges.get(c);
+    IBinaryNaturalRelation R = edges.get(c);
     IntSet result = null;
     if (R == null) {
       if (s != null) {

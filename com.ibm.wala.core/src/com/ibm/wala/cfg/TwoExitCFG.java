@@ -324,7 +324,7 @@ public class TwoExitCFG implements ControlFlowGraph {
       Trace.println("TwoExitCFG: getSuccNodes " + N);
     }
     ensureEdgesReady();
-    IBasicBlock bb = (IBasicBlock) N;
+    IBasicBlock bb = N;
     if (N.equals(exceptionalExit)) {
       return EmptyIterator.instance();
     } else if (exceptionalPred.get(bb.getNumber())) {
@@ -352,7 +352,7 @@ public class TwoExitCFG implements ControlFlowGraph {
     } else {
       ensureEdgesReady();
       int result = delegate.getSuccNodeCount(N);
-      IBasicBlock bb = (IBasicBlock) N;
+      IBasicBlock bb = N;
       if (exceptionalPred.get(bb.getNumber()) && normalPred.get(bb.getNumber())) {
         result++;
       }
@@ -484,6 +484,7 @@ public class TwoExitCFG implements ControlFlowGraph {
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object arg0) {
       if (arg0 instanceof ExceptionalExitBlock) {
         ExceptionalExitBlock other = (ExceptionalExitBlock) arg0;
@@ -498,6 +499,7 @@ public class TwoExitCFG implements ControlFlowGraph {
      * 
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
       return delegate.exit().hashCode() * 8467;
     }
@@ -507,6 +509,7 @@ public class TwoExitCFG implements ControlFlowGraph {
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "Exceptional Exit[ " + getMethod() + "]";
     }
@@ -655,6 +658,7 @@ public class TwoExitCFG implements ControlFlowGraph {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer("Two-Exit CFG");
     result.append("\ndelegate\n" + delegate);

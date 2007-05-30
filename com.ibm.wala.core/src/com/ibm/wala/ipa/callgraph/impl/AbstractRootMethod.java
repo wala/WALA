@@ -70,6 +70,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
    * 
    * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.warnings.WarningSet)
    */
+  @Override
   public SSAInstruction[] getStatements(SSAOptions options, WarningSet warnings) {
     SSAInstruction[] result = new SSAInstruction[statements.size()];
     int i = 0;
@@ -85,6 +86,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
    * @see com.ibm.wala.classLoader.SyntheticMethod#makeIR(com.ibm.wala.ssa.SSAOptions,
    *      com.ibm.wala.util.warnings.WarningSet)
    */
+  @Override
   public IR makeIR(SSAOptions options, WarningSet warnings) {
     SSAInstruction instrs[] = getStatements(options, warnings);
     Map<Integer,ConstantValue> constants = null;
@@ -211,6 +213,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       this.t = t;
     }
 
+    @Override
     public String getMsg() {
       return getClass().toString() + " : " + t;
     }

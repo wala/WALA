@@ -63,7 +63,7 @@ public class SubtypesEntrypoint extends DefaultEntrypoint {
         if (!cs.isAbstract() && !cs.isInterface())
           subs.add(cs.getReference());
       }
-      return (TypeReference[]) subs.toArray(new TypeReference[subs.size()]);
+      return subs.toArray(new TypeReference[subs.size()]);
     }
   }
 }

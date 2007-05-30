@@ -97,6 +97,7 @@ public abstract class IntSetVariable extends AbstractVariable {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     if (V == null) {
       return "[Empty]";
@@ -153,6 +154,7 @@ public abstract class IntSetVariable extends AbstractVariable {
    * 
    * @see com.ibm.wala.dataflow.AbstractVariable#hashCode()
    */
+  @Override
   public abstract int hashCode();
 
 

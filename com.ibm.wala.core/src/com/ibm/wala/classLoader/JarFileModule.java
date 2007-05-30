@@ -54,6 +54,7 @@ public class JarFileModule implements Module {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "JarFileModule:" + file.getName();
   }
@@ -77,6 +78,7 @@ public class JarFileModule implements Module {
    * 
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return file.hashCode();
   }
@@ -86,6 +88,7 @@ public class JarFileModule implements Module {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object arg0) {
     if (arg0 == null) {
       return false;

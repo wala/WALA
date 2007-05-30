@@ -73,6 +73,7 @@ public class JarFileEntry implements ModuleEntry {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     // TODO Auto-generated method stub
     return jarFile.getName() + ":" + getName();
@@ -96,6 +97,7 @@ public class JarFileEntry implements ModuleEntry {
     return jarFile;
   }
 
+  @Override
   public int hashCode() { 
     return entryName.hashCode() * 5059 + jarFile.hashCode();
   }
@@ -116,6 +118,7 @@ public class JarFileEntry implements ModuleEntry {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     return this == obj;
   }

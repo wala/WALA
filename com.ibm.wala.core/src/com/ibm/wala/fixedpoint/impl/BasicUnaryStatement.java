@@ -33,6 +33,7 @@ public class BasicUnaryStatement extends UnaryStatement {
   /**
    * @return Returns the operator.
    */
+  @Override
   public AbstractOperator getOperator() {
     return operator;
   }

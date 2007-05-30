@@ -63,6 +63,7 @@ public final class FieldImpl implements IField {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
     if (obj instanceof FieldImpl) {
@@ -78,6 +79,7 @@ public final class FieldImpl implements IField {
    * 
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 87049 * declaringClass.hashCode() + fieldRef.hashCode();
   }
@@ -87,6 +89,7 @@ public final class FieldImpl implements IField {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     FieldReference fr = getReference();
     return fr.toString();

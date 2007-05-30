@@ -52,10 +52,12 @@ public final class ReceiverInstanceContext implements Context {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "ReceiverInstanceContext<" + I + ">";
   }
 
+  @Override
   public int hashCode() {
     return I.hashCode() * 8747;
   }
@@ -65,6 +67,7 @@ public final class ReceiverInstanceContext implements Context {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final.
     if (obj instanceof ReceiverInstanceContext) {

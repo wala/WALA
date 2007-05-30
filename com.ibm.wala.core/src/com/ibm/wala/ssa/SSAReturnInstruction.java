@@ -38,6 +38,7 @@ public class SSAReturnInstruction extends SSAInstruction {
     this.result = -1;
     this.isPrimitive = false;
   }
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     if (result == -1)
       return
@@ -49,7 +50,8 @@ public class SSAReturnInstruction extends SSAInstruction {
 	  isPrimitive);
   }
 
-   public String toString(SymbolTable table, ValueDecorator d) {
+   @Override
+  public String toString(SymbolTable table, ValueDecorator d) {
     if (result == -1) {
       return "return";
     } else {
@@ -60,6 +62,7 @@ public class SSAReturnInstruction extends SSAInstruction {
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException  if v is null
    */
+  @Override
   public void visit(IVisitor v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -69,6 +72,7 @@ public class SSAReturnInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
+  @Override
   public int getNumberOfUses() {
     return (result == -1)? 0: 1;
   }
@@ -76,6 +80,7 @@ public class SSAReturnInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions)
       Assertions._assert(j == 0);
@@ -96,18 +101,21 @@ public class SSAReturnInstruction extends SSAInstruction {
     return result == -1;
   }
 
+  @Override
   public int hashCode() {
     return result * 8933;
   }
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
+  @Override
   public boolean isFallThrough() {
     return false;
   }
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return null;
   }

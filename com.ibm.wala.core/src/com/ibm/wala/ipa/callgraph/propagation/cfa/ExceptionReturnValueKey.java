@@ -24,6 +24,7 @@ public class ExceptionReturnValueKey extends ReturnValueKey {
     super(node);
   }
 
+  @Override
   public String toString() {
     return "[Exc-Ret-V:" + getNode() + "]";
   }
@@ -33,6 +34,7 @@ public class ExceptionReturnValueKey extends ReturnValueKey {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (obj == null) {
       return false;
@@ -45,6 +47,7 @@ public class ExceptionReturnValueKey extends ReturnValueKey {
    * 
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 1201 * super.internalHashCode();
   }

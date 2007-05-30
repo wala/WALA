@@ -53,6 +53,7 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
       super(programCounter, declaredTarget);
     }
 
+    @Override
     public IInvokeInstruction.IDispatch getInvocationCode() {
       return IInvokeInstruction.Dispatch.STATIC;
     }
@@ -63,6 +64,7 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
       super(programCounter, declaredTarget);
     }
 
+    @Override
     public IInvokeInstruction.IDispatch getInvocationCode() {
       return IInvokeInstruction.Dispatch.SPECIAL;
     }
@@ -73,6 +75,7 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
       super(programCounter, declaredTarget);
     }
 
+    @Override
     public IInvokeInstruction.IDispatch getInvocationCode() {
       return IInvokeInstruction.Dispatch.VIRTUAL;
     }
@@ -83,6 +86,7 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
       super(programCounter, declaredTarget);
     }
 
+    @Override
     public IInvokeInstruction.IDispatch getInvocationCode() {
       return IInvokeInstruction.Dispatch.INTERFACE;
     }
@@ -128,6 +132,7 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "invoke" + getInvocationString(getInvocationCode()) + " " + declaredTarget + "@" + getProgramCounter();
   }

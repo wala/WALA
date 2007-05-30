@@ -37,6 +37,7 @@ public final class Selector {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     // using instanceof is OK because Selector is final
     if (obj instanceof Selector) {
@@ -52,6 +53,7 @@ public final class Selector {
    * 
    * @see java.lang.Object#hashCode() Cache??
    */
+  @Override
   public int hashCode() {
     return 19 * name.hashCode() + descriptor.hashCode();
   }
@@ -61,6 +63,7 @@ public final class Selector {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return name.toString() + descriptor.toString();
   }

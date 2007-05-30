@@ -105,11 +105,13 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     normalToExit = new FixedSizeBitVector(getMaxNumber() + 1);
     exceptionalToExit = new FixedSizeBitVector(getMaxNumber() + 1);
     fallThru = new FixedSizeBitVector(getMaxNumber() + 1);
-    exit = (IBasicBlock) getNode(getMaxNumber());
+    exit = getNode(getMaxNumber());
   }
 
+  @Override
   public abstract boolean equals(Object o);
 
+  @Override
   public abstract int hashCode();
 
   /**
@@ -118,7 +120,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    * @return the entry basic block for the CFG.
    */
   public IBasicBlock entry() {
-    return (IBasicBlock) getNode(0);
+    return getNode(0);
   }
 
   /**
@@ -533,6 +535,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
     for (Iterator it = iterator(); it.hasNext();) {

@@ -56,6 +56,7 @@ public class MapIterator<X,Y> implements Iterator<Y> {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "map: " + f + " of " + i;
   }

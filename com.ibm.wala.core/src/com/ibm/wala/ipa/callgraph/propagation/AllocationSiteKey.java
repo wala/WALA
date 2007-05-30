@@ -26,10 +26,13 @@ public abstract class AllocationSiteKey extends AbstractAllocationSiteKey {
     this.site = allocation;
   }
 
+  @Override
   public abstract boolean equals(Object obj);
 
+  @Override
   public abstract int hashCode();
 
+  @Override
   public String toString() {
     return "SITE{" + getNode().getMethod() + ":" + site + " in " + getNode().getContext() + "}";
   }

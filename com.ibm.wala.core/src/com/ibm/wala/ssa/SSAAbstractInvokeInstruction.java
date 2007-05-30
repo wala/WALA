@@ -46,10 +46,12 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
     this.site = site;
   }
 
+  @Override
   public int getDef() {
     return result;
   }
 
+  @Override
   public boolean hasDef() {
     return result != -1;
   }
@@ -89,6 +91,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
     return site.getProgramCounter();
   }
 
+  @Override
   public int getDef(int i) {
     Assertions._assert(i < 2);
     return (i == 0 && result != -1) ? result : exception;
@@ -98,6 +101,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
     return exception;
   }
 
+  @Override
   public int getNumberOfDefs() {
     return (result == -1) ? 1 : 2;
   }
@@ -132,6 +136,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
    * 
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
+  @Override
   public boolean isPEI() {
     return true;
   }
@@ -141,10 +146,12 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
    * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
+  @Override
   public boolean isFallThrough() {
     return true;
   }
 
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     String code = site.getInvocationString();
     StringBuffer s = new StringBuffer();

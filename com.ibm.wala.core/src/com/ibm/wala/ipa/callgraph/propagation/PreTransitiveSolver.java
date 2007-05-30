@@ -61,6 +61,7 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
    */
+  @Override
   public void solve() {
 
     EngineTimings.startVirtual("PreTransitiveSolver.solve()");

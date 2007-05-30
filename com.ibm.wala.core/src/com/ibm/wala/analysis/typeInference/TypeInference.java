@@ -103,6 +103,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     init(ir, this.new TypeVarFactory(), this.new TypeOperatorFactory());
   }
 
+  @Override
   protected void initializeVariables() {
     int[] parameterValueNumbers = ir.getParameterValueNumbers();
     for (int i = 0; i < parameterValueNumbers.length; i++) {
@@ -172,6 +173,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     }
   }
 
+  @Override
   protected void initializeWorkList() {
     addAllStatementsToWorkList();
   }
@@ -192,6 +194,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     /**
      * Note that we need evalute this operator at most once
      */
+    @Override
     public byte evaluate(IVariable lhs) {
       TypeVariable t = (TypeVariable) lhs;
       if (t.type.equals(type)) {
@@ -205,6 +208,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "delared type := " + type;
     }
@@ -218,6 +222,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 9931 * type.hashCode();
     }
@@ -227,6 +232,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       if (o instanceof DeclaredTypeOperator) {
         DeclaredTypeOperator d = (DeclaredTypeOperator) o;
@@ -249,6 +255,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     /**
      * TODO: work on efficiency shortcuts for this.
      */
+    @Override
     public byte evaluate(IVariable lhs, IVariable[] rhs) {
       TypeVariable L = (TypeVariable) lhs;
       TypeAbstraction lhsType = L.getType();
@@ -270,6 +277,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "phi meet";
     }
@@ -279,6 +287,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 9929;
     }
@@ -288,6 +297,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       return (o instanceof PhiOperator);
     }
@@ -305,6 +315,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     /**
      * TODO: work on efficiency shortcuts for this.
      */
+    @Override
     public byte evaluate(IVariable lhsOperand, IVariable[] rhsOperands) {
       TypeVariable lhs = (TypeVariable) lhsOperand;
       TypeAbstraction lhsType = lhs.getType();
@@ -323,6 +334,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "pi";
     }
@@ -332,6 +344,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 9929 * 13;
     }
@@ -341,6 +354,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       return (o instanceof PiOperator);
     }
@@ -355,6 +369,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     protected PrimitivePropagateOperator() {
     }
 
+    @Override
     public byte evaluate(IVariable lhs, IVariable[] rhs) {
       TypeVariable L = (TypeVariable) lhs;
       TypeAbstraction lhsType = L.getType();
@@ -376,6 +391,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "propagate";
     }
@@ -385,6 +401,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 99292;
     }
@@ -394,6 +411,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       return o != null && o.getClass().equals(getClass());
     }
@@ -412,6 +430,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       this.load = load;
     }
 
+    @Override
     public byte evaluate(IVariable lhs, IVariable[] rhs) {
       TypeVariable t = (TypeVariable) lhs;
       TypeAbstraction arrayType = getType(load.getArrayRef());
@@ -472,6 +491,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "getElementType " + load;
     }
@@ -481,6 +501,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 9923 * load.hashCode();
     }
@@ -490,6 +511,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       if (o instanceof GetElementType) {
         GetElementType other = (GetElementType) o;
@@ -511,10 +533,12 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       return temp;
     }
 
+    @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
       result = new GetElementType(instruction);
     }
 
+    @Override
     public void visitArrayLength(SSAArrayLengthInstruction instruction) {
       if (!doPrimitives) {
         result = null;
@@ -523,6 +547,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       }
     }
 
+    @Override
     public void visitGet(SSAGetInstruction instruction) {
       TypeReference type = instruction.getDeclaredFieldType();
 
@@ -540,6 +565,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       }
     }
 
+    @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
       TypeReference type = instruction.getDeclaredResultType();
       if (type.isReferenceType()) {
@@ -558,6 +584,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       }
     }
 
+    @Override
     public void visitNew(SSANewInstruction instruction) {
       TypeReference type = instruction.getConcreteType();
       IClass klass = cha.lookupClass(type);
@@ -570,6 +597,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       }
     }
 
+    @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
       TypeReference type = instruction.getDeclaredResultType();
       IClass klass = cha.lookupClass(type);
@@ -582,24 +610,28 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       }
     }
 
+    @Override
     public void visitConversion(SSAConversionInstruction instruction) {
       if (doPrimitives) {
         result = new DeclaredTypeOperator(PrimitiveType.getPrimitive(instruction.getToType()));
       }
     }
 
+    @Override
     public void visitBinaryOp(SSABinaryOpInstruction instruction) {
       if (doPrimitives) {
         result = primitivePropagateOp;
       }
     }
 
+    @Override
     public void visitUnaryOp(SSAUnaryOpInstruction instruction) {
       if (doPrimitives) {
         result = primitivePropagateOp;
       }
     }
 
+    @Override
     public void visitInstanceof(SSAInstanceofInstruction instruction) {
       if (doPrimitives) {
 	result = new DeclaredTypeOperator(PrimitiveType.BOOLEAN);
@@ -607,15 +639,18 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       
     }
     
+    @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
       TypeAbstraction type = meetDeclaredExceptionTypes(instruction, cha);
       result = new DeclaredTypeOperator(type);
     }
 
+    @Override
     public void visitPhi(SSAPhiInstruction instruction) {
       result = phiOp;
     }
 
+    @Override
     public void visitPi(SSAPiInstruction instruction) {
       result = piOp;
     }
@@ -687,6 +722,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return type.toString();
     }
@@ -696,6 +732,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.AbstractVariable#hashCode()
      */
+    @Override
     public int hashCode() {
       return hash;
     }

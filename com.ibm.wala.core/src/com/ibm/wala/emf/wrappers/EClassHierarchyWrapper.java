@@ -42,6 +42,7 @@ public class EClassHierarchyWrapper extends EObjectTree {
    * @return an EClassHierarchy representing the contents of this object
    * @see com.ibm.wala.emf.wrappers.EObjectGraphImpl#export()
    */
+  @Override
   public EObject export() {
     EClassHierarchy cha = JavaFactory.eINSTANCE.createEClassHierarchy();
     makeNodes(cha);

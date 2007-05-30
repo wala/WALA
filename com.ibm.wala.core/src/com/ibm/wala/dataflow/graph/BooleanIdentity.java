@@ -31,6 +31,7 @@ public class BooleanIdentity extends UnaryOperator {
 
   /* (non-Javadoc)
    */
+  @Override
   public byte evaluate(IVariable lhs, IVariable rhs) {
     BooleanVariable L = (BooleanVariable) lhs;
     BooleanVariable R = (BooleanVariable) rhs;
@@ -46,6 +47,7 @@ public class BooleanIdentity extends UnaryOperator {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "Id ";
   }
@@ -53,6 +55,7 @@ public class BooleanIdentity extends UnaryOperator {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.Operator#hashCode()
    */
+  @Override
   public int hashCode() {
     return 9802;
   }
@@ -60,6 +63,7 @@ public class BooleanIdentity extends UnaryOperator {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object o) {
     return (o instanceof BooleanIdentity);
   }
@@ -67,6 +71,7 @@ public class BooleanIdentity extends UnaryOperator {
   /* (non-Javadoc)
    * @see com.ibm.wala.fixpoint.UnaryOperator#isIdentity()
    */
+  @Override
   public boolean isIdentity() {
     return true;
   }

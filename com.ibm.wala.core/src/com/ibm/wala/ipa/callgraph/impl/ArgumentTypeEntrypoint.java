@@ -106,6 +106,7 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
    * 
    * @see com.ibm.wala.ipa.callgraph.Entrypoint#getParameterTypes(int)
    */
+  @Override
   public TypeReference[] getParameterTypes(int i) {
     return paramTypes[i];
   }
@@ -115,6 +116,7 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
    * 
    * @see com.ibm.wala.ipa.callgraph.Entrypoint#getNumberOfParameters()
    */
+  @Override
   public int getNumberOfParameters() {
     return paramTypes.length;
   }

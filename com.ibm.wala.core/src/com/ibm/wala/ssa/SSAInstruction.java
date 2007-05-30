@@ -64,6 +64,7 @@ public abstract class SSAInstruction implements IInstruction {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return toString(null, null);
   }
@@ -231,6 +232,7 @@ public abstract class SSAInstruction implements IInstruction {
     throw new UnsupportedOperationException();
   }
 
+  @Override
   public abstract int hashCode();
 
   /**
@@ -257,6 +259,7 @@ public abstract class SSAInstruction implements IInstruction {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public final boolean equals(Object obj) {
     return this == obj;
   }

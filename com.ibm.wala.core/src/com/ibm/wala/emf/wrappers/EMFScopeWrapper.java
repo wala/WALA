@@ -170,21 +170,25 @@ public class EMFScopeWrapper extends AnalysisScope {
   private void processModule(EModule m, final ClassLoaderReference loader) {
     JavaScopeSwitch sw = new JavaScopeSwitch() {
 
+      @Override
       public Object defaultCase(EObject object) {
         Assertions.UNREACHABLE(object.getClass().toString());
         return null;
       }
 
+      @Override
       public Object caseEBuiltInModule(EBuiltInModule object) {
         processBuiltInModule(object, loader);
         return SUCCESS;
       }
 
+      @Override
       public Object caseEJarFile(EJarFile object) {
         processJarFile(object, loader);
         return SUCCESS;
       }
 
+      @Override
       public Object caseEClassFile(EClassFile object) {
         try {
           processClassFile(object, loader);
@@ -195,6 +199,7 @@ public class EMFScopeWrapper extends AnalysisScope {
         return SUCCESS;
       }
 
+      @Override
       public Object caseESourceFile(ESourceFile object) {
         try {
           processSourceFile(object, loader);
@@ -393,6 +398,7 @@ public class EMFScopeWrapper extends AnalysisScope {
     return result;
   }
 
+  @Override
   protected Object getExclusionString() {
     return "Exclusions defined in file " + exclusionsFile;
   }

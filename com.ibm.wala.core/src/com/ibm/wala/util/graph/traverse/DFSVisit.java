@@ -167,7 +167,7 @@ public class DFSVisit {
         T currentChild = e.next();
         // visit edge
         visitor.visitEdge(current, currentChild);
-        Iterator currentGrandChildren = (Iterator) states.get(currentChild);
+        Iterator currentGrandChildren = states.get(currentChild);
         if (currentGrandChildren == null) {
           // new child discovered
           found++;

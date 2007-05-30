@@ -205,7 +205,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
             int base = densePart.getOffset();
             int currentSize = densePart.length() - base;
             float newSize = 1.1f * (bits[index - 1] - base);
-            float fraction = newSize / (float) currentSize;
+            float fraction = newSize / currentSize;
             assert fraction > 1;
             densePart.growCapacity(fraction);
           }
@@ -599,6 +599,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     return change;
   }
 
+  @Override
   public String toString() {
     StringBuffer sb = new StringBuffer("[");
     if (densePart != null) {

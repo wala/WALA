@@ -246,6 +246,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
      * 
      * @see com.ibm.wala.ipa.summaries.MethodSummary#getStatements()
      */
+    @Override
     public SSAInstruction[] getStatements() {
       if (getReturnType().equals(TypeReference.Void)) {
         return NO_STATEMENTS;

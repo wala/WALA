@@ -118,6 +118,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
     for (int i = 0; i < nextIndex; i++) {

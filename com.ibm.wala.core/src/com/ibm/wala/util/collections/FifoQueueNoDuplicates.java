@@ -51,6 +51,7 @@ public class FifoQueueNoDuplicates<T> extends FifoQueue<T> {
    *          is the Object to be added to the queue if not ever previously
    *          queued.
    */
+  @Override
   public void push(T element) {
     if (wasInQueue.add(element)) {
       inQueue.add(element);
@@ -71,6 +72,7 @@ public class FifoQueueNoDuplicates<T> extends FifoQueue<T> {
    *          an Iterator of Objects to be added to the queue if never already
    *          queued.
    */
+  @Override
   public void push(Iterator<? extends T> elements) {
     while (elements.hasNext()) {
       T element = elements.next();

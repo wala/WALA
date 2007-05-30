@@ -70,6 +70,7 @@ public final class ImmutableByteArray {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return new String(b);
   }

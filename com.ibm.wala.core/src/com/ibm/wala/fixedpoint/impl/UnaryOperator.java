@@ -50,6 +50,7 @@ public abstract class UnaryOperator extends AbstractOperator implements FixedPoi
    * (non-Javadoc)
    * 
    */
+  @Override
   public byte evaluate(IVariable lhs, IVariable[] rhs) throws UnimplementedError {
     // this should never be called. Use the other, more efficient form.
     Assertions.UNREACHABLE();

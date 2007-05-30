@@ -46,6 +46,7 @@ public class CallerSiteContext implements Context {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "[CallerSiteContext: " + caller + "," + site.getProgramCounter() + "]";
   }
@@ -61,6 +62,7 @@ public class CallerSiteContext implements Context {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object arg0) {
     if (arg0 == null) {
       return false;
@@ -76,6 +78,7 @@ public class CallerSiteContext implements Context {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return site.hashCode() + 839 * caller.hashCode();
   }

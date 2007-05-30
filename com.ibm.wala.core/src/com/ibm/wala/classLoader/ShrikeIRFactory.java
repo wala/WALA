@@ -54,7 +54,7 @@ public class ShrikeIRFactory implements IRFactory {
    */
   public IR makeIR(final IMethod method, Context C, final ClassHierarchy cha, final SSAOptions options, final WarningSet warnings)
       throws IllegalArgumentException {
-    
+
     if (!(method instanceof ShrikeCTMethod)) {
       throw new IllegalArgumentException("method must be a ShrikeCTMethod");
     }
@@ -86,6 +86,7 @@ public class ShrikeIRFactory implements IRFactory {
         DeadAssignmentElimination.perform(this);
       }
 
+      @Override
       protected String instructionPosition(int instructionIndex) {
         try {
           int bcIndex = ((ShrikeCTMethod) method).getBytecodeIndex(instructionIndex);
@@ -101,6 +102,7 @@ public class ShrikeIRFactory implements IRFactory {
         }
       }
 
+      @Override
       public SSA2LocalMap getLocalMap() {
         return localMap;
       }

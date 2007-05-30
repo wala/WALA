@@ -16,60 +16,56 @@ package com.ibm.wala.logic;
 
 public class NullaryRelation implements IRelation {
 
-	static final public NullaryRelation TRUE = 
-		new NullaryRelation("true");
-	
-	static final public NullaryRelation FALSE =
-		new NullaryRelation("false");
-	
-	private final String symbol;
+  static final public NullaryRelation TRUE = new NullaryRelation("true");
 
-	protected NullaryRelation(String symbol) {
-		this.symbol = symbol;
-	}
+  static final public NullaryRelation FALSE = new NullaryRelation("false");
 
-	public String getSymbol() {
-		return symbol;
-	}
+  private final String symbol;
 
-	public int getValence() {
-		return 0;
-	}
+  protected NullaryRelation(String symbol) {
+    this.symbol = symbol;
+  }
 
-	public static NullaryRelation make(String symbol) {
-		return new NullaryRelation(symbol);
-	}
+  public String getSymbol() {
+    return symbol;
+  }
 
-	public String toString() {
-		return getSymbol() + " : int"; // int? 
-	}
+  public int getValence() {
+    return 0;
+  }
 
-	@Override
-	public int hashCode() {
-		final int PRIME = 31;
-		int result = 1;
-		result = PRIME * result + ((symbol == null) ? 0 : symbol.hashCode());
-		return result;
-	}
+  public static NullaryRelation make(String symbol) {
+    return new NullaryRelation(symbol);
+  }
 
+  @Override
+  public String toString() {
+    return getSymbol() + " : int"; // int?
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		final NullaryRelation other = (NullaryRelation) obj;
-		if (symbol == null) {
-			if (other.symbol != null)
-				return false;
-		} else if (!symbol.equals(other.symbol))
-			return false;
-		return true;
-	}
+  @Override
+  public int hashCode() {
+    final int PRIME = 31;
+    int result = 1;
+    result = PRIME * result + ((symbol == null) ? 0 : symbol.hashCode());
+    return result;
+  }
 
-
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    final NullaryRelation other = (NullaryRelation) obj;
+    if (symbol == null) {
+      if (other.symbol != null)
+        return false;
+    } else if (!symbol.equals(other.symbol))
+      return false;
+    return true;
+  }
 
 }

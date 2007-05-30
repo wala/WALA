@@ -49,6 +49,7 @@ public class CallerContext implements Context {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (obj == null) {
       return false;
@@ -64,6 +65,7 @@ public class CallerContext implements Context {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 7841 * caller.hashCode();
   }
@@ -71,6 +73,7 @@ public class CallerContext implements Context {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "Caller: " + caller;
   }

@@ -51,6 +51,7 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
    * 
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
    */
+  @Override
   public NodeManager<T> getNodeManager() {
     return nodeManager;
   }
@@ -60,6 +61,7 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
    * 
    * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
    */
+  @Override
   public EdgeManager<T> getEdgeManager() {
     return edgeManager;
   }

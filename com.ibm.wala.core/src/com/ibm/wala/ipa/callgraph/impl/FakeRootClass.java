@@ -152,7 +152,7 @@ public class FakeRootClass extends SyntheticClass {
    */
   public IField getField(Atom name) {
     if (fakeRootStaticFields != null) {
-      return (IField) fakeRootStaticFields.get(name);
+      return fakeRootStaticFields.get(name);
     } else {
       return null;
     }

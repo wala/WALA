@@ -34,6 +34,7 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
   /*
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
+  @Override
   public int getNumberOfUses() {
     return 2;
   }
@@ -41,6 +42,7 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions)
       Assertions._assert(j <= 1);
@@ -77,6 +79,7 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
+  @Override
   public boolean isPEI() {
     return true;
   }
@@ -86,6 +89,7 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
+  @Override
   public boolean isFallThrough() {
     return true;
   }

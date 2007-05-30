@@ -31,11 +31,13 @@ public class SSAMonitorInstruction extends SSAInstruction {
     this.isEnter = isEnter;
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     // todo: check that this is the intended behavior. julian?
     return new SSAMonitorInstruction(uses == null || uses.length == 0 ? ref : uses[0], isEnter);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return "monitor " + getValueString(symbolTable, d, ref);
   }
@@ -44,6 +46,7 @@ public class SSAMonitorInstruction extends SSAInstruction {
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException  if v is null
    */
+  @Override
   public void visit(IVisitor v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -54,6 +57,7 @@ public class SSAMonitorInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
+  @Override
   public int getNumberOfUses() {
     return 1;
   }
@@ -61,12 +65,14 @@ public class SSAMonitorInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions)
       Assertions._assert(j == 0);
     return ref;
   }
 
+  @Override
   public int hashCode() {
     return ref * 6173 ^ 4423;
   }
@@ -76,6 +82,7 @@ public class SSAMonitorInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
+  @Override
   public boolean isPEI() {
     return true;
   }
@@ -85,6 +92,7 @@ public class SSAMonitorInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
+  @Override
   public boolean isFallThrough() {
     return true;
   }
@@ -94,6 +102,7 @@ public class SSAMonitorInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Exceptions.getNullPointerException();
   }

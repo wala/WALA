@@ -46,6 +46,7 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
     this(-1, params, exception, site);
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     // result == -1 for void-returning methods, which are the only calls
     // that have a single value def.
@@ -84,6 +85,7 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException  if v is null
    */
+  @Override
   public void visit(IVisitor v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -94,6 +96,7 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
+  @Override
   public int getNumberOfUses() {
     if (params == null) {
       if (Assertions.verifyAssertions) {
@@ -107,6 +110,7 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
     }
   }
 
+  @Override
   public int getNumberOfParameters() {
     return getNumberOfUses();
   }
@@ -114,6 +118,7 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions) {
       if (params == null) {
@@ -126,6 +131,7 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
     return params[j];
   }
 
+  @Override
   public int hashCode() {
     return site.hashCode() * 7529;
   }
@@ -135,6 +141,7 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Exceptions.getNullPointerException();
   }

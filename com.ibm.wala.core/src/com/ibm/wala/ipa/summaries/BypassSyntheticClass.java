@@ -66,6 +66,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    * 
    * @see com.ibm.wala.classLoader.IClass#getClassLoader()
    */
+  @Override
   public IClassLoader getClassLoader() {
     return loader;
   }
@@ -140,6 +141,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    * 
    * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
    */
+  @Override
   public String getSourceFileName() {
     return realType.getSourceFileName();
   }
@@ -194,6 +196,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "<Synthetic " + (realType.isInterface() ? "Implementor" : "Subclass") + " " + realType.toString() + ">";
   }
@@ -207,6 +210,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object arg0) {
     if (arg0 == null) {
       return false;
@@ -223,6 +227,7 @@ public class BypassSyntheticClass extends SyntheticClass {
    * 
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return realType.hashCode() * 1621;
   }

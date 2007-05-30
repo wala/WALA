@@ -95,6 +95,7 @@ public class ZeroXCFABuilder extends CFABuilder {
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#getDefaultDispatchBoundHeuristic()
    */
+  @Override
   protected byte getDefaultDispatchBoundHeuristic() {
     switch (instancePolicy) {
     case ZeroXInstanceKeys.ALLOCATIONS:

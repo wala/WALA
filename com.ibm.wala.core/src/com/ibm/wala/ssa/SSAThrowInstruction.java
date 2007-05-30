@@ -25,6 +25,7 @@ public class SSAThrowInstruction extends SSAAbstractThrowInstruction {
     super(exception);
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
     if (uses != null && uses.length != 1) {
       throw new IllegalArgumentException("if non-null, uses.length must be 1");
@@ -35,6 +36,7 @@ public class SSAThrowInstruction extends SSAAbstractThrowInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
+  @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitThrow(this);
   }
@@ -42,6 +44,7 @@ public class SSAThrowInstruction extends SSAAbstractThrowInstruction {
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Exceptions.getNullPointerException();
   }

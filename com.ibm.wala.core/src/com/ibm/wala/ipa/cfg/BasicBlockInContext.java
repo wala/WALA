@@ -113,6 +113,7 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object arg0) {
     if (arg0 instanceof BasicBlockInContext) {
       BasicBlockInContext other = (BasicBlockInContext) arg0;
@@ -127,6 +128,7 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
    * 
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return delegate.hashCode() + 229 * node.hashCode();
   }
@@ -148,6 +150,7 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return delegate.toString() + "(node:" + node.getGraphNodeId() + ")";
   }

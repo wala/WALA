@@ -328,6 +328,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       this.entrypoint = entrypoint;
     }
 
+    @Override
     public String getMsg() {
       return getClass().toString() + " : " + entrypoint;
     }
@@ -548,6 +549,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       this.t = t;
     }
 
+    @Override
     public String getMsg() {
       return getClass().toString() + " : " + t;
     }
@@ -598,6 +600,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object obj) {
       // instanceof is OK because this class is final
       if (obj instanceof TypedPointerKey) {
@@ -613,6 +616,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
       return 67931 * base.hashCode() + type.hashCode();
     }
@@ -622,6 +626,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "{ " + base + " type: " + type + "}";
     }
@@ -697,6 +702,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * @see com.ibm.wala.dataflow.UnaryOperator#evaluate(com.ibm.wala.dataflow.IVariable,
      *      com.ibm.wala.dataflow.IVariable)
      */
+    @Override
     public byte evaluate(IVariable lhs, IVariable rhs) {
 
       PointsToSetVariable L = (PointsToSetVariable) lhs;
@@ -763,6 +769,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "Filter ";
     }
@@ -772,6 +779,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object obj) {
       // these objects are canonicalized for the duration of a
       // solve
@@ -783,6 +791,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 88651;
     }
@@ -1113,6 +1122,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   public final class ArrayLoadOperator extends UnarySideEffect implements IPointerOperator {
     protected final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
 
+    @Override
     public String toString() {
       return "ArrayLoad";
     }
@@ -1122,6 +1132,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       system.registerFixedSet(def, this);
     }
 
+    @Override
     public byte evaluate(IVariable rhs) {
       boolean debug = false;
       if (DEBUG_ARRAY_LOAD) {
@@ -1184,6 +1195,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 9871 + super.hashCode();
     }
@@ -1193,10 +1205,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       return super.equals(o);
     }
 
+    @Override
     protected boolean isLoadOperator() {
       return true;
     }
@@ -1216,6 +1230,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * equations.
    */
   public final class ArrayStoreOperator extends UnarySideEffect implements IPointerOperator {
+    @Override
     public String toString() {
       return "ArrayStore";
     }
@@ -1225,6 +1240,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       system.registerFixedSet(val, this);
     }
 
+    @Override
     public byte evaluate(IVariable rhs) {
       boolean debug = false;
       if (DEBUG_ARRAY_STORE) {
@@ -1284,6 +1300,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 9859 + super.hashCode();
     }
@@ -1302,10 +1319,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       return super.equals(o);
     }
 
+    @Override
     protected boolean isLoadOperator() {
       return false;
     }
@@ -1325,10 +1344,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       system.registerFixedSet(def, this);
     }
 
+    @Override
     public String toString() {
       return "GetField " + getField() + "," + getFixedSet().getPointerKey();
     }
 
+    @Override
     public byte evaluate(IVariable rhs) {
       if (DEBUG_GET) {
         String S = "EVAL GetField " + getField() + " " + getFixedSet().getPointerKey() + " "
@@ -1401,6 +1422,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 9857 * getField().hashCode() + getFixedSet().hashCode();
     }
@@ -1410,6 +1432,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       if (o instanceof GetFieldOperator) {
         GetFieldOperator other = (GetFieldOperator) o;
@@ -1426,6 +1449,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return field;
     }
 
+    @Override
     protected boolean isLoadOperator() {
       return true;
     }
@@ -1448,6 +1472,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
     protected final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
 
+    @Override
     public String toString() {
       return "PutField" + getField();
     }
@@ -1467,6 +1492,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return true;
     }
 
+    @Override
     public byte evaluate(IVariable rhs) {
       if (DEBUG_PUT) {
         String S = "EVAL PutField " + getField() + " " + (getFixedSet()).getPointerKey() + " "
@@ -1529,6 +1555,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 9857 * getField().hashCode() + getFixedSet().hashCode();
     }
@@ -1538,6 +1565,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       if (o.getClass().equals(getClass())) {
         PutFieldOperator other = (PutFieldOperator) o;
@@ -1562,6 +1590,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       return field;
     }
 
+    @Override
     protected boolean isLoadOperator() {
       return false;
     }
@@ -1577,6 +1606,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
     protected final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
 
+    @Override
     public String toString() {
       return "InstancePutField" + field;
     }
@@ -1589,6 +1619,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     /**
      * Simply add the instance to each relevant points-to set.
      */
+    @Override
     public byte evaluate(IVariable dummyLHS, IVariable var) {
       PointsToSetVariable ref = (PointsToSetVariable) var;
       if (ref.size() == 0) {
@@ -1618,6 +1649,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return field.hashCode() + 9839 * instance.hashCode();
     }
@@ -1627,6 +1659,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       if (o instanceof InstancePutFieldOperator) {
         InstancePutFieldOperator other = (InstancePutFieldOperator) o;
@@ -1655,6 +1688,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
     protected final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
 
+    @Override
     public String toString() {
       return "InstanceArrayStore ";
     }
@@ -1666,6 +1700,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     /**
      * Simply add the instance to each relevant points-to set.
      */
+    @Override
     public byte evaluate(IVariable dummyLHS, IVariable var) {
       PointsToSetVariable arrayref = (PointsToSetVariable) var;
       if (arrayref.size() == 0) {
@@ -1716,6 +1751,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 9839 * instance.hashCode();
     }
@@ -1725,6 +1761,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       if (o instanceof InstanceArrayStoreOperator) {
         InstanceArrayStoreOperator other = (InstanceArrayStoreOperator) o;
@@ -1792,6 +1829,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "InverseFilter";
     }
@@ -1801,6 +1839,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * 
      * @see com.ibm.wala.ipa.callgraph.propagation.IPointerOperator#isComplex()
      */
+    @Override
     public boolean isComplex() {
       return false;
     }
@@ -1811,6 +1850,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * @see com.ibm.wala.dataflow.UnaryOperator#evaluate(com.ibm.wala.dataflow.IVariable,
      *      com.ibm.wala.dataflow.IVariable)
      */
+    @Override
     public byte evaluate(IVariable lhs, IVariable rhs) {
 
       PointsToSetVariable L = (PointsToSetVariable) lhs;

@@ -80,6 +80,7 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     return graph.equals(obj);
   }
@@ -89,6 +90,7 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
    * 
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return graph.hashCode();
   }
@@ -98,6 +100,7 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return graph.toString();
   }

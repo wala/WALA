@@ -91,7 +91,7 @@ public class SparseIntSet implements IntSet {
    */
   private void cloneState(SparseIntSet S) {
     if (S.elements != null) {
-      elements = (int[]) S.elements.clone();
+      elements = S.elements.clone();
     } else {
       elements = null;
     }
@@ -317,6 +317,7 @@ public class SparseIntSet implements IntSet {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer sb = new StringBuffer(6 * size);
     sb.append("{ ");

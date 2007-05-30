@@ -27,6 +27,7 @@ public class ClassHierarchyWarning extends Warning {
     this.message = message;
   }
 
+  @Override
   public String getMsg() {
     return getClass().toString() + " : " + message;
   }

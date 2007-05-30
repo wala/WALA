@@ -217,6 +217,7 @@ public class Util {
         init(cg, Collections.singleton(cg.getFakeRootNode()).iterator());
       }
 
+      @Override
       public Iterator<CGNode> getConnected(CGNode N) {
         HashSet<CGNode> result = HashSetFactory.make(5);
         for (Iterator it = super.getConnected(N); it.hasNext();) {
@@ -231,7 +232,7 @@ public class Util {
 
     HashSet<CGNode> result = HashSetFactory.make();
     for (DarkIterator D = new DarkIterator(); D.hasNext();) {
-      CGNode N = (CGNode) D.next();
+      CGNode N = D.next();
       result.add(N);
     }
     return result;
@@ -351,6 +352,7 @@ public class Util {
        * 
        * @see java.lang.Object#toString()
        */
+      @Override
       public String toString() {
         StringBuffer result = new StringBuffer();
         result.append("squashed " + name + " call graph\n");
@@ -393,7 +395,8 @@ public class Util {
        */
       public Iterator<MethodReference> getPredNodes(MethodReference N) {
         Set<MethodReference> pred = HashSetFactory.make(10);
-        for (Iterator<CGNode> i = cg.getNodes((MethodReference) N).iterator(); i.hasNext();)
+        MethodReference methodReference = N;
+        for (Iterator<CGNode> i = cg.getNodes(methodReference).iterator(); i.hasNext();)
           for (Iterator ps = cg.getPredNodes(i.next()); ps.hasNext();)
             pred.add(((CGNode) ps.next()).getMethod().getReference());
 
@@ -419,7 +422,8 @@ public class Util {
        */
       public Iterator<MethodReference> getSuccNodes(MethodReference N) {
         Set<MethodReference> succ = HashSetFactory.make(10);
-        for (Iterator<? extends CGNode> i = cg.getNodes((MethodReference) N).iterator(); i.hasNext();)
+        MethodReference methodReference = N;
+        for (Iterator<? extends CGNode> i = cg.getNodes(methodReference).iterator(); i.hasNext();)
           for (Iterator<? extends CGNode> ps = cg.getSuccNodes(i.next()); ps.hasNext();)
             succ.add(((CGNode) ps.next()).getMethod().getReference());
 

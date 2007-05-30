@@ -44,6 +44,7 @@ public final class MultiNewArrayAllocationSiteKey extends AllocationSiteKey {
     this.dim = dim;
   }
 
+  @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
     if (obj instanceof MultiNewArrayAllocationSiteKey) {
@@ -54,10 +55,12 @@ public final class MultiNewArrayAllocationSiteKey extends AllocationSiteKey {
     }
   }
 
+  @Override
   public int hashCode() {
     return 9967 * dim + getNode().hashCode() * 8647 * getSite().hashCode();
   }
 
+  @Override
   public String toString() {
     return super.toString() + "<dim:" + dim + ">";
   }

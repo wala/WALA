@@ -258,6 +258,7 @@ public class AnalysisScope {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
     for (ClassLoaderReference loader : loadersByName.values()) {

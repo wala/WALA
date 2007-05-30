@@ -31,14 +31,17 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getDef()
    */
+  @Override
   public boolean hasDef() {
     return true;
   }
 
+  @Override
   public int getDef() {
     return result;
   }
 
+  @Override
   public int getDef(int i) {
     Assertions._assert(i == 0);
     return result;
@@ -47,10 +50,12 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
+  @Override
   public int getNumberOfDefs() {
     return 1;
   }
 
+  @Override
   public int getNumberOfUses() {
     return 1;
   }
@@ -58,12 +63,14 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions)
       Assertions._assert(j == 0);
     return val;
   }
 
+  @Override
   public int hashCode() {
     return val * 1663 ^ result * 4027;
   }
@@ -71,6 +78,7 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
+  @Override
   public boolean isFallThrough() {
     return true;
   }

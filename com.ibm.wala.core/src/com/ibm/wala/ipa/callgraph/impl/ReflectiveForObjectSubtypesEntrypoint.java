@@ -25,6 +25,7 @@ public class ReflectiveForObjectSubtypesEntrypoint extends ReflectiveSubtypesEnt
     super(method, cha);
   }
 
+  @Override
   protected boolean useReflectiveMachinery(TypeReference type) {
     return type.equals(TypeReference.JavaLangObject);
   }

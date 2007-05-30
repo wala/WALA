@@ -24,10 +24,12 @@ public class SourceDirectoryTreeModule extends DirectoryTreeModule {
     super(root);
   }
 
+  @Override
   protected boolean includeFile(File file) {
     return file.getName().endsWith("java");
   }
 
+  @Override
   protected FileModule makeFile(File file) {
     return new SourceFileModule(file, root.getAbsolutePath());
   }

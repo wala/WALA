@@ -83,6 +83,7 @@ public class BitVectorVariable extends AbstractVariable {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     if (V == null) {
       return "[Empty]";
@@ -132,6 +133,7 @@ public class BitVectorVariable extends AbstractVariable {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.AbstractVariable#hashCode()
    */
+  @Override
   public int hashCode() {
     return hash;
   }
@@ -139,6 +141,7 @@ public class BitVectorVariable extends AbstractVariable {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     return this == obj;
   }

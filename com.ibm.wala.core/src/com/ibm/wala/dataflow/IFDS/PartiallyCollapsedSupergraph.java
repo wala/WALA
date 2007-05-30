@@ -181,6 +181,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    * 
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
    */
+  @Override
   protected com.ibm.wala.util.graph.NodeManager<Object> getNodeManager() {
     return nodeManager;
   }
@@ -190,6 +191,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    * 
    * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
    */
+  @Override
   protected com.ibm.wala.util.graph.EdgeManager<Object> getEdgeManager() {
     return edgeManager;
   }
@@ -311,7 +313,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    */
   @SuppressWarnings("unchecked")
   public Iterator<Object> getCalledNodes(Object n) {
-    return new FilterIterator<Object>((Iterator<Object>) edgeManager.getSuccNodes(n), isEntry);
+    return new FilterIterator<Object>(edgeManager.getSuccNodes(n), isEntry);
   }
 
   /*
@@ -460,6 +462,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       }
     }
 
+    @Override
     public String toString() {
       StringBuffer result = new StringBuffer();
       result.append("Transverse Edges:\n");
@@ -484,7 +487,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     @SuppressWarnings("unchecked")
     public Iterator<? extends Object> getPredNodes(Object N) {
       if (N instanceof IBasicBlock) {
-        Set incoming = (Set) incomingTransverseEdges.get(N);
+        Set incoming = incomingTransverseEdges.get(N);
         if (incoming == null) {
           return partialIPFG.getPredNodes((BasicBlockInContext) N);
         } else {
@@ -531,7 +534,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      */
     public IntSet getPredNodeNumbers(Object node) {
       if (node instanceof IBasicBlock) {
-        Set incoming = (Set) incomingTransverseEdges.get(node);
+        Set incoming = incomingTransverseEdges.get(node);
         if (incoming == null) {
           return partialIPFG.getPredNodeNumbers((BasicBlockInContext) node);
         } else {
@@ -552,7 +555,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
               result.add(nodeManager.getCollapsedEntry(p).number);
             }
           }
-          Set xverse = (Set) incomingTransverseEdges.get(node);
+          Set xverse = incomingTransverseEdges.get(node);
           if (xverse != null) {
             for (Iterator it = xverse.iterator(); it.hasNext();) {
               result.add(getNumber(it.next()));
@@ -570,7 +573,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
             }
           }
           result.add(nodeManager.getCollapsedEntry(n).number);
-          Set xverse = (Set) incomingTransverseEdges.get(node);
+          Set xverse = incomingTransverseEdges.get(node);
           if (xverse != null) {
             for (Iterator it = xverse.iterator(); it.hasNext();) {
               result.add(getNumber(it.next()));
@@ -588,7 +591,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      */
     @SuppressWarnings("unchecked")
     public int getPredNodeCount(Object N) {
-      Collection c = new Iterator2Collection<Object>((Iterator<Object>) getPredNodes(N));
+      Collection c = new Iterator2Collection<Object>(getPredNodes(N));
       return c.size();
     }
 
@@ -644,7 +647,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      */
     public IntSet getSuccNodeNumbers(Object N) {
       if (N instanceof IBasicBlock) {
-        Set xverse = (Set) outgoingTransverseEdges.get(N);
+        Set xverse = outgoingTransverseEdges.get(N);
         if (xverse == null) {
           return partialIPFG.getSuccNodeNumbers((BasicBlockInContext) N);
         } else {
@@ -666,7 +669,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
             }
           }
           result.add(nodeManager.getCollapsedExit(n).number);
-          Set xverse = (Set) outgoingTransverseEdges.get(N);
+          Set xverse = outgoingTransverseEdges.get(N);
           if (xverse != null) {
             for (Iterator it = xverse.iterator(); it.hasNext();) {
               result.add(getNumber(it.next()));
@@ -715,7 +718,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
 
     @SuppressWarnings("unchecked")
     public int getSuccNodeCount(Object N) {
-      Collection c = new Iterator2Collection<Object>((Iterator<Object>) getSuccNodes(N));
+      Collection c = new Iterator2Collection<Object>(getSuccNodes(N));
       return c.size();
     }
 
@@ -818,11 +821,11 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      * @return an object that represents entry to this node
      */
     public CollapsedNode getCollapsedEntry(CGNode n) {
-      Integer index = (Integer) node2EntryIndex.get(n);
+      Integer index = node2EntryIndex.get(n);
       if (Assertions.verifyAssertions && index == null) {
         Assertions.UNREACHABLE("null index for " + n);
       }
-      return (CollapsedNode) collapsedNodes.get(index.intValue());
+      return collapsedNodes.get(index.intValue());
     }
 
     /**
@@ -833,8 +836,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      * @return an object that represents entry to this node
      */
     public CollapsedNode getCollapsedExit(CGNode n) {
-      Integer index = (Integer) node2EntryIndex.get(n);
-      return (CollapsedNode) collapsedNodes.get(index.intValue() + 1);
+      Integer index = node2EntryIndex.get(n);
+      return collapsedNodes.get(index.intValue() + 1);
     }
 
     /*
@@ -893,6 +896,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       StringBuffer result = new StringBuffer();
       result.append("Uncollapsed nodes:\n");
@@ -980,7 +984,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainExit()
    */
   public Object getMainExit() {
-    CGNode n = (CGNode) getMain();
+    CGNode n = getMain();
     if (noCollapse.contains(n)) {
       // p is cg node which is expanded in the IPFG
       ControlFlowGraph cfg = partialIPFG.getCFG(n);
@@ -1005,7 +1009,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       return partialIPFG.isReturn(object);
     } else {
       if (nodeManager.isCollapsedExit(object)) {
-        CGNode node = (CGNode) getProcOf(object);
+        CGNode node = getProcOf(object);
         return cg.getSuccNodeCount(node) > 0;
       } else {
         return false;
@@ -1056,7 +1060,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getNumberOfBlocks(java.lang.Object)
    */
   public int getNumberOfBlocks(CGNode procedure) {
-    CGNode n = (CGNode) procedure;
+    CGNode n = procedure;
     if (noCollapse.contains(n)) {
       // p is cg node which is expanded in the IPFG
       // note that we use getMaxNumber() and not getNumberOfNodes() to account
@@ -1090,7 +1094,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    *      int)
    */
   public Object getLocalBlock(CGNode procedure, int i) {
-    CGNode n = (CGNode) procedure;
+    CGNode n = procedure;
     if (noCollapse.contains(n)) {
       return partialIPFG.getCFG(n).getNode(i);
     } else {
@@ -1163,14 +1167,17 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       this.number = number;
     }
 
+    @Override
     public String toString() {
       return node + "," + (isEntry ? "entry" : "exit");
     }
 
+    @Override
     public int hashCode() {
       return 8017 * node.hashCode() + (isEntry ? 1 : 0);
     }
 
+    @Override
     public boolean equals(Object other) {
       if (other instanceof CollapsedNode) {
         CollapsedNode that = (CollapsedNode) other;

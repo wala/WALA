@@ -45,6 +45,7 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
    * 
    * @see com.ibm.wala.dataflow.IFDS.ExplodedSupergraph#getSuccNodes(java.lang.Object)
    */
+  @Override
   public Iterator<ExplodedSupergraphNode<T>> getSuccNodes(ExplodedSupergraphNode<T> src) {
     if (src == null) {
       throw new IllegalArgumentException("src is null");
@@ -73,6 +74,7 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.IFDS.ExplodedSupergraph#getPredNodes(java.lang.Object)
    */
+  @Override
   public Iterator<ExplodedSupergraphNode<T>> getPredNodes(ExplodedSupergraphNode<T> dest) {
     if (dest == null) {
       throw new IllegalArgumentException("dest is null");
@@ -100,6 +102,7 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.IFDS.ExplodedSupergraph#getPredNodeCount(java.lang.Object)
    */
+  @Override
   public int getPredNodeCount(ExplodedSupergraphNode<T> N) {
     return new Iterator2Collection<ExplodedSupergraphNode<T>>(getPredNodes(N)).size();
   }
@@ -111,6 +114,7 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.IFDS.ExplodedSupergraph#getSuccNodeCount(java.lang.Object)
    */
+  @Override
   public int getSuccNodeCount(ExplodedSupergraphNode<T> N) {
     return new Iterator2Collection<ExplodedSupergraphNode<T>>(getSuccNodes(N)).size();
   }

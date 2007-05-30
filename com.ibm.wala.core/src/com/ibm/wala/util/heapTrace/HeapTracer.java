@@ -644,6 +644,7 @@ public class HeapTracer {
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       StringBuffer result = new StringBuffer();
       result.append("Totals: " + totalInstances + " " + totalSize + "\n");
@@ -739,6 +740,7 @@ public class HeapTracer {
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       StringBuffer result = new StringBuffer();
       result.append("Assuming " + BYTES_IN_HEADER + " header bytes per object\n");

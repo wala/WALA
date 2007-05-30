@@ -28,6 +28,7 @@ class CallerSiteContext extends CallerContext {
     this.callSite = callSite;
   }
 
+  @Override
   public ContextItem get(ContextKey name) {
     if (name.equals(ContextKey.CALLSITE)) {
       return callSite;
@@ -36,6 +37,7 @@ class CallerSiteContext extends CallerContext {
     }
   }
 
+  @Override
   public boolean equals(Object obj) {
     if (getClass().equals(obj.getClass())) {
       CallerSiteContext other = (CallerSiteContext)obj;
@@ -46,10 +48,12 @@ class CallerSiteContext extends CallerContext {
     }
   }
 
+  @Override
   public int hashCode() {
     return callSite.hashCode() * super.hashCode();
   }
 
+  @Override
   public String toString() {
     return super.toString() + "@" + callSite.getProgramCounter();
   }

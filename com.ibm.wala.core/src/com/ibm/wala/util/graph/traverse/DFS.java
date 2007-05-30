@@ -52,9 +52,10 @@ public class DFS {
     }
     Iterator<T> dfs = new SlowDFSFinishTimeIterator<T>(G, C.iterator()) {
 
+      @Override
       @SuppressWarnings("unchecked")
       protected Iterator<T> getConnected(T n) {
-        return new FilterIterator<T>((Iterator<T>) G.getSuccNodes(n), filter);
+        return new FilterIterator<T>(G.getSuccNodes(n), filter);
       }
     };
     return new Iterator2Collection<T>(dfs);
@@ -156,8 +157,8 @@ public class DFS {
       if (o1 == o2) {
         return 0;
       }
-      Integer t1 = (Integer) order.get(o1);
-      Integer t2 = (Integer) order.get(o2);
+      Integer t1 = order.get(o1);
+      Integer t2 = order.get(o2);
       // throws an exception if either node has not been ordered
       return (t1.intValue() - t2.intValue());
     }

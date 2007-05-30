@@ -173,6 +173,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
     };
   }
 
+  @Override
   public String toString() {
     StringBuffer sb = new StringBuffer();
     for (Iterator<? extends IBasicBlock> ns = iterator(); ns.hasNext();) {
@@ -226,6 +227,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
   /*
    * (non-Javadoc)
    */
+  @Override
   public NodeManager<IBasicBlock> getNodeManager() {
     return cfg;
   }
@@ -233,6 +235,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
   /*
    * (non-Javadoc)
    */
+  @Override
   public EdgeManager<IBasicBlock> getEdgeManager() {
     return edgeManager;
   }

@@ -57,6 +57,7 @@ public class SparseNumberedGraph<T extends INodeWithNumber> extends AbstractNumb
   /* (non-Javadoc)
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
    */
+  @Override
   protected NodeManager<T> getNodeManager() {
     return nodeManager;
   }
@@ -64,6 +65,7 @@ public class SparseNumberedGraph<T extends INodeWithNumber> extends AbstractNumb
   /* (non-Javadoc)
    * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
    */
+  @Override
   protected EdgeManager<T> getEdgeManager() {
     return edgeManager;
   }

@@ -58,6 +58,7 @@ public class XMLSetOfClasses extends SetOfClasses {
     needsCompile = false;
   }
 
+  @Override
   public boolean contains(TypeReference klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
@@ -70,6 +71,7 @@ public class XMLSetOfClasses extends SetOfClasses {
    * 
    * @see com.ibm.wala.ipa.callgraph.impl.SetOfClasses#contains(java.lang.String)
    */
+  @Override
   public boolean contains(String klassName) {
     if (needsCompile) {
       compile();
@@ -90,6 +92,7 @@ public class XMLSetOfClasses extends SetOfClasses {
    * 
    * @see com.ibm.wala.ipa.callgraph.impl.SetOfClasses#add(com.ibm.wala.classLoader.IClass)
    */
+  @Override
   public void add(IClass klass) {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");

@@ -25,6 +25,7 @@ public class SmushedAllocationSiteKey extends AbstractAllocationSiteKey {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
     if (obj instanceof SmushedAllocationSiteKey) {
@@ -38,6 +39,7 @@ public class SmushedAllocationSiteKey extends AbstractAllocationSiteKey {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return getNode().hashCode() * 8293 + getConcreteType().hashCode();
   }
@@ -45,6 +47,7 @@ public class SmushedAllocationSiteKey extends AbstractAllocationSiteKey {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "SMUSHED " + getNode() + " : " + getConcreteType();
   }

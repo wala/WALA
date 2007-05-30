@@ -103,6 +103,7 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
    *      com.ibm.detox.ipa.callgraph.Context,
    *      com.ibm.wala.util.warnings.WarningSet)
    */
+  @Override
   public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
     return getCFAInterpreter(node).iterateNewSites(node, warnings);
   }
@@ -114,6 +115,7 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
    *      com.ibm.detox.ipa.callgraph.Context,
    *      com.ibm.wala.util.warnings.WarningSet)
    */
+  @Override
   public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
     return getCFAInterpreter(node).iterateCallSites(node, warnings);
   }
@@ -124,6 +126,7 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
    * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.IClass)
    */
+  @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
     // do nothing; we don't understand factory methods.
     return false;

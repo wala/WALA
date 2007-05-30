@@ -41,6 +41,7 @@ public final class FieldReference extends MemberReference {
    * 
    * @see com.ibm.wala.types.MemberReference#getSignature()
    */
+  @Override
   public String getSignature() {
     return getDeclaringClass().getName() + "." + getName() + " " + getFieldType().getName();
   }
@@ -103,6 +104,7 @@ public final class FieldReference extends MemberReference {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public final String toString() {
     return "< " + getDeclaringClass().getClassLoader().getName() + ", " + getDeclaringClass().getName() + ", " + getName() + ", "
         + fieldType + " >";
@@ -124,10 +126,12 @@ public final class FieldReference extends MemberReference {
       this.fieldType = fieldType;
     }
 
+    @Override
     public final int hashCode() {
       return 7487 * type.hashCode() + name.hashCode();
     }
 
+    @Override
     public final boolean equals(Object other) {
       if (Assertions.verifyAssertions) {
         Assertions._assert(this.getClass().equals(other.getClass()));

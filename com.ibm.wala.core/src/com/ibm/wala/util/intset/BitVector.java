@@ -66,6 +66,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    * @param bit
    *          the bit to be set
    */
+  @Override
   public final void set(int bit) {
     int shiftBits = bit & LOW_MASK;
     int subscript = subscript(bit);
@@ -87,6 +88,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    * @param bit
    *          the bit to be cleared
    */
+  @Override
   public final void clear(int bit) {
     int ss = subscript(bit);
     if (ss >= bits.length) {
@@ -102,6 +104,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    * @param bit
    *          the bit to be gotten
    */
+  @Override
   public final boolean get(int bit) {
     if (DEBUG) {
       Assertions._assert(bit >= 0);
@@ -129,6 +132,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    * @param set
    *          the bit set to be ANDed with
    */
+  @Override
   public final void and(BitVector set) {
     if (this == set) {
       return;
@@ -158,6 +162,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    * @param set
    *          the bit set to be ORed with
    */
+  @Override
   public final void or(BitVector set) {
     if (this == set) { // should help alias analysis
       return;
@@ -236,6 +241,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    *          the bit set to be XORed with
    * @throws IllegalArgumentException  if set is null
    */
+  @Override
   public final void xor(BitVector set) {
     if (set == null) {
       throw new IllegalArgumentException("set is null");
@@ -255,6 +261,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    *          the set to check intersection with
    * @throws IllegalArgumentException  if other is null
    */
+  @Override
   public final boolean intersectionEmpty(BitVector other) {
     if (other == null) {
       throw new IllegalArgumentException("other is null");
@@ -273,6 +280,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    * Calculates and returns the set's size in bits. The maximum element in the
    * set is the size - 1st element.
    */
+  @Override
   public final int length() {
     return bits.length << LOG_BITS_PER_UNIT;
   }
@@ -284,6 +292,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    *          the object to compare with
    * @return true if the objects are the same; false otherwise.
    */
+  @Override
   public final boolean sameBits(BitVector B) {
     if (this == B) { // should help alias analysis
       return true;
@@ -313,6 +322,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    * @param other
    * @return true iff this is a subset of other
    */
+  @Override
   public boolean isSubset(BitVector other) {
     if (this == other) { // should help alias analysis
       return true;
@@ -334,6 +344,7 @@ public class BitVector extends BitVectorBase<BitVector> {
   /**
    * @param vector
    */
+  @Override
   public void andNot(BitVector vector) {
     int ai = 0;
     int bi = 0;
@@ -349,6 +360,7 @@ public class BitVector extends BitVectorBase<BitVector> {
    *          the object to compare with
    * @return true if the objects are the same; false otherwise.
    */
+  @Override
   public boolean equals(Object obj) {
     if ((obj != null) && (obj instanceof BitVector)) {
       if (this == obj) { // should help alias analysis

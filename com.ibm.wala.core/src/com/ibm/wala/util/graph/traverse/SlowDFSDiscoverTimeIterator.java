@@ -73,6 +73,7 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
   }
 
 
+  @Override
   protected Iterator<? extends T> getPendingChildren(Object n) {
     return pendingChildren.get(n);
   }
@@ -81,6 +82,7 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
    * @param v
    * @param iterator
    */
+  @Override
   protected void setPendingChildren(T v, Iterator<? extends T> iterator) {
     pendingChildren.put(v, iterator);
   }

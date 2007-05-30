@@ -33,10 +33,13 @@ public abstract class AbstractAllocationSiteKey implements InstanceKeyWithNode {
     this.type = type;
   }
 
+  @Override
   public abstract boolean equals(Object obj);
 
+  @Override
   public abstract int hashCode();
 
+  @Override
   public abstract String toString();
 
   /**

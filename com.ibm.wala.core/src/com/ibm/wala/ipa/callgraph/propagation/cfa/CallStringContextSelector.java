@@ -26,6 +26,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
 
 
   private static final ContextKey CALL_STRING = new ContextKey() {
+    @Override
     public String toString() {
       return "CALL_STRING_KEY";
     }
@@ -50,6 +51,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
       System.arraycopy(base.methods, 0, methods, 1, Math.min(length - 1, base.methods.length));
     }
 
+    @Override
     public String toString() {
       StringBuffer str = new StringBuffer("[");
       for (int i = 0; i < sites.length; i++)
@@ -58,6 +60,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
       return str.toString();
     }
 
+    @Override
     public int hashCode() {
       int code = 1;
       for (int i = 0; i < sites.length; i++) {
@@ -67,6 +70,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
       return code;
     }
 
+    @Override
     public boolean equals(Object o) {
       if (o instanceof CallString) {
         CallString oc = (CallString) o;
@@ -92,14 +96,17 @@ public abstract class CallStringContextSelector implements ContextSelector {
       this.cs = cs;
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof CallStringContext) && ((CallStringContext) o).cs.equals(cs);
     }
 
+    @Override
     public int hashCode() {
       return cs.hashCode();
     }
 
+    @Override
     public String toString() {
       return "CallStringContext: " + cs.toString();
     }
@@ -123,15 +130,18 @@ public abstract class CallStringContextSelector implements ContextSelector {
       this.base = base;
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof CallStringContextPair) && ((CallStringContextPair) o).cs.equals(cs)
           && ((CallStringContextPair) o).base.equals(base);
     }
 
+    @Override
     public String toString() {
       return "CallStringContextPair: " + cs.toString() + ":" + base.toString();
     }
 
+    @Override
     public int hashCode() {
       return cs.hashCode() * base.hashCode();
     }

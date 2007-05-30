@@ -21,6 +21,7 @@ import com.ibm.wala.fixpoint.IVariable;
 public class GeneralStatement extends AbstractStatement {
 
   protected final IVariable lhs;
+
   protected final IVariable[] rhs;
 
   private final int hashCode;
@@ -139,7 +140,8 @@ public class GeneralStatement extends AbstractStatement {
    *          the equation operator
    * @param rhs
    *          the operands of the right-hand side in order
-   * @throws IllegalArgumentException  if rhs is null
+   * @throws IllegalArgumentException
+   *           if rhs is null
    */
   public GeneralStatement(IVariable lhs, AbstractOperator operator, IVariable[] rhs) {
     super();
@@ -148,7 +150,7 @@ public class GeneralStatement extends AbstractStatement {
     }
     this.operator = operator;
     this.lhs = lhs;
-    this.rhs = (IVariable[]) rhs.clone();
+    this.rhs = rhs.clone();
     this.hashCode = makeHashCode();
   }
 
@@ -159,7 +161,8 @@ public class GeneralStatement extends AbstractStatement {
 
   private int makeHashCode() {
     int result = operator.hashCode();
-    if (lhs != null) result += lhs.hashCode() * primes[0];
+    if (lhs != null)
+      result += lhs.hashCode() * primes[0];
     for (int i = 0; i < Math.min(rhs.length, 2); i++) {
       if (rhs[i] != null) {
         result += primes[i + 1] * rhs[i].hashCode();
@@ -173,6 +176,7 @@ public class GeneralStatement extends AbstractStatement {
    * 
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return hashCode;
   }
@@ -182,6 +186,7 @@ public class GeneralStatement extends AbstractStatement {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object o) {
     if (o == null) {
       return false;
@@ -192,8 +197,8 @@ public class GeneralStatement extends AbstractStatement {
         if (lhs == null || other.lhs == null) {
           if (other.lhs != lhs) {
             return false;
-          } 
-	} else if (!lhs.equals(other.lhs)) {
+          }
+        } else if (!lhs.equals(other.lhs)) {
           return false;
         }
         if (operator.equals(other.operator) && rhs.length == other.rhs.length) {
@@ -216,11 +221,13 @@ public class GeneralStatement extends AbstractStatement {
   /**
    * @return Returns the operator.
    */
+  @Override
   public AbstractOperator getOperator() {
     return operator;
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    */
   public IVariable[] getRHS() {
     return rhs;

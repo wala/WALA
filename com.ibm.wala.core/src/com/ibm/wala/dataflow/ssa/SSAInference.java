@@ -160,6 +160,7 @@ public abstract class SSAInference extends DefaultFixedPointSolver {
    * Return a string representation of the system 
    * @return a string representation of the system 
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer("Type inference : \n");
     for (int i = 0; i < vars.length; i++) {

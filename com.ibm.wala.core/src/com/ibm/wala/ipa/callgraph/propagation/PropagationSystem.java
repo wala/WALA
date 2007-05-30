@@ -221,7 +221,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * @return the instance key numbered with index i
    */
   public InstanceKey getInstanceKey(int i) {
-    return (InstanceKey) instanceKeys.getMappedObject(i);
+    return instanceKeys.getMappedObject(i);
   }
 
   /**
@@ -244,6 +244,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * 
    * @see com.ibm.wala.dataflow.DataflowSystem#initializeVariables()
    */
+  @Override
   protected void initializeVariables() {
     // don't have to do anything; all variables initialized
     // by default to TOP (the empty set);
@@ -615,6 +616,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * 
    * @see com.ibm.wala.dataflow.DataflowSystem#initializeWorkList()
    */
+  @Override
   protected void initializeWorkList() {
     addAllStatementsToWorkList();
   }
@@ -633,6 +635,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * (non-Javadoc)
    * 
    */
+  @Override
   public void performVerboseAction() {
     super.performVerboseAction();
     if (DEBUG_MEMORY) {
@@ -690,6 +693,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * (non-Javadoc)
    * 
    */
+  @Override
   public IFixedPointSystem getFixedPointSystem() {
     return flowGraph;
   }
@@ -752,6 +756,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * (non-Javadoc)
    * 
    */
+  @Override
   protected void periodicMaintenance() {
     super.periodicMaintenance();
     ReferenceCleanser.clearSoftCaches();
@@ -761,6 +766,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * (non-Javadoc)
    * 
    */
+  @Override
   public int getVerboseInterval() {
     return verboseInterval;
   }
@@ -777,6 +783,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * (non-Javadoc)
    * 
    */
+  @Override
   public int getPeriodicMaintainInterval() {
     return periodicMaintainInterval;
   }

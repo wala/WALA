@@ -72,10 +72,12 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
   }
 
 
+  @Override
   Iterator<? extends T> getPendingChildren(Object n) {
     return pendingChildren.get(n);
   }
   
+  @Override
   void setPendingChildren(T v, Iterator<? extends T> iterator) {
     pendingChildren.put(v, iterator);
   }

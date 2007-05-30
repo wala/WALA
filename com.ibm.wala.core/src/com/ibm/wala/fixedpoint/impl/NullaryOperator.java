@@ -25,6 +25,7 @@ public abstract class NullaryOperator extends AbstractOperator implements FixedP
 
   /* (non-Javadoc)
    */
+  @Override
   public byte evaluate(IVariable lhs, IVariable[] rhs) {
     // don't call this
     Assertions.UNREACHABLE();

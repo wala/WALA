@@ -184,6 +184,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see java.lang.Object#equals(Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (obj == null) {
       return false;
@@ -199,6 +200,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return method.hashCode();
   }
@@ -206,6 +208,7 @@ public class SyntheticMethod implements IMethod {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer s = new StringBuffer("synthetic ");
     if (isFactoryMethod()) {

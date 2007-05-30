@@ -196,10 +196,12 @@ public class BasicHeapGraph extends HeapGraph {
         }
       };
 
+      @Override
       protected NodeManager<Object> getNodeManager() {
         return nodeMgr;
       }
 
+      @Override
       protected EdgeManager<Object> getEdgeManager() {
         return edgeMgr;
       }
@@ -506,6 +508,7 @@ public class BasicHeapGraph extends HeapGraph {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
     result.append("Nodes:\n");

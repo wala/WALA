@@ -111,10 +111,12 @@ public class SSACFG implements ControlFlowGraph{
 
   }
 
+  @Override
   public int hashCode() {
     return -3 * cfg.hashCode();
   }
 
+  @Override
   public boolean equals(Object o) {
     return (o instanceof SSACFG) && cfg.equals(((SSACFG) o).cfg);
   }
@@ -204,10 +206,12 @@ public class SSACFG implements ControlFlowGraph{
       this.path = path;
     }
 
+    @Override
     public int hashCode() {
       return n * path.hashCode();
     }
 
+    @Override
     public boolean equals(Object x) {
       return (x instanceof RefPathKey) && n == ((RefPathKey) x).n && src == ((RefPathKey) x).src && path == ((RefPathKey) x).path;
     }
@@ -245,7 +249,7 @@ public class SSACFG implements ControlFlowGraph{
      * Method getFirstInstructionIndex.
      */
     public int getFirstInstructionIndex() {
-      IBasicBlock B = (IBasicBlock) cfg.getNode(number);
+      IBasicBlock B = cfg.getNode(number);
       return B.getFirstInstructionIndex();
     }
 
@@ -262,7 +266,7 @@ public class SSACFG implements ControlFlowGraph{
      * @return int
      */
     public int getLastInstructionIndex() {
-      IBasicBlock B = (IBasicBlock) cfg.getNode(number);
+      IBasicBlock B = cfg.getNode(number);
       return B.getLastInstructionIndex();
     }
 
@@ -417,7 +421,7 @@ public class SSACFG implements ControlFlowGraph{
     }
 
     SSAPiInstruction getPiForRefAndPath(int n, Object path) {
-      return (SSAPiInstruction) piInstructions.get(new RefPathKey(n, this, path));
+      return piInstructions.get(new RefPathKey(n, this, path));
     }
 
     private final LinkedList<SSAPiInstruction> blockPiInstructions = new LinkedList<SSAPiInstruction>();
@@ -536,6 +540,7 @@ public class SSACFG implements ControlFlowGraph{
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "BB[SSA:" + getFirstInstructionIndex() + ".." + getLastInstructionIndex() + "]" + getNumber() + " - "
           + method.getSignature();
@@ -550,6 +555,7 @@ public class SSACFG implements ControlFlowGraph{
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object arg0) {
       if (arg0 instanceof BasicBlock) {
         BasicBlock b = (BasicBlock) arg0;
@@ -576,6 +582,7 @@ public class SSACFG implements ControlFlowGraph{
      * 
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
       return cfg.getNode(getNumber()).hashCode() * 6271;
     }
@@ -672,6 +679,7 @@ public class SSACFG implements ControlFlowGraph{
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "BB(Handler)[SSA]" + getNumber() + " - " + method.getSignature();
     }
@@ -700,6 +708,7 @@ public class SSACFG implements ControlFlowGraph{
      * 
      * @see com.ibm.wala.ssa.CFG.BasicBlock#getAllInstructions()
      */
+    @Override
     public List<SSAInstruction> getAllInstructions() {
       List<SSAInstruction> result = super.getAllInstructions();
       result.add(catchInstruction);
@@ -711,6 +720,7 @@ public class SSACFG implements ControlFlowGraph{
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
     for (int i = 0; i <= getNumber(exit()); i++) {
@@ -978,7 +988,7 @@ public class SSACFG implements ControlFlowGraph{
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    final IBasicBlock n = (IBasicBlock) cfg.getNode(b.getNumber());
+    final IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getExceptionalSuccessors(n).iterator();
     final Collection<IBasicBlock> c = new HashSet<IBasicBlock>(getSuccNodeCount(b));
     for (; i.hasNext();) {
@@ -997,10 +1007,10 @@ public class SSACFG implements ControlFlowGraph{
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    IBasicBlock n = (IBasicBlock) cfg.getNode(b.getNumber());
+    IBasicBlock n = cfg.getNode(b.getNumber());
     Function<IBasicBlock,IBasicBlock> f = new Function<IBasicBlock,IBasicBlock>() {
       public IBasicBlock apply(IBasicBlock object) {
-        return basicBlocks[cfg.getNumber((IBasicBlock) object)];
+        return basicBlocks[cfg.getNumber(object)];
       }
     };
     return new Iterator2Collection<IBasicBlock>(new MapIterator<IBasicBlock,IBasicBlock>(cfg.getExceptionalPredecessors(n).iterator(), f));
@@ -1045,7 +1055,7 @@ public class SSACFG implements ControlFlowGraph{
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    IBasicBlock n = (IBasicBlock) cfg.getNode(b.getNumber());
+    IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getNormalSuccessors(n).iterator();
     Collection<IBasicBlock> c = new ArrayList<IBasicBlock>(getSuccNodeCount(b));
     for (; i.hasNext();) {
@@ -1064,7 +1074,7 @@ public class SSACFG implements ControlFlowGraph{
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    IBasicBlock n = (IBasicBlock) cfg.getNode(b.getNumber());
+    IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getNormalPredecessors(n).iterator();
     Collection<IBasicBlock> c = new ArrayList<IBasicBlock>(getPredNodeCount(b));
     for (; i.hasNext();) {
@@ -1142,6 +1152,7 @@ public class SSACFG implements ControlFlowGraph{
       this.method = method;
     }
 
+    @Override
     public String getMsg() {
       return getClass().toString() + " : " + type + " " + method;
     }

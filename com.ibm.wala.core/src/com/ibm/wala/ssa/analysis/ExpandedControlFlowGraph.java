@@ -193,7 +193,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    * @return SingleInstructionBasicBlock containing the given instruction
    */
   public SingleInstructionBasicBlock getInstructionBlock(SSAInstruction inst) {
-    return (SingleInstructionBasicBlock) instructionToBlock.get(inst);
+    return instructionToBlock.get(inst);
   }
 
   /**
@@ -507,6 +507,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
      *          another object to be compared with
      * @return true if BBEdge equals to another given BBEdge, false otherwise
      */
+    @Override
     public boolean equals(Object other) {
       if (!(other instanceof BBEdge)) {
         return false;
@@ -518,6 +519,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     /**
      * @return BBEdge hashcode
      */
+    @Override
     public int hashCode() {
       return src.hashCode() + dest.hashCode();
     }
@@ -525,6 +527,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     /**
      * @return string representation of the BBEdge
      */
+    @Override
     public String toString() {
       return src + " -> " + dest;
     }
@@ -701,7 +704,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    * @return a List of successor basic-blocks
    */
   public List/* <BasicBlock> */getSuccessors(BasicBlock src) {
-    return (List) successors.get(src);
+    return successors.get(src);
   }
 
   /**
@@ -712,7 +715,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    * @return a List of predecessor basic-blocks
    */
   public List/* <BasicBlock> */getPredecessors(BasicBlock dest) {
-    return (List) predecessors.get(dest);
+    return predecessors.get(dest);
   }
 
   /**
@@ -991,7 +994,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    * @return the fall-through target of the given src block
    */
   public IBasicBlock getFallThroughTarget(IBasicBlock src) {
-    return (IBasicBlock) fallThroughTargets.get(src);
+    return fallThroughTargets.get(src);
   }
 
   /**
@@ -1167,6 +1170,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
       return s.iterator();
     }
 
+    @Override
     public boolean equals(Object other) {
       if (!(other instanceof SingleInstructionBasicBlock)) {
         return false;
@@ -1175,10 +1179,12 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
       return (otherBlock.number == number);
     }
 
+    @Override
     public int hashCode() {
       return number;
     }
 
+    @Override
     public String toString() {
       if (isEntry) {
         return "entry";
@@ -1219,6 +1225,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
      * @return true, since SingleInstructionExceptionHandlerBlock is always a
      *         catch block.
      */
+    @Override
     public boolean isCatchBlock() {
       return true;
     }

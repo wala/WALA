@@ -31,10 +31,12 @@ public class BitVectorSolver<T> extends DataflowSolver<T> {
    * @see com.ibm.wala.dataflow.graph.IterativeSolver#makeVariable(java.lang.Object,
    *      boolean)
    */
+  @Override
   protected IVariable makeNodeVariable(T n, boolean IN) {
     return new BitVectorVariable();
   }
 
+  @Override
   protected IVariable makeEdgeVariable(T src, T dst) {
     return new BitVectorVariable();
 

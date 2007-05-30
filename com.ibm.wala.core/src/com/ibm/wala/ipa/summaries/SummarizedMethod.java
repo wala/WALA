@@ -46,6 +46,7 @@ public class SummarizedMethod extends SyntheticMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#isNative()
    */
+  @Override
   public boolean isNative() {
     return summary.isNative();
   }
@@ -53,6 +54,7 @@ public class SummarizedMethod extends SyntheticMethod {
   /**
    * @see com.ibm.wala.classLoader.IMethod#isAbstract()
    */
+  @Override
   public boolean isAbstract() {
     return false;
   }
@@ -62,6 +64,7 @@ public class SummarizedMethod extends SyntheticMethod {
    * 
    * @see com.ibm.wala.classLoader.SyntheticMethod#getPoison()
    */
+  @Override
   public String getPoison() {
     return summary.getPoison();
   }
@@ -71,6 +74,7 @@ public class SummarizedMethod extends SyntheticMethod {
    * 
    * @see com.ibm.wala.classLoader.SyntheticMethod#getPoisonLevel()
    */
+  @Override
   public byte getPoisonLevel() {
     return summary.getPoisonLevel();
   }
@@ -80,6 +84,7 @@ public class SummarizedMethod extends SyntheticMethod {
    * 
    * @see com.ibm.wala.classLoader.SyntheticMethod#hasPoison()
    */
+  @Override
   public boolean hasPoison() {
     return summary.hasPoison();
   }
@@ -89,6 +94,7 @@ public class SummarizedMethod extends SyntheticMethod {
    * 
    * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.WarningSet)
    */
+  @Override
   public SSAInstruction[] getStatements(SSAOptions options, WarningSet warnings) {
     if (DEBUG) {
       Trace.println("getStatements: " + this);
@@ -130,6 +136,7 @@ public class SummarizedMethod extends SyntheticMethod {
    * 
    * @see com.ibm.wala.classLoader.IMethod#getIR(com.ibm.wala.util.WarningSet)
    */
+  @Override
   public IR makeIR(SSAOptions options, WarningSet warnings) {
     SSAInstruction instrs[] = getStatements(options, warnings);
     return new SyntheticIR(this, Everywhere.EVERYWHERE, makeControlFlowGraph(), instrs, options, summary.getConstants(), warnings);
@@ -140,6 +147,7 @@ public class SummarizedMethod extends SyntheticMethod {
    * 
    * @see com.ibm.wala.classLoader.IMethod#getNumberOfParameters()
    */
+  @Override
   public int getNumberOfParameters() {
     return summary.getNumberOfParameters();
   }
@@ -149,6 +157,7 @@ public class SummarizedMethod extends SyntheticMethod {
    * 
    * @see com.ibm.wala.classLoader.IMethod#isStatic()
    */
+  @Override
   public boolean isStatic() {
     return summary.isStatic();
   }
@@ -158,6 +167,7 @@ public class SummarizedMethod extends SyntheticMethod {
    * 
    * @see com.ibm.wala.classLoader.IMethod#getParameterType(int)
    */
+  @Override
   public TypeReference getParameterType(int i) {
     return summary.getParameterType(i);
   }

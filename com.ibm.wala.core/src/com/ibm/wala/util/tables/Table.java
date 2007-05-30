@@ -58,6 +58,7 @@ public class Table<T> implements Cloneable {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     int[] format = computeColumnWidths();
     StringBuffer result = new StringBuffer();
@@ -123,7 +124,7 @@ public class Table<T> implements Cloneable {
     SimpleVector<T> r = new SimpleVector<T>();
     rows.set(rows.getMaxIndex() + 1, r);
     for (int i = 0; i < getNumberOfColumns(); i++) {
-      r.set(i, (T) p.get(getColumnHeading(i)));
+      r.set(i, p.get(getColumnHeading(i)));
     }
   }
 }

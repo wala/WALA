@@ -30,6 +30,7 @@ abstract public class ReflectiveSubtypesEntrypoint extends SubtypesEntrypoint {
 
   abstract protected boolean useReflectiveMachinery(TypeReference type);
 
+  @Override
   protected int makeArgument(FakeRootMethod m, int i, WarningSet warnings) {
     if (useReflectiveMachinery(method.getParameterType(i))) {
       int fakeString = m.addAllocation(TypeReference.JavaLangString, warnings).getDef(0);

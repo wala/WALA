@@ -28,6 +28,7 @@ public final class TrueOperator extends UnaryOperator {
 
   /* (non-Javadoc)
    */
+  @Override
   public byte evaluate(IVariable lhs, IVariable rhs) {
     BooleanVariable L = (BooleanVariable) lhs;
     if (L.getValue()) {
@@ -41,6 +42,7 @@ public final class TrueOperator extends UnaryOperator {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "TRUE";
   }
@@ -50,6 +52,7 @@ public final class TrueOperator extends UnaryOperator {
    * 
    * @see com.ibm.wala.dataflow.Operator#hashCode()
    */
+  @Override
   public int hashCode() {
     return 9889;
   }
@@ -59,6 +62,7 @@ public final class TrueOperator extends UnaryOperator {
    * 
    * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object o) {
     return (o instanceof TrueOperator);
   }

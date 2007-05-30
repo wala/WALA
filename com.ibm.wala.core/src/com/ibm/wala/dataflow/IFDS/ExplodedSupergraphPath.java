@@ -217,6 +217,7 @@ public class ExplodedSupergraphPath<T> {
      * (non-Javadoc)
      * 
      */
+    @Override
     protected Iterator<ExplodedSupergraphNode<T>> getConnected(final ExplodedSupergraphNode<T> n) {
 
       return new FilterIterator<ExplodedSupergraphNode<T>>(super.getConnected(n), new Filter() {
@@ -241,6 +242,7 @@ public class ExplodedSupergraphPath<T> {
      * (non-Javadoc)
      * 
      */
+    @Override
     public List<ExplodedSupergraphNode<T>> find() {
       List<ExplodedSupergraphNode<T>> L = super.find();
       if (L == null) {
@@ -279,8 +281,9 @@ public class ExplodedSupergraphPath<T> {
      * (non-Javadoc)
      * 
      */
+    @Override
     protected Iterator<ExplodedSupergraphNode<T>> getConnected(ExplodedSupergraphNode<T> n) {
-      ExplodedSupergraphNode src = (ExplodedSupergraphNode) n;
+      ExplodedSupergraphNode src = n;
       PartiallyCollapsedSupergraph supergraph = (PartiallyCollapsedSupergraph) esg.getSupergraph();
       HashSet<ExplodedSupergraphNode<T>> result = new HashSet<ExplodedSupergraphNode<T>>(esg.getPredNodeCount(n));
       // add facts from non-call exploded supergraph edges
@@ -399,6 +402,7 @@ public class ExplodedSupergraphPath<T> {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
 
     StringBuffer result = new StringBuffer("Outermost List: \n");

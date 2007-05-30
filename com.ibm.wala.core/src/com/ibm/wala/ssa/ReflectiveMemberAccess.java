@@ -38,6 +38,7 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
    * @see com.ibm.wala.ssa.SSAInstruction#toString(com.ibm.wala.ssa.SymbolTable,
    *      com.ibm.wala.ssa.ValueDecorator)
    */
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return "fieldref " + getValueString(symbolTable, d, objectRef) + "." + getValueString(symbolTable, d, memberRef);
   }
@@ -45,6 +46,7 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions)
       Assertions._assert(j <= 1);
@@ -62,6 +64,7 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 6311 * memberRef ^ 2371 * objectRef;
   }
@@ -69,6 +72,7 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.SSAInstruction#isFallThrough()
    */
+  @Override
   public boolean isFallThrough() {
     return true;
   }

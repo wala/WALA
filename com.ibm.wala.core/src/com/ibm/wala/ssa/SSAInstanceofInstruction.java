@@ -33,11 +33,13 @@ public class SSAInstanceofInstruction extends SSAInstruction {
     this.checkedType = checkedType;
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     return new SSAInstanceofInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? ref : uses[0],
         checkedType);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return getValueString(symbolTable, d, result) + " = instanceof " + getValueString(symbolTable, d, ref) + " " + checkedType;
   }
@@ -45,6 +47,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
+  @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitInstanceof(this);
   }
@@ -52,14 +55,17 @@ public class SSAInstanceofInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getDef()
    */
+  @Override
   public boolean hasDef() {
     return true;
   }
 
+  @Override
   public int getDef() {
     return result;
   }
 
+  @Override
   public int getDef(int i) {
     Assertions._assert(i == 0);
     return result;
@@ -72,10 +78,12 @@ public class SSAInstanceofInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
+  @Override
   public int getNumberOfDefs() {
     return 1;
   }
 
+  @Override
   public int getNumberOfUses() {
     return 1;
   }
@@ -83,12 +91,14 @@ public class SSAInstanceofInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions)
       Assertions._assert(j == 0);
     return ref;
   }
 
+  @Override
   public int hashCode() {
     return ref * 677 ^ result * 3803;
   }
@@ -98,6 +108,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
+  @Override
   public boolean isFallThrough() {
     return true;
   }
@@ -107,6 +118,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return null;
   }

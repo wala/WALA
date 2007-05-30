@@ -85,6 +85,7 @@ public abstract class UnaryStatement extends AbstractStatement {
    * Return a string representation of this object 
    * @return a string representation of this object 
    */
+  @Override
   public String toString() {
     String result;
     if (lhs == null) {
@@ -111,6 +112,7 @@ public abstract class UnaryStatement extends AbstractStatement {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.AbstractEquation#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object o) {
     if (o instanceof UnaryStatement) {
       UnaryStatement other = (UnaryStatement) o;
@@ -151,6 +153,7 @@ public abstract class UnaryStatement extends AbstractStatement {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.AbstractEquation#hashCode()
    */
+  @Override
   public int hashCode() {
     int result = getOperator().hashCode() * 1381;
     if (lhs != null) {

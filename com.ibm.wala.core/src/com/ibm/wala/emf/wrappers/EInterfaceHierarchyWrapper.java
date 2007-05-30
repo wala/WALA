@@ -36,6 +36,7 @@ import com.ibm.wala.util.graph.traverse.DFS;
  * @author sfink
  */
 public class EInterfaceHierarchyWrapper extends EObjectGraphImpl {
+  @Override
   public EObject export() {
     EInterfaceHierarchy h = JavaFactory.eINSTANCE.createEInterfaceHierarchy();
     makeNodes(h);

@@ -71,6 +71,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
   /* (non-Javadoc)
    * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#understands(com.ibm.wala.classLoader.IMethod, com.ibm.detox.ipa.callgraph.Context)
    */
+  @Override
   public boolean understands(CGNode node) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(B.understands(node));
@@ -80,6 +81,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
   /* (non-Javadoc)
    * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.IClass)
    */
+  @Override
   public boolean recordFactoryType(CGNode node, IClass klass) {
     boolean result = false;
     if (A != null) {

@@ -46,7 +46,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
     if (N == null) {
       throw new IllegalArgumentException("N is null");
     }
-    INodeWithNumber n = (INodeWithNumber) N;
+    INodeWithNumber n = N;
     return n.getGraphNodeId();
   }
 
@@ -133,7 +133,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
     if (n == null) {
       throw new IllegalArgumentException("n is null");
     }
-    INodeWithNumber N = (INodeWithNumber) n;
+    INodeWithNumber N = n;
     int number = N.getGraphNodeId();
     if (number == -1) {
       maxNumber++;
@@ -175,7 +175,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
     if (n == null) {
       throw new IllegalArgumentException("n is null");
     }
-    INodeWithNumber N = (INodeWithNumber) n;
+    INodeWithNumber N = n;
     int number = N.getGraphNodeId();
     if (nodes[number] != null) {
       nodes[number] = null;
@@ -188,6 +188,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer("Nodes:\n");
     for (int i = 0; i < maxNumber; i++) {
@@ -209,7 +210,7 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
     if (n == null) {
       throw new IllegalArgumentException("n is null");
     }
-    INodeWithNumber N = (INodeWithNumber) n;
+    INodeWithNumber N = n;
     int number = N.getGraphNodeId();
     if (number == -1) {
       return false;

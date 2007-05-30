@@ -33,8 +33,10 @@ public abstract class AbstractStatement extends NodeWithNumber implements IFixed
   /**
    * Subclasses must implement this, to prevent non-determinism.
    */
+  @Override
   public abstract int hashCode();
 
+  @Override
   public abstract boolean equals(Object o);
 
   /*
@@ -42,6 +44,7 @@ public abstract class AbstractStatement extends NodeWithNumber implements IFixed
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer("");
     if (getLHS() == null) {

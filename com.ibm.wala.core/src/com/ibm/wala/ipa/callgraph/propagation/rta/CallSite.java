@@ -28,10 +28,12 @@ public final class CallSite {
     this.node = node;
   }
 
+  @Override
   public int hashCode() {
     return 3229 * site.hashCode() + node.hashCode();
   }
 
+  @Override
   public boolean equals(Object o) {
     if (o == null) {
       return false;
@@ -43,6 +45,7 @@ public final class CallSite {
     return node.equals(other.node) && site.equals(other.site);
   }
 
+  @Override
   public String toString() {
     return site.toString() + " " + node.toString();
   }

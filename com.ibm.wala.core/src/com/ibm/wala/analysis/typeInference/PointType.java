@@ -37,6 +37,7 @@ public class PointType extends TypeAbstraction {
     }
   }
 
+  @Override
   public TypeAbstraction meet(TypeAbstraction rhs) {
     if (rhs == TOP) {
       return this;
@@ -79,6 +80,7 @@ public class PointType extends TypeAbstraction {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "point: " + type.toString();
   }
@@ -88,6 +90,7 @@ public class PointType extends TypeAbstraction {
    * 
    * @return TypeReference
    */
+  @Override
   public IClass getType() {
     return type;
   }
@@ -95,6 +98,7 @@ public class PointType extends TypeAbstraction {
   /**
    * @see java.lang.Object#equals(Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (!(obj instanceof PointType)) {
       return false;
@@ -111,6 +115,7 @@ public class PointType extends TypeAbstraction {
   /**
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 37 * type.hashCode();
   }

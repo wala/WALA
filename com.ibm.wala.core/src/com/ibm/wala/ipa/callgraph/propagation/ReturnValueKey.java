@@ -23,6 +23,7 @@ public class ReturnValueKey extends NodeKey {
     super(node);
   }
 
+  @Override
   public String toString() {
     return "[Ret-V:" + getNode() + "]";
   }
@@ -32,6 +33,7 @@ public class ReturnValueKey extends NodeKey {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     return (obj instanceof ReturnValueKey) && super.internalEquals(obj);
   }
@@ -41,6 +43,7 @@ public class ReturnValueKey extends NodeKey {
    * 
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 1283 * super.internalHashCode();
   }

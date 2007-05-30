@@ -103,6 +103,7 @@ public final class TypeName {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     return this == obj;
   }
@@ -112,6 +113,7 @@ public final class TypeName {
    * 
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return key.hashCode();
   }
@@ -121,6 +123,7 @@ public final class TypeName {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return key.toString();
   }
@@ -268,6 +271,7 @@ public final class TypeName {
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object obj) {
       if (obj instanceof TypeNameKey) {
         TypeNameKey other = (TypeNameKey) obj;
@@ -283,6 +287,7 @@ public final class TypeName {
      * 
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
       int result = className.hashCode() * 5009 + dim * 5011 + (innermostPrimitive ? 5021 : 5023);
       if (packageName != null) {
@@ -296,6 +301,7 @@ public final class TypeName {
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       StringBuffer result = new StringBuffer();
       for (short i = 0; i < dim; i++) {

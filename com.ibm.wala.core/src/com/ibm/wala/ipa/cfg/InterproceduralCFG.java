@@ -619,9 +619,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
    */
   public Iterator<? extends BasicBlockInContext> getPredNodes(BasicBlockInContext N) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(N instanceof BasicBlockInContext);
-    }
+
     return G.getPredNodes(N);
   }
 
@@ -631,9 +629,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
   public int getPredNodeCount(BasicBlockInContext N) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(N instanceof BasicBlockInContext);
-    }
+
     return G.getPredNodeCount(N);
   }
 
@@ -643,9 +639,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
   public Iterator<? extends BasicBlockInContext> getSuccNodes(BasicBlockInContext N) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(N instanceof BasicBlockInContext);
-    }
+
     return G.getSuccNodes(N);
   }
 
@@ -655,9 +649,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(com.ibm.wala.util.graph.Node)
    */
   public int getSuccNodeCount(BasicBlockInContext N) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(N instanceof BasicBlockInContext);
-    }
+
     return G.getSuccNodeCount(N);
   }
 
@@ -690,6 +682,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return G.toString();
   }
@@ -887,12 +880,12 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     if (bb == null) {
       throw new IllegalArgumentException("bb is null");
     }
-    ControlFlowGraph cfg = getCFG((IBasicBlock) bb);
+    ControlFlowGraph cfg = getCFG(bb);
     Iterator<? extends IBasicBlock> it = cfg.getPredNodes(bb.getDelegate());
     final CGNode node = bb.getNode();
     Function<IBasicBlock,BasicBlockInContext> toContext = new Function<IBasicBlock,BasicBlockInContext>() {
       public BasicBlockInContext apply(IBasicBlock object) {
-        IBasicBlock bb = (IBasicBlock) object;
+        IBasicBlock bb = object;
         return new BasicBlockInContext(node, bb);
       }
     };

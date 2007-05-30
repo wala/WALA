@@ -58,6 +58,7 @@ public abstract class FileModule implements Module, ModuleEntry {
    * 
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return file.hashCode();
   }
@@ -67,6 +68,7 @@ public abstract class FileModule implements Module, ModuleEntry {
    * 
    * @see com.ibm.wala.classLoader.FileModule#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object o) {
     if (o == null) {
       return false;

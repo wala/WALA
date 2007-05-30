@@ -214,6 +214,7 @@ public class HeapReachingDefs {
       return delegate.entrySet();
     }
 
+    @Override
     public boolean equals(Object o) {
       Assertions.UNREACHABLE();
       return delegate.equals(o);
@@ -223,6 +224,7 @@ public class HeapReachingDefs {
       return delegate.get(key);
     }
 
+    @Override
     public int hashCode() {
       Assertions.UNREACHABLE();
       return delegate.hashCode();

@@ -420,6 +420,7 @@ public final class ShrikeClass implements IClass {
       this.className = className;
     }
 
+    @Override
     public String getMsg() {
       return getClass().toString() + " : " + className;
     }
@@ -486,7 +487,7 @@ public final class ShrikeClass implements IClass {
     }
 
     // my methods + cached parent stuff
-    IMethod result = (IMethod) methodMap.get(selector);
+    IMethod result = methodMap.get(selector);
     if (result != null) {
       return result;
     }
@@ -523,7 +524,7 @@ public final class ShrikeClass implements IClass {
             .iterator();
         // try each superinterface
         while (it.hasNext()) {
-          IClass k = (IClass) it.next();
+          IClass k = it.next();
           result = k.getMethod(selector);
           if (result != null) {
             return result;
@@ -658,6 +659,7 @@ public final class ShrikeClass implements IClass {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return getReference().toString();
   }
@@ -665,6 +667,7 @@ public final class ShrikeClass implements IClass {
   /**
    * @see java.lang.Object#equals(Object)
    */
+  @Override
   public boolean equals(Object obj) {
     // it's ok to use instanceof since this class is final
     // if (this.getClass().equals(obj.getClass())) {
@@ -678,6 +681,7 @@ public final class ShrikeClass implements IClass {
   /**
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return hashCode;
   }
@@ -707,7 +711,7 @@ public final class ShrikeClass implements IClass {
         Assertions.UNREACHABLE();
       }
     }
-    return (IMethod) methodMap.get(MethodReference.clinitSelector);
+    return methodMap.get(MethodReference.clinitSelector);
   }
 
   /*

@@ -37,6 +37,7 @@ public class WarningSet extends HashSet<Warning> {
    * 
    * @see java.util.Collection#add(java.lang.Object)
    */
+  @Override
   public boolean add(Warning o) {
     return super.add(o);
   }
@@ -47,6 +48,7 @@ public class WarningSet extends HashSet<Warning> {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     TreeSet<Warning> T = new TreeSet<Warning>(new DescendingComparator());
     T.addAll(this);

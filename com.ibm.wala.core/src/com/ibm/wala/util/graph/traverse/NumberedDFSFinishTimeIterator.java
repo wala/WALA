@@ -74,6 +74,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
     this(G, G.iterator());
   }
 
+  @Override
   Iterator getPendingChildren(T n) {
     int number = G.getNumber(n);
     if (number >= pendingChildren.length) {
@@ -95,6 +96,7 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
    * @param v
    * @param iterator
    */
+  @Override
   void setPendingChildren(T v, Iterator<? extends T> iterator) {
     pendingChildren[G.getNumber(v)] = iterator;
   }

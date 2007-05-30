@@ -189,6 +189,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer sb = new StringBuffer();
     for (Iterator<? extends T> ns = iterator(); ns.hasNext();) {

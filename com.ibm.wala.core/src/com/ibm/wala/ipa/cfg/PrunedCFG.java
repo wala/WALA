@@ -67,7 +67,7 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
     public Iterator<IBasicBlock> getExceptionalSuccessors(final IBasicBlock N) {
       return new FilterIterator<IBasicBlock>(cfg.getExceptionalSuccessors(N).iterator(), new Filter() {
         public boolean accepts(Object o) {
-          return currentCFGNodes.containsNode((IBasicBlock) o) && filter.hasExceptionalEdge((IBasicBlock) N, (IBasicBlock) o);
+          return currentCFGNodes.containsNode((IBasicBlock) o) && filter.hasExceptionalEdge(N, (IBasicBlock) o);
         }
       });
     }
@@ -75,7 +75,7 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
     public Iterator<IBasicBlock> getNormalSuccessors(final IBasicBlock N) {
       return new FilterIterator<IBasicBlock>(cfg.getNormalSuccessors(N).iterator(), new Filter() {
         public boolean accepts(Object o) {
-          return currentCFGNodes.containsNode((IBasicBlock) o) && filter.hasNormalEdge((IBasicBlock) N, (IBasicBlock) o);
+          return currentCFGNodes.containsNode((IBasicBlock) o) && filter.hasNormalEdge(N, (IBasicBlock) o);
         }
       });
     }
@@ -83,7 +83,7 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
     public Iterator<IBasicBlock> getExceptionalPredecessors(final IBasicBlock N) {
       return new FilterIterator<IBasicBlock>(cfg.getExceptionalPredecessors(N).iterator(), new Filter() {
         public boolean accepts(Object o) {
-          return currentCFGNodes.containsNode((IBasicBlock) o) && filter.hasExceptionalEdge((IBasicBlock) o, (IBasicBlock) N);
+          return currentCFGNodes.containsNode((IBasicBlock) o) && filter.hasExceptionalEdge((IBasicBlock) o, N);
         }
       });
     }
@@ -91,13 +91,13 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
     public Iterator<IBasicBlock> getNormalPredecessors(final IBasicBlock N) {
       return new FilterIterator<IBasicBlock>(cfg.getNormalPredecessors(N).iterator(), new Filter() {
         public boolean accepts(Object o) {
-          return currentCFGNodes.containsNode((IBasicBlock) o) && filter.hasNormalEdge((IBasicBlock) o, (IBasicBlock) N);
+          return currentCFGNodes.containsNode((IBasicBlock) o) && filter.hasNormalEdge((IBasicBlock) o, N);
         }
       });
     }
 
     public Iterator<IBasicBlock> getSuccNodes(IBasicBlock N) {
-      return new CompoundIterator<IBasicBlock>(getNormalSuccessors((IBasicBlock) N), getExceptionalSuccessors((IBasicBlock) N));
+      return new CompoundIterator<IBasicBlock>(getNormalSuccessors(N), getExceptionalSuccessors(N));
     }
 
     public int getSuccNodeCount(IBasicBlock N) {
@@ -114,7 +114,7 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
     }
 
     public Iterator<IBasicBlock> getPredNodes(IBasicBlock N) {
-      return new CompoundIterator<IBasicBlock>(getNormalPredecessors((IBasicBlock) N), getExceptionalPredecessors((IBasicBlock) N));
+      return new CompoundIterator<IBasicBlock>(getNormalPredecessors(N), getExceptionalPredecessors(N));
     }
 
     public int getPredNodeCount(IBasicBlock N) {
@@ -242,10 +242,12 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
     Graph<IBasicBlock> temp = new AbstractNumberedGraph<IBasicBlock>() {
       private final EdgeManager<IBasicBlock> edges = new FilteredCFGEdges(cfg, cfg, filter);
 
+      @Override
       protected NodeManager<IBasicBlock> getNodeManager() {
         return cfg;
       }
 
+      @Override
       protected EdgeManager<IBasicBlock> getEdgeManager() {
         return edges;
       }
@@ -259,10 +261,12 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
     this.edges = new FilteredCFGEdges(cfg, nodes, filter);
   }
 
+  @Override
   protected NodeManager<IBasicBlock> getNodeManager() {
     return nodes;
   }
 
+  @Override
   protected EdgeManager<IBasicBlock> getEdgeManager() {
     return edges;
   }

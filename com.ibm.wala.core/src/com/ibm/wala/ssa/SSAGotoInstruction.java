@@ -23,11 +23,13 @@ public class SSAGotoInstruction extends SSAInstruction {
   SSAGotoInstruction() {
     super();
   }
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     return
       new SSAGotoInstruction();
   }
 
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return "goto";
   }
@@ -35,6 +37,7 @@ public class SSAGotoInstruction extends SSAInstruction {
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException  if v is null
    */
+  @Override
   public void visit(IVisitor v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -42,18 +45,21 @@ public class SSAGotoInstruction extends SSAInstruction {
     v.visitGoto(this);
   }
 
+  @Override
   public int hashCode() {
       return 1409; // XXX weak!
   }
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
+  @Override
   public boolean isFallThrough() {
     return false;
   }
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return null;
   }

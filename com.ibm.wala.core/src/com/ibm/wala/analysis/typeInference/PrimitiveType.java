@@ -52,6 +52,7 @@ public class PrimitiveType extends TypeAbstraction {
   }
 
   private final TypeReference reference;
+
   private final int size;
 
   private PrimitiveType(TypeReference reference, int size) {
@@ -59,16 +60,17 @@ public class PrimitiveType extends TypeAbstraction {
     this.size = size;
   }
 
+  @Override
   public TypeAbstraction meet(TypeAbstraction rhs) {
     if (rhs == TOP) {
       return this;
     } else if (rhs == this) {
       return this;
     } else if (rhs instanceof PrimitiveType) {
-      if (size() > ((PrimitiveType)rhs).size()) {
-	return this;
+      if (size() > ((PrimitiveType) rhs).size()) {
+        return this;
       } else {
-	return rhs;
+        return rhs;
       }
     } else {
       return TOP;
@@ -79,14 +81,17 @@ public class PrimitiveType extends TypeAbstraction {
     return size;
   }
 
+  @Override
   public int hashCode() {
     return reference.hashCode();
   }
 
+  @Override
   public boolean equals(Object other) {
     return this == other;
   }
 
+  @Override
   public IClass getType() {
     return null;
   }
@@ -96,11 +101,12 @@ public class PrimitiveType extends TypeAbstraction {
   }
 
   private static PrimitiveType makePrimitive(TypeReference reference, int size) {
-    PrimitiveType newType = new PrimitiveType(reference,size);
+    PrimitiveType newType = new PrimitiveType(reference, size);
     refernceToType.put(reference, newType);
     return newType;
   }
 
+  @Override
   public String toString() {
     String result = primitiveNameMap.get(reference.getName().toString());
     return (result != null) ? result : "PrimitiveType";

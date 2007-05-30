@@ -90,6 +90,7 @@ public final class Descriptor {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     return this == obj;
   }
@@ -97,6 +98,7 @@ public final class Descriptor {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return key.hashCode();
   }
@@ -104,6 +106,7 @@ public final class Descriptor {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return key.toString();
   }
@@ -153,6 +156,7 @@ public final class Descriptor {
       }
       hashCode = computeHashCode();
     }
+    @Override
     public int hashCode() {
       return hashCode;
     }
@@ -165,6 +169,7 @@ public final class Descriptor {
       }
       return result;
     }
+    @Override
     public boolean equals(Object obj) {
       if (Assertions.verifyAssertions) {
         Assertions._assert(obj instanceof Key);
@@ -189,6 +194,7 @@ public final class Descriptor {
       }
       return true;
     }
+    @Override
     public String toString() {
       StringBuffer result = new StringBuffer();
       result.append("(");

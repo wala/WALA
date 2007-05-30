@@ -32,6 +32,7 @@ public class BitVectorUnionConstant extends UnaryOperator {
 
   /* (non-Javadoc)
    */
+  @Override
   public byte evaluate(IVariable lhs, IVariable rhs) {
     BitVectorVariable L = (BitVectorVariable) lhs;
     BitVectorVariable R = (BitVectorVariable) rhs;
@@ -51,6 +52,7 @@ public class BitVectorUnionConstant extends UnaryOperator {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "U " + c;
   }
@@ -58,6 +60,7 @@ public class BitVectorUnionConstant extends UnaryOperator {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.Operator#hashCode()
    */
+  @Override
   public int hashCode() {
     return 9901 * c;
   }
@@ -65,6 +68,7 @@ public class BitVectorUnionConstant extends UnaryOperator {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object o) {
     if (o instanceof BitVectorUnionConstant) {
       BitVectorUnionConstant other = (BitVectorUnionConstant)o;

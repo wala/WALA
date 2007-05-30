@@ -299,7 +299,7 @@ public class SymbolTable {
       throw new IllegalArgumentException("rhs is null");
     }
     int result = getNewValueNumber();
-    SSAPhiInstruction phi = new SSAPhiInstruction(result, (int[]) rhs.clone());
+    SSAPhiInstruction phi = new SSAPhiInstruction(result, rhs.clone());
     values[result] = new PhiValue(phi);
     return result;
   }

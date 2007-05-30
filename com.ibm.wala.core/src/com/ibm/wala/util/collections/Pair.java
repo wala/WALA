@@ -28,6 +28,7 @@ public class Pair<T,U> {
     return (x == null) ? (y == null) : x.equals(y);
   }
 
+  @Override
   public boolean equals(Object o) {
     return (o instanceof Pair) && check(fst, ((Pair) o).fst) && check(snd, ((Pair) o).snd);
   }
@@ -36,6 +37,7 @@ public class Pair<T,U> {
     return (o == null) ? 0 : o.hashCode();
   }
 
+  @Override
   public int hashCode() {
     return hc(fst) * 7219 +  hc(snd);
   }
@@ -70,6 +72,7 @@ public class Pair<T,U> {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "[" + fst + "," + snd +"]";
   }

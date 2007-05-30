@@ -61,6 +61,7 @@ public class EObjectGraphImpl implements EObjectGraph {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     return this == obj;
   }
@@ -97,6 +98,7 @@ public class EObjectGraphImpl implements EObjectGraph {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return delegate.hashCode();
   }
@@ -127,6 +129,7 @@ public class EObjectGraphImpl implements EObjectGraph {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return delegate.toString();
   }

@@ -102,14 +102,17 @@ public class TabulationSolver<T, P> {
    * A dummy object which represents the "no dataflow facts reach here"
    */
   public final static Object DUMMY_ZERO = new Object() {
+    @Override
     public int hashCode() {
       return 211;
     }
 
+    @Override
     public boolean equals(Object o) {
       return this == o;
     }
 
+    @Override
     public String toString() {
       return "dummy universal dataflow fact";
     }
@@ -894,6 +897,7 @@ public class TabulationSolver<T, P> {
       }
     }
 
+    @Override
     public String toString() {
       StringBuffer result = new StringBuffer();
       result.append("<");
@@ -913,6 +917,7 @@ public class TabulationSolver<T, P> {
      * 
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
       return s_p.hashCode() + d1 * 401 + n.hashCode() * 409 + d2 * 419;
     }
@@ -922,6 +927,7 @@ public class TabulationSolver<T, P> {
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object arg0) {
       if (getClass().equals(arg0.getClass())) {
         PathEdge that = (PathEdge) arg0;
@@ -991,6 +997,7 @@ public class TabulationSolver<T, P> {
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
 
       Collection reachableNodes = DFS.getReachableNodes(supergraph, Collections.singleton(supergraph.getMainEntry()));
@@ -1078,6 +1085,7 @@ public class TabulationSolver<T, P> {
      * (non-Javadoc)
      * 
      */
+    @Override
     protected boolean compareElements(Object elt1, Object elt2) {
       PathEdge p1 = (PathEdge) elt1;
       PathEdge p2 = (PathEdge) elt2;

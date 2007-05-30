@@ -22,6 +22,7 @@ public final class NormalAllocationSiteKey extends AllocationSiteKey {
   public NormalAllocationSiteKey(CGNode node, NewSiteReference allocation, IClass type) {
     super(node, allocation, type);
   }
+  @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
     if (obj instanceof NormalAllocationSiteKey) {
@@ -31,6 +32,7 @@ public final class NormalAllocationSiteKey extends AllocationSiteKey {
       return false;
     }
   }
+  @Override
   public int hashCode() {
     return getNode().hashCode() * 8647 + getSite().hashCode();
   }

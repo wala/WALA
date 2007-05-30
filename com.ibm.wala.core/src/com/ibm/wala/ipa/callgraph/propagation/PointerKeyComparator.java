@@ -244,11 +244,13 @@ public class PointerKeyComparator implements Comparator {
     return 0;
   }
 
+  @Override
   public boolean equals(Object o) {
     return (o instanceof PointerKeyComparator) &&
 	((PointerKeyComparator)o).cha.equals(cha);
   }
 
+  @Override
   public int hashCode() {
     return cha.hashCode();
   }

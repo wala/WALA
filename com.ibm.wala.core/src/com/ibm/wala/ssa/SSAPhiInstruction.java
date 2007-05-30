@@ -38,6 +38,7 @@ public class SSAPhiInstruction extends SSAInstruction {
     }
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException();
@@ -45,6 +46,7 @@ public class SSAPhiInstruction extends SSAInstruction {
     return new SSAPhiInstruction(defs == null ? result : defs[0], uses == null ? params : uses);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
 
     StringBuffer s = new StringBuffer();
@@ -61,6 +63,7 @@ public class SSAPhiInstruction extends SSAInstruction {
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException  if v is null
    */
+  @Override
   public void visit(IVisitor v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -71,14 +74,17 @@ public class SSAPhiInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getDef()
    */
+  @Override
   public boolean hasDef() {
     return true;
   }
 
+  @Override
   public int getDef() {
     return result;
   }
 
+  @Override
   public int getDef(int i) {
     Assertions._assert(i == 0);
     return result;
@@ -87,10 +93,12 @@ public class SSAPhiInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
+  @Override
   public int getNumberOfUses() {
     return params.length;
   }
 
+  @Override
   public int getNumberOfDefs() {
     return 1;
   }
@@ -98,6 +106,7 @@ public class SSAPhiInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
+  @Override
   public int getUse(int j) throws IllegalArgumentException {
     if (j >= params.length) {
       throw new IllegalArgumentException("Bad use " + j);
@@ -118,6 +127,7 @@ public class SSAPhiInstruction extends SSAInstruction {
    * @see com.ibm.wala.ssa.SSAInstruction#getValueString(SymbolTable,
    *      ValueDecorator, int)
    */
+  @Override
   protected String getValueString(SymbolTable symbolTable, ValueDecorator d, int valueNumber) {
 
     if (valueNumber == AbstractIntStackMachine.TOP) {
@@ -127,6 +137,7 @@ public class SSAPhiInstruction extends SSAInstruction {
     }
   }
 
+  @Override
   public int hashCode() {
     return 7823 * result;
   }
@@ -136,6 +147,7 @@ public class SSAPhiInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
+  @Override
   public boolean isFallThrough() {
     return true;
   }
@@ -145,6 +157,7 @@ public class SSAPhiInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return null;
   }

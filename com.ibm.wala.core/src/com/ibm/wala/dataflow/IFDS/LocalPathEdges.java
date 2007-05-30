@@ -126,7 +126,7 @@ public class LocalPathEdges {
       if (i == j) {
         addIdentityPathEdge(i, n);
       } else {
-        IBinaryNaturalRelation R = (IBinaryNaturalRelation) paths.get(j);
+        IBinaryNaturalRelation R = paths.get(j);
         if (R == null) {
           // we expect the first dimention of R to be dense, the second sparse
           R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
@@ -136,7 +136,7 @@ public class LocalPathEdges {
         R.add(n, i);
 
         if (altPaths != null) {
-          IBinaryNaturalRelation R2 = (IBinaryNaturalRelation) altPaths.get(i);
+          IBinaryNaturalRelation R2 = altPaths.get(i);
           if (R2 == null) {
             // we expect the first dimention of R to be dense, the second sparse
             R2 = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
@@ -169,7 +169,7 @@ public class LocalPathEdges {
     s.add(n);
 
     if (altPaths != null) {
-      IBinaryNaturalRelation R2 = (IBinaryNaturalRelation) altPaths.get(i);
+      IBinaryNaturalRelation R2 = altPaths.get(i);
       if (R2 == null) {
         // we expect the first dimention of R to be dense, the second sparse
         R2 = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
@@ -202,7 +202,7 @@ public class LocalPathEdges {
     }
     z.add(n);
     if (altPaths != null) {
-      IBinaryNaturalRelation R = (IBinaryNaturalRelation) altPaths.get(0);
+      IBinaryNaturalRelation R = altPaths.get(0);
       if (R == null) {
         // we expect the first dimention of R to be dense, the second sparse
         R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
@@ -235,7 +235,7 @@ public class LocalPathEdges {
    *         path edges. null if none found
    */
   public IntSet getInverse(int n, int d2) {
-    IBinaryNaturalRelation R = (IBinaryNaturalRelation) paths.get(d2);
+    IBinaryNaturalRelation R = paths.get(d2);
     BitVectorIntSet s = (BitVectorIntSet) identityPaths.get(d2);
     BitVectorIntSet z = (BitVectorIntSet) zeroPaths.get(d2);
     if (R == null) {
@@ -334,7 +334,7 @@ public class LocalPathEdges {
           return false;
         }
       } else {
-        IBinaryNaturalRelation R = (IBinaryNaturalRelation) paths.get(j);
+        IBinaryNaturalRelation R = paths.get(j);
         if (R == null) {
           return false;
         }
@@ -402,7 +402,7 @@ public class LocalPathEdges {
    */
   private IntSet getReachableFast(int n, int d1) {
 
-    IBinaryNaturalRelation R = (IBinaryNaturalRelation) altPaths.get(d1);
+    IBinaryNaturalRelation R = altPaths.get(d1);
     if (R != null) {
       return R.getRelated(n);
     }

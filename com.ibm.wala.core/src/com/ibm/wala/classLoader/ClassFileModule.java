@@ -47,6 +47,7 @@ public class ClassFileModule extends FileModule implements Module, ModuleEntry {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "ClassFileModule:" + getFile();
   }

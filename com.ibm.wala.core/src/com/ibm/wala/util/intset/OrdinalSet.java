@@ -113,6 +113,7 @@ public class OrdinalSet<T> implements Iterable<T> {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return new Iterator2Collection<T>(iterator()).toString();
   }

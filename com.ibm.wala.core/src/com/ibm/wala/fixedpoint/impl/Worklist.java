@@ -27,6 +27,7 @@ public class Worklist extends Heap {
     super(100);
   }
 
+  @Override
   protected final boolean compareElements(Object o1, Object o2) {
     AbstractStatement eq1 = (AbstractStatement) o1;
     AbstractStatement eq2 = (AbstractStatement) o2;

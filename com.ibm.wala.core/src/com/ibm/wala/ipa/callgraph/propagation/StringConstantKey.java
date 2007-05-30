@@ -23,6 +23,7 @@ public final class StringConstantKey implements InstanceKey {
     this.string = string;
     this.stringClass = stringClass;
   }
+  @Override
   public boolean equals(Object obj) {
     if (obj instanceof StringConstantKey) {
       StringConstantKey other = (StringConstantKey) obj;
@@ -31,9 +32,11 @@ public final class StringConstantKey implements InstanceKey {
       return false;
     }
   }
+  @Override
   public int hashCode() {
     return 1877*string.hashCode();
   }
+  @Override
   public String toString() {
     return "[" + string + "]";
   }

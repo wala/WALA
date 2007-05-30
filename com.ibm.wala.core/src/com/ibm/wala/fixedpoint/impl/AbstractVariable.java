@@ -26,6 +26,7 @@ public abstract class AbstractVariable extends NodeWithNumber implements IVariab
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     // we assume the solver manages these canonically
     return this == obj;
@@ -35,6 +36,7 @@ public abstract class AbstractVariable extends NodeWithNumber implements IVariab
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public abstract int hashCode();
   
   

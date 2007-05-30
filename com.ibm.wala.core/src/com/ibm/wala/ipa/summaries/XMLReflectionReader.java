@@ -153,6 +153,7 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
     /* (non-Javadoc)
      * @see org.xml.sax.ContentHandler#startElement(java.lang.String, java.lang.String, java.lang.String, org.xml.sax.Attributes)
      */
+    @Override
     public void startElement(String uri, String name, String qName, Attributes atts) {
       Integer element = elementMap.get(qName);
       if (element == null) {
@@ -209,6 +210,7 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
     /* (non-Javadoc)
      * @see org.xml.sax.ContentHandler#endElement(java.lang.String, java.lang.String, java.lang.String)
      */
+    @Override
     public void endElement(String uri, String name, String qName) {
       Integer element = elementMap.get(qName);
       if (element == null) {

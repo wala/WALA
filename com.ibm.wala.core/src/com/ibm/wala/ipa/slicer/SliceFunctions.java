@@ -32,7 +32,7 @@ public class SliceFunctions implements IFlowFunctionMap<Statement> {
     if (src == null) {
       throw new IllegalArgumentException("src is null");
     }
-    Statement s = (Statement) src;
+    Statement s = src;
     switch (s.getKind()) {
     case NORMAL_RET_CALLER:
     case PARAM_CALLER:

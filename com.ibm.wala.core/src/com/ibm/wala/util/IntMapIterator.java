@@ -58,6 +58,7 @@ public class IntMapIterator<T> implements Iterator<T> {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "map: " + f + " of " + i;
   }

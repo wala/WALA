@@ -31,6 +31,7 @@ public final class UnaryOr extends UnaryOperator {
 
   /* (non-Javadoc)
    */
+  @Override
   public byte evaluate(IVariable lhs, IVariable rhs) {
     BooleanVariable L = (BooleanVariable) lhs;
     BooleanVariable R = (BooleanVariable) rhs;
@@ -43,6 +44,7 @@ public final class UnaryOr extends UnaryOperator {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "OR";
   }
@@ -50,6 +52,7 @@ public final class UnaryOr extends UnaryOperator {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.Operator#hashCode()
    */
+  @Override
   public int hashCode() {
     return 9887;
   }
@@ -57,6 +60,7 @@ public final class UnaryOr extends UnaryOperator {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object o) {
     return (o instanceof UnaryOr);
   }

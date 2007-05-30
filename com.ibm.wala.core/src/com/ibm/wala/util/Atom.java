@@ -138,6 +138,7 @@ public final class Atom {
    * Return printable representation of "this" atom. Does not correctly handle
    * UTF8 translation.
    */
+  @Override
   public final String toString() {
     return new String(val);
   }
@@ -291,6 +292,7 @@ public final class Atom {
     /**
      * @see java.lang.Object#equals(Object)
      */
+    @Override
     public final boolean equals(Object other) {
       if (Assertions.verifyAssertions) {
         Assertions._assert(this.getClass().equals(other.getClass()));
@@ -316,6 +318,7 @@ public final class Atom {
      * Return printable representation of "this" atom. Does not correctly handle
      * UTF8 translation.
      */
+    @Override
     public final String toString() {
       return new String(val);
     }
@@ -323,6 +326,7 @@ public final class Atom {
     /**
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public final int hashCode() {
       return hash;
     }
@@ -332,6 +336,7 @@ public final class Atom {
   /**
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return hash;
   }
@@ -341,6 +346,7 @@ public final class Atom {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     return this == obj;
   }

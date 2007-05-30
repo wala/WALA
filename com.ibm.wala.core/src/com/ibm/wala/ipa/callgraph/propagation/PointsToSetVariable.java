@@ -38,6 +38,7 @@ public class PointsToSetVariable extends IntSetVariable {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (obj instanceof PointsToSetVariable) {
       return pointerKey.equals(((PointsToSetVariable)obj).pointerKey);
@@ -48,6 +49,7 @@ public class PointsToSetVariable extends IntSetVariable {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.fixpoint.IntSetVariable#hashCode()
    */
+  @Override
   public int hashCode() {
     return pointerKey.hashCode();
   }
@@ -65,6 +67,7 @@ public class PointsToSetVariable extends IntSetVariable {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return pointerKey.toString() + ":" + super.toString();
   }

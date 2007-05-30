@@ -63,6 +63,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     this.cha = klass.getClassHierarchy();
   }
 
+  @Override
   public byte[] getBytecodes() {
     CodeReader code = getCodeReader();
     if (code == null) {
@@ -72,16 +73,19 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     }
   }
 
+  @Override
   protected String getMethodName() throws InvalidClassFileException {
     ClassReader reader = getClassReader();
     return reader.getMethodName(shrikeMethodIndex);
   }
 
+  @Override
   protected String getMethodSignature() throws InvalidClassFileException {
     ClassReader reader = getClassReader();
     return reader.getMethodType(shrikeMethodIndex);
   }
 
+  @Override
   protected int getModifiers() {
     if (modifiers == -1) {
       modifiers = getClassReader().getMethodAccessFlags(shrikeMethodIndex);
@@ -89,6 +93,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     return modifiers;
   }
 
+  @Override
   protected Decoder makeDecoder() {
     CodeReader reader = getCodeReader();
     if (reader == null) {
@@ -103,11 +108,13 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     return d;
   }
 
+  @Override
   public int getMaxLocals() {
     CodeReader reader = getCodeReader();
     return reader.getMaxLocals();
   }
 
+  @Override
   public int getMaxStackHeight() {
     CodeReader reader = getCodeReader();
     // note that Shrike returns the maximum index in the zero-indexed stack
@@ -121,6 +128,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     return reader.getMaxStack() + 2;
   }
 
+  @Override
   public boolean hasExceptionHandler() {
     CodeReader reader = getCodeReader();
     if (reader == null)
@@ -129,6 +137,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     return handlers != null && handlers.length > 0;
   }
 
+  @Override
   protected String[] getDeclaredExceptionTypeNames() throws InvalidClassFileException {
     ExceptionsReader reader = getExceptionReader();
     if (reader == null) {
@@ -138,12 +147,14 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     }
   }
 
+  @Override
   protected void processDebugInfo(BytecodeInfo bcInfo) throws InvalidClassFileException {
     CodeReader cr = getCodeReader();
     bcInfo.lineNumberMap = LineNumberTableReader.makeBytecodeToSourceMap(cr);
     bcInfo.localVariableMap = LocalVariableTableReader.makeVarMap(cr);
   }
 
+  @Override
   public String getLocalVariableName(int bcIndex, int localNumber) throws InvalidClassFileException {
     int[][] map = getBCInfo().localVariableMap;
 
@@ -181,6 +192,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
    * 
    * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
    */
+  @Override
   public boolean hasLocalVariableTable() {
     try {
       ClassReader.AttrIterator iter = new ClassReader.AttrIterator();
@@ -278,6 +290,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     return result;
   }
 
+  @Override
   protected String computeGenericsSignature() throws InvalidClassFileException {
     SignatureReader reader = getSignatureReader();
     if (reader == null) {

@@ -38,6 +38,7 @@ public final class AssignEquation extends UnaryStatement implements VerboseActio
    * 
    * @see com.ibm.wala.dataflow.fixpoint.AbstractEquation#getOperator()
    */
+  @Override
   public AbstractOperator getOperator() {
     return PropagationCallGraphBuilder.assignOperator;
   }
@@ -47,6 +48,7 @@ public final class AssignEquation extends UnaryStatement implements VerboseActio
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object o) {
     if (o instanceof AssignEquation) {
       AssignEquation other = (AssignEquation) o;

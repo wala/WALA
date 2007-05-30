@@ -69,6 +69,7 @@ public abstract class NullaryStatement extends AbstractStatement {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.AbstractEquation#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object o) {
     if (o instanceof NullaryStatement) {
       NullaryStatement other = (NullaryStatement) o;
@@ -97,6 +98,7 @@ public abstract class NullaryStatement extends AbstractStatement {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.AbstractEquation#hashCode()
    */
+  @Override
   public int hashCode() {
     int result = getOperator().hashCode() * 1381;
     if (lhs != null) {

@@ -93,6 +93,7 @@ public class SSAOptions {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object arg0) {
     if (arg0 == null) {
       return false;
@@ -108,6 +109,7 @@ public class SSAOptions {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return (usePiNodes) ? 9277 : 7207;
   }

@@ -68,7 +68,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
     if (done) {
       throw new java.util.NoSuchElementException();
     }
-    T o = (T) next;
+    T o = next;
     advance();
     return o;
   }
@@ -96,6 +96,7 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "filter " + f + " of " + i;
   }

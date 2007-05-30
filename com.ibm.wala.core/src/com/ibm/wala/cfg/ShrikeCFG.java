@@ -83,10 +83,12 @@ public class ShrikeCFG extends AbstractCFG {
     computeEdges();
   }
 
+  @Override
   public int hashCode() {
     return 9511 * getMethod().hashCode();
   }
 
+  @Override
   public boolean equals(Object o) {
     return (o instanceof ShrikeCFG) && getMethod().equals(((ShrikeCFG) o).getMethod());
   }
@@ -216,7 +218,7 @@ public class ShrikeCFG extends AbstractCFG {
    * instruction in the CFG's instruction array.
    */
   public IBasicBlock getBlockForInstruction(int index) {
-    return (IBasicBlock) getNode(instruction2Block[index]);
+    return getNode(instruction2Block[index]);
   }
 
   public final class BasicBlock extends NodeWithNumber implements IBasicBlock {
@@ -438,6 +440,7 @@ public class ShrikeCFG extends AbstractCFG {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "BB[Shrike]" + getNumber() + " - " + method.getDeclaringClass().getReference().getName() + "." + method.getName();
     }
@@ -474,10 +477,12 @@ public class ShrikeCFG extends AbstractCFG {
      * 
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
       return hashBase + getNumber();
     }
 
+    @Override
     public boolean equals(Object o) {
       return (o instanceof BasicBlock) && ((BasicBlock) o).getMethod().equals(getMethod())
           && ((BasicBlock) o).getNumber() == getNumber();
@@ -500,6 +505,7 @@ public class ShrikeCFG extends AbstractCFG {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
     for (Iterator it = iterator(); it.hasNext();) {
@@ -573,6 +579,7 @@ public class ShrikeCFG extends AbstractCFG {
       this.T = T;
     }
 
+    @Override
     public String getMsg() {
       return getClass().toString() + " : " + T;
     }

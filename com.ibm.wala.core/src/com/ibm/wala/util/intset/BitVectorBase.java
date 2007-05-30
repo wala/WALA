@@ -71,6 +71,7 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
   /**
    * Gets the hashcode.
    */
+  @Override
   public int hashCode() {
     int h = 1234;
     for (int i = bits.length - 1; i >= 0;) {
@@ -104,6 +105,7 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
   /**
    * Clones the FixedSizeBitVector.
    */
+  @Override
   @SuppressWarnings("unchecked")
   public Object clone() {
     BitVectorBase<T> result = null;
@@ -121,6 +123,7 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
   /**
    * Converts the FixedSizeBitVector to a String.
    */
+  @Override
   public String toString() {
     StringBuffer buffer = new StringBuffer();
     boolean needSeparator = false;

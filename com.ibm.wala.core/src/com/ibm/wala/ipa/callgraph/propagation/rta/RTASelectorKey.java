@@ -29,12 +29,14 @@ public class RTASelectorKey implements PointerKey {
     this.selector = selector;
   }
 
+  @Override
   public int hashCode() {
     return 131 * selector.hashCode();
   }
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object arg0) {
     if (arg0 == null) {
       return false;
@@ -50,6 +52,7 @@ public class RTASelectorKey implements PointerKey {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "RTAKey:" + selector.toString();
   }

@@ -36,10 +36,12 @@ public class ArrayNonNullIterator<T> extends ArrayIterator<T> {
     super(elts, start);
   }
 
+  @Override
   public boolean hasNext() {
     return _cnt < _elts.length && _elts[_cnt] != null;
   }
 
+  @Override
   public T next() {
     T result = _elts[_cnt];
     do {

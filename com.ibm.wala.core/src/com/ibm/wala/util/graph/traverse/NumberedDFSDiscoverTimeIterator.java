@@ -87,6 +87,7 @@ public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIter
    * Method getPendingChildren.
    * @return Object
    */
+  @Override
   protected Iterator<? extends T> getPendingChildren(T n) {
     return pendingChildren[G.getNumber(n)];
   }
@@ -95,6 +96,7 @@ public class NumberedDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIter
    * @param v
    * @param iterator
    */
+  @Override
   protected void setPendingChildren(T v, Iterator<? extends T> iterator) {
     pendingChildren[G.getNumber(v)] = iterator;
   }

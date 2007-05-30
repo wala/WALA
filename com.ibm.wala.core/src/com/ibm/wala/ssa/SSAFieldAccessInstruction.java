@@ -58,6 +58,7 @@ public abstract class SSAFieldAccessInstruction extends SSAInstruction {
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
+  @Override
   public boolean isPEI() {
     return true;
   }

@@ -47,9 +47,11 @@ public class TypeArgument extends Signature {
   }
 
   private final static TypeArgument WILDCARD = new TypeArgument("*") {
+    @Override
     public boolean isWildcard() {
       return true;
     }
+    @Override
     public String toString() {
       return "*";
     }

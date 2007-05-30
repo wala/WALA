@@ -231,6 +231,7 @@ public class CodeScanner {
   public static Set<TypeReference> getCaughtExceptions(SSAInstruction[] statements) {
     final HashSet<TypeReference> result = HashSetFactory.make(10);
     Visitor v = new Visitor() {
+      @Override
       public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
         Collection<TypeReference> t = instruction.getExceptionTypes();
         result.addAll(t);
@@ -268,6 +269,7 @@ public class CodeScanner {
   private static List<CallSiteReference> getCallSites(SSAInstruction[] statements) {
     final List<CallSiteReference> result = new LinkedList<CallSiteReference>();
     Visitor v = new Visitor() {
+      @Override
       public void visitInvoke(SSAInvokeInstruction instruction) {
         result.add(instruction.getCallSite());
       }
@@ -289,6 +291,7 @@ public class CodeScanner {
   private static List<NewSiteReference> getNewSites(SSAInstruction[] statements) {
     final List<NewSiteReference> result = new LinkedList<NewSiteReference>();
     Visitor v = new Visitor() {
+      @Override
       public void visitNew(SSANewInstruction instruction) {
         result.add(instruction.getNewSite());
       }
@@ -310,6 +313,7 @@ public class CodeScanner {
   public static List<FieldReference> getFieldsRead(SSAInstruction[] statements) {
     final List<FieldReference> result = new LinkedList<FieldReference>();
     Visitor v = new Visitor() {
+      @Override
       public void visitGet(SSAGetInstruction instruction) {
         result.add(instruction.getDeclaredField());
       }
@@ -331,6 +335,7 @@ public class CodeScanner {
   public static List<FieldReference> getFieldsWritten(SSAInstruction[] statements) {
     final List<FieldReference> result = new LinkedList<FieldReference>();
     Visitor v = new Visitor() {
+      @Override
       public void visitPut(SSAPutInstruction instruction) {
         result.add(instruction.getDeclaredField());
       }
@@ -349,6 +354,7 @@ public class CodeScanner {
     class ScanVisitor extends Visitor {
       boolean foundOne = false;
 
+      @Override
       public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
         if (!instruction.typeIsPrimitive()) {
           foundOne = true;
@@ -373,6 +379,7 @@ public class CodeScanner {
     class ScanVisitor extends Visitor {
       boolean foundOne = false;
 
+      @Override
       public void visitArrayStore(SSAArrayStoreInstruction instruction) {
         if (!instruction.typeIsPrimitive()) {
           foundOne = true;

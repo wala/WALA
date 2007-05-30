@@ -117,6 +117,7 @@ public abstract class EJfaceApplicationRunner  {
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (applicationWindow: ");

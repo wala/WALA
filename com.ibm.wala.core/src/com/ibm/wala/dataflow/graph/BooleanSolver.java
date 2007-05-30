@@ -31,14 +31,14 @@ public class BooleanSolver<T> extends DataflowSolver<T> {
    * @see com.ibm.wala.dataflow.graph.IterativeSolver#makeVariable(java.lang.Object,
    *      boolean)
    */
+  @Override
   protected IVariable makeNodeVariable(Object n, boolean IN) {
-
     return new BooleanVariable(n.hashCode() * 97381 + (IN ? 0 : 1));
 
   }
 
+  @Override
   protected IVariable makeEdgeVariable(Object src, Object dst) {
-
     return new BooleanVariable(src.hashCode() ^ dst.hashCode());
 
   }

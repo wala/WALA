@@ -311,6 +311,7 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "Successors relation:\n" + successors;
   }

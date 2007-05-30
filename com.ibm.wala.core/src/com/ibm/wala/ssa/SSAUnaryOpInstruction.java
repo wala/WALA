@@ -28,10 +28,12 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
     this.operator = operator;
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     return new SSAUnaryOpInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val : uses[0]);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return getValueString(symbolTable, d, result) + " = " + operator + " " + getValueString(symbolTable, d, val);
   }
@@ -39,6 +41,7 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
+  @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitUnaryOp(this);
   }
@@ -52,6 +55,7 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return null;
   }

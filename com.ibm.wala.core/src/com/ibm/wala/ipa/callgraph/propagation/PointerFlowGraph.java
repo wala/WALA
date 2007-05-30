@@ -110,6 +110,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
    * (non-Javadoc)
    * 
    */
+  @Override
   public NodeManager<PointerKey> getNodeManager() {
     return delegate.getNodeManager();
   }
@@ -118,6 +119,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
    * (non-Javadoc)
    * 
    */
+  @Override
   protected EdgeManager<PointerKey> getEdgeManager() {
     return edgeManager;
   }
@@ -282,6 +284,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
      * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitArrayLoad(com.ibm.wala.ssa.SSAArrayLoadInstruction)
      */
+    @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
       // skip arrays of primitive type
       if (instruction.typeIsPrimitive()) {
@@ -314,6 +317,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
      * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitArrayStore(com.ibm.wala.ssa.SSAArrayStoreInstruction)
      */
+    @Override
     public void visitArrayStore(SSAArrayStoreInstruction instruction) {
       // skip arrays of primitive type
       if (instruction.typeIsPrimitive()) {
@@ -346,6 +350,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
      * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitCheckCast(com.ibm.wala.ssa.SSACheckCastInstruction)
      */
+    @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
       PointerKey result = pa.getHeapModel().getPointerKeyForLocal(node, instruction.getResult());
       PointerKey value = pa.getHeapModel().getPointerKeyForLocal(node, instruction.getVal());
@@ -361,6 +366,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
      * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitCheckCast(com.ibm.wala.ssa.SSACheckCastInstruction)
      */
+    @Override
     public void visitPi(SSAPiInstruction instruction) {
       PointerKey result = pa.getHeapModel().getPointerKeyForLocal(node, instruction.getDef());
       PointerKey value = pa.getHeapModel().getPointerKeyForLocal(node, instruction.getVal());
@@ -374,6 +380,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
      * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitReturn(com.ibm.wala.ssa.SSAReturnInstruction)
      */
+    @Override
     public void visitReturn(SSAReturnInstruction instruction) {
       // skip returns of primitive type
       if (instruction.returnsPrimitiveType() || instruction.returnsVoid()) {
@@ -397,6 +404,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
      * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitGet(com.ibm.wala.ssa.SSAGetInstruction)
      */
+    @Override
     public void visitGet(SSAGetInstruction instruction) {
       FieldReference field = instruction.getDeclaredField();
 
@@ -432,6 +440,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
      * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitPut(com.ibm.wala.ssa.PutInstruction)
      */
+    @Override
     public void visitPut(SSAPutInstruction instruction) {
 
       FieldReference field = instruction.getDeclaredField();
@@ -473,6 +482,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
      * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitInvoke(com.ibm.wala.ssa.InvokeInstruction)
      */
+    @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
 
       for (Iterator it = node.getPossibleTargets(instruction.getCallSite()).iterator(); it.hasNext();) {
@@ -523,6 +533,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
      * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitThrow(com.ibm.wala.ssa.ThrowInstruction)
      */
+    @Override
     public void visitThrow(SSAThrowInstruction instruction) {
       // don't do anything: we handle exceptional edges
       // in a separate pass
@@ -533,6 +544,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
      * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitGetCaughtException(com.ibm.wala.ssa.GetCaughtExceptionInstruction)
      */
+    @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
       List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, bb);
       PointerKey def = pa.getHeapModel().getPointerKeyForLocal(node, instruction.getDef());
@@ -575,6 +587,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     return pa;
   }
 
+  @Override
   public Iterator<PointerKey> iterator() {
     // give up on laziness
     processAllNodes();

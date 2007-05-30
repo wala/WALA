@@ -37,6 +37,7 @@ public final class ConcreteTypeKey implements InstanceKey {
     this.type = type;
   }
 
+  @Override
   public boolean equals(Object obj) {
     if (obj instanceof ConcreteTypeKey) {
       ConcreteTypeKey other = (ConcreteTypeKey) obj;
@@ -46,10 +47,12 @@ public final class ConcreteTypeKey implements InstanceKey {
     }
   }
 
+  @Override
   public int hashCode() {
     return 461 * type.hashCode();
   }
 
+  @Override
   public String toString() {
     return "[" + type + "]";
   }

@@ -23,6 +23,7 @@ public class nCFAContextSelector extends CallStringContextSelector {
     this.n = n;
   }
 
+  @Override
   protected int getLength(CGNode caller, CallSiteReference site, IMethod target) {
     return n;
   }

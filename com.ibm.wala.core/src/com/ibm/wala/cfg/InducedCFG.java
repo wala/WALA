@@ -93,10 +93,12 @@ public class InducedCFG extends AbstractCFG {
     }
   }
 
+  @Override
   public int hashCode() {
     return context.hashCode() ^ getMethod().hashCode();
   }
 
+  @Override
   public boolean equals(Object o) {
       return (o instanceof InducedCFG) &&
 	  getMethod().equals(((InducedCFG)o).getMethod()) &&
@@ -195,16 +197,19 @@ public class InducedCFG extends AbstractCFG {
       index = i;
     }
 
+    @Override
     public void visitGoto(SSAGotoInstruction instruction) {
       Assertions.UNREACHABLE("haven't implemented logic for goto yet.");
       breakBasicBlock();
     }
 
+    @Override
     public void visitConditionalBranch(SSAConditionalBranchInstruction instruction) {
       Assertions.UNREACHABLE("haven't implemented logic for cbranch yet.");
       breakBasicBlock();
     }
 
+    @Override
     public void visitSwitch(SSASwitchInstruction instruction) {
       Assertions.UNREACHABLE("haven't implemented logic for switch yet.");
 //      breakBasicBlock();
@@ -214,10 +219,12 @@ public class InducedCFG extends AbstractCFG {
 //      }
     }
 
+    @Override
     public void visitReturn(SSAReturnInstruction instruction) {
       breakBasicBlock();
     }
 
+    @Override
     public void visitThrow(SSAThrowInstruction instruction) {
       breakBasicBlock();
     }
@@ -248,42 +255,52 @@ public class InducedCFG extends AbstractCFG {
       }
     }
 
+    @Override
     public void visitArrayLength(SSAArrayLengthInstruction instruction) {
       breakBasicBlock();
     }
 
+    @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
       breakBasicBlock();
     }
 
+    @Override
     public void visitArrayStore(SSAArrayStoreInstruction instruction) {
       breakBasicBlock();
     }
 
+    @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
       breakBasicBlock();
     }
 
+    @Override
     public void visitGet(SSAGetInstruction instruction) {
       breakBasicBlock();
     }
 
+    @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
       breakBasicBlock();
     }
 
+    @Override
     public void visitMonitor(SSAMonitorInstruction instruction) {
       breakBasicBlock();
     }
 
+    @Override
     public void visitNew(SSANewInstruction instruction) {
       breakBasicBlock();
     }
 
+    @Override
     public void visitPut(SSAPutInstruction instruction) {
       breakBasicBlock();
     }
 
+    @Override
     public void visitThrow(com.ibm.wala.ssa.SSAThrowInstruction instruction) {
       breakBasicBlock();
     }
@@ -320,6 +337,7 @@ public class InducedCFG extends AbstractCFG {
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object arg0) {
       if (getClass().equals(arg0.getClass())) {
         BasicBlock other = (BasicBlock) arg0;
@@ -431,6 +449,7 @@ public class InducedCFG extends AbstractCFG {
       return false;
     }
 
+    @Override
     public int hashCode() {
       return 1153 * getGraphNodeId() + getMethod().hashCode();
     }
@@ -438,6 +457,7 @@ public class InducedCFG extends AbstractCFG {
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "BB[Induced]" + getNumber() + " - " + getMethod().getSignature();
     }
@@ -494,6 +514,7 @@ public class InducedCFG extends AbstractCFG {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
     for (Iterator it = iterator(); it.hasNext();) {

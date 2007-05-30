@@ -128,10 +128,12 @@ public class GraphSlicer {
     };
     AbstractGraph<T> output = new AbstractGraph<T>() {
 
+      @Override
       protected NodeManager<T> getNodeManager() {
         return n;
       }
 
+      @Override
       protected EdgeManager<T> getEdgeManager() {
         return e;
       }

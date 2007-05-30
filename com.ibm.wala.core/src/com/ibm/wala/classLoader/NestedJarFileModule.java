@@ -206,6 +206,7 @@ public class NestedJarFileModule implements Module {
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "nested entry: " + name;
     }
@@ -235,6 +236,7 @@ public class NestedJarFileModule implements Module {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "Nested Jar File:" + entry.getName();
   }

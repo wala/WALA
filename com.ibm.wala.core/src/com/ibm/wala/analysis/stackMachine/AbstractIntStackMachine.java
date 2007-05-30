@@ -135,6 +135,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
       public UnaryOperator getNodeTransferFunction(final IBasicBlock node) {
         return new UnaryOperator() {
+          @Override
           public byte evaluate(IVariable lhs, IVariable rhs) {
 
             MachineState exit = (MachineState) lhs;
@@ -149,14 +150,17 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
             }
           }
 
+          @Override
           public String toString() {
             return "NODE-FLOW";
           }
 
+          @Override
           public int hashCode() {
             return 9973 * node.hashCode();
           }
 
+          @Override
           public boolean equals(Object o) {
             return this == o;
           }
@@ -165,6 +169,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
       public UnaryOperator getEdgeTransferFunction(final IBasicBlock from, final IBasicBlock to) {
         return new UnaryOperator() {
+          @Override
           public byte evaluate(IVariable lhs, IVariable rhs) {
 
             MachineState exit = (MachineState) lhs;
@@ -179,14 +184,17 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
             }
           }
 
+          @Override
           public String toString() {
             return "EDGE-FLOW";
           }
 
+          @Override
           public int hashCode() {
             return 9973 * (from.hashCode() ^ to.hashCode());
           }
 
+          @Override
           public boolean equals(Object o) {
             return this == o;
           }
@@ -202,6 +210,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     solver = new DataflowSolver<IBasicBlock>(problem) {
       private IVariable entry;
 
+      @Override
       protected IVariable makeNodeVariable(IBasicBlock n, boolean IN) {
         if (Assertions.verifyAssertions) {
           Assertions._assert(n != null);
@@ -213,6 +222,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         return result;
       }
 
+      @Override
       protected IVariable makeEdgeVariable(IBasicBlock from, IBasicBlock to) {
         if (Assertions.verifyAssertions) {
           Assertions._assert(from != null);
@@ -223,6 +233,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         return result;
       }
 
+      @Override
       protected void initializeWorkList() {
         super.buildEquations(false, false);
         /**
@@ -239,6 +250,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
        * 
        * @see com.ibm.wala.dataflow.fixpoint.DataflowSystem#initializeVariables()
        */
+      @Override
       protected void initializeVariables() {
         super.initializeVariables();
         AbstractIntStackMachine.this.initializeVariables();
@@ -285,6 +297,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.graph.AbstractMeetOperator#isUnaryNoOp()
      */
+    @Override
     public boolean isUnaryNoOp() {
       return false;
     }
@@ -294,6 +307,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.fixpoint.Operator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable[])
      */
+    @Override
     public byte evaluate(IVariable lhs, IVariable[] rhs) {
       MachineState L = (MachineState) lhs;
       BasicBlock bb = L.getBasicBlock();
@@ -309,6 +323,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.fixpoint.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return 72223 * meeter.hashCode();
     }
@@ -318,6 +333,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.fixpoint.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       if (o instanceof MeetOperator) {
         MeetOperator other = (MeetOperator) o;
@@ -332,6 +348,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.fixpoint.Operator#toString()
      */
+    @Override
     public String toString() {
       return "MEETER";
     }
@@ -730,6 +747,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       return false;
     }
 
+    @Override
     public String toString() {
       if (isTOP()) {
         return "<TOP>@" + System.identityHashCode(this);
@@ -823,6 +841,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
      * 
      * @see com.ibm.wala.dataflow.AbstractVariable#hashCode()
      */
+    @Override
     public int hashCode() {
       return hash;
     }
@@ -976,6 +995,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLength(ArrayLengthInstruction)
        */
+      @Override
       public void visitArrayLength(ArrayLengthInstruction instruction) {
 
         workingState.pop();
@@ -985,6 +1005,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLoad(ArrayLoadInstruction)
        */
+      @Override
       public void visitArrayLoad(ArrayLoadInstruction instruction) {
         workingState.pop();
         workingState.pop();
@@ -994,6 +1015,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayStore(ArrayStoreInstruction)
        */
+      @Override
       public void visitArrayStore(ArrayStoreInstruction instruction) {
         workingState.pop();
         workingState.pop();
@@ -1003,6 +1025,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitBinaryOp(BinaryOpInstruction)
        */
+      @Override
       public void visitBinaryOp(BinaryOpInstruction instruction) {
         workingState.pop();
       }
@@ -1010,6 +1033,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitComparison(ComparisonInstruction)
        */
+      @Override
       public void visitComparison(ComparisonInstruction instruction) {
         workingState.pop();
         workingState.pop();
@@ -1019,6 +1043,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConditionalBranch(ConditionalBranchInstruction)
        */
+      @Override
       public void visitConditionalBranch(ConditionalBranchInstruction instruction) {
         workingState.pop();
         workingState.pop();
@@ -1027,6 +1052,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConstant(ConstantInstruction)
        */
+      @Override
       public void visitConstant(ConstantInstruction instruction) {
         workingState.push(UNANALYZED);
       }
@@ -1034,6 +1060,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConversion(ConversionInstruction)
        */
+      @Override
       public void visitConversion(ConversionInstruction instruction) {
         workingState.pop();
         workingState.push(UNANALYZED);
@@ -1042,6 +1069,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitDup(DupInstruction)
        */
+      @Override
       public void visitDup(DupInstruction instruction) {
 
         int size = instruction.getSize();
@@ -1076,6 +1104,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitGet(GetInstruction)
        */
+      @Override
       public void visitGet(GetInstruction instruction) {
         popN(instruction);
         workingState.push(UNANALYZED);
@@ -1090,6 +1119,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInstanceof(InstanceofInstruction)
        */
+      @Override
       public void visitInstanceof(InstanceofInstruction instruction) {
         workingState.pop();
         workingState.push(UNANALYZED);
@@ -1098,6 +1128,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInvoke(InvokeInstruction)
        */
+      @Override
       public void visitInvoke(com.ibm.wala.shrikeBT.InvokeInstruction instruction) {
         popN(instruction);
         ClassLoaderReference loader = cfg.getMethod().getDeclaringClass().getClassLoader().getReference();
@@ -1110,6 +1141,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitMonitor(MonitorInstruction)
        */
+      @Override
       public void visitMonitor(MonitorInstruction instruction) {
         workingState.pop();
       }
@@ -1117,6 +1149,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitLocalLoad(LoadInstruction)
        */
+      @Override
       public void visitLocalLoad(LoadInstruction instruction) {
         int t = workingState.getLocal(instruction.getVarIndex());
         workingState.push(t);
@@ -1125,6 +1158,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitLocalStore(StoreInstruction)
        */
+      @Override
       public void visitLocalStore(StoreInstruction instruction) {
         int index = instruction.getVarIndex();
         workingState.setLocal(index, workingState.pop());
@@ -1133,6 +1167,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitNew(NewInstruction)
        */
+      @Override
       public void visitNew(NewInstruction instruction) {
         popN(instruction);
         workingState.push(UNANALYZED);
@@ -1141,6 +1176,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitPop(PopInstruction)
        */
+      @Override
       public void visitPop(PopInstruction instruction) {
         workingState.pop();
       }
@@ -1148,6 +1184,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitPut(PutInstruction)
        */
+      @Override
       public void visitPut(PutInstruction instruction) {
         popN(instruction);
       }
@@ -1155,6 +1192,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitShift(ShiftInstruction)
        */
+      @Override
       public void visitShift(ShiftInstruction instruction) {
         workingState.pop();
       }
@@ -1162,6 +1200,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitSwap(SwapInstruction)
        */
+      @Override
       public void visitSwap(SwapInstruction instruction) {
         workingState.swap();
       }
@@ -1169,6 +1208,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitSwitch(SwitchInstruction)
        */
+      @Override
       public void visitSwitch(SwitchInstruction instruction) {
         workingState.pop();
       }
@@ -1176,6 +1216,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitThrow(ThrowInstruction)
        */
+      @Override
       public void visitThrow(ThrowInstruction instruction) {
         int exceptionType = workingState.pop();
         workingState.clearStack();
@@ -1185,6 +1226,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitUnaryOp(UnaryOpInstruction)
        */
+      @Override
       public void visitUnaryOp(UnaryOpInstruction instruction) {
         // treated as a no-op in basic scheme
       }

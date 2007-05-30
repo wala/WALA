@@ -573,6 +573,7 @@ public class ClassHierarchy implements Iterable<IClass> {
     return result;
   }
 
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer(100);
     recursiveStringify(root, result);
@@ -654,6 +655,7 @@ public class ClassHierarchy implements Iterable<IClass> {
       return children.iterator();
     }
 
+    @Override
     public String toString() {
       StringBuffer result = new StringBuffer(100);
       result.append(klass.toString()).append(":");
@@ -671,6 +673,7 @@ public class ClassHierarchy implements Iterable<IClass> {
      * 
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public int hashCode() {
       return klass.hashCode() * 929;
     }
@@ -680,6 +683,7 @@ public class ClassHierarchy implements Iterable<IClass> {
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object obj) {
       return this == obj;
     }
@@ -1169,6 +1173,7 @@ public class ClassHierarchy implements Iterable<IClass> {
       this.message = message;
     }
 
+    @Override
     public String getMsg() {
       return getClass().toString() + " : " + klass + " " + message;
     }

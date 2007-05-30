@@ -16,7 +16,7 @@ import java.io.File;
  * Module representing a directory of .class files
  * 
  * @author julian (?)
- *
+ * 
  */
 public class BinaryDirectoryTreeModule extends DirectoryTreeModule {
 
@@ -24,10 +24,12 @@ public class BinaryDirectoryTreeModule extends DirectoryTreeModule {
     super(root);
   }
 
+  @Override
   protected boolean includeFile(File file) {
-	  return file.getName().endsWith("class");
+    return file.getName().endsWith("class");
   }
-  
+
+  @Override
   protected FileModule makeFile(File file) {
     return new ClassFileModule(file);
   }

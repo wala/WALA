@@ -218,7 +218,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
           nextX = i;
           nextIndex = getFirstIndex(i);
           if (nextIndex == smallStore.length) {
-            IntSet s = (IntSet) delegateStore.get(i);
+            IntSet s = delegateStore.get(i);
             if (Assertions.verifyAssertions) {
               Assertions._assert(s.size() > 0);
             }
@@ -285,7 +285,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   }
 
   private IntSet getDelegate(int x) {
-    return (IntSet) delegateStore.get(x);
+    return delegateStore.get(x);
   }
 
   /**
@@ -480,6 +480,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
     for (int i = 0; i <= maxX; i++) {

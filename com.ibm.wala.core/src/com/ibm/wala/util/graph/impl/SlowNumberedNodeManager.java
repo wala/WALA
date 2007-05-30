@@ -37,7 +37,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
 
 
   public T getNode(int number)  {
-    T result = (T) map.getMappedObject(number);
+    T result = map.getMappedObject(number);
     return result;
   }
 
@@ -86,6 +86,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer("Nodes:\n");
     for (int i = 0; i <= getMaxNumber(); i++) {

@@ -116,10 +116,12 @@ public class Dominators<T> {
 
   public Graph<T> dominatorTree() {
     return new AbstractGraph<T>() {
+      @Override
       protected NodeManager<T> getNodeManager() {
         return G;
       }
 
+      @Override
       protected EdgeManager<T> getEdgeManager() {
         return edges;
       }
@@ -234,6 +236,7 @@ public class Dominators<T> {
     DFSDiscoverTimeIterator<T> dfs = new SlowDFSDiscoverTimeIterator<T>(G, root) {
       public static final long serialVersionUID = 88831771771711L;
 
+      @Override
       protected void visitEdge(T from, T to) {
         if (DEBUG)
           System.out.println("visiting edge " + from + " --> " + to);
@@ -264,7 +267,7 @@ public class Dominators<T> {
     // for i=n downto 2
     for (int i = reachableNodeCount; i > 1; i--) {
       // node = vertex[i]
-      T node = (T) vertex[i];
+      T node = vertex[i];
 
       if (DEBUG) {
         System.out.println(" Processing: " + node + "\n");

@@ -32,10 +32,12 @@ class AssignOperator extends UnaryOperator implements IPointerOperator {
    * @see com.ibm.wala.dataflow.fixpoint.UnaryOperator#makeEquation(com.ibm.wala.dataflow.fixpoint.IVariable,
    *      com.ibm.wala.dataflow.fixpoint.IVariable, int)
    */
+  @Override
   public UnaryStatement makeEquation(IVariable lhs, IVariable rhs) {
     return new AssignEquation(lhs, rhs);
   }
 
+  @Override
   public byte evaluate(IVariable lhs, IVariable rhs) {
 
     PointsToSetVariable L = (PointsToSetVariable) lhs;
@@ -66,6 +68,7 @@ class AssignOperator extends UnaryOperator implements IPointerOperator {
     return changed ? CHANGED : NOT_CHANGED;
   }
 
+  @Override
   public String toString() {
     return "Assign";
   }
@@ -75,6 +78,7 @@ class AssignOperator extends UnaryOperator implements IPointerOperator {
    * 
    * @see com.ibm.wala.dataflow.Operator#hashCode()
    */
+  @Override
   public int hashCode() {
     return 9883;
   }
@@ -84,6 +88,7 @@ class AssignOperator extends UnaryOperator implements IPointerOperator {
    * 
    * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
    */
+  @Override
   public final boolean equals(Object o) {
     // this is a singleton
     return (this == o);

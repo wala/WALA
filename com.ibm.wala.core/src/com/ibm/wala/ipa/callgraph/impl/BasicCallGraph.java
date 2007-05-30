@@ -204,16 +204,19 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     /**
      * @see java.lang.Object#equals(Object)
      */
+    @Override
     public abstract boolean equals(Object obj);
 
     /**
      * @see java.lang.Object#hashCode()
      */
+    @Override
     public abstract int hashCode();
 
     /**
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "Node: " + method.toString() + " Context: " + context.toString();
     }
@@ -235,6 +238,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer("");
     for (Iterator i = DFS.iterateDiscoverTime(this, new NonNullSingletonIterator<CGNode>(getFakeRootNode())); i.hasNext();) {
@@ -293,6 +297,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * (non-Javadoc)
    * 
    */
+  @Override
   public void removeNodeAndEdges(CGNode N) {
     Assertions.UNREACHABLE();
   }
@@ -328,10 +333,12 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
       this.C = C;
     }
 
+    @Override
     public int hashCode() {
       return 17 * m.hashCode() + C.hashCode();
     }
 
+    @Override
     public boolean equals(Object o) {
       if (Assertions.verifyAssertions) {
         Assertions._assert(o instanceof Key);
@@ -345,6 +352,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
       return "{" + m + "," + C + "}";
     }
@@ -381,6 +389,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * 
    * @see com.ibm.wala.util.graph.Graph#getNumberOfNodes()
    */
+  @Override
   public int getNumberOfNodes() {
     return nodes.size();
   }
@@ -391,6 +400,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * 
    * @see com.ibm.wala.util.graph.Graph#iterator()
    */
+  @Override
   public Iterator<CGNode> iterator() {
     return nodes.values().iterator();
   }
@@ -401,6 +411,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * @throws IllegalArgumentException  if N is null
    * 
    */
+  @Override
   public boolean containsNode(CGNode N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
@@ -419,6 +430,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * (non-Javadoc)
    * 
    */
+  @Override
   protected NodeManager<CGNode> getNodeManager() {
     return nodeManager;
   }

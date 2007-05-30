@@ -56,14 +56,17 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
     this.successorBlock = s;
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     return new SSAPiInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], successorBlock, cause);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return getValueString(symbolTable, d, result) + " = pi " + getValueString(symbolTable, d, val) + " for BB" + successorBlock;
   }
 
+  @Override
   public void visit(IVisitor v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");

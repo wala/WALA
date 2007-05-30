@@ -213,6 +213,7 @@ public class GSViewLauncherImpl  {
    * <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (description: ");

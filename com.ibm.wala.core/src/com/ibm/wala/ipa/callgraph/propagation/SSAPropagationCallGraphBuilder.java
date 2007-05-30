@@ -205,6 +205,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#addConstraintsFromNode(com.ibm.wala.ipa.callgraph.CGNode)
    */
+  @Override
   protected boolean addConstraintsFromNode(CGNode node) {
     if (haveAlreadyVisited(node)) {
       return false;
@@ -217,6 +218,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /**
    * @param node
    */
+  @Override
   protected boolean unconditionallyAddConstraintsFromNode(CGNode node) {
 
     boolean debug;
@@ -600,6 +602,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitArrayLoad(com.ibm.wala.ssa.SSAArrayLoadInstruction)
      */
+    @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
       // skip arrays of primitive type
       if (instruction.typeIsPrimitive()) {
@@ -638,6 +641,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitArrayStore(com.ibm.wala.ssa.SSAArrayStoreInstruction)
      */
+    @Override
     public void visitArrayStore(SSAArrayStoreInstruction instruction) {
       // skip arrays of primitive type
       if (instruction.typeIsPrimitive()) {
@@ -711,6 +715,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitCheckCast(com.ibm.wala.ssa.SSACheckCastInstruction)
      */
+    @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
 
       IClass cls = getClassHierarchy().lookupClass(instruction.getDeclaredResultType());
@@ -772,6 +777,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitReturn(com.ibm.wala.ssa.SSAReturnInstruction)
      */
+    @Override
     public void visitReturn(SSAReturnInstruction instruction) {
       // skip returns of primitive type
       if (instruction.returnsPrimitiveType() || instruction.returnsVoid()) {
@@ -797,6 +803,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitGet(com.ibm.wala.ssa.SSAGetInstruction)
      */
+    @Override
     public void visitGet(SSAGetInstruction instruction) {
       visitGetInternal(instruction.getDef(), instruction.getRef(), instruction.isStatic(), instruction.getDeclaredField());
     }
@@ -914,6 +921,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitPut(com.ibm.wala.ssa.PutInstruction)
      */
+    @Override
     public void visitPut(SSAPutInstruction instruction) {
       visitPutInternal(instruction.getVal(), instruction.getRef(), instruction.isStatic(), instruction.getDeclaredField());
     }
@@ -1023,6 +1031,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitInvoke(com.ibm.wala.ssa.InvokeInstruction)
      */
+    @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
       visitInvokeInternal(instruction);
     }
@@ -1091,6 +1100,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitNew(com.ibm.wala.ssa.NewInstruction)
      */
+    @Override
     public void visitNew(SSANewInstruction instruction) {
       InstanceKey iKey = getInstanceKeyForAllocation(node, instruction.getNewSite());
       if (iKey == null) {
@@ -1161,6 +1171,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitThrow(com.ibm.wala.ssa.ThrowInstruction)
      */
+    @Override
     public void visitThrow(SSAThrowInstruction instruction) {
       // don't do anything: we handle exceptional edges
       // in a separate pass
@@ -1171,6 +1182,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.ssa.Instruction.Visitor#visitGetCaughtException(com.ibm.wala.ssa.GetCaughtExceptionInstruction)
      */
+    @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
       List<ProgramCounter> peis = getIncomingPEIs(ir, getBasicBlock());
       PointerKey def = getPointerKeyForLocal(node, instruction.getDef());
@@ -1223,6 +1235,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitPi(com.ibm.wala.ssa.SSAPiInstruction)
      */
+    @Override
     public void visitPi(SSAPiInstruction instruction) {
       int dir;
       ControlFlowGraph CFG = ir.getControlFlowGraph();
@@ -1308,6 +1321,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return constParams;
     }
 
+    @Override
     public void visitLoadClass(SSALoadClassInstruction instruction) {
       PointerKey def = getPointerKeyForLocal(node, instruction.getDef());
       InstanceKey iKey = getInstanceKeyForClassObject(instruction.getLoadedClass());
@@ -1368,6 +1382,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * @see com.ibm.wala.dataflow.fixpoint.UnaryOperator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable,
      *      com.ibm.wala.dataflow.fixpoint.IVariable)
      */
+    @Override
     public byte evaluate(IVariable lhs, IVariable rhs) {
       final IntSetVariable receivers = (IntSetVariable) rhs;
       final MutableBoolean sideEffect = new MutableBoolean();
@@ -1496,6 +1511,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return false;
     }
 
+    @Override
     public String toString() {
       return "Dispatch to " + call + " in node " + node;
     }
@@ -1505,6 +1521,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return node.hashCode() + 90289 * call.hashCode();
     }
@@ -1514,6 +1531,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       // note that these are not necessarily canonical, since
       // with synthetic factories we may regenerate constraints
@@ -1725,22 +1743,26 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     protected boolean bingo = false;
 
+    @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
       if (!instruction.typeIsPrimitive() && instruction.getArrayRef() == vn) {
         bingo = true;
       }
     }
 
+    @Override
     public void visitArrayStore(SSAArrayStoreInstruction instruction) {
       if (!instruction.typeIsPrimitive() && (instruction.getArrayRef() == vn || instruction.getValue() == vn)) {
         bingo = true;
       }
     }
 
+    @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
       bingo = true;
     }
 
+    @Override
     public void visitGet(SSAGetInstruction instruction) {
       FieldReference field = instruction.getDeclaredField();
       if (!field.getFieldType().isPrimitiveType()) {
@@ -1748,22 +1770,27 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
 
+    @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
       bingo = true;
     }
 
+    @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
       bingo = true;
     }
 
+    @Override
     public void visitPhi(SSAPhiInstruction instruction) {
       bingo = true;
     }
 
+    @Override
     public void visitPi(SSAPiInstruction instruction) {
       bingo = true;
     }
 
+    @Override
     public void visitPut(SSAPutInstruction instruction) {
       FieldReference field = instruction.getDeclaredField();
       if (!field.getFieldType().isPrimitiveType()) {
@@ -1771,10 +1798,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
 
+    @Override
     public void visitReturn(SSAReturnInstruction instruction) {
       bingo = true;
     }
 
+    @Override
     public void visitThrow(SSAThrowInstruction instruction) {
       bingo = true;
     }
@@ -1977,6 +2006,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       this.type = type;
     }
 
+    @Override
     public String getMsg() {
       return getClass().toString() + " : " + type;
     }
@@ -2000,6 +2030,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       this.field = field;
     }
 
+    @Override
     public String getMsg() {
       return getClass().toString() + " : " + field;
     }
@@ -2050,6 +2081,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#makeSolver()
    */
+  @Override
   protected IPointsToSolver makeSolver() {
     return usePreTransitiveSolver ? (IPointsToSolver) new PreTransitiveSolver(system, this) : new StandardSolver(system, this);
     // return true ? (IPointsToSolver)new PreTransitiveSolver(system,this) : new

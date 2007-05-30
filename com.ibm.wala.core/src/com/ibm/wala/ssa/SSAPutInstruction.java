@@ -35,6 +35,7 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
     this.val = val;
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     if (isStatic())
       return new SSAPutInstruction(uses == null ? val : uses[0], getDeclaredField());
@@ -42,6 +43,7 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
       return new SSAPutInstruction(uses == null ? getRef() : uses[0], uses == null ? val : uses[1], getDeclaredField());
   }
 
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     if (isStatic()) {
       return "putstatic " + getValueString(symbolTable, d, val) + " " + getDeclaredField();
@@ -55,6 +57,7 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException  if v is null
    */
+  @Override
   public void visit(IVisitor v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -65,6 +68,7 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
+  @Override
   public int getNumberOfUses() {
     return isStatic()? 1 : 2;
   }
@@ -72,6 +76,7 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions)
       Assertions._assert(j == 0 || (!isStatic() && j == 1));
@@ -82,6 +87,7 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
     return val;
   }
 
+  @Override
   public int hashCode() {
     return val * 9929 ^ 2063;
   }
@@ -91,6 +97,7 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
+  @Override
   public boolean isFallThrough() {
     return true;
   }
@@ -100,6 +107,7 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Exceptions.getNullPointerException();
   }

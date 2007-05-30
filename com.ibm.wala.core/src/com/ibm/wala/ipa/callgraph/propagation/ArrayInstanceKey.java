@@ -20,6 +20,7 @@ public final class ArrayInstanceKey extends AbstractFieldPointerKey implements F
     super(instance);
   }
 
+  @Override
   public boolean equals(Object obj) {
     if (obj instanceof ArrayInstanceKey) {
       ArrayInstanceKey other = (ArrayInstanceKey) obj;
@@ -29,10 +30,12 @@ public final class ArrayInstanceKey extends AbstractFieldPointerKey implements F
     }
   }
 
+  @Override
   public int hashCode() {
     return 1061 * instance.hashCode();
   }
 
+  @Override
   public String toString() {
     return "[" + instance + "[]]";
   }

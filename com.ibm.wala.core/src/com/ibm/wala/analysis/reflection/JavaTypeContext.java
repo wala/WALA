@@ -57,10 +57,12 @@ public class JavaTypeContext implements Context {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "JavaTypeContext<" + type + ">";
   }
 
+  @Override
   public int hashCode() {
     return 6367 * type.hashCode();
   }
@@ -70,6 +72,7 @@ public class JavaTypeContext implements Context {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (obj == null) {
       return false;

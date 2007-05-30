@@ -28,6 +28,7 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
     this.value = value;
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     return new SSAArrayStoreInstruction(
       uses == null ? getArrayRef() : uses[0],
@@ -36,6 +37,7 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
       getDeclaredType());
   }
 
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return "arraystore " + getValueString(symbolTable, d, getArrayRef()) + "[" + getValueString(symbolTable, d, getIndex()) + "] = " + getValueString(symbolTable, d, value);
   }
@@ -44,6 +46,7 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException  if v is null
    */
+  @Override
   public void visit(IVisitor v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -54,10 +57,12 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
+  @Override
   public int getNumberOfUses() {
     return 3;
   }
 
+  @Override
   public int getNumberOfDefs() {
     return 0;
   }
@@ -69,6 +74,7 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (j == 2)
       return value;
@@ -76,6 +82,7 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
       return super.getUse(j);
   }
 
+  @Override
   public int hashCode() {
     return 6311 * value ^ 2371 * getArrayRef() + getIndex();
   }
@@ -85,6 +92,7 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     if (typeIsPrimitive()) {
       return Exceptions.getArrayAccessExceptions();

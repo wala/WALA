@@ -129,6 +129,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * Visit all instructions in a node, and add dataflow constraints induced by
    * each statement relevat to RTA
    */
+  @Override
   protected boolean addConstraintsFromNode(CGNode node) {
     if (haveAlreadyVisited(node)) {
       return false;
@@ -392,6 +393,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#customInit()
    */
+  @Override
   protected void customInit() {
     super.customInit();
 
@@ -417,6 +419,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#makeSolver()
    */
+  @Override
   protected IPointsToSolver makeSolver() {
     return new StandardSolver(system, this);
   }
@@ -447,6 +450,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     return contextInterpreter;
   }
 
+  @Override
   protected boolean unconditionallyAddConstraintsFromNode(CGNode node) {
     // add all relevant constraints
     addNewConstraints(node);
@@ -462,6 +466,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#createEmptyCallGraph(com.ibm.wala.ipa.cha.ClassHierarchy,
    *      com.ibm.wala.ipa.callgraph.AnalysisOptions)
    */
+  @Override
   protected ExplicitCallGraph createEmptyCallGraph(ClassHierarchy cha, AnalysisOptions options) {
     return new DelegatingExplicitCallGraph(cha, options);
   }
@@ -471,6 +476,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#makeSystem(com.ibm.wala.ipa.callgraph.AnalysisOptions)
    */
+  @Override
   protected PropagationSystem makeSystem(AnalysisOptions options) {
     PropagationSystem result = super.makeSystem(options);
     result.setVerboseInterval(VERBOSE_INTERVAL);
@@ -482,6 +488,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   /* (non-Javadoc)
    * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#getPointerAnalysis()
    */
+  @Override
   public PointerAnalysis getPointerAnalysis() {
     return new TypeBasedPointerAnalysis(getOptions(), allocatedClasses, getCallGraph());
   }

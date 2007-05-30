@@ -27,10 +27,12 @@ public class InvertedNumberedGraph<T> extends AbstractNumberedGraph<T> {
   final private NumberedNodeManager<T> nodes;
   final private NumberedEdgeManager<T> edges;
 
+  @Override
   protected NodeManager<T> getNodeManager() {
     return nodes;
   }
 
+  @Override
   protected EdgeManager<T> getEdgeManager() {
     return edges;
   }

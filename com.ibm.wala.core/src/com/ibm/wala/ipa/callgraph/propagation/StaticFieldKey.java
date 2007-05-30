@@ -26,6 +26,7 @@ public final class StaticFieldKey extends AbstractPointerKey {
     this.field = field;
   }
 
+  @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
     if (obj instanceof StaticFieldKey) {
@@ -35,9 +36,11 @@ public final class StaticFieldKey extends AbstractPointerKey {
       return false;
     }
   }
+  @Override
   public int hashCode() {
     return 1889 * field.hashCode();
   }
+  @Override
   public String toString() {
     return "[" + field + "]";
   }

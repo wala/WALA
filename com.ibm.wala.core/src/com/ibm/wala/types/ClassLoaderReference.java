@@ -87,6 +87,7 @@ public class ClassLoaderReference {
    * 
    * @see java.lang.Object#equals(Object)
    */
+  @Override
   public boolean equals(Object obj) {
 
     if (obj == null) {
@@ -106,6 +107,7 @@ public class ClassLoaderReference {
    * 
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return name.hashCode();
   }
@@ -115,6 +117,7 @@ public class ClassLoaderReference {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
     result.append(name.toString());

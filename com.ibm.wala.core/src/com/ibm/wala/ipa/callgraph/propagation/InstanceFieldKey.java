@@ -32,6 +32,7 @@ public class InstanceFieldKey extends AbstractFieldPointerKey {
     this.field = field;
   }
 
+  @Override
   public boolean equals(Object obj) {
     if (obj instanceof InstanceFieldKey) {
       if (obj.getClass().equals(getClass())) {
@@ -46,10 +47,12 @@ public class InstanceFieldKey extends AbstractFieldPointerKey {
     }
   }
 
+  @Override
   public int hashCode() {
     return 6229 * field.hashCode() + instance.hashCode();
   }
 
+  @Override
   public String toString() {
     return "[" + instance + "," + field + "]";
   }

@@ -33,6 +33,7 @@ public class BasicNullaryStatement extends NullaryStatement {
   /**
    * @return Returns the operator.
    */
+  @Override
   public AbstractOperator getOperator() {
     return operator;
   }

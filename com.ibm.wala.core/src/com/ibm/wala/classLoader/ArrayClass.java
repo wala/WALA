@@ -209,6 +209,7 @@ public class ArrayClass implements IClass, Constants {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return getReference().toString();
   }
@@ -225,6 +226,7 @@ public class ArrayClass implements IClass, Constants {
     return loader.lookupClass(elementType.getName(), getClassHierarchy());
   }
 
+  @Override
   public int hashCode() {
     return type.hashCode();
   }
@@ -312,6 +314,7 @@ public class ArrayClass implements IClass, Constants {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (obj instanceof ArrayClass) {
       ArrayClass other = (ArrayClass) obj;

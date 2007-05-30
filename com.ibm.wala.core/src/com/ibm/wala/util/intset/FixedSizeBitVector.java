@@ -208,6 +208,7 @@ public final class FixedSizeBitVector
   /**
    * Gets the hashcode.
    */
+  @Override
   public int hashCode() {
     int h = 1234;
     for (int i = bits.length; --i >= 0;) {
@@ -240,6 +241,7 @@ public final class FixedSizeBitVector
    * @param obj the object to compare with
    * @return true if the objects are the same; false otherwise.
    */
+  @Override
   public boolean equals(Object obj) {
     if ((obj != null) && (obj instanceof FixedSizeBitVector)) {
       if (this == obj) { // should help alias analysis
@@ -271,6 +273,7 @@ public final class FixedSizeBitVector
   /**
    * Clones the FixedSizeBitVector.
    */
+  @Override
   public Object clone() {
     FixedSizeBitVector result = null;
     try {
@@ -287,6 +290,7 @@ public final class FixedSizeBitVector
   /**
    * Converts the FixedSizeBitVector to a String.
    */
+  @Override
   public String toString() {
     StringBuffer buffer = new StringBuffer();
     boolean needSeparator = false;

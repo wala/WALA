@@ -85,7 +85,7 @@ public class LocalSummaryEdges {
    */
   public void insertSummaryEdge(int s_p, int x, int d1, int d2) {
     int n = getIndexForEntryExitPair(s_p, x);
-    IBinaryNaturalRelation R = (IBinaryNaturalRelation) summaries.get(n);
+    IBinaryNaturalRelation R = summaries.get(n);
     if (R == null) {
       // we expect R to usually be sparse
       R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
@@ -112,7 +112,7 @@ public class LocalSummaryEdges {
    */
   public boolean contains(int s_p, int x, int d1, int d2) {
     int n = getIndexForEntryExitPair(s_p, x);
-    IBinaryNaturalRelation R = (IBinaryNaturalRelation) summaries.get(n);
+    IBinaryNaturalRelation R = summaries.get(n);
     if (R == null) {
       return false;
     } else {
@@ -132,7 +132,7 @@ public class LocalSummaryEdges {
    */
   public IntSet getSummaryEdges(int s_p, int x, int d1) {
     int n = getIndexForEntryExitPair(s_p, x);
-    IBinaryNaturalRelation R = (IBinaryNaturalRelation) summaries.get(n);
+    IBinaryNaturalRelation R = summaries.get(n);
     if (R == null) {
       return null;
     } else {
@@ -154,7 +154,7 @@ public class LocalSummaryEdges {
    */
   public IntSet getInvertedSummaryEdgesForTarget(int s_p, int x, int d2) {
     int n = getIndexForEntryExitPair(s_p, x);
-    IBinaryNaturalRelation R = (IBinaryNaturalRelation) summaries.get(n);
+    IBinaryNaturalRelation R = summaries.get(n);
     if (R == null) {
       return null;
     } else {

@@ -374,6 +374,7 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "Backwards of delegate\n" + delegate;
   }

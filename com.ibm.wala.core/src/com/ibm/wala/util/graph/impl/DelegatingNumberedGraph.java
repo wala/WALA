@@ -27,6 +27,7 @@ public class DelegatingNumberedGraph<T extends INodeWithNumberedEdges> extends A
   /* (non-Javadoc)
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
    */
+  @Override
   protected NodeManager<T> getNodeManager() {
     return nodeManager;
   }
@@ -34,6 +35,7 @@ public class DelegatingNumberedGraph<T extends INodeWithNumberedEdges> extends A
   /* (non-Javadoc)
    * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
    */
+  @Override
   protected EdgeManager<T> getEdgeManager() {
     return edgeManager;
   }

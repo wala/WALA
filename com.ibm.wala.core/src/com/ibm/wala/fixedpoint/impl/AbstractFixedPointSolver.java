@@ -222,6 +222,7 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer("Fixed Point Sytem:\n");
     for (Iterator it = getStatements(); it.hasNext();) {

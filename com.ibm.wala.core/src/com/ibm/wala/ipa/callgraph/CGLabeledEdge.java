@@ -21,10 +21,12 @@ public class CGLabeledEdge extends CGEdge {
     this.label = label;
   }
 
+  @Override
   public int hashCode() {
     return super.hashCode() ^ label.hashCode();
   }
 
+  @Override
   public boolean equals(Object t) {
     return super.equals(t) && label.equals(((CGLabeledEdge)t).label);
   }

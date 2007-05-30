@@ -26,6 +26,7 @@ abstract class GraphDFSDiscoverTimeIterator<T> extends DFSDiscoverTimeIterator<T
     super.init(nodes);
   }
 
+  @Override
   protected Iterator<? extends T> getConnected(T n) {
     return G.getSuccNodes(n);
   }

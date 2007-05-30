@@ -105,7 +105,7 @@ public class PropagationGraph implements IFixedPointSystem {
   private IBinaryNaturalRelation findOrCreateRelation(Map<UnaryOperator, IBinaryNaturalRelation> m, UnaryOperator key) {
     IBinaryNaturalRelation result = m.get(key);
     if (result == null) {
-      result = makeRelation((AbstractOperator) key);
+      result = makeRelation(key);
       m.put(key, result);
     }
     return result;
@@ -140,6 +140,7 @@ public class PropagationGraph implements IFixedPointSystem {
 
     private int varCount = 0;
 
+    @Override
     public void addNode(INodeWithNumber o) {
       Assertions.UNREACHABLE("Don't call me");
     }
@@ -171,6 +172,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
      */
+    @Override
     protected NodeManager<INodeWithNumber> getNodeManager() {
       return nodeManager;
     }
@@ -180,6 +182,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
      */
+    @Override
     protected EdgeManager<INodeWithNumber> getEdgeManager() {
       return edgeManager;
     }
@@ -533,6 +536,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
      */
+    @Override
     public void removeNodeAndEdges(IVariable N) {
       Assertions.UNREACHABLE();
     }
@@ -542,6 +546,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
      */
+    @Override
     public Iterator<IVariable> iterator() {
       return getVariables();
     }
@@ -551,6 +556,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
      */
+    @Override
     public int getNumberOfNodes() {
       return delegateGraph.getVarCount();
     }
@@ -560,6 +566,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
      */
+    @Override
     public void addNode(IVariable n) {
       Assertions.UNREACHABLE();
 
@@ -570,6 +577,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
      */
+    @Override
     public void removeNode(IVariable n) {
       Assertions.UNREACHABLE();
 
@@ -580,6 +588,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
      */
+    @Override
     public boolean containsNode(IVariable N) {
       Assertions.UNREACHABLE();
       return false;
@@ -590,8 +599,9 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
      */
+    @Override
     public Iterator<IVariable> getPredNodes(IVariable N) {
-      IVariable v = (IVariable) N;
+      IVariable v = N;
       final Iterator eqs = getStatementsThatDef(v);
       return new Iterator<IVariable>() {
         Iterator<IVariable> inner;
@@ -650,8 +660,9 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
      */
+    @Override
     public Iterator<IVariable> getSuccNodes(IVariable N) {
-      IVariable v = (IVariable) N;
+      IVariable v = N;
       final Iterator eqs = getStatementsThatUse(v);
       return new Iterator<IVariable>() {
         IVariable nextResult;
@@ -689,6 +700,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
      */
+    @Override
     public int getSuccNodeCount(IVariable v) {
       int result = 0;
       for (Iterator eqs = getStatementsThatUse(v); eqs.hasNext();) {
@@ -707,6 +719,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
      *      java.lang.Object)
      */
+    @Override
     public void addEdge(IVariable src, IVariable dst) {
       Assertions.UNREACHABLE();
     }
@@ -716,6 +729,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(java.lang.Object)
      */
+    @Override
     public void removeAllIncidentEdges(IVariable node) {
       Assertions.UNREACHABLE();
     }
@@ -725,6 +739,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
      */
+    @Override
     @SuppressWarnings("unchecked")
     protected NodeManager getNodeManager() {
       return nodeManager;
@@ -735,6 +750,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
      */
+    @Override
     @SuppressWarnings("unchecked")
     protected EdgeManager getEdgeManager() {
       // TODO Auto-generated method stub
@@ -957,6 +973,7 @@ public class PropagationGraph implements IFixedPointSystem {
   public NumberedGraph<IVariable> getAssignmentGraph() {
     return new FilteredConstraintGraphView() {
 
+      @Override
       boolean isInteresting(AbstractStatement eq) {
         return eq instanceof AssignEquation;
       }
@@ -971,6 +988,7 @@ public class PropagationGraph implements IFixedPointSystem {
   public Graph<IVariable> getFilterAssignmentGraph() {
     return new FilteredConstraintGraphView() {
 
+      @Override
       boolean isInteresting(AbstractStatement eq) {
         return eq instanceof AssignEquation || eq.getOperator() instanceof PropagationCallGraphBuilder.FilterOperator;
       }
@@ -991,6 +1009,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
      */
+    @Override
     public void removeNodeAndEdges(IVariable N) {
       Assertions.UNREACHABLE();
     }
@@ -1000,6 +1019,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
      */
+    @Override
     public Iterator<IVariable> iterator() {
       return getVariables();
     }
@@ -1009,6 +1029,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
      */
+    @Override
     public int getNumberOfNodes() {
       return delegateGraph.getVarCount();
     }
@@ -1018,6 +1039,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
      */
+    @Override
     public void addNode(IVariable n) {
       Assertions.UNREACHABLE();
 
@@ -1028,6 +1050,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
      */
+    @Override
     public void removeNode(IVariable n) {
       Assertions.UNREACHABLE();
 
@@ -1038,6 +1061,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
      */
+    @Override
     public boolean containsNode(IVariable N) {
       Assertions.UNREACHABLE();
       return false;
@@ -1048,8 +1072,9 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(java.lang.Object)
      */
+    @Override
     public Iterator<? extends IVariable> getPredNodes(IVariable N) {
-      IVariable v = (IVariable) N;
+      IVariable v = N;
       final Iterator eqs = getStatementsThatDef(v);
       return new Iterator<IVariable>() {
         IVariable nextResult;
@@ -1089,8 +1114,9 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
      */
+    @Override
     public int getPredNodeCount(IVariable N) {
-      IVariable v = (IVariable) N;
+      IVariable v = N;
       int result = 0;
       for (Iterator eqs = getStatementsThatDef(v); eqs.hasNext();) {
         AbstractStatement eq = (AbstractStatement) eqs.next();
@@ -1106,8 +1132,9 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
      */
+    @Override
     public Iterator<IVariable> getSuccNodes(IVariable N) {
-      IVariable v = (IVariable) N;
+      IVariable v = N;
       final Iterator eqs = getStatementsThatUse(v);
       return new Iterator<IVariable>() {
         IVariable nextResult;
@@ -1147,8 +1174,13 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
      */
+    @Override
     public int getSuccNodeCount(IVariable N) {
-      IVariable v = (IVariable) N;
+      IVariable v = N;
+      
+      
+      
+      
       int result = 0;
       for (Iterator eqs = getStatementsThatUse(v); eqs.hasNext();) {
         AbstractStatement eq = (AbstractStatement) eqs.next();
@@ -1165,6 +1197,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
      *      java.lang.Object)
      */
+    @Override
     public void addEdge(IVariable src, IVariable dst) {
       Assertions.UNREACHABLE();
     }
@@ -1174,6 +1207,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.EdgeManager#removeAllIncidentEdges(java.lang.Object)
      */
+    @Override
     public void removeAllIncidentEdges(IVariable node) {
       Assertions.UNREACHABLE();
     }
@@ -1183,6 +1217,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()
      */
+    @Override
     @SuppressWarnings("unchecked")
     protected NodeManager getNodeManager() {
       return nodeManager;
@@ -1193,6 +1228,7 @@ public class PropagationGraph implements IFixedPointSystem {
      * 
      * @see com.ibm.wala.util.graph.AbstractGraph#getEdgeManager()
      */
+    @Override
     protected EdgeManager<IVariable> getEdgeManager() {
       Assertions.UNREACHABLE();
       return null;

@@ -138,6 +138,7 @@ public abstract class IR {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return toString(null);
   }
@@ -230,6 +231,7 @@ public abstract class IR {
    */
   public Iterator<? extends SSAInstruction> iteratePhis() {
     return new DerivedNodeIterator() {
+      @Override
       Iterator<? extends SSAInstruction> getBlockIterator(BasicBlock b) {
         return b.iteratePhis();
       }
@@ -241,6 +243,7 @@ public abstract class IR {
    */
   public Iterator<? extends SSAInstruction> iteratePis() {
     return new DerivedNodeIterator() {
+      @Override
       Iterator<? extends SSAInstruction> getBlockIterator(BasicBlock b) {
         return b.iteratePis();
       }
@@ -259,7 +262,7 @@ public abstract class IR {
     @SuppressWarnings("unchecked")
     DerivedNodeIterator() {
       currentBlockIndex = 0;
-      currentBlockIterator = (Iterator<SSAInstruction>) ((BasicBlock) cfg.getNode(0)).iteratePhis();
+      currentBlockIterator = ((BasicBlock) cfg.getNode(0)).iteratePhis();
       if (!currentBlockIterator.hasNext()) {
         advanceBlock();
       }
@@ -465,7 +468,7 @@ public abstract class IR {
    * @return the exit basic block
    */
   public BasicBlock getExitBlock() {
-    return (BasicBlock) cfg.exit();
+    return cfg.exit();
   }
 
   /**

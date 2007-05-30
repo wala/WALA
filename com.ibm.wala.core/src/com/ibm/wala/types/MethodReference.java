@@ -128,6 +128,7 @@ public final class MethodReference extends MemberReference {
     return selector.getDescriptor();
   }
 
+  @Override
   public final String toString() {
     return "< " + getDeclaringClass().getClassLoader().getName() + ", " + getDeclaringClass().getName() + ", " + selector + " >";
   }
@@ -180,6 +181,7 @@ public final class MethodReference extends MemberReference {
    *   com.foo.bar.createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
    * @return String
    */
+  @Override
   public String getSignature() {
     // TODO: check that we're not calling this often.
     String s = getDeclaringClass().getName().toString().substring(1).replace('/', '.') + "." + getName() + getDescriptor();
@@ -218,11 +220,13 @@ public final class MethodReference extends MemberReference {
       this.name = name;
       this.descriptor = descriptor;
     }
+    @Override
     public final int hashCode() {
  
       return 7001 * type.hashCode() + 7013 * name.hashCode() + descriptor.hashCode();
     }
 
+    @Override
     public final boolean equals(Object other) {
       if (Assertions.verifyAssertions) {
         Assertions._assert(this.getClass().equals(other.getClass()));

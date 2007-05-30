@@ -30,6 +30,7 @@ public class Stopwatch extends com.ibm.wala.util.perf.Stopwatch {
     this.name = name;
   }
 
+  @Override
   public final void start() {
     System.gc();
     Runtime r = Runtime.getRuntime();
@@ -37,6 +38,7 @@ public class Stopwatch extends com.ibm.wala.util.perf.Stopwatch {
     super.start();
   }
 
+  @Override
   public final void stop() {
     super.stop();
     System.gc();

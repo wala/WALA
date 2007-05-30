@@ -41,6 +41,7 @@ public class CallSiteMap {
       throw new IllegalArgumentException("ir is null");
     }
     Visitor v = new Visitor() {
+      @Override
       public void visitInvoke(SSAInvokeInstruction instruction) {
         CallSiteReference site = instruction.getCallSite();
         map.put(site, instruction);

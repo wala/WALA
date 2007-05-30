@@ -86,6 +86,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     System.arraycopy(s.bits, 0, bits, 0, s.bits.length);
   }
 
+  @Override
   public String toString() {
     return super.toString() + "(offset:" + offset + ")";
   }
@@ -108,6 +109,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param bit
    *          the bit to be set
    */
+  @Override
   public final void set(int bit) {
     int shiftBits;
     int subscript;
@@ -139,6 +141,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param bit
    *          the bit to be cleared
    */
+  @Override
   public final void clear(int bit) {
     if (bit < offset) {
       return;
@@ -159,6 +162,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param bit
    *          the bit to be gotten
    */
+  @Override
   public final boolean get(int bit) {
     if (DEBUG) {
       Assertions._assert(bit >= 0);
@@ -180,6 +184,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param start
    * @return min j >= start s.t get(j)
    */
+  @Override
   public int nextSetBit(int start) {
     int nb = super.nextSetBit(Math.max(0, start - offset));
     return nb == -1 ? -1 : offset + nb;
@@ -197,6 +202,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
     }
   }
 
+  @Override
   public int max() {
     return super.max() + offset;
   }
@@ -205,6 +211,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * Calculates and returns the set's size in bits. The maximum element in the
    * set is the size - 1st element.
    */
+  @Override
   public final int length() {
     return (bits.length << LOG_BITS_PER_UNIT) + offset;
   }
@@ -226,6 +233,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    *          the object to compare with
    * @return true if the objects are the same; false otherwise.
    */
+  @Override
   public boolean equals(Object obj) {
     if ((obj != null) && (obj instanceof OffsetBitVector)) {
       if (this == obj) { // should help alias analysis
@@ -243,6 +251,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param other
    *          the set to check intersection with
    */
+  @Override
   public final boolean intersectionEmpty(OffsetBitVector set) {
     if (this == set) {
       return isZero();
@@ -269,6 +278,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    *          the object to compare with
    * @return true if the objects are the same; false otherwise.
    */
+  @Override
   public final boolean sameBits(OffsetBitVector set) {
     if (this == set) { // should help alias analysis
       return true;
@@ -317,6 +327,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
   /*
    * @param other @return true iff this is a subset of other
    */
+  @Override
   public boolean isSubset(OffsetBitVector other) {
     if (this == other) { // should help alias analysis
       return true;
@@ -368,6 +379,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param set
    *          the bit set to be ANDed with
    */
+  @Override
   public final void and(OffsetBitVector set) {
     if (this == set) {
       return;
@@ -397,6 +409,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param set
    *          the bit set to be ORed with
    */
+  @Override
   public final void or(OffsetBitVector set) {
     if (this == set) { // should help alias analysis
       return;
@@ -419,6 +432,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param set
    *          the bit set to be XORed with
    */
+  @Override
   public final void xor(OffsetBitVector set) {
     if (this == set) {
       clearAll();
@@ -439,6 +453,7 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
   /**
    * @param vector
    */
+  @Override
   public void andNot(OffsetBitVector set) {
     if (this == set) {
       clearAll();

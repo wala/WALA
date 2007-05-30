@@ -73,6 +73,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
 
   /* (non-Javadoc)
    */
+  @Override
   protected void initializeVariables() {
     Graph<T> G = problem.getFlowGraph();
     ITransferFunctionProvider functions = problem.getTransferFunctionProvider();
@@ -102,6 +103,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
    * 
    * @see com.ibm.wala.dataflow.fixpoint.DataflowSystem#initializeWorkList()
    */
+  @Override
   protected void initializeWorkList() {
     buildEquations(true, false);
   }

@@ -498,6 +498,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return getReference().toString();
   }
@@ -505,6 +506,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /**
    * @see java.lang.Object#equals(Object)
    */
+  @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final.
     // if (this.getClass().equals(obj.getClass())) {
@@ -519,6 +521,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /**
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 9661 * getReference().hashCode();
   }
@@ -588,10 +591,12 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
      * 
      * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitMonitor(com.ibm.wala.shrikeBT.MonitorInstruction)
      */
+    @Override
     public void visitMonitor(MonitorInstruction instruction) {
       hasMonitorOp = true;
     }
 
+    @Override
     public void visitNew(NewInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
       TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
@@ -603,6 +608,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       }
     }
 
+    @Override
     public void visitGet(GetInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
       FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(), instruction
@@ -610,6 +616,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       fieldsRead.add(f);
     }
 
+    @Override
     public void visitPut(PutInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
       FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(), instruction
@@ -617,6 +624,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       fieldsWritten.add(f);
     }
 
+    @Override
     public void visitInvoke(InvokeInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
       MethodReference m = MethodReference.findOrCreate(loader, instruction.getClassType(), instruction.getMethodName(),
@@ -657,6 +665,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
      * 
      * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLoad(com.ibm.wala.shrikeBT.ArrayLoadInstruction)
      */
+    @Override
     public void visitArrayLoad(ArrayLoadInstruction instruction) {
       arraysRead.add(ShrikeUtil.makeTypeReference(getDeclaringClass().getClassLoader().getReference(), instruction.getType()));
     }
@@ -666,10 +675,12 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
      * 
      * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayStore(com.ibm.wala.shrikeBT.ArrayStoreInstruction)
      */
+    @Override
     public void visitArrayStore(ArrayStoreInstruction instruction) {
       arraysWritten.add(ShrikeUtil.makeTypeReference(getDeclaringClass().getClassLoader().getReference(), instruction.getType()));
     }
 
+    @Override
     public void visitCheckCast(CheckCastInstruction instruction) {
       castTypes.add(ShrikeUtil.makeTypeReference(getDeclaringClass().getClassLoader().getReference(), instruction.getType()));
     }

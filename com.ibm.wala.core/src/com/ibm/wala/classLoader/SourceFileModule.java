@@ -42,6 +42,7 @@ public class SourceFileModule extends FileModule implements Module, ModuleEntry 
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "SourceFileModule:" + getFile().toString();
   }

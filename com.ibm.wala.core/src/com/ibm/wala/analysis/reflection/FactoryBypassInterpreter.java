@@ -532,18 +532,22 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object obj) {
       return this == obj;
     }
 
+    @Override
     public int hashCode() { // TODO: change this to avoid non-determinism!
       return System.identityHashCode(this);
     }
 
+    @Override
     public String toString() {
       return super.toString();
     }
 
+    @Override
     public SSAInstruction[] getStatements(WarningSet warnings) {
       SSAInstruction[] result = new SSAInstruction[allInstructions.size()];
       int i = 0;
@@ -553,6 +557,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
       return result;
     }
 
+    @Override
     public IClass getDeclaringClass() {
       if (Assertions.verifyAssertions) {
         if (method.getDeclaringClass() == null) {
@@ -562,10 +567,12 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
       return method.getDeclaringClass();
     }
 
+    @Override
     public int getNumberOfParameters() {
       return method.getNumberOfParameters();
     }
 
+    @Override
     public TypeReference getParameterType(int i) {
       return method.getParameterType(i);
     }
@@ -575,6 +582,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
      * 
      * @see com.ibm.wala.classLoader.IMethod#getIR(com.ibm.wala.util.WarningSet)
      */
+    @Override
     public IR makeIR(SSAOptions options, WarningSet warnings) {
       SSAInstruction[] instrs = getStatements(warnings);
       Map<Integer, ConstantValue> constants = null;
@@ -785,6 +793,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
       this.nImplementors = nImplementors;
     }
 
+    @Override
     public String getMsg() {
       return getClass().toString() + " : " + T + " " + nImplementors;
     }
@@ -808,6 +817,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
       this.T = T;
     }
 
+    @Override
     public String getMsg() {
       return getClass().toString() + " : " + T;
     }
@@ -827,6 +837,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
 
     private static IgnoreSerializableWarning instance = new IgnoreSerializableWarning();
 
+    @Override
     public String getMsg() {
       return getClass().toString();
     }

@@ -38,6 +38,7 @@ public class ExplodedSupergraphNode<T> {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object arg0) {
     if (arg0 == null) {
       return false;
@@ -53,6 +54,7 @@ public class ExplodedSupergraphNode<T> {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 8353 * supergraphNode.hashCode() + fact;
   }
@@ -60,6 +62,7 @@ public class ExplodedSupergraphNode<T> {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return supergraphNode.toString() + "," + fact;
   }

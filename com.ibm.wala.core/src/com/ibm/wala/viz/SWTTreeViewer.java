@@ -140,6 +140,7 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
    * <!-- begin-user-doc --> <!-- end-user-doc -->
    * @generated
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer(super.toString());
     result.append(", graphInput: ");
@@ -227,6 +228,7 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
      * 
      * @see org.eclipse.jface.window.Window#createContents(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     protected Control createContents(Composite parent) {
       viewer = new TreeViewer(parent);
       viewer.setContentProvider(new GraphContentProvider());
@@ -331,6 +333,7 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
 
       final NodeDecorator d = getNodeDecoratorInput();
 
+      @Override
       public String getText(Object element) {
         try {
           return (d == null) ? super.getText(element) : d.getLabel(element);
@@ -343,4 +346,4 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
 
     }
   }
-} // SWTTreeViewer
+}

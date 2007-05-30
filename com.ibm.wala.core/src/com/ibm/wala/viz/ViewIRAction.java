@@ -79,6 +79,7 @@ public class ViewIRAction extends Action {
    * 
    * @see org.eclipse.jface.action.IAction#run()
    */
+  @Override
   public void run() {
 
     IR ir = getIRForSelection();

@@ -42,6 +42,7 @@ public class ResolutionFailure extends MethodWarning {
   /* (non-Javadoc)
    * @see com.ibm.wala.util.warnings.Warning#getMsg()
    */
+  @Override
   public String getMsg() {
     if (message == null) {
       return getClass() + " " + getMethod() + " " + ref;
@@ -74,6 +75,7 @@ public class ResolutionFailure extends MethodWarning {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (obj == null) {
       return false;
@@ -89,6 +91,7 @@ public class ResolutionFailure extends MethodWarning {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return getMethod().hashCode() * 8999 + ref.hashCode() * 8461 + getLevel();
   }

@@ -24,6 +24,7 @@ abstract class ReflectiveJavaMemberAccess extends ReflectiveMemberAccess {
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
+  @Override
   public boolean isPEI() {
     return true;
   }
@@ -31,6 +32,7 @@ abstract class ReflectiveJavaMemberAccess extends ReflectiveMemberAccess {
   /* (non-Javadoc)
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Exceptions.getNullPointerException();
   }

@@ -28,6 +28,7 @@ public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
     this.result = result;
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     return new SSAArrayLoadInstruction(
       defs == null ? result : defs[0],
@@ -36,6 +37,7 @@ public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
       getDeclaredType());
   }
     
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return getValueString(symbolTable, d, result) + " = arrayload " + getValueString(symbolTable, d, getArrayRef()) + "[" + getValueString(symbolTable, d, getIndex()) + "]";
   }
@@ -44,6 +46,7 @@ public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    * @throws IllegalArgumentException  if v is null
    */
+  @Override
   public void visit(IVisitor v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -54,23 +57,28 @@ public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getDef()
    */
+  @Override
   public boolean hasDef() {
     return true;
   }
 
+  @Override
   public int getDef() {
     return result;
   }
 
+  @Override
   public int getDef(int i) {
     Assertions._assert(i == 0);
     return result;
   }
 
+  @Override
   public int getNumberOfDefs() {
     return 1;
   }
 
+  @Override
   public int hashCode() {
     return 6311 * result ^ 2371 * getArrayRef() + getIndex();
   }
@@ -80,6 +88,7 @@ public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Exceptions.getArrayAccessExceptions();
   }

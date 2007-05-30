@@ -37,6 +37,7 @@ public class CGEdge {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (obj == null) {
       return false;
@@ -50,6 +51,7 @@ public class CGEdge {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 4027 * src.hashCode() + dest.hashCode();
   }
@@ -57,6 +59,7 @@ public class CGEdge {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "[" + src.toString() + "," + dest.toString() + "]";
   }

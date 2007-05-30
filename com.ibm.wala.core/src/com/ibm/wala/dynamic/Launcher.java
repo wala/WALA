@@ -61,6 +61,7 @@ public abstract class Launcher {
     env = newEnv;
   }
 
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (workingDir: ");
@@ -106,6 +107,7 @@ public abstract class Launcher {
   protected Thread drainStdOut(Process p) {
     final BufferedInputStream output = new BufferedInputStream(p.getInputStream());
     Thread result = new Drainer(p) {
+      @Override
       void drain() throws IOException {
         drainAndPrint(output, System.out);
       }
@@ -118,6 +120,7 @@ public abstract class Launcher {
     final BufferedInputStream output = new BufferedInputStream(p.getInputStream());
     final ByteArrayOutputStream b = new ByteArrayOutputStream();
     Drainer result = new Drainer(p) {
+      @Override
       void drain() throws IOException {
         drainAndCatch(output, b);
       }
@@ -130,6 +133,7 @@ public abstract class Launcher {
   protected Thread drainStdErr(Process p) {
     final BufferedInputStream err = new BufferedInputStream(p.getErrorStream());
     Thread result = new Drainer(p) {
+      @Override
       void drain() throws IOException {
         drainAndPrint(err, System.err);
       }
@@ -156,6 +160,7 @@ public abstract class Launcher {
       this.p = p;
     }
 
+    @Override
     public void run() {
       try {
         boolean repeat = true;

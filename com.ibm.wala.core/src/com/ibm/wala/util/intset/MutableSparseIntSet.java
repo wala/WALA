@@ -182,7 +182,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     if (that instanceof SparseIntSet) {
       SparseIntSet set = (SparseIntSet) that;
       if (set.elements != null) {
-        elements = (int[]) set.elements.clone();
+        elements = set.elements.clone();
         size = set.size;
       } else {
         elements = null;

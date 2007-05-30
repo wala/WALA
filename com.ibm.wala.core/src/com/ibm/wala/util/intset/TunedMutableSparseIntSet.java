@@ -28,10 +28,12 @@ public class TunedMutableSparseIntSet extends MutableSparseIntSet {
     this.expansion = expansion;
   }
 
+  @Override
   public float getExpansionFactor() {
     return expansion;
   }
 
+  @Override
   public int getInitialNonEmptySize() {
     return initialSize;
   }

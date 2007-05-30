@@ -35,6 +35,7 @@ public abstract class NodeKey extends AbstractLocalPointerKey {
   /**
    * @return the node this key represents
    */
+  @Override
   public CGNode getNode() {
     return node;
   }
@@ -42,11 +43,13 @@ public abstract class NodeKey extends AbstractLocalPointerKey {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public abstract boolean equals(Object obj);
 
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public abstract int hashCode();
 
 }

@@ -338,6 +338,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
     primaryImpl.foreachExcluding(X, action);
   }
 
+  @Override
   public String toString() {
     return "[[P " + primaryImpl.toString() + ", S " + secondaryImpl.toString() + " ]]";
   }

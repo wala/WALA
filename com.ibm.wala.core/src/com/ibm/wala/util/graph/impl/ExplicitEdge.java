@@ -25,12 +25,15 @@ public class ExplicitEdge {
     this.src = src;
     this.dest = dest;
   }
+  @Override
   public String toString() {
     return "<" + src + "->" + dest + ">";
   }
+  @Override
   public int hashCode() {
     return src.hashCode() * 947 + dest.hashCode();
   }
+  @Override
   public boolean equals(Object obj) {
     if (obj == null) {
       return false;

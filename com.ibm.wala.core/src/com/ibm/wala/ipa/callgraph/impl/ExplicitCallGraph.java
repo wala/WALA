@@ -88,6 +88,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   /**
    * subclasses may wish to override!
    */
+  @Override
   protected CGNode makeFakeRootNode() {
     return findOrCreateNode(new FakeRootMethod(cha, options), Everywhere.EVERYWHERE);
   }
@@ -95,6 +96,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   /**
    * subclasses may wish to override!
    */
+  @Override
   protected CGNode makeFakeWorldClinitNode() {
     return findOrCreateNode(new FakeWorldClinitMethod(cha, options), Everywhere.EVERYWHERE);
   }
@@ -105,6 +107,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
    * @param method
    * @return NodeImpl
    */
+  @Override
   public CGNode findOrCreateNode(IMethod method, Context C) {
     if (Assertions.verifyAssertions) {
       if (method == null || C == null) {
@@ -146,6 +149,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       super(method, C);
     }
 
+    @Override
     public Set<CGNode> getPossibleTargets(CallSiteReference site) {
       Object result = targets.get(site.getProgramCounter());
 
@@ -158,7 +162,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
         IntSet s = (IntSet) result;
         HashSet<CGNode> h = HashSetFactory.make(s.size());
         for (IntIterator it = s.intIterator(); it.hasNext();) {
-          h.add((CGNode) getNode(it.next()));
+          h.add(getNode(it.next()));
         }
         return h;
       }
@@ -191,6 +195,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       });
     }
 
+    @Override
     public boolean addTarget(CallSiteReference site, CGNode tNode) {
       return addTarget(site.getProgramCounter(), tNode);
     }
@@ -293,6 +298,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
      * 
      * @see com.ibm.wala.ipa.callgraph.impl.BasicCallGraph.NodeImpl#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object obj) {
       // we can use object equality since these objects are canonical as created
       // by the governing ExplicitCallGraph
@@ -304,6 +310,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
      * 
      * @see com.ibm.wala.ipa.callgraph.impl.BasicCallGraph.NodeImpl#hashCode()
      */
+    @Override
     public int hashCode() {
       // TODO: cache?
       return getMethod().hashCode() * 8681 + getContext().hashCode();
@@ -440,6 +447,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   /**
    * @return Returns the edgeManger.
    */
+  @Override
   public EdgeManager<CGNode> getEdgeManager() {
     return edgeManager;
   }

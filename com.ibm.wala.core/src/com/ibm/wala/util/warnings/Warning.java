@@ -68,6 +68,7 @@ public abstract class Warning implements Comparable {
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (obj instanceof Warning) {
       Warning other = (Warning) obj;
@@ -82,6 +83,7 @@ public abstract class Warning implements Comparable {
    * 
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 1499 * getMsg().hashCode() + getLevel();
   }
@@ -91,6 +93,7 @@ public abstract class Warning implements Comparable {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
     result.append("[").append(severityString()).append("] ");

@@ -102,6 +102,7 @@ public final class BitSet<T> {
   /**
    * @return a String representation
    */
+  @Override
   public String toString() {
     return vector.toString();
   }

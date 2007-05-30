@@ -54,6 +54,7 @@ public class ECallGraphWrapper extends EObjectGraphImpl {
    * @return an ECallGraph representing the contents of this object
    * @see com.ibm.wala.emf.wrappers.EObjectGraphImpl#export()
    */
+  @Override
   public EObject export() {
     ECallGraph cg = CallGraphFactory.eINSTANCE.createECallGraph();
     EObjectDictionary nodes = makeNodes(cg);

@@ -39,7 +39,7 @@ public class CallGraphStats {
     int nNodes = 0;
     int nEdges = 0;
     for (Iterator<CGNode> it = reachableNodes.iterator(); it.hasNext();) {
-      CGNode n = (CGNode) it.next();
+      CGNode n = it.next();
       nNodes++;
       nEdges += cg.getSuccNodeCount(n);
     }

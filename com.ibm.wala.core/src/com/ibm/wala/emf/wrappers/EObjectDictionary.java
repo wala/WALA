@@ -49,7 +49,7 @@ public class EObjectDictionary {
       map.add(key);
       return key;
     } else {
-      return (EObject) map.getMappedObject(index);
+      return map.getMappedObject(index);
     }
   }
 
@@ -90,7 +90,7 @@ public class EObjectDictionary {
       EContainer c = CommonFactory.eINSTANCE.createEContainer();
       // note: be careful to maintain iteration order here.
       for (int i = 0; i < map.getMappingSize(); i++) {
-        EObject o = (EObject) map.getMappedObject(i);
+        EObject o = map.getMappedObject(i);
         if (createUniqueIds && o instanceof EObjectWithContainerId) {
           EObjectWithContainerId x = (EObjectWithContainerId) o;
           x.setId(i);

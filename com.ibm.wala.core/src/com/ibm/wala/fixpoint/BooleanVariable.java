@@ -57,6 +57,7 @@ public class BooleanVariable extends AbstractVariable {
   /**
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return hash + (B ? "[TRUE]" : "[FALSE]");
   }
@@ -81,6 +82,7 @@ public class BooleanVariable extends AbstractVariable {
   /* (non-Javadoc)
    * @see com.ibm.wala.dataflow.AbstractVariable#hashCode()
    */
+  @Override
   public int hashCode() {
     return hash;
   }
@@ -94,6 +96,7 @@ public class BooleanVariable extends AbstractVariable {
 
   /* (non-Javadoc)
    */
+  @Override
   public boolean equals(Object obj) {
     return this == obj;
   }

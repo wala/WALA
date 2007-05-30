@@ -57,6 +57,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
    * 
    * @param klass
    */
+  @Override
   protected void updateSetsForNewClass(IClass klass, InstanceKey iKey, CGNode node, NewSiteReference n) {
 
     // set up the selector map to record each method that klass implements
@@ -95,6 +96,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     }
   }
 
+  @Override
   protected PointerKey getKeyForSite(CallSiteReference site) {
     return new RTASelectorKey(site.getDeclaredTarget().getSelector());
   }
@@ -127,6 +129,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
      */
     private MutableIntSet previousReceivers = IntSetUtil.getDefaultIntSetFactory().make();
 
+    @Override
     public byte evaluate(IVariable lhs, IVariable rhs) {
       IntSetVariable receivers = (IntSetVariable) rhs;
 
@@ -209,6 +212,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
       return NOT_CHANGED;
     }
 
+    @Override
     public String toString() {
       return "Dispatch";
     }
@@ -218,6 +222,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#hashCode()
      */
+    @Override
     public int hashCode() {
       return caller.hashCode() + 8707 * site.hashCode();
     }
@@ -227,6 +232,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
      * 
      * @see com.ibm.wala.dataflow.Operator#equals(java.lang.Object)
      */
+    @Override
     public boolean equals(Object o) {
       if (o instanceof DispatchOperator) {
         DispatchOperator other = (DispatchOperator)o;
@@ -243,6 +249,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.AbstractRTABuilder#makeDispatchOperator(com.ibm.wala.classLoader.CallSiteReference,
    *      com.ibm.wala.ipa.callgraph.CGNode)
    */
+  @Override
   protected UnaryOperator makeDispatchOperator(CallSiteReference site, CGNode node) {
     return new DispatchOperator(site, (ExplicitNode)node);
   }
@@ -252,6 +259,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
    * 
    * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#getDefaultDispatchBoundHeuristic()
    */
+  @Override
   protected byte getDefaultDispatchBoundHeuristic() {
     return AnalysisOptions.NO_DISPATCH_BOUND;
   }

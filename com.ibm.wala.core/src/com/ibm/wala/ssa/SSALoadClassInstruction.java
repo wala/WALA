@@ -29,14 +29,17 @@ public class SSALoadClassInstruction extends SSAInstruction {
     this.typeRef = typeRef;
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     return new SSALoadClassInstruction(defs == null ? lval : defs[0], typeRef);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return getValueString(symbolTable, d, lval) + " = load_class: " + typeRef;
   }
 
+  @Override
   public void visit(IVisitor v) {
     if (v == null) {
       throw new IllegalArgumentException("v is null");
@@ -44,31 +47,38 @@ public class SSALoadClassInstruction extends SSAInstruction {
     v.visitLoadClass(this);
   }
 
+  @Override
   public int hashCode() {
     return typeRef.hashCode() * lval;
   }
 
+  @Override
   public boolean isPEI() {
     return true;
   }
 
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     return loadClassExceptions;
   }
 
+  @Override
   public int getDef() {
     return lval;
   }
 
+  @Override
   public int getDef(int i) {
     Assertions._assert(i == 0);
     return lval;
   }
 
+  @Override
   public int getNumberOfDefs() {
     return 1;
   }
 
+  @Override
   public boolean isFallThrough() {
     return true;
   }

@@ -38,6 +38,7 @@ public class ViewAnnotatedIRAction extends ViewIRAction {
   /* (non-Javadoc)
    * @see org.eclipse.jface.action.IAction#run()
    */
+  @Override
   public void run() {
     IR ir = getIRForSelection();
     // spawn the viewer

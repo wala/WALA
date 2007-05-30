@@ -40,11 +40,13 @@ public class SSABinaryOpInstruction extends SSAInstruction {
     Assertions._assert(val1 != -1 && val2 != -1);
   }
 
+  @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     return new SSABinaryOpInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
         uses == null ? val2 : uses[1]);
   }
 
+  @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     return getValueString(symbolTable, d, result) + " = binaryop(" + operator + ") " + getValueString(symbolTable, d, val1) + " , "
         + getValueString(symbolTable, d, val2);
@@ -53,6 +55,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
    */
+  @Override
   public void visit(IVisitor v) throws NullPointerException {
     v.visitBinaryOp(this);
   }
@@ -70,14 +73,17 @@ public class SSABinaryOpInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getDef()
    */
+  @Override
   public boolean hasDef() {
     return true;
   }
 
+  @Override
   public int getDef() {
     return result;
   }
 
+  @Override
   public int getDef(int i) {
     Assertions._assert(i == 0);
     return result;
@@ -86,10 +92,12 @@ public class SSABinaryOpInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getNumberOfUses()
    */
+  @Override
   public int getNumberOfDefs() {
     return 1;
   }
 
+  @Override
   public int getNumberOfUses() {
     return 2;
   }
@@ -97,12 +105,14 @@ public class SSABinaryOpInstruction extends SSAInstruction {
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#getUse(int)
    */
+  @Override
   public int getUse(int j) {
     if (Assertions.verifyAssertions)
       Assertions._assert(j <= 1);
     return (j == 0) ? val1 : val2;
   }
 
+  @Override
   public int hashCode() {
     return 6311 * result ^ 2371 * val1 + val2;
   }
@@ -112,6 +122,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#isPEI()
    */
+  @Override
   public boolean isPEI() {
     return operator == BinaryOpInstruction.Operator.DIV || operator == BinaryOpInstruction.Operator.REM;
   }
@@ -121,6 +132,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
+  @Override
   public boolean isFallThrough() {
     return true;
   }
@@ -130,6 +142,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
    * 
    * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
    */
+  @Override
   public Collection<TypeReference> getExceptionTypes() {
     if (isPEI()) {
       return Exceptions.getArithmeticException();

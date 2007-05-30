@@ -43,6 +43,7 @@ public class IntPair {
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     if (obj == null) {
       return false;
@@ -58,6 +59,7 @@ public class IntPair {
   /* (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
+  @Override
   public int hashCode() {
     return 8377 * x + y;
   }
@@ -65,6 +67,7 @@ public class IntPair {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "[" + x + "," + y + "]";
   }

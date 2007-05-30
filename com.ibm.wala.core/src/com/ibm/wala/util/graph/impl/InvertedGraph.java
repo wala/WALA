@@ -23,12 +23,14 @@ public class InvertedGraph<T> extends AbstractGraph<T> {
 
   final private NodeManager<T> nodes;
 
+  @Override
   protected NodeManager<T> getNodeManager() {
     return nodes;
   }
 
   final private EdgeManager<T> edges;
 
+  @Override
   protected EdgeManager<T> getEdgeManager() {
     return edges;
   }

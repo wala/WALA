@@ -39,6 +39,7 @@ public class Iterator2Collection<T> implements Collection<T> {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return delegate.toString();
   }
@@ -156,10 +157,12 @@ public class Iterator2Collection<T> implements Collection<T> {
     return delegate.toArray(a);
   }
 
+  @Override
   public boolean equals(Object o) {
     return delegate.equals(o);
   }
 
+  @Override
   public int hashCode() {
     return delegate.hashCode();
   }

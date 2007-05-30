@@ -220,7 +220,7 @@ public class EclipseAnalysisScope extends AnalysisScope {
     // Find all the plugins necessary to the analysis scope.
     workQ.push(plugIn);
     while (!workQ.isEmpty()) {
-      File f = (File) workQ.pop();
+      File f = workQ.pop();
       Manifest mf = null;
       try {
         if (f.isDirectory()) {
@@ -304,7 +304,7 @@ public class EclipseAnalysisScope extends AnalysisScope {
     Set<JarFile> jars = HashSetFactory.make();
     workQueue.push(baseDir);
     while (!workQueue.isEmpty()) {
-      File dir = (File) workQueue.pop();
+      File dir = workQueue.pop();
       File[] contents = dir.listFiles();
       if (contents == null) {
         throw new IllegalArgumentException("bad file " + dir.getAbsolutePath());
@@ -411,7 +411,7 @@ public class EclipseAnalysisScope extends AnalysisScope {
     Set<String> manifests = HashSetFactory.make();
     workQueue.push(new File(baseDirName));
     while (!workQueue.isEmpty()) {
-      File dir = (File) workQueue.pop();
+      File dir = workQueue.pop();
       String dirName = dir.getAbsolutePath().replace('\\', '/');
       String[] contents = dir.list();
       for (int i = 0; i < contents.length; i++) {
@@ -536,94 +536,117 @@ public class EclipseAnalysisScope extends AnalysisScope {
     return is;
   }
 
+  @Override
   public void addClassFileToScope(ClassLoaderReference loader, File file) {
     delegate.addClassFileToScope(loader, file);
   }
 
+  @Override
   public void addSourceFileToScope(ClassLoaderReference loader, File file, String fileName) {
     delegate.addSourceFileToScope(loader, file, fileName);
   }
 
+  @Override
   public void addToScope(ClassLoaderReference loader, JarFile file) {
     delegate.addToScope(loader, file);
   }
 
+  @Override
   public void addToScope(ClassLoaderReference loader, Module m) {
     delegate.addToScope(loader, m);
   }
 
+  @Override
   public boolean equals(Object obj) {
     return delegate.equals(obj);
   }
 
+  @Override
   public MethodReference findMethod(Atom loader, String klass, Atom name, ImmutableByteArray desc) {
     return delegate.findMethod(loader, klass, name, desc);
   }
 
+  @Override
   public ClassLoaderReference getApplicationLoader() {
     return delegate.getApplicationLoader();
   }
 
+  @Override
   public ArrayClassLoader getArrayClassLoader() {
     return delegate.getArrayClassLoader();
   }
 
+  @Override
   public SetOfClasses getExclusions() {
     return delegate.getExclusions();
   }
 
+  @Override
   public ClassLoaderReference getExtensionLoader() {
     return delegate.getExtensionLoader();
   }
 
+  @Override
   public String getJavaLibraryVersion() {
     return delegate.getJavaLibraryVersion();
   }
 
+  @Override
   public ClassLoaderReference getLoader(Atom name) {
     return delegate.getLoader(name);
   }
 
+  @Override
   public String getLoaderImpl(ClassLoaderReference ref) {
     return delegate.getLoaderImpl(ref);
   }
 
+  @Override
   public Collection<ClassLoaderReference> getLoaders() {
     return delegate.getLoaders();
   }
 
+  @Override
   public Set<Module> getModules(ClassLoaderReference loader) {
     return delegate.getModules(loader);
   }
 
+  @Override
   public int getNumberOfLoaders() {
     return delegate.getNumberOfLoaders();
   }
 
+  @Override
   public ClassLoaderReference getPrimordialLoader() {
     return delegate.getPrimordialLoader();
   }
 
+  @Override
   public ClassLoaderReference getSyntheticLoader() {
     return delegate.getSyntheticLoader();
   }
 
+  @Override
   public int hashCode() {
     return delegate.hashCode();
   }
 
+  @Override
   public boolean isJava14Libraries() {
     return delegate.isJava14Libraries();
   }
 
+  @Override
   public boolean isJava15Libraries() {
     return delegate.isJava15Libraries();
   }
 
+  @Override
   public void setExclusions(SetOfClasses classes) {
     delegate.setExclusions(classes);
   }
 
+  @Override
   public String toString() {
     return delegate.toString();
   }

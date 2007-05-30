@@ -33,6 +33,7 @@ public class LocalPointerKey extends AbstractLocalPointerKey {
     }
   }
 
+  @Override
   public final boolean equals(Object obj) {
     if (obj instanceof LocalPointerKey) {
       LocalPointerKey other = (LocalPointerKey) obj;
@@ -42,14 +43,17 @@ public class LocalPointerKey extends AbstractLocalPointerKey {
     }
   }
 
+  @Override
   public final int hashCode() {
     return node.hashCode() * 23 + valueNumber;
   }
 
+  @Override
   public String toString() {
     return "[" + node + ", v" + valueNumber + "]";
   }
 
+  @Override
   public final CGNode getNode() {
     return node;
   }

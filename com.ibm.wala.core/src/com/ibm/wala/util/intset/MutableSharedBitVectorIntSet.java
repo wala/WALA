@@ -959,6 +959,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
    * 
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return makeSparseCopy().toString();
   }

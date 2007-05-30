@@ -39,6 +39,7 @@ public class Everywhere implements Context {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
+  @Override
   public String toString() {
     return "Everywhere";
   }
@@ -47,12 +48,14 @@ public class Everywhere implements Context {
    *  Don't use default hashCode (java.lang.Object) as it's
    *  nondeterministic.
    */
+  @Override
   public int hashCode() { 
     return 9851; 
   }
   /* (non-Javadoc)
    * @see java.lang.Object#equals(java.lang.Object)
    */
+  @Override
   public boolean equals(Object obj) {
     return this == obj;
   }
