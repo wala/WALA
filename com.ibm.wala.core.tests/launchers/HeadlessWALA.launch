@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launchConfiguration type="org.eclipse.pde.ui.RuntimeWorkbench">
+<stringAttribute key="product" value="org.eclipse.sdk.ide"/>
+<booleanAttribute key="clearws" value="false"/>
+<booleanAttribute key="usefeatures" value="false"/>
+<stringAttribute key="bootstrap" value=""/>
+<booleanAttribute key="useProduct" value="false"/>
+<booleanAttribute key="tracing" value="false"/>
+<stringAttribute key="pde.version" value="3.2a"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-nosplash"/>
+<stringAttribute key="templateConfig" value="${target_home}\configuration\config.ini"/>
+<booleanAttribute key="default" value="true"/>
+<booleanAttribute key="clearConfig" value="false"/>
+<booleanAttribute key="automaticValidate" value="false"/>
+<booleanAttribute key="org.eclipse.debug.core.appendEnvironmentVariables" value="true"/>
+<booleanAttribute key="useDefaultConfigArea" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>
+<booleanAttribute key="useDefaultConfig" value="true"/>
+<booleanAttribute key="automaticAdd" value="true"/>
+<stringAttribute key="checked" value="[NONE]"/>
+<booleanAttribute key="askclear" value="true"/>
+<stringAttribute key="location" value="${workspace_loc}/"/>
+<booleanAttribute key="includeOptional" value="true"/>
+<stringAttribute key="configLocation" value=""/>
+<stringAttribute key="application" value="com.ibm.wala.eclipse.HeadlessWALA"/>
+</launchConfiguration>
