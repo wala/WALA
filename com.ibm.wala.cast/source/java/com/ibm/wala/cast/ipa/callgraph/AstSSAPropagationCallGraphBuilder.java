@@ -272,7 +272,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   /////////////////////////////////////////////////////////////////////////////
 
   protected ExplicitCallGraph createEmptyCallGraph(ClassHierarchy cha, AnalysisOptions options) {
-    return new AstCallGraph(cha, options, getWarnings());
+    return new AstCallGraph(cha, options);
   }
 
   protected class AstInterestingVisitor extends InterestingVisitor implements AstInstructionVisitor {

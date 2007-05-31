@@ -29,14 +29,10 @@ import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.util.Function;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public class AstCallGraph extends ExplicitCallGraph {
-  private final WarningSet warnings;
-
-  public AstCallGraph(ClassHierarchy cha, AnalysisOptions options, WarningSet warnings) {
+  public AstCallGraph(ClassHierarchy cha, AnalysisOptions options) {
     super(cha, options);
-    this.warnings = warnings;
   }
 
   public class AstFakeRoot extends FakeRootMethod {
@@ -46,7 +42,7 @@ public class AstCallGraph extends ExplicitCallGraph {
     }
 
     public InducedCFG makeControlFlowGraph() {
-      return new AstInducedCFG(getStatements(warnings), this, Everywhere.EVERYWHERE);
+      return new AstInducedCFG(getStatements(), this, Everywhere.EVERYWHERE);
     }
 
     public AstLexicalRead addGlobalRead(String name) {
