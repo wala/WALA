@@ -39,10 +39,6 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     }
   }
 
-  /*
-   * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#understands(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.detox.ipa.callgraph.Context)
-   */
   public boolean understands(CGNode node) {
     if (A != null) {
       return A.understands(node) || B.understands(node);
@@ -51,52 +47,52 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     }
   }
 
-  public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
+  public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
-        return A.iterateNewSites(node, warnings);
+        return A.iterateNewSites(node);
       }
     }
     if (Assertions.verifyAssertions) {
       Assertions._assert(B.understands(node));
     }
-    return B.iterateNewSites(node, warnings);
+    return B.iterateNewSites(node);
   }
 
-  public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
+  public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
-        return A.iterateCallSites(node, warnings);
+        return A.iterateCallSites(node);
       }
     }
     if (Assertions.verifyAssertions) {
       Assertions._assert(B.understands(node));
     }
-    return B.iterateCallSites(node, warnings);
+    return B.iterateCallSites(node);
   }
 
-  public Iterator iterateFieldsRead(CGNode node, WarningSet warnings) {
+  public Iterator iterateFieldsRead(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
-        return A.iterateFieldsRead(node, warnings);
+        return A.iterateFieldsRead(node);
       }
     }
     if (Assertions.verifyAssertions) {
       Assertions._assert(B.understands(node));
     }
-    return B.iterateFieldsRead(node, warnings);
+    return B.iterateFieldsRead(node);
   }
 
-  public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings) {
+  public Iterator iterateFieldsWritten(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
-        return A.iterateFieldsWritten(node, warnings);
+        return A.iterateFieldsWritten(node);
       }
     }
     if (Assertions.verifyAssertions) {
       Assertions._assert(B.understands(node));
     }
-    return B.iterateFieldsWritten(node, warnings);
+    return B.iterateFieldsWritten(node);
   }
 
   public boolean recordFactoryType(CGNode node, IClass klass) {

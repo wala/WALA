@@ -32,12 +32,12 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInterpreter, SSAContextInterpreter {
 
-  public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
+  public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     try {
-      return CodeScanner.iterateNewSites(node.getMethod(), warnings);
+      return CodeScanner.getNewSites(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -45,12 +45,12 @@ public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInte
     }
   }
 
-  public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
+  public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     try {
-      return CodeScanner.iterateCallSites(node.getMethod(), warnings);
+      return CodeScanner.getCallSites(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -58,12 +58,12 @@ public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInte
     }
   }
 
-  public Iterator iterateFieldsRead(CGNode node, WarningSet warnings) {
+  public Iterator iterateFieldsRead(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     try {
-      return CodeScanner.iterateFieldsRead(node.getMethod(), warnings);
+      return CodeScanner.getFieldsRead(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -71,12 +71,12 @@ public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInte
     }
   }
 
-  public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings) {
+  public Iterator iterateFieldsWritten(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     try {
-      return CodeScanner.iterateFieldsWritten(node.getMethod(), warnings);
+      return CodeScanner.getFieldsWritten(node.getMethod()).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();

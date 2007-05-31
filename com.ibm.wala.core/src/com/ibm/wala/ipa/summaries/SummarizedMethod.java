@@ -83,11 +83,8 @@ public class SummarizedMethod extends SyntheticMethod {
     return summary.hasPoison();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.WarningSet)
-   */
   @Override
-  public SSAInstruction[] getStatements(SSAOptions options, WarningSet warnings) {
+  public SSAInstruction[] getStatements(SSAOptions options) {
     if (DEBUG) {
       Trace.println("getStatements: " + this);
     }
@@ -124,7 +121,7 @@ public class SummarizedMethod extends SyntheticMethod {
   // }
   @Override
   public IR makeIR(SSAOptions options, WarningSet warnings) {
-    SSAInstruction instrs[] = getStatements(options, warnings);
+    SSAInstruction instrs[] = getStatements(options);
     return new SyntheticIR(this, Everywhere.EVERYWHERE, makeControlFlowGraph(), instrs, options, summary.getConstants(), warnings);
   }
 

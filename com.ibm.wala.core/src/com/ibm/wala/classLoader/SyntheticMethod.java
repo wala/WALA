@@ -150,7 +150,7 @@ public class SyntheticMethod implements IMethod {
   }
 
   public InducedCFG makeControlFlowGraph() {
-    return new InducedCFG(getStatements(new WarningSet()), this, Everywhere.EVERYWHERE);
+    return new InducedCFG(getStatements(), this, Everywhere.EVERYWHERE);
   }
 
   public BytecodeStream getBytecodeStream() {
@@ -237,10 +237,7 @@ public class SyntheticMethod implements IMethod {
     return -1;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.WarningSet)
-   */
-  public SSAInstruction[] getStatements(SSAOptions options, WarningSet warnings) {
+  public SSAInstruction[] getStatements(SSAOptions options) {
     return NO_STATEMENTS;
   }
 
@@ -335,11 +332,8 @@ public class SyntheticMethod implements IMethod {
     return false;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.warnings.WarningSet)
-   */
-  public SSAInstruction[] getStatements(WarningSet warnings) {
-    return getStatements(SSAOptions.defaultOptions(), warnings);
+  public SSAInstruction[] getStatements() {
+    return getStatements(SSAOptions.defaultOptions());
   }
 
 

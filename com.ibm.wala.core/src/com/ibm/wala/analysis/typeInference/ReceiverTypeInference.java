@@ -11,7 +11,6 @@
 package com.ibm.wala.analysis.typeInference;
 
 import java.util.HashMap;
-import java.util.Iterator;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.CodeScanner;
@@ -22,7 +21,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -40,14 +38,9 @@ public class ReceiverTypeInference {
    */
   private HashMap<CallSiteReference, SSAInvokeInstruction> invokeMap;
 
-  /**
-   * An object to track analysis warnings
-   */
-  private WarningSet warnings;
 
-  public ReceiverTypeInference(TypeInference ti, WarningSet warnings) {
+  public ReceiverTypeInference(TypeInference ti) {
     this.ti = ti;
-    this.warnings = warnings;
 
     try {
       setupInvokeMap();
@@ -70,8 +63,7 @@ public class ReceiverTypeInference {
     IMethod method = ir.getMethod();
     // set up mapping from Integer (program counter) -> CallSiteReference
     HashMap<Integer, CallSiteReference> intMap = HashMapFactory.make(5);
-    for (Iterator it = CodeScanner.iterateCallSites(method, warnings); it.hasNext();) {
-      CallSiteReference site = (CallSiteReference) it.next();
+    for (CallSiteReference site :  CodeScanner.getCallSites(method)) {
       int pc = site.getProgramCounter();
       intMap.put(new Integer(pc), site);
     }

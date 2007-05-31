@@ -160,27 +160,26 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   /**
-   * @return an Iterator of CallSiteReferences from this method.
    * @throws InvalidClassFileException
    */
-  Iterator<CallSiteReference> getCallSites() throws InvalidClassFileException {
+  Collection<CallSiteReference> getCallSites() throws InvalidClassFileException {
+    Collection<CallSiteReference> empty = Collections.emptySet();
     if (isNative()) {
-      return EmptyIterator.instance();
+      return empty;
     }
-    Iterator<CallSiteReference> empty = EmptyIterator.instance();
-    return (getBCInfo().callSites == null) ? empty : Arrays.asList(getBCInfo().callSites).iterator();
+    return (getBCInfo().callSites == null) ? empty : Collections.unmodifiableCollection(Arrays.asList(getBCInfo().callSites));
   }
 
   /**
-   * @return an Iterator of NewlSiteReferences from this method.
    * @throws InvalidClassFileException
    */
-  Iterator<NewSiteReference> getNewSites() throws InvalidClassFileException {
+  Collection<NewSiteReference> getNewSites() throws InvalidClassFileException {
+    Collection<NewSiteReference> empty = Collections.emptySet();
     if (isNative()) {
-      return EmptyIterator.instance();
+      return empty;
     }
-    Iterator<NewSiteReference> empty = EmptyIterator.instance();
-    return (getBCInfo().newSites == null) ? empty : Arrays.asList(getBCInfo().newSites).iterator();
+    
+    return (getBCInfo().newSites == null) ? empty : Collections.unmodifiableCollection(Arrays.asList(getBCInfo().newSites));
   }
 
   /**

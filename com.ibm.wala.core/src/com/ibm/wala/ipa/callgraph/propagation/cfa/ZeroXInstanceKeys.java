@@ -126,21 +126,10 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   private RTAContextInterpreter contextInterpreter;
 
   /**
-   * An object which tracks analysis warnings
-   */
-  private final WarningSet warnings;
-
-  /**
    * a Map from CGNode->Set<IClass> that should be smushed.
    */
   Map<CGNode, Set> smushMap = new HashMap<CGNode, Set>();
 
-  /**
-   * @param options
-   * @param cha
-   * @param warnings
-   * @param policy
-   */
   public ZeroXInstanceKeys(AnalysisOptions options, ClassHierarchy cha, RTAContextInterpreter contextInterpreter,
       WarningSet warnings, int policy) {
     classBased = new ClassBasedInstanceKeys(options, cha, warnings);
@@ -149,7 +138,6 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     this.cha = cha;
     this.policy = policy;
     this.contextInterpreter = contextInterpreter;
-    this.warnings = warnings;
   }
 
   /**
@@ -209,9 +197,9 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     if (s == null) {
       Map<IClass, Integer> count = countAllocsByType(node);
       HashSet<IClass> smushees = new HashSet<IClass>(5);
-      for (Iterator<Map.Entry<IClass,Integer>> it = count.entrySet().iterator(); it.hasNext();) {
-        Map.Entry<IClass,Integer> e = it.next();
-        Integer i =  e.getValue();
+      for (Iterator<Map.Entry<IClass, Integer>> it = count.entrySet().iterator(); it.hasNext();) {
+        Map.Entry<IClass, Integer> e = it.next();
+        Integer i = e.getValue();
         if (i.intValue() > SMUSH_LIMIT) {
           smushees.add(e.getKey());
         }
@@ -229,7 +217,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
    */
   private Map<IClass, Integer> countAllocsByType(CGNode node) {
     Map<IClass, Integer> count = new HashMap<IClass, Integer>();
-    for (Iterator it = contextInterpreter.iterateNewSites(node, warnings); it.hasNext();) {
+    for (Iterator it = contextInterpreter.iterateNewSites(node); it.hasNext();) {
       NewSiteReference n = (NewSiteReference) it.next();
       IClass alloc = cha.lookupClass(n.getDeclaredType());
       if (alloc != null) {

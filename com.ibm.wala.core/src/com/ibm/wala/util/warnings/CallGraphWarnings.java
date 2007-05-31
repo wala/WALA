@@ -133,7 +133,7 @@ public class CallGraphWarnings {
         warnings.add(new PoisonWarning(s.getPoisonLevel(),n));
       }
       if (s.isFactoryMethod()) {
-        int count = IteratorUtil.count(interp.iterateNewSites(n, new WarningSet()));
+        int count = IteratorUtil.count(interp.iterateNewSites(n));
         if (count == 1) {
           warnings.add(new UnresolvedReflectionWarning(n));
         }
@@ -143,7 +143,7 @@ public class CallGraphWarnings {
       warnings.add(new NativeWarning(n));
     }
     //  check that every call site in node has at least one successor
-    for (Iterator it = interp.iterateCallSites(n, warnings); it.hasNext();) {
+    for (Iterator it = interp.iterateCallSites(n); it.hasNext();) {
       CallSiteReference site = (CallSiteReference) it.next();
       Iterator targets = n.getPossibleTargets(site).iterator();
 

@@ -35,22 +35,22 @@ public interface RTAContextInterpreter {
    * @return an Iterator of the types that may be allocated by a given
    * method in a given context.
    */
-  public abstract Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings);
+  public abstract Iterator<NewSiteReference> iterateNewSites(CGNode node);
   /**
    * @return an Iterator of the call statements that may execute
    * in a given method for a given context
    */
-  public abstract Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings);
+  public abstract Iterator<CallSiteReference> iterateCallSites(CGNode node);
 
   /**
    * @return iterator of FieldReference
    */
-  public Iterator iterateFieldsRead(CGNode node, WarningSet warnings); 
+  public Iterator iterateFieldsRead(CGNode node); 
 
   /**
    * @return iterator of FieldReference
    */
-  public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings); 
+  public Iterator iterateFieldsWritten(CGNode node); 
 
   /**
    * record that the "factory" method of a node should be interpreted to allocate a 

@@ -26,7 +26,6 @@ import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -142,7 +141,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
    */
   static NewSiteReference findAlloc(CallGraph cg, CGNode n, int allocPC) throws WalaException {
     RTAContextInterpreter interp = cg.getInterpreter(n);
-    for (Iterator it = interp.iterateNewSites(n, new WarningSet()); it.hasNext();) {
+    for (Iterator it = interp.iterateNewSites(n); it.hasNext();) {
       NewSiteReference site = (NewSiteReference) it.next();
       if (site.getProgramCounter() == allocPC) {
         return site;

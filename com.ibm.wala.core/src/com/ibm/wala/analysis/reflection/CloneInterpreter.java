@@ -134,12 +134,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
     return (node.getMethod().getReference().equals(CLONE) && ContextUtil.getConcreteClassFromContext(node.getContext()) != null);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#getAllocatedTypes(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.detox.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
+  public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
@@ -150,7 +145,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
     return new NonNullSingletonIterator<NewSiteReference>(NewSiteReference.make(NEW_PC, cls.getReference()));
   }
 
-  public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
+  public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
     }
@@ -255,17 +250,13 @@ public class CloneInterpreter implements SSAContextInterpreter {
     // this object is not bound to a WarningSet
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateFieldsRead(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public Iterator iterateFieldsRead(CGNode node, WarningSet warnings) {
-    SSAInstruction[] statements = getIR(node, warnings).getInstructions();
+  public Iterator iterateFieldsRead(CGNode node) {
+    SSAInstruction[] statements = getIR(node, new WarningSet()).getInstructions();
     return CodeScanner.getFieldsRead(statements).iterator();
   }
 
-  public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings) {
-    SSAInstruction[] statements = getIR(node, warnings).getInstructions();
+  public Iterator iterateFieldsWritten(CGNode node) {
+    SSAInstruction[] statements = getIR(node, new WarningSet()).getInstructions();
     return CodeScanner.getFieldsWritten(statements).iterator();
   }
 

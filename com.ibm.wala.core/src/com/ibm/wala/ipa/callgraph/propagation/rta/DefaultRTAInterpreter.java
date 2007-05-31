@@ -63,32 +63,32 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     } 
   }
 
-  public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
+  public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    return getNodeInterpreter(node).iterateNewSites(node,warnings);
+    return getNodeInterpreter(node).iterateNewSites(node);
   }
 
-  public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
+  public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    return getNodeInterpreter(node).iterateCallSites(node,warnings);
+    return getNodeInterpreter(node).iterateCallSites(node);
   }
 
-  public Iterator iterateFieldsRead(CGNode node, WarningSet warnings) {
+  public Iterator iterateFieldsRead(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    return getNodeInterpreter(node).iterateFieldsRead(node, warnings);
+    return getNodeInterpreter(node).iterateFieldsRead(node);
   }
 
-  public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings) {
+  public Iterator iterateFieldsWritten(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    return getNodeInterpreter(node).iterateFieldsWritten(node, warnings);
+    return getNodeInterpreter(node).iterateFieldsWritten(node);
   }
 
 

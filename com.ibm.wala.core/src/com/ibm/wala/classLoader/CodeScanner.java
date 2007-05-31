@@ -32,7 +32,6 @@ import com.ibm.wala.ssa.SSAInstruction.Visitor;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  *
@@ -44,104 +43,100 @@ import com.ibm.wala.util.warnings.WarningSet;
 public class CodeScanner {
 
   /**
-   * @return iterator of call site references.
    * @throws InvalidClassFileException
    * @throws IllegalArgumentException  if m is null
    */
-  public static Iterator<CallSiteReference> iterateCallSites(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+  public static Collection<CallSiteReference> getCallSites(IMethod m) throws InvalidClassFileException {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getCallSites(sm.getStatements(SSAOptions.defaultOptions(), warnings)).iterator();
+      return getCallSites(sm.getStatements(SSAOptions.defaultOptions()));
     } else {
       return getCallSitesFromShrikeBT((ShrikeCTMethod) m);
     }
   }
 
   /**
-   * @return iterator of FieldReference
    * @throws InvalidClassFileException
    * @throws IllegalArgumentException  if m is null
    */
-  public static Iterator<FieldReference> iterateFieldsRead(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+  public static Collection<FieldReference> getFieldsRead(IMethod m) throws InvalidClassFileException {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getFieldsRead(sm.getStatements(SSAOptions.defaultOptions(), warnings)).iterator();
+      return getFieldsRead(sm.getStatements(SSAOptions.defaultOptions()));
     } else {
-      return getFieldsReadFromShrikeBT((ShrikeCTMethod) m).iterator();
+      return getFieldsReadFromShrikeBT((ShrikeCTMethod) m);
     }
   }
 
   /**
-   * @return iterator of FieldReference
    * @throws InvalidClassFileException
    * @throws IllegalArgumentException  if m is null
    */
-  public static Iterator<FieldReference> iterateFieldsWritten(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+  public static Collection<FieldReference> getFieldsWritten(IMethod m) throws InvalidClassFileException {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getFieldsWritten(sm.getStatements(SSAOptions.defaultOptions(), warnings)).iterator();
+      return getFieldsWritten(sm.getStatements(SSAOptions.defaultOptions()));
     } else {
-      return getFieldsWrittenFromShrikeBT((ShrikeCTMethod) m).iterator();
+      return getFieldsWrittenFromShrikeBT((ShrikeCTMethod) m);
     }
   }
 
   /**
-   * @return iterator of TypeReference.
    * @throws InvalidClassFileException
    * @throws IllegalArgumentException  if m is null
    */
-  public static Iterator<NewSiteReference> iterateNewSites(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+  public static Collection<NewSiteReference> getNewSites(IMethod m) throws InvalidClassFileException {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getNewSites(sm.getStatements(SSAOptions.defaultOptions(), warnings)).iterator();
+      return getNewSites(sm.getStatements(SSAOptions.defaultOptions()));
     } else {
       return getNewSitesFromShrikeBT((ShrikeCTMethod) m);
     }
   }
 
-  public static boolean hasObjectArrayLoad(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+  public static boolean hasObjectArrayLoad(IMethod m) throws InvalidClassFileException {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return hasObjectArrayLoad(sm.getStatements(SSAOptions.defaultOptions(), warnings));
+      return hasObjectArrayLoad(sm.getStatements(SSAOptions.defaultOptions()));
     } else {
       return hasShrikeBTObjectArrayLoad((ShrikeCTMethod) m);
     }
   }
 
-  public static boolean hasObjectArrayStore(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+  public static boolean hasObjectArrayStore(IMethod m) throws InvalidClassFileException {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return hasObjectArrayStore(sm.getStatements(SSAOptions.defaultOptions(), warnings));
+      return hasObjectArrayStore(sm.getStatements(SSAOptions.defaultOptions()));
     } else {
       return hasShrikeBTObjectArrayStore((ShrikeCTMethod) m);
     }
   }
 
-  public static Set getCaughtExceptions(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+  public static Set getCaughtExceptions(IMethod m) throws InvalidClassFileException {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return getCaughtExceptions(sm.getStatements(SSAOptions.defaultOptions(), warnings));
+      return getCaughtExceptions(sm.getStatements(SSAOptions.defaultOptions()));
     } else {
       return getShrikeBTCaughtExceptions((ShrikeCTMethod) m);
     }
@@ -154,13 +149,13 @@ public class CodeScanner {
    * @throws InvalidClassFileException
    * @throws IllegalArgumentException  if m is null
    */
-  public static Iterator iterateCastTypes(IMethod m, WarningSet warnings) throws InvalidClassFileException {
+  public static Iterator iterateCastTypes(IMethod m) throws InvalidClassFileException {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
     if (m.isSynthetic()) {
       SyntheticMethod sm = (SyntheticMethod) m;
-      return iterateCastTypes(sm.getStatements(SSAOptions.defaultOptions(), warnings));
+      return iterateCastTypes(sm.getStatements(SSAOptions.defaultOptions()));
     } else {
       return iterateShrikeBTCastTypes((ShrikeCTMethod) m);
     }
@@ -184,7 +179,7 @@ public class CodeScanner {
     return false;
   }
 
-  private static Iterator<CallSiteReference> getCallSitesFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
+  private static Collection<CallSiteReference> getCallSitesFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
     return M.getCallSites();
   }
 
@@ -193,7 +188,7 @@ public class CodeScanner {
    * @return Iterator of TypeReference
    * @throws InvalidClassFileException
    */
-  private static Iterator<NewSiteReference> getNewSitesFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
+  private static Collection<NewSiteReference> getNewSitesFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
     return M.getNewSites();
   }
 

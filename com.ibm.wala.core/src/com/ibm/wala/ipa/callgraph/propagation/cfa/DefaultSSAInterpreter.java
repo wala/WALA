@@ -73,13 +73,13 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
   }
 
   @Override
-  public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
-    return getCFAInterpreter(node).iterateNewSites(node, warnings);
+  public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
+    return getCFAInterpreter(node).iterateNewSites(node);
   }
 
   @Override
-  public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
-    return getCFAInterpreter(node).iterateCallSites(node, warnings);
+  public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
+    return getCFAInterpreter(node).iterateCallSites(node);
   }
 
   @Override

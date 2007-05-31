@@ -251,7 +251,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
      * @see com.ibm.wala.ipa.callgraph.CGNode#iterateSites()
      */
     public Iterator<CallSiteReference> iterateSites() {
-      return getInterpreter(this).iterateCallSites(this, new WarningSet());
+      return getInterpreter(this).iterateCallSites(this);
     }
 
     /*

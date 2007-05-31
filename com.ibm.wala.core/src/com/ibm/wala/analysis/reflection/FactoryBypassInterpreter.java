@@ -202,7 +202,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     return getTypesForContext(node.getContext()) != null;
   }
 
-  public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
+  public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
@@ -223,7 +223,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     return m.getInvokeStatements().iterator();
   }
 
-  public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
+  public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     final Iterator<SSAInstruction> I = getInvokeStatements(node);
     return new Iterator<CallSiteReference>() {
       public boolean hasNext() {
@@ -428,7 +428,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
 
     private int addOriginalStatements(SummarizedMethod m) {
-      SSAInstruction[] original = m.getStatements(options.getSSAOptions(), warnings);
+      SSAInstruction[] original = m.getStatements(options.getSSAOptions());
       // local value number 1 is "this", so the next free value number is 2
       int nextLocal = 2;
       for (int i = 0; i < original.length; i++) {
@@ -528,7 +528,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
 
     @Override
-    public SSAInstruction[] getStatements(WarningSet warnings) {
+    public SSAInstruction[] getStatements() {
       SSAInstruction[] result = new SSAInstruction[allInstructions.size()];
       int i = 0;
       for (Iterator<SSAInstruction> it = allInstructions.iterator(); it.hasNext();) {
@@ -562,7 +562,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
      */
     @Override
     public IR makeIR(SSAOptions options, WarningSet warnings) {
-      SSAInstruction[] instrs = getStatements(warnings);
+      SSAInstruction[] instrs = getStatements();
       Map<Integer, ConstantValue> constants = null;
       if (valueNumberForConstantOne > -1) {
         constants = HashMapFactory.make(1);
@@ -639,13 +639,13 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateFieldsRead(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.util.warnings.WarningSet)
    */
-  public Iterator iterateFieldsRead(CGNode node, WarningSet warnings) {
+  public Iterator iterateFieldsRead(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
-      return CodeScanner.iterateFieldsRead(m, warnings);
+      return CodeScanner.getFieldsRead(m).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -653,13 +653,13 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
   }
 
-  public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings) {
+  public Iterator iterateFieldsWritten(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
-      return CodeScanner.iterateFieldsWritten(m, warnings);
+      return CodeScanner.getFieldsWritten(m).iterator();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -677,13 +677,13 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     return m;
   }
 
-  public Set getCaughtExceptions(CGNode node, WarningSet warnings) {
+  public Set getCaughtExceptions(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
-      return CodeScanner.getCaughtExceptions(m, warnings);
+      return CodeScanner.getCaughtExceptions(m);
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -691,13 +691,13 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
   }
 
-  public boolean hasObjectArrayLoad(CGNode node, WarningSet warnings) {
+  public boolean hasObjectArrayLoad(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
-      return CodeScanner.hasObjectArrayLoad(m, warnings);
+      return CodeScanner.hasObjectArrayLoad(m);
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -705,13 +705,13 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
   }
 
-  public boolean hasObjectArrayStore(CGNode node, WarningSet warnings) {
+  public boolean hasObjectArrayStore(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
-      return CodeScanner.hasObjectArrayStore(m, warnings);
+      return CodeScanner.hasObjectArrayStore(m);
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -719,13 +719,13 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
   }
 
-  public Iterator iterateCastTypes(CGNode node, WarningSet warnings) {
+  public Iterator iterateCastTypes(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     try {
-      return CodeScanner.iterateCastTypes(m, warnings);
+      return CodeScanner.iterateCastTypes(m);
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();

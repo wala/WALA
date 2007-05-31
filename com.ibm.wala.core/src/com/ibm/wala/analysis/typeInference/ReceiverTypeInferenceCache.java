@@ -64,7 +64,7 @@ public class ReceiverTypeInferenceCache {
         TypeInference T = new TypeInference(ir);
         T.solve();
 
-        result = new ReceiverTypeInference(T, warnings);
+        result = new ReceiverTypeInference(T);
         ref = CacheReference.make(result);
         typeInferenceMap.put(n, ref);
       }

@@ -66,7 +66,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   }
 
   @Override
-  public SSAInstruction[] getStatements(SSAOptions options, WarningSet warnings) {
+  public SSAInstruction[] getStatements(SSAOptions options) {
     SSAInstruction[] result = new SSAInstruction[statements.size()];
     int i = 0;
     for (Iterator<SSAInstruction> it = statements.iterator(); it.hasNext();) {
@@ -77,7 +77,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   @Override
   public IR makeIR(SSAOptions options, WarningSet warnings) {
-    SSAInstruction instrs[] = getStatements(options, warnings);
+    SSAInstruction instrs[] = getStatements(options);
     Map<Integer,ConstantValue> constants = null;
     if (valueNumberForConstantOne > -1) {
       constants = HashMapFactory.make(1);
@@ -240,9 +240,9 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   public RTAContextInterpreter getInterpreter() {
     return new RTAContextInterpreter() {
 
-      public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
+      public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
         ArrayList<NewSiteReference> result = new ArrayList<NewSiteReference>();
-        SSAInstruction[] statements = getStatements(options.getSSAOptions(), warnings);
+        SSAInstruction[] statements = getStatements(options.getSSAOptions());
         for (int i = 0; i < statements.length; i++) {
           if (statements[i] instanceof SSANewInstruction) {
             SSANewInstruction s = (SSANewInstruction) statements[i];
@@ -252,9 +252,9 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
         return result.iterator();
       }
 
-      public Iterator<SSAInstruction> getInvokeStatements(WarningSet warnings) {
+      public Iterator<SSAInstruction> getInvokeStatements() {
         ArrayList<SSAInstruction> result = new ArrayList<SSAInstruction>();
-        SSAInstruction[] statements = getStatements(options.getSSAOptions(), warnings);
+        SSAInstruction[] statements = getStatements(options.getSSAOptions());
         for (int i = 0; i < statements.length; i++) {
           if (statements[i] instanceof SSAInvokeInstruction) {
             result.add(statements[i]);
@@ -263,8 +263,8 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
         return result.iterator();
       }
 
-      public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
-        final Iterator<SSAInstruction> I = getInvokeStatements(warnings);
+      public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
+        final Iterator<SSAInstruction> I = getInvokeStatements();
         return new Iterator<CallSiteReference>() {
           public boolean hasNext() {
             return I.hasNext();
@@ -294,11 +294,11 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
         // this object is not bound to a WarningSet
       }
 
-      public Iterator iterateFieldsRead(CGNode node, WarningSet warnings) {
+      public Iterator iterateFieldsRead(CGNode node) {
         return EmptyIterator.instance();
       }
 
-      public Iterator iterateFieldsWritten(CGNode node, WarningSet warnings) {
+      public Iterator iterateFieldsWritten(CGNode node) {
         return EmptyIterator.instance();
       }
     };
