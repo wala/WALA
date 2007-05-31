@@ -25,8 +25,8 @@ import com.ibm.wala.util.warnings.WarningSet;
 
 public class JSCallGraph extends AstCallGraph {
 
-  public JSCallGraph(ClassHierarchy cha, AnalysisOptions options, WarningSet warnings) {
-    super(cha, options, warnings);
+  public JSCallGraph(ClassHierarchy cha, AnalysisOptions options) {
+    super(cha, options);
   }
 
   public class JSFakeRoot extends ScriptFakeRoot {
@@ -36,7 +36,7 @@ public class JSCallGraph extends AstCallGraph {
     }
 
     public InducedCFG makeControlFlowGraph() {
-      return new JSInducedCFG(getStatements(new WarningSet()), this, Everywhere.EVERYWHERE);
+      return new JSInducedCFG(getStatements(), this, Everywhere.EVERYWHERE);
     }
 
     public SSANewInstruction addAllocation(TypeReference T, WarningSet warnings) {

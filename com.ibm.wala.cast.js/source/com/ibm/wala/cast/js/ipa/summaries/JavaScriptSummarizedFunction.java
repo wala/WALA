@@ -17,7 +17,6 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public class JavaScriptSummarizedFunction extends SummarizedMethod {
 
@@ -33,7 +32,7 @@ public class JavaScriptSummarizedFunction extends SummarizedMethod {
   }
 
   public InducedCFG makeControlFlowGraph() {
-    return new JSInducedCFG(getStatements(new WarningSet()), this, Everywhere.EVERYWHERE);
+    return new JSInducedCFG(getStatements(), this, Everywhere.EVERYWHERE);
   }
 
 }

@@ -71,7 +71,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   /////////////////////////////////////////////////////////////////////////////
 
   protected ExplicitCallGraph createEmptyCallGraph(ClassHierarchy cha, AnalysisOptions options) {
-    return new JSCallGraph(cha, options, getWarnings());
+    return new JSCallGraph(cha, options);
   }
 
   protected TypeInference makeTypeInference(IR ir, ClassHierarchy cha) {
