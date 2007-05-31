@@ -131,14 +131,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
     return node.getMethod().getReference().equals(J2EEContextSelector.ExecuteMethod);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#getNewSites(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public Iterator<NewSiteReference> iterateNewSites(CGNode node, WarningSet warnings) {
+  public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     return EmptyIterator.instance();
   }
 
@@ -150,14 +143,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
     return m.getInvokeStatements().iterator();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#getCallSites(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.detox.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public Iterator<CallSiteReference> iterateCallSites(CGNode node, WarningSet warnings) {
+  public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     final Iterator<SSAInstruction> I = getInvokeStatements(node);
     return new Iterator<CallSiteReference>() {
       public boolean hasNext() {
@@ -301,23 +287,11 @@ public class CommandInterpreter implements SSAContextInterpreter {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateFieldsRead(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public Iterator<IField> iterateFieldsRead(CGNode node, WarningSet warnings) {
+  public Iterator<IField> iterateFieldsRead(CGNode node) {
     return EmptyIterator.instance();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateFieldsWritten(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public Iterator<IField> iterateFieldsWritten(CGNode node, WarningSet warnings) {
+  public Iterator<IField> iterateFieldsWritten(CGNode node) {
     return EmptyIterator.instance();
   }
 
