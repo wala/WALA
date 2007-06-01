@@ -18,16 +18,21 @@ import java.util.Set;
 import com.ibm.wala.cast.ir.cfg.AstInducedCFG;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cfg.InducedCFG;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.impl.*;
+import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
+import com.ibm.wala.ipa.callgraph.impl.Everywhere;
+import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
+import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Function;
-import com.ibm.wala.util.Function;
-import com.ibm.wala.types.*;
 
 public class AstCallGraph extends ExplicitCallGraph {
   public AstCallGraph(IClassHierarchy cha, AnalysisOptions options) {
@@ -83,11 +88,11 @@ public class AstCallGraph extends ExplicitCallGraph {
 
   }
 
-  protected static class AstCGNode<T extends AstCallGraph> extends ExplicitNode<T> {
+  protected class AstCGNode extends ExplicitNode {
     private Set<Function<Object,Object>> callbacks;
 
-    private AstCGNode(T CG, IMethod method, Context context) {
-      super(CG, method, context);
+    private AstCGNode(IMethod method, Context context) {
+      super(method, context);
     }
 
     private void fireCallbacks() {
@@ -123,7 +128,7 @@ public class AstCallGraph extends ExplicitCallGraph {
 
 	callbacks.add(callback);
 
-	for(Iterator ps = CG.getPredNodes(this); ps.hasNext(); ) {
+	for(Iterator ps = getCallGraph().getPredNodes(this); ps.hasNext(); ) {
 	  ((AstCGNode)ps.next()).addCallback(callback);
 	}
       }
@@ -137,7 +142,7 @@ public class AstCallGraph extends ExplicitCallGraph {
 
 	callbacks.addAll(callbacks);
 
-	for(Iterator ps = CG.getPredNodes(this); ps.hasNext(); ) {
+	for(Iterator ps = getCallGraph().getPredNodes(this); ps.hasNext(); ) {
 	  ((AstCGNode)ps.next()).addAllCallbacks(callbacks);
 	}
       }
@@ -157,7 +162,7 @@ public class AstCallGraph extends ExplicitCallGraph {
   }
 
   protected ExplicitNode makeNode(IMethod method, Context context) {
-    return new AstCGNode(this, method, context);
+    return new AstCGNode(method, context);
   }
 
   protected CGNode makeFakeRootNode() {

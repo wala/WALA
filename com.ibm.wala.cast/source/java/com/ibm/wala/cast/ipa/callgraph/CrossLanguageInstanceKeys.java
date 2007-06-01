@@ -37,9 +37,6 @@ public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
     return (InstanceKeyFactory)languageSelectors.get(getLanguage(type));
   }
 
-  private InstanceKeyFactory getSelector(CGNode node) {
-      return (InstanceKeyFactory)languageSelectors.get(getLanguage(node));
-  }
 
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     return getSelector(allocation).getInstanceKeyForAllocation(node, allocation);
@@ -49,12 +46,12 @@ public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
     return getSelector(allocation).getInstanceKeyForMultiNewArray(node, allocation, dim);
   }
 
-  public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
-    return getSelector(node).getInstanceKeyForConstant(node, S);
+  public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
+    return getSelector(type).getInstanceKeyForConstant(type, S);
   }
 
-  public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
-    return getSelector(node).getStringConstantForInstanceKey(node, I);
+  public String getStringConstantForInstanceKey(InstanceKey I) {
+    return getSelector(I.getConcreteType().getReference()).getStringConstantForInstanceKey(I);
   }
 
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
