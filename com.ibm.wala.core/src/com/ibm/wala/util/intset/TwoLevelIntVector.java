@@ -30,7 +30,7 @@ public class TwoLevelIntVector implements IntVector {
    * Array of IntVector: data.get(i) holds data[i*PAGE_SIZE] ...
    * data[(i+1)*PAGESIZE - 1]
    */
-  private Vector<SparseIntVector> data = new Vector<SparseIntVector>();
+  final private Vector<SparseIntVector> data = new Vector<SparseIntVector>();
 
   private final int defaultValue;
 

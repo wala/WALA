@@ -27,7 +27,7 @@ public class SymbolTable {
   /**
    * value numbers for parameters to this method
    */
-  private int[] parameters;
+  final private int[] parameters;
 
   /**
    * Mapping from Constant -> value number

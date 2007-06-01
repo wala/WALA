@@ -303,7 +303,7 @@ public class EngineTimings {
   private static class Phase {
     String name;
 
-    int depth;
+    final int depth;
 
     long millis;
 

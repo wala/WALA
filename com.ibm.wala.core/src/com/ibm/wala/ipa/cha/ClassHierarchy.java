@@ -60,10 +60,8 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   private final Language language;
 
-  /**
-   * mapping from IClass to Node
-   */
-  private HashMap<IClass, Node> map = HashMapFactory.make();
+
+  final private HashMap<IClass, Node> map = HashMapFactory.make();
 
   /**
    * root node of the class hierarchy
@@ -80,7 +78,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * 
    * XXX is order significant??
    */
-  private IClassLoader[] loaders;
+  final private IClassLoader[] loaders;
 
   /**
    * An object which tracks analysis warnings

@@ -83,7 +83,7 @@ public class EclipseAnalysisScope extends AnalysisScope {
    * A Set containing String objects, each String object representing the plugin
    * id of a plug-in, fragment, or bundle being analyzed.
    */
-  private Set<String> pluginIds = HashSetFactory.make();
+  final private Set<String> pluginIds = HashSetFactory.make();
   
   /**
    * name of plugin being analyzed

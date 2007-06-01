@@ -223,7 +223,7 @@ public class ShrikeCFG extends AbstractCFG {
     /**
      * The number of the ShrikeBT instruction that begins this block.
      */
-    private int startIndex;
+    final private int startIndex;
 
     public BasicBlock(int startIndex) {
       this.startIndex = startIndex;

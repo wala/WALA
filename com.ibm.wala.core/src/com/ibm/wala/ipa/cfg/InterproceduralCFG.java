@@ -65,7 +65,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   /**
    * Graph implementation we delegate to.
    */
-  private NumberedGraph<BasicBlockInContext> G = new SlowSparseNumberedGraph<BasicBlockInContext>(2);
+  final private NumberedGraph<BasicBlockInContext> G = new SlowSparseNumberedGraph<BasicBlockInContext>(2);
 
   /**
    * Governing call graph

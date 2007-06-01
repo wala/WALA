@@ -45,7 +45,7 @@ public class AnalysisOptions {
   /**
    * An object that identifies the entrypoints for the call graph
    */
-  private Iterable<Entrypoint> entrypoints;
+  private final Iterable<Entrypoint> entrypoints;
 
   /**
    * An object which represents the user specification for reflection
@@ -157,20 +157,18 @@ public class AnalysisOptions {
     this.ssaCache = new SSACache(factory);
     this.cfgCache = new CFGCache(factory);
     ReferenceCleanser.registerAnalysisOptions(this);
+    this.entrypoints = null;
   }
 
   public AnalysisOptions() {
     this(new DefaultIRFactory());
   }
 
-  /**
-   * Constructor AnalysisOptions.
-   * 
-   * @param scope
-   * @param e
-   */
   public AnalysisOptions(AnalysisScope scope, IRFactory factory, Iterable<Entrypoint> e) {
-    this(factory);
+    this.irFactory = factory;
+    this.ssaCache = new SSACache(factory);
+    this.cfgCache = new CFGCache(factory);
+    ReferenceCleanser.registerAnalysisOptions(this);
     this.analysisScope = scope;
     this.entrypoints = e;
   }
@@ -179,30 +177,14 @@ public class AnalysisOptions {
     this(scope, new DefaultIRFactory(), e);
   }
 
-  /**
-   * Returns the analysisScope.
-   * 
-   * @return AnalysisScope
-   */
   public AnalysisScope getAnalysisScope() {
     return analysisScope;
   }
 
-  /**
-   * Sets the analysisScope.
-   * 
-   * @param analysisScope
-   *          The analysisScope to set
-   */
   public void setAnalysisScope(AnalysisScope analysisScope) {
     this.analysisScope = analysisScope;
   }
 
-  /**
-   * Returns the entrypoints.
-   * 
-   * @return Entrypoints
-   */
   public Iterable<Entrypoint> getEntrypoints() {
     return entrypoints;
   }

@@ -30,7 +30,7 @@ import com.ibm.wala.types.TypeReference;
  */
 public class ArgumentTypeEntrypoint extends Entrypoint {
 
-  private TypeReference[][] paramTypes;
+  final private TypeReference[][] paramTypes;
 
   private final IClassHierarchy cha;
 

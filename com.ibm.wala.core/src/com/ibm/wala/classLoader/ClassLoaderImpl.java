@@ -48,7 +48,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * classes to ignore
    */
-  private SetOfClasses exclusions;
+  final private SetOfClasses exclusions;
 
   /**
    * Identity for this class loader

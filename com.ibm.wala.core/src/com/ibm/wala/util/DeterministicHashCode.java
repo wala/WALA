@@ -20,7 +20,7 @@ import java.util.Random;
  */
 public class DeterministicHashCode {
 
-  private static Random r = new Random(1000);
+  final private static Random r = new Random(1000);
 
   public static synchronized int get() {
     return r.nextInt();

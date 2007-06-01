@@ -98,7 +98,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
   /**
    * Mapping from TypeReference -> IR TODO: Soft references?
    */
-  private Map<TypeReference, IR> IRCache = HashMapFactory.make();
+  final private Map<TypeReference, IR> IRCache = HashMapFactory.make();
 
   public IR getIR(CGNode node, WarningSet warnings) {
     if (node == null) {

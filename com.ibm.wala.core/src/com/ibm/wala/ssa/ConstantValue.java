@@ -17,25 +17,16 @@ package com.ibm.wala.ssa;
  * @author sfink
  */
 public class ConstantValue implements Value {
-  private Object constant;
+  final private Object constant;
 
-  /**
-   * @param constant
-   */
   public ConstantValue(Object constant) {
     this.constant = constant;
   }
 
-  /**
-   * @param constant
-   */
   public ConstantValue(int constant) {
     this(new Integer(constant));
   }
 
-  /**
-   * @param constant
-   */
   public ConstantValue(double constant) {
     this(new Double(constant));
   }

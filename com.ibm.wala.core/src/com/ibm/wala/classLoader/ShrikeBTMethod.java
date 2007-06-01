@@ -121,7 +121,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
      * Exception types this method might throw. Computed on demand.
      */
     private TypeReference[] exceptionTypes;
-    
+
     /**
      * the "Signature" attribute; holds information on generics
      */
@@ -136,7 +136,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   public ShrikeBTMethod(IClass klass) {
     this.declaringClass = klass;
   }
-  
+
   protected BytecodeInfo getBCInfo() throws InvalidClassFileException {
     BytecodeInfo result = null;
     if (bcInfo != null) {
@@ -178,7 +178,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     if (isNative()) {
       return empty;
     }
-    
+
     return (getBCInfo().newSites == null) ? empty : Collections.unmodifiableCollection(Arrays.asList(getBCInfo().newSites));
   }
 
@@ -191,13 +191,13 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     if (isNative()) {
       return Collections.EMPTY_SET;
     }
-    return (getBCInfo().implicitExceptions == null) ? Arrays.asList(new TypeReference[0]) : Arrays.asList(getBCInfo().implicitExceptions);
+    return (getBCInfo().implicitExceptions == null) ? Arrays.asList(new TypeReference[0]) : Arrays
+        .asList(getBCInfo().implicitExceptions);
   }
 
   /**
-   * Do a cheap pass over the bytecodes to collect some
-   * mapping information. Some methods require this as a pre-req to accessing
-   * ShrikeCT information.
+   * Do a cheap pass over the bytecodes to collect some mapping information.
+   * Some methods require this as a pre-req to accessing ShrikeCT information.
    * 
    * @throws InvalidClassFileException
    */
@@ -321,8 +321,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       Atom name = Atom.findOrCreateUnicodeAtom(getMethodName());
       ImmutableByteArray desc = ImmutableByteArray.make(getMethodSignature());
       Descriptor D = Descriptor.findOrCreate(desc);
-      return 
-	MethodReference.findOrCreate(declaringClass.getReference(), name, D);
+      return MethodReference.findOrCreate(declaringClass.getReference(), name, D);
     } catch (InvalidClassFileException e) {
       Assertions.UNREACHABLE();
       return null;
@@ -369,7 +368,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   public boolean isFinal() {
     return ((getModifiers() & Constants.ACC_FINAL) != 0);
   }
-  
+
   public boolean isVolatile() {
     return ((getModifiers() & Constants.ACC_VOLATILE) != 0);
   }
@@ -403,7 +402,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
    * @throws InvalidClassFileException
    */
   protected abstract void processDebugInfo(BytecodeInfo bcInfo) throws InvalidClassFileException;
-
 
   private void processBytecodesWithShrikeBT(BytecodeInfo info) throws InvalidClassFileException {
     info.decoder = makeDecoder();
@@ -544,14 +542,14 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /**
    * 
    * A visitor used to process bytecodes
-   *
+   * 
    */
   private class SimpleVisitor extends Instruction.Visitor {
-    
+
     private final BytecodeInfo info;
-    
+
     public SimpleVisitor(BytecodeInfo info) {
-      this.info = info; 
+      this.info = info;
     }
 
     // TODO: make a better Set implementation for these.
@@ -561,9 +559,9 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
     Set<FieldReference> fieldsRead = HashSetFactory.make(5);
 
-    Set<NewSiteReference> newSites = HashSetFactory.make(5);
+    final Set<NewSiteReference> newSites = HashSetFactory.make(5);
 
-    Set<TypeReference> arraysRead = HashSetFactory.make(5);
+    final Set<TypeReference> arraysRead = HashSetFactory.make(5);
 
     Set<TypeReference> arraysWritten = HashSetFactory.make(5);
 
@@ -619,8 +617,8 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     @Override
     public void visitInvoke(InvokeInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
-      MethodReference m = MethodReference.findOrCreate(loader, instruction.getClassType(), instruction.getMethodName(),
-          instruction.getMethodSignature());
+      MethodReference m = MethodReference.findOrCreate(loader, instruction.getClassType(), instruction.getMethodName(), instruction
+          .getMethodSignature());
       int programCounter = 0;
       try {
         programCounter = getProgramCounter();
@@ -743,7 +741,8 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   /**
    * Clients should not modify the returned array. TODO: clone to avoid the
    * problem?
-   * @throws InvalidClassFileException 
+   * 
+   * @throws InvalidClassFileException
    * 
    * @see com.ibm.wala.classLoader.IMethod#getDeclaredExceptions()
    */
@@ -760,7 +759,8 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   private TypeReference[] computeDeclaredExceptions() {
     try {
       String[] strings = getDeclaredExceptionTypeNames();
-      if (strings == null) return null;
+      if (strings == null)
+        return null;
 
       ClassLoaderReference loader = getDeclaringClass().getClassLoader().getReference();
 
@@ -774,8 +774,8 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       return null;
     }
   }
-  
-  protected abstract String computeGenericsSignature() throws InvalidClassFileException; 
+
+  protected abstract String computeGenericsSignature() throws InvalidClassFileException;
 
   /*
    * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)
@@ -829,7 +829,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   public abstract String getLocalVariableName(int bcIndex, int localNumber) throws InvalidClassFileException;
 
   /*
-   * TODO: cache for efficiency? 
+   * TODO: cache for efficiency?
    * 
    * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
    */

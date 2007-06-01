@@ -238,7 +238,7 @@ public class InducedCFG extends AbstractCFG {
   // TODO: extend the following to deal with catch blocks. Right now
   // it simply breaks basic blocks at PEIs.
   public class PEIVisitor extends SSAInstruction.Visitor {
-    private boolean[] r;
+    final private boolean[] r;
 
     protected PEIVisitor(boolean[] r) {
       this.r = r;

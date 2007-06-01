@@ -47,7 +47,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
    */
   private final EdgeManager<IBasicBlock> edgeManager;
 
-  private boolean ignoreUnreachableCode = false;
+  private final boolean ignoreUnreachableCode;
 
   private final HashMap<IBasicBlock, BasicBlock> bbMap = new HashMap<IBasicBlock, BasicBlock>();
 

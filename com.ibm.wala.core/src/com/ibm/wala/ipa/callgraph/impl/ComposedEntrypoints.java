@@ -25,7 +25,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
  */
 public class ComposedEntrypoints implements Iterable<Entrypoint> {
 
-  private Set<Entrypoint> entrypoints = HashSetFactory.make();
+  final private Set<Entrypoint> entrypoints = HashSetFactory.make();
   
   public ComposedEntrypoints(Iterable<Entrypoint> A, Iterable<Entrypoint> B) {
     if (A == null) {

@@ -50,7 +50,7 @@ public class DFSPathFinder<T> extends Stack<T> {
   /**
    * an enumeration of all nodes to search from
    */
-  private Iterator<T> roots;
+  final private Iterator<T> roots;
 
   /**
    * An iterator of child nodes for each node being searched

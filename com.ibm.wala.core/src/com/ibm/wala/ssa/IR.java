@@ -61,7 +61,7 @@ public abstract class IR {
   /**
    * Symbol table
    */
-  private SymbolTable symbolTable;
+  final private SymbolTable symbolTable;
 
   /**
    * Mapping from CallSiteReference program counters to instruction[] indices
@@ -76,7 +76,7 @@ public abstract class IR {
   /**
    * Mapping from PEI program counters to instruction[] indices
    */
-  private Map<ProgramCounter, Integer> peiMapping = HashMapFactory.make();
+  final private Map<ProgramCounter, Integer> peiMapping = HashMapFactory.make();
   
   /**
    * Mapping from SSAInstruction to Basic Block, computed lazily
@@ -420,7 +420,7 @@ public abstract class IR {
   private class NormalIterator implements Iterator<SSAInstruction> {
     int nextIndex = -1;
 
-    SSAInstruction[] instructions = getInstructions();
+    final SSAInstruction[] instructions = getInstructions();
 
     NormalIterator() {
       advanceIndex(0);

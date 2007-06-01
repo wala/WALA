@@ -62,7 +62,7 @@ public class SSABuilder extends AbstractIntStackMachine {
   /**
    * A wrapper around the method being analyzed.
    */
-  private ShrikeCTMethod method;
+  final private ShrikeCTMethod method;
 
   /**
    * Governing symbol table

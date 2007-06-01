@@ -201,11 +201,8 @@ public class CallGraphWarnings {
    */
   private static class NoCalleeWarning extends MethodWarning {
 
-    private CallSiteReference site;
+    final private CallSiteReference site;
 
-    /**
-     * @param node
-     */
     public NoCalleeWarning(CGNode node, CallSiteReference site) {
       super(node.getMethod().getReference());
       this.site = site;

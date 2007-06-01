@@ -30,7 +30,7 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class ReceiverTypeInference {
 
-  private TypeInference ti;
+  final private TypeInference ti;
 
   /**
    * Mapping from call site reference to InvokeInstruction. TODO: this kind of

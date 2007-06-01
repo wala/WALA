@@ -54,7 +54,7 @@ public class BFSPathFinder<T> {
   /**
    * an enumeration of all nodes to search from
    */
-  private Iterator<T> roots;
+  final private Iterator<T> roots;
 
   /**
    * Construct a breadth-first enumerator starting with a particular node in a

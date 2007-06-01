@@ -60,7 +60,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
   /**
    * The governing class hierarchy
    */
-  protected IClassHierarchy cha;
+  final protected IClassHierarchy cha;
 
   /**
    * A singleton instance of the phi operator.

@@ -30,7 +30,7 @@ public class IntensionalSetOfStrings {
   private static final boolean DEBUG = false;
 
   private Pattern pattern;
-  private String regex;
+  final private String regex;
   private boolean needsCompile = true;
 
   public IntensionalSetOfStrings(String xmlFile, ClassLoader loader) throws WalaException {

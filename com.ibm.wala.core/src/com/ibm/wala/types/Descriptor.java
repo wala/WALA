@@ -138,7 +138,7 @@ public final class Descriptor {
   private static class Key {
     private TypeName returnType;
     private TypeName[] parameters;
-    private int hashCode; // cached for efficiency
+    final private int hashCode; // cached for efficiency
     Key(TypeName returnType, TypeName[] parameters) {
       this.returnType = returnType;
       this.parameters = parameters;

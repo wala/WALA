@@ -39,7 +39,7 @@ public class BFSIterator<T> implements Iterator<T> {
   /**
    * Set of nodes that have been visited
    */
-  HashSet<T> visited = HashSetFactory.make();
+  final HashSet<T> visited = HashSetFactory.make();
 
   /**
    * index of the node currently being searched

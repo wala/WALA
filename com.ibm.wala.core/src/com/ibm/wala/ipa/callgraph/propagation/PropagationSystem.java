@@ -118,7 +118,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * 
    * This maintains a map from PointsToSetVariable -> Set<UnarySideEffect>
    */
-  private Map<PointsToSetVariable,Set<UnarySideEffect>> fixedSetMap = HashMapFactory.make();
+  final private Map<PointsToSetVariable,Set<UnarySideEffect>> fixedSetMap = HashMapFactory.make();
 
   /**
    * Governing call graph;

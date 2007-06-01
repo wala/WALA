@@ -39,7 +39,7 @@ public class SSACache {
   /**
    * A cache of SSA IRs
    */
-  private AuxiliaryCache irCache = new AuxiliaryCache();
+  final private AuxiliaryCache irCache = new AuxiliaryCache();
 
   /**
    * A cache of DefUse information
