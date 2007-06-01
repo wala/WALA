@@ -11,13 +11,13 @@
 package com.ibm.wala.j2ee;
 
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 class MDBEntrypoint extends EJBLifecycleEntrypoint {
 
-  MDBEntrypoint(IMethod m, ClassHierarchy cha, TypeReference bean) {
+  MDBEntrypoint(IMethod m, IClassHierarchy cha, TypeReference bean) {
     super(m, cha, bean);
     if (Assertions.verifyAssertions) {
       Assertions._assert(m.getDescriptor().equals(EJBConstants.onMessageDesc));

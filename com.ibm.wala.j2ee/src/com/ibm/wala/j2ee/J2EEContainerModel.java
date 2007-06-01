@@ -23,7 +23,7 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticClass;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
@@ -115,9 +115,9 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   /**
    * Governing class hierarchy
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
-  J2EEContainerModel(DeploymentMetaData deployment, ClassHierarchy cha) {
+  J2EEContainerModel(DeploymentMetaData deployment, IClassHierarchy cha) {
     super(containerModelRef, cha);
     this.cha = cha;
     this.deployment = deployment;

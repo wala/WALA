@@ -23,7 +23,7 @@ import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.j2ee.util.TopLevelArchiveModule;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
@@ -55,7 +55,7 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
   /**
    * Governing class hierarchy
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * Governing analysis scope
@@ -65,15 +65,13 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
   private final WarningSet warnings;
 
   /**
-   * Constructor.
-   * 
    * @param scope
    *          scope of analysis
    * @param cha
    *          loaded class hierarchy
    * @throws IllegalArgumentException  if scope is null
    */
-  public AppClientEntrypoints(J2EEAnalysisScope scope, ClassHierarchy cha, WarningSet warnings) {
+  public AppClientEntrypoints(J2EEAnalysisScope scope, IClassHierarchy cha, WarningSet warnings) {
     if (scope == null) {
       throw new IllegalArgumentException("scope is null");
     }

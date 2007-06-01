@@ -15,7 +15,7 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassSyntheticClass;
 import com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader;
 import com.ibm.wala.types.TypeName;
@@ -47,7 +47,7 @@ public class J2EEClassTargetSelector implements ClassTargetSelector {
   /**
    * Governing class hierarchy
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   private final BypassSyntheticClassLoader bypassLoader;
 
@@ -61,7 +61,7 @@ public class J2EEClassTargetSelector implements ClassTargetSelector {
    * @param bypassLoader
    *          class loader to deal with J2EE bypass logic
    */
-  public J2EEClassTargetSelector(ClassTargetSelector parent, DeploymentMetaData metaData, ClassHierarchy cha,
+  public J2EEClassTargetSelector(ClassTargetSelector parent, DeploymentMetaData metaData, IClassHierarchy cha,
       IClassLoader bypassLoader) {
     this.cha = cha;
     this.parent = parent;

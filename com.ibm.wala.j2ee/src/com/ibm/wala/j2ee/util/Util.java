@@ -27,6 +27,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.rta.BasicRTABuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.j2ee.BeanMetaData;
 import com.ibm.wala.j2ee.CommandInterpreter;
 import com.ibm.wala.j2ee.DeploymentMetaData;
@@ -60,7 +61,7 @@ public class Util {
    * @param warnings
    *          an object which tracks analysis warnings
    */
-  public static CallGraphBuilder makeRTABuilder(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
+  public static CallGraphBuilder makeRTABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
       DeploymentMetaData dmd, WarningSet warnings) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
@@ -92,7 +93,7 @@ public class Util {
    *          an object which tracks analysis warnings
    * @return a 0-CFA Call Graph Builder.
    */
-  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
+  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
       DeploymentMetaData dmd, WarningSet warnings) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
@@ -125,7 +126,7 @@ public class Util {
    *          an object which tracks analysis warnings
    * @return a 1-CFA Call Graph Builder.
    */
-  public static CallGraphBuilder makeOneCFABuilder(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl,
+  public static CallGraphBuilder makeOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl,
       AnalysisScope scope, DeploymentMetaData dmd, WarningSet warnings) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
@@ -161,7 +162,7 @@ public class Util {
    * This version uses the DEDUCED_PLUS_STRINGSTUFF policy to avoid
    * disambiguating uninteresting types.
    */
-  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
+  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
       DeploymentMetaData dmd, WarningSet warnings) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
@@ -231,7 +232,7 @@ public class Util {
    * @return a 0-CFA Call Graph Builder augmented with extra logic for
    *         containers
    */
-  public static CFABuilder makeZeroContainerCFABuilder(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl,
+  public static CFABuilder makeZeroContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl,
       AnalysisScope scope, DeploymentMetaData dmd, WarningSet warnings) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
@@ -264,7 +265,7 @@ public class Util {
    * @return a 0-1-CFA Call Graph Builder augmented with extra logic for
    *         containers
    */
-  public static CFABuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl,
+  public static CFABuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl,
       AnalysisScope scope, DeploymentMetaData dmd, WarningSet warnings) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
@@ -281,7 +282,7 @@ public class Util {
     return new ZeroOneContainerCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec());
   }
 
-  public static void addJ2EEBypassLogic(AnalysisOptions options, AnalysisScope scope, DeploymentMetaData dmd, ClassHierarchy cha,
+  public static void addJ2EEBypassLogic(AnalysisOptions options, AnalysisScope scope, DeploymentMetaData dmd, IClassHierarchy cha,
       ReceiverTypeInferenceCache typeInference, WarningSet warn) {
 
     if (cha == null) {
@@ -325,7 +326,7 @@ public class Util {
 
   private static final String benignExtSpec = "benignext.xml";
 
-  public static void addDefaultJ2EEBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, ClassHierarchy cha) {
+  public static void addDefaultJ2EEBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, IClassHierarchy cha) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultBypassLogic(options, scope, cl, cha);
     com.ibm.wala.ipa.callgraph.impl.Util.addBypassLogic(options, scope, cl, benignExtSpec, cha);
   }

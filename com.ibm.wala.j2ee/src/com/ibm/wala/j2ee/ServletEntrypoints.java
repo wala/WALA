@@ -19,7 +19,7 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
@@ -147,13 +147,12 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   }
 
   /**
-   * Constructor.
    * @param scope
    *          scope of analysis
    * @param cha
    *          loaded class hierarchy
    */
-  public ServletEntrypoints(J2EEAnalysisScope scope, ClassHierarchy cha) {
+  public ServletEntrypoints(J2EEAnalysisScope scope, IClassHierarchy cha) {
 
     TypeReference servletType = TypeReference.findOrCreate(scope.getExtensionLoader(), servletName);
     TypeReference actionServletType = TypeReference.findOrCreate(scope.getApplicationLoader(), actionServlet);

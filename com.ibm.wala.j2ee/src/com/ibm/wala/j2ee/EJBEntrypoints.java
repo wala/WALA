@@ -31,7 +31,7 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MemberReference;
@@ -55,7 +55,7 @@ import com.ibm.wala.util.warnings.WarningSet;
 public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   static final boolean DEBUG = false;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * The set of Entrypoint for call graph construction.
@@ -114,7 +114,7 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
    *          representation of the analysis scope.
    */
   @SuppressWarnings({ "restriction", "unchecked" })
-  public EJBEntrypoints(ClassHierarchy cha, J2EEAnalysisScope scope, DeploymentMetaData deployment, boolean justMDBs,
+  public EJBEntrypoints(IClassHierarchy cha, J2EEAnalysisScope scope, DeploymentMetaData deployment, boolean justMDBs,
       J2EEClassTargetSelector classTargetSelector, WarningSet warnings) {
     this.cha = cha;
     this.deployment = deployment;

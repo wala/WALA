@@ -12,7 +12,7 @@ package com.ibm.wala.j2ee.client.impl;
 
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.j2ee.DeploymentMetaData;
 import com.ibm.wala.j2ee.J2EEAnalysisScope;
 import com.ibm.wala.j2ee.client.CallGraphBuilderFactory;
@@ -27,16 +27,7 @@ public class ZeroCFABuilderFactory
     implements CallGraphBuilderFactory 
 {
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.client.CallGraphBuilderFactory#make(com.ibm.wala.ipa.callgraph.AnalysisOptions,
-   *      com.ibm.wala.ipa.cha.ClassHierarchy, java.lang.ClassLoader,
-   *      com.ibm.wala.j2ee.J2EEAnalysisScope,
-   *      com.ibm.wala.j2ee.DeploymentMetaData,
-   *      com.ibm.wala.util.warnings.WarningSet, boolean)
-   */
-  public CallGraphBuilder make(AnalysisOptions options, ClassHierarchy cha, J2EEAnalysisScope scope,
+  public CallGraphBuilder make(AnalysisOptions options, IClassHierarchy cha, J2EEAnalysisScope scope,
       DeploymentMetaData dmd, WarningSet warnings, boolean keepPointsTo) {
     return Util.makeZeroCFABuilder(options, cha, getClass().getClassLoader(), scope, dmd, warnings);
   }

@@ -20,8 +20,8 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MemberReference;
@@ -81,14 +81,12 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   }
 
   /**
-   * Constructor.
-   * 
    * @param scope
    *          scope of analysis
    * @param cha
    *          loaded class hierarchy
    */
-  public StrutsEntrypoints(J2EEAnalysisScope scope, ClassHierarchy cha) {
+  public StrutsEntrypoints(J2EEAnalysisScope scope, IClassHierarchy cha) {
 
     TypeReference actionType = TypeReference.findOrCreate(scope.getApplicationLoader(), actionName);
     IClass actionClass = cha.lookupClass(actionType);
@@ -136,7 +134,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
    * @param klass
    *          an Action
    */
-  private void addSpeculativeDispatchMethods(IClass klass, ClassHierarchy cha) {
+  private void addSpeculativeDispatchMethods(IClass klass, IClassHierarchy cha) {
     IClass C = klass;
     while (C != null) {
       for (Iterator<IMethod> it = C.getDeclaredMethods().iterator(); it.hasNext();) {
@@ -203,7 +201,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   private static class StrutsActionEntrypoint extends DefaultEntrypoint {
     private final TypeReference receiver;
 
-    public StrutsActionEntrypoint(IClass concreteType, IMethod method, ClassHierarchy cha) {
+    public StrutsActionEntrypoint(IClass concreteType, IMethod method, IClassHierarchy cha) {
       super(method, cha);
       receiver = concreteType.getReference();
     }

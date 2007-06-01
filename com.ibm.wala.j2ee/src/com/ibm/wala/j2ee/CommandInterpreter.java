@@ -35,7 +35,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
@@ -75,7 +75,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
   /**
    * Governing class hierarchy
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * Keep track of analysis warnings
@@ -88,7 +88,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
    * @param warnings
    *          object to track analysis warnings
    */
-  public CommandInterpreter(ClassHierarchy cha,  WarningSet warnings) {
+  public CommandInterpreter(IClassHierarchy cha,  WarningSet warnings) {
     this.cha = cha;
     this.warnings = warnings;
   }

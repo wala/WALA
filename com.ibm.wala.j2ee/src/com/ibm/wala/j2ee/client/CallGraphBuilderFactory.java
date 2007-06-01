@@ -12,7 +12,7 @@ package com.ibm.wala.j2ee.client;
 
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.j2ee.DeploymentMetaData;
 import com.ibm.wala.j2ee.J2EEAnalysisScope;
 import com.ibm.wala.util.warnings.WarningSet;
@@ -58,6 +58,6 @@ public interface CallGraphBuilderFactory extends com.ibm.wala.client.CallGraphBu
    *          preserve PointsTo graph for posterity?
    *  
    */
-  CallGraphBuilder make(AnalysisOptions options, ClassHierarchy cha, J2EEAnalysisScope scope, DeploymentMetaData dmd,
+  CallGraphBuilder make(AnalysisOptions options, IClassHierarchy cha, J2EEAnalysisScope scope, DeploymentMetaData dmd,
       WarningSet warnings, boolean keepPointsTo);
 }

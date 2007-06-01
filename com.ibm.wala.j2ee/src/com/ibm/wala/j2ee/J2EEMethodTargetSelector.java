@@ -27,7 +27,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassSyntheticClass;
 import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
@@ -94,7 +94,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   /**
    * the governing class hierarchy
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * A cache of synthetic methods generated so far. Mapping from MethodReference ->
@@ -149,7 +149,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   }
 
   public J2EEMethodTargetSelector(AnalysisScope scope, MethodTargetSelector parent, DeploymentMetaData deployment,
-      ClassHierarchy cha, ReceiverTypeInferenceCache typeInference, WarningSet warnings) {
+      IClassHierarchy cha, ReceiverTypeInferenceCache typeInference, WarningSet warnings) {
     this.scope = scope;
     this.deployment = deployment;
     this.warnings = warnings;

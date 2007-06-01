@@ -12,14 +12,14 @@ package com.ibm.wala.j2ee;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
 class EJBLifecycleEntrypoint extends DefaultEntrypoint {
 
   private final TypeReference bean;
 
-  EJBLifecycleEntrypoint(IMethod m, ClassHierarchy cha, TypeReference bean) {
+  EJBLifecycleEntrypoint(IMethod m, IClassHierarchy cha, TypeReference bean) {
     super(m, cha);
     this.bean = bean;
   }
