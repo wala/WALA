@@ -44,15 +44,16 @@ import java.util.jar.*;
  * <P>
  * This observation is implemented in the obvious way:
  * <OL>
- *  <LI> All static fields are collected
- *  <LI> All Thread constructor parameters are collected
- *  <LI> The points-to sets of these values represent the base set of escapees.
- *  <LI> All object reachable from fields of these objects are added
- *  <LI> This process continues until a fixpoint is reached
- *  <LI> The abstract objects in the points-to sets are converted to types
- *  <LI> This set of types is returned
- * </OL></P>
- *
+ * <LI> All static fields are collected
+ * <LI> All Thread constructor parameters are collected
+ * <LI> The points-to sets of these values represent the base set of escapees.
+ * <LI> All object reachable from fields of these objects are added
+ * <LI> This process continues until a fixpoint is reached
+ * <LI> The abstract objects in the points-to sets are converted to types
+ * <LI> This set of types is returned
+ * </OL>
+ * </P>
+ * 
  * @author Julian Dolby
  */
 public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
@@ -195,7 +196,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     // reachable from fields of types in these pointer keys, and all
     // Thread objects must be constructed somewhere)
     Collection<IClass> threads = cha.computeSubClasses(TypeReference.JavaLangThread);
-    for (Iterator<IClass>clss = threads.iterator(); clss.hasNext();) {
+    for (Iterator<IClass> clss = threads.iterator(); clss.hasNext();) {
       IClass cls = (IClass) clss.next();
       for (Iterator<IMethod> ms = cls.getDeclaredMethods().iterator(); ms.hasNext();) {
         IMethod m = (IMethod) ms.next();
@@ -282,13 +283,12 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
   }
 
   /**
-   *  This main program shows one example use of thread escape
-   * analysis: producing a set of fields to be monitored for a
-   * dynamic race detector.  The idea is that any field might have a
-   * race with two excpetions: final fields do not have races since
-   * there are no writes to them, and volatile fields have atomic read
-   * and write semantics provided by trhe VM.  Hence, this piece of
-   * code produces a list of all other fields.
+   * This main program shows one example use of thread escape analysis:
+   * producing a set of fields to be monitored for a dynamic race detector. The
+   * idea is that any field might have a race with two excpetions: final fields
+   * do not have races since there are no writes to them, and volatile fields
+   * have atomic read and write semantics provided by trhe VM. Hence, this piece
+   * of code produces a list of all other fields.
    */
   public static void main(String[] args) throws IOException, ClassHierarchyException {
     String mainClassName = args[0];
@@ -302,11 +302,11 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
 
     for (Iterator<IClass> types = escapingTypes.iterator(); types.hasNext();) {
       IClass cls = types.next();
-      for(Iterator fs = cls.getAllFields().iterator(); fs.hasNext(); ) {
-	IField f = (IField) fs.next();
-	if (!f.isVolatile() && !f.isFinal()) {
-	  System.err.println( f.getReference() );
-	}
+      for (Iterator<IField> fs = cls.getAllFields().iterator(); fs.hasNext();) {
+        IField f = (IField) fs.next();
+        if (!f.isVolatile() && !f.isFinal()) {
+          System.err.println(f.getReference());
+        }
       }
     }
   }
