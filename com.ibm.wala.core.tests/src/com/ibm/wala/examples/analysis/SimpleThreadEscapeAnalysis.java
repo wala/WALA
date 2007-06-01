@@ -139,7 +139,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     //
     // ...and the class hierarchy
     //
-    ClassHierarchy cha = buildClassHierarchy();
+    IClassHierarchy cha = buildClassHierarchy();
     setClassHierarchy(cha);
 
     //
@@ -281,6 +281,15 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     return escapingTypes;
   }
 
+  /**
+   *  This main program shows one example use of thread escape
+   * analysis: producing a set of fields to be monitored for a
+   * dynamic race detector.  The idea is that any field might have a
+   * race with two excpetions: final fields do not have races since
+   * there are no writes to them, and volatile fields have atomic read
+   * and write semantics provided by trhe VM.  Hence, this piece of
+   * code produces a list of all other fields.
+   */
   public static void main(String[] args) throws IOException, ClassHierarchyException {
     String mainClassName = args[0];
 
@@ -292,7 +301,13 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     Set<IClass> escapingTypes = (new SimpleThreadEscapeAnalysis(jars, mainClassName)).gatherThreadEscapingClasses();
 
     for (Iterator<IClass> types = escapingTypes.iterator(); types.hasNext();) {
-      System.out.println(types.next().getName().toString());
+      IClass cls = types.next();
+      for(Iterator fs = cls.getAllFields().iterator(); fs.hasNext(); ) {
+	IField f = (IField) fs.next();
+	if (!f.isVolatile() && !f.isFinal()) {
+	  System.err.println( f.getReference() );
+	}
+      }
     }
   }
 }

@@ -1035,4 +1035,31 @@ public class PrimitivesTest extends WalaTestCase {
     assertTrue(v2.isSubset(v1));
   }
 
+  public void testSpecificBugsInSemiSparseMutableIntSets() {
+    SemiSparseMutableIntSet v1 = new SemiSparseMutableIntSet();
+    v1.add(54);
+    v1.add(58);
+    v1.add(59);
+    v1.add(64);
+    v1.add(67);
+    v1.add(73);
+    v1.add(83);
+    v1.add(105);
+    v1.add(110);
+    v1.add(126);
+    v1.add(136);
+    v1.add(143);
+    v1.add(150);
+    v1.add(155);
+    v1.add(156);
+    v1.add(162);
+    v1.add(168);
+    v1.add(183);
+    v1.add(191);
+    v1.add(265);
+    v1.add(294);
+    v1.add(324); 
+    v1.add(344);
+    v1.add(397);
+  }
 }

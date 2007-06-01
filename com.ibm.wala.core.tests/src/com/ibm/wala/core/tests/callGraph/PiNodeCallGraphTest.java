@@ -55,7 +55,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
 
   private static final String thatName = TestConstants.PI_TEST_MAIN + "$That";
 
-  private static final ClassLoaderReference loader = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Application"));
+  private static final ClassLoaderReference loader = ClassLoaderReference.Application;
 
   private static final TypeReference whateverRef = TypeReference.findOrCreate(loader, TypeName.string2TypeName(whateverName));
 
