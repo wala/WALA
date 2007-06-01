@@ -28,8 +28,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.*;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WarningSet;
 
@@ -90,7 +89,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
       throws IOException {
     try {
       WarningSet warnings = new WarningSet();
-      ClassHierarchy cha = makeHierarchy(scope, loaders, warnings);
+      IClassHierarchy cha = makeHierarchy(scope, loaders, warnings);
       Iterable<Entrypoint> roots = makeScriptRoots(cha);
       AnalysisOptions options = makeOptions(scope, keepIRs, cha, roots, warnings);
 
