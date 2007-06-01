@@ -45,7 +45,7 @@ import com.ibm.wala.shrikeCT.SourceFileReader;
  * @author roca
  */
 public class ClassPrinter {
-  private PrintWriter w;
+  final private PrintWriter w;
 
   private boolean printLineNumberInfo = true;
 

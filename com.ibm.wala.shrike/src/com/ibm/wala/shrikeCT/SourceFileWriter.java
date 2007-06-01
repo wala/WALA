@@ -16,7 +16,7 @@ package com.ibm.wala.shrikeCT;
  * After constructing a SourceFileWriter, you must call setSourceFileCPIndex.
  */
 public final class SourceFileWriter extends ClassWriter.Element {
-  private int attrID;
+  final private int attrID;
   private int index = -1;
 
   /**

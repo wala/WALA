@@ -32,9 +32,9 @@ public class PutInstruction extends Instruction {
   }
 
   final static class Lazy extends PutInstruction {
-    private ConstantPoolReader cp;
+    final private ConstantPoolReader cp;
 
-    private int index;
+    final private int index;
 
     Lazy(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null, null, null);

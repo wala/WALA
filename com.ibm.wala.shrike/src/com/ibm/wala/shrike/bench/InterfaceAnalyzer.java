@@ -24,9 +24,6 @@ import com.ibm.wala.shrikeCT.ClassReader;
 
 /**
  * @author roca
- * 
- * To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Generation - Code and Comments
  */
 public class InterfaceAnalyzer {
   final static class TypeStats {
@@ -37,7 +34,7 @@ public class InterfaceAnalyzer {
     int lastMUID;
   }
 
-  static HashMap<String, TypeStats> typeStats = new HashMap<String, TypeStats>();
+  final static HashMap<String, TypeStats> typeStats = new HashMap<String, TypeStats>();
 
   public static void main(String[] args) throws Exception {
     OfflineInstrumenter instrumenter = new OfflineInstrumenter();

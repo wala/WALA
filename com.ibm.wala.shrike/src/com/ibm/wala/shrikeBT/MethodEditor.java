@@ -92,9 +92,9 @@ public final class MethodEditor {
    */
   private static class HandlerPatch {
     HandlerPatch next;
-    String catchClass;
-    int label;
-    Patch patch;
+    final String catchClass;
+    final int label;
+    final Patch patch;
 
     HandlerPatch(HandlerPatch next, String catchClass, int label, Patch patch) {
       this.next = next;
@@ -193,7 +193,7 @@ public final class MethodEditor {
    * body.
    */
   public final static class Output {
-    ArrayList<Instruction> newInstructions = new ArrayList<Instruction>();
+    final ArrayList<Instruction> newInstructions = new ArrayList<Instruction>();
     ArrayList<ExceptionHandler[]> newInstructionHandlers = new ArrayList<ExceptionHandler[]>();
     int[] instructionsToBytecodes = new int[10];
     int[] labelDefs;

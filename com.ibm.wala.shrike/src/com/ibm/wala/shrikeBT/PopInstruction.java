@@ -14,7 +14,7 @@ package com.ibm.wala.shrikeBT;
  * PopInstructions pop one or two elements off the working stack.
  */
 public final class PopInstruction extends Instruction {
-  private byte size;
+  final private byte size;
 
   protected PopInstruction(byte size) {
     this.size = size;

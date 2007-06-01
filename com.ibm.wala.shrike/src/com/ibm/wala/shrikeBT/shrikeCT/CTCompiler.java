@@ -21,7 +21,7 @@ import com.ibm.wala.shrikeCT.ClassWriter;
  * bytecodes using ShrikeCT.
  */
 final public class CTCompiler extends Compiler {
-  private ClassWriter cw;
+  final private ClassWriter cw;
 
   /**
    * Compile 'md' into the class given by 'cw'.

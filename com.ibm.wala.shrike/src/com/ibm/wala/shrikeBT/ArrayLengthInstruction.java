@@ -18,7 +18,7 @@ final public class ArrayLengthInstruction extends Instruction {
     opcode = (byte) OP_arraylength;
   }
 
-  private static ArrayLengthInstruction preallocated = new ArrayLengthInstruction();
+  private static final ArrayLengthInstruction preallocated = new ArrayLengthInstruction();
 
   public static ArrayLengthInstruction make() {
     return preallocated;

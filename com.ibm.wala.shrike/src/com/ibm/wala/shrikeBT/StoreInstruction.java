@@ -14,7 +14,7 @@ package com.ibm.wala.shrikeBT;
  * This class represents instructions that store to local variables.
  */
 public final class StoreInstruction extends Instruction {
-  private int index;
+  final private int index;
 
   protected StoreInstruction(short opcode, int index) {
     this.index = index;

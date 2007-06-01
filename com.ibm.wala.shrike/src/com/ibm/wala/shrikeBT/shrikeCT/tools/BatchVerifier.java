@@ -45,7 +45,7 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
  */
 public class BatchVerifier {
   private static boolean disasm = false;
-  private static ClassHierarchyStore store = new ClassHierarchyStore();
+  final private static ClassHierarchyStore store = new ClassHierarchyStore();
   private static int errors = 0;
 
   public static void main(String[] args) throws Exception {

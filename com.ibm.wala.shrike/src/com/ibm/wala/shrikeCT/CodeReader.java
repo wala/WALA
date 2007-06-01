@@ -14,8 +14,8 @@ package com.ibm.wala.shrikeCT;
  * This attribute reader reads Code attributes from methods.
  */
 public final class CodeReader extends AttributeReader {
-  private int codeLen;
-  private int exnTableLen;
+  final private int codeLen;
+  final private int exnTableLen;
 
   public CodeReader(ClassReader.AttrIterator iter) throws InvalidClassFileException {
     super(iter, "Code");

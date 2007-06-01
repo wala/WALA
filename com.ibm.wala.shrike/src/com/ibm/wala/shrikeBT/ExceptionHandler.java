@@ -35,7 +35,7 @@ package com.ibm.wala.shrikeBT;
 final public class ExceptionHandler {
   int handler;
 
-  String catchClass;
+  final String catchClass;
 
   /**
    * @param handler

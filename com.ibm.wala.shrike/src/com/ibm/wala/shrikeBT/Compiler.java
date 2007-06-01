@@ -33,7 +33,7 @@ public abstract class Compiler implements Constants {
   // input
   private boolean isStatic;
 
-  private String classType;
+  final private String classType;
 
   private String signature;
 
@@ -1158,7 +1158,7 @@ public abstract class Compiler implements Constants {
 
     Instruction[] code;
 
-    ExceptionHandler[] handlers;
+    final ExceptionHandler[] handlers;
 
     HelperPatch(int start, int length, Instruction[] code, ExceptionHandler[] handlers) {
       this.start = start;

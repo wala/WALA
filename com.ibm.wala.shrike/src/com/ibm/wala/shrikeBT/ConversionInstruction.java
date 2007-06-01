@@ -15,9 +15,9 @@ package com.ibm.wala.shrikeBT;
  * another.
  */
 public final class ConversionInstruction extends Instruction {
-  private String fromType;
+  final private String fromType;
 
-  private String toType;
+  final private String toType;
 
   protected ConversionInstruction(short opcode) {
     this.opcode = opcode;

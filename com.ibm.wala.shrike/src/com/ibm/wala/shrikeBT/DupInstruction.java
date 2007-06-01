@@ -17,9 +17,9 @@ package com.ibm.wala.shrikeBT;
  * dup: a::rest => a::a::rest dup_x1: a::b::rest => a::b::a::rest
  */
 public final class DupInstruction extends Instruction {
-  private int size;
+  final private int size;
 
-  private byte delta;
+  final private byte delta;
 
   protected DupInstruction(byte size, byte delta) {
     this.size = size;

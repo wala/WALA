@@ -16,9 +16,9 @@ import java.util.Arrays;
  * This instruction represents all forms of switch instructions.
  */
 public final class SwitchInstruction extends Instruction {
-  private int[] casesAndLabels;
+  final private int[] casesAndLabels;
 
-  private int defaultLabel;
+  final private int defaultLabel;
 
   protected SwitchInstruction(short opcode, int[] casesAndLabels, int defaultLabel) {
     this.casesAndLabels = casesAndLabels;

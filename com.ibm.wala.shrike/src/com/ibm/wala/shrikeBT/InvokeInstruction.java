@@ -48,9 +48,9 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
   }
 
   final static class Lazy extends InvokeInstruction {
-    private ConstantPoolReader cp;
+    final private ConstantPoolReader cp;
 
-    private int index;
+    final private int index;
 
     Lazy(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null, null, null);

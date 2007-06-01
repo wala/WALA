@@ -19,9 +19,9 @@ import java.io.Writer;
  * exception handler blocks and the mapping back to the original bytecodes.
  */
 public class Disassembler {
-  private Instruction[] instructions;
-  private ExceptionHandler[][] handlers;
-  private int[] instructionsToBytecodes;
+  final private Instruction[] instructions;
+  final private ExceptionHandler[][] handlers;
+  final private int[] instructionsToBytecodes;
 
   /**
    * Create a disassembler for a method.

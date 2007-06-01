@@ -420,9 +420,9 @@ public abstract class ConstantInstruction extends Instruction {
   }
 
   final static class LazyClass extends ConstClass {
-    private ConstantPoolReader cp;
+    final private ConstantPoolReader cp;
 
-    private int index;
+    final private int index;
 
     protected LazyClass(short opcode, ConstantPoolReader cp, int index) {
       super(opcode, null);

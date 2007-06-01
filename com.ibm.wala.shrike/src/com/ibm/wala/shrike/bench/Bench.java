@@ -55,7 +55,7 @@ public class Bench {
 
   private static OfflineInstrumenter instrumenter;
 
-  private static boolean doEntry = true;
+  final private static boolean doEntry = true;
   private static boolean doExit = false;
   private static boolean doException = false;
 

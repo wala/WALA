@@ -14,7 +14,7 @@ package com.ibm.wala.shrikeBT;
  * This class represents checkcast instructions.
  */
 final public class CheckCastInstruction extends Instruction {
-  private String type;
+  final private String type;
 
   protected CheckCastInstruction(String type) {
     this.type = type;

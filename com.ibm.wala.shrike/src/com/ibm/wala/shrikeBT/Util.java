@@ -163,9 +163,9 @@ public final class Util {
     }
   }
 
-  private static HashMap<String, String> classAliases;
+  final private static HashMap<String, String> classAliases;
 
-  private static HashMap<String, String> typeAliases;
+  final private static HashMap<String, String> typeAliases;
 
   private static void addAlias(String c, String t) {
     typeAliases.put(c, t);

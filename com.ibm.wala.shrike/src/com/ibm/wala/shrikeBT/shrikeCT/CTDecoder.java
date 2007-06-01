@@ -68,7 +68,7 @@ final public class CTDecoder extends Decoder {
   }
 
   final static class CPReader extends ConstantPoolReader {
-    private ConstantPoolParser cp;
+    final private ConstantPoolParser cp;
 
     CPReader(ConstantPoolParser cp) {
       this.cp = cp;

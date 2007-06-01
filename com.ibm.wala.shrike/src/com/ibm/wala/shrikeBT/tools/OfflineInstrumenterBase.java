@@ -37,11 +37,11 @@ import java.util.zip.ZipEntry;
 public abstract class OfflineInstrumenterBase {
   private int inputIndex;
 
-  private HashSet<String> entryNames = new HashSet<String>();
+  final private HashSet<String> entryNames = new HashSet<String>();
 
   private ArrayList<Input> inputs = new ArrayList<Input>();
 
-  private BitSet ignoringInputs = new BitSet();
+  final private BitSet ignoringInputs = new BitSet();
 
   private File outputFile;
 
@@ -113,7 +113,7 @@ public abstract class OfflineInstrumenterBase {
   final class JarInput extends Input {
     private File file;
 
-    private String name;
+    final private String name;
 
     /**
      * Select a particular entry from a JAR file on disk.
@@ -173,7 +173,7 @@ public abstract class OfflineInstrumenterBase {
    * file resources are not supported.
    */
   final class ClassInput extends Input {
-    private File file;
+    final private File file;
 
     public ClassInput(File f) {
       file = f;

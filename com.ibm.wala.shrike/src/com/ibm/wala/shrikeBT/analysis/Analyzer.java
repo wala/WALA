@@ -33,10 +33,10 @@ public class Analyzer {
 
   // inputs
   protected boolean isStatic;
-  protected String classType;
+  final protected String classType;
   protected String signature;
-  protected Instruction[] instructions;
-  protected ExceptionHandler[][] handlers;
+  final protected Instruction[] instructions;
+  final protected ExceptionHandler[][] handlers;
   protected ClassHierarchyProvider hierarchy;
 
   // working
@@ -331,8 +331,8 @@ public class Analyzer {
   public static final class FailureException extends Exception {
 
     private static final long serialVersionUID = -7663520961403117526L;
-    private int offset;
-    private String reason;
+    final private int offset;
+    final private String reason;
     private List<PathElement> path;
 
     FailureException(int offset, String reason, List<PathElement> path) {

@@ -16,7 +16,7 @@ import java.util.Arrays;
  * This class helps emit LocalVariableTable attributes.
  */
 public final class LocalVariableTableWriter extends ClassWriter.Element {
-  private int attrID;
+  final private int attrID;
   private int[] rawTable = emptyTable;
 
   private static final int[] emptyTable = new int[0];

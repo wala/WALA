@@ -24,10 +24,10 @@ public final class ClassHierarchyStore implements ClassHierarchyProvider {
   private static final String[] noClasses = new String[0];
 
   final static class ClassInfo {
-    boolean isInterface;
-    boolean isFinal;
-    String superClass;
-    String[] superInterfaces;
+    final boolean isInterface;
+    final boolean isFinal;
+    final String superClass;
+    final String[] superInterfaces;
 
     ClassInfo(boolean isInterface, boolean isFinal, String superClass, String[] superInterfaces) {
       this.isInterface = isInterface;

@@ -11,9 +11,9 @@
 package com.ibm.wala.shrikeBT;
 
 public final class NewInstruction extends Instruction {
-  private String type;
+  final private String type;
 
-  private short arrayBoundsCount;
+  final private short arrayBoundsCount;
 
   protected NewInstruction(short opcode, String type, short arrayBoundsCount) {
     this.type = type;

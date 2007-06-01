@@ -41,15 +41,15 @@ import com.ibm.wala.shrikeCT.ClassWriter.Element;
  * you can then go in and modify the methods.
  */
 final public class ClassInstrumenter {
-  private boolean[] deletedMethods;
+  final private boolean[] deletedMethods;
 
   private MethodData[] methods;
 
-  private CodeReader[] oldCode;
+  final private CodeReader[] oldCode;
 
-  private ClassReader cr;
+  final private ClassReader cr;
 
-  private ConstantPoolReader cpr;
+  final private ConstantPoolReader cpr;
 
   private boolean createFakeLineNumbers = false;
 

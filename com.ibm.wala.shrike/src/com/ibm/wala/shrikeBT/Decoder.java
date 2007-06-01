@@ -131,7 +131,7 @@ public abstract class Decoder implements Constants {
   private Instruction[] instructions;
   private ExceptionHandler[][] handlers;
   private int[] instructionsToBytecodes;
-  private ConstantPoolReader constantPool;
+  final private ConstantPoolReader constantPool;
 
   // Holds the input to decode
   private final byte[] code;
@@ -230,9 +230,9 @@ public abstract class Decoder implements Constants {
 
   private static class RetInfo {
     int sub;
-    int retVar;
-    int stackLen;
-    byte[] stackWords;
+    final int retVar;
+    final int stackLen;
+    final byte[] stackWords;
 
     RetInfo(int sub, int retVar, int stackLen, byte[] stackWords) {
       this.sub = sub;

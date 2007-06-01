@@ -14,7 +14,7 @@ package com.ibm.wala.shrikeCT;
  * This class builds serializable InnerClasses attributes.
  */
 public final class InnerClassesWriter extends ClassWriter.Element {
-  private int attrID;
+  final private int attrID;
   private int[] table;
 
   /**

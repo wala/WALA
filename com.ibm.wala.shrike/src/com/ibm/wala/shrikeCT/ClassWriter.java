@@ -24,9 +24,9 @@ public final class ClassWriter implements ClassConstants {
   private HashMap<Object, Integer> cachedCPEntries = new HashMap<Object, Integer>(1);
   private ArrayList<Object> newCPEntries = new ArrayList<Object>(1);
   private int nextCPIndex = 1;
-  private ArrayList<Element> fields = new ArrayList<Element>(1);
+  final private ArrayList<Element> fields = new ArrayList<Element>(1);
   private ArrayList<Element> methods = new ArrayList<Element>(1);
-  private ArrayList<Element> classAttributes = new ArrayList<Element>(1);
+  final private ArrayList<Element> classAttributes = new ArrayList<Element>(1);
   private int thisClass;
   private int superClass;
   private int[] superInterfaces;
@@ -118,7 +118,7 @@ public final class ClassWriter implements ClassConstants {
   }
 
   static class CWRef extends CWItem {
-    private String c;
+    final private String c;
     private String n;
     private String t;
     private byte type;
@@ -511,7 +511,7 @@ public final class ClassWriter implements ClassConstants {
    */
   public static final class RawElement extends Element {
     private byte[] buf;
-    private int offset;
+    final private int offset;
     private int len;
 
     /**

@@ -17,9 +17,9 @@ package com.ibm.wala.shrikeCT;
  * After constructing a ConstantValueWriter, you must call setValueCPIndex.
  */
 public final class ConstantValueWriter extends ClassWriter.Element {
-  private int attrID;
+  final private int attrID;
   private int index = -1;
-  private ClassWriter w;
+  final private ClassWriter w;
 
   /**
    * Build an empty writer.

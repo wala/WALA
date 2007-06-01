@@ -34,7 +34,7 @@ public final class ConditionalBranchInstruction extends Instruction {
     }
   }
 
-  private int label;
+  final private int label;
 
   protected ConditionalBranchInstruction(short opcode, int label) {
     this.opcode = opcode;

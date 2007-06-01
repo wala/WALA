@@ -14,7 +14,7 @@ package com.ibm.wala.shrikeCT;
  * This class helps emit LineNumberTable attributes.
  */
 public final class LineNumberTableWriter extends ClassWriter.Element {
-  private int attrID;
+  final private int attrID;
   private int[] rawTable = emptyTable;
 
   private static final int[] emptyTable = new int[0];

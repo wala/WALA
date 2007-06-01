@@ -17,7 +17,7 @@ package com.ibm.wala.shrikeCT;
  * bytecode bytes must be set before it can be used.
  */
 public final class CodeWriter extends ClassWriter.Element {
-  private int attrID;
+  final private int attrID;
   private int maxLocals = -1;
   private int maxStack = -1;
   private byte[] code;

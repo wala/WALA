@@ -14,7 +14,7 @@ package com.ibm.wala.shrikeBT;
  * This class represents instanceof instructions.
  */
 public final class InstanceofInstruction extends Instruction {
-  private String type;
+  final private String type;
 
   protected InstanceofInstruction(String type) {
     this.type = type;

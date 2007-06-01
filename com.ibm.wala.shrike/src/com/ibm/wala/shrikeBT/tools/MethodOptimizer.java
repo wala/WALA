@@ -26,7 +26,7 @@ import com.ibm.wala.shrikeBT.MethodEditor.Output;
 import com.ibm.wala.shrikeBT.info.LocalAllocator;
 
 public final class MethodOptimizer {
-  private MethodData data;
+  final private MethodData data;
   private Instruction[] instructions;
   private ExceptionHandler[][] handlers;
   private final MethodEditor editor;

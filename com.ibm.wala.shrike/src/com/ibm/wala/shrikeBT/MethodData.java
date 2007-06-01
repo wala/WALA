@@ -26,11 +26,11 @@ import java.util.Iterator;
  * method.
  */
 public final class MethodData {
-  private HashMap<Object, Results> map = new HashMap<Object, Results>();
+  final private HashMap<Object, Results> map = new HashMap<Object, Results>();
 
-  private int access;
-  private String classType;
-  private String name;
+  final private int access;
+  final private String classType;
+  final private String name;
   private String signature;
   private Instruction[] instructions;
   private ExceptionHandler[][] handlers;

@@ -17,7 +17,7 @@ package com.ibm.wala.shrikeCT;
 public class InvalidClassFileException extends Exception {
 
   private static final long serialVersionUID = -6224203694783674259L;
-  private int offset;
+  final private int offset;
 
   /**
    * The incoming class file is invalid.

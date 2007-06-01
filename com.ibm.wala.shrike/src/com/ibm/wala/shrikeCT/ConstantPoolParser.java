@@ -15,7 +15,7 @@ package com.ibm.wala.shrikeCT;
  * class file.
  */
 public final class ConstantPoolParser implements ClassConstants {
-  private byte[] bytes;
+  final private byte[] bytes;
   private int[] cpOffsets;
   private String[] cpItems;
 
