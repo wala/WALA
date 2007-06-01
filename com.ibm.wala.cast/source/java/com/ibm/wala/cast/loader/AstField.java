@@ -16,7 +16,7 @@ import java.util.Collection;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
@@ -25,12 +25,12 @@ public class AstField implements IField {
   private final Collection qualifiers;
   private final FieldReference ref;
   private final IClass declaringClass;
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   public AstField(FieldReference ref,
 		  Collection qualifiers,
 		  IClass declaringClass,
-		  ClassHierarchy cha)
+		  IClassHierarchy cha)
   {
     this.declaringClass = declaringClass;
     this.qualifiers = qualifiers;
@@ -82,7 +82,7 @@ public class AstField implements IField {
     return qualifiers.contains(CAstQualifier.VOLATILE);
   }
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return cha;
   }
 }

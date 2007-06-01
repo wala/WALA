@@ -12,7 +12,7 @@ package com.ibm.wala.cast.analysis.typeInference;
 
 import com.ibm.wala.analysis.typeInference.*;
 import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 
 public abstract class AstTypeInference extends TypeInference {
@@ -54,7 +54,7 @@ public abstract class AstTypeInference extends TypeInference {
     }
   };
 
-  public AstTypeInference(IR ir, ClassHierarchy cha, TypeAbstraction booleanType, boolean doPrimitives) {
+  public AstTypeInference(IR ir, IClassHierarchy cha, TypeAbstraction booleanType, boolean doPrimitives) {
     super(ir, doPrimitives);
     this.booleanType = booleanType;
   }

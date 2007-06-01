@@ -19,8 +19,8 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.callgraph.impl.*;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -28,7 +28,7 @@ import com.ibm.wala.util.warnings.WarningSet;
 
 public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   private final IClass scriptType;
 
@@ -46,7 +46,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
       return 1;
     }
 
-    public SSAAbstractInvokeInstruction addCall(FakeRootMethod m, WarningSet warnings) {
+    public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m, WarningSet warnings) {
       CallSiteReference site = makeSite(0);
 
       if (site == null) {
@@ -63,7 +63,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
     }
   }
 
-  public ScriptEntryPoints(ClassHierarchy cha, IClass scriptType) {
+  public ScriptEntryPoints(IClassHierarchy cha, IClass scriptType) {
     this.cha = cha;
     this.scriptType = scriptType;
   }

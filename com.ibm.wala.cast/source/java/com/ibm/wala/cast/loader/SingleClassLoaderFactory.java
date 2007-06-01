@@ -13,7 +13,7 @@ package com.ibm.wala.cast.loader;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -21,7 +21,7 @@ public abstract class SingleClassLoaderFactory implements ClassLoaderFactory {
   private IClassLoader THE_LOADER = null;
 
   public IClassLoader getLoader(ClassLoaderReference classLoaderReference,
-				ClassHierarchy cha, 
+				IClassHierarchy cha, 
 				AnalysisScope scope)
   {
     if (THE_LOADER == null) {
@@ -44,6 +44,6 @@ public abstract class SingleClassLoaderFactory implements ClassLoaderFactory {
 
   public abstract ClassLoaderReference getTheReference();
 
-  protected abstract IClassLoader makeTheLoader(ClassHierarchy cha);
+  protected abstract IClassLoader makeTheLoader(IClassHierarchy cha);
 
 }

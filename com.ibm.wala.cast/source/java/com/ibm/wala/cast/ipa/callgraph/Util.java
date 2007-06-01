@@ -62,4 +62,24 @@ public class Util {
     }
   }
 
+  public static SourceFileModule[] handleFileNames(String[] fileNameArgs) {
+    SourceFileModule[] fileNames = new SourceFileModule[ fileNameArgs.length ];
+    for(int i = 0; i < fileNameArgs.length; i++) {
+      if (new File(fileNameArgs[i]).exists()) {
+	try {
+	  fileNames[i] = 
+	    Util.makeSourceModule(
+	      new URL("file:"+fileNameArgs[i]), fileNameArgs[i]);
+	} catch (MalformedURLException e) {
+	  Assertions.UNREACHABLE( e.toString() );
+	}
+      } else {
+	URL url = Util.class.getClassLoader().getResource(fileNameArgs[i]);
+	fileNames[i] = Util.makeSourceModule(url, fileNameArgs[i]);
+      }
+    }
+
+    return fileNames;
+  }
+
 }

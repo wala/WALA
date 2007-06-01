@@ -34,7 +34,7 @@ public class AstIRFactory implements IRFactory {
     this.keptIRs = (keepIR) ? new HashMap<IMethod, IR>() : null;
   }
 
-  public ControlFlowGraph makeCFG(final IMethod method, final Context context, final ClassHierarchy cha, final WarningSet warnings) {
+  public ControlFlowGraph makeCFG(final IMethod method, final Context context, final IClassHierarchy cha, final WarningSet warnings) {
     return ((AstMethod) method).getControlFlowGraph();
   }
 
@@ -87,7 +87,7 @@ public class AstIRFactory implements IRFactory {
     }
   }
 
-  public IR makeIR(final IMethod method, final Context context, final ClassHierarchy cha, final SSAOptions options,
+  public IR makeIR(final IMethod method, final Context context, final IClassHierarchy cha, final SSAOptions options,
       final WarningSet warnings) {
     Assertions._assert(method instanceof AstMethod, method.toString());
     if (keepIR) {
@@ -113,7 +113,7 @@ public class AstIRFactory implements IRFactory {
     return new DefaultIRFactory() {
       private final AstIRFactory astFactory = new AstIRFactory(keepAstIRs);
 
-      public IR makeIR(IMethod method, Context context, ClassHierarchy cha, SSAOptions options, WarningSet warnings) {
+      public IR makeIR(IMethod method, Context context, IClassHierarchy cha, SSAOptions options, WarningSet warnings) {
         if (method instanceof AstMethod) {
           return astFactory.makeIR(method, context, cha, options, warnings);
         } else {
@@ -121,7 +121,7 @@ public class AstIRFactory implements IRFactory {
         }
       }
 
-      public ControlFlowGraph makeCFG(IMethod method, Context context, ClassHierarchy cha, WarningSet warnings) {
+      public ControlFlowGraph makeCFG(IMethod method, Context context, IClassHierarchy cha, WarningSet warnings) {
         if (method instanceof AstMethod) {
           return astFactory.makeCFG(method, context, cha, warnings);
         } else {

@@ -13,14 +13,14 @@ package com.ibm.wala.cast.ipa.callgraph;
 import com.ibm.wala.cast.types.*;
 import com.ibm.wala.classLoader.*;
 import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.*;
 
 public class StandardFunctionTargetSelector implements MethodTargetSelector {  
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
   private final MethodTargetSelector base;
 
-  public StandardFunctionTargetSelector(ClassHierarchy cha, MethodTargetSelector base) {
+  public StandardFunctionTargetSelector(IClassHierarchy cha, MethodTargetSelector base) {
     this.cha = cha;
     this.base = base;
   }

@@ -18,55 +18,76 @@ import java.util.Set;
 import com.ibm.wala.cast.ir.cfg.AstInducedCFG;
 import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
 import com.ibm.wala.cfg.InducedCFG;
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.*;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.impl.Everywhere;
-import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.callgraph.impl.*;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.util.Function;
+import com.ibm.wala.util.Function;
+import com.ibm.wala.types.*;
 
 public class AstCallGraph extends ExplicitCallGraph {
-  public AstCallGraph(ClassHierarchy cha, AnalysisOptions options) {
+  public AstCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     super(cha, options);
   }
 
-  public class AstFakeRoot extends FakeRootMethod {
+  public static class AstFakeRoot extends AbstractRootMethod {
 
-    public AstFakeRoot(ClassHierarchy cha, AnalysisOptions options) {
-      super(cha, options);
+    public AstFakeRoot(MethodReference rootMethod,
+		       IClass declaringClass,
+		       IClassHierarchy cha, 
+		       AnalysisOptions options)
+    {
+      super(rootMethod, declaringClass, cha, options);
+    }
+
+    public AstFakeRoot(MethodReference rootMethod,
+		       IClassHierarchy cha, 
+		       AnalysisOptions options)
+    {
+      super(rootMethod, cha, options);
     }
 
     public InducedCFG makeControlFlowGraph() {
       return new AstInducedCFG(getStatements(), this, Everywhere.EVERYWHERE);
     }
 
-    public AstLexicalRead addGlobalRead(String name) {
+    public AstLexicalRead addGlobalRead(TypeReference type, String name) {
       AstLexicalRead s = new AstLexicalRead(nextLocal++, null, name);
       statements.add(s);
       return s;
     }
   }
 
-  public abstract class ScriptFakeRoot extends AstFakeRoot {
+  public static abstract class ScriptFakeRoot extends AstFakeRoot {
 
-    public ScriptFakeRoot(ClassHierarchy cha, AnalysisOptions options) {
-      super(cha, options);
+    public ScriptFakeRoot(MethodReference rootMethod,
+			  IClass declaringClass,
+			  IClassHierarchy cha, 
+			  AnalysisOptions options)
+    {
+	super(rootMethod, declaringClass, cha, options);
+    }
+
+    public ScriptFakeRoot(MethodReference rootMethod,
+			  IClassHierarchy cha, 
+			  AnalysisOptions options)
+    {
+	super(rootMethod, cha, options);
     }
 
     public abstract SSAAbstractInvokeInstruction addDirectCall(int functionVn, int[] argVns, CallSiteReference callSite);
 
   }
 
-  class AstCGNode extends ExplicitNode {
+  protected static class AstCGNode<T extends AstCallGraph> extends ExplicitNode<T> {
     private Set<Function<Object,Object>> callbacks;
 
-    private AstCGNode(IMethod method, Context context) {
-      super(method, context);
+    private AstCGNode(T CG, IMethod method, Context context) {
+      super(CG, method, context);
     }
 
     private void fireCallbacks() {
@@ -102,7 +123,7 @@ public class AstCallGraph extends ExplicitCallGraph {
 
 	callbacks.add(callback);
 
-	for(Iterator ps = getPredNodes(this); ps.hasNext(); ) {
+	for(Iterator ps = CG.getPredNodes(this); ps.hasNext(); ) {
 	  ((AstCGNode)ps.next()).addCallback(callback);
 	}
       }
@@ -116,7 +137,7 @@ public class AstCallGraph extends ExplicitCallGraph {
 
 	callbacks.addAll(callbacks);
 
-	for(Iterator ps = getPredNodes(this); ps.hasNext(); ) {
+	for(Iterator ps = CG.getPredNodes(this); ps.hasNext(); ) {
 	  ((AstCGNode)ps.next()).addAllCallbacks(callbacks);
 	}
       }
@@ -136,11 +157,11 @@ public class AstCallGraph extends ExplicitCallGraph {
   }
 
   protected ExplicitNode makeNode(IMethod method, Context context) {
-    return new AstCGNode(method, context);
+    return new AstCGNode(this, method, context);
   }
 
   protected CGNode makeFakeRootNode() {
-    return findOrCreateNode(new AstFakeRoot(cha, options), Everywhere.EVERYWHERE);
+      return findOrCreateNode(new AstFakeRoot(FakeRootMethod.rootMethod, cha, options), Everywhere.EVERYWHERE);
   }
 
 }

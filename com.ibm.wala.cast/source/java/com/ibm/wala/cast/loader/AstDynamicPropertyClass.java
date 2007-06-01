@@ -18,7 +18,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.Selector;
@@ -89,7 +89,7 @@ public abstract class AstDynamicPropertyClass extends AstClass {
             return isStatic;
           }
 
-          public ClassHierarchy getClassHierarchy() {
+          public IClassHierarchy getClassHierarchy() {
             return AstDynamicPropertyClass.this.getClassHierarchy();
           }
         });

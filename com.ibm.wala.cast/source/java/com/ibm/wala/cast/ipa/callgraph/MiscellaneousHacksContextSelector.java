@@ -21,7 +21,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.*;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
@@ -37,7 +37,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector
 
   public MiscellaneousHacksContextSelector(ContextSelector special,
 					   ContextSelector base,
-					   ClassHierarchy cha,
+					   IClassHierarchy cha,
 					   String[][] descriptors)
   {
     basePolicy = base;
@@ -47,16 +47,17 @@ public class MiscellaneousHacksContextSelector implements ContextSelector
       String[] descr = descriptors[i];
       switch (descr.length) {
 
-      // loader name, classname, method name, method descr
-      case 4: {
+      // loader name, loader language, classname, method name, method descr
+      case 5: {
 	MethodReference ref =
 	  MethodReference.findOrCreate(
 	    TypeReference.findOrCreate(
 	      new ClassLoaderReference(
-	        Atom.findOrCreateUnicodeAtom( descr[0] )),
-	      TypeName.string2TypeName( descr[1] ) ),
-	    Atom.findOrCreateUnicodeAtom( descr[2] ),
-	    Descriptor.findOrCreateUTF8( descr[3] ));
+	        Atom.findOrCreateUnicodeAtom( descr[0] ),
+	        Atom.findOrCreateUnicodeAtom( descr[1] )),
+	      TypeName.string2TypeName( descr[2] ) ),
+	    Atom.findOrCreateUnicodeAtom( descr[3] ),
+	    Descriptor.findOrCreateUTF8( descr[4] ));
 
 	methodsToSpecialize.add( cha.resolveMethod( ref ).getReference() );
 	break;
@@ -68,7 +69,8 @@ public class MiscellaneousHacksContextSelector implements ContextSelector
 	  MethodReference.findOrCreate(
 	    TypeReference.findOrCreate(
 	      new ClassLoaderReference(
-	        Atom.findOrCreateUnicodeAtom("Application")),
+	        Atom.findOrCreateUnicodeAtom("Application"),
+		ClassLoaderReference.Java),
 	      TypeName.string2TypeName( descr[0] ) ),
 	    Atom.findOrCreateUnicodeAtom( descr[1] ),
 	    Descriptor.findOrCreateUTF8( descr[2] ));
@@ -83,7 +85,8 @@ public class MiscellaneousHacksContextSelector implements ContextSelector
 	  cha.lookupClass(
 	    TypeReference.findOrCreate(
 	      new ClassLoaderReference(
-	        Atom.findOrCreateUnicodeAtom( descr[0] )),
+	        Atom.findOrCreateUnicodeAtom( descr[0] ),
+		ClassLoaderReference.Java),
 	      TypeName.string2TypeName( descr[1] ) ) );
 
 	for(Iterator M = klass.getDeclaredMethods().iterator(); M.hasNext(); ) {
@@ -99,7 +102,8 @@ public class MiscellaneousHacksContextSelector implements ContextSelector
 	  cha.lookupClass(
 	    TypeReference.findOrCreate(
 	      new ClassLoaderReference(
-	        Atom.findOrCreateUnicodeAtom("Application")),
+	        Atom.findOrCreateUnicodeAtom("Application"),
+		ClassLoaderReference.Java),
 	      TypeName.string2TypeName( descr[0] ) ) );
 
 	for(Iterator M = klass.getDeclaredMethods().iterator(); M.hasNext(); ) {

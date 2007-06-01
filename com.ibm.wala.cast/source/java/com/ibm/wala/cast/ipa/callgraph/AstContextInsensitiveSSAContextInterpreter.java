@@ -20,7 +20,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContextInsensitiveSSAInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.warnings.WarningSet;
@@ -29,7 +29,7 @@ public class AstContextInsensitiveSSAContextInterpreter
   extends ContextInsensitiveSSAInterpreter 
 {
 
-  public AstContextInsensitiveSSAContextInterpreter(AnalysisOptions options, ClassHierarchy cha) {
+  public AstContextInsensitiveSSAContextInterpreter(AnalysisOptions options, IClassHierarchy cha) {
     super(options, cha);
   }
 
@@ -37,8 +37,8 @@ public class AstContextInsensitiveSSAContextInterpreter
     return method instanceof AstMethod;
   }
 
-  public Iterator<NewSiteReference> iterateNewSites(CGNode N, WarningSet warnings) {
-    IR ir = getIR(N, warnings);
+  public Iterator<NewSiteReference> iterateNewSites(CGNode N) {
+    IR ir = getIR(N, new WarningSet());
     if (ir == null) {
       return EmptyIterator.instance();
     } else {
@@ -46,8 +46,8 @@ public class AstContextInsensitiveSSAContextInterpreter
     }
   }
 
-  public Iterator<CallSiteReference> iterateCallSites(CGNode N, WarningSet warnings) {
-    IR ir = getIR(N, warnings);
+  public Iterator<CallSiteReference> iterateCallSites(CGNode N) {
+    IR ir = getIR(N, new WarningSet());
     if (ir == null) {
       return EmptyIterator.instance();
     } else {
