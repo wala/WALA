@@ -14,7 +14,7 @@ package com.ibm.wala.shrikeBT;
  * This class represents local variable load instructions.
  */
 public final class LoadInstruction extends Instruction {
-  private int index;
+  private final int index;
 
   protected LoadInstruction(short opcode, int index) {
     this.index = index;
