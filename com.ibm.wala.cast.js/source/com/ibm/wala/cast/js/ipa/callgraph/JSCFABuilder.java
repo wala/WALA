@@ -12,7 +12,7 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.ipa.callgraph.*;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -26,7 +26,7 @@ public class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
    * @param cha
    * @param warnings
    */
-  public JSCFABuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options) {
+  public JSCFABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options) {
     super(cha, warnings, options, new AstCFAPointerKeys());
   }
 

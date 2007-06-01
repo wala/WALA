@@ -14,7 +14,7 @@ import com.ibm.wala.ipa.callgraph.*;
 import com.ibm.wala.ipa.callgraph.impl.*;
 import com.ibm.wala.ipa.callgraph.propagation.*;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -32,7 +32,7 @@ public class JSZeroXCFABuilder extends JSCFABuilder {
    * @param bypass
    * @param contextProvider
    */
-  public JSZeroXCFABuilder(ClassHierarchy cha, 
+  public JSZeroXCFABuilder(IClassHierarchy cha, 
 			   WarningSet warnings,
 			   AnalysisOptions options,
 			   ContextSelector appContextSelector,
@@ -49,7 +49,6 @@ public class JSZeroXCFABuilder extends JSCFABuilder {
       new JavaScriptConstructTargetSelector(
         cha,
 	options.getMethodTargetSelector(),
-	contextInterpreter,
 	warnings));
 	
     ContextSelector def = new DefaultContextSelector(cha,options.getMethodTargetSelector());
@@ -81,7 +80,7 @@ public class JSZeroXCFABuilder extends JSCFABuilder {
    *          deployment descriptor abstraction
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
-  public static JSCFABuilder make(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
+  public static JSCFABuilder make(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
       String[] xmlFiles, WarningSet warnings, byte instancePolicy) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);

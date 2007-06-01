@@ -15,13 +15,13 @@ import com.ibm.wala.analysis.typeInference.*;
 import com.ibm.wala.cast.analysis.typeInference.AstTypeInference;
 import com.ibm.wala.cast.js.ssa.*;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.TypeReference;
 
 public class JSTypeInference extends AstTypeInference {
 
-  public JSTypeInference(IR ir, ClassHierarchy cha) {
+  public JSTypeInference(IR ir, IClassHierarchy cha) {
     super(ir, cha, new PointType(cha.lookupClass(JavaScriptTypes.Boolean)), true);
   }
 

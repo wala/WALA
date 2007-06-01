@@ -24,7 +24,7 @@ public class JavaScriptLoaderFactory extends SingleClassLoaderFactory {
     this.translatorFactory = factory;
   }
 
-  protected IClassLoader makeTheLoader(ClassHierarchy cha) {
+  protected IClassLoader makeTheLoader(IClassHierarchy cha) {
     return new JavaScriptLoader( cha, translatorFactory );
   }
 

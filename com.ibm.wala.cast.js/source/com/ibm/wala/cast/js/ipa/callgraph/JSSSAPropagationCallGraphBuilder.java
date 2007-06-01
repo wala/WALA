@@ -25,9 +25,10 @@ import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.ipa.callgraph.*;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.*;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
+import com.ibm.wala.util.graph.*;
 import com.ibm.wala.util.warnings.WarningSet;
 import com.ibm.wala.shrikeBT.*;
 
@@ -39,7 +40,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   public static final boolean DEBUG_TYPE_INFERENCE = false;
 
   protected 
-    JSSSAPropagationCallGraphBuilder(ClassHierarchy cha, 
+    JSSSAPropagationCallGraphBuilder(IClassHierarchy cha, 
 				     WarningSet warnings,
 				     AnalysisOptions options,
 				     PointerKeyFactory pointerKeyFactory)
@@ -70,11 +71,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   //
   /////////////////////////////////////////////////////////////////////////////
 
-  protected ExplicitCallGraph createEmptyCallGraph(ClassHierarchy cha, AnalysisOptions options) {
+  protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     return new JSCallGraph(cha, options);
   }
 
-  protected TypeInference makeTypeInference(IR ir, ClassHierarchy cha) {
+  protected TypeInference makeTypeInference(IR ir, IClassHierarchy cha) {
     TypeInference ti = new JSTypeInference(ir, cha);
     ti.solve();
 
@@ -98,11 +99,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     system.newConstraint(exceptionVar, assignOperator, e);
   }
 
-  class JSInterestingVisitor
+  public static class JSInterestingVisitor
     extends AstInterestingVisitor 
       implements com.ibm.wala.cast.js.ssa.InstructionVisitor 
   {
-    JSInterestingVisitor(int vn) {
+    public JSInterestingVisitor(int vn) {
       super(vn);
     }
 
@@ -127,7 +128,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
   }
 
-  protected InterestingVisitor makeInterestingVisitor(int vn) {
+  protected InterestingVisitor makeInterestingVisitor(CGNode node, int vn) {
     return new JSInterestingVisitor(vn);
   }
 
@@ -137,14 +138,14 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   //
   /////////////////////////////////////////////////////////////////////////////
 
-  protected class JSPointerFlowGraph extends AstPointerFlowGraph {
+  public static class JSPointerFlowGraph extends AstPointerFlowGraph {
     
-    protected class JSPointerFlowVisitor
+    public static class JSPointerFlowVisitor
       extends AstPointerFlowVisitor 
       implements com.ibm.wala.cast.js.ssa.InstructionVisitor
     {
-      protected JSPointerFlowVisitor(CGNode node, IR ir, BasicBlock bb) {
-	super(node, ir, bb);
+      public JSPointerFlowVisitor(PointerAnalysis pa, CallGraph cg, Graph<PointerKey> delegate, CGNode node, IR ir, BasicBlock bb) {
+        super(pa, cg, delegate, node, ir, bb);
       }
 
       public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
@@ -169,7 +170,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
 
     protected InstructionVisitor makeInstructionVisitor(CGNode node, IR ir, BasicBlock bb) {
-      return new JSPointerFlowVisitor(node,ir, bb);
+      return new JSPointerFlowVisitor(pa, cg, delegate, node, ir, bb);
     }
   }
 
@@ -181,7 +182,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     };
   }
 
-  protected class JSPointerAnalysisImpl extends AstPointerAnalysisImpl {
+  public static class JSPointerAnalysisImpl extends AstPointerAnalysisImpl {
       
     JSPointerAnalysisImpl(PropagationCallGraphBuilder builder, 
 			   CallGraph cg, 
@@ -194,16 +195,16 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 	    cg, 
 	    pointsToMap, 
 	    instanceKeys, 
-	    pointerKeyFactory, 
-	    instanceKeyFactory);
+	    pointerKeys, 
+	    iKeyFactory);
     }
 
-    protected class JSImplicitPointsToSetVisitor
+    public static class JSImplicitPointsToSetVisitor
       extends AstImplicitPointsToSetVisitor 
 	implements com.ibm.wala.cast.js.ssa.InstructionVisitor 
     {
-      JSImplicitPointsToSetVisitor(LocalPointerKey lpk) {
-	super(lpk);
+      public JSImplicitPointsToSetVisitor(AstPointerAnalysisImpl analysis, LocalPointerKey lpk) {
+	super(analysis, lpk);
       }
 
       public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
@@ -226,7 +227,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     protected ImplicitPointsToSetVisitor
       makeImplicitPointsToVisitor(LocalPointerKey lpk) 
     {
-      return new JSImplicitPointsToSetVisitor(lpk);
+      return new JSImplicitPointsToSetVisitor(this, lpk);
     }
   };
 
@@ -248,6 +249,114 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       }
     };
   }
+
+
+  /////////////////////////////////////////////////////////////////////////////
+  //
+  // IR visitor specialization for JavaScript
+  //
+  /////////////////////////////////////////////////////////////////////////////
+  
+  protected ConstraintVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node)
+  {
+    return new JSConstraintVisitor(this, node);
+  }
+
+  public static class JSConstraintVisitor extends AstConstraintVisitor implements InstructionVisitor {
+
+    public JSConstraintVisitor(AstSSAPropagationCallGraphBuilder builder,
+			       ExplicitCallGraph.ExplicitNode node)
+    {
+      super(builder, node);
+    }
+    
+    public void visitUnaryOp(SSAUnaryOpInstruction inst) {
+      if (inst.getOpcode() == UnaryOpInstruction.Operator.NEG) {
+	int lval = inst.getDef(0);
+	PointerKey lk = getPointerKeyForLocal(lval);
+      
+	IClass bool = getClassHierarchy().lookupClass(JavaScriptTypes.Boolean);
+	InstanceKey key = new ConcreteTypeKey( bool );
+
+	system.newConstraint(lk, key);
+      }
+    }
+
+    public void visitIsDefined(AstIsDefinedInstruction inst) {
+      int lval = inst.getDef(0);
+      PointerKey lk = getPointerKeyForLocal(lval);
+      
+      IClass bool = getClassHierarchy().lookupClass(JavaScriptTypes.Boolean);
+      InstanceKey key = new ConcreteTypeKey( bool );
+
+      system.newConstraint(lk, key);
+    }
+
+    public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
+      int lval = inst.getDef(0);
+      PointerKey lk = getPointerKeyForLocal(lval);
+      
+      IClass bool = getClassHierarchy().lookupClass(JavaScriptTypes.Boolean);
+      InstanceKey key = new ConcreteTypeKey( bool );
+
+      system.newConstraint(lk, key);
+    }
+
+    public void visitTypeOf(JavaScriptTypeOfInstruction instruction) {
+      int lval = instruction.getDef(0);
+      PointerKey lk = getPointerKeyForLocal(lval);
+      
+      IClass string = getClassHierarchy().lookupClass(JavaScriptTypes.String);
+      InstanceKey key = new ConcreteTypeKey( string );
+
+      system.newConstraint(lk, key);
+    }
+
+    public void visitBinaryOp(final SSABinaryOpInstruction instruction) {
+      handleBinaryOp( instruction, node, symbolTable, du );
+    }
+      
+    public void visitJavaScriptPropertyRead(JavaScriptPropertyRead instruction) {
+      newFieldRead(node,
+		   instruction.getUse(0),
+		   instruction.getUse(1),
+		   instruction.getDef(0));
+    }
+  
+    public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction) {
+      newFieldWrite(node,
+		    instruction.getUse(0),
+		    instruction.getUse(1),
+		    instruction.getUse(2));
+    }
+
+    public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
+      PointerKey F = getPointerKeyForLocal(instruction.getFunction());
+
+      InstanceKey[][] consts = computeInvariantParameters(instruction);
+
+      PointerKey uniqueCatch = null;
+      if (hasUniqueCatchBlock(instruction, ir)) {
+        uniqueCatch = getBuilder().getUniqueCatchKey(instruction, ir, node);
+      }
+
+      if (contentsAreInvariant(symbolTable, du, instruction.getFunction())) {
+       system.recordImplicitPointsToSet(F);
+	InstanceKey[] ik = getInvariantContents(instruction.getFunction());
+	for (int i = 0; i < ik.length; i++) {
+          system.findOrCreateIndexForInstanceKey(ik[i]);
+	  CGNode n = getTargetForCall(node, instruction.getCallSite(), ik[i]);
+	  if (n != null) {
+	    processJSCall(node, instruction, n, ik[i], consts, uniqueCatch);
+          }
+	}
+      } else {
+        system.newSideEffect(
+	  new JSDispatchOperator(instruction, node, consts, uniqueCatch), 
+	  F);
+      }
+    }
+ 
 
   /////////////////////////////////////////////////////////////////////////////
   //
@@ -303,8 +412,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 	      CGNode target = getTargetForCall(node, call.getSite(), iKey);
 	      if (target != null) {
 		processJSCall(node, call, target, iKey, constParams, uniqueCatch);
-		if (!haveAlreadyVisited(target)) {
-		  markDiscovered(target);
+		if (!getBuilder().haveAlreadyVisited(target)) {
+		  getBuilder().markDiscovered(target);
 		}
 	      }
 	    }
@@ -326,14 +435,14 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 		     PointerKey uniqueCatchKey) 
   {
     caller.addTarget(instruction.getCallSite(), target);
-    if (!haveAlreadyVisited(target)) {
-      markDiscovered(target);
+    if (!getBuilder().haveAlreadyVisited(target)) {
+      getBuilder().markDiscovered(target);
     }
 
-    IR sourceIR = getCFAContextInterpreter().getIR(caller, getWarnings());
+    IR sourceIR = getBuilder().getCFAContextInterpreter().getIR(caller, getWarnings());
     SymbolTable sourceST = sourceIR.getSymbolTable();
 
-    IR targetIR = getCFAContextInterpreter().getIR(target, getWarnings());
+    IR targetIR = getBuilder().getCFAContextInterpreter().getIR(target, getWarnings());
     SymbolTable targetST = targetIR.getSymbolTable();
     
     int av = -1;
@@ -355,11 +464,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       int fn = targetST.getConstant(i);
       PointerKey F =
         (i == 0)?
-	  getFilteredPointerKeyForLocal(
+	  getBuilder().getFilteredPointerKeyForLocal(
 	    target,
 	    targetST.getParameter(i), 
 	    function):
-	  getPointerKeyForLocal(target, targetST.getParameter(i));
+	  getBuilder().getPointerKeyForLocal(target, targetST.getParameter(i));
 
       if (constParams != null && constParams[i] != null) {
 	for(int j = 0; j < constParams[i].length; j++) {
@@ -369,11 +478,11 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 	if (av != -1) newFieldWrite(target, av, fn, constParams[i]);
 
       } else {
-	PointerKey A = getPointerKeyForLocal(caller, instruction.getUse(i));
+	PointerKey A = getBuilder().getPointerKeyForLocal(caller, instruction.getUse(i));
 	system.newConstraint(
           F,
 	  (F instanceof FilteredPointerKey)? 
-	    (UnaryOperator)filterOperator:
+	    (UnaryOperator)getBuilder().filterOperator:
 	    (UnaryOperator)assignOperator, 
 	  A);
 	  
@@ -389,7 +498,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 	  if (constParams != null && constParams[i] != null) {
 	    newFieldWrite(target, av, fn, constParams[i]);
 	  } else {
-	    PointerKey A = getPointerKeyForLocal(caller, instruction.getUse(i));
+	    PointerKey A = getBuilder().getPointerKeyForLocal(caller, instruction.getUse(i));
 	    newFieldWrite(target, av, fn, A);
 	  }
 	}
@@ -399,10 +508,10 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     // extra formal parameters get null (extra args are ignored here)
     else if (argCount < paramCount) {
       int nullvn = sourceST.getNullConstant();
-      DefUse sourceDU = getCFAContextInterpreter().getDU(caller, getWarnings());
-      InstanceKey[] nullkeys = getInvariantContents(sourceST, sourceDU, caller, nullvn, this);
+      DefUse sourceDU = getBuilder().getCFAContextInterpreter().getDU(caller, getWarnings());
+      InstanceKey[] nullkeys = getInvariantContents(sourceST, sourceDU, caller, nullvn);
       for(int i = argCount; i < paramCount; i++) {
-	PointerKey F = getPointerKeyForLocal(target, targetST.getParameter(i));
+	PointerKey F = getBuilder().getPointerKeyForLocal(target, targetST.getParameter(i));
 	for(int k = 0; k < nullkeys.length; k++) {
 	  system.newConstraint(F, nullkeys[k]);
 	}
@@ -418,17 +527,17 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
     // return values
     if (instruction.getDef(0) != -1) {
-      PointerKey RF = getPointerKeyForReturnValue( target );
-      PointerKey RA = getPointerKeyForLocal(caller, instruction.getDef(0));
+      PointerKey RF = getBuilder().getPointerKeyForReturnValue( target );
+      PointerKey RA = getBuilder().getPointerKeyForLocal(caller, instruction.getDef(0));
       system.newConstraint(RA, assignOperator, RF);
     }
 
-    PointerKey EF = getPointerKeyForExceptionalReturnValue( target );
+    PointerKey EF = getBuilder().getPointerKeyForExceptionalReturnValue( target );
     if (SHORT_CIRCUIT_SINGLE_USES && uniqueCatchKey != null) {
       // e has exactly one use. so, represent e implicitly
       system.newConstraint(uniqueCatchKey, assignOperator, EF);
     } else {
-      PointerKey EA = getPointerKeyForLocal(caller, instruction.getDef(1));
+      PointerKey EA = getBuilder().getPointerKeyForLocal(caller, instruction.getDef(1));
       system.newConstraint(EA, assignOperator, EF);
     }
   }
@@ -445,7 +554,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 			      final DefUse du)
   {
     int lval = instruction.getDef(0);
-    PointerKey lk = getPointerKeyForLocal(node, lval);
+    PointerKey lk = getPointerKeyForLocal(lval);
     final PointsToSetVariable lv = system.findOrCreatePointsToSet(lk);
     
     final int arg1 = instruction.getUse(0);
@@ -484,10 +593,10 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 	 
       private InstanceKey[] getInstancesArray(int vn) {
 	if (contentsAreInvariant(symbolTable, du, vn)) {
-	  return getInvariantContents(symbolTable, du, node, vn, JSSSAPropagationCallGraphBuilder.this);
+	  return getInvariantContents(vn);
 	} else {
 	  PointsToSetVariable v =
-	    system.findOrCreatePointsToSet(getPointerKeyForLocal(node,vn));
+	    system.findOrCreatePointsToSet(getPointerKeyForLocal(vn));
 	  if (v.getValue() == null || v.size() == 0) {
 	    return new InstanceKey[0];
 	  } else {
@@ -579,124 +688,17 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       if (contentsAreInvariant(symbolTable, du, arg2)) {
 	B.evaluate(null, null);
       } else {
-	system.newConstraint(lk, B, getPointerKeyForLocal(node, arg2));
+	system.newConstraint(lk, B, getPointerKeyForLocal(arg2));
       }
     } else {
-      PointerKey k1 = getPointerKeyForLocal(node, arg1);
+      PointerKey k1 = getPointerKeyForLocal(arg1);
       if (contentsAreInvariant(symbolTable, du, arg2)) {
 	system.newConstraint(lk, B, k1);
       } else {
-	system.newConstraint(lk, B, k1, getPointerKeyForLocal(node, arg2));
+	system.newConstraint(lk, B, k1, getPointerKeyForLocal(arg2));
       }
     }
-  }
-
-  /////////////////////////////////////////////////////////////////////////////
-  //
-  // IR visitor specialization for JavaScript
-  //
-  /////////////////////////////////////////////////////////////////////////////
-  
-  class JSConstraintVisitor extends AstConstraintVisitor implements InstructionVisitor {
-
-    public JSConstraintVisitor(ExplicitCallGraph.ExplicitNode node, IR ir, ExplicitCallGraph callGraph, DefUse du) {
-      super(node, ir, callGraph, du);
-    }
-    
-    public void visitUnaryOp(SSAUnaryOpInstruction inst) {
-      if (inst.getOpcode() == UnaryOpInstruction.Operator.NEG) {
-	int lval = inst.getDef(0);
-	PointerKey lk = getPointerKeyForLocal(node, lval);
-      
-	IClass bool = cha.lookupClass(JavaScriptTypes.Boolean);
-	InstanceKey key = new ConcreteTypeKey( bool );
-
-	system.newConstraint(lk, key);
-      }
-    }
-
-    public void visitIsDefined(AstIsDefinedInstruction inst) {
-      int lval = inst.getDef(0);
-      PointerKey lk = getPointerKeyForLocal(node, lval);
-      
-      IClass bool = cha.lookupClass(JavaScriptTypes.Boolean);
-      InstanceKey key = new ConcreteTypeKey( bool );
-
-      system.newConstraint(lk, key);
-    }
-
-    public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
-      int lval = inst.getDef(0);
-      PointerKey lk = getPointerKeyForLocal(node, lval);
-      
-      IClass bool = cha.lookupClass(JavaScriptTypes.Boolean);
-      InstanceKey key = new ConcreteTypeKey( bool );
-
-      system.newConstraint(lk, key);
-    }
-
-    public void visitTypeOf(JavaScriptTypeOfInstruction instruction) {
-      int lval = instruction.getDef(0);
-      PointerKey lk = getPointerKeyForLocal(node, lval);
-      
-      IClass string = cha.lookupClass(JavaScriptTypes.String);
-      InstanceKey key = new ConcreteTypeKey( string );
-
-      system.newConstraint(lk, key);
-    }
-
-    public void visitBinaryOp(final SSABinaryOpInstruction instruction) {
-      handleBinaryOp( instruction, node, symbolTable, du );
-    }
-      
-    public void visitJavaScriptPropertyRead(JavaScriptPropertyRead instruction) {
-      newFieldRead(node,
-		   instruction.getUse(0),
-		   instruction.getUse(1),
-		   instruction.getDef(0));
-    }
-  
-    public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction) {
-      newFieldWrite(node,
-		    instruction.getUse(0),
-		    instruction.getUse(1),
-		    instruction.getUse(2));
-    }
-
-    public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
-      PointerKey F = getPointerKeyForLocal(node, instruction.getFunction());
-
-      InstanceKey[][] consts = computeInvariantParameters(instruction);
-
-      PointerKey uniqueCatch = null;
-      if (hasUniqueCatchBlock(instruction, ir)) {
-        uniqueCatch = getUniqueCatchKey(instruction, ir, node);
-      }
-
-      if (contentsAreInvariant(symbolTable, du, instruction.getFunction())) {
-       system.recordImplicitPointsToSet(F);
-	InstanceKey[] ik = getInvariantContents(symbolTable, du, node, instruction.getFunction(), JSSSAPropagationCallGraphBuilder.this);
-	for (int i = 0; i < ik.length; i++) {
-          system.findOrCreateIndexForInstanceKey(ik[i]);
-	  CGNode n = getTargetForCall(node, instruction.getCallSite(), ik[i]);
-	  if (n != null) {
-	    processJSCall(node, instruction, n, ik[i], consts, uniqueCatch);
-          }
-	}
-      } else {
-        system.newSideEffect(
-	  new JSDispatchOperator(instruction, node, consts, uniqueCatch), 
-	  F);
-      }
-    }
-  }
-
-  protected ConstraintVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node, 
-					  IR ir, 
-					  DefUse du,
-					  ExplicitCallGraph callGraph)
-  {
-    return new JSConstraintVisitor(node, ir, callGraph, du);
   }
 }
 
+}

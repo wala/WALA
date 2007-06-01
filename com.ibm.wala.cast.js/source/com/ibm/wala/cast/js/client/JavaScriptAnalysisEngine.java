@@ -16,15 +16,14 @@ import java.util.jar.JarFile;
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.*;
-import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
+import com.ibm.wala.cast.js.loader.*;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.client.impl.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.*;
 import com.ibm.wala.util.debug.Assertions;
 
 public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
@@ -56,9 +55,9 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
     }
   }
 
-  protected ClassHierarchy buildClassHierarchy() {
+  protected IClassHierarchy buildClassHierarchy() {
     try {
-      return ClassHierarchy.make(getScope(), loaderFactory, getWarnings(), JavaScriptTypes.Root);
+      return ClassHierarchy.make(getScope(), loaderFactory, getWarnings(), JavaScriptLoader.JS);
     } catch (ClassHierarchyException e) {
       Assertions.UNREACHABLE(e.toString());
       return null;
@@ -77,19 +76,12 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
     Assertions.UNREACHABLE("Illegal to call setJ2SELibraries");
   }
 
-  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
     return new JavaScriptEntryPoints(cha, cha.getLoader(JavaScriptTypes.jsLoader));
   }
 
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> roots) {
     final AnalysisOptions options = new AnalysisOptions(scope, AstIRFactory.makeDefaultFactory(keepIRs), roots);
-
-    options.setConstantType(Boolean.class, JavaScriptTypes.Boolean);
-    options.setConstantType(String.class, JavaScriptTypes.String);
-    options.setConstantType(Integer.class, JavaScriptTypes.Number);
-    options.setConstantType(Float.class, JavaScriptTypes.Number);
-    options.setConstantType(Double.class, JavaScriptTypes.Number);
-    options.setConstantType(null, JavaScriptTypes.Null);
 
     options.setUseConstantSpecificKeys(true);
 

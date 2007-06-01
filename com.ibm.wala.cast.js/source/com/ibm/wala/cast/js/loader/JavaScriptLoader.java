@@ -31,11 +31,8 @@ import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.classLoader.*;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -47,6 +44,39 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 public class JavaScriptLoader implements IClassLoader {
+
+  public final static Language JS = new Language() {
+
+    public Atom getName() {
+      return Atom.findOrCreateUnicodeAtom("JavaScript");
+    }
+
+    public TypeReference getRootType() {
+      return JavaScriptTypes.Root;
+    }
+
+    public TypeReference getConstantType(Object o) {
+      if (o == null) {
+	return JavaScriptTypes.Null;
+      } else {
+	Class c = o.getClass();
+	if (c == Boolean.class) {
+	  return JavaScriptTypes.Boolean; 
+	} else if (c == String.class) {
+	  return JavaScriptTypes.String; 
+	} else if (c == Integer.class) { 
+	  return JavaScriptTypes.Number; 
+	} else if (c == Float.class) {
+	  return JavaScriptTypes.Number; 
+	} else if (c == Double.class) {
+	  return JavaScriptTypes.Number; 
+	} else {
+	  return null;
+	}
+      }
+    }
+  };
+
   private final Map<TypeName,IClass> types = new HashMap<TypeName,IClass>();
   
   private static final Map<Selector,IMethod> emptyMap1 = Collections.emptyMap();
@@ -54,9 +84,9 @@ public class JavaScriptLoader implements IClassLoader {
 
   private final JavaScriptTranslatorFactory translatorFactory;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
-  JavaScriptLoader(ClassHierarchy cha, JavaScriptTranslatorFactory translatorFactory) {
+  public JavaScriptLoader(IClassHierarchy cha, JavaScriptTranslatorFactory translatorFactory) {
     this.cha = cha;
     this.translatorFactory = translatorFactory;
   }
@@ -73,7 +103,7 @@ public class JavaScriptLoader implements IClassLoader {
       superClass = superRef == null ? null : loader.lookupClass(superRef.getName(), cha);
     }
 
-    public ClassHierarchy getClassHierarchy() {
+    public IClassHierarchy getClassHierarchy() {
       return cha;
     }
 
@@ -100,7 +130,7 @@ public class JavaScriptLoader implements IClassLoader {
       types.put(JavaScriptTypes.Root.getName(), this);
     }
 
-    public ClassHierarchy getClassHierarchy() {
+    public IClassHierarchy getClassHierarchy() {
       return cha;
     }
 
@@ -125,7 +155,7 @@ public class JavaScriptLoader implements IClassLoader {
       types.put(codeName.getName(), this);
     }
 
-    public ClassHierarchy getClassHierarchy() {
+    public IClassHierarchy getClassHierarchy() {
       return cha;
     }
 
@@ -151,7 +181,7 @@ public class JavaScriptLoader implements IClassLoader {
           lexicalInfo, debugInfo);
     }
 
-    public ClassHierarchy getClassHierarchy() {
+    public IClassHierarchy getClassHierarchy() {
       return cha;
     }
 
@@ -242,6 +272,8 @@ public class JavaScriptLoader implements IClassLoader {
 
   final JavaScriptClass PRIMITIVES = new JavaScriptClass(this, JavaScriptTypes.Primitives, JavaScriptTypes.Root, null);
 
+  final JavaScriptClass FAKEROOT = new JavaScriptClass(this, JavaScriptTypes.FakeRoot, JavaScriptTypes.Root, null);
+
   final JavaScriptClass STRING = new JavaScriptClass(this, JavaScriptTypes.String, JavaScriptTypes.Root, null);
 
   final JavaScriptClass NULL = new JavaScriptClass(this, JavaScriptTypes.Null, JavaScriptTypes.Root, null);
@@ -276,13 +308,12 @@ public class JavaScriptLoader implements IClassLoader {
 
   final JavaScriptClass STRING_OBJECT = new JavaScriptClass(this, JavaScriptTypes.StringObject, JavaScriptTypes.Object, null);
 
-  public IClass lookupClass(String className, ClassHierarchy cha) {
+  public IClass lookupClass(String className, IClassHierarchy cha) {
     Assertions._assert(this.cha == cha);
     return (IClass) types.get(TypeName.string2TypeName(className));
   }
 
-  public IClass lookupClass(TypeName className, ClassHierarchy cha) {
-    Assertions._assert(this.cha == cha);
+  public IClass lookupClass(TypeName className, IClassHierarchy cha) {
     return (IClass) types.get(className);
   }
 
@@ -300,6 +331,10 @@ public class JavaScriptLoader implements IClassLoader {
 
   public Atom getName() {
     return getReference().getName();
+  }
+
+  public Language getLanguage() {
+    return JS;
   }
 
   public int getNumberOfMethods() {

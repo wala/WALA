@@ -25,14 +25,18 @@ import com.ibm.wala.util.warnings.WarningSet;
 
 public class JSCallGraph extends AstCallGraph {
 
-  public JSCallGraph(ClassHierarchy cha, AnalysisOptions options) {
+  public JSCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     super(cha, options);
   }
 
-  public class JSFakeRoot extends ScriptFakeRoot {
+  public final static MethodReference fakeRoot = MethodReference.findOrCreate(JavaScriptTypes.FakeRoot, FakeRootMethod.name, FakeRootMethod.descr);
 
-    public JSFakeRoot(ClassHierarchy cha, AnalysisOptions options) {
-      super(cha, options);
+  public static class JSFakeRoot extends ScriptFakeRoot {
+
+    public JSFakeRoot(IClassHierarchy cha, 
+		      AnalysisOptions options)
+    {
+      super(fakeRoot, cha.lookupClass(JavaScriptTypes.FakeRoot), cha, options);
     }
 
     public InducedCFG makeControlFlowGraph() {
@@ -62,6 +66,6 @@ public class JSCallGraph extends AstCallGraph {
   }
 
   protected CGNode makeFakeRootNode() {
-    return findOrCreateNode(new JSFakeRoot(cha, options), Everywhere.EVERYWHERE);
+      return findOrCreateNode(new JSFakeRoot(cha, options), Everywhere.EVERYWHERE);
   }
 }

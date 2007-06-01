@@ -19,14 +19,14 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 public class JavaScriptScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
   private final IClass codeBody;
 
-  public JavaScriptScopeMappingInstanceKeys(ClassHierarchy cha,
+  public JavaScriptScopeMappingInstanceKeys(IClassHierarchy cha,
 					    PropagationCallGraphBuilder builder, 
 					    InstanceKeyFactory basic)
   {

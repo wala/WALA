@@ -38,19 +38,12 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
     return translatorFactory;
   }
 
-  public static AnalysisOptions makeOptions(AnalysisScope scope, boolean keepIRs, ClassHierarchy cha, Iterable<Entrypoint> roots,
+  public static AnalysisOptions makeOptions(AnalysisScope scope, boolean keepIRs, IClassHierarchy cha, Iterable<Entrypoint> roots,
       final WarningSet warnings) {
     final AnalysisOptions options = new AnalysisOptions(scope, AstIRFactory.makeDefaultFactory(keepIRs), roots);
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
     options.setSelector(new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()));
-
-    options.setConstantType(Boolean.class, JavaScriptTypes.Boolean);
-    options.setConstantType(String.class, JavaScriptTypes.String);
-    options.setConstantType(Integer.class, JavaScriptTypes.Number);
-    options.setConstantType(Float.class, JavaScriptTypes.Number);
-    options.setConstantType(Double.class, JavaScriptTypes.Number);
-    options.setConstantType(null, JavaScriptTypes.Null);
 
     options.setUseConstantSpecificKeys(true);
 
@@ -77,12 +70,12 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
     return new CAstAnalysisScope(files, loaders);
   }
 
-  public static ClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders, WarningSet warnings)
+  public static IClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders, WarningSet warnings)
       throws ClassHierarchyException {
-    return ClassHierarchy.make(scope, loaders, warnings, JavaScriptTypes.Root);
+    return ClassHierarchy.make(scope, loaders, warnings, JavaScriptLoader.JS);
   }
 
-  public static Iterable<Entrypoint> makeScriptRoots(ClassHierarchy cha) {
+  public static Iterable<Entrypoint> makeScriptRoots(IClassHierarchy cha) {
     return new JavaScriptEntryPoints(cha, cha.getLoader(JavaScriptTypes.jsLoader));
   }
 

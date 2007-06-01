@@ -16,13 +16,18 @@ import com.ibm.wala.util.Atom;
 
 public class JavaScriptTypes extends AstTypeReference {
 
-  public static final String jsLoaderNameStr = "JavaScript";
+  public static final String jsNameStr = "JavaScript";
+
+  public static final String jsLoaderNameStr = "JavaScriptLoader";
+
+  public static final Atom jsName =
+    Atom.findOrCreateUnicodeAtom(jsNameStr);
 
   public static final Atom jsLoaderName =
     Atom.findOrCreateUnicodeAtom(jsLoaderNameStr);
 
   public static final ClassLoaderReference jsLoader =
-    new ClassLoaderReference( jsLoaderName );
+    new ClassLoaderReference( jsLoaderName, jsName );
 
   public static final TypeReference Root = 
     TypeReference.findOrCreate(jsLoader, rootTypeName);
@@ -53,6 +58,9 @@ public class JavaScriptTypes extends AstTypeReference {
 
   public static final TypeReference Primitives =
     TypeReference.findOrCreate(jsLoader, "LPrimitives");
+
+  public static final TypeReference FakeRoot =
+    TypeReference.findOrCreate(jsLoader, "LFakeRoot");
 
   public static final TypeReference Boolean =
     TypeReference.findOrCreate(jsLoader, "LBoolean");

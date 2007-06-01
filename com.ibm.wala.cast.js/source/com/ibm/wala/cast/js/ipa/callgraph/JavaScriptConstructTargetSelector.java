@@ -24,7 +24,7 @@ import com.ibm.wala.cast.types.*;
 import com.ibm.wala.classLoader.*;
 import com.ibm.wala.ipa.callgraph.*;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.*;
@@ -33,9 +33,8 @@ import com.ibm.wala.util.warnings.WarningSet;
 public class JavaScriptConstructTargetSelector implements MethodTargetSelector {  
   private static final boolean DEBUG = false;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
   private final MethodTargetSelector base;
-  private final SSAContextInterpreter interpreter;
   private final WarningSet warnings;
 
   private final Map<Object, IMethod> constructors = new HashMap<Object, IMethod>();
@@ -64,14 +63,12 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     }
   }
 
-  public JavaScriptConstructTargetSelector(ClassHierarchy cha, 
+  public JavaScriptConstructTargetSelector(IClassHierarchy cha, 
 					   MethodTargetSelector base,
-					   SSAContextInterpreter interpreter,
 					   WarningSet warnings)
   {
     this.cha = cha;
     this.base = base;
-    this.interpreter = interpreter;
     this.warnings = warnings;
   }
   
@@ -529,6 +526,8 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   {
     if (site.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
       Assertions._assert(cha.isSubclassOf(receiver, cha.lookupClass(JavaScriptTypes.Root)));
+      SSAContextInterpreter interpreter = 
+	caller.getCallGraph().getInterpreter(caller);
       IR callerIR = interpreter.getIR(caller, warnings);
       SSAAbstractInvokeInstruction callStmts[] = callerIR.getCalls( site );
       Assertions._assert( callStmts.length == 1 );
