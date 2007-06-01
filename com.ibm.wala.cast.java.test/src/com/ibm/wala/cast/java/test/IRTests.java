@@ -40,7 +40,7 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -269,7 +269,7 @@ public abstract class IRTests extends WalaTestCase {
   private static void dumpIR(CallGraph cg, boolean assertReachable) throws IOException {
     Set<IMethod> unreachable = HashSetFactory.make();
     WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = cg.getClassHierarchy();
+    IClassHierarchy cha = cg.getClassHierarchy();
     IClassLoader sourceLoader = cha.getLoader(EclipseProjectPath.SOURCE_REF);
     for (Iterator iter = sourceLoader.iterateAllClasses(); iter.hasNext();) {
       IClass clazz = (IClass) iter.next();
@@ -344,7 +344,7 @@ public abstract class IRTests extends WalaTestCase {
     }
   }
 
-  private static MethodReference descriptorToMethodRef(String descrip, ClassHierarchy cha) {
+  private static MethodReference descriptorToMethodRef(String descrip, IClassHierarchy cha) {
     String srcDescriptor = descrip; // ldr#type#methName#methSig
     String[] ldrTypeMeth = srcDescriptor.split("\\#");
 
@@ -361,7 +361,7 @@ public abstract class IRTests extends WalaTestCase {
     return methodRef;
   }
 
-  private static ClassLoaderReference findLoader(String loaderName, ClassHierarchy cha) {
+  private static ClassLoaderReference findLoader(String loaderName, IClassHierarchy cha) {
     Atom loaderAtom = Atom.findOrCreateUnicodeAtom(loaderName);
     IClassLoader[] loaders = cha.getLoaders();
     for (int i = 0; i < loaders.length; i++) {
