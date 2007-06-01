@@ -18,7 +18,7 @@ import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContainerContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -45,7 +45,7 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
    *          reflection specification
    */
   public AstJavaZeroOneContainerCFABuilder(
-		  ClassHierarchy cha, 
+		  IClassHierarchy cha, 
 		  WarningSet warnings, 
 		  AnalysisOptions options,
 		  ContextSelector appContextSelector,
@@ -69,7 +69,7 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
     setContextSelector(DCS);
   }
 
-  protected ZeroXInstanceKeys makeInstanceKeys(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options, SSAContextInterpreter contextInterpreter) {
+  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options, SSAContextInterpreter contextInterpreter) {
     ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, warnings, ZeroXInstanceKeys.ALLOCATIONS
         | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS 
 	| ZeroXInstanceKeys.SMUSH_STRINGS
@@ -83,7 +83,7 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
    * @param keys
    * @return an object which creates contexts for call graph nodes based on the container disambiguation policy
    */
-  protected ContextSelector makeContainerContextSelector(ClassHierarchy cha, ZeroXInstanceKeys keys) {
+  protected ContextSelector makeContainerContextSelector(IClassHierarchy cha, ZeroXInstanceKeys keys) {
     return new ContainerContextSelector(cha,keys );
   }
 

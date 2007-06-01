@@ -18,7 +18,7 @@ import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.*;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -36,7 +36,7 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
    * @param bypass
    * @param contextProvider
    */
-  public AstJavaZeroXCFABuilder(ClassHierarchy cha, 
+  public AstJavaZeroXCFABuilder(IClassHierarchy cha, 
 			   WarningSet warnings,
 			   AnalysisOptions options,
 			   ContextSelector appContextSelector,
@@ -78,7 +78,7 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
    *          deployment descriptor abstraction
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
-  public static AstJavaCFABuilder make(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
+  public static AstJavaCFABuilder make(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
       String[] xmlFiles, WarningSet warnings, byte instancePolicy) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);

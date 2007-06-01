@@ -15,7 +15,7 @@ import com.ibm.wala.client.CallGraphBuilderFactory;
 import com.ibm.wala.ipa.callgraph.*;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.*;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -29,12 +29,12 @@ public class ZeroCFABuilderFactory implements CallGraphBuilderFactory {
    * (non-Javadoc)
    * 
    * @see com.ibm.domo.j2ee.client.CallGraphBuilderFactory#make(com.ibm.domo.ipa.callgraph.AnalysisOptions,
-   *      com.ibm.domo.ipa.cha.ClassHierarchy, java.lang.ClassLoader,
+   *      com.ibm.domo.ipa.cha.IClassHierarchy, java.lang.ClassLoader,
    *      com.ibm.domo.j2ee.J2EEAnalysisScope,
    *      com.ibm.domo.util.warnings.WarningSet, boolean)
    */
   public CallGraphBuilder make(AnalysisOptions options,
-			       ClassHierarchy cha,
+			       IClassHierarchy cha,
 			       AnalysisScope scope,
 			       WarningSet warnings,
 			       boolean keepPointsTo)

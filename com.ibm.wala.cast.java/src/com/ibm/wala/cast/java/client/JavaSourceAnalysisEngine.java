@@ -29,8 +29,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.*;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.Value;
@@ -133,8 +132,8 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     return new PolyglotClassLoaderFactory(exclusions, warnings, extInfo);
   }
 
-  protected ClassHierarchy buildClassHierarchy() {
-    ClassHierarchy cha = null;
+  protected IClassHierarchy buildClassHierarchy() {
+    IClassHierarchy cha = null;
     ClassLoaderFactory factory = getClassLoaderFactory(scope.getExclusions(), getWarnings(), getTranslatorExtension());
 
     try {
@@ -147,7 +146,7 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     return cha;
   }
 
-  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
     return Util.makeMainEntrypoints(EclipseProjectPath.SOURCE_REF, cha);
   }
 

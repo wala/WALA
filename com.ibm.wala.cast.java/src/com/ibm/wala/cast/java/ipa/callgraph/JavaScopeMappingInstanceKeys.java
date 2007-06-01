@@ -27,7 +27,7 @@ import com.ibm.wala.util.debug.*;
 
 public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 
-  public JavaScopeMappingInstanceKeys(ClassHierarchy cha, PropagationCallGraphBuilder builder, InstanceKeyFactory basic) {
+  public JavaScopeMappingInstanceKeys(IClassHierarchy cha, PropagationCallGraphBuilder builder, InstanceKeyFactory basic) {
     super(builder, basic);
 
   }

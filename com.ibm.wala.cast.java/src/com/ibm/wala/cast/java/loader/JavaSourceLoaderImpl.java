@@ -39,7 +39,7 @@ import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -82,7 +82,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
       this.enclosingClass = enclosingClass;
     }
 
-    public ClassHierarchy getClassHierarchy() {
+    public IClassHierarchy getClassHierarchy() {
       return cha;
     }
 
@@ -268,7 +268,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
       return new LexicalParent[0];
     }
 
-    public ClassHierarchy getClassHierarchy() {
+    public IClassHierarchy getClassHierarchy() {
       return cha;
     }
   }
@@ -285,7 +285,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
       super(methodEntity, owner, cfg, symtab, hasCatchBlock, catchTypes, lexicalInfo, debugInfo);
     }
 
-    public ClassHierarchy getClassHierarchy() {
+    public IClassHierarchy getClassHierarchy() {
       return cha;
     }
 
@@ -389,12 +389,12 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     return result;
   }
 
-  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, ClassHierarchy cha,
+  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha,
       WarningSet warnings) throws IOException {
     super(loaderRef, cha.getScope().getArrayClassLoader(), parent, cha.getScope().getExclusions(), cha, warnings);
   }
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return cha;
   }
 

@@ -12,7 +12,7 @@ package com.ibm.wala.cast.java.ipa.callgraph;
 
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CFAPointerKeys;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -26,7 +26,7 @@ public class AstJavaCFABuilder extends AstJavaSSAPropagationCallGraphBuilder {
    * @param cha
    * @param warnings
    */
-  public AstJavaCFABuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options) {
+  public AstJavaCFABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options) {
     super(cha, warnings, options, new CFAPointerKeys());
   }
 
