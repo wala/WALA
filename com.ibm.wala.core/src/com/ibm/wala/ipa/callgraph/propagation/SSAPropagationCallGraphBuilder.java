@@ -186,7 +186,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param type
    * @return the instance key that represents the exception of type _type_
    *         thrown by a particular PEI.
-   * @throws IllegalArgumentException  if ikFactory is null
+   * @throws IllegalArgumentException
+   *           if ikFactory is null
    */
   public static InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter x, TypeReference type, InstanceKeyFactory ikFactory) {
     if (ikFactory == null) {
@@ -511,7 +512,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /**
    * @return a List of Instructions that may transfer control to bb via an
    *         exceptional edge
-   * @throws IllegalArgumentException  if ir is null
+   * @throws IllegalArgumentException
+   *           if ir is null
    */
   public static List<ProgramCounter> getIncomingPEIs(IR ir, IBasicBlock bb) {
     if (ir == null) {
@@ -549,9 +551,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   protected static class ConstraintVisitor extends SSAInstruction.Visitor {
 
     /**
-     *  The governing call graph builder.  This field is used instead of
-     * an inner class in order to allow more flexible reuse of this
-     * visitor in subclasses
+     * The governing call graph builder. This field is used instead of an inner
+     * class in order to allow more flexible reuse of this visitor in subclasses
      */
     protected final SSAPropagationCallGraphBuilder builder;
 
@@ -560,7 +561,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      */
     protected final ExplicitCallGraph.ExplicitNode node;
 
-     /**
+    /**
      * The governing call graph.
      */
     private final ExplicitCallGraph callGraph;
@@ -592,7 +593,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     private final boolean debug;
 
-    public ConstraintVisitor(SSAPropagationCallGraphBuilder builder, ExplicitCallGraph.ExplicitNode node) {      
+    public ConstraintVisitor(SSAPropagationCallGraphBuilder builder, ExplicitCallGraph.ExplicitNode node) {
       this.builder = builder;
       this.node = node;
 
@@ -604,7 +605,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       this.symbolTable = this.ir.getSymbolTable();
 
       this.du = builder.getCFAContextInterpreter().getDU(node, builder.getWarnings());
-      
+
       this.debug = DEBUG_METHOD_SUBSTRING == null || node.toString().indexOf(DEBUG_METHOD_SUBSTRING) > -1;
       if (Assertions.verifyAssertions) {
         Assertions._assert(symbolTable != null);
@@ -642,7 +643,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     public PointerKey getPointerKeyForStaticField(IField f) {
       return getBuilder().getPointerKeyForStaticField(f);
     }
-    
+
     public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField f) {
       return getBuilder().getPointerKeyForInstanceField(I, f);
     }
@@ -660,11 +661,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     public InstanceKey getInstanceKeyForConstant(Object S) {
-      return getBuilder().getInstanceKeyForConstant(node, S);
+      TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(S);
+      return getBuilder().getInstanceKeyForConstant(type, S);
     }
 
     public String getStringConstantForInstanceKey(InstanceKey I) {
-      return getBuilder().getStringConstantForInstanceKey(node, I);
+      return getBuilder().getStringConstantForInstanceKey(I);
     }
 
     public InstanceKey getInstanceKeyForPEI(ProgramCounter instr, TypeReference type) {
@@ -1091,7 +1093,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         if (n == null) {
           getWarnings().add(ResolutionFailure.create(node, instruction));
         } else {
-	  getBuilder().processResolvedCall(node, instruction, n, computeInvariantParameters(instruction), uniqueCatch);
+          getBuilder().processResolvedCall(node, instruction, n, computeInvariantParameters(instruction), uniqueCatch);
           if (DEBUG) {
             Trace.guardedPrintln("visitInvoke class init " + n, DEBUG_METHOD_SUBSTRING);
           }
@@ -1127,8 +1129,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           if (DEBUG && debug) {
             Trace.println("Add side effect, dispatch to " + instruction + ", receiver " + receiver);
           }
-          DispatchOperator dispatchOperator = getBuilder().new DispatchOperator(instruction, node, computeInvariantParameters(instruction),
-              uniqueCatch);
+          DispatchOperator dispatchOperator = getBuilder().new DispatchOperator(instruction, node,
+              computeInvariantParameters(instruction), uniqueCatch);
           system.newSideEffect(dispatchOperator, receiver);
         }
       }
@@ -1404,12 +1406,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
 
       try {
-	IClass sc = klass.getSuperclass();
+        IClass sc = klass.getSuperclass();
         if (sc != null) {
-	  processClassInitializer(sc);
+          processClassInitializer(sc);
         }
       } catch (ClassHierarchyException e) {
-	  Assertions.UNREACHABLE();
+        Assertions.UNREACHABLE();
       }
     }
   }
@@ -1428,12 +1430,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    *          if non-null, then this is the unique PointerKey that catches all
    *          exceptions from this call site.
    */
-  private void processResolvedCall(CGNode caller, 
-				     SSAAbstractInvokeInstruction instruction,
-				     CGNode target,
-				     InstanceKey[][] constParams, 
-				     PointerKey uniqueCatchKey)
-  {
+  private void processResolvedCall(CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
+      InstanceKey[][] constParams, PointerKey uniqueCatchKey) {
 
     if (DEBUG) {
       Trace.println("processResolvedCall: " + caller + " ," + instruction + " , " + target);
@@ -1443,15 +1441,15 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       Trace.println("addTarget: " + caller + " ," + instruction + " , " + target);
     }
     caller.addTarget(instruction.getCallSite(), target);
-  
+
     if (FakeRootMethod.isFakeRootMethod(caller.getMethod().getReference())) {
       if (entrypointCallSites.contains(instruction.getSite())) {
-	  callGraph.registerEntrypoint(target);
-	}
+        callGraph.registerEntrypoint(target);
+      }
     }
 
     if (!haveAlreadyVisited(target)) {
-	markDiscovered(target);
+      markDiscovered(target);
     }
 
     // TODO: i'd like to enable this optimization, but it's a little tricky
@@ -1484,11 +1482,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * (!target.getMethod().isStatic() && !target.getMethod().isClinit()) {
      * nExpected++; }
      */
-    
+
     if (nUses != nExpected) {
-	// some sort of unverifiable code mismatch. give up.
-	getWarnings().add(ResolutionFailure.create(target, instruction, "found " + nUses + " uses but expected " + nExpected));
-	return;
+      // some sort of unverifiable code mismatch. give up.
+      getWarnings().add(ResolutionFailure.create(target, instruction, "found " + nUses + " uses but expected " + nExpected));
+      return;
     }
 
     boolean needsFilter = !instruction.getSite().isStatic() && needsFilterForReceiver(instruction, target);
@@ -1498,73 +1496,73 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // the various types of dispatch logic. We need a filter that expresses
     // "the set of types s.t. x.foo resolves to y.foo."
     for (int i = 0; i < instruction.getNumberOfParameters(); i++) {
-	// we rely on the invariant that the value number for the ith parameter
-	// is i+1
-	final int vn = i + 1;
+      // we rely on the invariant that the value number for the ith parameter
+      // is i+1
+      final int vn = i + 1;
 
-	if (target.getMethod().getParameterType(i).isReferenceType()) {
-	  // if (constParams != null && constParams[i] != null &&
-	  // !supportFullPointerFlowGraph) {
-	  if (constParams != null && constParams[i] != null) {
-	    InstanceKey[] ik = constParams[i];
-	    for (int j = 0; j < ik.length; j++) {
-	      if (needsFilter && (i == 0)) {
+      if (target.getMethod().getParameterType(i).isReferenceType()) {
+        // if (constParams != null && constParams[i] != null &&
+        // !supportFullPointerFlowGraph) {
+        if (constParams != null && constParams[i] != null) {
+          InstanceKey[] ik = constParams[i];
+          for (int j = 0; j < ik.length; j++) {
+            if (needsFilter && (i == 0)) {
               FilteredPointerKey.TypeFilter C = getFilter(target);
-		PointerKey formal = null;
-		if (isRootType(C)) {
-		  // TODO: we need much better filtering here ... see comments
-		  // above.
-		  formal = getPointerKeyForLocal(target, vn);
-		} else {
-		  formal = getFilteredPointerKeyForLocal(target, vn, C);
-		}
-		system.newConstraint(formal, ik[j]);
-	      } else {
-		PointerKey formal = getPointerKeyForLocal(target, vn);
-		system.newConstraint(formal, ik[j]);
-	      }
-	    }
-	  } else {
-	    if (Assertions.verifyAssertions) {
+              PointerKey formal = null;
+              if (isRootType(C)) {
+                // TODO: we need much better filtering here ... see comments
+                // above.
+                formal = getPointerKeyForLocal(target, vn);
+              } else {
+                formal = getFilteredPointerKeyForLocal(target, vn, C);
+              }
+              system.newConstraint(formal, ik[j]);
+            } else {
+              PointerKey formal = getPointerKeyForLocal(target, vn);
+              system.newConstraint(formal, ik[j]);
+            }
+          }
+        } else {
+          if (Assertions.verifyAssertions) {
             if (instruction.getUse(i) < 0) {
               Assertions.UNREACHABLE("unexpected " + instruction + " in " + caller);
-	      }
-	    }
-	    PointerKey actual = getPointerKeyForLocal(caller, instruction.getUse(i));
-	    if (needsFilter && (i == 0)) {
-	      FilteredPointerKey.TypeFilter C = getFilter(target);
-	      if (isRootType(C)) {
-		// TODO: we need much better filtering here ... see comments
-		// above.
-		PointerKey formal = getPointerKeyForLocal(target, vn);
-		system.newConstraint(formal, assignOperator, actual);
-	      } else {
-		FilteredPointerKey formal = getFilteredPointerKeyForLocal(target, vn, C);
-		system.newConstraint(formal, filterOperator, actual);
-	      }
-	    } else {
-	      PointerKey formal = getPointerKeyForLocal(target, vn);
-	      system.newConstraint(formal, assignOperator, actual);
-	    }
-	  }
-	}
+            }
+          }
+          PointerKey actual = getPointerKeyForLocal(caller, instruction.getUse(i));
+          if (needsFilter && (i == 0)) {
+            FilteredPointerKey.TypeFilter C = getFilter(target);
+            if (isRootType(C)) {
+              // TODO: we need much better filtering here ... see comments
+              // above.
+              PointerKey formal = getPointerKeyForLocal(target, vn);
+              system.newConstraint(formal, assignOperator, actual);
+            } else {
+              FilteredPointerKey formal = getFilteredPointerKeyForLocal(target, vn, C);
+              system.newConstraint(formal, filterOperator, actual);
+            }
+          } else {
+            PointerKey formal = getPointerKeyForLocal(target, vn);
+            system.newConstraint(formal, assignOperator, actual);
+          }
+        }
+      }
     }
-    
+
     // generate contraints from return value.
     if (instruction.hasDef() && instruction.getDeclaredResultType().isReferenceType()) {
-	PointerKey result = getPointerKeyForLocal(caller, instruction.getDef());
-	PointerKey ret = getPointerKeyForReturnValue(target);
-	system.newConstraint(result, assignOperator, ret);
+      PointerKey result = getPointerKeyForLocal(caller, instruction.getDef());
+      PointerKey ret = getPointerKeyForReturnValue(target);
+      system.newConstraint(result, assignOperator, ret);
     }
     // generate contraints from exception return value.
     PointerKey e = getPointerKeyForLocal(caller, instruction.getException());
     PointerKey er = getPointerKeyForExceptionalReturnValue(target);
     if (SHORT_CIRCUIT_SINGLE_USES && uniqueCatchKey != null) {
-	// e has exactly one use. so, represent e implicitly
-	system.newConstraint(uniqueCatchKey, assignOperator, er);
+      // e has exactly one use. so, represent e implicitly
+      system.newConstraint(uniqueCatchKey, assignOperator, er);
     } else {
-	  system.newConstraint(e, assignOperator, er);
-  }
+      system.newConstraint(e, assignOperator, er);
+    }
     // }
   }
 
@@ -1777,7 +1775,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return true;
     }
   }
-   
+
   public boolean hasNoInterestingUses(CGNode node, int vn, DefUse du) {
 
     if (du == null) {
@@ -2029,11 +2027,13 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     InstanceKey[] result;
     if (isConstantRef(symbolTable, valueNumber)) {
       Object S = symbolTable.getConstantValue(valueNumber);
-      InstanceKey ik = hm.getInstanceKeyForConstant(node, S);
-      if (ik != null)
+      TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(S);
+      InstanceKey ik = hm.getInstanceKeyForConstant(type, S);
+      if (ik != null) {
         result = new InstanceKey[] { ik };
-      else
+      } else {
         result = new InstanceKey[0];
+      }
     } else {
       SSANewInstruction def = (SSANewInstruction) du.getDef(valueNumber);
       InstanceKey iKey = hm.getInstanceKeyForAllocation(node, def.getNewSite());

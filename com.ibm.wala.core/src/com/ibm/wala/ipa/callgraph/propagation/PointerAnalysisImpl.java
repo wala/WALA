@@ -453,37 +453,23 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
 
   private class HModel implements HeapModel {
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys()
-     */
     public Iterator iteratePointerKeys() {
       return pointsToMap.iterateKeys();
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForAllocation(com.ibm.detox.ipa.callgraph.CGNode,
-     *      com.ibm.wala.ssa.NewInstruction)
-     */
     public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
       return iKeyFactory.getInstanceKeyForAllocation(node, allocation);
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForMultiNewArray(com.ibm.detox.ipa.callgraph.CGNode,
-     *      com.ibm.wala.ssa.NewInstruction, int)
-     */
     public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
       return iKeyFactory.getInstanceKeyForMultiNewArray(node, allocation, dim);
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForStringConstant(java.lang.String)
-     */
-    public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
-      return iKeyFactory.getInstanceKeyForConstant(node, S);
+    public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
+      return iKeyFactory.getInstanceKeyForConstant(type, S);
     }
 
-    public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
+    public String getStringConstantForInstanceKey(InstanceKey I) {
       Assertions.UNREACHABLE();
       return null;
     }
@@ -506,10 +492,6 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       return pointerKeys.getPointerKeyForLocal(node, valueNumber);
     }
 
-    /*
-     * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.detox.ipa.callgraph.CGNode,
-     *      int)
-     */
     public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
       return pointerKeys.getFilteredPointerKeyForLocal(node, valueNumber, filter);
     }

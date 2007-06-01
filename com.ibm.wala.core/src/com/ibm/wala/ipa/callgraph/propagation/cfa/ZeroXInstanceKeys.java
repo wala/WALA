@@ -240,15 +240,15 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     }
   }
 
-  public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
-    return classBased.getInstanceKeyForConstant(node, S);
+  public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
+    return classBased.getInstanceKeyForConstant(type, S);
   }
 
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getStringConstantForInstanceKey(com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
-  public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
-    return classBased.getStringConstantForInstanceKey(node, I);
+  public String getStringConstantForInstanceKey(InstanceKey I) {
+    return classBased.getStringConstantForInstanceKey(I);
   }
 
   /*

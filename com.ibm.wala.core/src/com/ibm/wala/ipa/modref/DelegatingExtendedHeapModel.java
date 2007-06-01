@@ -54,8 +54,8 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
     return h.getInstanceKeyForClassObject(type);
   }
 
-  public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
-    return h.getInstanceKeyForConstant(node, S);
+  public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
+    return h.getInstanceKeyForConstant(type, S);
   }
 
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
@@ -96,8 +96,8 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
     return h.getPointerKeyForStaticField(f);
   }
 
-  public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
-    return h.getStringConstantForInstanceKey(node, I);
+  public String getStringConstantForInstanceKey(InstanceKey I) {
+    return h.getStringConstantForInstanceKey(I);
   }
 
   public Iterator iteratePointerKeys() {

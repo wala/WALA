@@ -63,10 +63,10 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
    * <li> a CallSite if we're delegating these edges to another node
    * </ul>
    */
-  public static class DelegatingCGNode<T extends DelegatingExplicitCallGraph> extends ExplicitNode<T> {
+  public class DelegatingCGNode extends ExplicitNode {
 
-    protected DelegatingCGNode(T CG, IMethod method, Context C) {
-      super(CG, method, C);
+    protected DelegatingCGNode(IMethod method, Context C) {
+      super(method, C);
     }
 
     /*
@@ -151,11 +151,10 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     public void delegate(CallSiteReference site, CGNode delegateNode, CallSiteReference delegateSite) {
       CallSite d = new CallSite(delegateSite, delegateNode);
       targets.set(site.getProgramCounter(), d);
-      int y = CG.getNumber(this);
-      int x = CG.getNumber(delegateNode);
-      CG.delegateR.add(x, y);
+      int y = getCallGraph().getNumber(this);
+      int x = getCallGraph().getNumber(delegateNode);
+      delegateR.add(x, y);
     }
-
   }
 
   /*
@@ -164,7 +163,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
    */
   @Override
   protected ExplicitNode makeNode(IMethod method, Context context) {
-    return new DelegatingCGNode(this, method, context);
+    return new DelegatingCGNode(method, context);
   }
 
   private class DelegatingEdgeManager extends ExplicitEdgeManager {

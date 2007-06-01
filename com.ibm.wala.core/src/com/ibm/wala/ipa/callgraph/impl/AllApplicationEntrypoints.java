@@ -10,11 +10,13 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.impl;
 
+import java.util.HashSet;
 import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.debug.Trace;
 
@@ -25,7 +27,7 @@ import com.ibm.wala.util.debug.Trace;
  * @author sfink
  * @autor eyahav
  */
-public class AllApplicationEntrypoints extends BasicEntrypoints {
+public class AllApplicationEntrypoints extends HashSet<Entrypoint> {
 
   private final static boolean DEBUG = false;
   /**

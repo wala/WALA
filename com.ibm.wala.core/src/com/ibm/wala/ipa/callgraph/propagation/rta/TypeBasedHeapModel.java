@@ -66,7 +66,7 @@ public class TypeBasedHeapModel implements HeapModel {
   private final Collection<IClass> klasses;
 
   private final CallGraph cg;
-  
+
   private final Collection<CGNode> nodesHandled = HashSetFactory.make();
 
   /**
@@ -75,12 +75,13 @@ public class TypeBasedHeapModel implements HeapModel {
    * 
    * computed lazily
    */
-  private Map<PointerKey,Object> pKeys;
+  private Map<PointerKey, Object> pKeys;
 
   /**
    * @param klasses
    *          Collection<IClass>
-   * @throws IllegalArgumentException  if cg is null
+   * @throws IllegalArgumentException
+   *           if cg is null
    */
   public TypeBasedHeapModel(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) {
     if (cg == null) {
@@ -104,7 +105,7 @@ public class TypeBasedHeapModel implements HeapModel {
       initPKeysForNode(node);
     }
   }
-  
+
   private void initPKeysForNode(CGNode node) {
     if (pKeys == null) {
       pKeys = HashMapFactory.make();
@@ -123,7 +124,7 @@ public class TypeBasedHeapModel implements HeapModel {
     if (ir == null) {
       return Collections.emptyMap();
     }
-    Map<PointerKey,Object> result = HashMapFactory.make();
+    Map<PointerKey, Object> result = HashMapFactory.make();
     SymbolTable s = ir.getSymbolTable();
     if (s == null) {
       return Collections.emptyMap();
@@ -134,14 +135,14 @@ public class TypeBasedHeapModel implements HeapModel {
     for (int i = 1; i <= s.getMaxValueNumber(); i++) {
       if (s.isConstant(i)) {
         if (s.isStringConstant(i)) {
-	  result.put(pointerKeys.getPointerKeyForLocal(node, i), getInstanceKeyForConstant(node, s.getConstantValue(i)));
+          TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(s.getStringValue(i));
+          result.put(pointerKeys.getPointerKeyForLocal(node, i), getInstanceKeyForConstant(type, s.getConstantValue(i)));
         }
       } else {
         TypeAbstraction t = ti.getType(i);
         if (t.getType() != null && t.getType().isReferenceType()) {
-          result.put(
-	    pointerKeys.getPointerKeyForLocal(node, i), 
-	    pointerKeys.getFilteredPointerKeyForLocal(node, i, new FilteredPointerKey.SingleClassFilter(t.getType())));
+          result.put(pointerKeys.getPointerKeyForLocal(node, i), pointerKeys.getFilteredPointerKeyForLocal(node, i,
+              new FilteredPointerKey.SingleClassFilter(t.getType())));
         }
       }
     }
@@ -150,7 +151,7 @@ public class TypeBasedHeapModel implements HeapModel {
 
   /**
    */
-  private Map<PointerKey,Object> computePointerKeys(IClass klass) {
+  private Map<PointerKey, Object> computePointerKeys(IClass klass) {
     Map<PointerKey, Object> result = HashMapFactory.make();
     if (klass.isArrayClass()) {
       ArrayClass a = (ArrayClass) klass;
@@ -204,11 +205,11 @@ public class TypeBasedHeapModel implements HeapModel {
     return null;
   }
 
-  public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
-    return iKeyFactory.getInstanceKeyForConstant(node, S);
+  public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
+    return iKeyFactory.getInstanceKeyForConstant(type, S);
   }
 
-  public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
+  public String getStringConstantForInstanceKey(InstanceKey I) {
     Assertions.UNREACHABLE();
     return null;
   }
@@ -238,7 +239,8 @@ public class TypeBasedHeapModel implements HeapModel {
         ConcreteTypeKey c = (ConcreteTypeKey) result;
         if (c.getConcreteType().getReference().equals(TypeReference.JavaLangString)) {
           // a string constant;
-          return pointerKeys.getFilteredPointerKeyForLocal(node, valueNumber, new FilteredPointerKey.SingleClassFilter(c.getConcreteType()));
+          return pointerKeys.getFilteredPointerKeyForLocal(node, valueNumber, new FilteredPointerKey.SingleClassFilter(c
+              .getConcreteType()));
         } else {
           Assertions.UNREACHABLE("need to handle " + result.getClass());
           return null;

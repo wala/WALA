@@ -1,32 +1,33 @@
 package com.ibm.wala.classLoader;
 
-import com.ibm.wala.types.*;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 
 public interface Language {
 
-    public static Language JAVA = new Language() {
-      public Atom getName() {
-	return ClassLoaderReference.Java;
+  public static Language JAVA = new Language() {
+    public Atom getName() {
+      return ClassLoaderReference.Java;
+    }
+
+    public TypeReference getRootType() {
+      return TypeReference.JavaLangObject;
+    }
+
+    public TypeReference getConstantType(Object o) {
+      if (o instanceof String) {
+        return TypeReference.JavaLangString;
+      } else {
+        return null;
       }
+    }
+  };
 
-      public TypeReference getRootType() {
-	return TypeReference.JavaLangObject;
-      }
+  Atom getName();
 
-      public TypeReference getConstantType(Object o) {
-	if (o instanceof String) {
-	  return TypeReference.JavaLangString;
-	} else {
-	  return null;
-	}
-      }
-    };
+  TypeReference getRootType();
 
-    Atom getName();
-
-    TypeReference getRootType();
-
-    TypeReference getConstantType(Object o);
+  TypeReference getConstantType(Object o);
 
 }

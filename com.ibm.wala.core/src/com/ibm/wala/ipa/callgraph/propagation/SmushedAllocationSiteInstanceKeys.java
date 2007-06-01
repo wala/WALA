@@ -21,9 +21,9 @@ import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
- * This class provides instance keys where for a given type T in a CGNode
- * N, there is one "abstract allocation site" instance for all T allocations
- * in node N.
+ * This class provides instance keys where for a given type T in a CGNode N,
+ * there is one "abstract allocation site" instance for all T allocations in
+ * node N.
  * 
  * @author sfink
  */
@@ -62,7 +62,7 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
-      warnings.add(ResolutionFailure.create(node,allocation));
+      warnings.add(ResolutionFailure.create(node, allocation));
       return null;
     }
 
@@ -83,7 +83,7 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
-      warnings.add(ResolutionFailure.create(node,allocation));
+      warnings.add(ResolutionFailure.create(node, allocation));
       return null;
     }
     InstanceKey key = new MultiNewArrayAllocationSiteKey(node, allocation, type, dim);
@@ -91,15 +91,14 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
     return key;
   }
 
-  public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
-    Language l = node.getMethod().getDeclaringClass().getClassLoader().getLanguage();
+  public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
     if (options.getUseConstantSpecificKeys())
-      return new ConstantKey(S, cha.lookupClass(l.getConstantType(S)));
+      return new ConstantKey(S, cha.lookupClass(type));
     else
-      return new ConcreteTypeKey(cha.lookupClass(l.getConstantType(S)));
+      return new ConcreteTypeKey(cha.lookupClass(type));
   }
 
-  public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
+  public String getStringConstantForInstanceKey(InstanceKey I) {
     if (I instanceof StringConstantKey) {
       return ((StringConstantKey) I).getString();
     } else {

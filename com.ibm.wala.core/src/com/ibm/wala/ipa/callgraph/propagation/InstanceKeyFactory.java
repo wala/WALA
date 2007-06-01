@@ -22,35 +22,36 @@ import com.ibm.wala.types.TypeReference;
  */
 public interface InstanceKeyFactory {
   /**
-   * @param node 
-   * @param allocation
    * @return the instance key that represents a particular allocation
    */
   public abstract InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation);
+
   /**
-   * @param node
-   * @param allocation
-   * @param dim
-   * @return the instance key that represents the array allocated as the dimth dimension at a particular allocation
+   * @return the instance key that represents the array allocated as the dimth
+   *         dimension at a particular allocation
    */
   public abstract InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim);
+
   /**
-   * @param S
-   * @return the instance key that represents a constant with value S
+   * @return the instance key that represents a constant with value S, when considered as a particular type
    */
-  public abstract InstanceKey getInstanceKeyForConstant(CGNode node, Object S);
+  public abstract InstanceKey getInstanceKeyForConstant(TypeReference type, Object S);
+
   /**
-   * @param I
-   * @return if I was allocated by this for a specific string constant, return that constant (return null otherwise).
+   * @return if I was allocated by this for a specific string constant, return
+   *         that constant (return null otherwise).
    */
-  public abstract String getStringConstantForInstanceKey(CGNode node, InstanceKey I);
+  public abstract String getStringConstantForInstanceKey(InstanceKey I);
+
   /**
    * @param node
    * @param instr
    * @param type
-   * @return the instance key that represents the exception of type _type_ thrown by a particular PEI.
+   * @return the instance key that represents the exception of type _type_
+   *         thrown by a particular PEI.
    */
   public abstract InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type);
+
   /**
    * @return the instance key that represents the class object of type _type_.
    */

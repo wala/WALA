@@ -173,11 +173,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   /**
    * A class that represents the a normal node in a call graph.
    */
-  public abstract static class NodeImpl<T extends BasicCallGraph> extends NodeWithNumber implements CGNode {
-    /**
-     * The governing call graph
-     */
-    protected final T CG;
+  public abstract class NodeImpl extends NodeWithNumber implements CGNode {
 
     /**
      * The method this node represents.
@@ -189,8 +185,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
      */
     private final Context context;
 
-    protected NodeImpl(T CG, IMethod method, Context C) {
-      this.CG = CG;
+    protected NodeImpl(IMethod method, Context C) {
       this.method = method;
       this.context = C;
       if (Assertions.verifyAssertions) {

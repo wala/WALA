@@ -220,7 +220,6 @@ public class JdtUtil {
     IJavaElement[] arr = new IJavaElement[projects.size()];
     projects.toArray(arr);
     IJavaSearchScope scope = SearchEngine.createJavaSearchScope(arr , false);
-//    IJavaSearchScope scope = SearchEngine.createWorkspaceScope();
     SearchEngine engine = new SearchEngine();
     final Collection<IJavaElement> kludge = HashSetFactory.make();
     SearchRequestor requestor = new SearchRequestor() {

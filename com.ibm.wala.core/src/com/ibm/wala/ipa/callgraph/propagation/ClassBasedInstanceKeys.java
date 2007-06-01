@@ -44,7 +44,6 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     this.warnings = warnings;
   }
 
-
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     if (allocation == null) {
       throw new IllegalArgumentException("allocation is null");
@@ -107,21 +106,19 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     return key;
   }
 
-  public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
-    Language l = node.getMethod().getDeclaringClass().getClassLoader().getLanguage();
-    TypeReference type = l.getConstantType(S);
+  public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
     if (type == null || cha.lookupClass(type) == null) {
       return null;
     } else {
       if (options.getUseConstantSpecificKeys()) {
-	return new ConstantKey(S, cha.lookupClass(type));
+        return new ConstantKey(S, cha.lookupClass(type));
       } else {
-	return new ConcreteTypeKey(cha.lookupClass(type));
+        return new ConcreteTypeKey(cha.lookupClass(type));
       }
     }
   }
 
-  public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
+  public String getStringConstantForInstanceKey(InstanceKey I) {
     if (I instanceof StringConstantKey)
       return ((StringConstantKey) I).getString();
     else

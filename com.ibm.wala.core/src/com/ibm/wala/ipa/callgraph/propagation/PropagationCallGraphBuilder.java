@@ -1033,16 +1033,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     return instanceKeyFactory.getInstanceKeyForMultiNewArray(node, allocation, dim);
   }
 
-  /**
-   * @return the InstanceKey that acts as a representative for the class of
-   *         objects that includes the String constant
-   */
-  public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
-    return instanceKeyFactory.getInstanceKeyForConstant(node, S);
+  public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
+    return instanceKeyFactory.getInstanceKeyForConstant(type, S);
   }
 
-  public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
-    return instanceKeyFactory.getStringConstantForInstanceKey(node, I);
+  public String getStringConstantForInstanceKey(InstanceKey I) {
+    return instanceKeyFactory.getStringConstantForInstanceKey(I);
   }
 
   public InstanceKey getInstanceKeyForClassObject(TypeReference type) {

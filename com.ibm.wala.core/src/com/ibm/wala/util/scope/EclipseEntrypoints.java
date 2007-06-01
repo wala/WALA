@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.jar.Attributes;
@@ -26,8 +27,8 @@ import org.osgi.framework.Constants;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.ArgumentTypeEntrypoint;
-import com.ibm.wala.ipa.callgraph.impl.BasicEntrypoints;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.StringStuff;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -43,7 +44,7 @@ import com.ibm.wala.util.warnings.WalaException;
  * @author sfink
  */
 @Deprecated
-public class EclipseEntrypoints extends BasicEntrypoints {
+public class EclipseEntrypoints extends HashSet<Entrypoint> {
 
   private final static boolean DEBUG = false;
 
