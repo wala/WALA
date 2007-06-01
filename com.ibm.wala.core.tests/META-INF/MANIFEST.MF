@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: WALA Tests Plug-in
-Bundle-SymbolicName: com.ibm.wala.core.tests
+Bundle-SymbolicName: com.ibm.wala.core.tests;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: IBM
 Bundle-Localization: plugin
@@ -13,5 +13,6 @@ Export-Package: com.ibm.wala.core.tests.basic,
  com.ibm.wala.core.tests.cha,
  com.ibm.wala.core.tests.ir,
  com.ibm.wala.core.tests.util,
+ com.ibm.wala.eclipse.headless,
  com.ibm.wala.examples.drivers,
  com.ibm.wala.examples.properties
