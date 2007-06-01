@@ -85,6 +85,7 @@ public class ConeType extends TypeAbstraction {
     return type;
   }
 
+  @Override
   public TypeReference getTypeReference() {
     return type.getReference();
   }

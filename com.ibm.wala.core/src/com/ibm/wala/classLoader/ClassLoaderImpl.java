@@ -86,8 +86,6 @@ public class ClassLoaderImpl implements IClassLoader {
   private final ArrayClassLoader arrayClassLoader;
 
   /**
-   * Constructor for ModuleSetClassLoader.
-   * 
    * @param loader
    *          class loader reference identifying this loader
    * @param parent

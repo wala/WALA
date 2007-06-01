@@ -20,17 +20,10 @@ public class UnimplementedError extends Error {
   public static final long serialVersionUID = 20981098918191L;
   	
 
-  /**
-   * Constructor for UnimplementedError.
-   */
   public UnimplementedError() {
     super();
   }
 
-  /**
-   * Constructor for UnimplementedError.
-   * @param s
-   */
   public UnimplementedError(String s) {
     super(s);
   }

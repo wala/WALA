@@ -23,24 +23,15 @@ public class CompoundIterator<T> implements Iterator<T> {
 
   Iterator<? extends T> A;
   Iterator<? extends T> B;
-  /**
-   * Constructor for CompoundIterator.
-   */
   public CompoundIterator(Iterator<? extends T> A, Iterator<? extends T> B) {
     this.A = A;
     this.B = B;
   }
 
-  /**
-   * @see java.util.Iterator#hasNext()
-   */
   public boolean hasNext() {
     return A.hasNext() || B.hasNext();
   }
 
-  /**
-   * @see java.util.Iterator#next()
-   */
   public T next() throws NoSuchElementException {
     if (A.hasNext()) {
       return A.next();

@@ -189,9 +189,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
   private final static String V_TRUE = "true";
 
-  /**
-   * Constructor for XMLAnalysisScope.
-   */
   public XMLMethodSummaryReader(InputStream xmlFile, AnalysisScope scope) {
     super();
     Assertions.productionAssertion(xmlFile != null, "XMLMethodSummaryReader given null xmlFile");

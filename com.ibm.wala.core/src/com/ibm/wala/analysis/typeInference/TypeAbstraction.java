@@ -48,6 +48,7 @@ public abstract class TypeAbstraction implements ContextItem {
     public IClass getType() { 
       return null;
     }
+    @Override
     public TypeReference getTypeReference() { 
       return null;
     }

@@ -28,7 +28,6 @@ import com.ibm.wala.util.graph.traverse.DFS;
 public class CallGraphStats {
 
   /**
-   * Constructor for CallGraphStats.
    * @throws IllegalArgumentException  if cg is null
    */
   public static String getStats(CallGraph cg) {

@@ -66,7 +66,7 @@ public abstract class ParamStatement extends Statement {
     public boolean equals(Object obj) {
       if (getClass().equals(obj.getClass())) {
         ParamCaller other = (ParamCaller) obj;
-        return getNode().equals(other.getNode()) && valueNumber == other.valueNumber && call.equals(other.call);
+        return getNode().equals(other.getNode()) && valueNumber == other.valueNumber && call.getCallSite().equals(other.call.getCallSite());
       } else {
         return false;
       }
@@ -150,7 +150,7 @@ public abstract class ParamStatement extends Statement {
     public boolean equals(Object obj) {
       if (getClass().equals(obj.getClass())) {
         NormalReturnCaller other = (NormalReturnCaller) obj;
-        return getNode().equals(other.getNode()) && valueNumber == other.valueNumber && call.equals(other.call);
+        return getNode().equals(other.getNode()) && valueNumber == other.valueNumber && call.getCallSite().equals(other.call.getCallSite());
       } else {
         return false;
       }
@@ -195,7 +195,7 @@ public abstract class ParamStatement extends Statement {
     public boolean equals(Object obj) {
       if (getClass().equals(obj.getClass())) {
         ExceptionalReturnCaller other = (ExceptionalReturnCaller) obj;
-        return getNode().equals(other.getNode()) && valueNumber == other.valueNumber && call.equals(other.call);
+        return getNode().equals(other.getNode()) && valueNumber == other.valueNumber && call.getCallSite().equals(other.call.getCallSite());
       } else {
         return false;
       }

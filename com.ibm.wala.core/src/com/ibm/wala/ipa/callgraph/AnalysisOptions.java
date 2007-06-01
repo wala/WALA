@@ -10,16 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.ibm.wala.cfg.CFGCache;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSACache;
 import com.ibm.wala.ssa.SSAOptions;
-import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.ReferenceCleanser;
 
 /**
@@ -156,9 +152,6 @@ public class AnalysisOptions {
 
   private final CFGCache cfgCache;
 
-  /**
-   * Constructor for AnalysisOptions.
-   */
   public AnalysisOptions(IRFactory factory) {
     this.irFactory = factory;
     this.ssaCache = new SSACache(factory);

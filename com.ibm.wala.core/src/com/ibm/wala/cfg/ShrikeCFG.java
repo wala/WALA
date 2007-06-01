@@ -65,9 +65,6 @@ public class ShrikeCFG extends AbstractCFG {
    */
   private Set<ExceptionHandler> exceptionHandlers = HashSetFactory.make(10);
 
-  /**
-   * Constructor for ControlFlowGraph.
-   */
   public ShrikeCFG(ShrikeCTMethod method, WarningSet warnings, IClassHierarchy cha) throws IllegalArgumentException {
     super(method);
     if (method == null) {

@@ -96,9 +96,6 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
 
   private final static String A_BCINDEX = "bcIndex";
 
-  /**
-   * Constructor for XMLReflectionReader.
-   */
   public XMLReflectionReader(InputStream xmlFile, AnalysisScope scope) {
     super();
     Assertions.productionAssertion(xmlFile != null, "XMLMethodSummaryReader given null xmlFile");

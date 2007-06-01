@@ -47,6 +47,7 @@ public class SetType extends TypeAbstraction {
     hashCode = h;
   }
 
+  @Override
   public TypeReference getTypeReference() {
     Iterator ti = types.iterator();
     TypeAbstraction T = (TypeAbstraction)ti.next();

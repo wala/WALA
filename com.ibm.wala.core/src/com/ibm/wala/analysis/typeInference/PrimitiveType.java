@@ -96,6 +96,7 @@ public class PrimitiveType extends TypeAbstraction {
     return null;
   }
 
+  @Override
   public TypeReference getTypeReference() {
     return reference;
   }

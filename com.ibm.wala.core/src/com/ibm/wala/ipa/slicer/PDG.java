@@ -18,6 +18,7 @@ import java.util.Set;
 
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
+import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
@@ -78,9 +79,12 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
   private Statement[] returnStatements;
 
-  private final Map<SSAAbstractInvokeInstruction, Set<Statement>> callerParamStatements = HashMapFactory.make();
+  /**
+   * TODO: using CallSiteReference is sloppy.  clean it up.
+   */
+  private final Map<CallSiteReference, Set<Statement>> callerParamStatements = HashMapFactory.make();
 
-  private final Map<SSAAbstractInvokeInstruction, Set<Statement>> callerReturnStatements = HashMapFactory.make();
+  private final Map<CallSiteReference, Set<Statement>> callerReturnStatements = HashMapFactory.make();
 
   private final HeapExclusions exclusions;
 
@@ -128,11 +132,11 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   }
 
   public Set<Statement> getCallerParamStatements(SSAAbstractInvokeInstruction call) {
-    return callerParamStatements.get(call);
+    return callerParamStatements.get(call.getCallSite());
   }
 
   public Set<Statement> getCallerReturnStatements(SSAAbstractInvokeInstruction call) {
-    return callerReturnStatements.get(call);
+    return callerReturnStatements.get(call.getCallSite());
   }
 
   /**
@@ -167,10 +171,11 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
           src = ssaInstruction2Statement(s);
           // add edges from call statements to parameter passing and return
           if (s instanceof SSAAbstractInvokeInstruction) {
-            for (Statement st : callerParamStatements.get(s)) {
+            SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction)s;
+            for (Statement st : callerParamStatements.get(call.getCallSite())) {
               addEdge(src, st);
             }
-            for (Statement st : callerReturnStatements.get(s)) {
+            for (Statement st : callerReturnStatements.get(call.getCallSite())) {
               addEdge(src, st);
             }
           }
@@ -810,8 +815,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   private void addParamPassingStatements(SSAAbstractInvokeInstruction call, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions) {
 
-    Collection<Statement> params = MapUtil.findOrCreateSet(callerParamStatements, call);
-    Collection<Statement> rets = MapUtil.findOrCreateSet(callerReturnStatements, call);
+    Collection<Statement> params = MapUtil.findOrCreateSet(callerParamStatements, call.getCallSite());
+    Collection<Statement> rets = MapUtil.findOrCreateSet(callerReturnStatements, call.getCallSite());
     for (int j = 0; j < call.getNumberOfUses(); j++) {
       Statement st = new ParamStatement.ParamCaller(node, call, call.getUse(j));
       addNode(st);

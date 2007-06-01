@@ -208,7 +208,11 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    */
   public PDG getProcOf(Statement n) {
     CGNode node = n.getNode();
-    return sdg.getPDG(node);
+    PDG result = sdg.getPDG(node);
+    if (result == null) {
+      Assertions.UNREACHABLE("panic: " + n + " " + node);
+    }
+    return result;
   }
 
   /*

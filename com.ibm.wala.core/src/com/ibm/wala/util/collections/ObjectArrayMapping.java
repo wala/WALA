@@ -35,9 +35,6 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
    */
   private HashMap<T, Integer> map = HashMapFactory.make();
 
-  /**
-   * Constructor for ObjectArrayMapping.
-   */
   public ObjectArrayMapping(final T[] array) {
     this.array = array;
     for (int i = 0; i < array.length; i++) {

@@ -38,7 +38,6 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
   HashMap<T, Integer> map = HashMapFactory.make();
 
   /**
-   * Constructor for MutableMapping.
    * @throws IllegalArgumentException  if array is null
    */
   @SuppressWarnings("unchecked")
@@ -54,16 +53,11 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     nextIndex = array.length;
   }
 
-  /**
-   * Constructor MutableMapping.
-   */
   public MutableMapping() {
     array = new Object[INITIAL_CAPACITY];
     nextIndex = 0;
   }
 
-  /**
-   */
   @SuppressWarnings("unchecked")
   public T getMappedObject(int n) {
     return (T) array[n];

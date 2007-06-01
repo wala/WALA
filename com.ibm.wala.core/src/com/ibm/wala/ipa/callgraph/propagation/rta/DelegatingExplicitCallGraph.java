@@ -30,7 +30,7 @@ import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 
 /**
- * A call graph implementation where some edges are delegated to other other
+ * A call graph implementation where some edges are delegated to other
  * call sites, since they are guaranteed to be the same.
  * 
  * @author sfink
