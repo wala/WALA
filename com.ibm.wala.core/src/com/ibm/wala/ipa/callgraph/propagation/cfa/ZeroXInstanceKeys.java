@@ -29,7 +29,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.SmushedAllocationSiteInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
@@ -118,7 +118,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   /**
    * The governing class hierarchy
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * An object which interprets nodes in context.
@@ -130,7 +130,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
    */
   Map<CGNode, Set> smushMap = new HashMap<CGNode, Set>();
 
-  public ZeroXInstanceKeys(AnalysisOptions options, ClassHierarchy cha, RTAContextInterpreter contextInterpreter,
+  public ZeroXInstanceKeys(AnalysisOptions options, IClassHierarchy cha, RTAContextInterpreter contextInterpreter,
       WarningSet warnings, int policy) {
     classBased = new ClassBasedInstanceKeys(options, cha, warnings);
     siteBased = new AllocationSiteInstanceKeys(options, cha, warnings);
@@ -240,15 +240,15 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     }
   }
 
-  public InstanceKey getInstanceKeyForConstant(Object S) {
-    return classBased.getInstanceKeyForConstant(S);
+  public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
+    return classBased.getInstanceKeyForConstant(node, S);
   }
 
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getStringConstantForInstanceKey(com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
-  public String getStringConstantForInstanceKey(InstanceKey I) {
-    return classBased.getStringConstantForInstanceKey(I);
+  public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
+    return classBased.getStringConstantForInstanceKey(node, I);
   }
 
   /*
@@ -327,7 +327,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   /**
    * @return Returns the cha.
    */
-  protected ClassHierarchy getClassHierarchy() {
+  protected IClassHierarchy getClassHierarchy() {
     return cha;
   }
 }

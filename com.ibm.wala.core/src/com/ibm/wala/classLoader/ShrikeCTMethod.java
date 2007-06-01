@@ -13,7 +13,7 @@ package com.ibm.wala.classLoader;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.shrikeCT.CTDecoder;
 import com.ibm.wala.shrikeCT.ClassReader;
@@ -51,7 +51,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
    */
   private int modifiers = -1;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   public ShrikeCTMethod(IClass klass, int index) {
 
@@ -304,7 +304,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     return getReference().getReturnType();
   }
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return cha;
   }
 

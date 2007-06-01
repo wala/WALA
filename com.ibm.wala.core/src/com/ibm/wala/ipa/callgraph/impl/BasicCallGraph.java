@@ -108,7 +108,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     // add a call from fakeRoot to fakeWorldClinit
     CallSiteReference site = CallSiteReference.make(1, fakeWorldClinit.getMethod().getReference(), IInvokeInstruction.Dispatch.STATIC);
     // note that the result of addInvocation is a different site, with a different program counter!
-    site = ((FakeRootMethod)fakeRoot.getMethod()).addInvocation(null, site).getCallSite();
+    site = ((AbstractRootMethod)fakeRoot.getMethod()).addInvocation(null, site).getCallSite();
     fakeRoot.addTarget(site, fakeWorldClinit);
   }
 
@@ -173,7 +173,12 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   /**
    * A class that represents the a normal node in a call graph.
    */
-  public abstract class NodeImpl extends NodeWithNumber implements CGNode {
+  public abstract static class NodeImpl<T extends BasicCallGraph> extends NodeWithNumber implements CGNode {
+    /**
+     * The governing call graph
+     */
+    protected final T CG;
+
     /**
      * The method this node represents.
      */
@@ -184,7 +189,8 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
      */
     private final Context context;
 
-    protected NodeImpl(IMethod method, Context C) {
+    protected NodeImpl(T CG, IMethod method, Context C) {
+      this.CG = CG;
       this.method = method;
       this.context = C;
       if (Assertions.verifyAssertions) {

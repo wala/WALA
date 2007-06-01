@@ -31,10 +31,9 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
+import com.ibm.wala.ipa.callgraph.impl.*;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
@@ -115,7 +114,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * Governing class hierarchy
    */
-  protected ClassHierarchy cha;
+  protected IClassHierarchy cha;
 
   /**
    * An object which records analysis warnings
@@ -166,7 +165,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * singleton operator for filter
    */
-  protected final FilterOperator filterOperator = new FilterOperator();
+  public final FilterOperator filterOperator = new FilterOperator();
 
   /**
    * singleton operator for inverse filter
@@ -216,7 +215,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @param pointerKeyFactory
    *          factory which embodies pointer abstraction policy
    */
-  protected PropagationCallGraphBuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+  protected PropagationCallGraphBuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
       PointerKeyFactory pointerKeyFactory) {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
@@ -234,12 +233,13 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     this.pointerKeyFactory = pointerKeyFactory;
     this.dispatchBoundHeuristic = options.getDispatchBoundHeuristic();
     callGraph = createEmptyCallGraph(cha, options);
+    callGraph.init();
     callGraph.setInterpreter(contextInterpreter);
     JAVA_LANG_OBJECT = cha.lookupClass(TypeReference.JavaLangObject);
     JAVA_LANG_THROWABLE = cha.lookupClass(TypeReference.JavaLangThrowable);
   }
 
-  protected ExplicitCallGraph createEmptyCallGraph(ClassHierarchy cha, AnalysisOptions options) {
+  protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     return new ExplicitCallGraph(cha, options);
   }
 
@@ -289,7 +289,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       if (DEBUG_ENTRYPOINTS) {
         Trace.println("Entrypoint: " + E);
       }
-      SSAAbstractInvokeInstruction call = E.addCall((FakeRootMethod) callGraph.getFakeRootNode().getMethod(), warnings);
+      SSAAbstractInvokeInstruction call = E.addCall((AbstractRootMethod) callGraph.getFakeRootNode().getMethod(), warnings);
 
       if (call == null) {
         warnings.add(EntrypointResolutionWarning.create(E));
@@ -629,7 +629,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @throws IllegalArgumentException
    *           if catchClasses is null
    */
-  public static boolean catches(Set catchClasses, IClass klass, ClassHierarchy cha) {
+  public static boolean catches(Set catchClasses, IClass klass, IClassHierarchy cha) {
     if (catchClasses == null) {
       throw new IllegalArgumentException("catchClasses is null");
     }
@@ -763,7 +763,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
   }
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return cha;
   }
 
@@ -837,7 +837,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     case AnalysisOptions.SIMPLE_DISPATCH_BOUND:
       return getSimpleBoundOnNumberOfTargets(caller, site);
     case AnalysisOptions.CHA_DISPATCH_BOUND:
-      return getBoundOnNumberOfTargetsFromClassHierarchy(caller, site);
+      return getBoundOnNumberOfTargetsFromIClassHierarchy(caller, site);
     default:
       Assertions.UNREACHABLE();
       return -1;
@@ -890,12 +890,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @return the maximum number of nodes this call might resolve to, or -1 if
    *         there is no known bound
    */
-  private int getBoundOnNumberOfTargetsFromClassHierarchy(CGNode caller, CallSiteReference site) {
+  private int getBoundOnNumberOfTargetsFromIClassHierarchy(CGNode caller, CallSiteReference site) {
     if (site.isDispatch()) {
       if (hasManyImplementors(site.getDeclaredTarget())) {
         return -1;
       }
-      int nImplementations = findOrCreateBoundFromClassHierarchy(site.getDeclaredTarget());
+      int nImplementations = findOrCreateBoundFromIClassHierarchy(site.getDeclaredTarget());
       if (nImplementations > CUTOFF) {
         return -1;
       }
@@ -953,7 +953,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @param m
    * @return the number of implementations of this method in the class hierarchy
    */
-  protected int findOrCreateBoundFromClassHierarchy(MethodReference m) {
+  protected int findOrCreateBoundFromIClassHierarchy(MethodReference m) {
     Integer I = cachedBoundMap.get(m);
     if (I == null) {
       int i = 0;
@@ -1037,19 +1037,19 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @return the InstanceKey that acts as a representative for the class of
    *         objects that includes the String constant
    */
-  public InstanceKey getInstanceKeyForConstant(Object S) {
-    return instanceKeyFactory.getInstanceKeyForConstant(S);
+  public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
+    return instanceKeyFactory.getInstanceKeyForConstant(node, S);
   }
 
-  public String getStringConstantForInstanceKey(InstanceKey I) {
-    return instanceKeyFactory.getStringConstantForInstanceKey(I);
+  public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
+    return instanceKeyFactory.getStringConstantForInstanceKey(node, I);
   }
 
   public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
     return instanceKeyFactory.getInstanceKeyForClassObject(type);
   }
 
-  protected boolean haveAlreadyVisited(CGNode node) {
+  public boolean haveAlreadyVisited(CGNode node) {
     return alreadyVisited.contains(node);
   }
 
@@ -1065,7 +1065,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * 
    * @param node
    */
-  protected void markDiscovered(CGNode node) {
+  public void markDiscovered(CGNode node) {
     discoveredNodes.add(node);
   }
 

@@ -34,6 +34,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WarningSet;
@@ -51,7 +52,7 @@ import com.ibm.wala.util.warnings.WarningSet;
 public abstract class AbstractAnalysisEngine implements AnalysisEngine {
 
   public interface EntrypointBuilder {
-    Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, ClassHierarchy cha);
+    Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, IClassHierarchy cha);
   }
 
   public final static String BASIC_FILE = "SyntheticJ2SEModel.xml";
@@ -110,7 +111,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * Governing class hierarchy
    */
-  private ClassHierarchy cha;
+  private IClassHierarchy cha;
 
   /**
    * Governing call graph
@@ -138,16 +139,16 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   private HeapGraph heapGraph;
 
   private EntrypointBuilder entrypointBuilder = new EntrypointBuilder() {
-    public Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+    public Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
       return makeDefaultEntrypoints(scope, cha);
     }
   };
 
-  protected CallGraphBuilder getCallGraphBuilder(ClassHierarchy cha, AnalysisOptions options) {
+  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options) {
     return getCallGraphBuilderFactory().make(options, cha, getScope(), getWarnings(), false);
   }
 
-  protected CallGraphBuilder buildCallGraph(ClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis) {
+  protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis) {
     Assertions.productionAssertion(getCallGraphBuilderFactory() != null, "must initialize callGraphBuilderFactory!");
 
     CallGraphBuilder builder = getCallGraphBuilder(cha, options);
@@ -186,10 +187,10 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   }
 
   /**
-   * @return a ClassHierarchy object for this analysis scope
+   * @return a IClassHierarchy object for this analysis scope
    */
-  protected ClassHierarchy buildClassHierarchy() {
-    ClassHierarchy cha = null;
+  protected IClassHierarchy buildClassHierarchy() {
+    IClassHierarchy cha = null;
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(getScope().getExclusions(), getWarnings());
     try {
       cha = ClassHierarchy.make(getScope(), factory, getWarnings());
@@ -204,7 +205,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * @return Returns the cha.
    */
-  protected ClassHierarchy getClassHierarchy() {
+  protected IClassHierarchy getClassHierarchy() {
     return cha;
   }
 
@@ -212,7 +213,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    * @param cha
    *          The cha to set.
    */
-  protected void setClassHierarchy(ClassHierarchy cha) {
+  protected void setClassHierarchy(IClassHierarchy cha) {
     this.cha = cha;
   }
 
@@ -346,7 +347,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return new AnalysisOptions(getScope(), entrypoints);
   }
 
-  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+  protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
     return Util.makeMainEntrypoints(scope, cha);
   }
 
@@ -360,7 +361,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    */
   public CallGraphBuilder defaultCallGraphBuilder() {
     buildAnalysisScope();
-    ClassHierarchy cha = buildClassHierarchy();
+    IClassHierarchy cha = buildClassHierarchy();
     setClassHierarchy(cha);
     Iterable<Entrypoint> eps = entrypointBuilder.createEntrypoints(scope, cha);
     options = getDefaultOptions(eps);

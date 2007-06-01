@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyWarning;
 import com.ibm.wala.shrikeBT.Constants;
@@ -73,7 +73,7 @@ public final class ShrikeClass implements IClass {
   /**
    * Governing class hierarchy for this class
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * A mapping from Selector to IMethod
@@ -156,7 +156,7 @@ public final class ShrikeClass implements IClass {
    * @throws IllegalArgumentException
    *           if reader is null
    */
-  public ShrikeClass(ShrikeClassReaderHandle reader, IClassLoader loader, ClassHierarchy cha, WarningSet warnings)
+  public ShrikeClass(ShrikeClassReaderHandle reader, IClassLoader loader, IClassHierarchy cha, WarningSet warnings)
       throws InvalidClassFileException {
     if (reader == null) {
       throw new IllegalArgumentException("reader is null");
@@ -724,7 +724,7 @@ public final class ShrikeClass implements IClass {
     return false;
   }
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return cha;
   }
 

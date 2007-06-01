@@ -264,7 +264,7 @@ public final class TypeReference {
 
   private final static TypeName JavaUtilIteratorName = TypeName.string2TypeName("Ljava/util/Iterator");
 
-  public final static TypeReference JavaUtilIterator = findOrCreate(ClassLoaderReference.Primordial, JavaUtilIteratorName);
+ public final static TypeReference JavaUtilIterator = findOrCreate(ClassLoaderReference.Primordial, JavaUtilIteratorName);
 
   private final static TypeName JavaUtilVectorName = TypeName.string2TypeName("Ljava/util/Vector");
 

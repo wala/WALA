@@ -17,7 +17,7 @@ import java.util.Collections;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Instruction;
@@ -82,7 +82,7 @@ public class Exceptions implements Constants {
    * @throws IllegalArgumentException  if pei is null
    * 
    */
-  public static Collection<TypeReference> getExceptionTypes(ClassLoaderReference loader, Instruction pei, ClassHierarchy cha, WarningSet warnings) {
+  public static Collection<TypeReference> getExceptionTypes(ClassLoaderReference loader, Instruction pei, IClassHierarchy cha, WarningSet warnings) {
     if (pei == null) {
       throw new IllegalArgumentException("pei is null");
     }
@@ -117,7 +117,7 @@ public class Exceptions implements Constants {
    * @throws IllegalArgumentException  if target is null
    * @throws IllegalArgumentException  if cha is null
    */
-  public static Collection<TypeReference> inferInvokeExceptions(MethodReference target, ClassHierarchy cha, WarningSet warnings) throws InvalidClassFileException {
+  public static Collection<TypeReference> inferInvokeExceptions(MethodReference target, IClassHierarchy cha, WarningSet warnings) throws InvalidClassFileException {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
     }

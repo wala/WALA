@@ -23,7 +23,7 @@ import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.*;
@@ -55,16 +55,30 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
    */
   protected int nextLocal = 2;
 
-  protected final ClassHierarchy cha;
+  protected final IClassHierarchy cha;
 
   private final AnalysisOptions options;
 
-  public AbstractRootMethod(MethodReference method, final ClassHierarchy cha, AnalysisOptions options) {
-    super(method, new FakeRootClass(cha), true, false);
+  public AbstractRootMethod(MethodReference method, 
+			    IClass declaringClass,
+			    final IClassHierarchy cha,
+			    AnalysisOptions options) {
+    super(method, declaringClass, true, false);
     this.cha = cha;
     this.options = options;
   }
 
+  public AbstractRootMethod(MethodReference method, 
+			    final IClassHierarchy cha,
+			    AnalysisOptions options) {
+    this(method, new FakeRootClass(cha), cha, options);
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.warnings.WarningSet)
+   */
   @Override
   public SSAInstruction[] getStatements(SSAOptions options) {
     SSAInstruction[] result = new SSAInstruction[statements.size()];
@@ -212,7 +226,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     }
   }
 
-  public int addPhi(int[] values) {
+  public int addPhi(TypeReference type, int[] values) {
     int result = nextLocal++;
     SSAPhiInstruction phi = new SSAPhiInstruction(result, values);
     statements.add(phi);

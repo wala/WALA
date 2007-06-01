@@ -96,6 +96,10 @@ public class PrimitiveType extends TypeAbstraction {
     return null;
   }
 
+  public TypeReference getTypeReference() {
+    return reference;
+  }
+
   public static PrimitiveType getPrimitive(TypeReference reference) {
     return refernceToType.get(reference);
   }

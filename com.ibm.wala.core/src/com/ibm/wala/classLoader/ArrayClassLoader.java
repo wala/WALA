@@ -12,7 +12,7 @@ package com.ibm.wala.classLoader;
 
 import java.util.HashMap;
 
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -40,7 +40,7 @@ public class ArrayClassLoader {
    * @param delegator
    *          class loader to look up element type with
    */
-  public IClass lookupClass(TypeName className, IClassLoader delegator, ClassHierarchy cha) throws IllegalArgumentException {
+  public IClass lookupClass(TypeName className, IClassLoader delegator, IClassHierarchy cha) throws IllegalArgumentException {
     ArrayClass arrayClass;
     if (DEBUG) {
       Assertions._assert(className.toString().startsWith("["));

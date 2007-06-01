@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 
@@ -34,7 +34,7 @@ public abstract class SetOfClasses {
    * @return Iterator of IClass
    * @throws IllegalArgumentException  if hierarchy is null
    */
-  public Iterator<IClass> iterator(ClassHierarchy hierarchy) {
+  public Iterator<IClass> iterator(IClassHierarchy hierarchy) {
     if (hierarchy == null) {
       throw new IllegalArgumentException("hierarchy is null");
     }

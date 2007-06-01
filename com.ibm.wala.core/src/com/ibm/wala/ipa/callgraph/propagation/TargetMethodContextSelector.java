@@ -17,7 +17,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.util.warnings.WarningSet;
 
@@ -32,7 +32,7 @@ public class TargetMethodContextSelector implements ContextSelector {
 
   private final Selector selector;
 
-  public TargetMethodContextSelector(Selector selector, ClassHierarchy cha) {
+  public TargetMethodContextSelector(Selector selector, IClassHierarchy cha) {
     this.selector = selector;
   }
 

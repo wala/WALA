@@ -15,7 +15,7 @@ import java.util.Iterator;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.debug.Trace;
 
 /**
@@ -35,7 +35,7 @@ public class AllApplicationEntrypoints extends BasicEntrypoints {
    *          governing class hierarchy
    * @throws IllegalArgumentException  if cha is null
    */
-  public AllApplicationEntrypoints(AnalysisScope scope, final ClassHierarchy cha) {
+  public AllApplicationEntrypoints(AnalysisScope scope, final IClassHierarchy cha) {
 
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");

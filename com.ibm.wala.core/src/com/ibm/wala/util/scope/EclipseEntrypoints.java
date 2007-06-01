@@ -28,7 +28,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.ArgumentTypeEntrypoint;
 import com.ibm.wala.ipa.callgraph.impl.BasicEntrypoints;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.StringStuff;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Trace;
@@ -63,7 +63,7 @@ public class EclipseEntrypoints extends BasicEntrypoints {
    * @throws IllegalArgumentException  if cha is null
    * @throws IllegalArgumentException  if scope is null
    */
-  public EclipseEntrypoints(EclipseAnalysisScope scope, final ClassHierarchy cha, boolean internalEntrypoints) throws WalaException {
+  public EclipseEntrypoints(EclipseAnalysisScope scope, final IClassHierarchy cha, boolean internalEntrypoints) throws WalaException {
     if (scope == null) {
       throw new IllegalArgumentException("scope is null");
     }

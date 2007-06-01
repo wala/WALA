@@ -12,7 +12,7 @@ package com.ibm.wala.classLoader;
 
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -345,7 +345,7 @@ public class SyntheticMethod implements IMethod {
   }
 
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return getDeclaringClass().getClassHierarchy();
   }
 

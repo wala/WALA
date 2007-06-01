@@ -69,7 +69,7 @@ public class EclipseProjectPath {
 
   public static final Atom SOURCE = Atom.findOrCreateUnicodeAtom("Source");
 
-  public static final ClassLoaderReference SOURCE_REF = new ClassLoaderReference(EclipseProjectPath.SOURCE);
+  public static final ClassLoaderReference SOURCE_REF = new ClassLoaderReference(EclipseProjectPath.SOURCE, ClassLoaderReference.Java);
 
   public enum Loader {
     APPLICATION(ClassLoaderReference.Application),

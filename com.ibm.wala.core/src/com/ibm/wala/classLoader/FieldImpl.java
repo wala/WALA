@@ -10,16 +10,16 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * 
@@ -123,7 +123,7 @@ public final class FieldImpl implements IField {
     return ((accessFlags & ClassConstants.ACC_VOLATILE) != 0);
   }
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return declaringClass.getClassHierarchy();
   }
 

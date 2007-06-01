@@ -17,8 +17,9 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.Atom;
@@ -59,21 +60,21 @@ public class BypassSyntheticClassLoader implements IClassLoader {
 
   private final IClassLoader parent;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * A mapping from TypeName -> IClass
    */
   private final HashMap<TypeName, IClass> syntheticClasses = HashMapFactory.make();
 
-  public BypassSyntheticClassLoader(ClassLoaderReference me, IClassLoader parent, SetOfClasses exclusions, ClassHierarchy cha,
+  public BypassSyntheticClassLoader(ClassLoaderReference me, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha,
       WarningSet warnings) {
     this.me = me;
     this.cha = cha;
     this.parent = parent;
   }
 
-  public IClass lookupClass(TypeName className, ClassHierarchy cha) {
+  public IClass lookupClass(TypeName className, IClassHierarchy cha) {
     IClass pc = parent.lookupClass(className, cha);
     if (pc == null) {
       IClass c = syntheticClasses.get(className);
@@ -122,6 +123,14 @@ public class BypassSyntheticClassLoader implements IClassLoader {
    */
   public Atom getName() {
     return me.getName();
+  }
+
+  /**
+   * @return the unique name that identifies the programming language
+   *  from which this class loader loads code.
+   */
+  public Language getLanguage() {
+    return Language.JAVA;
   }
 
   /*

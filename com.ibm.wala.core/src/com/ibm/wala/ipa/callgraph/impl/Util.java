@@ -36,7 +36,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroOneContainerCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.rta.BasicRTABuilder;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassClassTargetSelector;
 import com.ibm.wala.ipa.summaries.BypassMethodTargetSelector;
 import com.ibm.wala.ipa.summaries.XMLMethodSummaryReader;
@@ -75,7 +75,7 @@ public class Util {
    * @throws IllegalArgumentException
    *           if options is null
    */
-  public static void addDefaultSelectors(AnalysisOptions options, ClassHierarchy cha, WarningSet warn) {
+  public static void addDefaultSelectors(AnalysisOptions options, IClassHierarchy cha, WarningSet warn) {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
@@ -170,7 +170,7 @@ public class Util {
    * @throws IllegalArgumentException
    *           if scope is null
    */
-  public static void addBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, String xmlFile, ClassHierarchy cha)
+  public static void addBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, String xmlFile, IClassHierarchy cha)
       throws IllegalArgumentException {
     if (scope == null) {
       throw new IllegalArgumentException("scope is null");
@@ -245,14 +245,14 @@ public class Util {
    * @throws IllegalArgumentException
    *           if scope is null
    */
-  public static Iterable<Entrypoint> makeMainEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
+  public static Iterable<Entrypoint> makeMainEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
     if (scope == null) {
       throw new IllegalArgumentException("scope is null");
     }
     return makeMainEntrypoints(scope.getApplicationLoader(), cha);
   }
 
-  public static Iterable<Entrypoint> makeMainEntrypoints(ClassLoaderReference clr, ClassHierarchy cha) {
+  public static Iterable<Entrypoint> makeMainEntrypoints(ClassLoaderReference clr, IClassHierarchy cha) {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
     }
@@ -278,11 +278,11 @@ public class Util {
   /**
    * @return Entrypoints object for a Main J2SE class
    */
-  public static Iterable<Entrypoint> makeMainEntrypoints(AnalysisScope scope, final ClassHierarchy cha, String className) {
+  public static Iterable<Entrypoint> makeMainEntrypoints(AnalysisScope scope, final IClassHierarchy cha, String className) {
     return makeMainEntrypoints(scope, cha, new String[] { className });
   }
 
-  public static Iterable<Entrypoint> makeMainEntrypoints(final AnalysisScope scope, final ClassHierarchy cha,
+  public static Iterable<Entrypoint> makeMainEntrypoints(final AnalysisScope scope, final IClassHierarchy cha,
       final String[] classNames) {
     if (scope == null) {
       throw new IllegalArgumentException("scope is null");
@@ -293,7 +293,7 @@ public class Util {
   /**
    * @return Entryponts for a set of J2SE Main classes
    */
-  public static Iterable<Entrypoint> makeMainEntrypoints(final ClassLoaderReference loaderRef, final ClassHierarchy cha,
+  public static Iterable<Entrypoint> makeMainEntrypoints(final ClassLoaderReference loaderRef, final IClassHierarchy cha,
       final String[] classNames) {
     for (int i = 0; i < classNames.length; i++) {
       if (classNames[i].indexOf("L") != 0) {
@@ -558,7 +558,7 @@ public class Util {
    * @param warnings
    *          an object which tracks analysis warnings
    */
-  public static CallGraphBuilder makeRTABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
+  public static CallGraphBuilder makeRTABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings) {
 
     addDefaultSelectors(options, cha, warnings);
@@ -578,7 +578,7 @@ public class Util {
    *          an object which tracks analysis warnings
    * @return a 0-CFA Call Graph Builder.
    */
-  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope, WarningSet warnings) {
+  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope, WarningSet warnings) {
     return makeZeroCFABuilder(options, cha, scope, warnings, null, null);
   }
 
@@ -599,7 +599,7 @@ public class Util {
    * @throws IllegalArgumentException
    *           if options is null
    */
-  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
+  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -627,7 +627,7 @@ public class Util {
    * @throws IllegalArgumentException
    *           if options is null
    */
-  public static CallGraphBuilder makeOneCFABuilder(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl,
+  public static CallGraphBuilder makeOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl,
       AnalysisScope scope, WarningSet warnings) {
 
     if (options == null) {
@@ -657,7 +657,7 @@ public class Util {
    * @param warnings
    *          an object which tracks analysis warnings
    */
-  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
+  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings) {
 
     return makeZeroOneCFABuilder(options, cha, scope, warnings, null, null);
@@ -680,7 +680,7 @@ public class Util {
    * @throws IllegalArgumentException
    *           if options is null
    */
-  public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
+  public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -708,7 +708,7 @@ public class Util {
    * @param warnings
    *          an object which tracks analysis warnings
    */
-  public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
+  public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings) {
 
     return makeVanillaZeroOneCFABuilder(options, cha, scope, warnings, null, null);
@@ -731,7 +731,7 @@ public class Util {
    * @throws IllegalArgumentException
    *           if options is null
    */
-  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
+  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -759,7 +759,7 @@ public class Util {
    * @throws IllegalArgumentException
    *           if options is null
    */
-  public static CFABuilder makeZeroContainerCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
+  public static CFABuilder makeZeroContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings) {
 
     if (options == null) {
@@ -787,7 +787,7 @@ public class Util {
    * @throws IllegalArgumentException
    *           if options is null
    */
-  public static CFABuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
+  public static CFABuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings) {
 
     if (options == null) {
@@ -815,7 +815,7 @@ public class Util {
    * @throws IllegalArgumentException
    *           if options is null
    */
-  public static CFABuilder makeVanillaZeroOneContainerCFABuilder(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
+  public static CFABuilder makeVanillaZeroOneContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
       WarningSet warnings) {
 
     if (options == null) {
@@ -828,7 +828,7 @@ public class Util {
 
     return new ZeroOneContainerCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec()) {
       @Override
-      protected ZeroXInstanceKeys makeInstanceKeys(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+      protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
           SSAContextInterpreter contextInterpreter) {
         ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, warnings, ZeroXInstanceKeys.ALLOCATIONS);
         return zik;
@@ -836,7 +836,7 @@ public class Util {
     };
   }
 
-  public static void addDefaultBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, ClassHierarchy cha) {
+  public static void addDefaultBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, IClassHierarchy cha) {
     addBypassLogic(options, scope, cl, benignSpec, cha);
     addBypassLogic(options, scope, cl, nativeSpec, cha);
   }

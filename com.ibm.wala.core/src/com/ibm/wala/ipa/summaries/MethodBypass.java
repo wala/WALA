@@ -18,7 +18,7 @@ import java.util.Set;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -62,7 +62,7 @@ public class MethodBypass {
   /**
    * Governing class hierarchy.
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * Mapping from MethodReference -> SyntheticMethod
@@ -74,7 +74,7 @@ public class MethodBypass {
    */
   private HashSet<MethodReference> considered = HashSetFactory.make();
 
-  public MethodBypass(Map methodSummaries, Set allocatable, ClassHierarchy cha) {
+  public MethodBypass(Map methodSummaries, Set allocatable, IClassHierarchy cha) {
     this.methodSummaries = methodSummaries;
     this.allocatable = allocatable;
     this.cha = cha;
@@ -198,7 +198,7 @@ public class MethodBypass {
     }
   }
 
-  protected ClassHierarchy getClassHierarchy() {
+  protected IClassHierarchy getClassHierarchy() {
     return cha;
   }
 

@@ -10,10 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.analysis.typeInference.*;
+import com.ibm.wala.classLoader.*;
+import com.ibm.wala.ipa.callgraph.impl.*;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -51,7 +51,7 @@ public abstract class Entrypoint implements BytecodeConstants {
     }
   }
 
-  public Entrypoint(MethodReference method, ClassHierarchy cha) {
+  public Entrypoint(MethodReference method, IClassHierarchy cha) {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
     }
@@ -99,7 +99,7 @@ public abstract class Entrypoint implements BytecodeConstants {
    * @return value number holding the parameter to the call; -1 if there was
    *         some error
    */
-  protected int makeArgument(FakeRootMethod m, int i, WarningSet warnings) {
+  protected int makeArgument(AbstractRootMethod m, int i, WarningSet warnings) {
     TypeReference[] p = getParameterTypes(i);
     if (p.length == 0) {
       return -1;
@@ -127,7 +127,24 @@ public abstract class Entrypoint implements BytecodeConstants {
         values = new int[oldValues.length - countErrors];
         System.arraycopy(oldValues, 0, values, 0, values.length);
       }
-      return m.addPhi(values);
+
+      TypeAbstraction a;
+      if (p[0].isPrimitiveType()) {
+	a = PrimitiveType.getPrimitive(p[0]);
+	for(i = 1; i < p.length; i++) {
+	  a = a.meet(PrimitiveType.getPrimitive(p[i]));
+	}
+      } else {
+	IClassHierarchy cha = m.getClassHierarchy();
+	IClass p0 = cha.lookupClass(p[0]);
+	a = new ConeType(p0);
+	for(i = 1; i < p.length; i++) {
+	  IClass pi = cha.lookupClass(p[i]);
+	  a = a.meet(new ConeType(pi));
+	}
+      }
+
+      return m.addPhi(a.getTypeReference(), values);
     }
   }
 
@@ -144,7 +161,7 @@ public abstract class Entrypoint implements BytecodeConstants {
    *          the Fake Root Method
    * @return the call instruction added, or null if the operation fails
    */
-  public SSAAbstractInvokeInstruction addCall(FakeRootMethod m, WarningSet warnings) {
+  public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m, WarningSet warnings) {
     int paramValues[];
     CallSiteReference site = makeSite(0);
     if (site == null) {

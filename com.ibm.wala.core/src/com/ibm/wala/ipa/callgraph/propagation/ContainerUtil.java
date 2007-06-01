@@ -14,7 +14,7 @@ import java.util.Collection;
 
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
@@ -49,7 +49,7 @@ public class ContainerUtil {
    * @return true iff C is a container class from java.util
    * @throws IllegalArgumentException  if C is null
    */
-  public static boolean isContainer(IClass C, ClassHierarchy cha) {
+  public static boolean isContainer(IClass C, IClassHierarchy cha) {
     if (C == null) {
       throw new IllegalArgumentException("C is null");
     }

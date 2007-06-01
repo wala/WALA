@@ -119,24 +119,6 @@ public class AnalysisOptions {
   private boolean useConstantSpecificKeys = false;
 
   /**
-   * The type reference which should represent a string constant. This is used
-   * in instance key selection to choose keys to represent string constants.
-   * 
-   * TODO: this is not really an option, in the sense that there is only one
-   * right answer for a given language being analyzed. At some point, we should
-   * make a cleaner separation into core engine and language personalities.
-   * 
-   * (java.lang.String is the default---since Java is the language typically
-   * analyzed by WALA---but other languages define other types, such as String
-   * for JavaScript)
-   */
-  private Map<Class<? extends Object>, TypeReference> constantTypes = new HashMap<Class<? extends Object>, TypeReference>();
-
-  {
-    constantTypes.put(String.class, TypeReference.JavaLangString);
-  }
-
-  /**
    * Should analysis of lexical scoping consider call stacks?
    * 
    * TODO: this option does not apply to all languages. We could have a
@@ -381,28 +363,6 @@ public class AnalysisOptions {
    */
   public void setSSAOptions(SSAOptions ssaOptions) {
     this.ssaOptions = ssaOptions;
-  }
-
-  /**
-   * Return he type reference which should represent the given constant. This is used
-   * in instance key selection to choose keys to represent string constants.
-   */
-  public TypeReference getConstantType(Object S) throws IllegalArgumentException {
-    Class<? extends Object> key = (S == null) ? null : S.getClass();
-    if (!constantTypes.containsKey(key)) {
-      throw new IllegalArgumentException("no type for " + S + " of type " + key);
-    }
-
-    return constantTypes.get(key);
-  }
-
-  public boolean hasConstantType(Object S) {
-    Class<? extends Object> key = (S == null) ? null : S.getClass();
-    return constantTypes.containsKey(key);
-  }
-
-  public void setConstantType(Class<? extends Object> valueClass, TypeReference constantType) {
-    constantTypes.put(valueClass, constantType);
   }
 
   public boolean getUseConstantSpecificKeys() {

@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
@@ -40,7 +40,7 @@ public class CFGSanitizer {
 
   /*
    */
-  public static Graph<IBasicBlock> sanitize(IR ir, ClassHierarchy cha) throws IllegalArgumentException, WalaException {
+  public static Graph<IBasicBlock> sanitize(IR ir, IClassHierarchy cha) throws IllegalArgumentException, WalaException {
  
     if (ir == null) {
       throw new IllegalArgumentException("ir cannot be null");
@@ -154,7 +154,7 @@ public class CFGSanitizer {
     return G;
   }
 
-  private static TypeReference[] computeExceptions(ClassHierarchy cha, SSAInstruction s) throws InvalidClassFileException {
+  private static TypeReference[] computeExceptions(IClassHierarchy cha, SSAInstruction s) throws InvalidClassFileException {
     Collection c = null;
     if (s instanceof SSAInvokeInstruction) {
       SSAInvokeInstruction call = (SSAInvokeInstruction) s;

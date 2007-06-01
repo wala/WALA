@@ -16,7 +16,7 @@ import java.util.HashMap;
 
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.warnings.Warning;
@@ -60,7 +60,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
    *          identifier for the desired class loader
    * @return IClassLoader
    */
-  public IClassLoader getLoader(ClassLoaderReference classLoaderReference, ClassHierarchy cha, AnalysisScope scope)
+  public IClassLoader getLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, AnalysisScope scope)
       throws IOException {
     IClassLoader result = map.get(classLoaderReference);
     if (result == null) {
@@ -88,7 +88,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
    *           if the desired loader cannot be instantiated, usually because the
    *           specified module can't be found.
    */
-  protected IClassLoader makeNewClassLoader(ClassLoaderReference classLoaderReference, ClassHierarchy cha, IClassLoader parent,
+  protected IClassLoader makeNewClassLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent,
       AnalysisScope scope) throws IOException {
     String implClass = scope.getLoaderImpl(classLoaderReference);
     IClassLoader cl;
@@ -98,7 +98,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
       try {
         Class<?> impl = Class.forName(implClass);
         Constructor<?> ctor = impl.getDeclaredConstructor(new Class[] { ClassLoaderReference.class, IClassLoader.class,
-            SetOfClasses.class, ClassHierarchy.class, WarningSet.class });
+            SetOfClasses.class, IClassHierarchy.class, WarningSet.class });
         cl = (IClassLoader) ctor.newInstance(new Object[] { classLoaderReference, parent, exclusions, cha, warnings });
       } catch (Exception e) {
         warnings.add(InvalidClassLoaderImplementation.create(implClass));

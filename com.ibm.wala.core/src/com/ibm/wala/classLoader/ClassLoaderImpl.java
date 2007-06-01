@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
@@ -68,7 +68,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * An object to track warnings
    */
-  private final WarningSet warnings;
+  protected final WarningSet warnings;
 
   /**
    * Parent classloader
@@ -78,7 +78,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * Governing class hierarchy
    */
-  protected final ClassHierarchy cha;
+  protected final IClassHierarchy cha;
 
   /**
    * an object to delegate to for loading of array classes
@@ -96,7 +96,7 @@ public class ClassLoaderImpl implements IClassLoader {
    *          set of classes to exclude from loading
    */
   public ClassLoaderImpl(ClassLoaderReference loader, ArrayClassLoader arrayClassLoader, IClassLoader parent,
-      SetOfClasses exclusions, ClassHierarchy cha, WarningSet warnings) {
+      SetOfClasses exclusions, IClassHierarchy cha, WarningSet warnings) {
 
     this.arrayClassLoader = arrayClassLoader;
     this.parent = parent;
@@ -402,7 +402,7 @@ public class ClassLoaderImpl implements IClassLoader {
     return loadedClasses.get(className);
   }
 
-  public IClass lookupClass(TypeName className, ClassHierarchy cha) {
+  public IClass lookupClass(TypeName className, IClassHierarchy cha) {
     if (className == null) {
       throw new IllegalArgumentException("className is null");
     }
@@ -440,6 +440,10 @@ public class ClassLoaderImpl implements IClassLoader {
 
   public Atom getName() {
     return loader.getName();
+  }
+
+  public Language getLanguage() {
+    return Language.JAVA;
   }
 
   /**

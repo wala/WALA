@@ -37,7 +37,7 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.ReflectionSummary;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
@@ -97,7 +97,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   /**
    * Governing class hierarchy
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * Keep track of analysis warnings
@@ -119,7 +119,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    * @param warnings
    *          object to track analysis warnings
    */
-  public FactoryBypassInterpreter(AnalysisOptions options, ClassHierarchy cha, ReflectionSpecification userSpec, WarningSet warnings) {
+  public FactoryBypassInterpreter(AnalysisOptions options, IClassHierarchy cha, ReflectionSpecification userSpec, WarningSet warnings) {
     this.options = options;
     this.cha = cha;
     this.warnings = warnings;

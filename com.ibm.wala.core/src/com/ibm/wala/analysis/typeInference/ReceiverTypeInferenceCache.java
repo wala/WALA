@@ -14,7 +14,7 @@ import java.util.Map;
 
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.CacheReference;
@@ -31,11 +31,11 @@ public class ReceiverTypeInferenceCache {
 
   private final WarningSet warnings;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   private final AnalysisOptions options;
 
-  public ReceiverTypeInferenceCache(ClassHierarchy cha, AnalysisOptions options, WarningSet warnings) {
+  public ReceiverTypeInferenceCache(IClassHierarchy cha, AnalysisOptions options, WarningSet warnings) {
     this.warnings = warnings;
     this.options = options;
     this.cha = cha;

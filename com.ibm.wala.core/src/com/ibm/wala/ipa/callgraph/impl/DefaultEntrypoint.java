@@ -13,7 +13,7 @@ package com.ibm.wala.ipa.callgraph.impl;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -27,9 +27,9 @@ import com.ibm.wala.util.debug.Assertions;
 public class DefaultEntrypoint extends Entrypoint {
   private final TypeReference[][] paramTypes;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
-  public DefaultEntrypoint(IMethod method, ClassHierarchy cha) {
+  public DefaultEntrypoint(IMethod method, IClassHierarchy cha) {
 
     super(method);
     if (method == null) {
@@ -42,7 +42,7 @@ public class DefaultEntrypoint extends Entrypoint {
     }
   }
 
-  public DefaultEntrypoint(MethodReference method, ClassHierarchy cha) {
+  public DefaultEntrypoint(MethodReference method, IClassHierarchy cha) {
     super(method, cha);
     if (method == null) {
       throw new IllegalArgumentException("method is null");
@@ -90,7 +90,7 @@ public class DefaultEntrypoint extends Entrypoint {
     return paramTypes.length;
   }
 
-  public ClassHierarchy getCha() {
+  public IClassHierarchy getCha() {
     return cha;
   }
 }

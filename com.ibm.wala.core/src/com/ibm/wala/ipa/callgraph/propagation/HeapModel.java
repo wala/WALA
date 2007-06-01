@@ -12,7 +12,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import java.util.Iterator;
 
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 
 /**
@@ -31,6 +31,6 @@ public interface HeapModel extends InstanceKeyFactory, PointerKeyFactory {
   /**
    * @return the governing class hierarchy for this heap model
    */
-  ClassHierarchy getClassHierarchy();
+  IClassHierarchy getClassHierarchy();
 
 }

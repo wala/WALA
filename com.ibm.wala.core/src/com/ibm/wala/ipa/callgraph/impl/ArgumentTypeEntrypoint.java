@@ -18,7 +18,7 @@ import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
 /**
@@ -32,7 +32,7 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
 
   private TypeReference[][] paramTypes;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * @param method
@@ -95,7 +95,7 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
    * @param method
    * @param cha
    */
-  public ArgumentTypeEntrypoint(IMethod method, ClassHierarchy cha) {
+  public ArgumentTypeEntrypoint(IMethod method, IClassHierarchy cha) {
     super(method);
     this.cha = cha;
     paramTypes = makeParameterTypes(method);

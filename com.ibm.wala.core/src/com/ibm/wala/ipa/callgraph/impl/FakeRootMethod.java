@@ -13,7 +13,7 @@ package com.ibm.wala.ipa.callgraph.impl;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
@@ -27,12 +27,13 @@ import com.ibm.wala.util.Atom;
  */
 public class FakeRootMethod extends AbstractRootMethod {
 
-  private static final Atom name = Atom.findOrCreateAsciiAtom("fakeRootMethod");
+  public static final Atom name = Atom.findOrCreateAsciiAtom("fakeRootMethod");
 
-  private static final MethodReference rootMethod = MethodReference.findOrCreate(FakeRootClass.FAKE_ROOT_CLASS, name, Descriptor
-      .findOrCreateUTF8("()V"));
+  public static final Descriptor descr = Descriptor.findOrCreateUTF8("()V");
 
-  public FakeRootMethod(final ClassHierarchy cha, AnalysisOptions options) {
+  public static final MethodReference rootMethod = MethodReference.findOrCreate(FakeRootClass.FAKE_ROOT_CLASS, name, descr);
+
+  public FakeRootMethod(final IClassHierarchy cha, AnalysisOptions options) {
     super(rootMethod, cha, options);
   }
 

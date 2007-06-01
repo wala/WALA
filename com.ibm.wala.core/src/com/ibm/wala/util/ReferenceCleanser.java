@@ -18,7 +18,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * 
@@ -35,16 +35,16 @@ public class ReferenceCleanser {
   
   private final static float OCCUPANCY_TRIGGER = 0.5f;
 
-  private static WeakReference<ClassHierarchy> cha;
+  private static WeakReference<IClassHierarchy> cha;
 
   private static WeakReference<AnalysisOptions> options;
 
-  public static void registerClassHierarchy(ClassHierarchy cha) {
-    ReferenceCleanser.cha = new WeakReference<ClassHierarchy>(cha);
+  public static void registerClassHierarchy(IClassHierarchy cha) {
+    ReferenceCleanser.cha = new WeakReference<IClassHierarchy>(cha);
   }
 
-  private static ClassHierarchy getClassHierarchy() {
-    ClassHierarchy result = null;
+  private static IClassHierarchy getClassHierarchy() {
+    IClassHierarchy result = null;
     if (cha != null) {
       result = cha.get();
     }
@@ -78,7 +78,7 @@ public class ReferenceCleanser {
       getAnalysisOptions().getSSACache().wipe();
       getAnalysisOptions().getCFGCache().wipe();
     }
-    ClassHierarchy cha = getClassHierarchy();
+    IClassHierarchy cha = getClassHierarchy();
     if (cha != null) {
       for (IClass klass : cha) {
         if (klass instanceof ShrikeClass) {

@@ -32,7 +32,7 @@ import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CFAPointerKeys;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SymbolTable;
@@ -134,7 +134,7 @@ public class TypeBasedHeapModel implements HeapModel {
     for (int i = 1; i <= s.getMaxValueNumber(); i++) {
       if (s.isConstant(i)) {
         if (s.isStringConstant(i)) {
-          result.put(pointerKeys.getPointerKeyForLocal(node, i), getInstanceKeyForConstant(s.getConstantValue(i)));
+	  result.put(pointerKeys.getPointerKeyForLocal(node, i), getInstanceKeyForConstant(node, s.getConstantValue(i)));
         }
       } else {
         TypeAbstraction t = ti.getType(i);
@@ -190,7 +190,7 @@ public class TypeBasedHeapModel implements HeapModel {
     });
   }
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return iKeyFactory.getClassHierarchy();
   }
 
@@ -204,11 +204,11 @@ public class TypeBasedHeapModel implements HeapModel {
     return null;
   }
 
-  public InstanceKey getInstanceKeyForConstant(Object S) {
-    return iKeyFactory.getInstanceKeyForConstant(S);
+  public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
+    return iKeyFactory.getInstanceKeyForConstant(node, S);
   }
 
-  public String getStringConstantForInstanceKey(InstanceKey I) {
+  public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
     Assertions.UNREACHABLE();
     return null;
   }

@@ -19,7 +19,7 @@ import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -33,7 +33,7 @@ public class ZeroXCFABuilder extends CFABuilder {
 
   private final int instancePolicy;
 
-  public ZeroXCFABuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options, ContextSelector appContextSelector,
+  public ZeroXCFABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
 
     super(cha, warnings, options);
@@ -56,7 +56,7 @@ public class ZeroXCFABuilder extends CFABuilder {
   /**
    * subclasses can override as desired
    */
-  protected ZeroXInstanceKeys makeInstanceKeys(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options, SSAContextInterpreter contextInterpreter, int instancePolicy) {
+  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options, SSAContextInterpreter contextInterpreter, int instancePolicy) {
     ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, warnings, instancePolicy);
     return zik;
   }
@@ -76,7 +76,7 @@ public class ZeroXCFABuilder extends CFABuilder {
    * @return a 0-1-Opt-CFA Call Graph Builder.
    * @throws IllegalArgumentException  if options is null
    */
-  public static CFABuilder make(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
+  public static CFABuilder make(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
       String[] xmlFiles, WarningSet warnings, byte instancePolicy) {
 
     if (options == null) {

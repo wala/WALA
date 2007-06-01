@@ -40,9 +40,7 @@ import com.ibm.wala.util.ReferenceCleanser;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.graph.AbstractGraph;
-import com.ibm.wala.util.graph.EdgeManager;
-import com.ibm.wala.util.graph.NodeManager;
+import com.ibm.wala.util.graph.*;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.warnings.WarningSet;
 
@@ -61,18 +59,18 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class PointerFlowGraph extends AbstractGraph<PointerKey> {
 
-  private final PointerAnalysis pa;
+  protected final PointerAnalysis pa;
 
-  private final CallGraph cg;
+  protected final CallGraph cg;
 
-  private SlowSparseNumberedGraph<PointerKey> delegate = new SlowSparseNumberedGraph<PointerKey>();
+  protected SlowSparseNumberedGraph<PointerKey> delegate = new SlowSparseNumberedGraph<PointerKey>();
 
   /**
    * nodes for which we have processed the statements
    */
   private final Collection<CGNode> processedNodes = HashSetFactory.make();
 
-  private final WarningSet warnings = new WarningSet();
+  private final static WarningSet warnings = new WarningSet();
 
   private final EdgeManager<PointerKey> edgeManager = new LazyEdgeManager();
 
@@ -211,7 +209,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
       Assertions._assert(!processedNodes.contains(node));
     }
     processedNodes.add(node);
-    IR ir = getIR(node);
+    IR ir = getIR(cg, node);
     if (ir != null) {
       visit(node, ir);
     } else {
@@ -219,7 +217,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
   }
 
-  private IR getIR(CGNode node) {
+  private static IR getIR(CallGraph cg, CGNode node) {
     wipeCount++;
     if (wipeCount > WIPE_THRESHOLD) {
       wipeCount = 0;
@@ -250,14 +248,14 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     // add edges relating to thrown exceptions that reach the exit block.
     List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getExitBlock());
     PointerKey exception = pa.getHeapModel().getPointerKeyForExceptionalReturnValue(node);
-    addExceptionEdges(node, pa, ir, peis, exception);
+    addExceptionEdges(node, delegate, pa, ir, peis, exception);
   }
 
   protected InstructionVisitor makeInstructionVisitor(CGNode node, IR ir, BasicBlock bb) {
-    return new InstructionVisitor(node,ir, bb);
+    return new InstructionVisitor(pa, cg, delegate, node,ir, bb);
   }
 
-  protected class InstructionVisitor extends SSAInstruction.Visitor {
+  public static class InstructionVisitor extends SSAInstruction.Visitor {
 
     private final CGNode node;
 
@@ -265,10 +263,19 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
 
     private final IBasicBlock bb;
 
-    public InstructionVisitor(CGNode node, IR ir, BasicBlock bb) {
+    private final PointerAnalysis pa;
+
+    private final Graph<PointerKey> delegate;
+
+    private final CallGraph cg;
+
+    public InstructionVisitor(PointerAnalysis pa, CallGraph cg, Graph<PointerKey> delegate, CGNode node, IR ir, BasicBlock bb) {
+      this.delegate = delegate;
       this.node = node;
       this.ir = ir;
       this.bb = bb;
+      this.pa = pa;
+      this.cg = cg;
     }
 
     /*
@@ -465,7 +472,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
         CGNode target = (CGNode) it.next();
 
         // some methods, like unmodelled natives, do not have IR.
-        if (getIR(target) == null)
+        if (getIR(cg, target) == null)
           continue;
 
         // handle parameter passing
@@ -520,7 +527,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
       List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, bb);
       PointerKey def = pa.getHeapModel().getPointerKeyForLocal(node, instruction.getDef());
-      addExceptionEdges(node, pa, ir, peis, def);
+      addExceptionEdges(node, delegate, pa, ir, peis, def);
     }
   }
 
@@ -535,7 +542,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
    * @param exceptionVar
    *          PointerKey representing a pointer to an exception value
    */
-  private void addExceptionEdges(CGNode node, PointerAnalysis pa, IR ir, List<ProgramCounter> peis, PointerKey exceptionVar) {
+  private static void addExceptionEdges(CGNode node, Graph<PointerKey> delegate, PointerAnalysis pa, IR ir, List<ProgramCounter> peis, PointerKey exceptionVar) {
     delegate.addNode(exceptionVar);
     for (Iterator<ProgramCounter> it = peis.iterator(); it.hasNext();) {
       ProgramCounter peiLoc = it.next();

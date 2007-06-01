@@ -23,26 +23,26 @@ import com.ibm.wala.util.collections.HashSetFactory;
  * @author sfink
  *
  */
-public class ComposedEntrypoints implements Iterable<Entrypoint> {
+public class ComposedEntrypoints<T extends Entrypoint> implements Iterable<T> {
 
-  private Set<Entrypoint> entrypoints = HashSetFactory.make();
+  private Set<T> entrypoints = HashSetFactory.make();
   
-  public ComposedEntrypoints(Iterable<Entrypoint> A, Iterable<Entrypoint> B) {
+  public ComposedEntrypoints(Iterable<T> A, Iterable<T> B) {
     if (A == null) {
       throw new IllegalArgumentException("A is null");
     }
     if (B == null) {
       throw new IllegalArgumentException("B is null");
     }
-    for (Iterator<? extends Entrypoint> it = A.iterator(); it.hasNext(); ) {
+    for (Iterator<T> it = A.iterator(); it.hasNext(); ) {
       entrypoints.add(it.next());
     }
-    for (Iterator<? extends Entrypoint> it = B.iterator(); it.hasNext(); ) {
+    for (Iterator<T> it = B.iterator(); it.hasNext(); ) {
       entrypoints.add(it.next());
     }
   }
 
-  public Iterator<Entrypoint> iterator() {
+  public Iterator<T> iterator() {
     return entrypoints.iterator();
   }
 

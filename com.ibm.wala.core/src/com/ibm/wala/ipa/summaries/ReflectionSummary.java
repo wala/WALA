@@ -18,7 +18,7 @@ import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.analysis.typeInference.SetType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -56,7 +56,7 @@ public class ReflectionSummary {
     return result;
   }
 
-  public TypeAbstraction getTypeForNewInstance(int bcIndex, ClassHierarchy cha) {
+  public TypeAbstraction getTypeForNewInstance(int bcIndex, IClassHierarchy cha) {
     Set S = map.get(new Integer(bcIndex));
     if (S == null) {
       return null;

@@ -13,7 +13,7 @@ package com.ibm.wala.classLoader;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
@@ -36,19 +36,19 @@ public class ShrikeIRFactory implements IRFactory {
 
   /*
    * @see com.ibm.wala.ssa.IRFactory#makeCFG(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.cha.ClassHierarchy,
+   *      com.ibm.wala.ipa.cha.IClassHierarchy,
    *      com.ibm.wala.util.warnings.WarningSet)
    */
-  public ControlFlowGraph makeCFG(final IMethod method, Context C, final ClassHierarchy cha, final WarningSet warnings) {
+  public ControlFlowGraph makeCFG(final IMethod method, Context C, final IClassHierarchy cha, final WarningSet warnings) {
     return new ShrikeCFG((ShrikeCTMethod) method, warnings, cha);
   }
 
   /*
    * @see com.ibm.wala.ssa.IRFactory#makeIR(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.cha.ClassHierarchy, com.ibm.wala.ssa.SSAOptions,
+   *      com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.ssa.SSAOptions,
    *      com.ibm.wala.util.warnings.WarningSet)
    */
-  public IR makeIR(final IMethod method, Context C, final ClassHierarchy cha, final SSAOptions options, final WarningSet warnings)
+  public IR makeIR(final IMethod method, Context C, final IClassHierarchy cha, final SSAOptions options, final WarningSet warnings)
       throws IllegalArgumentException {
 
     if (!(method instanceof ShrikeCTMethod)) {

@@ -14,7 +14,7 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSAOptions;
@@ -23,7 +23,7 @@ import com.ibm.wala.util.warnings.WarningSet;
 
 public class SyntheticIRFactory implements IRFactory {
 
-  public ControlFlowGraph makeCFG(IMethod method, Context C, ClassHierarchy cha, WarningSet warnings) {
+  public ControlFlowGraph makeCFG(IMethod method, Context C, IClassHierarchy cha, WarningSet warnings) {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
     }
@@ -32,7 +32,7 @@ public class SyntheticIRFactory implements IRFactory {
     return sm.makeControlFlowGraph();
   }
 
-  public IR makeIR(IMethod method, Context C, ClassHierarchy cha, SSAOptions options, WarningSet warnings) {
+  public IR makeIR(IMethod method, Context C, IClassHierarchy cha, SSAOptions options, WarningSet warnings) {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
     }

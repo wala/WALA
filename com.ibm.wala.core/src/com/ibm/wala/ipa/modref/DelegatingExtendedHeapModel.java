@@ -20,7 +20,7 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
 /**
@@ -38,7 +38,7 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
      this.h = h;
    }
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return h.getClassHierarchy();
   }
 
@@ -54,8 +54,8 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
     return h.getInstanceKeyForClassObject(type);
   }
 
-  public InstanceKey getInstanceKeyForConstant(Object S) {
-    return h.getInstanceKeyForConstant(S);
+  public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
+    return h.getInstanceKeyForConstant(node, S);
   }
 
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
@@ -96,8 +96,8 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
     return h.getPointerKeyForStaticField(f);
   }
 
-  public String getStringConstantForInstanceKey(InstanceKey I) {
-    return h.getStringConstantForInstanceKey(I);
+  public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
+    return h.getStringConstantForInstanceKey(node, I);
   }
 
   public Iterator iteratePointerKeys() {

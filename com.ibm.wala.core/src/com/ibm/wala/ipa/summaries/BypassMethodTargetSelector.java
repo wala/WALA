@@ -21,7 +21,7 @@ import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.impl.ClassHierarchyMethodTargetSelector;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.MemberReference;
@@ -67,7 +67,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   /**
    * Governing class hierarchy.
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * target selector to use for non-bypassed calls
@@ -87,7 +87,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
    * @param ignoredPackages
    * @param cha
    */
-  public BypassMethodTargetSelector(MethodTargetSelector parent, Map<MethodReference, MethodSummary> methodSummaries, Set<Atom> ignoredPackages, ClassHierarchy cha) {
+  public BypassMethodTargetSelector(MethodTargetSelector parent, Map<MethodReference, MethodSummary> methodSummaries, Set<Atom> ignoredPackages, IClassHierarchy cha) {
     this.methodSummaries = methodSummaries;
     this.ignoredPackages = ignoredPackages;
     this.parent = parent;
@@ -308,7 +308,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     }
   }
 
-  protected ClassHierarchy getClassHierarchy() {
+  protected IClassHierarchy getClassHierarchy() {
     return cha;
   }
 

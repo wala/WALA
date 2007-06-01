@@ -13,7 +13,7 @@ package com.ibm.wala.types.generics;
 import java.util.StringTokenizer;
 
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -126,7 +126,7 @@ public class ClassTypeSignature extends TypeSignature {
     return false;
   }
   
-  public static IClass lookupClass(ClassHierarchy cha, ClassTypeSignature sig) {
+  public static IClass lookupClass(IClassHierarchy cha, ClassTypeSignature sig) {
     if (sig == null) {
       throw new IllegalArgumentException("sig is null");
     }

@@ -28,7 +28,7 @@ import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.util.debug.Assertions;
@@ -47,7 +47,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class BasicRTABuilder extends AbstractRTABuilder {
 
-  public BasicRTABuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+  public BasicRTABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
       ContextSelector contextSelector, SSAContextInterpreter contextInterpreter) {
     super(cha, warnings, options, contextSelector, contextInterpreter, null);
   }

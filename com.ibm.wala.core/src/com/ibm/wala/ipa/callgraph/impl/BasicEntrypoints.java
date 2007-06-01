@@ -22,15 +22,15 @@ import com.ibm.wala.util.collections.HashSetFactory;
  * 
  * @author sfink
  */
-public class BasicEntrypoints implements Iterable<Entrypoint> {
+public class BasicEntrypoints<T extends Entrypoint> implements Iterable<T> {
 
-  private HashSet<Entrypoint> entrypoints = HashSetFactory.make();
+  private HashSet<T> entrypoints = HashSetFactory.make();
 
-  public Iterator<Entrypoint> iterator() {
+  public Iterator<T> iterator() {
     return entrypoints.iterator();
   }
 
-  public void add(Entrypoint e) {
+  public void add(T e) {
     entrypoints.add(e);
   }
 

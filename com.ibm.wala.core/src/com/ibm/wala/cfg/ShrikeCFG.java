@@ -18,7 +18,7 @@ import java.util.Set;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.Instruction;
@@ -51,7 +51,7 @@ public class ShrikeCFG extends AbstractCFG {
 
   private final WarningSet warnings;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   private final ShrikeCTMethod method;
 
@@ -68,7 +68,7 @@ public class ShrikeCFG extends AbstractCFG {
   /**
    * Constructor for ControlFlowGraph.
    */
-  public ShrikeCFG(ShrikeCTMethod method, WarningSet warnings, ClassHierarchy cha) throws IllegalArgumentException {
+  public ShrikeCFG(ShrikeCTMethod method, WarningSet warnings, IClassHierarchy cha) throws IllegalArgumentException {
     super(method);
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");

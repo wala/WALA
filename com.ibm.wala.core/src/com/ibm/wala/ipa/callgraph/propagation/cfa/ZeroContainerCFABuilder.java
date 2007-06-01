@@ -16,7 +16,7 @@ import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -44,7 +44,7 @@ public class ZeroContainerCFABuilder extends CFABuilder {
    * @throws IllegalArgumentException
    *           if options is null
    */
-  public ZeroContainerCFABuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+  public ZeroContainerCFABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
 
     super(cha, warnings, options);

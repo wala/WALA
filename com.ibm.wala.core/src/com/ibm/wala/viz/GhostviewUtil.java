@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.cfg.CFGSanitizer;
 import com.ibm.wala.cfg.IBasicBlock;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
@@ -44,7 +44,7 @@ public class GhostviewUtil {
    * @return a handle to the ghostview process
    * @throws WalaException
    */
-  public static Process ghostviewIR(ClassHierarchy cha, IR ir, boolean sanitize, String psFile, String dotFile, String dotExe,
+  public static Process ghostviewIR(IClassHierarchy cha, IR ir, boolean sanitize, String psFile, String dotFile, String dotExe,
       String gvExe) throws WalaException {
     return ghostviewIR(cha, ir, sanitize, psFile, dotFile, dotExe, gvExe, null);
   }
@@ -59,7 +59,7 @@ public class GhostviewUtil {
    * @throws IllegalArgumentException
    *           if ir is null
    */
-  public static Process ghostviewIR(ClassHierarchy cha, IR ir, boolean sanitize, String psFile, String dotFile, String dotExe,
+  public static Process ghostviewIR(IClassHierarchy cha, IR ir, boolean sanitize, String psFile, String dotFile, String dotExe,
       String gvExe, NodeDecorator annotations) throws WalaException {
 
     if (ir == null) {

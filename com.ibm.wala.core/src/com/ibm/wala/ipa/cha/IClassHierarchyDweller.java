@@ -17,5 +17,5 @@ package com.ibm.wala.ipa.cha;
  *
  */
 public interface IClassHierarchyDweller {
-  public ClassHierarchy getClassHierarchy();
+  public IClassHierarchy getClassHierarchy();
 }

@@ -14,7 +14,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * A ClassTargetSelector that simply looks up the declared type of a
@@ -24,12 +24,12 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
  */
 public class ClassHierarchyClassTargetSelector implements ClassTargetSelector {
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * @param cha governing class hierarchy
    */
-  public ClassHierarchyClassTargetSelector(ClassHierarchy cha) {
+  public ClassHierarchyClassTargetSelector(IClassHierarchy cha) {
     this.cha = cha;
   }
 

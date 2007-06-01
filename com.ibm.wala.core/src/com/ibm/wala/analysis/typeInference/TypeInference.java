@@ -21,7 +21,7 @@ import com.ibm.wala.fixedpoint.impl.AbstractVariable;
 import com.ibm.wala.fixedpoint.impl.NullaryOperator;
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -60,7 +60,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
   /**
    * The governing class hierarchy
    */
-  protected ClassHierarchy cha;
+  protected IClassHierarchy cha;
 
   /**
    * A singleton instance of the phi operator.
@@ -88,7 +88,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
-    this.cha = ir.getMethod().getClassHierarchy();
+    this.cha = ir.getMethod().getDeclaringClass().getClassHierarchy();
     this.ir = ir;
     this.doPrimitives = doPrimitives;
     this.BOTTOM = new ConeType(cha.getRootClass());
@@ -602,7 +602,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       result = piOp;
     }
 
-    private TypeAbstraction meetDeclaredExceptionTypes(SSAGetCaughtExceptionInstruction s, ClassHierarchy cha) {
+    private TypeAbstraction meetDeclaredExceptionTypes(SSAGetCaughtExceptionInstruction s, IClassHierarchy cha) {
       ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) ir.getControlFlowGraph().getNode(s.getBasicBlockNumber());
       Iterator it = bb.getCaughtExceptionTypes();
       TypeReference t = (TypeReference) it.next();

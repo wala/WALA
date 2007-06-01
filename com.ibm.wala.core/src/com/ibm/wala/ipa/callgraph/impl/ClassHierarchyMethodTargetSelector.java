@@ -15,7 +15,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -33,7 +33,7 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
   /**
    * Governing class hierarchy
    */
-  private final ClassHierarchy classHierarchy;
+  private final IClassHierarchy classHierarchy;
 
   /**
    * An object which records analysis warnings
@@ -49,7 +49,7 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
    * @param warn
    *          Where and how to emit warnings.
    */
-  public ClassHierarchyMethodTargetSelector(ClassHierarchy cha, WarningSet warn) {
+  public ClassHierarchyMethodTargetSelector(IClassHierarchy cha, WarningSet warn) {
     classHierarchy = cha;
     warnings = warn;
   }
@@ -100,7 +100,7 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
   /**
    * @return true if it may be possible to resolve a call to a site on the concrete type dispatchType
    */
-  public static boolean feasibleChaResolution(ClassHierarchy cha, CallSiteReference site, IClass dispatchType) {
+  public static boolean feasibleChaResolution(IClassHierarchy cha, CallSiteReference site, IClass dispatchType) {
     if (dispatchType == null) {
       return false;
     }

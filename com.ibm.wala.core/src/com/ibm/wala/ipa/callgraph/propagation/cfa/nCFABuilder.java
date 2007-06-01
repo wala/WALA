@@ -19,7 +19,7 @@ import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.ClassBasedInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -30,7 +30,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class nCFABuilder extends CFABuilder {
 
-  public nCFABuilder(int n, ClassHierarchy cha, WarningSet warnings, AnalysisOptions options, ContextSelector appContextSelector,
+  public nCFABuilder(int n, IClassHierarchy cha, WarningSet warnings, AnalysisOptions options, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
 
     super(cha, warnings, options);

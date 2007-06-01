@@ -9,7 +9,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
@@ -33,7 +33,7 @@ public class JUnitEntryPoints {
    * scope.
    * @throws IllegalArgumentException  if cha is null
    */
-  public static Iterable<Entrypoint> make(ClassHierarchy cha) {
+  public static Iterable<Entrypoint> make(IClassHierarchy cha) {
 
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
@@ -78,7 +78,7 @@ public class JUnitEntryPoints {
    * Construct JUnit entrypoints for the specified test method in a scope.
    * @throws IllegalArgumentException  if cha is null
    */
-  public static Iterable<Entrypoint> makeOne(ClassHierarchy cha, String targetPackageName, String targetSimpleClassName,
+  public static Iterable<Entrypoint> makeOne(IClassHierarchy cha, String targetPackageName, String targetSimpleClassName,
       String targetMethodName) {
 
     if (cha == null) {

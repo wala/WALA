@@ -11,7 +11,7 @@
 package com.ibm.wala.ipa.callgraph;
 
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MemberReference;
 
 /**
@@ -29,5 +29,5 @@ public interface ReflectionSpecification {
    * @return the TypeAbstraction which represents the set of types allocated by the new instance
    * at the specified bytecode index; or null if not specified.
    */
-  TypeAbstraction getTypeForNewInstance(MemberReference method, int bcIndex, ClassHierarchy cha);
+  TypeAbstraction getTypeForNewInstance(MemberReference method, int bcIndex, IClassHierarchy cha);
 }

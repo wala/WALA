@@ -45,7 +45,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.CFAPointerKeys;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.DelegatingExplicitCallGraph.DelegatingCGNode;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
@@ -113,7 +113,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/ExceptionInInitializerError"),
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/NullPointerException") };
 
-  protected AbstractRTABuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options, ContextSelector appContextSelector,
+  protected AbstractRTABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
     super(cha, warnings, options, new CFAPointerKeys());
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha, warnings));
@@ -447,11 +447,11 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#createEmptyCallGraph(com.ibm.wala.ipa.cha.ClassHierarchy,
+   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#createEmptyCallGraph(com.ibm.wala.ipa.cha.IClassHierarchy,
    *      com.ibm.wala.ipa.callgraph.AnalysisOptions)
    */
   @Override
-  protected ExplicitCallGraph createEmptyCallGraph(ClassHierarchy cha, AnalysisOptions options) {
+  protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     return new DelegatingExplicitCallGraph(cha, options);
   }
 

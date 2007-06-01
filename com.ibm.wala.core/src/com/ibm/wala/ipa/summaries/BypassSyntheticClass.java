@@ -18,7 +18,7 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticClass;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
@@ -55,7 +55,7 @@ public class BypassSyntheticClass extends SyntheticClass {
 
   private final IClassLoader loader;
 
-  public BypassSyntheticClass(IClass realType, IClassLoader loader, ClassHierarchy cha) throws NullPointerException, NullPointerException {
+  public BypassSyntheticClass(IClass realType, IClassLoader loader, IClassHierarchy cha) throws NullPointerException, NullPointerException {
     super(TypeReference.findOrCreate(loader.getReference(), getName(realType.getReference())), cha);
     this.loader = loader;
     this.realType = realType;

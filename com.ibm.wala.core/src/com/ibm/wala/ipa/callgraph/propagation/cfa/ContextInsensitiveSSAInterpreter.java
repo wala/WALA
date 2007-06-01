@@ -17,7 +17,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.ContextInsensitiveRTAInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.warnings.WarningSet;
@@ -33,9 +33,9 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
 
   private final AnalysisOptions options;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
-  public ContextInsensitiveSSAInterpreter(AnalysisOptions options, ClassHierarchy cha) {
+  public ContextInsensitiveSSAInterpreter(AnalysisOptions options, IClassHierarchy cha) {
     this.options = options;
     this.cha = cha;
   }

@@ -11,7 +11,7 @@
 
 package com.ibm.wala.classLoader;
 
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 
@@ -25,11 +25,11 @@ public abstract class SyntheticClass implements IClass {
 
   private final TypeReference T;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
   /**
    * @param T type reference describing this class
    */
-  public SyntheticClass(TypeReference T, ClassHierarchy cha) {
+  public SyntheticClass(TypeReference T, IClassHierarchy cha) {
     super();
     this.T = T;
     this.cha = cha;
@@ -79,7 +79,7 @@ public abstract class SyntheticClass implements IClass {
     return false;
   }
   
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return cha;
   }
 }

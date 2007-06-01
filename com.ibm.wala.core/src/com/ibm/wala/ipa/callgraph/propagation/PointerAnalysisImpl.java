@@ -21,7 +21,7 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -144,16 +144,21 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
   }
 
-  protected class ImplicitPointsToSetVisitor extends SSAInstruction.Visitor {
+  protected static class ImplicitPointsToSetVisitor extends SSAInstruction.Visitor {
+    protected final PointerAnalysisImpl analysis;
+    
     protected final CGNode node;
 
     protected final LocalPointerKey lpk;
 
     protected OrdinalSet<InstanceKey> pointsToSet = null;
 
-    protected ImplicitPointsToSetVisitor(LocalPointerKey lpk) {
+    protected ImplicitPointsToSetVisitor(PointerAnalysisImpl analysis,
+					 LocalPointerKey lpk) 
+    {
       this.lpk = lpk;
       this.node = lpk.getNode();
+      this.analysis = analysis;
     }
 
     @Override
@@ -163,42 +168,49 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
 
     @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
-      pointsToSet = computeImplicitPointsToSetAtCall(lpk, node, instruction);
+      pointsToSet = 
+	analysis.computeImplicitPointsToSetAtCall(lpk, node, instruction);
     }
 
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
-      pointsToSet = computeImplicitPointsToSetAtCheckCast(node, instruction);
+      pointsToSet = 
+	analysis.computeImplicitPointsToSetAtCheckCast(node, instruction);
     }
 
     @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
-      pointsToSet = computeImplicitPointsToSetAtCatch(node, instruction);
+      pointsToSet = 
+	analysis.computeImplicitPointsToSetAtCatch(node, instruction);
     }
 
     @Override
     public void visitGet(SSAGetInstruction instruction) {
-      pointsToSet = computeImplicitPointsToSetAtGet(node, instruction);
+      pointsToSet =
+	analysis.computeImplicitPointsToSetAtGet(node, instruction);
     }
 
     @Override
     public void visitPhi(SSAPhiInstruction instruction) {
-      pointsToSet = computeImplicitPointsToSetAtPhi(node, instruction);
+      pointsToSet = 
+	analysis.computeImplicitPointsToSetAtPhi(node, instruction);
     }
 
     @Override
     public void visitPi(SSAPiInstruction instruction) {
-      pointsToSet = computeImplicitPointsToSetAtPi(node, instruction);
+      pointsToSet = 
+	analysis.computeImplicitPointsToSetAtPi(node, instruction);
     }
 
     @Override
     public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
-      pointsToSet = computeImplicitPointsToSetAtALoad(node, instruction);
+      pointsToSet = 
+	analysis.computeImplicitPointsToSetAtALoad(node, instruction);
     }
   };
 
   protected ImplicitPointsToSetVisitor makeImplicitPointsToVisitor(LocalPointerKey lpk) {
-    return new ImplicitPointsToSetVisitor(lpk);
+    return new ImplicitPointsToSetVisitor(this, lpk);
   }
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSet(PointerKey key) {
@@ -287,7 +299,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     return computeImplicitPointsToSetAtGet(node, instruction.getDeclaredField(), instruction.getRef(), instruction.isStatic());
   }
 
-  protected OrdinalSet<InstanceKey> computeImplicitPointsToSetAtGet(CGNode node, FieldReference field, int refVn, boolean isStatic) {
+  public OrdinalSet<InstanceKey> computeImplicitPointsToSetAtGet(CGNode node, FieldReference field, int refVn, boolean isStatic) {
     IField f = getCallGraph().getClassHierarchy().resolveField(field);
     if (f == null) {
       return OrdinalSet.empty();
@@ -467,11 +479,11 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     /*
      * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForStringConstant(java.lang.String)
      */
-    public InstanceKey getInstanceKeyForConstant(Object S) {
-      return iKeyFactory.getInstanceKeyForConstant(S);
+    public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
+      return iKeyFactory.getInstanceKeyForConstant(node, S);
     }
 
-    public String getStringConstantForInstanceKey(InstanceKey I) {
+    public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
       Assertions.UNREACHABLE();
       return null;
     }
@@ -539,7 +551,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       return pointerKeys.getPointerKeyForArrayContents(I);
     }
 
-    public ClassHierarchy getClassHierarchy() {
+    public IClassHierarchy getClassHierarchy() {
       return getCallGraph().getClassHierarchy();
     }
   }
@@ -551,7 +563,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     return new Iterator2Collection<PointerKey>(pointsToMap.iterateKeys());
   }
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return builder.getClassHierarchy();
   }
 }

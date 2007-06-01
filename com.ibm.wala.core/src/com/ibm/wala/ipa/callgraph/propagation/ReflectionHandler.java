@@ -19,7 +19,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.NormalStatement;
 import com.ibm.wala.ipa.slicer.ParamStatement;
 import com.ibm.wala.ipa.slicer.Slicer;
@@ -123,7 +123,7 @@ public class ReflectionHandler {
    * @return set of nodes whose interpretation has changed.
    */
   private Set<CGNode> modifyFactoryInterpreter(Statement returnStatement, Collection<Statement> casts,
-      RTAContextInterpreter contextInterpreter, ClassHierarchy cha) {
+      RTAContextInterpreter contextInterpreter, IClassHierarchy cha) {
     HashSet<CGNode> result = HashSetFactory.make();
     IR ir = returnStatement.getNode().getIR(new WarningSet());
     LocalPointerKey pk = null;

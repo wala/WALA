@@ -23,7 +23,7 @@ import com.ibm.wala.ecore.java.JavaFactory;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
@@ -159,7 +159,7 @@ public class EMFBridge {
    *          a WALA class hierarchy
    * @return a EMF class hierarchy
    */
-  public static com.ibm.wala.emf.wrappers.EClassHierarchyWrapper makeClassHierarchy(ClassHierarchy cha)
+  public static com.ibm.wala.emf.wrappers.EClassHierarchyWrapper makeClassHierarchy(IClassHierarchy cha)
       throws IllegalArgumentException {
     if (cha == null) {
       throw new IllegalArgumentException("cha must not be null");
@@ -194,7 +194,7 @@ public class EMFBridge {
    * @return a EMF interface hierarchy
    * @throws IllegalArgumentException  if cha is null
    */
-  public static EInterfaceHierarchyWrapper makeInterfaceHierarchy(ClassHierarchy cha) {
+  public static EInterfaceHierarchyWrapper makeInterfaceHierarchy(IClassHierarchy cha) {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
     }
@@ -227,7 +227,7 @@ public class EMFBridge {
    * @return a EMF type hierarchy
    * @throws IllegalArgumentException  if cha is null
    */
-  public static ETypeHierarchyWrapper makeTypeHierarchy(ClassHierarchy cha) {
+  public static ETypeHierarchyWrapper makeTypeHierarchy(IClassHierarchy cha) {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
     }

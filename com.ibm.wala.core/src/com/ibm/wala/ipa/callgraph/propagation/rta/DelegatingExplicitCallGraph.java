@@ -19,7 +19,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVectorIntSet;
@@ -48,7 +48,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
    * @param cha
    * @param options
    */
-  public DelegatingExplicitCallGraph(ClassHierarchy cha, AnalysisOptions options) {
+  public DelegatingExplicitCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     super(cha, options);
   }
 
@@ -63,10 +63,10 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
    * <li> a CallSite if we're delegating these edges to another node
    * </ul>
    */
-  public class DelegatingCGNode extends ExplicitNode {
+  public static class DelegatingCGNode<T extends DelegatingExplicitCallGraph> extends ExplicitNode<T> {
 
-    protected DelegatingCGNode(IMethod method, Context C) {
-      super(method, C);
+    protected DelegatingCGNode(T CG, IMethod method, Context C) {
+      super(CG, method, C);
     }
 
     /*
@@ -151,9 +151,9 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
     public void delegate(CallSiteReference site, CGNode delegateNode, CallSiteReference delegateSite) {
       CallSite d = new CallSite(delegateSite, delegateNode);
       targets.set(site.getProgramCounter(), d);
-      int y = getNumber(this);
-      int x = getNumber(delegateNode);
-      delegateR.add(x, y);
+      int y = CG.getNumber(this);
+      int x = CG.getNumber(delegateNode);
+      CG.delegateR.add(x, y);
     }
 
   }
@@ -164,7 +164,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
    */
   @Override
   protected ExplicitNode makeNode(IMethod method, Context context) {
-    return new DelegatingCGNode(method, context);
+    return new DelegatingCGNode(this, method, context);
   }
 
   private class DelegatingEdgeManager extends ExplicitEdgeManager {

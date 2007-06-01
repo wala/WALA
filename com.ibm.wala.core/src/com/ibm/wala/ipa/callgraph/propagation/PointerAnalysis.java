@@ -13,7 +13,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import java.util.Collection;
 
 import com.ibm.wala.analysis.pointers.HeapGraph;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
@@ -65,6 +65,6 @@ public interface PointerAnalysis {
    */
   boolean isFiltered(PointerKey pk);
   
-  public ClassHierarchy getClassHierarchy();
+  public IClassHierarchy getClassHierarchy();
 
 }

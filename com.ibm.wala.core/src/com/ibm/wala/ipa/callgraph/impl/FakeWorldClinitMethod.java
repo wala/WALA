@@ -11,7 +11,7 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.Atom;
@@ -29,7 +29,7 @@ public class FakeWorldClinitMethod extends AbstractRootMethod {
   private static final MethodReference worldClinitMethod = MethodReference.findOrCreate(FakeRootClass.FAKE_ROOT_CLASS, name, Descriptor
       .findOrCreateUTF8("()V"));
   
-  public FakeWorldClinitMethod(final ClassHierarchy cha, AnalysisOptions options) {
+  public FakeWorldClinitMethod(final IClassHierarchy cha, AnalysisOptions options) {
     super(worldClinitMethod, cha, options);
   }
 }

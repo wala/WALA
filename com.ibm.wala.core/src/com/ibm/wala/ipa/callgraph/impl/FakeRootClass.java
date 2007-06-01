@@ -4,7 +4,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticClass;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.*;
 import com.ibm.wala.util.Atom;
@@ -25,7 +25,7 @@ public class FakeRootClass extends SyntheticClass {
 
   private Map<Atom,IField> fakeRootStaticFields = null;
 
-  FakeRootClass(ClassHierarchy cha) {
+  FakeRootClass(IClassHierarchy cha) {
     super(FAKE_ROOT_CLASS, cha);
   }
 
@@ -35,7 +35,7 @@ public class FakeRootClass extends SyntheticClass {
     }
 
     fakeRootStaticFields.put(name, new IField() {
-      public ClassHierarchy getClassHierarchy() {
+      public IClassHierarchy getClassHierarchy() {
         return FakeRootClass.this.getClassHierarchy();
       }
 

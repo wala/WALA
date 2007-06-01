@@ -16,15 +16,15 @@ import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 public class PointerKeyComparator implements Comparator {
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
-  public PointerKeyComparator(ClassHierarchy cha) {
+  public PointerKeyComparator(IClassHierarchy cha) {
     this.cha = cha;
   }
 

@@ -26,7 +26,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
@@ -287,7 +287,7 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
     }
   }
 
-  public TypeAbstraction getTypeForNewInstance(MemberReference method, int bcIndex, ClassHierarchy cha) {
+  public TypeAbstraction getTypeForNewInstance(MemberReference method, int bcIndex, IClassHierarchy cha) {
     ReflectionSummary summary = summaries.get(method);
     if (summary != null) {
       return summary.getTypeForNewInstance(bcIndex, cha);

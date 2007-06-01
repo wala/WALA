@@ -13,8 +13,9 @@ package com.ibm.wala.analysis.typeInference;
 import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.types.*;
 
 /**
  * 
@@ -52,7 +53,7 @@ public class ConeType extends TypeAbstraction {
         return this;
       } else if (type.isArrayClass() || other.type.isArrayClass()) {
         // give up on arrays. We don't care anyway.
-        return new ConeType(type.getClassHierarchy().getRootClass());
+	  return new ConeType(type.getClassHierarchy().getRootClass());
       } else {
         return new ConeType(type.getClassHierarchy().getLeastCommonSuperclass(this.type, other.type));
       }
@@ -82,6 +83,10 @@ public class ConeType extends TypeAbstraction {
   @Override
   public IClass getType() {
     return type;
+  }
+
+  public TypeReference getTypeReference() {
+    return type.getReference();
   }
 
   /**
@@ -125,7 +130,7 @@ public class ConeType extends TypeAbstraction {
     return type.getClassHierarchy().getImplementors(getType().getReference()).iterator();
   }
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return type.getClassHierarchy();
   }
 }

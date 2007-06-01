@@ -12,7 +12,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
 /**
@@ -25,7 +25,7 @@ public class InstanceFieldKeyWithFilter extends InstanceFieldKey implements Filt
 
   private final IClass filter;
 
-  public InstanceFieldKeyWithFilter(ClassHierarchy cha, InstanceKey instance, IField field) {
+  public InstanceFieldKeyWithFilter(IClassHierarchy cha, InstanceKey instance, IField field) {
 
     super(instance, field);
     if (field == null) {

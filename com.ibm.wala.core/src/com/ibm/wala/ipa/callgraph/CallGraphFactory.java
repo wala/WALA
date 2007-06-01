@@ -11,7 +11,7 @@
 package com.ibm.wala.ipa.callgraph;
 
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * @author ???
@@ -19,6 +19,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
  */
 public interface CallGraphFactory {
 
-    ExplicitCallGraph make(ClassHierarchy cha);
+    ExplicitCallGraph make(IClassHierarchy cha);
 
 }

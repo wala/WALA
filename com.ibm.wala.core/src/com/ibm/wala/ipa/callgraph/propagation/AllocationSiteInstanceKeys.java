@@ -10,14 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.classLoader.*;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContainerContextSelector;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.warnings.ResolutionFailure;
 import com.ibm.wala.util.warnings.WarningSet;
@@ -43,7 +40,7 @@ public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
   /**
    * Governing class hierarchy
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   private final ClassBasedInstanceKeys classBased;
 
@@ -53,7 +50,7 @@ public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
    * @param warnings
    *          An object to track analysis warnings
    */
-  public AllocationSiteInstanceKeys(AnalysisOptions options, ClassHierarchy cha, WarningSet warnings) {
+  public AllocationSiteInstanceKeys(AnalysisOptions options, IClassHierarchy cha, WarningSet warnings) {
     this.options = options;
     this.cha = cha;
     this.warnings = warnings;
@@ -92,14 +89,15 @@ public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
     return key;
   }
 
-  public InstanceKey getInstanceKeyForConstant(Object S) {
+  public InstanceKey getInstanceKeyForConstant(CGNode node, Object S) {
+      Language l = node.getMethod().getDeclaringClass().getClassLoader().getLanguage();
     if (options.getUseConstantSpecificKeys())
-      return new ConstantKey(S, cha.lookupClass(options.getConstantType(S)));
+      return new ConstantKey(S, cha.lookupClass(l.getConstantType(S)));
     else
-      return new ConcreteTypeKey(cha.lookupClass(options.getConstantType(S)));
+      return new ConcreteTypeKey(cha.lookupClass(l.getConstantType(S)));
   }
 
-  public String getStringConstantForInstanceKey(InstanceKey I) {
+  public String getStringConstantForInstanceKey(CGNode node, InstanceKey I) {
     if (I instanceof StringConstantKey) {
       return ((StringConstantKey) I).getString();
     } else {

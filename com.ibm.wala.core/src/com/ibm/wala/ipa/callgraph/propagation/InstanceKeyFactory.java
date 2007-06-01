@@ -38,12 +38,12 @@ public interface InstanceKeyFactory {
    * @param S
    * @return the instance key that represents a constant with value S
    */
-  public abstract InstanceKey getInstanceKeyForConstant(Object S);
+  public abstract InstanceKey getInstanceKeyForConstant(CGNode node, Object S);
   /**
    * @param I
    * @return if I was allocated by this for a specific string constant, return that constant (return null otherwise).
    */
-  public abstract String getStringConstantForInstanceKey(InstanceKey I);
+  public abstract String getStringConstantForInstanceKey(CGNode node, InstanceKey I);
   /**
    * @param node
    * @param instr

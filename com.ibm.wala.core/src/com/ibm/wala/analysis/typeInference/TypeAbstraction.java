@@ -14,6 +14,7 @@ package com.ibm.wala.analysis.typeInference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.types.*;
 
 /**
  *
@@ -47,6 +48,9 @@ public abstract class TypeAbstraction implements ContextItem {
     public IClass getType() { 
       return null;
     }
+    public TypeReference getTypeReference() { 
+      return null;
+    }
   };
 
   public abstract TypeAbstraction meet(TypeAbstraction rhs);
@@ -62,6 +66,11 @@ public abstract class TypeAbstraction implements ContextItem {
    */
   @Override
   public abstract int hashCode();
+
+  /**
+   * A TypeReference representing the types of this abstraction
+   */
+  public abstract TypeReference getTypeReference();
 
   /**
    * This is here for convenience; it makes sense for Point and Cone Dispatch.

@@ -17,7 +17,7 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 
@@ -30,11 +30,11 @@ import com.ibm.wala.types.TypeReference;
  */
 public class SubtypesEntrypoint extends DefaultEntrypoint {
 
-  public SubtypesEntrypoint(MethodReference method, ClassHierarchy cha) {
+  public SubtypesEntrypoint(MethodReference method, IClassHierarchy cha) {
     super(method, cha);
   }
 
-  public SubtypesEntrypoint(IMethod method, ClassHierarchy cha) {
+  public SubtypesEntrypoint(IMethod method, IClassHierarchy cha) {
     super(method, cha);
   }
 

@@ -15,7 +15,7 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.graph.NumberedGraph;
 
@@ -73,6 +73,6 @@ public interface CallGraph extends NumberedGraph<CGNode> {
   /**
    * @return the governing class hierarchy for this call graph
    */
-  public ClassHierarchy getClassHierarchy();
+  public IClassHierarchy getClassHierarchy();
 
 }

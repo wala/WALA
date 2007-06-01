@@ -23,14 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 
 import com.ibm.wala.annotations.Internal;
-import com.ibm.wala.classLoader.ArrayClass;
-import com.ibm.wala.classLoader.ClassLoaderFactory;
-import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IClassLoader;
-import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.ShrikeClass;
+import com.ibm.wala.classLoader.*;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
@@ -58,14 +51,14 @@ import com.ibm.wala.util.warnings.WarningSet;
  * 
  * @author sfink
  */
-public class ClassHierarchy implements Iterable<IClass> {
+public class ClassHierarchy implements IClassHierarchy {
 
   private static final boolean DEBUG = false;
 
   /**
-   * Descriptor of root of class hierarchy (java.lang.Object for Java)
+   * Language of classes represented in this hierarchy
    */
-  private final TypeReference rootDescriptor;
+  private final Language language;
 
   /**
    * mapping from IClass to Node
@@ -149,7 +142,7 @@ public class ClassHierarchy implements Iterable<IClass> {
 
   protected ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings, IProgressMonitor monitor)
       throws ClassHierarchyException {
-    this(scope, factory, warnings, TypeReference.JavaLangObject, monitor);
+    this(scope, factory, warnings, Language.JAVA, monitor);
   }
 
   /**
@@ -159,30 +152,42 @@ public class ClassHierarchy implements Iterable<IClass> {
    * @param rootDescriptor
    * @throws ClassHierarchyException
    */
-  private ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings, TypeReference rootDescriptor,
+  private ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings, Language language,
       IProgressMonitor progressMonitor) throws ClassHierarchyException, IllegalArgumentException {
     if (factory == null) {
+      throw new IllegalArgumentException();
+    }
+    if (language == null) {
       throw new IllegalArgumentException();
     }
     this.scope = scope;
     this.factory = factory;
     this.warnings = warnings;
-    this.rootDescriptor = rootDescriptor;
+    this.language = language;
     try {
-      loaders = new IClassLoader[scope.getNumberOfLoaders()];
+      int numLoaders = 0;
+      for (ClassLoaderReference ref : scope.getLoaders()) {
+	if (ref.getLanguage().equals(language.getName())) {
+	  numLoaders++;
+	}
+      }
+
+      loaders = new IClassLoader[numLoaders];
       int idx = 0;
 
-      progressMonitor.beginTask("Build Class Hierarchy", scope.getNumberOfLoaders());
+      progressMonitor.beginTask("Build Class Hierarchy", numLoaders);
       for (ClassLoaderReference ref : scope.getLoaders()) {
         if (progressMonitor.isCanceled()) {
           throw new CancelCHAConstructionException();
         }
 
-        IClassLoader icl = factory.getLoader(ref, this, scope);
-        loaders[idx++] = icl;
-        addAllClasses(icl, progressMonitor);
+	if (ref.getLanguage().equals(language.getName())) {
+	  IClassLoader icl = factory.getLoader(ref, this, scope);
+	  loaders[idx++] = icl;
+	  addAllClasses(icl, progressMonitor);
 
-        progressMonitor.worked(1);
+	  progressMonitor.worked(1);
+	}
       }
     } catch (IOException e) {
       throw new ClassHierarchyException("factory.getLoader failed " + e);
@@ -191,7 +196,7 @@ public class ClassHierarchy implements Iterable<IClass> {
     }
     
     if (root == null) {
-      throw new ClassHierarchyException("failed to load root of class hierarchy");
+      throw new ClassHierarchyException("failed to load root " + language.getRootType() + " of class hierarchy");
     }
     
     // perform numbering for subclass tests.
@@ -250,7 +255,7 @@ public class ClassHierarchy implements Iterable<IClass> {
     }
     Node node = findOrCreateNode(klass);
 
-    if (klass.getReference().equals(rootDescriptor)) {
+    if (klass.getReference().equals(language.getRootType())) {
       // there is only one root
       Assertions._assert(root == null);
       root = node;
@@ -272,7 +277,7 @@ public class ClassHierarchy implements Iterable<IClass> {
           Trace.println("addChild " + node.getJavaClass() + " to " + supernode.getJavaClass());
         }
         supernode.addChild(node);
-        if (supernode.getJavaClass().getReference().equals(rootDescriptor)) {
+        if (supernode.getJavaClass().getReference().equals(language.getRootType())) {
           node = null;
         } else {
           node = supernode;
@@ -826,7 +831,7 @@ public class ClassHierarchy implements Iterable<IClass> {
 
   private final static Atom syntheticLoaderName = Atom.findOrCreateUnicodeAtom("Synthetic");
 
-  private final static ClassLoaderReference syntheticLoaderRef = new ClassLoaderReference(syntheticLoaderName);
+    private final static ClassLoaderReference syntheticLoaderRef = new ClassLoaderReference(syntheticLoaderName, Language.JAVA.getName());
 
   public boolean isSyntheticClass(IClass c) {
     if (c == null) {
@@ -1114,8 +1119,8 @@ public class ClassHierarchy implements Iterable<IClass> {
   }
 
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings,
-      TypeReference rootDescriptor) throws ClassHierarchyException {
-    return new ClassHierarchy(scope, factory, warnings, rootDescriptor, new NullProgressMonitor());
+      Language language) throws ClassHierarchyException {
+    return new ClassHierarchy(scope, factory, warnings, language, new NullProgressMonitor());
   }
 
   /**
@@ -1125,12 +1130,16 @@ public class ClassHierarchy implements Iterable<IClass> {
    */
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings,
-      TypeReference rootDescriptor, IProgressMonitor monitor) throws ClassHierarchyException {
-    return new ClassHierarchy(scope, factory, warnings, rootDescriptor, monitor);
+      Language language, IProgressMonitor monitor) throws ClassHierarchyException {
+    return new ClassHierarchy(scope, factory, warnings, language, monitor);
   }
 
   public IClass getRootClass() {
     return root.getJavaClass();
+  }
+
+  public boolean isRootClass(IClass c) {
+    return c.equals(root.getJavaClass());
   }
 
   public int getNumber(IClass c) {

@@ -11,17 +11,17 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 
 public class ReflectiveForObjectSubtypesEntrypoint extends ReflectiveSubtypesEntrypoint {
 
-  public ReflectiveForObjectSubtypesEntrypoint(MethodReference method, ClassHierarchy cha) {
+  public ReflectiveForObjectSubtypesEntrypoint(MethodReference method, IClassHierarchy cha) {
     super(method, cha);
   }
 
-  public ReflectiveForObjectSubtypesEntrypoint(IMethod method, ClassHierarchy cha) {
+  public ReflectiveForObjectSubtypesEntrypoint(IMethod method, IClassHierarchy cha) {
     super(method, cha);
   }
 

@@ -18,7 +18,7 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -43,7 +43,7 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
   /**
    * Governing class hierarchy
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * Delegate
@@ -55,7 +55,7 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
    */
   private final BypassSyntheticClassLoader bypassLoader;
 
-  public BypassClassTargetSelector(ClassTargetSelector parent, Set<TypeReference> allocatableTypes, ClassHierarchy cha, IClassLoader bypassLoader) {
+  public BypassClassTargetSelector(ClassTargetSelector parent, Set<TypeReference> allocatableTypes, IClassHierarchy cha, IClassLoader bypassLoader) {
     if (Assertions.verifyAssertions) {
       if (!(bypassLoader instanceof BypassSyntheticClassLoader)) {
         Assertions._assert(false, "unexpected bypass loader: " + bypassLoader.getClass());

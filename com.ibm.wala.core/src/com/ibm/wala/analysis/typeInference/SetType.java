@@ -17,7 +17,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
-
 /**
  *
  * Abstraction of a set of PointTypes.  These are immutable.
@@ -48,7 +47,18 @@ public class SetType extends TypeAbstraction {
     hashCode = h;
   }
 
+  public TypeReference getTypeReference() {
+    Iterator ti = types.iterator();
+    TypeAbstraction T = (TypeAbstraction)ti.next();
+    while (ti.hasNext()) {
+      T = T.meet((TypeAbstraction)ti.next());
+    }
+    return T.getTypeReference();
+  }
 
+  /* (non-Javadoc)
+   * @see com.ibm.wala.analysis.typeInference.TypeAbstraction#meet(com.ibm.wala.analysis.typeInference.TypeAbstraction)
+   */
   @Override
   public TypeAbstraction meet(TypeAbstraction rhs) {
     // TODO Auto-generated method stub

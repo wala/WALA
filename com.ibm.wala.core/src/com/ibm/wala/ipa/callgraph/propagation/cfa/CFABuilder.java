@@ -15,7 +15,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -32,12 +32,12 @@ public abstract class CFABuilder extends SSAPropagationCallGraphBuilder {
    * @param warnings
    * @throws NullPointerException  if options is null
    */
-  public CFABuilder(ClassHierarchy cha, WarningSet warnings, AnalysisOptions options) throws NullPointerException {
+  public CFABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options) throws NullPointerException {
     super(cha, warnings, options, new CFAPointerKeys());
   }
 
   public SSAContextInterpreter makeDefaultContextInterpreters(SSAContextInterpreter appContextInterpreter, AnalysisOptions options,
-      ClassHierarchy cha, ReflectionSpecification reflect, WarningSet warnings) {
+      IClassHierarchy cha, ReflectionSpecification reflect, WarningSet warnings) {
     SSAContextInterpreter c = new DefaultSSAInterpreter(options, cha, warnings);
     c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, cha, reflect, warnings), c);
     return new DelegatingSSAContextInterpreter(appContextInterpreter, c);

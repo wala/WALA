@@ -21,7 +21,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.IntFunction;
@@ -59,7 +59,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   /**
    * Governing class hierarchy
    */
-  protected final ClassHierarchy cha;
+  protected final IClassHierarchy cha;
 
   /**
    * Analysis options
@@ -71,18 +71,17 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
    */
   private final ExplicitEdgeManager edgeManager = makeEdgeManger();
 
-  public ExplicitCallGraph(ClassHierarchy cha, AnalysisOptions options) {
+  public ExplicitCallGraph(IClassHierarchy cha, AnalysisOptions options) {
     super();
     this.cha = cha;
     this.options = options;
-    init();
   }
 
   /**
    * subclasses may wish to override!
    */
   protected ExplicitNode makeNode(IMethod method, Context context) {
-    return new ExplicitNode(method, context);
+    return new ExplicitNode(this, method, context);
   }
 
   /**
@@ -130,7 +129,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   /**
    * @author sfink
    */
-  public class ExplicitNode extends NodeImpl {
+  public static class ExplicitNode<T extends ExplicitCallGraph> extends NodeImpl<T> {
 
     /**
      * A Mapping from call site program counter (int) -> Object, where Object is
@@ -145,8 +144,8 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     /**
      * @param method
      */
-    protected ExplicitNode(IMethod method, Context C) {
-      super(method, C);
+    protected ExplicitNode(T CG, IMethod method, Context C) {
+      super(CG, method, C);
     }
 
     @Override
@@ -162,7 +161,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
         IntSet s = (IntSet) result;
         HashSet<CGNode> h = HashSetFactory.make(s.size());
         for (IntIterator it = s.intIterator(); it.hasNext();) {
-          h.add(getNode(it.next()));
+          h.add(CG.getNode(it.next()));
         }
         return h;
       }
@@ -174,7 +173,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       if (t == null) {
         return null;
       } else if (t instanceof CGNode) {
-        return SparseIntSet.singleton(getNumber((CGNode) t));
+        return SparseIntSet.singleton(CG.getNumber((CGNode) t));
       } else {
         return (IntSet) t;
       }
@@ -184,7 +183,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
      * @see com.ibm.wala.ipa.callgraph.CGNode#getPossibleSites(com.ibm.wala.ipa.callgraph.CGNode)
      */
     public Iterator<CallSiteReference> getPossibleSites(final CGNode to) {
-      final int n = getNumber(to);
+      final int n = CG.getNumber(to);
       return new FilterIterator<CallSiteReference>(iterateSites(), new Filter() {
         public boolean accepts(Object o) {
           IntSet s = getPossibleTargetNumbers((CallSiteReference) o);
@@ -199,12 +198,12 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     }
 
     protected boolean addTarget(int pc, CGNode tNode) {
-      allTargets.add(getNumber(tNode));
+      allTargets.add(CG.getNumber(tNode));
       Object S = targets.get(pc);
       if (S == null) {
         S = tNode;
         targets.set(pc, S);
-        addEdge(this, tNode);
+        CG.addEdge(this, tNode);
         return true;
       } else {
         if (S instanceof CGNode) {
@@ -212,18 +211,18 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
             return false;
           } else {
             MutableSharedBitVectorIntSet s = new MutableSharedBitVectorIntSet();
-            s.add(getNumber((CGNode) S));
-            s.add(getNumber(tNode));
-            addEdge(this, tNode);
+            s.add(CG.getNumber((CGNode) S));
+            s.add(CG.getNumber(tNode));
+            CG.addEdge(this, tNode);
             targets.set(pc, s);
             return true;
           }
         } else {
           MutableIntSet s = (MutableIntSet) S;
-          int n = getNumber(tNode);
+          int n = CG.getNumber(tNode);
           if (!s.contains(n)) {
             s.add(n);
-            addEdge(this, tNode);
+            CG.addEdge(this, tNode);
             return true;
           } else {
             return false;
@@ -251,14 +250,14 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
      * @see com.ibm.wala.ipa.callgraph.CGNode#iterateSites()
      */
     public Iterator<CallSiteReference> iterateSites() {
-      return getInterpreter(this).iterateCallSites(this);
+      return CG.getInterpreter(this).iterateCallSites(this);
     }
 
     /*
      * @see com.ibm.wala.ipa.callgraph.impl.BasicCallGraph.NodeImpl#removeTarget(com.ibm.wala.ipa.callgraph.CGNode)
      */
     public void removeTarget(CGNode target) {
-      allTargets.remove(getNumber(target));
+      allTargets.remove(CG.getNumber(target));
       for (IntIterator it = targets.safeIterateIndices(); it.hasNext();) {
         int pc = it.next();
         Object value = targets.get(pc);
@@ -268,7 +267,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
           }
         } else {
           MutableIntSet s = (MutableIntSet) value;
-          int n = getNumber(target);
+          int n = CG.getNumber(target);
           if (s.size() > 2) {
             s.remove(n);
           } else {
@@ -278,7 +277,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
             if (s.contains(n)) {
               s.remove(n);
               int i = s.intIterator().next();
-              targets.set(pc, getNode(i));
+              targets.set(pc, CG.getNode(i));
             }
           }
         }
@@ -307,8 +306,8 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       allTargets.clear();
     }
 
-    public CallGraph getCallGraph() {
-      return ExplicitCallGraph.this;
+    public T getCallGraph() {
+      return CG;
     }
 
     public IR getIR(WarningSet warnings) {
@@ -319,7 +318,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   /*
    * @see com.ibm.wala.ipa.callgraph.CallGraph#getClassHierarchy()
    */
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return cha;
   }
 

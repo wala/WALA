@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -33,7 +33,7 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class ArrayClass implements IClass, Constants {
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
   
   /**
    * Package-visible constructor; only for use by ArrayClassLoader class.
@@ -41,7 +41,7 @@ public class ArrayClass implements IClass, Constants {
    * 
    * [WHY? -- array classes are loaded by the element classloader??]
    */
-  ArrayClass(TypeReference type, IClassLoader loader, ClassHierarchy cha) {
+  ArrayClass(TypeReference type, IClassLoader loader, IClassHierarchy cha) {
     this.type = type;
     this.loader = loader;
     this.cha = cha;
@@ -310,7 +310,7 @@ public class ArrayClass implements IClass, Constants {
 	return null;
   }
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return cha;
   }
 

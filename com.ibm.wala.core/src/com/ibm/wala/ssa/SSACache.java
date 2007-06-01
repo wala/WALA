@@ -12,7 +12,7 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -64,7 +64,7 @@ public class SSACache {
    *         abstract or native.
    * @throws IllegalArgumentException  if m is null
    */
-  public synchronized IR findOrCreateIR(final IMethod m, final Context C, final ClassHierarchy cha, final SSAOptions options, final WarningSet warnings) {
+  public synchronized IR findOrCreateIR(final IMethod m, final Context C, final IClassHierarchy cha, final SSAOptions options, final WarningSet warnings) {
 
     if (m == null) {
       throw new IllegalArgumentException("m is null");
@@ -95,7 +95,7 @@ public class SSACache {
    * @return DefUse information for m, built according to the specified options.  null if unavailable
    * @throws IllegalArgumentException  if m is null
    */
-  public synchronized DefUse findOrCreateDU(IMethod m, Context C, ClassHierarchy cha, SSAOptions options, WarningSet warnings) {
+  public synchronized DefUse findOrCreateDU(IMethod m, Context C, IClassHierarchy cha, SSAOptions options, WarningSet warnings) {
    
     if (m == null) {
       throw new IllegalArgumentException("m is null");

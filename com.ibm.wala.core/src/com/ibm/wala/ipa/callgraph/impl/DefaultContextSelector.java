@@ -19,7 +19,7 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.CloneContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -36,7 +36,7 @@ public class DefaultContextSelector implements ContextSelector {
    * @param cha
    * @param methodTargetSelector
    */
-  public DefaultContextSelector(ClassHierarchy cha, MethodTargetSelector methodTargetSelector) {
+  public DefaultContextSelector(IClassHierarchy cha, MethodTargetSelector methodTargetSelector) {
     FactoryContextSelector R = new FactoryContextSelector(cha, methodTargetSelector);
     ContextInsensitiveSelector S = new ContextInsensitiveSelector();
     ContextSelector s = new DelegatingContextSelector(R, S);

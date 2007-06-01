@@ -88,10 +88,14 @@ public class AnalysisScope {
 
   public AnalysisScope() {
     super();
-    ClassLoaderReference primordial = new ClassLoaderReference(PRIMORDIAL);
-    ClassLoaderReference extension = new ClassLoaderReference(EXTENSION);
-    ClassLoaderReference application = new ClassLoaderReference(APPLICATION);
-    ClassLoaderReference synthetic = new ClassLoaderReference(SYNTHETIC);
+    ClassLoaderReference primordial = 
+      new ClassLoaderReference(PRIMORDIAL, ClassLoaderReference.Java);
+    ClassLoaderReference extension =
+      new ClassLoaderReference(EXTENSION, ClassLoaderReference.Java);
+    ClassLoaderReference application =
+      new ClassLoaderReference(APPLICATION, ClassLoaderReference.Java);
+    ClassLoaderReference synthetic =
+      new ClassLoaderReference(SYNTHETIC, ClassLoaderReference.Java);
     extension.setParent(primordial);
     application.setParent(extension);
     synthetic.setParent(application);

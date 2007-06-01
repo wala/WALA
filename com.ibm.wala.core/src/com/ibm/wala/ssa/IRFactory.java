@@ -13,7 +13,7 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -30,8 +30,8 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public interface IRFactory {
 
-  IR makeIR(IMethod method, Context C, ClassHierarchy cha, SSAOptions options, WarningSet warnings);
+  IR makeIR(IMethod method, Context C, IClassHierarchy cha, SSAOptions options, WarningSet warnings);
 
-  ControlFlowGraph makeCFG(IMethod method, Context C, ClassHierarchy cha, WarningSet warnings);
+  ControlFlowGraph makeCFG(IMethod method, Context C, IClassHierarchy cha, WarningSet warnings);
 
 }

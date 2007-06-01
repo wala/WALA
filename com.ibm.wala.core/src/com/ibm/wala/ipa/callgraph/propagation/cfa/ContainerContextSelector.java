@@ -20,7 +20,7 @@ import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteKey;
 import com.ibm.wala.ipa.callgraph.propagation.ContainerUtil;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.ReceiverInstanceContext;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MemberReference;
@@ -65,7 +65,7 @@ public class ContainerContextSelector implements ContextSelector {
   /**
    * The governing class hierarchy.
    */
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * An object that determines object naming policy
@@ -76,7 +76,7 @@ public class ContainerContextSelector implements ContextSelector {
    * @param cha
    * @param delegate
    */
-  public ContainerContextSelector(ClassHierarchy cha, ZeroXInstanceKeys delegate) {
+  public ContainerContextSelector(IClassHierarchy cha, ZeroXInstanceKeys delegate) {
     this.cha = cha;
     this.delegate = delegate;
     if (Assertions.verifyAssertions) {
@@ -265,7 +265,7 @@ public class ContainerContextSelector implements ContextSelector {
     return false;
   }
 
-  protected ClassHierarchy getClassHierarchy() {
+  protected IClassHierarchy getClassHierarchy() {
     return cha;
   }
 

@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.Atom;
@@ -37,7 +37,7 @@ public interface IClassLoader {
    * @return the IClass defined by this class loader that 
    * corresponds to the given class name, or null if not found.
    */
-  public abstract IClass lookupClass(TypeName className, ClassHierarchy cha);
+  public abstract IClass lookupClass(TypeName className, IClassHierarchy cha);
 
   /**
    * Return the ClassLoaderReference for this class loader.
@@ -59,6 +59,12 @@ public interface IClassLoader {
    * @return the unique name that identifies this class loader.
    */
   Atom getName();
+
+  /**
+   * @return the unique name that identifies the programming language
+   *  from which this class loader loads code.
+   */
+  Language getLanguage();
 
   public abstract int getNumberOfMethods();
 

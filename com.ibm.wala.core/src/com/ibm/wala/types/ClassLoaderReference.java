@@ -22,24 +22,34 @@ import com.ibm.wala.util.Atom;
 public class ClassLoaderReference {
 
   /**
+   * Canonical name for the Java language
+   */
+  public final static Atom Java = Atom.findOrCreateUnicodeAtom("Java");
+
+  /**
    * Canonical reference to primordial class loader
    */
-  public final static ClassLoaderReference Primordial = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Primordial"));
+  public final static ClassLoaderReference Primordial = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Primordial"), Java);
 
   /**
    * Canonical reference to extension class loader
    */
-  public final static ClassLoaderReference Extension = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Extension"));
+  public final static ClassLoaderReference Extension = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Extension"), Java);
 
   /**
    * Canonical reference to application class loader
    */
-  public final static ClassLoaderReference Application = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Application"));
+  public final static ClassLoaderReference Application = new ClassLoaderReference(Atom.findOrCreateUnicodeAtom("Application"), Java);
 
   /**
    * A String which identifies this loader
    */
   private final Atom name;
+
+  /**
+   * A String which identifies the language for this loader
+   */
+  private final Atom language;
 
   /**
    * This class loader's parent
@@ -52,11 +62,12 @@ public class ClassLoaderReference {
    * @param name
    *          String (actually Atom) name identifying the loader
    */
-  public ClassLoaderReference(Atom name) {
+  public ClassLoaderReference(Atom name, Atom language) {
     if (name == null) {
       throw new IllegalArgumentException("name is null");
     }
     this.name = name;
+    this.language = language;
   }
 
   /**
@@ -64,6 +75,13 @@ public class ClassLoaderReference {
    */
   public Atom getName() {
     return name;
+  }
+
+  /**
+   * @return the name of this class loader
+   */
+  public Atom getLanguage() {
+    return language;
   }
 
   /**

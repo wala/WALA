@@ -19,7 +19,7 @@ import com.ibm.wala.cfg.ShrikeCFG.BasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
 import com.ibm.wala.shrikeBT.ArrayLoadInstruction;
 import com.ibm.wala.shrikeBT.ArrayStoreInstruction;
@@ -75,7 +75,7 @@ public class SSABuilder extends AbstractIntStackMachine {
    */
   private final SSA2LocalMap localMap;
 
-  public SSABuilder(ShrikeCTMethod method, ClassHierarchy cha, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
+  public SSABuilder(ShrikeCTMethod method, IClassHierarchy cha, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
       SymbolTable symbolTable, boolean buildLocalMap, boolean addPiNodes, WarningSet warnings) {
     super(scfg);
     localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes(), maxLocals) : null;

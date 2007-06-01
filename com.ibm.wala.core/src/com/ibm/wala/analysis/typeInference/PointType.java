@@ -48,7 +48,7 @@ public class PointType extends TypeAbstraction {
           return this;
         } else if (type.isArrayClass() || other.type.isArrayClass()) {
           // give up on arrays. We don't care anyway.
-          return new ConeType(type.getClassHierarchy().getRootClass());
+	    return new ConeType(type.getClassHierarchy().getRootClass());
         } else {
           return new ConeType(type.getClassHierarchy().getLeastCommonSuperclass(this.type, other.type));
         }
@@ -57,7 +57,7 @@ public class PointType extends TypeAbstraction {
         TypeReference T = other.getType().getReference();
         if (type.isArrayClass() || T.isArrayType()) {
           // give up on arrays. We don't care anyway.
-          return new ConeType(type.getClassHierarchy().getRootClass());
+	    return new ConeType(type.getClassHierarchy().getRootClass());
         }
         IClass typeKlass = type;
         if (type.getClassHierarchy().isSubclassOf(typeKlass, other.getType())) {
@@ -93,6 +93,10 @@ public class PointType extends TypeAbstraction {
   @Override
   public IClass getType() {
     return type;
+  }
+
+  public TypeReference getTypeReference() {
+    return type.getReference();
   }
 
   /**
