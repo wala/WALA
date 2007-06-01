@@ -57,9 +57,9 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
 
   private final static Atom extensionLoaderName = Atom.findOrCreateUnicodeAtom("Extension");
 
-  private final static ClassLoaderReference syntheticLoaderRef = new ClassLoaderReference(syntheticLoaderName);
+  private final static ClassLoaderReference syntheticLoaderRef = new ClassLoaderReference(syntheticLoaderName, ClassLoaderReference.Java);
 
-  private final static ClassLoaderReference extensionLoaderRef = new ClassLoaderReference(extensionLoaderName);
+  private final static ClassLoaderReference extensionLoaderRef = new ClassLoaderReference(extensionLoaderName, ClassLoaderReference.Java);
 
   public static final TypeName containerModelName = TypeName.string2TypeName("L$ContainerModel");
 
