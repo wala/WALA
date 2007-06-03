@@ -34,7 +34,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
 
     int vn;
 
-    Name(int vn, int instructionIndex, String name) {
+    public Name(int vn, int instructionIndex, String name) {
       this.vn = vn;
       this.name = name;
       this.instructionIndex = instructionIndex;
