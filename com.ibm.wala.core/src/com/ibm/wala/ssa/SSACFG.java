@@ -781,8 +781,7 @@ public class SSACFG implements ControlFlowGraph{
   /*
    * @see com.ibm.wala.util.graph.Graph#getPredNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<IBasicBlock> getPredNodes(IBasicBlock N) {
-    BasicBlock b = (BasicBlock) N;
+  public Iterator<IBasicBlock> getPredNodes(IBasicBlock b) {
     IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getPredNodes(n);
     return new Iterator<IBasicBlock>() {
@@ -805,8 +804,7 @@ public class SSACFG implements ControlFlowGraph{
   /*
    * @see com.ibm.wala.util.graph.Graph#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
-  public int getPredNodeCount(IBasicBlock N) {
-    BasicBlock b = (BasicBlock) N;
+  public int getPredNodeCount(IBasicBlock b) {
     IBasicBlock n = cfg.getNode(b.getNumber());
     return cfg.getPredNodeCount(n);
   }
@@ -814,8 +812,7 @@ public class SSACFG implements ControlFlowGraph{
   /*
    * @see com.ibm.wala.util.graph.Graph#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<IBasicBlock> getSuccNodes(IBasicBlock N) {
-    BasicBlock b = (BasicBlock) N;
+  public Iterator<IBasicBlock> getSuccNodes(IBasicBlock b) {
     IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getSuccNodes(n);
     return new Iterator<IBasicBlock>() {
@@ -838,8 +835,7 @@ public class SSACFG implements ControlFlowGraph{
   /*
    * @see com.ibm.wala.util.graph.Graph#getSuccNodeCount(com.ibm.wala.util.graph.Node)
    */
-  public int getSuccNodeCount(IBasicBlock N) {
-    BasicBlock b = (BasicBlock) N;
+  public int getSuccNodeCount(IBasicBlock b) {
     IBasicBlock n = cfg.getNode(b.getNumber());
     return cfg.getSuccNodeCount(n);
   }
