@@ -16,7 +16,7 @@ import com.ibm.wala.ipa.callgraph.propagation.*;
 
 import java.io.*;
 
-public class TestSimpleCallGraphShape extends TestCallGraphShape {
+public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 
   public static void main(String[] args) {
     justThisTest(TestSimpleCallGraphShape.class);

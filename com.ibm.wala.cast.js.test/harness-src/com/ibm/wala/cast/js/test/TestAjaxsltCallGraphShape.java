@@ -16,7 +16,7 @@ import com.ibm.wala.ipa.callgraph.*;
 import java.io.*;
 import java.net.*;
 
-public class TestAjaxsltCallGraphShape extends TestCallGraphShape {
+public class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
   public static void main(String[] args) {
     justThisTest(TestAjaxsltCallGraphShape.class);
