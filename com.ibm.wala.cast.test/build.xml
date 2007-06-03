@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  =======================================================================
+    WALA CAst core tests build file
+  =======================================================================
+-->
+<project name="com.ibm.wala.cast.test" default="jar" basedir=".">
+    <!-- Software version details -->
+    <property name="name" value="walacasttest" />
+    <property name="module_name" value="com.ibm.wala.cast.test" />
+    <property name="Name" value="WALA CAst core tests" />
+    <property name="version" value="1-alpha" />
+
+    <!-- Compilation switches -->
+    <property name="debug" value="true" />
+    <property name="deprecation" value="false" />
+    <property name="optimize" value="true" />
+    <property name="javacFailOnError" value="true" />
+    <property name="javacDebugInfo" value="on" />
+    <property name="javacVerbose" value="false" />
+
+
+    <!-- Set global properties for this build -->
+    <property name="src" value="harness-src" />
+    <property name="build" value="build" />
+    <property name="build.result" value="${basedir}" />
+    <property name="build.tests" value="${basedir}" />
+    <property name="build.javadocs" value="${build}/javadocs" />
+    <property name="publish.javadocs" value="javadocs/com.ibm.wala.cast.test" />
+    <property name="dist" value="dist" />
+    <property name="etc" value="etc" />
+    <property name="docs" value="docs" />
+    <property name="lib" value="lib" />
+    <property name="mainlib" value="../mainlib" />
+    <property name="sharedlib" value="../sharedlib" />
+
+    <property name="templates" value="../com.ibm.safe/templates"/>
+    <property name="specifications" value="../com.ibm.safe/specifications"/>
+
+    <property name="cvsroot" value="/gsa/watgsa/home/d/o/dolby/cvs/JTD"/>
+
+    <property name="excluded-tests-file" value="excluded-tests.txt" />
+
+    <import file="${sharedlib}/scripts/common-tests-targets.xml"/>        
+
+</project>
