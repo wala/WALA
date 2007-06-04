@@ -63,7 +63,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     return (T) array[n];
   }
 
-  public int getMappedIndex(Object o) {
+  public int getMappedIndex(T o) {
     Integer I = map.get(o);
     if (I == null) {
       return -1;
@@ -73,7 +73,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
 
   }
 
-  public boolean hasMappedIndex(Object o) {
+  public boolean hasMappedIndex(T o) {
     return map.get(o) != null;
   }
 
@@ -128,7 +128,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
   /**
    * @param n
    */
-  public void deleteMappedObject(Object n) {
+  public void deleteMappedObject(T n) {
     int index = getMappedIndex(n);
     if (index != -1) {
       array[index] = null;

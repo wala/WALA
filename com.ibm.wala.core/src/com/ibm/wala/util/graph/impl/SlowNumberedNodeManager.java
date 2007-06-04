@@ -31,8 +31,8 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
   private MutableMapping<T> map = new MutableMapping<T>();
 
 
-  public int getNumber(Object T) {
-    return map.getMappedIndex(T);
+  public int getNumber(T obj) {
+    return map.getMappedIndex(obj);
   }
 
 
