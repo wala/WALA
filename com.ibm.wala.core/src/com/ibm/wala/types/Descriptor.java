@@ -136,8 +136,8 @@ public final class Descriptor {
    * value that defines a descriptor: used to canonicalize instances
    */
   private static class Key {
-    private TypeName returnType;
-    private TypeName[] parameters;
+    final private TypeName returnType;
+    final private TypeName[] parameters;
     final private int hashCode; // cached for efficiency
     Key(TypeName returnType, TypeName[] parameters) {
       this.returnType = returnType;

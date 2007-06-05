@@ -35,7 +35,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
   /**
    * A mapping from object to Integer.
    */
-  HashMap<T, Integer> map = HashMapFactory.make();
+  final HashMap<T, Integer> map = HashMapFactory.make();
 
   /**
    * @throws IllegalArgumentException  if array is null

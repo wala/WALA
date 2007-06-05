@@ -51,13 +51,13 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
 
   static final boolean DEBUG = false;
 
-  private AnalysisScope scope;
+  final private AnalysisScope scope;
 
   /**
    * Method summaries collected for methods. Mapping MethodReference ->
    * ReflectionSummary
    */
-  private HashMap<MethodReference, ReflectionSummary> summaries = HashMapFactory.make();
+  final private HashMap<MethodReference, ReflectionSummary> summaries = HashMapFactory.make();
 
   //
   // Define XML element names

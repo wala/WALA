@@ -25,7 +25,7 @@ public abstract class NullaryStatement extends AbstractStatement {
   /**
    * The operands
    */
-  protected IVariable lhs;
+  final protected IVariable lhs;
 
   /** 
    * Evaluate this equation, setting a new value for the

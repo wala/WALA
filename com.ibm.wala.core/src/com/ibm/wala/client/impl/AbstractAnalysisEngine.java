@@ -91,7 +91,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * An object to track analysis warnings
    */
-  private WarningSet warnings = new WarningSet();
+  final private WarningSet warnings = new WarningSet();
 
   /**
    * The standard J2SE libraries to analyze

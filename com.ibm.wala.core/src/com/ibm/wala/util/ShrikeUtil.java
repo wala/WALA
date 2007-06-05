@@ -29,7 +29,7 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class ShrikeUtil implements BytecodeConstants {
 
-  private static HashMap<String, TypeReference> primitiveMap;
+  final private static HashMap<String, TypeReference> primitiveMap;
 
   static {
     primitiveMap = HashMapFactory.make(10);

@@ -44,7 +44,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public abstract class AbstractRootMethod extends SyntheticMethod {
 
-  protected ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
+  final protected ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
 
   private int valueNumberForConstantOne = -1;
 

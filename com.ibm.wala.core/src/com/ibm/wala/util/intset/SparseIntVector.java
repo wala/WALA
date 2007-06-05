@@ -30,7 +30,7 @@ public class SparseIntVector implements IntVector {
   /**
    * if indices[i] = x, then data[i] == get(x)
    */
-  private MutableSparseIntSet indices = new MutableSparseIntSet();
+  final private MutableSparseIntSet indices = new MutableSparseIntSet();
   private int[] data = new int[INITIAL_SIZE];
 
   private final int defaultValue;

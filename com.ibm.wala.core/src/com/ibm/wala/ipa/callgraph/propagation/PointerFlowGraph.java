@@ -63,7 +63,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
 
   protected final CallGraph cg;
 
-  protected SlowSparseNumberedGraph<PointerKey> delegate = new SlowSparseNumberedGraph<PointerKey>();
+  final protected SlowSparseNumberedGraph<PointerKey> delegate = new SlowSparseNumberedGraph<PointerKey>();
 
   /**
    * nodes for which we have processed the statements

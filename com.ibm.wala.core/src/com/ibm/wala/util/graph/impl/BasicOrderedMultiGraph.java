@@ -31,7 +31,7 @@ import com.ibm.wala.util.intset.SimpleVector;
  */
 public class BasicOrderedMultiGraph<T> implements OrderedMultiGraph<T> {
 
-  Map<T, SimpleVector<T>> successorEdges = HashMapFactory.make();
+  final Map<T, SimpleVector<T>> successorEdges = HashMapFactory.make();
 
   private final Graph<T> delegate;
 

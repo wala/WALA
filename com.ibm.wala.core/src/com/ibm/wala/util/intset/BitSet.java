@@ -25,7 +25,7 @@ public final class BitSet<T> {
   /**
    * The backing bit vector that determines set membership.
    */
-  private BitVector vector;
+  final private BitVector vector;
 
   /**
    * The bijection between integer to object. 

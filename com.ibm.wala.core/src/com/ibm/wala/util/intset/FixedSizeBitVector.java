@@ -18,7 +18,7 @@ public final class FixedSizeBitVector
   private final static int MASK = 0xffffffff;
   private final static int LOW_MASK = 0x1f;
   private int bits[];
-  private int nbits;
+  final private int nbits;
 
   /**
    * Convert bitIndex to a subscript into the bits[] array.

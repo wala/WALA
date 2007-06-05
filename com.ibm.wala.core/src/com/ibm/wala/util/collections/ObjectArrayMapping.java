@@ -28,12 +28,12 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  */
 public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
 
-  private T[] array;
+  final private T[] array;
 
   /**
    * A mapping from object to Integer
    */
-  private HashMap<T, Integer> map = HashMapFactory.make();
+  final private HashMap<T, Integer> map = HashMapFactory.make();
 
   public ObjectArrayMapping(final T[] array) {
     this.array = array;

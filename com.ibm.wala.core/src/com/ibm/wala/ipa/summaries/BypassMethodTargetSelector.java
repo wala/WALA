@@ -79,7 +79,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
    * syntheticMethod.put(m,null) .. in which case we use containsKey() to check
    * for having already considered m.
    */
-  private HashMap<MethodReference, SummarizedMethod> syntheticMethods = HashMapFactory.make();
+  final private HashMap<MethodReference, SummarizedMethod> syntheticMethods = HashMapFactory.make();
 
   /**
    * @param parent

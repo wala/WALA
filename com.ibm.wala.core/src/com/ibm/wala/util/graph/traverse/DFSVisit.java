@@ -74,7 +74,7 @@ public class DFSVisit {
    * @version
    */
   public static class NumberedSimpleMap<K,V> implements SimpleMap<K,V> {
-    Object[] table;
+    final Object[] table;
 
     public NumberedSimpleMap(int capacity) {
       table = new Object[capacity];

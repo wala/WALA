@@ -91,17 +91,17 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   /**
    * The control flow graph to analyze
    */
-  private ShrikeCFG cfg;
+  final private ShrikeCFG cfg;
 
   /**
    * The max height of the stack.
    */
-  private int maxStackHeight;
+  final private int maxStackHeight;
 
   /**
    * the max number of locals in play
    */
-  protected int maxLocals;
+  final protected int maxLocals;
 
   /**
    * Should uninitialized variables be considered TOP (optimistic) or BOTTOM

@@ -93,12 +93,12 @@ public class DeadAssignmentElimination {
     /**
      * Map: value number -> BooleanVariable isLive
      */
-    private Map<Integer, BooleanVariable> vars = HashMapFactory.make();
+    final private Map<Integer, BooleanVariable> vars = HashMapFactory.make();
 
     /**
      * set of value numbers that are trivially dead
      */
-    private HashSet<Integer> trivialDead = HashSetFactory.make();
+    final private HashSet<Integer> trivialDead = HashSetFactory.make();
 
     /**
      * @param ir the IR to analyze

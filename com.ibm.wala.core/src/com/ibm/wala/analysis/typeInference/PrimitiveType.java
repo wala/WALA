@@ -19,7 +19,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 
 public class PrimitiveType extends TypeAbstraction {
 
-  private static Map<TypeReference, PrimitiveType> refernceToType = new HashMap<TypeReference, PrimitiveType>();
+  final private static Map<TypeReference, PrimitiveType> refernceToType = new HashMap<TypeReference, PrimitiveType>();
 
   public static final PrimitiveType BOOLEAN = makePrimitive(TypeReference.Boolean, 1);
 
@@ -37,7 +37,7 @@ public class PrimitiveType extends TypeAbstraction {
 
   public static final PrimitiveType DOUBLE = makePrimitive(TypeReference.Double, 64);
 
-  private static HashMap<String, String> primitiveNameMap;
+  final private static HashMap<String, String> primitiveNameMap;
   static {
     primitiveNameMap = HashMapFactory.make(9);
     primitiveNameMap.put("I", "int");

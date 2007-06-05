@@ -76,7 +76,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * Should we introduce a distinguished "exceptional exit" from each individual
    * CFG?
    */
-  private boolean partitionExits;
+  final private boolean partitionExits;
 
   /**
    * Governing provider of CFGs

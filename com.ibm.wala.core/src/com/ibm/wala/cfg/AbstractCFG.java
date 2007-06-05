@@ -50,18 +50,18 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /**
    * An object to track nodes in this cfg
    */
-  private DelegatingNumberedNodeManager<IBasicBlock> nodeManager = new DelegatingNumberedNodeManager<IBasicBlock>();
+  final private DelegatingNumberedNodeManager<IBasicBlock> nodeManager = new DelegatingNumberedNodeManager<IBasicBlock>();
 
   /**
    * An object to track most normal edges in this cfg
    */
-  private SparseNumberedEdgeManager<IBasicBlock> normalEdgeManager = new SparseNumberedEdgeManager<IBasicBlock>(nodeManager, 2,
+  final private SparseNumberedEdgeManager<IBasicBlock> normalEdgeManager = new SparseNumberedEdgeManager<IBasicBlock>(nodeManager, 2,
       BasicNaturalRelation.SIMPLE);
 
   /**
    * An object to track not-to-exit exceptional edges in this cfg
    */
-  private SparseNumberedEdgeManager<IBasicBlock> exceptionalEdgeManager = new SparseNumberedEdgeManager<IBasicBlock>(nodeManager,
+  final private SparseNumberedEdgeManager<IBasicBlock> exceptionalEdgeManager = new SparseNumberedEdgeManager<IBasicBlock>(nodeManager,
       0, BasicNaturalRelation.SIMPLE);
 
   /**
@@ -82,7 +82,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /**
    * Which basic blocks are catch blocks?
    */
-  private BitVector catchBlocks;
+  final private BitVector catchBlocks;
 
   /**
    * Cache here for efficiency

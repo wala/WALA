@@ -99,12 +99,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * The object that represents the java.lang.Throwable class
    */
-  private IClass JAVA_LANG_OBJECT;
+  final private IClass JAVA_LANG_OBJECT;
 
   /**
    * The object that represents the java.lang.Throwable class
    */
-  private IClass JAVA_LANG_THROWABLE;
+  final private IClass JAVA_LANG_THROWABLE;
 
   /**
    * A singleton set holding the java.lang.Throwable TypeReference
@@ -114,7 +114,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * Governing class hierarchy
    */
-  protected IClassHierarchy cha;
+  final protected IClassHierarchy cha;
 
   /**
    * An object which records analysis warnings
@@ -124,12 +124,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * Special rules for bypassing Java calls
    */
-  protected AnalysisOptions options;
+  final protected AnalysisOptions options;
 
   /**
    * Set of nodes that have already been traversed for constraints
    */
-  private Set<CGNode> alreadyVisited = HashSetFactory.make();
+  final private Set<CGNode> alreadyVisited = HashSetFactory.make();
 
   /**
    * At any given time, the set of nodes that have been discovered but not yet
@@ -140,7 +140,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * Set of calls (CallSiteReferences) that are created by entrypoints
    */
-  protected Set<CallSiteReference> entrypointCallSites = HashSetFactory.make();
+  final protected Set<CallSiteReference> entrypointCallSites = HashSetFactory.make();
 
   /**
    * The system of constraints used to build this graph
@@ -192,7 +192,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * Map: MethodReference -> Integer, caching the number of implementors in the
    * class hierarchy for a method reference
    */
-  private Map<MethodReference, Integer> cachedBoundMap = HashMapFactory.make();
+  final private Map<MethodReference, Integer> cachedBoundMap = HashMapFactory.make();
 
   /**
    * Algorithmic choice for bounding number of evaluations of dispatch operators
@@ -203,7 +203,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * Algorithmic choice: should the GetfieldOperator and PutfieldOperator cache
    * its previous history to reduce work?
    */
-  private boolean rememberGetPutHistory = true;
+  final private boolean rememberGetPutHistory = true;
 
   /**
    * @param cha

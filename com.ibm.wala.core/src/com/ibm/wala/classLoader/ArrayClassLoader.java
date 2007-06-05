@@ -31,7 +31,7 @@ public class ArrayClassLoader {
   /**
    * map: TypeReference -> ArrayClass
    */
-  private HashMap<TypeReference, ArrayClass> arrayClasses = HashMapFactory.make();
+  final private HashMap<TypeReference, ArrayClass> arrayClasses = HashMapFactory.make();
 
 
   /**

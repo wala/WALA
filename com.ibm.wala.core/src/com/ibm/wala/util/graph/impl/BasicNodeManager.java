@@ -25,7 +25,7 @@ import com.ibm.wala.util.graph.NodeManager;
  */
 public class BasicNodeManager<T> implements NodeManager<T> {
 
-  private HashSet<T> nodes = HashSetFactory.make();
+  final private HashSet<T> nodes = HashSetFactory.make();
 
   public Iterator<T> iterator() {
     return nodes.iterator();

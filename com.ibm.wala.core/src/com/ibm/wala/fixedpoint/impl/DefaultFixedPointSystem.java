@@ -49,14 +49,14 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
    * equals() ... the NumberedGraph does not support this. TODO: use a custom
    * NumberedNodeManager to save space
    */
-  private Set<GeneralStatement> equations = HashSetFactory.make();
+  final private Set<GeneralStatement> equations = HashSetFactory.make();
 
   /**
    * We maintain a hash set of variables in order to check for equality with
    * equals() ... the NumberedGraph does not support this. TODO: use a custom
    * NumberedNodeManager to save space
    */
-  private Set<IVariable> variables = HashSetFactory.make();
+  final private Set<IVariable> variables = HashSetFactory.make();
 
   /**
    * @param expectedOut number of expected out edges in the "usual" case

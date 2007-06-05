@@ -213,9 +213,9 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
   }
 
   private static class Path {
-    MutableIntSet contents = new BimodalMutableIntSet();
+    final MutableIntSet contents = new BimodalMutableIntSet();
 
-    ArrayList<Integer> sequence = new ArrayList<Integer>();
+    final ArrayList<Integer> sequence = new ArrayList<Integer>();
 
     public boolean contains(int number) {
       return contents.contains(number);

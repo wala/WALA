@@ -76,7 +76,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * A mapping from Key to NodeImpls in the graph. Note that each node is
    * created on demand. This Map does not include the root node.
    */
-  private Map<Key,CGNode> nodes = HashMapFactory.make();
+  final private Map<Key,CGNode> nodes = HashMapFactory.make();
 
   /**
    * A mapping from MethodReference to Set of nodes that represent this
@@ -88,7 +88,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
    * TODO: this is a bit redundant with the nodes Map. Restructure these data
    * structures for space efficiency.
    */
-  private Map<MethodReference,Set<CGNode>> mr2Nodes = HashMapFactory.make();
+  final private Map<MethodReference,Set<CGNode>> mr2Nodes = HashMapFactory.make();
 
   public BasicCallGraph() {
     super();

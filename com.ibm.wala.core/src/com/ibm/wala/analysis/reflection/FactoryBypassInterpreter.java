@@ -251,18 +251,18 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
      * List of synthetic allocation statements we model for this specialized
      * instance
      */
-    private ArrayList<SSAInstruction> allocations = new ArrayList<SSAInstruction>();
+    final private ArrayList<SSAInstruction> allocations = new ArrayList<SSAInstruction>();
 
     /**
      * List of synthetic invoke instructions we model for this specialized
      * instance.
      */
-    private ArrayList<SSAInstruction> calls = new ArrayList<SSAInstruction>();
+    final private ArrayList<SSAInstruction> calls = new ArrayList<SSAInstruction>();
 
     /**
      * List of all instructions
      */
-    private ArrayList<SSAInstruction> allInstructions = new ArrayList<SSAInstruction>();
+    private final ArrayList<SSAInstruction> allInstructions = new ArrayList<SSAInstruction>();
 
     /**
      * The method being modelled
@@ -796,7 +796,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    */
   private static class IgnoreSerializableWarning extends Warning {
 
-    private static IgnoreSerializableWarning instance = new IgnoreSerializableWarning();
+    final private static IgnoreSerializableWarning instance = new IgnoreSerializableWarning();
 
     @Override
     public String getMsg() {

@@ -28,7 +28,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
   /**
    * A bijection between integer <-> node
    */
-  private MutableMapping<T> map = new MutableMapping<T>();
+  final private MutableMapping<T> map = new MutableMapping<T>();
 
 
   public int getNumber(T obj) {

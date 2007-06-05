@@ -1605,7 +1605,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     /**
      * The set of pointers that have already been processed.
      */
-    private MutableIntSet previousReceivers = IntSetUtil.getDefaultIntSetFactory().make();
+    final private MutableIntSet previousReceivers = IntSetUtil.getDefaultIntSetFactory().make();
 
     /*
      * @see com.ibm.wala.dataflow.fixpoint.UnaryOperator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable,

@@ -123,12 +123,12 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   /**
    * An object which interprets nodes in context.
    */
-  private RTAContextInterpreter contextInterpreter;
+  final private RTAContextInterpreter contextInterpreter;
 
   /**
    * a Map from CGNode->Set<IClass> that should be smushed.
    */
-  Map<CGNode, Set> smushMap = new HashMap<CGNode, Set>();
+  final Map<CGNode, Set> smushMap = new HashMap<CGNode, Set>();
 
   public ZeroXInstanceKeys(AnalysisOptions options, IClassHierarchy cha, RTAContextInterpreter contextInterpreter,
       WarningSet warnings, int policy) {

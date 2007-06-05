@@ -52,7 +52,7 @@ public class CallGraphWarnings {
    * Set of TypeReferences representing types which we do not report unreachable
    * warnings for.
    */
-  private static Set<TypeReference> ignoredTypes = HashSetFactory.make();
+  final private static Set<TypeReference> ignoredTypes = HashSetFactory.make();
   static {
     for (int i = 0; i < ignoredTypeArray.length; i++) {
       ignoredTypes.add(ignoredTypeArray[i]);
@@ -63,7 +63,7 @@ public class CallGraphWarnings {
    * Set of Atoms representing package names whose methods should be treated as
    * no-ops
    */
-  private static Set<Atom> ignoredPackages = HashSetFactory.make();
+  final private static Set<Atom> ignoredPackages = HashSetFactory.make();
 
   /**
    * Register a package names whose methods should be treated as no-ops; don't
@@ -112,7 +112,7 @@ public class CallGraphWarnings {
    */
   private static class NoEntrypointsFailure extends Warning {
 
-    private static NoEntrypointsFailure INSTANCE = new NoEntrypointsFailure();
+    final private static NoEntrypointsFailure INSTANCE = new NoEntrypointsFailure();
     NoEntrypointsFailure() {
       super(Warning.SEVERE);
     }

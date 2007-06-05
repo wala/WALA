@@ -57,13 +57,13 @@ public class SSACFG implements ControlFlowGraph{
 
   private BasicBlock[] basicBlocks;
 
-  protected SSAInstruction[] instructions;
+  final protected SSAInstruction[] instructions;
 
-  protected IMethod method;
+  final protected IMethod method;
 
-  private WarningSet warnings;
+  final private WarningSet warnings;
 
-  protected AbstractCFG cfg;
+  final protected AbstractCFG cfg;
  
 
   /**

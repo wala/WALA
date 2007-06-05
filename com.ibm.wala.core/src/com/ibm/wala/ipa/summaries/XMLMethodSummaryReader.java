@@ -67,7 +67,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
   /**
    * Governing analysis scope
    */
-  private AnalysisScope scope;
+  final private AnalysisScope scope;
 
   /**
    * Method summaries collected for methods. Mapping Object -> MethodSummary
@@ -78,17 +78,17 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
    * <li>Atom (package name)
    * </ul>
    */
-  private HashMap<MethodReference, MethodSummary> summaries = HashMapFactory.make();
+  final private HashMap<MethodReference, MethodSummary> summaries = HashMapFactory.make();
 
   /**
    * Set of TypeReferences that are marked as "allocatable"
    */
-  private HashSet<TypeReference> allocatable = HashSetFactory.make();
+  final private HashSet<TypeReference> allocatable = HashSetFactory.make();
 
   /**
    * Set of Atoms that represent packages that can be ignored
    */
-  private HashSet<Atom> ignoredPackages = HashSetFactory.make();
+  final private HashSet<Atom> ignoredPackages = HashSetFactory.make();
 
   //
   // Define XML element names

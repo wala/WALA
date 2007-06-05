@@ -21,7 +21,7 @@ import com.ibm.wala.util.intset.SimpleVector;
 public class BasicTree<T> {
 
   private final T value;
-  private SimpleVector<BasicTree<T>> children = new SimpleVector<BasicTree<T>>();
+  final private SimpleVector<BasicTree<T>> children = new SimpleVector<BasicTree<T>>();
 
   private BasicTree(T value) {
     this.value = value;

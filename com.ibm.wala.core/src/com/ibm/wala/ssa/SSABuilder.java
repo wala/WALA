@@ -67,7 +67,7 @@ public class SSABuilder extends AbstractIntStackMachine {
   /**
    * Governing symbol table
    */
-  private SymbolTable symbolTable;
+  final private SymbolTable symbolTable;
 
   /**
    * A logical mapping from <bcIndex, valueNumber> -> local number if null,

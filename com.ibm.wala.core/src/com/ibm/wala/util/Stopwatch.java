@@ -19,7 +19,7 @@ package com.ibm.wala.util;
  */
 public class Stopwatch extends com.ibm.wala.util.perf.Stopwatch {
 
-  private String name;
+  final private String name;
 
   private long startMemory;
 

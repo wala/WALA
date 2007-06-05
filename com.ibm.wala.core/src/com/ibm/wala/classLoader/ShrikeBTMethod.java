@@ -553,21 +553,21 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
 
     // TODO: make a better Set implementation for these.
-    Set<CallSiteReference> callSites = HashSetFactory.make(5);
+    final Set<CallSiteReference> callSites = HashSetFactory.make(5);
 
-    Set<FieldReference> fieldsWritten = HashSetFactory.make(5);
+    final Set<FieldReference> fieldsWritten = HashSetFactory.make(5);
 
-    Set<FieldReference> fieldsRead = HashSetFactory.make(5);
+    final Set<FieldReference> fieldsRead = HashSetFactory.make(5);
 
     final Set<NewSiteReference> newSites = HashSetFactory.make(5);
 
     final Set<TypeReference> arraysRead = HashSetFactory.make(5);
 
-    Set<TypeReference> arraysWritten = HashSetFactory.make(5);
+    final Set<TypeReference> arraysWritten = HashSetFactory.make(5);
 
-    Set<TypeReference> implicitExceptions = HashSetFactory.make(5);
+    final Set<TypeReference> implicitExceptions = HashSetFactory.make(5);
 
-    Set<TypeReference> castTypes = HashSetFactory.make(5);
+    final Set<TypeReference> castTypes = HashSetFactory.make(5);
 
     boolean hasMonitorOp;
 

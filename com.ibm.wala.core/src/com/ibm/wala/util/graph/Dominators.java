@@ -444,7 +444,7 @@ public class Dominators<T> {
     /*
      * The buckets used in step 2
      */
-    private Set<T> bucket;
+    final private Set<T> bucket;
 
     /*
      * the labels used in the fast union-find structure

@@ -67,12 +67,12 @@ public class MethodBypass {
   /**
    * Mapping from MethodReference -> SyntheticMethod
    */
-  private HashMap<MethodReference, SummarizedMethod> syntheticMethods = HashMapFactory.make();
+  final private HashMap<MethodReference, SummarizedMethod> syntheticMethods = HashMapFactory.make();
 
   /**
    * Set of method references that have been considered already.
    */
-  private HashSet<MethodReference> considered = HashSetFactory.make();
+  final private HashSet<MethodReference> considered = HashSetFactory.make();
 
   public MethodBypass(Map methodSummaries, Set allocatable, IClassHierarchy cha) {
     this.methodSummaries = methodSummaries;

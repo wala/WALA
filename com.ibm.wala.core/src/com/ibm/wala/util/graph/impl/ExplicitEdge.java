@@ -18,8 +18,8 @@ package com.ibm.wala.util.graph.impl;
  */
 public class ExplicitEdge {
   
-  private Object src;
-  private Object dest;
+  final private Object src;
+  final private Object dest;
   
   public ExplicitEdge(Object src, Object dest) {
     this.src = src;

@@ -27,13 +27,13 @@ public class FifoQueue<T> {
   /**
    * The work queue. Items are references to Object instances.
    */
-  List<T> qItems = new LinkedList<T>();
+  final List<T> qItems = new LinkedList<T>();
 
   /**
    * Set representing items currently enqueue. This is used to keep an item from
    * having more than one entry in the queue.
    */
-  Set<T> inQueue = HashSetFactory.make();
+  final Set<T> inQueue = HashSetFactory.make();
 
   /**
    * Creates a FIFO queue with no elements enqueued.

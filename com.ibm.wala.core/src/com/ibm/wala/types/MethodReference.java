@@ -30,7 +30,7 @@ public final class MethodReference extends MemberReference {
    * Used to canonicalize MethodReferences
    * a mapping from Key -> MethodReference
    */
-  private static HashMap<Key, MethodReference> dictionary = HashMapFactory.make();
+  final private static HashMap<Key, MethodReference> dictionary = HashMapFactory.make();
 
   public final static Atom newInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
   private final static Descriptor newInstanceDesc = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
@@ -64,7 +64,7 @@ public final class MethodReference extends MemberReference {
   /**
    * types of parameters to this method.
    */
-  private TypeReference[] parameterTypes;
+  final private TypeReference[] parameterTypes;
 
   /**
    * return type.

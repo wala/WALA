@@ -44,7 +44,7 @@ public class SSACache {
   /**
    * A cache of DefUse information
    */
-  private AuxiliaryCache duCache = new AuxiliaryCache();
+  final private AuxiliaryCache duCache = new AuxiliaryCache();
 
   /**
    * @param factory

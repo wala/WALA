@@ -33,7 +33,7 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
    * An iterator of child nodes for each node being searched
    * A Map: Node -> Iterator
    */
-  private Map<T, Iterator<? extends T>> pendingChildren = HashMapFactory.make(25);
+  final private Map<T, Iterator<? extends T>> pendingChildren = HashMapFactory.make(25);
 
   /**
    * For use with extreme care by subclasses that know what they're doing.

@@ -53,7 +53,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * Identity for this class loader
    */
-  private ClassLoaderReference loader;
+  final private ClassLoaderReference loader;
 
   /**
    * A mapping from class name (TypeName) to IClass
@@ -73,7 +73,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * Parent classloader
    */
-  private IClassLoader parent;
+  final private IClassLoader parent;
 
   /**
    * Governing class hierarchy

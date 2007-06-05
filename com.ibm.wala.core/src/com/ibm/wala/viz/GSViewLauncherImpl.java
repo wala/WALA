@@ -22,7 +22,6 @@ import com.ibm.wala.util.warnings.WalaException;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link com.ibm.wala.viz.GSViewLauncherImpl#getDescription <em>Description</em>}</li>
  *   <li>{@link com.ibm.wala.viz.GSViewLauncherImpl#getVendor <em>Vendor</em>}</li>
  *   <li>{@link com.ibm.wala.viz.GSViewLauncherImpl#getVersion <em>Version</em>}</li>
  *   <li>{@link com.ibm.wala.viz.GSViewLauncherImpl#getPsfile <em>Psfile</em>}</li>
@@ -47,16 +46,6 @@ public class GSViewLauncherImpl  {
   protected static final String DESCRIPTION_EDEFAULT = "Launch gsview on a postscript file";
 
   /**
-   * The cached value of the '{@link #getDescription() <em>Description</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getDescription()
-   * @generated
-   * @ordered
-   */
-  protected String description = DESCRIPTION_EDEFAULT;
-
-  /**
    * The default value of the '{@link #getVendor() <em>Vendor</em>}' attribute.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -74,7 +63,7 @@ public class GSViewLauncherImpl  {
    * @generated
    * @ordered
    */
-  protected String vendor = VENDOR_EDEFAULT;
+  final protected String vendor = VENDOR_EDEFAULT;
 
   /**
    * The default value of the '{@link #getVersion() <em>Version</em>}' attribute.
@@ -94,7 +83,7 @@ public class GSViewLauncherImpl  {
    * @generated
    * @ordered
    */
-  protected String version = VERSION_EDEFAULT;
+  final protected String version = VERSION_EDEFAULT;
 
   /**
    * The default value of the '{@link #getPsfile() <em>Psfile</em>}' attribute.
@@ -143,15 +132,6 @@ public class GSViewLauncherImpl  {
    */
   protected GSViewLauncherImpl() {
     super();
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public String getDescription() {
-    return description;
   }
 
   /**
@@ -216,8 +196,6 @@ public class GSViewLauncherImpl  {
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (description: ");
-    result.append(description);
     result.append(", vendor: ");
     result.append(vendor);
     result.append(", version: ");

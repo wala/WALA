@@ -1012,9 +1012,9 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    * exit node.
    */
   private final static class CollapsedNode {
-    CGNode node;
+    final CGNode node;
 
-    boolean isEntry;
+    final boolean isEntry;
 
     final int number;
 

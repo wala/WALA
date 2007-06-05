@@ -34,12 +34,12 @@ public class BoundedBFSIterator<T> implements Iterator<T> {
   /**
    * List of nodes as discovered
    */
-  ArrayList<T> Q = new ArrayList<T>();
+  final ArrayList<T> Q = new ArrayList<T>();
 
   /**
    * Set of nodes that have been visited
    */
-  HashSet<T> visited = HashSetFactory.make();
+  final HashSet<T> visited = HashSetFactory.make();
 
   /**
    * index of the node currently being searched

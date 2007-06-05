@@ -146,7 +146,8 @@ public class DFS {
    * order
    */
   static class DFSComparator<T> implements Comparator<T> {
-    private Map<T, Integer> order;
+    final private Map<T, Integer> order;
+    
 
     DFSComparator(Map<T, Integer> order) {
       this.order = order;

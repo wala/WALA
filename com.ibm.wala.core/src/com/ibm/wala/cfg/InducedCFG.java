@@ -186,7 +186,7 @@ public class InducedCFG extends AbstractCFG {
    * instructions.
    */
   public class BranchVisitor extends SSAInstruction.Visitor {
-    private boolean[] r;
+    final private boolean[] r;
 
     protected BranchVisitor(boolean[] r) {
       this.r = r;

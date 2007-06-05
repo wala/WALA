@@ -145,7 +145,7 @@ public class TabulationSolver<T, P> {
    * structure is chosen to attempt to save space over representing each edge
    * explicitly.
    */
-  private Map<T, LocalPathEdges> pathEdges = HashMapFactory.make();
+  final private Map<T, LocalPathEdges> pathEdges = HashMapFactory.make();
 
   /**
    * A map from Object (entry node in supergraph) -> CallFlowEdges.
@@ -154,18 +154,18 @@ public class TabulationSolver<T, P> {
    * structure is chosen to attempt to save space over representing each edge
    * explicitly.
    */
-  private Map<T, CallFlowEdges> callFlowEdges = HashMapFactory.make();
+  final private Map<T, CallFlowEdges> callFlowEdges = HashMapFactory.make();
 
   /**
    * A map from Object (procedure) -> LocalSummaryEdges.
    * 
    */
-  protected Map<Object, LocalSummaryEdges> summaryEdges = HashMapFactory.make();
+  final protected Map<Object, LocalSummaryEdges> summaryEdges = HashMapFactory.make();
 
   /**
    * The worklist
    */
-  protected Worklist worklist = new Worklist();
+  final protected Worklist worklist = new Worklist();
 
   /**
    * @param p

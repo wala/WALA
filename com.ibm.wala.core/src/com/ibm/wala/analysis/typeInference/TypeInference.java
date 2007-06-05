@@ -55,7 +55,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
   /**
    * The governing SSA form
    */
-  protected IR ir;
+  final protected IR ir;
 
   /**
    * The governing class hierarchy

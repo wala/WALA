@@ -44,7 +44,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
    * The index of this method in the declaring class's method list according to
    * Shrike CT.
    */
-  private int shrikeMethodIndex;
+  final private int shrikeMethodIndex;
 
   /**
    * JVM-level modifiers for this method a value of -1 means "uninitialized"

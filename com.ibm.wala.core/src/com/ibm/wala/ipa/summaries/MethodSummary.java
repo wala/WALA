@@ -36,7 +36,7 @@ public class MethodSummary {
   /**
    * The method summarized
    */
-  private MethodReference method;
+  final private MethodReference method;
 
   /**
    * List of statements that define this method summary

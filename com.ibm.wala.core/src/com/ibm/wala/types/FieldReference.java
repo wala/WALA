@@ -32,7 +32,7 @@ public final class FieldReference extends MemberReference {
   /**
    * Used to canonicalize MemberReferences a mapping from Key -> MemberReference
    */
-  private static HashMap<Key, FieldReference> dictionary = HashMapFactory.make();
+  final private static HashMap<Key, FieldReference> dictionary = HashMapFactory.make();
 
   private final TypeReference fieldType;
 

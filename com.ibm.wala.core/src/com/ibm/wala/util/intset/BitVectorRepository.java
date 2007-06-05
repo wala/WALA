@@ -39,7 +39,7 @@ public class BitVectorRepository {
   /**
    * A Mapping from Integer -> WeakHashMap
    */
-  private static Map<Object, WeakHashMap<BitVectorIntSet,Object>> buckets = HashMapFactory.make();
+  final private static Map<Object, WeakHashMap<BitVectorIntSet,Object>> buckets = HashMapFactory.make();
 
   /**
    * @param value

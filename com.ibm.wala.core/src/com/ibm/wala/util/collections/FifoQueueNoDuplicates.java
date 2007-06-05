@@ -26,7 +26,7 @@ public class FifoQueueNoDuplicates<T> extends FifoQueue<T> {
    * Set representing items ever pushed into the work queue. This keeps an item
    * from ever be pushed again into the work queue.
    */
-  private Set<T> wasInQueue = HashSetFactory.make();
+  final private Set<T> wasInQueue = HashSetFactory.make();
 
   /**
    * Return an Iterator over the set of all the nodes that were pushed into the

@@ -27,8 +27,8 @@ public abstract class UnaryStatement extends AbstractStatement {
   /**
    * The operands
    */
-  protected IVariable lhs;
-  protected IVariable rhs;
+  final protected IVariable lhs;
+  final protected IVariable rhs;
 
   /** 
    * Evaluate this equation, setting a new value for the

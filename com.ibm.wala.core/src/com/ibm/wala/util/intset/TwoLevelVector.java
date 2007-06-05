@@ -31,7 +31,7 @@ public class TwoLevelVector<T> implements IVector<T> {
    * Array of IVector: data.get(i) holds data[i*PAGE_SIZE] ...
    * data[(i+1)*PAGESIZE - 1]
    */
-  private Vector<SparseVector<T>> data = new Vector<SparseVector<T>>(0);
+  final private Vector<SparseVector<T>> data = new Vector<SparseVector<T>>(0);
 
   private int maxPage = -1;
 

@@ -32,7 +32,7 @@ public class SymbolTable {
   /**
    * Mapping from Constant -> value number
    */
-  private HashMap<ConstantValue, Integer> constants = HashMapFactory.make(10);
+  final private HashMap<ConstantValue, Integer> constants = HashMapFactory.make(10);
 
   /**
    * Constructor.

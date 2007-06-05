@@ -63,7 +63,7 @@ public class ShrikeCFG extends AbstractCFG {
   /**
    * Set of Shrike ExceptionHandler objects that cover this method.
    */
-  private Set<ExceptionHandler> exceptionHandlers = HashSetFactory.make(10);
+  final private Set<ExceptionHandler> exceptionHandlers = HashSetFactory.make(10);
 
   public ShrikeCFG(ShrikeCTMethod method, WarningSet warnings, IClassHierarchy cha) throws IllegalArgumentException {
     super(method);

@@ -22,7 +22,7 @@ public class PhiValue implements Value {
   /**
    * The phi instruction that defines this value
    */
-  private SSAPhiInstruction phi;
+  final private SSAPhiInstruction phi;
 
   /**
    * @param phi The phi instruction that defines this value

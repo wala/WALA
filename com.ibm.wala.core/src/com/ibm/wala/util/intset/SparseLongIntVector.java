@@ -33,7 +33,7 @@ public class SparseLongIntVector {
   /**
    * if indices[i] = x, then data[i] == get(x)
    */
-  private MutableSparseLongSet indices = new MutableSparseLongSet();
+  final private MutableSparseLongSet indices = new MutableSparseLongSet();
 
   private int[] data = new int[INITIAL_SIZE];
 

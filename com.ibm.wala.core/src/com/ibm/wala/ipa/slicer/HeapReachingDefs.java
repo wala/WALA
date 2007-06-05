@@ -122,7 +122,7 @@ public class HeapReachingDefs {
   }
 
   private static class RDMap implements Map<Statement, OrdinalSet<Statement>> {
-    Map<Statement, OrdinalSet<Statement>> delegate = HashMapFactory.make();
+    final Map<Statement, OrdinalSet<Statement>> delegate = HashMapFactory.make();
 
     private final HeapExclusions exclusions;
 

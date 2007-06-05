@@ -33,13 +33,13 @@ public class DefUse {
   /**
    * A mapping from integer (value number) -> Instruction that defines the value
    */
-  private SSAInstruction[] defs;
+  final private SSAInstruction[] defs;
 
   /**
    * A mapping from integer (value number) -> BitVector holding integers
    * representing instructions that use the value number
    */
-  private MutableIntSet[] uses;
+  final private MutableIntSet[] uses;
 
   /**
    * A Mapping from integer -> Instruction

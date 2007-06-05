@@ -95,7 +95,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * the instance keys that correspond to a given class. This mapping is used to
    * filter sets based on declared types; e.g., in cast constraints
    */
-  private Map<IClass, MutableIntSet> class2InstanceKey = HashMapFactory.make();
+  final private Map<IClass, MutableIntSet> class2InstanceKey = HashMapFactory.make();
 
   /**
    * An abstraction of the pointer analysis result

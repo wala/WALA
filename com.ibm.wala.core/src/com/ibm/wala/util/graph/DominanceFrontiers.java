@@ -27,7 +27,7 @@ import com.ibm.wala.util.graph.traverse.DFS;
  */
 public class DominanceFrontiers<T> extends Dominators<T> {
 
-  private Map<T, Set<T>> DF = new HashMap<T, Set<T>>();
+  final private Map<T, Set<T>> DF = new HashMap<T, Set<T>>();
 
   /**
    * @param G

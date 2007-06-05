@@ -74,7 +74,7 @@ public class AnalysisScope {
   /**
    * map: Atom -> ClassLoaderReference
    */
-  protected LinkedHashMap<Atom, ClassLoaderReference> loadersByName = new LinkedHashMap<Atom, ClassLoaderReference>();
+  final protected LinkedHashMap<Atom, ClassLoaderReference> loadersByName = new LinkedHashMap<Atom, ClassLoaderReference>();
 
   /**
    * Special class loader for array instances
@@ -84,7 +84,7 @@ public class AnalysisScope {
   /**
    * map: ClassLoaderReference -> Set <Modules>
    */
-  private Map<ClassLoaderReference, Set<Module>> moduleMap = HashMapFactory.make(3);
+  final private Map<ClassLoaderReference, Set<Module>> moduleMap = HashMapFactory.make(3);
 
   public AnalysisScope() {
     super();

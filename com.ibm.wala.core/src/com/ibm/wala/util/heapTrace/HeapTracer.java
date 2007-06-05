@@ -45,7 +45,7 @@ public class HeapTracer {
   /**
    * Names of all classes considered for analysis
    */
-  private static String[] rootClasses = generateRootClassesFromWorkspace();
+  final private static String[] rootClasses = generateRootClassesFromWorkspace();
 
   /**
    * Object instances that should be considered roots of the heap trace
@@ -493,7 +493,7 @@ public class HeapTracer {
     return result;
   }
 
-  private HashMap<Class, Field[]> allReferenceFieldsCache = new HashMap<Class, Field[]>();
+  final private HashMap<Class, Field[]> allReferenceFieldsCache = new HashMap<Class, Field[]>();
 
   /**
    * @return Field[] representing reference instance fields of a class

@@ -41,7 +41,7 @@ public abstract class IR {
   /**
    * The method that defined this IR's bytecodes
    */
-  private IMethod method;
+  final private IMethod method;
 
   /**
    * Governing SSA construction options
@@ -51,12 +51,12 @@ public abstract class IR {
   /**
    * Control-flow graph
    */
-  private SSACFG cfg;
+  final private SSACFG cfg;
 
   /**
    * SSA instructions
    */
-  private SSAInstruction[] instructions;
+  final private SSAInstruction[] instructions;
 
   /**
    * Symbol table

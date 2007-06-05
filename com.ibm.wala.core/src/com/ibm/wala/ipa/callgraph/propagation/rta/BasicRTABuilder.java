@@ -127,7 +127,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     /**
      * The set of classes that have already been processed.
      */
-    private MutableIntSet previousReceivers = IntSetUtil.getDefaultIntSetFactory().make();
+    final private MutableIntSet previousReceivers = IntSetUtil.getDefaultIntSetFactory().make();
 
     @Override
     public byte evaluate(IVariable lhs, IVariable rhs) {

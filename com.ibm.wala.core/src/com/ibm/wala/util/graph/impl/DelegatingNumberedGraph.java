@@ -20,9 +20,9 @@ import com.ibm.wala.util.graph.NodeManager;
  */
 public class DelegatingNumberedGraph<T extends INodeWithNumberedEdges> extends AbstractNumberedGraph<T> {
 
-  private DelegatingNumberedNodeManager<T> nodeManager = new DelegatingNumberedNodeManager<T>();
+  final private DelegatingNumberedNodeManager<T> nodeManager = new DelegatingNumberedNodeManager<T>();
 
-  private DelegatingNumberedEdgeManager<T> edgeManager = new DelegatingNumberedEdgeManager<T>(nodeManager);
+  final private DelegatingNumberedEdgeManager<T> edgeManager = new DelegatingNumberedEdgeManager<T>(nodeManager);
 
   /*
    * @see com.ibm.wala.util.graph.AbstractGraph#getNodeManager()

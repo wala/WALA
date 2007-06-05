@@ -118,13 +118,13 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
   }
 
   private class UnionFind {
-    IntegerUnionFind uf;
+    final IntegerUnionFind uf;
 
-    ObjectArrayMapping map;
+    final ObjectArrayMapping map;
 
     boolean didSomething = false;
 
-    private Object[] allKeys;
+    final private Object[] allKeys;
 
     private int mapIt(int i, Object[] allKeys, Object[] allVars, Map<Object, IVariable> varMap) {
       for (Iterator<Object> it = varMap.keySet().iterator(); it.hasNext();) {

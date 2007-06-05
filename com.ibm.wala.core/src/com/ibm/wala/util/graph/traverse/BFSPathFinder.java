@@ -44,12 +44,12 @@ public class BFSPathFinder<T> {
   /**
    * The graph to search
    */
-  private Graph<T> G;
+  final private Graph<T> G;
 
   /**
    * The Filter which defines the target set of nodes to find
    */
-  private Filter filter;
+  final private Filter filter;
 
   /**
    * an enumeration of all nodes to search from

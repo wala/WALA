@@ -39,7 +39,7 @@ public final class Atom {
    * Used to canonicalize Atoms, a mapping from AtomKey -> Atom. AtomKeys are
    * not canonical, but Atoms are.
    */
-  private static HashMap<AtomKey, Atom> dictionary = HashMapFactory.make();
+  final private static HashMap<AtomKey, Atom> dictionary = HashMapFactory.make();
 
   /**
    * The utf8 value this atom represents

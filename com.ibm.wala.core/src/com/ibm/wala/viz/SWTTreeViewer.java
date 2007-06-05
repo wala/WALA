@@ -70,7 +70,7 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
    * @generated
    * @ordered
    */
-  protected List<ViewIRAction> popUpActions = new LinkedList<ViewIRAction>();
+  final protected List<ViewIRAction> popUpActions = new LinkedList<ViewIRAction>();
 
   /**
    * <!-- begin-user-doc --> <!-- end-user-doc -->

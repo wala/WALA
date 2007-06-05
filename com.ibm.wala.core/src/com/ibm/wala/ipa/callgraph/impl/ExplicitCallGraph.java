@@ -324,7 +324,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
 
   protected class ExplicitEdgeManager implements NumberedEdgeManager<CGNode> {
 
-    IntFunction<CGNode> toNode = new IntFunction<CGNode>() {
+    final IntFunction<CGNode> toNode = new IntFunction<CGNode>() {
       public CGNode apply(int i) {
         CGNode result = getNode(i);
         // if (Assertions.verifyAssertions && result == null) {

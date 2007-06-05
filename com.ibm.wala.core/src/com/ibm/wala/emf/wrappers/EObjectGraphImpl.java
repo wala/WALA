@@ -34,7 +34,7 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public class EObjectGraphImpl implements EObjectGraph {
 
-  private NumberedGraph<EObject> delegate = new SlowSparseNumberedGraph<EObject>();
+  final private NumberedGraph<EObject> delegate = new SlowSparseNumberedGraph<EObject>();
 
   public void addEdge(EObject src, EObject dst) throws IllegalArgumentException {
     delegate.addEdge(src, dst);

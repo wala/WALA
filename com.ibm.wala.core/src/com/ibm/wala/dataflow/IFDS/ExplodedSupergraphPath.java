@@ -75,7 +75,7 @@ public class ExplodedSupergraphPath<T> {
    */
   private final class PathIterator implements Iterator {
 
-    private Iterator it;
+    final private Iterator it;
 
     public void remove() {
       Assertions.UNREACHABLE();

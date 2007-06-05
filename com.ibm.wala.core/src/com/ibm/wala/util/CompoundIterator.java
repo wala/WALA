@@ -21,7 +21,7 @@ import java.util.NoSuchElementException;
  */
 public class CompoundIterator<T> implements Iterator<T> {
 
-  Iterator<? extends T> A;
+  final Iterator<? extends T> A;
   final Iterator<? extends T> B;
   public CompoundIterator(Iterator<? extends T> A, Iterator<? extends T> B) {
     this.A = A;

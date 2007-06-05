@@ -58,12 +58,12 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   /**
    * Cached map from InstanceKey -> Set<CGNode>
    */
-  private Map<InstanceKey, Set> liveNodes = HashMapFactory.make();
+  final private Map<InstanceKey, Set> liveNodes = HashMapFactory.make();
 
   /**
    * Set of instanceKeys which are live everywhere
    */
-  private Set<InstanceKey> liveEverywhere = HashSetFactory.make();
+  final private Set<InstanceKey> liveEverywhere = HashSetFactory.make();
 
   /**
    * A hack for now .. since right now the intraprocedural analysis is expensive

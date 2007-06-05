@@ -29,7 +29,7 @@ import com.ibm.wala.util.warnings.WarningSet;
 public class SummarizedMethod extends SyntheticMethod {
   static final boolean DEBUG = false;
 
-  private MethodSummary summary;
+  final private MethodSummary summary;
 
   public SummarizedMethod(MethodReference ref, MethodSummary summary, IClass declaringClass) throws NullPointerException {
 

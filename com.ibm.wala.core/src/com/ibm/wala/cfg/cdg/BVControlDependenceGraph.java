@@ -51,11 +51,11 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
 
   private final HashMap<IBasicBlock, BasicBlock> bbMap = new HashMap<IBasicBlock, BasicBlock>();
 
-  private Vector<BasicBlock> seen = new Vector<BasicBlock>();
+  final private Vector<BasicBlock> seen = new Vector<BasicBlock>();
 
   private BasicBlock entry;
 
-  private Vector<BasicBlock> entryBlocks = new Vector<BasicBlock>();
+  final private Vector<BasicBlock> entryBlocks = new Vector<BasicBlock>();
 
   private BasicBlock exitnode;
 
@@ -421,15 +421,15 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
 
     protected int index;
 
-    private Vector<BasicBlock> predecessors = new Vector<BasicBlock>(2);
+    final private Vector<BasicBlock> predecessors = new Vector<BasicBlock>(2);
 
-    private Vector<BasicBlock> successors = new Vector<BasicBlock>(2);
+    final private Vector<BasicBlock> successors = new Vector<BasicBlock>(2);
 
-    private Vector<IBasicBlock> cdPred = new Vector<IBasicBlock>(2);
+    final private Vector<IBasicBlock> cdPred = new Vector<IBasicBlock>(2);
 
-    private Vector<IBasicBlock> cdSucc = new Vector<IBasicBlock>(2);
+    final private Vector<IBasicBlock> cdSucc = new Vector<IBasicBlock>(2);
 
-    private HashMap<IBasicBlock, Set<IBasicBlock>> labelMap = new HashMap<IBasicBlock, Set<IBasicBlock>>();
+    final private HashMap<IBasicBlock, Set<IBasicBlock>> labelMap = new HashMap<IBasicBlock, Set<IBasicBlock>>();
 
     private BasicBlock(IBasicBlock item) {
       this.item = item;

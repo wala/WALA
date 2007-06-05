@@ -71,7 +71,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * An object which defines class loaders.
    */
-  private ClassLoaderFactory factory;
+  final private ClassLoaderFactory factory;
 
   /**
    * The loaders used to define this class hierarchy.
@@ -83,12 +83,12 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * An object which tracks analysis warnings
    */
-  private WarningSet warnings;
+  final private WarningSet warnings;
 
   /**
    * A mapping from IClass -> Selector -> Set of IMethod
    */
-  private HashMap<IClass, Object> targetCache = HashMapFactory.make();
+  final private HashMap<IClass, Object> targetCache = HashMapFactory.make();
 
   /**
    * Governing analysis scope
@@ -627,7 +627,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
     private final IClass klass;
 
-    private Set<Node> children = HashSetFactory.make(3);
+    final private Set<Node> children = HashSetFactory.make(3);
 
     // the following two fields are used for efficient subclass tests.
     // After numbering the tree, n1 is a child of n2 iff

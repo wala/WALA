@@ -21,9 +21,9 @@ import com.ibm.wala.util.intset.IntIterator;
  */
 public class CompoundIntIterator implements IntIterator {
 
-  IntIterator A;
+  final IntIterator A;
 
-  IntIterator B;
+  final IntIterator B;
 
 
   /**

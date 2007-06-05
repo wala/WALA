@@ -59,7 +59,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class TypeBasedHeapModel implements HeapModel {
 
-  CFAPointerKeys pointerKeys = new CFAPointerKeys();
+  final CFAPointerKeys pointerKeys = new CFAPointerKeys();
 
   private final ClassBasedInstanceKeys iKeyFactory;
 

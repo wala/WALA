@@ -48,7 +48,7 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class ECallGraphWrapper extends EObjectGraphImpl {
 
-  private static boolean DEBUG = false;
+  final private static boolean DEBUG = false;
 
   /**
    * @return an ECallGraph representing the contents of this object

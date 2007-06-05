@@ -40,12 +40,12 @@ public class DFSPathFinder<T> extends Stack<T> {
   /**
    * The graph to search
    */
-  private Graph<T> G;
+  final private Graph<T> G;
 
   /**
    * The Filter which defines the target set of nodes to find
    */
-  private Filter filter;
+  final private Filter filter;
 
   /**
    * an enumeration of all nodes to search from
@@ -55,7 +55,7 @@ public class DFSPathFinder<T> extends Stack<T> {
   /**
    * An iterator of child nodes for each node being searched
    */
-  private Map<T, Iterator<? extends T>> pendingChildren = HashMapFactory.make(25);
+  final private Map<T, Iterator<? extends T>> pendingChildren = HashMapFactory.make(25);
 
   /**
    * Construct a depth-first enumerator starting with a particular node

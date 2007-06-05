@@ -33,7 +33,7 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
   /**
    * The second DFS (the reverse one) needed while computing SCCs
    */
-  private DFSFinishTimeIterator<T> rev;
+  final private DFSFinishTimeIterator<T> rev;
 
   /**
    * Construct an enumeration across the SCCs of a given graph.

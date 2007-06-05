@@ -29,7 +29,7 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class StringStuff {
 
-  private static HashMap<String, String> primitiveClassNames;
+  final private static HashMap<String, String> primitiveClassNames;
 
   static {
     primitiveClassNames = HashMapFactory.make(10);

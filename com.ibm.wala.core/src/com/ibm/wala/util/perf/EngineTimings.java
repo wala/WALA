@@ -45,7 +45,7 @@ public class EngineTimings {
   /**
    * Maintain an arraylist of records for each thread
    */
-  static ThreadLocal<ArrayList<Record>> myBuffer = new ThreadLocal<ArrayList<Record>>();
+  final static ThreadLocal<ArrayList<Record>> myBuffer = new ThreadLocal<ArrayList<Record>>();
 
   // TODO: make this a property!
   private static final String FILENAME = "c:/temp/perf.xml";
@@ -301,7 +301,7 @@ public class EngineTimings {
    * A record holding timing information for a particular engine invocation
    */
   private static class Phase {
-    String name;
+    final String name;
 
     final int depth;
 

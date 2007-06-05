@@ -36,7 +36,7 @@ public class EObjectDictionary {
   /**
    * Implementation of a canonical dictionary of EObjects
    */
-  private MutableMapping<EObject> map = new MutableMapping<EObject>();
+  final private MutableMapping<EObject> map = new MutableMapping<EObject>();
 
   /**
    * @param key

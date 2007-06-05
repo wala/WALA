@@ -24,7 +24,7 @@ public class HashSetFactory {
   /**
    * If true, this factory returns Paranoid versions of collections
    */
-  public static boolean DEBUG = false;
+  final public static boolean DEBUG = false;
 
   /**
    * @param size

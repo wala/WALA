@@ -31,7 +31,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
    * Set of classes that class loaders should ignore; classloaders should
    * pretend these classes don't exit.
    */
-  private SetOfClasses exclusions;
+  final private SetOfClasses exclusions;
 
   /**
    * An object to track warnings
@@ -41,7 +41,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
   /**
    * A Mapping from ClassLoaderReference to IClassLoader
    */
-  private HashMap<ClassLoaderReference, IClassLoader> map = HashMapFactory.make(3);
+  final private HashMap<ClassLoaderReference, IClassLoader> map = HashMapFactory.make(3);
 
   /**
    * @param exclusions

@@ -72,37 +72,37 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
   /**
    * map SSAInstructions to their corresponding SingleInstructionBlocks
    */
-  Map<SSAInstruction, SingleInstructionBasicBlock> instructionToBlock = HashMapFactory.make();
+  final Map<SSAInstruction, SingleInstructionBasicBlock> instructionToBlock = HashMapFactory.make();
 
   /**
    * instructions in the method
    */
-  private SSAInstruction[] instructions;
+  final private SSAInstruction[] instructions;
 
   /**
    * analyzed method
    */
-  private IMethod method;
+  final private IMethod method;
 
   /**
    * underlying SSA CFG
    */
-  private SSACFG cfg;
+  final private SSACFG cfg;
 
   /**
    * underlying IR
    */
-  private IR ir;
+  final private IR ir;
 
   /**
    * successor relation
    */
-  private Map<IBasicBlock, List<IBasicBlock>> successors;
+  final private Map<IBasicBlock, List<IBasicBlock>> successors;
 
   /**
    * predecessor relation
    */
-  private Map<IBasicBlock, List<IBasicBlock>> predecessors;
+  final private Map<IBasicBlock, List<IBasicBlock>> predecessors;
 
   /**
    * number of entry instruction
@@ -117,7 +117,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
   /*****************************************************************************
    * A set of blocks that are true-pi instructions
    */
-  private Set<SSAPiInstruction> trueCasePiInstructions = HashSetFactory.make();
+  final private Set<SSAPiInstruction> trueCasePiInstructions = HashSetFactory.make();
 
   /**
    * entry block
@@ -132,7 +132,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
   /**
    * map of fall-through targets
    */
-  private Map<IBasicBlock, IBasicBlock> fallThroughTargets = HashMapFactory.make();
+  final private Map<IBasicBlock, IBasicBlock> fallThroughTargets = HashMapFactory.make();
 
   /**
    * create an ExpandedControlFlowGraph
@@ -472,17 +472,17 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     /**
      * is this a fallthrough edge?
      */
-    public boolean isFallThrough;
+    final public boolean isFallThrough;
 
     /**
      * source basic-block
      */
-    public BasicBlock src;
+    final public BasicBlock src;
 
     /**
      * destination basic-block
      */
-    public BasicBlock dest;
+    final public BasicBlock dest;
 
     /**
      * create a new Edge
@@ -1010,7 +1010,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     /**
      * instruction contained in the block (a single instruction!)
      */
-    private SSAInstruction instruction;
+    final private SSAInstruction instruction;
 
     /**
      * is this an exit block?

@@ -69,7 +69,7 @@ public class JavaLauncher extends Launcher {
    * @generated
    * @ordered
    */
-  protected EList classpathEntries = null;
+  final protected EList classpathEntries = null;
 
   /**
    * <!-- begin-user-doc --> <!-- end-user-doc -->
