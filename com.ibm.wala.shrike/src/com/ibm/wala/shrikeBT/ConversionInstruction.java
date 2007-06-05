@@ -20,7 +20,7 @@ public final class ConversionInstruction extends Instruction {
   final private String toType;
 
   protected ConversionInstruction(short opcode) {
-    this.opcode = opcode;
+    super(opcode);
 
     if (opcode < OP_i2b) {
       int k = opcode - OP_i2l;

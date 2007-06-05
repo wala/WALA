@@ -35,7 +35,7 @@ final public class BinaryOpInstruction extends Instruction {
   }
 
   protected BinaryOpInstruction(short opcode) {
-    this.opcode = opcode;
+    super(opcode);
   }
 
   private final static BinaryOpInstruction[] arithmeticOps = preallocateArithmeticOps();

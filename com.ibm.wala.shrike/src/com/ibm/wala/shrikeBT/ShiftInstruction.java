@@ -23,7 +23,7 @@ public final class ShiftInstruction extends Instruction {
   }
 
   protected ShiftInstruction(short opcode) {
-    this.opcode = opcode;
+    super(opcode);
   }
 
   private static final ShiftInstruction[] preallocated = preallocate();

@@ -21,10 +21,10 @@ public class PutInstruction extends Instruction {
   protected String fieldName;
 
   PutInstruction(short opcode, String type, String classType, String fieldName) {
+    super(opcode);
     this.type = type;
     this.classType = classType;
     this.fieldName = fieldName;
-    this.opcode = opcode;
   }
 
   ConstantPoolReader getLazyConstantPool() {

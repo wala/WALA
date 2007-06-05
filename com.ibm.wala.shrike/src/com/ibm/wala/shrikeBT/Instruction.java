@@ -53,10 +53,11 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
   /**
    * Ensure that only this package can subclass Instruction.
    */
-  Instruction() {
+  Instruction(short opcode) {
+    this.opcode = opcode;
   }
 
-  short opcode = -1;
+  final short opcode;
 
   /**
    * @return true if the instruction can "fall through" to the following

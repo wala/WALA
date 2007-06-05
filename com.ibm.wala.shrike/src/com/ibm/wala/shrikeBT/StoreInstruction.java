@@ -17,8 +17,8 @@ public final class StoreInstruction extends Instruction {
   final private int index;
 
   protected StoreInstruction(short opcode, int index) {
+    super(opcode);
     this.index = index;
-    this.opcode = opcode;
   }
 
   private final static StoreInstruction[] preallocated = preallocate();

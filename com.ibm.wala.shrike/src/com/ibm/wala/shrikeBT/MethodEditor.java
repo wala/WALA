@@ -91,7 +91,7 @@ public final class MethodEditor {
    * This patch lets us stuff an exception handler into the code.
    */
   private static class HandlerPatch {
-    HandlerPatch next;
+    final HandlerPatch next;
     final String catchClass;
     final int label;
     final Patch patch;

@@ -15,7 +15,7 @@ package com.ibm.wala.shrikeBT;
  */
 public final class ReturnInstruction extends Instruction {
   protected ReturnInstruction(short opcode) {
-    this.opcode = opcode;
+    super(opcode);
   }
 
   private static final ReturnInstruction[] preallocated = preallocate();

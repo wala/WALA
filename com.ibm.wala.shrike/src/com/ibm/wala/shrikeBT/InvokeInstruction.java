@@ -21,10 +21,10 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
   protected String methodName;
 
   InvokeInstruction(short opcode, String type, String classType, String methodName) {
+    super(opcode);
     this.type = type;
     this.classType = classType;
     this.methodName = methodName;
-    this.opcode = opcode;
   }
 
   public static InvokeInstruction make(String type, String className, String methodName, Dispatch mode) throws NullPointerException {

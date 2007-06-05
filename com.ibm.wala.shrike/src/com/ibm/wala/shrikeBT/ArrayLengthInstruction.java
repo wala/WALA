@@ -15,7 +15,7 @@ package com.ibm.wala.shrikeBT;
  */
 final public class ArrayLengthInstruction extends Instruction {
   protected ArrayLengthInstruction() {
-    opcode = (byte) OP_arraylength;
+    super(OP_arraylength);
   }
 
   private static final ArrayLengthInstruction preallocated = new ArrayLengthInstruction();

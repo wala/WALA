@@ -17,8 +17,8 @@ public final class LoadInstruction extends Instruction {
   private final int index;
 
   protected LoadInstruction(short opcode, int index) {
+    super(opcode);
     this.index = index;
-    this.opcode = opcode;
   }
 
   private final static LoadInstruction[] preallocated = preallocate();

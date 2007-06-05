@@ -21,7 +21,7 @@ public class GetInstruction extends Instruction {
   protected String fieldName;
 
   GetInstruction(short opcode, String type, String classType, String fieldName) {
-    this.opcode = opcode;
+    super(opcode);
     this.type = type;
     this.classType = classType;
     this.fieldName = fieldName;

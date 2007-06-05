@@ -17,8 +17,8 @@ public final class InstanceofInstruction extends Instruction {
   final private String type;
 
   protected InstanceofInstruction(String type) {
+    super(OP_instanceof);
     this.type = type;
-    this.opcode = OP_instanceof;
   }
 
   public static InstanceofInstruction make(String type) {

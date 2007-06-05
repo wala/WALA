@@ -17,9 +17,9 @@ public final class GotoInstruction extends Instruction {
   final private int[] label;
 
   protected GotoInstruction(int label) {
+    super(OP_goto);
     int[] l = { label };
     this.label = l;
-    this.opcode = OP_goto;
   }
 
   private final static GotoInstruction[] preallocated = preallocate();

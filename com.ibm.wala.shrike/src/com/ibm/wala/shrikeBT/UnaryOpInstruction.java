@@ -28,7 +28,7 @@ public final class UnaryOpInstruction extends Instruction {
   }
 
   protected UnaryOpInstruction(short opcode) {
-    this.opcode = opcode;
+    super(opcode);
   }
 
   private final static UnaryOpInstruction[] preallocated = preallocate();

@@ -16,6 +16,7 @@ package com.ibm.wala.shrikeBT;
  */
 public final class SwapInstruction extends Instruction {
   protected SwapInstruction() {
+    super((short)-1);
   }
 
   private final static SwapInstruction preallocated = new SwapInstruction();

@@ -26,7 +26,7 @@ final public class ComparisonInstruction extends Instruction {
   }
 
   protected ComparisonInstruction(short opcode) {
-    this.opcode = opcode;
+    super(opcode);
   }
 
   private final static ComparisonInstruction preallocatedLCMP = new ComparisonInstruction(OP_lcmp);

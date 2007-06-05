@@ -17,8 +17,8 @@ final public class CheckCastInstruction extends Instruction {
   final private String type;
 
   protected CheckCastInstruction(String type) {
+    super(OP_checkcast);
     this.type = type;
-    this.opcode = OP_checkcast;
   }
 
   public static CheckCastInstruction make(String type) {

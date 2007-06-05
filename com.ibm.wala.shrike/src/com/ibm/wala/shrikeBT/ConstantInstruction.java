@@ -14,7 +14,8 @@ package com.ibm.wala.shrikeBT;
  * A ConstantInstruction pushes some constant value onto the stack.
  */
 public abstract class ConstantInstruction extends Instruction {
-  ConstantInstruction() {
+  ConstantInstruction(short opcode) {
+    super(opcode);
   }
 
   ConstantPoolReader getLazyConstantPool() {
@@ -27,7 +28,7 @@ public abstract class ConstantInstruction extends Instruction {
 
   final static class ConstNull extends ConstantInstruction {
     protected ConstNull() {
-      opcode = OP_aconst_null;
+      super(OP_aconst_null);
     }
 
     private final static ConstNull preallocated = new ConstNull();
@@ -53,7 +54,7 @@ public abstract class ConstantInstruction extends Instruction {
     private final static ConstInt[] preallocated = preallocate();
 
     protected ConstInt(short opcode, int value) {
-      this.opcode = opcode;
+      super(opcode);
       this.value = value;
     }
 
@@ -133,7 +134,7 @@ public abstract class ConstantInstruction extends Instruction {
     private final static ConstLong[] preallocated = preallocate();
 
     protected ConstLong(short opcode, long value) {
-      this.opcode = opcode;
+      super(opcode);
       this.value = value;
     }
 
@@ -205,7 +206,7 @@ public abstract class ConstantInstruction extends Instruction {
     private final static ConstFloat[] preallocated = preallocate();
 
     protected ConstFloat(short opcode, float value) {
-      this.opcode = opcode;
+      super(opcode);
       this.value = value;
     }
 
@@ -277,7 +278,7 @@ public abstract class ConstantInstruction extends Instruction {
     private final static ConstDouble[] preallocated = preallocate();
 
     protected ConstDouble(short opcode, double value) {
-      this.opcode = opcode;
+      super(opcode);
       this.value = value;
     }
 
@@ -347,7 +348,7 @@ public abstract class ConstantInstruction extends Instruction {
     protected String value;
 
     protected ConstString(short opcode, String value) {
-      this.opcode = opcode;
+      super(opcode);
       this.value = value;
     }
 
@@ -400,7 +401,7 @@ public abstract class ConstantInstruction extends Instruction {
     protected String typeName;
 
     protected ConstClass(short opcode, String typeName) {
-      this.opcode = opcode;
+      super(opcode);
       this.typeName = typeName;
     }
 

@@ -15,7 +15,7 @@ package com.ibm.wala.shrikeBT;
  */
 public final class MonitorInstruction extends Instruction {
   protected MonitorInstruction(short opcode) {
-    this.opcode = opcode;
+    super(opcode);
   }
 
   private final static MonitorInstruction enter = new MonitorInstruction(OP_monitorenter);

@@ -17,7 +17,7 @@ public final class ThrowInstruction extends Instruction {
   private static final ThrowInstruction preallocated = new ThrowInstruction();
 
   protected ThrowInstruction() {
-    this.opcode = OP_athrow;
+    super(OP_athrow);
   }
 
   public static ThrowInstruction make() {

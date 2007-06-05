@@ -15,7 +15,7 @@ package com.ibm.wala.shrikeBT;
  */
 final public class ArrayStoreInstruction extends Instruction {
   protected ArrayStoreInstruction(short opcode) {
-    this.opcode = opcode;
+    super(opcode);
   }
 
   private final static ArrayStoreInstruction[] preallocated = preallocate();
