@@ -19,22 +19,34 @@ import java.util.HashMap;
 public final class ClassWriter implements ClassConstants {
   // input
   private int majorVersion = 46;
+
   private int minorVersion = 0;
+
   private ConstantPoolParser rawCP;
+
   private HashMap<Object, Integer> cachedCPEntries = new HashMap<Object, Integer>(1);
-  private ArrayList<Object> newCPEntries = new ArrayList<Object>(1);
+  final private ArrayList<Object> newCPEntries = new ArrayList<Object>(1);
+
   private int nextCPIndex = 1;
+
   final private ArrayList<Element> fields = new ArrayList<Element>(1);
-  private ArrayList<Element> methods = new ArrayList<Element>(1);
+  final private ArrayList<Element> methods = new ArrayList<Element>(1);
+
   final private ArrayList<Element> classAttributes = new ArrayList<Element>(1);
+
   private int thisClass;
+
   private int superClass;
+
   private int[] superInterfaces;
+
   private int accessFlags;
+
   private boolean forceAddCPEntries = false;
 
   // output
   private byte[] buf;
+
   private int bufLen;
 
   /**
@@ -72,12 +84,12 @@ public final class ClassWriter implements ClassConstants {
   }
 
   static class CWString extends CWItem {
-    private String s;
+    final private String s;
 
     CWString(String s) {
       this.s = s;
     }
-
+    
     @Override
     public boolean equals(Object o) {
       return o instanceof CWString && ((CWString) o).s.equals(s);
@@ -95,7 +107,7 @@ public final class ClassWriter implements ClassConstants {
   }
 
   static class CWClass extends CWItem {
-    private String c;
+    final private String c;
 
     CWClass(String c) {
       this.c = c;
@@ -119,9 +131,12 @@ public final class ClassWriter implements ClassConstants {
 
   static class CWRef extends CWItem {
     final private String c;
-    private String n;
-    private String t;
-    private byte type;
+
+    final private String n;
+
+    final private String t;
+
+    final private byte type;
 
     CWRef(byte type, String c, String n, String t) {
       this.type = type;
@@ -152,8 +167,9 @@ public final class ClassWriter implements ClassConstants {
   }
 
   static class CWNAT extends CWItem {
-    private String n;
-    private String t;
+    final private String n;
+
+    final private String t;
 
     CWNAT(String n, String t) {
       this.n = n;
@@ -510,9 +526,9 @@ public final class ClassWriter implements ClassConstants {
    * byte buffer.
    */
   public static final class RawElement extends Element {
-    private byte[] buf;
+    final private byte[] buf;
     final private int offset;
-    private int len;
+    final private int len;
 
     /**
      * Create an Element for the 'len' bytes in 'buf' at offset 'offset'.
@@ -584,10 +600,11 @@ public final class ClassWriter implements ClassConstants {
   }
 
   static final class MemberElement extends Element {
-    private int access;
-    private int name;
-    private int type;
-    private Element[] attributes;
+    final private int access;
+    final private int name; 
+    final private int type;
+
+    final private Element[] attributes;
 
     public MemberElement(int access, int name, int type, Element[] attributes) {
       if (access < 0 || access > 0xFFFF) {
@@ -653,9 +670,9 @@ public final class ClassWriter implements ClassConstants {
    *          the attributes in raw form, one Element per attribute
    */
   public void addMethod(int access, int name, int type, Element[] attributes) {
-    //int idx=methods.size()-2;
-    //if (idx<0) idx=0;
-    //methods.add(0,new MemberElement(access, name, type, attributes));
+    // int idx=methods.size()-2;
+    // if (idx<0) idx=0;
+    // methods.add(0,new MemberElement(access, name, type, attributes));
     methods.add(new MemberElement(access, name, type, attributes));
     if (methods.size() > 0xFFFF) {
       throw new IllegalArgumentException("Too many methods");
@@ -801,7 +818,7 @@ public final class ClassWriter implements ClassConstants {
           }
           int bytes = p - (offset + 3);
           reserveBuf(bytes - maxBytes); // negative reservation to push back buf
-                                        // size
+          // size
           if (bytes > 0xFFFF) {
             throw new IllegalArgumentException("String too long: " + bytes + " bytes");
           }
@@ -875,8 +892,8 @@ public final class ClassWriter implements ClassConstants {
 
     offset = reserveBuf(2);
     int numMethods = methods.size();
-    //Xiangyu, debug
-    //System.out.println("numMethods="+numMethods);
+    // Xiangyu, debug
+    // System.out.println("numMethods="+numMethods);
     setUShort(buf, offset, numMethods);
     for (int i = 0; i < numMethods; i++) {
       emitElement(methods.get(i));
@@ -900,7 +917,9 @@ public final class ClassWriter implements ClassConstants {
 
   /**
    * Set the byte at offset 'offset' in 'buf' to the unsigned 8-bit value in v.
-   * @throws IllegalArgumentException  if buf is null
+   * 
+   * @throws IllegalArgumentException
+   *           if buf is null
    */
   public static void setUByte(byte[] buf, int offset, int v) throws IllegalArgumentException {
     if (buf == null) {
@@ -915,7 +934,9 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Set the 4 bytes at offset 'offset' in 'buf' to the signed 32-bit value in
    * v.
-   * @throws IllegalArgumentException  if buf is null
+   * 
+   * @throws IllegalArgumentException
+   *           if buf is null
    */
   public static void setInt(byte[] buf, int offset, int v) throws IllegalArgumentException {
     if (buf == null) {
@@ -942,21 +963,23 @@ public final class ClassWriter implements ClassConstants {
   /**
    * Set the 4 bytes at offset 'offset' in 'buf' to the float value in v.
    */
-  public static void setFloat(byte[] buf, int offset, float v) throws IllegalArgumentException{
+  public static void setFloat(byte[] buf, int offset, float v) throws IllegalArgumentException {
     setInt(buf, offset, Float.floatToIntBits(v));
   }
 
   /**
    * Set the 8 bytes at offset 'offset' in 'buf' to the double value in v.
    */
-  public static void setDouble(byte[] buf, int offset, double v) throws IllegalArgumentException{
+  public static void setDouble(byte[] buf, int offset, double v) throws IllegalArgumentException {
     setLong(buf, offset, Double.doubleToRawLongBits(v));
   }
 
   /**
    * Set the 2 bytes at offset 'offset' in 'buf' to the unsigned 16-bit value in
    * v.
-   * @throws IllegalArgumentException  if buf is null
+   * 
+   * @throws IllegalArgumentException
+   *           if buf is null
    */
   public static void setUShort(byte[] buf, int offset, int v) throws IllegalArgumentException {
     if (buf == null) {

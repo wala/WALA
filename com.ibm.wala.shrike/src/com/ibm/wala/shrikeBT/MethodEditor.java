@@ -67,7 +67,7 @@ public final class MethodEditor {
   private Instruction[] instructions;
   private ExceptionHandler[][] handlers;
 
-  private MethodData methodInfo;
+  final private MethodData methodInfo;
 
   // working
   private static final int BEFORE_PASS = 0x01;
@@ -194,9 +194,9 @@ public final class MethodEditor {
    */
   public final static class Output {
     final ArrayList<Instruction> newInstructions = new ArrayList<Instruction>();
-    ArrayList<ExceptionHandler[]> newInstructionHandlers = new ArrayList<ExceptionHandler[]>();
+    final ArrayList<ExceptionHandler[]> newInstructionHandlers = new ArrayList<ExceptionHandler[]>();
     int[] instructionsToBytecodes = new int[10];
-    int[] labelDefs;
+    final int[] labelDefs;
     ExceptionHandler[] additionalHandlers;
     int originalBytecode;
     boolean codeChanged = false;

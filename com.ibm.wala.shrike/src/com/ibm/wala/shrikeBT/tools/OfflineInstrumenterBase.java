@@ -39,7 +39,7 @@ public abstract class OfflineInstrumenterBase {
 
   final private HashSet<String> entryNames = new HashSet<String>();
 
-  private ArrayList<Input> inputs = new ArrayList<Input>();
+  final private ArrayList<Input> inputs = new ArrayList<Input>();
 
   final private BitSet ignoringInputs = new BitSet();
 
@@ -111,7 +111,7 @@ public abstract class OfflineInstrumenterBase {
    * JAR if the client requests that.
    */
   final class JarInput extends Input {
-    private File file;
+    final private File file;
 
     final private String name;
 

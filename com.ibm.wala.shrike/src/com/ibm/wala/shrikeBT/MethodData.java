@@ -31,7 +31,7 @@ public final class MethodData {
   final private int access;
   final private String classType;
   final private String name;
-  private String signature;
+  final private String signature;
   private Instruction[] instructions;
   private ExceptionHandler[][] handlers;
   private int[] instructionsToBytecodes;

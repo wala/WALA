@@ -31,17 +31,17 @@ import com.ibm.wala.shrikeBT.analysis.Verifier;
  */
 public abstract class Compiler implements Constants {
   // input
-  private boolean isStatic;
+  final private boolean isStatic;
 
   final private String classType;
 
-  private String signature;
+  final private String signature;
 
   private final Instruction[] instructions;
 
-  private ExceptionHandler[][] handlers;
+  final private ExceptionHandler[][] handlers;
 
-  private int[] instructionsToBytecodes;
+  final private int[] instructionsToBytecodes;
 
   private static final int[] noRawHandlers = new int[0];
 
@@ -399,11 +399,11 @@ public abstract class Compiler implements Constants {
   }
 
   abstract class Patch {
-    int instrStart;
+    final int instrStart;
 
-    int instrOffset;
+    final int instrOffset;
 
-    int targetLabel;
+    final int targetLabel;
 
     Patch(int instrStart, int instrOffset, int targetLabel) {
       this.instrStart = instrStart;
@@ -1152,11 +1152,11 @@ public abstract class Compiler implements Constants {
   }
 
   static class HelperPatch {
-    int start;
+    final int start;
 
-    int length;
+    final int length;
 
-    Instruction[] code;
+    final Instruction[] code;
 
     final ExceptionHandler[] handlers;
 
@@ -1751,21 +1751,21 @@ public abstract class Compiler implements Constants {
    * than 64K bytecodes).
    */
   public final static class Output {
-    private byte[] code;
+    final private byte[] code;
 
-    private int[] rawHandlers;
+    final private int[] rawHandlers;
 
-    private int[] newBytecodesToOldBytecodes;
+    final private int[] newBytecodesToOldBytecodes;
 
-    private String name;
+    final private String name;
 
-    private String signature;
+    final private String signature;
 
-    private boolean isStatic;
+    final private boolean isStatic;
 
-    private int maxLocals;
+    final private int maxLocals;
 
-    private int maxStack;
+    final private int maxStack;
 
     Output(String name, String signature, byte[] code, int[] rawHandlers, int[] newBytecodesToOldBytecodes, int maxLocals,
         int maxStack, boolean isStatic) {

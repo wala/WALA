@@ -43,7 +43,7 @@ import com.ibm.wala.shrikeCT.ClassWriter.Element;
 final public class ClassInstrumenter {
   final private boolean[] deletedMethods;
 
-  private MethodData[] methods;
+  final private MethodData[] methods;
 
   final private CodeReader[] oldCode;
 

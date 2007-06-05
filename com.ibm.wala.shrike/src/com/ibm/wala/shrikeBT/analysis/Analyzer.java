@@ -30,11 +30,10 @@ import com.ibm.wala.shrikeBT.Util;
  */
 public class Analyzer {
 
-
   // inputs
-  protected boolean isStatic;
+  final protected boolean isStatic;
   final protected String classType;
-  protected String signature;
+  final protected String signature;
   final protected Instruction[] instructions;
   final protected ExceptionHandler[][] handlers;
   protected ClassHierarchyProvider hierarchy;
@@ -398,9 +397,9 @@ public class Analyzer {
   }
 
   public static final class PathElement {
-    int index;
-    String[] stack;
-    String[] locals;
+    final int index;
+    final String[] stack;
+    final String[] locals;
 
     PathElement(int index, String[] stack, String[] locals) {
       this.stack = stack.clone();
