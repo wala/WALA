@@ -136,9 +136,7 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
     return site.hashCode() * 7529;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#getExceptionTypes()
-   */
+
   @Override
   public Collection<TypeReference> getExceptionTypes() {
     return Exceptions.getNullPointerException();
