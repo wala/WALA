@@ -109,7 +109,6 @@ public class Simplifier {
     return false;
   }
 
-
   private static Pair<ITerm, ITerm> getNextSubCandidate(Collection<IFormula> s, ITheory t, Collection<IFormula> alreadyUsed) {
     Collection<IFormula> candidates = HashSetFactory.make();
     candidates.addAll(s);
@@ -127,8 +126,8 @@ public class Simplifier {
   }
 
   /**
-   * does the structure of formula f suggest an immediate substitution
-   * to simplify it?
+   * does the structure of formula f suggest an immediate substitution to
+   * simplify it?
    * 
    * @return a pair (p1, p2) meaning "substitute p2 for p1"
    */
@@ -153,7 +152,9 @@ public class Simplifier {
 
   /**
    * in formula f, substitute the term t2 for all free occurences of t1
-   * @throws IllegalArgumentException  if formula is null
+   * 
+   * @throws IllegalArgumentException
+   *           if formula is null
    */
   public static IFormula substitute(IFormula formula, ITerm t1, ITerm t2) {
     if (formula == null) {
@@ -180,6 +181,8 @@ public class Simplifier {
         terms.add(substitute(t, t1, t2));
       }
       return RelationFormula.make(r.getRelation(), terms);
+    case CONSTANT:
+      return formula;
     default:
       Assertions.UNREACHABLE();
       return null;

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation.
+ * Copyright (c) 2007 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,37 +10,35 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-/**
- * @author schandra_sf
- */
-
 import java.util.Collection;
 import java.util.Collections;
 
-public class NullConstant extends IntConstant implements IConstant {
+public class BooleanConstantFormula implements IFormula {
 
-  // static NullConstant SINGLE = (NullConstant) new IntConstant(0);
+  public static final BooleanConstantFormula TRUE = new BooleanConstantFormula(BooleanConstant.TRUE);
+  public static final BooleanConstantFormula FALSE = new BooleanConstantFormula(BooleanConstant.FALSE);
 
-  private NullConstant() {
-    super(0);
+  private final BooleanConstant c;
+
+  private BooleanConstantFormula(BooleanConstant c) {
+    this.c = c;
   }
 
-  public static NullConstant make() {
-    return new NullConstant();
-  }
-
-  @Override
   public Collection<Variable> getFreeVariables() {
     return Collections.emptySet();
   }
 
-  @Override
   public Kind getKind() {
     return Kind.CONSTANT;
   }
 
+  public boolean isAtomic() {
+    return true;
+  }
+
   @Override
   public String toString() {
-    return "null";
+    return c.toString();
   }
+
 }

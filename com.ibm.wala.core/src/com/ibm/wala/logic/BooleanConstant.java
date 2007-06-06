@@ -11,26 +11,31 @@
 package com.ibm.wala.logic;
 
 import java.util.Collection;
+import java.util.Collections;
 
-/**
- * Formula := P(Term, ....) 
- *         |  NOT(Formula)
- *         |  Formula CONNECTIVE Formula
- *         |  QUANTIFIER Formula
- *         |  TRUE
- *         |  FALSE
- * 
- * @author sjfink
- *
- */
-public interface IFormula {
-  static enum Kind {
-    RELATION, NEGATION, BINARY, QUANTIFIED, CONSTANT
+
+public class BooleanConstant implements IConstant {
+  
+  public static final BooleanConstant TRUE = new BooleanConstant(true);
+  public static final BooleanConstant FALSE = new BooleanConstant(false);
+  
+  private boolean val;
+  
+  private BooleanConstant(boolean val) {
+    this.val = val;
+  }
+
+  public Collection<Variable> getFreeVariables() {
+    return Collections.emptySet();
+  }
+
+  public Kind getKind() {
+    return Kind.CONSTANT;
+  }
+
+  @Override
+  public String toString() {
+    return Boolean.toString(val);
   }
   
-  public boolean isAtomic();
-
-  public Kind getKind();
-  
-  public Collection<Variable> getFreeVariables();
 }

@@ -87,10 +87,6 @@ public class RelationFormula implements IFormula {
     return new RelationFormula(relation, terms);
   }
   
-  public static RelationFormula make(NullaryRelation R) {
-	  return new RelationFormula(R, new ArrayList<ITerm>());
-  }
-
   @Override
   public int hashCode() {
     final int PRIME = 31;

@@ -17,28 +17,29 @@ package com.ibm.wala.logic;
 
 public class NaryFunction implements IFunction {
 
-	  private final String symbol;
-	  private final int k;
+  private final String symbol;
 
-	  private NaryFunction(String symbol, int k) {
-	    this.symbol = symbol;
-	    this.k = k;
-	  }
+  private final int k;
 
-	  public static NaryFunction make(String symbol, int k) {
-	    return new NaryFunction(symbol, k);
-	  }
+  private NaryFunction(String symbol, int k) {
+    this.symbol = symbol;
+    this.k = k;
+  }
 
-	  public int getNumberOfParameters() {
-	    return k;
-	  }
+  public static NaryFunction make(String symbol, int k) {
+    return new NaryFunction(symbol, k);
+  }
 
-	  public String getSymbol() {
-	    return symbol;
-	  }
-	  
-	  @Override
-	  public String toString() {
-	    return getSymbol() + " : int ^ k -> int";
-	  }
+  public int getNumberOfParameters() {
+    return k;
+  }
+
+  public String getSymbol() {
+    return symbol;
+  }
+
+  @Override
+  public String toString() {
+    return getSymbol() + " : int ^ k -> int";
+  }
 }
