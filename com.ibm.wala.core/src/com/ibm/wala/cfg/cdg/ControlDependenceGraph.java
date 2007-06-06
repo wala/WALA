@@ -211,7 +211,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
     this(cfg, false);
   }
 
-  public ControlFlowGraph getUnderlyingCFG() {
+  public ControlFlowGraph getControlFlowGraph() {
     return cfg;
   }
 
@@ -247,5 +247,4 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
 
     return true;
   }
-
 }
