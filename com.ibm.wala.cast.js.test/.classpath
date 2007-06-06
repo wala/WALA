@@ -4,5 +4,6 @@
 	<classpathentry kind="src" path="examples-src"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/com.ibm.wala.cast.test"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
