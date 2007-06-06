@@ -29,8 +29,8 @@ public class AstContextInsensitiveSSAContextInterpreter
   extends ContextInsensitiveSSAInterpreter 
 {
 
-  public AstContextInsensitiveSSAContextInterpreter(AnalysisOptions options, IClassHierarchy cha) {
-    super(options, cha);
+  public AstContextInsensitiveSSAContextInterpreter(AnalysisOptions options) {
+    super(options);
   }
 
   public boolean understands(IMethod method, Context context) {
