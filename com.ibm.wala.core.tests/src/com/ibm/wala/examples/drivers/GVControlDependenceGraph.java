@@ -97,7 +97,7 @@ public class GVControlDependenceGraph {
       }
       AnalysisOptions options = new AnalysisOptions();
       options.getSSAOptions().setUsePiNodes(true);
-      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, cha, options.getSSAOptions(), new WarningSet());
+      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions(), new WarningSet());
 
       if (ir == null) {
         Assertions.UNREACHABLE("Null IR for " + m);

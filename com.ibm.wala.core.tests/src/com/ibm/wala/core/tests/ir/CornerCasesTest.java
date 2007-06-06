@@ -31,7 +31,7 @@ import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
- *  tests for weird corner cases, such as when the input program doesn't verify
+ * tests for weird corner cases, such as when the input program doesn't verify
  * 
  * @author sfink
  */
@@ -42,7 +42,8 @@ public class CornerCasesTest extends WalaTestCase {
   /**
    * test that getMethod() works even if a declared ancester interface doesn't
    * exist
-   * @throws ClassHierarchyException 
+   * 
+   * @throws ClassHierarchyException
    */
   public void testBug38484() throws ClassHierarchyException {
     AnalysisScope scope = null;
@@ -60,7 +61,8 @@ public class CornerCasesTest extends WalaTestCase {
   /**
    * test that type inference works in the presence of a getfield where the
    * field's declared type cannot be loaded
-   * @throws ClassHierarchyException 
+   * 
+   * @throws ClassHierarchyException
    */
   public void testBug38540() throws ClassHierarchyException {
     AnalysisScope scope = null;
@@ -74,7 +76,7 @@ public class CornerCasesTest extends WalaTestCase {
     ShrikeCTMethod m = (ShrikeCTMethod) klass.getMethod(new Selector(Atom.findOrCreateAsciiAtom("foo"), Descriptor
         .findOrCreateUTF8("()Ljava/lang/Object;")));
     assertTrue(m != null);
-    IR ir = options.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, cha, options.getSSAOptions(), warnings);
+    IR ir = options.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, options.getSSAOptions(), warnings);
     new TypeInference(ir);
 
     Trace.print(warnings.toString());

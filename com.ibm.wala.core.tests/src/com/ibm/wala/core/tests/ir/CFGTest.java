@@ -60,7 +60,7 @@ public class CFGTest extends WalaTestCase {
       }
       AnalysisOptions options = new AnalysisOptions();
       options.getSSAOptions().setUsePiNodes(true);
-      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, cha, options.getSSAOptions(), new WarningSet());
+      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions(), new WarningSet());
 
       ControlFlowGraph cfg = ir.getControlFlowGraph();
       try {

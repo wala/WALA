@@ -45,8 +45,11 @@ public class DeterministicIRTest extends WalaTestCase {
   private static final ClassLoader MY_CLASSLOADER = DeterministicIRTest.class.getClassLoader();
 
   private WarningSet warnings;
+
   private AnalysisScope scope;
+
   private ClassHierarchy cha;
+
   private AnalysisOptions options;
 
   public static void main(String[] args) {
@@ -94,7 +97,7 @@ public class DeterministicIRTest extends WalaTestCase {
     assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
     assertNotNull("imethod not found", imethod);
-    IR ir1 = options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, cha, options.getSSAOptions(), warnings);
+    IR ir1 = options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions(), warnings);
     options.getSSACache().wipe();
 
     checkNotAllNull(ir1.getInstructions());
@@ -107,9 +110,9 @@ public class DeterministicIRTest extends WalaTestCase {
       assertTrue("unsound CFG for ir1", false);
     }
 
-    IR ir2 = options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, cha, options.getSSAOptions(), warnings);
+    IR ir2 = options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions(), warnings);
     options.getSSACache().wipe();
-    
+
     try {
       GraphIntegrity.check(ir2.getControlFlowGraph());
     } catch (UnsoundGraphException e1) {
@@ -167,49 +170,48 @@ public class DeterministicIRTest extends WalaTestCase {
 
   public void testLocalNamesWithoutPiNodes() {
     boolean save = options.getSSAOptions().getUsePiNodes();
-    options.getSSAOptions().setUsePiNodes( false );
+    options.getSSAOptions().setUsePiNodes(false);
     IR ir = doMethod(scope.findMethod(AnalysisScope.APPLICATION, "LcornerCases/Locals", Atom.findOrCreateUnicodeAtom("foo"),
         new ImmutableByteArray(UTF8Convert.toUTF8("([Ljava/lang/String;)V"))));
-    options.getSSAOptions().setUsePiNodes( save );
-   
-    
+    options.getSSAOptions().setUsePiNodes(save);
+
     // v1 should be the parameter "a" at pc 0
-    String[] names = ir.getLocalNames(0,1);
-    assertTrue("failed local name resolution for v1@0" , names != null);
-    assertTrue("incorrect number of local names for v1@0: " + names.length , names.length == 1);
+    String[] names = ir.getLocalNames(0, 1);
+    assertTrue("failed local name resolution for v1@0", names != null);
+    assertTrue("incorrect number of local names for v1@0: " + names.length, names.length == 1);
     assertTrue("incorrect local name resolution for v1@0: " + names[0], names[0].equals("a"));
-  
+
     // v2 is a compiler-induced temporary
-    assertTrue("didn't expect name for v2 at pc 2" , ir.getLocalNames(2,2) == null);
-  
+    assertTrue("didn't expect name for v2 at pc 2", ir.getLocalNames(2, 2) == null);
+
     // at pc 5, v1 should represent the locals "a" and "b"
-    names = ir.getLocalNames(5,1);
-    assertTrue("failed local name resolution for v1@5" , names != null);
-    assertTrue("incorrect number of local names for v1@5: " + names.length , names.length == 2);
+    names = ir.getLocalNames(5, 1);
+    assertTrue("failed local name resolution for v1@5", names != null);
+    assertTrue("incorrect number of local names for v1@5: " + names.length, names.length == 2);
     assertTrue("incorrect local name resolution #0 for v1@5: " + names[0], names[0].equals("a"));
     assertTrue("incorrect local name resolution #1 for v1@5: " + names[1], names[1].equals("b"));
   }
 
   public void testLocalNamesWithPiNodes() {
     boolean save = options.getSSAOptions().getUsePiNodes();
-    options.getSSAOptions().setUsePiNodes( true );
+    options.getSSAOptions().setUsePiNodes(true);
     IR ir = doMethod(scope.findMethod(AnalysisScope.APPLICATION, "LcornerCases/Locals", Atom.findOrCreateUnicodeAtom("foo"),
         new ImmutableByteArray(UTF8Convert.toUTF8("([Ljava/lang/String;)V"))));
-    options.getSSAOptions().setUsePiNodes( save );
-   
+    options.getSSAOptions().setUsePiNodes(save);
+
     // v1 should be the parameter "a" at pc 0
-    String[] names = ir.getLocalNames(0,1);
-    assertTrue("failed local name resolution for v1@0" , names != null);
-    assertTrue("incorrect number of local names for v1@0: " + names.length , names.length == 1);
+    String[] names = ir.getLocalNames(0, 1);
+    assertTrue("failed local name resolution for v1@0", names != null);
+    assertTrue("incorrect number of local names for v1@0: " + names.length, names.length == 1);
     assertTrue("incorrect local name resolution for v1@0: " + names[0], names[0].equals("a"));
-  
+
     // v2 is a compiler-induced temporary
-    assertTrue("didn't expect name for v2 at pc 2" , ir.getLocalNames(2,2) == null);
-  
+    assertTrue("didn't expect name for v2 at pc 2", ir.getLocalNames(2, 2) == null);
+
     // at pc 5, v1 should represent the locals "a" and "b"
-    names = ir.getLocalNames(5,1);
-    assertTrue("failed local name resolution for v1@5" , names != null);
-    assertTrue("incorrect number of local names for v1@5: " + names.length , names.length == 2);
+    names = ir.getLocalNames(5, 1);
+    assertTrue("failed local name resolution for v1@5", names != null);
+    assertTrue("incorrect number of local names for v1@5: " + names.length, names.length == 2);
     assertTrue("incorrect local name resolution #0 for v1@5: " + names[0], names[0].equals("a"));
     assertTrue("incorrect local name resolution #1 for v1@5: " + names[1], names[1].equals("b"));
   }

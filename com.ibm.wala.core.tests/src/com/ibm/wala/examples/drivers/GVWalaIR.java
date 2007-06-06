@@ -32,8 +32,8 @@ import com.ibm.wala.viz.GhostviewUtil;
 
 /**
  * 
- * This simple example application builds a WALA IR and fires off ghostview
- * to viz a DOT representation.
+ * This simple example application builds a WALA IR and fires off ghostview to
+ * viz a DOT representation.
  * 
  * @author sfink
  */
@@ -93,7 +93,7 @@ public class GVWalaIR {
       }
       AnalysisOptions options = new AnalysisOptions();
       options.getSSAOptions().setUsePiNodes(true);
-      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, cha, options.getSSAOptions(), new WarningSet());
+      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions(), new WarningSet());
 
       if (ir == null) {
         Assertions.UNREACHABLE("Null IR for " + m);
@@ -110,8 +110,7 @@ public class GVWalaIR {
         Assertions.UNREACHABLE();
       }
       String psFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + GVWalaIR.PS_FILE;
-      String dotFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar
-          + GVTypeHierarchy.DOT_FILE;
+      String dotFile = wp.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + GVTypeHierarchy.DOT_FILE;
       String dotExe = wp.getProperty(WalaExamplesProperties.DOT_EXE);
       String gvExe = wp.getProperty(WalaExamplesProperties.GHOSTVIEW_EXE);
 
