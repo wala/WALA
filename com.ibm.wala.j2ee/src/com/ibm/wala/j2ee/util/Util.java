@@ -69,7 +69,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(cha, options, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
       addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
       appSelector = new J2EEContextSelector(typeInference, warnings);
       appInterpreter = new CommandInterpreter(cha, warnings);
@@ -101,7 +101,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(cha, options, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
       addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
       appSelector = new J2EEContextSelector(typeInference, warnings);
       appInterpreter = new CommandInterpreter(cha, warnings);
@@ -134,7 +134,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(cha, options, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
       addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
       appSelector = new J2EEContextSelector(typeInference, warnings);
       appInterpreter = new CommandInterpreter(cha, warnings);
@@ -170,7 +170,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(cha, options, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
       addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
       appSelector = new J2EEContextSelector(typeInference, warnings);
       appInterpreter = new CommandInterpreter(cha, warnings);
@@ -206,7 +206,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(cha, options, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
       addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
       appSelector = new J2EEContextSelector(typeInference, warnings);
       appInterpreter = new CommandInterpreter(cha, warnings);
@@ -240,7 +240,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(cha, options, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
       addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
       appSelector = new J2EEContextSelector(typeInference, warnings);
       appInterpreter = new CommandInterpreter(cha, warnings);
@@ -273,7 +273,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(cha, options, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
       addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
       appSelector = new J2EEContextSelector(typeInference, warnings);
       appInterpreter = new CommandInterpreter(cha, warnings);
@@ -286,8 +286,8 @@ public class Util {
       ReceiverTypeInferenceCache typeInference, WarningSet warn) {
 
     if (cha == null) {
-          throw new IllegalArgumentException("cha is null");
-        }
+      throw new IllegalArgumentException("cha is null");
+    }
     MethodTargetSelector ms = new J2EEMethodTargetSelector(scope, options.getMethodTargetSelector(), dmd, cha, typeInference, warn);
     options.setSelector(ms);
 
