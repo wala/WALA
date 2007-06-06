@@ -10,10 +10,13 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeBT;
 
+import com.ibm.wala.annotations.NonNull;
+
 /**
  * This class represents instanceof instructions.
  */
 public final class InstanceofInstruction extends Instruction {
+  @NonNull
   final private String type;
 
   protected InstanceofInstruction(String type) {

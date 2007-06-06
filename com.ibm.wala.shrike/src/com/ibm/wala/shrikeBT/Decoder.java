@@ -12,6 +12,7 @@ package com.ibm.wala.shrikeBT;
 
 import java.util.ArrayList;
 
+import com.ibm.wala.annotations.NonNull;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction.Operator;
 
 /**
@@ -134,7 +135,9 @@ public abstract class Decoder implements Constants {
   final private ConstantPoolReader constantPool;
 
   // Holds the input to decode
+  @NonNull
   private final byte[] code;
+  @NonNull
   private final int[] rawHandlers;
 
   // Temporary working data

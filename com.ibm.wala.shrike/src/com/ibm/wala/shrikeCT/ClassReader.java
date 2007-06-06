@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeCT;
 
+import com.ibm.wala.annotations.NonNull;
+
 /**
  * This is the core class for reading class file data.
  * 
@@ -17,6 +19,7 @@ package com.ibm.wala.shrikeCT;
  * InvalidClassFileException.
  */
 public final class ClassReader implements ClassConstants {
+  @NonNull
   private final byte[] bytes;
   private int[] methodOffsets;
   private int[] fieldOffsets;
