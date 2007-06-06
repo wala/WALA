@@ -290,8 +290,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     return result;
   }
 
-  @Override
-  protected String computeGenericsSignature() throws InvalidClassFileException {
+  private String computeGenericsSignature() throws InvalidClassFileException {
     SignatureReader reader = getSignatureReader();
     if (reader == null) {
       return null;
@@ -309,11 +308,12 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
   }
 
   /**
+   * TODO: cache?
    * @return raw "Signature" attribute from the bytecode
    * @throws InvalidClassFileException 
    */
   private String getGenericsSignature() throws InvalidClassFileException {
-    return getBCInfo().genericsSignature;
+    return computeGenericsSignature();
   }
 
   /**

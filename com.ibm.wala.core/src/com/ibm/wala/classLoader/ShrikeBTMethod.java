@@ -121,11 +121,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
      * Exception types this method might throw. Computed on demand.
      */
     private TypeReference[] exceptionTypes;
-
-    /**
-     * the "Signature" attribute; holds information on generics
-     */
-    protected String genericsSignature;
   }
 
   /**
@@ -204,7 +199,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   private BytecodeInfo computeBCInfo() throws InvalidClassFileException {
     BytecodeInfo result = new BytecodeInfo();
     result.exceptionTypes = computeDeclaredExceptions();
-    result.genericsSignature = computeGenericsSignature();
 
     if (isNative()) {
       return result;
@@ -774,8 +768,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
       return null;
     }
   }
-
-  protected abstract String computeGenericsSignature() throws InvalidClassFileException;
 
   /*
    * @see com.ibm.wala.classLoader.IMethod#getLineNumber(int)
