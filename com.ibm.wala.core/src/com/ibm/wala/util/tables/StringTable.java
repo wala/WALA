@@ -19,8 +19,6 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.StringTokenizer;
 
-import org.eclipse.core.runtime.Plugin;
-
 import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.SimpleVector;
@@ -81,19 +79,19 @@ public class StringTable extends Table<String> implements Cloneable {
     return readFromTextFile(f);
   }
 
-  /**
-   * read from a text file obtained as a resource
-   * 
-   * @param fileName
-   * @throws IllegalArgumentException  if p is null
-   */
-  public static StringTable readFromTextFile(Plugin p, String fileName) throws IOException {
-    if (p == null) {
-      throw new IllegalArgumentException("p is null");
-    }
-    File f = FileProvider.getFileFromPlugin(p, fileName);
-    return readFromTextFile(f);
-  }
+//  /**
+//   * read from a text file obtained as a resource
+//   * 
+//   * @param fileName
+//   * @throws IllegalArgumentException  if p is null
+//   */
+//  public static StringTable readFromTextFile(Plugin p, String fileName) throws IOException {
+//    if (p == null) {
+//      throw new IllegalArgumentException("p is null");
+//    }
+//    File f = FileProvider.getFileFromPlugin(p, fileName);
+//    return readFromTextFile(f);
+//  }
 
   /**
    * @param f
@@ -101,7 +99,7 @@ public class StringTable extends Table<String> implements Cloneable {
    * @throws IOException 
    * @throws FileNotFoundException 
    */
-  private static StringTable readFromTextFile(File f) throws FileNotFoundException, IOException {
+  public static StringTable readFromTextFile(File f) throws FileNotFoundException, IOException {
     return readFromStream(new FileInputStream(f));
   }
 
