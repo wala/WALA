@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
@@ -215,11 +216,25 @@ public class JdtUtil {
    */
   public static IType findJavaClassInProjects(String className, Collection<IJavaProject> projects) {
     
-    SearchPattern p = SearchPattern.createPattern(className, IJavaSearchConstants.CLASS_AND_INTERFACE, IJavaSearchConstants.DECLARATIONS,
-        SearchPattern.R_EXACT_MATCH);
     IJavaElement[] arr = new IJavaElement[projects.size()];
     projects.toArray(arr);
     IJavaSearchScope scope = SearchEngine.createJavaSearchScope(arr , false);
+    
+    return searchForJavaClass(className, scope);
+  }
+  
+  public static IType findJavaClassInResources(String className, Collection<IResource> resources) {
+    
+    Collection<IJavaProject> projects = HashSetFactory.make();
+    for (IResource r : resources) {
+      projects.add(JavaCore.create(r).getJavaProject());
+    }
+    return findJavaClassInProjects(className, projects);
+  }
+
+  private static IType searchForJavaClass(String className, IJavaSearchScope scope) {
+    SearchPattern p = SearchPattern.createPattern(className, IJavaSearchConstants.CLASS_AND_INTERFACE, IJavaSearchConstants.DECLARATIONS,
+        SearchPattern.R_EXACT_MATCH);
     SearchEngine engine = new SearchEngine();
     final Collection<IJavaElement> kludge = HashSetFactory.make();
     SearchRequestor requestor = new SearchRequestor() {
@@ -239,10 +254,9 @@ public class JdtUtil {
       System.err.println("Found " + className);
       return (IType) kludge.iterator().next();
     } else {
-      System.err.println("Failed to find " + className);
+      System.err.println("Failed to find " + className + " " + kludge.size());
       return null;
     }
-
   }
 
   /**
