@@ -37,7 +37,7 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
- *
+ * 
  * A graph of basic blocks.
  * 
  * @author sfink
@@ -51,8 +51,6 @@ public class ShrikeCFG extends AbstractCFG {
 
   private final WarningSet warnings;
 
-  private final IClassHierarchy cha;
-
   private final ShrikeCTMethod method;
 
   /**
@@ -65,7 +63,7 @@ public class ShrikeCFG extends AbstractCFG {
    */
   final private Set<ExceptionHandler> exceptionHandlers = HashSetFactory.make(10);
 
-  public ShrikeCFG(ShrikeCTMethod method, WarningSet warnings, IClassHierarchy cha) throws IllegalArgumentException {
+  public ShrikeCFG(ShrikeCTMethod method, WarningSet warnings) throws IllegalArgumentException {
     super(method);
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
@@ -73,7 +71,6 @@ public class ShrikeCFG extends AbstractCFG {
     this.method = method;
     this.hashBase = method.hashCode() * 9967;
     this.warnings = warnings;
-    this.cha = cha;
     makeBasicBlocks();
     init();
     computeI2BMapping();
@@ -267,6 +264,7 @@ public class ShrikeCFG extends AbstractCFG {
      *          the last instruction in a basic block.
      */
     private void addExceptionalEdges(Instruction last) {
+      IClassHierarchy cha = getMethod().getClassHierarchy();
       if (Exceptions.isPEI(last)) {
         Collection<TypeReference> exceptionTypes = null;
         boolean goToAllHandlers = false;
@@ -285,7 +283,7 @@ public class ShrikeCFG extends AbstractCFG {
           if (hs != null && hs.length > 0) {
             exceptionTypes = Exceptions.getExceptionTypes(getMethod().getDeclaringClass().getReference().getClassLoader(), last,
                 cha, warnings);
-          } 
+          }
         }
 
         if (hs != null && hs.length > 0) {
@@ -328,7 +326,8 @@ public class ShrikeCFG extends AbstractCFG {
                 addExceptionalEdgeTo(b);
                 exceptionTypes.clear();
               } else {
-                // the set "caught" should be the set of exceptions that MUST have been caught
+                // the set "caught" should be the set of exceptions that MUST
+                // have been caught
                 // by the handlers in scope
                 HashSet<TypeReference> caught = HashSetFactory.make(exceptionTypes.size());
                 // check if we should add an edge to the catch block.
@@ -345,7 +344,7 @@ public class ShrikeCFG extends AbstractCFG {
                       if (cha.isSubclassOf(klass, caughtClass) || cha.isSubclassOf(caughtClass, klass)) {
                         // add the edge and null out the type from the array
                         addExceptionalEdgeTo(b);
-                        if (cha.isSubclassOf( klass, caughtClass )) {
+                        if (cha.isSubclassOf(klass, caughtClass)) {
                           caught.add(t);
                         }
                       }
@@ -482,7 +481,7 @@ public class ShrikeCFG extends AbstractCFG {
     }
 
     public Iterator<IInstruction> iterator() {
-      return new ArrayIterator<IInstruction>(getInstructions(),getFirstInstructionIndex(),getLastInstructionIndex());
+      return new ArrayIterator<IInstruction>(getInstructions(), getFirstInstructionIndex(), getLastInstructionIndex());
     }
   }
 

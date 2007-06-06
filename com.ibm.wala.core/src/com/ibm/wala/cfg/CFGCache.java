@@ -16,7 +16,6 @@ import java.util.Map;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.util.CacheReference;
 import com.ibm.wala.util.collections.Pair;
@@ -67,7 +66,7 @@ public class CFGCache {
    *         abstract or native.
    * @throws IllegalArgumentException  if m is null
    */
-  public synchronized ControlFlowGraph findOrCreate(IMethod m, Context C, IClassHierarchy cha, WarningSet warnings) {
+  public synchronized ControlFlowGraph findOrCreate(IMethod m, Context C,  WarningSet warnings) {
 
     if (m == null) {
       throw new IllegalArgumentException("m is null");
@@ -81,13 +80,13 @@ public class CFGCache {
     Pair<IMethod,Context> p = new Pair<IMethod,Context>(m, C);
     Object ref = dictionary.get(p);
     if (ref == null || CacheReference.get(ref) == null) {
-      ControlFlowGraph cfg = factory.makeCFG(m, C, cha, warnings);
+      ControlFlowGraph cfg = factory.makeCFG(m, C,  warnings);
       ref = CacheReference.make(cfg);
       dictionary.put(p, ref);
       return cfg;
     } else {
       ControlFlowGraph cfg = (ControlFlowGraph) CacheReference.get(ref);
-      return (cfg == null) ? findOrCreate(m, C, cha, warnings) : cfg;
+      return (cfg == null) ? findOrCreate(m, C, warnings) : cfg;
     }
   }
 

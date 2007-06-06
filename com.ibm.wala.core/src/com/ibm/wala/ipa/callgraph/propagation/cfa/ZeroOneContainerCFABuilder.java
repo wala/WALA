@@ -42,7 +42,8 @@ public class ZeroOneContainerCFABuilder extends CFABuilder {
    *          application-specific logic to interpret a method in context
    * @param reflect
    *          reflection specification
-   * @throws IllegalArgumentException  if options is null
+   * @throws IllegalArgumentException
+   *           if options is null
    */
   public ZeroOneContainerCFABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
@@ -55,31 +56,33 @@ public class ZeroOneContainerCFABuilder extends CFABuilder {
     ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
 
-    SSAContextInterpreter c = new DefaultSSAInterpreter(options, cha, warnings);
-    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, cha, reflect, warnings), c);
+    SSAContextInterpreter c = new DefaultSSAInterpreter(options, warnings);
+    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect, warnings), c);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, c);
     setContextInterpreter(contextInterpreter);
 
     ZeroXInstanceKeys zik = makeInstanceKeys(cha, warnings, options, contextInterpreter);
     setInstanceKeys(zik);
 
-    ContextSelector CCS = makeContainerContextSelector(cha,(ZeroXInstanceKeys) getInstanceKeys());
+    ContextSelector CCS = makeContainerContextSelector(cha, (ZeroXInstanceKeys) getInstanceKeys());
     DelegatingContextSelector DCS = new DelegatingContextSelector(CCS, contextSelector);
     setContextSelector(DCS);
   }
 
-  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options, SSAContextInterpreter contextInterpreter) {
+  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+      SSAContextInterpreter contextInterpreter) {
     ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, warnings, ZeroXInstanceKeys.ALLOCATIONS
         | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS | ZeroXInstanceKeys.SMUSH_STRINGS
         | ZeroXInstanceKeys.SMUSH_THROWABLES);
     return zik;
   }
-  
+
   /**
-   * @return an object which creates contexts for call graph nodes based on the container disambiguation policy
+   * @return an object which creates contexts for call graph nodes based on the
+   *         container disambiguation policy
    */
   protected ContextSelector makeContainerContextSelector(IClassHierarchy cha, ZeroXInstanceKeys keys) {
-    return new ContainerContextSelector(cha,keys );
+    return new ContainerContextSelector(cha, keys);
   }
 
   /*

@@ -23,7 +23,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.DefaultRTAInterpreter;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.warnings.WarningSet;
@@ -40,15 +39,10 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
 
   private final ContextInsensitiveSSAInterpreter defaultInterpreter;
 
-  /**
-   * @param options
-   * @param cha
-   * @param warnings
-   */
-  public DefaultSSAInterpreter(AnalysisOptions options, IClassHierarchy cha,WarningSet warnings) {
-    super(options, cha, warnings);
+  public DefaultSSAInterpreter(AnalysisOptions options, WarningSet warnings) {
+    super(options, warnings);
     cloneInterpreter = new CloneInterpreter();
-    defaultInterpreter = new ContextInsensitiveSSAInterpreter(options, cha);
+    defaultInterpreter = new ContextInsensitiveSSAInterpreter(options);
   }
 
   private SSAContextInterpreter getCFAInterpreter(CGNode node) {

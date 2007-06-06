@@ -23,6 +23,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class DefaultCFGProvider implements CFGProvider {
   private final CallGraph callGraph;
+
   private final CFGCache cfgCache;
 
   public ControlFlowGraph getCFG(CGNode n, WarningSet warnings) {
@@ -31,7 +32,7 @@ public class DefaultCFGProvider implements CFGProvider {
     if (interp instanceof CFGProvider) {
       return ((CFGProvider) interp).getCFG(n, warnings);
     } else {
-      return cfgCache.findOrCreate(n.getMethod(),n.getContext(),callGraph.getClassHierarchy(), warnings);
+      return cfgCache.findOrCreate(n.getMethod(), n.getContext(), warnings);
     }
   }
 

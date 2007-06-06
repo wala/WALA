@@ -13,12 +13,11 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
- * This is intended as an internal interface; clients probably shouldn't be using
- * this directly.
+ * This is intended as an internal interface; clients probably shouldn't be
+ * using this directly.
  * 
  * If you have a call graph in hand, to get the IR for a CGNode, use
  * callGraph.getInterpreter().getIR();
@@ -26,12 +25,12 @@ import com.ibm.wala.util.warnings.WarningSet;
  * Otherwise, look at SSACache.
  * 
  * @author Julian Dolby
- *
+ * 
  */
 public interface IRFactory {
 
-  IR makeIR(IMethod method, Context C, IClassHierarchy cha, SSAOptions options, WarningSet warnings);
+  IR makeIR(IMethod method, Context C, SSAOptions options, WarningSet warnings);
 
-  ControlFlowGraph makeCFG(IMethod method, Context C, IClassHierarchy cha, WarningSet warnings);
+  ControlFlowGraph makeCFG(IMethod method, Context C, WarningSet warnings);
 
 }

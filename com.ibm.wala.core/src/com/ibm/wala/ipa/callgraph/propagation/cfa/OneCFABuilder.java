@@ -35,7 +35,6 @@ public class OneCFABuilder extends CFABuilder {
 
     super(cha, warnings, options);
 
-
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha, warnings));
 
     ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
@@ -43,8 +42,8 @@ public class OneCFABuilder extends CFABuilder {
     contextSelector = new OneLevelContextSelector(contextSelector);
     setContextSelector(contextSelector);
 
-    SSAContextInterpreter defI = new DefaultSSAInterpreter(options, cha, warnings);
-    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, cha, reflect, warnings), defI);
+    SSAContextInterpreter defI = new DefaultSSAInterpreter(options, warnings);
+    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect, warnings), defI);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     setContextInterpreter(contextInterpreter);
   }

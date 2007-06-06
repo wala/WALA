@@ -429,8 +429,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   protected SSAContextInterpreter makeContextInterpreter(SSAContextInterpreter appContextInterpreter,
       ReflectionSpecification reflect, WarningSet warnings) {
 
-    SSAContextInterpreter defI = new DefaultSSAInterpreter(getOptions(), getClassHierarchy(), warnings);
-    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(getOptions(), getClassHierarchy(), reflect, warnings),
+    SSAContextInterpreter defI = new DefaultSSAInterpreter(getOptions(),warnings);
+    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(getOptions(),  reflect, warnings),
         defI);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     return contextInterpreter;

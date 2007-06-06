@@ -17,8 +17,8 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.types.*;
 
 /**
- *
- * Absraction of a Java type.  These are immutable.
+ * 
+ * Absraction of a Java type. These are immutable.
  * 
  * @author sfink
  */
@@ -32,24 +32,29 @@ public abstract class TypeAbstraction implements ContextItem {
     public TypeAbstraction meet(TypeAbstraction rhs) {
       return rhs;
     }
+
     @Override
     public String toString() {
       return "JavaTypeAbstraction.TOP";
     }
+
     @Override
     public int hashCode() {
       return 17;
     }
+
     @Override
     public boolean equals(Object other) {
       return this == other;
     }
+
     @Override
-    public IClass getType() { 
+    public IClass getType() {
       return null;
     }
+
     @Override
-    public TypeReference getTypeReference() { 
+    public TypeReference getTypeReference() {
       return null;
     }
   };

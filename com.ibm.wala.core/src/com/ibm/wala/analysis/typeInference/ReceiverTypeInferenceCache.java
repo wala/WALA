@@ -14,7 +14,6 @@ import java.util.Map;
 
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.CacheReference;
@@ -31,15 +30,11 @@ public class ReceiverTypeInferenceCache {
 
   private final WarningSet warnings;
 
-  private final IClassHierarchy cha;
-
   private final AnalysisOptions options;
 
-  public ReceiverTypeInferenceCache(IClassHierarchy cha, AnalysisOptions options, WarningSet warnings) {
+  public ReceiverTypeInferenceCache(AnalysisOptions options, WarningSet warnings) {
     this.warnings = warnings;
     this.options = options;
-    this.cha = cha;
-
   }
 
   /**
@@ -60,7 +55,7 @@ public class ReceiverTypeInferenceCache {
       if (result == null) {
         SSAOptions options = SSAOptions.defaultOptions();
         options.setUsePiNodes(true);
-        IR ir = this.options.getSSACache().findOrCreateIR(n.getMethod(), n.getContext(), cha, options, warnings);
+        IR ir = this.options.getSSACache().findOrCreateIR(n.getMethod(), n.getContext(),  options, warnings);
         TypeInference T = new TypeInference(ir);
         T.solve();
 

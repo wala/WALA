@@ -12,7 +12,6 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -62,9 +61,10 @@ public class SSACache {
    *          an option to track analysis warnings
    * @return an IR for m, built according to the specified options. null if m is
    *         abstract or native.
-   * @throws IllegalArgumentException  if m is null
+   * @throws IllegalArgumentException
+   *           if m is null
    */
-  public synchronized IR findOrCreateIR(final IMethod m, final Context C, final IClassHierarchy cha, final SSAOptions options, final WarningSet warnings) {
+  public synchronized IR findOrCreateIR(final IMethod m, final Context C, final SSAOptions options, final WarningSet warnings) {
 
     if (m == null) {
       throw new IllegalArgumentException("m is null");
@@ -74,13 +74,13 @@ public class SSACache {
     }
 
     if (DISABLE) {
-      return factory.makeIR(m, C, cha, options, warnings);
+      return factory.makeIR(m, C, options, warnings);
     }
 
-    IR ir = (IR)irCache.find(m,C, options);
+    IR ir = (IR) irCache.find(m, C, options);
     if (ir == null) {
-      ir = factory.makeIR(m, C, cha, options, warnings);
-      irCache.cache(m,C, options,ir);
+      ir = factory.makeIR(m, C, options, warnings);
+      irCache.cache(m, C, options, ir);
     }
     return ir;
   }
@@ -92,43 +92,46 @@ public class SSACache {
    *          options governing ssa construction
    * @param warnings
    *          an option to track analysis warnings
-   * @return DefUse information for m, built according to the specified options.  null if unavailable
-   * @throws IllegalArgumentException  if m is null
+   * @return DefUse information for m, built according to the specified options.
+   *         null if unavailable
+   * @throws IllegalArgumentException
+   *           if m is null
    */
-  public synchronized DefUse findOrCreateDU(IMethod m, Context C, IClassHierarchy cha, SSAOptions options, WarningSet warnings) {
-   
+  public synchronized DefUse findOrCreateDU(IMethod m, Context C, SSAOptions options, WarningSet warnings) {
+
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
     if (m.isAbstract() || m.isNative()) {
       return null;
     }
-    
-    DefUse du = (DefUse)duCache.find(m,C,options);
+
+    DefUse du = (DefUse) duCache.find(m, C, options);
     if (du == null) {
-      IR ir = findOrCreateIR(m,C,cha,options,warnings);
+      IR ir = findOrCreateIR(m, C, options, warnings);
       du = new DefUse(ir);
-      duCache.cache(m,C,options,du);
+      duCache.cache(m, C, options, du);
     }
     return du;
   }
-  
+
   /**
-   * @return DefUse information for m, built according to the specified options.  null if unavailable
-   * @throws IllegalArgumentException  if ir is null
+   * @return DefUse information for m, built according to the specified options.
+   *         null if unavailable
+   * @throws IllegalArgumentException
+   *           if ir is null
    */
   public synchronized DefUse findOrCreateDU(IR ir, Context C) {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
-    DefUse du = (DefUse)duCache.find(ir.getMethod(),C,ir.getOptions());
+    DefUse du = (DefUse) duCache.find(ir.getMethod(), C, ir.getOptions());
     if (du == null) {
       du = new DefUse(ir);
-      duCache.cache(ir.getMethod(),C,ir.getOptions(),du);
+      duCache.cache(ir.getMethod(), C, ir.getOptions(), du);
     }
     return du;
   }
-  
 
   /**
    * The existence of this is unfortunate.

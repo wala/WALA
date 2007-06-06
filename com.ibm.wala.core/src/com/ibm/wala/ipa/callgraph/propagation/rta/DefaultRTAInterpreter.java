@@ -20,7 +20,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContextInsensitiveSSAInterpreter;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.WarningSet;
 
@@ -42,12 +41,11 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
 
   /**
    * @param options governing analysis options
-   * @param cha governing class hierarchy
    * @param warnings an object to track analysis warnings
    */
-  public DefaultRTAInterpreter(AnalysisOptions options, IClassHierarchy cha, WarningSet warnings) {
+  public DefaultRTAInterpreter(AnalysisOptions options, WarningSet warnings) {
     this.warnings = warnings;
-    defaultInterpreter = new ContextInsensitiveSSAInterpreter(options, cha);
+    defaultInterpreter = new ContextInsensitiveSSAInterpreter(options);
   }
 
   private RTAContextInterpreter getNodeInterpreter(CGNode node) {

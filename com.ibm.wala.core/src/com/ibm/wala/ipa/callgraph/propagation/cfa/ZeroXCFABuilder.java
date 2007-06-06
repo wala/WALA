@@ -44,8 +44,8 @@ public class ZeroXCFABuilder extends CFABuilder {
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     setContextSelector(contextSelector);
 
-    SSAContextInterpreter c = new DefaultSSAInterpreter(options, cha, warnings);
-    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, cha, reflect, warnings), c);
+    SSAContextInterpreter c = new DefaultSSAInterpreter(options,warnings);
+    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect, warnings), c);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, c);
     setContextInterpreter(contextInterpreter);
 

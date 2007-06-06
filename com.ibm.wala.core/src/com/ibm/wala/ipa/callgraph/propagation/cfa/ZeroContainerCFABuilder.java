@@ -61,7 +61,7 @@ public class ZeroContainerCFABuilder extends CFABuilder {
     DelegatingContextSelector DCS = new DelegatingContextSelector(CCS, contextSelector);
     setContextSelector(DCS);
 
-    setContextInterpreter(makeDefaultContextInterpreters(appContextInterpreter, options, cha, reflect, warnings));
+    setContextInterpreter(makeDefaultContextInterpreters(appContextInterpreter, options, reflect, warnings));
 
   }
 

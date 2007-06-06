@@ -45,8 +45,8 @@ public class nCFABuilder extends CFABuilder {
     contextSelector = new nCFAContextSelector(n, contextSelector);
     setContextSelector(contextSelector);
 
-    SSAContextInterpreter defI = new DefaultSSAInterpreter(options, cha, warnings);
-    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, cha, reflect, warnings), defI);
+    SSAContextInterpreter defI = new DefaultSSAInterpreter(options, warnings);
+    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect, warnings), defI);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     setContextInterpreter(contextInterpreter);
   }

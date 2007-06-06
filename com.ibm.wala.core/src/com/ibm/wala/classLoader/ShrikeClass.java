@@ -148,11 +148,6 @@ public final class ShrikeClass implements IClass {
   private final int hashCode;
 
   /**
-   * @param reader
-   * @param loader
-   * @param cha
-   * @param warnings
-   * @throws InvalidClassFileException
    * @throws IllegalArgumentException
    *           if reader is null
    */

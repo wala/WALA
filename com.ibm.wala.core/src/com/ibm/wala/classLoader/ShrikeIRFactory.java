@@ -13,7 +13,6 @@ package com.ibm.wala.classLoader;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
@@ -39,8 +38,8 @@ public class ShrikeIRFactory implements IRFactory {
    *      com.ibm.wala.ipa.cha.IClassHierarchy,
    *      com.ibm.wala.util.warnings.WarningSet)
    */
-  public ControlFlowGraph makeCFG(final IMethod method, Context C, final IClassHierarchy cha, final WarningSet warnings) {
-    return new ShrikeCFG((ShrikeCTMethod) method, warnings, cha);
+  public ControlFlowGraph makeCFG(final IMethod method, Context C, final WarningSet warnings) {
+    return new ShrikeCFG((ShrikeCTMethod) method, warnings);
   }
 
   /*
@@ -48,7 +47,7 @@ public class ShrikeIRFactory implements IRFactory {
    *      com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.ssa.SSAOptions,
    *      com.ibm.wala.util.warnings.WarningSet)
    */
-  public IR makeIR(final IMethod method, Context C, final IClassHierarchy cha, final SSAOptions options, final WarningSet warnings)
+  public IR makeIR(final IMethod method, Context C, final SSAOptions options, final WarningSet warnings)
       throws IllegalArgumentException {
 
     if (!(method instanceof ShrikeCTMethod)) {
@@ -63,7 +62,7 @@ public class ShrikeIRFactory implements IRFactory {
       Assertions.UNREACHABLE();
       shrikeInstructions = null;
     }
-    final ShrikeCFG shrikeCFG = (ShrikeCFG) makeCFG(method, C, cha, warnings);
+    final ShrikeCFG shrikeCFG = (ShrikeCFG) makeCFG(method, C, warnings);
 
     final SymbolTable symbolTable = new SymbolTable(method.getNumberOfParameters());
     final SSAInstruction[] newInstrs = new SSAInstruction[shrikeInstructions.length];
@@ -104,7 +103,7 @@ public class ShrikeIRFactory implements IRFactory {
       }
 
       {
-        SSABuilder builder = new SSABuilder((ShrikeCTMethod) method, cha, newCfg, shrikeCFG, newInstrs, symbolTable, buildLocalMap,
+        SSABuilder builder = new SSABuilder((ShrikeCTMethod) method, newCfg, shrikeCFG, newInstrs, symbolTable, buildLocalMap,
             options.getUsePiNodes(), warnings);
         builder.build();
         if (buildLocalMap)

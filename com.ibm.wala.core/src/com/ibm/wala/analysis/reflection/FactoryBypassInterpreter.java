@@ -95,11 +95,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   private final AnalysisOptions options;
 
   /**
-   * Governing class hierarchy
-   */
-  private final IClassHierarchy cha;
-
-  /**
    * Keep track of analysis warnings
    */
   private WarningSet warnings;
@@ -110,18 +105,14 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   private final ReflectionSpecification userSpec;
 
   /**
-   * 
    * @param options
    *          governing analysis options
-   * @param cha
-   *          governing class hierarchy
    * @param userSpec
    * @param warnings
    *          object to track analysis warnings
    */
-  public FactoryBypassInterpreter(AnalysisOptions options, IClassHierarchy cha, ReflectionSpecification userSpec, WarningSet warnings) {
+  public FactoryBypassInterpreter(AnalysisOptions options, ReflectionSpecification userSpec, WarningSet warnings) {
     this.options = options;
-    this.cha = cha;
     this.warnings = warnings;
     this.userSpec = userSpec;
   }
@@ -156,7 +147,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    return options.getSSACache().findOrCreateIR(m, node.getContext(), cha, options.getSSAOptions(), warnings);
+    return options.getSSACache().findOrCreateIR(m, node.getContext(),options.getSSAOptions(), warnings);
   }
 
   private Set getTypesForContext(Context context) {
@@ -311,7 +302,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
 
       for (Iterator it = S.iterator(); it.hasNext();) {
         TypeReference type = (TypeReference) it.next();
-        TypeAbstraction T = typeRef2TypeAbstraction(type);
+        TypeAbstraction T = typeRef2TypeAbstraction(m.getClassHierarchy(), type);
         addStatementsForTypeAbstraction(T);
       }
     }
@@ -340,7 +331,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
             Trace.println("Cone clause for " + T);
           }
           if (((ConeType) T).isInterface()) {
-            Set implementors = cha.getImplementors(ref);
+            Set implementors = T.getType().getClassHierarchy().getImplementors(ref);
             if (DEBUG) {
               Trace.println("Implementors for " + T + " " + implementors);
             }
@@ -356,7 +347,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
 
             addStatementsForSetOfTypes(implementors.iterator());
           } else {
-            Collection<IClass> subclasses = cha.computeSubClasses(ref);
+            Collection<IClass> subclasses = T.getType().getClassHierarchy().computeSubClasses(ref);
             if (DEBUG) {
               Trace.println("Subclasses for " + T + " " + subclasses);
             }
@@ -573,7 +564,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
   }
 
-  public boolean recordType(Context context, TypeReference type) {
+  public boolean recordType(IClassHierarchy cha, Context context, TypeReference type) {
     Set<TypeReference> types = map.get(context);
     if (types == null) {
       types = HashSetFactory.make(2);
@@ -586,7 +577,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
       // update any extant synthetic method
       SpecializedFactoryMethod m = syntheticMethodCache.get(context);
       if (m != null) {
-        TypeAbstraction T = typeRef2TypeAbstraction(type);
+        TypeAbstraction T = typeRef2TypeAbstraction(cha, type);
         m.addStatementsForTypeAbstraction(T);
         options.getSSACache().invalidate(m, context);
       }
@@ -600,7 +591,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    *         ConeTypes by default, since we don't propagate information allowing
    *         us to distinguish between points and cones yet.
    */
-  private TypeAbstraction typeRef2TypeAbstraction(TypeReference type) {
+  private TypeAbstraction typeRef2TypeAbstraction(IClassHierarchy cha, TypeReference type) {
     IClass klass = cha.lookupClass(type);
     if (klass != null) {
       return new ConeType(klass);
@@ -625,7 +616,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    return recordType(node.getContext(), klass.getReference());
+    return recordType(node.getMethod().getClassHierarchy(), node.getContext(), klass.getReference());
   }
 
   /*
@@ -813,6 +804,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    return options.getSSACache().findOrCreateDU(m, node.getContext(), cha, options.getSSAOptions(), warnings);
+    return options.getSSACache().findOrCreateDU(m, node.getContext(), options.getSSAOptions(), warnings);
   }
 }

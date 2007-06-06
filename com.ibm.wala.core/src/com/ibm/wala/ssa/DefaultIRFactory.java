@@ -15,7 +15,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeIRFactory;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SyntheticIRFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WarningSet;
@@ -32,14 +31,14 @@ public class DefaultIRFactory implements IRFactory {
   /* 
    * @see com.ibm.wala.ssa.IRFactory#makeCFG(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.util.warnings.WarningSet)
    */
-  public ControlFlowGraph makeCFG(IMethod method, Context C, IClassHierarchy cha, WarningSet warnings) throws IllegalArgumentException {
+  public ControlFlowGraph makeCFG(IMethod method, Context C,  WarningSet warnings) throws IllegalArgumentException {
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
     }
     if (method.isSynthetic()) {
-      return syntheticFactory.makeCFG(method, C, cha, warnings);
+      return syntheticFactory.makeCFG(method, C,  warnings);
     } else if (method instanceof ShrikeCTMethod) {
-      return shrikeFactory.makeCFG(method, C, cha, warnings);
+      return shrikeFactory.makeCFG(method, C, warnings);
     } else {
       Assertions.UNREACHABLE();
       return null;
@@ -49,14 +48,14 @@ public class DefaultIRFactory implements IRFactory {
   /*
    * @see com.ibm.wala.ssa.IRFactory#makeIR(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.ssa.SSAOptions, com.ibm.wala.util.warnings.WarningSet)
    */
-  public IR makeIR(IMethod method, Context C, IClassHierarchy cha, SSAOptions options, WarningSet warnings) throws IllegalArgumentException{
+  public IR makeIR(IMethod method, Context C, SSAOptions options, WarningSet warnings) throws IllegalArgumentException{
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
     }
     if (method.isSynthetic()) {
-      return syntheticFactory.makeIR(method, C, cha, options, warnings);
+      return syntheticFactory.makeIR(method, C, options, warnings);
     } else if (method instanceof ShrikeCTMethod) {
-      return shrikeFactory.makeIR(method, C, cha, options, warnings);
+      return shrikeFactory.makeIR(method, C, options, warnings);
     } else {
       Assertions.UNREACHABLE();
       return null;

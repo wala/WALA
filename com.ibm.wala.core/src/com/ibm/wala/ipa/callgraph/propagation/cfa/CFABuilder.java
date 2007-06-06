@@ -28,18 +28,17 @@ import com.ibm.wala.util.warnings.WarningSet;
 public abstract class CFABuilder extends SSAPropagationCallGraphBuilder {
 
   /**
-   * @param cha
-   * @param warnings
-   * @throws NullPointerException  if options is null
+   * @throws NullPointerException
+   *           if options is null
    */
   public CFABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options) throws NullPointerException {
     super(cha, warnings, options, new CFAPointerKeys());
   }
 
   public SSAContextInterpreter makeDefaultContextInterpreters(SSAContextInterpreter appContextInterpreter, AnalysisOptions options,
-      IClassHierarchy cha, ReflectionSpecification reflect, WarningSet warnings) {
-    SSAContextInterpreter c = new DefaultSSAInterpreter(options, cha, warnings);
-    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, cha, reflect, warnings), c);
+      ReflectionSpecification reflect, WarningSet warnings) {
+    SSAContextInterpreter c = new DefaultSSAInterpreter(options, warnings);
+    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect, warnings), c);
     return new DelegatingSSAContextInterpreter(appContextInterpreter, c);
   }
 
