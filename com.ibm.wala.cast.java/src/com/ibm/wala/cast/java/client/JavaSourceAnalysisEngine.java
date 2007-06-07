@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.java.client;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
@@ -29,7 +28,9 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.cha.*;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.Value;
@@ -95,15 +96,13 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
 
   protected void addApplicationModulesToScope() {
     ClassLoaderReference app = scope.getApplicationLoader();
-    for (Iterator it = userEntries.iterator(); it.hasNext();) {
-      Module M = (Module) it.next();
+    for (Module M : userEntries) {
       scope.addToScope(app, M);
     }
 
     ClassLoaderReference src = ((JavaSourceAnalysisScope) scope).getSourceLoader();
 
-    for (Iterator it = sourceEntries.iterator(); it.hasNext();) {
-      Module M = (Module) it.next();
+    for (Module M : sourceEntries) {
       scope.addToScope(src, M);
     }
   }
@@ -116,10 +115,10 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
       scope.setExclusions(new XMLSetOfClasses(getExclusionsFile(), loader));
     }
 
-    for (Iterator modules = systemEntries.iterator(); modules.hasNext();) {
-      scope.addToScope(scope.getPrimordialLoader(), (Module) modules.next());
+    for( Module M : this.systemEntries) {
+      scope.addToScope(scope.getPrimordialLoader(), M);
     }
-
+    
     // add user stuff
     addApplicationModulesToScope();
   }
