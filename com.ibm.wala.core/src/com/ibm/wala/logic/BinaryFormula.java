@@ -18,6 +18,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 public class BinaryFormula implements IFormula {
   private final IFormula f1;
+
   private final IFormula f2;
 
   private final BinaryConnective b;
@@ -29,11 +30,9 @@ public class BinaryFormula implements IFormula {
     this.f2 = f2;
   }
 
-
   public Kind getKind() {
     return Kind.BINARY;
   }
-
 
   public static IFormula and(Collection<IFormula> clauses) throws IllegalArgumentException {
     if (clauses == null) {
@@ -50,42 +49,53 @@ public class BinaryFormula implements IFormula {
     return result;
   }
 
-  public static BinaryFormula and(IFormula f1, IFormula f2) {
-    return new BinaryFormula(BinaryConnective.AND, f1, f2);
+  public static IFormula and(IFormula f1, IFormula f2) {
+    if (f1.equals(BooleanConstantFormula.TRUE)) {
+      return f2;
+    } else if (f2.equals(BooleanConstantFormula.TRUE)) {
+      return f1;
+    } else if (f1.equals(BooleanConstantFormula.FALSE) || f2.equals(BooleanConstantFormula.FALSE)) {
+      return BooleanConstantFormula.FALSE;
+    } else {
+      return new BinaryFormula(BinaryConnective.AND, f1, f2);
+    }
   }
-  
+
   public static BinaryFormula biconditional(IFormula f1, IFormula f2) {
     return new BinaryFormula(BinaryConnective.BICONDITIONAL, f1, f2);
   }
-  
 
   public static IFormula make(BinaryConnective connective, IFormula f1, IFormula f2) {
     return new BinaryFormula(connective, f1, f2);
   }
-  
-  public static BinaryFormula or(IFormula f1, IFormula f2) {
-    return new BinaryFormula(BinaryConnective.OR, f1, f2);
+
+  public static IFormula or(IFormula f1, IFormula f2) {
+    if (f1.equals(BooleanConstantFormula.FALSE)) {
+      return f2;
+    } else if (f2.equals(BooleanConstantFormula.FALSE)) {
+      return f1;
+    } else if (f1.equals(BooleanConstantFormula.TRUE) || f2.equals(BooleanConstantFormula.TRUE)) {
+      return BooleanConstantFormula.TRUE;
+    } else {
+      return new BinaryFormula(BinaryConnective.OR, f1, f2);
+    }
   }
 
   public static BinaryFormula implies(IFormula f1, IFormula f2) {
     return new BinaryFormula(BinaryConnective.IMPLIES, f1, f2);
   }
 
-
   public BinaryConnective getConnective() {
     return b;
   }
-
 
   public IFormula getF1() {
     return f1;
   }
 
-
   public IFormula getF2() {
     return f2;
   }
-
 
   public Collection<Variable> getFreeVariables() {
     Collection<Variable> result = HashSetFactory.make();
@@ -93,7 +103,7 @@ public class BinaryFormula implements IFormula {
     result.addAll(f2.getFreeVariables());
     return result;
   }
-  
+
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
@@ -108,7 +118,6 @@ public class BinaryFormula implements IFormula {
 
   }
 
-
   @Override
   public int hashCode() {
     final int PRIME = 31;
@@ -118,7 +127,6 @@ public class BinaryFormula implements IFormula {
     result = PRIME * result + ((f2 == null) ? 0 : f2.hashCode());
     return result;
   }
-
 
   @Override
   public boolean equals(Object obj) {
@@ -147,9 +155,8 @@ public class BinaryFormula implements IFormula {
     return true;
   }
 
-
   public boolean isAtomic() {
     return false;
   }
-  
+
 }
