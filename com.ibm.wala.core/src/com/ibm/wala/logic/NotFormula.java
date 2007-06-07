@@ -28,7 +28,28 @@ public class NotFormula implements IFormula {
     }
   }
   
-  public static NotFormula make(IFormula f) {
+  public static IFormula make(IFormula f) {
+    if (f instanceof RelationFormula) {
+      RelationFormula r = (RelationFormula)f;
+      if (r.getRelation().equals(BinaryRelation.EQUALS)) {
+        return RelationFormula.make(BinaryRelation.NE, r.getTerms());
+      }
+      if (r.getRelation().equals(BinaryRelation.NE)) {
+        return RelationFormula.make(BinaryRelation.EQUALS, r.getTerms());
+      }
+      if (r.getRelation().equals(BinaryRelation.GE)) {
+        return RelationFormula.make(BinaryRelation.LT, r.getTerms());
+      }
+      if (r.getRelation().equals(BinaryRelation.GT)) {
+        return RelationFormula.make(BinaryRelation.LE, r.getTerms());
+      }
+      if (r.getRelation().equals(BinaryRelation.LE)) {
+        return RelationFormula.make(BinaryRelation.GT, r.getTerms());
+      }
+      if (r.getRelation().equals(BinaryRelation.LT)) {
+        return RelationFormula.make(BinaryRelation.GE, r.getTerms());
+      }
+    }
     return new NotFormula(f);
   }
 

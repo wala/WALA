@@ -22,6 +22,11 @@ import com.ibm.wala.util.intset.IntSet;
 public class BinaryRelation implements IRelation {
   
   public final static BinaryRelation EQUALS = new BinaryRelation("=");
+  public final static BinaryRelation NE = new BinaryRelation("/=");
+  public final static BinaryRelation LT = new BinaryRelation("<");
+  public final static BinaryRelation LE = new BinaryRelation("<=");
+  public final static BinaryRelation GT = new BinaryRelation(">");
+  public final static BinaryRelation GE = new BinaryRelation(">=");
 
   private final String symbol;
   
