@@ -297,6 +297,20 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     return new AstInterestingVisitor(vn);
   }
 
+  public boolean hasNoInterestingUses(CGNode node, int vn, DefUse du) {
+    if (node.getMethod() instanceof AstMethod) {
+      int uses[] = 
+	((AstMethod)node.getMethod()).lexicalInfo.getAllExposedUses();
+      for(int i = 0; i < uses.length; i++) {
+	if (uses[i] == vn) {
+	  return false;
+	}
+      }
+    }
+
+    return super.hasNoInterestingUses(node, vn, du);
+  }
+
   // ///////////////////////////////////////////////////////////////////////////
   //
   // IR visitor specialization for Ast-specific IR types

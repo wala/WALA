@@ -1,3 +1,13 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
 import com.ibm.wala.classLoader.*;
@@ -8,6 +18,18 @@ import com.ibm.wala.util.warnings.*;
 
 import java.util.*;
 
+/**
+ * A ContextSelector implementation adapted to work for analysi across
+ * multiple languages.  This context selector delegates to one of several
+ * child selectors based on the language of the code body for which a 
+ * context is being selected.  
+ *
+ *  This provides a convenient way to integrate multiple, lanuage-specific
+ * specialized context policies---such as the ones used for clone() in
+ * Java and runtime primitives in JavaScript.
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public class CrossLanguageContextSelector implements ContextSelector {
 
   private final Map languageSelectors;

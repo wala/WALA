@@ -45,6 +45,8 @@ public abstract class AstMethod implements IMethod {
 	
     public int[] getExposedUses(int instructionOffset);
 
+    public int[] getAllExposedUses();
+
     public Pair[] getExposedNames();
 
     public String[] getScopingParents();

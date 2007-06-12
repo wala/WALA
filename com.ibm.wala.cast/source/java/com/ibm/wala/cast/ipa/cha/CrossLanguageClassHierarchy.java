@@ -1,3 +1,13 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
 package com.ibm.wala.cast.ipa.cha;
 
 import com.ibm.wala.classLoader.*;
@@ -11,6 +21,23 @@ import com.ibm.wala.util.warnings.*;
 
 import java.util.*;
 
+/**
+ *  This class hierarchy represents a family of disjoint class hierarchies, 
+ * one for each of a selection of languages.  The implementation creates a
+ * separate ClassHierarchy object for each language, and this overall
+ * IClassHierarchy implementation delegates to the appropriate language
+ * class hierarchy based on the language associated with the class loader
+ * of the given TypeReference or IClass object.
+ *
+ *  Note that, because of this delegating structure and representation of
+ * multiple languages, the getRootClass API call does not make sense for
+ * this hierarchy.  In general, any code that wants to use multiple
+ * language must deal with the fact that there is no longer a single
+ * root type.  Each individual language is still expected to have a root
+ * type, however.
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public class CrossLanguageClassHierarchy implements IClassHierarchy {
 
   private final ClassLoaderFactory loaderFactory;

@@ -1,3 +1,13 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
 import com.ibm.wala.cast.util.*;
@@ -14,6 +24,15 @@ import com.ibm.wala.util.warnings.*;
 
 import java.util.*;
 
+/**
+ *  A CallGraph implementation adapted to work for graphs that contain
+ * code entities from multiple languages, and hence multiple specialized
+ * forms of IR.  The root node delegates to one of several language-specific
+ * root nodes, allowing each language to use its own specialized IR 
+ * constructs for entry points.
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public class CrossLanguageCallGraph extends AstCallGraph {
   
   public CrossLanguageCallGraph(

@@ -1,3 +1,13 @@
+/******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
 import com.ibm.wala.classLoader.*;
@@ -7,6 +17,18 @@ import com.ibm.wala.util.Atom;
 
 import java.util.*;
 
+/**
+ *  A MethodTargetSelector implementation that supports multiple languages.
+ * It works by delegating to a language-specific child selector based on
+ * the language associated with the MethodReference for which a target is
+ * being chosen.  
+ *
+ *  This provides a simple way to combine language-specific target
+ * selection policies---such as those used for constructor calls in
+ * JavaScript and for bean methods in J2EE.
+ *
+ * @author Julian Dolby (dolby@us.ibm.com)
+ */
 public class CrossLanguageMethodTargetSelector
     implements MethodTargetSelector 
 {

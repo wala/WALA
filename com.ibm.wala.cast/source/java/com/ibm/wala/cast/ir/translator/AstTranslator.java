@@ -320,7 +320,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
   public static final boolean DEBUG_NAMES = DEBUG_ALL || true;
 
-  public static final boolean DEBUG_LEXICAL = DEBUG_ALL || false;
+  public static final boolean DEBUG_LEXICAL = DEBUG_ALL || true;
 
   protected final static class PreBasicBlock implements INodeWithNumber, IBasicBlock {
     private static final int NORMAL = 0;
@@ -919,15 +919,15 @@ public abstract class AstTranslator extends CAstVisitor {
     }
   }
 
-  private final static int TYPE_LOCAL = 1;
+  protected final static int TYPE_LOCAL = 1;
 
-  private final static int TYPE_GLOBAL = 2;
+  protected final static int TYPE_GLOBAL = 2;
 
-  private final static int TYPE_SCRIPT = 3;
+  protected final static int TYPE_SCRIPT = 3;
 
-  private final static int TYPE_FUNCTION = 4;
+  protected final static int TYPE_FUNCTION = 4;
 
-  private final static int TYPE_TYPE = 5;
+  protected final static int TYPE_TYPE = 5;
 
   protected class FinalCAstSymbol implements CAstSymbol {
     private final String _name;
@@ -991,6 +991,8 @@ public abstract class AstTranslator extends CAstVisitor {
     boolean isLexicallyScoped(Symbol s);
 
     CAstEntity getEntity();
+
+    Scope getParent();
   }
 
   private static abstract class AbstractSymbol implements Symbol {
@@ -1037,6 +1039,10 @@ public abstract class AstTranslator extends CAstVisitor {
     private final Map<String, String> caseInsensitiveNames = new LinkedHashMap<String, String>();
 
     protected abstract SymbolTable getUnderlyingSymtab();
+
+    public Scope getParent() {
+      return parent;
+    }
 
     public int size() {
       return getUnderlyingSymtab().getMaxValueNumber() + 1;
@@ -1360,6 +1366,10 @@ public abstract class AstTranslator extends CAstVisitor {
         return (mappedName == null) ? nm : mappedName;
       }
 
+      public Scope getParent() {
+	return null;
+      }
+
       public boolean isGlobal(Symbol s) {
         return true;
       }
@@ -1464,6 +1474,10 @@ public abstract class AstTranslator extends CAstVisitor {
       private final String mapName(String nm) {
         String mappedName = caseInsensitiveNames.get(nm.toLowerCase());
         return (mappedName == null) ? nm : mappedName;
+      }
+
+      public Scope getParent() {
+	return parent;
       }
 
       public boolean isGlobal(Symbol s) {
@@ -1885,6 +1899,32 @@ public abstract class AstTranslator extends CAstVisitor {
 
     public int[] getExposedUses(int instructionOffset) {
       return instructionLexicalUses[instructionOffset];
+    }
+
+    public int[] getAllExposedUses() {
+      List uses = new ArrayList();
+      if (exitLexicalUses != null) {
+	for(int i = 0; i < exitLexicalUses.length; i++) {
+	  uses.add(new Integer(exitLexicalUses[i]));
+	}
+      }
+      if (instructionLexicalUses != null) {
+	for(int i = 0; i < instructionLexicalUses.length; i++) {
+	  if (instructionLexicalUses[i] != null) {
+	    for(int j = 0; j < instructionLexicalUses[i].length; j++) {
+	      uses.add(new Integer(instructionLexicalUses[i][j]));
+	    }
+	  }
+	}
+      }
+
+      int i = 0;
+      int[] result = new int[ uses.size() ];
+      for(Iterator x = uses.iterator(); x.hasNext(); ) {
+	result[i++] = ((Integer)x.next()).intValue();
+      }
+
+      return result;
     }
 
     public Pair[] getExposedNames() {
