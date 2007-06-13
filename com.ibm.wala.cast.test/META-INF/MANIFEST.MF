@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Java Plug-in
-Bundle-SymbolicName: com.ibm.capa.ast.test
+Bundle-SymbolicName: com.ibm.wala.cast.test
 Bundle-Version: 1.0.0
 Bundle-Vendor: IBM
 Bundle-Localization: plugin
