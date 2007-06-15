@@ -23,8 +23,6 @@ import com.ibm.wala.util.warnings.WarningSet;
 
 public abstract class CallStringContextSelector implements ContextSelector {
 
-
-
   private static final ContextKey CALL_STRING = new ContextKey() {
     @Override
     public String toString() {
@@ -187,7 +185,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
       return new CallStringContextPair(cs, baseContext);
     }
   }
-  
+
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
     return base.mayUnderstand(caller, site, targetMethod, instance);
   }

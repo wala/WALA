@@ -78,7 +78,7 @@ public class ClassLoaderReference {
   }
 
   /**
-   * @return the name of this class loader
+   * @return the name of the language this class loader belongs to
    */
   public Atom getLanguage() {
     return language;

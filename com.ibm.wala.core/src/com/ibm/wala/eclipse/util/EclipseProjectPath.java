@@ -66,7 +66,6 @@ public class EclipseProjectPath {
    * TODO: do we really need this? Why shouldn't source files come from a
    * "normal" class loader like any other resource?
    */
-
   public static final Atom SOURCE = Atom.findOrCreateUnicodeAtom("Source");
 
   public static final ClassLoaderReference SOURCE_REF = new ClassLoaderReference(EclipseProjectPath.SOURCE, ClassLoaderReference.Java);
