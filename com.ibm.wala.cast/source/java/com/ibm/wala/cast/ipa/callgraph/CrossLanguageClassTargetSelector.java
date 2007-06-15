@@ -10,12 +10,13 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.Atom;
+import java.util.Map;
 
-import java.util.*;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
+import com.ibm.wala.util.Atom;
 
 /**
  *  A ClassTargetSelector implementation that delegates to one of several

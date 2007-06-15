@@ -10,69 +10,72 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.cast.util.*;
-import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.impl.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.shrikeBT.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.warnings.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
+import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
+import com.ibm.wala.cast.util.TargetLanguageSelector;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
+import com.ibm.wala.ipa.callgraph.impl.Everywhere;
+import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.warnings.WarningSet;
 
 /**
- *  A CallGraph implementation adapted to work for graphs that contain
- * code entities from multiple languages, and hence multiple specialized
- * forms of IR.  The root node delegates to one of several language-specific
- * root nodes, allowing each language to use its own specialized IR 
- * constructs for entry points.
- *
+ * A CallGraph implementation adapted to work for graphs that contain code
+ * entities from multiple languages, and hence multiple specialized forms of IR.
+ * The root node delegates to one of several language-specific root nodes,
+ * allowing each language to use its own specialized IR constructs for entry
+ * points.
+ * 
  * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class CrossLanguageCallGraph extends AstCallGraph {
-  
-  public CrossLanguageCallGraph(
-	   TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph> roots,
-	   IClassHierarchy cha, 
-	   AnalysisOptions options)
-  {
+
+  public CrossLanguageCallGraph(TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph> roots, IClassHierarchy cha,
+      AnalysisOptions options) {
     super(cha, options);
     this.roots = roots;
   }
 
   private final TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph> roots;
 
-  private final Set languageRootNodes = new HashSet();
+  private final Set<CGNode> languageRootNodes = HashSetFactory.make();
 
-  private final Map languageRoots = new HashMap();
+  private final Map<Atom,IMethod> languageRoots = HashMapFactory.make();
 
   public AbstractRootMethod getLanguageRoot(Atom language) {
-    if (! languageRoots.containsKey(language)) {
+    if (!languageRoots.containsKey(language)) {
       AbstractRootMethod languageRoot = roots.get(language, this);
-      
-      CGNode languageRootNode = 
-	findOrCreateNode(languageRoot, Everywhere.EVERYWHERE);
 
-      languageRootNodes.add( languageRootNode );
+      CGNode languageRootNode = findOrCreateNode(languageRoot, Everywhere.EVERYWHERE);
 
-      CallSiteReference site = 
-	CallSiteReference.make(1, 
-			       languageRoot.getReference(),
-			       IInvokeInstruction.Dispatch.STATIC);
-      
+      languageRootNodes.add(languageRootNode);
+
+      CallSiteReference site = CallSiteReference.make(1, languageRoot.getReference(), IInvokeInstruction.Dispatch.STATIC);
+
       CGNode fakeRootNode = getFakeRootNode();
-      CrossLanguageFakeRoot fakeRootMethod = 
-	(CrossLanguageFakeRoot) fakeRootNode.getMethod();
+      CrossLanguageFakeRoot fakeRootMethod = (CrossLanguageFakeRoot) fakeRootNode.getMethod();
 
-      site =
-	fakeRootMethod.addInvocationInternal(new int[0], site).getCallSite();
+      site = fakeRootMethod.addInvocationInternal(new int[0], site).getCallSite();
 
       fakeRootNode.addTarget(site, languageRootNode);
-      
+
       languageRoots.put(language, languageRoot);
     }
 
@@ -80,17 +83,12 @@ public class CrossLanguageCallGraph extends AstCallGraph {
   }
 
   public class CrossLanguageFakeRoot extends ScriptFakeRoot {
-  
-    public CrossLanguageFakeRoot(IClass declaringClass, 
-				 IClassHierarchy cha, 
-				 AnalysisOptions options)
-    {
+
+    public CrossLanguageFakeRoot(IClass declaringClass, IClassHierarchy cha, AnalysisOptions options) {
       super(FakeRootMethod.rootMethod, declaringClass, cha, options);
     }
 
-    public CrossLanguageFakeRoot(IClassHierarchy cha, 
-				 AnalysisOptions options)
-    {
+    public CrossLanguageFakeRoot(IClassHierarchy cha, AnalysisOptions options) {
       super(FakeRootMethod.rootMethod, cha, options);
     }
 
@@ -120,44 +118,35 @@ public class CrossLanguageCallGraph extends AstCallGraph {
       return root.addCheckcast(type, rv);
     }
 
-    public SSANewInstruction 
-      addAllocation(TypeReference type, WarningSet warnings)
-    {
+    public SSANewInstruction addAllocation(TypeReference type, WarningSet warnings) {
       Atom language = type.getClassLoader().getLanguage();
       AbstractRootMethod root = getLanguageRoot(language);
       return root.addAllocation(type, warnings);
     }
 
-    public SSAInvokeInstruction 
-      addInvocation(int[] params, CallSiteReference site) 
-    {
+    public SSAInvokeInstruction addInvocation(int[] params, CallSiteReference site) {
       TypeReference type = site.getDeclaredTarget().getDeclaringClass();
       Atom language = type.getClassLoader().getLanguage();
       AbstractRootMethod root = getLanguageRoot(language);
       return root.addInvocation(params, site);
     }
 
-    public SSAInvokeInstruction 
-      addInvocationInternal(int[] params, CallSiteReference site) 
-    {
+    public SSAInvokeInstruction addInvocationInternal(int[] params, CallSiteReference site) {
       return super.addInvocation(params, site);
     }
 
     public AstLexicalRead addGlobalRead(TypeReference type, String name) {
       Atom language = type.getClassLoader().getLanguage();
       AbstractRootMethod root = getLanguageRoot(language);
-      return ((AstFakeRoot)root).addGlobalRead(type, name);
-    }    
+      return ((AstFakeRoot) root).addGlobalRead(type, name);
+    }
 
-    public SSAAbstractInvokeInstruction 
-      addDirectCall(int functionVn, int[] argVns, CallSiteReference callSite) 
-    {
+    public SSAAbstractInvokeInstruction addDirectCall(int functionVn, int[] argVns, CallSiteReference callSite) {
       TypeReference type = callSite.getDeclaredTarget().getDeclaringClass();
       Atom language = type.getClassLoader().getLanguage();
       AbstractRootMethod root = getLanguageRoot(language);
-      return
-	((ScriptFakeRoot)root).addDirectCall(functionVn, argVns, callSite);
-    }	
+      return ((ScriptFakeRoot) root).addDirectCall(functionVn, argVns, callSite);
+    }
   }
 
   Iterator getLanguageRoots() {
@@ -165,9 +154,6 @@ public class CrossLanguageCallGraph extends AstCallGraph {
   }
 
   protected CGNode makeFakeRootNode() {
-    return 
-      findOrCreateNode(
-	new CrossLanguageFakeRoot(cha, options),
-	Everywhere.EVERYWHERE);
+    return findOrCreateNode(new CrossLanguageFakeRoot(cha, options), Everywhere.EVERYWHERE);
   }
 }

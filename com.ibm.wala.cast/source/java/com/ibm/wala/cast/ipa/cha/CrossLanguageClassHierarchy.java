@@ -10,43 +10,58 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.cha;
 
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.collections.*;
-import com.ibm.wala.util.debug.*;
-import com.ibm.wala.util.warnings.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
+import com.ibm.wala.classLoader.ClassLoaderFactory;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.ComposedIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.warnings.WarningSet;
 
 /**
- *  This class hierarchy represents a family of disjoint class hierarchies, 
- * one for each of a selection of languages.  The implementation creates a
- * separate ClassHierarchy object for each language, and this overall
- * IClassHierarchy implementation delegates to the appropriate language
- * class hierarchy based on the language associated with the class loader
- * of the given TypeReference or IClass object.
- *
- *  Note that, because of this delegating structure and representation of
- * multiple languages, the getRootClass API call does not make sense for
- * this hierarchy.  In general, any code that wants to use multiple
- * language must deal with the fact that there is no longer a single
- * root type.  Each individual language is still expected to have a root
- * type, however.
- *
+ * This class hierarchy represents a family of disjoint class hierarchies, one
+ * for each of a selection of languages. The implementation creates a separate
+ * ClassHierarchy object for each language, and this overall IClassHierarchy
+ * implementation delegates to the appropriate language class hierarchy based on
+ * the language associated with the class loader of the given TypeReference or
+ * IClass object.
+ * 
+ * Note that, because of this delegating structure and representation of
+ * multiple languages, the getRootClass API call does not make sense for this
+ * hierarchy. In general, any code that wants to use multiple language must deal
+ * with the fact that there is no longer a single root type. Each individual
+ * language is still expected to have a root type, however.
+ * 
  * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class CrossLanguageClassHierarchy implements IClassHierarchy {
 
   private final ClassLoaderFactory loaderFactory;
-    
+
   private final AnalysisScope analysisScope;
 
   private final Map hierarchies;
 
-  public ClassLoaderFactory getFactory()  {
+  public ClassLoaderFactory getFactory() {
     return loaderFactory;
   }
 
@@ -83,14 +98,12 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
   }
 
   public IClassLoader[] getLoaders() {
-    Set loaders = new HashSet();
-    for(Iterator ldrs = analysisScope.getLoaders().iterator(); 
-	ldrs.hasNext(); )
-    {
-      loaders.add(getLoader((ClassLoaderReference)ldrs.next()));
+    Set<IClassLoader> loaders = HashSetFactory.make();
+    for (Iterator ldrs = analysisScope.getLoaders().iterator(); ldrs.hasNext();) {
+      loaders.add(getLoader((ClassLoaderReference) ldrs.next()));
     }
 
-    return (IClassLoader[])loaders.toArray(new IClassLoader[loaders.size()]);
+    return (IClassLoader[]) loaders.toArray(new IClassLoader[loaders.size()]);
   }
 
   public IClassLoader getLoader(ClassLoaderReference loaderRef) {
@@ -103,13 +116,10 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
 
   public int getNumberOfClasses() {
     int total = 0;
-    for(Iterator ldrs = analysisScope.getLoaders().iterator(); 
-	ldrs.hasNext(); )
-    {
-      total += 
-	getLoader((ClassLoaderReference)ldrs.next()).getNumberOfClasses();
+    for (Iterator ldrs = analysisScope.getLoaders().iterator(); ldrs.hasNext();) {
+      total += getLoader((ClassLoaderReference) ldrs.next()).getNumberOfClasses();
     }
-    
+
     return total;
   }
 
@@ -162,9 +172,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     return getHierarchy(A).getLeastCommonSuperclass(A, B);
   }
 
-  public TypeReference 
-    getLeastCommonSuperclass(TypeReference A, TypeReference B) 
-  {
+  public TypeReference getLeastCommonSuperclass(TypeReference A, TypeReference B) {
     return getHierarchy(A).getLeastCommonSuperclass(A, B);
   }
 
@@ -197,44 +205,33 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
   }
 
   public boolean isAssignableFrom(IClass c1, IClass c2) {
-    return getHierarchy(c1).isAssignableFrom(c1,c2);
+    return getHierarchy(c1).isAssignableFrom(c1, c2);
   }
 
   public Iterator<IClass> iterator() {
-    return new ComposedIterator(analysisScope.getLoaders().iterator()) {
-      public Iterator makeInner(Object o) {  
-	IClassLoader ldr = getLoader( (ClassLoaderReference) o );
-	return ldr.iterateAllClasses();
+    return new ComposedIterator<ClassLoaderReference, IClass>(analysisScope.getLoaders().iterator()) {
+      public Iterator<IClass> makeInner(ClassLoaderReference o) {
+        IClassLoader ldr = getLoader(o);
+        return ldr.iterateAllClasses();
       }
     };
   }
 
-  private CrossLanguageClassHierarchy(
-	   AnalysisScope scope,
-	   ClassLoaderFactory factory,
-	   Map hierarchies)
-  {
+  private CrossLanguageClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Map hierarchies) {
     this.analysisScope = scope;
     this.loaderFactory = factory;
     this.hierarchies = hierarchies;
   }
 
-  public static CrossLanguageClassHierarchy 
-      make(AnalysisScope scope,
-	   ClassLoaderFactory factory,
-	   WarningSet warnings,
-	   Map languageMap)
-      throws ClassHierarchyException
-  {
-    Set languages = new HashSet();
-    for(Iterator ldrs = scope.getLoaders().iterator(); 
-	ldrs.hasNext(); )
-    {
-      languages.add(((ClassLoaderReference)ldrs.next()).getLanguage());
+  public static CrossLanguageClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings,
+      Map languageMap) throws ClassHierarchyException {
+    Set<Atom> languages = HashSetFactory.make();
+    for (Iterator ldrs = scope.getLoaders().iterator(); ldrs.hasNext();) {
+      languages.add(((ClassLoaderReference) ldrs.next()).getLanguage());
     }
 
-    Map hierarchies = new HashMap();
-    for(Iterator ls = languages.iterator(); ls.hasNext(); ) {
+    Map<Atom, IClassHierarchy> hierarchies = HashMapFactory.make();
+    for (Iterator ls = languages.iterator(); ls.hasNext();) {
       Atom l = (Atom) ls.next();
       Language L = (Language) languageMap.get(l);
       assert L != null : l.toString();
@@ -243,5 +240,5 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
 
     return new CrossLanguageClassHierarchy(scope, factory, hierarchies);
   }
-    
+
 }

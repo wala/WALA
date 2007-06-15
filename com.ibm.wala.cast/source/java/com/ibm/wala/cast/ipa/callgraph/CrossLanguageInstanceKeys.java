@@ -10,17 +10,18 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.warnings.*;
+import java.util.Map;
 
-import java.util.*;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.Atom;
 
 /**
- *  An InstanceKeyFactory implementation that is designed to support
+ * An InstanceKeyFactory implementation that is designed to support
  * multiple languages.  This implementation delegates to one of several
  * child instance key factories based on the language associated with
  * the IClass or TypeReference for which an instance key is being chosen.
@@ -43,9 +44,9 @@ public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
     return getLanguage(site.getDeclaredType());
   }
 
-  private static Atom getLanguage(CGNode node) {
-    return getLanguage(node.getMethod().getDeclaringClass().getReference());
-  }
+//  private static Atom getLanguage(CGNode node) {
+//    return getLanguage(node.getMethod().getDeclaringClass().getReference());
+//  }
 
   private InstanceKeyFactory getSelector(NewSiteReference site) {
     return (InstanceKeyFactory)languageSelectors.get(getLanguage(site));

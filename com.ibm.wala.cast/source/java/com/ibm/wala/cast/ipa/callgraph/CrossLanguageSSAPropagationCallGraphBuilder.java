@@ -1,20 +1,32 @@
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder.AstPointerAnalysisImpl.*;
-import com.ibm.wala.cast.util.*;
-import com.ibm.wala.cfg.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.impl.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.ssa.SSACFG.*;
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.graph.*;
-import com.ibm.wala.util.intset.MutableMapping;
-import com.ibm.wala.util.warnings.*;
+import java.util.Iterator;
 
-import java.util.*;
+import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder.AstPointerAnalysisImpl.AstImplicitPointsToSetVisitor;
+import com.ibm.wala.cast.util.TargetLanguageSelector;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
+import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
+import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraph;
+import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
+import com.ibm.wala.ipa.callgraph.propagation.PointsToMap;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationSystem;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSACFG.BasicBlock;
+import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.util.intset.MutableMapping;
+import com.ibm.wala.util.warnings.WarningSet;
 
 public abstract class CrossLanguageSSAPropagationCallGraphBuilder
     extends AstSSAPropagationCallGraphBuilder

@@ -254,11 +254,7 @@ public abstract class AstTranslator extends CAstVisitor {
     }
   }
 
-  protected void doIsFieldDefined(WalkContext context, 
-				  int result, 
-				  int ref,
-				  CAstNode field) 
-  {
+  protected void doIsFieldDefined(WalkContext context, int result, int ref, CAstNode field) {
     Assertions.UNREACHABLE();
   }
 
@@ -281,10 +277,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
     private Position[] instructionPositions;
 
-    AstDebuggingInformation(Position codeBodyPosition,
-			    Position[] instructionPositions, 
-			    String[] names) 
-    {
+    AstDebuggingInformation(Position codeBodyPosition, Position[] instructionPositions, String[] names) {
       this.codeBodyPosition = codeBodyPosition;
 
       this.instructionPositions = instructionPositions;
@@ -410,12 +403,12 @@ public abstract class AstTranslator extends CAstVisitor {
     }
 
     public Iterator<IInstruction> iterator() {
-      Function<SSAInstruction,IInstruction> kludge = new Function<SSAInstruction, IInstruction>() {
+      Function<SSAInstruction, IInstruction> kludge = new Function<SSAInstruction, IInstruction>() {
         public IInstruction apply(SSAInstruction s) {
           return s;
         }
       };
-      return new MapIterator<SSAInstruction, IInstruction>(instructions.iterator(),kludge);
+      return new MapIterator<SSAInstruction, IInstruction>(instructions.iterator(), kludge);
     }
   }
 
@@ -518,22 +511,17 @@ public abstract class AstTranslator extends CAstVisitor {
           }
 
           while (sourceContext != null && (targetContext == null || !targetContext.covers(sourceContext))) {
-            final CAstRewriter.Rewrite ast = 
-	      (new CAstCloner(new CAstImpl()))
-		.copy(sourceContext.unwindAst, 
-		      sourceContext.astContext.getControlFlow(),
-		      sourceContext.astContext.getSourceMap(),
-		      sourceContext.astContext.top().getNodeTypeMap(),
-		      sourceContext.astContext.top().getAllScopedEntities());
-            sourceContext.astVisitor.visit(ast.newRoot(), 
-	      new DelegatingContext(sourceContext.astContext) {
-                public CAstSourcePositionMap getSourceMap() {
-                  return ast.newPos();
-                }
+            final CAstRewriter.Rewrite ast = (new CAstCloner(new CAstImpl())).copy(sourceContext.unwindAst,
+                sourceContext.astContext.getControlFlow(), sourceContext.astContext.getSourceMap(), sourceContext.astContext.top()
+                    .getNodeTypeMap(), sourceContext.astContext.top().getAllScopedEntities());
+            sourceContext.astVisitor.visit(ast.newRoot(), new DelegatingContext(sourceContext.astContext) {
+              public CAstSourcePositionMap getSourceMap() {
+                return ast.newPos();
+              }
 
-                public CAstControlFlowMap getControlFlow() {
-                  return ast.newCfg();
-                }
+              public CAstControlFlowMap getControlFlow() {
+                return ast.newCfg();
+              }
             }, sourceContext.astVisitor);
 
             sourceContext = sourceContext.getParent();
@@ -936,13 +924,21 @@ public abstract class AstTranslator extends CAstVisitor {
       this._name = _name;
     }
 
-    public String name() { return _name; }
+    public String name() {
+      return _name;
+    }
 
-    public boolean isFinal() { return true; }
+    public boolean isFinal() {
+      return true;
+    }
 
-    public boolean isCaseInsensitive() { return false; }
+    public boolean isCaseInsensitive() {
+      return false;
+    }
 
-    public Object defaultInitValue() { return null; }
+    public Object defaultInitValue() {
+      return null;
+    }
   }
 
   protected interface Symbol {
@@ -1071,8 +1067,8 @@ public abstract class AstTranslator extends CAstVisitor {
         return getUnderlyingSymtab().getConstant((Boolean) o);
       } else if (o instanceof Character) {
         return getUnderlyingSymtab().getConstant(((Character) o).charValue());
-      } else if (o instanceof Byte)  {
-      	return getUnderlyingSymtab().getConstant(((Byte) o).byteValue());
+      } else if (o instanceof Byte) {
+        return getUnderlyingSymtab().getConstant(((Byte) o).byteValue());
       } else if (o == null) {
         return getUnderlyingSymtab().getNullConstant();
       } else if (o == CAstControlFlowMap.SWITCH_DEFAULT) {
@@ -1196,11 +1192,11 @@ public abstract class AstTranslator extends CAstVisitor {
 
       protected Symbol makeSymbol(final String nm, final boolean isFinal, final Object defaultInitValue, int vn, Scope definer) {
         final int v = vn == -1 ? getUnderlyingSymtab().newSymbol() : vn;
-	if (useDefaultInitValues() && defaultInitValue != null) {
-	  if (getUnderlyingSymtab().getValue(v) == null) {
-	    getUnderlyingSymtab().setDefaultValue(v, defaultInitValue);
-	  }
-	}
+        if (useDefaultInitValues() && defaultInitValue != null) {
+          if (getUnderlyingSymtab().getValue(v) == null) {
+            getUnderlyingSymtab().setDefaultValue(v, defaultInitValue);
+          }
+        }
         return new AbstractSymbol(definer, isFinal, defaultInitValue) {
           public String toString() {
             return nm + ":" + System.identityHashCode(this);
@@ -1226,19 +1222,27 @@ public abstract class AstTranslator extends CAstVisitor {
 
       // ctor for scope object
       {
-	for (int i = 0; i < f.getArgumentCount(); i++) {
-	  final int yuck = i;
+        for (int i = 0; i < f.getArgumentCount(); i++) {
+          final int yuck = i;
           declare(new CAstSymbol() {
-	    public String name() { return f.getArgumentNames()[yuck]; }
+            public String name() {
+              return f.getArgumentNames()[yuck];
+            }
 
-	    public boolean isFinal() { return false; }
+            public boolean isFinal() {
+              return false;
+            }
 
-	    public boolean isCaseInsensitive() { return false; }
+            public boolean isCaseInsensitive() {
+              return false;
+            }
 
-	    public Object defaultInitValue() { return null; }
-		  
-	  });
-	}
+            public Object defaultInitValue() {
+              return null;
+            }
+
+          });
+        }
       }
 
       public SymbolTable getUnderlyingSymtab() {
@@ -1274,7 +1278,8 @@ public abstract class AstTranslator extends CAstVisitor {
         return -1;
       }
 
-      protected Symbol makeSymbol(final String nm, final boolean isFinal, final Object defaultInitValue, final int valueNumber, Scope definer) {
+      protected Symbol makeSymbol(final String nm, final boolean isFinal, final Object defaultInitValue, final int valueNumber,
+          Scope definer) {
         return new AbstractSymbol(definer, isFinal, defaultInitValue) {
           final int vn;
 
@@ -1288,11 +1293,11 @@ public abstract class AstTranslator extends CAstVisitor {
             } else {
               vn = getUnderlyingSymtab().newSymbol();
             }
-	    if (useDefaultInitValues() && defaultInitValue != null) {
-	      if (getUnderlyingSymtab().getValue(vn) == null) {
-		getUnderlyingSymtab().setDefaultValue(vn, defaultInitValue);
-	      }
-	    }
+            if (useDefaultInitValues() && defaultInitValue != null) {
+              if (getUnderlyingSymtab().getValue(vn) == null) {
+                getUnderlyingSymtab().setDefaultValue(vn, defaultInitValue);
+              }
+            }
           }
 
           public String toString() {
@@ -1335,11 +1340,11 @@ public abstract class AstTranslator extends CAstVisitor {
 
       protected Symbol makeSymbol(final String nm, boolean isFinal, final Object defaultInitValue, int vn, Scope definer) {
         final int v = vn == -1 ? getUnderlyingSymtab().newSymbol() : vn;
-	if (useDefaultInitValues() && defaultInitValue != null) {
-	  if (getUnderlyingSymtab().getValue(v) == null) {
-	    getUnderlyingSymtab().setDefaultValue(v, defaultInitValue);
-	  }
-	}
+        if (useDefaultInitValues() && defaultInitValue != null) {
+          if (getUnderlyingSymtab().getValue(v) == null) {
+            getUnderlyingSymtab().setDefaultValue(v, defaultInitValue);
+          }
+        }
         return new AbstractSymbol(definer, isFinal, defaultInitValue) {
           public String toString() {
             return nm + ":" + System.identityHashCode(this);
@@ -1367,7 +1372,7 @@ public abstract class AstTranslator extends CAstVisitor {
       }
 
       public Scope getParent() {
-	return null;
+        return null;
       }
 
       public boolean isGlobal(Symbol s) {
@@ -1419,23 +1424,31 @@ public abstract class AstTranslator extends CAstVisitor {
       }
 
       public Symbol lookup(final String name) {
-	if (!globalSymbols.containsKey(mapName(name))) {
-	  if (hasImplicitGlobals()) {
-	    declare(new CAstSymbol() {
-	      public String name() { return name; }
+        if (!globalSymbols.containsKey(mapName(name))) {
+          if (hasImplicitGlobals()) {
+            declare(new CAstSymbol() {
+              public String name() {
+                return name;
+              }
 
-	      public boolean isFinal() { return false; }
+              public boolean isFinal() {
+                return false;
+              }
 
-	      public boolean isCaseInsensitive() { return false; }
-		    
-	      public Object defaultInitValue() { return null; }
-	    });
+              public boolean isCaseInsensitive() {
+                return false;
+              }
+
+              public Object defaultInitValue() {
+                return null;
+              }
+            });
           } else if (hasSpecialUndeclaredVariables()) {
             return null;
           } else {
             throw new Error("cannot find " + name);
           }
-	}
+        }
 
         return globalSymbols.get(mapName(name));
       }
@@ -1446,7 +1459,7 @@ public abstract class AstTranslator extends CAstVisitor {
       }
 
       public void declare(CAstSymbol s) {
-	final String name = s.name();
+        final String name = s.name();
         if (s.isCaseInsensitive()) {
           caseInsensitiveNames.put(name.toLowerCase(), name);
         }
@@ -1477,7 +1490,7 @@ public abstract class AstTranslator extends CAstVisitor {
       }
 
       public Scope getParent() {
-	return parent;
+        return parent;
       }
 
       public boolean isGlobal(Symbol s) {
@@ -1542,7 +1555,7 @@ public abstract class AstTranslator extends CAstVisitor {
       }
 
       public void declare(CAstSymbol s) {
-	final String name = s.name();
+        final String name = s.name();
         Assertions._assert(!s.isFinal());
         if (s.isCaseInsensitive())
           caseInsensitiveNames.put(name.toLowerCase(), name);
@@ -1902,26 +1915,26 @@ public abstract class AstTranslator extends CAstVisitor {
     }
 
     public int[] getAllExposedUses() {
-      List uses = new ArrayList();
+      List<Integer> uses = new ArrayList<Integer>();
       if (exitLexicalUses != null) {
-	for(int i = 0; i < exitLexicalUses.length; i++) {
-	  uses.add(new Integer(exitLexicalUses[i]));
-	}
+        for (int i = 0; i < exitLexicalUses.length; i++) {
+          uses.add(new Integer(exitLexicalUses[i]));
+        }
       }
       if (instructionLexicalUses != null) {
-	for(int i = 0; i < instructionLexicalUses.length; i++) {
-	  if (instructionLexicalUses[i] != null) {
-	    for(int j = 0; j < instructionLexicalUses[i].length; j++) {
-	      uses.add(new Integer(instructionLexicalUses[i][j]));
-	    }
-	  }
-	}
+        for (int i = 0; i < instructionLexicalUses.length; i++) {
+          if (instructionLexicalUses[i] != null) {
+            for (int j = 0; j < instructionLexicalUses[i].length; j++) {
+              uses.add(new Integer(instructionLexicalUses[i][j]));
+            }
+          }
+        }
       }
 
       int i = 0;
-      int[] result = new int[ uses.size() ];
-      for(Iterator x = uses.iterator(); x.hasNext(); ) {
-	result[i++] = ((Integer)x.next()).intValue();
+      int[] result = new int[uses.size()];
+      for (Iterator x = uses.iterator(); x.hasNext();) {
+        result[i++] = ((Integer) x.next()).intValue();
       }
 
       return result;
@@ -2084,18 +2097,15 @@ public abstract class AstTranslator extends CAstVisitor {
         // hacks for idioms for internal names in the translators
         if ("ctor temp".equals(nm))
           continue;
-        if (nm.startsWith("readTemp")) 
+        if (nm.startsWith("readTemp"))
           continue;
 
-	// constants can flow to multiple variables
-	if (scope.isConstant( v.valueNumber() ))
-	  continue;
+        // constants can flow to multiple variables
+        if (scope.isConstant(v.valueNumber()))
+          continue;
 
-        Assertions._assert(
-	  map[v.valueNumber()] == null || map[v.valueNumber()].equals(nm),
-	  "value number " + v.valueNumber() + 
-	  " mapped to multiple names in " + n.getName() + ": " +
-	  nm + " and " + map[v.valueNumber()]);
+        Assertions._assert(map[v.valueNumber()] == null || map[v.valueNumber()].equals(nm), "value number " + v.valueNumber()
+            + " mapped to multiple names in " + n.getName() + ": " + nm + " and " + map[v.valueNumber()]);
 
         map[v.valueNumber()] = nm;
 
@@ -2530,7 +2540,7 @@ public abstract class AstTranslator extends CAstVisitor {
     if (n.getChildCount() == 2) {
       CAstNode v = n.getChild(1);
       if (scope.contains(nm) && scope.lookup(nm).getDefiningScope() == scope) {
-        Assertions._assert(! s.isFinal());
+        Assertions._assert(!s.isFinal());
         context.cfg().addInstruction(new AssignInstruction(scope.lookup(nm).valueNumber(), getValue(v)));
       } else if (v.getKind() != CAstNode.CONSTANT && v.getKind() != CAstNode.VAR && v.getKind() != CAstNode.THIS) {
         scope.declare(s, getValue(v));
@@ -2970,7 +2980,7 @@ public abstract class AstTranslator extends CAstVisitor {
     visitor.visit(switchBody, context, visitor);
     context.cfg().newBlock(true);
 
-    if (! hasExplicitDefault) {
+    if (!hasExplicitDefault) {
       context.cfg().addEdge(defaultHackBlock, context.cfg().getCurrentBlock());
     }
 
@@ -3238,7 +3248,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
   protected void leaveIsDefinedExpr(CAstNode n, Context c, CAstVisitor visitor) {
     WalkContext wc = (WalkContext) c;
-    int ref = getValue( n.getChild(0) );
+    int ref = getValue(n.getChild(0));
     int result = wc.currentScope().allocateTempValue();
     setValue(n, result);
     if (n.getChildCount() == 1) {
