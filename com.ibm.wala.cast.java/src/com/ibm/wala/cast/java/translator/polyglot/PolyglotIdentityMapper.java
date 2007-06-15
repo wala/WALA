@@ -155,7 +155,7 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type,CodeInstance,
     	Assertions.UNREACHABLE("typeToTypeID() encountered a null type!");
     	return null;
         }
-        Assertions._assert(type.isClass(), "typeToTypeID() encountered type that is neither primitive, array, nor class!");
+        Assertions._assert(type.isClass(), "typeToTypeID() encountered the type " + type + " that is neither primitive, array, nor class!");
 
         ClassType ctype= (ClassType) type;
 
