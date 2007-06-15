@@ -11,8 +11,12 @@
 
 package com.ibm.wala.ssa;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.Exceptions;
 
 /**
  * 
@@ -35,16 +39,10 @@ public abstract class SSAFieldAccessInstruction extends SSAInstruction {
     }
   }
 
-  /**
-   * @return TypeReference
-   */
   public TypeReference getDeclaredFieldType() {
     return field.getFieldType();
   }
 
-  /**
-   * @return TypeReference
-   */
   public FieldReference getDeclaredField() {
     return field;
   }
@@ -57,12 +55,15 @@ public abstract class SSAFieldAccessInstruction extends SSAInstruction {
     return ref == -1;
   }
 
-  /*
-   * @see com.ibm.wala.ssa.Instruction#isPEI()
-   */
   @Override
   public boolean isPEI() {
-    return true;
+    return !isStatic();
+  }
+
+  @Override
+  public Collection<TypeReference> getExceptionTypes() {
+    Collection<TypeReference> empty = Collections.emptySet();
+    return isStatic() ? empty : Exceptions.getNullPointerException();
   }
 
 }
