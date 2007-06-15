@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import com.ibm.wala.util.debug.*;
+
 import java.io.File;
 
 /**
@@ -31,7 +33,16 @@ public class SourceDirectoryTreeModule extends DirectoryTreeModule {
 
   @Override
   protected FileModule makeFile(File file) {
-    return new SourceFileModule(file, root.getAbsolutePath());
+    String rootPath = root.getAbsolutePath();
+    if (! rootPath.endsWith(File.separator)) {
+      rootPath = rootPath + File.separator;
+    }
+
+    String filePath = file.getAbsolutePath();
+
+    Assertions._assert(filePath.startsWith(rootPath));
+
+    return new SourceFileModule(file, filePath.substring(rootPath.length()));
   }
 
 }
