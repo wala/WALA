@@ -47,37 +47,33 @@ public class GVCallGraph {
   private final static String PS_FILE = "cg.ps";
 
   /**
-   * Usage: GVCallGraph -appJar [jar file name] The "jar file name" should
-   * be something like "c:/temp/testdata/java_cup.jar"
-   * 
-   * @param args
-   * @throws WalaException 
+   * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" 
+   * The "jar file name" should be
+   * something like "c:/temp/testdata/java_cup.jar"
    */
   public static void main(String[] args) throws WalaException {
     run(args);
   }
 
   /**
-   * Usage: args = "-appJar [jar file name] " The "jar file name" should be
+   * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" 
+   * The "jar file name" should be
    * something like "c:/temp/testdata/java_cup.jar"
-   * 
-   * @param args
-   * @throws WalaException 
    */
   public static Process run(String[] args) throws WalaException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
-    return run(p.getProperty("appJar"));
+    return run(p.getProperty("appJar"), p.getProperty("exclusionFile"));
   }
 
   /**
    * @param appJar
    *          something like "c:/temp/testdata/java_cup.jar"
    */
-  public static Process run(String appJar) {
+  public static Process run(String appJar, String exclusionFile) {
     try {
 
-      Graph<CGNode> g = buildPrunedCallGraph(appJar);
+      Graph<CGNode> g = buildPrunedCallGraph(appJar, exclusionFile);
 
       Properties p = null;
       try {
@@ -106,14 +102,15 @@ public class GVCallGraph {
    * @param appJar
    *          something like "c:/temp/testdata/java_cup.jar"
    * @return a call graph
-   * @throws WalaException
    */
-  public static Graph<CGNode> buildPrunedCallGraph(String appJar) throws WalaException {
+  public static Graph<CGNode> buildPrunedCallGraph(String appJar, String exclusionFile) throws WalaException {
     EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar);
+    if (exclusionFile != null) {
+      escope.setExclusionFileName(exclusionFile);
+    }
 
     // generate a DOMO-consumable wrapper around the incoming scope object
     EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
-    
 
     // TODO: return the warning set (need a CAPA type)
     // invoke DOMO to build a DOMO class hierarchy object
