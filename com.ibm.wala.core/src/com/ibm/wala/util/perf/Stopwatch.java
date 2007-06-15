@@ -24,22 +24,13 @@ public class Stopwatch {
 
   private long startTime;
 
-  /**
-   * Constructor Stopwatch.
-   */
   public Stopwatch() {
   }
 
-  /**
-   * Method start.
-   */
   public void start() {
     startTime = System.currentTimeMillis();
   }
 
-  /**
-   * Method stop.
-   */
   public void stop() {
     double endTime = System.currentTimeMillis();
     count++;
