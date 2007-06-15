@@ -13,29 +13,11 @@ package com.ibm.wala.viz;
 import org.eclipse.jface.window.ApplicationWindow;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>EJface Application Runner</b></em>'.
- * <!-- end-user-doc -->
- * <p>
- * The following features are implemented:
- * <ul>
- *   <li>{@link com.ibm.wala.viz.EJfaceApplicationRunner#getApplicationWindow <em>Application Window</em>}</li>
- *   <li>{@link com.ibm.wala.viz.EJfaceApplicationRunner#isBlockInput <em>Block Input</em>}</li>
- * </ul>
- * </p>
- *
- * @generated
+ * abstract base class for launching a JFace application
+ * 
+ * TODO: unify with other launchers?
  */
 public abstract class EJfaceApplicationRunner  {
-  /**
-   * The default value of the '{@link #getApplicationWindow() <em>Application Window</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getApplicationWindow()
-   * @generated
-   * @ordered
-   */
-  protected static final ApplicationWindow APPLICATION_WINDOW_EDEFAULT = null;
 
   /**
    * The cached value of the '{@link #getApplicationWindow() <em>Application Window</em>}' attribute.
@@ -45,33 +27,10 @@ public abstract class EJfaceApplicationRunner  {
    * @generated
    * @ordered
    */
-  protected ApplicationWindow applicationWindow = APPLICATION_WINDOW_EDEFAULT;
+  protected ApplicationWindow applicationWindow = null;
 
-  /**
-   * The default value of the '{@link #isBlockInput() <em>Block Input</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isBlockInput()
-   * @generated
-   * @ordered
-   */
-  protected static final boolean BLOCK_INPUT_EDEFAULT = false;
+  protected boolean blockInput = false;
 
-  /**
-   * The cached value of the '{@link #isBlockInput() <em>Block Input</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #isBlockInput()
-   * @generated
-   * @ordered
-   */
-  protected boolean blockInput = BLOCK_INPUT_EDEFAULT;
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   protected EJfaceApplicationRunner() {
     super();
   }

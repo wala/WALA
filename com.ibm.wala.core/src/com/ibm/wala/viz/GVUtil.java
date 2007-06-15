@@ -26,7 +26,7 @@ public class GVUtil {
    */
   public static Process launchGV(String psFile, String gvExe) throws WalaException {
     // set up a viewer for the ps file.
-    final GSViewLauncherImpl gv = new GSViewLauncherImpl();
+    final GSViewLauncher gv = new GSViewLauncher();
     gv.setGvExe(gvExe);
     gv.setPsfile(psFile);
     gv.run();

@@ -21,16 +21,10 @@ public abstract class BasicBlockDecorator implements NodeDecorator {
     super();
   }
 
-  /**
-   * @return Returns the currentNode.
-   */
   public CGNode getCurrentNode() {
     return currentNode;
   }
 
-  /**
-   * @param currentNode The currentNode to set.
-   */
   public void setCurrentNode(CGNode currentNode) {
     this.currentNode = currentNode;
   }

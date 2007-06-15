@@ -32,7 +32,7 @@ import com.ibm.wala.util.warnings.WalaException;
  * 
  * @author Stephen Fink
  */
-public class IFDSExplorerImpl  {
+public class IFDSExplorer  {
 
   /**
    * absolute path name to invoke dot
@@ -45,9 +45,6 @@ public class IFDSExplorerImpl  {
    */
   protected static String gvExe = null;
 
-
-  /**
-   */
   public static void setDotExe(String newDotExe) {
     dotExe = newDotExe;
   }
@@ -55,7 +52,6 @@ public class IFDSExplorerImpl  {
   public static void setGvExe(String newGvExe) {
     gvExe = newGvExe;
   }
-
 
   public static void viewIFDS(CallGraph cg, TabulationResult r) throws WalaException {
     
@@ -112,4 +108,4 @@ public class IFDSExplorerImpl  {
     return gvExe;
   }
 
-} //IFDSExplorerImpl
+}

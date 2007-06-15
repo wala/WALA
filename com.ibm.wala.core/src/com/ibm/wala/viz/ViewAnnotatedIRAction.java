@@ -22,22 +22,11 @@ public class ViewAnnotatedIRAction extends ViewIRAction {
 
   private final BasicBlockDecorator dec;
   
-  /**
-   * @param viewer
-   * @param cg
-   * @param psFile
-   * @param dotFile
-   * @param dotExe
-   * @param gvExe
-   */
   public ViewAnnotatedIRAction(SWTTreeViewer viewer, CallGraph cg, String psFile, String dotFile, String dotExe, String gvExe, BasicBlockDecorator dec) {
     super(viewer, cg, psFile, dotFile, dotExe, gvExe);
     this.dec = dec;
   }
   
-  /* 
-   * @see org.eclipse.jface.action.IAction#run()
-   */
   @Override
   public void run() {
     IR ir = getIRForSelection();
