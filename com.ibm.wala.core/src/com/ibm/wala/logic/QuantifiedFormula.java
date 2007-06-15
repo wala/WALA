@@ -108,7 +108,11 @@ public class QuantifiedFormula implements IFormula {
   public String toString() {
     return getQuantifier() + " " + getBoundVar() + getBoundVar().getRange() + "." + getFormula();
   }
-  
+
+  public String prettyPrint(ILogicDecorator d) {
+    return d.prettyPrint(getQuantifier()) + " " + d.prettyPrint(getBoundVar()) + "." + getFormula().prettyPrint(d);
+  }
+
   public boolean isAtomic() {
     return false;
   }

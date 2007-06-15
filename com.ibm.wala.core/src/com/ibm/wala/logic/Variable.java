@@ -69,6 +69,11 @@ public class Variable implements ITerm, Comparable<Variable> {
     return "v" + getNumber();
   }
 
+  public String prettyPrint(ILogicDecorator d) {
+    return d.prettyPrint(this);
+  }
+
+
   public IntPair getRange() {
     return range;
   }

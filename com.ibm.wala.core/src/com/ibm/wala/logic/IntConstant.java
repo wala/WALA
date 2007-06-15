@@ -37,6 +37,11 @@ public class IntConstant implements IConstant {
   public String toString() {
     return String.valueOf(val);
   }
+  
+
+  public String prettyPrint(ILogicDecorator d) {
+    return d.prettyPrint(this);
+  }
 
   @Override
   public int hashCode() {

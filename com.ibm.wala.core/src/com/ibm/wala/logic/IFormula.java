@@ -33,4 +33,6 @@ public interface IFormula {
   public Kind getKind();
   
   public Collection<Variable> getFreeVariables();
+  
+  public String prettyPrint(ILogicDecorator d);
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation.
+ * Copyright (c) 2007 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -10,24 +10,19 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-import java.util.Collection;
+import com.ibm.wala.logic.ILogicConstants.BinaryConnective;
+import com.ibm.wala.logic.ILogicConstants.Quantifier;
 
-/**
- * Term := Constant
- *      |  Variable
- *      |  f(Term,...)
- * 
- * @author sjfink
- *
- */
-public interface ITerm {
-  static enum Kind {
-    CONSTANT, VARIABLE, FUNCTION
-  }
-  
-  public Kind getKind();
+public interface ILogicDecorator {
 
-  public Collection<Variable> getFreeVariables();
+  String prettyPrint(BinaryConnective b);
 
-  public String prettyPrint(ILogicDecorator d);
+  String prettyPrint(BooleanConstant c);
+
+  String prettyPrint(Variable boundVar);
+
+  String prettyPrint(Quantifier quantifier);
+
+  String prettyPrint(IConstant constant);
+
 }

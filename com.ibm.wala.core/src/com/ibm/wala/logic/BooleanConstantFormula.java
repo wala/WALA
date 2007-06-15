@@ -38,7 +38,11 @@ public class BooleanConstantFormula implements IFormula {
 
   @Override
   public String toString() {
-    return c.toString();
+    return prettyPrint(DefaultDecorator.instance());
+  }
+
+  public String prettyPrint(ILogicDecorator d) {
+    return d.prettyPrint(c);
   }
 
 }

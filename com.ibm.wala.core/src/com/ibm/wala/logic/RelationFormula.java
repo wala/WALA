@@ -132,34 +132,38 @@ public class RelationFormula implements IFormula {
 
   @Override
   public String toString() {
+    return prettyPrint(DefaultDecorator.instance());
+  }
+  
+  public String prettyPrint(ILogicDecorator d) {
     if (R.getValence() == 2) {
-      return infixNotation();
+      return infixNotation(d);
     } else {
-      return prefixNotation();
+      return prefixNotation(d);
     }
   }
 
-  private String prefixNotation() {
+  private String prefixNotation(ILogicDecorator d) {
     StringBuffer result = new StringBuffer(R.getSymbol());
     result.append("(");
     for (int i = 0; i < R.getValence() - 1; i++) {
-      result.append(terms.get(i));
+      result.append(terms.get(i).prettyPrint(d));
       result.append(",");
     }
     if (R.getValence() > 0) 
-    	result.append(terms.get(R.getValence() - 1));
+    	result.append(terms.get(R.getValence() - 1).prettyPrint(d));
     result.append(")");
     return result.toString();
   }
 
-  private String infixNotation() {
+  private String infixNotation(ILogicDecorator d) {
     assert R.getValence() == 2;
     StringBuffer result = new StringBuffer();
-    result.append(terms.get(0));
+    result.append(terms.get(0).prettyPrint(d));
     result.append(" ");
     result.append(R.getSymbol());
     result.append(" ");
-    result.append(terms.get(1));
+    result.append(terms.get(1).prettyPrint(d));
     return result.toString();
   }
 

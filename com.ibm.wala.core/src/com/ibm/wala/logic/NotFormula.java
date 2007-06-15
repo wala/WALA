@@ -14,7 +14,7 @@ import java.util.Collection;
 
 /**
  * @author sjfink
- *
+ * 
  */
 public class NotFormula implements IFormula {
 
@@ -27,10 +27,10 @@ public class NotFormula implements IFormula {
       throw new IllegalArgumentException("f cannot be null");
     }
   }
-  
+
   public static IFormula make(IFormula f) {
     if (f instanceof RelationFormula) {
-      RelationFormula r = (RelationFormula)f;
+      RelationFormula r = (RelationFormula) f;
       if (r.getRelation().equals(BinaryRelation.EQUALS)) {
         return RelationFormula.make(BinaryRelation.NE, r.getTerms());
       }
@@ -64,11 +64,16 @@ public class NotFormula implements IFormula {
   public Collection<Variable> getFreeVariables() {
     return f.getFreeVariables();
   }
-  
+
   @Override
   public String toString() {
-    return "not(" + f + ")";
+    return prettyPrint(DefaultDecorator.instance());
   }
+
+  public String prettyPrint(ILogicDecorator d) {
+    return "not(" + f.prettyPrint(d) + ")";
+  }
+
   public boolean isAtomic() {
     return false;
   }

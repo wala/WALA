@@ -37,5 +37,9 @@ public class BooleanConstant implements IConstant {
   public String toString() {
     return Boolean.toString(val);
   }
+
+  public String prettyPrint(ILogicDecorator d) {
+    return Boolean.toString(val);
+  }
   
 }

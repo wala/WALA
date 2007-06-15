@@ -103,19 +103,22 @@ public class BinaryFormula implements IFormula {
     result.addAll(f2.getFreeVariables());
     return result;
   }
+  
+  public String prettyPrint(ILogicDecorator d) {
+    StringBuffer result = new StringBuffer();
+    result.append("(");
+    result.append(f1.prettyPrint(d));
+    result.append(") ");
+    result.append(d.prettyPrint(b));
+    result.append(" (");
+    result.append(f2.prettyPrint(d));
+    result.append(")");
+    return result.toString();
+  }
 
   @Override
   public String toString() {
-    StringBuffer result = new StringBuffer();
-    result.append("(");
-    result.append(f1);
-    result.append(") ");
-    result.append(b);
-    result.append(" (");
-    result.append(f2);
-    result.append(")");
-    return result.toString();
-
+    return prettyPrint(DefaultDecorator.instance());
   }
 
   @Override
