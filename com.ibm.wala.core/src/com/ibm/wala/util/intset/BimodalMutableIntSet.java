@@ -15,7 +15,7 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * 
  * An implementation of mutable int set that delegates to either a
- * MutableSparseIntSet of a BitVectorIntSet
+ * {@link MutableSparseIntSet} or a {@link BitVectorIntSet}
  * 
  * @author sfink
  */

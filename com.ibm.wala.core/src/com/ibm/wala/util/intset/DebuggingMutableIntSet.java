@@ -16,8 +16,8 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * This class wraps two concrete bitsets behind teh standard interface, carrying
- * out all operations on botgh of them and performing consistency checks at
+ * This class wraps two concrete {@link MutableIntSet}s behind the standard interface, carrying
+ * out all operations on both of them and performing consistency checks at
  * every step. The purpose of this is debugging bitset implementations.
  * 
  * @author Julian Dolby (dolby@us.ibm.com)

@@ -15,7 +15,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * 
- * A subclass of BitVector that implements the MutableIntSet interface.
+ * A {@link BitVector} implementation of {@link MutableIntSet}.
  * 
  * Note that this is NOT a value with regard to hashCode and equals.
  * 

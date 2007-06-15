@@ -11,6 +11,10 @@
 package com.ibm.wala.util.intset;
 
 /**
+ * A {@link MutableSparseIntSet} that allows for tuning of
+ * its initial size and expansion factor.
+ * @see #getInitialNonEmptySize()
+ * @see #getExpansionFactor()
  * @author sfink
  *
  */
