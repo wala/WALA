@@ -24,12 +24,9 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.warnings.WarningSet;
 
 public class PolyglotSourceLoaderImpl extends JavaSourceLoaderImpl {
-    protected final IRTranslatorExtension fExtInfo;
-
     public PolyglotSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions,
 	    IClassHierarchy cha, WarningSet warnings, IRTranslatorExtension extInfo) throws IOException {
-	super(loaderRef, parent, exclusions, cha, warnings);
- 	fExtInfo= extInfo;
+	super(loaderRef, parent, exclusions, cha, warnings, extInfo);
     }
 
     protected SourceModuleTranslator getTranslator() {

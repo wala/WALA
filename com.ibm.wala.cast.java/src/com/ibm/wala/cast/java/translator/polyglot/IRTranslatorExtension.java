@@ -24,4 +24,9 @@ public interface IRTranslatorExtension {
      * results to AST nodes.
      */
     PolyglotIdentityMapper getIdentityMapper();
+    
+    /**
+     * @return the CAstRewriterFactory.
+     */
+    CAstRewriterFactory getCAstRewriterFactory();
 }

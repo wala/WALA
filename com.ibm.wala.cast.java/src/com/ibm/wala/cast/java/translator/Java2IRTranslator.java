@@ -16,7 +16,9 @@ package com.ibm.wala.cast.java.translator;
 import java.io.PrintWriter;
 
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
-import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.java.translator.polyglot.*;
+import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.tree.impl.*;
 import com.ibm.wala.cast.util.CAstPrinter;
 
 public class Java2IRTranslator {
@@ -24,6 +26,7 @@ public class Java2IRTranslator {
 
     protected final JavaSourceLoaderImpl fLoader;
     protected final TranslatorToCAst fSourceTranslator;
+    CAstRewriterFactory<?> castRewriterFactory = null;
 
     public Java2IRTranslator(TranslatorToCAst sourceTranslator, 
 			     JavaSourceLoaderImpl srcLoader)
@@ -38,6 +41,11 @@ public class Java2IRTranslator {
       DEBUG = debug;
       fLoader= srcLoader;
       fSourceTranslator = sourceTranslator;
+      
+      IRTranslatorExtension ext = fLoader.getTranslatorExtension();
+      if (ext != null) {
+        castRewriterFactory = ext.getCAstRewriterFactory();
+      }
     }
 
     public void translate(Object ast, String N) {
@@ -49,6 +57,17 @@ public class Java2IRTranslator {
 	printWriter.flush();
       }
 
+      if (castRewriterFactory != null) {
+        CAst cast = new CAstImpl();
+        CAstRewriter<?> rw = castRewriterFactory.createCAstRewriter(cast);
+        ce = rw.rewrite(ce);
+        if (DEBUG) {
+          PrintWriter printWriter= new PrintWriter(System.out);
+          CAstPrinter.printTo(ce, printWriter);
+          printWriter.flush();
+        }
+      }
+   
       new JavaCAst2IRTranslator(ce, fLoader).translate();
     }
 }
