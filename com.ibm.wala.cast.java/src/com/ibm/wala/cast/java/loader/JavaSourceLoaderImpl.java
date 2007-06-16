@@ -64,7 +64,6 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   public Map<CAstEntity, IClass> fTypeMap = HashMapFactory.make();
-  protected final IRTranslatorExtension fExtInfo;
 
   /**
    * DOMO representation of a Java class residing in a source file
@@ -392,15 +391,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   }
 
   public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha,
-      WarningSet warnings, IRTranslatorExtension ext) throws IOException {
-    super(loaderRef, cha.getScope().getArrayClassLoader(), parent, cha.getScope().getExclusions(), cha, warnings);
-    fExtInfo = ext;
-  }
-
-  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha,
       WarningSet warnings) throws IOException {
     super(loaderRef, cha.getScope().getArrayClassLoader(), parent, cha.getScope().getExclusions(), cha, warnings);
-    fExtInfo = null;
   }
 
   public IClassHierarchy getClassHierarchy() {
@@ -414,10 +406,6 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
 
   protected abstract SourceModuleTranslator getTranslator();
   
-  public IRTranslatorExtension getTranslatorExtension() {
-    return fExtInfo;
-  }
-
   public void defineFunction(CAstEntity n, IClass owner, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
       TypeReference[][] catchTypes, LexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
     ((JavaClass) owner).addMethod(n, owner, cfg, symtab, hasCatchBlock, catchTypes, lexicalInfo, debugInfo);

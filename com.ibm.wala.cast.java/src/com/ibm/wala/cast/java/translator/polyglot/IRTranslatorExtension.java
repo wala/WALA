@@ -13,6 +13,7 @@
  */
 package com.ibm.wala.cast.java.translator.polyglot;
 
+import com.ibm.wala.cast.tree.impl.*;
 import com.ibm.wala.cast.java.translator.polyglot.PolyglotIdentityMapper;
 
 public interface IRTranslatorExtension {

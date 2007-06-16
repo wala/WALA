@@ -38,14 +38,25 @@ public class Java2IRTranslator {
 			     JavaSourceLoaderImpl srcLoader,
 			     boolean debug) 
     {
+      this(sourceTranslator, srcLoader, null, debug);
+    }
+
+    public Java2IRTranslator(TranslatorToCAst sourceTranslator, 
+			     JavaSourceLoaderImpl srcLoader,
+			     CAstRewriterFactory<?> castRewriterFactory)
+    {
+	this(sourceTranslator, srcLoader, castRewriterFactory, false);
+    }
+
+    public Java2IRTranslator(TranslatorToCAst sourceTranslator, 
+			     JavaSourceLoaderImpl srcLoader,
+			     CAstRewriterFactory<?> castRewriterFactory,
+			     boolean debug) 
+    {
       DEBUG = debug;
       fLoader= srcLoader;
       fSourceTranslator = sourceTranslator;
-      
-      IRTranslatorExtension ext = fLoader.getTranslatorExtension();
-      if (ext != null) {
-        castRewriterFactory = ext.getCAstRewriterFactory();
-      }
+      this.castRewriterFactory = castRewriterFactory;
     }
 
     public void translate(Object ast, String N) {

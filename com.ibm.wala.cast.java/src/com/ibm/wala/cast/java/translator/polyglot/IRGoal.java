@@ -57,7 +57,8 @@ public class IRGoal extends AbstractGoal implements EndGoal {
 	    extInfo.nodeFactory(),
 	    extInfo.typeSystem(),
 	    new PolyglotIdentityMapper(fSourceLoader.getReference(), this.job.extensionInfo().typeSystem())),
-	  fSourceLoader));
+	  fSourceLoader,
+	  ((IRTranslatorExtension)extInfo).getCAstRewriterFactory()));
     }
 
     public String name() {

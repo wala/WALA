@@ -14,6 +14,7 @@
 package com.ibm.wala.cast.java.translator.polyglot;
 
 import com.ibm.wala.cast.java.translator.polyglot.PolyglotIdentityMapper;
+import com.ibm.wala.cast.tree.impl.*;
 
 import polyglot.frontend.JLExtensionInfo;
 import polyglot.frontend.Job;
