@@ -122,7 +122,12 @@ public class TabulationSolver<T, P> {
    * solver allows interruption
    */
   static protected final boolean INTERRUPTIBLE = true;
-
+  
+  /**
+   * how frequently to check for interruption?
+   */
+  static final private int INTERRUPT_LATENCY = 20;
+  
   /**
    * The supergraph which induces this dataflow problem
    */
@@ -229,6 +234,7 @@ public class TabulationSolver<T, P> {
    * @throws SolverInterruptedException
    */
   private void forwardTabulateSLRPs() throws SolverInterruptedException {
+    int interrupt = 0;
     while (worklist.size() > 0) {
       if (verbose) {
         performVerboseAction();
@@ -237,8 +243,13 @@ public class TabulationSolver<T, P> {
         tendToSoftCaches();
       }
       if (INTERRUPTIBLE) {
-        if (Thread.interrupted()) {
-          throw new SolverInterruptedException();
+        // checking Thread.interrupted is expensive.  Don't do it every time.
+        interrupt++;
+        if (interrupt % INTERRUPT_LATENCY == 0) {
+          interrupt = 0;
+          if (Thread.interrupted()) {
+            throw new SolverInterruptedException();
+          }
         }
       }
 
