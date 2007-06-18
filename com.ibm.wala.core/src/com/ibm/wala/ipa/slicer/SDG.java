@@ -107,8 +107,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
    */
   private final HeapExclusions heapExclude;
 
-  /**
-   */
+
   public SDG(final CallGraph cg, PointerAnalysis pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
     this(cg, pa, dOptions, cOptions, null);
   }
