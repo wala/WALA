@@ -41,7 +41,7 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
 
   static final boolean DEBUG = false;
 
-  static public final boolean verbose = ("true".equals(System.getProperty("com.ibm.wala.util.fixedpoint.impl.verbose")) ? true
+  static public final boolean verbose = ("true".equals(System.getProperty("com.ibm.wala.fixedpoint.impl.verbose")) ? true
       : false);
 
   static public final int DEFAULT_VERBOSE_INTERVAL = 100000;
