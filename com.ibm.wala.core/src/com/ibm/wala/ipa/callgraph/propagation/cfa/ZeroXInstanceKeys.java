@@ -47,6 +47,11 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
 
   public final static TypeReference JavaLangStringBuffer = TypeReference.findOrCreate(ClassLoaderReference.Primordial,
       JavaLangStringBufferName);
+  
+  private final static TypeName JavaLangStringBuilderName = TypeName.string2TypeName("Ljava/lang/StringBuilder");
+
+  public final static TypeReference JavaLangStringBuilder = TypeReference.findOrCreate(ClassLoaderReference.Primordial,
+      JavaLangStringBuilderName);
 
   /**
    * The NONE policy is not allocation-site based
@@ -286,7 +291,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     if (C == null) {
       throw new IllegalArgumentException("C is null");
     }
-    return C.getReference().equals(TypeReference.JavaLangString) || C.getReference().equals(JavaLangStringBuffer);
+    return C.getReference().equals(TypeReference.JavaLangString) || C.getReference().equals(JavaLangStringBuffer) || C.getReference().equals(JavaLangStringBuilder);
   }
 
   public boolean isThrowable(IClass C) {
