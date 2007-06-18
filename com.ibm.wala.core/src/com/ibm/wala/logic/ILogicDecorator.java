@@ -25,4 +25,6 @@ public interface ILogicDecorator {
 
   String prettyPrint(IConstant constant);
 
+  String prettyPrint(FunctionTerm term);
+
 }

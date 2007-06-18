@@ -40,15 +40,8 @@ public class FunctionTerm implements ITerm {
   }
 
   public String prettyPrint(ILogicDecorator d) {
-    StringBuffer result = new StringBuffer(f.getSymbol());
-    result.append("(");
-    for (int i = 0; i < f.getNumberOfParameters() - 1; i++) {
-      result.append(parameters.get(i).prettyPrint(d));
-      result.append(",");
-    }
-    result.append(parameters.get(f.getNumberOfParameters() - 1).prettyPrint(d));
-    result.append(")");
-    return result.toString();
+    return d.prettyPrint(this);
+
   }
 
   public static FunctionTerm make(UnaryFunction f, int i) {

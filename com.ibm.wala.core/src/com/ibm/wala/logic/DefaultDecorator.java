@@ -44,4 +44,16 @@ public class DefaultDecorator implements ILogicDecorator {
     return constant.toString();
   }
 
+  public String prettyPrint(FunctionTerm term) {
+    StringBuffer result = new StringBuffer(term.getFunction().getSymbol());
+    result.append("(");
+    for (int i = 0; i < term.getFunction().getNumberOfParameters() - 1; i++) {
+      result.append(term.getParameters().get(i).prettyPrint(this));
+      result.append(",");
+    }
+    result.append(term.getParameters().get(term.getFunction().getNumberOfParameters() - 1).prettyPrint(this));
+    result.append(")");
+    return result.toString();
+  }
+
 }

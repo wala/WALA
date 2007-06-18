@@ -17,8 +17,9 @@ import java.util.Set;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
- * @author sjfink
+ * The union of two theories.
  * 
+ * @author sjfink
  */
 public class CombinedTheory extends AbstractTheory {
 
@@ -52,7 +53,7 @@ public class CombinedTheory extends AbstractTheory {
     return CombinedVocabulary.make(a.getVocabulary(), b.getVocabulary());
   }
 
-  public static ITheory make(ITheory t, BasicVocabulary<?> v) {
+  public static ITheory make(ITheory t, IVocabulary<?> v) {
     return make(t, new JustVocabulary(v));
   }
 

@@ -12,7 +12,7 @@ package com.ibm.wala.logic;
 
 import java.util.TreeSet;
 
-public abstract class AbstractTheory implements ITheory {
+public abstract class AbstractTheory extends DefaultDecorator implements ITheory {
 
   @Override
   public String toString() {

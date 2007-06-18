@@ -28,7 +28,6 @@ public class Variable implements ITerm, Comparable<Variable> {
     this.number = number;
     this.range = range;
   }
- 
 
   public Kind getKind() {
     return Kind.VARIABLE;
