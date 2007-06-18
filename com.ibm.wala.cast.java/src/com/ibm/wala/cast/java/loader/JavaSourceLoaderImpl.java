@@ -24,7 +24,6 @@ import java.util.Set;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
-import com.ibm.wala.cast.java.translator.polyglot.*;
 import com.ibm.wala.cast.loader.AstClass;
 import com.ibm.wala.cast.loader.AstField;
 import com.ibm.wala.cast.loader.AstMethod;

@@ -16,69 +16,63 @@ package com.ibm.wala.cast.java.translator;
 import java.io.PrintWriter;
 
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
-import com.ibm.wala.cast.java.translator.polyglot.*;
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.impl.*;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.impl.CAstImpl;
+import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 import com.ibm.wala.cast.util.CAstPrinter;
 
 public class Java2IRTranslator {
-    private final boolean DEBUG;
+  private final boolean DEBUG;
 
-    protected final JavaSourceLoaderImpl fLoader;
-    protected final TranslatorToCAst fSourceTranslator;
-    CAstRewriterFactory<?> castRewriterFactory = null;
+  protected final JavaSourceLoaderImpl fLoader;
 
-    public Java2IRTranslator(TranslatorToCAst sourceTranslator, 
-			     JavaSourceLoaderImpl srcLoader)
-    {
-      this(sourceTranslator, srcLoader, false);
+  protected final TranslatorToCAst fSourceTranslator;
+
+  CAstRewriterFactory<?> castRewriterFactory = null;
+
+  public Java2IRTranslator(TranslatorToCAst sourceTranslator, JavaSourceLoaderImpl srcLoader) {
+    this(sourceTranslator, srcLoader, false);
+  }
+
+  public Java2IRTranslator(TranslatorToCAst sourceTranslator, JavaSourceLoaderImpl srcLoader, boolean debug) {
+    this(sourceTranslator, srcLoader, null, debug);
+  }
+
+  public Java2IRTranslator(TranslatorToCAst sourceTranslator, JavaSourceLoaderImpl srcLoader,
+      CAstRewriterFactory<?> castRewriterFactory) {
+    this(sourceTranslator, srcLoader, castRewriterFactory, false);
+  }
+
+  public Java2IRTranslator(TranslatorToCAst sourceTranslator, JavaSourceLoaderImpl srcLoader,
+      CAstRewriterFactory<?> castRewriterFactory, boolean debug) {
+    DEBUG = debug;
+    fLoader = srcLoader;
+    fSourceTranslator = sourceTranslator;
+    this.castRewriterFactory = castRewriterFactory;
+  }
+
+  public void translate(Object ast, String N) {
+    CAstEntity ce = fSourceTranslator.translate(ast, N);
+
+    if (DEBUG) {
+      PrintWriter printWriter = new PrintWriter(System.out);
+      CAstPrinter.printTo(ce, printWriter);
+      printWriter.flush();
     }
 
-    public Java2IRTranslator(TranslatorToCAst sourceTranslator, 
-			     JavaSourceLoaderImpl srcLoader,
-			     boolean debug) 
-    {
-      this(sourceTranslator, srcLoader, null, debug);
-    }
-
-    public Java2IRTranslator(TranslatorToCAst sourceTranslator, 
-			     JavaSourceLoaderImpl srcLoader,
-			     CAstRewriterFactory<?> castRewriterFactory)
-    {
-	this(sourceTranslator, srcLoader, castRewriterFactory, false);
-    }
-
-    public Java2IRTranslator(TranslatorToCAst sourceTranslator, 
-			     JavaSourceLoaderImpl srcLoader,
-			     CAstRewriterFactory<?> castRewriterFactory,
-			     boolean debug) 
-    {
-      DEBUG = debug;
-      fLoader= srcLoader;
-      fSourceTranslator = sourceTranslator;
-      this.castRewriterFactory = castRewriterFactory;
-    }
-
-    public void translate(Object ast, String N) {
-      CAstEntity ce= fSourceTranslator.translate(ast, N);
-
+    if (castRewriterFactory != null) {
+      CAst cast = new CAstImpl();
+      CAstRewriter<?> rw = castRewriterFactory.createCAstRewriter(cast);
+      ce = rw.rewrite(ce);
       if (DEBUG) {
-	PrintWriter printWriter= new PrintWriter(System.out);
-	CAstPrinter.printTo(ce, printWriter);
-	printWriter.flush();
+        PrintWriter printWriter = new PrintWriter(System.out);
+        CAstPrinter.printTo(ce, printWriter);
+        printWriter.flush();
       }
-
-      if (castRewriterFactory != null) {
-        CAst cast = new CAstImpl();
-        CAstRewriter<?> rw = castRewriterFactory.createCAstRewriter(cast);
-        ce = rw.rewrite(ce);
-        if (DEBUG) {
-          PrintWriter printWriter= new PrintWriter(System.out);
-          CAstPrinter.printTo(ce, printWriter);
-          printWriter.flush();
-        }
-      }
-   
-      new JavaCAst2IRTranslator(ce, fLoader).translate();
     }
+
+    new JavaCAst2IRTranslator(ce, fLoader).translate();
+  }
 }
