@@ -1066,10 +1066,9 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /**
-   * @param bb
    * @return the basic block with a particular number
    */
-  public IBasicBlock getBasicBlock(int bb) {
+  public BasicBlock getBasicBlock(int bb) {
     return basicBlocks[bb];
   }
 
