@@ -77,6 +77,12 @@ public class FunctionTerm implements ITerm {
     return new FunctionTerm(f, p);
   }
   
+
+  public static FunctionTerm make(NullaryFunction f) {
+    List<ITerm> empty = Collections.emptyList();
+    return new FunctionTerm(f, empty);
+  }
+  
   public static FunctionTerm make(UnaryFunction f, ITerm t) {
     List<ITerm> p = new LinkedList<ITerm>();
     p.add(t);
@@ -129,6 +135,7 @@ public class FunctionTerm implements ITerm {
       return false;
     return true;
   }
+
 
 
 }

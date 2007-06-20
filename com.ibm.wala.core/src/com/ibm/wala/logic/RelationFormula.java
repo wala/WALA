@@ -76,7 +76,7 @@ public class RelationFormula implements IFormula {
     l.add(t);
     return new RelationFormula(R, l);
   }
-  
+
   public static RelationFormula make(UnaryRelation R, int i) {
     ArrayList<ITerm> l = new ArrayList<ITerm>();
     l.add(IntConstant.make(i));
@@ -86,7 +86,7 @@ public class RelationFormula implements IFormula {
   public static IFormula make(IRelation relation, List<ITerm> terms) {
     return new RelationFormula(relation, terms);
   }
-  
+
   @Override
   public int hashCode() {
     final int PRIME = 31;
@@ -134,7 +134,7 @@ public class RelationFormula implements IFormula {
   public String toString() {
     return prettyPrint(DefaultDecorator.instance());
   }
-  
+
   public String prettyPrint(ILogicDecorator d) {
     if (R.getValence() == 2) {
       return infixNotation(d);
@@ -143,20 +143,21 @@ public class RelationFormula implements IFormula {
     }
   }
 
-  private String prefixNotation(ILogicDecorator d) {
+  public String prefixNotation(ILogicDecorator d) {
     StringBuffer result = new StringBuffer(R.getSymbol());
     result.append("(");
     for (int i = 0; i < R.getValence() - 1; i++) {
       result.append(terms.get(i).prettyPrint(d));
       result.append(",");
     }
-    if (R.getValence() > 0) 
-    	result.append(terms.get(R.getValence() - 1).prettyPrint(d));
+    if (R.getValence() > 0) {
+      result.append(terms.get(R.getValence() - 1).prettyPrint(d));
+    }
     result.append(")");
     return result.toString();
   }
 
-  private String infixNotation(ILogicDecorator d) {
+  public String infixNotation(ILogicDecorator d) {
     assert R.getValence() == 2;
     StringBuffer result = new StringBuffer();
     result.append(terms.get(0).prettyPrint(d));

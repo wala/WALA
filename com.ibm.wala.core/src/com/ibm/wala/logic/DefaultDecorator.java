@@ -51,7 +51,9 @@ public class DefaultDecorator implements ILogicDecorator {
       result.append(term.getParameters().get(i).prettyPrint(this));
       result.append(",");
     }
-    result.append(term.getParameters().get(term.getFunction().getNumberOfParameters() - 1).prettyPrint(this));
+    if (term.getFunction().getNumberOfParameters() > 0) {
+      result.append(term.getParameters().get(term.getFunction().getNumberOfParameters() - 1).prettyPrint(this));
+    }
     result.append(")");
     return result.toString();
   }

@@ -14,7 +14,6 @@ package com.ibm.wala.logic;
 /**
  * @author schandra_sf
  */
-
 public class NaryFunction implements IFunction {
 
   private final String symbol;
