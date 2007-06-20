@@ -136,11 +136,7 @@ public class RelationFormula implements IFormula {
   }
 
   public String prettyPrint(ILogicDecorator d) {
-    if (R.getValence() == 2) {
-      return infixNotation(d);
-    } else {
-      return prefixNotation(d);
-    }
+    return d.prettyPrint(this);
   }
 
   public String prefixNotation(ILogicDecorator d) {

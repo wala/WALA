@@ -27,4 +27,6 @@ public interface ILogicDecorator {
 
   String prettyPrint(FunctionTerm term);
 
+  String prettyPrint(RelationFormula formula);
+
 }

@@ -57,5 +57,38 @@ public class DefaultDecorator implements ILogicDecorator {
     result.append(")");
     return result.toString();
   }
+  
+  public String prettyPrint(RelationFormula r) {
+    if (r.getRelation().getValence() == 2) {
+      return infixNotation(r);
+    } else {
+      return prefixNotation(r);
+    }
+  }
+
+  public String prefixNotation(RelationFormula r) {
+    StringBuffer result = new StringBuffer(r.getRelation().getSymbol());
+    result.append("(");
+    for (int i = 0; i < r.getRelation().getValence() - 1; i++) {
+      result.append(r.getTerms().get(i).prettyPrint(this));
+      result.append(",");
+    }
+    if (r.getRelation().getValence() > 0) {
+      result.append(r.getTerms().get(r.getRelation().getValence() - 1).prettyPrint(this));
+    }
+    result.append(")");
+    return result.toString();
+  }
+
+  public String infixNotation(RelationFormula r) {
+    assert r.getRelation().getValence() == 2;
+    StringBuffer result = new StringBuffer();
+    result.append(r.getTerms().get(0).prettyPrint(this));
+    result.append(" ");
+    result.append(r.getRelation().getSymbol());
+    result.append(" ");
+    result.append(r.getTerms().get(1).prettyPrint(this));
+    return result.toString();
+  }
 
 }
