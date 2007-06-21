@@ -241,13 +241,15 @@ public class EMFScopeWrapper extends AnalysisScope {
    * @param m
    * @param loader
    */
-  private void processJarFile(EJarFile m, ClassLoaderReference loader) {
+  private void processJarFile(EJarFile m, ClassLoaderReference loader) throws IllegalArgumentException {
     String fileName = m.getUrl();
     Assertions.productionAssertion(fileName != null, "null jar file name specified");
     Module mod = null;
     try {
       mod = FileProvider.getJarFileModule(fileName);
-      Assertions._assert(mod != null);
+      if (mod == null) {
+        throw new IllegalArgumentException("failed to find jar file module " + fileName);
+      }
     } catch (ZipException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE("Error opening jar file: " + fileName);
@@ -494,7 +496,8 @@ public class EMFScopeWrapper extends AnalysisScope {
    * @param escope
    * @return a new EMFScopeWrapper comprising the given scope
    * @throws WalaException
-   * @throws IllegalArgumentException  if escope is null
+   * @throws IllegalArgumentException
+   *           if escope is null
    */
   public static EMFScopeWrapper generateScope(EJavaAnalysisScope escope) throws WalaException {
     if (escope == null) {
