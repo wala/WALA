@@ -824,7 +824,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
       if (p != pRef) {
         // pRef is the representative for p.
         // be careful: cache the defs before mucking with the underlying system
-        for (Iterator d = new Iterator2Collection<AbstractStatement>(getStatementsThatDef(p)).iterator(); d.hasNext();) {
+        for (Iterator d = Iterator2Collection.toCollection(getStatementsThatDef(p)).iterator(); d.hasNext();) {
           AbstractStatement as = (AbstractStatement) d.next();
 
           if (as instanceof AssignEquation) {
@@ -841,7 +841,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
           }
         }
         // be careful: cache the defs before mucking with the underlying system
-        for (Iterator u = new Iterator2Collection<AbstractStatement>(getStatementsThatUse(p)).iterator(); u.hasNext();) {
+        for (Iterator u = Iterator2Collection.toCollection(getStatementsThatUse(p)).iterator(); u.hasNext();) {
           AbstractStatement as = (AbstractStatement) u.next();
           if (as instanceof AssignEquation) {
             AssignEquation assign = (AssignEquation) as;

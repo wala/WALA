@@ -49,7 +49,7 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
       throw new IllegalArgumentException("src is null");
     }
     HashSet<ExplodedSupergraphNode<T>> result = HashSetFactory.make(5);
-    result.addAll(new Iterator2Collection<ExplodedSupergraphNode<T>>(super.getSuccNodes(src)));
+    result.addAll(Iterator2Collection.toCollection(super.getSuccNodes(src)));
 
     // add facts from summary edges
     if (getSupergraph().isCall(src.getSupergraphNode())) {
@@ -76,7 +76,7 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
       throw new IllegalArgumentException("dest is null");
     }
     HashSet<ExplodedSupergraphNode<T>> result = HashSetFactory.make(5);
-    result.addAll(new Iterator2Collection<ExplodedSupergraphNode<T>>(super.getPredNodes(dest)));
+    result.addAll(Iterator2Collection.toCollection(super.getPredNodes(dest)));
 
     // add facts from summary edges
     if (getSupergraph().isReturn(dest.getSupergraphNode())) {
@@ -99,7 +99,7 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
    */
   @Override
   public int getPredNodeCount(ExplodedSupergraphNode<T> N) {
-    return new Iterator2Collection<ExplodedSupergraphNode<T>>(getPredNodes(N)).size();
+    return Iterator2Collection.toCollection(getPredNodes(N)).size();
   }
 
   /*
@@ -107,6 +107,6 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
    */
   @Override
   public int getSuccNodeCount(ExplodedSupergraphNode<T> N) {
-    return new Iterator2Collection<ExplodedSupergraphNode<T>>(getSuccNodes(N)).size();
+    return Iterator2Collection.toCollection(getSuccNodes(N)).size();
   }
 }

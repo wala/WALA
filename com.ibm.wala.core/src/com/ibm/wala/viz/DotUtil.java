@@ -202,7 +202,7 @@ public class DotUtil {
    * 
    */
   private static <T> Collection<T> computeDotNodes(Graph<T> g) throws WalaException {
-    return new Iterator2Collection<T>(g.iterator());
+    return Iterator2Collection.toCollection(g.iterator());
     // if (!usingClusters()) {
     // return new Iterator2Collection(getGraphInput().iterateNodes());
     // } else {

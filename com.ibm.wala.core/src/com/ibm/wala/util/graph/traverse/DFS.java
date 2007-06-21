@@ -58,7 +58,7 @@ public class DFS {
         return new FilterIterator<T>(G.getSuccNodes(n), filter);
       }
     };
-    return new Iterator2Collection<T>(dfs);
+    return Iterator2Collection.toCollection(dfs);
   }
 
   /**

@@ -489,7 +489,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         }
       }
     };
-    Collection<Statement> relevantStatements = new Iterator2Collection<Statement>(new FilterIterator<Statement>(iterator(), f));
+    Collection<Statement> relevantStatements = Iterator2Collection.toCollection(new FilterIterator<Statement>(iterator(), f));
 
     Map<Statement, OrdinalSet<Statement>> heapReachingDefs = dOptions.isIgnoreHeap() ? null : HeapReachingDefs.computeReachingDefs(
         node, ir, pa, mod, relevantStatements, new HeapExclusions(SetComplement.complement(new SingletonSet(t))));
@@ -581,7 +581,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         }
       }
     };
-    return new Iterator2Collection<NormalStatement>(new FilterIterator<NormalStatement>(iterator(), filter));
+    return Iterator2Collection.toCollection(new FilterIterator<NormalStatement>(iterator(), filter));
   }
 
   /**
@@ -599,7 +599,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         }
       }
     };
-    return new Iterator2Collection<NormalStatement>(new FilterIterator<NormalStatement>(iterator(), filter));
+    return Iterator2Collection.toCollection(new FilterIterator<NormalStatement>(iterator(), filter));
   }
 
   /**

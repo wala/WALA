@@ -110,7 +110,7 @@ public class OrdinalSet<T> implements Iterable<T> {
 
   @Override
   public String toString() {
-    return new Iterator2Collection<T>(iterator()).toString();
+    return Iterator2Collection.toCollection(iterator()).toString();
   }
 
   /**
@@ -148,7 +148,7 @@ public class OrdinalSet<T> implements Iterable<T> {
    * @throws NullPointerException  if instances is null
    */
   public static <T> Collection<T> toCollection(OrdinalSet<T> instances) throws NullPointerException {
-    return new Iterator2Collection<T>(instances.iterator());
+    return Iterator2Collection.toCollection(instances.iterator());
   }
 
   /**

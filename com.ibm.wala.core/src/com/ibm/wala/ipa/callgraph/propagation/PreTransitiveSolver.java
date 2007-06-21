@@ -150,7 +150,7 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
         }
 
         // cache the predecessors before unification might screw things up.
-        Iterator2Collection<IVariable> origPred = new Iterator2Collection<IVariable>(ag.getPredNodes(v));
+        Iterator2Collection<? extends IVariable> origPred = Iterator2Collection.toCollection(ag.getPredNodes(v));
         for (Iterator it = origPred.iterator(); it.hasNext();) {
           PointsToSetVariable n = (PointsToSetVariable) it.next();
 

@@ -275,7 +275,7 @@ public class Slicer {
             Assertions._assert(!st.getKind().equals(Kind.EXC_RET_CALLEE));
           }
 
-          Collection<Statement> succs = new Iterator2Collection<Statement>(sdg.getSuccNodes(st));
+          Collection<Statement> succs = Iterator2Collection.toCollection(sdg.getSuccNodes(st));
           succs.removeAll(slice);
           for (Statement s : succs) {
             // s is a statement that is a successor of a return statement to the
@@ -314,7 +314,7 @@ public class Slicer {
         case HEAP_PARAM_CALLEE:
         case PARAM_CALLEE:
         case METHOD_ENTRY:
-          Collection<Statement> preds = new Iterator2Collection<Statement>(sdg.getPredNodes(st));
+          Collection<Statement> preds = Iterator2Collection.toCollection(sdg.getPredNodes(st));
           preds.removeAll(slice);
           for (Statement p : preds) {
             // p is a statement that is a predecessor of an incoming parameter

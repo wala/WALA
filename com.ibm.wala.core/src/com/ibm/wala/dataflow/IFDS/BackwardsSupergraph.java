@@ -88,7 +88,7 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   public Iterator<T> getCalledNodes(T ret) {
     if (DEBUG_LEVEL > 1) {
       Trace.println(getClass() + " getCalledNodes " + ret);
-      Trace.printCollection("called nodes ", new Iterator2Collection<Object>(new FilterIterator<Object>(getSuccNodes(ret), exitFilter)));
+      Trace.printCollection("called nodes ", Iterator2Collection.toCollection(new FilterIterator<Object>(getSuccNodes(ret), exitFilter)));
     }
     return new FilterIterator<T>(getSuccNodes(ret), exitFilter);
   }

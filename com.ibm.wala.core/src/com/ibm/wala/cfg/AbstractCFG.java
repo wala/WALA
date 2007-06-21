@@ -145,7 +145,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
       boolean exceptionalIn = getNumberOfExceptionalIn(N) > 0;
       if (normalIn) {
         if (exceptionalIn) {
-          return new Iterator2Collection<IBasicBlock>(getPredNodes(N)).size();
+          return Iterator2Collection.toCollection(getPredNodes(N)).size();
         } else {
           return getNumberOfNormalIn(N);
         }
@@ -243,8 +243,8 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
       if (normalIn) {
         if (exceptionalIn) {
           HashSet<IBasicBlock> result = new HashSet<IBasicBlock>(getNumberOfNormalIn(N) + getNumberOfExceptionalIn(N));
-          result.addAll(new Iterator2Collection<IBasicBlock>(normalEdgeManager.getPredNodes(N)));
-          result.addAll(new Iterator2Collection<IBasicBlock>(exceptionalEdgeManager.getPredNodes(N)));
+          result.addAll(Iterator2Collection.toCollection(normalEdgeManager.getPredNodes(N)));
+          result.addAll(Iterator2Collection.toCollection(exceptionalEdgeManager.getPredNodes(N)));
           if (fallThru.get(number - 1)) {
             result.add(getNode(number - 1));
           }
@@ -302,7 +302,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   private int slowCountSuccNodes(IBasicBlock N) {
-    return new Iterator2Collection<IBasicBlock>(getSuccNodes(N)).size();
+    return Iterator2Collection.toCollection(getSuccNodes(N)).size();
   }
 
   public Iterator<IBasicBlock> getSuccNodes(IBasicBlock N) {
@@ -580,7 +580,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    return new Iterator2Collection<IBasicBlock>(iterateExceptionalSuccessors(b.getNumber()));
+    return Iterator2Collection.toCollection(iterateExceptionalSuccessors(b.getNumber()));
   }
 
   /*
@@ -590,7 +590,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    return new Iterator2Collection<IBasicBlock>(iterateNormalSuccessors(b.getNumber()));
+    return Iterator2Collection.toCollection(iterateNormalSuccessors(b.getNumber()));
   }
 
   /*
@@ -625,7 +625,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    return new Iterator2Collection<IBasicBlock>(iterateExceptionalPredecessors(b));
+    return Iterator2Collection.toCollection(iterateExceptionalPredecessors(b));
   }
 
   /*
@@ -635,7 +635,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    return new Iterator2Collection<IBasicBlock>(iterateNormalPredecessors(b));
+    return Iterator2Collection.toCollection(iterateNormalPredecessors(b));
   }
 
   public IntSet getPredNodeNumbers(IBasicBlock node) {

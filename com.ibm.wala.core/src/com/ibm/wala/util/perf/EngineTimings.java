@@ -213,7 +213,7 @@ public class EngineTimings {
   }
 
   private static void addUnaccountedFor(EObjectGraphImpl g) {
-    Collection nodes = new Iterator2Collection<EObject>(g.iterator());
+    Collection nodes = Iterator2Collection.toCollection(g.iterator());
     for (Iterator it = nodes.iterator(); it.hasNext();) {
       EPhaseTiming node = (EPhaseTiming) it.next();
 

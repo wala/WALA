@@ -121,7 +121,7 @@ public class ClassLoaderImpl implements IClassLoader {
       Trace.println("Get source files for " + M);
     }
     TreeSet<ModuleEntry> sortedEntries = new TreeSet<ModuleEntry>(HashCodeComparator.instance());
-    sortedEntries.addAll(new Iterator2Collection<ModuleEntry>(M.getEntries()));
+    sortedEntries.addAll(Iterator2Collection.toCollection(M.getEntries()));
 
     HashSet<ModuleEntry> result = HashSetFactory.make();
     for (Iterator it = sortedEntries.iterator(); it.hasNext();) {
@@ -154,7 +154,7 @@ public class ClassLoaderImpl implements IClassLoader {
       Trace.println("Get class files for " + M);
     }
     TreeSet<ModuleEntry> sortedEntries = new TreeSet<ModuleEntry>(HashCodeComparator.instance());
-    sortedEntries.addAll(new Iterator2Collection<ModuleEntry>(M.getEntries()));
+    sortedEntries.addAll(Iterator2Collection.toCollection(M.getEntries()));
 
     HashSet<ModuleEntry> result = HashSetFactory.make();
     for (Iterator it = sortedEntries.iterator(); it.hasNext();) {

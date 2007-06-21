@@ -38,12 +38,20 @@ import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
- * A pruned view of a control flow graph
+ * A pruned view of a {@link ControlFlowGraph}.   Use this class along with
+ * an {@link EdgeFilter} to produce a custom view of a CFG.
  * 
- * 
+ * For example, you can use this class to produce a CFG view that ignores certain
+ * types of exceptional edges.
  */
 public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements ControlFlowGraph {
 
+  /**
+   * @param cfg the original CFG that you want a view of
+   * @param filter an object that selectively filters edges in the original CFG
+   * @return a view of cfg that includes only edges accepted by the filter.
+   * @throws IllegalArgumentException if cfg is null
+   */
   public static PrunedCFG make(final ControlFlowGraph cfg, final EdgeFilter filter) {
     if (cfg == null) {
       throw new IllegalArgumentException("cfg is null");
@@ -101,7 +109,7 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
     }
 
     public int getSuccNodeCount(IBasicBlock N) {
-      return new Iterator2Collection<IBasicBlock>(getSuccNodes(N)).size();
+      return Iterator2Collection.toCollection(getSuccNodes(N)).size();
     }
 
     public IntSet getSuccNodeNumbers(IBasicBlock N) {
@@ -118,7 +126,7 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
     }
 
     public int getPredNodeCount(IBasicBlock N) {
-      return new Iterator2Collection<IBasicBlock>(getPredNodes(N)).size();
+      return Iterator2Collection.toCollection(getPredNodes(N)).size();
     }
 
     public IntSet getPredNodeNumbers(IBasicBlock N) {
@@ -272,19 +280,19 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
   }
 
   public Collection<IBasicBlock> getExceptionalSuccessors(final IBasicBlock N) {
-    return new Iterator2Collection<IBasicBlock>(edges.getExceptionalSuccessors(N));
+    return Iterator2Collection.toCollection(edges.getExceptionalSuccessors(N));
   }
 
   public Collection<IBasicBlock> getNormalSuccessors(final IBasicBlock N) {
-    return new Iterator2Collection<IBasicBlock>(edges.getNormalSuccessors(N));
+    return Iterator2Collection.toCollection(edges.getNormalSuccessors(N));
   }
 
   public Collection<IBasicBlock> getExceptionalPredecessors(final IBasicBlock N) {
-    return new Iterator2Collection<IBasicBlock>(edges.getExceptionalPredecessors(N));
+    return Iterator2Collection.toCollection(edges.getExceptionalPredecessors(N));
   }
 
   public Collection<IBasicBlock> getNormalPredecessors(final IBasicBlock N) {
-    return new Iterator2Collection<IBasicBlock>(edges.getNormalPredecessors(N));
+    return Iterator2Collection.toCollection(edges.getNormalPredecessors(N));
   }
 
   public IBasicBlock entry() {

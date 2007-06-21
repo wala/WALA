@@ -210,7 +210,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       case EXC_RET_CALLER: {
         ParamStatement.ExceptionalReturnCaller nrc = (ParamStatement.ExceptionalReturnCaller) N;
         SSAAbstractInvokeInstruction call = nrc.getCall();
-        Collection<Statement> result = new Iterator2Collection<Statement>(getPDG(N.getNode()).getPredNodes(N));
+        Collection<Statement> result = Iterator2Collection.toCollection(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
           for (CGNode t : N.getNode().getPossibleTargets(call.getCallSite())) {
@@ -224,7 +224,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       case NORMAL_RET_CALLER: {
         ParamStatement.NormalReturnCaller nrc = (ParamStatement.NormalReturnCaller) N;
         SSAAbstractInvokeInstruction call = nrc.getCall();
-        Collection<Statement> result = new Iterator2Collection<Statement>(getPDG(N.getNode()).getPredNodes(N));
+        Collection<Statement> result = Iterator2Collection.toCollection(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
           for (CGNode t : N.getNode().getPossibleTargets(call.getCallSite())) {
@@ -238,7 +238,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       case HEAP_RET_CALLER: {
         HeapStatement.ReturnCaller r = (HeapStatement.ReturnCaller) N;
         SSAAbstractInvokeInstruction call = r.getCall();
-        Collection<Statement> result = new Iterator2Collection<Statement>(getPDG(N.getNode()).getPredNodes(N));
+        Collection<Statement> result = Iterator2Collection.toCollection(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
           for (CGNode t : N.getNode().getPossibleTargets(call.getCallSite())) {

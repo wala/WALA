@@ -60,7 +60,6 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   private final Language language;
 
-
   final private HashMap<IClass, Node> map = HashMapFactory.make();
 
   /**
@@ -165,38 +164,46 @@ public class ClassHierarchy implements IClassHierarchy {
     try {
       int numLoaders = 0;
       for (ClassLoaderReference ref : scope.getLoaders()) {
-	if (ref.getLanguage().equals(language.getName())) {
-	  numLoaders++;
-	}
+        if (ref.getLanguage().equals(language.getName())) {
+          numLoaders++;
+        }
       }
 
       loaders = new IClassLoader[numLoaders];
       int idx = 0;
 
-      progressMonitor.beginTask("Build Class Hierarchy", numLoaders);
+      if (progressMonitor != null) {
+        progressMonitor.beginTask("Build Class Hierarchy", numLoaders);
+      }
       for (ClassLoaderReference ref : scope.getLoaders()) {
-        if (progressMonitor.isCanceled()) {
-          throw new CancelCHAConstructionException();
+        if (progressMonitor != null) {
+          if (progressMonitor.isCanceled()) {
+            throw new CancelCHAConstructionException();
+          }
         }
 
-	if (ref.getLanguage().equals(language.getName())) {
-	  IClassLoader icl = factory.getLoader(ref, this, scope);
-	  loaders[idx++] = icl;
-	  addAllClasses(icl, progressMonitor);
+        if (ref.getLanguage().equals(language.getName())) {
+          IClassLoader icl = factory.getLoader(ref, this, scope);
+          loaders[idx++] = icl;
+          addAllClasses(icl, progressMonitor);
 
-	  progressMonitor.worked(1);
-	}
+          if (progressMonitor != null) {
+            progressMonitor.worked(1);
+          }
+        }
       }
     } catch (IOException e) {
       throw new ClassHierarchyException("factory.getLoader failed " + e);
     } finally {
-      progressMonitor.done(); // In case an exception is thrown.
+      if (progressMonitor != null) {
+        progressMonitor.done(); // In case an exception is thrown.
+      }
     }
-    
+
     if (root == null) {
       throw new ClassHierarchyException("failed to load root " + language.getRootType() + " of class hierarchy");
     }
-    
+
     // perform numbering for subclass tests.
     numberTree();
     ReferenceCleanser.registerClassHierarchy(this);
@@ -211,8 +218,10 @@ public class ClassHierarchy implements IClassHierarchy {
     }
     Collection<IClass> toRemove = HashSetFactory.make();
     for (Iterator<IClass> it = loader.iterateAllClasses(); it.hasNext();) {
-      if (progressMonitor.isCanceled()) {
-        throw new CancelCHAConstructionException();
+      if (progressMonitor != null) {
+        if (progressMonitor.isCanceled()) {
+          throw new CancelCHAConstructionException();
+        }
       }
       IClass klass = it.next();
       boolean added = addClass(klass);
@@ -221,13 +230,14 @@ public class ClassHierarchy implements IClassHierarchy {
       }
     }
     loader.removeAll(toRemove);
-   
+
   }
 
   /**
    * @param klass
    * @return true if the add succeeded; false if it failed for some reason
-   * @throws IllegalArgumentException  if klass is null
+   * @throws IllegalArgumentException
+   *           if klass is null
    */
   public boolean addClass(IClass klass) {
     if (klass == null) {
@@ -326,7 +336,8 @@ public class ClassHierarchy implements IClassHierarchy {
    * @param ref
    *          method reference
    * @return the set of IMethods that this call can resolve to.
-   * @throws IllegalArgumentException  if ref is null
+   * @throws IllegalArgumentException
+   *           if ref is null
    */
   public Collection<IMethod> getPossibleTargets(MethodReference ref) {
     if (ref == null) {
@@ -357,7 +368,8 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   @SuppressWarnings("unchecked")
   private Set<IMethod> findOrCreateTargetSet(IClass declaredClass, MethodReference ref) {
-    Map<MethodReference, Set<IMethod>> classCache = (Map<MethodReference, Set<IMethod>>) CacheReference.get(targetCache.get(declaredClass));
+    Map<MethodReference, Set<IMethod>> classCache = (Map<MethodReference, Set<IMethod>>) CacheReference.get(targetCache
+        .get(declaredClass));
     if (classCache == null) {
       classCache = HashMapFactory.make(3);
       targetCache.put(declaredClass, CacheReference.make(classCache));
@@ -441,7 +453,8 @@ public class ClassHierarchy implements IClassHierarchy {
    * 
    * @param m
    * @return IMethod, or null if no appropriate receiver is found.
-   * @throws IllegalArgumentException  if m is null
+   * @throws IllegalArgumentException
+   *           if m is null
    */
   public IMethod resolveMethod(MethodReference m) {
     if (m == null) {
@@ -458,7 +471,8 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * @return the canonical FieldReference that represents a given field , or
    *         null if none found
-   * @throws IllegalArgumentException  if f is null
+   * @throws IllegalArgumentException
+   *           if f is null
    */
   public IField resolveField(FieldReference f) {
     if (f == null) {
@@ -474,8 +488,10 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * @return the canonical FieldReference that represents a given field , or
    *         null if none found
-   * @throws IllegalArgumentException  if f is null
-   * @throws IllegalArgumentException  if klass is null
+   * @throws IllegalArgumentException
+   *           if f is null
+   * @throws IllegalArgumentException
+   *           if klass is null
    */
   public IField resolveField(IClass klass, FieldReference f) {
     if (klass == null) {
@@ -496,7 +512,8 @@ public class ClassHierarchy implements IClassHierarchy {
    * @param selector
    *          method signature
    * @return Method resolved method abstraction
-   * @throws IllegalArgumentException  if receiverClass is null
+   * @throws IllegalArgumentException
+   *           if receiverClass is null
    */
   public IMethod resolveMethod(IClass receiverClass, Selector selector) {
     if (receiverClass == null) {
@@ -688,7 +705,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @throws IllegalArgumentException  if A is null
+   * @throws IllegalArgumentException
+   *           if A is null
    */
   public IClass getLeastCommonSuperclass(IClass A, IClass B) {
 
@@ -761,7 +779,8 @@ public class ClassHierarchy implements IClassHierarchy {
    * Load a class using one of the loaders specified for this class hierarchy
    * 
    * @return null if can't find the class.
-   * @throws IllegalArgumentException  if A is null
+   * @throws IllegalArgumentException
+   *           if A is null
    */
   public IClass lookupClass(TypeReference A) {
     if (A == null) {
@@ -829,7 +848,8 @@ public class ClassHierarchy implements IClassHierarchy {
 
   private final static Atom syntheticLoaderName = Atom.findOrCreateUnicodeAtom("Synthetic");
 
-    private final static ClassLoaderReference syntheticLoaderRef = new ClassLoaderReference(syntheticLoaderName, Language.JAVA.getName());
+  private final static ClassLoaderReference syntheticLoaderRef = new ClassLoaderReference(syntheticLoaderName, Language.JAVA
+      .getName());
 
   public boolean isSyntheticClass(IClass c) {
     if (c == null) {
@@ -840,7 +860,9 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * Is c a subclass of T?
-   * @throws IllegalArgumentException  if c is null
+   * 
+   * @throws IllegalArgumentException
+   *           if c is null
    */
   public boolean isSubclassOf(IClass c, IClass T) {
     if (c == null) {
@@ -1075,7 +1097,7 @@ public class ClassHierarchy implements IClassHierarchy {
         return n.klass;
       }
     };
-    return new Iterator2Collection<IClass>(new MapIterator<Node, IClass>(findNode(klass).children.iterator(), node2Class));
+    return Iterator2Collection.toCollection(new MapIterator<Node, IClass>(findNode(klass).children.iterator(), node2Class));
   }
 
   /**
@@ -1083,16 +1105,16 @@ public class ClassHierarchy implements IClassHierarchy {
    * @param warnings
    * @return a ClassHierarchy object representing the analysis scope
    * @throws ClassHierarchyException
-   * @throws NullPointerException  if scope is null
+   * @throws NullPointerException
+   *           if scope is null
    */
   public static ClassHierarchy make(AnalysisScope scope, WarningSet warnings) throws NullPointerException, ClassHierarchyException {
     return make(scope, new ClassLoaderFactoryImpl(scope.getExclusions(), warnings), warnings);
   }
 
   /**
-   * temporarily marking this internal to avoid infinite sleep with
-   * randomly chosen IProgressMonitor.
-   * TODO: nanny for testgen
+   * temporarily marking this internal to avoid infinite sleep with randomly
+   * chosen IProgressMonitor. TODO: nanny for testgen
    */
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, WarningSet warnings, IProgressMonitor monitor)
@@ -1106,9 +1128,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * temporarily marking this internal to avoid infinite sleep with
-   * randomly chosen IProgressMonitor.
-   * TODO: nanny for testgen
+   * temporarily marking this internal to avoid infinite sleep with randomly
+   * chosen IProgressMonitor. TODO: nanny for testgen
    */
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings, IProgressMonitor monitor)
@@ -1116,19 +1137,18 @@ public class ClassHierarchy implements IClassHierarchy {
     return new ClassHierarchy(scope, factory, warnings, monitor);
   }
 
-  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings,
-      Language language) throws ClassHierarchyException {
+  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings, Language language)
+      throws ClassHierarchyException {
     return new ClassHierarchy(scope, factory, warnings, language, new NullProgressMonitor());
   }
 
   /**
-   * temporarily marking this internal to avoid infinite sleep with
-   * randomly chosen IProgressMonitor.
-   * TODO: nanny for testgen
+   * temporarily marking this internal to avoid infinite sleep with randomly
+   * chosen IProgressMonitor. TODO: nanny for testgen
    */
   @Internal
-  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings,
-      Language language, IProgressMonitor monitor) throws ClassHierarchyException {
+  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings, Language language,
+      IProgressMonitor monitor) throws ClassHierarchyException {
     return new ClassHierarchy(scope, factory, warnings, language, monitor);
   }
 
@@ -1175,8 +1195,11 @@ public class ClassHierarchy implements IClassHierarchy {
    * Does an expression c1 x := c2 y typecheck?
    * 
    * i.e. is c2 a subtype of c1?
-   * @throws IllegalArgumentException  if c1 is null
-   * @throws IllegalArgumentException  if c2 is null
+   * 
+   * @throws IllegalArgumentException
+   *           if c1 is null
+   * @throws IllegalArgumentException
+   *           if c2 is null
    */
   public boolean isAssignableFrom(IClass c1, IClass c2) {
     if (c2 == null) {

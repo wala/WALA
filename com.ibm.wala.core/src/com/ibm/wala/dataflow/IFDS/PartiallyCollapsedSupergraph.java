@@ -524,7 +524,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      */
     @SuppressWarnings("unchecked")
     public int getPredNodeCount(Object N) {
-      Collection c = new Iterator2Collection<Object>(getPredNodes(N));
+      Collection c = Iterator2Collection.toCollection(getPredNodes(N));
       return c.size();
     }
 
@@ -645,7 +645,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
 
     @SuppressWarnings("unchecked")
     public int getSuccNodeCount(Object N) {
-      Collection c = new Iterator2Collection<Object>(getSuccNodes(N));
+      Collection c = Iterator2Collection.toCollection(getSuccNodes(N));
       return c.size();
     }
 

@@ -11,11 +11,10 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 
 /**
- * 
  * Converts an iterator to a collection
  * 
  * @author sfink
@@ -24,14 +23,16 @@ public class Iterator2Collection<T> implements Collection<T> {
 
   private final Collection<T> delegate;
 
-  /**
-   * @param i
-   */
-  public Iterator2Collection(Iterator<? extends T> i) {
+
+  private Iterator2Collection(Iterator<? extends T> i) {
     delegate = new LinkedHashSet<T>(5);
     while (i.hasNext()) {
       delegate.add(i.next());
     }
+  }
+  
+  public static <T> Iterator2Collection<T> toCollection(Iterator<? extends T> i) {
+    return new Iterator2Collection<T>(i);
   }
 
   @Override
@@ -137,5 +138,4 @@ public class Iterator2Collection<T> implements Collection<T> {
   public int hashCode() {
     return delegate.hashCode();
   }
-
 }

@@ -324,9 +324,7 @@ public class JdtUtil {
     }
   }
 
-  /**
-   * @throws JavaModelException
-   */
+
   public static Collection<String> getTypeParameterNames(IType type) throws JavaModelException {
     ITypeParameter[] tp = type.getTypeParameters();
     Collection<String> typeParameterNames = HashSetFactory.make(tp.length);

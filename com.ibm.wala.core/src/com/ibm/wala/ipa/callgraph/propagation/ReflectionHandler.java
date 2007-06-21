@@ -91,7 +91,7 @@ public class ReflectionHandler {
           }
         }
       };
-      Collection<Statement> casts = new Iterator2Collection<Statement>(new FilterIterator<Statement>(slice.iterator(), f));
+      Collection<Statement> casts = Iterator2Collection.toCollection(new FilterIterator<Statement>(slice.iterator(), f));
       changedNodes.addAll(modifyFactoryInterpreter(st, casts, builder.getContextInterpreter(), builder.getClassHierarchy()));
     }
     for (Iterator<CGNode> it = changedNodes.iterator(); it.hasNext();) {

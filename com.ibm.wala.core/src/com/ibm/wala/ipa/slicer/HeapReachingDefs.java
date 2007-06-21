@@ -584,7 +584,7 @@ public class HeapReachingDefs {
               return o instanceof StaticFieldKey;
             }
           };
-          final Collection<PointerKey> kill = new Iterator2Collection<PointerKey>(new FilterIterator<PointerKey>(mod.iterator(),
+          final Collection<PointerKey> kill = Iterator2Collection.toCollection(new FilterIterator<PointerKey>(mod.iterator(),
               staticFilter));
           if (kill.isEmpty()) {
             return null;
@@ -602,7 +602,7 @@ public class HeapReachingDefs {
                 return false;
               }
             };
-            Collection<Statement> killedStatements = new Iterator2Collection<Statement>(new FilterIterator<Statement>(domain
+            Collection<Statement> killedStatements = Iterator2Collection.toCollection(new FilterIterator<Statement>(domain
                 .iterator(), f));
             BitVector result = new BitVector();
             for (Statement k : killedStatements) {

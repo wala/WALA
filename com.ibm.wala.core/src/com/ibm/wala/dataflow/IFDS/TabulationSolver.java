@@ -570,7 +570,7 @@ public class TabulationSolver<T, P> {
     // c:= number of the call node
     final int c = supergraph.getNumber(edge.n);
 
-    final Collection<T> returnSites = new Iterator2Collection<T>(supergraph.getReturnSites(edge.n));
+    final Collection<T> returnSites = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.n));
 
     // [14 - 16]
     for (Iterator<? extends T> it = supergraph.getCalledNodes(edge.n); it.hasNext();) {
