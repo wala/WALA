@@ -348,87 +348,91 @@ public class JdtUtil {
 
   public static final String[] parseForParameterTypes(String selector) throws IllegalArgumentException {
 
-    if (selector == null) {
-      throw new IllegalArgumentException("selector is null");
-    }
-    String d = selector.substring(selector.indexOf('('));
-    if (d.length() <= 2) {
-      throw new IllegalArgumentException("invalid descriptor: " + d);
-
-    }
-    if (d.charAt(0) != '(') {
-      throw new IllegalArgumentException("invalid descriptor: " + d);
-    }
-
-    ArrayList<String> sigs = new ArrayList<String>(10);
-
-    int i = 1;
-    while (true) {
-      switch (d.charAt(i++)) {
-      case TypeReference.VoidTypeCode:
-        sigs.add(TypeReference.VoidName.toString());
-        continue;
-      case TypeReference.BooleanTypeCode:
-        sigs.add(TypeReference.BooleanName.toString());
-        continue;
-      case TypeReference.ByteTypeCode:
-        sigs.add(TypeReference.ByteName.toString());
-        continue;
-      case TypeReference.ShortTypeCode:
-        sigs.add(TypeReference.ShortName.toString());
-        continue;
-      case TypeReference.IntTypeCode:
-        sigs.add(TypeReference.IntName.toString());
-        continue;
-      case TypeReference.LongTypeCode:
-        sigs.add(TypeReference.LongName.toString());
-        continue;
-      case TypeReference.FloatTypeCode:
-        sigs.add(TypeReference.FloatName.toString());
-        continue;
-      case TypeReference.DoubleTypeCode:
-        sigs.add(TypeReference.DoubleName.toString());
-        continue;
-      case TypeReference.CharTypeCode:
-        sigs.add(TypeReference.CharName.toString());
-        continue;
-
-      case TypeReference.ArrayTypeCode: {
-        int off = i - 1;
-        while (d.charAt(i) == TypeReference.ArrayTypeCode) {
-          ++i;
-        }
-        String T = null;
-        Assertions.UNREACHABLE("fix me");
-        if (d.charAt(i++) == TypeReference.ClassTypeCode) {
-          while (d.charAt(i++) != ',')
-            ;
-          T = d.substring(off, i - off - 1);
-        } else {
-          T = d.substring(off, i - off);
-        }
-        sigs.add(T);
-
-        continue;
+    try {
+      if (selector == null) {
+        throw new IllegalArgumentException("selector is null");
       }
-      case (byte) ')': // end of parameter list
-        return toArray(sigs);
-      default: {
-        // a class
-        int off = i - 1;
-        char c;
-        do {
-          c = d.charAt(i++);
-        } while (c != ',' && c != ')');
-        sigs.add("L" + d.substring(off, i - 1) + ";");
+      String d = selector.substring(selector.indexOf('('));
+      if (d.length() <= 2) {
+        throw new IllegalArgumentException("invalid descriptor: " + d);
 
-        if (c == ')') {
+      }
+      if (d.charAt(0) != '(') {
+        throw new IllegalArgumentException("invalid descriptor: " + d);
+      }
+
+      ArrayList<String> sigs = new ArrayList<String>(10);
+
+      int i = 1;
+      while (true) {
+        switch (d.charAt(i++)) {
+        case TypeReference.VoidTypeCode:
+          sigs.add(TypeReference.VoidName.toString());
+          continue;
+        case TypeReference.BooleanTypeCode:
+          sigs.add(TypeReference.BooleanName.toString());
+          continue;
+        case TypeReference.ByteTypeCode:
+          sigs.add(TypeReference.ByteName.toString());
+          continue;
+        case TypeReference.ShortTypeCode:
+          sigs.add(TypeReference.ShortName.toString());
+          continue;
+        case TypeReference.IntTypeCode:
+          sigs.add(TypeReference.IntName.toString());
+          continue;
+        case TypeReference.LongTypeCode:
+          sigs.add(TypeReference.LongName.toString());
+          continue;
+        case TypeReference.FloatTypeCode:
+          sigs.add(TypeReference.FloatName.toString());
+          continue;
+        case TypeReference.DoubleTypeCode:
+          sigs.add(TypeReference.DoubleName.toString());
+          continue;
+        case TypeReference.CharTypeCode:
+          sigs.add(TypeReference.CharName.toString());
+          continue;
+
+        case TypeReference.ArrayTypeCode: {
+          int off = i - 1;
+          while (d.charAt(i) == TypeReference.ArrayTypeCode) {
+            ++i;
+          }
+          String T = null;
+          Assertions.UNREACHABLE("fix me");
+          if (d.charAt(i++) == TypeReference.ClassTypeCode) {
+            while (d.charAt(i++) != ',')
+              ;
+            T = d.substring(off, i - off - 1);
+          } else {
+            T = d.substring(off, i - off);
+          }
+          sigs.add(T);
+
+          continue;
+        }
+        case (byte) ')': // end of parameter list
           return toArray(sigs);
-        }
+        default: {
+          // a class
+          int off = i - 1;
+          char c;
+          do {
+            c = d.charAt(i++);
+          } while (c != ',' && c != ')');
+          sigs.add("L" + d.substring(off, i - 1) + ";");
 
-        continue;
+          if (c == ')') {
+            return toArray(sigs);
+          }
+
+          continue;
+        }
+        }
       }
-      }
+    } catch (StringIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("error parsing selector " + selector);
     }
   }
 
