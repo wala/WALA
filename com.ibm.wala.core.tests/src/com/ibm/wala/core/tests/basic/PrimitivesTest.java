@@ -411,31 +411,31 @@ public class PrimitivesTest extends WalaTestCase {
     NumberedGraph<Integer> G = makeBFSTestGraph();
 
     BoundedBFSIterator<Integer> bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 0);
-    Collection<Integer> c = new Iterator2Collection<Integer>(bfs);
+    Collection<Integer> c = Iterator2Collection.toCollection(bfs);
     assertTrue(c.size() == 1);
 
     bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 1);
-    c = new Iterator2Collection<Integer>(bfs);
+    c = Iterator2Collection.toCollection(bfs);
     assertTrue(c.size() == 3);
 
     bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 2);
-    c = new Iterator2Collection<Integer>(bfs);
+    c = Iterator2Collection.toCollection(bfs);
     assertTrue(c.size() == 5);
 
     bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 3);
-    c = new Iterator2Collection<Integer>(bfs);
+    c = Iterator2Collection.toCollection(bfs);
     assertTrue(c.size() == 7);
 
     bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 4);
-    c = new Iterator2Collection<Integer>(bfs);
+    c = Iterator2Collection.toCollection(bfs);
     assertTrue(c.size() == 9);
 
     bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 5);
-    c = new Iterator2Collection<Integer>(bfs);
+    c = Iterator2Collection.toCollection(bfs);
     assertTrue(c.size() == 10);
 
     bfs = new BoundedBFSIterator<Integer>(G, G.getNode(0), 500);
-    c = new Iterator2Collection<Integer>(bfs);
+    c = Iterator2Collection.toCollection(bfs);
     assertTrue(c.size() == 10);
   }
 

@@ -135,7 +135,7 @@ public class ExportCallGraphToXML {
 
     // make sure every java method reachable from the call graph
     // is a node is the call graph
-    Collection c = new Iterator2Collection<EObject>(cg.getNodes().getContents().iterator());
+    Collection c = Iterator2Collection.toCollection(cg.getNodes().getContents().iterator());
     for (Iterator it = c.iterator(); it.hasNext();) {
       Object node = it.next();
       if (node instanceof ECallSite) {
