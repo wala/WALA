@@ -440,7 +440,7 @@ public class JdtUtil {
   private static String[] toArray(ArrayList<String> sigs) {
     int size = sigs.size();
     if (size == 0) {
-      return null;
+      return new String[0];
     }
     Iterator<String> it = sigs.iterator();
     String[] result = new String[size];
