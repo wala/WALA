@@ -222,9 +222,9 @@ public class RhinoToAstTranslator {
 
     private final List<CAstNode> initializers = new ArrayList<CAstNode>();
 
-    private final CAstControlFlowRecorder cfg = new CAstControlFlowRecorder();
-
     private final CAstSourcePositionRecorder pos = new CAstSourcePositionRecorder();
+
+    private final CAstControlFlowRecorder cfg = new CAstControlFlowRecorder(pos);
 
     FunctionContext(WalkContext parent, ScriptOrFnNode s) {
       super(parent);
