@@ -102,6 +102,14 @@ public abstract class AstTranslator extends CAstVisitor {
   protected abstract void doCall(WalkContext context, CAstNode call, int result, int exception, CAstNode name, int receiver,
       int[] arguments);
 
+  protected boolean isExceptionLabel(Object label) {
+    if (label == null) return false;
+    if (label instanceof Boolean) return false;
+    if (label instanceof Number) return false;
+    if (label == CAstControlFlowMap.SWITCH_DEFAULT) return false;
+    return true;
+  }
+
   /**
    * If this returns true, new global declarations get created for any attempt
    * to access a non-existent variable (believe it or not, JavaScript actually
@@ -473,8 +481,10 @@ public abstract class AstTranslator extends CAstVisitor {
         unwindData.put(nodeToBlock.get(node), context);
       }
 
-      public PreBasicBlock findOrCreateCode(PreBasicBlock source, PreBasicBlock target, boolean exception) {
+      public PreBasicBlock findOrCreateCode(PreBasicBlock source, PreBasicBlock target, final boolean exception) {
         UnwindState sourceContext = unwindData.get(source);
+	final CAstNode dummy = 
+	  exception? (new CAstImpl()).makeNode(CAstNode.EMPTY): null;
 
         // no unwinding is needed, so jump to target block directly
         if (sourceContext == null)
@@ -509,26 +519,46 @@ public abstract class AstTranslator extends CAstVisitor {
             addInstruction(SSAInstructionFactory.GetCaughtExceptionInstruction(startBlock.getNumber(), e));
             sourceContext.astContext.setCatchType(startBlock.getNumber(), defaultCatchType());
           }
-
+	  
           while (sourceContext != null && (targetContext == null || !targetContext.covers(sourceContext))) {
-            final CAstRewriter.Rewrite ast = (new CAstCloner(new CAstImpl())).copy(sourceContext.unwindAst,
-                sourceContext.astContext.getControlFlow(), sourceContext.astContext.getSourceMap(), sourceContext.astContext.top()
-                    .getNodeTypeMap(), sourceContext.astContext.top().getAllScopedEntities());
-            sourceContext.astVisitor.visit(ast.newRoot(), new DelegatingContext(sourceContext.astContext) {
-              public CAstSourcePositionMap getSourceMap() {
-                return ast.newPos();
-              }
+            final CAstRewriter.Rewrite ast = 
+	      (new CAstCloner(new CAstImpl()) {
+	        protected CAstNode flowOutTo(Map<CAstNode, CAstNode> nodeMap, 
+					 CAstNode oldSource,
+					 Object label,
+					 CAstNode oldTarget,
+					 CAstControlFlowMap orig, 
+					 CAstSourcePositionMap src) 
+		{
+		  if (exception && !isExceptionLabel(label)) {
+		    return dummy;
+		  } else {
+		    return oldTarget;
+		  }
+		}
+	      }).copy(sourceContext.unwindAst,
+		     sourceContext.astContext.getControlFlow(), 
+		     sourceContext.astContext.getSourceMap(), 
+		     sourceContext.astContext.top().getNodeTypeMap(),
+		     sourceContext.astContext.top().getAllScopedEntities());
+	    sourceContext.astVisitor.visit(ast.newRoot(), 
+	      new DelegatingContext(sourceContext.astContext) {
+                public CAstSourcePositionMap getSourceMap() {
+                  return ast.newPos();
+		}
 
-              public CAstControlFlowMap getControlFlow() {
-                return ast.newCfg();
-              }
-            }, sourceContext.astVisitor);
+		public CAstControlFlowMap getControlFlow() {
+		  return ast.newCfg();
+		}
+	      }, 
+	      sourceContext.astVisitor);
 
             sourceContext = sourceContext.getParent();
           }
 
           PreBasicBlock endBlock = getCurrentBlock();
           if (exception) {
+	    addPreNode(dummy);
             doThrow(astContext, e);
           } else {
             addInstruction(SSAInstructionFactory.GotoInstruction());
@@ -2602,6 +2632,9 @@ public abstract class AstTranslator extends CAstVisitor {
     context.cfg().addPreNode(n, context.getUnwindState());
     context.cfg().addInstruction(SSAInstructionFactory.GotoInstruction());
     context.cfg().newBlock(false);
+    if (context.getControlFlow().getTarget(n, null) == null) {
+      Assertions._assert(context.getControlFlow().getTarget(n, null) != null, context.getControlFlow() + " does not map " + n + " (" + context.getSourceMap().getPosition(n) + ")");
+    }
     context.cfg().addPreEdge(n, context.getControlFlow().getTarget(n, null), false);
   }
 

@@ -68,7 +68,7 @@ public class CAstImpl implements CAst {
     }
 
     public String toString() {
-      return CAstPrinter.print(this);
+	return super.toString() + ":" + CAstPrinter.print(this);
     }
 
     public int hashCode() {

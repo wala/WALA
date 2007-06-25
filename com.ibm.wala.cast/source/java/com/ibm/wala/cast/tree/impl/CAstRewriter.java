@@ -23,7 +23,8 @@ public abstract class CAstRewriter<RewriteContext> {
 
   protected final RewriteContext rootContext;
 
-  public CAstRewriter(CAst Ast, boolean recursive, RewriteContext rootContext) {
+  public CAstRewriter(CAst Ast, boolean recursive, RewriteContext rootContext)
+  {
     this.Ast = Ast;
     this.recursive = recursive;
     this.rootContext = rootContext;
@@ -45,9 +46,20 @@ public abstract class CAstRewriter<RewriteContext> {
 
   protected abstract CAstNode copyNodes(CAstNode root, RewriteContext context, Map<CAstNode, CAstNode> nodeMap);
 
-  private CAstControlFlowMap copyFlow(Map<CAstNode, CAstNode> nodeMap, CAstControlFlowMap orig) {
+  protected CAstNode flowOutTo(Map<CAstNode, CAstNode> nodeMap, 
+			       CAstNode oldSource,
+			       Object label,
+			       CAstNode oldTarget,
+			       CAstControlFlowMap orig, 
+			       CAstSourcePositionMap src) 
+  {
+    return oldTarget;
+  }
+
+  private CAstControlFlowMap copyFlow(Map<CAstNode, CAstNode> nodeMap, CAstControlFlowMap orig, CAstSourcePositionMap src) {
+    Set mappedOutsideNodes = new HashSet(1);
     Collection<CAstNode> oldSources = orig.getMappedNodes();
-    CAstControlFlowRecorder newMap = new CAstControlFlowRecorder();
+    CAstControlFlowRecorder newMap = new CAstControlFlowRecorder(src);
     for (Iterator<CAstNode> NS = nodeMap.keySet().iterator(); NS.hasNext();) {
       CAstNode old = NS.next();
       CAstNode newNode = nodeMap.get(old);
@@ -58,7 +70,15 @@ public abstract class CAstRewriter<RewriteContext> {
           if (nodeMap.containsKey(oldTarget)) {
             newMap.add(newNode, nodeMap.get(oldTarget), null);
           } else {
-            newMap.add(newNode, oldTarget, null);
+	    CAstNode tgt = flowOutTo(nodeMap, old, null, oldTarget, orig, src);
+            newMap.add(newNode, tgt, null);
+	    if (tgt != CAstControlFlowMap.EXCEPTION_TO_EXIT 
+                               && 
+		!mappedOutsideNodes.contains(tgt)) 
+	    {
+	      mappedOutsideNodes.add(tgt);
+	      newMap.map(tgt, tgt);
+	    }
           }
         }
 
@@ -68,7 +88,15 @@ public abstract class CAstRewriter<RewriteContext> {
           if (nodeMap.containsKey(oldTarget)) {
             newMap.add(newNode, nodeMap.get(oldTarget), label);
           } else {
-            newMap.add(newNode, oldTarget, label);
+	    CAstNode tgt = flowOutTo(nodeMap, old, null, oldTarget, orig, src);
+            newMap.add(newNode, tgt, label);
+	    if (tgt != CAstControlFlowMap.EXCEPTION_TO_EXIT 
+                               && 
+		!mappedOutsideNodes.contains(tgt)) 
+	    {
+	      mappedOutsideNodes.add(tgt);
+	      newMap.map(tgt, tgt);
+	    }
           }
         }
       }
@@ -167,7 +195,7 @@ public abstract class CAstRewriter<RewriteContext> {
 
       public CAstControlFlowMap newCfg() {
         if (theCfg == null)
-          theCfg = copyFlow(nodes, cfg);
+	    theCfg = copyFlow(nodes, cfg, newPos());
         return theCfg;
       }
 

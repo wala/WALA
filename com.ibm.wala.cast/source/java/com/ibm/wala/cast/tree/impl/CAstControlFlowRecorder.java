@@ -31,6 +31,8 @@ import java.util.*;
  * @author Julian Dolby (dolby@us.ibm.com)
  */
 public class CAstControlFlowRecorder implements CAstControlFlowMap {
+  private final CAstSourcePositionMap src;
+
   private final Map<CAstNode,Object> CAstToNode = new LinkedHashMap<CAstNode,Object>();
 
   private final Map<Object,CAstNode> nodeToCAst = new LinkedHashMap<Object,CAstNode>();
@@ -41,7 +43,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
 
   private final Map<Object,Set<Object>> sourceMap = new LinkedHashMap<Object,Set<Object>>();
 
-  private class Key {
+  private static class Key {
     private final Object label;
 
     private final Object from;
@@ -49,11 +51,6 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     Key(Object label, Object from) {
       this.from = from;
       this.label = label;
-    }
-
-    Key(Object label, CAstNode from) {
-      this(label, CAstToNode.get(from));
-      Assertions._assert(CAstToNode.containsKey(from));
     }
 
     public int hashCode() {
@@ -69,12 +66,13 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     }
   }
 
-  public CAstControlFlowRecorder() {
+  public CAstControlFlowRecorder(CAstSourcePositionMap src) {
+    this.src = src;
     map(EXCEPTION_TO_EXIT, EXCEPTION_TO_EXIT);
   }
 
   public CAstNode getTarget(CAstNode from, Object label) {
-    Key key = new Key(label, from);
+    Key key = new Key(label, CAstToNode.get(from));
     if (table.containsKey(key))
       return (CAstNode) nodeToCAst.get(table.get(key));
     else
@@ -132,7 +130,30 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
    * using this call.
    */
   public void map(Object node, CAstNode ast) {
+    assert ! nodeToCAst.containsKey(node) : node + " already mapped:\n" + this;
+    assert ! CAstToNode.containsKey(ast) : ast + " already mapped:\n" + this;
     nodeToCAst.put(node, ast);
     CAstToNode.put(ast, node);
+  }
+
+  public String toString() {
+    StringBuffer sb = new StringBuffer("control flow map\n");
+    for(Iterator keys = table.keySet().iterator(); keys.hasNext(); ) {
+      Key key = (Key) keys.next();
+      sb.append(key.from);
+      if (src != null &&
+	  nodeToCAst.get(key.from) != null &&
+	  src.getPosition(nodeToCAst.get(key.from)) != null)
+      {
+	sb.append(" (").append(src.getPosition(nodeToCAst.get(key.from))).append(") ");
+      }
+      sb.append(" -- "); 
+      sb.append(key.label);
+      sb.append(" --> ");
+      sb.append(table.get(key));
+      sb.append("\n");
+    }
+    sb.append("\n");
+    return sb.toString();
   }
 }
