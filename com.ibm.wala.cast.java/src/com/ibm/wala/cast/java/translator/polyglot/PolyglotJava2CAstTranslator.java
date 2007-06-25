@@ -912,8 +912,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public CAstNode visit(Switch s, WalkContext wc) {
-      Node breakLabel = fNodeFactory.Labeled(Position.COMPILER_GENERATED, "switchBreakLabel"
-          + s.position().toString().replace('.', '_'), fNodeFactory.Empty(Position.COMPILER_GENERATED));
+	Node breakLabel = fNodeFactory.Labeled(s.position(), "switchBreakLabel"
+					     + s.position().toString().replace('.', '_'), fNodeFactory.Empty(s.position()));
       CAstNode breakAst = walkNodes(breakLabel, wc);
       String loopLabel = (String) wc.getLabelMap().get(s);
       WalkContext child = new SwitchContext(wc, loopLabel, breakLabel);
@@ -947,7 +947,6 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
           CAstNode.BLOCK_STMT, caseNodes));
 
       wc.cfg().map(s, switchAst);
-      wc.cfg().map(breakLabel, breakAst);
 
       // Finally, wrap the entire switch in a block so that we have a
       // well-defined place to 'break' to.
@@ -1770,7 +1769,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
   public class CodeBodyContext extends DelegatingContext {
     final CAstSourcePositionRecorder fSourceMap = new CAstSourcePositionRecorder();
 
-    final CAstControlFlowRecorder fCFG = new CAstControlFlowRecorder();
+    final CAstControlFlowRecorder fCFG = new CAstControlFlowRecorder(fSourceMap);
 
     final CAstNodeTypeMapRecorder fNodeTypeMap = new CAstNodeTypeMapRecorder();
 
