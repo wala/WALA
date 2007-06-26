@@ -10,10 +10,10 @@
  *******************************************************************************/
 package cornerCases;
 
-/**
- * @author sfink
- *
- */
-public class Concrete2 extends Abstract2 {
+public class AliasNames {
 
+  public static void foo(String[] a) {
+    @SuppressWarnings("unused")
+    String s = a[0].toString();
+  }
 }
