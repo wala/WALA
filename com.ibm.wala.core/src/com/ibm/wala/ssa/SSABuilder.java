@@ -785,8 +785,6 @@ public class SSABuilder extends AbstractIntStackMachine {
   }
 
   /**
-   * @author sfink
-   * 
    * A logical mapping from <pc, valueNumber> -> local number Note: make sure
    * this class remains static: this persists as part of the IR!!
    */
