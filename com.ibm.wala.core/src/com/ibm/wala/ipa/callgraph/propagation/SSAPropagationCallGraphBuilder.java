@@ -723,13 +723,15 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           system.recordImplicitPointsToSet(arrayRef);
           InstanceKey[] ik = getInvariantContents(instruction.getArrayRef());
           for (int i = 0; i < ik.length; i++) {
-            system.findOrCreateIndexForInstanceKey(ik[i]);
-            PointerKey p = getPointerKeyForArrayContents(ik[i]);
-            if (p == null) {
-              getWarnings().add(ResolutionFailure.create(node, ik[i].getConcreteType()));
-            } else {
-              system.newConstraint(result, assignOperator, p);
-            }
+	    if (! representsNullType(ik[i])) {
+	      system.findOrCreateIndexForInstanceKey(ik[i]);
+	      PointerKey p = getPointerKeyForArrayContents(ik[i]);
+	      if (p == null) {
+		getWarnings().add(ResolutionFailure.create(node, ik[i].getConcreteType()));
+	      } else {
+		system.newConstraint(result, assignOperator, p);
+	      }
+	    }
           }
         } else {
           if (Assertions.verifyAssertions) {
@@ -762,37 +764,39 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         InstanceKey[] ik = getInvariantContents(instruction.getArrayRef());
 
         for (int i = 0; i < ik.length; i++) {
-          system.findOrCreateIndexForInstanceKey(ik[i]);
-          PointerKey p = getPointerKeyForArrayContents(ik[i]);
-          IClass contents = ((ArrayClass) ik[i].getConcreteType()).getElementClass();
-          if (p == null) {
-            getWarnings().add(ResolutionFailure.create(node, ik[i].getConcreteType()));
-          } else {
-            if (DEBUG_TRACK_INSTANCE) {
-              if (system.findOrCreateIndexForInstanceKey(ik[i]) == DEBUG_INSTANCE_KEY) {
-                Assertions.UNREACHABLE();
-              }
-            }
-            if (contentsAreInvariant(symbolTable, du, instruction.getValue())) {
-              system.recordImplicitPointsToSet(value);
-              InstanceKey[] vk = getInvariantContents(instruction.getValue());
-              for (int j = 0; j < vk.length; j++) {
-                system.findOrCreateIndexForInstanceKey(vk[j]);
-                if (vk[j].getConcreteType() != null) {
-                  if (getClassHierarchy().isAssignableFrom(contents, vk[j].getConcreteType())) {
-                    system.newConstraint(p, vk[j]);
-                  }
-                }
-              }
-            } else {
-              if (isRootType(contents)) {
-                system.newConstraint(p, assignOperator, value);
-              } else {
-                system.newConstraint(p, getBuilder().filterOperator, value);
-              }
-            }
-          }
-        }
+	  if (! representsNullType(ik[i])) {
+	    system.findOrCreateIndexForInstanceKey(ik[i]);
+	    PointerKey p = getPointerKeyForArrayContents(ik[i]);
+	    IClass contents = ((ArrayClass) ik[i].getConcreteType()).getElementClass();
+	    if (p == null) {
+	      getWarnings().add(ResolutionFailure.create(node, ik[i].getConcreteType()));
+	    } else {
+	      if (DEBUG_TRACK_INSTANCE) {
+                if (system.findOrCreateIndexForInstanceKey(ik[i]) == DEBUG_INSTANCE_KEY) {
+		  Assertions.UNREACHABLE();
+		}
+	      }
+	      if (contentsAreInvariant(symbolTable, du, instruction.getValue())) {
+		system.recordImplicitPointsToSet(value);
+		InstanceKey[] vk = getInvariantContents(instruction.getValue());
+		for (int j = 0; j < vk.length; j++) {
+		  system.findOrCreateIndexForInstanceKey(vk[j]);
+		  if (vk[j].getConcreteType() != null) {
+		    if (getClassHierarchy().isAssignableFrom(contents, vk[j].getConcreteType())) {
+		      system.newConstraint(p, vk[j]);
+		    }
+		  }
+		}
+	      } else {
+		if (isRootType(contents)) {
+                  system.newConstraint(p, assignOperator, value);
+		} else {
+		  system.newConstraint(p, getBuilder().filterOperator, value);
+		}
+	      }
+	    }
+	  }	      
+	}
       } else {
         if (contentsAreInvariant(symbolTable, du, instruction.getValue())) {
           system.recordImplicitPointsToSet(value);
@@ -951,10 +955,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             system.recordImplicitPointsToSet(refKey);
             InstanceKey[] ik = getInvariantContents(ref);
             for (int i = 0; i < ik.length; i++) {
-              system.findOrCreateIndexForInstanceKey(ik[i]);
-              PointerKey p = getPointerKeyForInstanceField(ik[i], f);
-              system.newConstraint(def, assignOperator, p);
-            }
+	      if (! representsNullType(ik[i])) {
+		system.findOrCreateIndexForInstanceKey(ik[i]);
+		PointerKey p = getPointerKeyForInstanceField(ik[i], f);
+		system.newConstraint(def, assignOperator, p);
+	      }
+	    }
           } else {
             system.newSideEffect(getBuilder().new GetFieldOperator(f, system.findOrCreatePointsToSet(def)), refKey);
           }
@@ -1013,12 +1019,14 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           system.recordImplicitPointsToSet(refKey);
           InstanceKey[] refk = getInvariantContents(ref);
           for (int j = 0; j < refk.length; j++) {
-            system.findOrCreateIndexForInstanceKey(refk[j]);
-            PointerKey p = getPointerKeyForInstanceField(refk[j], f);
-            for (int i = 0; i < ik.length; i++) {
-              system.newConstraint(p, ik[i]);
-            }
-          }
+	    if (! representsNullType(refk[j])) {
+	      system.findOrCreateIndexForInstanceKey(refk[j]);
+	      PointerKey p = getPointerKeyForInstanceField(refk[j], f);
+	      for (int i = 0; i < ik.length; i++) {
+		system.newConstraint(p, ik[i]);
+	      }
+	    }
+	  }
         } else {
           for (int i = 0; i < ik.length; i++) {
             system.findOrCreateIndexForInstanceKey(ik[i]);
@@ -1030,10 +1038,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           system.recordImplicitPointsToSet(refKey);
           InstanceKey[] refk = getInvariantContents(ref);
           for (int j = 0; j < refk.length; j++) {
-            system.findOrCreateIndexForInstanceKey(refk[j]);
-            PointerKey p = getPointerKeyForInstanceField(refk[j], f);
-            system.newConstraint(p, assignOperator, rvalKey);
-          }
+	    if (! representsNullType(refk[j])) {
+	      system.findOrCreateIndexForInstanceKey(refk[j]);
+	      PointerKey p = getPointerKeyForInstanceField(refk[j], f);
+	      system.newConstraint(p, assignOperator, rvalKey);
+	    }
+	  }
         } else {
           if (DEBUG) {
             Trace.guardedPrintln("adding side effect " + f, DEBUG_METHOD_SUBSTRING);

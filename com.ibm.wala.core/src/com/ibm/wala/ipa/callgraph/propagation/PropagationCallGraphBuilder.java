@@ -16,12 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.classLoader.SyntheticClass;
+import com.ibm.wala.classLoader.*;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -657,6 +652,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       }
     }
     return false;
+  }
+
+  public static boolean representsNullType(InstanceKey key) {
+    IClass cls  = key.getConcreteType();
+    Language L = cls.getClassLoader().getLanguage();
+    return L.isNullType( cls.getReference() );
   }
 
   /**
@@ -1308,16 +1309,18 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       IntSetAction action = new IntSetAction() {
         public void act(int i) {
           InstanceKey I = system.getInstanceKey(i);
-          PointerKey p = getPointerKeyForInstanceField(I, getField());
+	  if (! representsNullType(I)) {
+	    PointerKey p = getPointerKeyForInstanceField(I, getField());
 
-          if (p != null) {
-            if (DEBUG_GET) {
-              String S = "Getfield add constraint " + dVal + " " + p;
-              Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
-            }
-            sideEffect.b |= system.newFieldRead(dVal, assignOperator, p, object);
-          }
-        }
+	    if (p != null) {
+	      if (DEBUG_GET) {
+		String S = "Getfield add constraint " + dVal + " " + p;
+		Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
+	      }
+	      sideEffect.b |= system.newFieldRead(dVal, assignOperator, p, object);
+	    }
+	  }
+	}
       };
       if (priorInstances != null) {
         // temp for performance debugging
@@ -1436,17 +1439,19 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       IntSetAction action = new IntSetAction() {
         public void act(int i) {
           InstanceKey I = system.getInstanceKey(i);
-          if (DEBUG_PUT) {
-            String S = "Putfield consider instance " + I;
-            Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
-          }
-          PointerKey p = getPointerKeyForInstanceField(I, getField());
-          if (DEBUG_PUT) {
-            String S = "Putfield add constraint " + p + " " + pVal;
-            Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
-          }
-          sideEffect.b |= system.newFieldWrite(p, assign, pVal, object);
-        }
+	  if (! representsNullType(I)) {
+	    if (DEBUG_PUT) {
+	      String S = "Putfield consider instance " + I;
+	      Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
+	    }
+	    PointerKey p = getPointerKeyForInstanceField(I, getField());
+	    if (DEBUG_PUT) {
+	      String S = "Putfield add constraint " + p + " " + pVal;
+	      Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
+	    }
+	    sideEffect.b |= system.newFieldWrite(p, assign, pVal, object);
+	  }
+	}
       };
       if (priorInstances != null) {
         value.foreachExcluding(priorInstances, action);
@@ -1538,9 +1543,11 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       IntSetAction action = new IntSetAction() {
         public void act(int i) {
           InstanceKey I = system.getInstanceKey(i);
-          PointerKey p = getPointerKeyForInstanceField(I, field);
-          sideEffect.b |= system.newConstraint(p, instance);
-        }
+	  if (! representsNullType(I)) {
+	    PointerKey p = getPointerKeyForInstanceField(I, field);
+	    sideEffect.b |= system.newConstraint(p, instance);
+	  }
+	}
       };
       if (priorInstances != null) {
         value.foreachExcluding(priorInstances, action);

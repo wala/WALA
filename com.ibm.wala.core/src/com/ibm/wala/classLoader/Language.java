@@ -22,6 +22,10 @@ public interface Language {
         return null;
       }
     }
+
+    public boolean isNullType(TypeReference type) {
+      return false;
+    }
   };
 
   Atom getName();
@@ -29,5 +33,7 @@ public interface Language {
   TypeReference getRootType();
 
   TypeReference getConstantType(Object o);
+
+  boolean isNullType(TypeReference type);
 
 }

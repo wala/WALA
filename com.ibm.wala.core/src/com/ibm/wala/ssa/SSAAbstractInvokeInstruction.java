@@ -82,7 +82,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
   public int getReceiver() {
     if (Assertions.verifyAssertions) {
       IInvokeInstruction.IDispatch code = site.getInvocationCode();
-      Assertions._assert(code != IInvokeInstruction.Dispatch.STATIC);
+      Assertions._assert(code!=IInvokeInstruction.Dispatch.STATIC, toString());
     }
     return getUse(0);
   }
