@@ -49,12 +49,13 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   }
     
   public void handleText(char[] data, int pos) {
+    System.out.println("text pos: " + pos);
     getScript(data);
   }
     
   private void getScript(char [] data) {
     if(script) {
-      System.out.print(data);
+      System.out.println(new String(data));
       try {
 	out2.write(data);
 	out2.write("\n");
@@ -65,9 +66,20 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   }
     
   public void handleComment(char[] data, int pos) {
+    System.out.println("comment pos: " + pos);
     getScript(data);
   }
     
+  public void handleEndOfLineString(String eol) {
+    if (script) {
+      try {
+        out2.write("\n");
+      } catch (IOException e) {
+	System.out.println("Error writing to second file");
+      }
+    }
+  }
+
   protected String createElement(HTML.Tag t, MutableAttributeSet a) {
     String tag = t.toString().toUpperCase();
     String varName = "node" + (counter++);
@@ -175,7 +187,4 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
     System.out.println("Error" + errorMsg);
   }
     
-  public void handleEndOfLineString(String eol) {
-    System.out.println("EOL");
-  }
 }

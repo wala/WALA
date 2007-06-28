@@ -282,6 +282,10 @@ String.prototype = {
 
   substring: function substring(from, to) {
     return new String(primitive("StringSubString", this, from, to));
+  },
+
+  replace: function replace(regex, withStr) {
+    return new String(primitive("StringReplace", this, regex, withStr));
   }
 };
 

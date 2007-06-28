@@ -27,9 +27,8 @@ import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
-import com.ibm.wala.cast.tree.CAstEntity;
-import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.CAstType;
+import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.tree.impl.*;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
@@ -314,6 +313,16 @@ public class JSAstTranslator extends AstTranslator {
       context.cfg()
         .addInstruction(new AstIsDefinedInstruction(result, ref, getValue(f)));
     }
+  }
+
+  protected void doPrologue(WalkContext context) {
+    super.doPrologue(context);
+    int tempVal = context.currentScope().allocateTempValue();
+    doNewObject(context, null, tempVal, "Array", null);
+    CAstSymbol args = new CAstSymbolImpl("arguments");
+    context.currentScope().declare(args, tempVal);
+    context.cfg().addInstruction(
+      new JavaScriptStaticPropertyWrite(1, "arguments", tempVal));
   }
 
   protected boolean doVisit(CAstNode n, Context cntxt, CAstVisitor visitor) {

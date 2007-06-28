@@ -529,18 +529,6 @@ public class RhinoToAstTranslator {
       stmts = newStmts;
     }
 
-    // function initialization code
-    if (n instanceof FunctionNode) {
-      CAstNode[] newStmts = new CAstNode[stmts.length + 1];
-      newStmts[0] = Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl("arguments", true)), makeBuiltinNew(child,
-          "Object"));
-
-      for (int i = 0; i < stmts.length; i++)
-        newStmts[i + 1] = stmts[i];
-
-      stmts = newStmts;
-    }
-
     final CAstNode ast = Ast.makeNode(CAstNode.BLOCK_STMT, stmts);
     final CAstControlFlowMap map = child.cfg();
     final CAstSourcePositionMap pos = child.pos();

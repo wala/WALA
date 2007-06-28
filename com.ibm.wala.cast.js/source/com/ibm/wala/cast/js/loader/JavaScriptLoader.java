@@ -71,9 +71,17 @@ public class JavaScriptLoader implements IClassLoader {
 	} else if (c == Double.class) {
 	  return JavaScriptTypes.Number; 
 	} else {
+	  assert false : "cannot determine type for " + o + " of class " + c;
 	  return null;
 	}
       }
+    }
+
+    public boolean isNullType(TypeReference type) {
+      return 
+	type.equals(JavaScriptTypes.Undefined)
+	                 || 
+	type.equals(JavaScriptTypes.Null);
     }
   };
 
