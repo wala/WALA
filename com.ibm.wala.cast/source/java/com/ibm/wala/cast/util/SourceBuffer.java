@@ -31,7 +31,7 @@ public class SourceBuffer {
       if (line >= p.getFirstLine()) {
 	lines[line-p.getFirstLine()] = 
 	   line == p.getLastLine()?
-	   theLine.substring(0, p.getLastCol()+1):
+	   theLine.substring(0, Math.min(theLine.length(), p.getLastCol()+1)):
 	   theLine;
       }
       line++;
