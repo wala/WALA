@@ -58,7 +58,11 @@ public class Util {
     PointerAnalysis PA = builder.getPointerAnalysis();
     for (Iterator x = PA.getPointerKeys().iterator(); x.hasNext();) {
       PointerKey n = (PointerKey) x.next();
-      Trace.println(n + " --> " + PA.getPointsToSet(n));
+      try {
+	Trace.println(n + " --> " + PA.getPointsToSet(n));
+      } catch (Throwable e) {
+	Trace.println("error computing set for " + n);
+      }
     }
   }
 

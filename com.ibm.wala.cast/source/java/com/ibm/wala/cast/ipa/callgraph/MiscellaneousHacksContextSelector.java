@@ -24,7 +24,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.*;
 import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.*;
 import com.ibm.wala.util.warnings.WarningSet;
 
 public class MiscellaneousHacksContextSelector implements ContextSelector 
@@ -59,7 +59,11 @@ public class MiscellaneousHacksContextSelector implements ContextSelector
 	    Atom.findOrCreateUnicodeAtom( descr[3] ),
 	    Descriptor.findOrCreateUTF8( descr[4] ));
 
-	methodsToSpecialize.add( cha.resolveMethod( ref ).getReference() );
+	if (cha.resolveMethod( ref ) != null) {
+	  methodsToSpecialize.add( cha.resolveMethod( ref ).getReference() );
+	} else {
+	  methodsToSpecialize.add( ref );
+	}
 	break;
       }
 
@@ -117,13 +121,19 @@ public class MiscellaneousHacksContextSelector implements ContextSelector
 	Assertions.UNREACHABLE();
       }
     }
+
+    Trace.println("hacking context selector for methods " + methodsToSpecialize);
   }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
-    if (methodsToSpecialize.contains( callee.getReference() ))
+    if (methodsToSpecialize.contains( site.getDeclaredTarget() ) 
+	                           ||
+	methodsToSpecialize.contains( callee.getReference() ) )
+    {
       return specialPolicy.getCalleeTarget(caller, site, callee, receiver);
-    else
+    } else {
       return basePolicy.getCalleeTarget(caller, site, callee, receiver);
+    }
   }
 
   /* (non-Javadoc)
