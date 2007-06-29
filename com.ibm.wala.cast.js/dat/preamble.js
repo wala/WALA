@@ -5,16 +5,33 @@
 // 4. inheritance in this file is implemented by creating a new object for the prototype. Instead, the prototype object could be shared
 
 // A combination of interfaces NodeList, NamedNodeMap, HTMLCollection
+// implement a list of Nodes, accessible through names as well
 function NamedNodeList() {
 	var maxLength = 10;
 	var local = new Array(10);
 	var counter = -1;
-	function add(elem) {
+
+	var checkAndIncrease = function checkAndIncrease() {
+		if(counter >= maxLength - 1) {
+			maxLength += 10;
+			var temp = new Array(maxLength);
+			for(traverse = 0; traverse <= counter; traverse++) {
+				temp[traverse] = local[traverse];
+			}
+			local = temp;
+		}
+	}
+
+        this.get = function get(index) {
+                return local[ index ];
+	}
+
+	this.add = function add(elem) {
 		checkAndIncrease();
 		local[counter++] = elem;
 	}
 
-	function getIndex(elem) {
+	this.getIndex = function getIndex(elem) {
 		for(var traverse = 0; traverse <= counter; traverse++) {
 			if(local[traverse] == elem) {
 				return traverse;
@@ -23,7 +40,7 @@ function NamedNodeList() {
 		return -1;
 	}
 
-	function remove(elem) {
+	this.remove = function remove(elem) {
 		var found = getIndex(elem);
 		if(found > -1) {
 			for(traverse = found; traverse < counter; traverse++) {
@@ -33,14 +50,14 @@ function NamedNodeList() {
 		}
 	}
 
-	function replace(newElem, oldElem) {
+	this.replace = function replace(newElem, oldElem) {
 		var found = getIndex(oldElem);
 		if(found > -1) {
 			local[found] = newElem;
 		}
 	}
 
-	function insertBefore(newElem, oldElem) {
+	this.insertBefore = function insertBefore(newElem, oldElem) {
 		var found = getIndex(oldElem);
 		if(found > -1) {
 			checkAndIncrease();
@@ -52,58 +69,64 @@ function NamedNodeList() {
 		}
 	}
 
-	var checkAndIncrease = function() {
-		if(counter >= maxLength - 1) {
-			maxLength += 10;
-			var temp = new Array(maxLength);
-			for(traverse = 0; traverse <= counter; traverse++) {
-				temp[traverse] = local[traverse];
-			}
-			local = temp;
-		}
-	}
-
-	// implement a list of Nodes, accessible through names as well
-	
+	this.collect = function collect(predicate, result) {
+          for(var traverse = 0; traverse <= counter; traverse++) {
+            local[traverse].collect(predicate, result);
+          }
+        }
 }
 
 function DOMNode() { // An impostor for the Node class
 	this.attributes = new NamedNodeList();
 	this.childNodes = new NamedNodeList();
-	this.insertBefore = function(newChild, refChild) {
+	this.insertBefore = function insertBefore(newChild, refChild) {
 				this.childNodes.insertBefore(newChild, refChild);
 			}
-	this.replaceChild = function(newChild, oldChild) {
+	this.replaceChild = function replaceChild(newChild, oldChild) {
 				this.childNodes.replace(newChild, oldChild);
 			}
-	this.removeChild = function(oldChild) {
+	this.removeChild = function removeChild(oldChild) {
 				this.childNodes.remove(oldChild);
 			}
-	this.appendChild = function(newChild) {
+	this.appendChild = function appendChild(newChild) {
 				this.childNodes.add(newChild);
 				newChild.parentNode = this;
 			}
-	this.hasChildNodes = function() {
+	this.hasChildNodes = function hasChildNodes() {
 				return this.childNodes.hasElements();
 			}
 	
 	this.ownerDocument = document;
+
+	this.collect = function collect(predicate, result) {
+          if (predicate(this)) {
+            result.add(this);
+          }
+          this.childNodes.collect(predicate, result);
+        }
 }
 
 function DOMDocument() {
-	this.prototype = new DOMNode();
-	this.createElement = function(name) {
+	this.temp = DOMNode;
+	this.temp();
+
+	this.createElement = function createElement(name) {
 		// TODO : to be implemented accurately
 		var toReturn = new DOMHTMLGenericElement(name);
 		return toReturn;
 	}
+
+        this.getElementById = function getElementById(id) {
+          var result = new NamedNodeList();
+          this.collect(function check_id(x) { return x.id == id; }, result);
+          return result.get(0);
+	}
 }
 
 function DOMHTMLDocument() {
-	this.prototype = new DOMDocument();
-	this.getElementsByName = function(name) {
-		// get the node in the tree with name attribute == name
-	}
+	this.temp = DOMDocument;
+	this.temp();
+
 }
 
 // Creating the root document object
@@ -111,30 +134,29 @@ var document = new DOMHTMLDocument();
 
 function DOMElement() { // An impostor for the Element class
 	// inherits from Node
-	this.prototype = new DOMNode();
+	this.temp = DOMNode;
+	this.temp();
 
 	// The get/set/remove attribute methods cannot be run using 'onclick','onmouseover', 'on...' kind of arguments for name.
 	// since that would be used as a workaround for eval
 
-	this.getAttribute = function(name) {
+	this.getAttribute = function getAttribute(name) {
 		this.attributes.get(name);
 	}
-	this.setAttribute = function(name, value) {
+	this.setAttribute = function setAttribute(name, value) {
 		this.attributes.set(name, value);
 	}
 
-	this.removeAttribute = function(name) {
+	this.removeAttribute = function removeAttribute(name) {
 		this.attributes.remove(name);
 	}
 
-	this.getElementsByTagName = function(name) {
-		var toReturn = new NamedNodeList();
-	}
 }
 
 function DOMHTMLElement() { // An impostor for the HTMLElement class
 	// inherits from Element
-	this.prototype = new DOMElement();
+	this.temp = DOMElement;
+	this.temp();
 
 	// Set HTML Attribute Defaults
 	this.id = null;
@@ -144,7 +166,7 @@ function DOMHTMLElement() { // An impostor for the HTMLElement class
 	this.className = null;
 
 	// Set Javascript properties
-	this.getAttribute = function(name) {
+	this.getAttribute = function getAttribute(name) {
 			if(name == "id") return this.id;
 			else if(name == "title") return this.title;
 			else if(name == "lang") return this.lang;
@@ -153,7 +175,7 @@ function DOMHTMLElement() { // An impostor for the HTMLElement class
 			else return this.attributes.get(name);
 		}
 
-	this.setAttribute = function(name, value) {
+	this.setAttribute = function setAttribute(name, value) {
 			if(name == "id") this.id = value;
 			else if(name == "title") this.title = value;
 			else if(name == "lang")  this.lang = value;
@@ -162,7 +184,7 @@ function DOMHTMLElement() { // An impostor for the HTMLElement class
 			else return this.attributes.set(name, value);
 		}
 
-	this.removeAttribute = function(name) {
+	this.removeAttribute = function removeAttribute(name) {
 			if(name == "id") this.id = null;
 			else if(name == "title") this.title = null;
 			else if(name == "lang")  this.lang = null;
@@ -175,7 +197,8 @@ function DOMHTMLElement() { // An impostor for the HTMLElement class
 // Just a hack until all HTML elements have corresponding constructors
 function DOMHTMLGenericElement(tagName) {
 	// inherits from Element
-	this.prototype = new DOMElement();
+	this.temp = DOMElement;
+	this.temp();
 
 	// Set just the tag name
 	this.nodeName = tagName;
@@ -184,7 +207,8 @@ function DOMHTMLGenericElement(tagName) {
 
 function DOMHTMLFormElement() {
 	// inherits from HTMLElement
-	this.prototype = new DOMHTMLElement();
+	this.temp = DOMHTMLElement;
+	this.temp();
 
 	// Set Javascript properties
 	this.nodeName = "FORM";
@@ -206,7 +230,7 @@ function DOMHTMLFormElement() {
 	this.target = null;
 
 	// Set Javascript properties
-	this.getAttribute = function(name) {
+	this.getAttribute = function getAttribute(name) {
 			if(name == "name") return this.name;
 			else if(name == "accept-charset") return this.acceptCharset;
 			else if(name == "action") return this.action;
@@ -216,7 +240,7 @@ function DOMHTMLFormElement() {
 			else return this.prototype.getAttribute(name);
 		}
 
-	this.setAttribute = function(name, value) {
+	this.setAttribute = function setAttribute(name, value) {
 			if(name == "name") this.name = value;
 			else if(name == "accept-charset") this.acceptCharset = value;
 			else if(name == "action") this.action = value;
@@ -226,7 +250,7 @@ function DOMHTMLFormElement() {
 			else return this.prototype.setAttribute(name, value);
 		}
 
-	this.removeAttribute = function(name) {
+	this.removeAttribute = function removeAttribute(name) {
 			if(name == "name") this.name = null;
 			else if(name == "accept-charset") this.acceptCharset = null;
 			else if(name == "action") this.action = null;
@@ -239,7 +263,8 @@ function DOMHTMLFormElement() {
 
 function DOMHTMLTableElement () {
 	// inherits from HTMLElement
-	this.prototype = new DOMHTMLElement();
+	this.temp = DOMHTMLElement;
+	this.temp();
 
 	this.rows = function() {
 	}	
