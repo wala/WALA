@@ -322,9 +322,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     // visit each phi instruction in each successor block
     for (Iterator sbs = cfg.getSuccNodes(b); sbs.hasNext();) {
       BasicBlock sb = (BasicBlock) sbs.next();
-      if (sb.isExitBlock()) {
-        // an optimization based on invariant that exit blocks should have no
-        // phis.
+      if (! sb.hasPhi()) {
         continue;
       }
       int n = 0;
