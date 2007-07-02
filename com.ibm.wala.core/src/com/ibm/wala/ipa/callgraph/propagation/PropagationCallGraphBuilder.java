@@ -104,7 +104,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * A singleton set holding the java.lang.Throwable TypeReference
    */
-  public final static Set THROWABLE_SET = Collections.singleton(TypeReference.JavaLangThrowable);
+  public final static Set<TypeReference> THROWABLE_SET = Collections.singleton(TypeReference.JavaLangThrowable);
 
   /**
    * Governing class hierarchy
