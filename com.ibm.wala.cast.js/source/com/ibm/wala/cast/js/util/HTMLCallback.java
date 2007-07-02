@@ -114,14 +114,6 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
     if(cons == null) cons = "DOMHTMLElement";
     try {
       writeElement(t, a, tag, cons, varName);
-      Enumeration enu = a.getAttributeNames();
-      while(enu.hasMoreElements()) {
-	Object attrObj = enu.nextElement(); 
-	String attr = attrObj.toString();
-	String value = a.getAttribute(attrObj).toString();
-	System.out.println(attr);
-	writeAttribute(t, a, attr, value, varName);
-      }
       out.write("\n");
     } catch (IOException e) {
       System.out.println("Error writing to file");
@@ -131,23 +123,41 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   }
 
   protected void writeElement(HTML.Tag t, MutableAttributeSet a, String tag, String cons, String varName) throws IOException {
-    out.write("var " + varName + " = new " + cons + "(" + tag + ");\n");
-    if(!stack.empty()) {
-    out.write(stack.peek() + ".appendChild(" + varName + ");\n");
+    Enumeration enu = a.getAttributeNames();
+
+    if (! enu.hasMoreElements()) {
+      out.write("var " + varName + " = new " + cons + "(" + tag + ");\n");
+
     } else {
-    out.write("document.appendChild(" + varName + ");\n");
+      out.write("function make_" + varName + "() {\n");
+      out.write("  this.temp = " + cons + ";\n");
+      out.write("  this.temp(" + tag + ");\n");
+      while(enu.hasMoreElements()) {
+	Object attrObj = enu.nextElement(); 
+	String attr = attrObj.toString();
+	String value = a.getAttribute(attrObj).toString();
+	System.out.println(attr);
+	writeAttribute(t, a, attr, value, "this", varName);
+      }
+      out.write("}\n");
+      out.write("var " + varName + " = new make_" + varName + "();\n");
+    }
+    if(!stack.empty()) {
+      out.write(stack.peek() + ".appendChild(" + varName + ");\n");
+    } else {
+      out.write("document.appendChild(" + varName + ");\n");
     }
   }
 
-  protected void writeAttribute(HTML.Tag t, MutableAttributeSet a, String attr, String value, String varName) throws IOException {
+  protected void writeAttribute(HTML.Tag t, MutableAttributeSet a, String attr, String value, String varName, String varName2) throws IOException {
     writePortletAttribute(t, a, attr, value, varName);
-    writeEventAttribute(t, a, attr, value, varName);
+    writeEventAttribute(t, a, attr, value, varName, varName2);
   }
 
-  protected void writeEventAttribute(HTML.Tag t, MutableAttributeSet a, String attr, String value, String varName) throws IOException {
+  protected void writeEventAttribute(HTML.Tag t, MutableAttributeSet a, String attr, String value, String varName, String varName2) throws IOException {
     if(attr.substring(0,2).equals("on")) {
       out.write(varName + "." + attr + " = function " + attr + "_" + varName + "(event) {" + value + "};\n");
-      out2.write("\n\n" + varName + "." + attr + "(null);\n\n");
+      out2.write("\n\n" + varName2 + "." + attr + "(null);\n\n");
     } else {
       out.write(varName + ".setAttribute('" + attr + "', '" + value + "');\n");
     }
