@@ -19,8 +19,7 @@ import com.ibm.wala.ssa.SSASwitchInstruction;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
- * 
+ * Convenience methods for navigating a CFG.
  */
 public class Util {
 
