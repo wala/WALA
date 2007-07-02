@@ -26,9 +26,9 @@ public interface ISSABasicBlock extends IBasicBlock {
 
   public boolean isEntryBlock();
 
-  public Iterator iteratePhis();
+  public Iterator<SSAPhiInstruction> iteratePhis();
 
-  public Iterator iteratePis();
+  public Iterator<SSAPiInstruction> iteratePis();
 
   public SSAInstruction getLastInstruction();
 }

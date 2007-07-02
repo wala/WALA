@@ -19,6 +19,8 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.util.IteratorPlusOne;
 import com.ibm.wala.util.collections.EmptyIterator;
@@ -423,12 +425,12 @@ public class TwoExitCFG implements ControlFlowGraph {
       return getMaxNumber();
     }
 
-    public Iterator iteratePhis() {
-      return Collections.EMPTY_LIST.iterator();
+    public Iterator<SSAPhiInstruction> iteratePhis() {
+      return EmptyIterator.instance();
     }
 
-    public Iterator iteratePis() {
-      return Collections.EMPTY_LIST.iterator();
+    public Iterator<SSAPiInstruction> iteratePis() {
+      return EmptyIterator.instance();
     }
 
     public Iterator<IInstruction> iterator() {

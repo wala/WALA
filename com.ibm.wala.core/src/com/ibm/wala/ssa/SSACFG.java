@@ -273,7 +273,7 @@ public class SSACFG implements ControlFlowGraph{
     /*
      * @see com.ibm.wala.ssa.ISSABasicBlock#iteratePhis()
      */
-    public Iterator<? extends SSAInstruction> iteratePhis() {
+    public Iterator<SSAPhiInstruction> iteratePhis() {
       compressPhis();
       if (stackSlotPhis == null) {
         if (localPhis == null) {
@@ -285,7 +285,7 @@ public class SSACFG implements ControlFlowGraph{
         if (localPhis == null) {
           return Arrays.asList(stackSlotPhis).iterator();
         } else {
-          return new CompoundIterator<SSAInstruction>(Arrays.asList(stackSlotPhis).iterator(), Arrays.asList(localPhis).iterator());
+          return new CompoundIterator<SSAPhiInstruction>(Arrays.asList(stackSlotPhis).iterator(), Arrays.asList(localPhis).iterator());
         }
       }
     }

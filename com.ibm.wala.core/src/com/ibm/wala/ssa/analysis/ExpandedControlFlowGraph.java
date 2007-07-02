@@ -1155,11 +1155,11 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
       number = id;
     }
 
-    public Iterator iteratePhis() {
+    public Iterator<SSAPhiInstruction> iteratePhis() {
       throw new UnsupportedOperationException("NYI");
     }
 
-    public Iterator iteratePis() {
+    public Iterator<SSAPiInstruction> iteratePis() {
       throw new UnsupportedOperationException("NYI");
     }
 
