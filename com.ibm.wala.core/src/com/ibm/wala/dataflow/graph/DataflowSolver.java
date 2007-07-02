@@ -302,9 +302,6 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
     }
   }
 
-  /**
-   * @param G
-   */
   private void shortCircuitUnaryMeets(Graph<T> G, ITransferFunctionProvider functions, UnionFind uf) {
     for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T node = it.next();
@@ -317,9 +314,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
     }
   }
 
-  /**
-   * @return Returns the problem.
-   */
+
   public IKilldallFramework getProblem() {
     return problem;
   }
