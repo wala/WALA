@@ -16,6 +16,7 @@ import java.util.Collections;
 public class BooleanConstantFormula implements IFormula {
 
   public static final BooleanConstantFormula TRUE = new BooleanConstantFormula(BooleanConstant.TRUE);
+
   public static final BooleanConstantFormula FALSE = new BooleanConstantFormula(BooleanConstant.FALSE);
 
   private final BooleanConstant c;
@@ -26,6 +27,11 @@ public class BooleanConstantFormula implements IFormula {
 
   public Collection<Variable> getFreeVariables() {
     return Collections.emptySet();
+  }
+
+  public Collection<? extends IConstant> getConstants() {
+    Collection<? extends IConstant> result = Collections.singleton(c);
+    return result;
   }
 
   public Kind getKind() {

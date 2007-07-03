@@ -10,21 +10,26 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
+import java.util.Collection;
+import java.util.Collections;
 
 
-public class BooleanConstant extends AbstractConstant {
+public abstract class AbstractConstant implements IConstant {
   
-  public static final BooleanConstant TRUE = new BooleanConstant(true);
-  public static final BooleanConstant FALSE = new BooleanConstant(false);
-  
-  private boolean val;
-  
-  private BooleanConstant(boolean val) {
-    this.val = val;
+  public Kind getKind() {
+    return Kind.CONSTANT;
+   }
+
+  public String prettyPrint(ILogicDecorator d) {
+    return d.prettyPrint(this);
   }
 
-  @Override
-  public String toString() {
-    return Boolean.toString(val);
+  public Collection<Variable> getFreeVariables() {
+    return Collections.emptySet();
   }
+
+  public Collection<? extends IConstant> getConstants() {
+    return Collections.singleton(this);
+  }
+  
 }

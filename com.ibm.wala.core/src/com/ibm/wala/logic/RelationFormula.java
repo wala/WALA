@@ -129,6 +129,14 @@ public class RelationFormula implements IFormula {
     }
     return result;
   }
+  
+  public Collection<? extends IConstant> getConstants() {
+    Collection<IConstant> result = HashSetFactory.make(terms.size());
+    for (ITerm t : terms) {
+      result.addAll(t.getConstants());
+    }
+    return result;
+  }
 
   @Override
   public String toString() {

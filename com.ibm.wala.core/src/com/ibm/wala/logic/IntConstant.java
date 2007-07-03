@@ -10,11 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-import java.util.Collection;
-import java.util.Collections;
 
 
-public class IntConstant implements IConstant {
+public class IntConstant extends AbstractConstant {
   private final int val;
   
   protected IntConstant(int val) {
@@ -25,10 +23,6 @@ public class IntConstant implements IConstant {
     return new IntConstant(val);
   }
   
-  public Kind getKind() {
-    return Kind.CONSTANT;
-   }
-
   public int getVal() {
     return val;
   }
@@ -38,10 +32,6 @@ public class IntConstant implements IConstant {
     return String.valueOf(val);
   }
   
-
-  public String prettyPrint(ILogicDecorator d) {
-    return d.prettyPrint(this);
-  }
 
   @Override
   public int hashCode() {
@@ -64,9 +54,4 @@ public class IntConstant implements IConstant {
       return false;
     return true;
   }
-
-  public Collection<Variable> getFreeVariables() {
-    return Collections.emptySet();
-  }
-  
 }

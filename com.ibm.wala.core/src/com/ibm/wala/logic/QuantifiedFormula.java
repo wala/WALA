@@ -103,6 +103,10 @@ public class QuantifiedFormula implements IFormula {
     result.remove(boundV);
     return result;
   }
+  
+  public Collection<? extends IConstant> getConstants() {
+    return f.getConstants();
+  }
 
   @Override
   public String toString() {

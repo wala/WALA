@@ -67,7 +67,7 @@ public class DefaultDecorator implements ILogicDecorator {
   }
 
   public String prefixNotation(RelationFormula r) {
-    StringBuffer result = new StringBuffer(r.getRelation().getSymbol());
+    StringBuffer result = new StringBuffer(prettyPrint(r.getRelation()));
     result.append("(");
     for (int i = 0; i < r.getRelation().getValence() - 1; i++) {
       result.append(r.getTerms().get(i).prettyPrint(this));
@@ -85,10 +85,14 @@ public class DefaultDecorator implements ILogicDecorator {
     StringBuffer result = new StringBuffer();
     result.append(r.getTerms().get(0).prettyPrint(this));
     result.append(" ");
-    result.append(r.getRelation().getSymbol());
+    result.append(prettyPrint(r.getRelation()));
     result.append(" ");
     result.append(r.getTerms().get(1).prettyPrint(this));
     return result.toString();
+  }
+
+  public String prettyPrint(IRelation r) {
+    return r.getSymbol();
   }
 
 }

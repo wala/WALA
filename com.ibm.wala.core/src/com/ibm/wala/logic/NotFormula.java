@@ -64,6 +64,10 @@ public class NotFormula implements IFormula {
   public Collection<Variable> getFreeVariables() {
     return f.getFreeVariables();
   }
+  
+  public Collection<? extends IConstant> getConstants() {
+    return f.getConstants();
+  }
 
   @Override
   public String toString() {

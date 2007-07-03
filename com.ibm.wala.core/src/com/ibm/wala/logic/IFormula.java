@@ -28,11 +28,22 @@ public interface IFormula {
     RELATION, NEGATION, BINARY, QUANTIFIED, CONSTANT
   }
   
+  /**
+   * Constant and Relation formulae are considered atomic.  Others not.
+   */
   public boolean isAtomic();
 
   public Kind getKind();
   
+  /**
+   * @return the free variables in this formula
+   */
   public Collection<Variable> getFreeVariables();
+  
+  /**
+   * @return the constants that appear in this formula
+   */
+  public Collection<? extends IConstant> getConstants();
   
   public String prettyPrint(ILogicDecorator d);
 }

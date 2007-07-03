@@ -104,6 +104,14 @@ public class FunctionTerm implements ITerm {
     }
     return result;
   }
+  
+  public Collection<? extends IConstant> getConstants() {
+    Collection<IConstant> result = HashSetFactory.make();
+    for (ITerm t : parameters) {
+      result.addAll(t.getConstants());
+    }
+    return result;
+  }
 
   @Override
   public int hashCode() {

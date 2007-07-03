@@ -80,6 +80,10 @@ public class Variable implements ITerm, Comparable<Variable> {
   public Collection<Variable> getFreeVariables() {
     return Collections.singleton(this);
   }
+  
+  public Collection<? extends IConstant> getConstants() {
+    return Collections.emptySet();
+  }
 
   public int compareTo(Variable o) throws NullPointerException {
     return this.getNumber() - o.getNumber();

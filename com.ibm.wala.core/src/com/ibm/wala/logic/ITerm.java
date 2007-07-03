@@ -30,4 +30,6 @@ public interface ITerm {
   public Collection<Variable> getFreeVariables();
 
   public String prettyPrint(ILogicDecorator d);
+
+  public Collection<? extends IConstant> getConstants();
 }

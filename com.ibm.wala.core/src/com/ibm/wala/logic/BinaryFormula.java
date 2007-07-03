@@ -104,6 +104,13 @@ public class BinaryFormula implements IFormula {
     return result;
   }
   
+  public Collection<IConstant> getConstants() {
+    Collection<IConstant> result = HashSetFactory.make();
+    result.addAll(f1.getConstants());
+    result.addAll(f2.getConstants());
+    return result;
+  }
+  
   public String prettyPrint(ILogicDecorator d) {
     StringBuffer result = new StringBuffer();
     result.append("(");
