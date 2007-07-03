@@ -96,7 +96,63 @@ public class Simplifier {
         substitution = getNextSubCandidate(s, t, alreadyUsed);
       }
     }
-    return s;
+    return simpleSat(s);
+  }
+
+  /**
+   * Check simple satisfiability rules for each formula in a collection. Replace
+   * tautologies with "true" and contradictions with false.
+   */
+  private static Collection<IFormula> simpleSat(Collection<IFormula> s) {
+    Collection<IFormula> result = HashSetFactory.make();
+    for (IFormula f : s) {
+      if (isTautology(f)) {
+        result.add(BooleanConstantFormula.TRUE);
+      } else if (isContradiction(f)) {
+        result.add(BooleanConstantFormula.FALSE);
+      } else {
+        result.add(f);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * @return true if we can easily prove f is a contradiction
+   */
+  private static boolean isContradiction(IFormula f) {
+    if (f.getKind().equals(IFormula.Kind.RELATION)) {
+      RelationFormula r = (RelationFormula) f;
+      if (r.getRelation().equals(BinaryRelation.EQUALS)) {
+        ITerm lhs = r.getTerms().get(0);
+        ITerm rhs = r.getTerms().get(1);
+        if (lhs.getKind().equals(ITerm.Kind.CONSTANT) && rhs.getKind().equals(ITerm.Kind.CONSTANT)) {
+          if (!lhs.equals(rhs)) {
+            return true;
+          }
+        }
+      }
+    } 
+    return false;
+  }
+
+  /**
+   * @return true if we can easily prove f is a tautology
+   */
+  private static boolean isTautology(IFormula f) {
+    if (f.getKind().equals(IFormula.Kind.RELATION)) {
+      RelationFormula r = (RelationFormula) f;
+      if (r.getRelation().equals(BinaryRelation.EQUALS)) {
+        ITerm lhs = r.getTerms().get(0);
+        ITerm rhs = r.getTerms().get(1);
+        if (lhs.getKind().equals(ITerm.Kind.CONSTANT) && rhs.getKind().equals(ITerm.Kind.CONSTANT)) {
+          if (lhs.equals(rhs)) {
+            return true;
+          }
+        }
+      }
+    } 
+    return false;
   }
 
   private static boolean defines(IFormula f, ITerm t) {
