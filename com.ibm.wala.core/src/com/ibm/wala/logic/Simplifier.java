@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.ibm.wala.logic.ILogicConstants.BinaryConnective;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
@@ -96,14 +97,14 @@ public class Simplifier {
         substitution = getNextSubCandidate(s, t, alreadyUsed);
       }
     }
-    return simpleSat(s);
+    return trivialDecision(s);
   }
 
   /**
    * Check simple satisfiability rules for each formula in a collection. Replace
    * tautologies with "true" and contradictions with false.
    */
-  private static Collection<IFormula> simpleSat(Collection<IFormula> s) {
+  private static Collection<IFormula> trivialDecision(Collection<IFormula> s) {
     Collection<IFormula> result = HashSetFactory.make();
     for (IFormula f : s) {
       if (isTautology(f)) {
@@ -132,7 +133,14 @@ public class Simplifier {
           }
         }
       }
-    } 
+    } else if (f.getKind().equals(IFormula.Kind.BINARY)) { 
+      BinaryFormula b = (BinaryFormula)f;
+      if (b.getConnective().equals(BinaryConnective.AND)) {
+        if (isContradiction(b.getF1()) || isContradiction(b.getF2())) {
+          return true;
+        }
+      }
+    }
     return false;
   }
 
@@ -151,7 +159,14 @@ public class Simplifier {
           }
         }
       }
-    } 
+    } else if (f.getKind().equals(IFormula.Kind.BINARY)) { 
+      BinaryFormula b = (BinaryFormula)f;
+      if (b.getConnective().equals(BinaryConnective.AND)) {
+        if (isTautology(b.getF1()) && isTautology(b.getF2())) {
+          return true;
+        }
+      }
+    }
     return false;
   }
 
