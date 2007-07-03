@@ -1126,6 +1126,13 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     public IMethod getMethod() {
       return method;
     }
+    
+    /**
+     * @return the {@link ExpandedControlFlowGraph} to which this block belongs
+     */
+    public ExpandedControlFlowGraph getCFG() {
+      return ExpandedControlFlowGraph.this;
+    }
 
     /**
      * get number of the block
