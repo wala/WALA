@@ -11,8 +11,10 @@
 package com.ibm.wala.logic;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
@@ -27,6 +29,16 @@ public class BinaryRelation implements IRelation {
   public final static BinaryRelation LE = new BinaryRelation("<=");
   public final static BinaryRelation GT = new BinaryRelation(">");
   public final static BinaryRelation GE = new BinaryRelation(">=");
+  
+  private final static Map<BinaryRelation, BinaryRelation> negations = HashMapFactory.make();
+  static {
+    negations.put(EQUALS, NE);
+    negations.put(NE, EQUALS);
+    negations.put(LT,GE);
+    negations.put(GE,LT);
+    negations.put(GT, LE);
+    negations.put(LE, GT);
+  }
 
   private final String symbol;
   
@@ -119,6 +131,13 @@ public class BinaryRelation implements IRelation {
   
   public static BinaryRelation make(String symbol) {
     return new BinaryRelation(symbol);
+  }
+
+  /**
+   * Attempt to negate a relation symbol.  Return null if unsucessful.
+   */
+  public static BinaryRelation negate(IRelation relation) {
+    return negations.get(relation);
   }
 
 }

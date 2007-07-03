@@ -300,4 +300,23 @@ public class Simplifier {
     return free;
   }
 
+  /**
+   * Attempt to distribute the NOT from a NotFormula
+   * @return the original formula if the distribution is unsucessful
+   */
+  public static IFormula distributeNot(NotFormula f) {
+    IFormula f1 = f.getFormula();
+    if (f1 instanceof RelationFormula) {
+      RelationFormula r = (RelationFormula)f1;
+      BinaryRelation negate = BinaryRelation.negate(r.getRelation());
+      if (negate == null) {
+        return f;
+      } else {
+        return RelationFormula.make(negate, r.getTerms());
+      }
+    } else {
+      return f;
+    }
+  }
+
 }
