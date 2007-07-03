@@ -181,7 +181,7 @@ public class SlicerTest extends TestCase {
         TestConstants.SLICE7_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cha, scope, warnings);
+    CallGraphBuilder builder = Util.makeVanillaZeroOneContainerCFABuilder(options, cha, scope, warnings);
     CallGraph cg = builder.makeCallGraph(options);
 
     CGNode main = findMainMethod(cg);
