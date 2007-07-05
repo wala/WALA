@@ -5,7 +5,6 @@ Bundle-SymbolicName: com.ibm.wala.cast.java
 Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.cast.java.JavaSourcePlugin
 Bundle-Vendor: rfuhrer@watson.ibm.com
-Bundle-Localization: plugin
 Require-Bundle: com.ibm.wala.cast;visibility:=reexport,
  com.ibm.wala.core;visibility:=reexport
 Eclipse-LazyStart: true
