@@ -130,4 +130,24 @@ public class ServletRequest implements javax.servlet.ServletRequest {
   public void setCharacterEncoding(String env) {
     encoding = env;
   }
+
+  public String getLocalAddr() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public String getLocalName() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  public int getLocalPort() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
+
+  public int getRemotePort() {
+    // TODO Auto-generated method stub
+    return 0;
+  }
 }

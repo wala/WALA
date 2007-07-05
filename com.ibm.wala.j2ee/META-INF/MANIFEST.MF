@@ -19,4 +19,4 @@ Require-Bundle: com.ibm.wala.core;visibility:=reexport,
  org.eclipse.wst.common.frameworks,
  org.eclipse.emf.ecore.xmi,
  com.ibm.icu;visibility:=reexport,
- org.eclipse.equinox.servlet.api;visibility:=reexport
+ javax.servlet

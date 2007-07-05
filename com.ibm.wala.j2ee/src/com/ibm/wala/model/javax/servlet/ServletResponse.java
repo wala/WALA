@@ -64,5 +64,15 @@ public class ServletResponse implements javax.servlet.ServletResponse {
     public void setLocale(java.util.Locale loc) {
 	locale = loc;
     }
+
+    public String getContentType() {
+      // TODO Auto-generated method stub
+      return null;
+    }
+
+    public void setCharacterEncoding(String charset) {
+      // TODO Auto-generated method stub
+      
+    }
 }
 
