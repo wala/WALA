@@ -217,9 +217,8 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     if (key instanceof LocalPointerKey) {
       LocalPointerKey lpk = (LocalPointerKey) key;
       CGNode node = lpk.getNode();
-      SSAContextInterpreter interp = getCallGraph().getInterpreter(node);
-      IR ir = interp.getIR(node, new WarningSet());
-      DefUse du = interp.getDU(node, new WarningSet());
+      IR ir = node.getIR(new WarningSet());
+      DefUse du = node.getDU(new WarningSet());
       if (((SSAPropagationCallGraphBuilder) builder).contentsAreInvariant(ir.getSymbolTable(), du, lpk.getValueNumber())) {
         // cons up the points-to set for invariant contents
         InstanceKey[] ik = ((SSAPropagationCallGraphBuilder) builder).getInvariantContents(ir.getSymbolTable(), du, node, lpk
@@ -325,7 +324,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtCatch(CGNode node, SSAGetCaughtExceptionInstruction instruction) {
-    IR ir = getCallGraph().getInterpreter(node).getIR(node, new WarningSet());
+    IR ir = node.getIR(new WarningSet());
     List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getBasicBlockForCatch(instruction));
     Set caughtTypes = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
     MutableSparseIntSet S = new MutableSparseIntSet();

@@ -25,8 +25,6 @@ import com.ibm.wala.cfg.TwoExitCFG;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
-import com.ibm.wala.ipa.cfg.CFGProvider;
-import com.ibm.wala.ipa.cfg.DefaultCFGProvider;
 import com.ibm.wala.ipa.cfg.InterproceduralCFG;
 import com.ibm.wala.util.CollectionFilter;
 import com.ibm.wala.util.CompoundIterator;
@@ -108,7 +106,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    *          object to track analysis warnings
    */
   public PartiallyCollapsedSupergraph(CallGraph cg, CFGCache cfgCache, Collection<CGNode> noCollapse, WarningSet warnings) {
-    this(cg, new DefaultCFGProvider(cg, cfgCache), noCollapse, IndiscriminateFilter.singleton(), warnings);
+    this(cg, noCollapse, IndiscriminateFilter.singleton(), warnings);
   }
 
   /**
@@ -124,7 +122,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    */
   public PartiallyCollapsedSupergraph(CallGraph cg, CFGCache cfgCache, Collection<CGNode> noCollapse, Filter relevant,
       WarningSet warnings) {
-    this(cg, new DefaultCFGProvider(cg, cfgCache), noCollapse, relevant, warnings);
+    this(cg, noCollapse, relevant, warnings);
   }
 
   /**
@@ -135,8 +133,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    * @param warnings
    *          object to track analysis warnings
    */
-  public PartiallyCollapsedSupergraph(CallGraph cg, CFGProvider P, Collection<CGNode> noCollapse, WarningSet warnings) {
-    this(cg, P, noCollapse, IndiscriminateFilter.singleton(), warnings);
+  public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse, WarningSet warnings) {
+    this(cg, noCollapse, IndiscriminateFilter.singleton(), warnings);
   }
 
   /**
@@ -150,8 +148,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    * @param warnings
    *          object to track analysis warnings
    */
-  public PartiallyCollapsedSupergraph(CallGraph cg, CFGProvider P, Collection<CGNode> noCollapse, Filter relevant,
-      WarningSet warnings) {
+  public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse, Filter relevant, WarningSet warnings) {
 
     EngineTimings.startVirtual("PartiallyCollapsedSupergraph.<init>");
 
@@ -166,7 +163,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       }
     }
     this.noCollapse = noCollapse;
-    this.partialIPFG = new InterproceduralCFG(cg, P, new Filtersection(relevant, new CollectionFilter(noCollapse)), true, warnings);
+    this.partialIPFG = new InterproceduralCFG(cg, new Filtersection(relevant, new CollectionFilter(noCollapse)), true, warnings);
     if (DEBUG_LEVEL > 0) {
       Trace.println("IPFG \n" + partialIPFG.toString());
     }

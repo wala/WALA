@@ -13,8 +13,11 @@ package com.ibm.wala.ipa.callgraph;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.warnings.WarningSet;
@@ -81,5 +84,25 @@ public interface CGNode extends INodeWithNumber, ContextItem {
    * @return the "default" IR for this node used by the governing call graph
    */
   public IR getIR(WarningSet warnings);
-
+  
+  /**
+   * @return DefUse for the "default" IR for this node used by the governing call graph
+   */
+  public DefUse getDU(WarningSet warnings);
+  
+  /**
+   * @return a CFG that represents the node, or null if it's an unmodelled native method
+   */
+  public ControlFlowGraph getCFG(WarningSet warnings);
+  
+  /**
+   * @return an Iterator of the types that may be allocated by a given
+   * method in a given context.
+   */
+  public Iterator<NewSiteReference> iterateNewSites();
+  /**
+   * @return an Iterator of the call statements that may execute
+   * in a given method for a given context
+   */
+  public Iterator<CallSiteReference> iterateCallSites();
 }

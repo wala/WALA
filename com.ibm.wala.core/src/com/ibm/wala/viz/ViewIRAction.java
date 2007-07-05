@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.util.warnings.WarningSet;
@@ -99,8 +98,7 @@ public class ViewIRAction extends Action {
     CGNode first = (CGNode) selection.getFirstElement();
 
     // get the IR for the node
-    SSAContextInterpreter i =  cg.getInterpreter(first);
-    return i.getIR(first, new WarningSet());
+    return first.getIR(new WarningSet());
   }
   
   protected CGNode getNodeForSelection() {

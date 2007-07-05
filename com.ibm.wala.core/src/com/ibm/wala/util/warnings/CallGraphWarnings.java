@@ -19,7 +19,6 @@ import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.UnresolvedReflectionWarning;
-import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.TypeName;
@@ -100,8 +99,7 @@ public class CallGraphWarnings {
     } else {
       for (Iterator it = cg.iterator(); it.hasNext();) {
         CGNode n = (CGNode) it.next();
-        RTAContextInterpreter interp = cg.getInterpreter(n);
-        addWarningsForNode(result, n, interp);
+        addWarningsForNode(result, n);
       }
     }
     return result;
@@ -122,7 +120,7 @@ public class CallGraphWarnings {
     }
   }
 
-  private static void addWarningsForNode(WarningSet warnings, CGNode n, RTAContextInterpreter interp) {
+  private static void addWarningsForNode(WarningSet warnings, CGNode n) {
     IMethod m = n.getMethod();
     if (m == null) {
       return;
@@ -133,7 +131,7 @@ public class CallGraphWarnings {
         warnings.add(new PoisonWarning(s.getPoisonLevel(),n));
       }
       if (s.isFactoryMethod()) {
-        int count = IteratorUtil.count(interp.iterateNewSites(n));
+        int count = IteratorUtil.count(n.iterateNewSites());
         if (count == 1) {
           warnings.add(new UnresolvedReflectionWarning(n));
         }
@@ -143,7 +141,7 @@ public class CallGraphWarnings {
       warnings.add(new NativeWarning(n));
     }
     //  check that every call site in node has at least one successor
-    for (Iterator it = interp.iterateCallSites(n); it.hasNext();) {
+    for (Iterator it = n.iterateCallSites(); it.hasNext();) {
       CallSiteReference site = (CallSiteReference) it.next();
       Iterator targets = n.getPossibleTargets(site).iterator();
 

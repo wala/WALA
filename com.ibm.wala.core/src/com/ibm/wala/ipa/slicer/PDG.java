@@ -235,7 +235,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       return;
     }
 
-    DefUse DU = node.getCallGraph().getInterpreter(node).getDU(node, new WarningSet());
+    DefUse DU = node.getDU(new WarningSet());
     SSAInstruction[] instructions = ir.getInstructions();
     for (Iterator<? extends Statement> it = iterator(); it.hasNext();) {
       Statement s = it.next();
@@ -677,7 +677,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    */
   private void createNodes(Map<CGNode, OrdinalSet<PointerKey>> mod, Map<CGNode, OrdinalSet<PointerKey>> ref,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
-    IR ir = node.getCallGraph().getInterpreter(node).getIR(node, new WarningSet());
+    IR ir = node.getIR(new WarningSet());
 
     if (ir != null) {
       Collection<SSAInstruction> visited = createNormalStatements(ir, mod, ref, dOptions);

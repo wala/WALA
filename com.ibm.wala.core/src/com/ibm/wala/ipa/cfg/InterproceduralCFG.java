@@ -79,11 +79,6 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   final private boolean partitionExits;
 
   /**
-   * Governing provider of CFGs
-   */
-  private final CFGProvider P;
-
-  /**
    * Filter that determines relevant call graph nodes
    */
   private final Filter relevant;
@@ -109,7 +104,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    *          an object to track analysis warnings
    */
   public InterproceduralCFG(CallGraph CG, CFGCache cfgCache, WarningSet warnings) {
-    this(CG, new DefaultCFGProvider(CG, cfgCache), IndiscriminateFilter.singleton(), false, warnings);
+    this(CG, IndiscriminateFilter.singleton(), false, warnings);
   }
 
   /**
@@ -117,17 +112,14 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * 
    * @param CG
    *          the call graph
-   * @param P
-   *          an object that provides CFGs for call graph nodes.
    * @param relevant
    *          a filter which accepts those call graph nodes which should be
    *          included in the I-CFG. Other nodes are ignored.
    */
-  public InterproceduralCFG(CallGraph CG, CFGProvider P, Filter relevant, boolean partitionExits, WarningSet warnings) {
+  public InterproceduralCFG(CallGraph CG, Filter relevant, boolean partitionExits, WarningSet warnings) {
 
     EngineTimings.startVirtual("InterproceduralCFG.<init>");
     this.cg = CG;
-    this.P = P;
     this.relevant = relevant;
     this.warnings = warnings;
     this.partitionExits = partitionExits;
@@ -158,7 +150,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
       CGNode n = (CGNode) ns.next();
       if (relevant.accepts(n)) {
         // retrieve a cfg for node n.
-        ControlFlowGraph cfg = P.getCFG(n, warnings);
+        ControlFlowGraph cfg = n.getCFG(warnings);
         if (cfg == null) {
           // n is an unmodelled native method
           continue;
@@ -210,7 +202,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @return the cfg for n, or null if none found
    */
   public ControlFlowGraph getCFG(CGNode n) {
-    ControlFlowGraph cfg = P.getCFG(n, warnings);
+    ControlFlowGraph cfg = n.getCFG(warnings);
     if (cfg == null) {
       return null;
     }
@@ -309,7 +301,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
             Trace.println("Relevant target: " + tn);
           }
           // add an edge from tn exit to this node
-          ControlFlowGraph tcfg = P.getCFG(tn, warnings);
+          ControlFlowGraph tcfg = tn.getCFG(warnings);
           // tcfg might be null if tn is an unmodelled native method
           if (tcfg != null) {
             if (partitionExits) {
@@ -494,7 +486,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
         if (DEBUG_LEVEL > 0) {
           Trace.println("caller " + caller + "is relevant");
         }
-        ControlFlowGraph ccfg = P.getCFG(caller, warnings);
+        ControlFlowGraph ccfg = caller.getCFG(warnings);
         IInstruction[] cinsts = ccfg.getInstructions();
 
         if (DEBUG_LEVEL > 0) {

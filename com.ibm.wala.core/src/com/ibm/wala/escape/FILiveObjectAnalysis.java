@@ -22,7 +22,6 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractLocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder.TypedPointerKey;
 import com.ibm.wala.ssa.DefUse;
@@ -143,9 +142,8 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
    */
   private boolean mayBeLiveIntraprocedural(InstanceKey ik, CGNode m, int instructionIndex) {
 
-    SSAContextInterpreter i = callGraph.getInterpreter(m);
-    IR ir = i.getIR(m, new WarningSet());
-    DefUse du = i.getDU(m, new WarningSet());
+    IR ir = m.getIR(new WarningSet());
+    DefUse du = m.getDU(new WarningSet());
 
     for (Iterator it = DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik); it.hasNext();) {
       Object p = it.next();

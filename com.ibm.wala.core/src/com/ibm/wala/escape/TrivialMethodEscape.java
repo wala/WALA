@@ -23,7 +23,6 @@ import com.ibm.wala.ipa.callgraph.propagation.AbstractLocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
-import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.warnings.WalaException;
 
@@ -140,8 +139,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
    * @throws WalaException
    */
   static NewSiteReference findAlloc(CallGraph cg, CGNode n, int allocPC) throws WalaException {
-    RTAContextInterpreter interp = cg.getInterpreter(n);
-    for (Iterator it = interp.iterateNewSites(n); it.hasNext();) {
+    for (Iterator it = n.iterateNewSites(); it.hasNext();) {
       NewSiteReference site = (NewSiteReference) it.next();
       if (site.getProgramCounter() == allocPC) {
         return site;

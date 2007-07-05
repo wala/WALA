@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.graph.NumberedGraph;
@@ -55,15 +54,6 @@ public interface CallGraph extends NumberedGraph<CGNode> {
    * this method.
    */
   public Set<CGNode> getNodes(MethodReference m);
-  
-  /**
-   * 
-   * @param node
-   * @return an object that provides an interpretation of the node.
-   * This is the minimum interpreter functionality that all call graphs
-   * must provide.
-   */
-  public SSAContextInterpreter getInterpreter(CGNode node);
 
   /**
    *  Dump the callgraph to the specified file in dotty(1) format.

@@ -223,14 +223,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
       wipeCount = 0;
       ReferenceCleanser.clearSoftCaches();
     }
-    SSAContextInterpreter interp = cg.getInterpreter(node);
-    if (Assertions.verifyAssertions) {
-      if (interp == null) {
-        cg.getInterpreter(node);
-        Assertions._assert(interp != null, "null interp for " + node);
-      }
-    }
-    return interp.getIR(node, warnings);
+    return node.getIR(warnings);
   }
 
   private void visit(CGNode node, IR ir) {

@@ -15,14 +15,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
+import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.IntFunction;
 import com.ibm.wala.util.IntMapIterator;
@@ -309,9 +311,25 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     public IR getIR(WarningSet warnings) {
       return getCallGraph().getInterpreter(this).getIR(this,warnings);
     }
+    
+    public DefUse getDU(WarningSet warnings) {
+      return getCallGraph().getInterpreter(this).getDU(this,warnings);
+    }
 
-    public CallGraph getCallGraph() {
+    public ExplicitCallGraph getCallGraph() {
       return ExplicitCallGraph.this;
+    }
+
+    public Iterator<CallSiteReference> iterateCallSites() {
+      return getCallGraph().getInterpreter(this).iterateCallSites(this);
+    }
+
+    public Iterator<NewSiteReference> iterateNewSites() {
+      return getCallGraph().getInterpreter(this).iterateNewSites(this);
+    }
+
+    public ControlFlowGraph getCFG(WarningSet warnings) {
+      return getCallGraph().getInterpreter(this).getCFG(this,warnings);
     }
   }
 

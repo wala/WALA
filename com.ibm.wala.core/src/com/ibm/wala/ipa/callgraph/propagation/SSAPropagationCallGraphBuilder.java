@@ -482,8 +482,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    *         thrown by a certain call site.
    */
   static boolean hasUniqueCatchBlock(SSAAbstractInvokeInstruction call, CGNode node, CallGraph cg) {
-    SSAContextInterpreter interp = cg.getInterpreter(node);
-    return hasUniqueCatchBlock(call, interp.getIR(node, new WarningSet()));
+    return hasUniqueCatchBlock(call, node.getIR(new WarningSet()));
   }
 
   /**
