@@ -211,8 +211,7 @@ public abstract class IRTests extends WalaTestCase {
           CGNode n = (CGNode) ns.next();
           for (Iterator as = s.iterator(); as.hasNext();) {
             SourceMapAssertion a = (SourceMapAssertion) as.next();
-            Assert.assertTrue("failed for " + a.variableName + " in " + n, a
-                .check(n.getMethod(), CG.getInterpreter(n).getIR(n, ws)));
+            Assert.assertTrue("failed for " + a.variableName + " in " + n, a.check(n.getMethod(), n.getIR(ws)));
           }
         }
       }
@@ -290,7 +289,7 @@ public abstract class IRTests extends WalaTestCase {
             continue;
           }
           CGNode node = (CGNode) nodeIter.next();
-          Trace.println(cg.getInterpreter(node).getIR(node, warnings));
+          Trace.println(node.getIR(warnings));
         }
       }
     }
@@ -372,8 +371,8 @@ public abstract class IRTests extends WalaTestCase {
     return null;
   }
 
-  private static void populateScope(JavaSourceAnalysisEngine engine, Collection/* <String> */sources,
-      List/* <String> */libs) throws IOException {
+  private static void populateScope(JavaSourceAnalysisEngine engine, Collection/* <String> */sources, List/* <String> */libs)
+      throws IOException {
 
     boolean foundLib = false;
     for (Iterator iter = libs.iterator(); iter.hasNext();) {
