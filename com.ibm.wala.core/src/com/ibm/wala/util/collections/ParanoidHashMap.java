@@ -11,9 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.util.debug.Assertions;
@@ -65,8 +63,7 @@ public class ParanoidHashMap<K, V> extends HashMap<K, V> {
     if (arg0 == null) {
       throw new IllegalArgumentException("arg0 is null");
     }
-    for (Iterator<?> it = arg0.entrySet().iterator(); it.hasNext();) {
-      Map.Entry<? extends K, ? extends V> E = (Entry<? extends K, ? extends V>) it.next();
+    for (Map.Entry<K,V> E: entrySet()) {
       put(E.getKey(), E.getValue());
     }
   }

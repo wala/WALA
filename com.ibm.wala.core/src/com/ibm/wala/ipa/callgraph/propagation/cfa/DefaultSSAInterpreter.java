@@ -62,6 +62,7 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
     return getCFAInterpreter(node).getNumberOfStatements(node, warnings);
   }
 
+
   public boolean understands(IMethod method, Context context) {
     return true;
   }

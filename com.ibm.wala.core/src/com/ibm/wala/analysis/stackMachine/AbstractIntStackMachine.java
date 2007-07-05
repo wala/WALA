@@ -59,7 +59,7 @@ import com.ibm.wala.util.debug.Trace;
 
 /**
  * 
- * Skeleton of functionality to propogate information through the Java bytecode
+ * Skeleton of functionality to propagate information through the Java bytecode
  * stack machine using ShrikeBT.
  * 
  * This class computes properties the Java operand stack and of the local

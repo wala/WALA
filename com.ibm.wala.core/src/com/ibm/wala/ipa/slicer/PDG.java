@@ -80,7 +80,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   private Statement[] returnStatements;
 
   /**
-   * TODO: using CallSiteReference is sloppy.  clean it up.
+   * TODO: using CallSiteReference is sloppy. clean it up.
    */
   private final Map<CallSiteReference, Set<Statement>> callerParamStatements = HashMapFactory.make();
 
@@ -100,12 +100,13 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
   /**
    * @param mod
-   *          the set of heap locations which may be written (transitively) by
-   *          this node. These are logically return values in the SDG.
+   *            the set of heap locations which may be written (transitively) by
+   *            this node. These are logically return values in the SDG.
    * @param ref
-   *          the set of heap locations which may be read (transitively) by this
-   *          node. These are logically parameters in the SDG.
-   * @throws IllegalArgumentException  if node is null
+   *            the set of heap locations which may be read (transitively) by
+   *            this node. These are logically parameters in the SDG.
+   * @throws IllegalArgumentException
+   *             if node is null
    */
   public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
@@ -171,7 +172,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
           src = ssaInstruction2Statement(s);
           // add edges from call statements to parameter passing and return
           if (s instanceof SSAAbstractInvokeInstruction) {
-            SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction)s;
+            SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
             for (Statement st : callerParamStatements.get(call.getCallSite())) {
               addEdge(src, st);
             }
@@ -347,8 +348,9 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       case PARAM_CALLER: {
         ParamStatement.ParamCaller pac = (ParamStatement.ParamCaller) s;
         int vn = pac.getValueNumber();
-        // note that if the caller is the fake root method and the parameter type is primitive,
-        // it's possible to have a value number of -1.  If so, just ignore it.
+        // note that if the caller is the fake root method and the parameter
+        // type is primitive,
+        // it's possible to have a value number of -1. If so, just ignore it.
         if (vn > -1) {
           if (ir.getSymbolTable().isParameter(vn)) {
             Statement a = new ParamStatement.ParamCallee(node, vn);
@@ -697,8 +699,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * create nodes representing defs of the return values
    * 
    * @param mod
-   *          the set of heap locations which may be written (transitively) by
-   *          this node. These are logically parameters in the SDG.
+   *            the set of heap locations which may be written (transitively) by
+   *            this node. These are logically parameters in the SDG.
    * @param dOptions
    */
   private void createReturnStatements(Map<CGNode, OrdinalSet<PointerKey>> mod, DataDependenceOptions dOptions) {
@@ -728,8 +730,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * create nodes representing defs of formal parameters
    * 
    * @param ref
-   *          the set of heap locations which may be read (transitively) by this
-   *          node. These are logically parameters in the SDG.
+   *            the set of heap locations which may be read (transitively) by
+   *            this node. These are logically parameters in the SDG.
    * @param dOptions
    */
   private void createCalleeParams(Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions) {
@@ -792,7 +794,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       SSAInstruction s = instructions[i];
 
       if (s instanceof SSAGetCaughtExceptionInstruction) {
-	continue;
+        continue;
       }
 
       if (s != null) {
@@ -854,7 +856,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   /**
    * @return the set of all locations read by any callee at a call site.
    */
-  private OrdinalSet<PointerKey> unionHeapLocations(CGNode n, SSAAbstractInvokeInstruction call, Map<CGNode, OrdinalSet<PointerKey>> loc) {
+  private OrdinalSet<PointerKey> unionHeapLocations(CGNode n, SSAAbstractInvokeInstruction call,
+      Map<CGNode, OrdinalSet<PointerKey>> loc) {
     BitVectorIntSet bv = new BitVectorIntSet();
     for (CGNode t : n.getPossibleTargets(call.getCallSite())) {
       bv.addAll(loc.get(t).getBackingSet());

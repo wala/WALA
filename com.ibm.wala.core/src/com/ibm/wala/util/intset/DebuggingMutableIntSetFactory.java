@@ -17,8 +17,6 @@ import com.ibm.wala.util.debug.Assertions;
  * A debugging factory that creates debugging bitsets that are implemented as
  * two bitsets that perform consistency checks for every operation.
  * 
- * @see DebuggingMutableIntSet
- * 
  * @author Julian Dolby (dolby@us.ibm.com)
  * 
  */

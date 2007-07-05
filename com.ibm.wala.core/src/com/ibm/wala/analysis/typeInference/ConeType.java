@@ -19,7 +19,7 @@ import com.ibm.wala.types.*;
 
 /**
  * 
- * Absraction of a Java type. These are immutable.
+ * Abstraction of a Java type. These are immutable.
  * 
  * @author sfink
  */
