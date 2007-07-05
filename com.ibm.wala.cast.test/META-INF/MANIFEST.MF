@@ -4,7 +4,6 @@ Bundle-Name: Java Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast.test
 Bundle-Version: 1.0.0
 Bundle-Vendor: IBM
-Bundle-Localization: plugin
 Require-Bundle: 
  com.ibm.wala.core.tests,
  com.ibm.wala.cast,
