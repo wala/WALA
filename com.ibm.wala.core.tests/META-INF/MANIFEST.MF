@@ -4,7 +4,6 @@ Bundle-Name: WALA Tests Plug-in
 Bundle-SymbolicName: com.ibm.wala.core.tests;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-Vendor: IBM
-Bundle-Localization: plugin
 Require-Bundle: com.ibm.wala.core,
  org.junit,
  org.eclipse.jface
