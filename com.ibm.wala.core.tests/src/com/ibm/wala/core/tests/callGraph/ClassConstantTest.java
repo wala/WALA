@@ -62,7 +62,7 @@ public class ClassConstantTest extends WalaTestCase {
     Assert.assertFalse(mainMethodNodes.isEmpty());
     CGNode mainMethodNode = (CGNode) mainMethodNodes.iterator().next();
     Trace.println("main IR:");
-    Trace.println(cg.getInterpreter(mainMethodNode).getIR(mainMethodNode, warnings));
+    Trace.println(mainMethodNode.getIR(warnings));
 
     // Make sure call to hashCode is there (it uses the class constant)
     TypeReference classRef = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Class");

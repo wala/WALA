@@ -91,7 +91,7 @@ public class CompareCDGTest extends WalaTestCase {
       Trace.println(mref.toString());
       // if(app.equals("Application"))
       {
-        IR ir = g.getInterpreter(n).getIR(n, new WarningSet());
+        IR ir = n.getIR(new WarningSet());
         if (ir != null) {
           SSACFG cfg = ir.getControlFlowGraph();
           long startTime = System.currentTimeMillis();

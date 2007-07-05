@@ -564,7 +564,7 @@ public class SlicerTest extends TestCase {
   }
 
   public static Statement findCallTo(CGNode n, String methodName) {
-    IR ir = n.getCallGraph().getInterpreter(n).getIR(n, new WarningSet());
+    IR ir = n.getIR(new WarningSet());
     for (Iterator<SSAInstruction> it = ir.iterateAllInstructions(); it.hasNext();) {
       SSAInstruction s = it.next();
       if (s instanceof SSAInvokeInstruction) {
@@ -581,7 +581,7 @@ public class SlicerTest extends TestCase {
   }
 
   public static Statement findFirstAllocation(CGNode n) {
-    IR ir = n.getCallGraph().getInterpreter(n).getIR(n, new WarningSet());
+    IR ir = n.getIR(new WarningSet());
     for (int i = 0; i < ir.getInstructions().length; i++) {
       SSAInstruction s = ir.getInstructions()[i];
       if (s instanceof SSANewInstruction) {
