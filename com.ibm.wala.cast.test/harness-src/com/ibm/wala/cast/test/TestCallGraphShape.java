@@ -10,20 +10,19 @@
  *****************************************************************************/
 package com.ibm.wala.cast.test;
 
-import com.ibm.wala.util.debug.Trace;
-
-import com.ibm.wala.util.collections.*;
-
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.util.warnings.WarningSet;
-
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 
 import junit.framework.Assert;
+
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.util.collections.NonNullSingletonIterator;
+import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.warnings.WarningSet;
 
 public abstract class TestCallGraphShape extends WalaTestCase {
 
@@ -47,7 +46,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
       Iterator NS = getNodes(CG, (String) assertionData[i][0]).iterator();
       while (NS.hasNext()) {
         CGNode N = (CGNode) NS.next();
-        IR ir = ((SSAContextInterpreter) CG.getInterpreter(N)).getIR(N, W);
+        IR ir = N.getIR(W);
         Name[] names = (Name[]) assertionData[i][1];
         for (int j = 0; j < names.length; j++) {
 
