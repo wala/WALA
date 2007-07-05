@@ -5,7 +5,6 @@ Bundle-SymbolicName: com.ibm.wala.cast.java.test
 Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.cast.java.test.TestPlugin
 Bundle-Vendor: IBM
-Bundle-Localization: plugin
 Require-Bundle: com.ibm.wala.core.tests,
  com.ibm.wala.cast.java,
  com.ibm.wala.cast,
