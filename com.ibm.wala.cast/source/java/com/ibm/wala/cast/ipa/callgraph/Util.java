@@ -47,7 +47,7 @@ public class Util {
     for (Iterator x = CG.iterator(); x.hasNext();) {
       CGNode N = (CGNode) x.next();
       Trace.println("\nIR of node " + N);
-      IR ir = ((SSAContextInterpreter) CG.getInterpreter(N)).getIR(N, builder.getWarnings());
+      IR ir = N.getIR(builder.getWarnings());
       if (ir != null) {
         Trace.println(ir);
       } else {
