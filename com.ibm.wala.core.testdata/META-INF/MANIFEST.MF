@@ -4,4 +4,3 @@ Bundle-Name: Testdata Plug-in
 Bundle-SymbolicName: com.ibm.wala.core.testdata
 Bundle-Version: 1.0.0
 Bundle-Vendor: IBM
-Bundle-Localization: plugin
