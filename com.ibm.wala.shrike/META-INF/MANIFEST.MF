@@ -4,7 +4,6 @@ Bundle-Name: Shrike Bytecode Manipulation Library
 Bundle-SymbolicName: com.ibm.wala.shrike
 Bundle-Version: 1.0.0
 Bundle-Vendor: WALA
-Bundle-Localization: plugin
 Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.annotations,
  com.ibm.wala.shrike.bench,

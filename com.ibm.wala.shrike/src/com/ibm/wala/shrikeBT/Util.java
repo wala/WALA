@@ -353,7 +353,7 @@ public final class Util {
   /**
    * Given a Java Method, compute the VM-style type signature.
    */
-  public static String computeSignature(Class[] params, Class<?> result) {
+  public static String computeSignature(Class<?>[] params, Class<?> result) {
     StringBuffer buf = new StringBuffer();
     buf.append("(");
     for (int i = 0; i < params.length; i++) {
@@ -402,7 +402,7 @@ public final class Util {
     }
   }
 
-  private static String makeName(String name, Class[] paramTypes) {
+  private static String makeName(String name, Class<?>[] paramTypes) {
     if (paramTypes == null) {
       return name;
     } else {
@@ -423,7 +423,7 @@ public final class Util {
     return findMethod(c, name, null);
   }
 
-  public static Method findMethod(Class<?> c, String name, Class[] paramTypes) {
+  public static Method findMethod(Class<?> c, String name, Class<?>[] paramTypes) {
     if (c == null) {
       throw new IllegalArgumentException("c is null");
     }
@@ -447,14 +447,14 @@ public final class Util {
    * information is obtained using reflection.
    * @throws IllegalArgumentException  if name is null
    */
-  public static InvokeInstruction makeInvoke(Class<?> c, String name, Class[] paramTypes) {
+  public static InvokeInstruction makeInvoke(Class<?> c, String name, Class<?>[] paramTypes) {
     if (name == null) {
       throw new IllegalArgumentException("name is null");
     }
     InvokeInstruction result = null;
 
     if (name.equals("<init>")) {
-      Constructor[] cs = c.getConstructors();
+      Constructor<?>[] cs = c.getConstructors();
       for (int i = 0; i < cs.length; i++) {
         Constructor<?> con = cs[i];
         if (paramTypes == null || Arrays.equals(con.getParameterTypes(), paramTypes)) {
