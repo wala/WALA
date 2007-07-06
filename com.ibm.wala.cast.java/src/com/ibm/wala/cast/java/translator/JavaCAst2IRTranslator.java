@@ -214,8 +214,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       // N.B.: base class may actually ask to create a synthetic type to wrap
       // code bodies, so we may see other things than TYPE_ENTITY here.
       IClass owner =
-	loader.lookupClass(makeType(topEntity.getType()).getName(),
-			   loader().getClassHierarchy());
+	loader.lookupClass(makeType(topEntity.getType()).getName());
 
       if (owner == null) {
 	Assertions._assert(owner != null, makeType(topEntity.getType()).getName() + " not found in " + loader);
@@ -229,8 +228,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       CAstType.Method methodType= (Method) N.getType();
       CAstType owningType= methodType.getDeclaringType();
       IClass owner = 
-	loader.lookupClass(makeType(owningType).getName(),
-			   loader().getClassHierarchy());
+	loader.lookupClass(makeType(owningType).getName());
 
       if (owner == null) {
 	Assertions._assert(owner != null, makeType(owningType).getName().toString() + " not found in " + loader);
@@ -252,8 +250,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       CAstType.Method methodType= (Method) N.getType();
       CAstType owningType= methodType.getDeclaringType();
       IClass owner = 
-	loader.lookupClass(makeType(owningType).getName(),
-			   loader().getClassHierarchy());
+	loader.lookupClass(makeType(owningType).getName());
 
       if (owner == null) {
 	Assertions._assert(owner != null, makeType(owningType).getName().toString() + " not found in " + loader);
