@@ -27,7 +27,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * Test integrity of CFGs
@@ -45,12 +44,9 @@ public class CFGTest extends WalaTestCase {
     try {
       EJavaAnalysisScope escope = JavaScopeUtil.makePrimordialScope();
 
-      // generate a DOMO-consumable wrapper around the incoming scope object
       EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
       
-      // invoke DOMO to build a DOMO class hierarchy object
-      WarningSet warnings = new WarningSet();
-      ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+      ClassHierarchy cha = ClassHierarchy.make(scope);
 
       MethodReference mr = StringStuff.makeMethodReference(methodSig);
 
@@ -60,7 +56,7 @@ public class CFGTest extends WalaTestCase {
       }
       AnalysisOptions options = new AnalysisOptions();
       options.getSSAOptions().setUsePiNodes(true);
-      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions(), new WarningSet());
+      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
 
       ControlFlowGraph cfg = ir.getControlFlowGraph();
       try {

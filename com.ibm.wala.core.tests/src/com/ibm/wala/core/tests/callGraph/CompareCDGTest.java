@@ -41,7 +41,6 @@ import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 import com.ibm.wala.viz.DotUtil;
 
 /**
@@ -91,7 +90,7 @@ public class CompareCDGTest extends WalaTestCase {
       Trace.println(mref.toString());
       // if(app.equals("Application"))
       {
-        IR ir = n.getIR(new WarningSet());
+        IR ir = n.getIR();
         if (ir != null) {
           SSACFG cfg = ir.getControlFlowGraph();
           long startTime = System.currentTimeMillis();
@@ -372,21 +371,17 @@ public class CompareCDGTest extends WalaTestCase {
 
   /**
    * @param appJar
-   *          something like "c:/temp/testdata/java_cup.jar"
+   *            something like "c:/temp/testdata/java_cup.jar"
    * @return a call graph
    * @throws WalaException
-   * @throws ClassHierarchyException 
+   * @throws ClassHierarchyException
    */
   public static CallGraph buildCallGraphCommandLine(String appJar) throws WalaException, ClassHierarchyException {
     EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar);
 
-    // generate a DOMO-consumable wrapper around the incoming scope object
     EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
 
-    // TODO: return the warning set
-    // invoke DOMO to build a DOMO class hierarchy object
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
 
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
@@ -394,7 +389,7 @@ public class CompareCDGTest extends WalaTestCase {
     // //
     // build the call graph
     // //
-    CFABuilder builder = Util.makeZeroCFABuilder(options, cha, scope, warnings, null, null);
+    CFABuilder builder = Util.makeZeroCFABuilder(options, cha, scope, null, null);
     CallGraph cg = builder.makeCallGraph(options);
     return cg;
 
@@ -402,32 +397,31 @@ public class CompareCDGTest extends WalaTestCase {
 
   public void testJavaCup() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JAVA_CUP);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.JAVA_CUP_MAIN);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.JAVA_CUP_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    run(CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings));
+    run(CallGraphTestUtil.buildZeroCFA(options, cha, scope));
   }
 
   public void testBcelVerifier() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.BCEL);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
-        .makeMainEntrypoints(scope, cha, TestConstants.BCEL_VERIFIER_MAIN);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.BCEL_VERIFIER_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    run(CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings));
+    run(CallGraphTestUtil.buildZeroCFA(options, cha, scope));
   }
 
   public void testJLex() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JLEX);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.JLEX_MAIN);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
+        .makeMainEntrypoints(scope, cha, TestConstants.JLEX_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    run(CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings));
+    run(CallGraphTestUtil.buildZeroCFA(options, cha, scope));
   }
 }

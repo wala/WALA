@@ -18,7 +18,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * A test of support for source file mapping
@@ -35,7 +34,7 @@ public class SourceMapTest extends WalaTestCase {
     scope = new EMFScopeWrapper(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
     // see feature 38676
-    ClassHierarchy cha = ClassHierarchy.make(scope, new WarningSet());
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     TypeReference t = TypeReference.findOrCreate(scope.getApplicationLoader(), TestConstants.HELLO_MAIN);
     IClass klass = cha.lookupClass(t);
     assertTrue("failed to load " + t, klass != null);
@@ -49,7 +48,7 @@ public class SourceMapTest extends WalaTestCase {
     scope = new EMFScopeWrapper(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
     // open a feature to fix this
-    ClassHierarchy cha = ClassHierarchy.make(scope, new WarningSet());
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     TypeReference t = TypeReference.findOrCreate(scope.getPrimordialLoader(), CLASS_IN_PRIMORDIAL_JAR);
     IClass klass = cha.lookupClass(t);
     assertTrue(klass != null);

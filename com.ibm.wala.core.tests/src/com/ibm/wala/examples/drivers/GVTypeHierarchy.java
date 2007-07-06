@@ -32,7 +32,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.GVUtil;
 
@@ -74,7 +73,7 @@ public class GVTypeHierarchy {
       } else {
         ExportTypeHierarchyToXML.validateCommandLine(args);
         String classpath = args[ExportTypeHierarchyToXML.CLASSPATH_INDEX];
-        th = ExportTypeHierarchyToXML.buildTypeHierarchy(classpath, new WarningSet());
+        th = ExportTypeHierarchyToXML.buildTypeHierarchy(classpath);
       }
 
       Graph<EObject> g = typeHierarchy2Graph(th);

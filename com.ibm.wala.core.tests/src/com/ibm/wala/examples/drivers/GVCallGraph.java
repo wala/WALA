@@ -31,7 +31,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.GVUtil;
 
@@ -109,13 +108,8 @@ public class GVCallGraph {
       escope.setExclusionFileName(exclusionFile);
     }
 
-    // generate a DOMO-consumable wrapper around the incoming scope object
     EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
-
-    // TODO: return the warning set (need a CAPA type)
-    // invoke DOMO to build a DOMO class hierarchy object
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
 
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
@@ -123,7 +117,7 @@ public class GVCallGraph {
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cha, scope, warnings, null, null);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cha, scope, null, null);
     CallGraph cg = builder.makeCallGraph(options);
 
     Graph<CGNode> g = pruneForAppLoader(cg);

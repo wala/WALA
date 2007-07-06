@@ -27,7 +27,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * Check properties of a call to clone() in RTA
@@ -39,14 +38,13 @@ public class CloneTest extends WalaTestCase {
   public void testClone() throws ClassHierarchyException {
 
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraph cg = CallGraphTestUtil.buildRTA(options, cha, scope, warnings);
+    CallGraph cg = CallGraphTestUtil.buildRTA(options, cha, scope);
 
-    // Find node corresp. to java.text.MessageFormat.clone()
+    // Find node corresponding to java.text.MessageFormat.clone()
     TypeReference t = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/text/MessageFormat");
     MethodReference m = MethodReference.findOrCreate(t, "clone", "()Ljava/lang/Object;");
     CGNode node = (CGNode) cg.getNodes(m).iterator().next();

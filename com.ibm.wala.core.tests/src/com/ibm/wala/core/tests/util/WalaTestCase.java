@@ -15,6 +15,7 @@ import junit.framework.TestSuite;
 
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.heapTrace.HeapTracer;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * 
@@ -55,6 +56,7 @@ public abstract class WalaTestCase extends TestCase {
    * @see junit.framework.TestCase#tearDown()
    */
   protected void tearDown() throws Exception {
+    Warnings.clear();
     if (baseTraceFile != null) {
       Trace.setTraceFile(baseTraceFile);
     }

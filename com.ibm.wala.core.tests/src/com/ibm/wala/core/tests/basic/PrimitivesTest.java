@@ -27,7 +27,24 @@ import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.BFSPathFinder;
 import com.ibm.wala.util.graph.traverse.BoundedBFSIterator;
-import com.ibm.wala.util.intset.*;
+import com.ibm.wala.util.intset.BasicNaturalRelation;
+import com.ibm.wala.util.intset.BimodalMutableIntSetFactory;
+import com.ibm.wala.util.intset.BitVector;
+import com.ibm.wala.util.intset.BitVectorBase;
+import com.ibm.wala.util.intset.BitVectorIntSetFactory;
+import com.ibm.wala.util.intset.IBinaryNaturalRelation;
+import com.ibm.wala.util.intset.IntPair;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
+import com.ibm.wala.util.intset.IntegerUnionFind;
+import com.ibm.wala.util.intset.MutableIntSet;
+import com.ibm.wala.util.intset.MutableIntSetFactory;
+import com.ibm.wala.util.intset.MutableSharedBitVectorIntSetFactory;
+import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
+import com.ibm.wala.util.intset.OffsetBitVector;
+import com.ibm.wala.util.intset.SemiSparseMutableIntSet;
+import com.ibm.wala.util.intset.SemiSparseMutableIntSetFactory;
+import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
  * 

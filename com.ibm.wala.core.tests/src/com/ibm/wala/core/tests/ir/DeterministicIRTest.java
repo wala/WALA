@@ -31,7 +31,7 @@ import com.ibm.wala.util.ImmutableByteArray;
 import com.ibm.wala.util.UTF8Convert;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * Test that the SSA-numbering of variables in the IR is deterministic.
@@ -44,8 +44,6 @@ public class DeterministicIRTest extends WalaTestCase {
 
   private static final ClassLoader MY_CLASSLOADER = DeterministicIRTest.class.getClassLoader();
 
-  private WarningSet warnings;
-
   private AnalysisScope scope;
 
   private ClassHierarchy cha;
@@ -56,35 +54,22 @@ public class DeterministicIRTest extends WalaTestCase {
     justThisTest(DeterministicIRTest.class);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see junit.framework.TestCase#setUp()
-   */
   protected void setUp() throws Exception {
 
-    warnings = new WarningSet();
     scope = new EMFScopeWrapper(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
-    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions(), warnings);
-
-    warnings = new WarningSet();
+    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions() );
 
     try {
-      cha = ClassHierarchy.make(scope, factory, warnings);
+      cha = ClassHierarchy.make(scope, factory);
     } catch (ClassHierarchyException e) {
       throw new Exception();
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see junit.framework.TestCase#tearDown()
-   */
   protected void tearDown() throws Exception {
-    warnings = null;
+    Warnings.clear();
     scope = null;
     cha = null;
     super.tearDown();
@@ -97,7 +82,7 @@ public class DeterministicIRTest extends WalaTestCase {
     assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
     assertNotNull("imethod not found", imethod);
-    IR ir1 = options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions(), warnings);
+    IR ir1 = options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions() );
     options.getSSACache().wipe();
 
     checkNotAllNull(ir1.getInstructions());
@@ -110,7 +95,7 @@ public class DeterministicIRTest extends WalaTestCase {
       assertTrue("unsound CFG for ir1", false);
     }
 
-    IR ir2 = options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions(), warnings);
+    IR ir2 = options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     options.getSSACache().wipe();
 
     try {

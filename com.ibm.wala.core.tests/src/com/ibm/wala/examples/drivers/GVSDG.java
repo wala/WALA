@@ -39,7 +39,6 @@ import com.ibm.wala.util.graph.NodeDecorator;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.GVUtil;
 
@@ -108,12 +107,11 @@ public class GVSDG {
 
       // generate a WALA-consumable wrapper around the incoming scope object
       EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
-      WarningSet warnings = new WarningSet();
-      ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+      ClassHierarchy cha = ClassHierarchy.make(scope);
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-      CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cha, scope, warnings);
+      CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cha, scope);
       CallGraph cg = builder.makeCallGraph(options);
       SDG sdg = new SDG(cg,builder.getPointerAnalysis(), dOptions, cOptions);
       try {

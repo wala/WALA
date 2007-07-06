@@ -28,7 +28,6 @@ import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -64,11 +63,9 @@ public class ExportTypeHierarchyToXML {
       String classpath = args[CLASSPATH_INDEX];
       
       System.err.println("build type hierarchy...");
-      WarningSet warnings = new WarningSet();
-      ETypeHierarchy th = buildTypeHierarchy(classpath, warnings);
+      ETypeHierarchy th = buildTypeHierarchy(classpath);
       if (th.getClasses().getNodes().getContents().size() <1) {
         System.err.println("PANIC: type hierarchy # classes=" + th.getClasses().getNodes().getContents().size());
-        System.err.println(warnings.toString());
         System.exit(-1);
       }
      
@@ -82,8 +79,6 @@ public class ExportTypeHierarchyToXML {
         System.err.println("ERROR: The type hierarchy in " + ExportTypeHierarchyToXML.getFileName() + " has no nodes from the Application loader");
         System.err.println("Probably something's wrong with the input jars being analyzed.");
         System.err.println("check the files in the path: " + classpath);
-        System.err.println("Also look at these warning messages:");
-        System.err.println(warnings.toString());
         System.exit(-1);
       }
 
@@ -124,14 +119,14 @@ public class ExportTypeHierarchyToXML {
     return file;
   }
 
-  public static ETypeHierarchy buildTypeHierarchy(String classpath, WarningSet warnings) throws WalaException {
+  public static ETypeHierarchy buildTypeHierarchy(String classpath) throws WalaException {
     EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(classpath);
     
     // generate a WALA-consumable wrapper around the incoming scope object
     EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
     
     // invoke WALA to build a class hierarchy
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     
     // Export the class hierarchy object to an EMF TypeHierarchy object
     com.ibm.wala.emf.wrappers.ETypeHierarchyWrapper t1 = EMFBridge.makeTypeHierarchy(cha);

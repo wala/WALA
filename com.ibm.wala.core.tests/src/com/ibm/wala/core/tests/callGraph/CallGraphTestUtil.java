@@ -20,7 +20,6 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.Stopwatch;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -52,11 +51,11 @@ public class CallGraphTestUtil {
     return new EMFScopeWrapper(scopeFile, exclusionsFile, MY_CLASSLOADER);
   }
 
-  public static CallGraph buildRTA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope, WarningSet warnings) {
+  public static CallGraph buildRTA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope) {
     Stopwatch S = new Stopwatch("build RTA graph");
     S.start();
 
-    CallGraphBuilder builder = Util.makeRTABuilder(options, cha, scope, warnings);
+    CallGraphBuilder builder = Util.makeRTABuilder(options, cha, scope);
     CallGraph cg = builder.makeCallGraph(options);
 
     S.stop();
@@ -64,11 +63,11 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroCFA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope, WarningSet warnings) {
+  public static CallGraph buildZeroCFA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope) {
     Stopwatch S = new Stopwatch("build ZeroCFA graph");
     S.start();
 
-    CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cha, scope, warnings);
+    CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cha, scope);
     CallGraph cg = builder.makeCallGraph(options);
 
     S.stop();
@@ -76,11 +75,11 @@ public class CallGraphTestUtil {
     return cg;
   }
   
-  public static CallGraph buildVanillaZeroOneCFA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope, WarningSet warnings) {
+  public static CallGraph buildVanillaZeroOneCFA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope) {
     Stopwatch S = new Stopwatch("build Vanila 0-1-CFA graph");
     S.start();
 
-    CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, cha, scope, warnings);
+    CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, cha, scope);
     CallGraph cg = builder.makeCallGraph(options);
 
     S.stop();
@@ -88,11 +87,11 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroOneCFA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope, WarningSet warnings) {
+  public static CallGraph buildZeroOneCFA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope) {
     Stopwatch S = new Stopwatch("build 0-1-CFA graph");
     S.start();
 
-    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cha, scope, warnings);
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cha, scope);
     CallGraph cg = builder.makeCallGraph(options);
 
     S.stop();
@@ -100,12 +99,11 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroContainerCFA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
-      WarningSet warnings) {
+  public static CallGraph buildZeroContainerCFA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope) {
     Stopwatch S = new Stopwatch("build 0-1-Container-CFA graph");
     S.start();
 
-    CallGraphBuilder builder = Util.makeZeroContainerCFABuilder(options, cha, scope, warnings);
+    CallGraphBuilder builder = Util.makeZeroContainerCFABuilder(options, cha, scope);
     CallGraph cg = builder.makeCallGraph(options);
 
     S.stop();
@@ -113,12 +111,11 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroOneContainerCFA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope,
-      WarningSet warnings) {
+  public static CallGraph buildZeroOneContainerCFA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope) {
     Stopwatch S = new Stopwatch("build 0-1-Container-CFA graph");
     S.start();
 
-    CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cha, scope, warnings);
+    CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cha, scope);
     CallGraph cg = builder.makeCallGraph(options);
 
     S.stop();
@@ -126,11 +123,11 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildOneCFA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope, WarningSet warnings) {
+  public static CallGraph buildOneCFA(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope) {
     Stopwatch S = new Stopwatch("build 1-CFA graph");
     S.start();
 
-    CallGraphBuilder builder = Util.makeOneCFABuilder(options, cha, MY_CLASSLOADER, scope, warnings);
+    CallGraphBuilder builder = Util.makeOneCFABuilder(options, cha, MY_CLASSLOADER, scope);
     CallGraph cg = builder.makeCallGraph(options);
 
     S.stop();

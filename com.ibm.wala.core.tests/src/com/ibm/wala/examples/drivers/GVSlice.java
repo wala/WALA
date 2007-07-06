@@ -50,7 +50,6 @@ import com.ibm.wala.util.graph.NodeDecorator;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.GVUtil;
 
@@ -147,13 +146,12 @@ public class GVSlice {
       // create an analysis scope representing the appJar as a J2SE application
       EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar);
       EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
-      WarningSet warnings = new WarningSet();
 
       // build a class hierarchy, call graph, and system dependence graph
-      ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+      ClassHierarchy cha = ClassHierarchy.make(scope);
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-      CallGraphBuilder builder = Util.makeVanillaZeroOneContainerCFABuilder(options, cha, scope, warnings);
+      CallGraphBuilder builder = Util.makeVanillaZeroOneContainerCFABuilder(options, cha, scope);
       CallGraph cg = builder.makeCallGraph(options);
       SDG sdg = new SDG(cg, builder.getPointerAnalysis(), dOptions, cOptions);
 

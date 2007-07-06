@@ -51,8 +51,7 @@ import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.graph.traverse.DFS;
-import com.ibm.wala.util.warnings.CallGraphWarnings;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * 
@@ -128,59 +127,45 @@ public class CallGraphTest extends WalaTestCase {
 
   public void testBcelVerifier() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.BCEL);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
-        .makeMainEntrypoints(scope, cha, TestConstants.BCEL_VERIFIER_MAIN);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.BCEL_VERIFIER_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-
-    Trace.println("bcel verifier set up warnings:\n");
-    Trace.print(warnings.toString());
 
     doCallGraphs(options, cha, scope, null, useShortProfile(), false);
   }
 
   public void testJava_cup() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JAVA_CUP);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.JAVA_CUP_MAIN);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.JAVA_CUP_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-
-    Trace.println("java_cup set up warnings:\n");
-    Trace.print(warnings.toString());
 
     doCallGraphs(options, cha, scope, null, useShortProfile(), false);
   }
 
   public void testJLex() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JLEX);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.JLEX_MAIN);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
+        .makeMainEntrypoints(scope, cha, TestConstants.JLEX_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-
-    Trace.println("JLex set up warnings:\n");
-    Trace.print(warnings.toString());
 
     doCallGraphs(options, cha, scope, null, useShortProfile(), false);
   }
 
   public void testCornerCases() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    Trace.println("testCornerCases set up warnings:\n");
-    Trace.print(warnings.toString());
-
-    warnings = doCallGraphs(options, cha, scope, null, useShortProfile(), false);
+    doCallGraphs(options, cha, scope, null, useShortProfile(), false);
 
     // we expect a warning or two about class Abstract1, which has no concrete
     // subclasses
-    String ws = warnings.toString();
+    String ws = Warnings.asString();
     assertTrue("failed to report a warning about Abstract1", ws.indexOf("cornerCases/Abstract1") > -1);
 
     // we do not expect a warning about class Abstract2, which has a concrete
@@ -212,54 +197,40 @@ public class CallGraphTest extends WalaTestCase {
   //
   public void testHello() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.HELLO);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.HELLO_MAIN);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.HELLO_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-
-    Trace.println("hello set up warnings:\n");
-    Trace.print(warnings.toString());
 
     doCallGraphs(options, cha, scope, null, false, false);
   }
 
   public void testRecursion() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.RECURSE_MAIN);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.RECURSE_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-
-    Trace.println("testRecursion set up warnings:\n");
-    Trace.print(warnings.toString());
 
     doCallGraphs(options, cha, scope, null, useShortProfile(), false);
   }
 
   public void testHelloAllEntrypoints() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.HELLO);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-
-    Trace.println("hello all entrypoints set up warnings:\n");
-    Trace.print(warnings.toString());
 
     doCallGraphs(options, cha, scope, null, useShortProfile(), false);
   }
 
   public void testIO() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.xml", "GUIExclusions.xml");
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = makePrimordialPublicEntrypoints(scope, cha, "java/io");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    Trace.println("primordial set up warnings:\n");
-    Trace.print(warnings.toString());
-
-    CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings);
+    CallGraphTestUtil.buildZeroCFA(options, cha, scope);
   }
 
   public static Iterable<Entrypoint> makePrimordialPublicEntrypoints(AnalysisScope scope, ClassHierarchy cha, String pkg) {
@@ -288,15 +259,11 @@ public class CallGraphTest extends WalaTestCase {
     }
 
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.xml", "GUIExclusions.xml");
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = makePrimordialMainEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    Trace.println("primordial set up warnings:\n");
-    Trace.print(warnings.toString());
-
-    CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings);
+    CallGraphTestUtil.buildZeroCFA(options, cha, scope);
   }
 
   /**
@@ -337,14 +304,13 @@ public class CallGraphTest extends WalaTestCase {
   /**
    * TODO: refactor this to avoid excessive code bloat.
    */
-  public static WarningSet doCallGraphs(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope, String dcgFile,
+  public static void doCallGraphs(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope, String dcgFile,
       boolean stopAfterZeroCFA, boolean stopAfterZeroContainerCFA) {
 
     // ///////////////
     // // RTA /////
     // ///////////////
-    WarningSet warnings = new WarningSet();
-    CallGraph cg = CallGraphTestUtil.buildRTA(options, cha, scope, warnings);
+    CallGraph cg = CallGraphTestUtil.buildRTA(options, cha, scope);
     try {
       GraphIntegrity.check(cg);
     } catch (UnsoundGraphException e1) {
@@ -355,19 +321,16 @@ public class CallGraphTest extends WalaTestCase {
     Trace.println("RTA methods reached: " + rtaMethods.size());
     Trace.println(CallGraphStats.getStats(cg));
     Trace.println("RTA warnings:\n");
-    warnings.addAll(CallGraphWarnings.getWarnings(cg));
-    Trace.print(warnings.toString(cg));
 
     // ///////////////
     // // 0-CFA /////
     // ///////////////
-    warnings = new WarningSet();
-    cg = CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings);
+    cg = CallGraphTestUtil.buildZeroCFA(options, cha, scope);
 
     // FIXME: annoying special cases caused by clone2assign mean using
     // the rta graph for proper graph subset checking does not work.
     // (note that all the other such checks do use proper graph subset)
-    Graph<MethodReference> squashZero = checkCallGraph(warnings, cg, null, rtaMethods, "0-CFA");
+    Graph<MethodReference> squashZero = checkCallGraph(cg, null, rtaMethods, "0-CFA");
 
     // test Pretransitive 0-CFA
     // not currently supported
@@ -381,32 +344,29 @@ public class CallGraphTest extends WalaTestCase {
     // checkCallGraph(warnings, cg, squashPT, null, "Pre-T 2");
 
     if (stopAfterZeroCFA) {
-      return warnings;
+      return;
     }
     // ///////////////
     // // 0-1-CFA ///
     // ///////////////
-    warnings = new WarningSet();
-    cg = CallGraphTestUtil.buildZeroOneCFA(options, cha, scope, warnings);
-    Graph<MethodReference> squashZeroOne = checkCallGraph(warnings, cg, squashZero, null, "0-1-CFA");
+    cg = CallGraphTestUtil.buildZeroOneCFA(options, cha, scope);
+    Graph<MethodReference> squashZeroOne = checkCallGraph(cg, squashZero, null, "0-1-CFA");
 
     // ///////////////////////////////////////////////////
     // // 0-CFA augmented to disambiguate containers ///
     // ///////////////////////////////////////////////////
-    warnings = new WarningSet();
-    cg = CallGraphTestUtil.buildZeroContainerCFA(options, cha, scope, warnings);
-    Graph<MethodReference> squashZeroContainer = checkCallGraph(warnings, cg, squashZero, null, "0-Container-CFA");
+    cg = CallGraphTestUtil.buildZeroContainerCFA(options, cha, scope);
+    Graph<MethodReference> squashZeroContainer = checkCallGraph(cg, squashZero, null, "0-Container-CFA");
 
     if (stopAfterZeroContainerCFA)
-      return warnings;
+      return;
 
     // ///////////////////////////////////////////////////
     // // 0-1-CFA augmented to disambiguate containers ///
     // ///////////////////////////////////////////////////
-    warnings = new WarningSet();
-    cg = CallGraphTestUtil.buildZeroOneContainerCFA(options, cha, scope, warnings);
-    checkCallGraph(warnings, cg, squashZeroContainer, null, "0-1-Container-CFA");
-    checkCallGraph(warnings, cg, squashZeroOne, null, "0-1-Container-CFA");
+    cg = CallGraphTestUtil.buildZeroOneContainerCFA(options, cha, scope);
+    checkCallGraph(cg, squashZeroContainer, null, "0-1-Container-CFA");
+    checkCallGraph(cg, squashZeroOne, null, "0-1-Container-CFA");
 
     if (dcgFile != null) {
       checkAgainstDCG(cg, dcgFile);
@@ -414,7 +374,7 @@ public class CallGraphTest extends WalaTestCase {
 
     // test ICFG
     checkICFG(cg);
-    return warnings;
+    return;
     // /////////////
     // // 1-CFA ///
     // /////////////
@@ -429,7 +389,7 @@ public class CallGraphTest extends WalaTestCase {
    * @param cg
    */
   private static void checkICFG(CallGraph cg) {
-    InterproceduralCFG icfg = new InterproceduralCFG(cg,new WarningSet());
+    InterproceduralCFG icfg = new InterproceduralCFG(cg);
 
     try {
       GraphIntegrity.check(icfg);
@@ -517,9 +477,9 @@ public class CallGraphTest extends WalaTestCase {
    * <ul>
    * 
    * @param G
-   *          an EMF format call graph
+   *            an EMF format call graph
    * @param synthetic
-   *          a set of synthetic methods
+   *            a set of synthetic methods
    */
   private static void prune(ECallGraphWrapper G, Set<CGNode> synthetic) {
     // compute synthetic nodes
@@ -601,14 +561,14 @@ public class CallGraphTest extends WalaTestCase {
    * subset of a super-graph
    * 
    * @param warnings
-   *          object to track warnings
+   *            object to track warnings
    * @param cg
    * @param superCG
    * @param superMethods
    * @param thisAlgorithm
    * @return a squashed version of cg
    */
-  private static Graph<MethodReference> checkCallGraph(WarningSet warnings, CallGraph cg, Graph<MethodReference> superCG,
+  private static Graph<MethodReference> checkCallGraph(CallGraph cg, Graph<MethodReference> superCG,
       Set<MethodReference> superMethods, String thisAlgorithm) {
     try {
       GraphIntegrity.check(cg);
@@ -618,9 +578,6 @@ public class CallGraphTest extends WalaTestCase {
     Set<MethodReference> callGraphMethods = CallGraphStats.collectMethods(cg);
     Trace.println(thisAlgorithm + " methods reached: " + callGraphMethods.size());
     Trace.println(CallGraphStats.getStats(cg));
-    Trace.println(thisAlgorithm + " warnings:\n");
-    warnings.addAll(CallGraphWarnings.getWarnings(cg));
-    Trace.print(warnings.toString(cg));
 
     Graph<MethodReference> thisCG = com.ibm.wala.ipa.callgraph.impl.Util.squashCallGraph(thisAlgorithm, cg);
 

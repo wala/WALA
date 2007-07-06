@@ -33,7 +33,6 @@ import com.ibm.wala.util.ImmutableByteArray;
 import com.ibm.wala.util.UTF8Convert;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * Test IR's getLocalNames.
@@ -42,8 +41,6 @@ public class LocalNamesTest extends WalaTestCase {
 
   private static final ClassLoader MY_CLASSLOADER = LocalNamesTest.class.getClassLoader();
   
-  private WarningSet warnings;
-
   private AnalysisScope scope;
 
   private ClassHierarchy cha;
@@ -61,16 +58,13 @@ public class LocalNamesTest extends WalaTestCase {
    */
   protected void setUp() throws Exception {
 
-    warnings = new WarningSet();
     scope = new EMFScopeWrapper(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
-    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions(), warnings);
-
-    warnings = new WarningSet();
+    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions() );
 
     try {
-      cha = ClassHierarchy.make(scope, factory, warnings);
+      cha = ClassHierarchy.make(scope, factory);
     } catch (ClassHierarchyException e) {
       throw new Exception();
     }
@@ -82,7 +76,6 @@ public class LocalNamesTest extends WalaTestCase {
    * @see junit.framework.TestCase#tearDown()
    */
   protected void tearDown() throws Exception {
-    warnings = null;
     scope = null;
     cha = null;
     super.tearDown();
@@ -94,8 +87,7 @@ public class LocalNamesTest extends WalaTestCase {
   public void testAliasNames() {
     try {
       AnalysisScope scope = new EMFScopeWrapper(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
-      WarningSet warnings = new WarningSet();
-      ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+      ClassHierarchy cha = ClassHierarchy.make(scope);
       TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "AliasNames");
       IClass klass = cha.lookupClass(t);
       assertTrue(klass != null);
@@ -103,7 +95,7 @@ public class LocalNamesTest extends WalaTestCase {
 
       AnalysisOptions options = new AnalysisOptions();
       options.getSSAOptions().setUsePiNodes(true);
-      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions(), new WarningSet());
+      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions() );
 
       for (int offsetIndex = 0; offsetIndex < ir.getInstructions().length; offsetIndex++) {
         SSAInstruction instr = ir.getInstructions()[offsetIndex];
@@ -129,7 +121,7 @@ public class LocalNamesTest extends WalaTestCase {
     assertNotNull("method not found", mref);
     IMethod imethod = cha.resolveMethod(mref);
     assertNotNull("imethod not found", imethod);
-    IR ir =  options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions(), warnings);
+    IR ir =  options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     options.getSSAOptions().setUsePiNodes(save);
   
     // v1 should be the parameter "a" at pc 0
@@ -157,7 +149,7 @@ public class LocalNamesTest extends WalaTestCase {
     assertNotNull("method not found", mref);
     IMethod imethod = cha.resolveMethod(mref);
     assertNotNull("imethod not found", imethod);
-    IR ir =  options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions(), warnings);
+    IR ir =  options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     options.getSSAOptions().setUsePiNodes(save);
   
     // v1 should be the parameter "a" at pc 0

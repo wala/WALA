@@ -24,7 +24,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * Test ClassHierarchy.getPossibleTargets
@@ -33,7 +32,6 @@ public class GetTargetsTest extends WalaTestCase {
 
   private static final ClassLoader MY_CLASSLOADER = GetTargetsTest.class.getClassLoader();
 
-  private WarningSet warnings;
   private AnalysisScope scope;
   private ClassHierarchy cha;
 
@@ -41,22 +39,14 @@ public class GetTargetsTest extends WalaTestCase {
     justThisTest(GetTargetsTest.class);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see junit.framework.TestCase#setUp()
-   */
   protected void setUp() throws Exception {
 
-    warnings = new WarningSet();
     scope = new EMFScopeWrapper(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
 
-    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions(), warnings);
-
-    warnings = new WarningSet();
+    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions() );
 
     try {
-      cha = ClassHierarchy.make(scope, factory, warnings);
+      cha = ClassHierarchy.make(scope, factory);
     } catch (ClassHierarchyException e) {
       throw new Exception();
     }
@@ -68,7 +58,6 @@ public class GetTargetsTest extends WalaTestCase {
    * @see junit.framework.TestCase#tearDown()
    */
   protected void tearDown() throws Exception {
-    warnings = null;
     scope = null;
     cha = null;
     super.tearDown();

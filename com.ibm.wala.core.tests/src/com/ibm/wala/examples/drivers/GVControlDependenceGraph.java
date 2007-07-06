@@ -28,7 +28,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.StringStuff;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.GVUtil;
 import com.ibm.wala.viz.GhostviewUtil;
@@ -82,12 +81,8 @@ public class GVControlDependenceGraph {
       }
       EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar);
 
-      // generate a DOMO-consumable wrapper around the incoming scope object
       EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
-
-      // invoke DOMO to build a DOMO class hierarchy object
-      WarningSet warnings = new WarningSet();
-      ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+      ClassHierarchy cha = ClassHierarchy.make(scope);
 
       MethodReference mr = StringStuff.makeMethodReference(methodSig);
 
@@ -97,7 +92,7 @@ public class GVControlDependenceGraph {
       }
       AnalysisOptions options = new AnalysisOptions();
       options.getSSAOptions().setUsePiNodes(true);
-      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions(), new WarningSet());
+      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions() );
 
       if (ir == null) {
         Assertions.UNREACHABLE("Null IR for " + m);

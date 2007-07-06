@@ -19,10 +19,9 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * 
@@ -43,19 +42,13 @@ public class ReflectionTest extends WalaTestCase {
 
   public void testReflect1() throws WalaException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.REFLECT1_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    Trace.println("testReflect1 set up warnings:\n");
-    Trace.print(warnings.toString());
-
-    warnings = CallGraphTest.doCallGraphs(options, cha, scope, null, useShortProfile(), false);
-    if (warnings.size() > 0) {
-      System.err.println(warnings);
-    }
-    for (Iterator<Warning> it = warnings.iterator(); it.hasNext(); ) {
+    Warnings.clear();
+    CallGraphTest.doCallGraphs(options, cha, scope, null, useShortProfile(), false);
+    for (Iterator<Warning> it = Warnings.iterator(); it.hasNext(); ) {
       Warning w = (Warning)it.next();
       if (w.toString().indexOf("com/ibm/jvm") > 0) {
         continue;

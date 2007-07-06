@@ -40,7 +40,6 @@ import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * This simple example application builds a call graph writes it to an XML file
@@ -79,14 +78,9 @@ public class ExportCallGraphToXML {
 
       EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar);
 
-      // generate a DOMO-consumable wrapper around the incoming scope object
       EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
-
-      // TODO: return the warning set (need a CAPA type)
-      // invoke DOMO to build a DOMO class hierarchy object
-      WarningSet warnings = new WarningSet();
       System.err.println("Build class hierarchy...");
-      ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+      ClassHierarchy cha = ClassHierarchy.make(scope);
 
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
       AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
@@ -95,7 +89,7 @@ public class ExportCallGraphToXML {
       // build the call graph
       // //
       System.err.println("Build callgraph...");
-      com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cha, scope, warnings, null, null);
+      com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cha, scope, null, null);
       CallGraph cg = builder.makeCallGraph(options);
 
       System.err.println("Convert to EMF...");

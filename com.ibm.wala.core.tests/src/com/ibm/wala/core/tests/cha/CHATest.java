@@ -37,7 +37,6 @@ import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * @author sfink
@@ -67,8 +66,7 @@ public class CHATest extends WalaTestCase {
     System.err.println("build ...");
     // build a class hierarchy for the primordial loader
     AnalysisScope scope = new EMFScopeWrapper(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     com.ibm.wala.emf.wrappers.ETypeHierarchyWrapper t1 = EMFBridge.makeTypeHierarchy(cha);
     System.err.println("save ...");
     // save it to disk

@@ -33,7 +33,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * @author Julian Dolby
@@ -74,14 +73,12 @@ public class PiNodeCallGraphTest extends WalaTestCase {
 
   private CallGraph doGraph(boolean usePiNodes) throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.PI_TEST_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     options.getSSAOptions().setUsePiNodes(usePiNodes);
-    warnings = new WarningSet();
 
-    return CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings);
+    return CallGraphTestUtil.buildZeroCFA(options, cha, scope);
   }
 
   private void checkCallAssertions(CallGraph cg, int desiredNumberOfTargets, int desiredNumberOfCalls) {

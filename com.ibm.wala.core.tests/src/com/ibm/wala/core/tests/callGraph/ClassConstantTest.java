@@ -28,7 +28,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * Check handling of class constants (test for part of 1.5 support)
@@ -40,10 +39,7 @@ public class ClassConstantTest extends WalaTestCase {
   public void testClassConstants() throws ClassHierarchyException {
 
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
-    Trace.println("setup warnings:");
-    Trace.println(warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
 
     // make sure we have the test class
     TypeReference mainClassRef = TypeReference.findOrCreate(ClassLoaderReference.Application, TestConstants.CLASSCONSTANT_MAIN);
@@ -52,7 +48,7 @@ public class ClassConstantTest extends WalaTestCase {
     // make call graph
     Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, TestConstants.CLASSCONSTANT_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, cha, scope, warnings);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, cha, scope);
     Trace.println("\nCall graph:");
     Trace.println(cg);
 
@@ -62,7 +58,7 @@ public class ClassConstantTest extends WalaTestCase {
     Assert.assertFalse(mainMethodNodes.isEmpty());
     CGNode mainMethodNode = (CGNode) mainMethodNodes.iterator().next();
     Trace.println("main IR:");
-    Trace.println(mainMethodNode.getIR(warnings));
+    Trace.println(mainMethodNode.getIR());
 
     // Make sure call to hashCode is there (it uses the class constant)
     TypeReference classRef = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Class");

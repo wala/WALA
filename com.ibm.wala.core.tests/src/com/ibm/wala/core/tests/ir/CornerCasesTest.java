@@ -27,8 +27,6 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * tests for weird corner cases, such as when the input program doesn't verify
@@ -48,14 +46,12 @@ public class CornerCasesTest extends WalaTestCase {
   public void testBug38484() throws ClassHierarchyException {
     AnalysisScope scope = null;
     scope = new EMFScopeWrapper(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "YuckyInterface");
     IClass klass = cha.lookupClass(t);
     assertTrue(klass != null);
     IMethod m = klass.getMethod(new Selector(Atom.findOrCreateAsciiAtom("x"), Descriptor.findOrCreateUTF8("()V")));
     assertTrue(m == null);
-    Trace.print(warnings.toString());
   }
 
   /**
@@ -68,18 +64,15 @@ public class CornerCasesTest extends WalaTestCase {
     AnalysisScope scope = null;
     scope = new EMFScopeWrapper(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
     AnalysisOptions options = new AnalysisOptions();
-    WarningSet warnings = new WarningSet();
-    ClassHierarchy cha = ClassHierarchy.make(scope, warnings);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
     TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "Main");
     IClass klass = cha.lookupClass(t);
     assertTrue(klass != null);
     ShrikeCTMethod m = (ShrikeCTMethod) klass.getMethod(new Selector(Atom.findOrCreateAsciiAtom("foo"), Descriptor
         .findOrCreateUTF8("()Ljava/lang/Object;")));
     assertTrue(m != null);
-    IR ir = options.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, options.getSSAOptions(), warnings);
+    IR ir = options.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
     new TypeInference(ir);
-
-    Trace.print(warnings.toString());
   }
 
 }
