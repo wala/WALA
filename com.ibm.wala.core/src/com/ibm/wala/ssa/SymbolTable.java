@@ -298,6 +298,13 @@ public class SymbolTable {
     return (String) ((ConstantValue) values[v]).getValue();
   }
 
+  public float getFloatValue(int v) throws IllegalArgumentException {
+    if (!isNumberConstant(v)) {
+      throw new IllegalArgumentException("value number " + v + " is not a numeric constant.");
+    }
+    return ((Number) ((ConstantValue) values[v]).getValue()).floatValue();
+  }
+  
   public double getDoubleValue(int v) throws IllegalArgumentException {
     if (!isNumberConstant(v)) {
       throw new IllegalArgumentException("value number " + v + " is not a numeric constant.");
@@ -310,6 +317,13 @@ public class SymbolTable {
       throw new IllegalArgumentException("value number " + v + " is not a numeric constant.");
     }
     return ((Number) ((ConstantValue) values[v]).getValue()).intValue();
+  }
+
+  public long getLongValue(int v) throws IllegalArgumentException {
+    if (!isNumberConstant(v)) {
+      throw new IllegalArgumentException("value number " + v + " is not a numeric constant.");
+    }
+    return ((Number) ((ConstantValue) values[v]).getValue()).longValue();
   }
 
   public Object getConstantValue(int v) throws IllegalArgumentException{
