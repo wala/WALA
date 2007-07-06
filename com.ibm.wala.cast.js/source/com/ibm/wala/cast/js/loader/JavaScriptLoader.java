@@ -108,7 +108,7 @@ public class JavaScriptLoader implements IClassLoader {
         CAstSourcePositionMap.Position sourcePosition) {
       super(sourcePosition, classRef.getName(), loader, (short) 0, emptyMap2, emptyMap1);
       types.put(classRef.getName(), this);
-      superClass = superRef == null ? null : loader.lookupClass(superRef.getName(), cha);
+      superClass = superRef == null ? null : loader.lookupClass(superRef.getName());
     }
 
     public IClassHierarchy getClassHierarchy() {
@@ -321,7 +321,7 @@ public class JavaScriptLoader implements IClassLoader {
     return (IClass) types.get(TypeName.string2TypeName(className));
   }
 
-  public IClass lookupClass(TypeName className, IClassHierarchy cha) {
+  public IClass lookupClass(TypeName className) {
     return (IClass) types.get(className);
   }
 

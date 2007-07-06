@@ -18,7 +18,7 @@ import com.ibm.wala.ipa.cha.*;
 public class JavaScriptEntryPoints extends ScriptEntryPoints {
 
   public JavaScriptEntryPoints(IClassHierarchy cha, IClassLoader loader) {
-    super(cha, loader.lookupClass(JavaScriptTypes.Script.getName(), cha));
+    super(cha, loader.lookupClass(JavaScriptTypes.Script.getName()));
   }
     
 }
