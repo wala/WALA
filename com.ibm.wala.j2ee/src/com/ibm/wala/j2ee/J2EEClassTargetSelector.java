@@ -102,7 +102,7 @@ public class J2EEClassTargetSelector implements ClassTargetSelector {
     if (metaData.isContainerManaged(realRef) || metaData.isEJBInterface(realRef)) {
       if (realType.isAbstract() || realType.isInterface()) {
         TypeName syntheticName = BypassSyntheticClass.getName(realRef);
-        IClass result = bypassLoader.lookupClass(syntheticName, realType.getClassHierarchy());
+        IClass result = bypassLoader.lookupClass(syntheticName);
         if (result != null) {
           return result;
         } else {
