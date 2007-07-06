@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 
-import com.ibm.wala.cfg.CFGCache;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
