@@ -414,7 +414,7 @@ public class CallGraphTest extends WalaTestCase {
     }
 
     // test ICFG
-    checkICFG(cg, options.getCFGCache());
+    checkICFG(cg);
     return warnings;
     // /////////////
     // // 1-CFA ///
@@ -429,8 +429,8 @@ public class CallGraphTest extends WalaTestCase {
    * 
    * @param cg
    */
-  private static void checkICFG(CallGraph cg, CFGCache cfgCache) {
-    InterproceduralCFG icfg = new InterproceduralCFG(cg, cfgCache, new WarningSet());
+  private static void checkICFG(CallGraph cg) {
+    InterproceduralCFG icfg = new InterproceduralCFG(cg,new WarningSet());
 
     try {
       GraphIntegrity.check(icfg);

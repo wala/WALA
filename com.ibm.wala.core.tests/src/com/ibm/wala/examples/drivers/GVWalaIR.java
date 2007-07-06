@@ -33,13 +33,11 @@ import com.ibm.wala.viz.GhostviewUtil;
 /**
  * 
  * This simple example application builds a WALA IR and fires off ghostview to
- * viz a DOT representation.
+ * visualize a DOT representation.
  * 
  * @author sfink
  */
 public class GVWalaIR {
-
-  final public static boolean SANITIZE_CFG = false;
 
   final public static String PS_FILE = "ir.ps";
 
@@ -56,9 +54,10 @@ public class GVWalaIR {
 
   /**
    * @param args
-   *          -appJar [jar file name] -sig [method signature] The "jar file
-   *          name" should be something like "c:/temp/testdata/java_cup.jar" The
-   *          signature should be something like "java_cup.lexer.advance()V"
+   *            -appJar [jar file name] -sig [method signature] The "jar file
+   *            name" should be something like "c:/temp/testdata/java_cup.jar"
+   *            The signature should be something like
+   *            "java_cup.lexer.advance()V"
    */
   public static Process run(String[] args) {
     validateCommandLine(args);
@@ -67,9 +66,9 @@ public class GVWalaIR {
 
   /**
    * @param appJar
-   *          should be something like "c:/temp/testdata/java_cup.jar"
+   *            should be something like "c:/temp/testdata/java_cup.jar"
    * @param methodSig
-   *          should be something like "java_cup.lexer.advance()V"
+   *            should be something like "java_cup.lexer.advance()V"
    */
   public static Process run(String appJar, String methodSig) {
     try {
@@ -114,7 +113,7 @@ public class GVWalaIR {
       String dotExe = wp.getProperty(WalaExamplesProperties.DOT_EXE);
       String gvExe = wp.getProperty(WalaExamplesProperties.GHOSTVIEW_EXE);
 
-      return GhostviewUtil.ghostviewIR(cha, ir, SANITIZE_CFG, psFile, dotFile, dotExe, gvExe);
+      return GhostviewUtil.ghostviewIR(cha, ir, psFile, dotFile, dotExe, gvExe);
 
     } catch (WalaException e) {
       // TODO Auto-generated catch block
@@ -135,7 +134,7 @@ public class GVWalaIR {
    * 
    * @param args
    * @throws UnsupportedOperationException
-   *           if command-line is malformed.
+   *             if command-line is malformed.
    */
   static void validateCommandLine(String[] args) {
     if (args.length != 4) {
