@@ -16,7 +16,6 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.ComposedEntrypoints;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -42,7 +41,7 @@ public class J2EEEntrypoints implements Iterable<Entrypoint> {
    * @param useEjbEntrypoints
    *          should the analysis assume external callers on the EJB interfaces?
    */
-  public J2EEEntrypoints(J2EEAnalysisScope scope, DeploymentMetaData dmd, IClassHierarchy cha, WarningSet warnings,
+  public J2EEEntrypoints(J2EEAnalysisScope scope, DeploymentMetaData dmd, IClassHierarchy cha, 
       boolean useEjbEntrypoints) {
     ServletEntrypoints servletEntrypoints = new ServletEntrypoints(scope, cha);
     J2EEClassTargetSelector classTargetSelector = new J2EEClassTargetSelector(null, dmd, cha, cha.getLoader(scope.getLoader(Atom
@@ -51,14 +50,14 @@ public class J2EEEntrypoints implements Iterable<Entrypoint> {
     EJBEntrypoints ejbEntrypoints = null;
     if (useEjbEntrypoints) {
       // pick up all ejb entrypoints
-      ejbEntrypoints = new EJBEntrypoints(cha, scope, dmd, false, classTargetSelector, warnings);
+      ejbEntrypoints = new EJBEntrypoints(cha, scope, dmd, false, classTargetSelector);
     } else {
       // pick up only MDB EJB entrypoints
-      ejbEntrypoints = new EJBEntrypoints(cha, scope, dmd, true, classTargetSelector, warnings);
+      ejbEntrypoints = new EJBEntrypoints(cha, scope, dmd, true, classTargetSelector);
     }
     entrypoints = new ComposedEntrypoints(servletEntrypoints, ejbEntrypoints);
 
-    appClientEntrypoints = new AppClientEntrypoints(scope, cha, warnings);
+    appClientEntrypoints = new AppClientEntrypoints(scope, cha);
     entrypoints = new ComposedEntrypoints(entrypoints, appClientEntrypoints);
 
     if (USE_STRUTS_ACTIONS) {

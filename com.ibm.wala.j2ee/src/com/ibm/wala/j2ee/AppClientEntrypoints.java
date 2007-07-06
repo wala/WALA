@@ -34,7 +34,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * 
@@ -62,8 +62,6 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
    */
   private final AnalysisScope scope;
   
-  private final WarningSet warnings;
-
   /**
    * @param scope
    *          scope of analysis
@@ -71,13 +69,12 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
    *          loaded class hierarchy
    * @throws IllegalArgumentException  if scope is null
    */
-  public AppClientEntrypoints(J2EEAnalysisScope scope, IClassHierarchy cha, WarningSet warnings) {
+  public AppClientEntrypoints(J2EEAnalysisScope scope, IClassHierarchy cha) {
     if (scope == null) {
       throw new IllegalArgumentException("scope is null");
     }
     this.cha = cha;
     this.scope = scope;
-    this.warnings = warnings;
     ClassLoaderReference loader = scope.getApplicationLoader();
     for (Iterator<Module> it = scope.getModules(loader).iterator(); it.hasNext();) {
       Module M = (Module) it.next();
@@ -113,9 +110,6 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
     }
   }
 
-  /**
-   * @param file
-   */
   @SuppressWarnings("restriction")
   private void addEntrypoints(ApplicationClientFile file) {
     ArchiveManifest manifest = file.getManifest();
@@ -138,12 +132,12 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
     }
     IClass klass = cha.lookupClass(T);
     if (klass == null) {
-      warnings.add(LoadFailure.create(T));
+      Warnings.add(LoadFailure.create(T));
       return;
     }
     IMethod m = cha.resolveMethod(klass,Main.getSelector());
     if (m == null) {
-      warnings.add(LoadFailure.create(Main));
+      Warnings.add(LoadFailure.create(Main));
       return;
     }
     entrypoints.put(Main, new DefaultEntrypoint(m, cha));

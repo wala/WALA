@@ -17,7 +17,6 @@ import com.ibm.wala.j2ee.DeploymentMetaData;
 import com.ibm.wala.j2ee.J2EEAnalysisScope;
 import com.ibm.wala.j2ee.client.CallGraphBuilderFactory;
 import com.ibm.wala.j2ee.util.Util;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * A factory to create J2EE call graph builders using 0-1-container-CFA
@@ -30,8 +29,8 @@ public class ZeroOneCFABuilderFactory
 {
 
   public CallGraphBuilder make(AnalysisOptions options, IClassHierarchy cha, J2EEAnalysisScope scope,
-      DeploymentMetaData dmd, WarningSet warnings, boolean keepPointsTo) {
-    return Util.makeZeroOneCFABuilder(options, cha, getClass().getClassLoader(), scope, dmd, warnings);
+      DeploymentMetaData dmd, boolean keepPointsTo) {
+    return Util.makeZeroOneCFABuilder(options, cha, getClass().getClassLoader(), scope, dmd);
   }
 
 }

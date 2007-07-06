@@ -52,10 +52,9 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
  * Logic to interpret dynacache commands in context
  * 
  * @author sfink
@@ -78,19 +77,13 @@ public class CommandInterpreter implements SSAContextInterpreter {
   private final IClassHierarchy cha;
 
   /**
-   * Keep track of analysis warnings
-   */
-  private WarningSet warnings;
-
-  /**
    * @param cha
    *          governing class hierarchy
    * @param warnings
    *          object to track analysis warnings
    */
-  public CommandInterpreter(IClassHierarchy cha,  WarningSet warnings) {
+  public CommandInterpreter(IClassHierarchy cha) {
     this.cha = cha;
-    this.warnings = warnings;
   }
 
   /*
@@ -100,29 +93,16 @@ public class CommandInterpreter implements SSAContextInterpreter {
    *      com.ibm.wala.ipa.callgraph.Context,
    *      com.ibm.wala.util.warnings.WarningSet)
    */
-  public IR getIR(CGNode node, WarningSet warnings) {
+  public IR getIR(CGNode node) {
     SpecializedExecuteMethod m = findOrCreateSpecializedMethod(node);
-    return m.getIR(warnings);
+    return m.getIR();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#getNumberOfStatements(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public int getNumberOfStatements(CGNode node, WarningSet warnings) {
+  public int getNumberOfStatements(CGNode node) {
     SpecializedExecuteMethod m = findOrCreateSpecializedMethod(node);
     return m.calls.size();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#understands(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.callgraph.Context)
-   */
   public boolean understands(CGNode node) {
 
     if (!(node.getContext() instanceof JavaTypeContext)) {
@@ -181,7 +161,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
             if (DEBUG) {
               Trace.println("Found no implementors of type " + T);
             }
-            warnings.add(NoSubtypesWarning.create(T));
+            Warnings.add(NoSubtypesWarning.create(T));
           }
 
           addStatementsForSetOfTypes(implementors.iterator());
@@ -191,7 +171,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
             if (DEBUG) {
               Trace.println("Found no subclasses of type " + T);
             }
-            warnings.add(NoSubtypesWarning.create(T));
+            Warnings.add(NoSubtypesWarning.create(T));
           }
           addStatementsForSetOfTypes(subclasses.iterator());
         }
@@ -267,7 +247,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
      * 
      * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.warnings.WarningSet)
      */
-    public SSAInstruction[] getStatements(WarningSet warnings) {
+    public SSAInstruction[] getStatements() {
       SSAInstruction[] result = new SSAInstruction[calls.size()];
       int i = 0;
       for (Iterator<SSAInstruction> it = calls.iterator(); it.hasNext();) {
@@ -276,14 +256,9 @@ public class CommandInterpreter implements SSAContextInterpreter {
       return result;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.wala.classLoader.IMethod#getIR(com.ibm.wala.util.warnings.WarningSet)
-     */
-    public IR getIR(WarningSet warnings) {
-      SSAInstruction[] instrs = getStatements(warnings);
-      return new SyntheticIR(this, Everywhere.EVERYWHERE, new InducedCFG(instrs, this, Everywhere.EVERYWHERE), instrs, SSAOptions.defaultOptions(), null, warnings);
+    public IR getIR() {
+      SSAInstruction[] instrs = getStatements();
+      return new SyntheticIR(this, Everywhere.EVERYWHERE, new InducedCFG(instrs, this, Everywhere.EVERYWHERE), instrs, SSAOptions.defaultOptions(), null);
     }
   }
 
@@ -313,78 +288,32 @@ public class CommandInterpreter implements SSAContextInterpreter {
     return m;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#getCaughtExceptions(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public Set<Object> getCaughtExceptions(CGNode node, WarningSet warnings) {
+  public Set<Object> getCaughtExceptions(CGNode node) {
     return Collections.emptySet();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#hasObjectArrayLoad(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public boolean hasObjectArrayLoad(CGNode node, WarningSet warnings) {
+  public boolean hasObjectArrayLoad(CGNode node) {
     return false;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#hasObjectArrayStore(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public boolean hasObjectArrayStore(CGNode node, WarningSet warnings) {
+  public boolean hasObjectArrayStore(CGNode node) {
     return false;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.xta.XTAContextInterpreter#iterateCastTypes(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public Iterator<IClass> iterateCastTypes(CGNode node, WarningSet warnings) {
+  public Iterator<IClass> iterateCastTypes(CGNode node ) {
     return EmptyIterator.instance();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.IClass)
-   */
   public boolean recordFactoryType(CGNode node, IClass klass) {
     // this class does not observe factories
     return false;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
-  public void setWarnings(WarningSet newWarnings) {
-    this.warnings = newWarnings;
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.cfg.CFGProvider#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
-   */
-  public ControlFlowGraph getCFG(CGNode N, WarningSet warnings) {
-    return getIR(N, warnings).getControlFlowGraph();
+  public ControlFlowGraph getCFG(CGNode N) {
+    return getIR(N).getControlFlowGraph();
   }
  /**
-   * @author sfink
-   *
-   * A waring when we fail to find subtypes for a command method
+   * A warning when we fail to find subtypes for a command method
    */
   private static class NoSubtypesWarning extends Warning {
 
@@ -400,10 +329,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
       return new NoSubtypesWarning(T);
     }
   }
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getDU(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.util.warnings.WarningSet)
-   */
-  public DefUse getDU(CGNode node, WarningSet warnings) {
-    return new DefUse(getIR(node,warnings));
+  public DefUse getDU(CGNode node) {
+    return new DefUse(getIR(node));
   }
 }

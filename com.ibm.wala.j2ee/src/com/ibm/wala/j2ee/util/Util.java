@@ -38,7 +38,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * @author sfink
@@ -49,246 +48,237 @@ public class Util {
    * @return an RTA Call Graph builder.
    * 
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param cl
-   *          classloader that can find WALA resources
+   *            classloader that can find WALA resources
    * @param scope
-   *          representation of the analysis scope
+   *            representation of the analysis scope
    * @param dmd
-   *          deployment descriptor abstraction
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            deployment descriptor abstraction
    */
   public static CallGraphBuilder makeRTABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
-      DeploymentMetaData dmd, WarningSet warnings) {
+      DeploymentMetaData dmd) {
 
-    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
+    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     addDefaultJ2EEBypassLogic(options, scope, cl, cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
-      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
-      appSelector = new J2EEContextSelector(typeInference, warnings);
-      appInterpreter = new CommandInterpreter(cha, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options);
+      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference);
+      appSelector = new J2EEContextSelector(typeInference);
+      appInterpreter = new CommandInterpreter(cha);
     }
 
-    return new BasicRTABuilder(cha, warnings, options, appSelector, appInterpreter);
+    return new BasicRTABuilder(cha, options, appSelector, appInterpreter);
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param cl
-   *          classloader that can find WALA resources
+   *            classloader that can find WALA resources
    * @param scope
-   *          representation of the analysis scope
+   *            representation of the analysis scope
    * @param dmd
-   *          deployment descriptor abstraction
+   *            deployment descriptor abstraction
    * @param warnings
-   *          an object which tracks analysis warnings
+   *            an object which tracks analysis warnings
    * @return a 0-CFA Call Graph Builder.
    */
   public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
-      DeploymentMetaData dmd, WarningSet warnings) {
+      DeploymentMetaData dmd) {
 
-    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
+    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     addDefaultJ2EEBypassLogic(options, scope, cl, cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
-      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
-      appSelector = new J2EEContextSelector(typeInference, warnings);
-      appInterpreter = new CommandInterpreter(cha, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options);
+      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference);
+      appSelector = new J2EEContextSelector(typeInference);
+      appInterpreter = new CommandInterpreter(cha);
     }
 
-    return new ZeroXCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec(),
-        ZeroXInstanceKeys.NONE);
+    return new ZeroXCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec(), ZeroXInstanceKeys.NONE);
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param cl
-   *          classloader that can find WALA resources
+   *            classloader that can find WALA resources
    * @param scope
-   *          representation of the analysis scope
+   *            representation of the analysis scope
    * @param dmd
-   *          deployment descriptor abstraction
+   *            deployment descriptor abstraction
    * @param warnings
-   *          an object which tracks analysis warnings
+   *            an object which tracks analysis warnings
    * @return a 1-CFA Call Graph Builder.
    */
   public static CallGraphBuilder makeOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl,
-      AnalysisScope scope, DeploymentMetaData dmd, WarningSet warnings) {
+      AnalysisScope scope, DeploymentMetaData dmd) {
 
-    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
+    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     addDefaultJ2EEBypassLogic(options, scope, cl, cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
-      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
-      appSelector = new J2EEContextSelector(typeInference, warnings);
-      appInterpreter = new CommandInterpreter(cha, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options);
+      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference);
+      appSelector = new J2EEContextSelector(typeInference);
+      appInterpreter = new CommandInterpreter(cha);
     }
 
-    CallGraphBuilder builder = new OneCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec());
+    CallGraphBuilder builder = new OneCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec());
     return builder;
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param cl
-   *          classloader that can find WALA resources
+   *            classloader that can find WALA resources
    * @param scope
-   *          representation of the analysis scope
+   *            representation of the analysis scope
    * @param dmd
-   *          deployment descriptor abstraction
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            deployment descriptor abstraction
    * @return a 0-1-CFA Call Graph Builder.
    * 
    * This version uses the DEDUCED_PLUS_STRINGSTUFF policy to avoid
    * disambiguating uninteresting types.
    */
   public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
-      DeploymentMetaData dmd, WarningSet warnings) {
+      DeploymentMetaData dmd) {
 
-    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
+    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     addDefaultJ2EEBypassLogic(options, scope, cl, cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
-      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
-      appSelector = new J2EEContextSelector(typeInference, warnings);
-      appInterpreter = new CommandInterpreter(cha, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options);
+      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference);
+      appSelector = new J2EEContextSelector(typeInference);
+      appInterpreter = new CommandInterpreter(cha);
     }
 
-    return new ZeroXCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec(),
+    return new ZeroXCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec(),
         ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
             | ZeroXInstanceKeys.SMUSH_STRINGS | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param cl
-   *          classloader that can find WALA resources
+   *            classloader that can find WALA resources
    * @param scope
-   *          representation of the analysis scope
+   *            representation of the analysis scope
    * @param dmd
-   *          deployment descriptor abstraction
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            deployment descriptor abstraction
    * @return a 0-1-CFA Call Graph Builder.
    * 
    * This version uses the ALL policy to disambiguate all allocation sites
    */
   public static CFABuilder makeZeroOneUnoptCFABuilder(AnalysisOptions options, ClassHierarchy cha, ClassLoader cl,
-      AnalysisScope scope, DeploymentMetaData dmd, WarningSet warnings) {
+      AnalysisScope scope, DeploymentMetaData dmd) {
 
-    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
+    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     addDefaultJ2EEBypassLogic(options, scope, cl, cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
-      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
-      appSelector = new J2EEContextSelector(typeInference, warnings);
-      appInterpreter = new CommandInterpreter(cha, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options);
+      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference);
+      appSelector = new J2EEContextSelector(typeInference);
+      appInterpreter = new CommandInterpreter(cha);
     }
 
-    return new ZeroXCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec(),
+    return new ZeroXCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec(),
         ZeroXInstanceKeys.ALLOCATIONS);
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param cl
-   *          classloader that can find WALA resources
+   *            classloader that can find WALA resources
    * @param scope
-   *          representation of the analysis scope
+   *            representation of the analysis scope
    * @param dmd
-   *          deployment descriptor abstraction
+   *            deployment descriptor abstraction
    * @param warnings
-   *          an object which tracks analysis warnings
+   *            an object which tracks analysis warnings
    * @return a 0-CFA Call Graph Builder augmented with extra logic for
    *         containers
    */
   public static CFABuilder makeZeroContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl,
-      AnalysisScope scope, DeploymentMetaData dmd, WarningSet warnings) {
+      AnalysisScope scope, DeploymentMetaData dmd) {
 
-    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
+    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     addDefaultJ2EEBypassLogic(options, scope, cl, cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
-      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
-      appSelector = new J2EEContextSelector(typeInference, warnings);
-      appInterpreter = new CommandInterpreter(cha, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options);
+      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference);
+      appSelector = new J2EEContextSelector(typeInference);
+      appInterpreter = new CommandInterpreter(cha);
     }
 
-    return new ZeroContainerCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec());
+    return new ZeroContainerCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec());
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param cl
-   *          classloader that can find WALA resources
+   *            classloader that can find WALA resources
    * @param scope
-   *          representation of the analysis scope
+   *            representation of the analysis scope
    * @param dmd
-   *          deployment descriptor abstraction
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            deployment descriptor abstraction
    * @return a 0-1-CFA Call Graph Builder augmented with extra logic for
    *         containers
    */
   public static CFABuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl,
-      AnalysisScope scope, DeploymentMetaData dmd, WarningSet warnings) {
+      AnalysisScope scope, DeploymentMetaData dmd) {
 
-    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
+    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     addDefaultJ2EEBypassLogic(options, scope, cl, cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
     if (dmd != null) {
-      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options, warnings);
-      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference, warnings);
-      appSelector = new J2EEContextSelector(typeInference, warnings);
-      appInterpreter = new CommandInterpreter(cha, warnings);
+      ReceiverTypeInferenceCache typeInference = new ReceiverTypeInferenceCache(options);
+      addJ2EEBypassLogic(options, scope, dmd, cha, typeInference);
+      appSelector = new J2EEContextSelector(typeInference);
+      appInterpreter = new CommandInterpreter(cha);
     }
 
-    return new ZeroOneContainerCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec());
+    return new ZeroOneContainerCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec());
   }
 
   public static void addJ2EEBypassLogic(AnalysisOptions options, AnalysisScope scope, DeploymentMetaData dmd, IClassHierarchy cha,
-      ReceiverTypeInferenceCache typeInference, WarningSet warn) {
+      ReceiverTypeInferenceCache typeInference) {
 
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
     }
-    MethodTargetSelector ms = new J2EEMethodTargetSelector(scope, options.getMethodTargetSelector(), dmd, cha, typeInference, warn);
+    MethodTargetSelector ms = new J2EEMethodTargetSelector(scope, options.getMethodTargetSelector(), dmd, cha, typeInference);
     options.setSelector(ms);
 
     ClassTargetSelector cs = new J2EEClassTargetSelector(options.getClassTargetSelector(), dmd, cha, cha.getLoader(scope
@@ -299,7 +289,7 @@ public class Util {
   /**
    * @param bean
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @return the Set of CMR fields for this bean, including inherited CMRs
    */
   public static Set<Object> getCMRFields(BeanMetaData bean, DeploymentMetaData dmd, ClassHierarchy cha) {

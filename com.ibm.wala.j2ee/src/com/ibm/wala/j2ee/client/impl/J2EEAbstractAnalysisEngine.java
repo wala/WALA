@@ -53,11 +53,12 @@ public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine 
    */
   private boolean dependentJars = true;
 
-  protected J2EEAbstractAnalysisEngine() {}
+  protected J2EEAbstractAnalysisEngine() {
+  }
 
   protected CallGraphBuilder getCallGraphBuilder(ClassHierarchy cha, AnalysisOptions options) {
     return ((CallGraphBuilderFactory) getCallGraphBuilderFactory()).make(options, cha, (J2EEAnalysisScope) getScope(), getDmd(),
-        getWarnings(), false);
+        false);
   }
 
   /**
@@ -66,6 +67,7 @@ public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine 
   protected void buildAnalysisScope() {
     buildAnalysisScope(null);
   }
+
   /**
    * Set up the AnalysisScope object
    */
@@ -86,7 +88,7 @@ public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine 
   /**
    * Add the application modules to the analyis scope.
    */
-  @SuppressWarnings({ "restriction", "unchecked" })
+  @SuppressWarnings( { "restriction", "unchecked" })
   protected void addApplicationModulesToScope() {
     ClassLoaderReference app = scope.getApplicationLoader();
     for (Iterator<Archive> it = moduleFiles.iterator(); it.hasNext();) {
@@ -134,7 +136,7 @@ public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine 
 
   /**
    * @param dmd
-   *          The dmd to set.
+   *            The dmd to set.
    */
   protected void setDmd(DeploymentMetaData dmd) {
     this.dmd = dmd;
@@ -149,7 +151,7 @@ public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine 
 
   /**
    * @param dependentJars
-   *          The dependentJars to set.
+   *            The dependentJars to set.
    */
   public void setDependentJars(boolean dependentJars) {
     this.dependentJars = dependentJars;

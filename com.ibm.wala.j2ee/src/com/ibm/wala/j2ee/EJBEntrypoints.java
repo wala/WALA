@@ -43,7 +43,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * 
@@ -105,8 +105,6 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
 
   private final J2EEClassTargetSelector classTargetSelector;
 
-  private final WarningSet warnings;
-
   /**
    * Create the set of EJB entrypoints that are defined in an analysis scope
    * 
@@ -115,11 +113,10 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
    */
   @SuppressWarnings({ "restriction", "unchecked" })
   public EJBEntrypoints(IClassHierarchy cha, J2EEAnalysisScope scope, DeploymentMetaData deployment, boolean justMDBs,
-      J2EEClassTargetSelector classTargetSelector, WarningSet warnings) {
+      J2EEClassTargetSelector classTargetSelector) {
     this.cha = cha;
     this.deployment = deployment;
     this.JUST_MDBS = justMDBs;
-    this.warnings = warnings;
     this.classTargetSelector = classTargetSelector;
     ClassLoaderReference loader = scope.getApplicationLoader();
 
@@ -206,7 +203,7 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     }
     IMethod m = cha.resolveMethod(e);
     if (m == null) {
-      warnings.add(LoadFailure.create(e));
+      Warnings.add(LoadFailure.create(e));
       return;
     }
     entrypoints.add(new MDBEntrypoint(m, cha, T));
@@ -285,7 +282,7 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       }
       IMethod m = cha.resolveMethod(e);
       if (m == null) {
-        warnings.add(LoadFailure.create(m));
+        Warnings.add(LoadFailure.create(m));
         continue;
       }
       entrypoints.add(new EJBLifecycleEntrypoint(m, cha, type));
@@ -313,12 +310,12 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       }
       final IClass klass = cha.lookupClass(interfaceType);
       if (klass == null) {
-        warnings.add(LoadFailure.create(interfaceType));
+        Warnings.add(LoadFailure.create(interfaceType));
         continue;
       }
       IMethod m = cha.resolveMethod(klass, target.getSelector());
       if (m == null) {
-        warnings.add(LoadFailure.create(target));
+        Warnings.add(LoadFailure.create(target));
         continue;
       }
       entrypoints.add(new DefaultEntrypoint(m, cha) {

@@ -17,7 +17,6 @@ import com.ibm.wala.j2ee.DeploymentMetaData;
 import com.ibm.wala.j2ee.J2EEAnalysisScope;
 import com.ibm.wala.j2ee.client.CallGraphBuilderFactory;
 import com.ibm.wala.j2ee.util.Util;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -31,8 +30,8 @@ public class RTABuilderFactory
 {
 
   public CallGraphBuilder make(AnalysisOptions options, IClassHierarchy cha,  J2EEAnalysisScope scope,
-      DeploymentMetaData dmd, WarningSet warnings, boolean keepPointsTo) {
-    return Util.makeRTABuilder(options, cha, getClass().getClassLoader(), scope, dmd, warnings);
+      DeploymentMetaData dmd, boolean keepPointsTo) {
+    return Util.makeRTABuilder(options, cha, getClass().getClassLoader(), scope, dmd);
   }
 
 }

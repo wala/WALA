@@ -28,10 +28,9 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
  * This class provides context selection logic for special J2EE methods.
  * 
  * @author sfink
@@ -52,11 +51,8 @@ public class J2EEContextSelector implements ContextSelector {
 
   private final ReceiverTypeInferenceCache typeInference;
 
-  private final WarningSet warnings;
-
-  public J2EEContextSelector(ReceiverTypeInferenceCache typeInference, WarningSet warnings) {
+  public J2EEContextSelector(ReceiverTypeInferenceCache typeInference) {
     this.typeInference = typeInference;
-    this.warnings = warnings;
   }
 
   /**
@@ -75,7 +71,7 @@ public class J2EEContextSelector implements ContextSelector {
       TypeAbstraction type = R.getReceiverType(site);
       if (type == null) {
         // Type inference failed; raise a severe warning
-        warnings.add(ResolutionFailure.create(caller, site));
+        Warnings.add(ResolutionFailure.create(caller, site));
         return null;
       }
       return new JavaTypeContext(type);
@@ -101,17 +97,6 @@ public class J2EEContextSelector implements ContextSelector {
   }
 
   /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
-  public void setWarnings(WarningSet newWarnings) {
-    // this object is not bound to a WarningSet
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.CallSiteReference)
    */

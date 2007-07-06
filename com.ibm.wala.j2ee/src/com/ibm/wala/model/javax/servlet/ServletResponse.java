@@ -1,6 +1,6 @@
 package com.ibm.wala.model.javax.servlet;
 
-import javax.servlet.*;
+import javax.servlet.ServletOutputStream;
 
 public class ServletResponse implements javax.servlet.ServletResponse {
     private java.util.Locale locale = java.util.Locale.getDefault();;

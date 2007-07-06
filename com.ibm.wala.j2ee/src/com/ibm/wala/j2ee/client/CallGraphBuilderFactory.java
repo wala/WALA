@@ -15,7 +15,6 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.j2ee.DeploymentMetaData;
 import com.ibm.wala.j2ee.J2EEAnalysisScope;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -52,12 +51,10 @@ public interface CallGraphBuilderFactory extends com.ibm.wala.client.CallGraphBu
    *          representation of the analysis scope
    * @param dmd
    *          deployment descriptor abstraction
-   * @param warnings
-   *          an object which tracks analysis warnings
    * @param keepPointsTo
    *          preserve PointsTo graph for posterity?
    *  
    */
   CallGraphBuilder make(AnalysisOptions options, IClassHierarchy cha, J2EEAnalysisScope scope, DeploymentMetaData dmd,
-      WarningSet warnings, boolean keepPointsTo);
+      boolean keepPointsTo);
 }

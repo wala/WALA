@@ -51,7 +51,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * 
@@ -108,11 +108,6 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   private final ReceiverTypeInferenceCache typeInference;
 
   /**
-   * An object which tracks warnings from analysis
-   */
-  private final WarningSet warnings;
-
-  /**
    * Governing analysis scope
    */
   private final AnalysisScope scope;
@@ -149,10 +144,9 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   }
 
   public J2EEMethodTargetSelector(AnalysisScope scope, MethodTargetSelector parent, DeploymentMetaData deployment,
-      IClassHierarchy cha, ReceiverTypeInferenceCache typeInference, WarningSet warnings) {
+      IClassHierarchy cha, ReceiverTypeInferenceCache typeInference) {
     this.scope = scope;
     this.deployment = deployment;
-    this.warnings = warnings;
     this.parent = parent;
     this.cha = cha;
     this.typeInference = typeInference;
@@ -179,7 +173,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
     // resolve the method via the class hierarchy first
     IMethod resolved = cha.resolveMethod(m);
     if (resolved == null) {
-      warnings.add(LoadFailure.create(m));
+      Warnings.add(LoadFailure.create(m));
       return null;
     }
     m = resolved.getReference();
@@ -264,7 +258,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
     // resolve the method via the class hierarchy first
     IMethod resolved = cha.resolveMethod(m);
     if (resolved == null) {
-      warnings.add(LoadFailure.create(m));
+      Warnings.add(LoadFailure.create(m));
       return null;
     }
     m = resolved.getReference();
@@ -809,7 +803,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         // this is a problem ... the field is not navigable .... need to do
         // something better, like
         // create a synthetic field.
-        warnings.add(LoadFailure.create(field));
+        Warnings.add(LoadFailure.create(field));
         return;
       }
       TypeReference otherT = oppField.getFieldType();
@@ -1105,7 +1099,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
     }
     if (type == null) {
       // Type inference failed; raise a severe warning
-      warnings.add(ResolutionFailure.create(N, site));
+      Warnings.add(ResolutionFailure.create(N, site));
       return null;
     } else {
       // Type inference succeeded; modify m to reflect the more specific
