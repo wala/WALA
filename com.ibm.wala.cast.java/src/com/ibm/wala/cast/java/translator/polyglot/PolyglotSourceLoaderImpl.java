@@ -15,20 +15,19 @@ package com.ibm.wala.cast.java.translator.polyglot;
 
 import java.io.IOException;
 
-import com.ibm.wala.cast.java.loader.*;
-import com.ibm.wala.cast.java.translator.*;
+import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
+import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public class PolyglotSourceLoaderImpl extends JavaSourceLoaderImpl {
     private final IRTranslatorExtension fExtInfo;
 
     public PolyglotSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions,
-	    IClassHierarchy cha, WarningSet warnings, IRTranslatorExtension extInfo) throws IOException {
-	super(loaderRef, parent, exclusions, cha, warnings);
+	    IClassHierarchy cha, IRTranslatorExtension extInfo) throws IOException {
+	super(loaderRef, parent, exclusions, cha);
 	this.fExtInfo = extInfo;
     }
 

@@ -13,9 +13,64 @@
  */
 package com.ibm.wala.cast.java.translator.polyglot;
 
-import polyglot.ast.*;
+import polyglot.ast.ArrayAccess;
+import polyglot.ast.ArrayAccessAssign;
+import polyglot.ast.ArrayInit;
+import polyglot.ast.ArrayTypeNode;
+import polyglot.ast.Assert;
+import polyglot.ast.Binary;
+import polyglot.ast.Block;
+import polyglot.ast.BooleanLit;
+import polyglot.ast.Branch;
+import polyglot.ast.Call;
+import polyglot.ast.CanonicalTypeNode;
+import polyglot.ast.Case;
+import polyglot.ast.Cast;
+import polyglot.ast.Catch;
+import polyglot.ast.CharLit;
+import polyglot.ast.ClassBody;
+import polyglot.ast.ClassDecl;
+import polyglot.ast.ClassLit;
+import polyglot.ast.Conditional;
+import polyglot.ast.ConstructorCall;
+import polyglot.ast.ConstructorDecl;
+import polyglot.ast.Do;
+import polyglot.ast.Empty;
+import polyglot.ast.Eval;
+import polyglot.ast.Field;
+import polyglot.ast.FieldAssign;
+import polyglot.ast.FieldDecl;
+import polyglot.ast.FloatLit;
+import polyglot.ast.For;
+import polyglot.ast.Formal;
+import polyglot.ast.If;
+import polyglot.ast.Import;
+import polyglot.ast.Initializer;
+import polyglot.ast.Instanceof;
+import polyglot.ast.IntLit;
+import polyglot.ast.Labeled;
+import polyglot.ast.Local;
+import polyglot.ast.LocalAssign;
+import polyglot.ast.LocalClassDecl;
+import polyglot.ast.LocalDecl;
+import polyglot.ast.MethodDecl;
+import polyglot.ast.New;
+import polyglot.ast.NewArray;
+import polyglot.ast.NullLit;
+import polyglot.ast.PackageNode;
+import polyglot.ast.Return;
+import polyglot.ast.Special;
+import polyglot.ast.StringLit;
+import polyglot.ast.Switch;
+import polyglot.ast.SwitchBlock;
+import polyglot.ast.Synchronized;
+import polyglot.ast.Throw;
+import polyglot.ast.Try;
+import polyglot.ast.Unary;
+import polyglot.ast.While;
 
-import com.ibm.wala.cast.java.translator.polyglot.PolyglotJava2CAstTranslator.*;
+import com.ibm.wala.cast.java.translator.polyglot.PolyglotJava2CAstTranslator.MethodContext;
+import com.ibm.wala.cast.java.translator.polyglot.PolyglotJava2CAstTranslator.WalkContext;
 import com.ibm.wala.cast.tree.CAstNode;
 
 /**

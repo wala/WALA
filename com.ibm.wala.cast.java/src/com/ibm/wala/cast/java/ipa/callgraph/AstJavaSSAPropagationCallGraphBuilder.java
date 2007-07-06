@@ -42,13 +42,12 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntSetAction;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
 
-  protected AstJavaSSAPropagationCallGraphBuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+  protected AstJavaSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options,
       PointerKeyFactory pointerKeyFactory) {
-    super(cha, warnings, options, pointerKeyFactory);
+    super(cha, options, pointerKeyFactory);
   }
 
   // ///////////////////////////////////////////////////////////////////////////

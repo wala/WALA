@@ -10,7 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.ssa;
 
-import com.ibm.wala.cast.ir.ssa.*;
+import com.ibm.wala.cast.ir.ssa.AstAbstractInstructionVisitor;
 
 public class AstJavaAbstractInstructionVisitor 
     extends AstAbstractInstructionVisitor 

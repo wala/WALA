@@ -13,17 +13,21 @@ package com.ibm.wala.cast.java.ipa.callgraph;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl.JavaClass;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalParent;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.util.debug.*;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
 
 public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
 

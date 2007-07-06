@@ -25,7 +25,7 @@ import polyglot.types.ReferenceType;
 import polyglot.types.Type;
 import polyglot.types.TypeSystem;
 
-import com.ibm.wala.cast.java.types.*;
+import com.ibm.wala.cast.java.types.JavaPrimitiveTypeMap;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstTypeDictionaryImpl;
 import com.ibm.wala.util.debug.Assertions;

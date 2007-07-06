@@ -28,14 +28,14 @@ import polyglot.main.UsageError;
 import polyglot.util.ErrorInfo;
 import polyglot.util.Position;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.cast.java.translator.*;
+import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
 import com.ibm.wala.classLoader.DirectoryTreeModule;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A SourceModuleTranslator whose implementation of loadAllSources() uses the PolyglotFrontEnd

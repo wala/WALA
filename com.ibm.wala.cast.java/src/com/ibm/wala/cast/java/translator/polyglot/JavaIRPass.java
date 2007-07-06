@@ -17,7 +17,7 @@ import polyglot.frontend.AbstractPass;
 import polyglot.frontend.Job;
 import polyglot.frontend.goals.Goal;
 
-import com.ibm.wala.cast.java.translator.*;
+import com.ibm.wala.cast.java.translator.Java2IRTranslator;
 
 /**
  * A Pass that creates DOMO IR for the given Java compilation unit.

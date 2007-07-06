@@ -17,7 +17,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * @author Julian Dolby (dolby@us.ibm.com)
@@ -26,22 +25,13 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class ZeroOneContainerCFABuilderFactory implements CallGraphBuilderFactory {
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.domo.j2ee.client.CallGraphBuilderFactory#make(com.ibm.domo.ipa.callgraph.AnalysisOptions,
-   *      com.ibm.domo.ipa.cha.IClassHierarchy, java.lang.ClassLoader,
-   *      com.ibm.domo.j2ee.J2EEAnalysisScope,
-   *      com.ibm.domo.util.warnings.WarningSet, boolean)
-   */
   public CallGraphBuilder make(AnalysisOptions options,
 			       IClassHierarchy cha,
 			       AnalysisScope scope,
-			       WarningSet warnings,
 			       boolean keepPointsTo)
   {
-      Util.addDefaultSelectors(options, cha, warnings);
+      Util.addDefaultSelectors(options, cha);
       Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
-      return new AstJavaZeroOneContainerCFABuilder(cha, warnings, options, null, null, options.getReflectionSpec());
+      return new AstJavaZeroOneContainerCFABuilder(cha, options, null, null, options.getReflectionSpec());
   }
 }

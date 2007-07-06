@@ -23,21 +23,20 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public class PolyglotClassLoaderFactory extends ClassLoaderFactoryImpl {
 
   final protected IRTranslatorExtension fExtInfo;
 
-  public PolyglotClassLoaderFactory(SetOfClasses exclusions, WarningSet warnings, IRTranslatorExtension extInfo) {
-    super(exclusions, warnings);
+  public PolyglotClassLoaderFactory(SetOfClasses exclusions, IRTranslatorExtension extInfo) {
+    super(exclusions);
     fExtInfo = extInfo;
   }
 
   protected IClassLoader makeNewClassLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent,
       AnalysisScope scope) throws IOException {
     if (classLoaderReference.equals(EclipseProjectPath.SOURCE_REF)) {
-      ClassLoaderImpl cl = new PolyglotSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, getWarnings(), fExtInfo);
+      ClassLoaderImpl cl = new PolyglotSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, fExtInfo);
       cl.init(scope.getModules(classLoaderReference));
       return cl;
     } else {

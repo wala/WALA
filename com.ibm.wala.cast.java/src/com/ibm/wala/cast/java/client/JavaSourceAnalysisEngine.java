@@ -37,7 +37,6 @@ import com.ibm.wala.ssa.Value;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.XMLSetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -127,16 +126,16 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     return new JavaIRTranslatorExtension();
   }
 
-  protected ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions, WarningSet warnings, IRTranslatorExtension extInfo) {
-    return new PolyglotClassLoaderFactory(exclusions, warnings, extInfo);
+  protected ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions, IRTranslatorExtension extInfo) {
+    return new PolyglotClassLoaderFactory(exclusions, extInfo);
   }
 
   protected IClassHierarchy buildClassHierarchy() {
     IClassHierarchy cha = null;
-    ClassLoaderFactory factory = getClassLoaderFactory(scope.getExclusions(), getWarnings(), getTranslatorExtension());
+    ClassLoaderFactory factory = getClassLoaderFactory(scope.getExclusions(), getTranslatorExtension());
 
     try {
-      cha = ClassHierarchy.make(getScope(), factory, getWarnings());
+      cha = ClassHierarchy.make(getScope(), factory );
     } catch (ClassHierarchyException e) {
       System.err.println("Class Hierarchy construction failed");
       System.err.println(e.toString());

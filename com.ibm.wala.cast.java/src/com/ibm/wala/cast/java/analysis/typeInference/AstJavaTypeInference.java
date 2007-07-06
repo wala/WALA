@@ -10,16 +10,23 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.analysis.typeInference;
 
-import com.ibm.wala.analysis.typeInference.*;
-import com.ibm.wala.cast.analysis.typeInference.*;
+import com.ibm.wala.analysis.typeInference.ConeType;
+import com.ibm.wala.analysis.typeInference.PointType;
+import com.ibm.wala.analysis.typeInference.PrimitiveType;
+import com.ibm.wala.analysis.typeInference.TypeAbstraction;
+import com.ibm.wala.cast.analysis.typeInference.AstTypeInference;
 import com.ibm.wala.cast.ir.ssa.AstConstants;
-import com.ibm.wala.cast.java.ssa.*;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.cast.java.ssa.AstJavaInstructionVisitor;
+import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
+import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.fixpoint.IVariable;
-import com.ibm.wala.ipa.cha.*;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.types.*;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSABinaryOpInstruction;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 public class AstJavaTypeInference extends AstTypeInference {

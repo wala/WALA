@@ -15,10 +15,11 @@ package com.ibm.wala.cast.java.translator;
 
 import java.util.Collection;
 import java.util.Iterator;
-import com.ibm.wala.util.debug.Assertions;
+
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
-import com.ibm.wala.cast.java.ssa.*;
+import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
+import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
@@ -27,7 +28,7 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstType.Method;
-import com.ibm.wala.cast.tree.visit.*;
+import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -38,6 +39,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.debug.Assertions;
 
 public class JavaCAst2IRTranslator extends AstTranslator {
     private final CAstEntity fSourceEntity;

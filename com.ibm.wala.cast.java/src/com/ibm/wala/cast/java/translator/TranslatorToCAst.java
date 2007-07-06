@@ -10,7 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.translator;
 
-import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.tree.CAstEntity;
 
 public interface TranslatorToCAst {
 

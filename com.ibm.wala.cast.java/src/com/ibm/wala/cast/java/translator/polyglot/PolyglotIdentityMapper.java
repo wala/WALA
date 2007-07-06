@@ -3,9 +3,24 @@
  */
 package com.ibm.wala.cast.java.translator.polyglot;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-import polyglot.types.*;
+import polyglot.types.ArrayType;
+import polyglot.types.ClassType;
+import polyglot.types.CodeInstance;
+import polyglot.types.ConstructorInstance;
+import polyglot.types.FieldInstance;
+import polyglot.types.InitializerInstance;
+import polyglot.types.MemberInstance;
+import polyglot.types.MethodInstance;
+import polyglot.types.PrimitiveType;
+import polyglot.types.ProcedureInstance;
+import polyglot.types.Type;
+import polyglot.types.TypeSystem;
 
 import com.ibm.wala.cast.java.translator.polyglot.PolyglotJava2CAstTranslator.IdentityMapper;
 import com.ibm.wala.cast.java.types.JavaPrimitiveTypeMap;

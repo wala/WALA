@@ -19,7 +19,6 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContainerContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -46,22 +45,21 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
    */
   public AstJavaZeroOneContainerCFABuilder(
 		  IClassHierarchy cha, 
-		  WarningSet warnings, 
 		  AnalysisOptions options,
 		  ContextSelector appContextSelector,
 		  SSAContextInterpreter appContextInterpreter, 
 		  ReflectionSpecification reflect) 
   {
-    super(cha, warnings, options);
+    super(cha, options);
 
     ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
 
     SSAContextInterpreter contextInterpreter = 
-      makeDefaultContextInterpreters(appContextInterpreter, options, cha, reflect, warnings);
+      makeDefaultContextInterpreters(appContextInterpreter, options, cha, reflect);
     setContextInterpreter(contextInterpreter);
 
-    ZeroXInstanceKeys zik = makeInstanceKeys(cha, warnings, options, contextInterpreter);
+    ZeroXInstanceKeys zik = makeInstanceKeys(cha, options, contextInterpreter);
     setInstanceKeys(zik);
 
     ContextSelector CCS = makeContainerContextSelector(cha,(ZeroXInstanceKeys) getInstanceKeys());
@@ -69,8 +67,8 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
     setContextSelector(DCS);
   }
 
-  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options, SSAContextInterpreter contextInterpreter) {
-    ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, warnings, ZeroXInstanceKeys.ALLOCATIONS
+  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, AnalysisOptions options, SSAContextInterpreter contextInterpreter) {
+    ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, ZeroXInstanceKeys.ALLOCATIONS
         | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS 
 	| ZeroXInstanceKeys.SMUSH_STRINGS
 	| ZeroXInstanceKeys.SMUSH_MANY

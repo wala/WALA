@@ -21,9 +21,8 @@ import polyglot.frontend.goals.AbstractGoal;
 import polyglot.frontend.goals.EndGoal;
 import polyglot.util.ErrorInfo;
 
-import com.ibm.wala.cast.java.translator.polyglot.PolyglotIdentityMapper;
-import com.ibm.wala.cast.java.loader.*;
-import com.ibm.wala.cast.java.translator.*;
+import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
+import com.ibm.wala.cast.java.translator.Java2IRTranslator;
 
 /**
  * A kind of EndGoal that indicates that DOMO IR has been generated for the given compilation unit.

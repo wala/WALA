@@ -53,7 +53,6 @@ import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * A DOMO ClassLoaderImpl that processes source file entities in the
@@ -389,9 +388,8 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     return result;
   }
 
-  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha,
-      WarningSet warnings) throws IOException {
-    super(loaderRef, cha.getScope().getArrayClassLoader(), parent, cha.getScope().getExclusions(), cha, warnings);
+  public JavaSourceLoaderImpl(ClassLoaderReference loaderRef, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) throws IOException {
+    super(loaderRef, cha.getScope().getArrayClassLoader(), parent, cha.getScope().getExclusions(), cha);
   }
 
   public IClassHierarchy getClassHierarchy() {

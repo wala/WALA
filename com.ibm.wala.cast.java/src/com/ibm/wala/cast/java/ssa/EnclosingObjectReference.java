@@ -1,10 +1,13 @@
 package com.ibm.wala.cast.java.ssa;
 
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.debug.Assertions;
+import java.util.Collection;
+import java.util.Collections;
 
-import java.util.*;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.ssa.ValueDecorator;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.debug.Assertions;
 
 /**
  *  The CAst source language front end for Java has explicit support

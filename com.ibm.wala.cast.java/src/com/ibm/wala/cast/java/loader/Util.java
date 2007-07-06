@@ -11,11 +11,14 @@
 package com.ibm.wala.cast.java.loader;
 
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.Atom;
+import java.util.Iterator;
 
-import java.util.*;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstType;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.util.Atom;
 
 public class Util {
 

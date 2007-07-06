@@ -13,12 +13,11 @@
  */
 package com.ibm.wala.cast.java.translator.polyglot;
 
-import com.ibm.wala.cast.java.translator.polyglot.PolyglotIdentityMapper;
-import com.ibm.wala.cast.tree.impl.*;
-
 import polyglot.frontend.JLExtensionInfo;
 import polyglot.frontend.Job;
 import polyglot.frontend.goals.Goal;
+
+import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 
 /**
  * A Polyglot extension descriptor for a test harness extension that generates DOMO IR for
