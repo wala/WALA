@@ -10,10 +10,10 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import com.ibm.wala.cast.ipa.callgraph.*;
-import com.ibm.wala.cast.js.types.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.cha.*;
+import com.ibm.wala.cast.ipa.callgraph.ScriptEntryPoints;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 public class JavaScriptEntryPoints extends ScriptEntryPoints {
 

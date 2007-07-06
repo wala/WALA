@@ -10,11 +10,15 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
-import com.ibm.wala.cast.ir.translator.TranslatorToIR;
-import com.ibm.wala.classLoader.*;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
-import java.io.*;
-import java.util.*;
+import com.ibm.wala.cast.ir.translator.TranslatorToIR;
+import com.ibm.wala.classLoader.ModuleEntry;
+import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.SourceURLModule;
 
 public abstract class TranslatorBase implements TranslatorToIR {
 

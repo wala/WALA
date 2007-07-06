@@ -18,25 +18,22 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 class dumpCallGraph {
 
-    public static void main(String[] args) throws Exception {
-      WarningSet warnings = new WarningSet();
+  public static void main(String[] args) throws Exception {
 
-      JavaScriptLoaderFactory loaders = Util.makeLoaders();
-      AnalysisScope scope = Util.makeScope( args, loaders );
-      IClassHierarchy cha = Util.makeHierarchy( scope, loaders, warnings );
-      Iterable<Entrypoint> roots = Util.makeScriptRoots( cha );
-      AnalysisOptions options = Util.makeOptions(scope, false, cha, roots, warnings);
+    JavaScriptLoaderFactory loaders = Util.makeLoaders();
+    AnalysisScope scope = Util.makeScope(args, loaders);
+    IClassHierarchy cha = Util.makeHierarchy(scope, loaders);
+    Iterable<Entrypoint> roots = Util.makeScriptRoots(cha);
+    AnalysisOptions options = Util.makeOptions(scope, false, cha, roots);
 
-      JSCFABuilder builder = new JSZeroXCFABuilder(cha, warnings, options, null, null, null, ZeroXInstanceKeys.ALLOCATIONS);
+    JSCFABuilder builder = new JSZeroXCFABuilder(cha, options, null, null, null, ZeroXInstanceKeys.ALLOCATIONS);
 
-      CallGraph cg = builder.makeCallGraph( options );
+    CallGraph cg = builder.makeCallGraph(options);
 
-      System.err.println( cg );
-    }
+    System.err.println(cg);
+  }
 
 }
-

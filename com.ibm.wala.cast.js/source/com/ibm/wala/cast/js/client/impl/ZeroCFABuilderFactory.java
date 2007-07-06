@@ -18,7 +18,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * @author Julian Dolby (dolby@us.ibm.com)
@@ -27,23 +26,14 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class ZeroCFABuilderFactory implements CallGraphBuilderFactory {
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.domo.j2ee.client.CallGraphBuilderFactory#make(com.ibm.domo.ipa.callgraph.AnalysisOptions,
-   *      com.ibm.domo.ipa.cha.IClassHierarchy, java.lang.ClassLoader,
-   *      com.ibm.domo.j2ee.J2EEAnalysisScope,
-   *      com.ibm.domo.util.warnings.WarningSet, boolean)
-   */
   public CallGraphBuilder make(AnalysisOptions options,
 			       IClassHierarchy cha,
 			       AnalysisScope scope,
-			       WarningSet warnings,
 			       boolean keepPointsTo)
   {
-    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
+    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     options.setSelector(new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()));
 
-    return new JSZeroXCFABuilder(cha, warnings, options, null, null, null, ZeroXInstanceKeys.NONE);
+    return new JSZeroXCFABuilder(cha, options, null, null, null, ZeroXInstanceKeys.NONE);
   }
 }

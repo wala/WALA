@@ -11,7 +11,11 @@
 package com.ibm.wala.cast.js.cfg;
 
 import com.ibm.wala.cast.ir.cfg.AstInducedCFG;
-import com.ibm.wala.cast.js.ssa.*;
+import com.ibm.wala.cast.js.ssa.InstructionVisitor;
+import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
+import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
+import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
+import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.SSAInstruction;

@@ -1,10 +1,13 @@
 package com.ibm.wala.cast.js.translator;
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.impl.*;
-import com.ibm.wala.util.debug.Assertions;
-
 import java.util.Map;
+
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.impl.CAstOperator;
+import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
+import com.ibm.wala.util.debug.Assertions;
 
 public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.RewriteContext> {
 

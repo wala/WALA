@@ -10,12 +10,12 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.loader;
 
-import com.ibm.wala.cast.js.translator.*;
-import com.ibm.wala.cast.js.types.*;
-import com.ibm.wala.cast.loader.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.types.*;
+import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.ClassLoaderReference;
 
 public class JavaScriptLoaderFactory extends SingleClassLoaderFactory {
   private final JavaScriptTranslatorFactory translatorFactory;

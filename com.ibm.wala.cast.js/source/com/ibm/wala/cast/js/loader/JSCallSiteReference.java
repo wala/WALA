@@ -10,11 +10,11 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.loader;
 
-import com.ibm.wala.cast.js.types.*;
-import com.ibm.wala.cast.types.*;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.types.MethodReference;
 
 public class JSCallSiteReference extends CallSiteReference {
 

@@ -10,18 +10,23 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import com.ibm.wala.cast.ipa.callgraph.*;
-import com.ibm.wala.cast.js.cfg.*;
-import com.ibm.wala.cast.js.ssa.*;
-import com.ibm.wala.cast.js.types.*;
-import com.ibm.wala.cfg.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.impl.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.cast.ipa.callgraph.AstCallGraph;
+import com.ibm.wala.cast.js.cfg.JSInducedCFG;
+import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
+import com.ibm.wala.cast.js.ssa.JavaScriptNewInstruction;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cfg.InducedCFG;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.impl.Everywhere;
+import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeReference;
 
 public class JSCallGraph extends AstCallGraph {
 
@@ -43,7 +48,7 @@ public class JSCallGraph extends AstCallGraph {
       return new JSInducedCFG(getStatements(), this, Everywhere.EVERYWHERE);
     }
 
-    public SSANewInstruction addAllocation(TypeReference T, WarningSet warnings) {
+    public SSANewInstruction addAllocation(TypeReference T) {
       if (cha.isSubclassOf(cha.lookupClass(T), cha.lookupClass(JavaScriptTypes.Root))) {
         int instance = nextLocal++;
         NewSiteReference ref = NewSiteReference.make(statements.size(), T);
@@ -51,7 +56,7 @@ public class JSCallGraph extends AstCallGraph {
         statements.add(result);
         return result;
       } else {
-        return super.addAllocation(T, warnings);
+        return super.addAllocation(T);
       }
     }
 

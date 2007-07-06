@@ -10,6 +10,19 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.mozilla.javascript.CompilerEnvirons;
 import org.mozilla.javascript.FunctionNode;
 import org.mozilla.javascript.Node;
@@ -18,18 +31,25 @@ import org.mozilla.javascript.ScriptOrFnNode;
 import org.mozilla.javascript.Token;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 
-import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstControlFlowMap;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstNodeTypeMap;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.CAstType;
+import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
+import com.ibm.wala.cast.tree.impl.CAstOperator;
+import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
+import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
+import com.ibm.wala.cast.tree.impl.LineNumberPosition;
+import com.ibm.wala.classLoader.ModuleEntry;
+import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.impl.*;
-import com.ibm.wala.classLoader.*;
-
-import java.io.*;
-import java.net.*;
-import java.util.*;
 
 public class RhinoToAstTranslator {
 

@@ -10,24 +10,17 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import com.ibm.wala.cast.ipa.callgraph.*;
+import com.ibm.wala.cast.ipa.callgraph.AstCFAPointerKeys;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
- * @author sfink
- * 
  * Common utilities for CFA-style call graph builders.
  */
 public class JSCFABuilder extends JSSSAPropagationCallGraphBuilder {
 
-  /**
-   * @param cha
-   * @param warnings
-   */
-  public JSCFABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options) {
-    super(cha, warnings, options, new AstCFAPointerKeys());
+  public JSCFABuilder(IClassHierarchy cha, AnalysisOptions options) {
+    super(cha, options, new AstCFAPointerKeys());
   }
 
 }

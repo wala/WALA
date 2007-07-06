@@ -49,7 +49,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private static final boolean DEBUG = false;
@@ -57,8 +56,6 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private final IClassHierarchy cha;
 
   private final MethodTargetSelector base;
-
-  private final WarningSet warnings;
 
   private final Map<Object, IMethod> constructors = new HashMap<Object, IMethod>();
 
@@ -79,10 +76,9 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
     }
   }
 
-  public JavaScriptConstructTargetSelector(IClassHierarchy cha, MethodTargetSelector base, WarningSet warnings) {
+  public JavaScriptConstructTargetSelector(IClassHierarchy cha, MethodTargetSelector base) {
     this.cha = cha;
     this.base = base;
-    this.warnings = warnings;
   }
 
   private IMethod record(Object key, IMethod m) {
@@ -472,7 +468,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     if (site.getDeclaredTarget().equals(JavaScriptMethods.ctorReference)) {
       Assertions._assert(cha.isSubclassOf(receiver, cha.lookupClass(JavaScriptTypes.Root)));
-      IR callerIR = caller.getIR(warnings);
+      IR callerIR = caller.getIR();
       SSAAbstractInvokeInstruction callStmts[] = callerIR.getCalls(site);
       Assertions._assert(callStmts.length == 1);
       int nargs = callStmts[0].getNumberOfUses();

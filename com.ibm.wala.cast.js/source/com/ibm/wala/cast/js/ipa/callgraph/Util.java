@@ -14,17 +14,27 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 
-import com.ibm.wala.cast.ipa.callgraph.*;
+import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
+import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
-import com.ibm.wala.cast.js.loader.*;
-import com.ibm.wala.cast.js.translator.*;
-import com.ibm.wala.cast.js.types.*;
-import com.ibm.wala.cast.types.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.cast.js.loader.JavaScriptLoader;
+import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
+import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import com.ibm.wala.cast.js.types.JavaScriptMethods;
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.cast.types.AstMethodReference;
+import com.ibm.wala.classLoader.ClassLoaderFactory;
+import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 
 public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
 
@@ -38,11 +48,10 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
     return translatorFactory;
   }
 
-  public static AnalysisOptions makeOptions(AnalysisScope scope, boolean keepIRs, IClassHierarchy cha, Iterable<Entrypoint> roots,
-      final WarningSet warnings) {
+  public static AnalysisOptions makeOptions(AnalysisScope scope, boolean keepIRs, IClassHierarchy cha, Iterable<Entrypoint> roots) {
     final AnalysisOptions options = new AnalysisOptions(scope, AstIRFactory.makeDefaultFactory(keepIRs), roots);
 
-    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha, warnings);
+    com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     options.setSelector(new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()));
 
     options.setUseConstantSpecificKeys(true);
@@ -70,9 +79,9 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
     return new CAstAnalysisScope(files, loaders);
   }
 
-  public static IClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders, WarningSet warnings)
+  public static IClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders)
       throws ClassHierarchyException {
-    return ClassHierarchy.make(scope, loaders, warnings, JavaScriptLoader.JS);
+    return ClassHierarchy.make(scope, loaders, JavaScriptLoader.JS);
   }
 
   public static Iterable<Entrypoint> makeScriptRoots(IClassHierarchy cha) {

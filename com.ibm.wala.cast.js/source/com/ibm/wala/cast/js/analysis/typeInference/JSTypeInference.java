@@ -10,13 +10,19 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.analysis.typeInference;
 
-import com.ibm.wala.fixpoint.IVariable;
-import com.ibm.wala.analysis.typeInference.*;
+import com.ibm.wala.analysis.typeInference.ConeType;
+import com.ibm.wala.analysis.typeInference.PointType;
+import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.cast.analysis.typeInference.AstTypeInference;
-import com.ibm.wala.cast.js.ssa.*;
+import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
+import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
+import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
+import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
+import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 
 public class JSTypeInference extends AstTypeInference {

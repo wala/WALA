@@ -10,11 +10,18 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.util;
 
-import java.io.*;
-import java.net.*;
-import javax.swing.text.html.*;
-import javax.swing.text.*;
-import java.util.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Stack;
+
+import javax.swing.text.BadLocationException;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.html.HTML;
+import javax.swing.text.html.HTMLEditorKit;
 
 public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   private final URL input;

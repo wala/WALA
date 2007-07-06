@@ -10,8 +10,10 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.types;
 
-import com.ibm.wala.cast.types.*;
-import com.ibm.wala.types.*;
+import com.ibm.wala.cast.types.AstMethodReference;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 
 public class JavaScriptMethods extends AstMethodReference {

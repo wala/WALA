@@ -10,11 +10,17 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.util;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
-import javax.swing.text.html.*;
-import javax.swing.text.html.parser.*;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.parser.ParserDelegator;
 
 public class Generator {
   public static final String preamble = "preamble.js", temp = "temp.js";
