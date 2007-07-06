@@ -53,7 +53,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public abstract class IRTests extends WalaTestCase {
   public IRTests(String name) {
@@ -198,7 +197,6 @@ public abstract class IRTests extends WalaTestCase {
     }
 
     void check(CallGraph CG) {
-      WarningSet ws = new WarningSet();
       for (Iterator ms = methodAssertions.entrySet().iterator(); ms.hasNext();) {
         Map.Entry entry = (Map.Entry) ms.next();
 
@@ -211,7 +209,7 @@ public abstract class IRTests extends WalaTestCase {
           CGNode n = (CGNode) ns.next();
           for (Iterator as = s.iterator(); as.hasNext();) {
             SourceMapAssertion a = (SourceMapAssertion) as.next();
-            Assert.assertTrue("failed for " + a.variableName + " in " + n, a.check(n.getMethod(), n.getIR(ws)));
+            Assert.assertTrue("failed for " + a.variableName + " in " + n, a.check(n.getMethod(), n.getIR()));
           }
         }
       }
@@ -267,7 +265,6 @@ public abstract class IRTests extends WalaTestCase {
 
   private static void dumpIR(CallGraph cg, boolean assertReachable) throws IOException {
     Set<IMethod> unreachable = HashSetFactory.make();
-    WarningSet warnings = new WarningSet();
     IClassHierarchy cha = cg.getClassHierarchy();
     IClassLoader sourceLoader = cha.getLoader(EclipseProjectPath.SOURCE_REF);
     for (Iterator iter = sourceLoader.iterateAllClasses(); iter.hasNext();) {
@@ -289,7 +286,7 @@ public abstract class IRTests extends WalaTestCase {
             continue;
           }
           CGNode node = (CGNode) nodeIter.next();
-          Trace.println(node.getIR(warnings));
+          Trace.println(node.getIR());
         }
       }
     }
