@@ -128,9 +128,6 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     return result;
   }
 
-  /**
-   * @author sfink
-   */
   public class ExplicitNode extends NodeImpl {
 
     /**

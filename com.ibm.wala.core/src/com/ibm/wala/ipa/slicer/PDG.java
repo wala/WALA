@@ -153,8 +153,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       return;
     }
     ControlDependenceGraph cdg = new ControlDependenceGraph(ir.getControlFlowGraph());
-    for (Iterator<? extends IBasicBlock> it = cdg.iterator(); it.hasNext();) {
-      IBasicBlock bb = it.next();
+    for (IBasicBlock bb : cdg) {
       if (bb.isExitBlock()) {
         // nothing should be control-dependent on the exit block.
         continue;
@@ -203,8 +202,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       IBasicBlock bb = it.next();
       if (cdg.getPredNodeCount(bb) == 0) {
         // this is control dependent on the method entry.
-        for (Iterator<? extends IInstruction> it2 = bb.iterator(); it2.hasNext();) {
-          SSAInstruction st = (SSAInstruction) it2.next();
+        for (IInstruction s : bb) {
+          SSAInstruction st = (SSAInstruction)s;
           Statement dest = ssaInstruction2Statement(st);
           addEdge(methodEntry, dest);
         }
@@ -605,6 +604,9 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * Wrap an SSAInstruction in a Statement
    */
   Statement ssaInstruction2Statement(SSAInstruction s) {
+    if (s == null) {
+      System.err.println("XXX");
+    }
     assert s != null;
     if (s instanceof SSAPhiInstruction) {
       SSAPhiInstruction phi = (SSAPhiInstruction) s;

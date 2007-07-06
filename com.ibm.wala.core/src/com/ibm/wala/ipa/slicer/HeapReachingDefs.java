@@ -66,34 +66,31 @@ import com.ibm.wala.util.intset.SparseIntSet;
  */
 public class HeapReachingDefs {
 
-  private static final boolean VERBOSE = true;
+  private static final boolean VERBOSE = false;
 
   /**
    * For each statement s, return the set of statements that may def the heap
    * value read by s.
-   * @throws IllegalArgumentException  if pa is null
-   * @throws IllegalArgumentException  if statements is null
+   * 
+   * @throws IllegalArgumentException
+   *             if pa is null
+   * @throws IllegalArgumentException
+   *             if statements is null
    * 
    */
   public static Map<Statement, OrdinalSet<Statement>> computeReachingDefs(CGNode node, IR ir, PointerAnalysis pa,
       Map<CGNode, OrdinalSet<PointerKey>> mod, Collection<Statement> statements, HeapExclusions exclusions) {
 
     if (statements == null) {
-          throw new IllegalArgumentException("statements is null");
-        }
+      throw new IllegalArgumentException("statements is null");
+    }
     if (pa == null) {
-          throw new IllegalArgumentException("pa is null");
-        }
+      throw new IllegalArgumentException("pa is null");
+    }
+    System.err.println("Reaching Defs " + node);
     if (VERBOSE) {
-      System.err.println("Reaching Defs " + node);
+//      System.err.println("Reaching Defs " + node);
       System.err.println(statements.size());
-      // int i = 0;
-      // for (Statement st : statements) {
-      // i++;
-      // if (i % 1000 == 0) {
-      // System.err.println(st);
-      // }
-      // }
     }
 
     // create a control flow graph with one instruction per basic block.

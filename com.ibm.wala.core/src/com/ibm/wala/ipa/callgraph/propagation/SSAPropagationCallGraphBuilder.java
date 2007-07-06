@@ -294,11 +294,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   /**
    * Add constraints for a particular basic block.
-   * 
-   * @param node
-   * @param cfg
-   * @param b
-   * @param v
    */
   protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph cfg, BasicBlock b, ConstraintVisitor v) {
     v.setBasicBlock(b);
@@ -317,12 +312,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     addPhiConstraints(node, cfg, b, v);
   }
 
-  /**
-   * @param node
-   * @param cfg
-   * @param b
-   * @param v
-   */
   private void addPhiConstraints(CGNode node, ControlFlowGraph cfg, BasicBlock b, ConstraintVisitor v) {
     // visit each phi instruction in each successor block
     for (Iterator sbs = cfg.getSuccNodes(b); sbs.hasNext();) {

@@ -44,7 +44,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
 
   /**
    * the EdgeManager for the CDG. It implements the edge part of the standard
-   * Graph abstraction, using the control-dependence egdes of the cdg.
+   * Graph abstraction, using the control-dependence edges of the cdg.
    */
   private final EdgeManager<IBasicBlock> edgeManager;
 

@@ -51,7 +51,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  * @author sfink
  */
 
-public class SSACFG implements ControlFlowGraph{
+public class SSACFG implements ControlFlowGraph {
 
   private static final boolean DEBUG = false;
 
@@ -64,7 +64,6 @@ public class SSACFG implements ControlFlowGraph{
   final private WarningSet warnings;
 
   final protected AbstractCFG cfg;
- 
 
   /**
    * cache a ref to the exit block for efficient access
@@ -83,7 +82,8 @@ public class SSACFG implements ControlFlowGraph{
    * Constructor CFG.
    * 
    * @param cfg
-   * @throws IllegalArgumentException  if method is null
+   * @throws IllegalArgumentException
+   *             if method is null
    */
   public SSACFG(IMethod method, AbstractCFG cfg, SSAInstruction[] instructions, WarningSet warnings) {
 
@@ -180,8 +180,8 @@ public class SSACFG implements ControlFlowGraph{
   }
 
   /**
-   * NB: Use iterators such as IR.iterateAllInstructions() instead
-   * of this method.  This will probably be deprecated someday.
+   * NB: Use iterators such as IR.iterateAllInstructions() instead of this
+   * method. This will probably be deprecated someday.
    * 
    * Return the instructions. Note that the CFG is created from the Shrike CFG
    * prior to creating the SSA instructions.
@@ -191,7 +191,8 @@ public class SSACFG implements ControlFlowGraph{
   public SSAInstruction[] getInstructions() {
     return instructions;
   }
-  private final Map<RefPathKey,SSAPiInstruction> piInstructions = new HashMap<RefPathKey,SSAPiInstruction>(2);
+
+  private final Map<RefPathKey, SSAPiInstruction> piInstructions = new HashMap<RefPathKey, SSAPiInstruction>(2);
 
   private class RefPathKey {
     private final int n;
@@ -260,11 +261,6 @@ public class SSACFG implements ControlFlowGraph{
       return cfg.getCatchBlocks().get(getNumber());
     }
 
-    /**
-     * Method getLastInstructionIndex.
-     * 
-     * @return int
-     */
     public int getLastInstructionIndex() {
       IBasicBlock B = cfg.getNode(number);
       return B.getLastInstructionIndex();
@@ -285,16 +281,14 @@ public class SSACFG implements ControlFlowGraph{
         if (localPhis == null) {
           return Arrays.asList(stackSlotPhis).iterator();
         } else {
-          return new CompoundIterator<SSAPhiInstruction>(Arrays.asList(stackSlotPhis).iterator(), Arrays.asList(localPhis).iterator());
+          return new CompoundIterator<SSAPhiInstruction>(Arrays.asList(stackSlotPhis).iterator(), Arrays.asList(localPhis)
+              .iterator());
         }
       }
     }
 
     /**
-     * Method getPhiForStackSlot. This method is used during SSA construction.
-     * 
-     * @param slot
-     * @return PhiInstruction
+     * This method is used during SSA construction.
      */
     public SSAPhiInstruction getPhiForStackSlot(int slot) {
       if (stackSlotPhis == null) {
@@ -309,10 +303,7 @@ public class SSACFG implements ControlFlowGraph{
     }
 
     /**
-     * Method getPhiForLocal. This method is used during SSA construction.
-     * 
-     * @param n
-     * @return PhiInstruction
+     * This method is used during SSA construction.
      */
     public SSAPhiInstruction getPhiForLocal(int n) {
       if (localPhis == null) {
@@ -326,12 +317,6 @@ public class SSACFG implements ControlFlowGraph{
       }
     }
 
-    /**
-     * Method addPhiForStackSlot.
-     * 
-     * @param slot
-     * @param phi
-     */
     public void addPhiForStackSlot(int slot, SSAPhiInstruction phi) {
       if (stackSlotPhis == null) {
         stackSlotPhis = new SSAPhiInstruction[initialCapacity];
@@ -344,12 +329,6 @@ public class SSACFG implements ControlFlowGraph{
       stackSlotPhis[slot] = phi;
     }
 
-    /**
-     * Method addPhiForLocal.
-     * 
-     * @param n
-     * @param phi
-     */
     public void addPhiForLocal(int n, SSAPhiInstruction phi) {
       if (localPhis == null) {
         localPhis = new SSAPhiInstruction[initialCapacity];
@@ -364,8 +343,6 @@ public class SSACFG implements ControlFlowGraph{
 
     /**
      * Remove any phis in the set.
-     * 
-     * @param toRemove
      */
     public void removePhis(Set<SSAPhiInstruction> toRemove) {
       int nRemoved = 0;
@@ -502,12 +479,12 @@ public class SSACFG implements ControlFlowGraph{
     }
 
     public Iterator<IInstruction> iterator() {
-      Function<SSAInstruction,IInstruction> kludge = new Function<SSAInstruction, IInstruction>() {
+      Function<SSAInstruction, IInstruction> kludge = new Function<SSAInstruction, IInstruction>() {
         public IInstruction apply(SSAInstruction s) {
           return s;
         }
       };
-      return new MapIterator<SSAInstruction, IInstruction>(getAllInstructions().iterator(),kludge);
+      return new MapIterator<SSAInstruction, IInstruction>(getAllInstructions().iterator(), kludge);
     }
 
     /**
@@ -590,10 +567,6 @@ public class SSACFG implements ControlFlowGraph{
     }
   }
 
-  /**
-   * 
-   * 
-   */
   public class ExceptionHandlerBasicBlock extends BasicBlock {
 
     /**
@@ -614,30 +587,14 @@ public class SSACFG implements ControlFlowGraph{
       super(number);
     }
 
-    /**
-     * Returns the catchInstruction.
-     * 
-     * @return GetCaughtExceptionInstruction
-     */
     public SSAGetCaughtExceptionInstruction getCatchInstruction() {
       return catchInstruction;
     }
 
-    /**
-     * Sets the catchInstruction.
-     * 
-     * @param catchInstruction
-     *          The catchInstruction to set
-     */
     public void setCatchInstruction(SSAGetCaughtExceptionInstruction catchInstruction) {
       this.catchInstruction = catchInstruction;
     }
 
-    /**
-     * Returns the exceptionType.
-     * 
-     * @return TypeReference
-     */
     public Iterator<TypeReference> getCaughtExceptionTypes() {
       return new Iterator<TypeReference>() {
         int next = 0;
@@ -656,20 +613,11 @@ public class SSACFG implements ControlFlowGraph{
       };
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "BB(Handler)[SSA]" + getNumber() + " - " + method.getSignature();
     }
 
-    /**
-     * Sets the exceptionType.
-     * 
-     * @param exceptionType
-     *          The exceptionType to set
-     */
     public void addCaughtExceptionType(TypeReference exceptionType) {
       if (exceptionTypes == null) {
         exceptionTypes = new TypeReference[initialCapacity];
@@ -683,13 +631,16 @@ public class SSACFG implements ControlFlowGraph{
       exceptionTypes[nExceptionTypes - 1] = exceptionType;
     }
 
-    /*
-     * @see com.ibm.wala.ssa.CFG.BasicBlock#getAllInstructions()
-     */
     @Override
     public List<SSAInstruction> getAllInstructions() {
       List<SSAInstruction> result = super.getAllInstructions();
-      result.add(catchInstruction);
+      if (catchInstruction != null) {
+        // it's disturbing that catchInstruction can be null here. must be some
+        // strange corner case
+        // involving dead code. oh well .. keep on chugging until we have hard
+        // evidence that this is a bug
+        result.add(catchInstruction);
+      }
       return result;
     }
 
@@ -851,7 +802,7 @@ public class SSACFG implements ControlFlowGraph{
     Assertions.UNREACHABLE("external agents shouldn't be adding edges");
 
   }
-  
+
   public void removeEdge(IBasicBlock src, IBasicBlock dst) {
     Assertions.UNREACHABLE("external agents shouldn't be removing edges");
 
@@ -933,17 +884,20 @@ public class SSACFG implements ControlFlowGraph{
       throw new IllegalArgumentException("b is null");
     }
     IBasicBlock n = cfg.getNode(b.getNumber());
-    Function<IBasicBlock,IBasicBlock> f = new Function<IBasicBlock,IBasicBlock>() {
+    Function<IBasicBlock, IBasicBlock> f = new Function<IBasicBlock, IBasicBlock>() {
       public IBasicBlock apply(IBasicBlock object) {
         return basicBlocks[cfg.getNumber(object)];
       }
     };
-    return Iterator2Collection.toCollection(new MapIterator<IBasicBlock,IBasicBlock>(cfg.getExceptionalPredecessors(n).iterator(), f));
+    return Iterator2Collection.toCollection(new MapIterator<IBasicBlock, IBasicBlock>(cfg.getExceptionalPredecessors(n).iterator(),
+        f));
   }
 
   /**
    * has exceptional edge src -> dest
-   * @throws IllegalArgumentException  if dest is null
+   * 
+   * @throws IllegalArgumentException
+   *             if dest is null
    */
   public boolean hasExceptionalEdge(IBasicBlock src, IBasicBlock dest) {
     if (dest == null) {
@@ -958,7 +912,9 @@ public class SSACFG implements ControlFlowGraph{
 
   /**
    * has normal edge src -> dest
-   * @throws IllegalArgumentException  if dest is null
+   * 
+   * @throws IllegalArgumentException
+   *             if dest is null
    */
   public boolean hasNormalEdge(IBasicBlock src, IBasicBlock dest) {
     if (dest == null) {

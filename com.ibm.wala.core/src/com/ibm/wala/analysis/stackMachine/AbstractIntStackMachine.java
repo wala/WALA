@@ -118,10 +118,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     this.cfg = G;
   }
 
-  /**
-   * @param meeter
-   * @param flow
-   */
   protected void init(Meeter meeter, final FlowProvider flow) {
     final MeetOperator meet = new MeetOperator(meeter);
     ITransferFunctionProvider<IBasicBlock> xferFunctions = new ITransferFunctionProvider<IBasicBlock>() {
@@ -275,10 +271,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     return (MachineState) solver.getIn(bb);
   }
 
-  /**
-   * @author sfink
-   * 
-   */
   private class MeetOperator extends AbstractMeetOperator {
 
     private final Meeter meeter;
@@ -287,9 +279,6 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       this.meeter = meeter;
     }
 
-    /*
-     * @see com.ibm.wala.dataflow.graph.AbstractMeetOperator#isUnaryNoOp()
-     */
     @Override
     public boolean isUnaryNoOp() {
       return false;

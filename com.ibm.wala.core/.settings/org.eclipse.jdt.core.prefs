@@ -1,4 +1,4 @@
-#Thu Jul 05 17:39:56 EDT 2007
+#Fri Jul 06 08:51:51 EDT 2007
 eclipse.preferences.version=1
 instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
@@ -32,7 +32,7 @@ org.eclipse.jdt.core.compiler.problem.invalidJavadocTags=enabled
 org.eclipse.jdt.core.compiler.problem.invalidJavadocTagsDeprecatedRef=disabled
 org.eclipse.jdt.core.compiler.problem.invalidJavadocTagsNotVisibleRef=enabled
 org.eclipse.jdt.core.compiler.problem.invalidJavadocTagsVisibility=public
-org.eclipse.jdt.core.compiler.problem.localVariableHiding=warning
+org.eclipse.jdt.core.compiler.problem.localVariableHiding=ignore
 org.eclipse.jdt.core.compiler.problem.methodWithConstructorName=warning
 org.eclipse.jdt.core.compiler.problem.missingDeprecatedAnnotation=warning
 org.eclipse.jdt.core.compiler.problem.missingJavadocComments=ignore
@@ -68,7 +68,7 @@ org.eclipse.jdt.core.compiler.problem.unusedDeclaredThrownExceptionWhenOverridin
 org.eclipse.jdt.core.compiler.problem.unusedImport=warning
 org.eclipse.jdt.core.compiler.problem.unusedLabel=warning
 org.eclipse.jdt.core.compiler.problem.unusedLocal=warning
-org.eclipse.jdt.core.compiler.problem.unusedParameter=warning
+org.eclipse.jdt.core.compiler.problem.unusedParameter=ignore
 org.eclipse.jdt.core.compiler.problem.unusedParameterWhenImplementingAbstract=disabled
 org.eclipse.jdt.core.compiler.problem.unusedParameterWhenOverridingConcrete=disabled
 org.eclipse.jdt.core.compiler.problem.unusedPrivateMember=warning

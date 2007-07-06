@@ -53,6 +53,10 @@ public class SliceFunctions implements IFlowFunctionMap<Statement> {
       } else {
         return ReachabilityFunctions.killReachability;
       }
+    case NORMAL:
+      // only control dependence flows into the missing function.
+      // this control dependence does not flow back to the caller.
+      return ReachabilityFunctions.killReachability;
     default: 
       Assertions.UNREACHABLE(s.getKind().toString());
       return null;

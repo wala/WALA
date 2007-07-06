@@ -107,6 +107,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
       };
       return new FilterIterator<Statement>(getSuccNodes(call), f);
     case PARAM_CALLER:
+    case HEAP_PARAM_CALLER:
       return getSuccNodes(call);
     default:
       Assertions.UNREACHABLE(call.getKind().toString());
@@ -261,6 +262,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     case HEAP_RET_CALLEE:
     case HEAP_RET_CALLER:
     case METHOD_ENTRY:
+    case CATCH:
       return false;
     case HEAP_PARAM_CALLER:
     case PARAM_CALLER:
@@ -273,7 +275,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
         return s.getInstruction() instanceof SSAAbstractInvokeInstruction;
       }
     default:
-      Assertions.UNREACHABLE(n.toString());
+      Assertions.UNREACHABLE(n.getKind() + " " + n.toString());
       return false;
     }
   }
@@ -314,6 +316,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     case NORMAL:
     case EXC_RET_CALLER:
     case METHOD_ENTRY:
+    case CATCH:
       return false;
     case HEAP_RET_CALLEE:
     case EXC_RET_CALLEE:
