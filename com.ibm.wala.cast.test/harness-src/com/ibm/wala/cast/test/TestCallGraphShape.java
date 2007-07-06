@@ -22,7 +22,6 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public abstract class TestCallGraphShape extends WalaTestCase {
 
@@ -41,12 +40,11 @@ public abstract class TestCallGraphShape extends WalaTestCase {
   }
 
   protected void verifyNameAssertions(CallGraph CG, Object[][] assertionData) {
-    WarningSet W = new WarningSet();
     for (int i = 0; i < assertionData.length; i++) {
       Iterator NS = getNodes(CG, (String) assertionData[i][0]).iterator();
       while (NS.hasNext()) {
         CGNode N = (CGNode) NS.next();
-        IR ir = N.getIR(W);
+        IR ir = N.getIR();
         Name[] names = (Name[]) assertionData[i][1];
         for (int j = 0; j < names.length; j++) {
 
