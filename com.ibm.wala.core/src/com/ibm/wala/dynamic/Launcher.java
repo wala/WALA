@@ -84,9 +84,9 @@ public abstract class Launcher {
       throw new IllegalArgumentException("cmd cannot be null");
     }
     System.out.println("spawning process " + cmd);
-    String[] env = getEnv() == null ? null : buildEnv(getEnv());
+    String[] ev = getEnv() == null ? null : buildEnv(getEnv());
     try {
-      Process p = Runtime.getRuntime().exec(cmd, env, getWorkingDir());
+      Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
       return p;
     } catch (IOException e) {
       e.printStackTrace();
@@ -94,10 +94,10 @@ public abstract class Launcher {
     }
   }
 
-  private String[] buildEnv(Map env) {
-    String[] result = new String[env.size()];
+  private String[] buildEnv(Map ev) {
+    String[] result = new String[ev.size()];
     int i = 0;
-    for (Iterator it = env.entrySet().iterator(); it.hasNext();) {
+    for (Iterator it = ev.entrySet().iterator(); it.hasNext();) {
       Map.Entry e = (Map.Entry) it.next();
       result[i++] = e.getKey() + "=" + e.getValue();
     }
@@ -105,11 +105,11 @@ public abstract class Launcher {
   }
 
   protected Thread drainStdOut(Process p) {
-    final BufferedInputStream output = new BufferedInputStream(p.getInputStream());
+    final BufferedInputStream out = new BufferedInputStream(p.getInputStream());
     Thread result = new Drainer(p) {
       @Override
       void drain() throws IOException {
-        drainAndPrint(output, System.out);
+        drainAndPrint(out, System.out);
       }
     };
     result.start();
@@ -117,12 +117,12 @@ public abstract class Launcher {
   }
 
   protected Drainer captureStdOut(Process p) {
-    final BufferedInputStream output = new BufferedInputStream(p.getInputStream());
+    final BufferedInputStream out = new BufferedInputStream(p.getInputStream());
     final ByteArrayOutputStream b = new ByteArrayOutputStream();
     Drainer result = new Drainer(p) {
       @Override
       void drain() throws IOException {
-        drainAndCatch(output, b);
+        drainAndCatch(out, b);
       }
     };
     result.setCapture(b);

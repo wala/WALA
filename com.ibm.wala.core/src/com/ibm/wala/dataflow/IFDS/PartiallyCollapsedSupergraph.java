@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.cfg.CFGCache;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.cfg.TwoExitCFG;
@@ -96,23 +95,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       return isEntry(o);
     }
   };
-
-
-  /**
-   * @param cg
-   *          Governing call graph
-   * @param noCollapse
-   *          set of nodes in the call graph which cannot be collapsed
-   * @param relevant
-   *          set of nodes which are relevant and should be included in the
-   *          supergraph
-   * @param warnings
-   *          object to track analysis warnings
-   */
-  public PartiallyCollapsedSupergraph(CallGraph cg, CFGCache cfgCache, Collection<CGNode> noCollapse, Filter relevant,
-      WarningSet warnings) {
-    this(cg, noCollapse, relevant, warnings);
-  }
 
   /**
    * @param cg

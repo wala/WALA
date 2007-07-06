@@ -68,14 +68,6 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     return map.keySet().iterator();
   }
 
-  /*
-   * @see com.ibm.wala.util.intset.OrdinalSetMapping#makeSingleton(int)
-   */
-  public OrdinalSet<T> makeSingleton(int i) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
-  }
-
   public int add(Object o) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return 0;

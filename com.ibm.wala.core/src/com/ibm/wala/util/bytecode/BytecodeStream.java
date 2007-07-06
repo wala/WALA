@@ -14,7 +14,6 @@ package com.ibm.wala.util.bytecode;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
-import com.ibm.wala.util.debug.UnimplementedError;
 
 /****
  * Provides minimal abstraction layer to a stream of bytecodes

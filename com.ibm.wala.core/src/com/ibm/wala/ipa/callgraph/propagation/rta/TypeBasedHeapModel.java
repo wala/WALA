@@ -112,14 +112,14 @@ public class TypeBasedHeapModel implements HeapModel {
     }
     if (!nodesHandled.contains(node)) {
       nodesHandled.add(node);
-      pKeys.putAll(computePointerKeys(node, cg));
+      pKeys.putAll(computePointerKeys(node));
     }
   }
 
   /**
    * @return Collection<IClass> representing pointer keys for locals of node
    */
-  private Map<PointerKey, Object> computePointerKeys(CGNode node, CallGraph cg) {
+  private Map<PointerKey, Object> computePointerKeys(CGNode node) {
     IR ir = node.getIR(new WarningSet());
     if (ir == null) {
       return Collections.emptyMap();

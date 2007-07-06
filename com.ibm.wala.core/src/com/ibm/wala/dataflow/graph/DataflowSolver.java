@@ -126,7 +126,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
 
     final private Object[] allKeys;
 
-    private int mapIt(int i, Object[] allKeys, Object[] allVars, Map<Object, IVariable> varMap) {
+    private int mapIt(int i, Object[] allVars, Map<Object, IVariable> varMap) {
       for (Iterator<Object> it = varMap.keySet().iterator(); it.hasNext();) {
         Object key = it.next();
         allKeys[i] = key;
@@ -140,9 +140,9 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
       allKeys = new Object[node2In.size() + node2Out.size() + edge2Var.size()];
       Object allVars[] = new Object[node2In.size() + node2Out.size() + edge2Var.size()];
 
-      int i = mapIt(0, allKeys, allVars, node2In);
-      i = mapIt(i, allKeys, allVars, node2Out);
-      mapIt(i, allKeys, allVars, edge2Var);
+      int i = mapIt(0, allVars, node2In);
+      i = mapIt(i, allVars, node2Out);
+      mapIt(i, allVars, edge2Var);
 
       uf = new IntegerUnionFind(allVars.length);
       map = new ObjectArrayMapping<Object>(allVars);

@@ -11,7 +11,6 @@
 package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * A sparse ordered, mutable duplicate-free, fully-encapsulated set of longs.

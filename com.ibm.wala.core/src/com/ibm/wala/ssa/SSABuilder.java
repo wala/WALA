@@ -713,7 +713,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       workingState.replaceValue(ref, pi.getDef());
     }
 
-    private void maybeInsertPi(SSAInstruction cond, int val) {
+    private void maybeInsertPi(int val) {
       if ((addPiForFieldSelect) && (creators.length > val) && (creators[val] instanceof SSAGetInstruction)
           && !((SSAGetInstruction) creators[val]).isStatic()) {
         reuseOrCreatePi(creators[val], val);
@@ -733,7 +733,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       } else if ((addPiForNullCheck) && (symbolTable.isNullConstant(val2))) {
         reuseOrCreatePi(cond, val1);
       } else if (symbolTable.isIntegerConstant(val2)) {
-        maybeInsertPi(cond, val1);
+        maybeInsertPi(val1);
       }
     }
 
@@ -745,7 +745,7 @@ public class SSABuilder extends AbstractIntStackMachine {
       @Override
       public void visitSwitch(com.ibm.wala.shrikeBT.SwitchInstruction instruction) {
         int val = getCurrentInstruction().getUse(0);
-        maybeInsertPi(getCurrentInstruction(), val);
+        maybeInsertPi(val);
       }
 
       @Override

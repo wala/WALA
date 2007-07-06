@@ -143,7 +143,7 @@ public class Slicer {
 
   /**
    * @param s
-   *          a statement of interest
+   *            a statement of interest
    * @return the backward slice of s.
    */
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pa,
@@ -153,7 +153,7 @@ public class Slicer {
 
   /**
    * @param s
-   *          a statement of interest
+   *            a statement of interest
    * @return the forward slice of s.
    */
   public static Collection<Statement> computeForwardSlice(Statement s, CallGraph cg, PointerAnalysis pa,
@@ -179,7 +179,7 @@ public class Slicer {
 
   /**
    * @param s
-   *          a statement of interest
+   *            a statement of interest
    */
   private static Collection<Statement> computeSlice(SDG sdg, Statement s, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) {
@@ -201,7 +201,7 @@ public class Slicer {
       rootsConsidered.add(root);
       Collection<Statement> empty = Collections.emptySet();
       ISDG sdgView = new SDGView(sdg, empty);
-      SliceProblem p = new SliceProblem(root, cg, sdgView, backward);
+      SliceProblem p = new SliceProblem(root, sdgView, backward);
 
       if (VERBOSE) {
         System.err.println("worklist now: " + workList.size());
@@ -342,7 +342,7 @@ public class Slicer {
 
   /**
    * @param s
-   *          a statement of interest
+   *            a statement of interest
    * @return the backward slice of s.
    */
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pointerAnalysis)
@@ -387,7 +387,7 @@ public class Slicer {
 
     private final IFlowFunctionMap<Statement> f;
 
-    public SliceProblem(Statement s, CallGraph cg, ISDG sdg, boolean backward) {
+    public SliceProblem(Statement s, ISDG sdg, boolean backward) {
       this.src = s;
       SDGSupergraph forwards = new SDGSupergraph(sdg, src, backward);
       this.supergraph = backward ? new BackwardsSupergraph<Statement, PDG>(forwards) : forwards;

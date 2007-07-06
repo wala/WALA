@@ -812,8 +812,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     final CGNode node = bb.getNode();
     Function<IBasicBlock, BasicBlockInContext> toContext = new Function<IBasicBlock, BasicBlockInContext>() {
       public BasicBlockInContext apply(IBasicBlock object) {
-        IBasicBlock bb = object;
-        return new BasicBlockInContext(node, bb);
+        IBasicBlock b = object;
+        return new BasicBlockInContext(node, b);
       }
     };
     MapIterator<IBasicBlock, BasicBlockInContext> m = new MapIterator<IBasicBlock, BasicBlockInContext>(it, toContext);
