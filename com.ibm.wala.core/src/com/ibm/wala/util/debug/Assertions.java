@@ -73,7 +73,7 @@ public class Assertions {
   }
 
   /**
-   * Method UNREACHABLE.
+   * An assertion to call when reaching a point that should not be reached.
    */
   @Internal
   public static void UNREACHABLE() {
@@ -81,8 +81,7 @@ public class Assertions {
   }
 
   /**
-   * Method UNREACHABLE.
-   * @param string
+   * An assertion to call when reaching a point that should not be reached.
    */
   @Internal
   public static void UNREACHABLE(String string) {
@@ -95,7 +94,6 @@ public class Assertions {
   }
   
   /**
-   * Method preconditon (convenience).
    * This is only a convenience method, identical to _assert.
    * Allows the programmer to distinguish preconditions from other assertions.
    * @param b
@@ -107,7 +105,6 @@ public class Assertions {
   }
 
   /**
-   * Method preconditon (convenience).
    * This is only a convenience method, identical to _assert.
    * It allows the programmer to distinguish preconditions from other assertions.
    * @param b
@@ -120,7 +117,6 @@ public class Assertions {
   }
   
   /**
-   * Method postcondition (convenience).
    * This is only a convenience method, identical to _assert.
    * Allows the programmer to distinguish postconditions from other assertions.
    * @param b
@@ -132,7 +128,6 @@ public class Assertions {
   }
 
   /**
-   * Method postcondition (convenience).
    * This is only a convenience method, identical to _assert.
    * It allows the programmer to distinguish postconditions from other assertions.
    * @param b
@@ -143,9 +138,4 @@ public class Assertions {
     if (!b)
       throw new UnimplementedError(string);
   }
-  
-  
-  
-  
-  
 }
