@@ -48,9 +48,9 @@ import com.ibm.wala.util.warnings.WalaException;
  * Given an Eclipse plugin, this class detects all the other plugins that should
  * be part of the analysis scope when analyzing the given plugin.
  * 
- * This is buggy in that it ignores the Import-Package declarations in the manifest.
- * This is a problem.   Probably the way to go is to recode this whole thing using
- * a headless Eclipse instance, and rely on Eclipse APIs to resolve
+ * This is buggy in that it ignores the Import-Package declarations in the
+ * manifest. This is a problem. Probably the way to go is to recode this whole
+ * thing using a headless Eclipse instance, and rely on Eclipse APIs to resolve
  * dependencies the right way.
  * 
  * @author Marco Pistoia
@@ -84,31 +84,30 @@ public class EclipseAnalysisScope extends AnalysisScope {
    * id of a plug-in, fragment, or bundle being analyzed.
    */
   final private Set<String> pluginIds = HashSetFactory.make();
-  
+
   /**
    * name of plugin being analyzed
    */
   private final String pluginName;
-  
+
   /**
    * absolute name of plugins directory in Eclipse installation
    */
   private final String pluginsDirName;
 
-
   /**
    * @param pluginName
-   *          name of the plugin to be analyzed
+   *            name of the plugin to be analyzed
    * @throws WalaException
    */
   public EclipseAnalysisScope(String pluginName) throws WalaException {
-    
+
     this.pluginName = pluginName;
-    
+
     Properties wp = WalaProperties.loadProperties();
     this.pluginsDirName = wp.getProperty(WalaProperties.ECLIPSE_PLUGINS_DIR);
     Assertions.productionAssertion(pluginsDirName != null, "eclipse_plugins_dir property is not set");
-    
+
     File pluginDirectory = new File(pluginsDirName);
 
     initVersionInfo(pluginDirectory);
@@ -118,7 +117,7 @@ public class EclipseAnalysisScope extends AnalysisScope {
 
   public EMFScopeWrapper buildDelegate(File pluginDirectory) throws WalaException {
     pluginIds.add(pluginName);
-    
+
     File plugIn = findPluginDirOrJAR(pluginName, pluginsDirName, pluginDirectory);
     if (plugIn == null) {
       throw new WalaException("EclipseAnalysisScopeBuilder: Unable to identify " + pluginName);
@@ -189,8 +188,8 @@ public class EclipseAnalysisScope extends AnalysisScope {
    * Properties object.
    * 
    * @param p
-   *          (in) - The configuration properties file for the
-   *          EclipseAnalysisScopeBuilder.
+   *            (in) - The configuration properties file for the
+   *            EclipseAnalysisScopeBuilder.
    */
   private static void printConfigurationInformation(AnalysisScope scope) {
     System.out.println("CONFIGURATION INFORMATION:");
@@ -211,8 +210,8 @@ public class EclipseAnalysisScope extends AnalysisScope {
    * the analysis scope.
    * 
    * @param workQ
-   *          A list of plugins and fragments which are required by the plugin
-   *          being analyzed.
+   *            A list of plugins and fragments which are required by the plugin
+   *            being analyzed.
    */
   private Collection<JarFile> findRequiredPluginsFragmentsAndBundles(File plugIn, File pluginDirectory) {
     Collection<JarFile> result = HashSetFactory.make();
@@ -261,13 +260,15 @@ public class EclipseAnalysisScope extends AnalysisScope {
    * the plugin is available as a JAR file.
    * 
    * @param libName
-   *          a String representing the name of a plugin
+   *            a String representing the name of a plugin
    * @return a File representing the directory or JAR file containing the
    *         plugin. This method returns <code>null</code> if no directory or
    *         JAR file was found for this plugin.
-   * @throws IllegalArgumentException  if pluginDirectory is null
+   * @throws IllegalArgumentException
+   *             if pluginDirectory is null
    */
-  public static File findPluginDirOrJAR(String libName, String pluginsDirName, File pluginDirectory) throws IllegalArgumentException {
+  public static File findPluginDirOrJAR(String libName, String pluginsDirName, File pluginDirectory)
+      throws IllegalArgumentException {
     if (pluginDirectory == null) {
       throw new IllegalArgumentException("pluginDirectory is null");
     }
@@ -295,7 +296,7 @@ public class EclipseAnalysisScope extends AnalysisScope {
    * recursively.
    * 
    * @param baseDir
-   *          a File representing the base directory of the plugin.
+   *            a File representing the base directory of the plugin.
    * @return a Set of Strings, each of which represents the name of a JAR file
    *         in the given directory.
    */
@@ -348,7 +349,8 @@ public class EclipseAnalysisScope extends AnalysisScope {
    * in its MANIFEST.MF file.
    * 
    * @param manifestFileName
-   *          a String representing the fully qualified name of a manifest file.
+   *            a String representing the fully qualified name of a manifest
+   *            file.
    * @return a TreeSet of Strings each of which represents the fully qualified
    *         name of a required plugin's directory. The returned TreeSet is
    *         <code>null</code> if it was not possible to have access to the
@@ -373,7 +375,7 @@ public class EclipseAnalysisScope extends AnalysisScope {
           String requiredBundleName = (requiredArray[i].trim()).split(";")[0];
           if ((version > 3 || version == 3 && subversion >= 2) && Character.isDigit(requiredBundleName.charAt(0)))
             continue;
-          File requiredBundle = findPluginDirOrJAR(requiredBundleName, pluginDirsName,pluginDirectory);
+          File requiredBundle = findPluginDirOrJAR(requiredBundleName, pluginDirsName, pluginDirectory);
           if (requiredBundle == null) {
             System.err.println("EclipseAnalysisScopeBuilder: " + requiredBundleName + " was not found.");
             continue;
@@ -442,7 +444,7 @@ public class EclipseAnalysisScope extends AnalysisScope {
       Iterator pluginIdsIter = pluginIds.iterator();
       while (pluginIdsIter.hasNext()) {
         String fragmentHost = (String) pluginIdsIter.next();
-        result.addAll(getContributingFragment(fragmentHost, manifestName, pluginsDirName, pluginDirectory));
+        result.addAll(getContributingFragment(fragmentHost, manifestName, pluginDirectory));
       }
     }
     return result;
@@ -454,12 +456,13 @@ public class EclipseAnalysisScope extends AnalysisScope {
    * and any required jars to the analysisScopeJars Set.
    * 
    * @param fragmentHost -
-   *          The plugin id value to search for in fragment manifests.
+   *            The plugin id value to search for in fragment manifests.
    * @param manifestFileName -
-   *          The name of the current manifest file being scanned.
+   *            The name of the current manifest file being scanned.
    * 
    */
-  private Collection<JarFile> getContributingFragment(String fragmentHost, String manifestFileName, String pluginsDirName, File pluginDirectory) {
+  private Collection<JarFile> getContributingFragment(String fragmentHost, String manifestFileName,
+      File pluginDirectory) {
     Collection<JarFile> result = HashSetFactory.make();
     InputStream is = getInputStream(manifestFileName);
     if (is == null) {
@@ -522,8 +525,8 @@ public class EclipseAnalysisScope extends AnalysisScope {
    * the XML file does not exist or cannot be opened.
    * 
    * @param xmlFileName
-   *          a String representing the name of the <code>plugin.xml</code>
-   *          file describing the plugin configuration.
+   *            a String representing the name of the <code>plugin.xml</code>
+   *            file describing the plugin configuration.
    * @return an InputStream to the <code>plugin.xml</code> file.
    */
   public static InputStream getInputStream(String xmlFileName) {

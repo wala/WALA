@@ -188,10 +188,10 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
    */
   public IStructuredSelection getSelection() throws IllegalStateException {
     GraphViewer viewer = (GraphViewer)getApplicationWindow();
-    if (viewer == null || viewer.viewer == null) {
+    if (viewer == null || viewer.treeViewer == null) {
       throw new IllegalStateException();
     }
-    return (IStructuredSelection) viewer.viewer.getSelection();
+    return (IStructuredSelection) viewer.treeViewer.getSelection();
   }
   
   /**
@@ -209,7 +209,7 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
     /**
      * JFace component implementing the tree viewer
      */
-    private TreeViewer viewer;
+    private TreeViewer treeViewer;
 
     /**
      * @throws WalaException
@@ -227,20 +227,20 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
      */
     @Override
     protected Control createContents(Composite parent) {
-      viewer = new TreeViewer(parent);
-      viewer.setContentProvider(new GraphContentProvider());
-      viewer.setLabelProvider(new GraphLabelProvider());
-      viewer.setInput(getGraphInput());
+      treeViewer = new TreeViewer(parent);
+      treeViewer.setContentProvider(new GraphContentProvider());
+      treeViewer.setLabelProvider(new GraphLabelProvider());
+      treeViewer.setInput(getGraphInput());
 
       // create a pop-up menu
       if (getPopUpActions().size() > 0) {
         MenuManager mm = new MenuManager();
-        viewer.getTree().setMenu(mm.createContextMenu(viewer.getTree()));
+        treeViewer.getTree().setMenu(mm.createContextMenu(treeViewer.getTree()));
         for (Iterator<ViewIRAction> it = getPopUpActions().iterator(); it.hasNext(); ) {
           mm.add(it.next());
         }
       }
-      return viewer.getTree();
+      return treeViewer.getTree();
     }
 
 

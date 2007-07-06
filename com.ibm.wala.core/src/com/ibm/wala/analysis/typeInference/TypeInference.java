@@ -115,7 +115,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         if (klass != null) {
           v.setType(new ConeType(klass));
         } else {
-          v.setType(ConeType.TOP);
+          v.setType(TypeAbstraction.TOP);
           // v.setType(BOTTOM);
         }
       } else if (doPrimitives) {
@@ -432,13 +432,10 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         }
       } else {
         IClass klass = cha.lookupClass(elementType);
-        // if (Assertions.verifyAssertions) {
-        // Assertions._assert(klass != null);
-        // }
         if (klass != null) {
           t.setType(new ConeType(klass));
         } else {
-          t.setType(ConeType.TOP);
+          t.setType(TypeAbstraction.TOP);
         }
 
         return CHANGED;
@@ -581,14 +578,13 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     @Override
     public void visitInstanceof(SSAInstanceofInstruction instruction) {
       if (doPrimitives) {
-	result = new DeclaredTypeOperator(PrimitiveType.BOOLEAN);
+        result = new DeclaredTypeOperator(PrimitiveType.BOOLEAN);
       }
-      
     }
     
     @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
-      TypeAbstraction type = meetDeclaredExceptionTypes(instruction, cha);
+      TypeAbstraction type = meetDeclaredExceptionTypes(instruction);
       result = new DeclaredTypeOperator(type);
     }
 
@@ -602,7 +598,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       result = piOp;
     }
 
-    private TypeAbstraction meetDeclaredExceptionTypes(SSAGetCaughtExceptionInstruction s, IClassHierarchy cha) {
+    private TypeAbstraction meetDeclaredExceptionTypes(SSAGetCaughtExceptionInstruction s) {
       ExceptionHandlerBasicBlock bb = (ExceptionHandlerBasicBlock) ir.getControlFlowGraph().getNode(s.getBasicBlockNumber());
       Iterator it = bb.getCaughtExceptionTypes();
       TypeReference t = (TypeReference) it.next();

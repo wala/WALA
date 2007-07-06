@@ -62,11 +62,17 @@ public class BypassSyntheticClassLoader implements IClassLoader {
 
   private final IClassHierarchy cha;
 
-  /**
-   * A mapping from TypeName -> IClass
-   */
   private final HashMap<TypeName, IClass> syntheticClasses = HashMapFactory.make();
 
+  /**
+   * Don't change my signature!  ClassLoaderFactoryImpl calls me by reflection! yuck.
+   * 
+   * @param me the name of this class loader
+   * @param parent its parent
+   * @param exclusions classes to ignore
+   * @param cha governing class hierarchy
+   * @param warnings object to record analysis warnings
+   */
   public BypassSyntheticClassLoader(ClassLoaderReference me, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha,
       WarningSet warnings) {
     this.me = me;
@@ -74,8 +80,8 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     this.parent = parent;
   }
 
-  public IClass lookupClass(TypeName className, IClassHierarchy cha) {
-    IClass pc = parent.lookupClass(className, cha);
+  public IClass lookupClass(TypeName className) {
+    IClass pc = parent.lookupClass(className);
     if (pc == null) {
       IClass c = syntheticClasses.get(className);
       return c;

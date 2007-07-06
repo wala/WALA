@@ -387,14 +387,14 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     if (!instbb.isPiBlock()) {
       for (Iterator sit = cfg.getSuccNodes(bb); sit.hasNext();) {
         BasicBlock succNode = (BasicBlock) sit.next();
-        boolean fallThrough = isFallThroughEdge(cfg, bb, succNode);
+        boolean fallThrough = isFallThroughEdge(bb, succNode);
         edgeWorkSet.add(new BBEdge(bb, succNode, fallThrough));
       }
     } else {
       SSAPiInstruction pi = (SSAPiInstruction) instbb.getInstruction();
       int succNum = pi.getSuccessor();
       BasicBlock succNode = (BasicBlock) cfg.getNode(succNum);
-      boolean fallThrough = isFallThroughEdge(cfg, bb, succNode);
+      boolean fallThrough = isFallThroughEdge(bb, succNode);
       edgeWorkSet.add(new BBEdge(bb, succNode, fallThrough));
     }
 
@@ -407,7 +407,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
       Iterator workIt = edgeWorkSet.iterator();
       BBEdge edge = (BBEdge) workIt.next();
       boolean fallThru = false;
-      if (isFallThroughEdge(cfg, edge.src, edge.dest)) {
+      if (isFallThroughEdge(edge.src, edge.dest)) {
         fallThru = true;
       }
       workIt.remove();
@@ -963,15 +963,12 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
   /**
    * is the given edge a fall-through edge?
    * 
-   * @param cfg
-   * @param src
-   * @param dest
-   * @return note: this is based on a DOMO-invariant that guarantees the blocks
-   *         are numbered in a certain way. This is the "DOMO-way" of
+   * @return note: this is based on a WALA-invariant that guarantees the blocks
+   *         are numbered in a certain way. This is the "WALA-way" of
    *         identifying fall-through edges, and is mainly done due for
    *         efficiency reasons (as many other software crimes).
    */
-  private boolean isFallThroughEdge(SSACFG cfg, IBasicBlock src, IBasicBlock dest) {
+  private boolean isFallThroughEdge(IBasicBlock src, IBasicBlock dest) {
     if (cfg.getSuccNodeCount(src) == 2) {
       return ((src.getNumber() + 1) == dest.getNumber());
     } else {

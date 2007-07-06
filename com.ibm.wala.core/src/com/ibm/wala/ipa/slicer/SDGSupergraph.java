@@ -30,7 +30,6 @@ import com.ibm.wala.util.intset.SparseIntSet;
  * A wrapper around an SDG to make it look like a supergraph for tabulation.
  * 
  * @author sjfink
- * 
  */
 class SDGSupergraph implements ISupergraph<Statement, PDG> {
 
@@ -39,7 +38,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /**
    * We are interested in flow to or from the following statement.
    */
-  private final Statement src;
+  private final Statement srcStatement;
 
   /**
    * Do a backward slice?
@@ -48,7 +47,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
 
   public SDGSupergraph(ISDG sdg, Statement src, boolean backward) {
     this.sdg = sdg;
-    this.src = src;
+    this.srcStatement = src;
     this.backward = backward;
   }
 
@@ -57,6 +56,9 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     return null;
   }
 
+  /* 
+   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object, java.lang.Object)
+   */
   public byte classifyEdge(Statement src, Statement dest) {
     Assertions.UNREACHABLE();
     return 0;
@@ -162,7 +164,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMain()
    */
   public PDG getMain() {
-    return getProcOf(src);
+    return getProcOf(srcStatement);
   }
 
   /*
@@ -170,7 +172,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    */
   public Statement getMainEntry() {
     Assertions.productionAssertion(!backward, "todo: support backward");
-    return src;
+    return srcStatement;
   }
 
   /*
@@ -180,7 +182,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     // We pretend that sink is the "main exit" .. we don't care about
     // flow past the sink.
     Assertions.productionAssertion(backward, "todo: support forward");
-    return src;
+    return srcStatement;
   }
 
   /*
@@ -397,7 +399,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
 
   public Iterator<? extends Statement> getSuccNodes(Statement N) {
     if (backward) {
-      if (N.equals(src)) {
+      if (N.equals(srcStatement)) {
         return EmptyIterator.instance();
       } else {
         return sdg.getSuccNodes(N);
@@ -409,13 +411,13 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
 
   public boolean hasEdge(Statement src, Statement dst) {
     if (backward) {
-      if (src.equals(this.src)) {
+      if (src.equals(this.srcStatement)) {
         return IteratorUtil.contains(getSuccNodes(src), dst);
       } else {
         return sdg.hasEdge(src, dst);
       }
     } else {
-      if (dst.equals(this.src)) {
+      if (dst.equals(this.srcStatement)) {
         return IteratorUtil.contains(getPredNodes(dst), src);
       } else {
         return sdg.hasEdge(src, dst);
@@ -469,7 +471,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    */
   public IntSet getSuccNodeNumbers(Statement node) {
     if (backward) {
-      if (node.equals(src)) {
+      if (node.equals(srcStatement)) {
         return new SparseIntSet();
       } else {
         return sdg.getSuccNodeNumbers(node);

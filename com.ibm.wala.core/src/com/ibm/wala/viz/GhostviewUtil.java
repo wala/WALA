@@ -39,28 +39,22 @@ public class GhostviewUtil {
   /**
    * spawn a process to ghostview a WALA IR
    * 
-   * @param cha
-   * @param ir
    * @return a handle to the ghostview process
-   * @throws WalaException
    */
-  public static Process ghostviewIR(IClassHierarchy cha, IR ir, boolean sanitize, String psFile, String dotFile, String dotExe,
-      String gvExe) throws WalaException {
-    return ghostviewIR(cha, ir, sanitize, psFile, dotFile, dotExe, gvExe, null);
+  public static Process ghostviewIR(IClassHierarchy cha, IR ir, String psFile, String dotFile, String dotExe, String gvExe)
+      throws WalaException {
+    return ghostviewIR(cha, ir, psFile, dotFile, dotExe, gvExe, null);
   }
 
   /**
    * spawn a process to ghostview a WALA IR
    * 
-   * @param cha
-   * @param ir
    * @return a handle to the ghostview process
-   * @throws WalaException
    * @throws IllegalArgumentException
-   *           if ir is null
+   *             if ir is null
    */
-  public static Process ghostviewIR(IClassHierarchy cha, IR ir, boolean sanitize, String psFile, String dotFile, String dotExe,
-      String gvExe, NodeDecorator annotations) throws WalaException {
+  public static Process ghostviewIR(IClassHierarchy cha, IR ir, String psFile, String dotFile, String dotExe, String gvExe,
+      NodeDecorator annotations) throws WalaException {
 
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");

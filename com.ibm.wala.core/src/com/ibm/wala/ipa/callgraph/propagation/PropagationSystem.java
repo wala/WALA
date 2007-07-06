@@ -483,7 +483,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     for (int i = 1; i < dim; i++) {
       TypeReference jlo = makeArray(TypeReference.JavaLangObject, i);
       IClass jloClass = null;
-      jloClass = aClass.getClassLoader().lookupClass(jlo.getName(), aClass.getClassHierarchy());
+      jloClass = aClass.getClassLoader().lookupClass(jlo.getName());
       MutableIntSet set = findOrCreateSparseSetForClass(jloClass);
       set.add(index);
     }
@@ -502,7 +502,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
       IClass I = (IClass) it.next();
       TypeReference iArrayRef = makeArray(I.getReference(), dim);
       IClass iArrayClass = null;
-      iArrayClass = I.getClassLoader().lookupClass(iArrayRef.getName(), I.getClassHierarchy());
+      iArrayClass = I.getClassLoader().lookupClass(iArrayRef.getName());
       MutableIntSet set = findOrCreateSparseSetForClass(iArrayClass);
       set.add(index);
       if (DEBUG) {
@@ -527,7 +527,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     while (T != null) {
       TypeReference tArrayRef = makeArray(T.getReference(), dim);
       IClass tArrayClass = null;
-      tArrayClass = T.getClassLoader().lookupClass(tArrayRef.getName(), T.getClassHierarchy());
+      tArrayClass = T.getClassLoader().lookupClass(tArrayRef.getName());
       MutableIntSet set = findOrCreateSparseSetForClass(tArrayClass);
       set.add(index);
       if (DEBUG) {

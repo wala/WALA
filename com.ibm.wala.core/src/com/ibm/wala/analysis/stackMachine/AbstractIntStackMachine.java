@@ -882,9 +882,9 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     /**
      * Initialize the visitor used to perform the flow functions
      */
-    protected void init(BasicStackMachineVisitor visitor, com.ibm.wala.shrikeBT.Instruction.Visitor edgeVisitor) {
-      this.visitor = visitor;
-      this.edgeVisitor = edgeVisitor;
+    protected void init(BasicStackMachineVisitor v, com.ibm.wala.shrikeBT.Instruction.Visitor ev) {
+      this.visitor = v;
+      this.edgeVisitor = ev;
     }
 
     public boolean needsNodeFlow() {

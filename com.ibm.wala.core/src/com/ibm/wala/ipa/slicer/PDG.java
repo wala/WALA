@@ -34,6 +34,7 @@ import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
 import com.ibm.wala.ssa.SSACheckCastInstruction;
@@ -41,7 +42,6 @@ import com.ibm.wala.ssa.SSAFieldAccessInstruction;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAInstanceofInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
@@ -92,7 +92,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
   private final PointerAnalysis pa;
 
-  private final ExtendedHeapModel h;
+  private final ExtendedHeapModel heapModel;
 
   private final Map<CGNode, OrdinalSet<PointerKey>> mod;
 
@@ -117,18 +117,18 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       throw new IllegalArgumentException("node is null");
     }
     this.node = node;
-    this.h = pa == null ? null : new DelegatingExtendedHeapModel(pa.getHeapModel());
+    this.heapModel = pa == null ? null : new DelegatingExtendedHeapModel(pa.getHeapModel());
     this.pa = pa;
     this.dOptions = dOptions;
     this.mod = mod;
     this.exclusions = exclusions;
     instructionIndices = computeInstructionIndices(node.getIR(new WarningSet()));
-    createNodes(mod, ref, dOptions, cOptions);
-    createScalarEdges(dOptions, cOptions);
+    createNodes(ref, cOptions);
+    createScalarEdges(cOptions);
   }
 
-  private void createScalarEdges(DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
-    createScalarDataDependenceEdges(dOptions);
+  private void createScalarEdges(ControlDependenceOptions cOptions) {
+    createScalarDataDependenceEdges();
     createControlDependenceEdges(cOptions);
   }
 
@@ -226,7 +226,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * @param pa
    * @param mod
    */
-  private void createScalarDataDependenceEdges(DataDependenceOptions dOptions) {
+  private void createScalarDataDependenceEdges() {
     if (dOptions.equals(DataDependenceOptions.NONE)) {
       return;
     }
@@ -450,12 +450,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   /**
    * Create heap data dependence edges in this PDG relevant to a particular
    * statement.
-   * 
-   * @param pa
-   * @param mod
    */
-  private void createHeapDataDependenceEdges(final PointerKey pk, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
-      DataDependenceOptions dOptions) {
+  private void createHeapDataDependenceEdges(final PointerKey pk) {
 
     if (locationsHandled.contains(pk)) {
       return;
@@ -480,7 +476,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       System.err.println("Location " + pk);
     }
 
-    // in reaching defs calcuation, exclude heap statements that are irrelevant.
+    // in reaching defs calculation, exclude heap statements that are
+    // irrelevant.
     Filter f = new Filter() {
       public boolean accepts(Object o) {
         if (o instanceof HeapStatement) {
@@ -677,17 +674,16 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * 
    * @param dOptions
    */
-  private void createNodes(Map<CGNode, OrdinalSet<PointerKey>> mod, Map<CGNode, OrdinalSet<PointerKey>> ref,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+  private void createNodes(Map<CGNode, OrdinalSet<PointerKey>> ref, ControlDependenceOptions cOptions) {
     IR ir = node.getIR(new WarningSet());
 
     if (ir != null) {
-      Collection<SSAInstruction> visited = createNormalStatements(ir, mod, ref, dOptions);
+      Collection<SSAInstruction> visited = createNormalStatements(ir, ref);
       createSpecialStatements(ir, visited);
     }
 
-    createCalleeParams(ref, dOptions);
-    createReturnStatements(mod, dOptions);
+    createCalleeParams(ref);
+    createReturnStatements();
 
     if (!cOptions.equals(ControlDependenceOptions.NONE)) {
       addNode(new MethodEntryStatement(node));
@@ -703,7 +699,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    *            this node. These are logically parameters in the SDG.
    * @param dOptions
    */
-  private void createReturnStatements(Map<CGNode, OrdinalSet<PointerKey>> mod, DataDependenceOptions dOptions) {
+  private void createReturnStatements() {
     ArrayList<Statement> list = new ArrayList<Statement>();
     if (!node.getMethod().getReturnType().equals(TypeReference.Void)) {
       ParamStatement.NormalReturnCallee n = new ParamStatement.NormalReturnCallee(node);
@@ -732,9 +728,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * @param ref
    *            the set of heap locations which may be read (transitively) by
    *            this node. These are logically parameters in the SDG.
-   * @param dOptions
    */
-  private void createCalleeParams(Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions) {
+  private void createCalleeParams(Map<CGNode, OrdinalSet<PointerKey>> ref) {
 
     ArrayList<Statement> list = new ArrayList<Statement>();
     for (int i = 1; i <= node.getMethod().getNumberOfParameters(); i++) {
@@ -785,8 +780,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * @param options
    * 
    */
-  private Collection<SSAInstruction> createNormalStatements(IR ir, Map<CGNode, OrdinalSet<PointerKey>> mod,
-      Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions) {
+  private Collection<SSAInstruction> createNormalStatements(IR ir, Map<CGNode, OrdinalSet<PointerKey>> ref) {
     Collection<SSAInstruction> visited = HashSetFactory.make();
     // create a node for every normal instruction in the IR
     SSAInstruction[] instructions = ir.getInstructions();
@@ -802,7 +796,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         visited.add(s);
       }
       if (s instanceof SSAAbstractInvokeInstruction) {
-        addParamPassingStatements((SSAAbstractInvokeInstruction) s, mod, ref, dOptions);
+        addParamPassingStatements((SSAAbstractInvokeInstruction) s, ref);
       }
     }
     return visited;
@@ -814,8 +808,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * 
    * @param dOptions
    */
-  private void addParamPassingStatements(SSAAbstractInvokeInstruction call, Map<CGNode, OrdinalSet<PointerKey>> mod,
-      Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions) {
+  private void addParamPassingStatements(SSAAbstractInvokeInstruction call, Map<CGNode, OrdinalSet<PointerKey>> ref) {
 
     Collection<Statement> params = MapUtil.findOrCreateSet(callerParamStatements, call.getCallSite());
     Collection<Statement> rets = MapUtil.findOrCreateSet(callerReturnStatements, call.getCallSite());
@@ -920,9 +913,9 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     case NORMAL:
       NormalStatement st = (NormalStatement) N;
       if (!(IGNORE_ALLOC_HEAP_DEFS && st.getInstruction() instanceof SSANewInstruction)) {
-        Collection<PointerKey> ref = ModRef.getRef(node, h, pa, st.getInstruction(), exclusions);
+        Collection<PointerKey> ref = ModRef.getRef(node, heapModel, pa, st.getInstruction(), exclusions);
         for (PointerKey pk : ref) {
-          createHeapDataDependenceEdges(pk, pa, mod, dOptions);
+          createHeapDataDependenceEdges(pk);
         }
       }
       break;
@@ -931,7 +924,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     case HEAP_RET_CALLEE:
     case HEAP_RET_CALLER:
       HeapStatement h = (HeapStatement) N;
-      createHeapDataDependenceEdges(h.getLocation(), pa, mod, dOptions);
+      createHeapDataDependenceEdges(h.getLocation());
     }
   }
 
@@ -940,9 +933,9 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     case NORMAL:
       NormalStatement st = (NormalStatement) N;
       if (!(IGNORE_ALLOC_HEAP_DEFS && st.getInstruction() instanceof SSANewInstruction)) {
-        Collection<PointerKey> ref = ModRef.getMod(node, h, pa, st.getInstruction(), exclusions);
+        Collection<PointerKey> ref = ModRef.getMod(node, heapModel, pa, st.getInstruction(), exclusions);
         for (PointerKey pk : ref) {
-          createHeapDataDependenceEdges(pk, pa, mod, dOptions);
+          createHeapDataDependenceEdges(pk);
         }
       }
       break;
@@ -951,7 +944,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     case HEAP_RET_CALLEE:
     case HEAP_RET_CALLER:
       HeapStatement h = (HeapStatement) N;
-      createHeapDataDependenceEdges(h.getLocation(), pa, mod, dOptions);
+      createHeapDataDependenceEdges(h.getLocation());
     }
   }
 

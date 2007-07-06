@@ -59,9 +59,9 @@ public class ViewIRAction extends Action {
 
   /**
    * @param viewer
-   *          Governing tree viewer
+   *            Governing tree viewer
    * @param cg
-   *          Governing call graph
+   *            Governing call graph
    */
   public ViewIRAction(SWTTreeViewer viewer, CallGraph cg, String psFile, String dotFile, String dotExe, String gvExe) {
     this.viewer = viewer;
@@ -83,7 +83,7 @@ public class ViewIRAction extends Action {
     // spawn the viewer
     System.err.println("Spawn IR Viewer for " + ir.getMethod());
     try {
-      GhostviewUtil.ghostviewIR(cg.getClassHierarchy(), ir, false, psFile, dotFile, dotExe, gvExe);
+      GhostviewUtil.ghostviewIR(cg.getClassHierarchy(), ir, psFile, dotFile, dotExe, gvExe);
     } catch (WalaException e) {
       e.printStackTrace();
     }
@@ -100,7 +100,7 @@ public class ViewIRAction extends Action {
     // get the IR for the node
     return first.getIR(new WarningSet());
   }
-  
+
   protected CGNode getNodeForSelection() {
     // we assume the tree viewer's current selection is a CGNode
     IStructuredSelection selection = viewer.getSelection();

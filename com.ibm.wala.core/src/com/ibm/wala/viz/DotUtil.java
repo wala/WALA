@@ -230,6 +230,10 @@ public class DotUtil {
     return null;
   }
 
+  /**
+   * @param n node to decorate
+   * @param d decorating master
+   */
   private static String decorateNode(Object n, NodeDecorator d) throws WalaException {
     StringBuffer result = new StringBuffer();
 

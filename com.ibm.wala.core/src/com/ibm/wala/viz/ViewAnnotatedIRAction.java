@@ -16,17 +16,18 @@ import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * @author sfink
- *
+ * 
  */
 public class ViewAnnotatedIRAction extends ViewIRAction {
 
   private final BasicBlockDecorator dec;
-  
-  public ViewAnnotatedIRAction(SWTTreeViewer viewer, CallGraph cg, String psFile, String dotFile, String dotExe, String gvExe, BasicBlockDecorator dec) {
+
+  public ViewAnnotatedIRAction(SWTTreeViewer viewer, CallGraph cg, String psFile, String dotFile, String dotExe, String gvExe,
+      BasicBlockDecorator dec) {
     super(viewer, cg, psFile, dotFile, dotExe, gvExe);
     this.dec = dec;
   }
-  
+
   @Override
   public void run() {
     IR ir = getIRForSelection();
@@ -34,7 +35,7 @@ public class ViewAnnotatedIRAction extends ViewIRAction {
     System.err.println("Spawn IR Viewer for " + ir.getMethod());
     try {
       dec.setCurrentNode(getNodeForSelection());
-      GhostviewUtil.ghostviewIR(getCg().getClassHierarchy(), ir, false, getPsFile(), getDotFile(),  getDotExe(), getGvExe(), dec);
+      GhostviewUtil.ghostviewIR(getCg().getClassHierarchy(), ir, getPsFile(), getDotFile(), getDotExe(), getGvExe(), dec);
     } catch (WalaException e) {
       e.printStackTrace();
     }

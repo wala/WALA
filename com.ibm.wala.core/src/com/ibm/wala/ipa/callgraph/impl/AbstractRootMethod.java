@@ -226,7 +226,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     }
   }
 
-  public int addPhi(TypeReference type, int[] values) {
+  public int addPhi(int[] values) {
     int result = nextLocal++;
     SSAPhiInstruction phi = new SSAPhiInstruction(result, values);
     statements.add(phi);

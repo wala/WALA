@@ -345,7 +345,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
         OrdinalSet ep = getPointsToSet(e);
         for (Iterator it2 = ep.iterator(); it2.hasNext();) {
           InstanceKey ik = (InstanceKey) it2.next();
-          if (SSAPropagationCallGraphBuilder.catches(caughtTypes, ik.getConcreteType(), getCallGraph().getClassHierarchy())) {
+          if (PropagationCallGraphBuilder.catches(caughtTypes, ik.getConcreteType(), getCallGraph().getClassHierarchy())) {
             S.add(instanceKeys.getMappedIndex(ik));
           }
         }
@@ -362,7 +362,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
             InstanceKey ik = SSAPropagationCallGraphBuilder.getInstanceKeyForPEI(node, peiLoc, type, iKeyFactory);
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
             IClass klass = ck.getType();
-            if (SSAPropagationCallGraphBuilder.catches(caughtTypes, klass, getCallGraph().getClassHierarchy())) {
+            if (PropagationCallGraphBuilder.catches(caughtTypes, klass, getCallGraph().getClassHierarchy())) {
               S.add(instanceKeys.getMappedIndex(SSAPropagationCallGraphBuilder
                   .getInstanceKeyForPEI(node, peiLoc, type, iKeyFactory)));
             }

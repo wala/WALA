@@ -98,7 +98,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
     // instances := set of instance key allocated at &lt;allocMethod, allocPC>
     for (Iterator it = allocN.iterator(); it.hasNext();) {
       CGNode n = (CGNode) it.next();
-      NewSiteReference site = findAlloc(cg, n, allocPC);
+      NewSiteReference site = findAlloc(n, allocPC);
       InstanceKey ik = hg.getHeapModel().getInstanceKeyForAllocation(n, site);
       if (ik == null) {
         throw new WalaException("could not get instance key at site " + site + " in " + n);
@@ -138,7 +138,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
    * @return the NewSiteReference for the allocation
    * @throws WalaException
    */
-  static NewSiteReference findAlloc(CallGraph cg, CGNode n, int allocPC) throws WalaException {
+  static NewSiteReference findAlloc(CGNode n, int allocPC) throws WalaException {
     for (Iterator it = n.iterateNewSites(); it.hasNext();) {
       NewSiteReference site = (NewSiteReference) it.next();
       if (site.getProgramCounter() == allocPC) {

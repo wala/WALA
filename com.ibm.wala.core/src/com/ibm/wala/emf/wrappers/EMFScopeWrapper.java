@@ -84,7 +84,7 @@ public class EMFScopeWrapper extends AnalysisScope {
 
   private final String scopeFile;
 
-  private final ClassLoader loader;
+  private final ClassLoader classloader;
 
   private static final Object SUCCESS = new Object();
 
@@ -100,7 +100,7 @@ public class EMFScopeWrapper extends AnalysisScope {
    * files provided)
    */
   protected EMFScopeWrapper(final ClassLoader loader) {
-    this.loader = loader;
+    this.classloader = loader;
     this.scopeFile = null;
     this.exclusionsFile = null;
   }
@@ -108,7 +108,7 @@ public class EMFScopeWrapper extends AnalysisScope {
   public EMFScopeWrapper(String scopeFile, String exclusionsFile, ClassLoader loader, boolean scopeAsFile) {
     super();
     this.scopeFile = scopeFile;
-    this.loader = loader;
+    this.classloader = loader;
 
     if (DEBUG_LEVEL > 0) {
       Trace.println(getClass() + " ctor " + scopeFile);
@@ -164,9 +164,7 @@ public class EMFScopeWrapper extends AnalysisScope {
     }
   }
 
-  /**
-   * @param m
-   */
+
   private void processModule(EModule m, final ClassLoaderReference loader) {
     JavaScopeSwitch sw = new JavaScopeSwitch() {
 
@@ -356,7 +354,7 @@ public class EMFScopeWrapper extends AnalysisScope {
    * @return an EMF scope object
    */
   private EJavaAnalysisScope readScope() {
-    InputStream s = loader.getResourceAsStream(scopeFile);
+    InputStream s = classloader.getResourceAsStream(scopeFile);
     if (s == null) {
       Assertions.UNREACHABLE("failed to open scope file: " + scopeFile);
     }

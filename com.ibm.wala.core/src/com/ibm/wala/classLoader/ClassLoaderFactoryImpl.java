@@ -96,6 +96,7 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
       cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha, warnings);
     } else
       try {
+        // this is fragile.  why are we doing things this way again?
         Class<?> impl = Class.forName(implClass);
         Constructor<?> ctor = impl.getDeclaredConstructor(new Class[] { ClassLoaderReference.class, IClassLoader.class,
             SetOfClasses.class, IClassHierarchy.class, WarningSet.class });
@@ -109,8 +110,6 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
   }
 
   /**
-   * @author sfink
-   * 
    * A waring when we fail to load an appropriate class loader implementation
    */
   private static class InvalidClassLoaderImplementation extends Warning {

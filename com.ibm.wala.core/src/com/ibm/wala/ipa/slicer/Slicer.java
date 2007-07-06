@@ -224,7 +224,7 @@ public class Slicer {
       if (VERBOSE) {
         System.err.println("Tabulated.");
       }
-      Collection<Statement> slice = result2Slice(sdg, tr);
+      Collection<Statement> slice = result2Slice(tr);
       result.addAll(slice);
 
       if (VERBOSE) {
@@ -351,10 +351,10 @@ public class Slicer {
   }
 
   /**
-   * Convert the resuls of the tabulation to a slice, represented as a
+   * Convert the results of the tabulation to a slice, represented as a
    * Collection<Statement>
    */
-  private static Collection<Statement> result2Slice(ISDG sdg, final TabulationResult<Statement> result) {
+  private static Collection<Statement> result2Slice(final TabulationResult<Statement> result) {
     return result.getSupergraphNodesReached();
     // final Collection<Statement> nodes = new
     // Iterator2Collection<Statement>(sdg.iterateLazyNodes());

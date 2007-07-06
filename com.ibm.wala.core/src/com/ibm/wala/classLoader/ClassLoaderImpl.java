@@ -400,7 +400,7 @@ public class ClassLoaderImpl implements IClassLoader {
     return loadedClasses.get(className);
   }
 
-  public IClass lookupClass(TypeName className, IClassHierarchy cha) {
+  public IClass lookupClass(TypeName className) {
     if (className == null) {
       throw new IllegalArgumentException("className is null");
     }

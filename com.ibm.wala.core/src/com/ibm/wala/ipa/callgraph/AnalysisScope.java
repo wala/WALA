@@ -214,12 +214,6 @@ public class AnalysisScope {
     return loadersByName.get(name);
   }
 
-  /**
-   * Method classLoaderName2Ref.
-   * 
-   * @param clName
-   * @return ClassLoaderReference
-   */
   protected ClassLoaderReference classLoaderName2Ref(String clName) {
     return getLoader(Atom.findOrCreateUnicodeAtom(clName));
   }
@@ -235,16 +229,10 @@ public class AnalysisScope {
     loaderImplByRef.put(ref, implClass);
   }
 
-  /**
-   * @return an Iterator <ClassLoaderReference>over the loaders.
-   */
   public Collection<ClassLoaderReference> getLoaders() {
     return Collections.unmodifiableCollection(loadersByName.values());
   }
 
-  /**
-   * @return the number of loaders.
-   */
   public int getNumberOfLoaders() {
     return loadersByName.values().size();
   }

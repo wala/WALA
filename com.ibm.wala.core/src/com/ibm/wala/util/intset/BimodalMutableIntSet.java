@@ -107,9 +107,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
       // don't bother
       return;
     }
-    int bvSize = BitVector.subscript(impl.max()) + 1;
-    // Trace.println("S B " + sparseSize + " " + bvSize + " " + impl.max() + " "
-    // + impl);
+    int bvSize = BitVectorBase.subscript(impl.max()) + 1;
     if (sparseSize > bvSize) {
       if (!(impl instanceof BitVectorIntSet)) {
         impl = new BitVectorIntSet(impl);

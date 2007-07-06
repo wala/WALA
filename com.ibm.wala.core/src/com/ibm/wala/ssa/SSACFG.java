@@ -136,7 +136,7 @@ public class SSACFG implements ControlFlowGraph{
       } else {
         TypeReference exceptionType = ShrikeUtil.makeTypeReference(loader.getReference(), handler.getCatchClass());
         IClass klass = null;
-        klass = loader.lookupClass(exceptionType.getName(), method.getClassHierarchy());
+        klass = loader.lookupClass(exceptionType.getName());
         if (klass == null) {
           warnings.add(ExceptionLoadFailure.create(exceptionType, method));
           t = exceptionType;

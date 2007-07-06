@@ -63,7 +63,6 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
- * 
  * Logic to interpret "factory" methods in context.
  * 
  * @author sfink
@@ -97,7 +96,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   /**
    * Keep track of analysis warnings
    */
-  private WarningSet warnings;
+  private WarningSet warningsSet;
 
   /**
    * User-defined reflection specification
@@ -113,7 +112,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    */
   public FactoryBypassInterpreter(AnalysisOptions options, ReflectionSpecification userSpec, WarningSet warnings) {
     this.options = options;
-    this.warnings = warnings;
+    this.warningsSet = warnings;
     this.userSpec = userSpec;
   }
 
@@ -339,10 +338,10 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
               if (DEBUG) {
                 Trace.println("Found no implementors of type " + T);
               }
-              warnings.add(NoSubtypesWarning.create(T));
+              warningsSet.add(NoSubtypesWarning.create(T));
             }
             if (implementors.size() > CONE_BOUND) {
-              warnings.add(ManySubtypesWarning.create(T, implementors.size()));
+              warningsSet.add(ManySubtypesWarning.create(T, implementors.size()));
             }
 
             addStatementsForSetOfTypes(implementors.iterator());
@@ -355,10 +354,10 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
               if (DEBUG) {
                 Trace.println("Found no subclasses of type " + T);
               }
-              warnings.add(NoSubtypesWarning.create(T));
+              warningsSet.add(NoSubtypesWarning.create(T));
             }
             if (subclasses.size() > CONE_BOUND) {
-              warnings.add(ManySubtypesWarning.create(T, subclasses.size()));
+              warningsSet.add(ManySubtypesWarning.create(T, subclasses.size()));
             }
             addStatementsForSetOfTypes(subclasses.iterator());
           }
@@ -375,7 +374,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     private TypeAbstraction interceptType(TypeAbstraction T) {
       TypeReference type = T.getType().getReference();
       if (type.equals(TypeReference.JavaIoSerializable)) {
-        warnings.add(IgnoreSerializableWarning.create());
+        warningsSet.add(IgnoreSerializableWarning.create());
         return null;
       } else {
         return T;
@@ -623,7 +622,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
    */
   public void setWarnings(WarningSet newWarnings) {
-    this.warnings = newWarnings;
+    this.warningsSet = newWarnings;
   }
 
   /*

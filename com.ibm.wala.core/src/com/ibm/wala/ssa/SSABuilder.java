@@ -49,7 +49,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntPair;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * This class constructs an SSA IR from a backing ShrikeBT instruction stream.
@@ -75,7 +74,7 @@ public class SSABuilder extends AbstractIntStackMachine {
   private final SSA2LocalMap localMap;
 
   public SSABuilder(ShrikeCTMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
-      SymbolTable symbolTable, boolean buildLocalMap, boolean addPiNodes, WarningSet warnings) {
+      SymbolTable symbolTable, boolean buildLocalMap, boolean addPiNodes) {
     super(scfg);
     localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes(), maxLocals) : null;
     init(new SymbolTableMeeter(symbolTable, cfg, instructions, scfg), new SymbolicPropagator(scfg, instructions, symbolTable,

@@ -48,7 +48,7 @@ public class ArrayClass implements IClass, Constants {
     if (Assertions.verifyAssertions) {
       TypeReference elementType = type.getInnermostElementType();
       if (!elementType.isPrimitiveType()) {
-        IClass klass = loader.lookupClass(elementType.getName(), cha);
+        IClass klass = loader.lookupClass(elementType.getName());
         if (klass == null) {
           Assertions.UNREACHABLE("caller should not attempt to create an array with type " + type);
         }
@@ -114,14 +114,14 @@ public class ArrayClass implements IClass, Constants {
       // 1) [Ljava/lang/Object
       // 2) [? for primitive arrays (null from getElementClass)
       if (elt == null || elt.getReference() == TypeReference.JavaLangObject) {
-        return loader.lookupClass(TypeReference.JavaLangObject.getName(), getClassHierarchy());
+        return loader.lookupClass(TypeReference.JavaLangObject.getName());
       }
 
       // else it is array of super of element type (yuck)
       else {
         TypeReference eltSuperRef = elt.getSuperclass().getReference();
         TypeReference superRef = TypeReference.findOrCreateArrayOf(eltSuperRef);
-        return elt.getSuperclass().getClassLoader().lookupClass(superRef.getName(), getClassHierarchy());
+        return elt.getSuperclass().getClassLoader().lookupClass(superRef.getName());
       }
     } catch (ClassHierarchyException e) {
       e.printStackTrace();
@@ -134,7 +134,7 @@ public class ArrayClass implements IClass, Constants {
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
   public IMethod getMethod(Selector sig) {
-    return loader.lookupClass(TypeReference.JavaLangObject.getName(), getClassHierarchy()).getMethod(sig);
+    return loader.lookupClass(TypeReference.JavaLangObject.getName()).getMethod(sig);
   }
 
   public IField getField(Atom name) {
@@ -194,7 +194,7 @@ public class ArrayClass implements IClass, Constants {
     if (elementType.isPrimitiveType()) {
       return null;
     }
-    return loader.lookupClass(elementType.getName(), getClassHierarchy());
+    return loader.lookupClass(elementType.getName());
   }
 
   @Override
@@ -223,8 +223,8 @@ public class ArrayClass implements IClass, Constants {
    */
   public Collection<IClass> getAllImplementedInterfaces() {
     HashSet<IClass> result = HashSetFactory.make(2);
-    result.add(loader.lookupClass(TypeReference.array_interfaces[0], getClassHierarchy()));
-    result.add(loader.lookupClass(TypeReference.array_interfaces[1], getClassHierarchy()));
+    result.add(loader.lookupClass(TypeReference.array_interfaces[0]));
+    result.add(loader.lookupClass(TypeReference.array_interfaces[1]));
     return result;
   }
 
@@ -256,7 +256,7 @@ public class ArrayClass implements IClass, Constants {
     if (elementType.isPrimitiveType()) {
       return null;
     }
-    return loader.lookupClass(elementType.getName(), getClassHierarchy());
+    return loader.lookupClass(elementType.getName());
   }
 
   /*

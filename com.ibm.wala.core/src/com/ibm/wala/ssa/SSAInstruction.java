@@ -197,6 +197,10 @@ public abstract class SSAInstruction implements IInstruction {
     return -1;
   }
 
+  /**
+   * Return the ith def
+   * @param i number of the def, starting at 0.
+   */
   public int getDef(int i) {
     return -1;
   }

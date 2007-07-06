@@ -284,12 +284,12 @@ public final class ShrikeClass implements IClass {
 
     if (superName == null) {
       if (!getReference().equals(TypeReference.JavaLangObject)) {
-        superClass = loader.lookupClass(TypeReference.JavaLangObject.getName(), getClassHierarchy());
+        superClass = loader.lookupClass(TypeReference.JavaLangObject.getName());
       }
       return;
     }
 
-    superClass = loader.lookupClass(TypeName.findOrCreate(superName), getClassHierarchy());
+    superClass = loader.lookupClass(TypeName.findOrCreate(superName));
     if (DEBUG) {
       Trace.println("got superclass " + superClass + " for " + this);
     }
@@ -387,7 +387,7 @@ public final class ShrikeClass implements IClass {
     for (int i = 0; i < interfaces.length; i++) {
       ImmutableByteArray name = interfaces[i];
       IClass klass = null;
-      klass = loader.lookupClass(TypeName.findOrCreate(name), getClassHierarchy());
+      klass = loader.lookupClass(TypeName.findOrCreate(name));
       if (klass == null) {
         warnings.add(ClassNotFoundWarning.create(name));
       } else {

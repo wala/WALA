@@ -38,7 +38,7 @@ public abstract class Entrypoint implements BytecodeConstants {
 
   /**
    * @param method
-   *          the method to be called for this entrypoint
+   *            the method to be called for this entrypoint
    */
   protected Entrypoint(IMethod method) {
     if (method == null) {
@@ -66,7 +66,7 @@ public abstract class Entrypoint implements BytecodeConstants {
    * Create a call site reference representing a call to this entrypoint
    * 
    * @param programCounter
-   *          the bytecode index of the synthesize call
+   *            the bytecode index of the synthesize call
    * @return the call site reference, or null if failed to find entrypoint
    */
   public CallSiteReference makeSite(int programCounter) {
@@ -130,21 +130,21 @@ public abstract class Entrypoint implements BytecodeConstants {
 
       TypeAbstraction a;
       if (p[0].isPrimitiveType()) {
-	a = PrimitiveType.getPrimitive(p[0]);
-	for(i = 1; i < p.length; i++) {
-	  a = a.meet(PrimitiveType.getPrimitive(p[i]));
-	}
+        a = PrimitiveType.getPrimitive(p[0]);
+        for (i = 1; i < p.length; i++) {
+          a = a.meet(PrimitiveType.getPrimitive(p[i]));
+        }
       } else {
-	IClassHierarchy cha = m.getClassHierarchy();
-	IClass p0 = cha.lookupClass(p[0]);
-	a = new ConeType(p0);
-	for(i = 1; i < p.length; i++) {
-	  IClass pi = cha.lookupClass(p[i]);
-	  a = a.meet(new ConeType(pi));
-	}
+        IClassHierarchy cha = m.getClassHierarchy();
+        IClass p0 = cha.lookupClass(p[0]);
+        a = new ConeType(p0);
+        for (i = 1; i < p.length; i++) {
+          IClass pi = cha.lookupClass(p[i]);
+          a = a.meet(new ConeType(pi));
+        }
       }
 
-      return m.addPhi(a.getTypeReference(), values);
+      return m.addPhi(values);
     }
   }
 
@@ -158,7 +158,7 @@ public abstract class Entrypoint implements BytecodeConstants {
    * Add a call to this entrypoint from the fake root method
    * 
    * @param m
-   *          the Fake Root Method
+   *            the Fake Root Method
    * @return the call instruction added, or null if the operation fails
    */
   public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m, WarningSet warnings) {

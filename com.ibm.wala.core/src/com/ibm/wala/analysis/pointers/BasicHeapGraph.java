@@ -79,7 +79,7 @@ public class BasicHeapGraph extends HeapGraph {
     this.pointerAnalysis = P;
     this.callGraph = callGraph;
 
-    final OrdinalSetMapping<PointerKey> pointerKeys = getPointerKeys(P);
+    final OrdinalSetMapping<PointerKey> pointerKeys = getPointerKeys();
     final NumberedNodeManager<Object> nodeMgr = new NumberedNodeManager<Object>() {
       public Iterator<Object> iterator() {
         return new CompoundIterator<Object>(pointerKeys.iterator(), P.getInstanceKeyMapping().iterator());
@@ -208,10 +208,7 @@ public class BasicHeapGraph extends HeapGraph {
     };
   }
 
-  /**
-   * 
-   */
-  private OrdinalSetMapping<PointerKey> getPointerKeys(PointerAnalysis pointerAnalysis) {
+  private OrdinalSetMapping<PointerKey> getPointerKeys() {
     MutableMapping<PointerKey> result = new MutableMapping<PointerKey>();
 
     for (Iterator<PointerKey> it = pointerAnalysis.getPointerKeys().iterator(); it.hasNext();) {

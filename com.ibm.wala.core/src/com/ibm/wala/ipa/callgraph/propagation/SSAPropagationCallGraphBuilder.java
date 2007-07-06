@@ -21,19 +21,24 @@ import com.ibm.wala.analysis.reflection.CloneInterpreter;
 import com.ibm.wala.analysis.reflection.Malleable;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.classLoader.ArrayClass;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
@@ -449,7 +454,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             }
             ConcreteTypeKey ck = (ConcreteTypeKey) ik;
             IClass klass = ck.getType();
-            if (SSAPropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
+            if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
               system.newConstraint(exceptionVar, getInstanceKeyForPEI(node, peiLoc, type, instanceKeyFactory));
             }
           }
@@ -475,14 +480,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
     return false;
-  }
-
-  /**
-   * @return true iff there's a unique catch block which catches all exceptions
-   *         thrown by a certain call site.
-   */
-  static boolean hasUniqueCatchBlock(SSAAbstractInvokeInstruction call, CGNode node, CallGraph cg) {
-    return hasUniqueCatchBlock(call, node.getIR(new WarningSet()));
   }
 
   /**

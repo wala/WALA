@@ -350,7 +350,7 @@ public class ClassHierarchy implements IClassHierarchy {
       throw new UnimplementedError("factory.getLoader failed " + e);
     }
     IClass declaredClass;
-    declaredClass = loader.lookupClass(ref.getDeclaringClass().getName(), this);
+    declaredClass = loader.lookupClass(ref.getDeclaringClass().getName());
     if (declaredClass == null) {
       return Collections.emptySet();
     }
@@ -789,7 +789,7 @@ public class ClassHierarchy implements IClassHierarchy {
     ClassLoaderReference loaderRef = A.getClassLoader();
     for (int i = 0; i < loaders.length; i++) {
       if (loaders[i].getReference().equals(loaderRef)) {
-        IClass klass = loaders[i].lookupClass(A.getName(), this);
+        IClass klass = loaders[i].lookupClass(A.getName());
         if (klass != null) {
           if (DEBUG) {
             Trace.println("lookupClass: got " + klass);

@@ -419,17 +419,16 @@ public class ExplodedSupergraphPath<T> {
    */
   public static <T> ExplodedSupergraphPath<T> summarize(ISupergraph<T,?> supergraph, ExplodedSupergraphPath<T> path) {
     pruneForCallReturn(supergraph, path);
-    // System.err.println("pruned path A: " + p);
-    pruneBoringCalls(supergraph, path);
+    pruneBoringCalls(path);
     return path;
   }
 
   /**
-   * Create a brief(er) summary of a path, which excludes call/return pairs in
+   * Create a briefer summary of a path, which excludes call/return pairs in
    * which no state transitions occur
    * @throws IllegalArgumentException  if path is null
    */
-  public static <T> void pruneBoringCalls(ISupergraph supergraph, ExplodedSupergraphPath<T> path) {
+  public static <T> void pruneBoringCalls(ExplodedSupergraphPath<T> path) {
     if (path == null) {
       throw new IllegalArgumentException("path is null");
     }

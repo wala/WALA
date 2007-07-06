@@ -80,7 +80,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   }
 
   public boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex) throws WalaException {
-    NewSiteReference site = TrivialMethodEscape.findAlloc(callGraph, allocMethod, allocPC);
+    NewSiteReference site = TrivialMethodEscape.findAlloc(allocMethod, allocPC);
     InstanceKey ik = heapGraph.getHeapModel().getInstanceKeyForAllocation(allocMethod, site);
     return mayBeLive(ik, m, instructionIndex);
   }

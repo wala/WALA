@@ -356,10 +356,4 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
     size = ci;
     return (al != size);
   }
-
-
-  public void removeAll(MutableSparseLongSet set) throws UnimplementedError {
-    Assertions.UNREACHABLE("implement me");
-  }
-
 }

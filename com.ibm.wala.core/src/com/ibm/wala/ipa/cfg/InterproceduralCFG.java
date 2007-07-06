@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.ibm.wala.cfg.CFGCache;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.cfg.TwoExitCFG;
@@ -103,7 +102,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @param warnings
    *          an object to track analysis warnings
    */
-  public InterproceduralCFG(CallGraph CG, CFGCache cfgCache, WarningSet warnings) {
+  public InterproceduralCFG(CallGraph CG, WarningSet warnings) {
     this(CG, IndiscriminateFilter.singleton(), false, warnings);
   }
 

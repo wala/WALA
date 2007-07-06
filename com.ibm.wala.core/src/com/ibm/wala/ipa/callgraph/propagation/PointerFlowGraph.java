@@ -209,7 +209,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
       Assertions._assert(!processedNodes.contains(node));
     }
     processedNodes.add(node);
-    IR ir = getIR(cg, node);
+    IR ir = getIR(node);
     if (ir != null) {
       visit(node, ir);
     } else {
@@ -217,7 +217,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     }
   }
 
-  private static IR getIR(CallGraph cg, CGNode node) {
+  private static IR getIR(CGNode node) {
     wipeCount++;
     if (wipeCount > WIPE_THRESHOLD) {
       wipeCount = 0;
@@ -465,7 +465,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
         CGNode target = (CGNode) it.next();
 
         // some methods, like unmodelled natives, do not have IR.
-        if (getIR(cg, target) == null)
+        if (getIR(target) == null)
           continue;
 
         // handle parameter passing

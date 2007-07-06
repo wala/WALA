@@ -97,17 +97,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   };
 
-  /**
-   * @param cg
-   *          Governing call graph
-   * @param noCollapse
-   *          set of nodes in the call graph which cannot be collapsed
-   * @param warnings
-   *          object to track analysis warnings
-   */
-  public PartiallyCollapsedSupergraph(CallGraph cg, CFGCache cfgCache, Collection<CGNode> noCollapse, WarningSet warnings) {
-    this(cg, noCollapse, IndiscriminateFilter.singleton(), warnings);
-  }
 
   /**
    * @param cg

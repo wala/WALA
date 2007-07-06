@@ -150,7 +150,11 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
     throw new UnimplementedError();
   }
 
+  /**
+   * @param from source of the edge to visit
+   * @param to target of the edge to visit
+   */
   protected void visitEdge(T from, T to) {
-
+    // do nothing.  subclasses will override.
   }
 }

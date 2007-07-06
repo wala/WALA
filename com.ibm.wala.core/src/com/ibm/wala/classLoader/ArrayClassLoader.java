@@ -62,7 +62,7 @@ public class ArrayClassLoader {
       arrayClass = arrayClasses.get(type);
       if (arrayClass == null) {
 	// check that the element class is loadable. If not, return null.
-	IClass elementCls = delegator.lookupClass(elementType.getName(), cha);
+	IClass elementCls = delegator.lookupClass(elementType.getName());
         if (elementCls == null) {
           return null;
         }

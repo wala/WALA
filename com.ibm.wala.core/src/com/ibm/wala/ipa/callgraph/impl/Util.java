@@ -828,9 +828,9 @@ public class Util {
 
     return new ZeroOneContainerCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec()) {
       @Override
-      protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+      protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy c, WarningSet w, AnalysisOptions o,
           SSAContextInterpreter contextInterpreter) {
-        ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, warnings, ZeroXInstanceKeys.ALLOCATIONS);
+        ZeroXInstanceKeys zik = new ZeroXInstanceKeys(o, c, contextInterpreter, w, ZeroXInstanceKeys.ALLOCATIONS);
         return zik;
       }
     };

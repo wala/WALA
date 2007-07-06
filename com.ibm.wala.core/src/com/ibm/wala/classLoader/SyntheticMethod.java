@@ -24,6 +24,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.bytecode.BytecodeStream;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.warnings.WarningSet;
 
 /**
@@ -237,16 +238,22 @@ public class SyntheticMethod implements IMethod {
     return -1;
   }
 
+  /**
+   * @param options options governing SSA construction
+   */
   public SSAInstruction[] getStatements(SSAOptions options) {
     return NO_STATEMENTS;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#getIR(com.ibm.wala.util.WarningSet)
+
+  /**
+   * Most subclasses should override this.
+   * 
+   * @param options options governing IR conversion
+   * @param warnings object to record analysis warnings
    */
-  public IR makeIR(SSAOptions options, WarningSet warnings) {
-    Assertions.UNREACHABLE("haven't implemented IR yet for class " + getClass());
-    return null;
+  public IR makeIR(SSAOptions options, WarningSet warnings) throws UnimplementedError {
+    throw new UnimplementedError("haven't implemented IR yet for class " + getClass());
   }
 
   /*

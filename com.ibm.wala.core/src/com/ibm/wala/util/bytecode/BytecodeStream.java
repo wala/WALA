@@ -173,18 +173,18 @@ public class BytecodeStream implements BytecodeConstants {
   /**
    * Skips the current instruction (without using the opcode field)
    * A slightly optimized version of skipInstruction()
-   * @param opcode current opcode
-   * @param wide whether current instruction follows wide
+   * @param opc current opcode
+   * @param w whether current instruction follows wide
    * @see #skipInstruction()
    */
-  public final void skipInstruction(int opcode, boolean wide) {
-    int len = JBC_length[opcode] - 1;
-    if (wide)
+  public final void skipInstruction(int opc, boolean w) {
+    int len = JBC_length[opc] - 1;
+    if (w)
       len += len;
     if (len >= 0)
       bcIndex += len;
     else
-      skipSpecialInstruction(opcode);
+      skipSpecialInstruction(opc);
   }
 
   /**
@@ -535,8 +535,6 @@ public class BytecodeStream implements BytecodeConstants {
    * Used for ldc
    * @return constant index
    * @see #getWideConstantIndex()
-   * @see #getConstantType(int)
-   * @see #getIntConstant(int)
    */
   public final int getConstantIndex() {
     return readUnsignedByte();
@@ -547,43 +545,41 @@ public class BytecodeStream implements BytecodeConstants {
    * Used for ldc_w, ldc2_w
    * @return wide constant index
    * @see #getConstantIndex()
-   * @see #getConstantType(int)
-   * @see #getIntConstant(int)
    */
   public final int getWideConstantIndex() {
     return readUnsignedShort();
   }
 
-  /**
-   * Returns the type of a constant at a given constant pool index (as a byte)
-   * Used for ldc, ldc_w, ldc2_w
-   * @return constant type
-   * @see #getConstantIndex()
-   * @see #getWideConstantIndex()
-   * @see #getIntConstant(int)
-   * @throws UnimplementedError  unconditionally
-   */
-  public final byte getConstantType(int index) throws UnimplementedError {
-    throw new UnimplementedError();
-    //    byte desc = declaringClass.getLiteralDescription(index);
-    //    return desc;
-  }
+//  /**
+//   * Returns the type of a constant at a given constant pool index (as a byte)
+//   * Used for ldc, ldc_w, ldc2_w
+//   * @return constant type
+//   * @see #getConstantIndex()
+//   * @see #getWideConstantIndex()
+//   * @see #getIntConstant(int)
+//   * @throws UnimplementedError  unconditionally
+//   */
+//  public final byte getConstantType(int index) throws UnimplementedError {
+//    throw new UnimplementedError();
+//    //    byte desc = declaringClass.getLiteralDescription(index);
+//    //    return desc;
+//  }
 
-  /**
-   * Returns the constant at a given constant pool index (as an int)
-   * Used for ldc, ldc_w
-   * @return int constant
-   * @see #getConstantIndex()
-   * @see #getWideConstantIndex()
-   * @see #getConstantType(int)
-   * @throws UnimplementedError  unconditionally
-   */
-  public final int getIntConstant(int index) throws UnimplementedError {
-    throw new UnimplementedError();
-    //    int offset = declaringClass.getLiteralOffset(index) >> 2;
-    //    int val = Statics.getSlotContentsAsInt(offset);
-    //    return val;
-  }
+//  /**
+//   * Returns the constant at a given constant pool index (as an int)
+//   * Used for ldc, ldc_w
+//   * @return int constant
+//   * @see #getConstantIndex()
+//   * @see #getWideConstantIndex()
+//   * @see #getConstantType(int)
+//   * @throws UnimplementedError  unconditionally
+//   */
+//  public final int getIntConstant(int index) throws UnimplementedError {
+//    throw new UnimplementedError();
+//    //    int offset = declaringClass.getLiteralOffset(index) >> 2;
+//    //    int val = Statics.getSlotContentsAsInt(offset);
+//    //    return val;
+//  }
 
 //  /**
 //   * Returns the constant at a given constant pool index (as a long)

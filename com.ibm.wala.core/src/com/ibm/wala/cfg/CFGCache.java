@@ -75,7 +75,7 @@ public class CFGCache {
       return null;
     }
 
-    processResetLogic(m);
+    processResetLogic();
 
     Pair<IMethod,Context> p = new Pair<IMethod,Context>(m, C);
     Object ref = dictionary.get(p);
@@ -90,7 +90,7 @@ public class CFGCache {
     }
   }
 
-  private void processResetLogic(IMethod m) {
+  private void processResetLogic() {
     resetCount++;
     if (resetCount == RESET_INTERVAL) {
       reset();
