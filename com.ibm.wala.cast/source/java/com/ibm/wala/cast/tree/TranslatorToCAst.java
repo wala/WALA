@@ -10,7 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  *  Encapsulates a translator from source files to CAstEntities.  This

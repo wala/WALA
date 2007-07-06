@@ -10,9 +10,16 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
-import com.ibm.wala.cast.tree.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
-import java.util.*;
+import com.ibm.wala.cast.tree.CAstControlFlowMap;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstNodeTypeMap;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.CAstType;
 
 public class DelegatingEntity implements CAstEntity {
     private final CAstEntity base;

@@ -10,7 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.visit;
 
-import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.util.debug.Assertions;
 
 /**

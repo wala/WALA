@@ -10,7 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.ssa.SSAInstruction;
 
 public interface AstInstructionVisitor extends SSAInstruction.IVisitor {
 

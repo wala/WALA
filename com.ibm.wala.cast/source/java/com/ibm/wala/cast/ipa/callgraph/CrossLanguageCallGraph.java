@@ -34,7 +34,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * A CallGraph implementation adapted to work for graphs that contain code
@@ -118,10 +117,10 @@ public class CrossLanguageCallGraph extends AstCallGraph {
       return root.addCheckcast(type, rv);
     }
 
-    public SSANewInstruction addAllocation(TypeReference type, WarningSet warnings) {
+    public SSANewInstruction addAllocation(TypeReference type) {
       Atom language = type.getClassLoader().getLanguage();
       AbstractRootMethod root = getLanguageRoot(language);
-      return root.addAllocation(type, warnings);
+      return root.addAllocation(type);
     }
 
     public SSAInvokeInstruction addInvocation(int[] params, CallSiteReference site) {

@@ -22,103 +22,82 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.types.*;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.debug.*;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
 
-public class MiscellaneousHacksContextSelector implements ContextSelector 
-{
+public class MiscellaneousHacksContextSelector implements ContextSelector {
 
   private final Set<MethodReference> methodsToSpecialize;
 
   private final ContextSelector specialPolicy;
+
   private final ContextSelector basePolicy;
 
-  public MiscellaneousHacksContextSelector(ContextSelector special,
-					   ContextSelector base,
-					   IClassHierarchy cha,
-					   String[][] descriptors)
-  {
+  public MiscellaneousHacksContextSelector(ContextSelector special, ContextSelector base, IClassHierarchy cha,
+      String[][] descriptors) {
     basePolicy = base;
     specialPolicy = special;
     methodsToSpecialize = new HashSet<MethodReference>();
-    for(int i = 0; i < descriptors.length; i++) {
+    for (int i = 0; i < descriptors.length; i++) {
       String[] descr = descriptors[i];
       switch (descr.length) {
 
       // loader name, loader language, classname, method name, method descr
       case 5: {
-	MethodReference ref =
-	  MethodReference.findOrCreate(
-	    TypeReference.findOrCreate(
-	      new ClassLoaderReference(
-	        Atom.findOrCreateUnicodeAtom( descr[0] ),
-	        Atom.findOrCreateUnicodeAtom( descr[1] )),
-	      TypeName.string2TypeName( descr[2] ) ),
-	    Atom.findOrCreateUnicodeAtom( descr[3] ),
-	    Descriptor.findOrCreateUTF8( descr[4] ));
+        MethodReference ref = MethodReference.findOrCreate(TypeReference.findOrCreate(new ClassLoaderReference(Atom
+            .findOrCreateUnicodeAtom(descr[0]), Atom.findOrCreateUnicodeAtom(descr[1])), TypeName.string2TypeName(descr[2])), Atom
+            .findOrCreateUnicodeAtom(descr[3]), Descriptor.findOrCreateUTF8(descr[4]));
 
-	if (cha.resolveMethod( ref ) != null) {
-	  methodsToSpecialize.add( cha.resolveMethod( ref ).getReference() );
-	} else {
-	  methodsToSpecialize.add( ref );
-	}
-	break;
+        if (cha.resolveMethod(ref) != null) {
+          methodsToSpecialize.add(cha.resolveMethod(ref).getReference());
+        } else {
+          methodsToSpecialize.add(ref);
+        }
+        break;
       }
 
-      // classname, method name, method descr
+        // classname, method name, method descr
       case 3: {
-	MethodReference ref =
-	  MethodReference.findOrCreate(
-	    TypeReference.findOrCreate(
-	      new ClassLoaderReference(
-	        Atom.findOrCreateUnicodeAtom("Application"),
-		ClassLoaderReference.Java),
-	      TypeName.string2TypeName( descr[0] ) ),
-	    Atom.findOrCreateUnicodeAtom( descr[1] ),
-	    Descriptor.findOrCreateUTF8( descr[2] ));
+        MethodReference ref = MethodReference.findOrCreate(TypeReference.findOrCreate(new ClassLoaderReference(Atom
+            .findOrCreateUnicodeAtom("Application"), ClassLoaderReference.Java), TypeName.string2TypeName(descr[0])), Atom
+            .findOrCreateUnicodeAtom(descr[1]), Descriptor.findOrCreateUTF8(descr[2]));
 
-	methodsToSpecialize.add( cha.resolveMethod( ref ).getReference() );
-	break;
+        methodsToSpecialize.add(cha.resolveMethod(ref).getReference());
+        break;
       }
 
-      // loader name, classname, meaning all methods of that class
+        // loader name, classname, meaning all methods of that class
       case 2: {
-	IClass klass =
-	  cha.lookupClass(
-	    TypeReference.findOrCreate(
-	      new ClassLoaderReference(
-	        Atom.findOrCreateUnicodeAtom( descr[0] ),
-		ClassLoaderReference.Java),
-	      TypeName.string2TypeName( descr[1] ) ) );
+        IClass klass = cha.lookupClass(TypeReference.findOrCreate(new ClassLoaderReference(Atom.findOrCreateUnicodeAtom(descr[0]),
+            ClassLoaderReference.Java), TypeName.string2TypeName(descr[1])));
 
-	for(Iterator M = klass.getDeclaredMethods().iterator(); M.hasNext(); ) {
-	  methodsToSpecialize.add( ((IMethod)M.next()).getReference() );
-	}
+        for (Iterator M = klass.getDeclaredMethods().iterator(); M.hasNext();) {
+          methodsToSpecialize.add(((IMethod) M.next()).getReference());
+        }
 
-	break;
+        break;
       }
 
-      // classname, meaning all methods of that class
+        // classname, meaning all methods of that class
       case 1: {
-	IClass klass =
-	  cha.lookupClass(
-	    TypeReference.findOrCreate(
-	      new ClassLoaderReference(
-	        Atom.findOrCreateUnicodeAtom("Application"),
-		ClassLoaderReference.Java),
-	      TypeName.string2TypeName( descr[0] ) ) );
+        IClass klass = cha.lookupClass(TypeReference.findOrCreate(new ClassLoaderReference(Atom
+            .findOrCreateUnicodeAtom("Application"), ClassLoaderReference.Java), TypeName.string2TypeName(descr[0])));
 
-	for(Iterator M = klass.getDeclaredMethods().iterator(); M.hasNext(); ) {
-	  methodsToSpecialize.add( ((IMethod)M.next()).getReference() );
-	}
+        for (Iterator M = klass.getDeclaredMethods().iterator(); M.hasNext();) {
+          methodsToSpecialize.add(((IMethod) M.next()).getReference());
+        }
 
-	break;
+        break;
       }
 
-      default: 
-	Assertions.UNREACHABLE();
+      default:
+        Assertions.UNREACHABLE();
       }
     }
 
@@ -126,21 +105,15 @@ public class MiscellaneousHacksContextSelector implements ContextSelector
   }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
-    if (methodsToSpecialize.contains( site.getDeclaredTarget() ) 
-	                           ||
-	methodsToSpecialize.contains( callee.getReference() ) )
-    {
+    if (methodsToSpecialize.contains(site.getDeclaredTarget()) || methodsToSpecialize.contains(callee.getReference())) {
       return specialPolicy.getCalleeTarget(caller, site, callee, receiver);
     } else {
       return basePolicy.getCalleeTarget(caller, site, callee, receiver);
     }
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference)
-   */
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return basePolicy.contextIsIrrelevant(node,site);
+    return basePolicy.contextIsIrrelevant(node, site);
   }
 
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference reference, IMethod targetMethod) {
@@ -149,10 +122,6 @@ public class MiscellaneousHacksContextSelector implements ContextSelector
 
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
     return true;
-  }
-
-  public void setWarnings(WarningSet newWarnings) {
-    // no-op, not bound to warnings
   }
 
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {

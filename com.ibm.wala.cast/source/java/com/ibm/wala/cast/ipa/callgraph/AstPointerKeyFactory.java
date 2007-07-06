@@ -10,9 +10,11 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.ipa.callgraph.propagation.*;
+import java.util.Iterator;
 
-import java.util.*;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
 
 public interface AstPointerKeyFactory extends PointerKeyFactory {
 

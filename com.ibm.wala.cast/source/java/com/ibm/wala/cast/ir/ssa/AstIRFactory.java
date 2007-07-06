@@ -30,7 +30,6 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public class AstIRFactory implements IRFactory {
   private final boolean keepIR;
@@ -42,7 +41,7 @@ public class AstIRFactory implements IRFactory {
     this.keptIRs = (keepIR) ? new HashMap<IMethod, IR>() : null;
   }
 
-  public ControlFlowGraph makeCFG(final IMethod method, final Context context, final WarningSet warnings) {
+  public ControlFlowGraph makeCFG(final IMethod method, final Context context) {
     return ((AstMethod) method).getControlFlowGraph();
   }
 
@@ -95,7 +94,7 @@ public class AstIRFactory implements IRFactory {
     }
   }
 
-  public IR makeIR(final IMethod method, final Context context, final SSAOptions options, final WarningSet warnings) {
+  public IR makeIR(final IMethod method, final Context context, final SSAOptions options) {
     Assertions._assert(method instanceof AstMethod, method.toString());
     if (keepIR) {
       if (keptIRs.containsKey(method)) {
@@ -106,7 +105,7 @@ public class AstIRFactory implements IRFactory {
     AbstractCFG oldCfg = ((AstMethod) method).cfg;
     SSAInstruction[] instrs = (SSAInstruction[]) oldCfg.getInstructions();
 
-    IR newIR = new AstIR((AstMethod) method, instrs, ((AstMethod) method).symtab, new SSACFG(method, oldCfg, instrs, warnings),
+    IR newIR = new AstIR((AstMethod) method, instrs, ((AstMethod) method).symtab, new SSACFG(method, oldCfg, instrs),
         options);
 
     if (keepIR) {
@@ -120,19 +119,19 @@ public class AstIRFactory implements IRFactory {
     return new DefaultIRFactory() {
       private final AstIRFactory astFactory = new AstIRFactory(keepAstIRs);
 
-      public IR makeIR(IMethod method, Context context, SSAOptions options, WarningSet warnings) {
+      public IR makeIR(IMethod method, Context context, SSAOptions options) {
         if (method instanceof AstMethod) {
-          return astFactory.makeIR(method, context, options, warnings);
+          return astFactory.makeIR(method, context, options);
         } else {
-          return super.makeIR(method, context, options, warnings);
+          return super.makeIR(method, context, options);
         }
       }
 
-      public ControlFlowGraph makeCFG(IMethod method, Context context, WarningSet warnings) {
+      public ControlFlowGraph makeCFG(IMethod method, Context context) {
         if (method instanceof AstMethod) {
-          return astFactory.makeCFG(method, context, warnings);
+          return astFactory.makeCFG(method, context);
         } else {
-          return super.makeCFG(method, context, warnings);
+          return super.makeCFG(method, context);
         }
       }
     };

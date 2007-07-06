@@ -10,12 +10,16 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.visit;
 
-import com.ibm.wala.cast.tree.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-
-import java.util.*;
 
 /**
  * @author Igor Peshansky

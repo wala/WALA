@@ -10,12 +10,15 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.Atom;
+import java.util.Map;
 
-import java.util.*;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.util.Atom;
 
 /**
  *  A MethodTargetSelector implementation that supports multiple languages.

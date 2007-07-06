@@ -13,9 +13,12 @@
  */
 package com.ibm.wala.cast.tree.impl;
 
-import com.ibm.wala.cast.tree.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.*;
+import com.ibm.wala.cast.tree.CAstReference;
+import com.ibm.wala.cast.tree.CAstType;
+import com.ibm.wala.cast.tree.CAstTypeDictionary;
 
 public class CAstTypeDictionaryImpl implements CAstTypeDictionary {
   private final Map/*<ASTType,CAstType>*/<Object, CAstType> fMap= new HashMap<Object, CAstType>();

@@ -22,7 +22,6 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContextInsensitiveSSAInterpreter;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public class AstContextInsensitiveSSAContextInterpreter
   extends ContextInsensitiveSSAInterpreter 
@@ -37,7 +36,7 @@ public class AstContextInsensitiveSSAContextInterpreter
   }
 
   public Iterator<NewSiteReference> iterateNewSites(CGNode N) {
-    IR ir = getIR(N, new WarningSet());
+    IR ir = getIR(N);
     if (ir == null) {
       return EmptyIterator.instance();
     } else {
@@ -46,7 +45,7 @@ public class AstContextInsensitiveSSAContextInterpreter
   }
 
   public Iterator<CallSiteReference> iterateCallSites(CGNode N) {
-    IR ir = getIR(N, new WarningSet());
+    IR ir = getIR(N);
     if (ir == null) {
       return EmptyIterator.instance();
     } else {

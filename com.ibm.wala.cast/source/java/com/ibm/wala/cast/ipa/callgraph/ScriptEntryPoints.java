@@ -19,12 +19,11 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.impl.*;
+import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
 
@@ -46,17 +45,17 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
       return 1;
     }
 
-    public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m, WarningSet warnings) {
+    public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m){
       CallSiteReference site = makeSite(0);
 
       if (site == null) {
         return null;
       }
 
-      int functionVn = makeArgument(m, 0, warnings);
+      int functionVn = makeArgument(m, 0);
       int paramVns[] = new int[getNumberOfParameters() - 1];
       for (int j = 0; j < paramVns.length; j++) {
-        paramVns[j] = makeArgument(m, j + 1, warnings);
+        paramVns[j] = makeArgument(m, j + 1);
       }
 
       return ((ScriptFakeRoot) m).addDirectCall(functionVn, paramVns, site);

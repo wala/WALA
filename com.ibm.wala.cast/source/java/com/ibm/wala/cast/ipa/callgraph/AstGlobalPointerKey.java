@@ -10,7 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.ipa.callgraph.propagation.*;
+import com.ibm.wala.ipa.callgraph.propagation.AbstractPointerKey;
 
 public class AstGlobalPointerKey extends AbstractPointerKey {
   private final String globalName;

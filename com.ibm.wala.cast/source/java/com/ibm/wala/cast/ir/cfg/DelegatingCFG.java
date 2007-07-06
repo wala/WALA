@@ -10,13 +10,16 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.cfg;
 
-import com.ibm.wala.cfg.*;
+import java.util.Collection;
+
+import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.util.graph.*;
+import com.ibm.wala.util.graph.AbstractNumberedGraph;
+import com.ibm.wala.util.graph.EdgeManager;
+import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.intset.BitVector;
-
-import java.util.*;
 
 public class DelegatingCFG extends AbstractNumberedGraph<IBasicBlock> implements ControlFlowGraph {
 

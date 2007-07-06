@@ -10,11 +10,14 @@
  *****************************************************************************/
 package com.ibm.wala.cast.util;
 
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.cast.tree.impl.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
 
-import java.io.*;
-import java.net.*;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
 
 public class SourceBuffer {
   private String[] lines;

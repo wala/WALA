@@ -19,7 +19,7 @@ import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
-import com.ibm.wala.util.debug.*;
+import com.ibm.wala.util.debug.Assertions;
 
 public class CAstCloner extends CAstRewriter<Object> {
 

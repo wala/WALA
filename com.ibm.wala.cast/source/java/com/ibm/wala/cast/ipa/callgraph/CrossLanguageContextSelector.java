@@ -10,13 +10,15 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.warnings.*;
+import java.util.Map;
 
-import java.util.*;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.util.Atom;
 
 /**
  * A ContextSelector implementation adapted to work for analysi across
@@ -66,11 +68,6 @@ public class CrossLanguageContextSelector implements ContextSelector {
     return getSelector(site).mayUnderstand(caller, site, targetMethod, instance);
   }
 
-  public void setWarnings(WarningSet newWarnings) {
-    for(Iterator ss = languageSelectors.values().iterator(); ss.hasNext(); ) {  
-      ((ContextSelector)ss.next()).setWarnings(newWarnings);
-    }
-  }
 
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
     return getSelector(site).allSitesDispatchIdentically(node, site);

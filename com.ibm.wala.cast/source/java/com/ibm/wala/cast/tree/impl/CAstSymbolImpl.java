@@ -1,6 +1,6 @@
 package com.ibm.wala.cast.tree.impl;
 
-import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.tree.CAstSymbol;
 
 public class CAstSymbolImpl implements CAstSymbol {
 

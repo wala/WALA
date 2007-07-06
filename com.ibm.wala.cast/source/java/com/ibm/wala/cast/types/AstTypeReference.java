@@ -10,7 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.types;
 
-import com.ibm.wala.types.*;
+import com.ibm.wala.types.TypeName;
 
 public class AstTypeReference {
 

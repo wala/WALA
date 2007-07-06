@@ -10,7 +10,9 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  *  The assumption is that abstract syntax trees pertain to particular

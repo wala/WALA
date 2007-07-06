@@ -10,11 +10,12 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
-import com.ibm.wala.cast.tree.*;
+import java.util.NoSuchElementException;
+
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.util.CAstPrinter;
 import com.ibm.wala.util.debug.Assertions;
-
-import java.util.NoSuchElementException;
 
 /**
  *  An implementation of CAst, i.e. a simple factory for creating capa

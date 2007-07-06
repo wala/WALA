@@ -10,9 +10,9 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
-import com.ibm.wala.cast.tree.*;
-
 import java.util.NoSuchElementException;
+
+import com.ibm.wala.cast.tree.CAstNode;
 
 /**
  *  Various operators that are built in to many languages, and hence

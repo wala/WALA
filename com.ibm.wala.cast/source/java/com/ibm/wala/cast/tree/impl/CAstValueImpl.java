@@ -10,7 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
-import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.tree.CAstNode;
 
 /**
  *  An implementation of CAst, i.e. a simple factory for creating capa

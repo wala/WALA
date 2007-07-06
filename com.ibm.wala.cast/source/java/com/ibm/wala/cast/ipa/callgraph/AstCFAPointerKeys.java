@@ -10,7 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.ipa.callgraph.propagation.cfa.*;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CFAPointerKeys;
 
 public class AstCFAPointerKeys extends DelegatingAstPointerKeys {
 

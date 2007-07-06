@@ -11,8 +11,8 @@
 package com.ibm.wala.cast.ir.ssa;
 
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.ssa.SSAInstruction;
 
 /**
  *  This abstract instruction extends the abstract lexical invoke with

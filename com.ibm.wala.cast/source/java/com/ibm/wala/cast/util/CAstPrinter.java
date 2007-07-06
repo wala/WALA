@@ -10,10 +10,15 @@
  *****************************************************************************/
 package com.ibm.wala.cast.util;
 
-import com.ibm.wala.cast.tree.*;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.Collection;
+import java.util.Iterator;
 
-import java.io.*;
-import java.util.*;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 
 public class CAstPrinter {
   private static CAstPrinter instance= new CAstPrinter();

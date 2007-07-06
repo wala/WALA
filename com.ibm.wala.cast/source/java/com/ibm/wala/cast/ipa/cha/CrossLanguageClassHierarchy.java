@@ -35,7 +35,6 @@ import com.ibm.wala.util.collections.ComposedIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * This class hierarchy represents a family of disjoint class hierarchies, one
@@ -223,7 +222,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     this.hierarchies = hierarchies;
   }
 
-  public static CrossLanguageClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, WarningSet warnings,
+  public static CrossLanguageClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, 
       Map languageMap) throws ClassHierarchyException {
     Set<Atom> languages = HashSetFactory.make();
     for (Iterator ldrs = scope.getLoaders().iterator(); ldrs.hasNext();) {
@@ -235,7 +234,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
       Atom l = (Atom) ls.next();
       Language L = (Language) languageMap.get(l);
       assert L != null : l.toString();
-      hierarchies.put(l, ClassHierarchy.make(scope, factory, warnings, L));
+      hierarchies.put(l, ClassHierarchy.make(scope, factory, L));
     }
 
     return new CrossLanguageClassHierarchy(scope, factory, hierarchies);

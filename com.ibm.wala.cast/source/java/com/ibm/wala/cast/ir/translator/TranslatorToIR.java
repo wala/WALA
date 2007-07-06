@@ -10,10 +10,10 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.translator;
 
-import com.ibm.wala.classLoader.*;
+import java.io.IOException;
+import java.util.Set;
 
-import java.io.*;
-import java.util.*;
+import com.ibm.wala.classLoader.ModuleEntry;
 
 public interface TranslatorToIR {
 

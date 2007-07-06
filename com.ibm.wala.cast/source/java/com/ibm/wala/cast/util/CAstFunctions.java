@@ -10,11 +10,14 @@
  *****************************************************************************/
 package com.ibm.wala.cast.util;
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.util.collections.*;
-import com.ibm.wala.util.graph.traverse.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import java.util.*;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;
 
 public class CAstFunctions {
 

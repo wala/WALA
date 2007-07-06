@@ -35,7 +35,8 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.fixedpoint.impl.AbstractOperator;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.IVariable;
@@ -45,8 +46,23 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.*;
+import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
+import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysisImpl;
+import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraph;
+import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
+import com.ibm.wala.ipa.callgraph.propagation.PointsToMap;
+import com.ibm.wala.ipa.callgraph.propagation.PointsToSetVariable;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -58,13 +74,12 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.graph.*;
+import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.traverse.NumberedDFSDiscoverTimeIterator;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCallGraphBuilder {
 
@@ -86,17 +101,17 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   //
   ///////////////////////////////////////////////////////////////////////////
 
-  protected AstSSAPropagationCallGraphBuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+  protected AstSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options,
       PointerKeyFactory pointerKeyFactory) {
-    super(cha, warnings, options, pointerKeyFactory);
+    super(cha, options, pointerKeyFactory);
   }
 
   public SSAContextInterpreter makeDefaultContextInterpreters(SSAContextInterpreter appContextInterpreter, AnalysisOptions options,
-      IClassHierarchy cha, ReflectionSpecification reflect, WarningSet warnings) {
-    SSAContextInterpreter c = new DefaultSSAInterpreter(options, warnings);
+      IClassHierarchy cha, ReflectionSpecification reflect) {
+    SSAContextInterpreter c = new DefaultSSAInterpreter(options);
     c = new DelegatingSSAContextInterpreter(new AstContextInsensitiveSSAContextInterpreter(options), c);
 
-    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect, warnings), c);
+    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect), c);
 
     if (appContextInterpreter == null)
       return c;
@@ -369,7 +384,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           if (lexicalKey instanceof LocalPointerKey) {
             CGNode lnode = ((LocalPointerKey) lexicalKey).getNode();
             int lvn = ((LocalPointerKey) lexicalKey).getValueNumber();
-            IR lir = getBuilder().getCFAContextInterpreter().getIR(lnode, getWarnings());
+            IR lir = getBuilder().getCFAContextInterpreter().getIR(lnode);
             SymbolTable lsymtab = lir.getSymbolTable();
             DefUse ldu = getOptions().getSSACache().findOrCreateDU(lir, lnode.getContext());
             if (contentsAreInvariant(lsymtab, ldu, lvn)) {
@@ -655,7 +670,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         final Set<CGNode> result = new HashSet<CGNode>();
         PointerKey F = getBuilder().getPointerKeyForLocal(opNode, 1);
 
-        IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode, getWarnings());
+        IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode);
         SymbolTable symtab = ir.getSymbolTable();
         DefUse du = getOptions().getSSACache().findOrCreateDU(ir, opNode.getContext());
         if (contentsAreInvariant(symtab, du, 1)) {
@@ -705,8 +720,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         if (name.equals(names[i].fst) && definer.equals(names[i].snd)) {
           int vn = LI.getExitExposedUses()[i];
           if (vn > 0) {
-            IR ir = getBuilder().getCFAContextInterpreter().getIR(definingNode, getWarnings());
-            DefUse du = getBuilder().getCFAContextInterpreter().getDU(definingNode, getWarnings());
+            IR ir = getBuilder().getCFAContextInterpreter().getIR(definingNode);
+            DefUse du = getBuilder().getCFAContextInterpreter().getDU(definingNode);
             SymbolTable st = ir.getSymbolTable();
 
             PointerKey rhs = getBuilder().getPointerKeyForLocal(definingNode, vn);
@@ -777,7 +792,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
 
       else if (M instanceof AstMethod) {
-        AstIR ir = (AstIR) getBuilder().getCFAContextInterpreter().getIR(n, getWarnings());
+        AstIR ir = (AstIR) getBuilder().getCFAContextInterpreter().getIR(n);
         int pc = callSite.getProgramCounter();
         LexicalInformation L = ((AstMethod) M).lexicalInfo;
 
@@ -838,7 +853,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         if (L == null)
           return null;
 
-        AstIR ir = (AstIR) getBuilder().getCFAContextInterpreter().getIR(n, getWarnings());
+        AstIR ir = (AstIR) getBuilder().getCFAContextInterpreter().getIR(n);
         int pc = callSite.getProgramCounter();
         AbstractLexicalInvoke I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
 
@@ -908,9 +923,9 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     }
 
     private void newFieldOperation(CGNode opNode, final int objVn, final int fieldsVn, final boolean isLoadOperation, final ReflectedFieldAction action) {
-      IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode, getWarnings());
+      IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode);
       SymbolTable symtab = ir.getSymbolTable();
-      DefUse du = getBuilder().getCFAContextInterpreter().getDU(opNode, getWarnings());
+      DefUse du = getBuilder().getCFAContextInterpreter().getDU(opNode);
       PointerKey objKey = getBuilder().getPointerKeyForLocal(opNode, objVn);
       final PointerKey fieldKey = getBuilder().getPointerKeyForLocal(opNode, fieldsVn);
 
@@ -1139,9 +1154,9 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     }
 
     protected void newFieldWrite(CGNode opNode, int objVn, int fieldsVn, int rhsVn) {
-      IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode, getWarnings());
+      IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode);
       SymbolTable symtab = ir.getSymbolTable();
-      DefUse du = getBuilder().getCFAContextInterpreter().getDU(opNode, getWarnings());
+      DefUse du = getBuilder().getCFAContextInterpreter().getDU(opNode);
       PointerKey rhsKey = getBuilder().getPointerKeyForLocal(opNode, rhsVn);
       if (contentsAreInvariant(symtab, du, rhsVn)) {
         system.recordImplicitPointsToSet(rhsKey);
@@ -1174,7 +1189,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
       } catch (RuntimeException e) {
         System.err.println("error: " + e);
-        System.err.println(getBuilder().getCFAContextInterpreter().getIR(opNode, getWarnings()));
+        System.err.println(getBuilder().getCFAContextInterpreter().getIR(opNode));
         throw e;
       }
     }

@@ -10,16 +10,20 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.ssa.*;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
+
+import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-
-import java.io.*;
-import java.net.*;
-import java.util.*;
 
 public class Util {
 
@@ -47,7 +51,7 @@ public class Util {
     for (Iterator x = CG.iterator(); x.hasNext();) {
       CGNode N = (CGNode) x.next();
       Trace.println("\nIR of node " + N);
-      IR ir = N.getIR(builder.getWarnings());
+      IR ir = N.getIR();
       if (ir != null) {
         Trace.println(ir);
       } else {
@@ -59,27 +63,25 @@ public class Util {
     for (Iterator x = PA.getPointerKeys().iterator(); x.hasNext();) {
       PointerKey n = (PointerKey) x.next();
       try {
-	Trace.println(n + " --> " + PA.getPointsToSet(n));
+        Trace.println(n + " --> " + PA.getPointsToSet(n));
       } catch (Throwable e) {
-	Trace.println("error computing set for " + n);
+        Trace.println("error computing set for " + n);
       }
     }
   }
 
   public static SourceFileModule[] handleFileNames(String[] fileNameArgs) {
-    SourceFileModule[] fileNames = new SourceFileModule[ fileNameArgs.length ];
-    for(int i = 0; i < fileNameArgs.length; i++) {
+    SourceFileModule[] fileNames = new SourceFileModule[fileNameArgs.length];
+    for (int i = 0; i < fileNameArgs.length; i++) {
       if (new File(fileNameArgs[i]).exists()) {
-	try {
-	  fileNames[i] = 
-	    Util.makeSourceModule(
-	      new URL("file:"+fileNameArgs[i]), fileNameArgs[i]);
-	} catch (MalformedURLException e) {
-	  Assertions.UNREACHABLE( e.toString() );
-	}
+        try {
+          fileNames[i] = Util.makeSourceModule(new URL("file:" + fileNameArgs[i]), fileNameArgs[i]);
+        } catch (MalformedURLException e) {
+          Assertions.UNREACHABLE(e.toString());
+        }
       } else {
-	URL url = Util.class.getClassLoader().getResource(fileNameArgs[i]);
-	fileNames[i] = Util.makeSourceModule(url, fileNameArgs[i]);
+        URL url = Util.class.getClassLoader().getResource(fileNameArgs[i]);
+        fileNames[i] = Util.makeSourceModule(url, fileNameArgs[i]);
       }
     }
 

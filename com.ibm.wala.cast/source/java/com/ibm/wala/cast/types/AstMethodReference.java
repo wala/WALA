@@ -10,7 +10,10 @@
  *****************************************************************************/
 package com.ibm.wala.cast.types;
 
-import com.ibm.wala.types.*;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 
 public class AstMethodReference {

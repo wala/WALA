@@ -13,7 +13,8 @@
  */
 package com.ibm.wala.cast.tree;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
 public class CAstQualifier {
   public static final Set/* <CAstQualifier> */<CAstQualifier>sQualifiers = new HashSet<CAstQualifier>();

@@ -10,10 +10,11 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.cfg;
 
-import com.ibm.wala.cfg.*;
-import com.ibm.wala.util.debug.Assertions;
+import java.util.Iterator;
 
-import java.util.*;
+import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.util.debug.Assertions;
 
 public class Util {
 

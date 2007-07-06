@@ -1,10 +1,14 @@
 package com.ibm.wala.cast.ir.ssa;
 
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.debug.Assertions;
+import java.util.Collection;
+import java.util.Collections;
 
-import java.util.*;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.ssa.ValueDecorator;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.debug.Assertions;
 
 public class AstIsDefinedInstruction extends SSAInstruction {
   private final FieldReference fieldRef;
