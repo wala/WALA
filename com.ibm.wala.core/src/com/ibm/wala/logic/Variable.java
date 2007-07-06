@@ -15,11 +15,16 @@ import java.util.Collections;
 
 import com.ibm.wala.util.intset.IntPair;
 
+/**
+ * A term that represents a variable in a formula
+ * 
+ * @author sjfink
+ */
 public class Variable implements ITerm, Comparable<Variable> {
 
   private final int number;
   /**
-   * universe of valid int constants this variable can assume.
+   * universe of valid integer constants this variable can assume.
    * This is optional; can be null.
    */
   private final IntPair range;
