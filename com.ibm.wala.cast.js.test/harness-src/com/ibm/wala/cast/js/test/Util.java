@@ -28,9 +28,9 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
-import com.ibm.wala.ipa.cha.*;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
 
@@ -88,12 +88,11 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
   protected static PropagationCallGraphBuilder makeCG(JavaScriptLoaderFactory loaders, boolean keepIRs, AnalysisScope scope)
       throws IOException {
     try {
-      WarningSet warnings = new WarningSet();
-      IClassHierarchy cha = makeHierarchy(scope, loaders, warnings);
+      IClassHierarchy cha = makeHierarchy(scope, loaders);
       Iterable<Entrypoint> roots = makeScriptRoots(cha);
-      AnalysisOptions options = makeOptions(scope, keepIRs, cha, roots, warnings);
+      AnalysisOptions options = makeOptions(scope, keepIRs, cha, roots);
 
-      JSCFABuilder builder = new JSZeroXCFABuilder(cha, warnings, options, null, null, null, ZeroXInstanceKeys.ALLOCATIONS);
+      JSCFABuilder builder = new JSZeroXCFABuilder(cha, options, null, null, null, ZeroXInstanceKeys.ALLOCATIONS);
 
       return builder;
     } catch (ClassHierarchyException e) {
