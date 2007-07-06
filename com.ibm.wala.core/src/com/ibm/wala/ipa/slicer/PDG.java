@@ -57,7 +57,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * Program dependence graph for a single call graph node
@@ -122,7 +121,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     this.dOptions = dOptions;
     this.mod = mod;
     this.exclusions = exclusions;
-    instructionIndices = computeInstructionIndices(node.getIR(new WarningSet()));
+    instructionIndices = computeInstructionIndices(node.getIR());
     createNodes(ref, cOptions);
     createScalarEdges(cOptions);
   }
@@ -148,7 +147,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       return;
     }
     Assertions.productionAssertion(cOptions.equals(ControlDependenceOptions.FULL));
-    IR ir = node.getIR(new WarningSet());
+    IR ir = node.getIR();
     if (ir == null) {
       return;
     }
@@ -230,12 +229,12 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       return;
     }
 
-    IR ir = node.getIR(new WarningSet());
+    IR ir = node.getIR();
     if (ir == null) {
       return;
     }
 
-    DefUse DU = node.getDU(new WarningSet());
+    DefUse DU = node.getDU();
     SSAInstruction[] instructions = ir.getInstructions();
     for (Iterator<? extends Statement> it = iterator(); it.hasNext();) {
       Statement s = it.next();
@@ -466,7 +465,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       return;
     }
 
-    IR ir = node.getIR(new WarningSet());
+    IR ir = node.getIR();
     if (ir == null) {
       return;
     }
@@ -677,7 +676,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * @param dOptions
    */
   private void createNodes(Map<CGNode, OrdinalSet<PointerKey>> ref, ControlDependenceOptions cOptions) {
-    IR ir = node.getIR(new WarningSet());
+    IR ir = node.getIR();
 
     if (ir != null) {
       Collection<SSAInstruction> visited = createNormalStatements(ir, ref);

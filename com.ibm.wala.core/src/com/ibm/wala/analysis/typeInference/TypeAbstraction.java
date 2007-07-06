@@ -13,8 +13,8 @@ package com.ibm.wala.analysis.typeInference;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.ContextItem;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.types.*;
 
 /**
  * 

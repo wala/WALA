@@ -133,8 +133,8 @@ public class Simplifier {
           }
         }
       }
-    } else if (f.getKind().equals(IFormula.Kind.BINARY)) { 
-      BinaryFormula b = (BinaryFormula)f;
+    } else if (f.getKind().equals(IFormula.Kind.BINARY)) {
+      BinaryFormula b = (BinaryFormula) f;
       if (b.getConnective().equals(BinaryConnective.AND)) {
         if (isContradiction(b.getF1()) || isContradiction(b.getF2())) {
           return true;
@@ -159,8 +159,8 @@ public class Simplifier {
           }
         }
       }
-    } else if (f.getKind().equals(IFormula.Kind.BINARY)) { 
-      BinaryFormula b = (BinaryFormula)f;
+    } else if (f.getKind().equals(IFormula.Kind.BINARY)) {
+      BinaryFormula b = (BinaryFormula) f;
       if (b.getConnective().equals(BinaryConnective.AND)) {
         if (isTautology(b.getF1()) && isTautology(b.getF2())) {
           return true;
@@ -198,12 +198,13 @@ public class Simplifier {
 
   /**
    * does the structure of formula f suggest an immediate substitution to
-   * simplify it?
+   * simplify the system?
    * 
    * @return a pair (p1, p2) meaning "substitute p2 for p1"
    */
   private static Pair<ITerm, ITerm> suggestsSubstitution(IFormula f) {
-    if (f.getKind().equals(IFormula.Kind.RELATION)) {
+    switch (f.getKind()) {
+    case RELATION:
       RelationFormula r = (RelationFormula) f;
       if (r.getRelation().equals(BinaryRelation.EQUALS)) {
         ITerm lhs = r.getTerms().get(0);
@@ -216,16 +217,21 @@ public class Simplifier {
       } else {
         return null;
       }
-    } else {
+    case BINARY:
+    case CONSTANT:
+    case NEGATION:
+    case QUANTIFIED:
+    default:
+      // todo
       return null;
     }
   }
 
   /**
-   * in formula f, substitute the term t2 for all free occurences of t1
+   * in formula f, substitute the term t2 for all free occurrences of t1
    * 
    * @throws IllegalArgumentException
-   *           if formula is null
+   *             if formula is null
    */
   public static IFormula substitute(IFormula formula, ITerm t1, ITerm t2) {
     if (formula == null) {
@@ -261,7 +267,7 @@ public class Simplifier {
   }
 
   /**
-   * in term t, substitute t2 for free occurences of t1
+   * in term t, substitute t2 for free occurrences of t1
    */
   private static ITerm substitute(ITerm t, ITerm t1, ITerm t2) {
     if (t.equals(t1)) {
@@ -302,12 +308,13 @@ public class Simplifier {
 
   /**
    * Attempt to distribute the NOT from a NotFormula
-   * @return the original formula if the distribution is unsucessful
+   * 
+   * @return the original formula if the distribution is unsuccessful
    */
   public static IFormula distributeNot(NotFormula f) {
     IFormula f1 = f.getFormula();
     if (f1 instanceof RelationFormula) {
-      RelationFormula r = (RelationFormula)f1;
+      RelationFormula r = (RelationFormula) f1;
       BinaryRelation negate = BinaryRelation.negate(r.getRelation());
       if (negate == null) {
         return f;

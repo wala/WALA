@@ -12,7 +12,6 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -57,14 +56,12 @@ public class SSACache {
    *          a "normal" (bytecode-based) method
    * @param options
    *          options governing ssa construction
-   * @param warnings
-   *          an option to track analysis warnings
    * @return an IR for m, built according to the specified options. null if m is
    *         abstract or native.
    * @throws IllegalArgumentException
    *           if m is null
    */
-  public synchronized IR findOrCreateIR(final IMethod m, final Context C, final SSAOptions options, final WarningSet warnings) {
+  public synchronized IR findOrCreateIR(final IMethod m, final Context C, final SSAOptions options) {
 
     if (m == null) {
       throw new IllegalArgumentException("m is null");
@@ -74,12 +71,12 @@ public class SSACache {
     }
 
     if (DISABLE) {
-      return factory.makeIR(m, C, options, warnings);
+      return factory.makeIR(m, C, options);
     }
 
     IR ir = (IR) irCache.find(m, C, options);
     if (ir == null) {
-      ir = factory.makeIR(m, C, options, warnings);
+      ir = factory.makeIR(m, C, options);
       irCache.cache(m, C, options, ir);
     }
     return ir;
@@ -90,14 +87,12 @@ public class SSACache {
    *          a method
    * @param options
    *          options governing ssa construction
-   * @param warnings
-   *          an option to track analysis warnings
    * @return DefUse information for m, built according to the specified options.
    *         null if unavailable
    * @throws IllegalArgumentException
    *           if m is null
    */
-  public synchronized DefUse findOrCreateDU(IMethod m, Context C, SSAOptions options, WarningSet warnings) {
+  public synchronized DefUse findOrCreateDU(IMethod m, Context C, SSAOptions options) {
 
     if (m == null) {
       throw new IllegalArgumentException("m is null");
@@ -108,7 +103,7 @@ public class SSACache {
 
     DefUse du = (DefUse) duCache.find(m, C, options);
     if (du == null) {
-      IR ir = findOrCreateIR(m, C, options, warnings);
+      IR ir = findOrCreateIR(m, C, options);
       du = new DefUse(ir);
       duCache.cache(m, C, options, du);
     }

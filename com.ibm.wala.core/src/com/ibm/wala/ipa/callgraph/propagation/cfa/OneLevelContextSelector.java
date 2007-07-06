@@ -17,7 +17,6 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -54,10 +53,6 @@ public class OneLevelContextSelector implements ContextSelector {
 
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
     return baseSelector.getBoundOnNumberOfTargets(caller, site, targetMethod);
-  }
-
-  public void setWarnings(WarningSet newWarnings) {
-    baseSelector.setWarnings(newWarnings);
   }
 
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {

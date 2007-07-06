@@ -32,8 +32,8 @@ import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CFAPointerKeys;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
@@ -42,7 +42,6 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -87,7 +86,7 @@ public class TypeBasedHeapModel implements HeapModel {
     if (cg == null) {
       throw new IllegalArgumentException("cg is null");
     }
-    iKeyFactory = new ClassBasedInstanceKeys(options, cg.getClassHierarchy(), new WarningSet());
+    iKeyFactory = new ClassBasedInstanceKeys(options, cg.getClassHierarchy());
     this.klasses = klasses;
     this.cg = cg;
   }
@@ -120,7 +119,7 @@ public class TypeBasedHeapModel implements HeapModel {
    * @return Collection<IClass> representing pointer keys for locals of node
    */
   private Map<PointerKey, Object> computePointerKeys(CGNode node) {
-    IR ir = node.getIR(new WarningSet());
+    IR ir = node.getIR();
     if (ir == null) {
       return Collections.emptyMap();
     }

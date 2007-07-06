@@ -43,7 +43,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableMapping;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -217,8 +216,8 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     if (key instanceof LocalPointerKey) {
       LocalPointerKey lpk = (LocalPointerKey) key;
       CGNode node = lpk.getNode();
-      IR ir = node.getIR(new WarningSet());
-      DefUse du = node.getDU(new WarningSet());
+      IR ir = node.getIR();
+      DefUse du = node.getDU();
       if (((SSAPropagationCallGraphBuilder) builder).contentsAreInvariant(ir.getSymbolTable(), du, lpk.getValueNumber())) {
         // cons up the points-to set for invariant contents
         InstanceKey[] ik = ((SSAPropagationCallGraphBuilder) builder).getInvariantContents(ir.getSymbolTable(), du, node, lpk
@@ -324,7 +323,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtCatch(CGNode node, SSAGetCaughtExceptionInstruction instruction) {
-    IR ir = node.getIR(new WarningSet());
+    IR ir = node.getIR();
     List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getBasicBlockForCatch(instruction));
     Set caughtTypes = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
     MutableSparseIntSet S = new MutableSparseIntSet();

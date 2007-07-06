@@ -14,7 +14,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -49,11 +48,9 @@ public interface CallGraphBuilderFactory {
    *          governing class hierarchy
    * @param scope
    *          representation of the analysis scope
-   * @param warnings
-   *          an object which tracks analysis warnings
    * @param keepPointsTo
    *          preserve PointsTo graph for posterity?
    *  
    */
-  CallGraphBuilder make(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope, WarningSet warnings, boolean keepPointsTo);
+  CallGraphBuilder make(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope, boolean keepPointsTo);
 }

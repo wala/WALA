@@ -10,9 +10,13 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
-import com.ibm.wala.analysis.typeInference.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.impl.*;
+import com.ibm.wala.analysis.typeInference.ConeType;
+import com.ibm.wala.analysis.typeInference.PrimitiveType;
+import com.ibm.wala.analysis.typeInference.TypeAbstraction;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
@@ -21,7 +25,6 @@ import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -99,7 +102,7 @@ public abstract class Entrypoint implements BytecodeConstants {
    * @return value number holding the parameter to the call; -1 if there was
    *         some error
    */
-  protected int makeArgument(AbstractRootMethod m, int i, WarningSet warnings) {
+  protected int makeArgument(AbstractRootMethod m, int i) {
     TypeReference[] p = getParameterTypes(i);
     if (p.length == 0) {
       return -1;
@@ -107,14 +110,14 @@ public abstract class Entrypoint implements BytecodeConstants {
       if (p[0].isPrimitiveType()) {
         return m.addLocal();
       } else {
-        SSANewInstruction n = m.addAllocation(p[0], warnings);
+        SSANewInstruction n = m.addAllocation(p[0]);
         return (n == null) ? -1 : n.getDef();
       }
     } else {
       int[] values = new int[p.length];
       int countErrors = 0;
       for (int j = 0; j < p.length; j++) {
-        SSANewInstruction n = m.addAllocation(p[j], warnings);
+        SSANewInstruction n = m.addAllocation(p[j]);
         int value = (n == null) ? -1 : n.getDef();
         if (value == -1) {
           countErrors++;
@@ -161,7 +164,7 @@ public abstract class Entrypoint implements BytecodeConstants {
    *            the Fake Root Method
    * @return the call instruction added, or null if the operation fails
    */
-  public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m, WarningSet warnings) {
+  public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m) {
     int paramValues[];
     CallSiteReference site = makeSite(0);
     if (site == null) {
@@ -169,7 +172,7 @@ public abstract class Entrypoint implements BytecodeConstants {
     }
     paramValues = new int[getNumberOfParameters()];
     for (int j = 0; j < paramValues.length; j++) {
-      paramValues[j] = makeArgument(m, j, warnings);
+      paramValues[j] = makeArgument(m, j);
       if (paramValues[j] == -1) {
         // there was a problem
         return null;

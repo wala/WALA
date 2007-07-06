@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.cfg;
 
-import com.ibm.wala.cfg.*;
+import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.cfg.IBasicBlock;
 
 public class ExceptionPrunedCFG {
 

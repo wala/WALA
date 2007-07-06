@@ -30,7 +30,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -246,7 +245,6 @@ public class ContainerContextSelector implements ContextSelector {
   }
 
   /**
-   * @param C
    * @return true iff C is a container class
    */
   protected boolean isContainer(IClass C) {
@@ -256,10 +254,6 @@ public class ContainerContextSelector implements ContextSelector {
     return ContainerUtil.isContainer(C, cha);
   }
 
-  public void setWarnings(WarningSet newWarnings) {
-    // no-op, this object not bound to warnings
-
-  }
 
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
     return false;

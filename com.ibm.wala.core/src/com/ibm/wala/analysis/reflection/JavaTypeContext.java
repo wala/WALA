@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.reflection;
 
-import com.ibm.wala.analysis.typeInference.*;
+import com.ibm.wala.analysis.typeInference.PointType;
+import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextItem;

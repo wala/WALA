@@ -18,7 +18,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.CacheReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -28,12 +27,9 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class ReceiverTypeInferenceCache {
 
-  private final WarningSet warnings;
-
   private final AnalysisOptions options;
 
-  public ReceiverTypeInferenceCache(AnalysisOptions options, WarningSet warnings) {
-    this.warnings = warnings;
+  public ReceiverTypeInferenceCache(AnalysisOptions options) {
     this.options = options;
   }
 
@@ -55,7 +51,7 @@ public class ReceiverTypeInferenceCache {
       if (result == null) {
         SSAOptions options = SSAOptions.defaultOptions();
         options.setUsePiNodes(true);
-        IR ir = this.options.getSSACache().findOrCreateIR(n.getMethod(), n.getContext(),  options, warnings);
+        IR ir = this.options.getSSACache().findOrCreateIR(n.getMethod(), n.getContext(),  options);
         TypeInference T = new TypeInference(ir);
         T.solve();
 

@@ -16,7 +16,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.warnings.WarningSet;
 
 abstract public class ReflectiveSubtypesEntrypoint extends SubtypesEntrypoint {
 
@@ -31,15 +30,15 @@ abstract public class ReflectiveSubtypesEntrypoint extends SubtypesEntrypoint {
   abstract protected boolean useReflectiveMachinery(TypeReference type);
 
   @Override
-  protected int makeArgument(AbstractRootMethod m, int i, WarningSet warnings) {
+  protected int makeArgument(AbstractRootMethod m, int i) {
     if (useReflectiveMachinery(method.getParameterType(i))) {
-      int fakeString = m.addAllocation(TypeReference.JavaLangString, warnings).getDef(0);
+      int fakeString = m.addAllocation(TypeReference.JavaLangString).getDef(0);
       CallSiteReference fn = CallSiteReference.make(0, MethodReference.JavaLangClassForName, IInvokeInstruction.Dispatch.STATIC);
       int lv1 = m.addInvocation(new int[] { fakeString }, fn).getDef(0);
       CallSiteReference ni = CallSiteReference.make(0, MethodReference.JavaLangClassNewInstance, IInvokeInstruction.Dispatch.VIRTUAL);
       return m.addInvocation(new int[] { lv1 }, ni).getDef(0);
     } else {
-      return super.makeArgument(m, i, warnings);
+      return super.makeArgument(m, i);
     }
   }
 }

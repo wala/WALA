@@ -21,7 +21,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -31,7 +30,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  * @author sfink
  */
 public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInterpreter, SSAContextInterpreter {
-
+  
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -91,9 +90,5 @@ public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInte
   public boolean recordFactoryType(CGNode node, IClass klass) {
     // not a factory type
     return false;
-  }
-
-  public void setWarnings(WarningSet newWarnings) {
-    // this object is not bound to a WarningSet
   }
 }

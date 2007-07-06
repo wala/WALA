@@ -21,7 +21,6 @@ import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public class SyntheticIR extends IR {
 
@@ -32,18 +31,16 @@ public class SyntheticIR extends IR {
    * @param method
    *          the method to construct SSA form for
    * @param context
-   *          the govening context
+   *          the governing context
    * @param instructions
    *          the SSA instructions which define the body of the method
    * @param constants
    *          a Map giving information on constant values for the symbol table
-   * @param warnings
-   *          an object to track analysis warnings with
    * @throws AssertionError  if method is null
    */
   public SyntheticIR(IMethod method, Context context, AbstractCFG cfg, SSAInstruction[] instructions, SSAOptions options,
-      Map<Integer, ConstantValue> constants, WarningSet warnings) throws AssertionError {
-    super(method, instructions, makeSymbolTable(method, instructions, constants), new SSACFG(method, cfg, instructions, warnings),
+      Map<Integer, ConstantValue> constants) throws AssertionError {
+    super(method, instructions, makeSymbolTable(method, instructions, constants), new SSACFG(method, cfg, instructions),
         options);
 
     setupLocationMap();

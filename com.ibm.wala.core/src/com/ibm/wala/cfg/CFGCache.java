@@ -19,7 +19,6 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.util.CacheReference;
 import com.ibm.wala.util.collections.Pair;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  *
@@ -60,13 +59,11 @@ public class CFGCache {
   /**
    * @param m
    *          a "normal" (bytecode-based) method
-   * @param warnings
-   *          an option to track analysis warnings
    * @return an IR for m, built according to the specified options. null if m is
    *         abstract or native.
    * @throws IllegalArgumentException  if m is null
    */
-  public synchronized ControlFlowGraph findOrCreate(IMethod m, Context C,  WarningSet warnings) {
+  public synchronized ControlFlowGraph findOrCreate(IMethod m, Context C) {
 
     if (m == null) {
       throw new IllegalArgumentException("m is null");
@@ -80,13 +77,13 @@ public class CFGCache {
     Pair<IMethod,Context> p = new Pair<IMethod,Context>(m, C);
     Object ref = dictionary.get(p);
     if (ref == null || CacheReference.get(ref) == null) {
-      ControlFlowGraph cfg = factory.makeCFG(m, C,  warnings);
+      ControlFlowGraph cfg = factory.makeCFG(m, C);
       ref = CacheReference.make(cfg);
       dictionary.put(p, ref);
       return cfg;
     } else {
       ControlFlowGraph cfg = (ControlFlowGraph) CacheReference.get(ref);
-      return (cfg == null) ? findOrCreate(m, C, warnings) : cfg;
+      return (cfg == null) ? findOrCreate(m, C) : cfg;
     }
   }
 

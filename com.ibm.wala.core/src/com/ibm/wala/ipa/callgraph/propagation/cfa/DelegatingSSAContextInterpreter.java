@@ -18,7 +18,6 @@ import com.ibm.wala.ipa.callgraph.propagation.rta.DelegatingRTAContextInterprete
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -41,28 +40,28 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
     }
   }
 
-  public IR getIR(CGNode node, WarningSet warnings) {
+  public IR getIR(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
-        return A.getIR(node, warnings);
+        return A.getIR(node);
       }
     }
     if (Assertions.verifyAssertions) {
       Assertions._assert(B.understands(node));
     }
-    return B.getIR(node, warnings);
+    return B.getIR(node);
   }
 
-  public int getNumberOfStatements(CGNode node, WarningSet warnings) {
+  public int getNumberOfStatements(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
-        return A.getNumberOfStatements(node, warnings);
+        return A.getNumberOfStatements(node);
       }
     }
     if (Assertions.verifyAssertions) {
       Assertions._assert(B.understands(node));
     }
-    return B.getNumberOfStatements(node, warnings);
+    return B.getNumberOfStatements(node);
   }
 
   @Override
@@ -82,27 +81,27 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
     result |= B.recordFactoryType(node, klass);
     return result;
   }
-  public ControlFlowGraph getCFG(CGNode node, WarningSet warnings) {
+  public ControlFlowGraph getCFG(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
-        return A.getCFG(node, warnings);
+        return A.getCFG(node);
       }
     }
     if (Assertions.verifyAssertions) {
       Assertions._assert(B.understands(node));
     }
-    return B.getCFG(node, warnings);
+    return B.getCFG(node);
   }
 
-  public DefUse getDU(CGNode node, WarningSet warnings) {
+  public DefUse getDU(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
-        return A.getDU(node, warnings);
+        return A.getDU(node);
       }
     }
     if (Assertions.verifyAssertions) {
       Assertions._assert(B.understands(node));
     }
-    return B.getDU(node, warnings);
+    return B.getDU(node);
   }
 }

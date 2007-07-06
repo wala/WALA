@@ -13,7 +13,6 @@ package com.ibm.wala.ipa.callgraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -47,12 +46,6 @@ public interface ContextSelector {
    */
   boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance);
 
-  /**
-   * Bind this object to a new object to track warnings
-   * 
-   * @param newWarnings
-   */
-  void setWarnings(WarningSet newWarnings);
 
   /**
    * @param site

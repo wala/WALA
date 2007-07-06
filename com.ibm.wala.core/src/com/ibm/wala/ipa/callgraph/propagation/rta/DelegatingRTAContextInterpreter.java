@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -102,13 +101,6 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     }
     result |= B.recordFactoryType(node, klass);
     return result;
-  }
-
-  public void setWarnings(WarningSet newWarnings) {
-    if (A != null) {
-      A.setWarnings(newWarnings);
-    }
-    B.setWarnings(newWarnings);
   }
 
   @Override

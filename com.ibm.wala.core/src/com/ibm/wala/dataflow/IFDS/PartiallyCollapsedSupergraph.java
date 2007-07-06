@@ -48,7 +48,6 @@ import com.ibm.wala.util.intset.BimodalMutableIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.perf.EngineTimings;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -101,11 +100,9 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    *          Governing call graph
    * @param noCollapse
    *          set of nodes in the call graph which cannot be collapsed
-   * @param warnings
-   *          object to track analysis warnings
    */
-  public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse, WarningSet warnings) {
-    this(cg, noCollapse, IndiscriminateFilter.singleton(), warnings);
+  public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse) {
+    this(cg, noCollapse, IndiscriminateFilter.singleton());
   }
 
   /**
@@ -116,10 +113,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    * @param relevant
    *          set of nodes which are relevant and should be included in the
    *          supergraph
-   * @param warnings
-   *          object to track analysis warnings
    */
-  public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse, Filter relevant, WarningSet warnings) {
+  public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse, Filter relevant) {
 
     EngineTimings.startVirtual("PartiallyCollapsedSupergraph.<init>");
 
@@ -134,7 +129,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       }
     }
     this.noCollapse = noCollapse;
-    this.partialIPFG = new InterproceduralCFG(cg, new Filtersection(relevant, new CollectionFilter(noCollapse)), true, warnings);
+    this.partialIPFG = new InterproceduralCFG(cg, new Filtersection(relevant, new CollectionFilter(noCollapse)), true);
     if (DEBUG_LEVEL > 0) {
       Trace.println("IPFG \n" + partialIPFG.toString());
     }

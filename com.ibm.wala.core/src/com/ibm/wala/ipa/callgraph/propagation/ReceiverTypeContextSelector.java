@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -45,10 +44,6 @@ public class ReceiverTypeContextSelector implements ContextSelector {
 
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
     return true;
-  }
-
-  public void setWarnings(WarningSet newWarnings) {
-    // no-op, not bound to warnings
   }
 
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {

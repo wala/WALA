@@ -10,9 +10,13 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.ContextItem;
-import com.ibm.wala.util.intset.*;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetAction;
+import com.ibm.wala.util.intset.IntSetUtil;
+import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
  * 

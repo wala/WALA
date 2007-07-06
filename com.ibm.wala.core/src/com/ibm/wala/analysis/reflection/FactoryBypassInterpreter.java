@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.reflection;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -60,7 +61,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * Logic to interpret "factory" methods in context.
@@ -94,11 +95,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   private final AnalysisOptions options;
 
   /**
-   * Keep track of analysis warnings
-   */
-  private WarningSet warningsSet;
-
-  /**
    * User-defined reflection specification
    */
   private final ReflectionSpecification userSpec;
@@ -106,13 +102,9 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   /**
    * @param options
    *          governing analysis options
-   * @param userSpec
-   * @param warnings
-   *          object to track analysis warnings
    */
-  public FactoryBypassInterpreter(AnalysisOptions options, ReflectionSpecification userSpec, WarningSet warnings) {
+  public FactoryBypassInterpreter(AnalysisOptions options, ReflectionSpecification userSpec) {
     this.options = options;
-    this.warningsSet = warnings;
     this.userSpec = userSpec;
   }
 
@@ -136,17 +128,16 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     return getLocalForType(T) + 1;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#getIR(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
+
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
    */
-  public IR getIR(CGNode node, WarningSet warnings) {
+  public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    return options.getSSACache().findOrCreateIR(m, node.getContext(),options.getSSAOptions(), warnings);
+    return options.getSSACache().findOrCreateIR(m, node.getContext(),options.getSSAOptions());
   }
 
   private Set getTypesForContext(Context context) {
@@ -168,12 +159,11 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     return types;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.cfa.CFAContextInterpreter#getNumberOfStatements(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.callgraph.Context,
-   *      com.ibm.wala.util.warnings.WarningSet)
+
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
    */
-  public int getNumberOfStatements(CGNode node, WarningSet warnings) {
+  public int getNumberOfStatements(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
@@ -338,10 +328,10 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
               if (DEBUG) {
                 Trace.println("Found no implementors of type " + T);
               }
-              warningsSet.add(NoSubtypesWarning.create(T));
+              Warnings.add(NoSubtypesWarning.create(T));
             }
             if (implementors.size() > CONE_BOUND) {
-              warningsSet.add(ManySubtypesWarning.create(T, implementors.size()));
+              Warnings.add(ManySubtypesWarning.create(T, implementors.size()));
             }
 
             addStatementsForSetOfTypes(implementors.iterator());
@@ -354,10 +344,10 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
               if (DEBUG) {
                 Trace.println("Found no subclasses of type " + T);
               }
-              warningsSet.add(NoSubtypesWarning.create(T));
+              Warnings.add(NoSubtypesWarning.create(T));
             }
             if (subclasses.size() > CONE_BOUND) {
-              warningsSet.add(ManySubtypesWarning.create(T, subclasses.size()));
+              Warnings.add(ManySubtypesWarning.create(T, subclasses.size()));
             }
             addStatementsForSetOfTypes(subclasses.iterator());
           }
@@ -374,7 +364,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     private TypeAbstraction interceptType(TypeAbstraction T) {
       TypeReference type = T.getType().getReference();
       if (type.equals(TypeReference.JavaIoSerializable)) {
-        warningsSet.add(IgnoreSerializableWarning.create());
+        Warnings.add(IgnoreSerializableWarning.create());
         return null;
       } else {
         return T;
@@ -551,7 +541,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
      * @see com.ibm.wala.classLoader.IMethod#getIR(com.ibm.wala.util.WarningSet)
      */
     @Override
-    public IR makeIR(SSAOptions options, WarningSet warnings) {
+    public IR makeIR(SSAOptions options) {
       SSAInstruction[] instrs = getStatements();
       Map<Integer, ConstantValue> constants = null;
       if (valueNumberForConstantOne > -1) {
@@ -559,7 +549,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
         constants.put(new Integer(valueNumberForConstantOne), new ConstantValue(new Integer(1)));
       }
 
-      return new SyntheticIR(this, context, new InducedCFG(instrs, this, context), instrs, options, constants, warnings);
+      return new SyntheticIR(this, context, new InducedCFG(instrs, this, context), instrs, options, constants);
     }
   }
 
@@ -618,17 +608,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     return recordType(node.getMethod().getClassHierarchy(), node.getContext(), klass.getReference());
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
-  public void setWarnings(WarningSet newWarnings) {
-    this.warningsSet = newWarnings;
-  }
-
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateFieldsRead(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
+ 
   public Iterator iterateFieldsRead(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -723,8 +703,11 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
   }
 
-  public ControlFlowGraph getCFG(CGNode N, WarningSet warnings) {
-    return getIR(N, warnings).getControlFlowGraph();
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
+   */
+  public ControlFlowGraph getCFG(CGNode N) {
+    return getIR(N).getControlFlowGraph();
   }
 
   /**
@@ -779,10 +762,8 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
   /**
-   * @author sfink
-   * 
-   * A waring when we find flow of a factory allocation to a cast to
-   * serializable
+   * A warning when we find flow of a factory allocation to a cast to
+   * {@link Serializable}
    */
   private static class IgnoreSerializableWarning extends Warning {
 
@@ -798,11 +779,11 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
   }
 
-  public DefUse getDU(CGNode node, WarningSet warnings) {
+  public DefUse getDU(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    return options.getSSACache().findOrCreateDU(m, node.getContext(), options.getSSAOptions(), warnings);
+    return options.getSSACache().findOrCreateDU(m, node.getContext(), options.getSSAOptions());
   }
 }

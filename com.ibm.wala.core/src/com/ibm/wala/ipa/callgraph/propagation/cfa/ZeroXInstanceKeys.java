@@ -29,13 +29,12 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.SmushedAllocationSiteInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * @author sfink
@@ -136,10 +135,10 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   final Map<CGNode, Set> smushMap = new HashMap<CGNode, Set>();
 
   public ZeroXInstanceKeys(AnalysisOptions options, IClassHierarchy cha, RTAContextInterpreter contextInterpreter,
-      WarningSet warnings, int policy) {
-    classBased = new ClassBasedInstanceKeys(options, cha, warnings);
-    siteBased = new AllocationSiteInstanceKeys(options, cha, warnings);
-    smushed = new SmushedAllocationSiteInstanceKeys(options, cha, warnings);
+      int policy) {
+    classBased = new ClassBasedInstanceKeys(options, cha);
+    siteBased = new AllocationSiteInstanceKeys(options, cha);
+    smushed = new SmushedAllocationSiteInstanceKeys(options, cha);
     this.cha = cha;
     this.policy = policy;
     this.contextInterpreter = contextInterpreter;

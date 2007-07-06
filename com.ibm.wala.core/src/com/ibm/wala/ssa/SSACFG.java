@@ -43,7 +43,7 @@ import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * A control-flow graph for ssa form.
@@ -61,8 +61,6 @@ public class SSACFG implements ControlFlowGraph {
 
   final protected IMethod method;
 
-  final private WarningSet warnings;
-
   final protected AbstractCFG cfg;
 
   /**
@@ -71,7 +69,6 @@ public class SSACFG implements ControlFlowGraph {
   private BasicBlock exit;
 
   protected SSACFG(SSACFG aCFG) {
-    this.warnings = aCFG.warnings;
     this.cfg = aCFG.cfg;
     this.method = aCFG.method;
     this.basicBlocks = aCFG.basicBlocks;
@@ -79,18 +76,14 @@ public class SSACFG implements ControlFlowGraph {
   }
 
   /**
-   * Constructor CFG.
-   * 
-   * @param cfg
    * @throws IllegalArgumentException
    *             if method is null
    */
-  public SSACFG(IMethod method, AbstractCFG cfg, SSAInstruction[] instructions, WarningSet warnings) {
+  public SSACFG(IMethod method, AbstractCFG cfg, SSAInstruction[] instructions) {
 
     if (method == null) {
       throw new IllegalArgumentException("method is null");
     }
-    this.warnings = warnings;
     this.cfg = cfg;
     if (DEBUG) {
       Trace.println("Incoming CFG for " + method + ":");
@@ -121,11 +114,6 @@ public class SSACFG implements ControlFlowGraph {
     return (o instanceof SSACFG) && cfg.equals(((SSACFG) o).cfg);
   }
 
-  /**
-   * Method recordExceptionTypes.
-   * 
-   * @param set
-   */
   private void recordExceptionTypes(Set<ExceptionHandler> set, IClassLoader loader) {
     for (Iterator<ExceptionHandler> it = set.iterator(); it.hasNext();) {
       ExceptionHandler handler = it.next();
@@ -138,7 +126,7 @@ public class SSACFG implements ControlFlowGraph {
         IClass klass = null;
         klass = loader.lookupClass(exceptionType.getName());
         if (klass == null) {
-          warnings.add(ExceptionLoadFailure.create(exceptionType, method));
+          Warnings.add(ExceptionLoadFailure.create(exceptionType, method));
           t = exceptionType;
         } else {
           t = klass.getReference();

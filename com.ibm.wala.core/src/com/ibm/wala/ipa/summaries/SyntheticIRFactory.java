@@ -18,11 +18,10 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 public class SyntheticIRFactory implements IRFactory {
 
-  public ControlFlowGraph makeCFG(IMethod method, Context C,  WarningSet warnings) {
+  public ControlFlowGraph makeCFG(IMethod method, Context C) {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
     }
@@ -31,12 +30,12 @@ public class SyntheticIRFactory implements IRFactory {
     return sm.makeControlFlowGraph();
   }
 
-  public IR makeIR(IMethod method, Context C,  SSAOptions options, WarningSet warnings) {
+  public IR makeIR(IMethod method, Context C, SSAOptions options) {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
     }
     Assertions._assert(method.isSynthetic());
     SyntheticMethod sm = (SyntheticMethod) method;
-    return sm.makeIR(options, warnings);
+    return sm.makeIR(options);
   }
 }

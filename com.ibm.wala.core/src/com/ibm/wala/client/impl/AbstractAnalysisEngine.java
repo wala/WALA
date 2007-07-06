@@ -37,7 +37,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -87,11 +86,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    * A representation of the analysis options
    */
   protected AnalysisOptions options;
-
-  /**
-   * An object to track analysis warnings
-   */
-  final private WarningSet warnings = new WarningSet();
 
   /**
    * The standard J2SE libraries to analyze
@@ -145,7 +139,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   };
 
   protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options) {
-    return getCallGraphBuilderFactory().make(options, cha, getScope(), getWarnings(), false);
+    return getCallGraphBuilderFactory().make(options, cha, getScope(),  false);
   }
 
   protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis) {
@@ -191,9 +185,9 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    */
   protected IClassHierarchy buildClassHierarchy() {
     IClassHierarchy cha = null;
-    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(getScope().getExclusions(), getWarnings());
+    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(getScope().getExclusions() );
     try {
-      cha = ClassHierarchy.make(getScope(), factory, getWarnings());
+      cha = ClassHierarchy.make(getScope(), factory);
     } catch (ClassHierarchyException e) {
       System.err.println("Class Hierarchy construction failed");
       System.err.println(e.toString());
@@ -277,13 +271,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    */
   protected AnalysisScope getScope() {
     return scope;
-  }
-
-  /**
-   * @return Returns the warnings.
-   */
-  protected WarningSet getWarnings() {
-    return warnings;
   }
 
   /**

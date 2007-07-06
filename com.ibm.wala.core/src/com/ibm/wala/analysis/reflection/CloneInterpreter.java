@@ -50,7 +50,6 @@ import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -100,7 +99,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
    */
   final private Map<TypeReference, IR> IRCache = HashMapFactory.make();
 
-  public IR getIR(CGNode node, WarningSet warnings) {
+  public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
@@ -110,23 +109,19 @@ public class CloneInterpreter implements SSAContextInterpreter {
     IClass cls = ContextUtil.getConcreteClassFromContext(node.getContext());
     IR result = IRCache.get(cls.getReference());
     if (result == null) {
-      result = makeIR(node.getMethod(), node.getContext(), cls, warnings);
+      result = makeIR(node.getMethod(), node.getContext(), cls);
       IRCache.put(cls.getReference(), result);
     }
     return result;
   }
 
-  public int getNumberOfStatements(CGNode node, WarningSet warnings) {
+  public int getNumberOfStatements(CGNode node) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
     }
-    return getIR(node, warnings).getInstructions().length;
+    return getIR(node).getInstructions().length;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.rta.RTAContextInterpreter#understands(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.detox.ipa.callgraph.Context)
-   */
   public boolean understands(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -226,13 +221,12 @@ public class CloneInterpreter implements SSAContextInterpreter {
    * @return an IR that encodes the behavior of the clone method for a given
    *         type.
    */
-  private IR makeIR(IMethod method, Context context, IClass klass, WarningSet warnings) {
+  private IR makeIR(IMethod method, Context context, IClass klass) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(klass != null);
     }
     SSAInstruction instrs[] = makeStatements(klass);
-    return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), null,
-        warnings);
+    return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), null);
   }
 
   /*
@@ -243,48 +237,42 @@ public class CloneInterpreter implements SSAContextInterpreter {
     return false;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
-  public void setWarnings(WarningSet newWarnings) {
-    // this object is not bound to a WarningSet
-  }
 
   public Iterator iterateFieldsRead(CGNode node) {
-    SSAInstruction[] statements = getIR(node, new WarningSet()).getInstructions();
+    SSAInstruction[] statements = getIR(node).getInstructions();
     return CodeScanner.getFieldsRead(statements).iterator();
   }
 
   public Iterator iterateFieldsWritten(CGNode node) {
-    SSAInstruction[] statements = getIR(node, new WarningSet()).getInstructions();
+    SSAInstruction[] statements = getIR(node).getInstructions();
     return CodeScanner.getFieldsWritten(statements).iterator();
   }
 
-  public Set getCaughtExceptions(CGNode node, WarningSet warnings) {
-    SSAInstruction[] statements = getIR(node, warnings).getInstructions();
+  public Set getCaughtExceptions(CGNode node) {
+    SSAInstruction[] statements = getIR(node).getInstructions();
     return CodeScanner.getCaughtExceptions(statements);
   }
 
-  public boolean hasObjectArrayLoad(CGNode node, WarningSet warnings) {
-    SSAInstruction[] statements = getIR(node, warnings).getInstructions();
+  public boolean hasObjectArrayLoad(CGNode node) {
+    SSAInstruction[] statements = getIR(node).getInstructions();
     return CodeScanner.hasObjectArrayLoad(statements);
   }
 
-  public boolean hasObjectArrayStore(CGNode node, WarningSet warnings) {
-    SSAInstruction[] statements = getIR(node, warnings).getInstructions();
+  public boolean hasObjectArrayStore(CGNode node) {
+    SSAInstruction[] statements = getIR(node).getInstructions();
     return CodeScanner.hasObjectArrayStore(statements);
   }
 
-  public Iterator iterateCastTypes(CGNode node, WarningSet warnings) {
-    SSAInstruction[] statements = getIR(node, warnings).getInstructions();
+  public Iterator iterateCastTypes(CGNode node) {
+    SSAInstruction[] statements = getIR(node).getInstructions();
     return CodeScanner.iterateCastTypes(statements);
   }
 
-  public ControlFlowGraph getCFG(CGNode N, WarningSet warnings) {
-    return getIR(N, warnings).getControlFlowGraph();
+  public ControlFlowGraph getCFG(CGNode N) {
+    return getIR(N).getControlFlowGraph();
   }
 
-  public DefUse getDU(CGNode node, WarningSet warnings) {
-    return new DefUse(getIR(node, warnings));
+  public DefUse getDU(CGNode node) {
+    return new DefUse(getIR(node));
   }
 }

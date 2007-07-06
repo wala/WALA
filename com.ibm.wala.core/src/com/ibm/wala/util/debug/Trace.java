@@ -10,7 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.util.debug;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Iterator;
 

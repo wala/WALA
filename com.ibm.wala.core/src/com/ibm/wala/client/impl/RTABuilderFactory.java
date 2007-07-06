@@ -16,7 +16,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -37,12 +36,11 @@ public class RTABuilderFactory implements CallGraphBuilderFactory {
   public CallGraphBuilder make(AnalysisOptions options,
 			       IClassHierarchy cha,
 			       AnalysisScope scope,
-			       WarningSet warnings,
 			       boolean keepPointsTo)
   {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
     }
-    return Util.makeRTABuilder(options, cha, scope, warnings);
+    return Util.makeRTABuilder(options, cha, scope);
   }
 }

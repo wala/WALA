@@ -17,7 +17,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  *
@@ -39,10 +38,6 @@ public class ContextInsensitiveSelector implements ContextSelector {
     return 1;
   }
   
-  public void setWarnings(WarningSet newWarnings) {
-    // this object is not bound to a WarningSet
-  }
-
   /* 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.classLoader.CallSiteReference)
    */

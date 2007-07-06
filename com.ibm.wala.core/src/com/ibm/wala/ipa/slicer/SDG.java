@@ -41,7 +41,6 @@ import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * System dependence graph.
@@ -261,7 +260,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
             CGNode caller = it.next();
             for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
-              IR ir = caller.getIR(new WarningSet());
+              IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
@@ -290,7 +289,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
             CGNode caller = it.next();
             for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
-              IR ir = caller.getIR(new WarningSet());
+              IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
@@ -317,7 +316,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
             PDG pdg = getPDG(caller);
             for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
-              IR ir = caller.getIR(new WarningSet());
+              IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
@@ -377,7 +376,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
             CGNode caller = it.next();
             for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
-              IR ir = caller.getIR(new WarningSet());
+              IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
@@ -399,7 +398,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
             CGNode caller = it.next();
             for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
-              IR ir = caller.getIR(new WarningSet());
+              IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
@@ -422,7 +421,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
             CGNode caller = it.next();
             for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
-              IR ir = caller.getIR(new WarningSet());
+              IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();

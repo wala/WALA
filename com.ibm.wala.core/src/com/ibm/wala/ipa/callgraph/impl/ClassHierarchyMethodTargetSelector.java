@@ -20,7 +20,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * A MethodTargetSelector that simply looks up the declared type, name and
@@ -36,26 +36,18 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
   private final IClassHierarchy classHierarchy;
 
   /**
-   * An object which records analysis warnings
-   */
-  private final WarningSet warnings;
-
-  /**
    * Initialization. The class hierarchy is needed for lookups and the warnings
    * are used when the lookups fails (which should never happen).
    * 
    * @param cha
    *          The class hierarchy to use.
-   * @param warn
-   *          Where and how to emit warnings.
    */
-  public ClassHierarchyMethodTargetSelector(IClassHierarchy cha, WarningSet warn) {
+  public ClassHierarchyMethodTargetSelector(IClassHierarchy cha) {
     classHierarchy = cha;
-    warnings = warn;
   }
 
   /**
-   * This target selector searches the clas hierachy for the method matching the
+   * This target selector searches the class hierarchy for the method matching the
    * signature of the call that is appropriate for the receiver type.
    * @throws IllegalArgumentException  if call is null
    */
@@ -80,7 +72,7 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
     } else if (call.isFixed()) {
       klass = classHierarchy.lookupClass(targetType);
       if (klass == null) {
-        warnings.add(ResolutionFailure.create(caller,targetType));
+        Warnings.add(ResolutionFailure.create(caller,targetType));
         return null;
       }
       // anything else
@@ -90,7 +82,7 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
 
     IMethod target = feasibleChaResolution(classHierarchy,call,klass) ? classHierarchy.resolveMethod(klass, call.getDeclaredTarget().getSelector()) : null;
     if (target == null) {
-      warnings.add(ResolutionFailure.create(caller,call.getDeclaredTarget().getSelector()));
+      Warnings.add(ResolutionFailure.create(caller,call.getDeclaredTarget().getSelector()));
       return null;
     }
 

@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.ShrikeIRFactory;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.summaries.SyntheticIRFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * @author Julian Dolby
@@ -31,14 +30,14 @@ public class DefaultIRFactory implements IRFactory {
   /* 
    * @see com.ibm.wala.ssa.IRFactory#makeCFG(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.util.warnings.WarningSet)
    */
-  public ControlFlowGraph makeCFG(IMethod method, Context C,  WarningSet warnings) throws IllegalArgumentException {
+  public ControlFlowGraph makeCFG(IMethod method, Context C) throws IllegalArgumentException {
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
     }
     if (method.isSynthetic()) {
-      return syntheticFactory.makeCFG(method, C,  warnings);
+      return syntheticFactory.makeCFG(method, C);
     } else if (method instanceof ShrikeCTMethod) {
-      return shrikeFactory.makeCFG(method, C, warnings);
+      return shrikeFactory.makeCFG(method, C);
     } else {
       Assertions.UNREACHABLE();
       return null;
@@ -48,14 +47,14 @@ public class DefaultIRFactory implements IRFactory {
   /*
    * @see com.ibm.wala.ssa.IRFactory#makeIR(com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.Context, com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.ssa.SSAOptions, com.ibm.wala.util.warnings.WarningSet)
    */
-  public IR makeIR(IMethod method, Context C, SSAOptions options, WarningSet warnings) throws IllegalArgumentException{
+  public IR makeIR(IMethod method, Context C, SSAOptions options) throws IllegalArgumentException{
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
     }
     if (method.isSynthetic()) {
-      return syntheticFactory.makeIR(method, C, options, warnings);
+      return syntheticFactory.makeIR(method, C, options);
     } else if (method instanceof ShrikeCTMethod) {
-      return shrikeFactory.makeIR(method, C, options, warnings);
+      return shrikeFactory.makeIR(method, C, options);
     } else {
       Assertions.UNREACHABLE();
       return null;

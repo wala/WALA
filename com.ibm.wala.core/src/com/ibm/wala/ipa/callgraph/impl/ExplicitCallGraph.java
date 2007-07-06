@@ -44,7 +44,6 @@ import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 import com.ibm.wala.util.intset.SparseVector;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -305,12 +304,12 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       allTargets.clear();
     }
 
-    public IR getIR(WarningSet warnings) {
-      return getCallGraph().getInterpreter(this).getIR(this,warnings);
+    public IR getIR() {
+      return getCallGraph().getInterpreter(this).getIR(this);
     }
     
-    public DefUse getDU(WarningSet warnings) {
-      return getCallGraph().getInterpreter(this).getDU(this,warnings);
+    public DefUse getDU() {
+      return getCallGraph().getInterpreter(this).getDU(this);
     }
 
     public ExplicitCallGraph getCallGraph() {
@@ -325,8 +324,8 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       return getCallGraph().getInterpreter(this).iterateNewSites(this);
     }
 
-    public ControlFlowGraph getCFG(WarningSet warnings) {
-      return getCallGraph().getInterpreter(this).getCFG(this,warnings);
+    public ControlFlowGraph getCFG() {
+      return getCallGraph().getInterpreter(this).getCFG(this);
     }
   }
 

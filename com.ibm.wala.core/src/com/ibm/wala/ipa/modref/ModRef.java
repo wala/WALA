@@ -39,7 +39,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.intset.OrdinalSet;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * Mod-ref analysis for heap locations.
@@ -151,7 +150,7 @@ public class ModRef {
     Collection<PointerKey> result = HashSetFactory.make();
     final ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
     SSAInstruction.Visitor v = new ModVisitor(n, result, h, pa);
-    IR ir = n.getIR(new WarningSet());
+    IR ir = n.getIR();
     if (ir != null) {
       for (Iterator<SSAInstruction> it = ir.iterateNormalInstructions(); it.hasNext();) {
         it.next().visit(v);
@@ -171,7 +170,7 @@ public class ModRef {
     Collection<PointerKey> result = HashSetFactory.make();
     final ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
     SSAInstruction.Visitor v = new RefVisitor(n, result, pa, h);
-    IR ir = n.getIR(new WarningSet());
+    IR ir = n.getIR();
     if (ir != null) {
       for (Iterator<SSAInstruction> it = ir.iterateNormalInstructions(); it.hasNext();) {
         it.next().visit(v);

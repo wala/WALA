@@ -28,8 +28,8 @@ import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -38,7 +38,7 @@ import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * @author sfink
@@ -47,9 +47,9 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class BasicRTABuilder extends AbstractRTABuilder {
 
-  public BasicRTABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+  public BasicRTABuilder(IClassHierarchy cha, AnalysisOptions options,
       ContextSelector contextSelector, SSAContextInterpreter contextInterpreter) {
-    super(cha, warnings, options, contextSelector, contextInterpreter, null);
+    super(cha, options, contextSelector, contextInterpreter, null);
   }
 
   /**
@@ -60,7 +60,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
   @Override
   protected void updateSetsForNewClass(IClass klass, InstanceKey iKey, CGNode node, NewSiteReference n) {
 
-    // set up the selector map to record each method that klass implements
+    // set up the selector map to record each method that class implements
     registerImplementedMethods(klass, iKey);
 
     try {
@@ -155,7 +155,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
       // TODO: cache this!!!
       IClass recvClass = getClassHierarchy().lookupClass(site.getDeclaredTarget().getDeclaringClass());
       if (recvClass == null) {
-        getWarnings().add(ResolutionFailure.create(caller,site.getDeclaredTarget().getDeclaringClass()));
+        Warnings.add(ResolutionFailure.create(caller,site.getDeclaredTarget().getDeclaringClass()));
         return NOT_CHANGED;
       }
       value = filterForClass(value, recvClass);

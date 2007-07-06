@@ -19,7 +19,6 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.ContextInsensitiveRTAInterpreter;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -36,17 +35,17 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     this.options = options;
   }
 
-  public IR getIR(CGNode node, WarningSet warnings) {
+  public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     // Note: since this is context-insensitive, we cache an IR based on the
     // EVERYWHERE context
-    return options.getSSACache().findOrCreateIR(node.getMethod(), Everywhere.EVERYWHERE, options.getSSAOptions(), warnings);
+    return options.getSSACache().findOrCreateIR(node.getMethod(), Everywhere.EVERYWHERE, options.getSSAOptions());
   }
 
-  public int getNumberOfStatements(CGNode node, WarningSet warnings) {
-    IR ir = getIR(node, warnings);
+  public int getNumberOfStatements(CGNode node) {
+    IR ir = getIR(node);
     return (ir == null) ? -1 : ir.getInstructions().length;
   }
 
@@ -55,8 +54,8 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     return false;
   }
 
-  public ControlFlowGraph getCFG(CGNode N, WarningSet warnings) {
-    IR ir = getIR(N, warnings);
+  public ControlFlowGraph getCFG(CGNode N) {
+    IR ir = getIR(N);
     if (ir == null) {
       return null;
     } else {
@@ -64,12 +63,12 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     }
   }
 
-  public DefUse getDU(CGNode node, WarningSet warnings) {
+  public DefUse getDU(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     // Note: since this is context-insensitive, we cache an IR based on the
     // EVERYWHERE context
-    return options.getSSACache().findOrCreateDU(node.getMethod(), Everywhere.EVERYWHERE, options.getSSAOptions(), warnings);
+    return options.getSSACache().findOrCreateDU(node.getMethod(), Everywhere.EVERYWHERE, options.getSSAOptions());
   }
 }

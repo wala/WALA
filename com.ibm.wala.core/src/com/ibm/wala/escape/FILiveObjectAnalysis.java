@@ -34,7 +34,6 @@ import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * A simple liveness analysis based on flow-insensitive pointer analysis
@@ -142,8 +141,8 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
    */
   private boolean mayBeLiveIntraprocedural(InstanceKey ik, CGNode m, int instructionIndex) {
 
-    IR ir = m.getIR(new WarningSet());
-    DefUse du = m.getDU(new WarningSet());
+    IR ir = m.getIR();
+    DefUse du = m.getDU();
 
     for (Iterator it = DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik); it.hasNext();) {
       Object p = it.next();

@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.slicer;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * A statement that has a corresponding index in the
@@ -65,7 +64,7 @@ public class NormalStatement extends Statement {
   }
   
   public SSAInstruction getInstruction() {
-    return getNode().getIR(new WarningSet()).getInstructions()[instructionIndex];
+    return getNode().getIR().getInstructions()[instructionIndex];
   }
 
   public int getInstructionIndex() {

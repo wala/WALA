@@ -23,7 +23,6 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.DefaultRTAInterpreter;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -37,8 +36,8 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
 
   private final ContextInsensitiveSSAInterpreter defaultInterpreter;
 
-  public DefaultSSAInterpreter(AnalysisOptions options, WarningSet warnings) {
-    super(options, warnings);
+  public DefaultSSAInterpreter(AnalysisOptions options) {
+    super(options);
     cloneInterpreter = new CloneInterpreter();
     defaultInterpreter = new ContextInsensitiveSSAInterpreter(options);
   }
@@ -52,12 +51,12 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
 
   }
 
-  public IR getIR(CGNode node, WarningSet warnings) {
-    return getCFAInterpreter(node).getIR(node, warnings);
+  public IR getIR(CGNode node) {
+    return getCFAInterpreter(node).getIR(node);
   }
 
-  public int getNumberOfStatements(CGNode node, WarningSet warnings) {
-    return getCFAInterpreter(node).getNumberOfStatements(node, warnings);
+  public int getNumberOfStatements(CGNode node) {
+    return getCFAInterpreter(node).getNumberOfStatements(node);
   }
 
   @Override
@@ -76,12 +75,12 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
     return false;
   }
 
-  public ControlFlowGraph getCFG(CGNode N, WarningSet warnings) {
-    return getCFAInterpreter(N).getCFG(N, warnings);
+  public ControlFlowGraph getCFG(CGNode N) {
+    return getCFAInterpreter(N).getCFG(N);
   }
 
-  public DefUse getDU(CGNode node, WarningSet warnings) {
-    return getCFAInterpreter(node).getDU(node, warnings);
+  public DefUse getDU(CGNode node) {
+    return getCFAInterpreter(node).getDU(node);
   }
 
 }

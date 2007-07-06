@@ -51,7 +51,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * @author sfink
@@ -69,17 +68,14 @@ public class Util {
    * Set up an AnalysisOptions object with default selectors, corresponding to
    * class hierarchy lookup
    * 
-   * @param options
-   * @param cha
-   * @param warn
    * @throws IllegalArgumentException
-   *           if options is null
+   *             if options is null
    */
-  public static void addDefaultSelectors(AnalysisOptions options, IClassHierarchy cha, WarningSet warn) {
+  public static void addDefaultSelectors(AnalysisOptions options, IClassHierarchy cha) {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
-    options.setSelector(new ClassHierarchyMethodTargetSelector(cha, warn));
+    options.setSelector(new ClassHierarchyMethodTargetSelector(cha));
     options.setSelector(new ClassHierarchyClassTargetSelector(cha));
   }
 
@@ -87,9 +83,9 @@ public class Util {
    * Not terribly efficient
    * 
    * @throws IllegalArgumentException
-   *           if g1 is null
+   *             if g1 is null
    * @throws IllegalArgumentException
-   *           if g2 is null
+   *             if g2 is null
    */
   public static <T> boolean areEqual(Graph<T> g1, Graph<T> g2) {
     if (g2 == null) {
@@ -124,9 +120,9 @@ public class Util {
    * Is g1 a subset of g2? Not terribly efficient
    * 
    * @throws IllegalArgumentException
-   *           if g1 is null
+   *             if g1 is null
    * @throws IllegalArgumentException
-   *           if g2 is null
+   *             if g2 is null
    */
   public static <T> boolean isSubset(Graph<T> g1, Graph<T> g2) {
     if (g2 == null) {
@@ -162,16 +158,16 @@ public class Util {
    * file.
    * 
    * @throws IllegalArgumentException
-   *           if scope is null
+   *             if scope is null
    * @throws IllegalArgumentException
-   *           if cl is null
+   *             if cl is null
    * @throws IllegalArgumentException
-   *           if options is null
+   *             if options is null
    * @throws IllegalArgumentException
-   *           if scope is null
+   *             if scope is null
    */
-  public static void addBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, String xmlFile, IClassHierarchy cha)
-      throws IllegalArgumentException {
+  public static void addBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, String xmlFile,
+      IClassHierarchy cha) throws IllegalArgumentException {
     if (scope == null) {
       throw new IllegalArgumentException("scope is null");
     }
@@ -200,7 +196,8 @@ public class Util {
   /**
    * @return the Set of CGNodes in the call graph that are reachable without
    *         traversing any entrypoint node
-   * @throws IllegalArgumentException  if cg is null
+   * @throws IllegalArgumentException
+   *             if cg is null
    */
   public static Collection<CGNode> computeDarkEntrypointNodes(final CallGraph cg, final Collection<CGNode> entrypoints) {
 
@@ -243,7 +240,7 @@ public class Util {
    * @param cha
    * @return set of all eligible Main classes in the class hierarchy
    * @throws IllegalArgumentException
-   *           if scope is null
+   *             if scope is null
    */
   public static Iterable<Entrypoint> makeMainEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
     if (scope == null) {
@@ -335,7 +332,7 @@ public class Util {
    * @return a graph whose nodes are MethodReferences, and whose edges represent
    *         calls between MethodReferences
    * @throws IllegalArgumentException
-   *           if cg is null
+   *             if cg is null
    */
   public static Graph<MethodReference> squashCallGraph(final String name, final CallGraph cg) {
     if (cg == null) {
@@ -495,9 +492,9 @@ public class Util {
    * @param supG
    * @param subG
    * @throws IllegalArgumentException
-   *           if subG is null
+   *             if subG is null
    * @throws IllegalArgumentException
-   *           if supG is null
+   *             if supG is null
    */
   public static <T> void checkGraphSubset(Graph<T> supG, Graph<T> subG) {
 
@@ -550,95 +547,84 @@ public class Util {
    * @return an RTA Call Graph builder.
    * 
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param scope
-   *          representation of the analysis scope
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            representation of the analysis scope
    */
-  public static CallGraphBuilder makeRTABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
-      WarningSet warnings) {
+  public static CallGraphBuilder makeRTABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope) {
 
-    addDefaultSelectors(options, cha, warnings);
+    addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return new BasicRTABuilder(cha, warnings, options, null, null);
+    return new BasicRTABuilder(cha, options, null, null);
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param scope
-   *          representation of the analysis scope
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            representation of the analysis scope
    * @return a 0-CFA Call Graph Builder.
    */
-  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope, WarningSet warnings) {
-    return makeZeroCFABuilder(options, cha, scope, warnings, null, null);
+  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope) {
+    return makeZeroCFABuilder(options, cha, scope, null, null);
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param scope
-   *          representation of the analysis scope
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            representation of the analysis scope
    * @param customSelector
-   *          user-defined context selector, or null if none
+   *            user-defined context selector, or null if none
    * @param customInterpreter
-   *          user-defined context interpreter, or null if none
+   *            user-defined context interpreter, or null if none
    * @return a 0-CFA Call Graph Builder.
    * @throws IllegalArgumentException
-   *           if options is null
+   *             if options is null
    */
   public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
-      WarningSet warnings, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
+      ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
-    addDefaultSelectors(options, cha, warnings);
+    addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return new ZeroXCFABuilder(cha, warnings, options, customSelector, customInterpreter, options.getReflectionSpec(),
-        ZeroXInstanceKeys.NONE);
+    return new ZeroXCFABuilder(cha, options, customSelector, customInterpreter, options.getReflectionSpec(), ZeroXInstanceKeys.NONE);
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param cl
-   *          classloader that can find WALA resources
+   *            classloader that can find WALA resources
    * @param scope
-   *          representation of the analysis scope
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            representation of the analysis scope
    * @return a 1-CFA Call Graph Builder.
    * @throws IllegalArgumentException
-   *           if options is null
+   *             if options is null
    */
-  public static CallGraphBuilder makeOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl,
-      AnalysisScope scope, WarningSet warnings) {
+  public static CallGraphBuilder makeOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
-    addDefaultSelectors(options, cha, warnings);
+    addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, cl, cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
 
-    CallGraphBuilder builder = new OneCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec());
+    CallGraphBuilder builder = new OneCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec());
     return builder;
   }
 
@@ -649,47 +635,41 @@ public class Util {
    * disambiguating uninteresting types.
    * 
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param scope
-   *          representation of the analysis scope
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            representation of the analysis scope
    */
-  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
-      WarningSet warnings) {
-
-    return makeZeroOneCFABuilder(options, cha, scope, warnings, null, null);
+  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope) {
+    return makeZeroOneCFABuilder(options, cha, scope, null, null);
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param scope
-   *          representation of the analysis scope
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            representation of the analysis scope
    * @param customSelector
-   *          user-defined context selector, or null if none
+   *            user-defined context selector, or null if none
    * @param customInterpreter
-   *          user-defined context interpreter, or null if none
+   *            user-defined context interpreter, or null if none
    * @return a 0-1-CFA Call Graph Builder.
    * @throws IllegalArgumentException
-   *           if options is null
+   *             if options is null
    */
   public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
-      WarningSet warnings, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
+      ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
-    addDefaultSelectors(options, cha, warnings);
+    addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return new ZeroXCFABuilder(cha, warnings, options, customSelector, customInterpreter, options.getReflectionSpec(),
+    return new ZeroXCFABuilder(cha, options, customSelector, customInterpreter, options.getReflectionSpec(),
         ZeroXInstanceKeys.ALLOCATIONS);
   }
 
@@ -700,137 +680,122 @@ public class Util {
    * disambiguating uninteresting types.
    * 
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param scope
-   *          representation of the analysis scope
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            representation of the analysis scope
    */
-  public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
-      WarningSet warnings) {
-
-    return makeVanillaZeroOneCFABuilder(options, cha, scope, warnings, null, null);
+  public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope) {
+    return makeVanillaZeroOneCFABuilder(options, cha, scope, null, null);
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param scope
-   *          representation of the analysis scope
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            representation of the analysis scope
    * @param customSelector
-   *          user-defined context selector, or null if none
+   *            user-defined context selector, or null if none
    * @param customInterpreter
-   *          user-defined context interpreter, or null if none
+   *            user-defined context interpreter, or null if none
    * @return a 0-1-CFA Call Graph Builder.
    * @throws IllegalArgumentException
-   *           if options is null
+   *             if options is null
    */
   public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
-      WarningSet warnings, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
+      ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
-    addDefaultSelectors(options, cha, warnings);
+    addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return new ZeroXCFABuilder(cha, warnings, options, customSelector, customInterpreter, options.getReflectionSpec(),
+    return new ZeroXCFABuilder(cha, options, customSelector, customInterpreter, options.getReflectionSpec(),
         ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
             | ZeroXInstanceKeys.SMUSH_STRINGS | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param scope
-   *          representation of the analysis scope
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            representation of the analysis scope
    * @return a 0-CFA Call Graph Builder augmented with extra logic for
    *         containers
    * @throws IllegalArgumentException
-   *           if options is null
+   *             if options is null
    */
-  public static CFABuilder makeZeroContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
-      WarningSet warnings) {
+  public static CFABuilder makeZeroContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
-    addDefaultSelectors(options, cha, warnings);
+    addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
 
-    return new ZeroContainerCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec());
+    return new ZeroContainerCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec());
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param scope
-   *          representation of the analysis scope
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            representation of the analysis scope
    * @return a 0-1-CFA Call Graph Builder augmented with extra logic for
    *         containers
    * @throws IllegalArgumentException
-   *           if options is null
+   *             if options is null
    */
-  public static CFABuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
-      WarningSet warnings) {
+  public static CFABuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope ) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
-    addDefaultSelectors(options, cha, warnings);
+    addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
 
-    return new ZeroOneContainerCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec());
+    return new ZeroOneContainerCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec());
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param scope
-   *          representation of the analysis scope
-   * @param warnings
-   *          an object which tracks analysis warnings
+   *            representation of the analysis scope
    * @return a 0-1-CFA Call Graph Builder augmented with extra logic for
    *         containers
    * @throws IllegalArgumentException
-   *           if options is null
+   *             if options is null
    */
-  public static CFABuilder makeVanillaZeroOneContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
-      WarningSet warnings) {
+  public static CFABuilder makeVanillaZeroOneContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
-    addDefaultSelectors(options, cha, warnings);
+    addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
 
-    return new ZeroOneContainerCFABuilder(cha, warnings, options, appSelector, appInterpreter, options.getReflectionSpec()) {
+    return new ZeroOneContainerCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec()) {
       @Override
-      protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy c, WarningSet w, AnalysisOptions o,
+      protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy c, AnalysisOptions o,
           SSAContextInterpreter contextInterpreter) {
-        ZeroXInstanceKeys zik = new ZeroXInstanceKeys(o, c, contextInterpreter, w, ZeroXInstanceKeys.ALLOCATIONS);
+        ZeroXInstanceKeys zik = new ZeroXInstanceKeys(o, c, contextInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
         return zik;
       }
     };

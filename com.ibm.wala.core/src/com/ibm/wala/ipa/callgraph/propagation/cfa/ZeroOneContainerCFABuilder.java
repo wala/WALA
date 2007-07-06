@@ -18,7 +18,6 @@ import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -31,9 +30,7 @@ public class ZeroOneContainerCFABuilder extends CFABuilder {
 
   /**
    * @param cha
-   *          governing class hierarhcy
-   * @param warnings
-   *          object to track analysis warnings
+   *          governing class hierarchy
    * @param options
    *          call graph construction options
    * @param appContextSelector
@@ -45,10 +42,10 @@ public class ZeroOneContainerCFABuilder extends CFABuilder {
    * @throws IllegalArgumentException
    *           if options is null
    */
-  public ZeroOneContainerCFABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+  public ZeroOneContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
 
-    super(cha, warnings, options);
+    super(cha,options);
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
@@ -56,12 +53,12 @@ public class ZeroOneContainerCFABuilder extends CFABuilder {
     ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
 
-    SSAContextInterpreter c = new DefaultSSAInterpreter(options, warnings);
-    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect, warnings), c);
+    SSAContextInterpreter c = new DefaultSSAInterpreter(options);
+    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect), c);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, c);
     setContextInterpreter(contextInterpreter);
 
-    ZeroXInstanceKeys zik = makeInstanceKeys(cha, warnings, options, contextInterpreter);
+    ZeroXInstanceKeys zik = makeInstanceKeys(cha, options, contextInterpreter);
     setInstanceKeys(zik);
 
     ContextSelector CCS = makeContainerContextSelector(cha, (ZeroXInstanceKeys) getInstanceKeys());
@@ -69,9 +66,9 @@ public class ZeroOneContainerCFABuilder extends CFABuilder {
     setContextSelector(DCS);
   }
 
-  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, AnalysisOptions options,
       SSAContextInterpreter contextInterpreter) {
-    ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, warnings, ZeroXInstanceKeys.ALLOCATIONS
+    ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, ZeroXInstanceKeys.ALLOCATIONS
         | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS | ZeroXInstanceKeys.SMUSH_STRINGS
         | ZeroXInstanceKeys.SMUSH_THROWABLES);
     return zik;

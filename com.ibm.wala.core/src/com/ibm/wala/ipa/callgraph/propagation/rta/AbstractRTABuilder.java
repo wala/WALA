@@ -45,8 +45,8 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.CFAPointerKeys;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.DelegatingExplicitCallGraph.DelegatingCGNode;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
@@ -59,7 +59,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * Abstract superclass of various RTA flavors
@@ -113,12 +113,12 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/ExceptionInInitializerError"),
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/NullPointerException") };
 
-  protected AbstractRTABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options, ContextSelector appContextSelector,
+  protected AbstractRTABuilder(IClassHierarchy cha, AnalysisOptions options, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
-    super(cha, warnings, options, new CFAPointerKeys());
-    setInstanceKeys(new ClassBasedInstanceKeys(options, cha, warnings));
+    super(cha, options, new CFAPointerKeys());
+    setInstanceKeys(new ClassBasedInstanceKeys(options, cha));
     setContextSelector(makeContextSelector(appContextSelector));
-    setContextInterpreter(makeContextInterpreter(appContextInterpreter, reflect, warnings));
+    setContextInterpreter(makeContextInterpreter(appContextInterpreter, reflect));
   }
 
   protected RTAContextInterpreter getRTAContextInterpreter() {
@@ -193,7 +193,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     TypeReference t = f.getDeclaringClass();
     IClass klass = getClassHierarchy().lookupClass(t);
     if (klass == null) {
-      getWarnings().add(ResolutionFailure.create(node, t));
+      Warnings.add(ResolutionFailure.create(node, t));
     } else {
       processClassInitializer(klass);
     }
@@ -259,7 +259,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     if (code == IInvokeInstruction.Dispatch.STATIC || canResolveEagerly) {
       CGNode n = getTargetForCall(node, site, (InstanceKey) null);
       if (n == null) {
-        getWarnings().add(ResolutionFailure.create(node, site));
+        Warnings.add(ResolutionFailure.create(node, site));
       } else {
         processResolvedCall(node, site, n);
 
@@ -301,7 +301,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       // do for invokestatic above.
       PointerKey selector = getKeyForSite(site);
       if (selector == null) {
-        getWarnings().add(ResolutionFailure.create(node, site));
+        Warnings.add(ResolutionFailure.create(node, site));
         return;
       }
 
@@ -368,7 +368,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     }
 
     if (klass == null) {
-      getWarnings().add(ResolutionFailure.create(node, iKey.getConcreteType()));
+      Warnings.add(ResolutionFailure.create(node, iKey.getConcreteType()));
       return;
     }
     if (allocatedClasses.contains(klass)) {
@@ -398,7 +398,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     FakeRootMethod m = (FakeRootMethod) getCallGraph().getFakeRootNode().getMethod();
 
     for (int i = 0; i < PRE_ALLOC.length; i++) {
-      SSANewInstruction n = m.addAllocation(PRE_ALLOC[i], getWarnings());
+      SSANewInstruction n = m.addAllocation(PRE_ALLOC[i]);
       // visit now to ensure java.lang.Object is visited first
       visitNew(getCallGraph().getFakeRootNode(), n.getNewSite());
     }
@@ -427,10 +427,10 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   protected SSAContextInterpreter makeContextInterpreter(SSAContextInterpreter appContextInterpreter,
-      ReflectionSpecification reflect, WarningSet warnings) {
+      ReflectionSpecification reflect) {
 
-    SSAContextInterpreter defI = new DefaultSSAInterpreter(getOptions(),warnings);
-    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(getOptions(),  reflect, warnings),
+    SSAContextInterpreter defI = new DefaultSSAInterpreter(getOptions());
+    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(getOptions(),  reflect),
         defI);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     return contextInterpreter;

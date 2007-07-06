@@ -20,7 +20,6 @@ import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.CloneContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -49,9 +48,6 @@ public class DefaultContextSelector implements ContextSelector {
 
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
     return delegate.getBoundOnNumberOfTargets(caller, site, targetMethod);
-  }
-
-  public void setWarnings(WarningSet newWarnings) {
   }
 
   /*

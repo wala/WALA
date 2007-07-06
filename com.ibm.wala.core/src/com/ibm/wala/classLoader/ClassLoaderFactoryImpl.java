@@ -20,7 +20,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * An implementation of the class loader factory that produces ClassLoaderImpls
@@ -34,11 +34,6 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
   final private SetOfClasses exclusions;
 
   /**
-   * An object to track warnings
-   */
-  private final WarningSet warnings;
-
-  /**
    * A Mapping from ClassLoaderReference to IClassLoader
    */
   final private HashMap<ClassLoaderReference, IClassLoader> map = HashMapFactory.make(3);
@@ -47,9 +42,8 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
    * @param exclusions
    *          A set of classes that class loaders should pretend don't exist.
    */
-  public ClassLoaderFactoryImpl(SetOfClasses exclusions, WarningSet warnings) {
+  public ClassLoaderFactoryImpl(SetOfClasses exclusions) {
     this.exclusions = exclusions;
-    this.warnings = warnings;
   }
 
   /**
@@ -93,17 +87,17 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
     String implClass = scope.getLoaderImpl(classLoaderReference);
     IClassLoader cl;
     if (implClass == null) {
-      cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha, warnings);
+      cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha);
     } else
       try {
         // this is fragile.  why are we doing things this way again?
         Class<?> impl = Class.forName(implClass);
         Constructor<?> ctor = impl.getDeclaredConstructor(new Class[] { ClassLoaderReference.class, IClassLoader.class,
-            SetOfClasses.class, IClassHierarchy.class, WarningSet.class });
-        cl = (IClassLoader) ctor.newInstance(new Object[] { classLoaderReference, parent, exclusions, cha, warnings });
+            SetOfClasses.class, IClassHierarchy.class});
+        cl = (IClassLoader) ctor.newInstance(new Object[] { classLoaderReference, parent, exclusions, cha});
       } catch (Exception e) {
-        warnings.add(InvalidClassLoaderImplementation.create(implClass));
-        cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha, warnings);
+        Warnings.add(InvalidClassLoaderImplementation.create(implClass));
+        cl = new ClassLoaderImpl(classLoaderReference, scope.getArrayClassLoader(), parent, exclusions, cha);
       }
     cl.init(scope.getModules(classLoaderReference));
     return cl;
@@ -136,9 +130,5 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
    */
   public SetOfClasses getExclusions() {
     return exclusions;
-  }
-
-  public WarningSet getWarnings() {
-    return warnings;
   }
 }

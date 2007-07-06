@@ -40,7 +40,6 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.perf.EngineTimings;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -83,11 +82,6 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   private final Filter relevant;
 
   /**
-   * Tracker of analysis warnings
-   */
-  private final WarningSet warnings;
-
-  /**
    * a cache: for each node (Basic Block), does that block end in a call?
    */
   private final BitVector hasCallVector = new BitVector();
@@ -99,11 +93,9 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * 
    * @param CG
    *          the call graph
-   * @param warnings
-   *          an object to track analysis warnings
    */
-  public InterproceduralCFG(CallGraph CG, WarningSet warnings) {
-    this(CG, IndiscriminateFilter.singleton(), false, warnings);
+  public InterproceduralCFG(CallGraph CG) {
+    this(CG, IndiscriminateFilter.singleton(), false);
   }
 
   /**
@@ -115,12 +107,11 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    *          a filter which accepts those call graph nodes which should be
    *          included in the I-CFG. Other nodes are ignored.
    */
-  public InterproceduralCFG(CallGraph CG, Filter relevant, boolean partitionExits, WarningSet warnings) {
+  public InterproceduralCFG(CallGraph CG, Filter relevant, boolean partitionExits) {
 
     EngineTimings.startVirtual("InterproceduralCFG.<init>");
     this.cg = CG;
     this.relevant = relevant;
-    this.warnings = warnings;
     this.partitionExits = partitionExits;
 
     // create nodes for IPCFG
@@ -149,7 +140,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
       CGNode n = (CGNode) ns.next();
       if (relevant.accepts(n)) {
         // retrieve a cfg for node n.
-        ControlFlowGraph cfg = n.getCFG(warnings);
+        ControlFlowGraph cfg = n.getCFG();
         if (cfg == null) {
           // n is an unmodelled native method
           continue;
@@ -201,7 +192,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @return the cfg for n, or null if none found
    */
   public ControlFlowGraph getCFG(CGNode n) {
-    ControlFlowGraph cfg = n.getCFG(warnings);
+    ControlFlowGraph cfg = n.getCFG();
     if (cfg == null) {
       return null;
     }
@@ -300,7 +291,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
             Trace.println("Relevant target: " + tn);
           }
           // add an edge from tn exit to this node
-          ControlFlowGraph tcfg = tn.getCFG(warnings);
+          ControlFlowGraph tcfg = tn.getCFG();
           // tcfg might be null if tn is an unmodelled native method
           if (tcfg != null) {
             if (partitionExits) {
@@ -485,7 +476,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
         if (DEBUG_LEVEL > 0) {
           Trace.println("caller " + caller + "is relevant");
         }
-        ControlFlowGraph ccfg = caller.getCFG(warnings);
+        ControlFlowGraph ccfg = caller.getCFG();
         IInstruction[] cinsts = ccfg.getInstructions();
 
         if (DEBUG_LEVEL > 0) {

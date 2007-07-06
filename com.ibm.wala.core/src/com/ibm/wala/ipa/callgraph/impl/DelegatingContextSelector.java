@@ -18,7 +18,6 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * A context selector that first checks with A, then defaults to B.
@@ -79,12 +78,6 @@ public class DelegatingContextSelector implements ContextSelector {
     return B.mayUnderstand(caller,site,targetMethod, instance);
   }
 
-  public void setWarnings(WarningSet newWarnings) {
-    if (A != null) {
-      A.setWarnings(newWarnings);
-    }
-   B.setWarnings(newWarnings);
-  }
 
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
     return A.contextIsIrrelevant(node,site) && B.contextIsIrrelevant(node,site);

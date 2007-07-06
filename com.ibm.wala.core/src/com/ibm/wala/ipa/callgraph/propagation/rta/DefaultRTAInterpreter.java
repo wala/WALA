@@ -21,7 +21,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContextInsensitiveSSAInterpreter;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  *
@@ -32,19 +31,13 @@ import com.ibm.wala.util.warnings.WarningSet;
 public class DefaultRTAInterpreter implements RTAContextInterpreter {
 
   private static final boolean DEBUG = false;
-  /**
-   * Object to track analysis warnings
-   */
-  private WarningSet warnings;
 
   private final ContextInsensitiveRTAInterpreter defaultInterpreter;
 
   /**
    * @param options governing analysis options
-   * @param warnings an object to track analysis warnings
    */
-  public DefaultRTAInterpreter(AnalysisOptions options, WarningSet warnings) {
-    this.warnings = warnings;
+  public DefaultRTAInterpreter(AnalysisOptions options) {
     defaultInterpreter = new ContextInsensitiveSSAInterpreter(options);
   }
 
@@ -97,13 +90,5 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
   public boolean recordFactoryType(CGNode node, IClass klass) {
     // not a factory type
     return false;
-  }
-  
-  public void setWarnings(WarningSet newWarnings) {
-    this.warnings = newWarnings;
-  }
-
-  public WarningSet getWarnings() {
-    return warnings;
   }
 }

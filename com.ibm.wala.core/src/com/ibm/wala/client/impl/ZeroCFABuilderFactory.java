@@ -16,7 +16,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -26,12 +25,7 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class ZeroCFABuilderFactory implements CallGraphBuilderFactory {
 
-  public CallGraphBuilder make(AnalysisOptions options,
-			       IClassHierarchy cha,
-			       AnalysisScope scope,
-			       WarningSet warnings,
-			       boolean keepPointsTo)
-  {
-    return Util.makeZeroCFABuilder(options, cha, scope, warnings);
+  public CallGraphBuilder make(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope, boolean keepPointsTo) {
+    return Util.makeZeroCFABuilder(options, cha, scope);
   }
 }

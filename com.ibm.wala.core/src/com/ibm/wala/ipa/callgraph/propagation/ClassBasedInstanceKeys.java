@@ -11,7 +11,10 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.analysis.reflection.Malleable;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.classLoader.ArrayClass;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -19,10 +22,9 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
  * This class provides Instance Key call backs where each instance is in the
  * same equivalence class as all other instances of the same concrete type.
  * 
@@ -32,16 +34,13 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
 
   private final static boolean DEBUG = false;
 
-  private final WarningSet warnings;
-
   private final AnalysisOptions options;
 
   private final IClassHierarchy cha;
 
-  public ClassBasedInstanceKeys(AnalysisOptions options, IClassHierarchy cha, WarningSet warnings) {
+  public ClassBasedInstanceKeys(AnalysisOptions options, IClassHierarchy cha) {
     this.cha = cha;
     this.options = options;
-    this.warnings = warnings;
   }
 
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
@@ -53,7 +52,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     }
     IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
-      warnings.add(ResolutionFailure.create(node, allocation));
+      Warnings.add(ResolutionFailure.create(node, allocation));
       return null;
     }
 

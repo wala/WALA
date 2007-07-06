@@ -17,7 +17,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -98,7 +97,7 @@ public class ViewIRAction extends Action {
     CGNode first = (CGNode) selection.getFirstElement();
 
     // get the IR for the node
-    return first.getIR(new WarningSet());
+    return first.getIR();
   }
 
   protected CGNode getNodeForSelection() {

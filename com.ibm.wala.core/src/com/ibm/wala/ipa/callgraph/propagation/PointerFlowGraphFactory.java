@@ -1,6 +1,6 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 
 public class PointerFlowGraphFactory {
 

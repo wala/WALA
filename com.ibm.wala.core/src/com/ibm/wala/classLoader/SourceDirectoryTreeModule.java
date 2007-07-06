@@ -10,9 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
-import com.ibm.wala.util.debug.*;
-
 import java.io.File;
+
+import com.ibm.wala.util.debug.Assertions;
 
 /**
  * a module representing a directory tree of source files.

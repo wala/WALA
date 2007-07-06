@@ -20,7 +20,6 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * For synthetic methods marked as "Factories", we analyze in a context defined by the caller.
@@ -89,13 +88,6 @@ public class FactoryContextSelector implements ContextSelector {
       }
     }
     return -1;
-  }
-
-  /* 
-   * @see com.ibm.wala.ipa.callgraph.rta.RTAContextInterpreter#setWarnings(com.ibm.wala.util.warnings.WarningSet)
-   */
-  public void setWarnings(WarningSet newWarnings) {
-    // this object is not bound to a WarningSet
   }
 
   /* 

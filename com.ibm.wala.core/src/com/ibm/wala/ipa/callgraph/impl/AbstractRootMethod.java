@@ -26,7 +26,16 @@ import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.ssa.ConstantValue;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAArrayStoreInstruction;
+import com.ibm.wala.ssa.SSAGetInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
+import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -34,7 +43,7 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * 
@@ -59,18 +68,13 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   private final AnalysisOptions options;
 
-  public AbstractRootMethod(MethodReference method, 
-			    IClass declaringClass,
-			    final IClassHierarchy cha,
-			    AnalysisOptions options) {
+  public AbstractRootMethod(MethodReference method, IClass declaringClass, final IClassHierarchy cha, AnalysisOptions options) {
     super(method, declaringClass, true, false);
     this.cha = cha;
     this.options = options;
   }
 
-  public AbstractRootMethod(MethodReference method, 
-			    final IClassHierarchy cha,
-			    AnalysisOptions options) {
+  public AbstractRootMethod(MethodReference method, final IClassHierarchy cha, AnalysisOptions options) {
     this(method, new FakeRootClass(cha), cha, options);
   }
 
@@ -90,23 +94,24 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   }
 
   @Override
-  public IR makeIR(SSAOptions options, WarningSet warnings) {
+  public IR makeIR(SSAOptions options) {
     SSAInstruction instrs[] = getStatements(options);
-    Map<Integer,ConstantValue> constants = null;
+    Map<Integer, ConstantValue> constants = null;
     if (valueNumberForConstantOne > -1) {
       constants = HashMapFactory.make(1);
       constants.put(new Integer(valueNumberForConstantOne), new ConstantValue(new Integer(1)));
     }
-    return new SyntheticIR(this, Everywhere.EVERYWHERE, makeControlFlowGraph(), instrs, options, constants, warnings);
+    return new SyntheticIR(this, Everywhere.EVERYWHERE, makeControlFlowGraph(), instrs, options, constants);
   }
 
   public int addLocal() {
     return nextLocal++;
   }
-  
+
   /**
    * @return the invoke instructions added by this operation
-   * @throws IllegalArgumentException  if site is null
+   * @throws IllegalArgumentException
+   *             if site is null
    */
   public SSAInvokeInstruction addInvocation(int[] params, CallSiteReference site) {
 
@@ -132,9 +137,10 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
    * 
    * @param T
    * @return instruction added, or null
-   * @throws IllegalArgumentException  if T is null
+   * @throws IllegalArgumentException
+   *             if T is null
    */
-  public SSANewInstruction addAllocation(TypeReference T, WarningSet warnings) {
+  public SSANewInstruction addAllocation(TypeReference T) {
     if (T == null) {
       throw new IllegalArgumentException("T is null");
     }
@@ -146,7 +152,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       if (T.isArrayType()) {
         initValueNumberForConstantOne();
         int[] sizes = new int[T.getDimensionality()];
-        Arrays.fill(sizes,valueNumberForConstantOne);
+        Arrays.fill(sizes, valueNumberForConstantOne);
         result = new SSANewInstruction(instance, ref, sizes);
       } else {
         result = new SSANewInstruction(instance, ref);
@@ -155,7 +161,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
       IClass klass = cha.lookupClass(T);
       if (klass == null) {
-        warnings.add(AllocationFailure.create(T));
+        Warnings.add(AllocationFailure.create(T));
         return null;
       }
 
@@ -170,7 +176,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
           if (e.isArrayType()) {
             initValueNumberForConstantOne();
             int[] sizes = new int[T.getDimensionality()];
-            Arrays.fill(sizes,valueNumberForConstantOne);
+            Arrays.fill(sizes, valueNumberForConstantOne);
             ni = new SSANewInstruction(alloc, n, sizes);
           } else {
             ni = new SSANewInstruction(alloc, n);
@@ -302,10 +308,6 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       public boolean recordFactoryType(CGNode node, IClass klass) {
         // not a factory type
         return false;
-      }
-
-      public void setWarnings(WarningSet newWarnings) {
-        // this object is not bound to a WarningSet
       }
 
       public Iterator iterateFieldsRead(CGNode node) {

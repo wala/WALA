@@ -16,7 +16,6 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  *
@@ -54,7 +53,7 @@ public interface RTAContextInterpreter {
 
   /**
    * record that the "factory" method of a node should be interpreted to allocate a 
-   * particular klass.
+   * particular class.
    * 
    * TODO: this is a little ugly, is there a better place to move this?
    * 
@@ -63,10 +62,4 @@ public interface RTAContextInterpreter {
    * @return true iff a NEW type was recorded, false if the type was previously recorded.
    */
   public boolean recordFactoryType(CGNode node, IClass klass);
-  
-  /**
-   * Bind this object to a new object to track warnings
-   * @param newWarnings
-   */
-  public void setWarnings(WarningSet newWarnings);
 }

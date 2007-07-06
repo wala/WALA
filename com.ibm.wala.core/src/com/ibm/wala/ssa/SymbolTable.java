@@ -13,7 +13,8 @@ package com.ibm.wala.ssa;
 import java.util.HashMap;
 
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.*;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
 
 /**
  * 

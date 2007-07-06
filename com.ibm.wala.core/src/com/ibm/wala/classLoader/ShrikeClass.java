@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.ClassHierarchyWarning;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
@@ -49,7 +49,7 @@ import com.ibm.wala.util.collections.SmallMap;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * A class read from Shrike
@@ -93,11 +93,6 @@ public final class ShrikeClass implements IClass {
    * Canonical type representation
    */
   private TypeReference typeReference;
-
-  /**
-   * An object to track warnings
-   */
-  private final WarningSet warnings;
 
   /**
    * superclass
@@ -151,7 +146,7 @@ public final class ShrikeClass implements IClass {
    * @throws IllegalArgumentException
    *           if reader is null
    */
-  public ShrikeClass(ShrikeClassReaderHandle reader, IClassLoader loader, IClassHierarchy cha, WarningSet warnings)
+  public ShrikeClass(ShrikeClassReaderHandle reader, IClassLoader loader, IClassHierarchy cha)
       throws InvalidClassFileException {
     if (reader == null) {
       throw new IllegalArgumentException("reader is null");
@@ -159,7 +154,6 @@ public final class ShrikeClass implements IClass {
     this.reader = reader;
     this.loader = loader;
     this.cha = cha;
-    this.warnings = warnings;
     computeTypeReference();
     this.hashCode = 2161 * getReference().hashCode();
     // as long as the reader is around, pull more data out
@@ -341,7 +335,7 @@ public final class ShrikeClass implements IClass {
       if (klass.isInterface()) {
         result.add(klass);
       } else {
-        warnings.add(ClassHierarchyWarning.create("expected an interface " + klass));
+        Warnings.add(ClassHierarchyWarning.create("expected an interface " + klass));
       }
     }
     for (Iterator<IClass> it = c.iterator(); it.hasNext();) {
@@ -349,7 +343,7 @@ public final class ShrikeClass implements IClass {
       if (I.isInterface()) {
         result.addAll(I.computeAllInterfacesAsCollection());
       } else {
-        warnings.add(ClassHierarchyWarning.create("expected an interface " + I));
+        Warnings.add(ClassHierarchyWarning.create("expected an interface " + I));
       }
     }
 
@@ -389,7 +383,7 @@ public final class ShrikeClass implements IClass {
       IClass klass = null;
       klass = loader.lookupClass(TypeName.findOrCreate(name));
       if (klass == null) {
-        warnings.add(ClassNotFoundWarning.create(name));
+        Warnings.add(ClassNotFoundWarning.create(name));
       } else {
         result.add(klass);
       }
@@ -721,10 +715,6 @@ public final class ShrikeClass implements IClass {
 
   public IClassHierarchy getClassHierarchy() {
     return cha;
-  }
-
-  public WarningSet getWarnings() {
-    return warnings;
   }
 
   /*

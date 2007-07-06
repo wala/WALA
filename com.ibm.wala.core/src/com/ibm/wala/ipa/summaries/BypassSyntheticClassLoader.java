@@ -24,7 +24,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * This class represents class loaders that introduce classes that do not exist
@@ -71,10 +70,8 @@ public class BypassSyntheticClassLoader implements IClassLoader {
    * @param parent its parent
    * @param exclusions classes to ignore
    * @param cha governing class hierarchy
-   * @param warnings object to record analysis warnings
    */
-  public BypassSyntheticClassLoader(ClassLoaderReference me, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha,
-      WarningSet warnings) {
+  public BypassSyntheticClassLoader(ClassLoaderReference me, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) {
     this.me = me;
     this.cha = cha;
     this.parent = parent;

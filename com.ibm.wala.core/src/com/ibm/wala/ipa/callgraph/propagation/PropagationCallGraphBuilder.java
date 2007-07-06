@@ -16,7 +16,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.SyntheticClass;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -26,7 +32,8 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.impl.*;
+import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
+import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -42,7 +49,7 @@ import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * 
@@ -110,11 +117,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * Governing class hierarchy
    */
   final protected IClassHierarchy cha;
-
-  /**
-   * An object which records analysis warnings
-   */
-  private WarningSet warnings;
 
   /**
    * Special rules for bypassing Java calls
@@ -210,7 +212,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @param pointerKeyFactory
    *          factory which embodies pointer abstraction policy
    */
-  protected PropagationCallGraphBuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options,
+  protected PropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options,
       PointerKeyFactory pointerKeyFactory) {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
@@ -219,7 +221,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       throw new IllegalArgumentException("options is null");
     }
     this.cha = cha;
-    this.warnings = warnings;
     this.options = options;
     if (Assertions.verifyAssertions) {
       // we need pointer keys to handle reflection
@@ -284,10 +285,10 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       if (DEBUG_ENTRYPOINTS) {
         Trace.println("Entrypoint: " + E);
       }
-      SSAAbstractInvokeInstruction call = E.addCall((AbstractRootMethod) callGraph.getFakeRootNode().getMethod(), warnings);
+      SSAAbstractInvokeInstruction call = E.addCall((AbstractRootMethod) callGraph.getFakeRootNode().getMethod());
 
       if (call == null) {
-        warnings.add(EntrypointResolutionWarning.create(E));
+        Warnings.add(EntrypointResolutionWarning.create(E));
       } else {
         entrypointCallSites.add(call.getCallSite());
       }
@@ -302,7 +303,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   protected PropagationSystem makeSystem(AnalysisOptions options) {
-    return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory, options.getSupportRefinement(), warnings);
+    return new PropagationSystem(callGraph, pointerKeyFactory, instanceKeyFactory, options.getSupportRefinement());
   }
 
   protected abstract IPointsToSolver makeSolver();
@@ -517,7 +518,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       TypeReference T = (TypeReference) it2.next();
       IClass C = cha.lookupClass(T);
       if (C == null) {
-        warnings.add(ExceptionLookupFailure.create(T));
+        Warnings.add(ExceptionLookupFailure.create(T));
       } else {
         if (C.getReference().equals(TypeReference.JavaLangThrowable)) {
           system.newConstraint(exceptionVar, assignOperator, e);
@@ -782,10 +783,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
   public ExplicitCallGraph getCallGraph() {
     return callGraph;
-  }
-
-  public WarningSet getWarnings() {
-    return warnings;
   }
 
   /**
@@ -1763,12 +1760,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
   }
 
-  /**
-   * @param set
-   */
-  public void setWarnings(WarningSet set) {
-    warnings = set;
-  }
 
   protected IPointsToSolver getSolver() {
     return solver;
@@ -1776,8 +1767,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
   /**
    * Add constraints when the interpretation of a node changes (e.g. reflection)
-   * 
-   * @param node
    */
   public void addConstraintsFromChangedNode(CGNode node) {
     unconditionallyAddConstraintsFromNode(node);

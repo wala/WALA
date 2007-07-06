@@ -14,8 +14,8 @@ import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.types.*;
 
 /**
  * 

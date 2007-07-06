@@ -23,7 +23,6 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.analysis.DeadAssignmentElimination;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * @author Julian Dolby
@@ -33,21 +32,11 @@ public class ShrikeIRFactory implements IRFactory {
 
   public final static boolean buildLocalMap = true;
 
-  /*
-   * @see com.ibm.wala.ssa.IRFactory#makeCFG(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.cha.IClassHierarchy,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public ControlFlowGraph makeCFG(final IMethod method, Context C, final WarningSet warnings) {
-    return new ShrikeCFG((ShrikeCTMethod) method, warnings);
+  public ControlFlowGraph makeCFG(final IMethod method, Context C) {
+    return new ShrikeCFG((ShrikeCTMethod) method);
   }
 
-  /*
-   * @see com.ibm.wala.ssa.IRFactory#makeIR(com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.cha.IClassHierarchy, com.ibm.wala.ssa.SSAOptions,
-   *      com.ibm.wala.util.warnings.WarningSet)
-   */
-  public IR makeIR(final IMethod method, Context C, final SSAOptions options, final WarningSet warnings)
+  public IR makeIR(final IMethod method, Context C, final SSAOptions options)
       throws IllegalArgumentException {
 
     if (!(method instanceof ShrikeCTMethod)) {
@@ -62,12 +51,12 @@ public class ShrikeIRFactory implements IRFactory {
       Assertions.UNREACHABLE();
       shrikeInstructions = null;
     }
-    final ShrikeCFG shrikeCFG = (ShrikeCFG) makeCFG(method, C, warnings);
+    final ShrikeCFG shrikeCFG = (ShrikeCFG) makeCFG(method, C);
 
     final SymbolTable symbolTable = new SymbolTable(method.getNumberOfParameters());
     final SSAInstruction[] newInstrs = new SSAInstruction[shrikeInstructions.length];
 
-    final SSACFG newCfg = new SSACFG(method, shrikeCFG, newInstrs, warnings);
+    final SSACFG newCfg = new SSACFG(method, shrikeCFG, newInstrs);
 
     return new IR(method, newInstrs, symbolTable, newCfg, options) {
       private final SSA2LocalMap localMap;

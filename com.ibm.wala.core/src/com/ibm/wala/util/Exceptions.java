@@ -29,7 +29,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * 
@@ -82,7 +82,7 @@ public class Exceptions implements Constants {
    * @throws IllegalArgumentException  if pei is null
    * 
    */
-  public static Collection<TypeReference> getExceptionTypes(ClassLoaderReference loader, Instruction pei, IClassHierarchy cha, WarningSet warnings) {
+  public static Collection<TypeReference> getExceptionTypes(ClassLoaderReference loader, Instruction pei, IClassHierarchy cha) {
     if (pei == null) {
       throw new IllegalArgumentException("pei is null");
     }
@@ -96,7 +96,7 @@ public class Exceptions implements Constants {
       Collection<TypeReference> result = null;
         try {
           result = inferInvokeExceptions(MethodReference.findOrCreate(loader, call.getClassType(), call.getMethodName(),
-              call.getMethodSignature()), cha, warnings);
+              call.getMethodSignature()), cha);
         } catch (InvalidClassFileException e) {
           e.printStackTrace();
           Assertions.UNREACHABLE();
@@ -111,13 +111,13 @@ public class Exceptions implements Constants {
   }
 
   /**
-   * @return Colection<TypeReference>, set of exception types a call to a
+   * @return Collection<TypeReference>, set of exception types a call to a
    *         declared target might throw.
    * @throws InvalidClassFileException 
    * @throws IllegalArgumentException  if target is null
    * @throws IllegalArgumentException  if cha is null
    */
-  public static Collection<TypeReference> inferInvokeExceptions(MethodReference target, IClassHierarchy cha, WarningSet warnings) throws InvalidClassFileException {
+  public static Collection<TypeReference> inferInvokeExceptions(MethodReference target, IClassHierarchy cha) throws InvalidClassFileException {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
     }
@@ -129,12 +129,12 @@ public class Exceptions implements Constants {
 
     IClass klass = cha.lookupClass(target.getDeclaringClass());
     if (klass == null) {
-      warnings.add(MethodResolutionFailure.moderate(target));
+      Warnings.add(MethodResolutionFailure.moderate(target));
     }
     if (klass != null) {
       IMethod M = klass.getMethod(target.getSelector());
       if (M == null) {
-        warnings.add(MethodResolutionFailure.severe(target));
+        Warnings.add(MethodResolutionFailure.severe(target));
       } else {
         TypeReference[] exceptionTypes = M.getDeclaredExceptions();
         if (exceptionTypes != null) {

@@ -20,7 +20,6 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.graph.INodeWithNumber;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * Basic interface for a node in a call graph.
@@ -83,17 +82,17 @@ public interface CGNode extends INodeWithNumber, ContextItem {
   /**
    * @return the "default" IR for this node used by the governing call graph
    */
-  public IR getIR(WarningSet warnings);
+  public IR getIR();
   
   /**
    * @return DefUse for the "default" IR for this node used by the governing call graph
    */
-  public DefUse getDU(WarningSet warnings);
+  public DefUse getDU();
   
   /**
    * @return a CFG that represents the node, or null if it's an unmodelled native method
    */
-  public ControlFlowGraph getCFG(WarningSet warnings);
+  public ControlFlowGraph getCFG();
   
   /**
    * @return an Iterator of the types that may be allocated by a given

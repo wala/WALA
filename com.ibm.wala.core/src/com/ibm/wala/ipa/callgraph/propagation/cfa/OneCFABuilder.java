@@ -20,7 +20,6 @@ import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.ClassBasedInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -30,20 +29,20 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public class OneCFABuilder extends CFABuilder {
 
-  public OneCFABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options, ContextSelector appContextSelector,
+  public OneCFABuilder(IClassHierarchy cha,AnalysisOptions options, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
 
-    super(cha, warnings, options);
+    super(cha, options);
 
-    setInstanceKeys(new ClassBasedInstanceKeys(options, cha, warnings));
+    setInstanceKeys(new ClassBasedInstanceKeys(options, cha));
 
     ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
     ContextSelector contextSelector = new DelegatingContextSelector(appContextSelector, def);
     contextSelector = new OneLevelContextSelector(contextSelector);
     setContextSelector(contextSelector);
 
-    SSAContextInterpreter defI = new DefaultSSAInterpreter(options, warnings);
-    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect, warnings), defI);
+    SSAContextInterpreter defI = new DefaultSSAInterpreter(options);
+    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect), defI);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     setContextInterpreter(contextInterpreter);
   }

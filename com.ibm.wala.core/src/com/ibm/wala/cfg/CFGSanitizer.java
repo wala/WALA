@@ -29,7 +29,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.warnings.WalaException;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * Utility class to remove edges to exit() from a CFG
@@ -158,7 +157,7 @@ public class CFGSanitizer {
     Collection c = null;
     if (s instanceof SSAInvokeInstruction) {
       SSAInvokeInstruction call = (SSAInvokeInstruction) s;
-      c = Exceptions.inferInvokeExceptions(call.getDeclaredTarget(), cha, new WarningSet());
+      c = Exceptions.inferInvokeExceptions(call.getDeclaredTarget(), cha);
     } else {
       c = s.getExceptionTypes();
     }

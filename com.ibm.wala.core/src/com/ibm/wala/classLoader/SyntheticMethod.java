@@ -25,7 +25,6 @@ import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.bytecode.BytecodeStream;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * @author sfink
@@ -250,9 +249,8 @@ public class SyntheticMethod implements IMethod {
    * Most subclasses should override this.
    * 
    * @param options options governing IR conversion
-   * @param warnings object to record analysis warnings
    */
-  public IR makeIR(SSAOptions options, WarningSet warnings) throws UnimplementedError {
+  public IR makeIR(SSAOptions options) throws UnimplementedError {
     throw new UnimplementedError("haven't implemented IR yet for class " + getClass());
   }
 

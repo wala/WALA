@@ -34,7 +34,7 @@ import com.ibm.wala.util.collections.ToStringComparator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  *
@@ -66,11 +66,6 @@ public class ClassLoaderImpl implements IClassLoader {
   private final Map<TypeName, String> sourceMap = HashMapFactory.make();
 
   /**
-   * An object to track warnings
-   */
-  protected final WarningSet warnings;
-
-  /**
    * Parent classloader
    */
   final private IClassLoader parent;
@@ -94,14 +89,13 @@ public class ClassLoaderImpl implements IClassLoader {
    *          set of classes to exclude from loading
    */
   public ClassLoaderImpl(ClassLoaderReference loader, ArrayClassLoader arrayClassLoader, IClassLoader parent,
-      SetOfClasses exclusions, IClassHierarchy cha, WarningSet warnings) {
+      SetOfClasses exclusions, IClassHierarchy cha) {
 
     this.arrayClassLoader = arrayClassLoader;
     this.parent = parent;
     this.loader = loader;
     this.exclusions = exclusions;
     this.cha = cha;
-    this.warnings = warnings;
 
     if (DEBUG_LEVEL > 0) {
       Trace.println("Creating class loader for " + loader);
@@ -246,23 +240,23 @@ public class ClassLoaderImpl implements IClassLoader {
       try {
         TypeName T = TypeName.string2TypeName(className);
         if (loadedClasses.get(T) != null) {
-          warnings.add(MultipleImplementationsWarning.create(className));
+          Warnings.add(MultipleImplementationsWarning.create(className));
         } else {
-          ShrikeClass klass = new ShrikeClass(reader, this, cha, warnings);
+          ShrikeClass klass = new ShrikeClass(reader, this, cha);
           if (klass.getReference().getName().equals(T)) {
-            loadedClasses.put(T, new ShrikeClass(reader, this, cha, warnings));
+            loadedClasses.put(T, new ShrikeClass(reader, this, cha));
             if (DEBUG_LEVEL > 1) {
               Trace.println("put " + T + " ");
             }
           } else {
-            warnings.add(InvalidClassFile.create(className));
+            Warnings.add(InvalidClassFile.create(className));
           }
         }
       } catch (InvalidClassFileException e) {
         if (DEBUG_LEVEL > 0) {
           Trace.println("Ignoring class " + className + " due to InvalidClassFileException");
         }
-        warnings.add(InvalidClassFile.create(className));
+        Warnings.add(InvalidClassFile.create(className));
       }
     }
   }

@@ -40,9 +40,11 @@ import com.ibm.wala.util.ReferenceCleanser;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.graph.*;
+import com.ibm.wala.util.graph.AbstractGraph;
+import com.ibm.wala.util.graph.EdgeManager;
+import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * A graphical view that represents the flow of pointers between abstract heap
@@ -69,8 +71,6 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
    * nodes for which we have processed the statements
    */
   private final Collection<CGNode> processedNodes = HashSetFactory.make();
-
-  private final static WarningSet warnings = new WarningSet();
 
   private final EdgeManager<PointerKey> edgeManager = new LazyEdgeManager();
 
@@ -223,7 +223,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
       wipeCount = 0;
       ReferenceCleanser.clearSoftCaches();
     }
-    return node.getIR(warnings);
+    return node.getIR();
   }
 
   private void visit(CGNode node, IR ir) {

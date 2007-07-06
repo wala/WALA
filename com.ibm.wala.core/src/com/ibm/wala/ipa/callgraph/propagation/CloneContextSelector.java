@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  *
@@ -58,10 +57,6 @@ public class CloneContextSelector implements ContextSelector {
       throw new IllegalArgumentException("targetMethod is null");
     }
     return targetMethod.getReference().equals(CloneInterpreter.CLONE);
-  }
-
-  public void setWarnings(WarningSet newWarnings) {
-    // no-op, this object not bound to warnings
   }
 
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {

@@ -1,17 +1,23 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticClass;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.types.*;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-
-import java.util.*;
 
 /**
  * 

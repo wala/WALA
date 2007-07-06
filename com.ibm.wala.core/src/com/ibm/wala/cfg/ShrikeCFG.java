@@ -34,7 +34,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 import com.ibm.wala.util.warnings.Warning;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * 
@@ -49,8 +49,6 @@ public class ShrikeCFG extends AbstractCFG {
 
   private int[] instruction2Block;
 
-  private final WarningSet warnings;
-
   private final ShrikeCTMethod method;
 
   /**
@@ -63,14 +61,13 @@ public class ShrikeCFG extends AbstractCFG {
    */
   final private Set<ExceptionHandler> exceptionHandlers = HashSetFactory.make(10);
 
-  public ShrikeCFG(ShrikeCTMethod method, WarningSet warnings) throws IllegalArgumentException {
+  public ShrikeCFG(ShrikeCTMethod method) throws IllegalArgumentException {
     super(method);
     if (method == null) {
       throw new IllegalArgumentException("method cannot be null");
     }
     this.method = method;
     this.hashBase = method.hashCode() * 9967;
-    this.warnings = warnings;
     makeBasicBlocks();
     init();
     computeI2BMapping();
@@ -282,7 +279,7 @@ public class ShrikeCFG extends AbstractCFG {
         } else {
           if (hs != null && hs.length > 0) {
             exceptionTypes = Exceptions.getExceptionTypes(getMethod().getDeclaringClass().getReference().getClassLoader(), last,
-                cha, warnings);
+                cha);
           }
         }
 
@@ -315,7 +312,7 @@ public class ShrikeCFG extends AbstractCFG {
                 if (caughtClass == null) {
                   // conservatively add the edge, and raise a warning
                   addExceptionalEdgeTo(b);
-                  warnings.add(FailedExceptionResolutionWarning.create(caughtException));
+                  Warnings.add(FailedExceptionResolutionWarning.create(caughtException));
                   // null out caughtException, to avoid attempting to process it
                   caughtException = null;
                 }
@@ -336,7 +333,7 @@ public class ShrikeCFG extends AbstractCFG {
                   if (t != null) {
                     IClass klass = cha.lookupClass(t);
                     if (klass == null) {
-                      warnings.add(FailedExceptionResolutionWarning.create(caughtException));
+                      Warnings.add(FailedExceptionResolutionWarning.create(caughtException));
                       // conservatively add an edge
                       addExceptionalEdgeTo(b);
                     } else {

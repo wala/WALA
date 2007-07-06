@@ -20,7 +20,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * @author sfink
@@ -120,9 +119,9 @@ public class SummarizedMethod extends SyntheticMethod {
   // return result;
   // }
   @Override
-  public IR makeIR(SSAOptions options, WarningSet warnings) {
+  public IR makeIR(SSAOptions options) {
     SSAInstruction instrs[] = getStatements(options);
-    return new SyntheticIR(this, Everywhere.EVERYWHERE, makeControlFlowGraph(), instrs, options, summary.getConstants(), warnings);
+    return new SyntheticIR(this, Everywhere.EVERYWHERE, makeControlFlowGraph(), instrs, options, summary.getConstants());
   }
 
   /*

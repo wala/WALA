@@ -50,7 +50,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.CallGraphWarnings;
 import com.ibm.wala.util.warnings.Warning;
 
 /**
@@ -312,7 +311,6 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
         String ignore = atts.getValue(A_IGNORE);
         if (ignore != null && ignore.equals(V_TRUE)) {
           ignoredPackages.add(governingPackage);
-          CallGraphWarnings.ignorePackage(governingPackage);
         }
         break;
       case E_CALL:

@@ -38,7 +38,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.perf.EngineTimings;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -125,7 +124,7 @@ public class ReflectionHandler {
   private Set<CGNode> modifyFactoryInterpreter(Statement returnStatement, Collection<Statement> casts,
       RTAContextInterpreter contextInterpreter, IClassHierarchy cha) {
     HashSet<CGNode> result = HashSetFactory.make();
-    IR ir = returnStatement.getNode().getIR(new WarningSet());
+    IR ir = returnStatement.getNode().getIR();
     LocalPointerKey pk = null;
 
     // pick some return statement. any will do.

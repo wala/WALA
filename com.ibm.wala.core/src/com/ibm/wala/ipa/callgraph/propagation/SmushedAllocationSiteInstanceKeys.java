@@ -10,17 +10,19 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContainerContextSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
  * This class provides instance keys where for a given type T in a CGNode N,
  * there is one "abstract allocation site" instance for all T allocations in
  * node N.
@@ -30,14 +32,9 @@ import com.ibm.wala.util.warnings.WarningSet;
 public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
 
   /**
-   * Governing call graph contruction options
+   * Governing call graph construction options
    */
   private final AnalysisOptions options;
-
-  /**
-   * An object to track analysis warnings
-   */
-  private final WarningSet warnings;
 
   /**
    * Governing class hierarchy
@@ -48,21 +45,18 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
 
   /**
    * @param options
-   *          Governing call graph contruction options
-   * @param warnings
-   *          An object to track analysis warnings
+   *          Governing call graph construction options
    */
-  public SmushedAllocationSiteInstanceKeys(AnalysisOptions options, IClassHierarchy cha, WarningSet warnings) {
+  public SmushedAllocationSiteInstanceKeys(AnalysisOptions options, IClassHierarchy cha) {
     this.options = options;
     this.cha = cha;
-    this.warnings = warnings;
-    this.classBased = new ClassBasedInstanceKeys(options, cha, warnings);
+    this.classBased = new ClassBasedInstanceKeys(options, cha);
   }
 
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
-      warnings.add(ResolutionFailure.create(node, allocation));
+      Warnings.add(ResolutionFailure.create(node, allocation));
       return null;
     }
 
@@ -83,7 +77,7 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
-      warnings.add(ResolutionFailure.create(node, allocation));
+      Warnings.add(ResolutionFailure.create(node, allocation));
       return null;
     }
     InstanceKey key = new MultiNewArrayAllocationSiteKey(node, allocation, type, dim);

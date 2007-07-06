@@ -1,10 +1,19 @@
 package com.ibm.wala.ipa.cha;
 
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.types.*;
+import java.util.Collection;
+import java.util.Set;
 
-import java.util.*;
+import com.ibm.wala.classLoader.ClassLoaderFactory;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.Selector;
+import com.ibm.wala.types.TypeReference;
 
 public interface IClassHierarchy extends Iterable<IClass> {
 

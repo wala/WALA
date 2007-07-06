@@ -52,7 +52,7 @@ import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableMapping;
-import com.ibm.wala.util.warnings.WarningSet;
+import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * 
@@ -84,11 +84,6 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * bijection from InstanceKey <=>Integer
    */
   protected final MutableMapping<InstanceKey> instanceKeys = new MutableMapping<InstanceKey>();
-
-  /**
-   * An object to track analysis warnings
-   */
-  private final WarningSet warnings;
 
   /**
    * A mapping from IClass -> MutableSharedBitVectorIntSet The range represents
@@ -133,14 +128,11 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * @param pointerKeyFactory
    * @param instanceKeyFactory
    * @param refinement
-   * @param warnings
    */
-  public PropagationSystem(CallGraph cg, PointerKeyFactory pointerKeyFactory, InstanceKeyFactory instanceKeyFactory, boolean refinement,
-      WarningSet warnings) {
+  public PropagationSystem(CallGraph cg, PointerKeyFactory pointerKeyFactory, InstanceKeyFactory instanceKeyFactory, boolean refinement) {
     this.cg = cg;
     this.pointerKeyFactory = pointerKeyFactory;
     this.instanceKeyFactory = instanceKeyFactory;
-    this.warnings = warnings;
   }
 
   /**
@@ -474,7 +466,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
         }
       }
     } catch (ClassHierarchyException e) {
-      warnings.add(ClassHierarchyWarning.create(e.getMessage()));
+      Warnings.add(ClassHierarchyWarning.create(e.getMessage()));
     }
   }
 
@@ -495,7 +487,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     try {
       ifaces = (elementClass.isInterface()) ? elementClass.getAllAncestorInterfaces() : elementClass.getAllImplementedInterfaces();
     } catch (ClassHierarchyException e) {
-      warnings.add(ClassHierarchyWarning.create(e.getMessage()));
+      Warnings.add(ClassHierarchyWarning.create(e.getMessage()));
       return;
     }
     for (Iterator it = ifaces.iterator(); it.hasNext();) {

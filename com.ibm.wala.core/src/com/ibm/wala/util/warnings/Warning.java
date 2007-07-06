@@ -36,7 +36,7 @@ public abstract class Warning implements Comparable {
   public final static byte N_LEVELS = 6;
 
   private byte level;
-
+  
   public Warning(byte level) {
     this.level = level;
   }
@@ -114,9 +114,6 @@ public abstract class Warning implements Comparable {
    */
   public abstract String getMsg();
 
-  /**
-   * @param b
-   */
   public void setLevel(byte b) {
     level = b;
   }

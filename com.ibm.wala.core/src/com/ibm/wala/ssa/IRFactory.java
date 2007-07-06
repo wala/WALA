@@ -13,7 +13,6 @@ package com.ibm.wala.ssa;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * This is intended as an internal interface; clients probably shouldn't be
@@ -29,8 +28,8 @@ import com.ibm.wala.util.warnings.WarningSet;
  */
 public interface IRFactory {
 
-  IR makeIR(IMethod method, Context C, SSAOptions options, WarningSet warnings);
+  IR makeIR(IMethod method, Context C, SSAOptions options);
 
-  ControlFlowGraph makeCFG(IMethod method, Context C, WarningSet warnings);
+  ControlFlowGraph makeCFG(IMethod method, Context C);
 
 }

@@ -20,7 +20,6 @@ import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.warnings.WarningSet;
 
 /**
  * 
@@ -33,10 +32,10 @@ public class ZeroXCFABuilder extends CFABuilder {
 
   private final int instancePolicy;
 
-  public ZeroXCFABuilder(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options, ContextSelector appContextSelector,
+  public ZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
 
-    super(cha, warnings, options);
+    super(cha, options);
 
     this.instancePolicy = instancePolicy;
 
@@ -44,50 +43,52 @@ public class ZeroXCFABuilder extends CFABuilder {
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     setContextSelector(contextSelector);
 
-    SSAContextInterpreter c = new DefaultSSAInterpreter(options,warnings);
-    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect, warnings), c);
+    SSAContextInterpreter c = new DefaultSSAInterpreter(options);
+    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect), c);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, c);
     setContextInterpreter(contextInterpreter);
 
-    ZeroXInstanceKeys zik = makeInstanceKeys(cha,warnings,options,contextInterpreter,instancePolicy);
+    ZeroXInstanceKeys zik = makeInstanceKeys(cha, options, contextInterpreter, instancePolicy);
     setInstanceKeys(zik);
   }
-  
+
   /**
    * subclasses can override as desired
    */
-  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, WarningSet warnings, AnalysisOptions options, SSAContextInterpreter contextInterpreter, int instancePolicy) {
-    ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, warnings, instancePolicy);
+  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, AnalysisOptions options,
+      SSAContextInterpreter contextInterpreter, int instancePolicy) {
+    ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, instancePolicy);
     return zik;
   }
 
   /**
    * @param options
-   *          options that govern call graph construction
+   *            options that govern call graph construction
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param cl
-   *          classloader that can find WALA resources
+   *            classloader that can find WALA resources
    * @param scope
-   *          representation of the analysis scope
+   *            representation of the analysis scope
    * @param xmlFiles
-   *          set of Strings that are names of XML files holding bypass logic
-   *          specifications.
+   *            set of Strings that are names of XML files holding bypass logic
+   *            specifications.
    * @return a 0-1-Opt-CFA Call Graph Builder.
-   * @throws IllegalArgumentException  if options is null
+   * @throws IllegalArgumentException
+   *             if options is null
    */
   public static CFABuilder make(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
-      String[] xmlFiles, WarningSet warnings, byte instancePolicy) {
+      String[] xmlFiles, byte instancePolicy) {
 
     if (options == null) {
-          throw new IllegalArgumentException("options is null");
-        }
-    Util.addDefaultSelectors(options, cha, warnings);
+      throw new IllegalArgumentException("options is null");
+    }
+    Util.addDefaultSelectors(options, cha);
     for (int i = 0; i < xmlFiles.length; i++) {
       Util.addBypassLogic(options, scope, cl, xmlFiles[i], cha);
     }
 
-    return new ZeroXCFABuilder(cha, warnings, options, null, null, options.getReflectionSpec(), instancePolicy);
+    return new ZeroXCFABuilder(cha, options, null, null, options.getReflectionSpec(), instancePolicy);
   }
 
   /*
