@@ -95,7 +95,7 @@ public class CrossLanguageCallGraph extends AstCallGraph {
     public int addPhi(TypeReference type, int[] values) {
       Atom language = type.getClassLoader().getLanguage();
       AbstractRootMethod root = getLanguageRoot(language);
-      return root.addPhi(type, values);
+      return root.addPhi(values);
     }
 
     public int addGetInstance(FieldReference ref, int object) {

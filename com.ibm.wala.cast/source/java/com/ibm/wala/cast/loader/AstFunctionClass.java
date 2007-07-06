@@ -78,7 +78,7 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
   }
 
   public IClass getSuperclass() throws ClassHierarchyException {
-    return loader.lookupClass(superReference.getName(), getClassHierarchy());
+    return loader.lookupClass(superReference.getName());
   }
 
   public Collection<IClass> getDirectInterfaces() {
@@ -97,12 +97,12 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
     if (selector.equals(AstMethodReference.fnSelector)) {
       return functionBody;
     } else {
-      return loader.lookupClass(superReference.getName(), getClassHierarchy()).getMethod(selector);
+      return loader.lookupClass(superReference.getName()).getMethod(selector);
     }
   }
 
   public IField getField(Atom name) {
-    return loader.lookupClass(superReference.getName(), getClassHierarchy()).getField(name);
+    return loader.lookupClass(superReference.getName()).getField(name);
   }
 
   public TypeReference getReference() {
