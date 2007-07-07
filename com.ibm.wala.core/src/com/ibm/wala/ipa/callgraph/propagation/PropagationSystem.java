@@ -675,7 +675,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys()
    */
-  public Iterator iteratePointerKeys() {
+  public Iterator<PointerKey> iteratePointerKeys() {
     return pointsToMap.iterateKeys();
   }
 

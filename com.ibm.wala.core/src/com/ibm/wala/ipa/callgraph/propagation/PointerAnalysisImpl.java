@@ -451,7 +451,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
 
   private class HModel implements HeapModel {
 
-    public Iterator iteratePointerKeys() {
+    public Iterator<PointerKey> iteratePointerKeys() {
       return pointsToMap.iterateKeys();
     }
 

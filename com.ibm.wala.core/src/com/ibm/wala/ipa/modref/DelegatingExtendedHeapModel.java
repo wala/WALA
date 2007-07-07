@@ -100,7 +100,7 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
     return h.getStringConstantForInstanceKey(I);
   }
 
-  public Iterator iteratePointerKeys() {
+  public Iterator<PointerKey> iteratePointerKeys() {
     return h.iteratePointerKeys();
   }
 

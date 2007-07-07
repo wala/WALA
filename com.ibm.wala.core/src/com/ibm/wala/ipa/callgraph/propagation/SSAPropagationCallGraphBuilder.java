@@ -2100,7 +2100,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.HeapModel#iteratePointerKeys()
    */
-  public Iterator iteratePointerKeys() {
+  public Iterator<PointerKey> iteratePointerKeys() {
     return system.iteratePointerKeys();
   }
 

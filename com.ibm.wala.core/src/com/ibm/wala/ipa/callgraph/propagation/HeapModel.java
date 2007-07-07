@@ -26,7 +26,7 @@ public interface HeapModel extends InstanceKeyFactory, PointerKeyFactory {
   /**
    * @return an Iterator of all PointerKeys that are modelled.
    */
-  Iterator iteratePointerKeys();
+  Iterator<PointerKey> iteratePointerKeys();
 
   /**
    * @return the governing class hierarchy for this heap model
