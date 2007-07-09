@@ -11,5 +11,9 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 public abstract class AbstractPointerKey implements PointerKey {
+  @Override
+  public abstract boolean equals(Object obj);
 
+  @Override
+  public abstract int hashCode();
 }
