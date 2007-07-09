@@ -754,7 +754,7 @@ public class TabulationSolver<T, P> {
   }
 
   /**
-   * Propagate the fact <s_p,i> -> <n, j> has arisin as a path edge. Note: apply
+   * Propagate the fact <s_p,i> -> <n, j> has arisen as a path edge. Note: apply
    * merging if necessary.
    * 
    * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have
@@ -776,7 +776,7 @@ public class TabulationSolver<T, P> {
     int number = supergraph.getLocalBlockNumber(n);
     if (Assertions.verifyAssertions) {
       if (number < 0) {
-        System.err.println("BOOM");
+        System.err.println("BOOM " + n);
         supergraph.getLocalBlockNumber(n);
       }
       Assertions._assert(number >= 0);
