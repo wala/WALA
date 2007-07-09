@@ -18,7 +18,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * 
- * Absraction of a Java type. These are immutable.
+ * Abstraction of a Java type. These are immutable.
  * 
  * @author sfink
  */
