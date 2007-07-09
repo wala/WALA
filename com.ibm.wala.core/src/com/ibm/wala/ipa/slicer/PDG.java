@@ -797,7 +797,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         visited.add(s);
       }
       if (s instanceof SSAAbstractInvokeInstruction) {
-        addParamPassingStatements((SSAAbstractInvokeInstruction) s, ref);
+        addParamPassingStatements(i, ref);
       }
     }
     return visited;
@@ -806,11 +806,10 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   /**
    * Create nodes in the graph corresponding to in/out parameter passing for a
    * call instruction
-   * 
-   * @param dOptions
    */
-  private void addParamPassingStatements(SSAAbstractInvokeInstruction call, Map<CGNode, OrdinalSet<PointerKey>> ref) {
+  private void addParamPassingStatements(int callIndex, Map<CGNode, OrdinalSet<PointerKey>> ref) {
 
+    SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction)node.getIR().getInstructions()[callIndex];
     Collection<Statement> params = MapUtil.findOrCreateSet(callerParamStatements, call.getCallSite());
     Collection<Statement> rets = MapUtil.findOrCreateSet(callerReturnStatements, call.getCallSite());
     for (int j = 0; j < call.getNumberOfUses(); j++) {
@@ -834,13 +833,13 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     if (!dOptions.isIgnoreHeap()) {
       OrdinalSet<PointerKey> uref = unionHeapLocations(node, call, ref);
       for (PointerKey p : uref) {
-        Statement st = new HeapStatement.ParamCaller(node, call, p);
+        Statement st = new HeapStatement.ParamCaller(node, callIndex, p);
         addNode(st);
         params.add(st);
       }
       OrdinalSet<PointerKey> umod = unionHeapLocations(node, call, mod);
       for (PointerKey p : umod) {
-        Statement st = new HeapStatement.ReturnCaller(node, call, p);
+        Statement st = new HeapStatement.ReturnCaller(node, callIndex, p);
         addNode(st);
         rets.add(st);
       }

@@ -29,11 +29,12 @@ public abstract class HeapStatement extends Statement {
 
 
   public final static class ParamCaller extends HeapStatement {
-    private final SSAAbstractInvokeInstruction call;
+    // index into the IR instruction array of the call statements
+    private final int callIndex;
 
-    public ParamCaller(CGNode node, SSAAbstractInvokeInstruction call, PointerKey loc) {
+    public ParamCaller(CGNode node,int callIndex, PointerKey loc) {
       super(node, loc);
-      this.call = call;
+      this.callIndex = callIndex;
     }
 
     @Override
@@ -41,13 +42,17 @@ public abstract class HeapStatement extends Statement {
       return Kind.HEAP_PARAM_CALLER;
     }
 
-    public SSAAbstractInvokeInstruction getCall() {
-      return call;
+    public int getCallIndex() {
+      return callIndex;
     }
-
+    
+    public SSAAbstractInvokeInstruction getCall() {
+      return (SSAAbstractInvokeInstruction) getNode().getIR().getInstructions()[callIndex];
+    }
+    
     @Override
     public String toString() {
-      return getKind().toString() + ":" + getNode() + " " + getLocation() + " call:" + call;
+      return getKind().toString() + ":" + getNode() + " " + getLocation() + " call:" + getCall();
     }
 
     @Override
@@ -57,10 +62,10 @@ public abstract class HeapStatement extends Statement {
 
     @Override
     public boolean equals(Object obj) {
-      // instanceof is ok because this class is final.  instanceof is more efficient than getClass
+      // instanceof is OK because this class is final.  instanceof is more efficient than getClass
       if (obj instanceof ParamCaller) {
         ParamCaller other = (ParamCaller) obj;
-        return getNode().equals(other.getNode()) && getLocation().equals(other.getLocation()) && getCall().equals(other.getCall());
+        return getNode().equals(other.getNode()) && getLocation().equals(other.getLocation()) && callIndex == other.callIndex;
       } else {
         return false;
       }
@@ -100,11 +105,13 @@ public abstract class HeapStatement extends Statement {
   }
 
   public final static class ReturnCaller extends HeapStatement {
-    private final SSAAbstractInvokeInstruction call;
+    // index into the instruction array of the relevant call instruction
+    private final int callIndex;
+//    private final SSAAbstractInvokeInstruction call;
 
-    public ReturnCaller(CGNode node, SSAAbstractInvokeInstruction call, PointerKey loc) {
+    public ReturnCaller(CGNode node, int callIndex, PointerKey loc) {
       super(node, loc);
-      this.call = call;
+      this.callIndex = callIndex;
     }
 
     @Override
@@ -112,13 +119,17 @@ public abstract class HeapStatement extends Statement {
       return Kind.HEAP_RET_CALLER;
     }
 
+    public int getCallIndex() {
+      return callIndex;
+    }
+    
     public SSAAbstractInvokeInstruction getCall() {
-      return call;
+      return (SSAAbstractInvokeInstruction) getNode().getIR().getInstructions()[callIndex];
     }
 
     @Override
     public String toString() {
-      return getKind().toString() + ":" + getNode() + " " + getLocation() + " call:" + call;
+      return getKind().toString() + ":" + getNode() + " " + getLocation() + " call:" + getCall();
     }
 
     @Override
@@ -131,7 +142,7 @@ public abstract class HeapStatement extends Statement {
       // instanceof is ok because this class is final.  instanceof is more efficient than getClass
       if (obj instanceof ReturnCaller) {
         ReturnCaller other = (ReturnCaller) obj;
-        return getNode().equals(other.getNode()) && getLocation().equals(other.getLocation()) && getCall().equals(other.getCall());
+        return getNode().equals(other.getNode()) && getLocation().equals(other.getLocation()) && callIndex == other.callIndex;
       } else {
         return false;
       }

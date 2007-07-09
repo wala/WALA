@@ -15,18 +15,14 @@ import com.ibm.wala.ssa.SSAInstruction;
 
 /**
  * A statement that has a corresponding index in the
- * bytecode (actually in the ShrikeBT representation)
+ * SSA IR
  * 
  * @author sjfink
- *
  */
 public class NormalStatement extends Statement {
 
   /**
-   * Index of the instruction in the ShrikeBT array.
-   * Note that this is different from the bytecode index.
-   * Use ShrikeCTMethodWrapper.getBytecodeIndex to convert
-   * to a bytecode index.
+   * Index of the instruction in the SSA IR
    */
   private final int instructionIndex;
   
@@ -70,7 +66,5 @@ public class NormalStatement extends Statement {
   public int getInstructionIndex() {
     return instructionIndex;
   }
-
-
 
 }

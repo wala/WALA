@@ -293,8 +293,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
-                Statement s = new HeapStatement.ParamCaller(caller, call, hpc.getLocation());
+                Statement s = new HeapStatement.ParamCaller(caller, i, hpc.getLocation());
                 addNode(s);
                 result.add(s);
               }
@@ -313,15 +312,13 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         if (!cOptions.equals(ControlDependenceOptions.NONE)) {
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
             CGNode caller = it.next();
-            PDG pdg = getPDG(caller);
             for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
               IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
-                Statement s = pdg.ssaInstruction2Statement(call);
+                Statement s = new NormalStatement(caller, i);
                 addNode(s);
                 result.add(s);
               }
@@ -425,8 +422,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
-                Statement s = new HeapStatement.ReturnCaller(caller, call, r.getLocation());
+                Statement s = new HeapStatement.ReturnCaller(caller, i, r.getLocation());
                 addNode(s);
                 result.add(s);
               }

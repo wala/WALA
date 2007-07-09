@@ -59,10 +59,10 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- * 
+ * Computation of reaching definitions for heap locations, relying on pointer
+ * analysis
  * 
  * @author sjfink
- * 
  */
 public class HeapReachingDefs {
 
@@ -72,11 +72,25 @@ public class HeapReachingDefs {
    * For each statement s, return the set of statements that may def the heap
    * value read by s.
    * 
+   * @param node
+   *            the node we are computing heap reaching defs for
+   * @param ir
+   *            IR for the node
+   * @param pa
+   *            governing pointer analysis
+   * @param mod
+   *            the set of heap locations which may be written (transitively) by
+   *            this node. These are logically return values in the SDG.
+   * @param statements
+   *            the statements whose def-use are considered interesting
+   * @param exclusions
+   *            heap locations that should be excluded from data dependence
+   *            tracking
+   * 
    * @throws IllegalArgumentException
    *             if pa is null
    * @throws IllegalArgumentException
    *             if statements is null
-   * 
    */
   public static Map<Statement, OrdinalSet<Statement>> computeReachingDefs(CGNode node, IR ir, PointerAnalysis pa,
       Map<CGNode, OrdinalSet<PointerKey>> mod, Collection<Statement> statements, HeapExclusions exclusions) {
@@ -88,6 +102,7 @@ public class HeapReachingDefs {
       throw new IllegalArgumentException("pa is null");
     }
     System.err.println("Reaching Defs " + node);
+    System.err.println(ir);
     if (VERBOSE) {
 //      System.err.println("Reaching Defs " + node);
       System.err.println(statements.size());
@@ -100,12 +115,12 @@ public class HeapReachingDefs {
     // shortly
     OrdinalSetMapping<Statement> domain = createStatementDomain(statements);
 
-    // map SSAInstructions to statements
-    Map<SSAInstruction, NormalStatement> ssaInstruction2Statement = mapInstructionsToStatements(domain);
+    // map SSAInstruction indices to statements
+    Map<Integer, NormalStatement> ssaInstructionIndex2Statement = mapInstructionsToStatements(domain);
 
     // solve reaching definitions as a dataflow problem
     BitVectorFramework<IBasicBlock, Statement> rd = new BitVectorFramework<IBasicBlock, Statement>(cfg, new RD(node, cfg, pa,
-        domain, ssaInstruction2Statement, exclusions), domain);
+        domain, ssaInstructionIndex2Statement, exclusions), domain);
     if (VERBOSE) {
       System.err.println("Solve ");
     }
@@ -115,7 +130,7 @@ public class HeapReachingDefs {
       System.err.println("Solved. ");
     }
     return makeResult(solver, domain, node, new DelegatingExtendedHeapModel(pa.getHeapModel()), pa, mod, cfg,
-        ssaInstruction2Statement, exclusions);
+        ssaInstructionIndex2Statement, exclusions);
   }
 
   private static class RDMap implements Map<Statement, OrdinalSet<Statement>> {
@@ -125,7 +140,7 @@ public class HeapReachingDefs {
 
     RDMap(BitVectorSolver<IBasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
         PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExpandedControlFlowGraph cfg,
-        Map<SSAInstruction, NormalStatement> ssaInstruction2Statement, HeapExclusions exclusions) {
+        Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions) {
       if (VERBOSE) {
         System.err.println("Init pointer Key mod ");
       }
@@ -134,7 +149,7 @@ public class HeapReachingDefs {
       if (VERBOSE) {
         System.err.println("Eager populate");
       }
-      eagerPopulate(pointerKeyMod, solver, domain, node, h, pa, mod, cfg, ssaInstruction2Statement);
+      eagerPopulate(pointerKeyMod, solver, domain, node, h, pa, mod, cfg, ssaInstructionIndex2Statement);
       if (VERBOSE) {
         System.err.println("Done populate");
       }
@@ -143,7 +158,7 @@ public class HeapReachingDefs {
     private void eagerPopulate(Map<PointerKey, MutableIntSet> pointerKeyMod, BitVectorSolver<IBasicBlock> solver,
         OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis pa,
         Map<CGNode, OrdinalSet<PointerKey>> mod, ExpandedControlFlowGraph cfg,
-        Map<SSAInstruction, NormalStatement> ssaInstruction2Statement) {
+        Map<Integer, NormalStatement> ssaInstruction2Statement) {
       for (Statement s : domain) {
         delegate.put(s, computeResult(s, pointerKeyMod, solver, domain, node, h, pa, mod, cfg, ssaInstruction2Statement));
       }
@@ -268,7 +283,7 @@ public class HeapReachingDefs {
     private OrdinalSet<Statement> computeResult(Statement s, Map<PointerKey, MutableIntSet> pointerKeyMod,
         BitVectorSolver<IBasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
         PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExpandedControlFlowGraph cfg,
-        Map<SSAInstruction, NormalStatement> ssaInstruction2Statement) {
+        Map<Integer, NormalStatement> ssaInstructionIndex2Statement) {
       switch (s.getKind()) {
       case NORMAL:
         NormalStatement n = (NormalStatement) s;
@@ -310,7 +325,7 @@ public class HeapReachingDefs {
       }
       case HEAP_PARAM_CALLER: {
         HeapStatement.ParamCaller r = (HeapStatement.ParamCaller) s;
-        NormalStatement call = ssaInstruction2Statement.get(r.getCall());
+        NormalStatement call = ssaInstructionIndex2Statement.get(r.getCallIndex());
         IBasicBlock callBlock = cfg.getBlockForInstruction(call.getInstructionIndex());
         BitVectorVariable v = (BitVectorVariable) solver.getIn(callBlock);
         if (pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
@@ -346,16 +361,13 @@ public class HeapReachingDefs {
   /**
    * For each statement s, compute the set of statements that may def the heap
    * value read by s.
-   * 
-   * @param mod
-   * @param ssaInstruction2Statement
    */
   private static Map<Statement, OrdinalSet<Statement>> makeResult(BitVectorSolver<IBasicBlock> solver,
       OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis pa,
       Map<CGNode, OrdinalSet<PointerKey>> mod, ExpandedControlFlowGraph cfg,
-      Map<SSAInstruction, NormalStatement> ssaInstruction2Statement, HeapExclusions exclusions) {
+      Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions) {
 
-    return new RDMap(solver, domain, node, h, pa, mod, cfg, ssaInstruction2Statement, exclusions);
+    return new RDMap(solver, domain, node, h, pa, mod, cfg, ssaInstructionIndex2Statement, exclusions);
   }
 
   /**
@@ -408,17 +420,18 @@ public class HeapReachingDefs {
   }
 
   /**
-   * map each SSAInstruction to the NormalStatement which represents it.
+   * map each SSAInstruction index to the NormalStatement which represents it.
    */
-  private static Map<SSAInstruction, NormalStatement> mapInstructionsToStatements(OrdinalSetMapping<Statement> domain) {
-    Map<SSAInstruction, NormalStatement> ssaInstruction2Statement = HashMapFactory.make();
+  private static Map<Integer, NormalStatement> mapInstructionsToStatements(OrdinalSetMapping<Statement> domain) {
+    Map<Integer, NormalStatement> result = HashMapFactory.make();
     for (Statement s : domain) {
       if (s.getKind().equals(Kind.NORMAL)) {
         NormalStatement n = (NormalStatement) s;
-        ssaInstruction2Statement.put(n.getInstruction(), n);
+        System.err.println("Map " + n.getInstructionIndex() + " " + n);
+        result.put(n.getInstructionIndex(), n);
       }
     }
-    return ssaInstruction2Statement;
+    return result;
   }
 
   private static OrdinalSetMapping<Statement> createStatementDomain(Collection<Statement> statements) {
@@ -442,7 +455,7 @@ public class HeapReachingDefs {
 
     private final ExtendedHeapModel h;
 
-    private final Map<SSAInstruction, NormalStatement> ssaInstruction2Statement;
+    private final Map<Integer, NormalStatement> ssaInstructionIndex2Statement;
 
     private final HeapExclusions exclusions;
 
@@ -454,13 +467,13 @@ public class HeapReachingDefs {
     private final IBinaryNaturalRelation heapReturnCaller = new BasicNaturalRelation();
 
     public RD(CGNode node, ExpandedControlFlowGraph cfg, PointerAnalysis pa, OrdinalSetMapping<Statement> domain,
-        Map<SSAInstruction, NormalStatement> ssaInstruction2Statement, HeapExclusions exclusions) {
+        Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions) {
       this.node = node;
       this.cfg = cfg;
       this.domain = domain;
       this.pa = pa;
       this.h = new DelegatingExtendedHeapModel(pa.getHeapModel());
-      this.ssaInstruction2Statement = ssaInstruction2Statement;
+      this.ssaInstructionIndex2Statement = ssaInstructionIndex2Statement;
       this.exclusions = exclusions;
       initHeapReturnCaller();
     }
@@ -469,7 +482,7 @@ public class HeapReachingDefs {
       for (Statement s : domain) {
         if (s.getKind().equals(Kind.HEAP_RET_CALLER)) {
           HeapStatement.ReturnCaller r = (ReturnCaller) s;
-          NormalStatement call = ssaInstruction2Statement.get(r.getCall());
+          NormalStatement call = ssaInstructionIndex2Statement.get(r.getCallIndex());
           int i = domain.getMappedIndex(call);
           int j = domain.getMappedIndex(r);
           heapReturnCaller.add(i, j);
@@ -534,13 +547,21 @@ public class HeapReachingDefs {
           return null;
         } else {
           if (s instanceof SSAInvokeInstruction) {
-            return heapReturnCaller.getRelated(domain.getMappedIndex(ssaInstruction2Statement.get(s)));
+            // it's a normal statement ... we better be able to find it in the domain.
+            Statement st = ssaInstructionIndex2Statement.get(b.getLastInstructionIndex());
+            if (st == null) {
+              System.err.println(ssaInstructionIndex2Statement);
+              Assertions.UNREACHABLE("bang " + b + " " + b.getLastInstructionIndex() + " " + s);
+            }
+            int domainIndex = domain.getMappedIndex(st);
+            assert (domainIndex != -1);
+            return heapReturnCaller.getRelated(domainIndex);
           } else {
             Collection<PointerKey> gen = ModRef.getMod(node, h, pa, s, exclusions);
             if (gen.isEmpty()) {
               return null;
             } else {
-              NormalStatement n = ssaInstruction2Statement.get(s);
+              NormalStatement n = ssaInstructionIndex2Statement.get(b.getLastInstructionIndex());
               return SparseIntSet.singleton(domain.getMappedIndex(n));
             }
           }

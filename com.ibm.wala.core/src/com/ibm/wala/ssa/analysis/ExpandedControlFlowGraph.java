@@ -58,6 +58,8 @@ import com.ibm.wala.util.intset.IntSet;
  * 
  * TODO: this needs MAJOR refactoring !!! [EY]
  * 
+ * SJF: the treatment of phis here is extremely problematic.  This whole thing needs
+ * major redesign.  Slicer uses it now, but it's too fragile.
  * 
  * @author Eran Yahav (yahave)
  */
@@ -207,7 +209,9 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
 
   /**
    * create single-instruction basic-blocks distinguish blocks inside exception
-   * handler from other blocks
+   * handler from other blocks.
+   * 
+   * This is pretty horrible.
    * 
    */
   private void createBasicBlocks() {
@@ -215,33 +219,52 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     List<IBasicBlock> basicBlockList = new ArrayList<IBasicBlock>();
 
     entry = 0; // -1;
-    entryBlock = new SingleInstructionBasicBlock(entry, null);
+    entryBlock = new SingleInstructionBasicBlock(entry, null, -1);
     entryBlock.setIsEntryBlock(true);
     basicBlockList.add(entryBlock);
 
     for (Iterator it = cfg.iterator(); it.hasNext();) {
       BasicBlock bb = (BasicBlock) it.next();
-      List blockInstrctions = getBlockInstructions(bb);
-      Object[] blockInstructionArray = blockInstrctions.toArray();
+      // add phis first
+      for (Iterator phiIt = bb.iteratePhis(); phiIt.hasNext();) {
+        SSAPhiInstruction phi = (SSAPhiInstruction) phiIt.next();
+        if (phi != null) {
+          int blockNum = basicBlockList.size();
+          basicBlockList.add(new SingleInstructionBasicBlock(blockNum, phi, -1));
+        }
+      }
 
-      int size = blockInstructionArray.length;
-      for (int i = 0; i < size; i++) {
-        SSAInstruction inst = (SSAInstruction) blockInstructionArray[i];
-        Assertions.productionAssertion(inst != null, "instruction is null");
-        int blockNum = basicBlockList.size();
+      // add pis
+      for (Iterator piIt = bb.iteratePis(); piIt.hasNext();) {
+        SSAPiInstruction pi = (SSAPiInstruction) piIt.next();
+        if (pi != null) {
+          int blockNum = basicBlockList.size();
+          basicBlockList.add(new SingleInstructionBasicBlock(blockNum, pi, -1));
+        }
+      }
 
-        if (bb.isCatchBlock()) {
-          SingleInstructionBasicBlock newBB = new SingleInstructionExceptionHandlerBlock(blockNum, inst);
-          basicBlockList.add(newBB);
-        } else {
-          SingleInstructionBasicBlock newBB = new SingleInstructionBasicBlock(blockNum, inst);
-          basicBlockList.add(newBB);
+      // then other instructions
+      for (int i = bb.getFirstInstructionIndex(); i <= bb.getLastInstructionIndex(); i++) {
+        SSAInstruction s = instructions[i];
+        if (s != null) {
+          int blockNum = basicBlockList.size();
+          basicBlockList.add(new SingleInstructionBasicBlock(blockNum, s, i));
+        }
+      }
+
+      // if this is an ExceptionHandlerBasicBlock, add the catch instruction
+      // too
+      if (bb instanceof ExceptionHandlerBasicBlock) {
+        ExceptionHandlerBasicBlock ebb = (ExceptionHandlerBasicBlock) bb;
+        SSAInstruction catchInst = ebb.getCatchInstruction();
+        if (catchInst != null) {
+          int blockNum = basicBlockList.size();
+          new SingleInstructionExceptionHandlerBlock(blockNum, catchInst);
         }
       }
     }
-
     exit = basicBlockList.size();
-    exitBlock = new SingleInstructionBasicBlock(exit, null);
+    exitBlock = new SingleInstructionBasicBlock(exit, null, -1);
     exitBlock.setIsExitBlock(true);
     basicBlockList.add(exitBlock);
 
@@ -1008,7 +1031,15 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
      * instruction contained in the block (a single instruction!)
      */
     final private SSAInstruction instruction;
-
+    
+    
+    /**
+     * If the instruction is a normal instruction, then the index of said instruction
+     * in the SSA instruction array.  If the instruction is a phi or pi, then this is
+     * -1.
+     */
+    private final int normalInstructionIndex;
+    
     /**
      * is this an exit block?
      */
@@ -1027,9 +1058,10 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
      * @param instruction -
      *          contained instruction
      */
-    public SingleInstructionBasicBlock(int number, SSAInstruction instruction) {
+    public SingleInstructionBasicBlock(int number, SSAInstruction instruction, int normalInstructionIndex) {
       this.number = number;
       this.instruction = instruction;
+      this.normalInstructionIndex = normalInstructionIndex;
     }
 
     /**
@@ -1042,21 +1074,17 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     }
 
     /**
-     * get the index of the first (and only) instruction in the block
-     * 
-     * @return index into the underlying BB array
+     * get the index of the first (and only) normal instruction in the block
      */
     public int getFirstInstructionIndex() {
-      return number;
+      return normalInstructionIndex;
     }
 
     /**
-     * get the index of the last (and only) instruction in the block
-     * 
-     * @return index into the underlying BB array
+     * get the index of the last (and only) normal instruction in the block
      */
     public int getLastInstructionIndex() {
-      return number;
+      return normalInstructionIndex;
     }
 
     /**
@@ -1218,7 +1246,9 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
      *          instruction contained in the block
      */
     public SingleInstructionExceptionHandlerBlock(int number, SSAInstruction instruction) {
-      super(number, instruction);
+      // note that the single instruction, GetCaughtException, is not in the normal
+      // ssa instruction array, so we pass -1 as the normalInstructionIndex
+      super(number, instruction, -1);
     }
 
     /**
