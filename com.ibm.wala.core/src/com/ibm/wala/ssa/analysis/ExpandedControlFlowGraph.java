@@ -67,7 +67,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
   private static final boolean DEBUG = false;
 
   /**
-   * underlying arrary of basic blocks
+   * underlying array of basic blocks
    */
   private IBasicBlock[] basicBlocks;
 
@@ -259,7 +259,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
         SSAInstruction catchInst = ebb.getCatchInstruction();
         if (catchInst != null) {
           int blockNum = basicBlockList.size();
-          new SingleInstructionExceptionHandlerBlock(blockNum, catchInst);
+          basicBlockList.add(new SingleInstructionExceptionHandlerBlock(blockNum, catchInst));
         }
       }
     }
@@ -332,6 +332,9 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
       SSAInstruction inst = (SSAInstruction) blockInstructionArray[i];
       Assertions.productionAssertion(inst != null);
       SingleInstructionBasicBlock currBlock = getInstructionBlock(inst);
+      if (currBlock == null) {
+        Assertions.UNREACHABLE("bang " + inst);
+      }
       if (i < size - 1) {
         // System.out.println("ADDED EDGE TO SUCCESSOR " + instNum);
         SSAInstruction nextInst = (SSAInstruction) blockInstructionArray[i + 1];
@@ -403,6 +406,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    *          an instruction basic-block (SingleInstructionBasicBlock)
    */
   private void handleLastInstruction(BasicBlock bb, SingleInstructionBasicBlock instbb) {
+    assert instbb != null;
     // Set successorInstructions = HashSetFactory.make();
     Set<BBEdge> edgeWorkSet = HashSetFactory.make();
 

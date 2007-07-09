@@ -777,9 +777,6 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
   /**
    * Create nodes in the graph corresponding to "normal" (bytecode) instructions
-   * 
-   * @param options
-   * 
    */
   private Collection<SSAInstruction> createNormalStatements(IR ir, Map<CGNode, OrdinalSet<PointerKey>> ref) {
     Collection<SSAInstruction> visited = HashSetFactory.make();

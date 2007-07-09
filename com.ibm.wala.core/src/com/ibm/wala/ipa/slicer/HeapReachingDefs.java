@@ -102,9 +102,8 @@ public class HeapReachingDefs {
       throw new IllegalArgumentException("pa is null");
     }
     System.err.println("Reaching Defs " + node);
-    System.err.println(ir);
     if (VERBOSE) {
-//      System.err.println("Reaching Defs " + node);
+      // System.err.println("Reaching Defs " + node);
       System.err.println(statements.size());
     }
 
@@ -427,7 +426,6 @@ public class HeapReachingDefs {
     for (Statement s : domain) {
       if (s.getKind().equals(Kind.NORMAL)) {
         NormalStatement n = (NormalStatement) s;
-        System.err.println("Map " + n.getInstructionIndex() + " " + n);
         result.put(n.getInstructionIndex(), n);
       }
     }
@@ -547,7 +545,8 @@ public class HeapReachingDefs {
           return null;
         } else {
           if (s instanceof SSAInvokeInstruction) {
-            // it's a normal statement ... we better be able to find it in the domain.
+            // it's a normal statement ... we better be able to find it in the
+            // domain.
             Statement st = ssaInstructionIndex2Statement.get(b.getLastInstructionIndex());
             if (st == null) {
               System.err.println(ssaInstructionIndex2Statement);
