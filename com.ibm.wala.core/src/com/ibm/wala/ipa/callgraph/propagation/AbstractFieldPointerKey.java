@@ -24,6 +24,4 @@ public abstract class AbstractFieldPointerKey extends AbstractPointerKey impleme
   public InstanceKey getInstanceKey() {
     return instance;
   }
-
-
 }
