@@ -61,15 +61,9 @@ public abstract class TypeAbstraction implements ContextItem {
 
   public abstract TypeAbstraction meet(TypeAbstraction rhs);
 
-  /**
-   * @see java.lang.Object#equals(Object)
-   */
   @Override
   public abstract boolean equals(Object obj);
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
   @Override
   public abstract int hashCode();
 
