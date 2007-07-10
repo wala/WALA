@@ -29,6 +29,12 @@ import com.ibm.wala.util.intset.IntPair;
  */
 public class Simplifier {
 
+  private final static boolean DEBUG = true;
+
+  /**
+   * Eliminate quantifiers, by substituting every possible constant value for a
+   * quantified variable
+   */
   public static ITheory eliminateQuantifiers(ITheory t) {
     if (t == null) {
       throw new IllegalArgumentException("t is null");
@@ -40,6 +46,10 @@ public class Simplifier {
     return BasicTheory.make(t.getVocabulary(), sentences);
   }
 
+  /**
+   * Eliminate quantifiers, by substituting every possible constant value for a
+   * quantified variable
+   */
   private static Collection<? extends IFormula> eliminateQuantifiers(IFormula s) {
     if (s.getKind().equals(IFormula.Kind.QUANTIFIED)) {
       Collection<IFormula> result = HashSetFactory.make();
@@ -79,7 +89,7 @@ public class Simplifier {
     while (changed) {
       changed = false;
       Collection<IFormula> alreadyUsed = HashSetFactory.make();
-      Pair<ITerm, ITerm> substitution = getNextSubCandidate(s, t, alreadyUsed);
+      Pair<ITerm, ITerm> substitution = getNextEqualitySubstitution(s, t, alreadyUsed);
       while (substitution != null) {
         Collection<IFormula> temp = HashSetFactory.make();
         for (IFormula f : s) {
@@ -94,35 +104,129 @@ public class Simplifier {
           }
         }
         s = temp;
-        substitution = getNextSubCandidate(s, t, alreadyUsed);
+        substitution = getNextEqualitySubstitution(s, t, alreadyUsed);
       }
     }
-    return trivialDecision(s);
+    return propositionalSimplify(s, t.getSentences());
   }
 
   /**
-   * Check simple satisfiability rules for each formula in a collection. Replace
-   * tautologies with "true" and contradictions with false.
+   * Simplify the set s based on simple propositional logic.
    */
-  private static Collection<IFormula> trivialDecision(Collection<IFormula> s) {
+  public static Collection<IFormula> propositionalSimplify(Collection<IFormula> s, Collection<? extends IFormula> t) {
+    debug1(s, t);
+    Collection<CNFFormula> cs = toCNF(s);
+    Collection<CNFFormula> ct = toCNF(t);
+    debug2(cs, ct);
+    Collection<Disjunction> facts = collectClauses(ct);
+
     Collection<IFormula> result = HashSetFactory.make();
-    for (IFormula f : s) {
-      if (isTautology(f)) {
-        result.add(BooleanConstantFormula.TRUE);
-      } else if (isContradiction(f)) {
-        result.add(BooleanConstantFormula.FALSE);
+    for (CNFFormula f : cs) {
+      Collection<Disjunction> d = simplifyCNF(f.getDisjunctions(), facts);
+      if (d.size() == 1) {
+        Disjunction x = d.iterator().next();
+        Collection<? extends IFormula> y = x.getClauses();
+        if (y.size() == 1) {
+          result.add(y.iterator().next());
+        } else {
+          result.add(CNFFormula.make(d));
+        }
       } else {
-        result.add(f);
+        result.add(CNFFormula.make(d));
       }
     }
     return result;
   }
 
+  private static Collection<Disjunction> simplifyCNF(Collection<? extends Disjunction> s, Collection<Disjunction> facts) {
+    Collection<Disjunction> result = HashSetFactory.make();
+    for (Disjunction d : s) {
+      if (isContradiction(d, facts)) {
+        return Collections.singleton(Disjunction.make(BooleanConstantFormula.FALSE));
+      } else if (isTautology(d, facts)) {
+        // do nothing.
+      } else {
+        result.add(d);
+      }
+    }
+    if (result.isEmpty()) {
+      return Collections.singleton(Disjunction.make(BooleanConstantFormula.TRUE));
+    }
+    return result;
+  }
+
+  private static Collection<Disjunction> collectClauses(Collection<CNFFormula> s) {
+    Collection<Disjunction> result = HashSetFactory.make();
+    for (CNFFormula f : s) {
+      result.addAll(f.getDisjunctions());
+    }
+    return result;
+  }
+
+  private static void debug2(Collection<CNFFormula> cs, Collection<CNFFormula> ct) {
+    if (DEBUG) {
+      System.err.println("--cs--");
+      for (IFormula f : cs) {
+        System.err.println(f);
+      }
+      System.err.println("--ct--");
+      for (IFormula f : ct) {
+        System.err.println(f);
+      }
+    }
+  }
+
+  private static void debug1(Collection<IFormula> s, Collection<? extends IFormula> t) {
+    if (DEBUG) {
+      System.err.println("--s--");
+      for (IFormula f : s) {
+        System.err.println(f);
+      }
+      System.err.println("--t--");
+      for (IFormula f : t) {
+        System.err.println(f);
+      }
+    }
+  }
+
+  private static Collection<CNFFormula> toCNF(Collection<? extends IFormula> s) {
+    Collection<CNFFormula> result = HashSetFactory.make();
+    for (IFormula f : s) {
+      result.add(CNFFormula.make(f));
+    }
+    return result;
+  }
+
   /**
+   * @param facts
+   *            formulae that can be treated as axioms
    * @return true if we can easily prove f is a contradiction
    */
-  private static boolean isContradiction(IFormula f) {
-    if (f.getKind().equals(IFormula.Kind.RELATION)) {
+  public static boolean isContradiction(IFormula f, Collection<Disjunction> facts) {
+    for (Disjunction d : facts) {
+      if (contradicts(d, f)) {
+        return true;
+      }
+    }
+    switch (f.getKind()) {
+    case BINARY:
+      AbstractBinaryFormula b = (AbstractBinaryFormula) f;
+      if (b.getConnective().equals(BinaryConnective.AND)) {
+        if (isContradiction(b.getF1(), facts) || isContradiction(b.getF2(), facts)) {
+          return true;
+        }
+      } else if (b.getConnective().equals(BinaryConnective.OR)) {
+        if (isContradiction(b.getF1(), facts) && isContradiction(b.getF2(), facts)) {
+          return true;
+        }
+      }
+      break;
+    case CONSTANT:
+      BooleanConstantFormula bc = (BooleanConstantFormula) f;
+      return bc.equals(BooleanConstantFormula.FALSE);
+    case NEGATION:
+    case QUANTIFIED:
+    case RELATION:
       RelationFormula r = (RelationFormula) f;
       if (r.getRelation().equals(BinaryRelation.EQUALS)) {
         ITerm lhs = r.getTerms().get(0);
@@ -133,22 +237,76 @@ public class Simplifier {
           }
         }
       }
-    } else if (f.getKind().equals(IFormula.Kind.BINARY)) {
-      BinaryFormula b = (BinaryFormula) f;
-      if (b.getConnective().equals(BinaryConnective.AND)) {
-        if (isContradiction(b.getF1()) || isContradiction(b.getF2())) {
-          return true;
-        }
+      break;
+    }
+    return false;
+  }
+
+  private static boolean contradicts(Disjunction axiom, IFormula f) {
+    IFormula notF = NotFormula.make(f);
+    return implies(axiom, notF);
+  }
+
+  private static boolean implies(Disjunction axiom, IFormula f) {
+    Collection<? extends IFormula> c = axiom.getClauses();
+    if (c.size() == 1) {
+      IFormula a = c.iterator().next();
+      if (a.equals(f)) {
+        return true;
+      }
+    }
+    if (f instanceof Disjunction) {
+      Disjunction d = (Disjunction) f;
+      Collection<? extends IFormula> dc = d.getClauses();
+      if (sameValue(c, dc)) {
+        return true;
       }
     }
     return false;
   }
 
+  private static boolean sameValue(Collection<?> a, Collection<?> b) {
+    if (a.size() != b.size()) {
+      return false;
+    }
+    for (Object x : a) {
+      if (!b.contains(x)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /**
+   * @param facts
+   *            formulae that can be treated as axioms
    * @return true if we can easily prove f is a tautology
    */
-  private static boolean isTautology(IFormula f) {
-    if (f.getKind().equals(IFormula.Kind.RELATION)) {
+  public static boolean isTautology(IFormula f, Collection<Disjunction> facts) {
+    for (Disjunction d : facts) {
+      if (implies(d, f)) {
+        return true;
+      }
+    }
+    switch (f.getKind()) {
+    case BINARY:
+      AbstractBinaryFormula b = (AbstractBinaryFormula) f;
+      if (b.getConnective().equals(BinaryConnective.AND)) {
+        if (isTautology(b.getF1(), facts) && isTautology(b.getF2(), facts)) {
+          return true;
+        }
+      }
+      break;
+    case CONSTANT:
+      Assertions.UNREACHABLE();
+      break;
+    case NEGATION:
+      Assertions.UNREACHABLE();
+      break;
+    case QUANTIFIED:
+      Assertions.UNREACHABLE();
+      break;
+    case RELATION:
       RelationFormula r = (RelationFormula) f;
       if (r.getRelation().equals(BinaryRelation.EQUALS)) {
         ITerm lhs = r.getTerms().get(0);
@@ -159,17 +317,14 @@ public class Simplifier {
           }
         }
       }
-    } else if (f.getKind().equals(IFormula.Kind.BINARY)) {
-      BinaryFormula b = (BinaryFormula) f;
-      if (b.getConnective().equals(BinaryConnective.AND)) {
-        if (isTautology(b.getF1()) && isTautology(b.getF2())) {
-          return true;
-        }
-      }
+      break;
     }
     return false;
   }
 
+  /**
+   * Is f of the form t = rhs?
+   */
   private static boolean defines(IFormula f, ITerm t) {
     if (f.getKind().equals(IFormula.Kind.RELATION)) {
       RelationFormula r = (RelationFormula) f;
@@ -180,13 +335,19 @@ public class Simplifier {
     return false;
   }
 
-  private static Pair<ITerm, ITerm> getNextSubCandidate(Collection<IFormula> s, ITheory t, Collection<IFormula> alreadyUsed) {
+  /**
+   * does the structure of some formula f suggest an immediate substitution to
+   * simplify the system, based on theory of equality?
+   * 
+   * @return a pair (p1, p2) meaning "substitute p2 for p1"
+   */
+  private static Pair<ITerm, ITerm> getNextEqualitySubstitution(Collection<IFormula> s, ITheory t, Collection<IFormula> alreadyUsed) {
     Collection<IFormula> candidates = HashSetFactory.make();
     candidates.addAll(s);
     candidates.addAll(t.getSentences());
     for (IFormula f : candidates) {
       if (!alreadyUsed.contains(f)) {
-        Pair<ITerm, ITerm> substitution = suggestsSubstitution(f);
+        Pair<ITerm, ITerm> substitution = equalitySuggestsSubsitution(f);
         if (substitution != null) {
           alreadyUsed.add(f);
           return substitution;
@@ -198,11 +359,11 @@ public class Simplifier {
 
   /**
    * does the structure of formula f suggest an immediate substitution to
-   * simplify the system?
+   * simplify the system, based on theory of equality?
    * 
    * @return a pair (p1, p2) meaning "substitute p2 for p1"
    */
-  private static Pair<ITerm, ITerm> suggestsSubstitution(IFormula f) {
+  private static Pair<ITerm, ITerm> equalitySuggestsSubsitution(IFormula f) {
     switch (f.getKind()) {
     case RELATION:
       RelationFormula r = (RelationFormula) f;
@@ -239,7 +400,7 @@ public class Simplifier {
     }
     switch (formula.getKind()) {
     case BINARY:
-      BinaryFormula b = (BinaryFormula) formula;
+      AbstractBinaryFormula b = (AbstractBinaryFormula) formula;
       return BinaryFormula.make(b.getConnective(), substitute(b.getF1(), t1, t2), substitute(b.getF2(), t1, t2));
     case NEGATION:
       NotFormula n = (NotFormula) formula;

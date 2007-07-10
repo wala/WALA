@@ -16,7 +16,7 @@ import java.util.Iterator;
 import com.ibm.wala.logic.ILogicConstants.BinaryConnective;
 import com.ibm.wala.util.collections.HashSetFactory;
 
-public class BinaryFormula implements IFormula {
+public class BinaryFormula extends AbstractBinaryFormula {
   private final IFormula f1;
 
   private final IFormula f2;
@@ -28,10 +28,6 @@ public class BinaryFormula implements IFormula {
     this.b = b;
     this.f1 = f1;
     this.f2 = f2;
-  }
-
-  public Kind getKind() {
-    return Kind.BINARY;
   }
 
   public static IFormula and(Collection<IFormula> clauses) throws IllegalArgumentException {
@@ -85,14 +81,17 @@ public class BinaryFormula implements IFormula {
     return new BinaryFormula(BinaryConnective.IMPLIES, f1, f2);
   }
 
+  @Override
   public BinaryConnective getConnective() {
     return b;
   }
 
+  @Override
   public IFormula getF1() {
     return f1;
   }
 
+  @Override
   public IFormula getF2() {
     return f2;
   }
@@ -113,13 +112,13 @@ public class BinaryFormula implements IFormula {
   
   public String prettyPrint(ILogicDecorator d) {
     StringBuffer result = new StringBuffer();
-    result.append("(");
+    result.append(" ( ");
     result.append(f1.prettyPrint(d));
-    result.append(") ");
+    result.append(" ) ");
     result.append(d.prettyPrint(b));
-    result.append(" (");
+    result.append(" ( ");
     result.append(f2.prettyPrint(d));
-    result.append(")");
+    result.append(" )");
     return result.toString();
   }
 
