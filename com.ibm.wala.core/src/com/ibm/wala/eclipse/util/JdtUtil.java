@@ -42,7 +42,6 @@ import org.eclipse.jdt.core.search.SearchRequestor;
 
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * Convenience methods to get information from JDT IJavaElement model.
@@ -121,7 +120,8 @@ public class JdtUtil {
    * 'FooProject' and source folder 'src' the handle would be '=FooProject/src<fooPackage.barPackage{FooClass.java[FooClass~fooMethod~I'
    * 
    * @param javaElt
-   * @throws IllegalArgumentException  if javaElt is null
+   * @throws IllegalArgumentException
+   *             if javaElt is null
    */
   public static String getJdtHandleString(IJavaElement javaElt) {
     if (javaElt == null) {
@@ -163,11 +163,11 @@ public class JdtUtil {
 
   /**
    * @param typeSignature
-   *          Some of the type signatures examples are "QString;" (String) and
-   *          "I" (int) The type signatures may be either unresolved (for source
-   *          types) or resolved (for binary types), and either basic (for basic
-   *          types) or rich (for parameterized types). See {@link Signature}
-   *          for details.
+   *            Some of the type signatures examples are "QString;" (String) and
+   *            "I" (int) The type signatures may be either unresolved (for
+   *            source types) or resolved (for binary types), and either basic
+   *            (for basic types) or rich (for parameterized types). See
+   *            {@link Signature} for details.
    */
   public static String getHumanReadableType(String typeSignature) {
     String simpleName = Signature.getSignatureSimpleName(typeSignature);
@@ -215,16 +215,16 @@ public class JdtUtil {
    * @return null if not found
    */
   public static IType findJavaClassInProjects(String className, Collection<IJavaProject> projects) {
-    
+
     IJavaElement[] arr = new IJavaElement[projects.size()];
     projects.toArray(arr);
-    IJavaSearchScope scope = SearchEngine.createJavaSearchScope(arr , false);
-    
+    IJavaSearchScope scope = SearchEngine.createJavaSearchScope(arr, false);
+
     return searchForJavaClass(className, scope);
   }
-  
+
   public static IType findJavaClassInResources(String className, Collection<IResource> resources) {
-    
+
     Collection<IJavaProject> projects = HashSetFactory.make();
     for (IResource r : resources) {
       projects.add(JavaCore.create(r).getJavaProject());
@@ -233,8 +233,8 @@ public class JdtUtil {
   }
 
   private static IType searchForJavaClass(String className, IJavaSearchScope scope) {
-    SearchPattern p = SearchPattern.createPattern(className, IJavaSearchConstants.CLASS_AND_INTERFACE, IJavaSearchConstants.DECLARATIONS,
-        SearchPattern.R_EXACT_MATCH);
+    SearchPattern p = SearchPattern.createPattern(className, IJavaSearchConstants.CLASS_AND_INTERFACE,
+        IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
     SearchEngine engine = new SearchEngine();
     final Collection<IJavaElement> kludge = HashSetFactory.make();
     SearchRequestor requestor = new SearchRequestor() {
@@ -262,7 +262,7 @@ public class JdtUtil {
   /**
    * Find the IMethod in the workspace corresponding to a method selector.
    * 
-   * TODO: this is way too slow.   figure out something better.
+   * TODO: this is way too slow. figure out something better.
    * 
    * @return null if not found
    */
@@ -323,7 +323,6 @@ public class JdtUtil {
       }
     }
   }
-
 
   public static Collection<String> getTypeParameterNames(IType type) throws JavaModelException {
     ITypeParameter[] tp = type.getTypeParameters();
@@ -393,23 +392,18 @@ public class JdtUtil {
         case TypeReference.CharTypeCode:
           sigs.add(TypeReference.CharName.toString());
           continue;
-
         case TypeReference.ArrayTypeCode: {
           int off = i - 1;
           while (d.charAt(i) == TypeReference.ArrayTypeCode) {
             ++i;
           }
-          String T = null;
-          Assertions.UNREACHABLE("fix me");
           if (d.charAt(i++) == TypeReference.ClassTypeCode) {
-            while (d.charAt(i++) != ',')
+            while (d.charAt(i++) != ';')
               ;
-            T = d.substring(off, i - off - 1);
+            sigs.add(d.substring(off, i).replaceAll("/", "."));
           } else {
-            T = d.substring(off, i - off);
+            sigs.add(d.substring(off, i));
           }
-          sigs.add(T);
-
           continue;
         }
         case (byte) ')': // end of parameter list
@@ -435,7 +429,6 @@ public class JdtUtil {
       throw new IllegalArgumentException("error parsing selector " + selector);
     }
   }
-
 
   private static String[] toArray(ArrayList<String> sigs) {
     int size = sigs.size();
@@ -490,13 +483,13 @@ public class JdtUtil {
   }
 
   /**
-   *Use the search engine to find all methods in a java element
+   * Use the search engine to find all methods in a java element
    */
   public static Collection<IMethod> findMethods(IJavaElement elt) {
     final Collection<IMethod> result = HashSetFactory.make();
     SearchPattern p = SearchPattern.createPattern("*", IJavaSearchConstants.METHOD, IJavaSearchConstants.DECLARATIONS,
         SearchPattern.R_PATTERN_MATCH);
-    IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new IJavaElement[] {elt}, IJavaSearchScope.SOURCES);
+    IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new IJavaElement[] { elt }, IJavaSearchScope.SOURCES);
     SearchEngine engine = new SearchEngine();
     SearchRequestor requestor = new SearchRequestor() {
       @Override
@@ -509,7 +502,7 @@ public class JdtUtil {
     } catch (CoreException e) {
       e.printStackTrace();
     }
-    
+
     return result;
   }
 
