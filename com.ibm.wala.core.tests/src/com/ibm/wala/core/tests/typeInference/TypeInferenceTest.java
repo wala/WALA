@@ -10,8 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.typeInference;
 
-import java.util.Iterator;
-
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
@@ -25,13 +23,10 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.ImmutableByteArray;
 import com.ibm.wala.util.UTF8Convert;
-import com.ibm.wala.util.graph.GraphIntegrity;
-import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
