@@ -418,7 +418,7 @@ public final class TypeReference {
 
   /**
    * Return the dimensionality of the type. By convention, class types have
-   * dimensionality 0, primitves -1, and arrays the number of [ in their
+   * dimensionality 0, primitives -1, and arrays the number of [ in their
    * descriptor.
    */
   public final int getDimensionality() {
