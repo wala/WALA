@@ -45,5 +45,10 @@ public interface IFormula {
    */
   public Collection<? extends IConstant> getConstants();
   
+  /**
+   * @return the terms that appear in this formula
+   */
+  public Collection<? extends ITerm> getTerms();
+  
   public String prettyPrint(ILogicDecorator d);
 }

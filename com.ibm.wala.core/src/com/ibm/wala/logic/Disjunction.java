@@ -38,6 +38,14 @@ public class Disjunction extends AbstractBinaryFormula {
     }
     return result;
   }
+  
+  public Collection<? extends ITerm> getTerms() {
+    Collection<ITerm> result = HashSetFactory.make();
+    for (IFormula f : clauses) {
+      result.addAll(f.getTerms());
+    }
+    return result;
+  }
 
   public Collection<Variable> getFreeVariables() {
     Collection<Variable> result = HashSetFactory.make();

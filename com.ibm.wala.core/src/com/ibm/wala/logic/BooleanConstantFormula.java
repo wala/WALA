@@ -34,6 +34,10 @@ public class BooleanConstantFormula implements IFormula {
     return result;
   }
 
+  public Collection<? extends ITerm> getTerms() {
+    return getConstants();
+  }
+
   public Kind getKind() {
     return Kind.CONSTANT;
   }

@@ -25,7 +25,7 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class CNFFormula extends AbstractBinaryFormula {
 
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   // invariant: size >= 1
   private final Collection<Disjunction> disjunctions;
@@ -39,6 +39,14 @@ public class CNFFormula extends AbstractBinaryFormula {
     Collection<IConstant> result = HashSetFactory.make();
     for (IFormula f : disjunctions) {
       result.addAll(f.getConstants());
+    }
+    return result;
+  }
+  
+  public Collection<? extends ITerm> getTerms() {
+    Collection<ITerm> result = HashSetFactory.make();
+    for (IFormula f : disjunctions) {
+      result.addAll(f.getTerms());
     }
     return result;
   }

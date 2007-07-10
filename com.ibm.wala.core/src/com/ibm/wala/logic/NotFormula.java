@@ -69,6 +69,10 @@ public class NotFormula implements IFormula {
     return f.getConstants();
   }
 
+  public Collection<? extends ITerm> getTerms() {
+    return f.getTerms();
+  }
+
   @Override
   public String toString() {
     return prettyPrint(DefaultDecorator.instance());

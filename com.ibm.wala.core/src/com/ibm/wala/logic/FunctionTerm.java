@@ -143,7 +143,4 @@ public class FunctionTerm implements ITerm {
       return false;
     return true;
   }
-
-
-
 }
