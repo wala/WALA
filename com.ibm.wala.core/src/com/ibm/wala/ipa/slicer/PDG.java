@@ -164,7 +164,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       } else {
         SSAInstruction s = ir.getInstructions()[bb.getLastInstructionIndex()];
         if (s == null) {
-          // should have no control dependence successors.
+          // should have no control dependent successors.
           // leave src null.
         } else {
           src = ssaInstruction2Statement(s);
@@ -180,15 +180,19 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
           }
         }
       }
-      // add edges for every control-dependent statement in the IR
-      for (Iterator<? extends IBasicBlock> succ = cdg.getSuccNodes(bb); succ.hasNext();) {
-        IBasicBlock bb2 = succ.next();
-        for (Iterator<? extends IInstruction> it2 = bb2.iterator(); it2.hasNext();) {
-          SSAInstruction st = (SSAInstruction) it2.next();
-          if (st != null) {
-            Statement dest = ssaInstruction2Statement(st);
-            assert src != null;
-            addEdge(src, dest);
+      // add edges for every control-dependent statement in the IR, if there are
+      // any
+      // control-dependent successors
+      if (src != null) {
+        for (Iterator<? extends IBasicBlock> succ = cdg.getSuccNodes(bb); succ.hasNext();) {
+          IBasicBlock bb2 = succ.next();
+          for (Iterator<? extends IInstruction> it2 = bb2.iterator(); it2.hasNext();) {
+            SSAInstruction st = (SSAInstruction) it2.next();
+            if (st != null) {
+              Statement dest = ssaInstruction2Statement(st);
+              assert src != null;
+              addEdge(src, dest);
+            }
           }
         }
       }
@@ -202,7 +206,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       if (cdg.getPredNodeCount(bb) == 0) {
         // this is control dependent on the method entry.
         for (IInstruction s : bb) {
-          SSAInstruction st = (SSAInstruction)s;
+          SSAInstruction st = (SSAInstruction) s;
           Statement dest = ssaInstruction2Statement(st);
           addEdge(methodEntry, dest);
         }
@@ -603,9 +607,6 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * Wrap an SSAInstruction in a Statement
    */
   Statement ssaInstruction2Statement(SSAInstruction s) {
-    if (s == null) {
-      System.err.println("XXX");
-    }
     assert s != null;
     if (s instanceof SSAPhiInstruction) {
       SSAPhiInstruction phi = (SSAPhiInstruction) s;
@@ -806,7 +807,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    */
   private void addParamPassingStatements(int callIndex, Map<CGNode, OrdinalSet<PointerKey>> ref) {
 
-    SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction)node.getIR().getInstructions()[callIndex];
+    SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) node.getIR().getInstructions()[callIndex];
     Collection<Statement> params = MapUtil.findOrCreateSet(callerParamStatements, call.getCallSite());
     Collection<Statement> rets = MapUtil.findOrCreateSet(callerReturnStatements, call.getCallSite());
     for (int j = 0; j < call.getNumberOfUses(); j++) {
