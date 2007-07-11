@@ -1,8 +1,7 @@
-package com.ibm.wala.core.ipa.callgraph.impl;
+package com.ibm.wala.ipa.callgraph.impl;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.*;
