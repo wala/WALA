@@ -10,11 +10,11 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.test;
 
-import com.ibm.wala.cast.js.translator.*;
-import com.ibm.wala.ipa.callgraph.*;
+import java.io.IOException;
+import java.net.URL;
 
-import java.io.*;
-import java.net.*;
+import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 
 public class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 

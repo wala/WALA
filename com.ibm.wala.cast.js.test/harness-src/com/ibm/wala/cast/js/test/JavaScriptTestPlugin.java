@@ -10,9 +10,11 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.test;
 
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
-import java.util.*;
 
 /**
  * The main plugin class to be used in the desktop.

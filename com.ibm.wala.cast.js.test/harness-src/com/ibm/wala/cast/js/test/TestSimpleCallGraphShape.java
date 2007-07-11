@@ -10,11 +10,11 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.test;
 
-import com.ibm.wala.cast.js.translator.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
+import java.io.IOException;
 
-import java.io.*;
+import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 
 public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 

@@ -10,10 +10,10 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.test;
 
-import com.ibm.wala.cast.test.*;
-import com.ibm.wala.ipa.callgraph.*;
+import java.util.Collection;
 
-import java.util.*;
+import com.ibm.wala.cast.test.TestCallGraphShape;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 
 public abstract class TestJSCallGraphShape extends TestCallGraphShape {
 

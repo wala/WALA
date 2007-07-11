@@ -10,13 +10,13 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.test;
 
+import java.net.URL;
+
+import junit.framework.Assert;
+
 import com.ibm.wala.cast.js.util.WebUtil;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-
-import java.net.*;
-
-import junit.framework.*;
 
 public class TestWebUtil extends WalaTestCase {
 
