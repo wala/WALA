@@ -234,7 +234,7 @@ public class CallGraphTest extends WalaTestCase {
   }
 
   public static Iterable<Entrypoint> makePrimordialPublicEntrypoints(AnalysisScope scope, ClassHierarchy cha, String pkg) {
-    final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
+    final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass clazz : cha) {
 
       if (clazz.getName().toString().indexOf(pkg) != -1 && !clazz.isInterface() && !clazz.isAbstract()) {
@@ -271,7 +271,7 @@ public class CallGraphTest extends WalaTestCase {
    */
   public static Iterable<Entrypoint> makePrimordialMainEntrypoints(AnalysisScope scope, ClassHierarchy cha) {
     final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
-    final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
+    final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass klass : cha) {
       MethodReference mainRef = MethodReference.findOrCreate(klass.getReference(), mainMethod, Descriptor
           .findOrCreateUTF8("([Ljava/lang/String;)V"));

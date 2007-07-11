@@ -18,6 +18,7 @@ import java.util.Map;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.util.collections.BimodalMap;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.SmallMap;
 import com.ibm.wala.util.debug.Trace;
@@ -601,7 +602,7 @@ public class PrimitivesTest extends WalaTestCase {
   }
 
   private int countEquivalenceClasses(IntegerUnionFind uf) {
-    HashSet<Integer> s = new HashSet<Integer>();
+    HashSet<Integer> s = HashSetFactory.make();
     for (int i = 0; i < uf.size(); i++) {
       s.add(new Integer(uf.find(i)));
     }

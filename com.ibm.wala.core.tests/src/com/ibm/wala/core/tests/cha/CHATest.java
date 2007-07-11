@@ -34,6 +34,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.properties.WalaProperties;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.WalaException;
@@ -122,7 +123,7 @@ public class CHATest extends WalaTestCase {
       for (IClass klass : cha) {
         if (!klass.isInterface()) {
           EJavaClass eKlass = EMFBridge.makeJavaClass(klass.getReference());
-          HashSet<EJavaClass> impls = new HashSet<EJavaClass>(5);
+          HashSet<EJavaClass> impls = HashSetFactory.make(5);
           for (Iterator<IClass> it2 = klass.getDirectInterfaces().iterator(); it2.hasNext();) {
             IClass iface = (IClass) it2.next();
             impls.add(EMFBridge.makeJavaClass(iface.getReference()));
