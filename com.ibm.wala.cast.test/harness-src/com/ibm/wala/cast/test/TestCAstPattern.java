@@ -10,19 +10,22 @@
  *****************************************************************************/
 package com.ibm.wala.cast.test;
 
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.impl.*;
+import junit.framework.Assert;
+
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.util.CAstPattern;
 import com.ibm.wala.cast.util.CAstPrinter;
-import com.ibm.wala.cast.util.CAstPattern.*;
+import com.ibm.wala.cast.util.CAstPattern.Segments;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-
-import java.util.*;
-
-import junit.framework.*;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
 
 public class TestCAstPattern extends WalaTestCase {
 
