@@ -20,7 +20,7 @@ import com.ibm.wala.util.intset.IntPair;
  * 
  * @author sjfink
  */
-public class Variable implements ITerm, Comparable<Variable> {
+public class Variable extends AbstractTerm implements Comparable<Variable> {
 
   private final int number;
   /**

@@ -10,33 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-import java.util.Collection;
-import java.util.Collections;
-
-
-public abstract class AbstractConstant implements IConstant {
-  
-  public Kind getKind() {
-    return Kind.CONSTANT;
-   }
-
-  public String prettyPrint(ILogicDecorator d) {
-    return d.prettyPrint(this);
-  }
-
-  public Collection<Variable> getFreeVariables() {
-    return Collections.emptySet();
-  }
-
-  public Collection<? extends IConstant> getConstants() {
-    return Collections.singleton(this);
-  }
-  
+public abstract class AbstractTerm implements ITerm {
 
   @Override
   public abstract boolean equals(Object obj);
 
   @Override
   public abstract int hashCode();
-  
+
 }

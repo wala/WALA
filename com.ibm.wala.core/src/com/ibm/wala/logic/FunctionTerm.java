@@ -17,7 +17,7 @@ import java.util.List;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 
-public class FunctionTerm implements ITerm {
+public class FunctionTerm extends AbstractTerm {
 
   private final List<ITerm> parameters;
   private final IFunction f;
