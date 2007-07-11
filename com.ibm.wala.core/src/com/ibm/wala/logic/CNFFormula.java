@@ -25,7 +25,7 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class CNFFormula extends AbstractBinaryFormula {
 
-  private static final boolean DEBUG = false;
+  private static final boolean DEBUG = true;
 
   // invariant: size >= 1
   private final Collection<Disjunction> disjunctions;
@@ -42,7 +42,7 @@ public class CNFFormula extends AbstractBinaryFormula {
     }
     return result;
   }
-  
+
   public Collection<? extends ITerm> getTerms() {
     Collection<ITerm> result = HashSetFactory.make();
     for (IFormula f : disjunctions) {
@@ -89,16 +89,25 @@ public class CNFFormula extends AbstractBinaryFormula {
       switch (f.getKind()) {
       case RELATION:
       case QUANTIFIED:
-      case CONSTANT:
+      case CONSTANT: {
         Disjunction single = Disjunction.make(Collections.singleton(f));
         Collection<Disjunction> clauses = Collections.singleton(single);
         return new CNFFormula(clauses);
+      }
       case BINARY:
+      case NEGATION: {
+        f = trivialCleanup(f);
+
         f = eliminateArrows(f);
         if (DEBUG) {
           System.err.println("after eliminate arrows " + f);
         }
         f = pushNegations(f);
+        if (f instanceof NotFormula) {
+          Disjunction single = Disjunction.make(Collections.singleton(f));
+          Collection<Disjunction> clauses = Collections.singleton(single);
+          return new CNFFormula(clauses);
+        }
         if (DEBUG) {
           System.err.println("after pushNegations " + f);
         }
@@ -113,11 +122,32 @@ public class CNFFormula extends AbstractBinaryFormula {
         } else {
           return CNFFormula.make(f);
         }
-      case NEGATION:
+      }
       default:
         Assertions.UNREACHABLE(f + " " + f.getKind());
         return null;
       }
+    }
+  }
+
+  private static IFormula trivialCleanup(IFormula f) {
+    switch (f.getKind()) {
+    case BINARY:
+      AbstractBinaryFormula b = (AbstractBinaryFormula) f;
+      return BinaryFormula.make(b.getConnective(), trivialCleanup(b.getF1()), trivialCleanup(b.getF2()));
+    case RELATION:
+      if (Simplifier.isTautology(f)) {
+        return BooleanConstantFormula.TRUE;
+      } else if (Simplifier.isContradiction(f)) {
+        return BooleanConstantFormula.FALSE;
+      } else {
+        return f;
+      }
+    case CONSTANT:
+    case NEGATION:
+    case QUANTIFIED:
+    default:
+      return f;
     }
   }
 
@@ -162,17 +192,27 @@ public class CNFFormula extends AbstractBinaryFormula {
         c.addAll(d2.getClauses());
         return Disjunction.make(c);
       } else {
-        Assertions.UNREACHABLE(b);
+        Assertions.UNREACHABLE(b.getConnective());
         return null;
       }
     case CONSTANT:
     case QUANTIFIED:
     case RELATION:
-      return Disjunction.make(Collections.singleton(f));
+      return Disjunction.make(Collections.singleton(simplify(f)));
     case NEGATION:
     default:
       Assertions.UNREACHABLE(f.getKind());
       return null;
+    }
+  }
+
+  private static IFormula simplify(IFormula f) {
+    if (Simplifier.isTautology(f)) {
+      return BooleanConstantFormula.TRUE;
+    } else if (Simplifier.isContradiction(f)) {
+      return BooleanConstantFormula.FALSE;
+    } else {
+      return f;
     }
   }
 
@@ -190,8 +230,8 @@ public class CNFFormula extends AbstractBinaryFormula {
     case CONSTANT:
     case QUANTIFIED:
     case RELATION:
-      return f;
     case NEGATION:
+      return f;
     default:
       Assertions.UNREACHABLE(f.getKind());
       return null;
@@ -225,7 +265,8 @@ public class CNFFormula extends AbstractBinaryFormula {
         IFormula bf = c2.getF1();
         IFormula cf = c2.getF2();
         IFormula x = BinaryFormula.and(BinaryFormula.or(f1, bf), BinaryFormula.or(f1, cf));
-        return x;
+        // distribute again; case 1 may apply now
+        return distribute(x);
       }
       return BinaryFormula.make(b.getConnective(), f1, f2);
     case AND:
@@ -256,8 +297,9 @@ public class CNFFormula extends AbstractBinaryFormula {
     case QUANTIFIED:
       return f;
     case NEGATION:
+      NotFormula n = (NotFormula) f;
+      return Simplifier.distributeNot(n);
     default:
-      Assertions.UNREACHABLE(f.getKind());
       return null;
     }
   }
@@ -275,6 +317,8 @@ public class CNFFormula extends AbstractBinaryFormula {
     case QUANTIFIED:
       return f;
     case NEGATION:
+      NotFormula n = (NotFormula) f;
+      return NotFormula.make(eliminateArrows(n.getFormula()));
     default:
       Assertions.UNREACHABLE(f.getKind());
       return null;
@@ -289,14 +333,13 @@ public class CNFFormula extends AbstractBinaryFormula {
     IFormula f2 = b.getF2();
     f1 = eliminateArrows(f1);
     f2 = eliminateArrows(f2);
-    Collection<Disjunction> emptyTheory = Collections.emptySet();
 
     switch (b.getConnective()) {
     case BICONDITIONAL:
-      if (Simplifier.isTautology(f1, emptyTheory)) {
+      if (Simplifier.isTautology(f1)) {
         return f2;
-      } else if (Simplifier.isContradiction(f1, emptyTheory)) {
-        return BooleanConstantFormula.FALSE;
+      } else if (Simplifier.isContradiction(f1)) {
+        return BooleanConstantFormula.TRUE;
       } else {
         IFormula not1 = NotFormula.make(f1);
         IFormula not2 = NotFormula.make(f2);
@@ -361,7 +404,13 @@ public class CNFFormula extends AbstractBinaryFormula {
 
   @Override
   public String toString() {
-    return prettyPrint(DefaultDecorator.instance());
+    StringBuffer result = new StringBuffer("CNF\n");
+    int i = 1;
+    for (Disjunction d : getDisjunctions()) {
+      result.append(" (" + i + ") " + d.prettyPrint(DefaultDecorator.instance()) + "\n");
+      i++;
+    }
+    return result.toString();
   }
 
   public Collection<? extends Disjunction> getDisjunctions() {

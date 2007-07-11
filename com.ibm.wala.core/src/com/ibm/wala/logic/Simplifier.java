@@ -135,6 +135,13 @@ public class Simplifier {
         result.add(CNFFormula.make(d));
       }
     }
+
+    if (DEBUG) {
+      System.err.println("--result--");
+      for (IFormula f : result) {
+        System.err.println(f);
+      }
+    }
     return result;
   }
 
@@ -224,7 +231,7 @@ public class Simplifier {
     case CONSTANT:
       BooleanConstantFormula bc = (BooleanConstantFormula) f;
       return bc.equals(BooleanConstantFormula.FALSE);
-    case NEGATION:
+
     case QUANTIFIED:
     case RELATION:
       RelationFormula r = (RelationFormula) f;
@@ -298,11 +305,10 @@ public class Simplifier {
       }
       break;
     case CONSTANT:
-      Assertions.UNREACHABLE();
-      break;
+      return f.equals(BooleanConstantFormula.TRUE);
     case NEGATION:
-      Assertions.UNREACHABLE();
-      break;
+      NotFormula n = (NotFormula) f;
+      return isContradiction(n.getFormula());
     case QUANTIFIED:
       Assertions.UNREACHABLE();
       break;
@@ -315,6 +321,14 @@ public class Simplifier {
           if (lhs.equals(rhs)) {
             return true;
           }
+        }
+      } else if (r.getRelation().equals(BinaryRelation.GE)) {
+        ITerm lhs = r.getTerms().get(0);
+        ITerm rhs = r.getTerms().get(1);
+        if (lhs instanceof IntConstant && rhs instanceof IntConstant) {
+          IntConstant x = (IntConstant) lhs;
+          IntConstant y = (IntConstant) rhs;
+          return x.getVal() >= y.getVal();
         }
       }
       break;
@@ -485,6 +499,24 @@ public class Simplifier {
     } else {
       return f;
     }
+  }
+
+  public static boolean isTautology(IFormula f) {
+    Collection<Disjunction> emptyTheory = Collections.emptySet();
+    return isTautology(f, emptyTheory);
+  }
+
+  public static boolean isContradiction(IFormula f) {
+    Collection<Disjunction> emptyTheory = Collections.emptySet();
+    return isContradiction(f, emptyTheory);
+  }
+
+  public static IFormula simplify(IFormula f) {
+    Collection<Disjunction> emptyTheory = Collections.emptySet();
+    Collection<IFormula> single = Collections.singleton(f);
+    Collection<IFormula> result = propositionalSimplify(single, emptyTheory);
+    assert result.size() == 1;
+    return result.iterator().next();
   }
 
 }
