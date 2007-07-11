@@ -3,7 +3,6 @@
  */
 package com.ibm.wala.cast.java.translator.polyglot;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,6 +31,7 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -42,9 +42,9 @@ import com.ibm.wala.util.debug.Assertions;
  * @author rfuhrer
  */
 public class PolyglotIdentityMapper implements IdentityMapper<Type,CodeInstance,FieldInstance> {
-    private final Map<Type,TypeReference> fTypeMap= new HashMap<Type,TypeReference>();
-    private final Map<FieldInstance,FieldReference> fFieldMap= new HashMap<FieldInstance,FieldReference>();
-    private final Map<CodeInstance,MethodReference> fMethodMap= new HashMap<CodeInstance,MethodReference>();
+    private final Map<Type,TypeReference> fTypeMap= HashMapFactory.make();
+    private final Map<FieldInstance,FieldReference> fFieldMap= HashMapFactory.make();
+    private final Map<CodeInstance,MethodReference> fMethodMap= HashMapFactory.make();
 
     /**
      * Map from Polyglot local ClassTypes to their enclosing methods. Used by localTypeToTypeID().<br>

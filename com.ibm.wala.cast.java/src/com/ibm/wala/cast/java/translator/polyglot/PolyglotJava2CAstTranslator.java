@@ -20,7 +20,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -145,6 +144,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.IteratorPlusOne;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -1867,7 +1867,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
     final CAstNodeTypeMapRecorder fNodeTypeMap = new CAstNodeTypeMapRecorder();
 
-    private final Map<Node, String> labelMap = new HashMap<Node, String>(2);
+    private final Map<Node, String> labelMap = HashMapFactory.make(2);
 
     private final Map<CAstNode, CAstEntity> fEntities;
 
@@ -2322,7 +2322,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     if (!classContext.getStaticInitializers().isEmpty()) {
       InitializerInstance initInstance = new InitializerInstance_c(fTypeSystem, n.position(), classType, Flags.STATIC);
 
-      Map<CAstNode, CAstEntity> childEntities = new HashMap<CAstNode, CAstEntity>();
+      Map<CAstNode, CAstEntity> childEntities = HashMapFactory.make();
       final MethodContext mc = new MethodContext(initInstance, childEntities, classContext);
 
       List inits = classContext.getStaticInitializers();
@@ -2343,7 +2343,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     for (Iterator iter = superConstructors.iterator(); iter.hasNext();) {
       ConstructorInstance superCtor = (ConstructorInstance) iter.next();
 
-      Map<CAstNode, CAstEntity> childEntities = new HashMap<CAstNode, CAstEntity>();
+      Map<CAstNode, CAstEntity> childEntities = HashMapFactory.make();
       final MethodContext mc = new MethodContext(superCtor, childEntities, classContext);
 
       String[] fakeArguments = new String[superCtor.formalTypes().size() + 1];

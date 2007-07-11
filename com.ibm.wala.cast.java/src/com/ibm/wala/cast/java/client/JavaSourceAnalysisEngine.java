@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.client;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
@@ -35,6 +34,7 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.Value;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.XMLSetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -49,17 +49,17 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
   /**
    * Modules which are user-space code
    */
-  private final Set<Module> userEntries = new HashSet<Module>();
+  private final Set<Module> userEntries = HashSetFactory.make();
 
   /**
    * Modules which are source code
    */
-  private final Set<Module> sourceEntries = new HashSet<Module>();
+  private final Set<Module> sourceEntries = HashSetFactory.make();
 
   /**
    * Modules which are system or library code TODO: what about extension loader?
    */
-  private final Set<Module> systemEntries = new HashSet<Module>();
+  private final Set<Module> systemEntries = HashSetFactory.make();
 
   public JavaSourceAnalysisEngine() {
     super();

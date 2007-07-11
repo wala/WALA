@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.ipa.callgraph;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -26,6 +25,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
@@ -40,7 +40,7 @@ public class JavaScopeMappingInstanceKeys extends ScopeMappingInstanceKeys {
     IClass cls = base.getConcreteType();
     if (isPossiblyLexicalClass(cls)) {
       try {
-        Set<LexicalParent> result = new HashSet<LexicalParent>();
+        Set<LexicalParent> result = HashSetFactory.make();
 
         for (Iterator MS = cls.getAllMethods().iterator(); MS.hasNext();) {
           IMethod m = (IMethod) MS.next();
