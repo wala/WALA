@@ -96,7 +96,10 @@ public class CNFFormula extends AbstractBinaryFormula {
       case BINARY:
       case NEGATION: {
         f = trivialCleanup(f);
-
+        if (DEBUG) {
+          System.err.println("after trivial cleanup " + f);
+        }
+        
         f = eliminateArrows(f);
         if (DEBUG) {
           System.err.println("after eliminate arrows " + f);
