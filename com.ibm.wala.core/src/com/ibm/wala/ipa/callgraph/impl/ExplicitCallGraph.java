@@ -146,8 +146,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       super(method, C);
     }
 
-    @Override
-    public Set<CGNode> getPossibleTargets(CallSiteReference site) {
+    protected Set<CGNode> getPossibleTargets(CallSiteReference site) {
       Object result = targets.get(site.getProgramCounter());
 
       if (result == null) {
@@ -165,7 +164,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       }
     }
 
-    public IntSet getPossibleTargetNumbers(CallSiteReference site) {
+    protected IntSet getPossibleTargetNumbers(CallSiteReference site) {
       Object t = targets.get(site.getProgramCounter());
 
       if (t == null) {
@@ -180,7 +179,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     /*
      * @see com.ibm.wala.ipa.callgraph.CGNode#getPossibleSites(com.ibm.wala.ipa.callgraph.CGNode)
      */
-    public Iterator<CallSiteReference> getPossibleSites(final CGNode to) {
+    protected Iterator<CallSiteReference> getPossibleSites(final CGNode to) {
       final int n = getCallGraph().getNumber(to);
       return new FilterIterator<CallSiteReference>(iterateSites(), new Filter() {
         public boolean accepts(Object o) {
@@ -188,6 +187,19 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
           return s == null ? false : s.contains(n);
         }
       });
+    }
+    
+
+    protected int getNumberOfTargets(CallSiteReference site) {
+      Object result = targets.get(site.getProgramCounter());
+
+      if (result == null) {
+        return 0;
+      } else if (result instanceof CGNode) {
+        return 1;
+      } else {
+        return ((IntSet) result).size();
+      }
     }
 
     @Override
@@ -229,20 +241,6 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       }
     }
 
-    /*
-     * @see com.ibm.detox.ipa.callgraph.CGNode#getNumberOfTargets(com.ibm.wala.classLoader.CallSiteReference)
-     */
-    public int getNumberOfTargets(CallSiteReference site) {
-      Object result = targets.get(site.getProgramCounter());
-
-      if (result == null) {
-        return 0;
-      } else if (result instanceof CGNode) {
-        return 1;
-      } else {
-        return ((IntSet) result).size();
-      }
-    }
 
     /*
      * @see com.ibm.wala.ipa.callgraph.CGNode#iterateSites()
@@ -295,7 +293,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       return getMethod().hashCode() * 8681 + getContext().hashCode();
     }
 
-    public MutableSharedBitVectorIntSet getAllTargetNumbers() {
+    protected MutableSharedBitVectorIntSet getAllTargetNumbers() {
       return allTargets;
     }
 
@@ -440,5 +438,44 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
 
   protected ExplicitEdgeManager makeEdgeManger() {
     return new ExplicitEdgeManager();
+  }
+
+  public int getNumberOfTargets(CGNode node, CallSiteReference site) {
+    if (!containsNode(node)) {
+      throw new IllegalArgumentException("node not in callgraph " + node);
+    }
+    assert (node instanceof ExplicitNode);
+    ExplicitNode n = (ExplicitNode)node;
+    return n.getNumberOfTargets(site);
+  }
+
+  public Iterator<CallSiteReference> getPossibleSites(CGNode src, CGNode target) {
+    if (!containsNode(src)) {
+      throw new IllegalArgumentException("node not in callgraph " + src);
+    }
+    if (!containsNode(target)) {
+      throw new IllegalArgumentException("node not in callgraph " + target);
+    }
+    assert (src instanceof ExplicitNode);
+    ExplicitNode n = (ExplicitNode)src;
+    return n.getPossibleSites(target);
+  }
+
+  public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
+    if (!containsNode(node)) {
+      throw new IllegalArgumentException("node not in callgraph " + node);
+    }
+    assert (node instanceof ExplicitNode);
+    ExplicitNode n = (ExplicitNode)node;
+    return n.getPossibleTargets(site);
+  }
+  
+  public IntSet getPossibleTargetNumbers(CGNode node, CallSiteReference site) {
+    if (!containsNode(node)) {
+      throw new IllegalArgumentException("node not in callgraph " + node);
+    }
+    assert (node instanceof ExplicitNode);
+    ExplicitNode n = (ExplicitNode)node;
+    return n.getPossibleTargetNumbers(site);
   }
 }

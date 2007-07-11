@@ -21,6 +21,7 @@ import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
@@ -96,6 +97,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   private final Map<CGNode, OrdinalSet<PointerKey>> mod;
 
   private final DataDependenceOptions dOptions;
+  
+  private final CallGraph cg;
 
   /**
    * @param mod
@@ -109,12 +112,13 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    */
   public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
-      HeapExclusions exclusions) {
+      HeapExclusions exclusions, CallGraph cg) {
 
     super();
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
+    this.cg = cg;
     this.node = node;
     this.heapModel = pa == null ? null : new DelegatingExtendedHeapModel(pa.getHeapModel());
     this.pa = pa;
@@ -493,7 +497,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     Collection<Statement> relevantStatements = Iterator2Collection.toCollection(new FilterIterator<Statement>(iterator(), f));
 
     Map<Statement, OrdinalSet<Statement>> heapReachingDefs = dOptions.isIgnoreHeap() ? null : HeapReachingDefs.computeReachingDefs(
-        node, ir, pa, mod, relevantStatements, new HeapExclusions(SetComplement.complement(new SingletonSet(t))));
+        node, ir, pa, mod, relevantStatements, new HeapExclusions(SetComplement.complement(new SingletonSet(t))), cg);
 
     for (Statement st : heapReachingDefs.keySet()) {
       switch (st.getKind()) {
@@ -829,13 +833,13 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     }
 
     if (!dOptions.isIgnoreHeap()) {
-      OrdinalSet<PointerKey> uref = unionHeapLocations(node, call, ref);
+      OrdinalSet<PointerKey> uref = unionHeapLocations(cg, node, call, ref);
       for (PointerKey p : uref) {
         Statement st = new HeapStatement.ParamCaller(node, callIndex, p);
         addNode(st);
         params.add(st);
       }
-      OrdinalSet<PointerKey> umod = unionHeapLocations(node, call, mod);
+      OrdinalSet<PointerKey> umod = unionHeapLocations(cg, node, call, mod);
       for (PointerKey p : umod) {
         Statement st = new HeapStatement.ReturnCaller(node, callIndex, p);
         addNode(st);
@@ -847,10 +851,10 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   /**
    * @return the set of all locations read by any callee at a call site.
    */
-  private OrdinalSet<PointerKey> unionHeapLocations(CGNode n, SSAAbstractInvokeInstruction call,
+  private OrdinalSet<PointerKey> unionHeapLocations(CallGraph cg, CGNode n, SSAAbstractInvokeInstruction call,
       Map<CGNode, OrdinalSet<PointerKey>> loc) {
     BitVectorIntSet bv = new BitVectorIntSet();
-    for (CGNode t : n.getPossibleTargets(call.getCallSite())) {
+    for (CGNode t : cg.getPossibleTargets(n, call.getCallSite())) {
       bv.addAll(loc.get(t).getBackingSet());
     }
     return new OrdinalSet<PointerKey>(bv, loc.get(n).getMapping());

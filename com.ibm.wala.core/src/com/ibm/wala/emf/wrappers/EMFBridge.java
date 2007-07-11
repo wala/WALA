@@ -65,7 +65,7 @@ public class EMFBridge {
       for (Iterator it2 = n.iterateSites(); it2.hasNext();) {
         CallSiteReference site = (CallSiteReference) it2.next();
         ECallSite eSite = makeCallSite(method, site);
-        for (Iterator it3 = n.getPossibleTargets(site).iterator(); it3.hasNext();) {
+        for (Iterator it3 = cg.getPossibleTargets(n,site).iterator(); it3.hasNext();) {
           CGNode target = (CGNode) it3.next();
           result.addEdge(eSite, makeJavaMethod(target.getMethod().getReference()));
         }

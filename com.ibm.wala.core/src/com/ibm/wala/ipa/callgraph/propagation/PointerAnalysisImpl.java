@@ -424,14 +424,12 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   /**
-   * @param node
-   * @param call
    * @return the points-to set for the exceptional return values from a
    *         particular call site
    */
   private OrdinalSet<InstanceKey> computeImplicitExceptionsForCall(CGNode node, SSAInvokeInstruction call) {
     MutableSparseIntSet S = new MutableSparseIntSet();
-    for (Iterator it = node.getPossibleTargets(call.getCallSite()).iterator(); it.hasNext();) {
+    for (Iterator it = getCallGraph().getPossibleTargets(node, call.getCallSite()).iterator(); it.hasNext();) {
       CGNode target = (CGNode) it.next();
       PointerKey retVal = pointerKeys.getPointerKeyForExceptionalReturnValue(target);
       IntSet set = getPointsToSet(retVal).getBackingSet();

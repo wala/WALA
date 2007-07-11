@@ -188,7 +188,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
             }
           }
 
-          IntSet targets = caller.getPossibleTargetNumbers(site);
+          IntSet targets = getCallGraph().getPossibleTargetNumbers(caller,site);
           if (targets != null && targets.contains(target.getGraphNodeId())) {
             // do nothing; we've previously discovered and handled this
             // receiver for this call site.

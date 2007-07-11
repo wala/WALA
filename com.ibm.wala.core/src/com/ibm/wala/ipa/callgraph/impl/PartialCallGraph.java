@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -124,5 +125,20 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
     }
 
     return x;
+  }
+
+  public int getNumberOfTargets(CGNode node, CallSiteReference site) {
+    Assertions.UNREACHABLE("TODO");
+    return 0;
+  }
+
+  public Iterator<CallSiteReference> getPossibleSites(CGNode src, CGNode target) {
+    Assertions.UNREACHABLE("TODO");
+    return null;
+  }
+
+  public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
+    Assertions.UNREACHABLE("TODO");
+    return null;
   }
 }

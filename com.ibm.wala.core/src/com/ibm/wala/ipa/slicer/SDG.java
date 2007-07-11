@@ -212,7 +212,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         Collection<Statement> result = Iterator2Collection.toCollection(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
-          for (CGNode t : N.getNode().getPossibleTargets(call.getCallSite())) {
+          for (CGNode t : cg.getPossibleTargets(N.getNode(),call.getCallSite())) {
             Statement s = new ParamStatement.ExceptionalReturnCallee(t);
             addNode(s);
             result.add(s);
@@ -226,7 +226,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         Collection<Statement> result = Iterator2Collection.toCollection(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
-          for (CGNode t : N.getNode().getPossibleTargets(call.getCallSite())) {
+          for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
             Statement s = new ParamStatement.NormalReturnCallee(t);
             addNode(s);
             result.add(s);
@@ -240,7 +240,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         Collection<Statement> result = Iterator2Collection.toCollection(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
-          for (CGNode t : N.getNode().getPossibleTargets(call.getCallSite())) {
+          for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
             if (mod.get(t).contains(r.getLocation())) {
               Statement s = new HeapStatement.ReturnCallee(t, r.getLocation());
               addNode(s);
@@ -258,7 +258,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           // data dependence predecessors
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
             CGNode caller = it.next();
-            for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
+            for (Iterator<CallSiteReference> it2 = cg.getPossibleSites(caller, N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
               IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
@@ -287,7 +287,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           // data dependence predecessors
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
             CGNode caller = it.next();
-            for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
+            for (Iterator<CallSiteReference> it2 = cg.getPossibleSites(caller, N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
               IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
@@ -312,7 +312,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         if (!cOptions.equals(ControlDependenceOptions.NONE)) {
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
             CGNode caller = it.next();
-            for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
+            for (Iterator<CallSiteReference> it2 = cg.getPossibleSites(caller, N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
               IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
@@ -346,7 +346,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           if (ns.getInstruction() instanceof SSAAbstractInvokeInstruction) {
             HashSet<Statement> result = HashSetFactory.make();
             SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ns.getInstruction();
-            for (CGNode t : N.getNode().getPossibleTargets(call.getCallSite())) {
+            for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
               Statement s = new MethodEntryStatement(t);
               addNode(s);
               result.add(s);
@@ -371,7 +371,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           // data dependence predecessors
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
             CGNode caller = it.next();
-            for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
+            for (Iterator<CallSiteReference> it2 = cg.getPossibleSites(caller, N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
               IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
@@ -393,7 +393,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           // data dependence predecessors
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
             CGNode caller = it.next();
-            for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
+            for (Iterator<CallSiteReference> it2 = cg.getPossibleSites(caller, N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
               IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
@@ -416,7 +416,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           // data dependence predecessors
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
             CGNode caller = it.next();
-            for (Iterator<CallSiteReference> it2 = caller.getPossibleSites(N.getNode()); it2.hasNext();) {
+            for (Iterator<CallSiteReference> it2 = cg.getPossibleSites(caller, N.getNode()); it2.hasNext();) {
               CallSiteReference site = it2.next();
               IR ir = caller.getIR();
               IntSet indices = ir.getCallInstructionIndices(site);
@@ -437,7 +437,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         Collection<Statement> result = HashSetFactory.make(5);
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence successors
-          for (CGNode t : N.getNode().getPossibleTargets(call.getCallSite())) {
+          for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
             for (int i = 0; i < t.getMethod().getNumberOfParameters(); i++) {
               if (call.getUse(i) == pac.getValueNumber()) {
                 Statement s = new ParamStatement.ParamCallee(t, i + 1);
@@ -455,7 +455,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         Collection<Statement> result = HashSetFactory.make(5);
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence successors
-          for (CGNode t : N.getNode().getPossibleTargets(call.getCallSite())) {
+          for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
             if (ref.get(t).contains(pc.getLocation())) {
               Statement s = new HeapStatement.ParamCallee(t, pc.getLocation());
               addNode(s);
@@ -480,7 +480,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           if (dst instanceof MethodEntryStatement) {
             if (ns.getInstruction() instanceof SSAAbstractInvokeInstruction) {
               SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ns.getInstruction();
-              return src.getNode().getPossibleTargets(call.getCallSite()).contains(dst.getNode());
+              return cg.getPossibleTargets(src.getNode(), call.getCallSite()).contains(dst.getNode());
             } else {
               return false;
             }
@@ -502,7 +502,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         }
         if (dst.getKind().equals(Kind.EXC_RET_CALLER)) {
           ParamStatement.ExceptionalReturnCaller r = (ParamStatement.ExceptionalReturnCaller) dst;
-          return r.getNode().getPossibleTargets(r.getCall().getCallSite()).contains(src.getNode());
+          return cg.getPossibleTargets(r.getNode(), r.getCall().getCallSite()).contains(src.getNode());
         } else {
           return false;
         }
@@ -513,7 +513,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         }
         if (dst.getKind().equals(Kind.NORMAL_RET_CALLER)) {
           ParamStatement.NormalReturnCaller r = (ParamStatement.NormalReturnCaller) dst;
-          return r.getNode().getPossibleTargets(r.getCall().getCallSite()).contains(src.getNode());
+          return cg.getPossibleTargets(r.getNode(), r.getCall().getCallSite()).contains(src.getNode());
         } else {
           return false;
         }
@@ -526,7 +526,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           HeapStatement.ReturnCaller r = (HeapStatement.ReturnCaller) dst;
           HeapStatement h = (HeapStatement) src;
           return h.getLocation().equals(r.getLocation())
-              && r.getNode().getPossibleTargets(r.getCall().getCallSite()).contains(src.getNode());
+              && cg.getPossibleTargets(r.getNode(), r.getCall().getCallSite()).contains(src.getNode());
         } else {
           return false;
         }
@@ -540,7 +540,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           ParamStatement.ParamCaller caller = (ParamStatement.ParamCaller) src;
 
           return caller.getValueNumber() == callee.getValueNumber()
-              && caller.getNode().getPossibleTargets(caller.getCall().getCallSite()).contains(callee.getNode());
+              && cg.getPossibleTargets(caller.getNode(), caller.getCall().getCallSite()).contains(callee.getNode());
         } else {
           return false;
         }
@@ -554,7 +554,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           HeapStatement.ParamCaller caller = (HeapStatement.ParamCaller) src;
 
           return caller.getLocation().equals(callee.getLocation())
-              && caller.getNode().getPossibleTargets(caller.getCall().getCallSite()).contains(callee.getNode());
+              && cg.getPossibleTargets(caller.getNode(), caller.getCall().getCallSite()).contains(callee.getNode());
         } else {
           return false;
         }
@@ -618,7 +618,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   public PDG getPDG(CGNode node) {
     PDG result = pdgMap.get(node);
     if (result == null) {
-      result = new PDG(node, pa, mod, ref, dOptions, cOptions, heapExclude);
+      result = new PDG(node, pa, mod, ref, dOptions, cOptions, heapExclude, cg);
       pdgMap.put(node, result);
       for (Iterator<? extends Statement> it = result.iterator(); it.hasNext();) {
         nodeMgr.addNode(it.next());
@@ -629,6 +629,10 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
 
   public ControlDependenceOptions getCOptions() {
     return cOptions;
+  }
+
+  public CallGraph getCallGraph() {
+    return cg;
   }
 
 }

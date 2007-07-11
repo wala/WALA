@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph;
 
 import java.util.Iterator;
-import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -44,40 +43,44 @@ public interface CGNode extends INodeWithNumber, ContextItem {
    */
   public Context getContext();
 
-  /**
-   * Return the set of CGNodes that represent possible targets 
-   * of a particular call site when invoked in this context.
-   */
-  Set<CGNode> getPossibleTargets(CallSiteReference site);
+//  /**
+//   * Return the set of CGNodes that represent possible targets 
+//   * of a particular call site when invoked in this context.
+//   */
+//  Set<CGNode> getPossibleTargets(CallSiteReference site);
 
   /**
    * @return Iterator of CallSiteReference
    */
   Iterator<CallSiteReference> iterateSites();
 
+//  /**
+//   * @param target
+//   * @return iterator of CallSiteReference, the call sites in this node that might
+//   * dispatch to the target node.
+//   */
+//  Iterator<CallSiteReference> getPossibleSites(CGNode target);
+//
   /**
-   * @param target
-   * @return iterator of CallSiteReference, the call sites in this node that might
-   * dispatch to the target node.
-   */
-  Iterator<CallSiteReference> getPossibleSites(CGNode target);
-
-  /**
+   * This is for use only by call graph builders ... not by the general
+   * public.  Clients should not use this.
+   * 
    * Record that a particular call site might resolve to a call to a 
    * particular target node.  Returns true if this is a new target
    */
+  @Deprecated
   public boolean addTarget(CallSiteReference site, CGNode target);
 
-  /**
-   * @return the number of nodes that the call site current may resolve
-   * to
-   */
-  public int getNumberOfTargets(CallSiteReference site);
+//  /**
+//   * @return the number of nodes that the call site current may resolve
+//   * to
+//   */
+//  public int getNumberOfTargets(CallSiteReference site);
   
-  /**
-   * @return the call graph in which this node dwells
-   */
-  public CallGraph getCallGraph();
+//  /**
+//   * @return the call graph in which this node dwells
+//   */
+//  public CallGraph getCallGraph();
   
   /**
    * @return the "default" IR for this node used by the governing call graph

@@ -10,10 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.impl;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -94,9 +90,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     super();
   }
 
-  /**
-   * 
-   */
+  @SuppressWarnings("deprecation")
   public void init() {
     fakeRoot = makeFakeRootNode();
     Key k = new Key(fakeRoot.getMethod(), fakeRoot.getContext());
@@ -197,8 +191,6 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
       return method;
     }
 
-    public abstract Set<CGNode> getPossibleTargets(CallSiteReference site);
-
     /**
      * @see java.lang.Object#equals(Object)
      */
@@ -236,7 +228,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
       if (n.getMethod() != null) {
         for (Iterator sites = n.iterateSites(); sites.hasNext();) {
           CallSiteReference site = (CallSiteReference) sites.next();
-          Iterator targets = n.getPossibleTargets(site).iterator();
+          Iterator targets = getPossibleTargets(n, site).iterator();
           if (targets.hasNext()) {
             result.append(" - " + site + "\n");
           }
@@ -248,38 +240,6 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
       }
     }
     return result.toString();
-  }
-
-  /**
-   * Dump this callgraph to the specified file in dotty(1) format.
-   * @throws IllegalArgumentException  if filename is null
-   */
-  public void dump(String filename) {
-    if (filename == null) {
-      throw new IllegalArgumentException("filename is null");
-    }
-    File file = new File(filename);
-    try {
-      PrintWriter out = new PrintWriter(new FileOutputStream(file));
-      out.println("digraph callgraph {");
-      for (Iterator it = iterator(); it.hasNext();) {
-        CGNode n = (CGNode) it.next();
-        for (Iterator it2 = getSuccNodes(n); it2.hasNext();) {
-          CGNode m = (CGNode) it2.next();
-          out.println("    \"" + prettyPrint(n) + "\" -> \"" + prettyPrint(m) + "\"");
-        }
-      }
-      out.println("}");
-      out.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-    }
-  }
-
-  private String prettyPrint(CGNode n) {
-    String s = n.toString().replace(",", "\\n");
-    return s.replace(" > Context: ", "\\n");
   }
 
   @Override

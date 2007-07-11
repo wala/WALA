@@ -28,6 +28,7 @@ import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
@@ -93,7 +94,7 @@ public class HeapReachingDefs {
    *             if statements is null
    */
   public static Map<Statement, OrdinalSet<Statement>> computeReachingDefs(CGNode node, IR ir, PointerAnalysis pa,
-      Map<CGNode, OrdinalSet<PointerKey>> mod, Collection<Statement> statements, HeapExclusions exclusions) {
+      Map<CGNode, OrdinalSet<PointerKey>> mod, Collection<Statement> statements, HeapExclusions exclusions, CallGraph cg) {
 
     if (statements == null) {
       throw new IllegalArgumentException("statements is null");
@@ -129,21 +130,24 @@ public class HeapReachingDefs {
       System.err.println("Solved. ");
     }
     return makeResult(solver, domain, node, new DelegatingExtendedHeapModel(pa.getHeapModel()), pa, mod, cfg,
-        ssaInstructionIndex2Statement, exclusions);
+        ssaInstructionIndex2Statement, exclusions, cg);
   }
 
   private static class RDMap implements Map<Statement, OrdinalSet<Statement>> {
     final Map<Statement, OrdinalSet<Statement>> delegate = HashMapFactory.make();
 
     private final HeapExclusions exclusions;
+    
+    private final CallGraph cg;
 
     RDMap(BitVectorSolver<IBasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
         PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExpandedControlFlowGraph cfg,
-        Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions) {
+        Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions, CallGraph cg) {
       if (VERBOSE) {
         System.err.println("Init pointer Key mod ");
       }
       this.exclusions = exclusions;
+      this.cg = cg;
       Map<PointerKey, MutableIntSet> pointerKeyMod = initPointerKeyMod(domain, node, h, pa);
       if (VERBOSE) {
         System.err.println("Eager populate");
@@ -313,7 +317,7 @@ public class HeapReachingDefs {
         HeapStatement.ReturnCaller r = (HeapStatement.ReturnCaller) s;
         IBasicBlock bb = cfg.getBlockForInstruction(r.getCall());
         BitVectorVariable v = (BitVectorVariable) solver.getIn(bb);
-        if (allCalleesMod(r, mod) || pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
+        if (allCalleesMod(cg, r, mod) || pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
           // do nothing ... force flow into and out of the callees
           return OrdinalSet.empty();
         } else {
@@ -364,19 +368,17 @@ public class HeapReachingDefs {
   private static Map<Statement, OrdinalSet<Statement>> makeResult(BitVectorSolver<IBasicBlock> solver,
       OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis pa,
       Map<CGNode, OrdinalSet<PointerKey>> mod, ExpandedControlFlowGraph cfg,
-      Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions) {
+      Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions, CallGraph cg) {
 
-    return new RDMap(solver, domain, node, h, pa, mod, cfg, ssaInstructionIndex2Statement, exclusions);
+    return new RDMap(solver, domain, node, h, pa, mod, cfg, ssaInstructionIndex2Statement, exclusions, cg);
   }
 
   /**
    * Do all callees corresponding to the given call site def the pointer key
    * being tracked by r?
-   * 
-   * @param mod
    */
-  private static boolean allCalleesMod(ReturnCaller r, Map<CGNode, OrdinalSet<PointerKey>> mod) {
-    Collection<CGNode> targets = r.getNode().getPossibleTargets(r.getCall().getCallSite());
+  private static boolean allCalleesMod(CallGraph cg, ReturnCaller r, Map<CGNode, OrdinalSet<PointerKey>> mod) {
+    Collection<CGNode> targets = cg.getPossibleTargets(r.getNode(), r.getCall().getCallSite());
     if (targets.isEmpty()) {
       return false;
     }

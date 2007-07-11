@@ -79,7 +79,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
         Object n = it.next();
         if (n instanceof CallSite) {
           ExplicitNode delegate = (ExplicitNode) ((CallSite) n).getNode();
-          IntSet s = delegate.getPossibleTargetNumbers(((CallSite) n).getSite());
+          IntSet s = DelegatingExplicitCallGraph.this.getPossibleTargetNumbers(delegate, ((CallSite) n).getSite());
           if (s != null) {
             result.addAll(s);
           }
@@ -98,7 +98,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
         CallSite p = (CallSite) result;
         CGNode n = p.getNode();
         CallSiteReference s = p.getSite();
-        return n.getPossibleTargets(s);
+        return DelegatingExplicitCallGraph.this.getPossibleTargets(n, s);
       } else {
         return super.getPossibleTargets(site);
       }
@@ -125,7 +125,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
           Object n = it.next();
           if (n instanceof CallSite) {
             ExplicitNode delegate = (ExplicitNode) ((CallSite) n).getNode();
-            IntSet s = delegate.getPossibleTargetNumbers(((CallSite) n).getSite());
+            IntSet s = DelegatingExplicitCallGraph.this.getPossibleTargetNumbers(delegate,((CallSite) n).getSite());
             if (s!= null && s.contains(y)) {
               return true;
             }
@@ -142,7 +142,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
         CallSite p = (CallSite) result;
         CGNode n = p.getNode();
         CallSiteReference s = p.getSite();
-        return n.getNumberOfTargets(s);
+        return DelegatingExplicitCallGraph.this.getNumberOfTargets(n,s);
       } else {
         return super.getNumberOfTargets(site);
       }

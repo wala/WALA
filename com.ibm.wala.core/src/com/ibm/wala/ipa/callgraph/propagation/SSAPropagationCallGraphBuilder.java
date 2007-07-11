@@ -1418,6 +1418,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    *            if non-null, then this is the unique PointerKey that catches all
    *            exceptions from this call site.
    */
+  @SuppressWarnings("deprecation")
   private void processResolvedCall(CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
       InstanceKey[][] constParams, PointerKey uniqueCatchKey) {
 
@@ -1660,7 +1661,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               Trace.println("Warning: null target for call " + call + " " + iKey);
             }
           } else {
-            IntSet targets = node.getPossibleTargetNumbers(call.getCallSite());
+            IntSet targets = getCallGraph().getPossibleTargetNumbers(node,call.getCallSite());
             if (targets != null && targets.contains(target.getGraphNodeId())) {
               // do nothing; we've previously discovered and handled this
               // receiver for this call site.
@@ -1703,7 +1704,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     private boolean willNeverChangeAgain(IntSet receivers) {
       int bound = getBoundOnNumberOfTargets(node, call.getSite());
       if (bound > -1) {
-        int nTargets = node.getNumberOfTargets(call.getSite());
+        int nTargets = getCallGraph().getNumberOfTargets(node, call.getSite());
         if (Assertions.verifyAssertions) {
           if (nTargets > bound) {
             Trace.println("node: " + node);
@@ -1711,7 +1712,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             Trace.println("instruction " + call);
             Trace.println("nTargets: " + nTargets);
             Trace.println("bound:    " + bound);
-            for (Iterator it = node.getPossibleTargets(call.getSite()).iterator(); it.hasNext();) {
+            for (Iterator it = getCallGraph().getPossibleTargets(node, call.getSite()).iterator(); it.hasNext();) {
               Trace.println("  " + it.next());
             }
             for (IntIterator intIt = receivers.intIterator(); intIt.hasNext();) {

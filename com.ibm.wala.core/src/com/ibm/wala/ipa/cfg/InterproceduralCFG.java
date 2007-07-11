@@ -277,7 +277,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
           Trace.println("got Site: " + site);
         }
         boolean irrelevantTargets = false;
-        for (Iterator ts = n.getPossibleTargets(site).iterator(); ts.hasNext();) {
+        for (Iterator ts = cg.getPossibleTargets(n, site).iterator(); ts.hasNext();) {
           CGNode tn = (CGNode) ts.next();
           if (!relevant.accepts(tn)) {
             if (DEBUG_LEVEL > 0) {
@@ -490,7 +490,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
             IInvokeInstruction call = (IInvokeInstruction) cinsts[i];
             CallSiteReference site = makeCallSiteReference(n.getMethod().getDeclaringClass().getClassLoader().getReference(), ccfg
                 .getProgramCounter(i), call);
-            if (caller.getPossibleTargets(site).contains(n)) {
+            if (cg.getPossibleTargets(caller, site).contains(n)) {
               if (DEBUG_LEVEL > 0) {
                 Trace.println("Adding edge " + ccfg.getBlockForInstruction(i) + " to " + bb);
               }
@@ -701,7 +701,6 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   /**
-   * @param B
    * @return the set of CGNodes that B may call, according to the governing call
    *         graph.
    */
@@ -710,8 +709,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     IInvokeInstruction call = (IInvokeInstruction) statements[B.getLastInstructionIndex()];
     int pc = cfg.getProgramCounter(B.getLastInstructionIndex());
     CallSiteReference site = makeCallSiteReference(B.getMethod().getDeclaringClass().getClassLoader().getReference(), pc, call);
-    HashSet<CGNode> result = HashSetFactory.make(Bnode.getNumberOfTargets(site));
-    for (Iterator<CGNode> it = Bnode.getPossibleTargets(site).iterator(); it.hasNext();) {
+    HashSet<CGNode> result = HashSetFactory.make(cg.getNumberOfTargets(Bnode,site));
+    for (Iterator<CGNode> it = cg.getPossibleTargets(Bnode,site).iterator(); it.hasNext();) {
       CGNode target = it.next();
       result.add(target);
     }

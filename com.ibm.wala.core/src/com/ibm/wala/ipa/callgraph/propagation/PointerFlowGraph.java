@@ -461,7 +461,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
     @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
 
-      for (Iterator it = node.getPossibleTargets(instruction.getCallSite()).iterator(); it.hasNext();) {
+      for (Iterator it = cg.getPossibleTargets(node, instruction.getCallSite()).iterator(); it.hasNext();) {
         CGNode target = (CGNode) it.next();
 
         // some methods, like unmodelled natives, do not have IR.
