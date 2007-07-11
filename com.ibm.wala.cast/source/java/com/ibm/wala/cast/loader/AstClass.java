@@ -13,7 +13,6 @@ package com.ibm.wala.cast.loader;
 
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -30,6 +29,7 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 abstract public class AstClass implements IClass, ClassConstants {
@@ -106,7 +106,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   public abstract IClass getSuperclass()  throws ClassHierarchyException;
   
   private Collection<IClass> gatherInterfaces() throws ClassHierarchyException {
-    Set<IClass> result = new HashSet<IClass>();
+    Set<IClass> result = HashSetFactory.make();
     result.addAll( getDirectInterfaces() );
     if (getSuperclass() != null)
       result.addAll( getSuperclass().getAllImplementedInterfaces() );
@@ -164,7 +164,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   }
 
   public Collection<IField> getDeclaredInstanceFields() {
-    Set<IField> result = new HashSet<IField>();
+    Set<IField> result = HashSetFactory.make();
     for(Iterator<IField> FS = declaredFields.values().iterator(); FS.hasNext();) {
       IField F = FS.next();
       if (! F.isStatic()) {
@@ -176,7 +176,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   }
     
   public Collection<IField> getDeclaredStaticFields() {
-    Set<IField> result = new HashSet<IField>();
+    Set<IField> result = HashSetFactory.make();
     for(Iterator<IField> FS = declaredFields.values().iterator(); FS.hasNext();) {
       IField F = FS.next();
       if (F.isStatic()) {
@@ -188,7 +188,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   }
 
   public Collection<IField> getAllInstanceFields() throws ClassHierarchyException {
-    Collection<IField> result = new HashSet<IField>();
+    Collection<IField> result = HashSetFactory.make();
     result.addAll( getDeclaredInstanceFields() );
     if (getSuperclass() != null) {
       result.addAll( getSuperclass().getAllInstanceFields() );
@@ -198,7 +198,7 @@ abstract public class AstClass implements IClass, ClassConstants {
   }
 
   public Collection<IField> getAllStaticFields() throws ClassHierarchyException {
-    Collection<IField> result = new HashSet<IField>();
+    Collection<IField> result = HashSetFactory.make();
     result.addAll( getDeclaredStaticFields() );
     if (getSuperclass() != null) {
       result.addAll( getSuperclass().getAllStaticFields() );
@@ -208,14 +208,14 @@ abstract public class AstClass implements IClass, ClassConstants {
   }
 
   public Collection<IField> getAllFields() throws ClassHierarchyException {
-    Collection<IField> result = new HashSet<IField>();
+    Collection<IField> result = HashSetFactory.make();
     result.addAll( getAllInstanceFields() );
     result.addAll( getAllStaticFields() );
     return result;
   }
   
   public Collection<IMethod> getAllMethods() throws ClassHierarchyException {
-    Collection<IMethod> result = new HashSet<IMethod>();
+    Collection<IMethod> result = HashSetFactory.make();
     for(Iterator<IMethod> ms = getDeclaredMethods().iterator(); ms.hasNext(); ) {
       result.add( ms.next() );
     }

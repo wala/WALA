@@ -29,6 +29,7 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 public class AstIRFactory implements IRFactory {
@@ -38,7 +39,9 @@ public class AstIRFactory implements IRFactory {
 
   AstIRFactory(boolean keepIR) {
     this.keepIR = keepIR;
-    this.keptIRs = (keepIR) ? new HashMap<IMethod, IR>() : null;
+    
+    HashMap<IMethod, IR> m = HashMapFactory.make();
+    this.keptIRs = (keepIR) ? m : null;
   }
 
   public ControlFlowGraph makeCFG(final IMethod method, final Context context) {

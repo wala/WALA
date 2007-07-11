@@ -26,6 +26,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
@@ -108,7 +109,8 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
         if (AstTranslator.DEBUG_LEXICAL)
           Trace.println("starting search for parents at " + creator);
 
-        scan(0, parents.length, parents, creator, new HashSet<CGNode>(5));
+        HashSet<CGNode> s = HashSetFactory.make(5);
+        scan(0, parents.length, parents, creator, s);
       }
 
       CGNode getDefiningNode(String definer) {

@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.ipa.callgraph;
 
 import java.util.ConcurrentModificationException;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -33,6 +32,7 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Function;
+import com.ibm.wala.util.collections.HashSetFactory;
 
 public class AstCallGraph extends ExplicitCallGraph {
   public AstCallGraph(IClassHierarchy cha, AnalysisOptions options) {
@@ -123,7 +123,7 @@ public class AstCallGraph extends ExplicitCallGraph {
     public void addCallback(Function<Object,Object> callback) {
       if (! hasCallback(callback)) {
 	if (callbacks == null) {
-	  callbacks = new HashSet<Function<Object,Object>>(1);
+	  callbacks = HashSetFactory.make(1);
 	}
 
 	callbacks.add(callback);
@@ -137,7 +137,7 @@ public class AstCallGraph extends ExplicitCallGraph {
     public void addAllCallbacks(Set<Function<Object,Object>> callback) {
       if (! hasAllCallbacks(callbacks)) {
 	if (callbacks == null) {
-	  callbacks = new HashSet<Function<Object,Object>>(1);
+	  callbacks = HashSetFactory.make(1);
 	}
 
 	callbacks.addAll(callbacks);

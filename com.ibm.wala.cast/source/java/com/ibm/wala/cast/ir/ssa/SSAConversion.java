@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.ir.ssa;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -29,6 +28,8 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.IR.SSA2LocalMap;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.BitVector;
@@ -123,9 +124,9 @@ public class SSAConversion extends AbstractSSAConversion {
 
     final int instructionIndex;
 
-    final Set<Object> renamedUses = new HashSet<Object>(2);
+    final Set<Object> renamedUses = HashSetFactory.make(2);
 
-    private final Set<CopyPropagationRecord> childRecords = new HashSet<CopyPropagationRecord>(1);
+    private final Set<CopyPropagationRecord> childRecords = HashSetFactory.make(1);
 
     public int hashCode() {
       return instructionIndex;
@@ -442,8 +443,9 @@ public class SSAConversion extends AbstractSSAConversion {
   @SuppressWarnings("unchecked")
   private SSAConversion(AstMethod M, AstIR ir, SSAOptions options) {
     super(ir, options);
+    HashMap<Object, CopyPropagationRecord> m = HashMapFactory.make();
     this.copyPropagationMap = (ir.getLocalMap() instanceof SSAInformation) ? ((SSAInformation) ir.getLocalMap()).getCopyHistory()
-        : new HashMap<Object,CopyPropagationRecord>();
+        : m;
 
     this.ir = ir;
     this.debugInfo = M.debugInfo;

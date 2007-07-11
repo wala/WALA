@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -23,6 +22,7 @@ import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
@@ -68,7 +68,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
   }
 
   public Iterator<Entrypoint> iterator() {
-    Set<Entrypoint> ES = new HashSet<Entrypoint>();
+    Set<Entrypoint> ES = HashSetFactory.make();
     Iterator<IClass> classes = scriptType.getClassLoader().iterateAllClasses();
     while (classes.hasNext()) {
       IClass cls = classes.next();

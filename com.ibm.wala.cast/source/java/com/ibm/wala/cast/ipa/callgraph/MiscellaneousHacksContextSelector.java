@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -28,6 +27,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
@@ -43,7 +43,7 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
       String[][] descriptors) {
     basePolicy = base;
     specialPolicy = special;
-    methodsToSpecialize = new HashSet<MethodReference>();
+    methodsToSpecialize = HashSetFactory.make();
     for (int i = 0; i < descriptors.length; i++) {
       String[] descr = descriptors[i];
       switch (descr.length) {

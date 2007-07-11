@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -27,6 +26,8 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 
 public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
@@ -60,14 +61,13 @@ public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
     return new ObjectPropertyCatalogKey(I);
   }
 
-  private final Map<IField, Set<PointerKey>> specificStringKeys = new HashMap<IField, Set<PointerKey>>();
-
-  // private final Map specificIndexKeys = new HashMap();
+  private final Map<IField, Set<PointerKey>> specificStringKeys = HashMapFactory.make();
 
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField f) {
     PointerKey fk = base.getPointerKeyForInstanceField(I, f);
     if (!specificStringKeys.containsKey(f)) {
-      specificStringKeys.put(f, new HashSet<PointerKey>());
+      HashSet<PointerKey> s = HashSetFactory.make();
+      specificStringKeys.put(f, s);
     }
 
     specificStringKeys.get(f).add(fk);

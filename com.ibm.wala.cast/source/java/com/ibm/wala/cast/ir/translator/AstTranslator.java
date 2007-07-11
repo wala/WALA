@@ -13,7 +13,6 @@ package com.ibm.wala.cast.ir.translator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -71,6 +70,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.Function;
 import com.ibm.wala.util.MapIterator;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -1773,7 +1773,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
       this.topEntityScope = entityScope;
 
-      this.allEntityScopes = new HashSet<Scope>();
+      this.allEntityScopes = HashSetFactory.make();
       this.allEntityScopes.add(entityScope);
 
       cfg = new IncipientCFG();

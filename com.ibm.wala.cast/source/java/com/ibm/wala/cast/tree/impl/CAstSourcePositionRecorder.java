@@ -19,10 +19,11 @@ import java.util.Iterator;
 
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.util.collections.HashMapFactory;
 
 public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
  
-  private final HashMap<CAstNode, Position> positions = new HashMap<CAstNode, Position>();
+  private final HashMap<CAstNode, Position> positions = HashMapFactory.make();
 
   public Position getPosition(CAstNode n) {
     return positions.get(n);

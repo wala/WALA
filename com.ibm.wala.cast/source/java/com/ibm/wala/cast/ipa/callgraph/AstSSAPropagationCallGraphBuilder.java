@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.ipa.callgraph;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -71,6 +70,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.util.Function;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -671,7 +671,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         return Collections.singleton(getBuilder().getCallGraph().getFakeRootNode());
 
       } else {
-        final Set<CGNode> result = new HashSet<CGNode>();
+        final Set<CGNode> result = HashSetFactory.make();
         PointerKey F = getBuilder().getPointerKeyForLocal(opNode, 1);
 
         IR ir = getBuilder().getCFAContextInterpreter().getIR(opNode);
@@ -713,7 +713,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         return a.equals(b);
     }
 
-    private Set<PointerKey> discoveredUpwardFunargs = new HashSet<PointerKey>();
+    private Set<PointerKey> discoveredUpwardFunargs = HashSetFactory.make();
 
     private void addUpwardFunargConstraints(PointerKey lhs, String name, String definer, CGNode definingNode) {
       discoveredUpwardFunargs.add(lhs);

@@ -10,13 +10,13 @@
  *****************************************************************************/
 package com.ibm.wala.cast.util;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;
 
 public class CAstFunctions {
@@ -39,7 +39,7 @@ public class CAstFunctions {
   public static Iterator<CAstNode> iterateNodes(final CAstNode tree) {
     return new DFSDiscoverTimeIterator<CAstNode>() {
 
-      private final Map<Object, Iterator<? extends CAstNode>> pendingChildren = new HashMap<Object, Iterator<? extends CAstNode>>();
+      private final Map<Object, Iterator<? extends CAstNode>> pendingChildren = HashMapFactory.make();
 
       protected Iterator<? extends CAstNode> getPendingChildren(CAstNode n) {
         return pendingChildren.get(n);

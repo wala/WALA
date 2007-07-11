@@ -13,13 +13,13 @@ package com.ibm.wala.cast.util;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
@@ -366,7 +366,7 @@ public class CAstPattern {
   }
 
   private static class Parser {
-    private final Map<String, CAstPattern> namedPatterns = new HashMap<String, CAstPattern>();
+    private final Map<String, CAstPattern> namedPatterns = HashMapFactory.make();
 
     private final String patternString;
 

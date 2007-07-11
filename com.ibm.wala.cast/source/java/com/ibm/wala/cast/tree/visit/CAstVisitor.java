@@ -11,13 +11,13 @@
 package com.ibm.wala.cast.tree.visit;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.cast.tree.CAstEntity;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.util.CAstPrinter;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
@@ -72,7 +72,7 @@ public abstract class CAstVisitor {
    */
   protected Context makeUnwindContext(Context context, CAstNode n, CAstVisitor visitor) { return context; }
 
-  private final Map<CAstEntity, CAstEntity> entityParents = new HashMap<CAstEntity, CAstEntity>();
+  private final Map<CAstEntity, CAstEntity> entityParents = HashMapFactory.make();
 
   /**
    * Get the parent entity for a given entity.

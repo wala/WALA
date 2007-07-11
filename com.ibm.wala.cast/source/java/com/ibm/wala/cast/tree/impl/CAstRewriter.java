@@ -11,8 +11,6 @@
 package com.ibm.wala.cast.tree.impl;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -26,6 +24,8 @@ import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.CAstNodeTypeMap;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 
 public abstract class CAstRewriter<RewriteContext> {
 
@@ -63,7 +63,7 @@ public abstract class CAstRewriter<RewriteContext> {
   }
 
   private CAstControlFlowMap copyFlow(Map<CAstNode, CAstNode> nodeMap, CAstControlFlowMap orig, CAstSourcePositionMap src) {
-    Set<CAstNode> mappedOutsideNodes = new HashSet<CAstNode>(1);
+    Set<CAstNode> mappedOutsideNodes = HashSetFactory.make(1);
     Collection<CAstNode> oldSources = orig.getMappedNodes();
     CAstControlFlowRecorder newMap = new CAstControlFlowRecorder(src);
     for (Iterator<CAstNode> NS = nodeMap.keySet().iterator(); NS.hasNext();) {
@@ -178,7 +178,7 @@ public abstract class CAstRewriter<RewriteContext> {
 
   public Rewrite rewrite(CAstNode root, final CAstControlFlowMap cfg, final CAstSourcePositionMap pos, final CAstNodeTypeMap types,
       final Map<CAstNode, Collection<CAstEntity>> children) {
-    final Map<CAstNode, CAstNode> nodes = new HashMap<CAstNode, CAstNode>();
+    final Map<CAstNode, CAstNode> nodes = HashMapFactory.make();
     final CAstNode newRoot = copyNodes(root, rootContext, nodes);
     return new Rewrite() {
       private CAstControlFlowMap theCfg = null;
