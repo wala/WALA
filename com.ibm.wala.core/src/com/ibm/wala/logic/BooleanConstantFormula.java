@@ -55,4 +55,15 @@ public class BooleanConstantFormula implements IFormula {
     return d.prettyPrint(c);
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    // note that these are canonical
+    return this == obj;
+  }
+
+  @Override
+  public int hashCode() {
+    return 163 * c.hashCode();
+  }
+
 }

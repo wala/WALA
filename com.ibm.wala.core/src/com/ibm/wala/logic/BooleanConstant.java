@@ -27,4 +27,16 @@ public class BooleanConstant extends AbstractConstant {
   public String toString() {
     return Boolean.toString(val);
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    // note that these are canonical
+    return this == obj;
+  }
+
+  @Override
+  public int hashCode() {
+    return val ? 11 : 13;
+  }
+  
 }
