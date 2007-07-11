@@ -55,7 +55,7 @@ public class CloneTest extends WalaTestCase {
       CallSiteReference site = (CallSiteReference) i.next();
       if (site.isSpecial()) {
         if (site.getDeclaredTarget().getDeclaringClass().equals(TypeReference.JavaLangObject)) {
-          Set<CGNode> targets = node.getPossibleTargets(site);
+          Set<CGNode> targets = cg.getPossibleTargets(node, site);
           if (targets.size() != 1) {
             System.err.println(targets.size() + " targets found for " + site);
             for (Iterator<CGNode> k = targets.iterator(); k.hasNext();) {

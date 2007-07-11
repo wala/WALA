@@ -94,7 +94,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
         CallSiteReference csRef = (CallSiteReference) sites.next();
         if (csRef.getDeclaredTarget().equals(unary2Ref)) {
           numberOfCalls++;
-          Assertions._assert(n.getNumberOfTargets(csRef) == desiredNumberOfTargets);
+          Assertions._assert(cg.getNumberOfTargets(n, csRef) == desiredNumberOfTargets);
         }
       }
     }
