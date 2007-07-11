@@ -418,8 +418,20 @@ public class Simplifier {
     }
     switch (formula.getKind()) {
     case BINARY:
-      AbstractBinaryFormula b = (AbstractBinaryFormula) formula;
-      return BinaryFormula.make(b.getConnective(), substitute(b.getF1(), t1, t2), substitute(b.getF2(), t1, t2));
+      // some special logic to avoid uglifying CNF formula during substitution
+      if (formula instanceof CNFFormula) {
+        CNFFormula cnf = (CNFFormula) formula;
+        Collection<Disjunction> newD = HashSetFactory.make();
+        for (Disjunction d : cnf.getDisjunctions()) {
+          newD.add(substituteDisjunction(d, t1, t2));
+        }
+        return CNFFormula.make(newD);
+      } else if (formula instanceof Disjunction) {
+        return substituteDisjunction((Disjunction)formula, t1, t2);
+      } else {
+        AbstractBinaryFormula b = (AbstractBinaryFormula) formula;
+        return BinaryFormula.make(b.getConnective(), substitute(b.getF1(), t1, t2), substitute(b.getF2(), t1, t2));
+      }
     case NEGATION:
       NotFormula n = (NotFormula) formula;
       return NotFormula.make(substitute(n.getFormula(), t1, t2));
@@ -443,6 +455,14 @@ public class Simplifier {
       Assertions.UNREACHABLE();
       return null;
     }
+  }
+
+  private static Disjunction substituteDisjunction(Disjunction d, ITerm t1, ITerm t2) {
+    Collection<IFormula> clauses = HashSetFactory.make();
+    for (IFormula f : d.getClauses()) {
+      clauses.add(substitute(f, t1, t2));
+    }
+    return Disjunction.make(clauses);
   }
 
   /**
@@ -526,7 +546,7 @@ public class Simplifier {
   public static IFormula propositionalSimplify(IFormula f) {
     Collection<IFormula> emptySet = Collections.emptySet();
     Collection<IFormula> singleton = Collections.singleton(f);
-    Collection<IFormula>  result = propositionalSimplify(singleton, emptySet);
+    Collection<IFormula> result = propositionalSimplify(singleton, emptySet);
     assert result.size() == 1;
     return result.iterator().next();
   }

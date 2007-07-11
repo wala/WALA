@@ -15,6 +15,8 @@ import com.ibm.wala.logic.ILogicConstants.Quantifier;
 
 public class DefaultDecorator implements ILogicDecorator {
 
+
+
   private final static DefaultDecorator INSTANCE = new DefaultDecorator();
 
   protected DefaultDecorator() {
@@ -94,5 +96,16 @@ public class DefaultDecorator implements ILogicDecorator {
   public String prettyPrint(IRelation r) {
     return r.getSymbol();
   }
-
+  
+  public String prettyPrint(BinaryFormula f) {
+    StringBuffer result = new StringBuffer();
+    result.append(" ( ");
+    result.append(f.getF1().prettyPrint(this));
+    result.append(" ) ");
+    result.append(prettyPrint(f.getConnective()));
+    result.append(" ( ");
+    result.append(f.getF2().prettyPrint(this));
+    result.append(" )");
+    return result.toString();
+  }
 }

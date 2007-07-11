@@ -118,15 +118,7 @@ public class BinaryFormula extends AbstractBinaryFormula {
   }
   
   public String prettyPrint(ILogicDecorator d) {
-    StringBuffer result = new StringBuffer();
-    result.append(" ( ");
-    result.append(f1.prettyPrint(d));
-    result.append(" ) ");
-    result.append(d.prettyPrint(b));
-    result.append(" ( ");
-    result.append(f2.prettyPrint(d));
-    result.append(" )");
-    return result.toString();
+    return d.prettyPrint(this);
   }
 
   @Override
