@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,6 +47,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
@@ -114,7 +113,7 @@ public abstract class IRTests extends WalaTestCase {
   }
 
   protected static class GraphAssertions {
-    public final Set/* <EdgeAssertions> */<EdgeAssertions> nodeAssertions = new HashSet<EdgeAssertions>();
+    public final Set/* <EdgeAssertions> */<EdgeAssertions> nodeAssertions = HashSetFactory.make();
 
     public GraphAssertions() {
     }
@@ -189,7 +188,7 @@ public abstract class IRTests extends WalaTestCase {
 
   protected static class SourceMapAssertions {
 
-    private final Map<String, Set<SourceMapAssertion>> methodAssertions = new HashMap<String, Set<SourceMapAssertion>>();
+    private final Map<String, Set<SourceMapAssertion>> methodAssertions = HashMapFactory.make();
 
     protected void addAssertion(String method, SourceMapAssertion a) {
       Set<SourceMapAssertion> x = MapUtil.findOrCreateSet(methodAssertions, method);
