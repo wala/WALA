@@ -322,8 +322,12 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   }
 
   protected static class AstConstraintVisitor extends ConstraintVisitor implements AstInstructionVisitor {
+    
+    private final CallGraph cg;
+    
     public AstConstraintVisitor(AstSSAPropagationCallGraphBuilder builder, ExplicitCallGraph.ExplicitNode node) {
       super(builder, node);
+      this.cg = builder.callGraph;
     }
 
     protected AstSSAPropagationCallGraphBuilder getBuilder() {
@@ -586,7 +590,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
                 CGNode from = (CGNode) caller;
                 CGNode to = (CGNode) callee;
 
-                for (Iterator SS = from.getPossibleSites(to); SS.hasNext();) {
+                for (Iterator SS = cg.getPossibleSites(from,to); SS.hasNext();) {
                   CallSiteReference site = (CallSiteReference) SS.next();
 
                   PointerKey V = isLoad ? getLocalReadKey(from, site, name, definer, D) : getLocalWriteKey(from, site, name,

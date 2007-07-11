@@ -58,6 +58,7 @@ public class CrossLanguageCallGraph extends AstCallGraph {
 
   private final Map<Atom,IMethod> languageRoots = HashMapFactory.make();
 
+  @SuppressWarnings("deprecation")
   public AbstractRootMethod getLanguageRoot(Atom language) {
     if (!languageRoots.containsKey(language)) {
       AbstractRootMethod languageRoot = roots.get(language, this);
