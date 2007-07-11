@@ -27,7 +27,6 @@ public class HashSetFactory {
   final public static boolean DEBUG = false;
 
   /**
-   * @param size
    * @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise
    */
   public static <T> HashSet<T> make(int size) {
