@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +37,7 @@ import com.ibm.wala.ecore.common.EPair;
 import com.ibm.wala.ecore.common.ERelation;
 import com.ibm.wala.ecore.common.EStringHolder;
 import com.ibm.wala.ecore.regex.impl.RegexPackageImpl;
-import com.ibm.wala.util.collections.Filter;
-import com.ibm.wala.util.collections.FilterIterator;
-import com.ibm.wala.util.collections.MapUtil;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WalaException;
 
@@ -154,7 +151,7 @@ public class EUtil {
       EObject o = it.next();
       r.getContents().add(o);
     }
-    java.util.Map<String, String> options = new HashMap<String, String>();
+    java.util.Map<String, String> options = HashMapFactory.make();
     options.put(org.eclipse.emf.ecore.xmi.XMLResource.OPTION_ENCODING, "UTF-8");
     try {
       r.save(options);
@@ -183,7 +180,7 @@ public class EUtil {
     Resource r = resSet.createResource(URI.createURI("junk"));
     ByteArrayOutputStream out = new ByteArrayOutputStream();
     r.getContents().add(o);
-    java.util.Map<String, String> options = new HashMap<String, String>();
+    java.util.Map<String, String> options = HashMapFactory.make();
     options.put(org.eclipse.emf.ecore.xmi.XMLResource.OPTION_ENCODING, "UTF-8");
     try {
       r.save(out, options);
@@ -195,24 +192,24 @@ public class EUtil {
     return data;
   }
 
-  /**
-   * @param R
-   *          a releation
-   * @return a java.util.Map that holds the contents of the relation
-   * @throws IllegalArgumentException  if R is null
-   */
-  public static Map createMap(ERelation R) {
-    if (R == null) {
-      throw new IllegalArgumentException("R is null");
-    }
-    HashMap result = new HashMap();
-    for (Iterator it = R.getContents().iterator(); it.hasNext();) {
-      EPair p = (EPair) it.next();
-      Set<Object> s = MapUtil.findOrCreateSet(result, p.getX());
-      s.add(p.getY());
-    }
-    return result;
-  }
+//  /**
+//   * @param R
+//   *          a relation
+//   * @return a java.util.Map that holds the contents of the relation
+//   * @throws IllegalArgumentException  if R is null
+//   */
+//  public static Map createMap(ERelation R) {
+//    if (R == null) {
+//      throw new IllegalArgumentException("R is null");
+//    }
+//    HashMap result = new HashMap();
+//    for (Iterator it = R.getContents().iterator(); it.hasNext();) {
+//      EPair p = (EPair) it.next();
+//      Set<Object> s = MapUtil.findOrCreateSet(result, p.getX());
+//      s.add(p.getY());
+//    }
+//    return result;
+//  }
 
   /**
    * Populate an ERelation with the EObject contents of a Map
@@ -347,48 +344,48 @@ public class EUtil {
     return klass;
   }
 
-  /**
-   * @param R
-   * @param key
-   * @return the subset r \in R s.t. r.X.equals(key)
-   * @throws IllegalArgumentException  if R is null
-   */
-  public static ERelation pruneRelationForKey(ERelation R, EObject key) {
-    if (R == null) {
-      throw new IllegalArgumentException("R is null");
-    }
-    Map m = createMap(R);
-    Set s = (Set) m.get(key);
-    m = new HashMap(1);
-    if (s != null) {
-      m.put(key,s);
-    }
-    ERelation result = CommonFactory.eINSTANCE.createERelation();
-    result.setName(R.getName());
-    populateRelation(result,m);
-    return result;
-  }
-  /**
-   * @param R
-   * @param f
-   * @return the subset r \in R s.t. r.X.equals(some y s.t. f.accepts(y))
-   * @throws IllegalArgumentException  if R is null
-   */
-  public static ERelation pruneRelationForKey(ERelation R, Filter f) {
-    if (R == null) {
-      throw new IllegalArgumentException("R is null");
-    }
-    Map m = createMap(R);
-    Map newM = new HashMap();
-    for (FilterIterator it = new FilterIterator(m.keySet().iterator(),f); it.hasNext(); ) {
-      Object key = it.next();
-      newM.put(key,m.get(key));
-    }
-
-    ERelation result = CommonFactory.eINSTANCE.createERelation();
-    result.setName(R.getName());
-    populateRelation(result,newM);
-    return result;
-  }
+//  /**
+//   * @param R
+//   * @param key
+//   * @return the subset r \in R s.t. r.X.equals(key)
+//   * @throws IllegalArgumentException  if R is null
+//   */
+//  public static ERelation pruneRelationForKey(ERelation R, EObject key) {
+//    if (R == null) {
+//      throw new IllegalArgumentException("R is null");
+//    }
+//    Map m = createMap(R);
+//    Set s = (Set) m.get(key);
+//    m = new HashMap(1);
+//    if (s != null) {
+//      m.put(key,s);
+//    }
+//    ERelation result = CommonFactory.eINSTANCE.createERelation();
+//    result.setName(R.getName());
+//    populateRelation(result,m);
+//    return result;
+//  }
+//  /**
+//   * @param R
+//   * @param f
+//   * @return the subset r \in R s.t. r.X.equals(some y s.t. f.accepts(y))
+//   * @throws IllegalArgumentException  if R is null
+//   */
+//  public static ERelation pruneRelationForKey(ERelation R, Filter f) {
+//    if (R == null) {
+//      throw new IllegalArgumentException("R is null");
+//    }
+//    Map m = createMap(R);
+//    Map newM = new HashMap();
+//    for (FilterIterator it = new FilterIterator(m.keySet().iterator(),f); it.hasNext(); ) {
+//      Object key = it.next();
+//      newM.put(key,m.get(key));
+//    }
+//
+//    ERelation result = CommonFactory.eINSTANCE.createERelation();
+//    result.setName(R.getName());
+//    populateRelation(result,newM);
+//    return result;
+//  }
 
 }

@@ -25,6 +25,7 @@ import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.util.StringStuff;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NodeDecorator;
 import com.ibm.wala.util.warnings.WalaException;
@@ -77,7 +78,7 @@ public class GhostviewUtil {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
-    final HashMap<BasicBlock, String> labelMap = new HashMap<BasicBlock, String>();
+    final HashMap<BasicBlock, String> labelMap = HashMapFactory.make();
     for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
       SSACFG.BasicBlock bb = (SSACFG.BasicBlock) it.next();
       labelMap.put(bb, getNodeLabel(ir, bb));

@@ -22,6 +22,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
@@ -52,7 +53,7 @@ public class FileUtil {
     if (files == null) {
       return Collections.emptyList();
     }
-    HashSet<File> result = new HashSet<File>();
+    HashSet<File> result = HashSetFactory.make();
     for (int i = 0; i < files.length; i++) {
       if (p == null || p.matcher(files[i].getAbsolutePath()).matches()) {
         result.add(files[i]);

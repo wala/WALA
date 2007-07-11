@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.slicer.thin;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -271,7 +270,7 @@ public class ThinSlicer {
       Statement st = it.next();
       switch (st.getKind()) {
       case NORMAL:
-        Set<PointerKey> c = new HashSet<PointerKey>(ModRef.getMod(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
+        Set<PointerKey> c = HashSetFactory.make(ModRef.getMod(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
             null));
         result.put(st, c);
         break;
@@ -291,7 +290,7 @@ public class ThinSlicer {
       Statement st = it.next();
       switch (st.getKind()) {
       case NORMAL:
-        Set<PointerKey> c = new HashSet<PointerKey>(ModRef.getRef(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
+        Set<PointerKey> c = HashSetFactory.make(ModRef.getRef(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
             null));
         result.put(st, c);
         break;

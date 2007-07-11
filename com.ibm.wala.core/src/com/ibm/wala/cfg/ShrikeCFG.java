@@ -288,7 +288,7 @@ public class ShrikeCFG extends AbstractCFG {
 
           // create a mutable copy
           if (!goToAllHandlers) {
-            exceptionTypes = new HashSet<TypeReference>(exceptionTypes);
+            exceptionTypes = HashSetFactory.make(exceptionTypes);
           }
 
           for (int j = 0; j < hs.length; j++) {

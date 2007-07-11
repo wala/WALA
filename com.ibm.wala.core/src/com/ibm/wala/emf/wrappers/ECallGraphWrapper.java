@@ -12,7 +12,6 @@ package com.ibm.wala.emf.wrappers;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -37,6 +36,7 @@ import com.ibm.wala.ecore.java.EJavaMethod;
 import com.ibm.wala.ecore.java.callGraph.CallGraphFactory;
 import com.ibm.wala.ecore.java.callGraph.CallGraphPackage;
 import com.ibm.wala.ecore.java.callGraph.ECallGraph;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -145,7 +145,7 @@ public class ECallGraphWrapper extends EObjectGraphImpl {
     Resource r = new XMIResourceImpl(URI.createURI(fileName));
     XMLResource.XMLMap xmlMap = new XMLMapImpl();
     xmlMap.setNoNamespacePackage(CallGraphPackage.eINSTANCE);
-    Map<String, XMLMap> options = new HashMap<String, XMLMap>();
+    Map<String, XMLMap> options = HashMapFactory.make();
     options.put(XMLResource.OPTION_XML_MAP, xmlMap);
     try {
       r.load(options);
@@ -158,7 +158,7 @@ public class ECallGraphWrapper extends EObjectGraphImpl {
       }
       ResourceSet resSet = new ResourceSetImpl();
       r = resSet.createResource(URI.createURI("junk"));
-      options = new HashMap<String, XMLMap>();
+      options = HashMapFactory.make();
       try {
         r.load(s, options);
       } catch (IOException e2) {

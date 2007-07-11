@@ -18,6 +18,8 @@ import java.util.Map;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.util.CacheReference;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.Pair;
 
@@ -37,7 +39,7 @@ public class AuxiliaryCache {
   /**
    * A mapping from IMethod -> SSAOptions -> SoftReference -> IR
    */
-  private HashMap<Pair, Map<SSAOptions,Object>> dictionary = new HashMap<Pair, Map<SSAOptions,Object>>();
+  private HashMap<Pair, Map<SSAOptions,Object>> dictionary = HashMapFactory.make();
 
   /**
    * Help out the garbage collector: clear this cache when
@@ -54,7 +56,7 @@ public class AuxiliaryCache {
    * The existence of this is unfortunate.
    */
   public void wipe() {
-    dictionary = new HashMap<Pair, Map<SSAOptions,Object>>();
+    dictionary = HashMapFactory.make();
     nItems = 0;
   }
 
@@ -63,13 +65,13 @@ public class AuxiliaryCache {
    */
   private void reset() {
     Map<Pair, Map<SSAOptions,Object>> oldDictionary = dictionary;
-    dictionary = new HashMap<Pair, Map<SSAOptions,Object>>();
+    dictionary = HashMapFactory.make();
     nItems = 0;
 
     for (Iterator<Map.Entry<Pair,Map<SSAOptions,Object>>> it = oldDictionary.entrySet().iterator(); it.hasNext();) {
       Map.Entry<Pair,Map<SSAOptions,Object>> e = it.next();
       Map<SSAOptions,Object> m = e.getValue();
-      HashSet<Object> toRemove = new HashSet<Object>();
+      HashSet<Object> toRemove = HashSetFactory.make();
       for (Iterator it2 = m.entrySet().iterator(); it2.hasNext();) {
         Map.Entry e2 = (Map.Entry) it2.next();
         Object key = e2.getKey();

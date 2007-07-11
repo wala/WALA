@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.summaries;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -20,6 +19,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.Warning;
 
@@ -89,7 +89,7 @@ public class MethodSummary {
 
   public void addConstant(Integer vn, ConstantValue value) {
     if (constantValues == null)
-      constantValues = new HashMap<Integer, ConstantValue>(5);
+      constantValues = HashMapFactory.make(5);
     constantValues.put(vn, value);
   }
 

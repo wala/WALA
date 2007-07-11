@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -34,6 +33,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -132,7 +133,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   /**
    * a Map from CGNode->Set<IClass> that should be smushed.
    */
-  final Map<CGNode, Set> smushMap = new HashMap<CGNode, Set>();
+  final Map<CGNode, Set> smushMap = HashMapFactory.make();
 
   public ZeroXInstanceKeys(AnalysisOptions options, IClassHierarchy cha, RTAContextInterpreter contextInterpreter,
       int policy) {
@@ -200,7 +201,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     Set s = smushMap.get(node);
     if (s == null) {
       Map<IClass, Integer> count = countAllocsByType(node);
-      HashSet<IClass> smushees = new HashSet<IClass>(5);
+      HashSet<IClass> smushees = HashSetFactory.make(5);
       for (Iterator<Map.Entry<IClass, Integer>> it = count.entrySet().iterator(); it.hasNext();) {
         Map.Entry<IClass, Integer> e = it.next();
         Integer i = e.getValue();
@@ -220,7 +221,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
    *         type.
    */
   private Map<IClass, Integer> countAllocsByType(CGNode node) {
-    Map<IClass, Integer> count = new HashMap<IClass, Integer>();
+    Map<IClass, Integer> count = HashMapFactory.make();
     for (Iterator it = contextInterpreter.iterateNewSites(node); it.hasNext();) {
       NewSiteReference n = (NewSiteReference) it.next();
       IClass alloc = cha.lookupClass(n.getDeclaredType());

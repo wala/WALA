@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
  *
@@ -49,12 +49,22 @@ public class HashSetFactory {
     }
   }
 
+//
+//  /**
+//   * @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise
+//   */
+//  public static <T> HashSet<T> make(Set<T> s) {
+//    if (DEBUG) {
+//      return new ParanoidHashSet<T>(s);
+//    } else {
+//      return new HashSet<T>(s);
+//    }
+//  }
 
   /**
-   * @param s
    * @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise
    */
-  public static <T> HashSet<T> make(Set<T> s) {
+  public static <T> HashSet<T> make(Collection<T> s) {
     if (DEBUG) {
       return new ParanoidHashSet<T>(s);
     } else {

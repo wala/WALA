@@ -18,12 +18,13 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticClass;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -90,7 +91,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   public Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException {
     Collection<IClass> realIfaces = realType.isInterface() ? realType.getAllAncestorInterfaces() : realType.getAllImplementedInterfaces();
     if (realType.isInterface()) {
-      HashSet<IClass> result = new HashSet<IClass>(realIfaces);
+      HashSet<IClass> result = HashSetFactory.make(realIfaces);
       result.add(realType);
       return result;
     } else {
@@ -105,7 +106,7 @@ public class BypassSyntheticClass extends SyntheticClass {
     if (Assertions.verifyAssertions) {
       Assertions._assert(realType.isInterface());
     }
-    HashSet<IClass> result = new HashSet<IClass>(realType.getAllAncestorInterfaces().size() + 1);
+    HashSet<IClass> result = HashSetFactory.make(realType.getAllAncestorInterfaces().size() + 1);
     result.addAll(realType.getAllAncestorInterfaces());
     return result;
   }

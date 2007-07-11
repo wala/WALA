@@ -22,6 +22,7 @@ import com.ibm.wala.util.IteratorPlusTwo;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
@@ -242,7 +243,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
       boolean exceptionalIn = getNumberOfExceptionalIn(N) > 0;
       if (normalIn) {
         if (exceptionalIn) {
-          HashSet<IBasicBlock> result = new HashSet<IBasicBlock>(getNumberOfNormalIn(N) + getNumberOfExceptionalIn(N));
+          HashSet<IBasicBlock> result = HashSetFactory.make(getNumberOfNormalIn(N) + getNumberOfExceptionalIn(N));
           result.addAll(Iterator2Collection.toCollection(normalEdgeManager.getPredNodes(N)));
           result.addAll(Iterator2Collection.toCollection(exceptionalEdgeManager.getPredNodes(N)));
           if (fallThru.get(number - 1)) {

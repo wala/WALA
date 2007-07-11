@@ -260,8 +260,6 @@ public class DotUtil {
     return result.toString();
   }
 
-//  private Map fieldInfo = new HashMap();
-
   // private void computeFieldInfo() {
   // for (Iterator it = getRecordsGraphInput().iterateNodes(); it.hasNext();) {
   // ECluster c = (ECluster) it.next();

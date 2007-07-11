@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -40,6 +39,8 @@ import com.ibm.wala.ecore.java.EJavaClass;
 import com.ibm.wala.ecore.java.ETypeHierarchy;
 import com.ibm.wala.ecore.java.JavaFactory;
 import com.ibm.wala.ecore.java.JavaPackage;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IntIterator;
@@ -134,7 +135,7 @@ public class ETypeHierarchyWrapper {
 
     ResourceSet resSet = new ResourceSetImpl();
     Resource r = resSet.createResource(URI.createURI("junk"));
-    Map<String, XMLMap> options = new HashMap<String, XMLMap>();
+    Map<String, XMLMap> options = HashMapFactory.make();
     try {
       r.load(s, options);
     } catch (IOException e) {
@@ -181,7 +182,7 @@ public class ETypeHierarchyWrapper {
     if (s == null) {
       return Collections.emptySet();
     }
-    HashSet<EJavaClass> result = new HashSet<EJavaClass>(3);
+    HashSet<EJavaClass> result = HashSetFactory.make(3);
     for (IntIterator it = s.intIterator(); it.hasNext();) {
       int x = it.next();
       EJavaClass c = (EJavaClass) iface.getNode(x);

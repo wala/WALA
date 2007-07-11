@@ -13,8 +13,6 @@ package com.ibm.wala.ssa;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -36,6 +34,8 @@ import com.ibm.wala.util.Function;
 import com.ibm.wala.util.MapIterator;
 import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -180,7 +180,7 @@ public class SSACFG implements ControlFlowGraph {
     return instructions;
   }
 
-  private final Map<RefPathKey, SSAPiInstruction> piInstructions = new HashMap<RefPathKey, SSAPiInstruction>(2);
+  private final Map<RefPathKey, SSAPiInstruction> piInstructions = HashMapFactory.make(2);
 
   private class RefPathKey {
     private final int n;
@@ -856,7 +856,7 @@ public class SSACFG implements ControlFlowGraph {
     }
     final IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getExceptionalSuccessors(n).iterator();
-    final Collection<IBasicBlock> c = new HashSet<IBasicBlock>(getSuccNodeCount(b));
+    final Collection<IBasicBlock> c = HashSetFactory.make(getSuccNodeCount(b));
     for (; i.hasNext();) {
       final IBasicBlock s = (IBasicBlock) i.next();
       c.add(basicBlocks[cfg.getNumber(s)]);

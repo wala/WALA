@@ -11,7 +11,6 @@
 package com.ibm.wala.escape;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -24,6 +23,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
@@ -94,7 +94,7 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
    * @throws WalaException
    */
   private boolean mayEscape(Set allocN, int allocPC, Set nodes) throws WalaException {
-    Set<InstanceKey> instances = new HashSet<InstanceKey>();
+    Set<InstanceKey> instances = HashSetFactory.make();
     // instances := set of instance key allocated at &lt;allocMethod, allocPC>
     for (Iterator it = allocN.iterator(); it.hasNext();) {
       CGNode n = (CGNode) it.next();

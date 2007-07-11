@@ -273,7 +273,7 @@ public class ExplodedSupergraphPath<T> {
     protected Iterator<ExplodedSupergraphNode<T>> getConnected(ExplodedSupergraphNode<T> n) {
       ExplodedSupergraphNode src = n;
       PartiallyCollapsedSupergraph supergraph = (PartiallyCollapsedSupergraph) esg.getSupergraph();
-      HashSet<ExplodedSupergraphNode<T>> result = new HashSet<ExplodedSupergraphNode<T>>(esg.getPredNodeCount(n));
+      HashSet<ExplodedSupergraphNode<T>> result = HashSetFactory.make(esg.getPredNodeCount(n));
       // add facts from non-call exploded supergraph edges
       for (Iterator<? extends ExplodedSupergraphNode<T>> it = super.getConnected(n); it.hasNext();) {
         ExplodedSupergraphNode<T> dest = it.next();

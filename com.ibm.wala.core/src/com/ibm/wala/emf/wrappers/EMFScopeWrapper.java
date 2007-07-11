@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.ZipException;
@@ -47,6 +46,7 @@ import com.ibm.wala.ecore.java.scope.util.JavaScopeSwitch;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.config.XMLSetOfClasses;
 import com.ibm.wala.util.debug.Assertions;
@@ -361,7 +361,7 @@ public class EMFScopeWrapper extends AnalysisScope {
     ResourceSet resSet = new ResourceSetImpl();
     Resource r = resSet.createResource(URI.createURI(getClass() + "junk"));
     Assertions.productionAssertion(r != null);
-    Map<String, XMLMap> options = new HashMap<String, XMLMap>();
+    Map<String, XMLMap> options = HashMapFactory.make();
     try {
       r.load(s, options);
     } catch (IOException e) {
@@ -384,7 +384,7 @@ public class EMFScopeWrapper extends AnalysisScope {
       Resource r = resSet.createResource(URI.createURI(getClass().toString())); // +
       // "junk2"));
       Assertions.productionAssertion(r != null);
-      Map<String, XMLMap> options = new HashMap<String, XMLMap>();
+      Map<String, XMLMap> options = HashMapFactory.make();
       try {
         r.load(s, options);
       } catch (IOException e) {

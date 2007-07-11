@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.impl.GraphInverter;
@@ -32,7 +33,7 @@ public class GraphSlicer {
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
-    HashSet<T> roots = new HashSet<T>();
+    HashSet<T> roots = HashSetFactory.make();
     for (Iterator<? extends T> it = g.iterator(); it.hasNext();) {
       T o = it.next();
       if (f.accepts(o)) {

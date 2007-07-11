@@ -145,7 +145,7 @@ public class HeapTracer {
   private static String[] generateRootClassesFromWorkspace() {
     String classpath = System.getProperty("java.class.path");
     Object[] binDirectories = extractBinDirectories(classpath);
-    HashSet<String> classFileNames = new HashSet<String>();
+    HashSet<String> classFileNames = HashSetFactory.make();
     for (int i = 0; i < binDirectories.length; i++) {
       String dir = (String) binDirectories[i];
       File fdir = new File(dir);
@@ -172,7 +172,7 @@ public class HeapTracer {
    * @return Collection <String>representing the class names in f
    */
   private static Collection<String> findClassNames(String rootDir, File f) {
-    HashSet<String> result = new HashSet<String>();
+    HashSet<String> result = HashSetFactory.make();
     if (f.isDirectory()) {
       File[] files = f.listFiles();
       for (int i = 0; i < files.length; i++) {
@@ -197,7 +197,7 @@ public class HeapTracer {
    */
   private static Object[] extractBinDirectories(String classpath) {
     StringTokenizer t = new StringTokenizer(classpath, ";");
-    HashSet<String> result = new HashSet<String>();
+    HashSet<String> result = HashSetFactory.make();
     while (t.hasMoreTokens()) {
       String n = t.nextToken();
       if (n.indexOf("bin") > 0) {
@@ -405,7 +405,7 @@ public class HeapTracer {
 
   private final Object BAD = new Object();
 
-  private final HashMap<Package, Object> packageStatus = new HashMap<Package, Object>();
+  private final HashMap<Package, Object> packageStatus = HashMapFactory.make();
 
   private final boolean isInBadPackage(Class c) {
     Package p = c.getPackage();
@@ -479,7 +479,7 @@ public class HeapTracer {
   }
 
   private static HashSet<Field> getAllInstanceFields(Class c) {
-    HashSet<Field> result = new HashSet<Field>();
+    HashSet<Field> result = HashSetFactory.make();
     Class klass = c;
     while (klass != null) {
       Field[] fields = klass.getDeclaredFields();
@@ -493,7 +493,7 @@ public class HeapTracer {
     return result;
   }
 
-  final private HashMap<Class, Field[]> allReferenceFieldsCache = new HashMap<Class, Field[]>();
+  final private HashMap<Class, Field[]> allReferenceFieldsCache = HashMapFactory.make();
 
   /**
    * @return Field[] representing reference instance fields of a class
@@ -502,7 +502,7 @@ public class HeapTracer {
     if (allReferenceFieldsCache.containsKey(c))
       return allReferenceFieldsCache.get(c);
     else {
-      HashSet<Field> s = new HashSet<Field>();
+      HashSet<Field> s = HashSetFactory.make();
       Class klass = c;
       while (klass != null) {
         Field[] fields = klass.getDeclaredFields();
@@ -605,12 +605,12 @@ public class HeapTracer {
     /**
      * mapping: Object (key) -> Integer (number of instances in a partition)
      */
-    private final HashMap<Object, Integer> instanceCount = new HashMap<Object, Integer>();
+    private final HashMap<Object, Integer> instanceCount = HashMapFactory.make();
 
     /**
      * mapping: Object (key) -> Integer (bytes)
      */
-    private final HashMap<Object, Integer> sizeCount = new HashMap<Object, Integer>();
+    private final HashMap<Object, Integer> sizeCount = HashMapFactory.make();
 
     /**
      * Total number of instances discovered
@@ -699,7 +699,7 @@ public class HeapTracer {
     /**
      * a mapping from Field (static field roots) -> Demographics object
      */
-    private final HashMap<Field, Demographics> roots = new HashMap<Field, Demographics>();
+    private final HashMap<Field, Demographics> roots = HashMapFactory.make();
 
     /**
      * @param root

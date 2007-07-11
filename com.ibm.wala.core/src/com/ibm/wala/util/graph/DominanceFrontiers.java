@@ -10,12 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.graph.traverse.DFS;
 
@@ -27,7 +27,7 @@ import com.ibm.wala.util.graph.traverse.DFS;
  */
 public class DominanceFrontiers<T> extends Dominators<T> {
 
-  final private Map<T, Set<T>> DF = new HashMap<T, Set<T>>();
+  final private Map<T, Set<T>> DF = HashMapFactory.make();
 
   /**
    * @param G
@@ -50,7 +50,7 @@ public class DominanceFrontiers<T> extends Dominators<T> {
     Iterator<T> XS = DFS.iterateFinishTime(DT, new NonNullSingletonIterator<T>(root));
     while (XS.hasNext()) {
       T X = XS.next();
-      Set<T> DF_X = new HashSet<T>();
+      Set<T> DF_X = HashSetFactory.make();
       DF.put(X, DF_X);
 
       // DF_local

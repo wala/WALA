@@ -9,11 +9,12 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Trace;
 
 /**
@@ -38,7 +39,7 @@ public class JUnitEntryPoints {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
     }
-    final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
+    final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass klass : cha) {
 
       if (klass.getClassLoader().getReference().equals(ClassLoaderReference.Application)) {
@@ -94,7 +95,7 @@ public class JUnitEntryPoints {
       Trace.println("finding entrypoint " + targetMethodAtom + " in " + targetType);
     }
 
-    final Set<Entrypoint> entryPts = new HashSet<Entrypoint>();
+    final Set<Entrypoint> entryPts = HashSetFactory.make();
 
     // TODO: improve this so that we don't need to check all the
     // classes and method to find a match
@@ -187,7 +188,7 @@ public class JUnitEntryPoints {
     final Atom setUpMethodAtom = Atom.findOrCreateAsciiAtom("setUp");
     final Atom tearDownMethodAtom = Atom.findOrCreateAsciiAtom("tearDown");
 
-    Set<IMethod> result = new HashSet<IMethod>();
+    Set<IMethod> result = HashSetFactory.make();
 
     IClass currClass = testClass;
     while (currClass != null && !currClass.getName().equals(junitTestCaseType) && !currClass.getName().equals(junitTestSuiteType)) {

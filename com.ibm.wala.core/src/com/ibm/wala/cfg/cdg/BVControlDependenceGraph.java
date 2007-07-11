@@ -12,7 +12,6 @@ package com.ibm.wala.cfg.cdg;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
@@ -20,6 +19,8 @@ import java.util.Vector;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.EdgeManager;
@@ -49,7 +50,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
 
   private final boolean ignoreUnreachableCode;
 
-  private final HashMap<IBasicBlock, BasicBlock> bbMap = new HashMap<IBasicBlock, BasicBlock>();
+  private final HashMap<IBasicBlock, BasicBlock> bbMap = HashMapFactory.make();
 
   final private Vector<BasicBlock> seen = new Vector<BasicBlock>();
 
@@ -429,7 +430,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
 
     final private Vector<IBasicBlock> cdSucc = new Vector<IBasicBlock>(2);
 
-    final private HashMap<IBasicBlock, Set<IBasicBlock>> labelMap = new HashMap<IBasicBlock, Set<IBasicBlock>>();
+    final private HashMap<IBasicBlock, Set<IBasicBlock>> labelMap = HashMapFactory.make();
 
     private BasicBlock(IBasicBlock item) {
       this.item = item;
@@ -497,7 +498,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
       }
       Set<IBasicBlock> labelSet = labelMap.get(bb.item);
       if (labelSet == null) {
-        labelSet = new HashSet<IBasicBlock>(2);
+        labelSet = HashSetFactory.make(2);
         labelMap.put(bb.item, labelSet);
       }
       if (label != null && !labelSet.contains(label))

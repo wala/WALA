@@ -12,7 +12,6 @@ package com.ibm.wala.logic;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 
 import com.ibm.wala.logic.ILogicConstants.BinaryConnective;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -116,7 +115,7 @@ public class Disjunction extends AbstractBinaryFormula {
     if (clauses.size() == 1) {
       return BooleanConstantFormula.FALSE;
     } else {
-      Collection<IFormula> c = new HashSet<IFormula>(clauses);
+      Collection<? extends IFormula> c = HashSetFactory.make(clauses);
       c.remove(getF1());
       return make(c);
     }

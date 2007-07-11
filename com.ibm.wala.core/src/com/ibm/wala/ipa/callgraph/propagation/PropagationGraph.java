@@ -28,6 +28,7 @@ import com.ibm.wala.util.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.SmallMap;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -73,7 +74,7 @@ public class PropagationGraph implements IFixedPointSystem {
 
   private final DelegateGraph delegateGraph = new DelegateGraph();
 
-  private final HashSet<AbstractStatement> delegateStatements = new HashSet<AbstractStatement>();
+  private final HashSet<AbstractStatement> delegateStatements = HashSetFactory.make();
 
   /**
    * special representation for implicitly represented unary equations. This is

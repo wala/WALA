@@ -12,7 +12,6 @@ package com.ibm.wala.logic;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 
 import com.ibm.wala.logic.ILogicConstants.BinaryConnective;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -396,7 +395,7 @@ public class CNFFormula extends AbstractBinaryFormula {
     if (disjunctions.size() == 1) {
       return BooleanConstantFormula.TRUE;
     } else {
-      Collection<Disjunction> c = new HashSet<Disjunction>(disjunctions);
+      Collection<Disjunction> c = HashSetFactory.make(disjunctions);
       c.remove(getF1());
       return new CNFFormula(c);
     }

@@ -23,6 +23,7 @@ import com.ibm.wala.ecore.common.ERelation;
 import com.ibm.wala.ecore.java.EClassHierarchy;
 import com.ibm.wala.ecore.java.EJavaClass;
 import com.ibm.wala.ecore.java.JavaFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -130,7 +131,7 @@ public class EClassHierarchyWrapper extends EObjectTree {
 
 
   public Collection<EJavaClass> getAllSuperclasses(EJavaClass klass) {
-    HashSet<EJavaClass> result = new HashSet<EJavaClass>();
+    HashSet<EJavaClass> result = HashSetFactory.make();
     EJavaClass superclass = getSuperclass(klass);
     while (superclass != null) {
       result.add(superclass);

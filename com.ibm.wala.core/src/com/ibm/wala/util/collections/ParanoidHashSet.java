@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -48,9 +48,9 @@ public class ParanoidHashSet<T> extends HashSet<T> {
    * @param s
    * @throws NullPointerException  if s is null
    */
-  public ParanoidHashSet(Set<T> s) throws NullPointerException {
+  public ParanoidHashSet(Collection<T> s) throws NullPointerException {
     super(s.size());
-    hcFreq = new HashMap<Integer, Set<T>>(s.size());
+    hcFreq = HashMapFactory.make(s.size());
     for (Iterator<T> it = s.iterator(); it.hasNext();) {
       add(it.next());
     }
@@ -61,12 +61,12 @@ public class ParanoidHashSet<T> extends HashSet<T> {
    */
   public ParanoidHashSet() {
     super();
-    hcFreq = new HashMap<Integer, Set<T>>();
+    hcFreq = HashMapFactory.make();
   }
 
   public ParanoidHashSet(int size) {
     super(size);
-    hcFreq = new HashMap<Integer, Set<T>>(size);
+    hcFreq = HashMapFactory.make(size);
   }
 
   /*

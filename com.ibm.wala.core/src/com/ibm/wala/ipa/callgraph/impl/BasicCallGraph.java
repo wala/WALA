@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.callgraph.impl;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -66,7 +65,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   /**
    * Set of nodes that are entrypoints for this analysis
    */
-  private final Set<CGNode> entrypointNodes = new HashSet<CGNode>();
+  private final Set<CGNode> entrypointNodes = HashSetFactory.make();
 
   /**
    * A mapping from Key to NodeImpls in the graph. Note that each node is

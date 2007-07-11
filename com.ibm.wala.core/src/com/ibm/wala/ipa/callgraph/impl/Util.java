@@ -254,7 +254,7 @@ public class Util {
       throw new IllegalArgumentException("cha is null");
     }
     final Atom mainMethod = Atom.findOrCreateAsciiAtom("main");
-    final HashSet<Entrypoint> result = new HashSet<Entrypoint>();
+    final HashSet<Entrypoint> result = HashSetFactory.make();
     for (IClass klass : cha) {
       if (klass.getClassLoader().getReference().equals(clr)) {
         MethodReference mainRef = MethodReference.findOrCreate(klass.getReference(), mainMethod, Descriptor

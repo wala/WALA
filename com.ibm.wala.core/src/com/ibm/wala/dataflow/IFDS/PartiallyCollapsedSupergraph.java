@@ -12,7 +12,6 @@ package com.ibm.wala.dataflow.IFDS;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -656,7 +655,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      * collapsed entry of a CGNode. Note that if i is the index for the
      * collapsed entry, then i+1 is the index for the collapsed exit
      */
-    private final Map<CGNode, Integer> node2EntryIndex = new HashMap<CGNode, Integer>();
+    private final Map<CGNode, Integer> node2EntryIndex = HashMapFactory.make();
 
     private final ArrayList<CollapsedNode> collapsedNodes = new ArrayList<CollapsedNode>();
 

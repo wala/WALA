@@ -18,6 +18,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.util.CacheReference;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 
 /**
@@ -40,7 +41,7 @@ public class CFGCache {
   /**
    * A mapping from ShrikeCTMethodWrapper -> SoftReference -> IR
    */
-  private HashMap<Object, Object> dictionary = new HashMap<Object, Object>();
+  private HashMap<Object, Object> dictionary = HashMapFactory.make();
 
   /**
    * Count accesses between resets.
@@ -98,7 +99,7 @@ public class CFGCache {
    * The existence of this is unfortunate.
    */
   public void wipe() {
-    dictionary = new HashMap<Object, Object>();
+    dictionary = HashMapFactory.make();
   }
 
   /**
@@ -107,7 +108,7 @@ public class CFGCache {
   private void reset() {
     resetCount = 0;
     Map<Object, Object> oldDictionary = dictionary;
-    dictionary = new HashMap<Object, Object>();
+    dictionary = HashMapFactory.make();
 
     for (Iterator it = oldDictionary.entrySet().iterator(); it.hasNext();) {
       Map.Entry e = (Map.Entry) it.next();

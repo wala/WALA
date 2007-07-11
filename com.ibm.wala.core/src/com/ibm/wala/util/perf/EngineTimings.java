@@ -12,7 +12,6 @@ package com.ibm.wala.util.perf;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +25,8 @@ import com.ibm.wala.ecore.perf.EPhaseTiming;
 import com.ibm.wala.ecore.perf.PerfFactory;
 import com.ibm.wala.emf.wrappers.EObjectGraphImpl;
 import com.ibm.wala.emf.wrappers.EUtil;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.warnings.WalaException;
 
@@ -155,7 +156,7 @@ public class EngineTimings {
   }
 
   private static void saveToFile(EGraph g) throws WalaException {
-    HashSet<EObject> s = new HashSet<EObject>();
+    HashSet<EObject> s = HashSetFactory.make();
     s.add(g);
     s.add(g.getNodes());
 
@@ -176,11 +177,11 @@ public class EngineTimings {
     s.push(root);
 
     // mapping from phase -> EPhaseTiming
-    Map<Phase, EPhaseTiming> phase2Emf = new HashMap<Phase, EPhaseTiming>();
+    Map<Phase, EPhaseTiming> phase2Emf = HashMapFactory.make();
     phase2Emf.put(root, r);
 
     // map: phase -> number of children recorded so far
-    Map<Phase, Integer> childCount = new HashMap<Phase, Integer>();
+    Map<Phase, Integer> childCount = HashMapFactory.make();
     for (Iterator<Phase> it = phases.iterator(); it.hasNext();) {
       childCount.put(it.next(), new Integer(0));
     }

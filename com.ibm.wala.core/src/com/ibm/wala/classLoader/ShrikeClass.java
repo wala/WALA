@@ -522,7 +522,7 @@ public final class ShrikeClass implements IClass {
 
   }
 
-  private final HashMap<Atom, IField> fieldMap = new HashMap<Atom, IField>(5);
+  private final HashMap<Atom, IField> fieldMap = HashMapFactory.make(5);
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getField(com.ibm.wala.util.Atom)

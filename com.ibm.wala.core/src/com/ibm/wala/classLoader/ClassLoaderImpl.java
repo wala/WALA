@@ -181,12 +181,12 @@ public class ClassLoaderImpl implements IClassLoader {
    * @param t
    */
   private void removeClassFiles(Set<ModuleEntry> s, Set<ModuleEntry> t) {
-    Set<String> old = new HashSet<String>();
+    Set<String> old = HashSetFactory.make();
     for (Iterator<ModuleEntry> it = t.iterator(); it.hasNext();) {
       ModuleEntry m = it.next();
       old.add(m.getClassName());
     }
-    HashSet<ModuleEntry> toRemove = new HashSet<ModuleEntry>();
+    HashSet<ModuleEntry> toRemove = HashSetFactory.make();
     for (Iterator<ModuleEntry> it = s.iterator(); it.hasNext();) {
       ModuleEntry m = it.next();
       if (old.contains(m.getClassName())) {
@@ -347,8 +347,8 @@ public class ClassLoaderImpl implements IClassLoader {
       }
       archives.add(M);
     }
-    Set<ModuleEntry> classModuleEntries = new HashSet<ModuleEntry>();
-    Set<ModuleEntry> sourceModuleEntries = new HashSet<ModuleEntry>();
+    Set<ModuleEntry> classModuleEntries = HashSetFactory.make();
+    Set<ModuleEntry> sourceModuleEntries = HashSetFactory.make();
     for (Iterator<Module> it = archives.iterator(); it.hasNext();) {
       Module archive = it.next();
       Set<ModuleEntry> classFiles = getClassFiles(archive);

@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.impl;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -20,6 +19,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
  * 
@@ -57,7 +57,7 @@ public class SubtypesEntrypoint extends DefaultEntrypoint {
     else {
       IClass nc = getCha().lookupClass(nominal);
       Collection subcs = nc.isInterface() ? getCha().getImplementors(nominal) : getCha().computeSubClasses(nominal);
-      Set<TypeReference> subs = new HashSet<TypeReference>();
+      Set<TypeReference> subs = HashSetFactory.make();
       for (Iterator I = subcs.iterator(); I.hasNext();) {
         IClass cs = (IClass) I.next();
         if (!cs.isAbstract() && !cs.isInterface())

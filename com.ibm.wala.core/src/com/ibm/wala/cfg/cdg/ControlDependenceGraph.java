@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.cfg.cdg;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -64,7 +63,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
    * @return Map: node n -> {x : n is control-dependent on x}
    */
   private Map<IBasicBlock, Set<IBasicBlock>> buildControlDependence(boolean wantEdgeLabels) {
-    Map<IBasicBlock, Set<IBasicBlock>> controlDependence = new HashMap<IBasicBlock, Set<IBasicBlock>>(cfg.getNumberOfNodes());
+    Map<IBasicBlock, Set<IBasicBlock>> controlDependence = HashMapFactory.make(cfg.getNumberOfNodes());
 
     DominanceFrontiers<IBasicBlock> RDF = new DominanceFrontiers<IBasicBlock>(GraphInverter.invert(cfg), cfg.exit());
 
@@ -73,7 +72,8 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
     }
 
     for (Iterator<? extends IBasicBlock> ns = cfg.iterator(); ns.hasNext();) {
-      controlDependence.put(ns.next(), new HashSet<IBasicBlock>(2));
+      HashSet<IBasicBlock> s = HashSetFactory.make(2);
+      controlDependence.put(ns.next(), s);
     }
 
     for (Iterator<? extends IBasicBlock> ns = cfg.iterator(); ns.hasNext();) {
@@ -82,7 +82,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
         IBasicBlock x = ns2.next();
         controlDependence.get(x).add(y);
         if (wantEdgeLabels) {
-          Set<Object> labels = new HashSet<Object>();
+          Set<Object> labels = HashSetFactory.make();
           edgeLabels.put(new Pair<Object, Object>(x, y), labels);
           for (Iterator<? extends IBasicBlock> ss = cfg.getSuccNodes(x); ss.hasNext();) {
             IBasicBlock s = ss.next();
@@ -104,7 +104,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
    */
   private EdgeManager<IBasicBlock> constructGraphEdges(final Map<IBasicBlock, Set<IBasicBlock>> forwardEdges) {
     return new EdgeManager<IBasicBlock>() {
-      Map<IBasicBlock, Set<IBasicBlock>> backwardEdges = new HashMap<IBasicBlock, Set<IBasicBlock>>(forwardEdges.size());
+      Map<IBasicBlock, Set<IBasicBlock>> backwardEdges = HashMapFactory.make(forwardEdges.size());
       {
         for (Iterator<? extends IBasicBlock> x = cfg.iterator(); x.hasNext();) {
           Set<IBasicBlock> s = HashSetFactory.make();

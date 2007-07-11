@@ -19,6 +19,7 @@ import com.ibm.wala.fixedpoint.impl.AbstractFixedPointSolver;
 import com.ibm.wala.fixedpoint.impl.AbstractStatement;
 import com.ibm.wala.fixedpoint.impl.UnaryStatement;
 import com.ibm.wala.fixpoint.IVariable;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -194,7 +195,7 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
    * @return set of PointsToSetVariable that are used by complex constraints
    */
   public Collection<IVariable> findComplexUses() {
-    HashSet<IVariable> result = new HashSet<IVariable>();
+    HashSet<IVariable> result = HashSetFactory.make();
     for (Iterator it = getSystem().getStatements(); it.hasNext();) {
       AbstractStatement s = (AbstractStatement) it.next();
       if (isComplexStatement(s)) {

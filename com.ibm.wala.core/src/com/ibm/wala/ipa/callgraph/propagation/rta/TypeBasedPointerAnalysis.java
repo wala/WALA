@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.propagation.rta;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -30,6 +29,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BimodalMutableIntSet;
@@ -102,7 +102,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     } else {
       klasses = getCallGraph().getClassHierarchy().computeSubClasses(type.getReference());
     }
-    klasses = new HashSet<IClass>(klasses);
+    klasses = HashSetFactory.make(klasses);
     klasses.retainAll(this.klasses);
     OrdinalSet<InstanceKey> result = toOrdinalInstanceKeySet(klasses);
     return result;
