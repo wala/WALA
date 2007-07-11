@@ -71,10 +71,8 @@ public abstract class TestCallGraphShape extends WalaTestCase {
     for (int i = 0; i < assertionData.length; i++) {
 
       check_target: for (int j = 0; j < ((String[]) assertionData[i][1]).length; j++) {
-	Iterator srcs = 
-	  (assertionData[i][0] instanceof String) ? 
-	    getNodes(CG, (String) assertionData[i][0]).iterator():
-	    new NonNullSingletonIterator<CGNode>(CG.getFakeRootNode());
+        Iterator srcs = (assertionData[i][0] instanceof String) ? getNodes(CG, (String) assertionData[i][0]).iterator()
+            : new NonNullSingletonIterator<CGNode>(CG.getFakeRootNode());
 
         Assert.assertTrue("cannot find " + assertionData[i][0], srcs.hasNext());
 
@@ -83,13 +81,12 @@ public abstract class TestCallGraphShape extends WalaTestCase {
           for (Iterator sites = src.iterateSites(); sites.hasNext();) {
             CallSiteReference sr = (CallSiteReference) sites.next();
 
-            Iterator dsts = 
-	      getNodes(CG, ((String[]) assertionData[i][1])[j]).iterator();
+            Iterator dsts = getNodes(CG, ((String[]) assertionData[i][1])[j]).iterator();
             Assert.assertTrue("cannot find " + ((String[]) assertionData[i][1])[j], dsts.hasNext());
 
             while (dsts.hasNext()) {
               CGNode dst = (CGNode) dsts.next();
-              for (Iterator tos = src.getPossibleTargets(sr).iterator(); tos.hasNext();) {
+              for (Iterator tos = CG.getPossibleTargets(src, sr).iterator(); tos.hasNext();) {
                 if (tos.next().equals(dst)) {
                   Trace.println("found expected " + src + " --> " + dst + " at " + sr);
                   continue check_target;
