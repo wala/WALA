@@ -64,9 +64,6 @@ public class ParanoidHashSet<T> extends HashSet<T> {
     hcFreq = new HashMap<Integer, Set<T>>();
   }
 
-  /**
-   * @param size
-   */
   public ParanoidHashSet(int size) {
     super(size);
     hcFreq = new HashMap<Integer, Set<T>>(size);
