@@ -117,10 +117,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   protected abstract CGNode makeFakeWorldClinitNode();
 
   /**
-   * Method findOrCreateNode. use with extreme care.
-   * 
-   * @param method
-   * @return NodeImpl
+   * Use with extreme care.
    */
   public abstract CGNode findOrCreateNode(IMethod method, Context C);
 
@@ -388,9 +385,6 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     return getNode(N.getMethod(), N.getContext()) != null;
   }
 
-  /**
-   * @param interpreter
-   */
   public void setInterpreter(SSAContextInterpreter interpreter) {
     this.interpreter = interpreter;
   }
