@@ -58,6 +58,7 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * @author sjfink
  * @author jdolby (some code moved here from EclipseProjectAnalysisEngine)
+ * @author smarkstr (added support for language file extensions)
  * 
  */
 public class EclipseProjectPath {
@@ -122,7 +123,7 @@ public class EclipseProjectPath {
    * of modules
    */
   @SuppressWarnings("restriction")
-  private void resolveClasspathEntry(IClasspathEntry entry, Loader loader) throws JavaModelException, IOException {
+  private void resolveClasspathEntry(IClasspathEntry entry, Loader loader, String fileExtension) throws JavaModelException, IOException {
     IClasspathEntry e = JavaCore.getResolvedClasspathEntry(entry);
     if (alreadyResolved.contains(e)) {
       return;
@@ -133,7 +134,7 @@ public class EclipseProjectPath {
     if (e.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
       IClasspathContainer cont = JavaCore.getClasspathContainer(entry.getPath(), project);
       IClasspathEntry[] entries = cont.getClasspathEntries();
-      resolveClasspathEntries(entries, cont.getKind() == IClasspathContainer.K_APPLICATION ? loader : Loader.PRIMORDIAL);
+      resolveClasspathEntries(entries, cont.getKind() == IClasspathContainer.K_APPLICATION ? loader : Loader.PRIMORDIAL, fileExtension);
     } else if (e.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
       File file = makeAbsolute(e.getPath()).toFile();
       JarFile j;
@@ -148,7 +149,7 @@ public class EclipseProjectPath {
     } else if (e.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
       File file = makeAbsolute(e.getPath()).toFile();
       Set<Module> s = MapUtil.findOrCreateSet(sourceModules, Loader.SOURCE);
-      s.add(new SourceDirectoryTreeModule(file));
+      s.add(new SourceDirectoryTreeModule(file, fileExtension));
       if (e.getOutputLocation() != null) {
         File output = makeAbsolute(e.getOutputLocation()).toFile();
         s = MapUtil.findOrCreateSet(binaryModules, loader);
@@ -162,7 +163,7 @@ public class EclipseProjectPath {
       try {
         if (project.hasNature(JavaCore.NATURE_ID)) {
           IJavaProject javaProject = JavaCore.create(project);
-          resolveClasspathEntries(javaProject.getRawClasspath(), loader);
+          resolveClasspathEntries(javaProject.getRawClasspath(), loader, fileExtension);
           File output = makeAbsolute(javaProject.getOutputLocation()).toFile();
           Set<Module> s = MapUtil.findOrCreateSet(binaryModules, loader);
           s.add(new BinaryDirectoryTreeModule(output));
@@ -176,9 +177,9 @@ public class EclipseProjectPath {
     }
   }
 
-  protected void resolveClasspathEntries(IClasspathEntry[] entries, Loader loader) throws JavaModelException, IOException {
+  protected void resolveClasspathEntries(IClasspathEntry[] entries, Loader loader, String fileExtension) throws JavaModelException, IOException {
     for (int i = 0; i < entries.length; i++) {
-      resolveClasspathEntry(entries[i], loader);
+      resolveClasspathEntry(entries[i], loader, fileExtension);
     }
   }
 
@@ -189,8 +190,25 @@ public class EclipseProjectPath {
     return workspaceRootPath.append(p);
   }
 
+  /**
+   * If file extension is not provided, use system default
+   * 
+   * @throws JavaModelException
+   * @throws IOException
+   */
   public void resolveProjectClasspathEntries() throws JavaModelException, IOException {
-    resolveClasspathEntries(project.getRawClasspath(), Loader.EXTENSION);
+    resolveClasspathEntries(project.getRawClasspath(), Loader.EXTENSION, null);
+  }
+
+  /**
+   * If file extension is provided, use that to resolve source files in the classpath
+   * 
+   * @param fileExtension
+   * @throws JavaModelException
+   * @throws IOException
+   */
+  public void resolveProjectClasspathEntries(String fileExtension) throws JavaModelException, IOException {
+    resolveClasspathEntries(project.getRawClasspath(), Loader.EXTENSION, fileExtension);
   }
 
   /**
