@@ -5,6 +5,8 @@
 	<property name="baseos" value="${os}"/>
 	<property name="basearch" value="${arch}"/>
 	<property name="basenl" value="${nl}"/>
+	<property name="bundleId" value="com.ibm.wala.j2ee"/>
+	<property name="bundleVersion" value="1.0.0"/>
 
 	<!-- Compiler settings. -->
 	<property name="javacFailOnError" value="true"/>
@@ -14,9 +16,12 @@
 	<property name="compilerArg" value=""/>
 	<property name="javacSource" value="1.5"/>
 	<property name="javacTarget" value="1.5"/>
-	<property name="eclipse.root" value="../../../eclipse"/>
+	<condition property="dir_bootclasspath" value="${java.home}/../Classes">
+		<os family="mac"/>
+	</condition>
+	<property name="dir_bootclasspath" value="${java.home}/lib"/>
 	<path id="path_bootclasspath">
-		<fileset dir="${java.home}/lib">
+		<fileset dir="${dir_bootclasspath}">
 			<include name="*.jar"/>
 		</fileset>
 	</path>
@@ -30,7 +35,7 @@
 			<isset property="buildTempFolder"/>
 		</condition>
 		<property name="pluginTemp" value="${basedir}"/>
-		<condition property="build.result.folder" value="${pluginTemp}/com.ibm.wala.j2ee">
+		<condition property="build.result.folder" value="${pluginTemp}/com.ibm.wala.j2ee_1.0.0">
 			<isset property="buildTempFolder"/>
 		</condition>
 		<property name="build.result.folder" value="${basedir}"/>
@@ -50,7 +55,7 @@
 		<antcall target="gather.bin.parts">
 			<param name="destination.temp.folder" value="${temp.folder}/"/>
 		</antcall>
-		<zip destfile="${plugin.destination}/com.ibm.wala.j2ee_1.0.0.jar" basedir="${temp.folder}/com.ibm.wala.j2ee_1.0.0" filesonly="false" whenempty="skip" update="false"/>
+		<jar destfile="${plugin.destination}/com.ibm.wala.j2ee_1.0.0.jar" basedir="${temp.folder}/com.ibm.wala.j2ee_1.0.0" filesetmanifest="merge"/>
 		<delete dir="${temp.folder}"/>
 	</target>
 
@@ -62,79 +67,85 @@
 			<pathelement path="../com.ibm.wala.core/@dot"/>
 			<pathelement path="../com.ibm.wala.emf/bin/"/>
 			<pathelement path="../com.ibm.wala.emf/@dot"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.runtime_3.2.0.v20060603.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.osgi_3.2.0.v20060601.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.equinox.common_3.2.0.v20060603.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.jobs_3.2.0.v20060603.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.0.v20060603/runtime_registry_compatibility.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.0.v20060603"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.equinox.registry_3.2.0.v20060601.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.apache.xerces_2.8.0.v200606131651/resolver.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.apache.xerces_2.8.0.v200606131651/xercesImpl.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.apache.xerces_2.8.0.v200606131651/xml-apis.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.equinox.preferences_3.2.0.v20060601.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.0.v20060603/@dot"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.contenttype_3.2.0.v20060603.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.runtime.compatibility.auth_3.2.0.v20060601.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.emf.ecore_2.2.0.v200606271057.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.emf.common_2.2.0.v200606271057.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.resources_3.2.0.v20060603.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.resources.compatibility_3.2.0.v20060603.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.resources.win32_3.2.0.v20060603.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.runtime.compatibility_3.1.100.v20060603.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.update.configurator_3.2.0.v20060605.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.ant.core_3.1.100.v20060531.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.variables_3.1.100.v20060605.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.expressions_3.2.0.v20060605-1400.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.filesystem_1.0.0.v20060603.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.filesystem.win32.x86_1.0.0.v20060603.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.emf.ecore.xmi_2.2.0.v200606271057.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.runtime_3.3.100.v20070530.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.osgi_3.3.0.v20070530.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.equinox.common_3.3.0.v20070426.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.jobs_3.3.0.v20070423.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.100.v20070316/runtime_registry_compatibility.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.100.v20070316"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.equinox.registry_3.3.0.v20070522.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.equinox.preferences_3.2.100.v20070522.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.runtime.compatibility.registry_3.2.100.v20070316/@dot"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.contenttype_3.2.100.v20070319.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.runtime.compatibility.auth_3.2.100.v20070502.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.equinox.app_1.0.0.v20070606.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.osgi.services_3.1.200.v20070605.jar"/>
+			<pathelement path="${eclipse.root}/plugins/javax.servlet_2.4.0.v200706111738.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.emf.ecore_2.3.0.v200706262000.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.emf.common_2.3.0.v200706262000.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.resources_3.3.0.v20070604.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.resources.compatibility_3.2.100.v20070502.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.resources.win32_3.3.0.v20070226.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.ant.core_3.1.200.v20070522.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.variables_3.2.0.v20070426.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.expressions_3.3.0.v20070606-0010.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.filesystem_1.1.0.v20070606.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.filesystem.win32.x86_1.1.0.v20070510.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.emf.ecore.xmi_2.3.0.v200706262000.jar"/>
 			<pathelement path="../com.ibm.wala.shrike/bin/"/>
 			<pathelement path="../com.ibm.wala.shrike/@dot"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.jface_3.2.0.I20060605-1400.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.swt_3.2.0.v3232o.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.swt.win32.win32.x86_3.2.0.v3232m.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.commands_3.2.0.I20060605-1400.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.jem_1.2.0.v20060530_RC2.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.jem.proxy_1.2.0.v20060530_RC2.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.jdt.launching_3.2.0.v20060605.jar"/>
-			<pathelement path="${eclipse.root}/plugins/com.ibm.icu_3.4.4.1.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.jdt.core_3.2.0.v_671.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.text_3.2.0.v20060605-1400.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.team.core_3.2.0.I200606051140.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.debug.core_3.2.0.v20060605.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.jdt.debug_3.2.0.v20060605/jdi.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.jdt.debug_3.2.0.v20060605/jdimodel.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.jdt.debug_3.2.0.v20060605/tools.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.jem.util_1.2.0.v20060530_RC2.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.pde.core_3.2.0.v20060605.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.filebuffers_3.2.0.v20060605-1400.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.pde.build_3.2.0.v20060603/pdebuild.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.update.core_3.2.0.v20060605.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.update.core.win32_3.2.0.v20060605.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.ui_3.2.0.I20060605-1400.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.ui.workbench_3.2.0.I20060605-1400.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.ui.workbench.compatibility_3.2.0.I20060605-1400/@dot"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.ui.workbench.compatibility_3.2.0.I20060605-1400/compatibility.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.help_3.2.0.v20060602.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.jst.j2ee.core_1.1.0.v200606130315.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.frameworks_1.1.0.v200606130645.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.environment_1.0.100.v200606130645.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.osgi.util_3.1.100.v20060601.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.emf_1.1.0.v200606130645.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.validation_1.1.0.v200606130645.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.project.facet.core_1.1.0.v200606130645.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.xml.core_1.1.0.v200606142000.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.uriresolver_1.1.0.v200606130645.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.sse.core_1.1.0.v200606141450.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.emf.ecore.edit_2.2.0.v200606271057.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.emf.edit_2.2.0.v200606271057.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.emf.ecore.change_2.2.0.v200606271057.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.emfworkbench.integration_1.1.0.v200606130645.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.xsd_2.2.0.v200606271057.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.core_1.1.0.v200606130645.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.jem.workbench_1.2.0.v20060530_RC2.jar"/>
-			<pathelement path="${eclipse.root}/plugins/org.eclipse.equinox.servlet.api_1.0.0.v20060601.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jface_3.3.0.I20070606-0010.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.swt_3.3.0.v3346.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.swt.win32.win32.x86_3.3.0.v3346.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.commands_3.3.0.I20070605-0010.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jdt.core_3.3.0.v_771.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jdt.compiler.apt_1.0.0.v20070510-2000.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jdt.compiler.tool_1.0.0.v_771.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.text_3.3.0.v20070606-0010.jar"/>
+			<pathelement path="${eclipse.root}/plugins/com.ibm.icu_3.6.1.v20070417.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.team.core_3.3.0.I20070607.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jem_2.0.0.v200705302225.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jem.proxy_2.0.0.v200705302225.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jdt.launching_3.3.0.v20070510.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.debug.core_3.3.0.v20070607-1800.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jdt.debug_3.3.0.v20070530a/jdi.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jdt.debug_3.3.0.v20070530a/jdimodel.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jdt.debug_3.3.0.v20070530a/tools.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jem.util_2.0.0.v200705302225.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.pde.core_3.3.0.v20070608-1300.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.update.configurator_3.2.100.v20070615.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.filebuffers_3.3.0.v20070606-0010.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.pde.build_3.3.0.v20070612/pdebuild.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.update.core_3.2.100.v20070615.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.update.core.win32_3.2.100.v20070615.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.net_1.0.0.I20070531.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.runtime.compatibility_3.1.200.v20070502.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.ui_3.3.0.I20070614-0800.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.ui.workbench_3.3.0.I20070608-1100.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.ui.workbench.compatibility_3.2.0.I20070319-0010/@dot"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.ui.workbench.compatibility_3.2.0.I20070319-0010/compatibility.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.help_3.3.0.v20070524.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jface.databinding_1.1.0.I20070606-0010.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.databinding_1.0.0.I20070606-0010.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jst.j2ee.core_1.1.102.v200706111630.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.frameworks_1.1.102.v200706071630.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.environment_1.0.200.v200705302225.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.osgi.util_3.1.200.v20070605.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.emf_1.1.103.v200706071630.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.validation_1.1.101.v200706071630.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.project.facet.core_1.2.0.v200706071740.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.xml.core_1.1.200.v200706120811.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.apache.xerces_2.8.0.v200705301630.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.apache.xml.resolver_1.1.0.v200705310020.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.uriresolver_1.1.201.v200705302225.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.sse.core_1.1.201.v200706212223.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.emf.ecore.edit_2.3.0.v200706262000.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.emf.edit_2.3.0.v200706262000.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.emf.ecore.change_2.3.0.v200706262000.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.emfworkbench.integration_1.1.103.v200706071630.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.core_1.1.101.v200706120315.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.wst.common.modulecore_1.1.102.v200706071630.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jem.workbench_2.0.0.v200705302225.jar"/>
 		</path>
 		<!-- compile the source code -->
 		<javac destdir="${temp.folder}/@dot.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}"		>
@@ -148,13 +159,23 @@
 		</javac>
 		<!-- Copy necessary resources -->
 		<copy todir="${temp.folder}/@dot.bin" failonerror="true" overwrite="false">
-			<fileset dir="dat/" excludes="**/*.java, **/package.htm*"			/>
-			<fileset dir="src/" excludes="**/*.java, **/package.htm*"			/>
-			<fileset dir="lib/" excludes="**/*.java, **/package.htm*"			/>
+			<fileset dir="dat/">
+				<exclude name="**/*.java"/>
+				<exclude name="**/package.htm*"/>
+			</fileset>
+			<fileset dir="src/">
+				<exclude name="**/*.java"/>
+				<exclude name="**/package.htm*"/>
+			</fileset>
+			<fileset dir="lib/">
+				<exclude name="**/*.java"/>
+				<exclude name="**/package.htm*"/>
+			</fileset>
 		</copy>
 		<mkdir dir="${build.result.folder}"/>
 		<copy todir="${build.result.folder}/@dot" failonerror="true" overwrite="false">
-			<fileset dir="${temp.folder}/@dot.bin"			/>
+			<fileset dir="${temp.folder}/@dot.bin">
+			</fileset>
 		</copy>
 		<delete dir="${temp.folder}/@dot.bin"/>
 	</target>
@@ -162,13 +183,19 @@
 	<target name="src.zip" depends="init" unless="src.zip">
 		<mkdir dir="${build.result.folder}"/>
 		<zip destfile="${build.result.folder}/src.zip" filesonly="false" whenempty="skip" update="false">
-			<fileset dir="dat/" includes="**/*.java"			/>
-			<fileset dir="src/" includes="**/*.java"			/>
-			<fileset dir="lib/" includes="**/*.java"			/>
+			<fileset dir="dat/">
+				<include name="**/*.java"/>
+			</fileset>
+			<fileset dir="src/">
+				<include name="**/*.java"/>
+			</fileset>
+			<fileset dir="lib/">
+				<include name="**/*.java"/>
+			</fileset>
 		</zip>
 	</target>
 
-	<target name="build.jars" depends="init" description="Build all the jars for the plug-in: com.ibm.wala.j2ee.">
+	<target name="build.jars" depends="init" description="Compile classes and build nested jars for the plug-in: com.ibm.wala.j2ee.">
 		<available property="@dot" file="${build.result.folder}/@dot"/>
 		<antcall target="@dot"/>
 	</target>
@@ -181,10 +208,18 @@
 	<target name="gather.bin.parts" depends="init" if="destination.temp.folder">
 		<mkdir dir="${destination.temp.folder}/com.ibm.wala.j2ee_1.0.0"/>
 		<copy todir="${destination.temp.folder}/com.ibm.wala.j2ee_1.0.0" failonerror="true" overwrite="false">
-			<fileset dir="${build.result.folder}/@dot" includes="**"			/>
+			<fileset dir="${build.result.folder}/@dot">
+				<include name="**"/>
+			</fileset>
 		</copy>
 		<copy todir="${destination.temp.folder}/com.ibm.wala.j2ee_1.0.0" failonerror="true" overwrite="false">
-			<fileset dir="${basedir}" includes="dat/DefaultWebsphereModules.xml,dat/J2EEClassHierarchyExclusions.xml,dat/SyntheticContainerModel.xml,dat/benignext.xml,META-INF/"			/>
+			<fileset dir="${basedir}">
+				<include name="dat/DefaultWebsphereModules.xml"/>
+				<include name="dat/J2EEClassHierarchyExclusions.xml"/>
+				<include name="dat/SyntheticContainerModel.xml"/>
+				<include name="dat/benignext.xml"/>
+				<include name="META-INF/"/>
+			</fileset>
 		</copy>
 	</target>
 
@@ -198,7 +233,11 @@
 
 	<target name="gather.logs" depends="init" if="destination.temp.folder">
 		<mkdir dir="${destination.temp.folder}/com.ibm.wala.j2ee_1.0.0"/>
-		<copy file="${temp.folder}/@dot.bin${logExtension}" todir="${destination.temp.folder}/com.ibm.wala.j2ee_1.0.0" failonerror="false" overwrite="false"/>
+		<copy todir="${destination.temp.folder}/com.ibm.wala.j2ee_1.0.0" failonerror="false" overwrite="false">
+			<fileset dir="${temp.folder}">
+				<include name="@dot.bin${logExtension}"/>
+			</fileset>
+		</copy>
 	</target>
 
 	<target name="clean" depends="init" description="Clean the plug-in: com.ibm.wala.j2ee of all the zips, jars and logs created.">
@@ -226,7 +265,9 @@
 			<param name="destination.temp.folder" value="${temp.folder}/"/>
 		</antcall>
 		<delete>
-			<fileset dir="${temp.folder}" includes="**/*.bin${logExtension}"			/>
+			<fileset dir="${temp.folder}">
+				<include name="**/*.bin${logExtension}"/>
+			</fileset>
 		</delete>
 		<zip destfile="${plugin.destination}/com.ibm.wala.j2ee_1.0.0.zip" basedir="${temp.folder}" filesonly="true" whenempty="skip" update="false"/>
 		<delete dir="${temp.folder}"/>
