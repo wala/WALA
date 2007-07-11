@@ -16,7 +16,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +47,7 @@ import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
@@ -238,7 +238,7 @@ public class RhinoToAstTranslator {
   private static class FunctionContext extends DelegatingContext {
     private final ScriptOrFnNode topNode;
 
-    private final Map<CAstNode, HashSet<CAstEntity>> scopedEntities = new HashMap<CAstNode, HashSet<CAstEntity>>();
+    private final Map<CAstNode, HashSet<CAstEntity>> scopedEntities = HashMapFactory.make();
 
     private final List<CAstNode> initializers = new ArrayList<CAstNode>();
 
@@ -256,8 +256,10 @@ public class RhinoToAstTranslator {
     }
 
     public void addScopedEntity(CAstNode construct, CAstEntity e) {
-      if (!scopedEntities.containsKey(construct))
-        scopedEntities.put(construct, new HashSet<CAstEntity>());
+      if (!scopedEntities.containsKey(construct)) {
+        HashSet<CAstEntity> s = HashSetFactory.make();
+        scopedEntities.put(construct, s);
+      }
 
       scopedEntities.get(construct).add(e);
     }
@@ -352,7 +354,7 @@ public class RhinoToAstTranslator {
   }
 
   private static class BaseCollectingContext extends DelegatingContext {
-    private final Set<Node> baseFor = new HashSet<Node>();
+    private final Set<Node> baseFor = HashSetFactory.make();
 
     private final CAstNode baseVar;
 

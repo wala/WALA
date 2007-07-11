@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import com.ibm.wala.cast.js.ipa.summaries.JavaScriptSummarizedFunction;
@@ -46,6 +45,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -57,7 +57,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
 
   private final MethodTargetSelector base;
 
-  private final Map<Object, IMethod> constructors = new HashMap<Object, IMethod>();
+  private final Map<Object, IMethod> constructors = HashMapFactory.make();
 
   private class JavaScriptConstructor extends JavaScriptSummarizedFunction {
     private final String toStringExtra;

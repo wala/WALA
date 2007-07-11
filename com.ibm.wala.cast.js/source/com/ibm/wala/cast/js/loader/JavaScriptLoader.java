@@ -13,8 +13,6 @@ package com.ibm.wala.cast.js.loader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -44,6 +42,8 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
@@ -89,7 +89,7 @@ public class JavaScriptLoader implements IClassLoader {
     }
   };
 
-  private final Map<TypeName,IClass> types = new HashMap<TypeName,IClass>();
+  private final Map<TypeName,IClass> types = HashMapFactory.make();
   
   private static final Map<Selector,IMethod> emptyMap1 = Collections.emptyMap();
   private static final Map<Atom,IField> emptyMap2 = Collections.emptyMap();
@@ -180,7 +180,7 @@ public class JavaScriptLoader implements IClassLoader {
   private final Set<CAstQualifier> functionQualifiers;
 
   {
-    functionQualifiers = new HashSet<CAstQualifier>();
+    functionQualifiers = HashSetFactory.make();
     functionQualifiers.add(CAstQualifier.PUBLIC);
     functionQualifiers.add(CAstQualifier.FINAL);
   }
@@ -368,7 +368,7 @@ public class JavaScriptLoader implements IClassLoader {
   }
 
   public void removeAll(Collection toRemove) {
-    Set<TypeName> keys = new HashSet<TypeName>();
+    Set<TypeName> keys = HashSetFactory.make();
 
     for (Iterator<Map.Entry<TypeName,IClass>> EE = types.entrySet().iterator(); EE.hasNext();) {
       Map.Entry<TypeName,IClass> E =  EE.next();

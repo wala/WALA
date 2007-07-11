@@ -9,7 +9,6 @@
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
 import java.io.FileReader;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.mozilla.javascript.CompilerEnvirons;
@@ -20,9 +19,11 @@ import org.mozilla.javascript.ScriptOrFnNode;
 import org.mozilla.javascript.Token;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 
+import com.ibm.wala.util.collections.HashMapFactory;
+
 class walkRhinoTree {
 
-    private final Map<Node, Integer> results = new HashMap<Node, Integer>();
+    private final Map<Node, Integer> results = HashMapFactory.make();
 
     private int nextValue = 1;
 
@@ -62,7 +63,7 @@ class walkRhinoTree {
 
     private static abstract class AbstractScope implements Scope {
       private final Scope parent;
-      private final Map<String, Symbol> values = new HashMap<String, Symbol>();
+      private final Map<String, Symbol> values = HashMapFactory.make();
 
       public void declare(String nm) {
 	if (! contains(nm)) {

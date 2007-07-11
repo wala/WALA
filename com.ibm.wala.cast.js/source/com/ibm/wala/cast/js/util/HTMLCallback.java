@@ -23,6 +23,8 @@ import javax.swing.text.MutableAttributeSet;
 import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLEditorKit;
 
+import com.ibm.wala.util.collections.HashMapFactory;
+
 public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   private final URL input;
   private final FileWriter out, out2;
@@ -30,7 +32,7 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   private int counter=0;
   private boolean script = false;
 
-  private final HashMap<String, String> constructors = new HashMap<String, String>();
+  private final HashMap<String, String> constructors = HashMapFactory.make();
 	
   protected final Stack<String> stack;
 

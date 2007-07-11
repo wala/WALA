@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import com.ibm.wala.analysis.typeInference.TypeInference;
@@ -57,6 +56,7 @@ import com.ibm.wala.ssa.SSABinaryOpInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntSetAction;
@@ -565,7 +565,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
             if (v.getValue() == null || v.size() == 0) {
               return new InstanceKey[0];
             } else {
-              final Set<InstanceKey> temp = new HashSet<InstanceKey>();
+              final Set<InstanceKey> temp = HashSetFactory.make();
               v.getValue().foreach(new IntSetAction() {
                 public void act(int keyIndex) {
                   temp.add(system.getInstanceKey(keyIndex));

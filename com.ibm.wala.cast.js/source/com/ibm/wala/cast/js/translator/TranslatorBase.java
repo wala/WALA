@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.js.translator;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -19,6 +18,7 @@ import com.ibm.wala.cast.ir.translator.TranslatorToIR;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceURLModule;
+import com.ibm.wala.util.collections.HashSetFactory;
 
 public abstract class TranslatorBase implements TranslatorToIR {
 
@@ -39,7 +39,7 @@ public abstract class TranslatorBase implements TranslatorToIR {
   }
 
   static {
-    bootstrapFileNames = new HashSet<String>();
+    bootstrapFileNames = HashSetFactory.make();
     bootstrapFileNames.add(prologueFileName);
   }
 
