@@ -143,6 +143,10 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     CAstToNode.put(ast, node);
   }
 
+  public boolean isMapped(Object node) {
+    return nodeToCAst.containsKey(node);
+  }
+
   public String toString() {
     StringBuffer sb = new StringBuffer("control flow map\n");
     for(Iterator keys = table.keySet().iterator(); keys.hasNext(); ) {
