@@ -409,6 +409,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       };
     }
 
+    @SuppressWarnings("deprecation")
     void processJSCall(CGNode caller, JavaScriptInvoke instruction, CGNode target, InstanceKey function,
         InstanceKey constParams[][], PointerKey uniqueCatchKey) {
       caller.addTarget(instruction.getCallSite(), target);
