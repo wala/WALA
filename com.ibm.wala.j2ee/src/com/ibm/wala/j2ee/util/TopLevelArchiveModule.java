@@ -11,7 +11,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 
 import org.eclipse.jst.j2ee.commonarchivecore.internal.ApplicationClientFile;
@@ -25,6 +24,7 @@ import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.j2ee.J2EEUtil;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.io.FileSuffixes;
@@ -116,7 +116,7 @@ public class TopLevelArchiveModule implements Module {
     }
     Archive A = materializeArchive();
     Collection files = A.getFiles();
-    Collection<ModuleEntry> entries = new HashSet<ModuleEntry>(files.size());
+    Collection<ModuleEntry> entries = HashSetFactory.make(files.size());
     for (Iterator<File> it = files.iterator(); it.hasNext(); ) {
       File f = (File)it.next();
       if (f.isArchive()) {
