@@ -123,10 +123,19 @@ public class Disjunction extends AbstractBinaryFormula {
   }
 
   public static Disjunction make(Collection<? extends IFormula> clauses) {
+    Collection<IFormula> newClauses = HashSetFactory.make();
     for (IFormula c: clauses) {
       assert !(c instanceof Disjunction);
+      if (Simplifier.isTautology(c)) {
+        return make(BooleanConstantFormula.TRUE);
+      } else if (!Simplifier.isContradiction(c)) {
+        newClauses.add(c);
+      }
     }
-    return new Disjunction(clauses);
+    if (newClauses.isEmpty()) {
+      return make(BooleanConstantFormula.FALSE);
+    }
+    return new Disjunction(newClauses);
   }
 
   public Collection<? extends IFormula> getClauses() {

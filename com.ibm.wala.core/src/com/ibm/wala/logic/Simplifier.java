@@ -231,8 +231,8 @@ public class Simplifier {
     case CONSTANT:
       BooleanConstantFormula bc = (BooleanConstantFormula) f;
       return bc.equals(BooleanConstantFormula.FALSE);
-
     case QUANTIFIED:
+      return false;
     case RELATION:
       RelationFormula r = (RelationFormula) f;
       if (r.getRelation().equals(BinaryRelation.EQUALS)) {
@@ -303,6 +303,11 @@ public class Simplifier {
           return true;
         }
       }
+      if (b.getConnective().equals(BinaryConnective.OR)) {
+        if (isTautology(b.getF1(), facts) || isTautology(b.getF2(), facts)) {
+          return true;
+        }
+      }
       break;
     case CONSTANT:
       return f.equals(BooleanConstantFormula.TRUE);
@@ -310,8 +315,7 @@ public class Simplifier {
       NotFormula n = (NotFormula) f;
       return isContradiction(n.getFormula());
     case QUANTIFIED:
-      Assertions.UNREACHABLE();
-      break;
+      return false;
     case RELATION:
       RelationFormula r = (RelationFormula) f;
       if (r.getRelation().equals(BinaryRelation.EQUALS)) {
@@ -515,6 +519,14 @@ public class Simplifier {
     Collection<Disjunction> emptyTheory = Collections.emptySet();
     Collection<IFormula> single = Collections.singleton(f);
     Collection<IFormula> result = propositionalSimplify(single, emptyTheory);
+    assert result.size() == 1;
+    return result.iterator().next();
+  }
+
+  public static IFormula propositionalSimplify(IFormula f) {
+    Collection<IFormula> emptySet = Collections.emptySet();
+    Collection<IFormula> singleton = Collections.singleton(f);
+    Collection<IFormula>  result = propositionalSimplify(singleton, emptySet);
     assert result.size() == 1;
     return result.iterator().next();
   }
