@@ -689,7 +689,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       handleThrowsFromCall(ctorInst, n, wc);
 
       return makeNode(wc, fFactory, n, CAstNode.LOCAL_SCOPE, makeNode(wc, fFactory, n, CAstNode.BLOCK_EXPR, makeNode(wc, fFactory,
-          n, CAstNode.DECL_STMT, fFactory.makeConstant(new CAstSymbolImpl(tmpName, true)), newNode), callNode, makeNode(wc,
+          n, CAstNode.DECL_STMT, fFactory.makeConstant(new CAstSymbolImpl(tmpName, true, false, true)), newNode), callNode, makeNode(wc,
           fFactory, n, CAstNode.VAR, fFactory.makeConstant(tmpName))));
     }
 
