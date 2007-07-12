@@ -99,7 +99,7 @@ public class CNFFormula extends AbstractBinaryFormula {
         if (DEBUG) {
           System.err.println("after trivial cleanup " + f);
         }
-        
+
         f = eliminateArrows(f);
         if (DEBUG) {
           System.err.println("after eliminate arrows " + f);
@@ -133,23 +133,22 @@ public class CNFFormula extends AbstractBinaryFormula {
   }
 
   private static IFormula trivialCleanup(IFormula f) {
-    switch (f.getKind()) {
-    case BINARY:
-      AbstractBinaryFormula b = (AbstractBinaryFormula) f;
-      return BinaryFormula.make(b.getConnective(), trivialCleanup(b.getF1()), trivialCleanup(b.getF2()));
-    case RELATION:
-      if (Simplifier.isTautology(f)) {
-        return BooleanConstantFormula.TRUE;
-      } else if (Simplifier.isContradiction(f)) {
-        return BooleanConstantFormula.FALSE;
-      } else {
+    if (Simplifier.isTautology(f)) {
+      return BooleanConstantFormula.TRUE;
+    } else if (Simplifier.isContradiction(f)) {
+      return BooleanConstantFormula.FALSE;
+    } else {
+      switch (f.getKind()) {
+      case BINARY:
+        AbstractBinaryFormula b = (AbstractBinaryFormula) f;
+        return BinaryFormula.make(b.getConnective(), trivialCleanup(b.getF1()), trivialCleanup(b.getF2()));
+      case RELATION:
+      case CONSTANT:
+      case NEGATION:
+      case QUANTIFIED:
+      default:
         return f;
       }
-    case CONSTANT:
-    case NEGATION:
-    case QUANTIFIED:
-    default:
-      return f;
     }
   }
 

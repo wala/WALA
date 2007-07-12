@@ -222,6 +222,14 @@ public class Simplifier {
         if (isContradiction(b.getF1(), facts) || isContradiction(b.getF2(), facts)) {
           return true;
         }
+        IFormula not1 = NotFormula.make(b.getF1());
+        if (implies(Disjunction.make(Collections.singleton(b.getF2())), not1)) {
+          return true;
+        }
+        IFormula not2 = NotFormula.make(b.getF2());
+        if (implies(Disjunction.make(Collections.singleton(b.getF1())), not2)) {
+          return true;
+        }
       } else if (b.getConnective().equals(BinaryConnective.OR)) {
         if (isContradiction(b.getF1(), facts) && isContradiction(b.getF2(), facts)) {
           return true;
