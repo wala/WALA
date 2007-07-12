@@ -175,11 +175,11 @@ public class JSAstTranslator extends AstTranslator {
 	  context.cfg().getCurrentInstruction())));
   }
 
-  protected void doArrayRead(WalkContext context, int result, int arrayValue, CAstNode arrayRef, int[] dimValues) {
+  public void doArrayRead(WalkContext context, int result, int arrayValue, CAstNode arrayRef, int[] dimValues) {
       Assertions.UNREACHABLE("JSAstTranslator.doArrayRead() called!");
   }
 
-  protected void doArrayWrite(WalkContext context, int arrayValue, CAstNode arrayRef, int[] dimValues, int rval) {
+  public void doArrayWrite(WalkContext context, int arrayValue, CAstNode arrayRef, int[] dimValues, int rval) {
       Assertions.UNREACHABLE("JSAstTranslator.doArrayWrite() called!");
   }
 
