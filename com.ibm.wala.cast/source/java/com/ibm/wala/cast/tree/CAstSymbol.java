@@ -10,5 +10,7 @@ public interface CAstSymbol {
 
   public Object defaultInitValue();
 
+  public boolean isInternalName();
+
 }
 

@@ -7,12 +7,14 @@ public class CAstSymbolImpl implements CAstSymbol {
   private final String _name;
   private final boolean _isFinal;
   private final boolean _isCaseInsensitive;
+  private final boolean _isInternalName;
   private final Object _defaultInitValue;
 
   public CAstSymbolImpl(String _name) {
     this._name = _name;
     this._isFinal = false;
     this._isCaseInsensitive = false;
+    this._isInternalName = false;
     this._defaultInitValue = null;
   }
 
@@ -20,6 +22,7 @@ public class CAstSymbolImpl implements CAstSymbol {
     this._name = _name;
     this._isFinal = _isFinal;
     this._isCaseInsensitive = false;
+    this._isInternalName = false;
     this._defaultInitValue = null;
   }
 
@@ -27,6 +30,15 @@ public class CAstSymbolImpl implements CAstSymbol {
     this._name = _name;
     this._isFinal = _isFinal;
     this._isCaseInsensitive = _isCaseInsensitive;
+    this._isInternalName = false;
+    this._defaultInitValue = null;
+  }
+
+  public CAstSymbolImpl(String _name, boolean _isFinal, boolean _isCaseInsensitive, boolean _isInternalName) {
+    this._name = _name;
+    this._isFinal = _isFinal;
+    this._isCaseInsensitive = _isCaseInsensitive;
+    this._isInternalName = _isInternalName;
     this._defaultInitValue = null;
   }
 
@@ -34,6 +46,7 @@ public class CAstSymbolImpl implements CAstSymbol {
     this._name = _name;
     this._isFinal = false;
     this._isCaseInsensitive = false;
+    this._isInternalName = false;
     this._defaultInitValue = _defaultInitValue;
   }
 
@@ -41,6 +54,7 @@ public class CAstSymbolImpl implements CAstSymbol {
     this._name = _name;
     this._isFinal = _isFinal;
     this._isCaseInsensitive = false;
+    this._isInternalName = false;
     this._defaultInitValue = _defaultInitValue;
   }
 
@@ -48,6 +62,15 @@ public class CAstSymbolImpl implements CAstSymbol {
     this._name = _name;
     this._isFinal = _isFinal;
     this._isCaseInsensitive = _isCaseInsensitive;
+    this._isInternalName = false;
+    this._defaultInitValue = _defaultInitValue;
+  }
+
+  public CAstSymbolImpl(String _name, boolean _isFinal, boolean _isCaseInsensitive, boolean _isInternalName, Object _defaultInitValue) {
+    this._name = _name;
+    this._isFinal = _isFinal;
+    this._isCaseInsensitive = _isCaseInsensitive;
+    this._isInternalName = _isInternalName;
     this._defaultInitValue = _defaultInitValue;
   }
 
@@ -56,6 +79,8 @@ public class CAstSymbolImpl implements CAstSymbol {
   public boolean isFinal() { return _isFinal; }
 
   public boolean isCaseInsensitive() { return _isCaseInsensitive; }
+
+  public boolean isInternalName() { return _isInternalName; }
 
   public Object defaultInitValue() { return _defaultInitValue; }
 
