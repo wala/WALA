@@ -485,7 +485,7 @@ public class Simplifier {
    * in term t, substitute t2 for free occurrences of t1
    */
   private static ITerm substitute(ITerm t, ITerm t1, ITerm t2) {
-    if (t.equals(t1)) {
+    if (termsMatch(t, t1)) {
       return t2;
     }
     switch (t.getKind()) {
@@ -507,6 +507,43 @@ public class Simplifier {
     default:
       Assertions.UNREACHABLE();
       return null;
+    }
+  }
+
+  /**
+   * Does the term t1 match the pattern t2? Note that this deals with wildcards.
+   */
+  private static boolean termsMatch(ITerm t1, ITerm t2) {
+    if (t1.equals(t2)) {
+      return true;
+    }
+    switch (t1.getKind()) {
+    case CONSTANT:
+    case VARIABLE:
+      return Wildcard.STAR.equals(t2);
+    case FUNCTION:
+      if (Wildcard.STAR.equals(t2)) {
+        return true;
+      } else {
+        if (t2 instanceof FunctionTerm){
+          FunctionTerm f1 = (FunctionTerm)t1;
+          FunctionTerm f2 = (FunctionTerm)t2;
+          if (f1.getFunction().equals(f2.getFunction())) {
+            for (int i =0; i< f1.getParameters().size(); i++) {
+              ITerm x = f1.getParameters().get(i);
+              ITerm y = f2.getParameters().get(i);
+              if (!termsMatch(x, y)) {
+                return false;
+              }
+            }
+            return true;
+          }
+        }
+        return false;
+      }
+    default:
+      Assertions.UNREACHABLE();
+      return false;
     }
   }
 
