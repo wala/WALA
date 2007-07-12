@@ -326,6 +326,14 @@ public class Simplifier {
             return true;
           }
         }
+      } else if (r.getRelation().equals(BinaryRelation.NE)) {
+        ITerm lhs = r.getTerms().get(0);
+        ITerm rhs = r.getTerms().get(1);
+        if (lhs.getKind().equals(ITerm.Kind.CONSTANT) && rhs.getKind().equals(ITerm.Kind.CONSTANT)) {
+          if (!lhs.equals(rhs)) {
+            return true;
+          }
+        }
       } else if (r.getRelation().equals(BinaryRelation.GE)) {
         ITerm lhs = r.getTerms().get(0);
         ITerm rhs = r.getTerms().get(1);
@@ -333,6 +341,14 @@ public class Simplifier {
           IntConstant x = (IntConstant) lhs;
           IntConstant y = (IntConstant) rhs;
           return x.getVal() >= y.getVal();
+        }
+      } else if (r.getRelation().equals(BinaryRelation.LT)) {
+        ITerm lhs = r.getTerms().get(0);
+        ITerm rhs = r.getTerms().get(1);
+        if (lhs instanceof IntConstant && rhs instanceof IntConstant) {
+          IntConstant x = (IntConstant) lhs;
+          IntConstant y = (IntConstant) rhs;
+          return x.getVal() < y.getVal();
         }
       }
       break;
@@ -427,7 +443,7 @@ public class Simplifier {
         }
         return CNFFormula.make(newD);
       } else if (formula instanceof Disjunction) {
-        return substituteDisjunction((Disjunction)formula, t1, t2);
+        return substituteDisjunction((Disjunction) formula, t1, t2);
       } else {
         AbstractBinaryFormula b = (AbstractBinaryFormula) formula;
         return BinaryFormula.make(b.getConnective(), substitute(b.getF1(), t1, t2), substitute(b.getF2(), t1, t2));
