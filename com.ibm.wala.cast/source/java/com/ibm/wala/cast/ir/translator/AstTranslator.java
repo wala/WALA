@@ -80,7 +80,7 @@ import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 /**
  * @author Julian Dolby TODO: document me.
  */
-public abstract class AstTranslator extends CAstVisitor {
+public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandler {
 
   protected abstract boolean useDefaultInitValues();
 
@@ -105,9 +105,9 @@ public abstract class AstTranslator extends CAstVisitor {
 
   protected abstract void doThrow(WalkContext context, int exception);
 
-  protected abstract void doArrayRead(WalkContext context, int result, int arrayValue, CAstNode arrayRef, int[] dimValues);
+  public abstract void doArrayRead(WalkContext context, int result, int arrayValue, CAstNode arrayRef, int[] dimValues);
 
-  protected abstract void doArrayWrite(WalkContext context, int arrayValue, CAstNode arrayRef, int[] dimValues, int rval);
+  public abstract void doArrayWrite(WalkContext context, int arrayValue, CAstNode arrayRef, int[] dimValues, int rval);
 
   protected abstract void doFieldRead(WalkContext context, int result, int receiver, CAstNode elt, CAstNode parent);
 
@@ -119,6 +119,8 @@ public abstract class AstTranslator extends CAstVisitor {
 
   protected abstract void doCall(WalkContext context, CAstNode call, int result, int exception, CAstNode name, int receiver,
       int[] arguments);
+
+  private ArrayOpHandler arrayOpHandler;
 
   protected boolean isExceptionLabel(Object label) {
     if (label == null) return false;
@@ -294,6 +296,11 @@ public abstract class AstTranslator extends CAstVisitor {
 
   protected AstTranslator(IClassLoader loader) {
     this.loader = loader;
+    this.arrayOpHandler= this;
+  }
+
+  public void setArrayOpHandler(ArrayOpHandler arrayOpHandler) {
+    this.arrayOpHandler= arrayOpHandler;
   }
 
   private static class AstDebuggingInformation implements DebuggingInformation {
@@ -2606,7 +2613,7 @@ public abstract class AstTranslator extends CAstVisitor {
     int arrayValue = getValue(n.getChild(0));
     int result = context.currentScope().allocateTempValue();
     setValue(n, result);
-    doArrayRead(context, result, arrayValue, n, gatherArrayDims(n));
+    arrayOpHandler.doArrayRead(context, result, arrayValue, n, gatherArrayDims(n));
   }
 
   protected boolean visitDeclStmt(CAstNode n, Context c, CAstVisitor visitor) { /* empty */
@@ -2825,7 +2832,7 @@ public abstract class AstTranslator extends CAstVisitor {
 
   protected void leaveArrayLiteralInitElement(CAstNode n, int i, Context c, CAstVisitor visitor) {
     WalkContext context = (WalkContext) c;
-    doArrayWrite(context, getValue(n.getChild(0)), n, new int[] { context.currentScope().getConstantValue(new Integer(i - 1)) },
+    arrayOpHandler.doArrayWrite(context, getValue(n.getChild(0)), n, new int[] { context.currentScope().getConstantValue(new Integer(i - 1)) },
         getValue(n.getChild(i)));
   }
 
@@ -2884,7 +2891,7 @@ public abstract class AstTranslator extends CAstVisitor {
     WalkContext context = (WalkContext) c;
     int rval = getValue(v);
     setValue(n, rval);
-    doArrayWrite(context, getValue(n.getChild(0)), n, gatherArrayDims(n), rval);
+    arrayOpHandler.doArrayWrite(context, getValue(n.getChild(0)), n, gatherArrayDims(n), rval);
   }
 
   protected boolean visitArrayRefAssignOp(CAstNode n, CAstNode v, CAstNode a, boolean pre, Context c, CAstVisitor visitor) { /* empty */
@@ -2895,10 +2902,10 @@ public abstract class AstTranslator extends CAstVisitor {
     WalkContext context = (WalkContext) c;
     int temp = context.currentScope().allocateTempValue();
     int[] dims = gatherArrayDims(n);
-    doArrayRead(context, temp, getValue(n.getChild(0)), n, dims);
+    arrayOpHandler.doArrayRead(context, temp, getValue(n.getChild(0)), n, dims);
     int rval = processAssignOp(n, v, a, temp, !pre, c);
     setValue(n, pre ? rval : temp);
-    doArrayWrite(context, getValue(n.getChild(0)), n, dims, rval);
+    arrayOpHandler.doArrayWrite(context, getValue(n.getChild(0)), n, dims, rval);
   }
 
   protected boolean visitObjectRefAssign(CAstNode n, CAstNode v, CAstNode a, Context c, CAstVisitor visitor) { /* empty */
