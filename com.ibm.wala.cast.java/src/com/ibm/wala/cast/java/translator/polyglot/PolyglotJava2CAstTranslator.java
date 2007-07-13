@@ -2242,12 +2242,20 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     return walkEntity((Node) ast, new RootContext(getTypeDict()));
   }
 
-  public interface IdentityMapper<T, M, F> {
-    MemberReference getMethodRef(M method);
+  /**
+   * Maps front-end-specific representations into WALA references of the appropriate kind.
+   * @author rfuhrer
+   *
+   * @param <T> The front-end-specific representation of a type (e.g., for Polyglot, a Type)
+   * @param <M> The front-end-specific representation of a procedure/method (e.g., for Polyglot, a CodeInstance)
+   * @param <F> The front-end-specific representation of a field (e.g., for Polyglot, a FieldInstance)
+   */
+  public interface IdentityMapper<TypeRep, MethodRep, FieldRep> {
+    MemberReference getMethodRef(MethodRep method);
 
-    TypeReference getTypeRef(T type);
+    TypeReference getTypeRef(TypeRep type);
 
-    FieldReference getFieldRef(F field);
+    FieldReference getFieldRef(FieldRep field);
   }
 
   protected static Collection mapFlagsToQualifiers(Flags flags) {
