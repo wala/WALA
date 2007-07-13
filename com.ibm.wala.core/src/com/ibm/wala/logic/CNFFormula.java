@@ -115,13 +115,7 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
         }
 
         if (f instanceof AbstractBinaryFormula) {
-          AbstractBinaryFormula b = (AbstractBinaryFormula) f;
-          if (b.getConnective().equals(BinaryConnective.AND)) {
-            return CNFFormula.make(collectMaxTerms(f));
-          } else {
-            Assertions.UNREACHABLE(f);
-            return null;
-          }
+          return CNFFormula.make(collectMaxTerms(f));
         } else {
           return CNFFormula.make(f);
         }
@@ -141,14 +135,33 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
       return Collections.singleton((IMaxTerm) f);
     case BINARY:
       AbstractBinaryFormula b = (AbstractBinaryFormula) f;
-      Collection<IMaxTerm> result = HashSetFactory.make();
-      result.addAll(collectMaxTerms(b.getF1()));
-      result.addAll(collectMaxTerms(b.getF2()));
-      return result;
+      if (b.getConnective().equals(BinaryConnective.AND)) {
+        Collection<IMaxTerm> result = HashSetFactory.make();
+        result.addAll(collectMaxTerms(b.getF1()));
+        result.addAll(collectMaxTerms(b.getF2()));
+        return result;
+      } else if (b.getConnective().equals(BinaryConnective.OR)) {
+        return Collections.singleton(orToMaxTerm(b));
+      } else {
+        Assertions.UNREACHABLE();
+        return null;
+      }
     case NEGATION:
     default:
       Assertions.UNREACHABLE(f);
       return null;
+    }
+  }
+
+  private static IMaxTerm orToMaxTerm(AbstractBinaryFormula b) {
+    assert b.getConnective().equals(BinaryConnective.OR);
+    Collection<IMaxTerm> clauses = HashSetFactory.make();
+    clauses.addAll(collectMaxTerms(b.getF1()));
+    clauses.addAll(collectMaxTerms(b.getF2()));
+    if (clauses.size() == 1) {
+      return clauses.iterator().next();
+    } else {
+      return Disjunction.make(clauses);
     }
   }
 

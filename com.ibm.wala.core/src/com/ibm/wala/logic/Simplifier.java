@@ -259,7 +259,7 @@ public class Simplifier {
   private static boolean implies(IFormula axiom, IFormula f) {
     if (axiom.equals(f)) {
       return true;
-    }
+    } 
     // TODO
     // if (f instanceof Disjunction) {
     // Disjunction d = (Disjunction) f;
