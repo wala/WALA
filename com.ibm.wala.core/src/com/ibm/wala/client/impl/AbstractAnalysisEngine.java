@@ -291,6 +291,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * @return Returns the pointerAnalysis.
    */
+  // TODO make this public so clients can get at it?
   protected PointerAnalysis getPointerAnalysis() {
     return pointerAnalysis;
   }
