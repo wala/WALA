@@ -201,8 +201,8 @@ public class CNFFormula extends AbstractBinaryFormula {
     case CONSTANT:
     case QUANTIFIED:
     case RELATION:
-      return Disjunction.make(Collections.singleton(simplify(f)));
     case NEGATION:
+      return Disjunction.make(Collections.singleton(simplify(f)));
     default:
       Assertions.UNREACHABLE(f.getKind());
       return null;

@@ -29,7 +29,8 @@ public class NotFormula implements IFormula {
   }
 
   public static IFormula make(IFormula f) {
-    if (f instanceof RelationFormula) {
+    switch (f.getKind()) {
+    case RELATION:
       RelationFormula r = (RelationFormula) f;
       if (r.getRelation().equals(BinaryRelation.EQUALS)) {
         return RelationFormula.make(BinaryRelation.NE, r.getTerms());
@@ -49,8 +50,14 @@ public class NotFormula implements IFormula {
       if (r.getRelation().equals(BinaryRelation.LT)) {
         return RelationFormula.make(BinaryRelation.GE, r.getTerms());
       }
+      return new NotFormula(f);
+    case CONSTANT:
+    case BINARY:
+    case NEGATION:
+    case QUANTIFIED:
+      default:
+        return new NotFormula(f);
     }
-    return new NotFormula(f);
   }
 
   public Kind getKind() {
