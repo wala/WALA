@@ -119,7 +119,6 @@ public class CNFFormula extends AbstractBinaryFormula {
         }
         if (f instanceof AbstractBinaryFormula) {
           AbstractBinaryFormula b = (AbstractBinaryFormula) f;
-          assert (b.getConnective().equals(BinaryConnective.AND));
           return new CNFFormula(collectClauses(b));
         } else {
           return CNFFormula.make(f);
@@ -153,32 +152,35 @@ public class CNFFormula extends AbstractBinaryFormula {
   }
 
   private static Collection<Disjunction> collectClauses(AbstractBinaryFormula b) {
-    assert (b.getConnective().equals(BinaryConnective.AND));
-    Collection<Disjunction> result = HashSetFactory.make();
-    IFormula f1 = b.getF1();
-    if (f1 instanceof AbstractBinaryFormula) {
-      AbstractBinaryFormula b1 = (AbstractBinaryFormula) f1;
-      if (b1.getConnective().equals(BinaryConnective.AND)) {
-        result.addAll(collectClauses(b1));
+    if (b.getConnective().equals(BinaryConnective.AND)) {
+      Collection<Disjunction> result = HashSetFactory.make();
+      IFormula f1 = b.getF1();
+      if (f1 instanceof AbstractBinaryFormula) {
+        AbstractBinaryFormula b1 = (AbstractBinaryFormula) f1;
+        if (b1.getConnective().equals(BinaryConnective.AND)) {
+          result.addAll(collectClauses(b1));
+        } else {
+          result.add(toDisjunction(b1));
+        }
       } else {
-        result.add(toDisjunction(b1));
+        result.add(toDisjunction(f1));
       }
-    } else {
-      result.add(toDisjunction(f1));
-    }
 
-    IFormula f2 = b.getF2();
-    if (f2 instanceof AbstractBinaryFormula) {
-      AbstractBinaryFormula b2 = (AbstractBinaryFormula) f2;
-      if (b2.getConnective().equals(BinaryConnective.AND)) {
-        result.addAll(collectClauses(b2));
+      IFormula f2 = b.getF2();
+      if (f2 instanceof AbstractBinaryFormula) {
+        AbstractBinaryFormula b2 = (AbstractBinaryFormula) f2;
+        if (b2.getConnective().equals(BinaryConnective.AND)) {
+          result.addAll(collectClauses(b2));
+        } else {
+          result.add(toDisjunction(b2));
+        }
       } else {
-        result.add(toDisjunction(b2));
+        result.add(toDisjunction(f2));
       }
+      return result;
     } else {
-      result.add(toDisjunction(f2));
+      return Collections.singleton(toDisjunction(b));
     }
-    return result;
   }
 
   private static Disjunction toDisjunction(IFormula f) {
