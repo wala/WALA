@@ -12,12 +12,14 @@ package com.ibm.wala.ssa;
 
 import java.util.Collection;
 
+import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author sfink
+ * SSA Instruction for comparisons between floats, longs and doubles
  * 
+ * @author sfink
  */
 public class SSAComparisonInstruction extends SSAInstruction {
   private final int result;
@@ -28,6 +30,9 @@ public class SSAComparisonInstruction extends SSAInstruction {
 
   private final short opcode;
 
+  /**
+   * @param opcode opcode from list in {@link Constants}
+   */
   SSAComparisonInstruction(short opcode, int result, int val1, int val2) {
     super();
     this.opcode = opcode;
