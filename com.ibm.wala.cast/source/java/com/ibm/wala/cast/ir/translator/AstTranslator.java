@@ -46,6 +46,8 @@ import com.ibm.wala.cast.tree.impl.CAstCloner;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
 import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
+import com.ibm.wala.cast.tree.impl.CAstSymbolImplBase;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstTypeReference;
 import com.ibm.wala.cast.util.CAstPrinter;
@@ -997,6 +999,28 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
     public Object defaultInitValue() {
       return null;
+    }
+  }
+
+  public static class InternalCAstSymbol extends CAstSymbolImplBase {
+    public InternalCAstSymbol(String _name) {
+      super(_name, false, false, null);
+    }
+
+    public InternalCAstSymbol(String _name, boolean _isFinal) {
+      super(_name, _isFinal, false, null);
+    }
+
+    public InternalCAstSymbol(String _name, boolean _isFinal, boolean _isCaseInsensitive) {
+      super(_name, _isFinal, _isCaseInsensitive, null);
+    }
+
+    public InternalCAstSymbol(String _name, boolean _isFinal, boolean _isCaseInsensitive, Object _defaultInitValue) {
+      super(_name, _isFinal, _isCaseInsensitive, _defaultInitValue);
+    }
+
+    public boolean isInternalName() {
+      return true;
     }
   }
 
