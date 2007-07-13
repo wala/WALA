@@ -94,7 +94,16 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type,CodeInstance,
         fLocalTypeMap.put(anonLocalType, owningProc);
     }
 
-    private FieldReference referenceForField(FieldInstance field) {
+    /**
+     * Create a FieldReference for the given Polyglot FieldInstance.<br>
+     * N.B.: This method <b>does not canonicalize</b> the FieldReferences,
+     * but rather creates a new one for each call.
+     * You more likely want to call getFieldRef(). This method is exposed
+     * so that multiple Polyglot instances can use the translation services
+     * without having FieldInstances collide (producing the dreaded "we are
+     * TypeSystem_c but type Foo is from TypeSystem_c" exception).
+     */
+    public FieldReference referenceForField(FieldInstance field) {
         Type targetType= field.container();
         Type fieldType= field.type();
         TypeReference targetTypeRef= TypeReference.findOrCreate(fClassLoaderRef, typeToTypeID(targetType));
@@ -105,7 +114,16 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type,CodeInstance,
         return fieldRef;
     }
 
-    private TypeReference referenceForType(Type type) {
+    /**
+     * Create a TypeReference for the given Polyglot Type.<br>
+     * N.B.: This method <b>does not canonicalize</b> the TypeReferences,
+     * but rather creates a new one for each call.
+     * You more likely want to call getTypeRef(). This method is exposed
+     * so that multiple Polyglot instances can use the translation services
+     * without having Types collide (producing the dreaded "we are
+     * TypeSystem_c but type Foo is from TypeSystem_c" exception).
+     */
+    public TypeReference referenceForType(Type type) {
         TypeName typeName= TypeName.string2TypeName(typeToTypeID(type));
         TypeReference typeRef= TypeReference.findOrCreate(fClassLoaderRef, typeName);
 
@@ -145,7 +163,16 @@ public class PolyglotIdentityMapper implements IdentityMapper<Type,CodeInstance,
       return new Selector(name, desc);
     }
 
-    private MethodReference referenceForMethod(CodeInstance procInstance) {
+    /**
+     * Create a MethodReference for the given Polyglot MethodInstance.<br>
+     * N.B.: This method <b>does not canonicalize</b> the MethodReferences,
+     * but rather creates a new one for each call.
+     * You more likely want to call getMethodRef(). This method is exposed
+     * so that multiple Polyglot instances can use the translation services
+     * without having MethodInstances collide (producing the dreaded "we are
+     * TypeSystem_c but type Foo is from TypeSystem_c" exception).
+     */
+    public MethodReference referenceForMethod(CodeInstance procInstance) {
         // Handles both ConstructorInstance's and MethodInstance's
         TypeName ownerType= TypeName.string2TypeName(typeToTypeID(((MemberInstance)procInstance).container()));
         TypeReference ownerTypeRef= TypeReference.findOrCreate(fClassLoaderRef, ownerType);
