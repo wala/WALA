@@ -115,25 +115,15 @@ public class Simplifier {
    */
   public static Collection<IFormula> propositionalSimplify(Collection<IFormula> s, Collection<? extends IFormula> t) {
     debug1(s, t);
-    Collection<CNFFormula> cs = toCNF(s);
-    Collection<CNFFormula> ct = toCNF(t);
+    Collection<ICNFFormula> cs = toCNF(s);
+    Collection<ICNFFormula> ct = toCNF(t);
     debug2(cs, ct);
-    Collection<Disjunction> facts = collectClauses(ct);
+    Collection<IMaxTerm> facts = collectClauses(ct);
 
     Collection<IFormula> result = HashSetFactory.make();
-    for (CNFFormula f : cs) {
-      Collection<Disjunction> d = simplifyCNF(f.getDisjunctions(), facts);
-      if (d.size() == 1) {
-        Disjunction x = d.iterator().next();
-        Collection<? extends IFormula> y = x.getClauses();
-        if (y.size() == 1) {
-          result.add(y.iterator().next());
-        } else {
-          result.add(CNFFormula.make(d));
-        }
-      } else {
-        result.add(CNFFormula.make(d));
-      }
+    for (ICNFFormula f : cs) {
+      Collection<? extends IMaxTerm> d = simplifyCNF(f, facts);
+      result.add(CNFFormula.make(d));
     }
 
     if (DEBUG) {
@@ -145,11 +135,11 @@ public class Simplifier {
     return result;
   }
 
-  private static Collection<Disjunction> simplifyCNF(Collection<? extends Disjunction> s, Collection<Disjunction> facts) {
-    Collection<Disjunction> result = HashSetFactory.make();
-    for (Disjunction d : s) {
+  private static Collection<? extends IMaxTerm> simplifyCNF(ICNFFormula f, Collection<IMaxTerm> facts) {
+    Collection<IMaxTerm> result = HashSetFactory.make();
+    for (IMaxTerm d : collectClauses(Collections.singleton(f))) {
       if (isContradiction(d, facts)) {
-        return Collections.singleton(Disjunction.make(BooleanConstantFormula.FALSE));
+        return Collections.singleton(BooleanConstantFormula.FALSE);
       } else if (isTautology(d, facts)) {
         // do nothing.
       } else {
@@ -157,20 +147,24 @@ public class Simplifier {
       }
     }
     if (result.isEmpty()) {
-      return Collections.singleton(Disjunction.make(BooleanConstantFormula.TRUE));
+      return Collections.singleton(BooleanConstantFormula.TRUE);
     }
     return result;
   }
 
-  private static Collection<Disjunction> collectClauses(Collection<CNFFormula> s) {
-    Collection<Disjunction> result = HashSetFactory.make();
-    for (CNFFormula f : s) {
-      result.addAll(f.getDisjunctions());
+  private static Collection<IMaxTerm> collectClauses(Collection<ICNFFormula> s) {
+    Collection<IMaxTerm> result = HashSetFactory.make();
+    for (ICNFFormula f : s) {
+      if (f instanceof CNFFormula) {
+        result.addAll(((CNFFormula) f).getMaxTerms());
+      } else {
+        result.add((IMaxTerm) f);
+      }
     }
     return result;
   }
 
-  private static void debug2(Collection<CNFFormula> cs, Collection<CNFFormula> ct) {
+  private static void debug2(Collection<ICNFFormula> cs, Collection<ICNFFormula> ct) {
     if (DEBUG) {
       System.err.println("--cs--");
       for (IFormula f : cs) {
@@ -196,8 +190,8 @@ public class Simplifier {
     }
   }
 
-  private static Collection<CNFFormula> toCNF(Collection<? extends IFormula> s) {
-    Collection<CNFFormula> result = HashSetFactory.make();
+  private static Collection<ICNFFormula> toCNF(Collection<? extends IFormula> s) {
+    Collection<ICNFFormula> result = HashSetFactory.make();
     for (IFormula f : s) {
       result.add(CNFFormula.make(f));
     }
@@ -209,8 +203,8 @@ public class Simplifier {
    *            formulae that can be treated as axioms
    * @return true if we can easily prove f is a contradiction
    */
-  public static boolean isContradiction(IFormula f, Collection<Disjunction> facts) {
-    for (Disjunction d : facts) {
+  public static boolean isContradiction(IFormula f, Collection<IMaxTerm> facts) {
+    for (IMaxTerm d : facts) {
       if (contradicts(d, f)) {
         return true;
       }
@@ -223,11 +217,11 @@ public class Simplifier {
           return true;
         }
         IFormula not1 = NotFormula.make(b.getF1());
-        if (implies(Disjunction.make(Collections.singleton(b.getF2())), not1)) {
+        if (implies(b.getF2(), not1)) {
           return true;
         }
         IFormula not2 = NotFormula.make(b.getF2());
-        if (implies(Disjunction.make(Collections.singleton(b.getF1())), not2)) {
+        if (implies(b.getF1(), not2)) {
           return true;
         }
       } else if (b.getConnective().equals(BinaryConnective.OR)) {
@@ -257,48 +251,45 @@ public class Simplifier {
     return false;
   }
 
-  private static boolean contradicts(Disjunction axiom, IFormula f) {
+  private static boolean contradicts(IMaxTerm axiom, IFormula f) {
     IFormula notF = NotFormula.make(f);
     return implies(axiom, notF);
   }
 
-  private static boolean implies(Disjunction axiom, IFormula f) {
-    Collection<? extends IFormula> c = axiom.getClauses();
-    if (c.size() == 1) {
-      IFormula a = c.iterator().next();
-      if (a.equals(f)) {
-        return true;
-      }
+  private static boolean implies(IFormula axiom, IFormula f) {
+    if (axiom.equals(f)) {
+      return true;
     }
-    if (f instanceof Disjunction) {
-      Disjunction d = (Disjunction) f;
-      Collection<? extends IFormula> dc = d.getClauses();
-      if (sameValue(c, dc)) {
-        return true;
-      }
-    }
+    // TODO
+    // if (f instanceof Disjunction) {
+    // Disjunction d = (Disjunction) f;
+    // Collection<? extends IFormula> dc = d.getClauses();
+    // if (sameValue(c, dc)) {
+    // return true;
+    // }
+    // }
     return false;
   }
 
-  private static boolean sameValue(Collection<?> a, Collection<?> b) {
-    if (a.size() != b.size()) {
-      return false;
-    }
-    for (Object x : a) {
-      if (!b.contains(x)) {
-        return false;
-      }
-    }
-    return true;
-  }
+  // private static boolean sameValue(Collection<?> a, Collection<?> b) {
+  // if (a.size() != b.size()) {
+  // return false;
+  // }
+  // for (Object x : a) {
+  // if (!b.contains(x)) {
+  // return false;
+  // }
+  // }
+  // return true;
+  // }
 
   /**
    * @param facts
    *            formulae that can be treated as axioms
    * @return true if we can easily prove f is a tautology
    */
-  public static boolean isTautology(IFormula f, Collection<Disjunction> facts) {
-    for (Disjunction d : facts) {
+  public static boolean isTautology(IFormula f, Collection<IMaxTerm> facts) {
+    for (IMaxTerm d : facts) {
       if (implies(d, f)) {
         return true;
       }
@@ -442,20 +433,8 @@ public class Simplifier {
     }
     switch (formula.getKind()) {
     case BINARY:
-      // some special logic to avoid uglifying CNF formula during substitution
-      if (formula instanceof CNFFormula) {
-        CNFFormula cnf = (CNFFormula) formula;
-        Collection<Disjunction> newD = HashSetFactory.make();
-        for (Disjunction d : cnf.getDisjunctions()) {
-          newD.add(substituteDisjunction(d, t1, t2));
-        }
-        return CNFFormula.make(newD);
-      } else if (formula instanceof Disjunction) {
-        return substituteDisjunction((Disjunction) formula, t1, t2);
-      } else {
-        AbstractBinaryFormula b = (AbstractBinaryFormula) formula;
-        return BinaryFormula.make(b.getConnective(), substitute(b.getF1(), t1, t2), substitute(b.getF2(), t1, t2));
-      }
+      AbstractBinaryFormula b = (AbstractBinaryFormula) formula;
+      return BinaryFormula.make(b.getConnective(), substitute(b.getF1(), t1, t2), substitute(b.getF2(), t1, t2));
     case NEGATION:
       NotFormula n = (NotFormula) formula;
       return NotFormula.make(substitute(n.getFormula(), t1, t2));
@@ -479,14 +458,6 @@ public class Simplifier {
       Assertions.UNREACHABLE();
       return null;
     }
-  }
-
-  private static Disjunction substituteDisjunction(Disjunction d, ITerm t1, ITerm t2) {
-    Collection<IFormula> clauses = HashSetFactory.make();
-    for (IFormula f : d.getClauses()) {
-      clauses.add(substitute(f, t1, t2));
-    }
-    return Disjunction.make(clauses);
   }
 
   /**
@@ -533,11 +504,11 @@ public class Simplifier {
       if (Wildcard.STAR.equals(t2)) {
         return true;
       } else {
-        if (t2 instanceof FunctionTerm){
-          FunctionTerm f1 = (FunctionTerm)t1;
-          FunctionTerm f2 = (FunctionTerm)t2;
+        if (t2 instanceof FunctionTerm) {
+          FunctionTerm f1 = (FunctionTerm) t1;
+          FunctionTerm f2 = (FunctionTerm) t2;
           if (f1.getFunction().equals(f2.getFunction())) {
-            for (int i =0; i< f1.getParameters().size(); i++) {
+            for (int i = 0; i < f1.getParameters().size(); i++) {
               ITerm x = f1.getParameters().get(i);
               ITerm y = f2.getParameters().get(i);
               if (!termsMatch(x, y)) {
@@ -587,12 +558,12 @@ public class Simplifier {
   }
 
   public static boolean isTautology(IFormula f) {
-    Collection<Disjunction> emptyTheory = Collections.emptySet();
+    Collection<IMaxTerm> emptyTheory = Collections.emptySet();
     return isTautology(f, emptyTheory);
   }
 
   public static boolean isContradiction(IFormula f) {
-    Collection<Disjunction> emptyTheory = Collections.emptySet();
+    Collection<IMaxTerm> emptyTheory = Collections.emptySet();
     return isContradiction(f, emptyTheory);
   }
 

@@ -20,23 +20,29 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * A formula in conjunctive normal form.
  * 
+ * TODO: rename and refactor
+ * 
  * @author sjfink
  */
-public class CNFFormula extends AbstractBinaryFormula {
+public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
 
   private static final boolean DEBUG = true;
 
-  // invariant: size >= 1
-  private final Collection<Disjunction> disjunctions;
+  // invariant: size >= 2
+  private final Collection<? extends IMaxTerm> maxTerms;
 
-  private CNFFormula(Collection<Disjunction> clauses) {
-    assert !clauses.isEmpty();
-    this.disjunctions = clauses;
+  private CNFFormula(Collection<? extends IMaxTerm> maxTerms) {
+    assert maxTerms.size() >= 2;
+    this.maxTerms = maxTerms;
+  }
+
+  private CNFFormula(IMaxTerm single) {
+    this.maxTerms = Collections.singleton(single);
   }
 
   public Collection<? extends IConstant> getConstants() {
     Collection<IConstant> result = HashSetFactory.make();
-    for (IFormula f : disjunctions) {
+    for (IFormula f : maxTerms) {
       result.addAll(f.getConstants());
     }
     return result;
@@ -44,7 +50,7 @@ public class CNFFormula extends AbstractBinaryFormula {
 
   public Collection<? extends ITerm> getTerms() {
     Collection<ITerm> result = HashSetFactory.make();
-    for (IFormula f : disjunctions) {
+    for (IFormula f : maxTerms) {
       result.addAll(f.getTerms());
     }
     return result;
@@ -52,18 +58,14 @@ public class CNFFormula extends AbstractBinaryFormula {
 
   public Collection<Variable> getFreeVariables() {
     Collection<Variable> result = HashSetFactory.make();
-    for (IFormula f : disjunctions) {
+    for (IFormula f : maxTerms) {
       result.addAll(f.getFreeVariables());
     }
     return result;
   }
 
-  public boolean isAtomic() {
-    return false;
-  }
-
   public String prettyPrint(ILogicDecorator d) {
-    if (disjunctions.size() == 1) {
+    if (maxTerms.size() == 1) {
       return getF1().prettyPrint(d);
     } else {
       StringBuffer result = new StringBuffer();
@@ -78,7 +80,7 @@ public class CNFFormula extends AbstractBinaryFormula {
     }
   }
 
-  public static CNFFormula make(IFormula f) {
+  public static ICNFFormula make(IFormula f) {
     if (DEBUG) {
       System.err.println("make CNF " + f);
     }
@@ -88,11 +90,8 @@ public class CNFFormula extends AbstractBinaryFormula {
       switch (f.getKind()) {
       case RELATION:
       case QUANTIFIED:
-      case CONSTANT: {
-        Disjunction single = Disjunction.make(Collections.singleton(f));
-        Collection<Disjunction> clauses = Collections.singleton(single);
-        return new CNFFormula(clauses);
-      }
+      case CONSTANT:
+        return (IMaxTerm) f;
       case BINARY:
       case NEGATION: {
         f = trivialCleanup(f);
@@ -104,22 +103,25 @@ public class CNFFormula extends AbstractBinaryFormula {
         if (DEBUG) {
           System.err.println("after eliminate arrows " + f);
         }
+
         f = pushNegations(f);
-        if (f instanceof NotFormula) {
-          Disjunction single = Disjunction.make(Collections.singleton(f));
-          Collection<Disjunction> clauses = Collections.singleton(single);
-          return new CNFFormula(clauses);
-        }
         if (DEBUG) {
           System.err.println("after pushNegations " + f);
         }
+
         f = distribute(f);
         if (DEBUG) {
           System.err.println("after distribute " + f);
         }
+
         if (f instanceof AbstractBinaryFormula) {
           AbstractBinaryFormula b = (AbstractBinaryFormula) f;
-          return new CNFFormula(collectClauses(b));
+          if (b.getConnective().equals(BinaryConnective.AND)) {
+            return CNFFormula.make(collectMaxTerms(f));
+          } else {
+            Assertions.UNREACHABLE(f);
+            return null;
+          }
         } else {
           return CNFFormula.make(f);
         }
@@ -128,6 +130,25 @@ public class CNFFormula extends AbstractBinaryFormula {
         Assertions.UNREACHABLE(f + " " + f.getKind());
         return null;
       }
+    }
+  }
+
+  private static Collection<IMaxTerm> collectMaxTerms(IFormula f) {
+    switch (f.getKind()) {
+    case CONSTANT:
+    case QUANTIFIED:
+    case RELATION:
+      return Collections.singleton((IMaxTerm) f);
+    case BINARY:
+      AbstractBinaryFormula b = (AbstractBinaryFormula) f;
+      Collection<IMaxTerm> result = HashSetFactory.make();
+      result.addAll(collectMaxTerms(b.getF1()));
+      result.addAll(collectMaxTerms(b.getF2()));
+      return result;
+    case NEGATION:
+    default:
+      Assertions.UNREACHABLE(f);
+      return null;
     }
   }
 
@@ -148,74 +169,6 @@ public class CNFFormula extends AbstractBinaryFormula {
       default:
         return f;
       }
-    }
-  }
-
-  private static Collection<Disjunction> collectClauses(AbstractBinaryFormula b) {
-    if (b.getConnective().equals(BinaryConnective.AND)) {
-      Collection<Disjunction> result = HashSetFactory.make();
-      IFormula f1 = b.getF1();
-      if (f1 instanceof AbstractBinaryFormula) {
-        AbstractBinaryFormula b1 = (AbstractBinaryFormula) f1;
-        if (b1.getConnective().equals(BinaryConnective.AND)) {
-          result.addAll(collectClauses(b1));
-        } else {
-          result.add(toDisjunction(b1));
-        }
-      } else {
-        result.add(toDisjunction(f1));
-      }
-
-      IFormula f2 = b.getF2();
-      if (f2 instanceof AbstractBinaryFormula) {
-        AbstractBinaryFormula b2 = (AbstractBinaryFormula) f2;
-        if (b2.getConnective().equals(BinaryConnective.AND)) {
-          result.addAll(collectClauses(b2));
-        } else {
-          result.add(toDisjunction(b2));
-        }
-      } else {
-        result.add(toDisjunction(f2));
-      }
-      return result;
-    } else {
-      return Collections.singleton(toDisjunction(b));
-    }
-  }
-
-  private static Disjunction toDisjunction(IFormula f) {
-    switch (f.getKind()) {
-    case BINARY:
-      AbstractBinaryFormula b = (AbstractBinaryFormula) f;
-      if (b.getConnective().equals(BinaryConnective.OR)) {
-        IFormula f1 = b.getF1();
-        Disjunction d2 = toDisjunction(b.getF2());
-        Collection<IFormula> c = HashSetFactory.make();
-        c.add(f1);
-        c.addAll(d2.getClauses());
-        return Disjunction.make(c);
-      } else {
-        Assertions.UNREACHABLE(b.getConnective());
-        return null;
-      }
-    case CONSTANT:
-    case QUANTIFIED:
-    case RELATION:
-    case NEGATION:
-      return Disjunction.make(Collections.singleton(simplify(f)));
-    default:
-      Assertions.UNREACHABLE(f.getKind());
-      return null;
-    }
-  }
-
-  private static IFormula simplify(IFormula f) {
-    if (Simplifier.isTautology(f)) {
-      return BooleanConstantFormula.TRUE;
-    } else if (Simplifier.isContradiction(f)) {
-      return BooleanConstantFormula.FALSE;
-    } else {
-      return f;
     }
   }
 
@@ -362,7 +315,7 @@ public class CNFFormula extends AbstractBinaryFormula {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime * result + ((disjunctions == null) ? 0 : disjunctions.hashCode());
+    result = prime * result + ((maxTerms == null) ? 0 : maxTerms.hashCode());
     return result;
   }
 
@@ -375,10 +328,10 @@ public class CNFFormula extends AbstractBinaryFormula {
     if (getClass() != obj.getClass())
       return false;
     final CNFFormula other = (CNFFormula) obj;
-    if (disjunctions == null) {
-      if (other.disjunctions != null)
+    if (maxTerms == null) {
+      if (other.maxTerms != null)
         return false;
-    } else if (!disjunctions.equals(other.disjunctions))
+    } else if (!maxTerms.equals(other.maxTerms))
       return false;
     return true;
   }
@@ -390,38 +343,37 @@ public class CNFFormula extends AbstractBinaryFormula {
 
   @Override
   public IFormula getF1() {
-    return disjunctions.iterator().next();
+    return maxTerms.iterator().next();
   }
 
   @Override
   public IFormula getF2() {
-    // if clauses.size() == 1, we fake this by saying we are getF1() AND true
-    if (disjunctions.size() == 1) {
-      return BooleanConstantFormula.TRUE;
-    } else {
-      Collection<Disjunction> c = HashSetFactory.make(disjunctions);
-      c.remove(getF1());
-      return new CNFFormula(c);
-    }
+    Collection<? extends IMaxTerm> c = HashSetFactory.make(maxTerms);
+    c.remove(getF1());
+    return CNFFormula.make(c);
   }
 
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer("CNF\n");
     int i = 1;
-    for (Disjunction d : getDisjunctions()) {
-      result.append(" (" + i + ") " + d.prettyPrint(DefaultDecorator.instance()) + "\n");
+    for (IMaxTerm t : getMaxTerms()) {
+      result.append(" (" + i + ") " + t.prettyPrint(DefaultDecorator.instance()) + "\n");
       i++;
     }
     return result.toString();
   }
 
-  public Collection<? extends Disjunction> getDisjunctions() {
-    return Collections.unmodifiableCollection(disjunctions);
+  public Collection<IMaxTerm> getMaxTerms() {
+    return Collections.unmodifiableCollection(maxTerms);
   }
 
-  public static CNFFormula make(Collection<Disjunction> d) {
-    return new CNFFormula(d);
+  public static ICNFFormula make(Collection<? extends IMaxTerm> d) {
+    if (d.size() == 1) {
+      return d.iterator().next();
+    } else {
+      return new CNFFormula(d);
+    }
   }
 
 }

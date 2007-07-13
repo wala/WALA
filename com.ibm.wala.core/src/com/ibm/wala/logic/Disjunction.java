@@ -21,12 +21,13 @@ import com.ibm.wala.util.collections.HashSetFactory;
  * 
  * @author sjfink
  */
-public class Disjunction extends AbstractBinaryFormula {
+public class Disjunction extends AbstractBinaryFormula implements IMaxTerm {
 
-  // invariant: size >= 1
+  // invariant: size >= 2
   private final Collection<? extends IFormula> clauses;
 
   private Disjunction(Collection<? extends IFormula> clauses) {
+    assert clauses.size() >= 2;
     this.clauses = clauses;
   }
 
@@ -37,7 +38,7 @@ public class Disjunction extends AbstractBinaryFormula {
     }
     return result;
   }
-  
+
   public Collection<? extends ITerm> getTerms() {
     Collection<ITerm> result = HashSetFactory.make();
     for (IFormula f : clauses) {
@@ -52,10 +53,6 @@ public class Disjunction extends AbstractBinaryFormula {
       result.addAll(f.getFreeVariables());
     }
     return result;
-  }
-
-  public boolean isAtomic() {
-    return false;
   }
 
   public String prettyPrint(ILogicDecorator d) {
@@ -111,19 +108,14 @@ public class Disjunction extends AbstractBinaryFormula {
 
   @Override
   public IFormula getF2() {
-    // if clauses.size() == 1, we fake this by saying we are getF1() OR false
-    if (clauses.size() == 1) {
-      return BooleanConstantFormula.FALSE;
-    } else {
-      Collection<? extends IFormula> c = HashSetFactory.make(clauses);
-      c.remove(getF1());
-      return make(c);
-    }
+    Collection<? extends IFormula> c = HashSetFactory.make(clauses);
+    c.remove(getF1());
+    return make(c);
   }
 
   public static Disjunction make(Collection<? extends IFormula> clauses) {
     Collection<IFormula> newClauses = HashSetFactory.make();
-    for (IFormula c: clauses) {
+    for (IFormula c : clauses) {
       assert !(c instanceof Disjunction);
       if (Simplifier.isTautology(c)) {
         return make(BooleanConstantFormula.TRUE);
@@ -145,7 +137,6 @@ public class Disjunction extends AbstractBinaryFormula {
     Collection<? extends IFormula> c = Collections.singleton(f);
     return new Disjunction(c);
   }
-  
 
   @Override
   public String toString() {

@@ -162,9 +162,4 @@ public class BinaryFormula extends AbstractBinaryFormula {
       return false;
     return true;
   }
-
-  public boolean isAtomic() {
-    return false;
-  }
-
 }

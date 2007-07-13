@@ -13,7 +13,7 @@ package com.ibm.wala.logic;
 import java.util.Collection;
 import java.util.Collections;
 
-public class BooleanConstantFormula implements IFormula {
+public class BooleanConstantFormula implements IMaxTerm {
 
   public static final BooleanConstantFormula TRUE = new BooleanConstantFormula(BooleanConstant.TRUE);
 
@@ -40,10 +40,6 @@ public class BooleanConstantFormula implements IFormula {
 
   public Kind getKind() {
     return Kind.CONSTANT;
-  }
-
-  public boolean isAtomic() {
-    return true;
   }
 
   @Override

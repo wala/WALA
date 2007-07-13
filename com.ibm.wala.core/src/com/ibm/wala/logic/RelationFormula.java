@@ -22,7 +22,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
  * @author sjfink
  * 
  */
-public class RelationFormula implements IFormula {
+public class RelationFormula implements IMaxTerm {
   private final IRelation R;
 
   private final List<ITerm> terms;
@@ -170,9 +170,5 @@ public class RelationFormula implements IFormula {
     result.append(" ");
     result.append(terms.get(1).prettyPrint(d));
     return result.toString();
-  }
-
-  public boolean isAtomic() {
-    return true;
   }
 }

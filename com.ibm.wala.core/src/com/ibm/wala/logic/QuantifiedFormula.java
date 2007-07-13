@@ -14,7 +14,7 @@ import java.util.Collection;
 
 import com.ibm.wala.logic.ILogicConstants.Quantifier;
 
-public class QuantifiedFormula implements IFormula {
+public class QuantifiedFormula implements IMaxTerm {
 
   private final IFormula f;
 
@@ -120,9 +120,4 @@ public class QuantifiedFormula implements IFormula {
   public String prettyPrint(ILogicDecorator d) {
     return d.prettyPrint(getQuantifier()) + " " + d.prettyPrint(getBoundVar()) + "." + getFormula().prettyPrint(d);
   }
-
-  public boolean isAtomic() {
-    return false;
-  }
-
 }

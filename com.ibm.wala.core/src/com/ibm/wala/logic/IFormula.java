@@ -27,11 +27,6 @@ public interface IFormula {
   static enum Kind {
     RELATION, NEGATION, BINARY, QUANTIFIED, CONSTANT
   }
-  
-  /**
-   * Constant and Relation formulae are considered atomic.  Others not.
-   */
-  public boolean isAtomic();
 
   public Kind getKind();
   

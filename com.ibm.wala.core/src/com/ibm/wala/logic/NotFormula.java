@@ -52,6 +52,12 @@ public class NotFormula implements IFormula {
       }
       return new NotFormula(f);
     case CONSTANT:
+      if (f.equals(BooleanConstantFormula.TRUE)) {
+        return BooleanConstantFormula.FALSE;
+      } else {
+        assert f.equals(BooleanConstantFormula.FALSE);
+        return BooleanConstantFormula.TRUE;
+      }
     case BINARY:
     case NEGATION:
     case QUANTIFIED:
@@ -87,9 +93,5 @@ public class NotFormula implements IFormula {
 
   public String prettyPrint(ILogicDecorator d) {
     return "not(" + f.prettyPrint(d) + ")";
-  }
-
-  public boolean isAtomic() {
-    return false;
   }
 }
