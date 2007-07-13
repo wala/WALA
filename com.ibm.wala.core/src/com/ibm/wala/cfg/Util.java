@@ -70,6 +70,10 @@ public class Util {
     return null;
   }
 
+  /**
+   * When the tested value of the switch statement in b has value c, which
+   * basic block does control transfer to.
+   */
   public static IBasicBlock resolveSwitch(ControlFlowGraph G, IBasicBlock b, int c) {
     Assertions._assert(endsWithSwitch(G, b));
     SSASwitchInstruction s = (SSASwitchInstruction) getLastInstruction(G, b);
@@ -90,6 +94,11 @@ public class Util {
     return G.getBlockForInstruction(sw.getDefault()).equals(s);
   }
 
+  /**
+   * When a switch statement at the end of block b transfers control to block s,
+   * which case was taken?
+   * TODO: Is this correct?  Can't we have multiple cases that apply?  Check on this.
+   */
   public static int getSwitchLabel(ControlFlowGraph G, IBasicBlock b, IBasicBlock s) {
     Assertions._assert(endsWithSwitch(G, b));
     SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);

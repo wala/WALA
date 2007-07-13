@@ -18,6 +18,8 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntIterator;
 
 /**
+ * SSA instruction representing a switch statement.
+ * 
  * @author sjfink
  *
  */
@@ -28,6 +30,10 @@ public class SSASwitchInstruction extends SSAInstruction {
 
   private final int[] casesAndLabels;
 
+  /**
+   * The labels in casesAndLabels represent <em>instruction indices</em> in the IR that each
+   * switch case branches to.
+   */
   SSASwitchInstruction(int val, int defaultLabel, int[] casesAndLabels) {
     super();
     this.val = val;
@@ -43,7 +49,7 @@ public class SSASwitchInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return "switch " + getValueString(symbolTable, d, val);
+    return "switch " + getValueString(symbolTable, d, val) + " " + casesAndLabels;
   }
 
   /**
@@ -116,7 +122,7 @@ public class SSASwitchInstruction extends SSAInstruction {
 
   @Override
   public int hashCode() {
-    return val * 1663 ^ 3499;
+    return val * 1663 + 3499;
   }
 
   /*
