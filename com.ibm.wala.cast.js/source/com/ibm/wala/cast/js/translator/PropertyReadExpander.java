@@ -2,6 +2,7 @@ package com.ibm.wala.cast.js.translator;
 
 import java.util.Map;
 
+import com.ibm.wala.cast.ir.translator.AstTranslator.InternalCAstSymbol;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstNode;
 import com.ibm.wala.cast.tree.impl.CAstOperator;
@@ -91,7 +92,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
     return
       Ast.makeNode(CAstNode.BLOCK_EXPR,
         Ast.makeNode(CAstNode.DECL_STMT,
-          Ast.makeConstant(new CAstSymbolImpl(receiverTemp, false, false, true)),
+          Ast.makeConstant(new InternalCAstSymbol(receiverTemp, false, false)),
 	  receiver),
         Ast.makeNode(CAstNode.LOOP,
           Ast.makeNode(CAstNode.UNARY_EXPR,
@@ -125,10 +126,10 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
     return
       Ast.makeNode(CAstNode.BLOCK_EXPR,
         Ast.makeNode(CAstNode.DECL_STMT,
-	  Ast.makeConstant(new CAstSymbolImpl(receiverTemp, false, false, true)),
+	  Ast.makeConstant(new InternalCAstSymbol(receiverTemp, false, false)),
 	  receiver),
 	Ast.makeNode(CAstNode.DECL_STMT,
-	  Ast.makeConstant(new CAstSymbolImpl(elementTemp, false, false, true)),
+	  Ast.makeConstant(new InternalCAstSymbol(elementTemp, false, false)),
 	  element),
 	Ast.makeNode(CAstNode.LOOP,
 	  Ast.makeNode(CAstNode.UNARY_EXPR,
@@ -174,11 +175,11 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
 	String temp2 = TEMP_NAME + (readTempCounter++);
 	CAstNode copy = Ast.makeNode(CAstNode.BLOCK_EXPR,
 	  Ast.makeNode(CAstNode.DECL_STMT,
-	    Ast.makeConstant(new CAstSymbolImpl(temp1, true, false, true)),
+	    Ast.makeConstant(new InternalCAstSymbol(temp1, true, false)),
 	    lval),
 	  rval,
 	  Ast.makeNode(CAstNode.DECL_STMT,
-	    Ast.makeConstant(new CAstSymbolImpl(temp2, true, false, true)),
+	    Ast.makeConstant(new InternalCAstSymbol(temp2, true, false)),
 	    Ast.makeNode(CAstNode.BINARY_EXPR, op, 
 	      Ast.makeNode(CAstNode.VAR, Ast.makeConstant(temp1)),
 	      rval)),
