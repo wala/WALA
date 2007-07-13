@@ -113,6 +113,8 @@ import polyglot.types.Type;
 import polyglot.types.TypeSystem;
 import polyglot.util.Position;
 
+import com.ibm.wala.cast.ir.translator.AstTranslator;
+import com.ibm.wala.cast.ir.translator.AstTranslator.InternalCAstSymbol;
 import com.ibm.wala.cast.java.loader.Util;
 import com.ibm.wala.cast.java.translator.JavaProcedureEntity;
 import com.ibm.wala.cast.java.translator.TranslatorToCAst;
@@ -689,7 +691,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       handleThrowsFromCall(ctorInst, n, wc);
 
       return makeNode(wc, fFactory, n, CAstNode.LOCAL_SCOPE, makeNode(wc, fFactory, n, CAstNode.BLOCK_EXPR, makeNode(wc, fFactory,
-          n, CAstNode.DECL_STMT, fFactory.makeConstant(new CAstSymbolImpl(tmpName, true, false, true)), newNode), callNode, makeNode(wc,
+          n, CAstNode.DECL_STMT, fFactory.makeConstant(new InternalCAstSymbol(tmpName, true)), newNode), callNode, makeNode(wc,
           fFactory, n, CAstNode.VAR, fFactory.makeConstant(tmpName))));
     }
 
@@ -2118,10 +2120,10 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
   }
 
-  private static class PolyglotSourcePosition extends AbstractSourcePosition {
+  protected static class PolyglotSourcePosition extends AbstractSourcePosition {
     private final Position p;
 
-    PolyglotSourcePosition(Position p) {
+    public PolyglotSourcePosition(Position p) {
       this.p = p;
     }
 
