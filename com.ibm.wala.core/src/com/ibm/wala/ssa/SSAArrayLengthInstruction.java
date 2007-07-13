@@ -17,8 +17,9 @@ import com.ibm.wala.util.Exceptions;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
+ * SSA instruction representing v_x := arraylength v_y
+ * 
  * @author sfink
- *  
  */
 public class SSAArrayLengthInstruction extends SSAInstruction {
   private final int result;
