@@ -91,6 +91,7 @@ public class Util {
     }
     Assertions._assert(endsWithSwitch(G, b));
     SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
+    assert G.getBlockForInstruction(sw.getDefault()) != null;
     return G.getBlockForInstruction(sw.getDefault()).equals(s);
   }
 
