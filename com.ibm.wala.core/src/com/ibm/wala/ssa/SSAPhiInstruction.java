@@ -115,8 +115,6 @@ public class SSAPhiInstruction extends SSAInstruction {
   }
 
   /**
-   * Method setValues.
-   * 
    * @param i
    */
   public void setValues(int[] i) {
