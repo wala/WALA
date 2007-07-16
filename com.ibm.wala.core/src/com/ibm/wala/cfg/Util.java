@@ -153,9 +153,12 @@ public class Util {
     return null;
   }
 
-  /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#whichPred(com.ibm.wala.cfg.IBasicBlock,
-   *      com.ibm.wala.cfg.IBasicBlock)
+  /**
+   * Given that a is a predecessor of b in the cfg ..
+   * 
+   * When we enumerate the predecessors of b in order, which is the first index in this
+   * order in which a appears?  Note that this order corresponds to the order of
+   * operands in a phi instruction.
    */
   public static int whichPred(ControlFlowGraph cfg, IBasicBlock a, IBasicBlock b) {
     if (cfg == null) {
