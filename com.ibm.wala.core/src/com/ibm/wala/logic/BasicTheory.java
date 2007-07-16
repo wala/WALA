@@ -12,7 +12,6 @@ package com.ibm.wala.logic;
 
 import java.util.Collection;
 
-
 public class BasicTheory extends AbstractTheory {
 
   private final IVocabulary vocab;
