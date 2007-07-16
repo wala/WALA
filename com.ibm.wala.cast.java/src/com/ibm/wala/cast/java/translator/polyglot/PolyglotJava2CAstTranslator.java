@@ -118,15 +118,7 @@ import com.ibm.wala.cast.java.loader.Util;
 import com.ibm.wala.cast.java.translator.JavaProcedureEntity;
 import com.ibm.wala.cast.java.translator.TranslatorToCAst;
 import com.ibm.wala.cast.java.types.JavaType;
-import com.ibm.wala.cast.tree.CAst;
-import com.ibm.wala.cast.tree.CAstControlFlowMap;
-import com.ibm.wala.cast.tree.CAstEntity;
-import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.CAstNodeTypeMap;
-import com.ibm.wala.cast.tree.CAstQualifier;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap;
-import com.ibm.wala.cast.tree.CAstType;
-import com.ibm.wala.cast.tree.CAstTypeDictionary;
+import com.ibm.wala.cast.tree.*;
 import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
 import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
 import com.ibm.wala.cast.tree.impl.CAstImpl;
@@ -1123,7 +1115,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       else if (type.isDouble() || type.isFloat())
         defaultValue = new Double(0.0);
       else
-        defaultValue = null;
+        defaultValue = CAstSymbol.NULL_DEFAULT_VALUE;
 
       boolean isFinal = ld.flags().isFinal();
 
