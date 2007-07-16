@@ -92,7 +92,7 @@ public class ThinSlicer {
     private final Map<Statement, Set<PointerKey>> ref;
 
     /**
-     * What statmements write each pointer key?
+     * What statements write each pointer key?
      */
     final Map<PointerKey, Set<Statement>> invMod;
 
