@@ -12,7 +12,6 @@
 package com.ibm.wala.ssa.analysis;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -26,7 +25,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
-import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
@@ -69,27 +67,12 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
   /**
    * underlying array of basic blocks
    */
-  private IBasicBlock[] basicBlocks;
+  private SingleInstructionBasicBlock[] basicBlocks;
 
   /**
    * map SSAInstructions to their corresponding SingleInstructionBlocks
    */
   final Map<SSAInstruction, SingleInstructionBasicBlock> instructionToBlock = HashMapFactory.make();
-
-  /**
-   * instructions in the method
-   */
-  final private SSAInstruction[] instructions;
-
-  /**
-   * analyzed method
-   */
-  final private IMethod method;
-
-  /**
-   * underlying SSA CFG
-   */
-  final private SSACFG cfg;
 
   /**
    * underlying IR
@@ -147,19 +130,11 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
-    this.cfg = ir.getControlFlowGraph();
     this.ir = ir;
     if (DEBUG) {
       debugDump();
     }
-    this.instructions = ir.getInstructions();
-    this.method = ir.getMethod();
 
-    if (Assertions.verifyAssertions) {
-      if (method.getDeclaringClass() == null) {
-        Assertions._assert(method.getDeclaringClass() != null, "null declaring class for " + method);
-      }
-    }
     successors = HashMapFactory.make();
     predecessors = HashMapFactory.make();
     createBasicBlocks();
@@ -223,7 +198,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     entryBlock.setIsEntryBlock(true);
     basicBlockList.add(entryBlock);
 
-    for (Iterator it = cfg.iterator(); it.hasNext();) {
+    for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
       BasicBlock bb = (BasicBlock) it.next();
       // add phis first
       for (Iterator phiIt = bb.iteratePhis(); phiIt.hasNext();) {
@@ -245,7 +220,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
 
       // then other instructions
       for (int i = bb.getFirstInstructionIndex(); i <= bb.getLastInstructionIndex(); i++) {
-        SSAInstruction s = instructions[i];
+        SSAInstruction s = ir.getInstructions()[i];
         if (s != null) {
           int blockNum = basicBlockList.size();
           basicBlockList.add(new SingleInstructionBasicBlock(blockNum, s, i));
@@ -285,7 +260,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    */
   private void createGraphEdges() {
 
-    for (Iterator it = cfg.iterator(); it.hasNext();) {
+    for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
       BasicBlock bb = (BasicBlock) it.next();
 
       if (!basicBlockHasNonNullInstruction(bb) && bb.isEntryBlock()) {
@@ -412,7 +387,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
 
     // create initial set of edges
     if (!instbb.isPiBlock()) {
-      for (Iterator sit = cfg.getSuccNodes(bb); sit.hasNext();) {
+      for (Iterator sit = ir.getControlFlowGraph().getSuccNodes(bb); sit.hasNext();) {
         BasicBlock succNode = (BasicBlock) sit.next();
         boolean fallThrough = isFallThroughEdge(bb, succNode);
         edgeWorkSet.add(new BBEdge(bb, succNode, fallThrough));
@@ -420,7 +395,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     } else {
       SSAPiInstruction pi = (SSAPiInstruction) instbb.getInstruction();
       int succNum = pi.getSuccessor();
-      BasicBlock succNode = (BasicBlock) cfg.getNode(succNum);
+      BasicBlock succNode = (BasicBlock) ir.getControlFlowGraph().getNode(succNum);
       boolean fallThrough = isFallThroughEdge(bb, succNode);
       edgeWorkSet.add(new BBEdge(bb, succNode, fallThrough));
     }
@@ -471,7 +446,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
       } else {
         // we should skip the block, and add its successor to the
         // workset
-        for (Iterator sit = cfg.getSuccNodes(edge.dest); sit.hasNext();) {
+        for (Iterator sit = ir.getControlFlowGraph().getSuccNodes(edge.dest); sit.hasNext();) {
           BasicBlock succNode = (BasicBlock) sit.next();
           // preserve the "fallthrough" label
           edgeWorkSet.add(new BBEdge(bb, succNode, edge.isFallThrough));
@@ -591,7 +566,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
 
     // then other instructions
     for (int i = bb.getFirstInstructionIndex(); i <= bb.getLastInstructionIndex(); i++) {
-      SSAInstruction s = instructions[i];
+      SSAInstruction s = ir.getInstructions()[i];
       if (s != null) {
         result.add(s);
       }
@@ -763,23 +738,18 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    * @return the indices of the catch blocks, as a bit vector
    */
   public BitVector getCatchBlocks() {
-    return cfg.getCatchBlocks();
+    // todo ... this can't be correct, can it?
+    return ir.getControlFlowGraph().getCatchBlocks();
   }
 
   /**
    * @param index
-   *          an instruction index
+   *          an instruction index from the original SSA IR
    * @return the basic block which contains this instruction.
    */
   public IBasicBlock getBlockForInstruction(int index) {
+    // TODO .. this is buggy if the original instruction was null and skipped!  FIX ME!!!
     SSAInstruction s = ir.getInstructions()[index];
-    return instructionToBlock.get(s);
-  }
-  
-  /**
-   * @return the basic block which contains this instruction.
-   */
-  public IBasicBlock getBlockForInstruction(SSAInstruction s) {
     return instructionToBlock.get(s);
   }
 
@@ -787,7 +757,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    * @return the instructions of this CFG, as an array.
    */
   public IInstruction[] getInstructions() {
-    return cfg.getInstructions();
+    return ir.getControlFlowGraph().getInstructions();
   }
 
   /**
@@ -797,14 +767,14 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    *         instruction
    */
   public int getProgramCounter(int index) {
-    return cfg.getProgramCounter(index);
+    return ir.getControlFlowGraph().getProgramCounter(index);
   }
 
   /**
    * @return the Method this CFG represents
    */
   public IMethod getMethod() {
-    return method;
+    return ir.getMethod();
   }
 
   /**
@@ -813,7 +783,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    *         control flow
    */
   public Collection<IBasicBlock> getExceptionalSuccessors(IBasicBlock b) {
-    return cfg.getExceptionalSuccessors(b);
+    return ir.getControlFlowGraph().getExceptionalSuccessors(b);
   }
 
   /**
@@ -916,7 +886,11 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
   }
 
   public Iterator<IBasicBlock> iterator() {
-    return Arrays.asList(basicBlocks).iterator();
+    List<IBasicBlock> a = new ArrayList<IBasicBlock>();
+    for (SingleInstructionBasicBlock b : basicBlocks) {
+      a.add(b);
+    }
+    return a.iterator();
   }
 
   /**
@@ -996,7 +970,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    *         efficiency reasons (as many other software crimes).
    */
   private boolean isFallThroughEdge(IBasicBlock src, IBasicBlock dest) {
-    if (cfg.getSuccNodeCount(src) == 2) {
+    if (ir.getControlFlowGraph().getSuccNodeCount(src) == 2) {
       return ((src.getNumber() + 1) == dest.getNumber());
     } else {
       return false;
@@ -1120,7 +1094,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
     }
 
     /**
-     * set this block as exit blokc
+     * set this block as exit block
      * 
      * @param val -
      *          new value
@@ -1153,7 +1127,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
      * @return IMethod of the method containing this block
      */
     public IMethod getMethod() {
-      return method;
+      return ir.getMethod();
     }
     
     /**
@@ -1272,7 +1246,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    * only used for debugging.
    */
   public void dumpDotFile() {
-    ExpandedCFGDotWriter.write("c:/temp/original.dt", cfg);
+    ExpandedCFGDotWriter.write("c:/temp/original.dt", ir.getControlFlowGraph());
     ExpandedCFGDotWriter.write("c:/temp/expanded.dt", this);
   }
 
@@ -1281,7 +1255,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    */
   private void debugDump() {
     Trace.println("IR INST: " + ir.getInstructions().length);
-    Trace.println("CFG INST: " + cfg.getInstructions().length);
+    Trace.println("CFG INST: " + ir.getControlFlowGraph().getInstructions().length);
 
     SSAInstruction[] debugInstIR = ir.getInstructions();
 

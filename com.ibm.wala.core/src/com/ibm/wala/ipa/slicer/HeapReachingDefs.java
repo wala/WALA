@@ -315,7 +315,7 @@ public class HeapReachingDefs {
       }
       case HEAP_RET_CALLER: {
         HeapStatement.ReturnCaller r = (HeapStatement.ReturnCaller) s;
-        IBasicBlock bb = cfg.getBlockForInstruction(r.getCall());
+        IBasicBlock bb = cfg.getBlockForInstruction(r.getCallIndex());
         BitVectorVariable v = (BitVectorVariable) solver.getIn(bb);
         if (allCalleesMod(cg, r, mod) || pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
           // do nothing ... force flow into and out of the callees
