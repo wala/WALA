@@ -170,10 +170,10 @@ public class Simplifier {
       for (IFormula f : cs) {
         System.err.println(f);
       }
-      System.err.println("--ct--");
-      for (IFormula f : ct) {
-        System.err.println(f);
-      }
+//      System.err.println("--ct--");
+//      for (IFormula f : ct) {
+//        System.err.println(f);
+//      }
     }
   }
 
@@ -183,10 +183,10 @@ public class Simplifier {
       for (IFormula f : s) {
         System.err.println(f);
       }
-      System.err.println("--t--");
-      for (IFormula f : t) {
-        System.err.println(f);
-      }
+//      System.err.println("--t--");
+//      for (IFormula f : t) {
+//        System.err.println(f);
+//      }
     }
   }
 
@@ -245,6 +245,14 @@ public class Simplifier {
             return true;
           }
         }
+      } else if (r.getRelation().equals(BinaryRelation.NE)) {
+        ITerm lhs = r.getTerms().get(0);
+        ITerm rhs = r.getTerms().get(1);
+        if (lhs.getKind().equals(ITerm.Kind.CONSTANT) && rhs.getKind().equals(ITerm.Kind.CONSTANT)) {
+          if (lhs.equals(rhs)) {
+            return true;
+          }
+        }
       }
       break;
     }
@@ -259,7 +267,7 @@ public class Simplifier {
   private static boolean implies(IFormula axiom, IFormula f) {
     if (axiom.equals(f)) {
       return true;
-    } 
+    }
     // TODO
     // if (f instanceof Disjunction) {
     // Disjunction d = (Disjunction) f;

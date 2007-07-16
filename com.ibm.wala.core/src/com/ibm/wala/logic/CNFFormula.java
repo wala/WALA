@@ -26,7 +26,7 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
 
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   // invariant: size >= 2
   private final Collection<? extends IMaxTerm> maxTerms;
@@ -115,7 +115,9 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
         }
 
         if (f instanceof AbstractBinaryFormula || f instanceof NotFormula) {
-          return CNFFormula.make(collectMaxTerms(f));
+          Collection<IMaxTerm> c = collectMaxTerms(f);
+          c.remove(BooleanConstantFormula.TRUE);
+          return CNFFormula.make(c);
         } else {
           return CNFFormula.make(f);
         }
@@ -147,7 +149,7 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
         return null;
       }
     case NEGATION:
-      NotFormula n = (NotFormula)f;
+      NotFormula n = (NotFormula) f;
       IMaxTerm t = NotFormulaMaxTerm.make(n.getFormula());
       return Collections.singleton(t);
     default:
@@ -385,10 +387,15 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
   }
 
   public static ICNFFormula make(Collection<? extends IMaxTerm> d) {
-    if (d.size() == 1) {
-      return d.iterator().next();
+    Collection<IMaxTerm> c = HashSetFactory.make();
+    c.addAll(d);
+    c.remove(BooleanConstantFormula.TRUE);
+    if (c.size() == 0) {
+      return BooleanConstantFormula.TRUE;
+    } else if (c.size() == 1) {
+      return c.iterator().next();
     } else {
-      return new CNFFormula(d);
+      return new CNFFormula(c);
     }
   }
 
