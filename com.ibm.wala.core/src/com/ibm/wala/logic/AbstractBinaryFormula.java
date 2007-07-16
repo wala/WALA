@@ -27,4 +27,12 @@ public abstract class AbstractBinaryFormula implements IFormula {
   public abstract IFormula getF1();
 
   public abstract IFormula getF2();
+
+  @Override
+  public abstract boolean equals(Object obj);
+
+  @Override
+  public abstract int hashCode();
+  
+  
 }

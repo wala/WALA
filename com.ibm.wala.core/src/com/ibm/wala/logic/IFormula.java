@@ -46,4 +46,5 @@ public interface IFormula {
   public Collection<? extends ITerm> getTerms();
   
   public String prettyPrint(ILogicDecorator d);
+ 
 }

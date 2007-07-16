@@ -13,14 +13,15 @@ package com.ibm.wala.logic;
 import java.util.Collection;
 
 /**
- * @author sjfink
+ * A formula of the form not(f)
  * 
+ * @author sjfink
  */
 public class NotFormula implements IFormula {
 
   private final IFormula f;
 
-  private NotFormula(final IFormula f) throws IllegalArgumentException {
+  protected NotFormula(final IFormula f) throws IllegalArgumentException {
     super();
     this.f = f;
     if (f == null) {
@@ -93,5 +94,30 @@ public class NotFormula implements IFormula {
 
   public String prettyPrint(ILogicDecorator d) {
     return "not(" + f.prettyPrint(d) + ")";
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((f == null) ? 0 : f.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    final NotFormula other = (NotFormula) obj;
+    if (f == null) {
+      if (other.f != null)
+        return false;
+    } else if (!f.equals(other.f))
+      return false;
+    return true;
   }
 }

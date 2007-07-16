@@ -114,7 +114,7 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
           System.err.println("after distribute " + f);
         }
 
-        if (f instanceof AbstractBinaryFormula) {
+        if (f instanceof AbstractBinaryFormula || f instanceof NotFormula) {
           return CNFFormula.make(collectMaxTerms(f));
         } else {
           return CNFFormula.make(f);
@@ -147,6 +147,9 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
         return null;
       }
     case NEGATION:
+      NotFormula n = (NotFormula)f;
+      IMaxTerm t = NotFormulaMaxTerm.make(n.getFormula());
+      return Collections.singleton(t);
     default:
       Assertions.UNREACHABLE(f);
       return null;
