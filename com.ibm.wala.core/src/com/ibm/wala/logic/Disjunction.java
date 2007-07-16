@@ -110,17 +110,26 @@ public class Disjunction extends AbstractBinaryFormula implements IMaxTerm {
   public IFormula getF2() {
     Collection<? extends IFormula> c = HashSetFactory.make(clauses);
     c.remove(getF1());
-    return make(c);
+    if (c.size() == 1) {
+      return c.iterator().next();
+    } else {
+      return make(c);
+    }
   }
 
   public static Disjunction make(Collection<? extends IFormula> clauses) {
+    assert clauses.size() >= 2;
     Collection<IFormula> newClauses = HashSetFactory.make();
     for (IFormula c : clauses) {
-      assert !(c instanceof Disjunction);
-      if (Simplifier.isTautology(c)) {
-        return make(BooleanConstantFormula.TRUE);
-      } else if (!Simplifier.isContradiction(c)) {
-        newClauses.add(c);
+      if (c instanceof Disjunction) {
+        Disjunction d = (Disjunction) c;
+        newClauses.addAll(d.clauses);
+      } else {
+        if (Simplifier.isTautology(c)) {
+          return make(BooleanConstantFormula.TRUE);
+        } else if (!Simplifier.isContradiction(c)) {
+          newClauses.add(c);
+        }
       }
     }
     if (newClauses.isEmpty()) {
