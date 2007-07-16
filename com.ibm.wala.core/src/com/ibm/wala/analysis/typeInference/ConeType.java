@@ -31,7 +31,7 @@ public class ConeType extends TypeAbstraction {
    * default constructor
    * 
    * @throws IllegalArgumentException
-   *           if type is null
+   *             if type is null
    */
   public ConeType(IClass type) {
     if (type == null) {
@@ -53,7 +53,7 @@ public class ConeType extends TypeAbstraction {
         return this;
       } else if (type.isArrayClass() || other.type.isArrayClass()) {
         // give up on arrays. We don't care anyway.
-	  return new ConeType(type.getClassHierarchy().getRootClass());
+        return new ConeType(type.getClassHierarchy().getRootClass());
       } else {
         return new ConeType(type.getClassHierarchy().getLeastCommonSuperclass(this.type, other.type));
       }
@@ -95,11 +95,13 @@ public class ConeType extends TypeAbstraction {
    */
   @Override
   public boolean equals(Object obj) {
-    if (!(obj instanceof ConeType))
+    if (!(obj instanceof ConeType)) {
       return false;
+    }
     ConeType other = (ConeType) obj;
-    if (other == TOP)
+    if (other == TOP) {
       return false;
+    }
     if (Assertions.verifyAssertions) {
       if (!type.getClassHierarchy().equals(other.type.getClassHierarchy())) {
         Assertions.UNREACHABLE("different chas " + this + " " + other);
