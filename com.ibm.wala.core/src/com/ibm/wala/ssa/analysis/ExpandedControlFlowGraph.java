@@ -99,7 +99,7 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    */
   private int exit;
 
-  /*****************************************************************************
+  /**
    * A set of blocks that are true-pi instructions
    */
   final private Set<SSAPiInstruction> trueCasePiInstructions = HashSetFactory.make();
@@ -165,10 +165,13 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
   /**
    * return the Instruction-Block for the given instruction.
    * 
+   * DEPRECATED: use getBlockForInstruction instead.
+   * 
    * @param inst -
    *          instruction
    * @return SingleInstructionBasicBlock containing the given instruction
    */
+  @Deprecated
   public SingleInstructionBasicBlock getInstructionBlock(SSAInstruction inst) {
     return instructionToBlock.get(inst);
   }
@@ -748,8 +751,12 @@ public class ExpandedControlFlowGraph implements ControlFlowGraph {
    * @return the basic block which contains this instruction.
    */
   public IBasicBlock getBlockForInstruction(int index) {
-    // TODO .. this is buggy if the original instruction was null and skipped!  FIX ME!!!
-    SSAInstruction s = ir.getInstructions()[index];
+    // this is horrible and ugly.
+    SSAInstruction s = null; 
+    // find the first non-null instruction following the index, since this class elides null instructions.
+    do {
+      s = ir.getInstructions()[index++];
+    } while (s == null);
     return instructionToBlock.get(s);
   }
 
