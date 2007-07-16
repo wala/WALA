@@ -118,7 +118,7 @@ public abstract class AbstractSSAConversion {
     this.DF = new DominanceFrontiers<IBasicBlock>(ir.getControlFlowGraph(), ir.getControlFlowGraph().entry());
     this.dominatorTree = DF.dominatorTree();
     this.flags = new int[2 * ir.getControlFlowGraph().getNumberOfNodes()];
-    this.instructions = ir.getInstructions();
+    this.instructions = getInstructions(ir);
     this.phiCounts = new int[CFG.getNumberOfNodes()];
     this.symbolTable = ir.getSymbolTable();
     this.defaultValues = options.getDefaultValues();
@@ -136,6 +136,10 @@ public abstract class AbstractSSAConversion {
   // 
   // initialization
   //
+  protected SSAInstruction[] getInstructions(IR ir) {
+    return ir.getInstructions();
+  }
+
   protected void init() {
     this.S = new IntStack[getMaxValueNumber() + 1];
     this.C = new int[getMaxValueNumber() + 1];

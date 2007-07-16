@@ -614,6 +614,10 @@ public class SSAConversion extends AbstractSSAConversion {
       Trace.println("exception " + e + " while converting:");
       Trace.println(ir);
       throw e;
+    } catch (Error e) {
+      Trace.println("error " + e + " while converting:");
+      Trace.println(ir);
+      throw e;
     }
   }
 

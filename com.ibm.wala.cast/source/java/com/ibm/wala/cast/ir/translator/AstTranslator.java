@@ -1278,7 +1278,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         final int v = vn == -1 ? getUnderlyingSymtab().newSymbol() : vn;
         if (useDefaultInitValues() && defaultInitValue != null) {
           if (getUnderlyingSymtab().getValue(v) == null) {
-            getUnderlyingSymtab().setDefaultValue(v, defaultInitValue);
+            setDefaultValue(getUnderlyingSymtab(), v, defaultInitValue);
           }
         }
         return new AbstractSymbol(definer, isFinal, defaultInitValue) {
@@ -1387,7 +1387,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
             }
             if (useDefaultInitValues() && defaultInitValue != null) {
               if (getUnderlyingSymtab().getValue(vn) == null) {
-                getUnderlyingSymtab().setDefaultValue(vn, defaultInitValue);
+		setDefaultValue(getUnderlyingSymtab(), vn, defaultInitValue);
               }
             }
           }
@@ -1438,7 +1438,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         final int v = vn == -1 ? getUnderlyingSymtab().newSymbol() : vn;
         if (useDefaultInitValues() && defaultInitValue != null) {
           if (getUnderlyingSymtab().getValue(v) == null) {
-            getUnderlyingSymtab().setDefaultValue(v, defaultInitValue);
+	    setDefaultValue(getUnderlyingSymtab(), v, defaultInitValue);
           }
         }
         return new AbstractSymbol(definer, isFinal, defaultInitValue) {
@@ -2112,6 +2112,14 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     } else {
       Assertions._assert(entityNames.containsKey(e));
       return "L" + entityNames.get(e);
+    }
+  }
+
+  private void setDefaultValue(SymbolTable symtab, int vn, Object value) {
+    if (value == CAstSymbol.NULL_DEFAULT_VALUE) {
+      symtab.setDefaultValue(vn, null);
+    } else {
+      symtab.setDefaultValue(vn, value);
     }
   }
 
