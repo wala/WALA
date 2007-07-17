@@ -692,14 +692,18 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       if (instruction.typeIsPrimitive()) {
         return;
       }
-      PointerKey result = getPointerKeyForLocal(instruction.getDef());
-      PointerKey arrayRef = getPointerKeyForLocal(instruction.getArrayRef());
-      if (hasNoInterestingUses(instruction.getDef())) {
+      doVisitArrayLoad(instruction.getDef(), instruction.getArrayRef());
+    }
+
+    protected void doVisitArrayLoad(int def, int arrayRef) {
+      PointerKey result = getPointerKeyForLocal(def);
+      PointerKey arrayRefPtrKey = getPointerKeyForLocal(arrayRef);
+      if (hasNoInterestingUses(def)) {
         system.recordImplicitPointsToSet(result);
       } else {
-        if (contentsAreInvariant(symbolTable, du, instruction.getArrayRef())) {
-          system.recordImplicitPointsToSet(arrayRef);
-          InstanceKey[] ik = getInvariantContents(instruction.getArrayRef());
+        if (contentsAreInvariant(symbolTable, du, arrayRef)) {
+          system.recordImplicitPointsToSet(arrayRefPtrKey);
+          InstanceKey[] ik = getInvariantContents(arrayRef);
           for (int i = 0; i < ik.length; i++) {
             if (!representsNullType(ik[i])) {
               system.findOrCreateIndexForInstanceKey(ik[i]);
@@ -714,9 +718,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         } else {
           if (Assertions.verifyAssertions) {
             Assertions._assert(!system.isUnified(result));
-            Assertions._assert(!system.isUnified(arrayRef));
+            Assertions._assert(!system.isUnified(arrayRefPtrKey));
           }
-          system.newSideEffect(getBuilder().new ArrayLoadOperator(system.findOrCreatePointsToSet(result)), arrayRef);
+          system.newSideEffect(getBuilder().new ArrayLoadOperator(system.findOrCreatePointsToSet(result)), arrayRefPtrKey);
         }
       }
     }
@@ -724,22 +728,16 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     /*
      * @see com.ibm.wala.ssa.SSAInstruction.Visitor#visitArrayStore(com.ibm.wala.ssa.SSAArrayStoreInstruction)
      */
-    @Override
-    public void visitArrayStore(SSAArrayStoreInstruction instruction) {
-      // skip arrays of primitive type
-      if (instruction.typeIsPrimitive()) {
-        return;
-      }
-
+    public void doVisitArrayStore(int arrayRef, int value) {
       // (requires the creation of assign constraints as
       // the set points-to(a[]) grows.)
-      PointerKey value = getPointerKeyForLocal(instruction.getValue());
-      PointerKey arrayRef = getPointerKeyForLocal(instruction.getArrayRef());
+      PointerKey valuePtrKey = getPointerKeyForLocal(value);
+      PointerKey arrayRefPtrKey = getPointerKeyForLocal(arrayRef);
       // if (!supportFullPointerFlowGraph &&
       // contentsAreInvariant(instruction.getArrayRef())) {
-      if (contentsAreInvariant(symbolTable, du, instruction.getArrayRef())) {
-        system.recordImplicitPointsToSet(arrayRef);
-        InstanceKey[] ik = getInvariantContents(instruction.getArrayRef());
+      if (contentsAreInvariant(symbolTable, du, arrayRef)) {
+        system.recordImplicitPointsToSet(arrayRefPtrKey);
+        InstanceKey[] ik = getInvariantContents(arrayRef);
 
         for (int i = 0; i < ik.length; i++) {
           if (!representsNullType(ik[i])) {
@@ -754,9 +752,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
                   Assertions.UNREACHABLE();
                 }
               }
-              if (contentsAreInvariant(symbolTable, du, instruction.getValue())) {
-                system.recordImplicitPointsToSet(value);
-                InstanceKey[] vk = getInvariantContents(instruction.getValue());
+              if (contentsAreInvariant(symbolTable, du, value)) {
+                system.recordImplicitPointsToSet(valuePtrKey);
+                InstanceKey[] vk = getInvariantContents(value);
                 for (int j = 0; j < vk.length; j++) {
                   system.findOrCreateIndexForInstanceKey(vk[j]);
                   if (vk[j].getConcreteType() != null) {
@@ -767,29 +765,38 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
                 }
               } else {
                 if (isRootType(contents)) {
-                  system.newConstraint(p, assignOperator, value);
+                  system.newConstraint(p, assignOperator, valuePtrKey);
                 } else {
-                  system.newConstraint(p, getBuilder().filterOperator, value);
+                  system.newConstraint(p, getBuilder().filterOperator, valuePtrKey);
                 }
               }
             }
           }
         }
       } else {
-        if (contentsAreInvariant(symbolTable, du, instruction.getValue())) {
-          system.recordImplicitPointsToSet(value);
-          InstanceKey[] ik = getInvariantContents(instruction.getValue());
+        if (contentsAreInvariant(symbolTable, du, value)) {
+          system.recordImplicitPointsToSet(valuePtrKey);
+          InstanceKey[] ik = getInvariantContents(value);
           for (int i = 0; i < ik.length; i++) {
             system.findOrCreateIndexForInstanceKey(ik[i]);
             if (Assertions.verifyAssertions) {
-              Assertions._assert(!system.isUnified(arrayRef));
+              Assertions._assert(!system.isUnified(arrayRefPtrKey));
             }
-            system.newSideEffect(getBuilder().new InstanceArrayStoreOperator(ik[i]), arrayRef);
+            system.newSideEffect(getBuilder().new InstanceArrayStoreOperator(ik[i]), arrayRefPtrKey);
           }
         } else {
-          system.newSideEffect(getBuilder().new ArrayStoreOperator(system.findOrCreatePointsToSet(value)), arrayRef);
+          system.newSideEffect(getBuilder().new ArrayStoreOperator(system.findOrCreatePointsToSet(valuePtrKey)), arrayRefPtrKey);
         }
       }
+    }
+
+    @Override
+    public void visitArrayStore(SSAArrayStoreInstruction instruction) {
+      // skip arrays of primitive type
+      if (instruction.typeIsPrimitive()) {
+        return;
+      }
+      doVisitArrayStore(instruction.getArrayRef(), instruction.getValue());
     }
 
     /*
