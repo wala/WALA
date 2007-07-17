@@ -55,4 +55,8 @@ public class NonNullSingletonIterator<T> implements Iterator<T> {
     throw new UnsupportedOperationException();
   }
 
+  public static <T> NonNullSingletonIterator<T> make(T item) {
+    return new NonNullSingletonIterator<T>(item);
+  }
+
 }
