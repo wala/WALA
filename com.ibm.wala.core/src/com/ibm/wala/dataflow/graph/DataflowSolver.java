@@ -23,8 +23,7 @@ import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntegerUnionFind;
 
 /**
- * 
- * Iterative solver for a killdall dataflow framework
+ * Iterative solver for a Killdall dataflow framework
  * 
  * @author sfink
  */
@@ -63,7 +62,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
 
   /**
    * @param n
-   *          a node
+   *            a node
    * @return a fresh variable to represent the lattice value at the IN or OUT of
    *         n
    */
@@ -78,6 +77,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
     // create a variable for each node.
     for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T N = it.next();
+      assert N != null;
       IVariable v = makeNodeVariable(N, true);
       node2In.put(N, v);
 
@@ -90,7 +90,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
         for (Iterator<? extends T> it2 = G.getSuccNodes(N); it2.hasNext();) {
           T S = it2.next();
           v = makeEdgeVariable(N, S);
-          edge2Var.put(new Pair<T,Object>(N, S), v);
+          edge2Var.put(new Pair<T, Object>(N, S), v);
         }
       }
     }
@@ -102,7 +102,10 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
   }
 
   public IVariable getOut(Object node) {
-    return node2Out.get(node);
+    assert node != null;
+    IVariable v = node2Out.get(node);
+    assert v != null;
+    return v;
   }
 
   public IVariable getIn(Object node) {
@@ -114,7 +117,11 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
   }
 
   public IVariable getEdge(Object src, Object dst) {
-    return getEdge(new Pair<Object,Object>(src, dst));
+    assert src != null;
+    assert dst != null;
+    IVariable v = getEdge(new Pair<Object, Object>(src, dst));
+    assert v != null;
+    return v;
   }
 
   private class UnionFind {
@@ -153,6 +160,8 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
      * (x,true) = IN(X) and (x,false) = OUT(X)
      */
     public void union(Object n1, Object n2) {
+      assert n1 != null;
+      assert n2 != null;
       int x = map.getMappedIndex(n1);
       int y = map.getMappedIndex(n2);
       uf.union(x, y);
@@ -162,7 +171,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
     public int size() {
       return map.getMappingSize();
     }
-    
+
     public int find(int i) {
       return uf.find(i);
     }
@@ -305,15 +314,19 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
   private void shortCircuitUnaryMeets(Graph<T> G, ITransferFunctionProvider functions, UnionFind uf) {
     for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T node = it.next();
+      assert node != null;
       int nPred = G.getPredNodeCount(node);
       if (nPred == 1) {
         // short circuit by setting IN = OUT_p
         Object p = G.getPredNodes(node).next();
+//        if (p == null) {
+//          p = G.getPredNodes(node).next();
+//        }
+        assert p != null;
         uf.union(getIn(node), functions.hasEdgeTransferFunctions() ? getEdge(p, node) : getOut(p));
       }
     }
   }
-
 
   public IKilldallFramework getProblem() {
     return problem;
