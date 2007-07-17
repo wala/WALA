@@ -39,7 +39,7 @@ public class SymbolTable {
    * Constructor.
    * 
    * @param numberOfParameters
-   *          in the IR .. should be ir.getNumberOfParameters()
+   *            in the IR .. should be ir.getNumberOfParameters()
    */
   public SymbolTable(int numberOfParameters) {
     parameters = new int[numberOfParameters];
@@ -69,7 +69,7 @@ public class SymbolTable {
    * Common part of getConstant functions.
    * 
    * @param o
-   *          instance of a Java 'boxed-primitive' class, String or NULL.
+   *            instance of a Java 'boxed-primitive' class, String or NULL.
    * @return value number for constant.
    */
   int findOrCreateConstant(Object o) {
@@ -95,12 +95,16 @@ public class SymbolTable {
     Trace.println("setting default for " + vn + " to " + defaultValue);
 
     values[vn] = new Value() {
-      public boolean isStringConstant() { return false; }
+      public boolean isStringConstant() {
+        return false;
+      }
 
-      public boolean isNullConstant() { return false; }
+      public boolean isNullConstant() {
+        return false;
+      }
 
       public int getDefaultValue(SymbolTable symtab) {
-	return findOrCreateConstant( defaultValue );
+        return findOrCreateConstant(defaultValue);
       }
     };
   }
@@ -153,7 +157,6 @@ public class SymbolTable {
     return parameters[i];
   }
 
-
   private void expandForNewValueNumber(int vn) {
     if (vn >= values.length) {
       Value[] temp = values;
@@ -173,7 +176,7 @@ public class SymbolTable {
    * number
    * 
    * @param i
-   *          a value number
+   *            a value number
    */
   public void ensureSymbol(int i) {
     if (i != -1) {
@@ -259,7 +262,8 @@ public class SymbolTable {
   }
 
   /**
-   * @throws IllegalArgumentException  if rhs is null
+   * @throws IllegalArgumentException
+   *             if rhs is null
    */
   public int newPhi(int[] rhs) throws IllegalArgumentException {
     if (rhs == null) {
@@ -305,14 +309,14 @@ public class SymbolTable {
     }
     return ((Number) ((ConstantValue) values[v]).getValue()).floatValue();
   }
-  
+
   public double getDoubleValue(int v) throws IllegalArgumentException {
     if (!isNumberConstant(v)) {
       throw new IllegalArgumentException("value number " + v + " is not a numeric constant.");
     }
     return ((Number) ((ConstantValue) values[v]).getValue()).doubleValue();
   }
-  
+
   public int getIntValue(int v) throws IllegalArgumentException {
     if (!isNumberConstant(v)) {
       throw new IllegalArgumentException("value number " + v + " is not a numeric constant.");
@@ -327,7 +331,7 @@ public class SymbolTable {
     return ((Number) ((ConstantValue) values[v]).getValue()).longValue();
   }
 
-  public Object getConstantValue(int v) throws IllegalArgumentException{
+  public Object getConstantValue(int v) throws IllegalArgumentException {
     if (!isConstant(v)) {
       throw new IllegalArgumentException("value number " + v + " is not a constant.");
     }
@@ -356,7 +360,7 @@ public class SymbolTable {
 
   /**
    * @param valueNumber
-   * @return true iff this valueNumber is a paramter
+   * @return true iff this valueNumber is a parameter
    */
   public boolean isParameter(int valueNumber) {
     return valueNumber <= getNumberOfParameters();
