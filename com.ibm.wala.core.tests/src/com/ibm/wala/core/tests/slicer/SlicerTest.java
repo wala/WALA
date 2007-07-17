@@ -98,7 +98,7 @@ public class SlicerTest extends TestCase {
     Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
         ControlDependenceOptions.NONE);
     dumpSlice(slice);
-    assertEquals(30, slice.size());
+    assertEquals(22, slice.size());
   }
 
   public void testSlice3() throws ClassHierarchyException {
