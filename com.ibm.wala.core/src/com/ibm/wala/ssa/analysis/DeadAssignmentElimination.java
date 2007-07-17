@@ -28,8 +28,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Trace;
 
 /**
- *
- * Eliminate dead assignnments (phis) from an SSA IR.
+ * Eliminate dead assignments (phis) from an SSA IR.
  * 
  * @author sfink
  */
@@ -84,8 +83,6 @@ public class DeadAssignmentElimination {
   }
 
   /**
-   * @author sfink
-   *
    * A dataflow system which computes whether or not a value is dead
    */
   private static class DeadValueSystem extends DefaultFixedPointSolver {

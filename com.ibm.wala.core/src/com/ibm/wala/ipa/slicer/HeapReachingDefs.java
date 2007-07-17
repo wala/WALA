@@ -40,8 +40,8 @@ import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
-import com.ibm.wala.ssa.analysis.ExpandedControlFlowGraph;
-import com.ibm.wala.ssa.analysis.ExpandedControlFlowGraph.SingleInstructionBasicBlock;
+import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
+import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -104,12 +104,11 @@ public class HeapReachingDefs {
     }
     System.err.println("Reaching Defs " + node);
     if (VERBOSE) {
-      // System.err.println("Reaching Defs " + node);
       System.err.println(statements.size());
     }
 
     // create a control flow graph with one instruction per basic block.
-    ExpandedControlFlowGraph cfg = new ExpandedControlFlowGraph(ir);
+    ExplodedControlFlowGraph cfg = ExplodedControlFlowGraph.make(ir);
 
     // create a mapping between statements and integers, used in bit vectors
     // shortly
@@ -137,11 +136,11 @@ public class HeapReachingDefs {
     final Map<Statement, OrdinalSet<Statement>> delegate = HashMapFactory.make();
 
     private final HeapExclusions exclusions;
-    
+
     private final CallGraph cg;
 
     RDMap(BitVectorSolver<IBasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
-        PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExpandedControlFlowGraph cfg,
+        PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
         Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions, CallGraph cg) {
       if (VERBOSE) {
         System.err.println("Init pointer Key mod ");
@@ -160,7 +159,7 @@ public class HeapReachingDefs {
 
     private void eagerPopulate(Map<PointerKey, MutableIntSet> pointerKeyMod, BitVectorSolver<IBasicBlock> solver,
         OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis pa,
-        Map<CGNode, OrdinalSet<PointerKey>> mod, ExpandedControlFlowGraph cfg,
+        Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
         Map<Integer, NormalStatement> ssaInstruction2Statement) {
       for (Statement s : domain) {
         delegate.put(s, computeResult(s, pointerKeyMod, solver, domain, node, h, pa, mod, cfg, ssaInstruction2Statement));
@@ -169,11 +168,6 @@ public class HeapReachingDefs {
 
     /**
      * For each pointerKey, which statements may def it
-     * 
-     * @param domain
-     * @param node
-     * @param h
-     * @param pa
      */
     private Map<PointerKey, MutableIntSet> initPointerKeyMod(OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
         PointerAnalysis pa) {
@@ -285,7 +279,7 @@ public class HeapReachingDefs {
      */
     private OrdinalSet<Statement> computeResult(Statement s, Map<PointerKey, MutableIntSet> pointerKeyMod,
         BitVectorSolver<IBasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
-        PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExpandedControlFlowGraph cfg,
+        PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
         Map<Integer, NormalStatement> ssaInstructionIndex2Statement) {
       switch (s.getKind()) {
       case NORMAL:
@@ -367,7 +361,7 @@ public class HeapReachingDefs {
    */
   private static Map<Statement, OrdinalSet<Statement>> makeResult(BitVectorSolver<IBasicBlock> solver,
       OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis pa,
-      Map<CGNode, OrdinalSet<PointerKey>> mod, ExpandedControlFlowGraph cfg,
+      Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
       Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions, CallGraph cg) {
 
     return new RDMap(solver, domain, node, h, pa, mod, cfg, ssaInstructionIndex2Statement, exclusions, cg);
@@ -447,7 +441,7 @@ public class HeapReachingDefs {
 
     private final CGNode node;
 
-    private final ExpandedControlFlowGraph cfg;
+    private final ExplodedControlFlowGraph cfg;
 
     private final OrdinalSetMapping<Statement> domain;
 
@@ -466,7 +460,7 @@ public class HeapReachingDefs {
      */
     private final IBinaryNaturalRelation heapReturnCaller = new BasicNaturalRelation();
 
-    public RD(CGNode node, ExpandedControlFlowGraph cfg, PointerAnalysis pa, OrdinalSetMapping<Statement> domain,
+    public RD(CGNode node, ExplodedControlFlowGraph cfg, PointerAnalysis pa, OrdinalSetMapping<Statement> domain,
         Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions) {
       this.node = node;
       this.cfg = cfg;
@@ -491,7 +485,7 @@ public class HeapReachingDefs {
     }
 
     public UnaryOperator getEdgeTransferFunction(IBasicBlock src, IBasicBlock dst) {
-      SingleInstructionBasicBlock s = (SingleInstructionBasicBlock) src;
+      ExplodedBasicBlock s = (ExplodedBasicBlock) src;
       if (s.getInstruction() != null && !(s.getInstruction() instanceof SSAInvokeInstruction)
           && !cfg.getNormalSuccessors(src).contains(dst)) {
         // if the edge only happens due to exceptional control flow, then no
@@ -538,7 +532,7 @@ public class HeapReachingDefs {
      * @return int set representing the heap def statements that are gen'ed by
      *         the basic block. null if none.
      */
-    IntSet gen(SingleInstructionBasicBlock b) {
+    IntSet gen(ExplodedBasicBlock b) {
       if (b.isEntryBlock()) {
         return heapEntryStatements();
       } else {
@@ -588,7 +582,7 @@ public class HeapReachingDefs {
      * @return int set representing the heap def statements that are killed by
      *         the basic block. null if none.
      */
-    BitVector kill(SingleInstructionBasicBlock b) {
+    BitVector kill(ExplodedBasicBlock b) {
       SSAInstruction s = b.getInstruction();
       if (s == null) {
         return null;
