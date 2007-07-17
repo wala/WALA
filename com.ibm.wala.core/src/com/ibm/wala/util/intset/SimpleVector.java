@@ -10,14 +10,13 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
- * 
  * simple implementation of IVector
  * 
  * @author sfink
@@ -103,7 +102,11 @@ public class SimpleVector<T> implements IVector<T> {
 
   @SuppressWarnings("unchecked")
   public Iterator<T> iterator() {
-    return (Iterator<T>) Arrays.asList(store).iterator();
+    ArrayList<T> result = new ArrayList<T>();
+    for (int i =0; i <= maxIndex; i++) {
+      result.add((T) store[i]);
+    }
+    return result.iterator();
   }
 
   public int getMaxIndex() {
