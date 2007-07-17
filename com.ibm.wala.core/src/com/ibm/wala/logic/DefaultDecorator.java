@@ -15,8 +15,6 @@ import com.ibm.wala.logic.ILogicConstants.Quantifier;
 
 public class DefaultDecorator implements ILogicDecorator {
 
-
-
   private final static DefaultDecorator INSTANCE = new DefaultDecorator();
 
   protected DefaultDecorator() {
@@ -106,6 +104,14 @@ public class DefaultDecorator implements ILogicDecorator {
     result.append(" ( ");
     result.append(f.getF2().prettyPrint(this));
     result.append(" )");
+    return result.toString();
+  }
+
+  public String prettyPrint(NotFormula n) {
+    StringBuffer result = new StringBuffer();
+    result.append("not ( ");
+    result.append(n.getFormula().prettyPrint(this));
+    result.append(" ) ");
     return result.toString();
   }
 }

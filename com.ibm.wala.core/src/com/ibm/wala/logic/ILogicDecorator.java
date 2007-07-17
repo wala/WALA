@@ -32,5 +32,7 @@ public interface ILogicDecorator {
   String prettyPrint(IRelation r);
 
   String prettyPrint(BinaryFormula binaryFormula);
+  
+  String prettyPrint(NotFormula notFormula);
 
 }

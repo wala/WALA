@@ -93,7 +93,7 @@ public class NotFormula implements IFormula {
   }
 
   public String prettyPrint(ILogicDecorator d) {
-    return "not(" + f.prettyPrint(d) + ")";
+    return d.prettyPrint(this);
   }
 
   @Override
