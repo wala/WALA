@@ -22,7 +22,10 @@ import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
@@ -61,7 +64,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     allNodes.add(exit);
     for (IBasicBlock b : ir.getControlFlowGraph()) {
       for (int i = b.getFirstInstructionIndex(); i <= b.getLastInstructionIndex(); i++) {
-        ExplodedBasicBlock bb = new ExplodedBasicBlock(i, b);
+        ExplodedBasicBlock bb = new ExplodedBasicBlock(i, (ISSABasicBlock)b);
         normalNodes.set(i, bb);
         allNodes.add(bb);
       }
@@ -315,13 +318,19 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     return null;
   }
 
-  public class ExplodedBasicBlock implements IBasicBlock {
+  /**
+   * A basic block with exactly one normal instruction (which may be null), corresponding
+   * to a single instruction index in the SSA instruction array.
+   * 
+   * The block may also have phis.
+   */
+  public class ExplodedBasicBlock implements ISSABasicBlock {
 
     private final int instructionIndex;
 
-    private final IBasicBlock original;
+    private final ISSABasicBlock original;
 
-    public ExplodedBasicBlock(int instructionIndex, IBasicBlock original) {
+    public ExplodedBasicBlock(int instructionIndex, ISSABasicBlock original) {
       this.instructionIndex = instructionIndex;
       this.original = original;
       assert original != null;
@@ -412,6 +421,24 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
       } else {
         return ir.getInstructions()[instructionIndex];
       }
+    }
+
+    public SSAInstruction getLastInstruction() {
+      Assertions.UNREACHABLE();
+      return null;
+    }
+
+    public Iterator<SSAPhiInstruction> iteratePhis() {
+      if (isEntryBlock() || isExitBlock() || instructionIndex != original.getFirstInstructionIndex()) {
+        return EmptyIterator.instance();
+      } else {
+        return original.iteratePhis();
+      }
+    }
+
+    public Iterator<SSAPiInstruction> iteratePis() {
+      Assertions.UNREACHABLE();
+      return null;
     }
   }
 
