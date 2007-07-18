@@ -756,23 +756,32 @@ public abstract class CAstVisitor {
     visitor.postProcessNode(n, context, visitor);
   }
 
+  /**
+   * Process the given array reference node. Factored out so that derived languages can reuse this
+   * code for specially-marked types of array references (as in X10, for which different instruction
+   * types get generated, but whose structure is essentially the same as an ordinary array reference).
+   */
+  protected boolean doVisitArrayRefNode(CAstNode n, CAstNode v, CAstNode a, boolean assign, boolean preOp, Context context, CAstVisitor visitor) {
+    if (assign ? visitor.visitArrayRefAssign(n, v, a, context, visitor)
+        : visitor.visitArrayRefAssignOp(n, v, a, preOp, context, visitor))
+      return true;
+    visitor.visit(n.getChild(0), context, visitor);
+    // XXX: we don't really need to visit array dims twice!
+    visitor.visitChildren(n, 2, context, visitor);
+    if (assign)
+      visitor.leaveArrayRefAssign(n, v, a, context, visitor);
+    else
+      visitor.leaveArrayRefAssignOp(n, v, a, preOp, context, visitor);
+    return true;
+  }
+
   protected boolean visitAssignNodes(CAstNode n, Context context, CAstNode v, CAstNode a, CAstVisitor visitor) {
     int NT = a.getKind();
     boolean assign = NT == CAstNode.ASSIGN;
     boolean preOp = NT == CAstNode.ASSIGN_PRE_OP;
     switch (n.getKind()) {
     case CAstNode.ARRAY_REF: {
-      if (assign ? visitor.visitArrayRefAssign(n, v, a, context, visitor)
-                 : visitor.visitArrayRefAssignOp(n, v, a, preOp, context, visitor))
-        return true;
-      visitor.visit(n.getChild(0), context, visitor);
-      // XXX: we don't really need to visit array dims twice!
-      visitor.visitChildren(n, 2, context, visitor);
-      if (assign)
-        visitor.leaveArrayRefAssign(n, v, a, context, visitor);
-      else
-        visitor.leaveArrayRefAssignOp(n, v, a, preOp, context, visitor);
-      break;
+      return doVisitArrayRefNode(n, v, a, assign, preOp, context, visitor);
     }
 
     case CAstNode.OBJECT_REF: {
