@@ -772,7 +772,7 @@ public abstract class CAstVisitor {
       visitor.leaveArrayRefAssign(n, v, a, context, visitor);
     else
       visitor.leaveArrayRefAssignOp(n, v, a, preOp, context, visitor);
-    return true;
+    return false;
   }
 
   protected boolean visitAssignNodes(CAstNode n, Context context, CAstNode v, CAstNode a, CAstVisitor visitor) {
@@ -781,7 +781,11 @@ public abstract class CAstVisitor {
     boolean preOp = NT == CAstNode.ASSIGN_PRE_OP;
     switch (n.getKind()) {
     case CAstNode.ARRAY_REF: {
-      return doVisitArrayRefNode(n, v, a, assign, preOp, context, visitor);
+      if (doVisitArrayRefNode(n, v, a, assign, preOp, context, visitor)) {
+	return true;
+      }
+
+      break;
     }
 
     case CAstNode.OBJECT_REF: {
