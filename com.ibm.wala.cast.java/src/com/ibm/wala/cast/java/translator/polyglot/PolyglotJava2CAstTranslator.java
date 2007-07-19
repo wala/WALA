@@ -2231,6 +2231,36 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     return cn;
   }
 
+  protected CAstNode makeNode(WalkContext wc, Position p, int kind, CAstNode c1) {
+    CAstNode cn = fFactory.makeNode(kind, c1);
+    setPos(wc, cn, p);
+    return cn;
+  }
+
+  protected CAstNode makeNode(WalkContext wc, Position p, int kind, CAstNode c1, CAstNode[] rest) {
+    CAstNode cn = fFactory.makeNode(kind, c1, rest);
+    setPos(wc, cn, p);
+    return cn;
+  }
+
+  protected CAstNode makeNode(WalkContext wc, Position p, int kind, CAstNode c1, CAstNode c2) {
+    CAstNode cn = fFactory.makeNode(kind, c1, c2);
+    setPos(wc, cn, p);
+    return cn;
+  }
+
+  protected CAstNode makeNode(WalkContext wc, Position p, int kind, CAstNode c1, CAstNode c2, CAstNode c3) {
+    CAstNode cn = fFactory.makeNode(kind, c1, c2, c3);
+    setPos(wc, cn, p);
+    return cn;
+  }
+
+  protected CAstNode makeNode(WalkContext wc, Position p, int kind, CAstNode c1, CAstNode c2, CAstNode c3, CAstNode c4) {
+    CAstNode cn = fFactory.makeNode(kind, c1, c2, c3, c4);
+    setPos(wc, cn, p);
+    return cn;
+  }
+
   public CAstEntity translate(Object ast, String fileName) {
     return walkEntity((Node) ast, new RootContext(getTypeDict()));
   }
