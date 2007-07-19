@@ -1286,8 +1286,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               system.newConstraint(dst, assignOperator, src);
             } else {
               PointerKey dst = getFilteredPointerKeyForLocal(instruction.getDef(), new FilteredPointerKey.SingleClassFilter(cls));
-              if ((target == com.ibm.wala.cfg.Util.getTrueSuccessor(CFG, getBasicBlock()) && dir == 1)
-                  || (target == com.ibm.wala.cfg.Util.getFalseSuccessor(CFG, getBasicBlock()) && dir == -1)) {
+              if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(CFG, getBasicBlock()) && dir == 1)
+                  || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(CFG, getBasicBlock()) && dir == -1)) {
                 system.newConstraint(dst, getBuilder().filterOperator, src);
                 // System.err.println("PI " + dst + " " + src);
               } else {
@@ -1295,8 +1295,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               }
             }
           } else if ((dir = nullConstantTest(cond, instruction.getVal())) != 0) {
-            if ((target == com.ibm.wala.cfg.Util.getTrueSuccessor(CFG, getBasicBlock()) && dir == -1)
-                || (target == com.ibm.wala.cfg.Util.getFalseSuccessor(CFG, getBasicBlock()) && dir == 1)) {
+            if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(CFG, getBasicBlock()) && dir == -1)
+                || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(CFG, getBasicBlock()) && dir == 1)) {
               PointerKey dst = getPointerKeyForLocal(instruction.getDef());
               system.newConstraint(dst, assignOperator, src);
             }

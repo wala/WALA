@@ -51,15 +51,32 @@ public class Util {
     return G.getBlockForInstruction(b.getLastInstructionIndex() + 1);
   }
 
-  public static IBasicBlock getFalseSuccessor(ControlFlowGraph G, IBasicBlock b) {
-    return getFallThruBlock(G, b);
-  }
-
-  public static IBasicBlock getTrueSuccessor(ControlFlowGraph G, IBasicBlock b) {
+  /**
+   * Given that b ends with a conditional branch, return the basic block to which control
+   * transfers if the branch is not taken.
+   */
+  public static IBasicBlock getNotTakenSuccessor(ControlFlowGraph G, IBasicBlock b) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
-    IBasicBlock fs = getFalseSuccessor(G, b);
+    if (!endsWithConditionalBranch(G, b)) {
+      throw new IllegalArgumentException(b.toString() + " does not end with a conditional branch");
+    }
+    return getFallThruBlock(G, b);
+  }
+
+  /**
+   * Given that b ends with a conditional branch, return the basic block to which control
+   * transfers if the branch is not taken.
+   */
+  public static IBasicBlock getTakenSuccessor(ControlFlowGraph G, IBasicBlock b) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
+    if (!endsWithConditionalBranch(G, b)) {
+      throw new IllegalArgumentException(b.toString() + " does not end with a conditional branch");
+    }
+    IBasicBlock fs = getNotTakenSuccessor(G, b);
     for (Iterator ss = G.getSuccNodes(b); ss.hasNext();) {
       IBasicBlock s = (IBasicBlock) ss.next();
       if (s != fs)
@@ -119,34 +136,34 @@ public class Util {
     switch ((ConditionalBranchInstruction.Operator) c.getOperator()) {
     case EQ:
       if (c1 == c2)
-        return getTrueSuccessor(G, bb);
+        return getTakenSuccessor(G, bb);
       else
-        return getFalseSuccessor(G, bb);
+        return getNotTakenSuccessor(G, bb);
     case NE:
       if (c1 != c2)
-        return getTrueSuccessor(G, bb);
+        return getTakenSuccessor(G, bb);
       else
-        return getFalseSuccessor(G, bb);
+        return getNotTakenSuccessor(G, bb);
     case LT:
       if (c1 < c2)
-        return getTrueSuccessor(G, bb);
+        return getTakenSuccessor(G, bb);
       else
-        return getFalseSuccessor(G, bb);
+        return getNotTakenSuccessor(G, bb);
     case GE:
       if (c1 >= c2)
-        return getTrueSuccessor(G, bb);
+        return getTakenSuccessor(G, bb);
       else
-        return getFalseSuccessor(G, bb);
+        return getNotTakenSuccessor(G, bb);
     case GT:
       if (c1 > c2)
-        return getTrueSuccessor(G, bb);
+        return getTakenSuccessor(G, bb);
       else
-        return getFalseSuccessor(G, bb);
+        return getNotTakenSuccessor(G, bb);
     case LE:
       if (c1 <= c2)
-        return getTrueSuccessor(G, bb);
+        return getTakenSuccessor(G, bb);
       else
-        return getFalseSuccessor(G, bb);
+        return getNotTakenSuccessor(G, bb);
     }
 
     Assertions.UNREACHABLE();
