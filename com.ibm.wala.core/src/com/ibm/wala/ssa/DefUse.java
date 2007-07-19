@@ -44,7 +44,7 @@ public class DefUse {
   /**
    * A Mapping from integer -> Instruction
    */
-  final private ArrayList<SSAInstruction> allInstructions = new ArrayList<SSAInstruction>();
+  final protected ArrayList<SSAInstruction> allInstructions = new ArrayList<SSAInstruction>();
 
   /**
    * prevent the IR from being collected while this is live.
@@ -62,15 +62,11 @@ public class DefUse {
       throw new IllegalArgumentException("ir is null");
     }
     this.ir = ir;
-    SymbolTable st = ir.getSymbolTable();
 
     // set up mapping from integer -> instruction
-    for (Iterator<SSAInstruction> it = ir.iterateAllInstructions(); it.hasNext();) {
-      allInstructions.add(it.next());
-    }
-
-    defs = new SSAInstruction[st.getMaxValueNumber() + 1];
-    uses = new MutableIntSet[st.getMaxValueNumber() + 1];
+    getAllInstructions();
+    defs = new SSAInstruction[getMaxValueNumber() + 1];
+    uses = new MutableIntSet[getMaxValueNumber() + 1];
     if (DEBUG) {
       Trace.println("DefUse: defs.length " + defs.length);
     }
@@ -80,11 +76,11 @@ public class DefUse {
       if (s == null) {
         continue;
       }
-      for (int j = 0; j < s.getNumberOfDefs(); j++) {
-        defs[s.getDef(j)] = s;
+      for (int j = 0; j < getNumberOfDefs(s); j++) {
+        defs[getDef(s,j)] = s;
       }
-      for (int j = 0; j < s.getNumberOfUses(); j++) {
-        int use = s.getUse(j);
+      for (int j = 0; j < getNumberOfUses(s); j++) {
+        int use = getUse(s,j);
         if (use != -1) {
           if (uses[use] == null) {
             uses[use] = IntSetUtil.make();
@@ -93,6 +89,34 @@ public class DefUse {
         }
       }
     }
+  }
+
+  protected int getMaxValueNumber() {
+    return ir.getSymbolTable().getMaxValueNumber();
+  }
+
+  protected void getAllInstructions() {
+    for (Iterator<SSAInstruction> it = ir.iterateAllInstructions(); 
+	 it.hasNext();) 
+    {
+      allInstructions.add(it.next());
+    }
+  }
+
+  protected int getDef(SSAInstruction s, int i) {
+    return s.getDef(i);
+  }
+
+  protected int getUse(SSAInstruction s, int i) {
+    return s.getUse(i);
+  }
+
+  protected int getNumberOfDefs(SSAInstruction s) {
+    return s.getNumberOfDefs();
+  }
+
+  protected int getNumberOfUses(SSAInstruction s) {
+    return s.getNumberOfUses();
   }
 
   /**
