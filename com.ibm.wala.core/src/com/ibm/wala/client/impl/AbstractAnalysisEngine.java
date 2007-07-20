@@ -23,6 +23,7 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.AnalysisEngine;
 import com.ibm.wala.client.CallGraphBuilderFactory;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -35,6 +36,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -85,7 +87,12 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * A representation of the analysis options
    */
-  protected AnalysisOptions options;
+  private AnalysisOptions options;
+  
+  /**
+   * A cache of IRs and stuff
+   */
+  private AnalysisCache cache;
 
   /**
    * The standard J2SE libraries to analyze
@@ -138,14 +145,14 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     }
   };
 
-  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options) {
-    return getCallGraphBuilderFactory().make(options, cha, getScope(),  false);
+  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    return getCallGraphBuilderFactory().make(options, cache, cha, getScope(),  false);
   }
 
-  protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis) {
+  protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, boolean savePointerAnalysis) {
     Assertions.productionAssertion(getCallGraphBuilderFactory() != null, "must initialize callGraphBuilderFactory!");
 
-    CallGraphBuilder builder = getCallGraphBuilder(cha, options);
+    CallGraphBuilder builder = getCallGraphBuilder(cha, options, cache);
 
     cg = builder.makeCallGraph(options);
 
@@ -196,17 +203,10 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return cha;
   }
 
-  /**
-   * @return Returns the cha.
-   */
   protected IClassHierarchy getClassHierarchy() {
     return cha;
   }
 
-  /**
-   * @param cha
-   *          The cha to set.
-   */
   protected void setClassHierarchy(IClassHierarchy cha) {
     this.cha = cha;
   }
@@ -334,6 +334,10 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> entrypoints) {
     return new AnalysisOptions(getScope(), entrypoints);
   }
+  
+  public AnalysisCache makeDefaultCache() {
+    return new AnalysisCache(new DefaultIRFactory());
+  }
 
   protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
     return Util.makeMainEntrypoints(scope, cha);
@@ -353,11 +357,16 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     setClassHierarchy(cha);
     Iterable<Entrypoint> eps = entrypointBuilder.createEntrypoints(scope, cha);
     options = getDefaultOptions(eps);
-    return buildCallGraph(cha, options, true);
+    cache = makeDefaultCache();
+    return buildCallGraph(cha, options, cache, true);
   }
 
   public CallGraph buildDefaultCallGraph() {
     return defaultCallGraphBuilder().makeCallGraph(options);
+  }
+
+  public AnalysisCache getCache() {
+    return cache;
   }
 
 }

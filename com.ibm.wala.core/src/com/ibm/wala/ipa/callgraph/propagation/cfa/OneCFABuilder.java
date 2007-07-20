@@ -12,6 +12,7 @@
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
 import com.ibm.wala.analysis.reflection.FactoryBypassInterpreter;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
@@ -29,10 +30,10 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class OneCFABuilder extends CFABuilder {
 
-  public OneCFABuilder(IClassHierarchy cha,AnalysisOptions options, ContextSelector appContextSelector,
+  public OneCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
 
-    super(cha, options);
+    super(cha, options, cache);
 
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha));
 
@@ -41,8 +42,8 @@ public class OneCFABuilder extends CFABuilder {
     contextSelector = new OneLevelContextSelector(contextSelector);
     setContextSelector(contextSelector);
 
-    SSAContextInterpreter defI = new DefaultSSAInterpreter(options);
-    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect), defI);
+    SSAContextInterpreter defI = new DefaultSSAInterpreter(options, getAnalysisCache());
+    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, getAnalysisCache(), reflect), defI);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     setContextInterpreter(contextInterpreter);
   }

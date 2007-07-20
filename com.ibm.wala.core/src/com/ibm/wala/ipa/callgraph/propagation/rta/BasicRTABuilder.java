@@ -20,6 +20,7 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.IntSetVariable;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -47,9 +48,9 @@ import com.ibm.wala.util.warnings.Warnings;
  */
 public class BasicRTABuilder extends AbstractRTABuilder {
 
-  public BasicRTABuilder(IClassHierarchy cha, AnalysisOptions options,
+  public BasicRTABuilder(IClassHierarchy cha, AnalysisOptions options,AnalysisCache cache,
       ContextSelector contextSelector, SSAContextInterpreter contextInterpreter) {
-    super(cha, options, contextSelector, contextInterpreter, null);
+    super(cha, options, cache, contextSelector, contextInterpreter, null);
   }
 
   /**

@@ -22,6 +22,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -113,9 +114,9 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/ExceptionInInitializerError"),
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/NullPointerException") };
 
-  protected AbstractRTABuilder(IClassHierarchy cha, AnalysisOptions options, ContextSelector appContextSelector,
+  protected AbstractRTABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
-    super(cha, options, new CFAPointerKeys());
+    super(cha, options, cache, new CFAPointerKeys());
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha));
     setContextSelector(makeContextSelector(appContextSelector));
     setContextInterpreter(makeContextInterpreter(appContextInterpreter, reflect));
@@ -430,8 +431,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   protected SSAContextInterpreter makeContextInterpreter(SSAContextInterpreter appContextInterpreter,
       ReflectionSpecification reflect) {
 
-    SSAContextInterpreter defI = new DefaultSSAInterpreter(getOptions());
-    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(getOptions(),  reflect),
+    SSAContextInterpreter defI = new DefaultSSAInterpreter(getOptions(), getAnalysisCache());
+    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(getOptions(),  getAnalysisCache(), reflect),
         defI);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     return contextInterpreter;
@@ -447,13 +448,9 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     return true;
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#createEmptyCallGraph(com.ibm.wala.ipa.cha.IClassHierarchy,
-   *      com.ibm.wala.ipa.callgraph.AnalysisOptions)
-   */
   @Override
   protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
-    return new DelegatingExplicitCallGraph(cha, options);
+    return new DelegatingExplicitCallGraph(cha, options, getAnalysisCache());
   }
 
   /*

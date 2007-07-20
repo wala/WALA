@@ -15,13 +15,12 @@ import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.classLoader.ShrikeClass;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 
  * For some reason (either a bug in our code that defeats soft references, or a
  * bad policy in the GC), leaving soft reference caches to clear themselves out
  * doesn't work. Help it out.
@@ -37,7 +36,7 @@ public class ReferenceCleanser {
 
   private static WeakReference<IClassHierarchy> cha;
 
-  private static WeakReference<AnalysisOptions> options;
+  private static WeakReference<AnalysisCache> cache;
 
   public static void registerClassHierarchy(IClassHierarchy cha) {
     ReferenceCleanser.cha = new WeakReference<IClassHierarchy>(cha);
@@ -51,17 +50,14 @@ public class ReferenceCleanser {
     return result;
   }
 
-  /**
-   * @param options
-   */
-  public static void registerAnalysisOptions(AnalysisOptions options) {
-    ReferenceCleanser.options = new WeakReference<AnalysisOptions>(options);
+  public static void registerCache(AnalysisCache cache) {
+    ReferenceCleanser.cache = new WeakReference<AnalysisCache>(cache);
   }
 
-  private static AnalysisOptions getAnalysisOptions() {
-    AnalysisOptions result = null;
-    if (options != null) {
-      result = options.get();
+  private static AnalysisCache getAnalysisCache() {
+    AnalysisCache result = null;
+    if (cache != null) {
+      result = cache.get();
     }
     return result;
   }
@@ -74,9 +70,9 @@ public class ReferenceCleanser {
     if (occupancy < OCCUPANCY_TRIGGER) {
       return;
     }
-    if (getAnalysisOptions() != null) {
-      getAnalysisOptions().getSSACache().wipe();
-      getAnalysisOptions().getCFGCache().wipe();
+    if (getAnalysisCache() != null) {
+      getAnalysisCache().getSSACache().wipe();
+      getAnalysisCache().getCFGCache().wipe();
     }
     IClassHierarchy cha = getClassHierarchy();
     if (cha != null) {

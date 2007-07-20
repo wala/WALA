@@ -20,6 +20,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
@@ -67,15 +68,18 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   protected final IClassHierarchy cha;
 
   private final AnalysisOptions options;
+  
+  private final AnalysisCache cache;
 
-  public AbstractRootMethod(MethodReference method, IClass declaringClass, final IClassHierarchy cha, AnalysisOptions options) {
+  public AbstractRootMethod(MethodReference method, IClass declaringClass, final IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
     super(method, declaringClass, true, false);
     this.cha = cha;
     this.options = options;
+    this.cache = cache;
   }
 
-  public AbstractRootMethod(MethodReference method, final IClassHierarchy cha, AnalysisOptions options) {
-    this(method, new FakeRootClass(cha), cha, options);
+  public AbstractRootMethod(MethodReference method, final IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    this(method, new FakeRootClass(cha), cha, options, cache);
   }
 
   /*
@@ -126,7 +130,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       s = new SSAInvokeInstruction(nextLocal++, params, nextLocal++, newSite);
     }
     statements.add(s);
-    options.invalidateCache(this, Everywhere.EVERYWHERE);
+    cache.invalidate(this, Everywhere.EVERYWHERE);
     return s;
   }
 
@@ -198,7 +202,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
             IInvokeInstruction.Dispatch.SPECIAL));
       }
     }
-    options.invalidateCache(this, Everywhere.EVERYWHERE);
+    cache.invalidate(this, Everywhere.EVERYWHERE);
     return result;
   }
 

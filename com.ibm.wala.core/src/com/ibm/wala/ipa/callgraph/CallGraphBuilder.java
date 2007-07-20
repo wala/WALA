@@ -37,5 +37,7 @@ public interface CallGraphBuilder {
   public PointerAnalysis getPointerAnalysis();
 
   public PointerFlowGraphFactory getPointerFlowGraphFactory();
+  
+  public AnalysisCache getAnalysisCache();
 
 }

@@ -16,6 +16,7 @@ import java.util.Iterator;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
@@ -37,8 +38,8 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
   /**
    * @param options governing analysis options
    */
-  public DefaultRTAInterpreter(AnalysisOptions options) {
-    defaultInterpreter = new ContextInsensitiveSSAInterpreter(options);
+  public DefaultRTAInterpreter(AnalysisOptions options, AnalysisCache cache) {
+    defaultInterpreter = new ContextInsensitiveSSAInterpreter(options, cache);
   }
 
   private RTAContextInterpreter getNodeInterpreter(CGNode node) {

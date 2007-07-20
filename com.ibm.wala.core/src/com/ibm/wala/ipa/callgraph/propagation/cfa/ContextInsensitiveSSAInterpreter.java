@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -31,7 +32,8 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
 
   private final AnalysisOptions options;
 
-  public ContextInsensitiveSSAInterpreter(AnalysisOptions options) {
+  public ContextInsensitiveSSAInterpreter(AnalysisOptions options, AnalysisCache cache) {
+    super(cache);
     this.options = options;
   }
 
@@ -41,7 +43,7 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     }
     // Note: since this is context-insensitive, we cache an IR based on the
     // EVERYWHERE context
-    return options.getSSACache().findOrCreateIR(node.getMethod(), Everywhere.EVERYWHERE, options.getSSAOptions());
+    return getAnalysisCache().getSSACache().findOrCreateIR(node.getMethod(), Everywhere.EVERYWHERE, options.getSSAOptions());
   }
 
   public int getNumberOfStatements(CGNode node) {
@@ -69,6 +71,6 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     }
     // Note: since this is context-insensitive, we cache an IR based on the
     // EVERYWHERE context
-    return options.getSSACache().findOrCreateDU(node.getMethod(), Everywhere.EVERYWHERE, options.getSSAOptions());
+    return getAnalysisCache().getSSACache().findOrCreateDU(node.getMethod(), Everywhere.EVERYWHERE, options.getSSAOptions());
   }
 }

@@ -32,6 +32,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -93,6 +94,11 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    * Governing analysis options
    */
   private final AnalysisOptions options;
+  
+  /**
+   * cache of analysis information
+   */
+  private final AnalysisCache cache;
 
   /**
    * User-defined reflection specification
@@ -103,9 +109,10 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
    * @param options
    *          governing analysis options
    */
-  public FactoryBypassInterpreter(AnalysisOptions options, ReflectionSpecification userSpec) {
+  public FactoryBypassInterpreter(AnalysisOptions options, AnalysisCache cache, ReflectionSpecification userSpec) {
     this.options = options;
     this.userSpec = userSpec;
+    this.cache = cache;
   }
 
   private int getLocalForType(TypeReference T) {
@@ -129,15 +136,12 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
 
-  /* 
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
-   */
   public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    return options.getSSACache().findOrCreateIR(m, node.getContext(),options.getSSAOptions());
+    return cache.getSSACache().findOrCreateIR(m, node.getContext(),options.getSSAOptions());
   }
 
   private Set getTypesForContext(Context context) {
@@ -568,7 +572,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
       if (m != null) {
         TypeAbstraction T = typeRef2TypeAbstraction(cha, type);
         m.addStatementsForTypeAbstraction(T);
-        options.getSSACache().invalidate(m, context);
+        cache.getSSACache().invalidate(m, context);
       }
       return true;
     }
@@ -784,6 +788,6 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    return options.getSSACache().findOrCreateDU(m, node.getContext(), options.getSSAOptions());
+    return cache.getSSACache().findOrCreateDU(m, node.getContext(), options.getSSAOptions());
   }
 }

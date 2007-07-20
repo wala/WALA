@@ -15,6 +15,7 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -48,8 +49,8 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
    * @param cha
    * @param options
    */
-  public DelegatingExplicitCallGraph(IClassHierarchy cha, AnalysisOptions options) {
-    super(cha, options);
+  public DelegatingExplicitCallGraph(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    super(cha, options, cache);
   }
 
   /**

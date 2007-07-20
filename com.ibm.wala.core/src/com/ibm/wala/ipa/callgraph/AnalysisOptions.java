@@ -10,13 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
-import com.ibm.wala.cfg.CFGCache;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.ssa.DefaultIRFactory;
-import com.ibm.wala.ssa.IRFactory;
-import com.ibm.wala.ssa.SSACache;
 import com.ibm.wala.ssa.SSAOptions;
-import com.ibm.wala.util.ReferenceCleanser;
 
 /**
  * 
@@ -146,35 +140,15 @@ public class AnalysisOptions {
 
   // SJF: I'm not sure these factories and caches belong here.
   // TODO: figure out how to clean this up.
-  private final IRFactory irFactory;
 
-  private final SSACache ssaCache;
 
-  private final CFGCache cfgCache;
-
-  public AnalysisOptions(IRFactory factory) {
-    this.irFactory = factory;
-    this.ssaCache = new SSACache(factory);
-    this.cfgCache = new CFGCache(factory);
-    ReferenceCleanser.registerAnalysisOptions(this);
+  public AnalysisOptions() {
     this.entrypoints = null;
   }
 
-  public AnalysisOptions() {
-    this(new DefaultIRFactory());
-  }
-
-  public AnalysisOptions(AnalysisScope scope, IRFactory factory, Iterable<Entrypoint> e) {
-    this.irFactory = factory;
-    this.ssaCache = new SSACache(factory);
-    this.cfgCache = new CFGCache(factory);
-    ReferenceCleanser.registerAnalysisOptions(this);
+  public AnalysisOptions(AnalysisScope scope,  Iterable<Entrypoint> e) {
     this.analysisScope = scope;
     this.entrypoints = e;
-  }
-
-  public AnalysisOptions(AnalysisScope scope, Iterable<Entrypoint> e) {
-    this(scope, new DefaultIRFactory(), e);
   }
 
   public AnalysisScope getAnalysisScope() {
@@ -379,25 +353,7 @@ public class AnalysisOptions {
     return usePreTransitiveSolver;
   }
 
-  public IRFactory getIRFactory() {
-    return irFactory;
-  }
-
-  public SSACache getSSACache() {
-    return ssaCache;
-  }
-
-  public CFGCache getCFGCache() {
-    return cfgCache;
-  }
-
-  public void invalidateCache(IMethod method, Context C) {
-    ssaCache.invalidate(method, C);
-    cfgCache.invalidate(method, C);
-  }
-
   public void setUsePreTransitiveSolver(boolean b) {
     usePreTransitiveSolver = b;
   }
-
 }

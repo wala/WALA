@@ -31,6 +31,7 @@ import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.IntSetVariable;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextKey;
@@ -165,18 +166,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   private final Set<IClass> clinitVisited = HashSetFactory.make();
 
   /**
-   * Set of CGNode numbers that have no instructions for Node number n:
-   * emptyNodeNumber[2n] marks whether we have counted the instructions
-   * emptyNodeNumber[2n+1] marks whether the number of instructions == 0
-   */
-  // private final BitVector emptyNodeNumbers = new BitVector();
-  /**
    * Should we use the pre-transitive solver?
    */
   private final boolean usePreTransitiveSolver;
 
-  protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, PointerKeyFactory pointerKeyFactory) {
-    super(cha, options, pointerKeyFactory);
+  protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, PointerKeyFactory pointerKeyFactory) {
+    super(cha, options, cache, pointerKeyFactory);
     this.usePreTransitiveSolver = options.usePreTransitiveSolver();
   }
 
@@ -600,6 +595,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     protected AnalysisOptions getOptions() {
       return builder.options;
+    }
+    
+    protected AnalysisCache getAnalysisCache() {
+      return builder.getAnalysisCache();
     }
 
     public PointerKey getPointerKeyForLocal(int valueNumber) {

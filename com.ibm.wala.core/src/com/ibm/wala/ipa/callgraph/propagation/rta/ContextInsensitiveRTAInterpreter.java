@@ -17,13 +17,13 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.CodeScanner;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * Default implementation of MethodContextInterpreter for context-insensitive
  * analysis
  * 
@@ -31,6 +31,20 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInterpreter, SSAContextInterpreter {
   
+  private final AnalysisCache analysisCache;
+  
+  public ContextInsensitiveRTAInterpreter(AnalysisCache cache) {
+    this.analysisCache = cache;
+  }
+  
+  
+  
+  public AnalysisCache getAnalysisCache() {
+    return analysisCache;
+  }
+
+
+
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");

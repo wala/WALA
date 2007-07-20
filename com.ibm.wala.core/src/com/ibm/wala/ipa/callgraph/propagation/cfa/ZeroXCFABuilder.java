@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
 import com.ibm.wala.analysis.reflection.FactoryBypassInterpreter;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -32,10 +33,10 @@ public class ZeroXCFABuilder extends CFABuilder {
 
   private final int instancePolicy;
 
-  public ZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, ContextSelector appContextSelector,
+  public ZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
 
-    super(cha, options);
+    super(cha, options, cache);
 
     this.instancePolicy = instancePolicy;
 
@@ -43,8 +44,8 @@ public class ZeroXCFABuilder extends CFABuilder {
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     setContextSelector(contextSelector);
 
-    SSAContextInterpreter c = new DefaultSSAInterpreter(options);
-    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect), c);
+    SSAContextInterpreter c = new DefaultSSAInterpreter(options, cache);
+    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, getAnalysisCache(), reflect), c);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, c);
     setContextInterpreter(contextInterpreter);
 
@@ -77,7 +78,7 @@ public class ZeroXCFABuilder extends CFABuilder {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder make(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
+  public static CFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
       String[] xmlFiles, byte instancePolicy) {
 
     if (options == null) {
@@ -88,7 +89,7 @@ public class ZeroXCFABuilder extends CFABuilder {
       Util.addBypassLogic(options, scope, cl, xmlFiles[i], cha);
     }
 
-    return new ZeroXCFABuilder(cha, options, null, null, options.getReflectionSpec(), instancePolicy);
+    return new ZeroXCFABuilder(cha, options, cache, null, null, options.getReflectionSpec(), instancePolicy);
   }
 
   /*

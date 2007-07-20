@@ -12,7 +12,7 @@ package com.ibm.wala.analysis.typeInference;
 
 import java.util.Map;
 
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAOptions;
@@ -20,17 +20,16 @@ import com.ibm.wala.util.CacheReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 /**
- * 
  * A soft cache of results of type inference
  * 
  * @author sfink
  */
 public class ReceiverTypeInferenceCache {
 
-  private final AnalysisOptions options;
+  private final AnalysisCache analysisCache;
 
-  public ReceiverTypeInferenceCache(AnalysisOptions options) {
-    this.options = options;
+  public ReceiverTypeInferenceCache(AnalysisCache cache) {
+    this.analysisCache = cache;
   }
 
   /**
@@ -51,7 +50,7 @@ public class ReceiverTypeInferenceCache {
       if (result == null) {
         SSAOptions options = SSAOptions.defaultOptions();
         options.setUsePiNodes(true);
-        IR ir = this.options.getSSACache().findOrCreateIR(n.getMethod(), n.getContext(),  options);
+        IR ir = analysisCache.getSSACache().findOrCreateIR(n.getMethod(), n.getContext(),  options);
         TypeInference T = new TypeInference(ir);
         T.solve();
 

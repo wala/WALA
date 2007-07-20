@@ -19,6 +19,7 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -553,12 +554,12 @@ public class Util {
    * @param scope
    *            representation of the analysis scope
    */
-  public static CallGraphBuilder makeRTABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope) {
+  public static CallGraphBuilder makeRTABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope) {
 
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return new BasicRTABuilder(cha, options, null, null);
+    return new BasicRTABuilder(cha, options, cache, null, null);
   }
 
   /**
@@ -570,8 +571,8 @@ public class Util {
    *            representation of the analysis scope
    * @return a 0-CFA Call Graph Builder.
    */
-  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope) {
-    return makeZeroCFABuilder(options, cha, scope, null, null);
+  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope) {
+    return makeZeroCFABuilder(options, cache, cha, scope, null, null);
   }
 
   /**
@@ -589,7 +590,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
+  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options,AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope,
       ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -598,7 +599,7 @@ public class Util {
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return new ZeroXCFABuilder(cha, options, customSelector, customInterpreter, options.getReflectionSpec(), ZeroXInstanceKeys.NONE);
+    return new ZeroXCFABuilder(cha, options, cache, customSelector, customInterpreter, options.getReflectionSpec(), ZeroXInstanceKeys.NONE);
   }
 
   /**
@@ -614,7 +615,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CallGraphBuilder makeOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope) {
+  public static CallGraphBuilder makeOneCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
@@ -624,7 +625,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
 
-    CallGraphBuilder builder = new OneCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec());
+    CallGraphBuilder builder = new OneCFABuilder(cha, options,cache, appSelector, appInterpreter, options.getReflectionSpec());
     return builder;
   }
 
@@ -641,8 +642,8 @@ public class Util {
    * @param scope
    *            representation of the analysis scope
    */
-  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope) {
-    return makeZeroOneCFABuilder(options, cha, scope, null, null);
+  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope) {
+    return makeZeroOneCFABuilder(options, cache, cha, scope, null, null);
   }
 
   /**
@@ -660,7 +661,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
+  public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache,IClassHierarchy cha, AnalysisScope scope,
       ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -669,7 +670,7 @@ public class Util {
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return new ZeroXCFABuilder(cha, options, customSelector, customInterpreter, options.getReflectionSpec(),
+    return new ZeroXCFABuilder(cha, options,cache,  customSelector, customInterpreter, options.getReflectionSpec(),
         ZeroXInstanceKeys.ALLOCATIONS);
   }
 
@@ -686,8 +687,8 @@ public class Util {
    * @param scope
    *            representation of the analysis scope
    */
-  public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope) {
-    return makeVanillaZeroOneCFABuilder(options, cha, scope, null, null);
+  public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options,AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope) {
+    return makeVanillaZeroOneCFABuilder(options, cache, cha, scope, null, null);
   }
 
   /**
@@ -705,7 +706,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope,
+  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache,IClassHierarchy cha, AnalysisScope scope,
       ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -714,7 +715,7 @@ public class Util {
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return new ZeroXCFABuilder(cha, options, customSelector, customInterpreter, options.getReflectionSpec(),
+    return new ZeroXCFABuilder(cha, options, cache, customSelector, customInterpreter, options.getReflectionSpec(),
         ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
             | ZeroXInstanceKeys.SMUSH_STRINGS | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }
@@ -731,7 +732,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder makeZeroContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope) {
+  public static CFABuilder makeZeroContainerCFABuilder(AnalysisOptions options,AnalysisCache cache,IClassHierarchy cha, AnalysisScope scope) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
@@ -741,7 +742,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
 
-    return new ZeroContainerCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec());
+    return new ZeroContainerCFABuilder(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec());
   }
 
   /**
@@ -756,7 +757,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope ) {
+  public static CFABuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, AnalysisCache cache,IClassHierarchy cha, AnalysisScope scope ) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
@@ -766,7 +767,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
 
-    return new ZeroOneContainerCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec());
+    return new ZeroOneContainerCFABuilder(cha, options,cache,  appSelector, appInterpreter, options.getReflectionSpec());
   }
 
   /**
@@ -781,7 +782,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder makeVanillaZeroOneContainerCFABuilder(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope) {
+  public static CFABuilder makeVanillaZeroOneContainerCFABuilder(AnalysisOptions options,AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope) {
 
     if (options == null) {
       throw new IllegalArgumentException("options is null");
@@ -791,7 +792,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
 
-    return new ZeroOneContainerCFABuilder(cha, options, appSelector, appInterpreter, options.getReflectionSpec()) {
+    return new ZeroOneContainerCFABuilder(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec()) {
       @Override
       protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy c, AnalysisOptions o,
           SSAContextInterpreter contextInterpreter) {

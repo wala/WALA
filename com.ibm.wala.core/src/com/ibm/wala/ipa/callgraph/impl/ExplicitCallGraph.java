@@ -19,6 +19,7 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -57,25 +58,22 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
 
   private static final boolean DEBUG = false;
 
-  /**
-   * Governing class hierarchy
-   */
   protected final IClassHierarchy cha;
 
-  /**
-   * Analysis options
-   */
   protected final AnalysisOptions options;
+  
+  private final AnalysisCache cache;
 
   /**
    * special object to track call graph edges
    */
   private final ExplicitEdgeManager edgeManager = makeEdgeManger();
 
-  public ExplicitCallGraph(IClassHierarchy cha, AnalysisOptions options) {
+  public ExplicitCallGraph(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
     super();
     this.cha = cha;
     this.options = options;
+    this.cache = cache;
   }
 
   /**
@@ -90,7 +88,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
    */
   @Override
   protected CGNode makeFakeRootNode() {
-    return findOrCreateNode(new FakeRootMethod(cha, options), Everywhere.EVERYWHERE);
+    return findOrCreateNode(new FakeRootMethod(cha, options, cache), Everywhere.EVERYWHERE);
   }
   
   /**
@@ -98,7 +96,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
    */
   @Override
   protected CGNode makeFakeWorldClinitNode() {
-    return findOrCreateNode(new FakeWorldClinitMethod(cha, options), Everywhere.EVERYWHERE);
+    return findOrCreateNode(new FakeWorldClinitMethod(cha, options, cache), Everywhere.EVERYWHERE);
   }
 
   /**
@@ -477,5 +475,9 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     assert (node instanceof ExplicitNode);
     ExplicitNode n = (ExplicitNode)node;
     return n.getPossibleTargetNumbers(site);
+  }
+
+  public AnalysisCache getAnalysisCache() {
+    return cache;
   }
 }

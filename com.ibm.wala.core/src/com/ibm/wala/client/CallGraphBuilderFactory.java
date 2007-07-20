@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.client;
 
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
@@ -52,5 +53,5 @@ public interface CallGraphBuilderFactory {
    *          preserve PointsTo graph for posterity?
    *  
    */
-  CallGraphBuilder make(AnalysisOptions options, IClassHierarchy cha, AnalysisScope scope, boolean keepPointsTo);
+  CallGraphBuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope, boolean keepPointsTo);
 }

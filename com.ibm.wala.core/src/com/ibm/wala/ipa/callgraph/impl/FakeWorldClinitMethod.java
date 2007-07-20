@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.impl;
 
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.Descriptor;
@@ -17,7 +18,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.Atom;
 
 /**
- * 
  * A synthetic method that calls all class initializers
  * 
  * @author sfink
@@ -29,7 +29,7 @@ public class FakeWorldClinitMethod extends AbstractRootMethod {
   private static final MethodReference worldClinitMethod = MethodReference.findOrCreate(FakeRootClass.FAKE_ROOT_CLASS, name, Descriptor
       .findOrCreateUTF8("()V"));
   
-  public FakeWorldClinitMethod(final IClassHierarchy cha, AnalysisOptions options) {
-    super(worldClinitMethod, cha, options);
+  public FakeWorldClinitMethod(final IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    super(worldClinitMethod, cha, options, cache);
   }
 }

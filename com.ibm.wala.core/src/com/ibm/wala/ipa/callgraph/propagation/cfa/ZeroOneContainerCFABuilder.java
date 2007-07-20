@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
 import com.ibm.wala.analysis.reflection.FactoryBypassInterpreter;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
@@ -20,7 +21,6 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 
  * 0-1-CFA Call graph builder which analyzes calls to "container methods" in a
  * context which is defined by the receiver instance.
  * 
@@ -30,22 +30,22 @@ public class ZeroOneContainerCFABuilder extends CFABuilder {
 
   /**
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param options
-   *          call graph construction options
+   *            call graph construction options
    * @param appContextSelector
-   *          application-specific logic to choose contexts
+   *            application-specific logic to choose contexts
    * @param appContextInterpreter
-   *          application-specific logic to interpret a method in context
+   *            application-specific logic to interpret a method in context
    * @param reflect
-   *          reflection specification
+   *            reflection specification
    * @throws IllegalArgumentException
-   *           if options is null
+   *             if options is null
    */
-  public ZeroOneContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options,
+  public ZeroOneContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
 
-    super(cha,options);
+    super(cha, options, cache);
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
@@ -53,8 +53,8 @@ public class ZeroOneContainerCFABuilder extends CFABuilder {
     ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
 
-    SSAContextInterpreter c = new DefaultSSAInterpreter(options);
-    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, reflect), c);
+    SSAContextInterpreter c = new DefaultSSAInterpreter(options, cache);
+    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, getAnalysisCache(), reflect), c);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, c);
     setContextInterpreter(contextInterpreter);
 

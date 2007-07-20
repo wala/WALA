@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
@@ -41,10 +42,10 @@ public class ZeroContainerCFABuilder extends CFABuilder {
    * @throws IllegalArgumentException
    *           if options is null
    */
-  public ZeroContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options,
+  public ZeroContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
 
-    super(cha, options);
+    super(cha, options, cache);
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
