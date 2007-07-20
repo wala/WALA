@@ -22,6 +22,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSZeroXCFABuilder;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.util.WebUtil;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -91,8 +92,9 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
       IClassHierarchy cha = makeHierarchy(scope, loaders);
       Iterable<Entrypoint> roots = makeScriptRoots(cha);
       AnalysisOptions options = makeOptions(scope, keepIRs, cha, roots);
+      AnalysisCache cache = makeCache(keepIRs);
 
-      JSCFABuilder builder = new JSZeroXCFABuilder(cha, options, null, null, null, ZeroXInstanceKeys.ALLOCATIONS);
+      JSCFABuilder builder = new JSZeroXCFABuilder(cha, options, cache, null, null, null, ZeroXInstanceKeys.ALLOCATIONS);
 
       return builder;
     } catch (ClassHierarchyException e) {
