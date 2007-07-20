@@ -26,7 +26,6 @@ public class SSAPhiInstruction extends SSAInstruction {
   private int[] params;
 
   public SSAPhiInstruction(int result, int[] params) throws IllegalArgumentException {
-
     super();
     if (params == null) {
       throw new IllegalArgumentException("params is null");
@@ -35,6 +34,11 @@ public class SSAPhiInstruction extends SSAInstruction {
     this.params = params;
     if (params.length == 0) {
       throw new IllegalArgumentException("can't have phi with no params");
+    }
+    for (int p : params) {
+      if (p == 0) {
+        throw new IllegalArgumentException("zero is an invalid value number for a parameter to phi");
+      }
     }
   }
 
