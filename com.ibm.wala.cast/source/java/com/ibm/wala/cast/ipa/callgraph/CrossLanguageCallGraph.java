@@ -19,6 +19,7 @@ import com.ibm.wala.cast.util.TargetLanguageSelector;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.impl.AbstractRootMethod;
@@ -47,8 +48,8 @@ import com.ibm.wala.util.collections.HashSetFactory;
 public class CrossLanguageCallGraph extends AstCallGraph {
 
   public CrossLanguageCallGraph(TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph> roots, IClassHierarchy cha,
-      AnalysisOptions options) {
-    super(cha, options);
+      AnalysisOptions options, AnalysisCache cache) {
+    super(cha, options, cache);
     this.roots = roots;
   }
 
@@ -84,12 +85,12 @@ public class CrossLanguageCallGraph extends AstCallGraph {
 
   public class CrossLanguageFakeRoot extends ScriptFakeRoot {
 
-    public CrossLanguageFakeRoot(IClass declaringClass, IClassHierarchy cha, AnalysisOptions options) {
-      super(FakeRootMethod.rootMethod, declaringClass, cha, options);
+    public CrossLanguageFakeRoot(IClass declaringClass, IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+      super(FakeRootMethod.rootMethod, declaringClass, cha, options, cache);
     }
 
-    public CrossLanguageFakeRoot(IClassHierarchy cha, AnalysisOptions options) {
-      super(FakeRootMethod.rootMethod, cha, options);
+    public CrossLanguageFakeRoot(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+      super(FakeRootMethod.rootMethod, cha, options, cache);
     }
 
     public int addPhi(TypeReference type, int[] values) {
@@ -154,6 +155,6 @@ public class CrossLanguageCallGraph extends AstCallGraph {
   }
 
   protected CGNode makeFakeRootNode() {
-    return findOrCreateNode(new CrossLanguageFakeRoot(cha, options), Everywhere.EVERYWHERE);
+    return findOrCreateNode(new CrossLanguageFakeRoot(cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
 }

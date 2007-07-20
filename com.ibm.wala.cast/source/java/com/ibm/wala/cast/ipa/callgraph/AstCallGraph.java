@@ -20,6 +20,7 @@ import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -35,25 +36,18 @@ import com.ibm.wala.util.Function;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 public class AstCallGraph extends ExplicitCallGraph {
-  public AstCallGraph(IClassHierarchy cha, AnalysisOptions options) {
-    super(cha, options);
+  public AstCallGraph(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    super(cha, options, cache);
   }
 
   public static class AstFakeRoot extends AbstractRootMethod {
 
-    public AstFakeRoot(MethodReference rootMethod,
-		       IClass declaringClass,
-		       IClassHierarchy cha, 
-		       AnalysisOptions options)
-    {
-      super(rootMethod, declaringClass, cha, options);
+    public AstFakeRoot(MethodReference rootMethod, IClass declaringClass, IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+      super(rootMethod, declaringClass, cha, options, cache);
     }
 
-    public AstFakeRoot(MethodReference rootMethod,
-		       IClassHierarchy cha, 
-		       AnalysisOptions options)
-    {
-      super(rootMethod, cha, options);
+    public AstFakeRoot(MethodReference rootMethod, IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+      super(rootMethod, cha, options, cache);
     }
 
     public InducedCFG makeControlFlowGraph() {
@@ -69,19 +63,12 @@ public class AstCallGraph extends ExplicitCallGraph {
 
   public static abstract class ScriptFakeRoot extends AstFakeRoot {
 
-    public ScriptFakeRoot(MethodReference rootMethod,
-			  IClass declaringClass,
-			  IClassHierarchy cha, 
-			  AnalysisOptions options)
-    {
-	super(rootMethod, declaringClass, cha, options);
+    public ScriptFakeRoot(MethodReference rootMethod, IClass declaringClass, IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+      super(rootMethod, declaringClass, cha, options, cache);
     }
 
-    public ScriptFakeRoot(MethodReference rootMethod,
-			  IClassHierarchy cha, 
-			  AnalysisOptions options)
-    {
-	super(rootMethod, cha, options);
+    public ScriptFakeRoot(MethodReference rootMethod, IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+      super(rootMethod, cha, options, cache);
     }
 
     public abstract SSAAbstractInvokeInstruction addDirectCall(int functionVn, int[] argVns, CallSiteReference callSite);
@@ -89,7 +76,7 @@ public class AstCallGraph extends ExplicitCallGraph {
   }
 
   protected class AstCGNode extends ExplicitNode {
-    private Set<Function<Object,Object>> callbacks;
+    private Set<Function<Object, Object>> callbacks;
 
     private AstCGNode(IMethod method, Context context) {
       super(method, context);
@@ -100,7 +87,7 @@ public class AstCallGraph extends ExplicitCallGraph {
         boolean done = false;
         while (!done) {
           try {
-            for (Iterator<Function<Object,Object>> x = callbacks.iterator(); x.hasNext();) {
+            for (Iterator<Function<Object, Object>> x = callbacks.iterator(); x.hasNext();) {
               x.next().apply(null);
             }
           } catch (ConcurrentModificationException e) {
@@ -112,48 +99,48 @@ public class AstCallGraph extends ExplicitCallGraph {
       }
     }
 
-    private boolean hasCallback(Function<Object,Object> callback) {
+    private boolean hasCallback(Function<Object, Object> callback) {
       return callbacks != null && callbacks.contains(callback);
     }
 
-    private boolean hasAllCallbacks(Set<Function<Object,Object>> callbacks) {
+    private boolean hasAllCallbacks(Set<Function<Object, Object>> callbacks) {
       return callbacks != null && callbacks.containsAll(callbacks);
     }
 
-    public void addCallback(Function<Object,Object> callback) {
-      if (! hasCallback(callback)) {
-	if (callbacks == null) {
-	  callbacks = HashSetFactory.make(1);
-	}
+    public void addCallback(Function<Object, Object> callback) {
+      if (!hasCallback(callback)) {
+        if (callbacks == null) {
+          callbacks = HashSetFactory.make(1);
+        }
 
-	callbacks.add(callback);
+        callbacks.add(callback);
 
-	for(Iterator ps = getCallGraph().getPredNodes(this); ps.hasNext(); ) {
-	  ((AstCGNode)ps.next()).addCallback(callback);
-	}
+        for (Iterator ps = getCallGraph().getPredNodes(this); ps.hasNext();) {
+          ((AstCGNode) ps.next()).addCallback(callback);
+        }
       }
     }
 
-    public void addAllCallbacks(Set<Function<Object,Object>> callback) {
-      if (! hasAllCallbacks(callbacks)) {
-	if (callbacks == null) {
-	  callbacks = HashSetFactory.make(1);
-	}
+    public void addAllCallbacks(Set<Function<Object, Object>> callback) {
+      if (!hasAllCallbacks(callbacks)) {
+        if (callbacks == null) {
+          callbacks = HashSetFactory.make(1);
+        }
 
-	callbacks.addAll(callbacks);
+        callbacks.addAll(callbacks);
 
-	for(Iterator ps = getCallGraph().getPredNodes(this); ps.hasNext(); ) {
-	  ((AstCGNode)ps.next()).addAllCallbacks(callbacks);
-	}
+        for (Iterator ps = getCallGraph().getPredNodes(this); ps.hasNext();) {
+          ((AstCGNode) ps.next()).addAllCallbacks(callbacks);
+        }
       }
     }
 
     public boolean addTarget(CallSiteReference site, CGNode node) {
       if (super.addTarget(site, node)) {
-	if (((AstCGNode)node).callbacks != null) {
-	  ((AstCGNode)node).fireCallbacks();
-	  addAllCallbacks(((AstCGNode)node).callbacks);
-	}
+        if (((AstCGNode) node).callbacks != null) {
+          ((AstCGNode) node).fireCallbacks();
+          addAllCallbacks(((AstCGNode) node).callbacks);
+        }
         return true;
       } else {
         return false;
@@ -166,7 +153,7 @@ public class AstCallGraph extends ExplicitCallGraph {
   }
 
   protected CGNode makeFakeRootNode() {
-      return findOrCreateNode(new AstFakeRoot(FakeRootMethod.rootMethod, cha, options), Everywhere.EVERYWHERE);
+    return findOrCreateNode(new AstFakeRoot(FakeRootMethod.rootMethod, cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
 
 }

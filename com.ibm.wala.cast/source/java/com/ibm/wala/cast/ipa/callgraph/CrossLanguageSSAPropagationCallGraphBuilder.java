@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.cast.ipa.callgraph.AstSSAPropagationCallGraphBuilder.AstPointerAnalysisImpl.AstImplicitPointsToSetVisitor;
 import com.ibm.wala.cast.util.TargetLanguageSelector;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -50,15 +51,15 @@ public abstract class CrossLanguageSSAPropagationCallGraphBuilder extends AstSSA
 
   protected abstract TargetLanguageSelector<AbstractRootMethod, CrossLanguageCallGraph> makeRootNodeSelector();
 
-  protected CrossLanguageSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options,
+  protected CrossLanguageSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {
-    super(cha, options, pointerKeyFactory);
+    super(cha, options, cache, pointerKeyFactory);
     visitors = makeMainVisitorSelector();
     interesting = makeInterestingVisitorSelector();
   }
 
   protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
-    return new CrossLanguageCallGraph(makeRootNodeSelector(), cha, options);
+    return new CrossLanguageCallGraph(makeRootNodeSelector(), cha, options, getAnalysisCache());
   }
 
   protected static Atom getLanguage(CGNode node) {

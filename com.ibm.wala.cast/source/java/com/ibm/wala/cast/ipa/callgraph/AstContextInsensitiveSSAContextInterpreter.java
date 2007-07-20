@@ -16,6 +16,7 @@ import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -27,8 +28,8 @@ public class AstContextInsensitiveSSAContextInterpreter
   extends ContextInsensitiveSSAInterpreter 
 {
 
-  public AstContextInsensitiveSSAContextInterpreter(AnalysisOptions options) {
-    super(options);
+  public AstContextInsensitiveSSAContextInterpreter(AnalysisOptions options, AnalysisCache cache) {
+    super(options,cache);
   }
 
   public boolean understands(IMethod method, Context context) {
