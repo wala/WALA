@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.ipa.callgraph;
 
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -26,9 +27,10 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
 
-  public AstJavaZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, ContextSelector appContextSelector,
-      SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
-    super(cha, options);
+  public AstJavaZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect,
+      int instancePolicy) {
+    super(cha, options, cache);
 
     SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha, reflect);
     setContextInterpreter(contextInterpreter);
@@ -58,7 +60,7 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
    *            deployment descriptor abstraction
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
-  public static AstJavaCFABuilder make(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
+  public static AstJavaCFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
       String[] xmlFiles, byte instancePolicy) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
@@ -66,7 +68,7 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
       com.ibm.wala.ipa.callgraph.impl.Util.addBypassLogic(options, scope, cl, xmlFiles[i], cha);
     }
 
-    return new AstJavaZeroXCFABuilder(cha, options, null, null, options.getReflectionSpec(), instancePolicy);
+    return new AstJavaZeroXCFABuilder(cha, options, cache, null, null, options.getReflectionSpec(), instancePolicy);
   }
 
   /*

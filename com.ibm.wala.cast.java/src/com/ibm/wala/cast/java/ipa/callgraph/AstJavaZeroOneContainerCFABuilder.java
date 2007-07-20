@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.cast.java.ipa.callgraph;
 
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
@@ -31,7 +32,7 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
 
   /**
    * @param cha
-   *          governing class hierarhcy
+   *          governing class hierarchy
    * @param warnings
    *          object to track analysis warnings
    * @param options
@@ -46,11 +47,12 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
   public AstJavaZeroOneContainerCFABuilder(
 		  IClassHierarchy cha, 
 		  AnalysisOptions options,
+		  AnalysisCache cache, 
 		  ContextSelector appContextSelector,
 		  SSAContextInterpreter appContextInterpreter, 
 		  ReflectionSpecification reflect) 
   {
-    super(cha, options);
+    super(cha, options, cache);
 
     ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);

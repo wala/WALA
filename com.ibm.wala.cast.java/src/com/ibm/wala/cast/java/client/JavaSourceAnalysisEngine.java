@@ -22,6 +22,7 @@ import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.impl.AbstractAnalysisEngine;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -148,8 +149,13 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     return Util.makeMainEntrypoints(EclipseProjectPath.SOURCE_REF, cha);
   }
 
+  @Override
+  public AnalysisCache makeDefaultCache() {
+    return new AnalysisCache(AstIRFactory.makeDefaultFactory(true));
+  }
+
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> entrypoints) {
-    AnalysisOptions options = new AnalysisOptions(getScope(), AstIRFactory.makeDefaultFactory(true), entrypoints);
+    AnalysisOptions options = new AnalysisOptions(getScope(),entrypoints);
 
     SSAOptions ssaOptions = new SSAOptions();
     ssaOptions.setDefaultValues(new SSAOptions.DefaultValues() {

@@ -12,6 +12,7 @@ package com.ibm.wala.cast.java.client.impl;
 
 import com.ibm.wala.cast.java.ipa.callgraph.AstJavaZeroOneContainerCFABuilder;
 import com.ibm.wala.client.CallGraphBuilderFactory;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
@@ -25,13 +26,9 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class ZeroOneContainerCFABuilderFactory implements CallGraphBuilderFactory {
 
-  public CallGraphBuilder make(AnalysisOptions options,
-			       IClassHierarchy cha,
-			       AnalysisScope scope,
-			       boolean keepPointsTo)
-  {
-      Util.addDefaultSelectors(options, cha);
-      Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
-      return new AstJavaZeroOneContainerCFABuilder(cha, options, null, null, options.getReflectionSpec());
+  public CallGraphBuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope, boolean keepPointsTo) {
+    Util.addDefaultSelectors(options, cha);
+    Util.addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
+    return new AstJavaZeroOneContainerCFABuilder(cha, options, cache, null, null, options.getReflectionSpec());
   }
 }
