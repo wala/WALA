@@ -17,6 +17,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ecore.java.impl.JavaPackageImpl;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -78,7 +79,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     options.getSSAOptions().setUsePiNodes(usePiNodes);
 
-    return CallGraphTestUtil.buildZeroCFA(options, cha, scope);
+    return CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope);
   }
 
   private void checkCallAssertions(CallGraph cg, int desiredNumberOfTargets, int desiredNumberOfCalls) {

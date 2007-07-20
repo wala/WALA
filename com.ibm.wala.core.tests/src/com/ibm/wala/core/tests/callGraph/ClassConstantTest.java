@@ -16,6 +16,7 @@ import junit.framework.Assert;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -48,7 +49,7 @@ public class ClassConstantTest extends WalaTestCase {
     // make call graph
     Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, TestConstants.CLASSCONSTANT_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, cha, scope);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope);
     Trace.println("\nCall graph:");
     Trace.println(cg);
 

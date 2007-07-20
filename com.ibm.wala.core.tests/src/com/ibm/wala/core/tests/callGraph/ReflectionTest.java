@@ -15,6 +15,7 @@ import java.util.Iterator;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ecore.java.impl.JavaPackageImpl;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -47,7 +48,7 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     Warnings.clear();
-    CallGraphTest.doCallGraphs(options, cha, scope, null, useShortProfile(), false);
+    CallGraphTest.doCallGraphs(options, new AnalysisCache(),cha, scope, null, useShortProfile(), false);
     for (Iterator<Warning> it = Warnings.iterator(); it.hasNext(); ) {
       Warning w = (Warning)it.next();
       if (w.toString().indexOf("com/ibm/jvm") > 0) {

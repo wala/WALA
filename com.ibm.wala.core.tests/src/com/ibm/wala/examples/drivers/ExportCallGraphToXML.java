@@ -31,6 +31,7 @@ import com.ibm.wala.emf.wrappers.EObjectGraph;
 import com.ibm.wala.emf.wrappers.EObjectGraphImpl;
 import com.ibm.wala.emf.wrappers.EUtil;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -89,7 +90,7 @@ public class ExportCallGraphToXML {
       // build the call graph
       // //
       System.err.println("Build callgraph...");
-      com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cha, scope, null, null);
+      com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(),cha, scope, null, null);
       CallGraph cg = builder.makeCallGraph(options);
 
       System.err.println("Convert to EMF...");

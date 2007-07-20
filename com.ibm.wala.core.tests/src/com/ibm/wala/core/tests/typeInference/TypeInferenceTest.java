@@ -17,6 +17,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -45,6 +46,8 @@ public class TypeInferenceTest extends WalaTestCase {
   private ClassHierarchy cha;
 
   private AnalysisOptions options;
+  
+  private AnalysisCache cache;
 
   public static void main(String[] args) {
     justThisTest(TypeInferenceTest.class);
@@ -55,6 +58,7 @@ public class TypeInferenceTest extends WalaTestCase {
     scope = new EMFScopeWrapper(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
+    cache = new AnalysisCache();
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions() );
 
     try {
@@ -77,7 +81,7 @@ public class TypeInferenceTest extends WalaTestCase {
     assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
     assertNotNull("imethod not found", imethod);
-    IR ir = options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions() );
+    IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions() );
     System.out.println(ir);
     
     TypeInference ti = new TypeInference(ir);

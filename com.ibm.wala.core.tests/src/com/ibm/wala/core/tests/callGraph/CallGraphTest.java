@@ -28,6 +28,7 @@ import com.ibm.wala.ecore.java.EJavaMethod;
 import com.ibm.wala.ecore.java.impl.JavaPackageImpl;
 import com.ibm.wala.emf.wrappers.ECallGraphWrapper;
 import com.ibm.wala.emf.wrappers.EMFBridge;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -132,7 +133,7 @@ public class CallGraphTest extends WalaTestCase {
         TestConstants.BCEL_VERIFIER_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, cha, scope, null, useShortProfile(), false);
+    doCallGraphs(options, new AnalysisCache(), cha, scope, null, useShortProfile(), false);
   }
 
   public void testJava_cup() throws ClassHierarchyException {
@@ -142,7 +143,7 @@ public class CallGraphTest extends WalaTestCase {
         TestConstants.JAVA_CUP_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, cha, scope, null, useShortProfile(), false);
+    doCallGraphs(options, new AnalysisCache(), cha, scope, null, useShortProfile(), false);
   }
 
   public void testJLex() throws ClassHierarchyException {
@@ -152,7 +153,7 @@ public class CallGraphTest extends WalaTestCase {
         .makeMainEntrypoints(scope, cha, TestConstants.JLEX_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, cha, scope, null, useShortProfile(), false);
+    doCallGraphs(options,new AnalysisCache(), cha, scope, null, useShortProfile(), false);
   }
 
   public void testCornerCases() throws ClassHierarchyException {
@@ -161,7 +162,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, cha, scope, null, useShortProfile(), false);
+    doCallGraphs(options,new AnalysisCache(), cha, scope, null, useShortProfile(), false);
 
     // we expect a warning or two about class Abstract1, which has no concrete
     // subclasses
@@ -202,7 +203,7 @@ public class CallGraphTest extends WalaTestCase {
         TestConstants.HELLO_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, cha, scope, null, false, false);
+    doCallGraphs(options, new AnalysisCache(), cha, scope, null, false, false);
   }
 
   public void testRecursion() throws ClassHierarchyException {
@@ -212,7 +213,7 @@ public class CallGraphTest extends WalaTestCase {
         TestConstants.RECURSE_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, cha, scope, null, useShortProfile(), false);
+    doCallGraphs(options, new AnalysisCache(),cha, scope, null, useShortProfile(), false);
   }
 
   public void testHelloAllEntrypoints() throws ClassHierarchyException {
@@ -221,7 +222,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, cha, scope, null, useShortProfile(), false);
+    doCallGraphs(options, new AnalysisCache(),cha, scope, null, useShortProfile(), false);
   }
 
   public void testIO() throws ClassHierarchyException {
@@ -230,7 +231,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = makePrimordialPublicEntrypoints(scope, cha, "java/io");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphTestUtil.buildZeroCFA(options, cha, scope);
+    CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope);
   }
 
   public static Iterable<Entrypoint> makePrimordialPublicEntrypoints(AnalysisScope scope, ClassHierarchy cha, String pkg) {
@@ -263,7 +264,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = makePrimordialMainEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphTestUtil.buildZeroCFA(options, cha, scope);
+    CallGraphTestUtil.buildZeroCFA(options,new AnalysisCache(), cha, scope);
   }
 
   /**
@@ -304,13 +305,13 @@ public class CallGraphTest extends WalaTestCase {
   /**
    * TODO: refactor this to avoid excessive code bloat.
    */
-  public static void doCallGraphs(AnalysisOptions options, ClassHierarchy cha, AnalysisScope scope, String dcgFile,
+  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, String dcgFile,
       boolean stopAfterZeroCFA, boolean stopAfterZeroContainerCFA) {
 
     // ///////////////
     // // RTA /////
     // ///////////////
-    CallGraph cg = CallGraphTestUtil.buildRTA(options, cha, scope);
+    CallGraph cg = CallGraphTestUtil.buildRTA(options,cache, cha, scope);
     try {
       GraphIntegrity.check(cg);
     } catch (UnsoundGraphException e1) {
@@ -325,7 +326,7 @@ public class CallGraphTest extends WalaTestCase {
     // ///////////////
     // // 0-CFA /////
     // ///////////////
-    cg = CallGraphTestUtil.buildZeroCFA(options, cha, scope);
+    cg = CallGraphTestUtil.buildZeroCFA(options, cache,cha, scope);
 
     // FIXME: annoying special cases caused by clone2assign mean using
     // the rta graph for proper graph subset checking does not work.
@@ -349,13 +350,13 @@ public class CallGraphTest extends WalaTestCase {
     // ///////////////
     // // 0-1-CFA ///
     // ///////////////
-    cg = CallGraphTestUtil.buildZeroOneCFA(options, cha, scope);
+    cg = CallGraphTestUtil.buildZeroOneCFA(options, cache,cha, scope);
     Graph<MethodReference> squashZeroOne = checkCallGraph(cg, squashZero, null, "0-1-CFA");
 
     // ///////////////////////////////////////////////////
     // // 0-CFA augmented to disambiguate containers ///
     // ///////////////////////////////////////////////////
-    cg = CallGraphTestUtil.buildZeroContainerCFA(options, cha, scope);
+    cg = CallGraphTestUtil.buildZeroContainerCFA(options,cache, cha, scope);
     Graph<MethodReference> squashZeroContainer = checkCallGraph(cg, squashZero, null, "0-Container-CFA");
 
     if (stopAfterZeroContainerCFA)
@@ -364,7 +365,7 @@ public class CallGraphTest extends WalaTestCase {
     // ///////////////////////////////////////////////////
     // // 0-1-CFA augmented to disambiguate containers ///
     // ///////////////////////////////////////////////////
-    cg = CallGraphTestUtil.buildZeroOneContainerCFA(options, cha, scope);
+    cg = CallGraphTestUtil.buildZeroOneContainerCFA(options, cache,cha, scope);
     checkCallGraph(cg, squashZeroContainer, null, "0-1-Container-CFA");
     checkCallGraph(cg, squashZeroOne, null, "0-1-Container-CFA");
 

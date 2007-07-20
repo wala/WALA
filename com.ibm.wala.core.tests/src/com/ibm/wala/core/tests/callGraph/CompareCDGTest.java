@@ -22,6 +22,7 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -389,7 +390,7 @@ public class CompareCDGTest extends WalaTestCase {
     // //
     // build the call graph
     // //
-    CFABuilder builder = Util.makeZeroCFABuilder(options, cha, scope, null, null);
+    CFABuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(),cha, scope, null, null);
     CallGraph cg = builder.makeCallGraph(options);
     return cg;
 
@@ -402,7 +403,7 @@ public class CompareCDGTest extends WalaTestCase {
         TestConstants.JAVA_CUP_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    run(CallGraphTestUtil.buildZeroCFA(options, cha, scope));
+    run(CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope));
   }
 
   public void testBcelVerifier() throws ClassHierarchyException {
@@ -412,7 +413,7 @@ public class CompareCDGTest extends WalaTestCase {
         TestConstants.BCEL_VERIFIER_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    run(CallGraphTestUtil.buildZeroCFA(options, cha, scope));
+    run(CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope));
   }
 
   public void testJLex() throws ClassHierarchyException {
@@ -422,6 +423,6 @@ public class CompareCDGTest extends WalaTestCase {
         .makeMainEntrypoints(scope, cha, TestConstants.JLEX_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    run(CallGraphTestUtil.buildZeroCFA(options, cha, scope));
+    run(CallGraphTestUtil.buildZeroCFA(options,new AnalysisCache(), cha, scope));
   }
 }

@@ -15,6 +15,7 @@ import java.util.Iterator;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -53,16 +54,14 @@ public class MultiDimArrayTest extends WalaTestCase {
     super(arg0);
   }
 
-
   public void testMultiDim() throws ClassHierarchyException {
-    
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
         .makeMainEntrypoints(scope, cha, TestConstants.MULTI_DIM_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, cha, scope);
+    CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(),cha, scope);
     CallGraph cg = builder.makeCallGraph(options);
     PointerAnalysis pa = builder.getPointerAnalysis();
     System.err.println(pa);
@@ -83,8 +82,4 @@ public class MultiDimArrayTest extends WalaTestCase {
     Assertions.UNREACHABLE("Unexpected: failed to find doNothing node");
     return null;
   }
-
- 
- 
-
 }

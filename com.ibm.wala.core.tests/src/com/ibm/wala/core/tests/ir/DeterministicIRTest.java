@@ -18,6 +18,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -49,6 +50,8 @@ public class DeterministicIRTest extends WalaTestCase {
   private ClassHierarchy cha;
 
   private AnalysisOptions options;
+  
+  private AnalysisCache cache;
 
   public static void main(String[] args) {
     justThisTest(DeterministicIRTest.class);
@@ -59,6 +62,7 @@ public class DeterministicIRTest extends WalaTestCase {
     scope = new EMFScopeWrapper(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
+    cache = new AnalysisCache();
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions() );
 
     try {
@@ -82,8 +86,8 @@ public class DeterministicIRTest extends WalaTestCase {
     assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
     assertNotNull("imethod not found", imethod);
-    IR ir1 = options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions() );
-    options.getSSACache().wipe();
+    IR ir1 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions() );
+    cache.getSSACache().wipe();
 
     checkNotAllNull(ir1.getInstructions());
     checkNoneNull(ir1.iterateAllInstructions());
@@ -95,8 +99,8 @@ public class DeterministicIRTest extends WalaTestCase {
       assertTrue("unsound CFG for ir1", false);
     }
 
-    IR ir2 = options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
-    options.getSSACache().wipe();
+    IR ir2 = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
+    cache.getSSACache().wipe();
 
     try {
       GraphIntegrity.check(ir2.getControlFlowGraph());

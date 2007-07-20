@@ -18,6 +18,7 @@ import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
@@ -60,14 +61,14 @@ public class GVSDG {
    * "c:/temp/testdata/java_cup.jar"
    * 
    * @param args
-   * @throws WalaException 
+   * @throws WalaException
    */
   public static void main(String[] args) throws WalaException {
     run(args);
   }
 
   /**
-   * @throws WalaException 
+   * @throws WalaException
    */
   public static Process run(String[] args) throws WalaException {
     Properties p = CommandLine.parse(args);
@@ -76,7 +77,7 @@ public class GVSDG {
   }
 
   public static DataDependenceOptions getDataDependenceOptions(Properties p) {
-    String d = p.getProperty("dd","full");
+    String d = p.getProperty("dd", "full");
     for (DataDependenceOptions result : DataDependenceOptions.values()) {
       if (d.equals(result.getName())) {
         return result;
@@ -85,9 +86,9 @@ public class GVSDG {
     Assertions.UNREACHABLE("unknown data datapendence option: " + d);
     return null;
   }
-  
+
   public static ControlDependenceOptions getControlDependenceOptions(Properties p) {
-    String d = p.getProperty("cd","full");
+    String d = p.getProperty("cd", "full");
     for (ControlDependenceOptions result : ControlDependenceOptions.values()) {
       if (d.equals(result.getName())) {
         return result;
@@ -99,7 +100,7 @@ public class GVSDG {
 
   /**
    * @param appJar
-   *          something like "c:/temp/testdata/java_cup.jar"
+   *            something like "c:/temp/testdata/java_cup.jar"
    */
   public static Process run(String appJar, String mainClass, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
     try {
@@ -111,9 +112,9 @@ public class GVSDG {
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-      CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cha, scope);
+      CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
       CallGraph cg = builder.makeCallGraph(options);
-      SDG sdg = new SDG(cg,builder.getPointerAnalysis(), dOptions, cOptions);
+      SDG sdg = new SDG(cg, builder.getPointerAnalysis(), dOptions, cOptions);
       try {
         GraphIntegrity.check(sdg);
       } catch (UnsoundGraphException e1) {
@@ -149,7 +150,7 @@ public class GVSDG {
   private static Graph<Statement> pruneSDG(final SDG sdg) {
     Filter f = new Filter() {
       public boolean accepts(Object o) {
-        Statement s = (Statement)o;
+        Statement s = (Statement) o;
         if (s.getNode().equals(sdg.getCallGraph().getFakeRootNode())) {
           return false;
         } else {
@@ -169,7 +170,7 @@ public class GVSDG {
         case HEAP_PARAM_CALLER:
         case HEAP_RET_CALLEE:
         case HEAP_RET_CALLER:
-          HeapStatement h =(HeapStatement)s;
+          HeapStatement h = (HeapStatement) s;
           return s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
         case EXC_RET_CALLEE:
         case EXC_RET_CALLER:
@@ -183,7 +184,7 @@ public class GVSDG {
           return s.toString();
         }
       }
-      
+
     };
   }
 
@@ -198,7 +199,7 @@ public class GVSDG {
    * <li> args[3] : something like "Lslice/TestRecursion"
    * 
    * @throws UnsupportedOperationException
-   *           if command-line is malformed.
+   *             if command-line is malformed.
    */
   static void validateCommandLine(Properties p) {
     if (p.get("appJar") == null) {

@@ -17,6 +17,7 @@ import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -71,7 +72,7 @@ public class CornerCasesTest extends WalaTestCase {
     ShrikeCTMethod m = (ShrikeCTMethod) klass.getMethod(new Selector(Atom.findOrCreateAsciiAtom("foo"), Descriptor
         .findOrCreateUTF8("()Ljava/lang/Object;")));
     assertTrue(m != null);
-    IR ir = options.getIRFactory().makeIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
+    IR ir = new AnalysisCache().getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
     new TypeInference(ir);
   }
 

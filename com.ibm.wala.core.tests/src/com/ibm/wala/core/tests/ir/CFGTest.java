@@ -17,6 +17,7 @@ import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -55,8 +56,9 @@ public class CFGTest extends WalaTestCase {
         Assertions.UNREACHABLE("could not resolve " + mr);
       }
       AnalysisOptions options = new AnalysisOptions();
+      AnalysisCache cache = new AnalysisCache();
       options.getSSAOptions().setUsePiNodes(true);
-      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
+      IR ir = cache.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
 
       ControlFlowGraph cfg = ir.getControlFlowGraph();
       try {

@@ -20,6 +20,7 @@ import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -151,7 +152,7 @@ public class GVSlice {
       ClassHierarchy cha = ClassHierarchy.make(scope);
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-      CallGraphBuilder builder = Util.makeVanillaZeroOneContainerCFABuilder(options, cha, scope);
+      CallGraphBuilder builder = Util.makeVanillaZeroOneContainerCFABuilder(options, new AnalysisCache(),cha, scope);
       CallGraph cg = builder.makeCallGraph(options);
       SDG sdg = new SDG(cg, builder.getPointerAnalysis(), dOptions, cOptions);
 

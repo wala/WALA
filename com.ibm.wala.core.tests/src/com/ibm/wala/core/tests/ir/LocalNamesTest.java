@@ -17,6 +17,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -46,6 +47,8 @@ public class LocalNamesTest extends WalaTestCase {
   private ClassHierarchy cha;
 
   private AnalysisOptions options;
+  
+  private AnalysisCache cache;
 
   public static void main(String[] args) {
     justThisTest(LocalNamesTest.class);
@@ -61,6 +64,7 @@ public class LocalNamesTest extends WalaTestCase {
     scope = new EMFScopeWrapper(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
+    cache = new AnalysisCache();
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions() );
 
     try {
@@ -95,7 +99,7 @@ public class LocalNamesTest extends WalaTestCase {
 
       AnalysisOptions options = new AnalysisOptions();
       options.getSSAOptions().setUsePiNodes(true);
-      IR ir = options.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions() );
+      IR ir = cache.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions() );
 
       for (int offsetIndex = 0; offsetIndex < ir.getInstructions().length; offsetIndex++) {
         SSAInstruction instr = ir.getInstructions()[offsetIndex];
@@ -121,7 +125,7 @@ public class LocalNamesTest extends WalaTestCase {
     assertNotNull("method not found", mref);
     IMethod imethod = cha.resolveMethod(mref);
     assertNotNull("imethod not found", imethod);
-    IR ir =  options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
+    IR ir =  cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     options.getSSAOptions().setUsePiNodes(save);
   
     // v1 should be the parameter "a" at pc 0
@@ -149,7 +153,7 @@ public class LocalNamesTest extends WalaTestCase {
     assertNotNull("method not found", mref);
     IMethod imethod = cha.resolveMethod(mref);
     assertNotNull("imethod not found", imethod);
-    IR ir =  options.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
+    IR ir =  cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     options.getSSAOptions().setUsePiNodes(save);
   
     // v1 should be the parameter "a" at pc 0
