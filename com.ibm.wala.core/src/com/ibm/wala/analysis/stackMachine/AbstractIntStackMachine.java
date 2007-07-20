@@ -467,6 +467,9 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
           R[j] = TOP;
         } else {
           R[j] = m.stack[i];
+          if (R[j] == 0) {
+            R[j] = TOP;
+          }
         }
       }
       int meet = meeter.meetStack(i, R, bb);
@@ -723,8 +726,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
       result.append("L");
       result.append(array2StringBuffer(locals, maxLocals));
-      result.append(">@");
-      result.append(System.identityHashCode(this));
+      result.append(">");
       return result.toString();
     }
 
