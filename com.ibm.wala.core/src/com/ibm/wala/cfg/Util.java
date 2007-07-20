@@ -67,7 +67,7 @@ public class Util {
 
   /**
    * Given that b ends with a conditional branch, return the basic block to which control
-   * transfers if the branch is not taken.
+   * transfers if the branch is taken.
    */
   public static IBasicBlock getTakenSuccessor(ControlFlowGraph G, IBasicBlock b) {
     if (G == null) {
