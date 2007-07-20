@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.shrikeCT;
 
+import java.util.HashMap;
+
 /**
  * This class reads RuntimeInvisibleAnnotations attributes.
  * 
@@ -84,15 +86,6 @@ public final class RuntimeInvisibleAnnotationsReader extends AttributeReader {
     return offset - begin;
   }
 
-  /**
-   * @return the size, in bytes, of the element-value structure starting at a
-   *         given offset
-   * @throws UnimplementedException 
-   * 
-   */
-  private int getElementValueSize(int begin) throws UnimplementedException {
-    throw new UnimplementedException();
-  }
 
   /**
    * temporary migration aid until I've implemented everything.
@@ -112,4 +105,74 @@ public final class RuntimeInvisibleAnnotationsReader extends AttributeReader {
     int cpOffset = cr.getUShort(offset);
     return cr.getCP().getCPUtf8(cpOffset);
   }
+  
+  public static final int INT_TYPE = 3;
+  public static final int STRING_TYPE = 1;
+  
+  /*
+   * This method maps the internal type representation of
+   * annotation types to java types and stringifies all
+   * annotations.
+   */
+  private String getFromConstantPool(int offset)
+  {
+    byte type = cr.getCP().getItemType(cr.getByte(offset));
+
+    if(type == INT_TYPE)
+    {
+      String res = "";
+      try{
+        res = ""+cr.getCP().getCPInt(cr.getByte(offset));
+      }
+      catch(Exception e) {}
+      return res;
+    }
+    if(type == STRING_TYPE)
+    {
+      String res = "";
+      try{
+        res = cr.getCP().getCPUtf8(cr.getByte(offset));
+      }
+      catch(Exception e) {}
+      return res;
+    }
+    return "";
+  }
+  
+  /**
+   * This method returns all the annotations as map key->stringified value
+   * starting at the index begin in the class file.
+   * @param begin
+   * @return HashMap<String, String>
+   */
+  public HashMap<String, String> getAnnotationValues(int begin)
+  {
+    HashMap<String, String> res = new HashMap<String, String>();
+    int offset = begin + 2;
+
+    int numElementValuePairs = cr.getUShort(offset);
+    
+    offset += 3;
+    for (int i = 0; i < numElementValuePairs; i++) {
+      String res1 = getFromConstantPool(offset);
+      offset += 3;
+      String res2 = getFromConstantPool(offset);
+      offset += 2;
+      res.put(res1, res2);
+    }
+    return res;
+  }
+
+  /**
+   * @return the size, in bytes, of the element-value structure starting at a
+   *         given offset
+   * 
+   * 
+   */
+  private int getElementValueSize(int begin) {
+    return 3; //this is correct for any primitive type annotations.
+    //TODO: Integrate array annotations
+
+  }
+  
 }
