@@ -11,7 +11,6 @@
 package com.ibm.wala.ssa;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -29,7 +28,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.CompoundIterator;
 import com.ibm.wala.util.Function;
 import com.ibm.wala.util.MapIterator;
 import com.ibm.wala.util.ShrikeUtil;
@@ -263,14 +261,31 @@ public class SSACFG implements ControlFlowGraph {
         if (localPhis == null) {
           return EmptyIterator.instance();
         } else {
-          return Arrays.asList(localPhis).iterator();
+          LinkedList<SSAPhiInstruction> result = new LinkedList<SSAPhiInstruction>();
+          for (SSAPhiInstruction phi : localPhis) {
+            if (phi != null) {
+              result.add(phi);
+            }
+          }
+          return result.iterator();
         }
       } else {
         if (localPhis == null) {
-          return Arrays.asList(stackSlotPhis).iterator();
+          LinkedList<SSAPhiInstruction> result = new LinkedList<SSAPhiInstruction>();
+          for (SSAPhiInstruction phi : stackSlotPhis) {
+            if (phi != null) {
+              result.add(phi);
+            }
+          }
+          return result.iterator();
         } else {
-          return new CompoundIterator<SSAPhiInstruction>(Arrays.asList(stackSlotPhis).iterator(), Arrays.asList(localPhis)
-              .iterator());
+          LinkedList<SSAPhiInstruction> result = new LinkedList<SSAPhiInstruction>();
+          for (SSAPhiInstruction phi : localPhis) {
+            if (phi != null) {
+              result.add(phi);
+            }
+          }
+          return result.iterator();
         }
       }
     }
