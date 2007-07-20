@@ -437,8 +437,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
 
     public Iterator<SSAPiInstruction> iteratePis() {
-      Assertions.UNREACHABLE();
-      return null;
+      if (isEntryBlock() || isExitBlock() || instructionIndex != original.getLastInstructionIndex()) {
+        return EmptyIterator.instance();
+      } else {
+        return original.iteratePis();
+      }
     }
   }
 
