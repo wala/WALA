@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.client.impl;
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroXCFABuilder;
 import com.ibm.wala.client.CallGraphBuilderFactory;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
@@ -26,14 +27,11 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class ZeroCFABuilderFactory implements CallGraphBuilderFactory {
 
-  public CallGraphBuilder make(AnalysisOptions options,
-			       IClassHierarchy cha,
-			       AnalysisScope scope,
-			       boolean keepPointsTo)
-  {
+  public CallGraphBuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope,
+      boolean keepPointsTo) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     options.setSelector(new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()));
 
-    return new JSZeroXCFABuilder(cha, options, null, null, null, ZeroXInstanceKeys.NONE);
+    return new JSZeroXCFABuilder(cha, options, cache, null, null, null, ZeroXInstanceKeys.NONE);
   }
 }

@@ -25,6 +25,7 @@ import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -47,9 +48,13 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
   public static JavaScriptTranslatorFactory getTranslatorFactory() {
     return translatorFactory;
   }
+  
+  public static AnalysisCache makeCache(boolean keepIRs) {
+    return new AnalysisCache(AstIRFactory.makeDefaultFactory(keepIRs));
+  }
 
   public static AnalysisOptions makeOptions(AnalysisScope scope, boolean keepIRs, IClassHierarchy cha, Iterable<Entrypoint> roots) {
-    final AnalysisOptions options = new AnalysisOptions(scope, AstIRFactory.makeDefaultFactory(keepIRs), roots);
+    final AnalysisOptions options = new AnalysisOptions(scope, /* AstIRFactory.makeDefaultFactory(keepIRs), */ roots);
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     options.setSelector(new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()));

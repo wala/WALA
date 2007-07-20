@@ -18,6 +18,7 @@ import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -30,18 +31,17 @@ import com.ibm.wala.types.TypeReference;
 
 public class JSCallGraph extends AstCallGraph {
 
-  public JSCallGraph(IClassHierarchy cha, AnalysisOptions options) {
-    super(cha, options);
+  public JSCallGraph(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    super(cha, options, cache);
   }
 
-  public final static MethodReference fakeRoot = MethodReference.findOrCreate(JavaScriptTypes.FakeRoot, FakeRootMethod.name, FakeRootMethod.descr);
+  public final static MethodReference fakeRoot = MethodReference.findOrCreate(JavaScriptTypes.FakeRoot, FakeRootMethod.name,
+      FakeRootMethod.descr);
 
   public static class JSFakeRoot extends ScriptFakeRoot {
 
-    public JSFakeRoot(IClassHierarchy cha, 
-		      AnalysisOptions options)
-    {
-      super(fakeRoot, cha.lookupClass(JavaScriptTypes.FakeRoot), cha, options);
+    public JSFakeRoot(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+      super(fakeRoot, cha.lookupClass(JavaScriptTypes.FakeRoot), cha, options, cache);
     }
 
     public InducedCFG makeControlFlowGraph() {
@@ -71,6 +71,6 @@ public class JSCallGraph extends AstCallGraph {
   }
 
   protected CGNode makeFakeRootNode() {
-      return findOrCreateNode(new JSFakeRoot(cha, options), Everywhere.EVERYWHERE);
+    return findOrCreateNode(new JSFakeRoot(cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
 }

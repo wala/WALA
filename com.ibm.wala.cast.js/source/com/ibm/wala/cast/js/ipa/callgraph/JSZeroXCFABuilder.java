@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -28,9 +29,9 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class JSZeroXCFABuilder extends JSCFABuilder {
 
-  public JSZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, ContextSelector appContextSelector,
+  public JSZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
-    super(cha, options);
+    super(cha, options, cache);
 
     SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha, reflect);
     setContextInterpreter(contextInterpreter);
@@ -62,7 +63,7 @@ public class JSZeroXCFABuilder extends JSCFABuilder {
    *            deployment descriptor abstraction
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
-  public static JSCFABuilder make(AnalysisOptions options, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
+  public static JSCFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
       String[] xmlFiles, byte instancePolicy) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
@@ -70,7 +71,7 @@ public class JSZeroXCFABuilder extends JSCFABuilder {
       com.ibm.wala.ipa.callgraph.impl.Util.addBypassLogic(options, scope, cl, xmlFiles[i], cha);
     }
 
-    return new JSZeroXCFABuilder(cha, options, null, null, options.getReflectionSpec(), instancePolicy);
+    return new JSZeroXCFABuilder(cha, options, cache, null, null, options.getReflectionSpec(), instancePolicy);
   }
 
   /*

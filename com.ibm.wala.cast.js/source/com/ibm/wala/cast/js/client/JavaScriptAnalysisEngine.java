@@ -23,6 +23,7 @@ import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.client.impl.AbstractAnalysisEngine;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -85,8 +86,13 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
     return new JavaScriptEntryPoints(cha, cha.getLoader(JavaScriptTypes.jsLoader));
   }
 
+  @Override
+  public AnalysisCache makeDefaultCache() {
+    return new AnalysisCache(AstIRFactory.makeDefaultFactory(keepIRs));
+  }
+
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> roots) {
-    final AnalysisOptions options = new AnalysisOptions(scope, AstIRFactory.makeDefaultFactory(keepIRs), roots);
+    final AnalysisOptions options = new AnalysisOptions(scope, roots);
 
     options.setUseConstantSpecificKeys(true);
 

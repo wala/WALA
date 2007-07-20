@@ -28,6 +28,7 @@ import com.ibm.wala.fixedpoint.impl.AbstractOperator;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.IntSetVariable;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -70,8 +71,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
   public static final boolean DEBUG_TYPE_INFERENCE = false;
 
-  protected JSSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, PointerKeyFactory pointerKeyFactory) {
-    super(cha, options, pointerKeyFactory);
+  protected JSSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options,AnalysisCache cache, PointerKeyFactory pointerKeyFactory) {
+    super(cha, options, cache, pointerKeyFactory);
   }
 
   protected boolean isConstantRef(SymbolTable symbolTable, int valueNumber) {
@@ -98,7 +99,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   // ///////////////////////////////////////////////////////////////////////////
 
   protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
-    return new JSCallGraph(cha, options);
+    return new JSCallGraph(cha, options, getAnalysisCache());
   }
 
   protected TypeInference makeTypeInference(IR ir, IClassHierarchy cha) {

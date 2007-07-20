@@ -12,6 +12,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.JSZeroXCFABuilder;
 import com.ibm.wala.cast.js.ipa.callgraph.Util;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -28,8 +29,9 @@ class dumpCallGraph {
     IClassHierarchy cha = Util.makeHierarchy(scope, loaders);
     Iterable<Entrypoint> roots = Util.makeScriptRoots(cha);
     AnalysisOptions options = Util.makeOptions(scope, false, cha, roots);
-
-    JSCFABuilder builder = new JSZeroXCFABuilder(cha, options, null, null, null, ZeroXInstanceKeys.ALLOCATIONS);
+    AnalysisCache cache = Util.makeCache(false);
+    
+    JSCFABuilder builder = new JSZeroXCFABuilder(cha, options, cache, null, null, null, ZeroXInstanceKeys.ALLOCATIONS);
 
     CallGraph cg = builder.makeCallGraph(options);
 
