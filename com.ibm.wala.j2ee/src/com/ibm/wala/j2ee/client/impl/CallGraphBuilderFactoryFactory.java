@@ -12,7 +12,7 @@ package com.ibm.wala.j2ee.client.impl;
 
 import java.util.Properties;
 
-import com.ibm.wala.j2ee.client.CallGraphBuilderFactory;
+import com.ibm.wala.j2ee.client.J2EECallGraphBuilderFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -30,13 +30,13 @@ public class CallGraphBuilderFactoryFactory {
    * @param props  Optionally, influence the construction of the engine.
    * @return A non-null AppAnalysisEngine instance.
    */
-  public static CallGraphBuilderFactory getCallGraphBuilderFactory(Properties props) {
+  public static J2EECallGraphBuilderFactory getCallGraphBuilderFactory(Properties props) {
     try {
       String klass = "com.ibm.wala.j2ee.client.impl.RTABuilderFactory";
       if (props != null) {
         klass = props.getProperty("analysis", "com.ibm.wala.j2ee.client.impl.RTABuilderFactory");
       }
-      return (CallGraphBuilderFactory) Class.forName(klass).newInstance();
+      return (J2EECallGraphBuilderFactory) Class.forName(klass).newInstance();
     } catch (Exception e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();

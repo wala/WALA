@@ -23,7 +23,7 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.j2ee.DeploymentMetaData;
 import com.ibm.wala.j2ee.J2EEAnalysisScope;
-import com.ibm.wala.j2ee.client.CallGraphBuilderFactory;
+import com.ibm.wala.j2ee.client.J2EECallGraphBuilderFactory;
 import com.ibm.wala.j2ee.client.J2EEAnalysisEngine;
 import com.ibm.wala.j2ee.util.TopLevelArchiveModule;
 import com.ibm.wala.j2ee.util.TopLevelArchiveModule.BloatedArchiveModule;
@@ -44,7 +44,7 @@ public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine 
   private DeploymentMetaData dmd;
 
   /**
-   * The J2EE libraries to analysze
+   * The J2EE libraries to analyze
    */
   private Module[] j2eeLibs;
 
@@ -57,7 +57,7 @@ public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine 
   }
 
   protected CallGraphBuilder getCallGraphBuilder(ClassHierarchy cha, AnalysisOptions options) {
-    return ((CallGraphBuilderFactory) getCallGraphBuilderFactory()).make(options, cha, (J2EEAnalysisScope) getScope(), getDmd(),
+    return ((J2EECallGraphBuilderFactory) getCallGraphBuilderFactory()).make(options, getCache(), cha, (J2EEAnalysisScope) getScope(), getDmd(),
         false);
   }
 

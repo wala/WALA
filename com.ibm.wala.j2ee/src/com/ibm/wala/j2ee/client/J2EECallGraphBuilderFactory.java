@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.j2ee.client;
 
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -22,7 +23,7 @@ import com.ibm.wala.j2ee.J2EEAnalysisScope;
  * 
  * @author sfink
  */
-public interface CallGraphBuilderFactory extends com.ibm.wala.client.CallGraphBuilderFactory {
+public interface J2EECallGraphBuilderFactory extends com.ibm.wala.client.CallGraphBuilderFactory {
 
   public final static String IMPL_PROPERTY = "callGraphBuilderFactoryImplementation";
   
@@ -55,6 +56,6 @@ public interface CallGraphBuilderFactory extends com.ibm.wala.client.CallGraphBu
    *          preserve PointsTo graph for posterity?
    *  
    */
-  CallGraphBuilder make(AnalysisOptions options, IClassHierarchy cha, J2EEAnalysisScope scope, DeploymentMetaData dmd,
+  CallGraphBuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, J2EEAnalysisScope scope, DeploymentMetaData dmd,
       boolean keepPointsTo);
 }

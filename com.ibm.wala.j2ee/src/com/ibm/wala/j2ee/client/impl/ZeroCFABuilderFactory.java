@@ -10,12 +10,13 @@
  *******************************************************************************/
 package com.ibm.wala.j2ee.client.impl;
 
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.j2ee.DeploymentMetaData;
 import com.ibm.wala.j2ee.J2EEAnalysisScope;
-import com.ibm.wala.j2ee.client.CallGraphBuilderFactory;
+import com.ibm.wala.j2ee.client.J2EECallGraphBuilderFactory;
 import com.ibm.wala.j2ee.util.Util;
 
 /**
@@ -23,12 +24,12 @@ import com.ibm.wala.j2ee.util.Util;
  */
 public class ZeroCFABuilderFactory
     extends com.ibm.wala.client.impl.ZeroCFABuilderFactory 
-    implements CallGraphBuilderFactory 
+    implements J2EECallGraphBuilderFactory 
 {
 
-  public CallGraphBuilder make(AnalysisOptions options, IClassHierarchy cha, J2EEAnalysisScope scope,
+  public CallGraphBuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, J2EEAnalysisScope scope,
       DeploymentMetaData dmd, boolean keepPointsTo) {
-    return Util.makeZeroCFABuilder(options, cha, getClass().getClassLoader(), scope, dmd);
+    return Util.makeZeroCFABuilder(options, cache, cha, getClass().getClassLoader(), scope, dmd);
   }
 
 }
