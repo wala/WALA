@@ -12,6 +12,7 @@ package com.ibm.wala.classLoader;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Decoder;
@@ -188,7 +189,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
   }
 
   /*
-   * TODO: cache for efficiency? 
+   * TODO: cache for efficiency?
    * 
    * @see com.ibm.wala.classLoader.IMethod#hasLocalVariableTable()
    */
@@ -309,8 +310,9 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
 
   /**
    * TODO: cache?
+   * 
    * @return raw "Signature" attribute from the bytecode
-   * @throws InvalidClassFileException 
+   * @throws InvalidClassFileException
    */
   private String getGenericsSignature() throws InvalidClassFileException {
     return computeGenericsSignature();
@@ -319,7 +321,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
   /**
    * UNDER CONSTRUCTION
    * 
-   * @throws InvalidClassFileException 
+   * @throws InvalidClassFileException
    */
   public MethodTypeSignature getMethodTypeSignature() throws InvalidClassFileException {
     String sig = getGenericsSignature();
@@ -336,7 +338,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
       Collection<Annotation> result = HashSetFactory.make();
       for (int i : offsets) {
         String type = r.getAnnotationType(i);
-        type = type.replaceAll(";","");
+        type = type.replaceAll(";", "");
         TypeReference t = TypeReference.findOrCreate(getDeclaringClass().getClassLoader().getReference(), type);
         result.add(Annotation.make(t));
       }
@@ -344,5 +346,28 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     } else {
       return Collections.emptySet();
     }
+  }
+
+  /**
+   * Retrieves all the annotations associated with a given index. Returns null
+   * if the index is not valid or the annotation contains arrays.
+   */
+  public HashMap<String, String> getAnnotations(int index) {
+    RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader();
+    if (r == null)
+      return null;
+    int offsets[];
+    try {
+      offsets = r.getAnnotationOffsets();
+      if (offsets.length <= index)
+        return null;
+    } catch (Exception e) {
+      return null;
+    }
+
+    int curOffset = offsets[index];
+    HashMap<String, String> res = r.getAnnotationValues(curOffset);
+
+    return res;
   }
 }
