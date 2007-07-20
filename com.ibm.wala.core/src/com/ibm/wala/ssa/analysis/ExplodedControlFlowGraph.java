@@ -23,9 +23,11 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
+import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
@@ -360,8 +362,13 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
 
     public boolean isCatchBlock() {
-      Assertions.UNREACHABLE();
-      return false;
+      return original.isCatchBlock();
+    }
+    
+    public SSAGetCaughtExceptionInstruction getCatchInstruction() {
+      assert (original instanceof ExceptionHandlerBasicBlock);
+      ExceptionHandlerBasicBlock e = (ExceptionHandlerBasicBlock)original;
+      return e.getCatchInstruction();
     }
 
     public boolean isEntryBlock() {
