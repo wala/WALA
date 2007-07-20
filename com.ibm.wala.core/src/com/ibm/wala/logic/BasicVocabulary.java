@@ -57,7 +57,7 @@ public class BasicVocabulary<T> extends AbstractVocabulary<T> {
     return new BasicVocabulary<T>(f, empty);
   }
   
-  public static <T> BasicVocabulary<T> make(Collection<IFunction> f, Collection<IRelation> r) {
+  public static <T> BasicVocabulary<T> make(Collection<? extends IFunction> f, Collection<IRelation> r) {
     return new BasicVocabulary<T>(f, r);
   }
 
