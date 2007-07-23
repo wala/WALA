@@ -128,7 +128,7 @@ public class Disjunction extends AbstractBinaryFormula implements IMaxTerm {
         if (Simplifier.isTautology(c)) {
           return make(BooleanConstantFormula.TRUE);
         } else if (!Simplifier.isContradiction(c)) {
-          newClauses.add(c);
+          newClauses.add(Simplifier.normalize(c));
         }
       }
     }

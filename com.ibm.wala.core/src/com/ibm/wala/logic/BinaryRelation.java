@@ -22,30 +22,43 @@ import com.ibm.wala.util.intset.IntPair;
 import com.ibm.wala.util.intset.IntSet;
 
 public class BinaryRelation implements IRelation {
-  
+
   public final static BinaryRelation EQUALS = new BinaryRelation("=");
+
   public final static BinaryRelation NE = new BinaryRelation("/=");
+
   public final static BinaryRelation LT = new BinaryRelation("<");
+
   public final static BinaryRelation LE = new BinaryRelation("<=");
+
   public final static BinaryRelation GT = new BinaryRelation(">");
+
   public final static BinaryRelation GE = new BinaryRelation(">=");
-  
+
   private final static Map<BinaryRelation, BinaryRelation> negations = HashMapFactory.make();
   static {
     negations.put(EQUALS, NE);
     negations.put(NE, EQUALS);
-    negations.put(LT,GE);
-    negations.put(GE,LT);
+    negations.put(LT, GE);
+    negations.put(GE, LT);
     negations.put(GT, LE);
     negations.put(LE, GT);
   }
 
+  private final static Map<BinaryRelation, BinaryRelation> swap = HashMapFactory.make();
+  static {
+    swap.put(LT, GT);
+    swap.put(GE, LE);
+    swap.put(GT, LT);
+    swap.put(LE, GE);
+  }
+
   private final String symbol;
-  
+
   protected BinaryRelation(String symbol) {
     this.symbol = symbol;
   }
-  
+
   public int getValence() {
     return 2;
   }
@@ -86,7 +99,9 @@ public class BinaryRelation implements IRelation {
 
   /**
    * build a constraint saying v \in s
-   * @throws IllegalArgumentException  if s is null
+   * 
+   * @throws IllegalArgumentException
+   *             if s is null
    */
   public static IFormula makeSetConstraint(Variable v, IntSet s) {
     if (s == null) {
@@ -105,11 +120,13 @@ public class BinaryRelation implements IRelation {
     }
     return result;
   }
-  
+
   /**
    * Build constraints which ensure that the relation r fully defines the
    * relation R over the given range of integers.
-   * @throws IllegalArgumentException  if domain is null
+   * 
+   * @throws IllegalArgumentException
+   *             if domain is null
    * 
    */
   public static Collection<IFormula> buildConstraints(IBinaryNaturalRelation r, BinaryRelation R, IntPair domain) {
@@ -128,16 +145,24 @@ public class BinaryRelation implements IRelation {
     }
     return result;
   }
-  
+
   public static BinaryRelation make(String symbol) {
     return new BinaryRelation(symbol);
   }
 
   /**
-   * Attempt to negate a relation symbol.  Return null if unsucessful.
+   * Attempt to negate a relation symbol. Return null if unsuccessful.
    */
   public static BinaryRelation negate(IRelation relation) {
     return negations.get(relation);
+  }
+
+  /**
+   * Return the relation which is the "swap" of the original relation. Return
+   * null if unsuccessful.
+   */
+  public static BinaryRelation swap(IRelation relation) {
+    return swap.get(relation);
   }
 
 }

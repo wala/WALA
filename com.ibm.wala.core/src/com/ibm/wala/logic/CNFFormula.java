@@ -388,7 +388,9 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
 
   public static ICNFFormula make(Collection<? extends IMaxTerm> d) {
     Collection<IMaxTerm> c = HashSetFactory.make();
-    c.addAll(d);
+    for (IMaxTerm x : d) {
+      c.add(normalize(x));
+    }
     c.remove(BooleanConstantFormula.TRUE);
     if (c.size() == 0) {
       return BooleanConstantFormula.TRUE;
@@ -396,6 +398,21 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
       return c.iterator().next();
     } else {
       return new CNFFormula(c);
+    }
+  }
+  
+  // TODO: move this to Simplifier?
+  public static IMaxTerm normalize(IMaxTerm f) {
+    switch (f.getKind()) {
+    case RELATION:
+      RelationFormula r = (RelationFormula) f;
+      if (r.getRelation().equals(BinaryRelation.GE )|| r.getRelation().equals(BinaryRelation.GT)) {
+        BinaryRelation swap = BinaryRelation.swap(r.getRelation());
+        return RelationFormula.make(swap, r.getTerms().get(1), r.getTerms().get(0));
+      }
+      return f;
+    default:
+      return f;
     }
   }
 

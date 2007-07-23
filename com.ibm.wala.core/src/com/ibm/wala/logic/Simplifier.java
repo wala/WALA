@@ -29,7 +29,7 @@ import com.ibm.wala.util.intset.IntPair;
  */
 public class Simplifier {
 
-  private final static boolean DEBUG = false;
+  private final static boolean DEBUG = true;
 
   /**
    * Eliminate quantifiers, by substituting every possible constant value for a
@@ -170,10 +170,10 @@ public class Simplifier {
       for (IFormula f : cs) {
         System.err.println(f);
       }
-//      System.err.println("--ct--");
-//      for (IFormula f : ct) {
-//        System.err.println(f);
-//      }
+      System.err.println("--ct--");
+      for (IFormula f : ct) {
+        System.err.println(f);
+      }
     }
   }
 
@@ -183,10 +183,10 @@ public class Simplifier {
       for (IFormula f : s) {
         System.err.println(f);
       }
-//      System.err.println("--t--");
-//      for (IFormula f : t) {
-//        System.err.println(f);
-//      }
+      System.err.println("--t--");
+      for (IFormula f : t) {
+        System.err.println(f);
+      }
     }
   }
 
@@ -265,7 +265,7 @@ public class Simplifier {
   }
 
   private static boolean implies(IFormula axiom, IFormula f) {
-    if (axiom.equals(f)) {
+    if (normalize(axiom).equals(normalize(f))) {
       return true;
     }
     // TODO
@@ -290,6 +290,23 @@ public class Simplifier {
   // }
   // return true;
   // }
+
+  // some ad-hoc formula normalization
+  // 1) change >, >= to <, <=
+  // TODO: do normalization in a principled manner
+  public static IFormula normalize(IFormula f) {
+    switch (f.getKind()) {
+    case RELATION:
+      RelationFormula r = (RelationFormula) f;
+      if (r.getRelation().equals(BinaryRelation.GE )|| r.getRelation().equals(BinaryRelation.GT)) {
+        BinaryRelation swap = BinaryRelation.swap(r.getRelation());
+        return RelationFormula.make(swap, r.getTerms().get(1), r.getTerms().get(0));
+      }
+      return f;
+    default:
+      return f;
+    }
+  }
 
   /**
    * @param facts
