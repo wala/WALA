@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ibm.wala.logic.ILogicConstants.BinaryConnective;
+import com.ibm.wala.logic.ILogicConstants.Quantifier;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
@@ -84,12 +85,12 @@ public class Simplifier {
    * 
    * This is inefficient.
    */
-  public static Collection<IFormula> simplify(Collection<IFormula> s, ITheory t) {
+  public static Collection<IFormula> simplify(Collection<IFormula> s, Collection<? extends IFormula> theory) {
     boolean changed = true;
     while (changed) {
       changed = false;
       Collection<IFormula> alreadyUsed = HashSetFactory.make();
-      Pair<ITerm, ITerm> substitution = getNextEqualitySubstitution(s, t, alreadyUsed);
+      Pair<ITerm, ITerm> substitution = getNextEqualitySubstitution(s, theory, alreadyUsed);
       while (substitution != null) {
         Collection<IFormula> temp = HashSetFactory.make();
         for (IFormula f : s) {
@@ -104,10 +105,10 @@ public class Simplifier {
           }
         }
         s = temp;
-        substitution = getNextEqualitySubstitution(s, t, alreadyUsed);
+        substitution = getNextEqualitySubstitution(s, theory, alreadyUsed);
       }
     }
-    return propositionalSimplify(s, t.getSentences());
+    return propositionalSimplify(s, theory);
   }
 
   /**
@@ -399,10 +400,10 @@ public class Simplifier {
    * 
    * @return a pair (p1, p2) meaning "substitute p2 for p1"
    */
-  private static Pair<ITerm, ITerm> getNextEqualitySubstitution(Collection<IFormula> s, ITheory t, Collection<IFormula> alreadyUsed) {
+  private static Pair<ITerm, ITerm> getNextEqualitySubstitution(Collection<IFormula> s, Collection<? extends IFormula> theory, Collection<IFormula> alreadyUsed) {
     Collection<IFormula> candidates = HashSetFactory.make();
     candidates.addAll(s);
-    candidates.addAll(t.getSentences());
+    candidates.addAll(theory);
     for (IFormula f : candidates) {
       if (!alreadyUsed.contains(f)) {
         Pair<ITerm, ITerm> substitution = equalitySuggestsSubsitution(f);
@@ -436,10 +437,18 @@ public class Simplifier {
       } else {
         return null;
       }
+    case QUANTIFIED:
+      QuantifiedFormula q = (QuantifiedFormula)f;
+      if (q.getQuantifier().equals(Quantifier.FORALL)) {
+        Variable bound = q.getBoundVar();
+        IFormula g = substitute(q.getFormula(), bound, Wildcard.STAR);
+        return equalitySuggestsSubsitution(g);
+      } else {
+        return null;
+      }
     case BINARY:
     case CONSTANT:
     case NEGATION:
-    case QUANTIFIED:
     default:
       // todo
       return null;

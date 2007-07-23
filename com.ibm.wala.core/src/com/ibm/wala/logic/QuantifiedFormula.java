@@ -103,7 +103,7 @@ public class QuantifiedFormula implements IMaxTerm {
     result.remove(boundV);
     return result;
   }
-  
+
   public Collection<? extends IConstant> getConstants() {
     return f.getConstants();
   }
@@ -114,7 +114,11 @@ public class QuantifiedFormula implements IMaxTerm {
 
   @Override
   public String toString() {
-    return getQuantifier() + " " + getBoundVar() + getBoundVar().getRange() + "." + getFormula();
+    if (getBoundVar().getRange() == null) {
+      return getQuantifier() + " " + getBoundVar()  + "." + getFormula();
+    } else {
+      return getQuantifier() + " " + getBoundVar() + getBoundVar().getRange() + "." + getFormula();
+    }
   }
 
   public String prettyPrint(ILogicDecorator d) {
