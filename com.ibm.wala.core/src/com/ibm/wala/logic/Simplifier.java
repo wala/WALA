@@ -269,6 +269,29 @@ public class Simplifier {
     if (normalize(axiom).equals(normalize(f))) {
       return true;
     }
+    if (axiom.getKind().equals(IFormula.Kind.QUANTIFIED)) {
+      QuantifiedFormula q = (QuantifiedFormula) axiom;
+      if (q.getQuantifier().equals(Quantifier.FORALL)) {
+        Variable bound = q.getBoundVar();
+        IFormula body = q.getFormula();
+        // this could be inefficient. find a better algorithm.
+        for (Variable free : f.getFreeVariables()) {
+          if (q.getFreeVariables().contains(free)) {
+            Variable fresh = makeFresh(q, f);
+            IFormula testBody = substitute(body, bound, fresh);
+            IFormula testF = substitute(f, free, fresh);
+            if (implies(testBody,testF)) {
+              return true;
+            }
+          } else {
+            IFormula testBody = substitute(body, bound, free);
+            if (implies(testBody, f)) {
+              return true;
+            }
+          }
+        }
+      }
+    }
     // TODO
     // if (f instanceof Disjunction) {
     // Disjunction d = (Disjunction) f;
@@ -292,6 +315,17 @@ public class Simplifier {
   // return true;
   // }
 
+  private static Variable makeFresh(IFormula f, IFormula g) {
+    int max = 0;
+    for (Variable v : f.getFreeVariables()) {
+      max = Math.max(max, v.getNumber());
+    }
+    for (Variable v : g.getFreeVariables()) {
+      max = Math.max(max, v.getNumber());
+    }
+    return Variable.make(max+1, null);
+  }
+
   // some ad-hoc formula normalization
   // 1) change >, >= to <, <=
   // TODO: do normalization in a principled manner
@@ -299,7 +333,7 @@ public class Simplifier {
     switch (f.getKind()) {
     case RELATION:
       RelationFormula r = (RelationFormula) f;
-      if (r.getRelation().equals(BinaryRelation.GE )|| r.getRelation().equals(BinaryRelation.GT)) {
+      if (r.getRelation().equals(BinaryRelation.GE) || r.getRelation().equals(BinaryRelation.GT)) {
         BinaryRelation swap = BinaryRelation.swap(r.getRelation());
         return RelationFormula.make(swap, r.getTerms().get(1), r.getTerms().get(0));
       }
@@ -400,7 +434,8 @@ public class Simplifier {
    * 
    * @return a pair (p1, p2) meaning "substitute p2 for p1"
    */
-  private static Pair<ITerm, ITerm> getNextEqualitySubstitution(Collection<IFormula> s, Collection<? extends IFormula> theory, Collection<IFormula> alreadyUsed) {
+  private static Pair<ITerm, ITerm> getNextEqualitySubstitution(Collection<IFormula> s, Collection<? extends IFormula> theory,
+      Collection<IFormula> alreadyUsed) {
     Collection<IFormula> candidates = HashSetFactory.make();
     candidates.addAll(s);
     candidates.addAll(theory);
@@ -438,7 +473,7 @@ public class Simplifier {
         return null;
       }
     case QUANTIFIED:
-      QuantifiedFormula q = (QuantifiedFormula)f;
+      QuantifiedFormula q = (QuantifiedFormula) f;
       if (q.getQuantifier().equals(Quantifier.FORALL)) {
         Variable bound = q.getBoundVar();
         IFormula g = substitute(q.getFormula(), bound, Wildcard.STAR);
