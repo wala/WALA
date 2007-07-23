@@ -266,11 +266,17 @@ public class Simplifier {
   }
 
   private static boolean implies(IFormula axiom, IFormula f) {
+
     if (normalize(axiom).equals(normalize(f))) {
       return true;
     }
     if (axiom.getKind().equals(IFormula.Kind.QUANTIFIED)) {
       QuantifiedFormula q = (QuantifiedFormula) axiom;
+      
+      if (!innerStructureMatches(q,f)) {
+        return false;
+      }
+      
       if (q.getQuantifier().equals(Quantifier.FORALL)) {
         Variable bound = q.getBoundVar();
         IFormula body = q.getFormula();
@@ -314,6 +320,39 @@ public class Simplifier {
   // }
   // return true;
   // }
+
+  private static boolean innerStructureMatches(QuantifiedFormula q, IFormula f) {
+    IFormula g = innermost(q);
+    if (!f.getKind().equals(g.getKind())) {
+      return false;
+    } else {
+      // TODO be less conservative
+      return true;
+    }
+//    switch (g.getKind()) {
+//    case BINARY:
+//      return true;
+//    case CONSTANT:
+//      return g.equals(f);
+//    case NEGATION:
+//      return true;
+//    case RELATION:
+//      RelationFormula r1 = (RelationFormula)g;
+//      RelationFormula r2 = (RelationFormula)f;
+//      return r1.getRelation().equals(r2.getRelation());
+//    case QUANTIFIED:
+//    default:
+//      Assertions.UNREACHABLE();
+  }
+  
+  public static IFormula innermost(QuantifiedFormula q) {
+    IFormula g = q.getFormula();
+    if (g.getKind().equals(IFormula.Kind.QUANTIFIED)) {
+      return innermost((QuantifiedFormula)g);
+    } else {
+      return g;
+    }
+   }
 
   private static Variable makeFresh(IFormula f, IFormula g) {
     int max = 0;
