@@ -34,6 +34,15 @@ public class RelationFormula implements IMaxTerm {
   public List<ITerm> getTerms() {
     return terms;
   }
+  
+
+  public Collection<? extends ITerm> getAllTerms() {
+    Collection<ITerm> result = HashSetFactory.make();
+    for (ITerm t: terms) {
+      result.addAll(t.getAllTerms());
+    }
+    return result;
+  }
 
   private RelationFormula(final IRelation R, final List<ITerm> terms) throws IllegalArgumentException {
     super();
@@ -171,4 +180,5 @@ public class RelationFormula implements IMaxTerm {
     result.append(terms.get(1).prettyPrint(d));
     return result.toString();
   }
+
 }

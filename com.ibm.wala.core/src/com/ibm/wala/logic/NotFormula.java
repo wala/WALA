@@ -83,8 +83,8 @@ public class NotFormula implements IFormula {
     return f.getConstants();
   }
 
-  public Collection<? extends ITerm> getTerms() {
-    return f.getTerms();
+  public Collection<? extends ITerm> getAllTerms() {
+    return f.getAllTerms();
   }
 
   @Override

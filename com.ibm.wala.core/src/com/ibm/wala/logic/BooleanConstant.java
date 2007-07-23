@@ -11,7 +11,6 @@
 package com.ibm.wala.logic;
 
 
-
 public class BooleanConstant extends AbstractConstant {
   
   public static final BooleanConstant TRUE = new BooleanConstant(true);
@@ -38,5 +37,5 @@ public class BooleanConstant extends AbstractConstant {
   public int hashCode() {
     return val ? 11 : 13;
   }
-  
+
 }

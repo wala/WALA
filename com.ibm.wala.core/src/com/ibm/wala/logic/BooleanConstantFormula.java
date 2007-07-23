@@ -62,4 +62,8 @@ public class BooleanConstantFormula implements IMaxTerm {
     return 163 * c.hashCode();
   }
 
+  public Collection<? extends ITerm> getAllTerms() {
+    return Collections.singleton(c);
+  }
+
 }

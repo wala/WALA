@@ -275,16 +275,16 @@ public class Simplifier {
         Variable bound = q.getBoundVar();
         IFormula body = q.getFormula();
         // this could be inefficient. find a better algorithm.
-        for (Variable free : f.getFreeVariables()) {
-          if (q.getFreeVariables().contains(free)) {
+        for (ITerm t : f.getAllTerms()) {
+          if (q.getFreeVariables().contains(t)) {
             Variable fresh = makeFresh(q, f);
             IFormula testBody = substitute(body, bound, fresh);
-            IFormula testF = substitute(f, free, fresh);
+            IFormula testF = substitute(f, t, fresh);
             if (implies(testBody,testF)) {
               return true;
             }
           } else {
-            IFormula testBody = substitute(body, bound, free);
+            IFormula testBody = substitute(body, bound, t);
             if (implies(testBody, f)) {
               return true;
             }

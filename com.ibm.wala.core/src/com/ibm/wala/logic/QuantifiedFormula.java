@@ -108,8 +108,8 @@ public class QuantifiedFormula implements IMaxTerm {
     return f.getConstants();
   }
 
-  public Collection<? extends ITerm> getTerms() {
-    return f.getTerms();
+  public Collection<? extends ITerm> getAllTerms() {
+    return f.getAllTerms();
   }
 
   @Override

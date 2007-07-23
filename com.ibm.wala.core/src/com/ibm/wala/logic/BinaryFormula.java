@@ -103,10 +103,10 @@ public class BinaryFormula extends AbstractBinaryFormula {
     return result;
   }
   
-  public Collection<? extends ITerm> getTerms() {
+  public Collection<? extends ITerm> getAllTerms() {
     Collection<ITerm> result = HashSetFactory.make();
-    result.addAll(f1.getTerms());
-    result.addAll(f2.getTerms());
+    result.addAll(f1.getAllTerms());
+    result.addAll(f2.getAllTerms());
     return result;
   }
 

@@ -32,4 +32,9 @@ public interface ITerm {
   public String prettyPrint(ILogicDecorator d);
 
   public Collection<? extends IConstant> getConstants();
+
+  /**
+   * Collect all terms that appear in this term, including subterms if this is a function term
+   */
+  public Collection<? extends ITerm> getAllTerms();
 }

@@ -41,9 +41,9 @@ public interface IFormula {
   public Collection<? extends IConstant> getConstants();
   
   /**
-   * @return the terms that appear in this formula
+   * @return all terms that appear in this formula, including recursive descent on on-atomic terms
    */
-  public Collection<? extends ITerm> getTerms();
+  public Collection<? extends ITerm> getAllTerms();
   
   public String prettyPrint(ILogicDecorator d);
  

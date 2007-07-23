@@ -39,10 +39,10 @@ public class Disjunction extends AbstractBinaryFormula implements IMaxTerm {
     return result;
   }
 
-  public Collection<? extends ITerm> getTerms() {
+  public Collection<? extends ITerm> getAllTerms() {
     Collection<ITerm> result = HashSetFactory.make();
     for (IFormula f : clauses) {
-      result.addAll(f.getTerms());
+      result.addAll(f.getAllTerms());
     }
     return result;
   }

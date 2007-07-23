@@ -143,4 +143,13 @@ public class FunctionTerm extends AbstractTerm {
       return false;
     return true;
   }
+
+  public Collection<? extends ITerm> getAllTerms() {
+    Collection<ITerm> result = HashSetFactory.make();
+    result.add(this);
+    for (ITerm t : parameters) {
+      result.addAll(t.getAllTerms());
+    }
+    return result;
+  }
 }

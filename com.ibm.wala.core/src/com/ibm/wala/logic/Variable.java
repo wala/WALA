@@ -93,4 +93,8 @@ public class Variable extends AbstractTerm implements Comparable<Variable> {
   public int compareTo(Variable o) throws NullPointerException {
     return this.getNumber() - o.getNumber();
   }
+
+  public Collection<? extends ITerm> getAllTerms() {
+    return Collections.singleton(this);
+  }
 }

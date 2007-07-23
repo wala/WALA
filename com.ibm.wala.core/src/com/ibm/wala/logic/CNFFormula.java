@@ -48,10 +48,10 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
     return result;
   }
 
-  public Collection<? extends ITerm> getTerms() {
+  public Collection<? extends ITerm> getAllTerms() {
     Collection<ITerm> result = HashSetFactory.make();
     for (IFormula f : maxTerms) {
-      result.addAll(f.getTerms());
+      result.addAll(f.getAllTerms());
     }
     return result;
   }

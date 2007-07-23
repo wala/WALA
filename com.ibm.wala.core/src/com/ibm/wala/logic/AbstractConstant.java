@@ -31,6 +31,10 @@ public abstract class AbstractConstant implements IConstant {
   public Collection<? extends IConstant> getConstants() {
     return Collections.singleton(this);
   }
+
+  public Collection<? extends ITerm> getAllTerms() {
+    return Collections.singleton(this);
+  }
   
 
   @Override
