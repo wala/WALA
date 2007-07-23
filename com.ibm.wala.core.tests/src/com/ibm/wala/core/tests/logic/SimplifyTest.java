@@ -20,10 +20,12 @@ import com.ibm.wala.logic.BinaryRelation;
 import com.ibm.wala.logic.BooleanConstant;
 import com.ibm.wala.logic.BooleanConstantFormula;
 import com.ibm.wala.logic.IFormula;
+import com.ibm.wala.logic.IntConstant;
 import com.ibm.wala.logic.NotFormula;
 import com.ibm.wala.logic.QuantifiedFormula;
 import com.ibm.wala.logic.RelationFormula;
 import com.ibm.wala.logic.Simplifier;
+import com.ibm.wala.logic.UnaryRelation;
 import com.ibm.wala.logic.Variable;
 import com.ibm.wala.util.collections.HashSetFactory;
 
@@ -35,7 +37,9 @@ import com.ibm.wala.util.collections.HashSetFactory;
 public class SimplifyTest extends TestCase {
 
   /**
-   * before: v1 = 0 theory: empty after : v1 = 0
+   * before: v1 = 0 
+   * theory: empty 
+   * after : v1 = 0
    */
   public void test1() {
     Variable v = Variable.make(1, null);
@@ -54,7 +58,9 @@ public class SimplifyTest extends TestCase {
   }
 
   /**
-   * before: v1 = 0 theory: v1 = 0 after : true
+   * before: v1 = 0 
+   * theory: v1 = 0 
+   * after : true
    */
   public void test2() {
     Variable v = Variable.make(1, null);
@@ -74,7 +80,9 @@ public class SimplifyTest extends TestCase {
   }
 
   /**
-   * before: v1 = 0 theory: v1 /= 0 after : false
+   * before: v1 = 0 
+   * theory: v1 /= 0 
+   * after : false
    */
   public void test3() {
     Variable v = Variable.make(1, null);
@@ -94,7 +102,9 @@ public class SimplifyTest extends TestCase {
   }
 
   /**
-   * before: v1 = 0 theory: (true = true) <=> (v1 /= 0) after : false
+   * before: v1 = 0 
+   * theory: (true = true) <=> (v1 /= 0) 
+   * after : false
    */
   public void test4() {
     Variable v = Variable.make(1, null);
@@ -118,7 +128,9 @@ public class SimplifyTest extends TestCase {
   }
 
   /**
-   * before: v1 = 0 theory: FORALL v1. v1 = 0 after : true
+   * before: v1 = 0 theory: 
+   * FORALL v1. v1 = 0 
+   * after : true
    */
   public void test5() {
     Variable v = Variable.make(1, null);
@@ -245,5 +257,30 @@ public class SimplifyTest extends TestCase {
     }
     assertTrue(c.size() == 1);
     assertTrue(c.iterator().next().equals(f));
+  }
+  
+  /**
+   * before: foo(0) 
+   * theory: FORALL v1. foo(v1) 
+   * after : true
+   */
+  public void test10() {
+    UnaryRelation foo = UnaryRelation.make("foo");
+    IFormula f = RelationFormula.make(foo, IntConstant.make(0));
+    System.out.println("before: " + f);
+    assertTrue(f != null);
+
+    Collection<IFormula> c = Collections.singleton(f);
+    Collection<IFormula> t = HashSetFactory.make();
+    Variable v1 = Variable.make(1, null);
+    IFormula g = RelationFormula.make(foo, v1);
+    IFormula axiom = QuantifiedFormula.forall(v1, g);
+    t.add(axiom);
+    c = Simplifier.simplify(c, t);
+    for (IFormula x : c) {
+      System.out.println("after : " + x);
+    }
+    assertTrue(c.size() == 1);
+    assertTrue(c.iterator().next().equals(BooleanConstantFormula.TRUE));
   }
 }
