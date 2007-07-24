@@ -26,7 +26,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 public interface IVocabulary<T> {
   
   /**
-   * The range [low,high] of integer values which are cosidered valid assignments for variables in this vocabulary
+   * The range [low,high] of integer values which are considered valid assignments for variables in this vocabulary
    */
   public IntPair getDomain();
   
