@@ -34,6 +34,10 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
   public static <T> OffsetOrdinalSetMapping<T> make(OrdinalSetMapping<T> delegate, int offset) {
     return new OffsetOrdinalSetMapping<T>(delegate, offset);
   }
+  
+  public static <T> OffsetOrdinalSetMapping<T> make(int offset) {
+    return new OffsetOrdinalSetMapping<T>(new MutableMapping<T>(), offset);
+  }
 
   public int add(T o) {
     return offset + delegate.add(o);
