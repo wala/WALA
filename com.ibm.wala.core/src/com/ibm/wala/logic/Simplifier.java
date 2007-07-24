@@ -26,7 +26,6 @@ import com.ibm.wala.util.intset.IntPair;
  * Utilities for simplifying logic expressions
  * 
  * @author sjfink
- * 
  */
 public class Simplifier {
 

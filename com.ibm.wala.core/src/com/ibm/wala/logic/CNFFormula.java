@@ -323,6 +323,7 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
     case OR:
       return BinaryFormula.make(b.getConnective(), f1, f2);
     case IMPLIES:
+      return BinaryFormula.or(NotFormula.make(f1), f2);
     default:
       Assertions.UNREACHABLE(b);
       return null;
