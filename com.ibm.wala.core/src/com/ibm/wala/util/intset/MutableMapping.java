@@ -82,7 +82,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
   }
 
   /**
-   * Add an Object to the set of mapped objects.
+   * Add an object to the set of mapped objects.
    * 
    * @return the integer to which the object is mapped.
    */
