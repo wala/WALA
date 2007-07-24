@@ -76,6 +76,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     this.cha = cha;
     this.options = options;
     this.cache = cache;
+    assert cache != null;
   }
 
   public AbstractRootMethod(MethodReference method, final IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {

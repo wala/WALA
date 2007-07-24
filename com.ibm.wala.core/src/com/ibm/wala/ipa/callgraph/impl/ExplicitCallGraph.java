@@ -74,6 +74,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     this.cha = cha;
     this.options = options;
     this.cache = cache;
+    assert cache != null;
   }
 
   /**

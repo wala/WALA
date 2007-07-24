@@ -223,6 +223,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
+    assert cache != null;
     this.cha = cha;
     this.options = options;
     this.analysisCache = cache;
