@@ -92,7 +92,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * A cache of IRs and stuff
    */
-  private AnalysisCache cache;
+  private AnalysisCache cache = makeDefaultCache();
 
   /**
    * The standard J2SE libraries to analyze
@@ -149,7 +149,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return getCallGraphBuilderFactory().make(options, cache, cha, getScope(),  false);
   }
 
-  protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, boolean savePointerAnalysis) {
+  protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis) {
     Assertions.productionAssertion(getCallGraphBuilderFactory() != null, "must initialize callGraphBuilderFactory!");
 
     CallGraphBuilder builder = getCallGraphBuilder(cha, options, cache);
@@ -358,7 +358,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     Iterable<Entrypoint> eps = entrypointBuilder.createEntrypoints(scope, cha);
     options = getDefaultOptions(eps);
     cache = makeDefaultCache();
-    return buildCallGraph(cha, options, cache, true);
+    return buildCallGraph(cha, options, true);
   }
 
   public CallGraph buildDefaultCallGraph() {
