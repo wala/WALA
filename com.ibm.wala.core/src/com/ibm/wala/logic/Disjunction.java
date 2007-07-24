@@ -152,4 +152,8 @@ public class Disjunction extends AbstractBinaryFormula implements IMaxTerm {
     return prettyPrint(DefaultDecorator.instance());
   }
 
+  public Collection<? extends IMaxTerm> getMaxTerms() {
+    return Collections.singleton(this);
+  }
+
 }

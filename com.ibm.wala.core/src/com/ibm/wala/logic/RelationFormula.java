@@ -12,6 +12,7 @@ package com.ibm.wala.logic;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -23,6 +24,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
  * 
  */
 public class RelationFormula implements IMaxTerm {
+
   private final IRelation R;
 
   private final List<ITerm> terms;
@@ -34,11 +36,10 @@ public class RelationFormula implements IMaxTerm {
   public List<ITerm> getTerms() {
     return terms;
   }
-  
 
   public Collection<? extends ITerm> getAllTerms() {
     Collection<ITerm> result = HashSetFactory.make();
-    for (ITerm t: terms) {
+    for (ITerm t : terms) {
       result.addAll(t.getAllTerms());
     }
     return result;
@@ -138,7 +139,7 @@ public class RelationFormula implements IMaxTerm {
     }
     return result;
   }
-  
+
   public Collection<? extends IConstant> getConstants() {
     Collection<IConstant> result = HashSetFactory.make(terms.size());
     for (ITerm t : terms) {
@@ -179,6 +180,10 @@ public class RelationFormula implements IMaxTerm {
     result.append(" ");
     result.append(terms.get(1).prettyPrint(d));
     return result.toString();
+  }
+
+  public Collection<? extends IMaxTerm> getMaxTerms() {
+    return Collections.singleton(this);
   }
 
 }

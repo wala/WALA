@@ -157,7 +157,7 @@ public class Simplifier {
     Collection<IMaxTerm> result = HashSetFactory.make();
     for (ICNFFormula f : s) {
       if (f instanceof CNFFormula) {
-        result.addAll(((CNFFormula) f).getMaxTerms());
+        result.addAll(f.getMaxTerms());
       } else {
         result.add((IMaxTerm) f);
       }
@@ -524,7 +524,7 @@ public class Simplifier {
     case CONSTANT:
     case NEGATION:
     default:
-      // todo
+      // TODO
       return null;
     }
   }

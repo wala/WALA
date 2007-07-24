@@ -66,4 +66,8 @@ public class BooleanConstantFormula implements IMaxTerm {
     return Collections.singleton(c);
   }
 
+  public Collection<? extends IMaxTerm> getMaxTerms() {
+    return Collections.singleton(this);
+  }
+
 }

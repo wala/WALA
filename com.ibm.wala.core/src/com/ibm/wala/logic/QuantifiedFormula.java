@@ -11,6 +11,7 @@
 package com.ibm.wala.logic;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import com.ibm.wala.logic.ILogicConstants.Quantifier;
 
@@ -123,5 +124,9 @@ public class QuantifiedFormula implements IMaxTerm {
 
   public String prettyPrint(ILogicDecorator d) {
     return d.prettyPrint(getQuantifier()) + " " + d.prettyPrint(getBoundVar()) + "." + getFormula().prettyPrint(d);
+  }
+  
+  public Collection<? extends IMaxTerm> getMaxTerms() {
+    return Collections.singleton(this);
   }
 }

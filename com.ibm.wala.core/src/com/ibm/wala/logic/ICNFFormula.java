@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
+import java.util.Collection;
+
 /**
  * A formula in conjunctive normal form
  * 
@@ -17,5 +19,7 @@ package com.ibm.wala.logic;
  *
  */
 public interface ICNFFormula extends IFormula {
+
+  public Collection<? extends IMaxTerm> getMaxTerms();
 
 }

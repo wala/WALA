@@ -29,7 +29,7 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
   private static final boolean DEBUG = false;
 
   // invariant: size >= 2
-  private final Collection<? extends IMaxTerm> maxTerms;
+  final Collection<? extends IMaxTerm> maxTerms;
 
   private CNFFormula(Collection<? extends IMaxTerm> maxTerms) {
     assert maxTerms.size() >= 2;
@@ -85,7 +85,7 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
       System.err.println("make CNF " + f);
     }
     if (f instanceof CNFFormula) {
-      return (CNFFormula) f;
+      return (ICNFFormula) f;
     } else {
       switch (f.getKind()) {
       case RELATION:
@@ -416,4 +416,6 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
     }
   }
 
+  
+  
 }

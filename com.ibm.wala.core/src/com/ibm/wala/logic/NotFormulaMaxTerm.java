@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
+import java.util.Collection;
+import java.util.Collections;
+
 
 /**
  * An irreducible Not Formula.
@@ -26,6 +29,10 @@ public class NotFormulaMaxTerm extends NotFormula implements IMaxTerm {
 
   private NotFormulaMaxTerm(IFormula f) {
     super(f);
+  }
+  
+  public Collection<? extends IMaxTerm> getMaxTerms() {
+    return Collections.singleton(this);
   }
 
  
