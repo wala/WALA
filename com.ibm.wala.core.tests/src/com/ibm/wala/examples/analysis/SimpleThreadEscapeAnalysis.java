@@ -178,7 +178,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     //
     // build the call graph
     //
-    buildCallGraph(cha, options, makeDefaultCache(), true);
+    buildCallGraph(cha, options, true);
 
     //
     // extract data for analysis
