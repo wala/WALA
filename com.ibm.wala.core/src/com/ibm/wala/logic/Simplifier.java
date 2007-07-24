@@ -29,7 +29,7 @@ import com.ibm.wala.util.intset.IntPair;
  */
 public class Simplifier {
 
-  private final static boolean DEBUG = true;
+  private final static boolean DEBUG = false;
 
   /**
    * Eliminate quantifiers, by substituting every possible constant value for a
