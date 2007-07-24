@@ -27,6 +27,9 @@ public class CombinedVocabulary extends AbstractVocabulary<Object> {
   private CombinedVocabulary(IVocabulary a, IVocabulary b) {
     this.a = a;
     this.b = b;
+    if (b.getRelations() == null) {
+      throw new IllegalArgumentException("b relations are null " + b.getClass());
+    }
   }
   
   public static CombinedVocabulary make(IVocabulary a, IVocabulary b) {
