@@ -413,17 +413,47 @@ public class SSACFG implements ControlFlowGraph {
       return blockPiInstructions.iterator();
     }
 
+    public Iterator<SSAInstruction> iterateNormalInstructions() {
+      int lookup = getFirstInstructionIndex();
+      final int end = getLastInstructionIndex();
+      // skip to first non-null instruction
+      while (lookup <= end && instructions[lookup] == null) {
+        lookup++;
+      }
+      final int dummy = lookup;
+      return new Iterator<SSAInstruction>() {
+        private int start = dummy;
+
+        public boolean hasNext() {
+          return (start <= end);
+        }
+
+        public SSAInstruction next() {
+          SSAInstruction i = instructions[start];
+          start++;
+          while (start <= end && instructions[start] == null) {
+            start++;
+          }
+          return i;
+        }
+
+        public void remove() {
+          throw new UnsupportedOperationException();
+        }
+      };
+    }
+
     /**
      * TODO: make this more efficient if needed
      */
     public List<SSAInstruction> getAllInstructions() {
       compressPhis();
-      
+
       ArrayList<SSAInstruction> result = new ArrayList<SSAInstruction>();
       for (Iterator<? extends SSAInstruction> it = iteratePhis(); it.hasNext();) {
         result.add(it.next());
       }
-      
+
       for (int i = getFirstInstructionIndex(); i <= getLastInstructionIndex(); i++) {
         SSAInstruction s = instructions[i];
         if (s != null) {
