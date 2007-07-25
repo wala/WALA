@@ -418,17 +418,19 @@ public class SSACFG implements ControlFlowGraph {
      */
     public List<SSAInstruction> getAllInstructions() {
       compressPhis();
-
+      
       ArrayList<SSAInstruction> result = new ArrayList<SSAInstruction>();
+      for (Iterator<? extends SSAInstruction> it = iteratePhis(); it.hasNext();) {
+        result.add(it.next());
+      }
+      
       for (int i = getFirstInstructionIndex(); i <= getLastInstructionIndex(); i++) {
         SSAInstruction s = instructions[i];
         if (s != null) {
           result.add(s);
         }
       }
-      for (Iterator<? extends SSAInstruction> it = iteratePhis(); it.hasNext();) {
-        result.add(it.next());
-      }
+
       for (Iterator<? extends SSAInstruction> it = iteratePis(); it.hasNext();) {
         result.add(it.next());
       }
