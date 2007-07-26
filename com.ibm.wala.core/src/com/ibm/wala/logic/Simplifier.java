@@ -141,7 +141,10 @@ public class Simplifier {
   private static Collection<? extends IMaxTerm> simplifyCNF(ICNFFormula f, Collection<IMaxTerm> facts) {
     Collection<IMaxTerm> result = HashSetFactory.make();
     for (IMaxTerm d : collectClauses(Collections.singleton(f))) {
-      if (isContradiction(d, facts)) {
+      Collection<IMaxTerm> otherFacts = HashSetFactory.make(facts);
+      otherFacts.addAll(collectClauses(Collections.singleton(f)));
+      otherFacts.remove(d);
+      if (isContradiction(d, otherFacts)) {
         return Collections.singleton(BooleanConstantFormula.FALSE);
       } else if (isTautology(d, facts)) {
         // do nothing.
