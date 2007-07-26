@@ -10,13 +10,16 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.ibm.wala.logic.ILogicConstants.BinaryConnective;
 import com.ibm.wala.logic.ILogicConstants.Quantifier;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
@@ -271,11 +274,11 @@ public class Simplifier {
     }
     if (axiom.getKind().equals(IFormula.Kind.QUANTIFIED)) {
       QuantifiedFormula q = (QuantifiedFormula) axiom;
-      
-      if (!innerStructureMatches(q,f)) {
+
+      if (!innerStructureMatches(q, f)) {
         return false;
       }
-      
+
       if (q.getQuantifier().equals(Quantifier.FORALL)) {
         Variable bound = q.getBoundVar();
         IFormula body = q.getFormula();
@@ -285,7 +288,7 @@ public class Simplifier {
             Variable fresh = makeFresh(q, f);
             IFormula testBody = substitute(body, bound, fresh);
             IFormula testF = substitute(f, t, fresh);
-            if (implies(testBody,testF)) {
+            if (implies(testBody, testF)) {
               return true;
             }
           } else {
@@ -328,30 +331,30 @@ public class Simplifier {
       // TODO be less conservative
       return true;
     }
-//    switch (g.getKind()) {
-//    case BINARY:
-//      return true;
-//    case CONSTANT:
-//      return g.equals(f);
-//    case NEGATION:
-//      return true;
-//    case RELATION:
-//      RelationFormula r1 = (RelationFormula)g;
-//      RelationFormula r2 = (RelationFormula)f;
-//      return r1.getRelation().equals(r2.getRelation());
-//    case QUANTIFIED:
-//    default:
-//      Assertions.UNREACHABLE();
+    // switch (g.getKind()) {
+    // case BINARY:
+    // return true;
+    // case CONSTANT:
+    // return g.equals(f);
+    // case NEGATION:
+    // return true;
+    // case RELATION:
+    // RelationFormula r1 = (RelationFormula)g;
+    // RelationFormula r2 = (RelationFormula)f;
+    // return r1.getRelation().equals(r2.getRelation());
+    // case QUANTIFIED:
+    // default:
+    // Assertions.UNREACHABLE();
   }
-  
+
   public static IFormula innermost(QuantifiedFormula q) {
     IFormula g = q.getFormula();
     if (g.getKind().equals(IFormula.Kind.QUANTIFIED)) {
-      return innermost((QuantifiedFormula)g);
+      return innermost((QuantifiedFormula) g);
     } else {
       return g;
     }
-   }
+  }
 
   private static Variable makeFresh(IFormula f, IFormula g) {
     int max = 0;
@@ -361,7 +364,7 @@ public class Simplifier {
     for (Variable v : g.getFreeVariables()) {
       max = Math.max(max, v.getNumber());
     }
-    return Variable.make(max+1, null);
+    return Variable.make(max + 1, null);
   }
 
   // some ad-hoc formula normalization
@@ -479,7 +482,7 @@ public class Simplifier {
     candidates.addAll(theory);
     for (IFormula f : candidates) {
       if (!alreadyUsed.contains(f)) {
-        Pair<ITerm, ITerm> substitution = equalitySuggestsSubsitution(f);
+        Pair<ITerm, ITerm> substitution = equalitySuggestsSubstitution(f);
         if (substitution != null) {
           alreadyUsed.add(f);
           return substitution;
@@ -495,7 +498,7 @@ public class Simplifier {
    * 
    * @return a pair (p1, p2) meaning "substitute p2 for p1"
    */
-  private static Pair<ITerm, ITerm> equalitySuggestsSubsitution(IFormula f) {
+  private static Pair<ITerm, ITerm> equalitySuggestsSubstitution(IFormula f) {
     switch (f.getKind()) {
     case RELATION:
       RelationFormula r = (RelationFormula) f;
@@ -514,8 +517,9 @@ public class Simplifier {
       QuantifiedFormula q = (QuantifiedFormula) f;
       if (q.getQuantifier().equals(Quantifier.FORALL)) {
         Variable bound = q.getBoundVar();
-        IFormula g = substitute(q.getFormula(), bound, Wildcard.STAR);
-        return equalitySuggestsSubsitution(g);
+        Wildcard w = freshWildcard(q);
+        IFormula g = substitute(q.getFormula(), bound, w);
+        return equalitySuggestsSubstitution(g);
       } else {
         return null;
       }
@@ -527,6 +531,18 @@ public class Simplifier {
       return null;
     }
   }
+
+  private static Wildcard freshWildcard(QuantifiedFormula q) {
+    int max = 0;
+    for (ITerm t : q.getAllTerms()) {
+      if (t instanceof Wildcard) {
+        Wildcard w = (Wildcard) t;
+        max = Math.max(max, w.getNumber());
+      }
+    }
+    return Wildcard.make(max + 1);
+  }
+
 
   /**
    * in formula f, substitute the term t2 for all free occurrences of t1
@@ -556,7 +572,8 @@ public class Simplifier {
       RelationFormula r = (RelationFormula) formula;
       List<ITerm> terms = new LinkedList<ITerm>();
       for (ITerm t : r.getTerms()) {
-        terms.add(substitute(t, t1, t2));
+        Map<Wildcard,ITerm> binding = HashMapFactory.make();
+        terms.add(substitute(t, t1, t2, binding));
       }
       return RelationFormula.make(r.getRelation(), terms);
     case CONSTANT:
@@ -570,9 +587,14 @@ public class Simplifier {
   /**
    * in term t, substitute t2 for free occurrences of t1
    */
-  private static ITerm substitute(ITerm t, ITerm t1, ITerm t2) {
-    if (termsMatch(t, t1)) {
-      return t2;
+  private static ITerm substitute(ITerm t, ITerm t1, ITerm t2, Map<Wildcard, ITerm> binding) {
+    assert t != null;
+    assert t1 != null;
+    assert t2 != null;
+    if (termsMatch(t, t1, binding)) {
+      ITerm result = bindingOf(t2, binding);
+      assert result != null;
+      return result;
     }
     switch (t.getKind()) {
     case CONSTANT:
@@ -581,7 +603,7 @@ public class Simplifier {
       FunctionTerm f = (FunctionTerm) t;
       List<ITerm> terms = new LinkedList<ITerm>();
       for (ITerm p : f.getParameters()) {
-        terms.add(substitute(p, t1, t2));
+        terms.add(substitute(p, t1, t2, binding));
       }
       return FunctionTerm.make(f.getFunction(), terms);
     case VARIABLE:
@@ -596,37 +618,75 @@ public class Simplifier {
     }
   }
 
+  private static ITerm bindingOf(ITerm t, Map<Wildcard, ITerm> binding) {
+    assert t != null;
+    switch (t.getKind()) {
+    case CONSTANT:
+      if (t instanceof Wildcard) {
+        ITerm result = binding.get(t);
+        if (result == null) {
+          return t;
+        } else {
+          return result;
+        }
+      } else {
+        return t;
+      }
+    case VARIABLE:
+      return t;
+    case FUNCTION:
+      FunctionTerm ft = (FunctionTerm) t;
+      List<ITerm> terms = new ArrayList<ITerm>();
+      for (ITerm p : ft.getParameters()) {
+        terms.add(bindingOf(p, binding));
+      }
+      return FunctionTerm.make(ft.getFunction(), terms);
+    default:
+      Assertions.UNREACHABLE(t);
+      return null;
+    }
+  }
+
   /**
    * Does the term t1 match the pattern t2? Note that this deals with wildcards.
+   * Records bindings from Wildcards to Terms in the binding map ... modified as
+   * a side effect.
    */
-  private static boolean termsMatch(ITerm t1, ITerm t2) {
+  private static boolean termsMatch(ITerm t1, ITerm t2, Map<Wildcard, ITerm> binding) {
     if (t1.equals(t2)) {
       return true;
     }
+    if (t2 instanceof Wildcard) {
+      Wildcard w = (Wildcard) t2;
+      ITerm b = binding.get(w);
+      if (b != null) {
+        return b.equals(t1);
+      } else {
+        binding.put(w, t1);
+        return true;
+      }
+    }
+
     switch (t1.getKind()) {
     case CONSTANT:
     case VARIABLE:
-      return Wildcard.STAR.equals(t2);
+      return false;
     case FUNCTION:
-      if (Wildcard.STAR.equals(t2)) {
-        return true;
-      } else {
-        if (t2 instanceof FunctionTerm) {
-          FunctionTerm f1 = (FunctionTerm) t1;
-          FunctionTerm f2 = (FunctionTerm) t2;
-          if (f1.getFunction().equals(f2.getFunction())) {
-            for (int i = 0; i < f1.getParameters().size(); i++) {
-              ITerm x = f1.getParameters().get(i);
-              ITerm y = f2.getParameters().get(i);
-              if (!termsMatch(x, y)) {
-                return false;
-              }
+      if (t2 instanceof FunctionTerm) {
+        FunctionTerm f1 = (FunctionTerm) t1;
+        FunctionTerm f2 = (FunctionTerm) t2;
+        if (f1.getFunction().equals(f2.getFunction())) {
+          for (int i = 0; i < f1.getParameters().size(); i++) {
+            ITerm x = f1.getParameters().get(i);
+            ITerm y = f2.getParameters().get(i);
+            if (!termsMatch(x, y, binding)) {
+              return false;
             }
-            return true;
           }
+          return true;
         }
-        return false;
       }
+      return false;
     default:
       Assertions.UNREACHABLE();
       return false;

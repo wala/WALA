@@ -28,6 +28,14 @@ public class FunctionTerm extends AbstractTerm {
     if (f == null) {
       throw new IllegalArgumentException("f cannot be null");
     }
+    if (parameters == null) {
+      throw new IllegalArgumentException("parameters cannot be null");
+    }
+    for (ITerm t : parameters) {
+      if (t == null) {
+        throw new IllegalArgumentException("cannot have a null parameter");
+      }
+    }
   }
   
   public Kind getKind() {
