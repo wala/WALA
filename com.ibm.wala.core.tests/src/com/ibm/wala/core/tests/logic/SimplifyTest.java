@@ -16,9 +16,11 @@ import java.util.Collections;
 import junit.framework.TestCase;
 
 import com.ibm.wala.logic.BinaryFormula;
+import com.ibm.wala.logic.BinaryFunction;
 import com.ibm.wala.logic.BinaryRelation;
 import com.ibm.wala.logic.BooleanConstant;
 import com.ibm.wala.logic.BooleanConstantFormula;
+import com.ibm.wala.logic.FunctionTerm;
 import com.ibm.wala.logic.IFormula;
 import com.ibm.wala.logic.IntConstant;
 import com.ibm.wala.logic.NotFormula;
@@ -275,6 +277,32 @@ public class SimplifyTest extends TestCase {
     Variable v1 = Variable.make(1, null);
     IFormula g = RelationFormula.make(foo, v1);
     IFormula axiom = QuantifiedFormula.forall(v1, g);
+    t.add(axiom);
+    c = Simplifier.simplify(c, t);
+    for (IFormula x : c) {
+      System.out.println("after : " + x);
+    }
+    assertTrue(c.size() == 1);
+    assertTrue(c.iterator().next().equals(BooleanConstantFormula.TRUE));
+  }
+  
+  /**
+   * before: foo(3,4) == 4
+   * theory: FORALL v1. FORALL v2. foo(v1, v2) == v2 
+   * after : true
+   */
+  public void test11() {
+    BinaryFunction foo = BinaryFunction.make("foo");
+    IFormula f = RelationFormula.makeEquals(FunctionTerm.make(foo,IntConstant.make(3), IntConstant.make(4)), IntConstant.make(4));
+    System.out.println("before: " + f);
+    assertTrue(f != null);
+
+    Collection<IFormula> c = Collections.singleton(f);
+    Collection<IFormula> t = HashSetFactory.make();
+    Variable v1 = Variable.make(1, null);
+    Variable v2 = Variable.make(2, null);
+    IFormula g = RelationFormula.makeEquals(FunctionTerm.make(foo,v1, v2), v2);
+    IFormula axiom = QuantifiedFormula.forall(v1, v2, g);
     t.add(axiom);
     c = Simplifier.simplify(c, t);
     for (IFormula x : c) {
