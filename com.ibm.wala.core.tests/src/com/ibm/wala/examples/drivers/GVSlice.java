@@ -152,7 +152,7 @@ public class GVSlice {
       ClassHierarchy cha = ClassHierarchy.make(scope);
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-      CallGraphBuilder builder = Util.makeVanillaZeroOneContainerCFABuilder(options, new AnalysisCache(),cha, scope);
+      CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(),cha, scope);
       CallGraph cg = builder.makeCallGraph(options);
       SDG sdg = new SDG(cg, builder.getPointerAnalysis(), dOptions, cOptions);
 
