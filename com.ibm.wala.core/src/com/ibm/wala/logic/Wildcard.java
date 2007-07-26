@@ -16,8 +16,6 @@ package com.ibm.wala.logic;
  * @author sjfink
  */
 public class Wildcard extends AbstractConstant {
-
-  public static final Wildcard STAR = new Wildcard(0);
   
   private final int number;
   private Wildcard(int number) {
@@ -26,7 +24,7 @@ public class Wildcard extends AbstractConstant {
 
   @Override
   public String toString() {
-    return number == 0 ?  "*" : "?" + number + "?";
+    return "?" + number + "?";
   }
 
   @Override
