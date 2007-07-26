@@ -179,9 +179,6 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
   }
 
   /**
-   * 
-   * @author sfink
-   * 
    * An operator which initializes a type to a declared type.
    */
   protected final class DeclaredTypeOperator extends NullaryOperator {
@@ -192,7 +189,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     }
 
     /**
-     * Note that we need evalute this operator at most once
+     * Note that we need evaluate this operator at most once
      */
     @Override
     public byte evaluate(IVariable lhs) {
@@ -233,10 +230,6 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     }
   }
 
-  /**
-   * @author sfink
-   * 
-   */
   private static final class PhiOperator extends AbstractOperator {
 
     private PhiOperator() {
@@ -264,9 +257,6 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       }
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "phi meet";
@@ -283,10 +273,6 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     }
   }
 
-  /**
-   * @author sfink
-   * 
-   */
   private static final class PiOperator extends AbstractOperator {
 
     private PiOperator() {
@@ -311,9 +297,6 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       }
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "pi";
@@ -330,10 +313,6 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     }
   }
 
-  /**
-   * @author sfink
-   * 
-   */
   protected static class PrimitivePropagateOperator extends AbstractOperator {
 
     protected PrimitivePropagateOperator() {
@@ -442,9 +421,6 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       }
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "getElementType " + load;
@@ -581,7 +557,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         result = new DeclaredTypeOperator(PrimitiveType.BOOLEAN);
       }
     }
-    
+
     @Override
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
       TypeAbstraction type = meetDeclaredExceptionTypes(instruction);
@@ -643,28 +619,15 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       this.type = other.type;
     }
 
-    /**
-     * Returns the type.
-     * 
-     * @return TypeAbstraction
-     */
+
     public TypeAbstraction getType() {
       return type;
     }
 
-    /**
-     * Sets the type.
-     * 
-     * @param type
-     *          The type to set
-     */
     public void setType(TypeAbstraction type) {
       this.type = type;
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return type.toString();
@@ -688,31 +651,16 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
           }
         }
       }
-      // if (st.isStringConstant(valueNumber)) {
-      // IClass klass = cha.lookupClass(TypeReference.JavaLangString);
-      // TypeAbstraction stringTypeAbs = new PointType(klass,cha);
-      // return new TypeVariable(stringTypeAbs, 797 * valueNumber);
-      // }
+
       return new TypeVariable(TypeAbstraction.TOP, 797 * valueNumber);
     }
 
   }
 
-  /**
-   * Returns the ir.
-   * 
-   * @return IR
-   */
   public IR getIR() {
     return ir;
   }
 
-  /**
-   * Method getType.
-   * 
-   * @param valueNumber
-   * @return JavaTypeAbstraction
-   */
   public TypeAbstraction getType(int valueNumber) {
     if (Assertions.verifyAssertions) {
       if (getVariable(valueNumber) == null) {
@@ -734,8 +682,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     SymbolTable st = ir.getSymbolTable();
     if (!st.isConstant(valueNumber)) {
       return TypeAbstraction.TOP;
-    }
-    if (st.isIntegerConstant(valueNumber)) {
+    } else if (st.isIntegerConstant(valueNumber)) {
       return PrimitiveType.INT;
     } else if (st.isFloatConstant(valueNumber)) {
       return PrimitiveType.FLOAT;
@@ -750,8 +697,9 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     // Steve's code assumes American style (god forbid), so what you're getting
     // here
     // is not undefined, but java.lang.Object [NR/EY]
-    if (getVariable(valueNumber) == null)
+    if (getVariable(valueNumber) == null) {
       return true;
+    }
     TypeAbstraction ta = ((TypeVariable) getVariable(valueNumber)).getType();
     return ta == BOTTOM || ta.getType() == null;
   }
