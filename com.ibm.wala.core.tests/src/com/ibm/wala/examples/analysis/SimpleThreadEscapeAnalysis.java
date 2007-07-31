@@ -10,34 +10,21 @@
  *******************************************************************************/
 package com.ibm.wala.examples.analysis;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
 import java.util.jar.JarFile;
 
-import com.ibm.wala.classLoader.ArrayClass;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.JarFileModule;
-import com.ibm.wala.client.impl.AbstractAnalysisEngine;
-import com.ibm.wala.client.impl.ZeroCFABuilderFactory;
-import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
+import com.ibm.wala.classLoader.*;
+import com.ibm.wala.client.impl.*;
+import com.ibm.wala.ipa.callgraph.*;
 import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.callgraph.propagation.*;
+import com.ibm.wala.ipa.cha.*;
+import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.intset.OrdinalSet;
+import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * <P>
@@ -105,15 +92,31 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
    * running JRE.
    */
   private JarFile[] getSystemJars() throws IOException {
+    String javaHomePath = "garbage";
     Set<JarFile> jarFiles = HashSetFactory.make();
 
-    String javaHomePath = System.getProperty("java.home");
-
-    if (!javaHomePath.endsWith(File.separator)) {
-      javaHomePath = javaHomePath + File.separator;
+    // first, see if wala.properties has been set up
+    try {
+      Properties p = WalaProperties.loadProperties();
+      javaHomePath = p.getProperty(WalaProperties.J2SE_DIR);
+    } catch (WalaException e) {
+      // no luck.
     }
 
-    collectJars(new File(javaHomePath + "lib"), jarFiles);
+    // if not, try assuming the running JRE looks normal
+    File x = new File(javaHomePath);
+    if (! (x.exists() && x.isDirectory())) {
+      javaHomePath = System.getProperty("java.home");
+
+      if (!javaHomePath.endsWith(File.separator)) {
+	javaHomePath = javaHomePath + File.separator;
+      }
+
+      javaHomePath = javaHomePath + "lib";
+    }
+
+    // find jars from chosen JRE lib path
+    collectJars(new File(javaHomePath), jarFiles);
 
     return jarFiles.toArray(new JarFile[jarFiles.size()]);
   }
@@ -156,6 +159,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     // ...and the class hierarchy
     //
     IClassHierarchy cha = buildClassHierarchy();
+    assert cha != null : "failed to create class hierarchy";
     setClassHierarchy(cha);
 
     //
@@ -317,10 +321,12 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
 
     for (Iterator<IClass> types = escapingTypes.iterator(); types.hasNext();) {
       IClass cls = types.next();
-      for (Iterator<IField> fs = cls.getAllFields().iterator(); fs.hasNext();) {
-        IField f = (IField) fs.next();
-        if (!f.isVolatile() && !f.isFinal()) {
-          System.err.println(f.getReference());
+      if (! cls.isArrayClass()) {
+	for (Iterator fs = cls.getAllFields().iterator(); fs.hasNext();) {
+	  IField f = (IField) fs.next();
+	  if (!f.isVolatile() && !f.isFinal()) {
+	    System.err.println(f.getReference());
+	  }
         }
       }
     }
