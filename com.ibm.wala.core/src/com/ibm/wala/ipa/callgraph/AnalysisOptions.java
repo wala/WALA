@@ -39,7 +39,7 @@ public class AnalysisOptions {
   /**
    * An object that identifies the entrypoints for the call graph
    */
-  private final Iterable<Entrypoint> entrypoints;
+  private Iterable<Entrypoint> entrypoints;
 
   /**
    * An object which represents the user specification for reflection
@@ -143,7 +143,6 @@ public class AnalysisOptions {
 
 
   public AnalysisOptions() {
-    this.entrypoints = null;
   }
 
   public AnalysisOptions(AnalysisScope scope,  Iterable<Entrypoint> e) {
@@ -161,6 +160,10 @@ public class AnalysisOptions {
 
   public Iterable<Entrypoint> getEntrypoints() {
     return entrypoints;
+  }
+
+  public void setEntrypoints(Iterable<Entrypoint> entrypoints) {
+    this.entrypoints = entrypoints;
   }
 
   /**
