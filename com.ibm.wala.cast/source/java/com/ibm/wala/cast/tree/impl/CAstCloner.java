@@ -13,42 +13,38 @@ package com.ibm.wala.cast.tree.impl;
 import java.util.Collection;
 import java.util.Map;
 
-import com.ibm.wala.cast.tree.CAst;
-import com.ibm.wala.cast.tree.CAstControlFlowMap;
-import com.ibm.wala.cast.tree.CAstEntity;
-import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.CAstNodeTypeMap;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.util.collections.*;
 import com.ibm.wala.util.debug.Assertions;
 
-public class CAstCloner extends CAstRewriter<Object> {
+public class CAstCloner extends CAstBasicRewriter {
 
   public CAstCloner(CAst Ast) {
-    super(Ast, false, null);
+    super(Ast, false);
   }
 
   protected CAstNode copyNodes(CAstNode root, 
-			       Object ignoredContext,
-			       Map<CAstNode, CAstNode> nodeMap) 
+			       NonCopyingContext c,
+			       Map nodeMap) 
   {
     if (root instanceof CAstOperator) {
-      nodeMap.put(root, root);
+      nodeMap.put(new Pair(root, c.key()), root);
       return root;
     } else if (root.getValue() != null) {
       CAstNode copy = Ast.makeConstant( root.getValue() );
       Assertions._assert(! nodeMap.containsKey(root));
-      nodeMap.put(root, copy);
+      nodeMap.put(new Pair(root, c.key()), copy);
       return copy;
     } else {
       CAstNode newChildren[] = new CAstNode[ root.getChildCount() ];
 
       for(int i = 0; i < root.getChildCount(); i++) {
-	newChildren[i] = copyNodes(root.getChild(i), ignoredContext, nodeMap);
+	newChildren[i] = copyNodes(root.getChild(i), c, nodeMap);
       }
 
       CAstNode copy = Ast.makeNode(root.getKind(), newChildren);
       Assertions._assert(! nodeMap.containsKey(root));
-      nodeMap.put(root, copy);
+      nodeMap.put(new Pair(root, c.key()), copy);
       return copy;
     }
   }

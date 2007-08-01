@@ -2,6 +2,11 @@ package com.ibm.wala.cast.tree.impl;
 
 import com.ibm.wala.cast.tree.CAst;
 
-public interface CAstRewriterFactory<Context> {
-  public CAstRewriter<Context> createCAstRewriter(CAst ast);
+public interface 
+    CAstRewriterFactory<C extends CAstRewriter.RewriteContext<K>, 
+			K extends CAstRewriter.CopyKey<K>>  
+{
+  
+  public CAstRewriter<C, K> createCAstRewriter(CAst ast);
+
 }

@@ -10,36 +10,36 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import com.ibm.wala.cast.tree.CAst;
-import com.ibm.wala.cast.tree.CAstControlFlowMap;
-import com.ibm.wala.cast.tree.CAstEntity;
-import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.CAstNodeTypeMap;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap;
-import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.util.*;
+import com.ibm.wala.util.*;
+import com.ibm.wala.util.collections.*;
+import com.ibm.wala.util.debug.*;
 
-public abstract class CAstRewriter<RewriteContext> {
+public abstract class 
+    CAstRewriter<C extends CAstRewriter.RewriteContext<K>, 
+		 K extends CAstRewriter.CopyKey<K>> 
+{
 
-  protected final CAst Ast;
+  protected static final boolean DEBUG = false;
 
-  protected final boolean recursive;
+  public interface CopyKey<Self extends CopyKey> {
+    
+    int hashCode();
 
-  protected final RewriteContext rootContext;
+    boolean equals(Object o);
 
-  public CAstRewriter(CAst Ast, boolean recursive, RewriteContext rootContext) {
-    this.Ast = Ast;
-    this.recursive = recursive;
-    this.rootContext = rootContext;
-  }
+    Self parent();
+
+  };
+
+  public interface RewriteContext<K extends CopyKey> {
+    
+    K key();
+
+  };
 
   public interface Rewrite {
 
@@ -55,129 +55,185 @@ public abstract class CAstRewriter<RewriteContext> {
 
   }
 
-  protected abstract CAstNode copyNodes(CAstNode root, RewriteContext context, Map<CAstNode, CAstNode> nodeMap);
+  protected final CAst Ast;
+
+  protected final boolean recursive;
+
+  protected final C rootContext;
+
+  public CAstRewriter(CAst Ast, boolean recursive, C rootContext) {
+    this.Ast = Ast;
+    this.recursive = recursive;
+    this.rootContext = rootContext;
+  }
+
+  protected abstract CAstNode copyNodes(CAstNode root, C context, Map nodeMap);
 
   protected CAstNode flowOutTo(Map<CAstNode, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget,
       CAstControlFlowMap orig, CAstSourcePositionMap src) {
     return oldTarget;
   }
 
-  private CAstControlFlowMap copyFlow(Map<CAstNode, CAstNode> nodeMap, CAstControlFlowMap orig, CAstSourcePositionMap src) {
+  private CAstControlFlowMap copyFlow(Map nodeMap, 
+				      CAstControlFlowMap orig,
+				      CAstSourcePositionMap newSrc) 
+  {
     Set<CAstNode> mappedOutsideNodes = HashSetFactory.make(1);
-    Collection<CAstNode> oldSources = orig.getMappedNodes();
-    CAstControlFlowRecorder newMap = new CAstControlFlowRecorder(src);
-    for (Iterator<CAstNode> NS = nodeMap.keySet().iterator(); NS.hasNext();) {
-      CAstNode old = NS.next();
-      CAstNode newNode = nodeMap.get(old);
-      newMap.map(newNode, newNode);
-      if (oldSources.contains(old)) {
-        if (orig.getTarget(old, null) != null) {
-          CAstNode oldTarget = orig.getTarget(old, null);
-          if (nodeMap.containsKey(oldTarget)) {
-            newMap.add(newNode, nodeMap.get(oldTarget), null);
-          } else {
-            CAstNode tgt = flowOutTo(nodeMap, old, null, oldTarget, orig, src);
-            newMap.add(newNode, tgt, null);
-            if (tgt != CAstControlFlowMap.EXCEPTION_TO_EXIT && !mappedOutsideNodes.contains(tgt)) {
-              mappedOutsideNodes.add(tgt);
-              newMap.map(tgt, tgt);
-            }
-          }
-        }
+    CAstControlFlowRecorder newMap = new CAstControlFlowRecorder(newSrc);
+    Collection oldSources = orig.getMappedNodes();
 
-        for (Iterator LS = orig.getTargetLabels(old).iterator(); LS.hasNext();) {
-          Object label = LS.next();
-          CAstNode oldTarget = orig.getTarget(old, label);
-          if (nodeMap.containsKey(oldTarget)) {
-            newMap.add(newNode, nodeMap.get(oldTarget), label);
-          } else {
-            CAstNode tgt = flowOutTo(nodeMap, old, null, oldTarget, orig, src);
-            newMap.add(newNode, tgt, label);
-            if (tgt != CAstControlFlowMap.EXCEPTION_TO_EXIT && !mappedOutsideNodes.contains(tgt)) {
-              mappedOutsideNodes.add(tgt);
-              newMap.map(tgt, tgt);
+    for(Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext(); ) {
+      Map.Entry entry = (Map.Entry) NS.next();
+      Pair N = (Pair)entry.getKey();
+      CAstNode oldSource = (CAstNode) N.fst;
+      CopyKey key = (CopyKey) N.snd;
+			  
+      CAstNode newSource = (CAstNode) entry.getValue();
+      Assertions._assert(newSource != null);
+
+      newMap.map(newSource, newSource);
+
+      if (DEBUG) {
+	Trace.println("\n\nlooking at "+key+":"+CAstPrinter.print(oldSource));
+      }
+
+      if (oldSources.contains(oldSource)) {
+	Iterator LS = orig.getTargetLabels(oldSource).iterator(); 
+	if (orig.getTarget(oldSource, null) != null) {
+	  LS = new IteratorPlusOne(LS, null);
+	}
+
+	while (LS.hasNext()) {
+	  Object label = LS.next();
+	  CAstNode oldTarget = orig.getTarget(oldSource, label);
+
+	  if (DEBUG) {
+	    Trace.println("old: "+label+" --> "+CAstPrinter.print(oldTarget));
+	  }
+
+	  Pair targetKey;
+	  CopyKey k = key; 
+	  do {
+	    targetKey = new Pair(oldTarget, k);
+	    if (k != null) {
+	      k = k.parent();
+	    } else {
+	      break;
+	    }
+	  } while (! nodeMap.containsKey(targetKey));
+	    
+	  CAstNode newTarget;
+	  if (nodeMap.containsKey(targetKey)) {
+	    newTarget = (CAstNode) nodeMap.get(targetKey);
+	    newMap.add(newSource, newTarget, label);
+	    
+	  } else {
+	    newTarget = flowOutTo(nodeMap, oldSource, label, oldTarget, orig, newSrc);
+            newMap.add(newSource, newTarget, label);
+            if (newTarget != CAstControlFlowMap.EXCEPTION_TO_EXIT 
+		                && 
+		!mappedOutsideNodes.contains(newTarget))
+	    {
+	      mappedOutsideNodes.add(newTarget);
+              newMap.map(newTarget, newTarget);
             }
-          }
-        }
+	  }
+
+	  if (DEBUG) {
+	    Trace.println("mapping:old: " + CAstPrinter.print(oldSource) +
+	      "-- " + label + " --> " + CAstPrinter.print(oldTarget));
+	    Trace.println("mapping:new: " + CAstPrinter.print(newSource) +
+	      "-- " + label + " --> " + CAstPrinter.print(newTarget));
+	  }
+	}
       }
     }
 
     return newMap;
   }
 
-  private CAstSourcePositionMap copySource(Map<CAstNode, CAstNode> nodeMap, CAstSourcePositionMap orig) {
-    if (orig == null) {
-      return null;
-    } else {
-      CAstSourcePositionRecorder newMap = new CAstSourcePositionRecorder();
-      for (Iterator<CAstNode> NS = nodeMap.keySet().iterator(); NS.hasNext();) {
-        CAstNode old = NS.next();
-        CAstNode newNode = nodeMap.get(old);
-
-        if (orig.getPosition(old) != null) {
-          newMap.setPosition(newNode, orig.getPosition(old));
-        }
+  private CAstSourcePositionMap copySource(Map nodeMap, CAstSourcePositionMap orig) {
+    CAstSourcePositionRecorder newMap = new CAstSourcePositionRecorder();
+    for(Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext(); ) {
+      Map.Entry entry = (Map.Entry)NS.next();
+      Pair N = (Pair)entry.getKey();
+      CAstNode oldNode = (CAstNode) N.fst;
+			  
+      CAstNode newNode = (CAstNode) entry.getValue();
+      
+      if (orig.getPosition(oldNode) != null) {
+	newMap.setPosition(newNode, orig.getPosition(oldNode));
       }
-
-      return newMap;
     }
+    
+    return newMap;
   }
 
   private CAstNodeTypeMap copyTypes(Map nodeMap, CAstNodeTypeMap orig) {
     if (orig != null) {
       CAstNodeTypeMapRecorder newMap = new CAstNodeTypeMapRecorder();
-      for (Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
-        Map.Entry entry = (Map.Entry) NS.next();
-        CAstNode oldNode = (CAstNode) entry.getKey();
-        CAstNode newNode = (CAstNode) entry.getValue();
-
-        if (orig.getNodeType(oldNode) != null) {
-          newMap.add(newNode, orig.getNodeType(oldNode));
-        }
+      for(Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext(); ) {
+	Map.Entry entry = (Map.Entry) NS.next();
+	Pair N = (Pair)entry.getKey();
+	CAstNode oldNode = (CAstNode) N.fst;
+			  
+	CAstNode newNode = (CAstNode) entry.getValue();
+	
+	if (orig.getNodeType(oldNode) != null) {
+	  newMap.add(newNode, orig.getNodeType(oldNode));
+	}
       }
-
+      
       return newMap;
     } else {
       return null;
     }
   }
 
-  private Map<CAstNode, Collection<CAstEntity>> copyChildren(Map nodeMap, Map<CAstNode, Collection<CAstEntity>> children) {
-    final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<CAstNode, Collection<CAstEntity>>();
+  private Map copyChildren(Map nodeMap, Map children) {
+    final Map newChildren = new LinkedHashMap();
 
-    for (Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
-      Map.Entry entry = (Map.Entry) NS.next();
-      CAstNode oldNode = (CAstNode) entry.getKey();
+    for(Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext(); ) {
+      Map.Entry entry = (Map.Entry)NS.next();
+      Pair N = (Pair)entry.getKey();
+      CAstNode oldNode = (CAstNode) N.fst;
+			  
       CAstNode newNode = (CAstNode) entry.getValue();
-
+	
       if (children.containsKey(oldNode)) {
-        Set<CAstEntity> newEntities = new LinkedHashSet<CAstEntity>();
-        newChildren.put(newNode, newEntities);
-        for (Iterator oldEntities = children.get(oldNode).iterator(); oldEntities.hasNext();) {
-          CAstEntity oldE = (CAstEntity) oldEntities.next();
-          newEntities.add(recursive ? rewrite(oldE) : oldE);
-        }
+	Set newEntities = new LinkedHashSet();
+	newChildren.put(newNode, newEntities);
+	for(Iterator oldEntities = ((Collection)children.get(oldNode)).iterator();
+	    oldEntities.hasNext(); )
+	{
+	  newEntities.add( rewrite((CAstEntity)oldEntities.next() ) );
+	}
       }
     }
-
-    for (Iterator<Map.Entry<CAstNode, Collection<CAstEntity>>> keys = children.entrySet().iterator(); keys.hasNext();) {
-      Map.Entry<CAstNode, Collection<CAstEntity>> entry = keys.next();
-      CAstNode key = entry.getKey();
-      if (!(key instanceof CAstNode)) {
-        Set<CAstEntity> newEntities = new LinkedHashSet<CAstEntity>();
-        newChildren.put(key, newEntities);
-        for (Iterator oldEntities = entry.getValue().iterator(); oldEntities.hasNext();) {
-          CAstEntity oldE = (CAstEntity) oldEntities.next();
-          newEntities.add(recursive ? rewrite(oldE) : oldE);
-        }
+    
+    for(Iterator keys = children.entrySet().iterator(); keys.hasNext();) {
+      Map.Entry entry = (Map.Entry) keys.next();
+      Object key = entry.getKey();
+      if (! (key instanceof CAstNode)) {
+	Set newEntities = new LinkedHashSet();
+	newChildren.put(key, newEntities);
+	for(Iterator oldEntities = ((Collection)entry.getValue()).iterator();
+	    oldEntities.hasNext(); )
+	{
+	  newEntities.add( rewrite((CAstEntity)oldEntities.next() ) );
+	}
       }
     }
 
     return newChildren;
   }
 
-  public Rewrite rewrite(CAstNode root, final CAstControlFlowMap cfg, final CAstSourcePositionMap pos, final CAstNodeTypeMap types,
-      final Map<CAstNode, Collection<CAstEntity>> children) {
+  public Rewrite rewrite(CAstNode root, 
+			 final CAstControlFlowMap cfg,
+			 final CAstSourcePositionMap pos,
+			 final CAstNodeTypeMap types,
+			 final Map<CAstNode, Collection<CAstEntity>> children) 
+  {
     final Map<CAstNode, CAstNode> nodes = HashMapFactory.make();
     final CAstNode newRoot = copyNodes(root, rootContext, nodes);
     return new Rewrite() {
