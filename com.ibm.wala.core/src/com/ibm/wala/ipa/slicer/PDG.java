@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
@@ -25,6 +26,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.cfg.ExceptionPrunedCFG;
 import com.ibm.wala.ipa.modref.DelegatingExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ModRef;
@@ -150,12 +152,25 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     if (cOptions.equals(ControlDependenceOptions.NONE)) {
       return;
     }
-    Assertions.productionAssertion(cOptions.equals(ControlDependenceOptions.FULL));
-    IR ir = node.getIR();
+    IR ir;
+    ir = node.getIR();
     if (ir == null) {
       return;
     }
-    ControlDependenceGraph cdg = new ControlDependenceGraph(ir.getControlFlowGraph());
+    ControlFlowGraph controlFlowGraph = ir.getControlFlowGraph();
+    if (cOptions.equals(ControlDependenceOptions.NO_EXCEPTIONAL_EDGES)) {
+      controlFlowGraph = ExceptionPrunedCFG.make(controlFlowGraph);
+      // In case the CFG has no nodes left because the only control dependencies were
+      // exceptional, simply return because at this point there are no nodes.
+      // Otherwise, later this may raise an Exception.
+      if (controlFlowGraph.getNumberOfNodes() == 0) {
+        return;
+      }
+    } else {
+      Assertions.productionAssertion(cOptions.equals(ControlDependenceOptions.FULL)); 
+    }
+    
+    ControlDependenceGraph cdg = new ControlDependenceGraph(controlFlowGraph);
     for (IBasicBlock bb : cdg) {
       if (bb.isExitBlock()) {
         // nothing should be control-dependent on the exit block.

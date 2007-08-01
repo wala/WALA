@@ -128,7 +128,8 @@ public class Slicer {
    */
   public static enum ControlDependenceOptions {
     FULL("full"),
-    NONE("none");
+    NONE("none"),
+    NO_EXCEPTIONAL_EDGES("no_exceptional_edges");
 
     private final String name;
 
