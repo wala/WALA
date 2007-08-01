@@ -27,7 +27,7 @@ import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 public class JavaIRTranslatorExtension extends JLExtensionInfo implements IRTranslatorExtension {
     protected PolyglotSourceLoaderImpl fSourceLoader;
     protected PolyglotIdentityMapper fMapper;
-    protected CAstRewriterFactory<?> rewriterFactory;
+    protected CAstRewriterFactory rewriterFactory;
 
     public void setSourceLoader(PolyglotSourceLoaderImpl sourceLoader) {
 	fSourceLoader= sourceLoader;
@@ -42,11 +42,11 @@ public class JavaIRTranslatorExtension extends JLExtensionInfo implements IRTran
 	return fMapper;
     }
     
-    public void setCAstRewriterFactory(CAstRewriterFactory<?> factory) {
+    public void setCAstRewriterFactory(CAstRewriterFactory factory) {
       rewriterFactory = factory;
     }
     
-    public CAstRewriterFactory<?> getCAstRewriterFactory() {
+    public CAstRewriterFactory getCAstRewriterFactory() {
       return rewriterFactory;
     }
 }
