@@ -3,28 +3,29 @@ package com.ibm.wala.cast.js.translator;
 import java.util.Map;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator.InternalCAstSymbol;
-import com.ibm.wala.cast.tree.CAst;
-import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.impl.CAstOperator;
-import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.tree.impl.*;
+import com.ibm.wala.util.collections.*;
 import com.ibm.wala.util.debug.Assertions;
 
-public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.RewriteContext> {
+public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.RewriteContext, CAstBasicRewriter.NoKey> {
 
   private int readTempCounter = 0;
 
   private static final String TEMP_NAME = "readTemp";
 
-  interface RewriteContext {
+  abstract static class RewriteContext
+    extends CAstBasicRewriter.NonCopyingContext 
+  {
 
-    boolean inRead();
+    abstract boolean inRead();
 
-    boolean inAssignment();
+    abstract boolean inAssignment();
 
-    void setAssign(CAstNode receiverTemp, CAstNode elementTemp);
+    abstract void setAssign(CAstNode receiverTemp, CAstNode elementTemp);
   }
 
-  private final class AssignOpContext implements RewriteContext {
+  private final class AssignOpContext extends RewriteContext {
     private CAstNode receiverTemp;
     private CAstNode elementTemp;
 
@@ -43,7 +44,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
 
   };
 	
-  private static final RewriteContext READ = new RewriteContext() {
+  private final static RewriteContext READ = new RewriteContext() {
     public boolean inAssignment() {
       return false;
     }
@@ -57,7 +58,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
     }
   };
 
-  private static final RewriteContext ASSIGN = new RewriteContext() {
+  private final static RewriteContext ASSIGN = new RewriteContext() {
     public boolean inAssignment() {
       return true;
     }
@@ -148,7 +149,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
 
   protected CAstNode copyNodes(CAstNode root, 
 			       RewriteContext context,
-			       Map<CAstNode, CAstNode> nodeMap) 
+			       Map nodeMap) 
   {
     int kind = root.getKind();
 
@@ -161,7 +162,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
       } else {
 	readLoop= makeVarRead(receiver, element, context);
       }
-      nodeMap.put(root, readLoop);
+      nodeMap.put(new Pair(root, context.key()), readLoop);
       return readLoop;
 
     } else if (kind==CAstNode.ASSIGN_PRE_OP || kind==CAstNode.ASSIGN_POST_OP) {
@@ -189,11 +190,11 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
 	    Ast.makeNode(CAstNode.VAR, Ast.makeConstant(temp2))),
 	  Ast.makeNode(CAstNode.VAR, 
 	    Ast.makeConstant((kind==CAstNode.ASSIGN_PRE_OP)? temp2: temp1)));
-	nodeMap.put(root,copy);
+	nodeMap.put(new Pair(root, context.key()), copy);
 	return copy;
       } else {
 	CAstNode copy = Ast.makeNode(kind, lval, rval, op);
-	nodeMap.put(root,copy);
+	nodeMap.put(new Pair(root, context.key()), copy);
 	return copy;
       }
 
@@ -201,7 +202,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
 	CAstNode copy = Ast.makeNode(CAstNode.ASSIGN, 
 	  copyNodes(root.getChild(0), ASSIGN, nodeMap),
 	  copyNodes(root.getChild(1), READ, nodeMap));
-	nodeMap.put(root,copy);
+	nodeMap.put(new Pair(root, context.key()), copy);
 	return copy;
 
     } else if (kind == CAstNode.BLOCK_EXPR) {
@@ -213,16 +214,16 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
       children[last] = copyNodes(root.getChild(last), context, nodeMap);
 
       CAstNode copy = Ast.makeNode(CAstNode.BLOCK_EXPR, children);  
-      nodeMap.put(root,copy);
+      nodeMap.put(new Pair(root, context.key()), copy);
       return copy;
 
     } else if (root.getKind() == CAstNode.CONSTANT) {
       CAstNode copy = Ast.makeConstant( root.getValue() );
-      nodeMap.put(root,copy);
+      nodeMap.put(new Pair(root, context.key()), copy);
       return copy;
 
     } else if (root.getKind() == CAstNode.OPERATOR) { 
-      nodeMap.put(root,root);
+      nodeMap.put(new Pair(root, context.key()), root);
       return root;
 
     } else { 
@@ -231,7 +232,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
 	children[i] = copyNodes(root.getChild(i), READ, nodeMap);
       }
       CAstNode copy = Ast.makeNode(kind, children);  
-      nodeMap.put(root,copy);
+      nodeMap.put(new Pair(root, context.key()), copy);
       return copy;
     }
   }
