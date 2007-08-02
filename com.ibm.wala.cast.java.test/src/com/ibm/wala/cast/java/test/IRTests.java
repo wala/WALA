@@ -13,16 +13,9 @@
  */
 package com.ibm.wala.cast.java.test;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 import java.util.jar.JarFile;
 
 import junit.framework.Assert;
@@ -39,6 +32,7 @@ import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.properties.*;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -50,8 +44,8 @@ import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.*;
+import com.ibm.wala.util.warnings.WalaException;
 
 public abstract class IRTests extends WalaTestCase {
   public IRTests(String name) {
@@ -69,6 +63,18 @@ public abstract class IRTests extends WalaTestCase {
     rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "rt.jar");
     rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "core.jar");
     rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "vm.jar");
+    rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "classes.jar");
+    try {
+      Properties p = WalaProperties.loadProperties();
+      String javaHomePath = p.getProperty(WalaProperties.J2SE_DIR);
+      rtJar.add(javaHomePath + File.separator + "classes.jar");
+      rtJar.add(javaHomePath + File.separator + "rt.jar");
+      rtJar.add(javaHomePath + File.separator + "core.jar");
+      rtJar.add(javaHomePath + File.separator + "vm.jar");    
+    } catch (WalaException e) {
+      // no properties
+    }
+
   }
 
   protected static class EdgeAssertions {
@@ -373,7 +379,6 @@ public abstract class IRTests extends WalaTestCase {
     boolean foundLib = false;
     for (Iterator iter = libs.iterator(); iter.hasNext();) {
       String lib = (String) iter.next();
-
       File libFile = new File(lib);
       if (libFile.exists()) {
         foundLib = true;
