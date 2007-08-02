@@ -102,8 +102,8 @@ public class HeapReachingDefs {
     if (pa == null) {
       throw new IllegalArgumentException("pa is null");
     }
-    System.err.println("Reaching Defs " + node);
     if (VERBOSE) {
+      System.err.println("Reaching Defs " + node);
       System.err.println(statements.size());
     }
 
