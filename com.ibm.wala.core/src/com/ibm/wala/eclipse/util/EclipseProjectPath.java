@@ -214,13 +214,13 @@ public class EclipseProjectPath {
   /**
    * Convert this path to a WALA analysis scope
    */
-  public AnalysisScope toAnalysisScope(String exclusionsFile) {
+  public AnalysisScope toAnalysisScope(final ClassLoader classLoader, final String exclusionsFile) {
     try {
       resolveProjectClasspathEntries();
       Set<Module> s = MapUtil.findOrCreateSet(binaryModules, Loader.APPLICATION);
       s.add(new BinaryDirectoryTreeModule(makeAbsolute(project.getOutputLocation()).toFile()));
 
-      AnalysisScope scope = new EMFScopeWrapper(AbstractAnalysisEngine.BASIC_FILE, exclusionsFile, getClass().getClassLoader());
+      AnalysisScope scope = new EMFScopeWrapper(AbstractAnalysisEngine.BASIC_FILE, exclusionsFile, classLoader);
 
       for (Loader loader : Loader.values()) {
         for (Module m : binaryModules.get(loader)) {
@@ -240,6 +240,10 @@ public class EclipseProjectPath {
       Assertions.UNREACHABLE();
       return null;
     }
+  }
+  
+  public AnalysisScope toAnalysisScope(final String exclusionsFile) {
+    return toAnalysisScope(getClass().getClassLoader(), exclusionsFile);
   }
 
   public Collection<Module> getModules(Loader loader, boolean binary) {
