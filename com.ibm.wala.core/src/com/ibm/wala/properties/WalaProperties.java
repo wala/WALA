@@ -114,7 +114,7 @@ public final class WalaProperties {
   }
 
   /**
-   * @deprecated beause when running under eclipse, there may be no such directory.
+   * @deprecated because when running under eclipse, there may be no such directory.
    * Need to handle that case.
    */
   @Deprecated
