@@ -132,8 +132,8 @@ public class RelationFormula implements IMaxTerm {
     return Kind.RELATION;
   }
 
-  public Collection<Variable> getFreeVariables() {
-    Collection<Variable> result = HashSetFactory.make(terms.size());
+  public Collection<AbstractVariable> getFreeVariables() {
+    Collection<AbstractVariable> result = HashSetFactory.make(terms.size());
     for (ITerm t : terms) {
       result.addAll(t.getFreeVariables());
     }

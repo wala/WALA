@@ -57,7 +57,8 @@ public class Simplifier {
     if (s.getKind().equals(IFormula.Kind.QUANTIFIED)) {
       Collection<IFormula> result = HashSetFactory.make();
       QuantifiedFormula f = (QuantifiedFormula) s;
-      Variable v = f.getBoundVar();
+      assert f.getBoundVar() instanceof ConstrainedIntVariable;
+      ConstrainedIntVariable v = (ConstrainedIntVariable) f.getBoundVar();
       IntPair range = v.getRange();
       assert range.getX() >= 0;
       assert range.getY() >= range.getX();
@@ -283,12 +284,12 @@ public class Simplifier {
       }
 
       if (q.getQuantifier().equals(Quantifier.FORALL)) {
-        Variable bound = q.getBoundVar();
+        AbstractVariable bound = q.getBoundVar();
         IFormula body = q.getFormula();
         // this could be inefficient. find a better algorithm.
         for (ITerm t : f.getAllTerms()) {
           if (q.getFreeVariables().contains(t)) {
-            Variable fresh = makeFresh(q, f);
+            AbstractVariable fresh = makeFreshIntVariable(q, f);
             IFormula testBody = substitute(body, bound, fresh);
             IFormula testF = substitute(f, t, fresh);
             if (implies(testBody, testF)) {
@@ -359,15 +360,15 @@ public class Simplifier {
     }
   }
 
-  private static Variable makeFresh(IFormula f, IFormula g) {
+  private static AbstractVariable makeFreshIntVariable(IFormula f, IFormula g) {
     int max = 0;
-    for (Variable v : f.getFreeVariables()) {
+    for (AbstractVariable v : f.getFreeVariables()) {
       max = Math.max(max, v.getNumber());
     }
-    for (Variable v : g.getFreeVariables()) {
+    for (AbstractVariable v : g.getFreeVariables()) {
       max = Math.max(max, v.getNumber());
     }
-    return Variable.make(max + 1, null);
+    return IntVariable.make(max + 1);
   }
 
   // some ad-hoc formula normalization
@@ -519,7 +520,7 @@ public class Simplifier {
     case QUANTIFIED:
       QuantifiedFormula q = (QuantifiedFormula) f;
       if (q.getQuantifier().equals(Quantifier.FORALL)) {
-        Variable bound = q.getBoundVar();
+        AbstractVariable bound = q.getBoundVar();
         Wildcard w = freshWildcard(q);
         IFormula g = substitute(q.getFormula(), bound, w);
         return equalitySuggestsSubstitution(g);
@@ -696,11 +697,11 @@ public class Simplifier {
     }
   }
 
-  public static Collection<Variable> getFreeVariables(Collection<? extends IFormula> constraints) {
+  public static Collection<AbstractVariable> getFreeVariables(Collection<? extends IFormula> constraints) {
     if (constraints == null) {
       throw new IllegalArgumentException("constraints is null");
     }
-    Collection<Variable> free = HashSetFactory.make();
+    Collection<AbstractVariable> free = HashSetFactory.make();
     for (IFormula f : constraints) {
       free.addAll(f.getFreeVariables());
     }

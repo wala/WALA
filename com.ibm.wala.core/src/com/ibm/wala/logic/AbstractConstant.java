@@ -24,7 +24,7 @@ public abstract class AbstractConstant implements IConstant {
     return d.prettyPrint(this);
   }
 
-  public Collection<Variable> getFreeVariables() {
+  public Collection<AbstractVariable> getFreeVariables() {
     return Collections.emptySet();
   }
 

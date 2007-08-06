@@ -32,7 +32,7 @@ public class DefaultDecorator implements ILogicDecorator {
     return c.toString();
   }
 
-  public String prettyPrint(Variable v) {
+  public String prettyPrint(AbstractVariable v) {
     return v.toString();
   }
 

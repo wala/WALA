@@ -103,7 +103,7 @@ public class BinaryRelation implements IRelation {
    * @throws IllegalArgumentException
    *             if s is null
    */
-  public static IFormula makeSetConstraint(Variable v, IntSet s) {
+  public static IFormula makeSetConstraint(ConstrainedIntVariable v, IntSet s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
@@ -137,7 +137,7 @@ public class BinaryRelation implements IRelation {
     for (int i = domain.getX(); i <= domain.getY(); i++) {
       IntSet s = r.getRelated(i);
       if (s != null) {
-        Variable v0 = Variable.make(0, domain);
+        ConstrainedIntVariable v0 = ConstrainedIntVariable.make(0, domain);
         IFormula inSet = makeSetConstraint(v0, s);
         IFormula f = BinaryFormula.biconditional(inSet, RelationFormula.make(R, i, v0));
         result.add(QuantifiedFormula.forall(v0, f));

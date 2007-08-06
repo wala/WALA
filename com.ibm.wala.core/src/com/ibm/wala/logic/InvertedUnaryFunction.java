@@ -45,8 +45,8 @@ public class InvertedUnaryFunction extends BinaryRelation {
     
     public Collection<? extends IFormula> getSentences() {
       // f(i) == j  equivalent to  R(j,i)
-      Variable i = Variable.make(0, originalVocabulary.getDomain());
-      Variable j = Variable.make(1, originalVocabulary.getDomain());
+      ConstrainedIntVariable i = ConstrainedIntVariable.make(0, originalVocabulary.getDomain());
+      ConstrainedIntVariable j = ConstrainedIntVariable.make(1, originalVocabulary.getDomain());
       RelationFormula fiequalsj = RelationFormula.makeEquals(FunctionTerm.make(f, i), j);
       RelationFormula Rji = RelationFormula.make(InvertedUnaryFunction.this,j,i);
       IFormula result = QuantifiedFormula.forall(i, j, BinaryFormula.biconditional(fiequalsj,Rji));

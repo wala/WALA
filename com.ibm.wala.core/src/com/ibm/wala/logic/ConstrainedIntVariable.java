@@ -10,31 +10,31 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-import java.util.Collection;
+import com.ibm.wala.util.intset.IntPair;
 
 /**
- * Term := Constant
- *      |  Variable
- *      |  f(Term,...)
+ * A term that represents a variable in a formula
  * 
  * @author sjfink
- *
  */
-public interface ITerm {
-  static enum Kind {
-    CONSTANT, VARIABLE, FUNCTION
-  }
-  
-  public Kind getKind();
-
-  public Collection<AbstractVariable> getFreeVariables();
-
-  public String prettyPrint(ILogicDecorator d);
-
-  public Collection<? extends IConstant> getConstants();
+public class ConstrainedIntVariable extends IntVariable {
 
   /**
-   * Collect all terms that appear in this term, including subterms if this is a function term
+   * universe of valid integer constants this variable can assume.
    */
-  public Collection<? extends ITerm> getAllTerms();
+  private final IntPair range;
+
+  protected ConstrainedIntVariable(int number, IntPair range) {
+    super(number);
+    assert range != null;
+    this.range = range;
+  }
+
+  public static ConstrainedIntVariable make(int number, IntPair range) {
+    return new ConstrainedIntVariable(number, range);
+  }
+  
+  public IntPair getRange() {
+    return range;
+  }
 }

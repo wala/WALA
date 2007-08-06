@@ -13,33 +13,25 @@ package com.ibm.wala.logic;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.ibm.wala.util.intset.IntPair;
-
 /**
  * A term that represents a variable in a formula
  * 
  * @author sjfink
  */
-public class Variable extends AbstractTerm implements Comparable<Variable> {
+public abstract class AbstractVariable extends AbstractTerm implements Comparable<AbstractVariable> {
 
   private final int number;
-  /**
-   * universe of valid integer constants this variable can assume.
-   * This is optional; can be null.
-   */
-  private final IntPair range;
 
-  protected Variable(int number, IntPair range) {
+  protected AbstractVariable(int number) {
     this.number = number;
-    this.range = range;
   }
 
-  public Kind getKind() {
+  public final Kind getKind() {
     return Kind.VARIABLE;
   }
 
   @Override
-  public int hashCode() {
+  public final int hashCode() {
     final int PRIME = 31;
     int result = 1;
     result = PRIME * result + number;
@@ -47,24 +39,20 @@ public class Variable extends AbstractTerm implements Comparable<Variable> {
   }
 
   @Override
-  public boolean equals(Object obj) {
+  public final boolean equals(Object obj) {
     if (this == obj)
       return true;
     if (obj == null)
       return false;
     if (getClass() != obj.getClass())
       return false;
-    final Variable other = (Variable) obj;
+    final AbstractVariable other = (AbstractVariable) obj;
     if (number != other.number)
       return false;
     return true;
   }
 
-  public static Variable make(int number, IntPair range) {
-    return new Variable(number, range);
-  }
-  
-  public int getNumber() {
+  public final int getNumber() {
     return number;
   }
   
@@ -77,24 +65,19 @@ public class Variable extends AbstractTerm implements Comparable<Variable> {
     return d.prettyPrint(this);
   }
 
-
-  public IntPair getRange() {
-    return range;
-  }
-
-  public Collection<Variable> getFreeVariables() {
+  public final Collection<AbstractVariable> getFreeVariables() {
     return Collections.singleton(this);
   }
   
-  public Collection<? extends IConstant> getConstants() {
+  public final Collection<? extends IConstant> getConstants() {
     return Collections.emptySet();
   }
 
-  public int compareTo(Variable o) throws NullPointerException {
+  public final int compareTo(AbstractVariable o) throws NullPointerException {
     return this.getNumber() - o.getNumber();
   }
 
-  public Collection<? extends ITerm> getAllTerms() {
+  public final Collection<? extends ITerm> getAllTerms() {
     return Collections.singleton(this);
   }
 }

@@ -25,7 +25,7 @@ public class BooleanConstantFormula implements IMaxTerm {
     this.c = c;
   }
 
-  public Collection<Variable> getFreeVariables() {
+  public Collection<AbstractVariable> getFreeVariables() {
     return Collections.emptySet();
   }
 

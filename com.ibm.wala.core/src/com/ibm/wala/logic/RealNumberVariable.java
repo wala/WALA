@@ -10,31 +10,19 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-import java.util.Collection;
 
 /**
- * Term := Constant
- *      |  Variable
- *      |  f(Term,...)
+ * A term that represents an unconstrained real number variable in a formula
  * 
  * @author sjfink
- *
  */
-public interface ITerm {
-  static enum Kind {
-    CONSTANT, VARIABLE, FUNCTION
+public class RealNumberVariable extends AbstractVariable {
+
+  protected RealNumberVariable(int number) {
+   super(number);
   }
-  
-  public Kind getKind();
 
-  public Collection<AbstractVariable> getFreeVariables();
-
-  public String prettyPrint(ILogicDecorator d);
-
-  public Collection<? extends IConstant> getConstants();
-
-  /**
-   * Collect all terms that appear in this term, including subterms if this is a function term
-   */
-  public Collection<? extends ITerm> getAllTerms();
+  public static RealNumberVariable make(int number) {
+    return new RealNumberVariable(number);
+  }
 }
