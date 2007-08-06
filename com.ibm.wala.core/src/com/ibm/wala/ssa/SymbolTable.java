@@ -109,11 +109,6 @@ public class SymbolTable {
     };
   }
 
-  /**
-   * Method getNullConstant.
-   * 
-   * @return int
-   */
   public int getNullConstant() {
     return findOrCreateConstant(null);
   }
