@@ -105,11 +105,11 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
 
     // if not, try assuming the running JRE looks normal
     File x = new File(javaHomePath);
-    if (! (x.exists() && x.isDirectory())) {
+    if (!(x.exists() && x.isDirectory())) {
       javaHomePath = System.getProperty("java.home");
 
       if (!javaHomePath.endsWith(File.separator)) {
-	javaHomePath = javaHomePath + File.separator;
+        javaHomePath = javaHomePath + File.separator;
       }
 
       javaHomePath = javaHomePath + "lib";
@@ -321,12 +321,12 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
 
     for (Iterator<IClass> types = escapingTypes.iterator(); types.hasNext();) {
       IClass cls = types.next();
-      if (! cls.isArrayClass()) {
-	for (Iterator fs = cls.getAllFields().iterator(); fs.hasNext();) {
-	  IField f = (IField) fs.next();
-	  if (!f.isVolatile() && !f.isFinal()) {
-	    System.err.println(f.getReference());
-	  }
+      if (!cls.isArrayClass()) {
+        for (Iterator<IField> fs = cls.getAllFields().iterator(); fs.hasNext();) {
+          IField f = (IField) fs.next();
+          if (!f.isVolatile() && !f.isFinal()) {
+            System.err.println(f.getReference());
+          }
         }
       }
     }

@@ -28,7 +28,7 @@ import com.ibm.wala.logic.QuantifiedFormula;
 import com.ibm.wala.logic.RelationFormula;
 import com.ibm.wala.logic.Simplifier;
 import com.ibm.wala.logic.UnaryRelation;
-import com.ibm.wala.logic.Variable;
+import com.ibm.wala.logic.IntVariable;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
@@ -44,7 +44,7 @@ public class SimplifyTest extends TestCase {
    * after : v1 = 0
    */
   public void test1() {
-    Variable v = Variable.make(1, null);
+    IntVariable v = IntVariable.make(1);
     IFormula f = RelationFormula.makeEquals(v, 0);
     System.out.println("before: " + f);
     assertTrue(f != null);
@@ -65,7 +65,7 @@ public class SimplifyTest extends TestCase {
    * after : true
    */
   public void test2() {
-    Variable v = Variable.make(1, null);
+    IntVariable v = IntVariable.make(1);
     IFormula f = RelationFormula.makeEquals(v, 0);
     System.out.println("before: " + f);
     assertTrue(f != null);
@@ -87,7 +87,7 @@ public class SimplifyTest extends TestCase {
    * after : false
    */
   public void test3() {
-    Variable v = Variable.make(1, null);
+    IntVariable v = IntVariable.make(1);
     IFormula f = RelationFormula.makeEquals(v, 0);
     System.out.println("before: " + f);
     assertTrue(f != null);
@@ -109,7 +109,7 @@ public class SimplifyTest extends TestCase {
    * after : false
    */
   public void test4() {
-    Variable v = Variable.make(1, null);
+    IntVariable v = IntVariable.make(1);
     IFormula f = RelationFormula.makeEquals(v, 0);
     System.out.println("before: " + f);
     assertTrue(f != null);
@@ -135,7 +135,7 @@ public class SimplifyTest extends TestCase {
    * after : true
    */
   public void test5() {
-    Variable v = Variable.make(1, null);
+    IntVariable v = IntVariable.make(1);
     IFormula f = RelationFormula.makeEquals(v, 0);
     System.out.println("before: " + f);
     assertTrue(f != null);
@@ -159,7 +159,7 @@ public class SimplifyTest extends TestCase {
    * after : true
    */
   public void test6() {
-    Variable v = Variable.make(1, null);
+    IntVariable v = IntVariable.make(1);
     BinaryRelation foo = BinaryRelation.make("foo");
     IFormula f = RelationFormula.make(foo, v, v);
     System.out.println("before: " + f);
@@ -184,8 +184,8 @@ public class SimplifyTest extends TestCase {
    * after : foo(v1,v2)
    */
   public void test7() {
-    Variable v1 = Variable.make(1, null);
-    Variable v2 = Variable.make(2, null);
+    IntVariable v1 = IntVariable.make(1);
+    IntVariable v2 = IntVariable.make(2);
     BinaryRelation foo = BinaryRelation.make("foo");
     IFormula f = RelationFormula.make(foo, v1, v2);
     System.out.println("before: " + f);
@@ -211,8 +211,8 @@ public class SimplifyTest extends TestCase {
    * after : foo(v1,v2)
    */
   public void test8() {
-    Variable v1 = Variable.make(1, null);
-    Variable v2 = Variable.make(2, null);
+    IntVariable v1 = IntVariable.make(1);
+    IntVariable v2 = IntVariable.make(2);
     BinaryRelation foo = BinaryRelation.make("foo");
     IFormula f = RelationFormula.make(foo, v1, v2);
     System.out.println("before: " + f);
@@ -239,8 +239,8 @@ public class SimplifyTest extends TestCase {
    * after : foo(v1,v2)
    */
   public void test9() {
-    Variable v1 = Variable.make(1, null);
-    Variable v2 = Variable.make(2, null);
+    IntVariable v1 = IntVariable.make(1);
+    IntVariable v2 = IntVariable.make(2);
     BinaryRelation foo = BinaryRelation.make("foo");
     IFormula f = RelationFormula.make(foo, v1, v2);
     System.out.println("before: " + f);
@@ -274,7 +274,7 @@ public class SimplifyTest extends TestCase {
 
     Collection<IFormula> c = Collections.singleton(f);
     Collection<IFormula> t = HashSetFactory.make();
-    Variable v1 = Variable.make(1, null);
+    IntVariable v1 = IntVariable.make(1);
     IFormula g = RelationFormula.make(foo, v1);
     IFormula axiom = QuantifiedFormula.forall(v1, g);
     t.add(axiom);
@@ -299,8 +299,8 @@ public class SimplifyTest extends TestCase {
 
     Collection<IFormula> c = Collections.singleton(f);
     Collection<IFormula> t = HashSetFactory.make();
-    Variable v1 = Variable.make(1, null);
-    Variable v2 = Variable.make(2, null);
+    IntVariable v1 = IntVariable.make(1);
+    IntVariable v2 = IntVariable.make(2);
     IFormula g = RelationFormula.makeEquals(FunctionTerm.make(foo,v1, v2), v2);
     IFormula axiom = QuantifiedFormula.forall(v1, v2, g);
     t.add(axiom);

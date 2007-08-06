@@ -26,13 +26,13 @@ import com.ibm.wala.logic.ILogicConstants;
 import com.ibm.wala.logic.IRelation;
 import com.ibm.wala.logic.ITheory;
 import com.ibm.wala.logic.IntConstant;
+import com.ibm.wala.logic.IntVariable;
 import com.ibm.wala.logic.NotFormula;
 import com.ibm.wala.logic.QuantifiedFormula;
 import com.ibm.wala.logic.RelationFormula;
 import com.ibm.wala.logic.Simplifier;
 import com.ibm.wala.logic.UnaryFunction;
 import com.ibm.wala.logic.UnaryRelation;
-import com.ibm.wala.logic.Variable;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
@@ -47,9 +47,9 @@ public class FormulaTest extends WalaTestCase {
 
   // F1: f(x,y) /\ g(z)
   public void testF1() {
-    Variable x = Variable.make(1, null);
-    Variable y = Variable.make(2, null);
-    Variable z = Variable.make(3, null);
+    IntVariable x = IntVariable.make(1);
+    IntVariable y = IntVariable.make(2);
+    IntVariable z = IntVariable.make(3);
     RelationFormula fxy = RelationFormula.make(BinaryRelation.make("f"), x, y);
     RelationFormula gz = RelationFormula.make(UnaryRelation.make("g"), z);
     IFormula f1 = BinaryFormula.make(ILogicConstants.BinaryConnective.AND, fxy, gz);
@@ -58,15 +58,15 @@ public class FormulaTest extends WalaTestCase {
 
   // F2: !(t(p) == q)
   public void testF2() {
-    Variable p = Variable.make(4, null);
-    Variable q = Variable.make(5, null);
+    IntVariable p = IntVariable.make(4);
+    IntVariable q = IntVariable.make(5);
     IFormula f2 = NotFormula.make(RelationFormula.makeEquals(FunctionTerm.make(UnaryFunction.make("t"), p), q));
     System.err.println(f2);
   }
 
   // F3: \exists s. (s > 0)
   public void testF3() {
-    Variable s = Variable.make(6, null);
+    IntVariable s = IntVariable.make(6);
     IFormula f3 = QuantifiedFormula.make(ILogicConstants.Quantifier.EXISTS, s, RelationFormula.make(BinaryRelation.make(">"), s,
         IntConstant.make(0)));
     System.err.println(f3);
@@ -74,8 +74,8 @@ public class FormulaTest extends WalaTestCase {
 
   // F4: In F2, substitute p by q
   public void testF4() {
-    Variable p = Variable.make(4, null);
-    Variable q = Variable.make(5, null);
+    IntVariable p = IntVariable.make(4);
+    IntVariable q = IntVariable.make(5);
     IFormula f2 = NotFormula.make(RelationFormula.makeEquals(FunctionTerm.make(UnaryFunction.make("t"), p), q));
     IFormula f4 = Simplifier.substitute(f2, p, q);
     System.err.println(f4);
@@ -84,15 +84,15 @@ public class FormulaTest extends WalaTestCase {
   public void testTH1() {
     // Build a "theory"
 
-    Variable x = Variable.make(1, null);
-    Variable y = Variable.make(2, null);
-    Variable z = Variable.make(3, null);
+    IntVariable x = IntVariable.make(1);
+    IntVariable y = IntVariable.make(2);
+    IntVariable z = IntVariable.make(3);
     RelationFormula fxy = RelationFormula.make(BinaryRelation.make("f"), x, y);
     RelationFormula gz = RelationFormula.make(UnaryRelation.make("g"), z);
     IFormula f1 = BinaryFormula.make(ILogicConstants.BinaryConnective.AND, fxy, gz);
 
-    Variable p = Variable.make(4, null);
-    Variable q = Variable.make(5, null);
+    IntVariable p = IntVariable.make(4);
+    IntVariable q = IntVariable.make(5);
     IFormula f2 = NotFormula.make(RelationFormula.makeEquals(FunctionTerm.make(UnaryFunction.make("t"), p), q));
 
     Collection<IFormula> sentences = HashSetFactory.make();
