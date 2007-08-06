@@ -373,7 +373,7 @@ public abstract class IRTests extends WalaTestCase {
     return null;
   }
 
-  private static void populateScope(JavaSourceAnalysisEngine engine, Collection/* <String> */sources, List/* <String> */libs)
+  protected static void populateScope(JavaSourceAnalysisEngine engine, Collection/* <String> */sources, List/* <String> */libs)
       throws IOException {
 
     boolean foundLib = false;
