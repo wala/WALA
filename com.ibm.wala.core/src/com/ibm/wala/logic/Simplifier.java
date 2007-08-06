@@ -754,4 +754,10 @@ public class Simplifier {
     return result.iterator().next();
   }
 
+  public static IFormula simplify(IFormula f, IFormula t) {
+    Collection<IFormula> s = simplify(Collections.singleton(f), Collections.singleton(t));
+    assert s.size() == 1;
+    return s.iterator().next();
+  }
+
 }
