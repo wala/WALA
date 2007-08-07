@@ -70,7 +70,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
   public static class EnclosingObjectReferenceKey extends AbstractFieldPointerKey {
     private final IClass outer;
 
-    private EnclosingObjectReferenceKey(InstanceKey inner, IClass outer) {
+    public EnclosingObjectReferenceKey(InstanceKey inner, IClass outer) {
       super(inner);
       this.outer = outer;
     }
