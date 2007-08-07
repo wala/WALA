@@ -56,6 +56,7 @@ public abstract class AbstractNumberedGraph<T> extends AbstractGraph<T> implemen
   }
   
   public IntSet getPredNodeNumbers(T node) throws IllegalArgumentException {
+    assert getEdgeManager() != null;
     return ((NumberedEdgeManager<T>) getEdgeManager()).getPredNodeNumbers(node);
   }
 
