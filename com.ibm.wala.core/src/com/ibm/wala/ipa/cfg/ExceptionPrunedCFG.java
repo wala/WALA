@@ -13,6 +13,9 @@ package com.ibm.wala.ipa.cfg;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 
+/**
+ * A view of a CFG that ignores exceptional edges
+ */
 public class ExceptionPrunedCFG {
 
   private static final EdgeFilter exceptionEdgePruner = new EdgeFilter() {
