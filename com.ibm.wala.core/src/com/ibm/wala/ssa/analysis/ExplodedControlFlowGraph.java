@@ -47,6 +47,10 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
 
   private final IR ir;
 
+  /**
+   * The ith element of this vector is the basic block holding instruction i.
+   * this basic block has number i+1.
+   */
   private final SimpleVector<IBasicBlock> normalNodes = new SimpleVector<IBasicBlock>();
 
   private final Collection<IBasicBlock> allNodes = HashSetFactory.make();
@@ -67,7 +71,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     allNodes.add(exit);
     for (IBasicBlock b : ir.getControlFlowGraph()) {
       for (int i = b.getFirstInstructionIndex(); i <= b.getLastInstructionIndex(); i++) {
-        ExplodedBasicBlock bb = new ExplodedBasicBlock(i, (ISSABasicBlock)b);
+        ExplodedBasicBlock bb = new ExplodedBasicBlock(i, (ISSABasicBlock) b);
         normalNodes.set(i, bb);
         allNodes.add(bb);
       }
@@ -90,14 +94,36 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     return normalNodes.get(index);
   }
 
+  /*
+   * @see com.ibm.wala.cfg.ControlFlowGraph#getCatchBlocks()
+   */
   public BitVector getCatchBlocks() {
-    Assertions.UNREACHABLE();
-    return null;
+    BitVector original = ir.getControlFlowGraph().getCatchBlocks();
+    BitVector result = new BitVector();
+    for (int i = 0; i <= original.max(); i++) {
+      if (original.get(i)) {
+        result.set(i + 1);
+      }
+    }
+    return result;
   }
 
   public Collection<IBasicBlock> getExceptionalPredecessors(IBasicBlock b) {
-    Assertions.UNREACHABLE();
-    return null;
+    assert b != null;
+    if (b.equals(entry)) {
+      return Collections.emptySet();
+    }
+    ExplodedBasicBlock eb = (ExplodedBasicBlock) b;
+    if (eb.isExitBlock() || eb.instructionIndex == eb.original.getFirstInstructionIndex()) {
+      List<IBasicBlock> result = new ArrayList<IBasicBlock>();
+      for (IBasicBlock s : ir.getControlFlowGraph().getExceptionalPredecessors(eb.original)) {
+        assert normalNodes.get(s.getLastInstructionIndex()) != null;
+        result.add(normalNodes.get(s.getLastInstructionIndex()));
+      }
+      return result;
+    } else {
+      return Collections.emptySet();
+    }
   }
 
   public Collection<IBasicBlock> getExceptionalSuccessors(IBasicBlock b) {
@@ -132,8 +158,26 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
   }
 
   public Collection<IBasicBlock> getNormalPredecessors(IBasicBlock b) {
-    Assertions.UNREACHABLE();
-    return null;
+    assert b != null;
+    if (b.equals(entry)) {
+      return Collections.emptySet();
+    }
+    ExplodedBasicBlock eb = (ExplodedBasicBlock) b;
+    if (eb.isExitBlock() || eb.instructionIndex == eb.original.getFirstInstructionIndex()) {
+      List<IBasicBlock> result = new ArrayList<IBasicBlock>();
+      for (IBasicBlock s : ir.getControlFlowGraph().getNormalPredecessors(eb.original)) {
+        if (s.equals(ir.getControlFlowGraph().entry())) {
+          result.add(entry());
+        } else {
+          assert normalNodes.get(s.getLastInstructionIndex()) != null;
+          result.add(normalNodes.get(s.getLastInstructionIndex()));
+        }
+      }
+      return result;
+    } else {
+      assert normalNodes.get(eb.instructionIndex - 1) != null;
+      return Collections.singleton(normalNodes.get(eb.instructionIndex - 1));
+    }
   }
 
   public Collection<IBasicBlock> getNormalSuccessors(IBasicBlock b) {
@@ -175,8 +219,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
   }
 
   public boolean containsNode(IBasicBlock N) {
-    Assertions.UNREACHABLE();
-    return false;
+    return allNodes.contains(N);
   }
 
   public int getNumberOfNodes() {
@@ -293,7 +336,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
   public IBasicBlock getNode(int number) {
     if (number == 0) {
       return entry();
-    } else if (number == getNumberOfNodes() -1) {
+    } else if (number == getNumberOfNodes() - 1) {
       return exit();
     } else {
       return normalNodes.get(number - 1);
@@ -311,7 +354,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
 
   public IntSet getPredNodeNumbers(IBasicBlock node) {
     MutableSparseIntSet result = new MutableSparseIntSet();
-    for (Iterator<? extends IBasicBlock> it = getPredNodes(node); it.hasNext(); ) {
+    for (Iterator<? extends IBasicBlock> it = getPredNodes(node); it.hasNext();) {
       result.add(getNumber(it.next()));
     }
     return result;
@@ -323,8 +366,8 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
   }
 
   /**
-   * A basic block with exactly one normal instruction (which may be null), corresponding
-   * to a single instruction index in the SSA instruction array.
+   * A basic block with exactly one normal instruction (which may be null),
+   * corresponding to a single instruction index in the SSA instruction array.
    * 
    * The block may also have phis.
    */
@@ -357,7 +400,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
       if (isEntryBlock()) {
         return 0;
       } else if (isExitBlock()) {
-        return getNumberOfNodes() -1;
+        return getNumberOfNodes() - 1;
       } else {
         return instructionIndex + 1;
       }
@@ -366,10 +409,10 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     public boolean isCatchBlock() {
       return original.isCatchBlock();
     }
-    
+
     public SSAGetCaughtExceptionInstruction getCatchInstruction() {
       assert (original instanceof ExceptionHandlerBasicBlock);
-      ExceptionHandlerBasicBlock e = (ExceptionHandlerBasicBlock)original;
+      ExceptionHandlerBasicBlock e = (ExceptionHandlerBasicBlock) original;
       return e.getCatchInstruction();
     }
 
@@ -392,8 +435,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
 
     public Iterator<IInstruction> iterator() {
-      Assertions.UNREACHABLE();
-      return null;
+      if (isEntryBlock() || isExitBlock() || getInstruction() == null) {
+        return EmptyIterator.instance();
+      } else {
+        return NonNullSingletonIterator.make((IInstruction) getInstruction());
+      }
     }
 
     @Override
