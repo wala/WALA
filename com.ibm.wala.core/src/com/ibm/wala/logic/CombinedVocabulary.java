@@ -39,7 +39,7 @@ public class CombinedVocabulary extends AbstractVocabulary<Object> {
 
   @SuppressWarnings("unchecked")
   public Collection<? extends IFunction> getFunctions() {
-    Set<? extends IFunction> s = HashSetFactory.make();
+    Collection<? extends IFunction> s = HashSetFactory.make();
     s.addAll(a.getFunctions());
     s.addAll(b.getFunctions());
     return s;
@@ -47,7 +47,7 @@ public class CombinedVocabulary extends AbstractVocabulary<Object> {
 
   @SuppressWarnings("unchecked")
   public Collection<? extends IRelation> getRelations() {
-    Set<? extends IRelation> s = HashSetFactory.make();
+    Collection<? extends IRelation> s = HashSetFactory.make();
     s.addAll(a.getRelations());
     s.addAll(b.getRelations());
     return s;
