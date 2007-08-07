@@ -29,7 +29,7 @@ public class SimpleIntVector implements IntVector {
   int[] store;
 
   final int defaultValue;
-
+  
   /**
    * @param defaultValue
    */
@@ -112,17 +112,14 @@ public class SimpleIntVector implements IntVector {
    * @return the percentage of entries in delegateStore that are non-null
    */
   private double computeOccupancy() {
-    int count = size();
+    int count1 = 0;
+    for (int i = 0; i < store.length; i++) {
+      if (store[i] != -1) {
+        count1++;
+      }
+    }
+    int count = count1;
     return (double) count / (double) store.length;
   }
 
-  public int size() {
-    int count = 0;
-    for (int i = 0; i < store.length; i++) {
-      if (store[i] != -1) {
-        count++;
-      }
-    }
-    return count;
-  }
 }
