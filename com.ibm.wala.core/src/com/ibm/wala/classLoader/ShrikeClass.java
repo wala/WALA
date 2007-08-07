@@ -932,4 +932,8 @@ public final class ShrikeClass implements IClass {
       return ClassSignature.make(r.getSignature());
     }
   }
+
+  public ModuleEntry getModuleEntry() {
+    return reader.getModuleEntry();
+  }
 }

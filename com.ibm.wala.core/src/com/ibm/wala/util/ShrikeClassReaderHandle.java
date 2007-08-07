@@ -111,4 +111,7 @@ public class ShrikeClassReaderHandle {
   public void clear() {
     reader = null;
   }
-}
+
+  public ModuleEntry getModuleEntry() {
+    return entry;
+  }}
