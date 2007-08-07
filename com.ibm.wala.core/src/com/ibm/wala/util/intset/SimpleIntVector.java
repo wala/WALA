@@ -16,7 +16,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
- * 
  * simple implementation of IntVector
  * 
  * @author sfink
@@ -40,24 +39,16 @@ public class SimpleIntVector implements IntVector {
     store[0] = defaultValue;
   }
 
-  /**
-   * @param defaultValue
-   * @param initialSize
-   */
   public SimpleIntVector(int defaultValue, int initialSize) {
     this.defaultValue = defaultValue;
     store = new int[initialSize];
     store[0] = defaultValue;
   }
 
-  /**
-   */
   int getInitialSize() {
     return INITIAL_SIZE;
   }
 
-  /**
-   */
   float getGrowthFactor() {
     return GROWTH_FACTOR;
   }
@@ -98,9 +89,6 @@ public class SimpleIntVector implements IntVector {
   /**
    * make sure we can store to a particular index
    * 
-   * @param index
-   */
-  /**
    * @param capacity
    */
   private void ensureCapacity(int capacity) {
@@ -124,12 +112,17 @@ public class SimpleIntVector implements IntVector {
    * @return the percentage of entries in delegateStore that are non-null
    */
   private double computeOccupancy() {
+    int count = size();
+    return (double) count / (double) store.length;
+  }
+
+  public int size() {
     int count = 0;
     for (int i = 0; i < store.length; i++) {
       if (store[i] != -1) {
         count++;
       }
     }
-    return (double) count / (double) store.length;
+    return count;
   }
 }
