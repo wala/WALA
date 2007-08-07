@@ -13,7 +13,6 @@ package com.ibm.wala.util.intset;
 import com.ibm.wala.util.debug.VerboseAction;
 
 /**
- *
  * interface for array of integer
  * 
  * @author sfink
