@@ -46,7 +46,7 @@ public abstract class DFSFinishTimeIterator<T> extends Stack<T> implements Itera
   private Graph<T> G;
 
   /**
-   * Subclasses must call this in the construtor!
+   * Subclasses must call this in the constructor!
    * 
    * @param G
    * @param nodes
