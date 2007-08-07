@@ -625,7 +625,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   /**
    * Wrap an SSAInstruction in a Statement
    */
-  Statement ssaInstruction2Statement(SSAInstruction s) {
+  public Statement ssaInstruction2Statement(SSAInstruction s) {
     assert s != null;
     if (s instanceof SSAPhiInstruction) {
       SSAPhiInstruction phi = (SSAPhiInstruction) s;

@@ -144,22 +144,22 @@ public class Slicer {
 
   /**
    * @param s
-   *            a statement of interest
+   *          a statement of interest
    * @return the backward slice of s.
    */
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
-    return computeSlice(null, s, cg, pa, dOptions, cOptions, true);
+    return computeSlice(null, Collections.singleton(s), cg, pa, dOptions, cOptions, true);
   }
 
   /**
    * @param s
-   *            a statement of interest
+   *          a statement of interest
    * @return the forward slice of s.
    */
   public static Collection<Statement> computeForwardSlice(Statement s, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
-    return computeSlice(null, s, cg, pa, dOptions, cOptions, false);
+    return computeSlice(null, Collections.singleton(s), cg, pa, dOptions, cOptions, false);
   }
 
   /**
@@ -167,7 +167,7 @@ public class Slicer {
    */
   public static Collection<Statement> computeBackwardSlice(SDG sdg, Statement s, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
-    return computeSlice(sdg, s, cg, pa, dOptions, cOptions, true);
+    return computeSlice(sdg, Collections.singleton(s), cg, pa, dOptions, cOptions, true);
   }
 
   /**
@@ -175,14 +175,22 @@ public class Slicer {
    */
   public static Collection<Statement> computeForwardSlice(SDG sdg, Statement s, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
-    return computeSlice(sdg, s, cg, pa, dOptions, cOptions, false);
+    return computeSlice(sdg, Collections.singleton(s), cg, pa, dOptions, cOptions, false);
   }
 
   /**
-   * @param s
-   *            a statement of interest
+   * Use the passed-in SDG
    */
-  private static Collection<Statement> computeSlice(SDG sdg, Statement s, CallGraph cg, PointerAnalysis pa,
+  public static Collection<Statement> computeBackwardSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
+    return computeSlice(sdg, ss, cg, pa, dOptions, cOptions, true);
+  }
+
+  /**
+   * @param ss
+   *          a collection of statements of interest
+   */
+  private static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) {
 
     if (VERBOSE) {
@@ -196,7 +204,9 @@ public class Slicer {
     Collection<Statement> rootsConsidered = HashSetFactory.make();
     Stack<Statement> workList = new Stack<Statement>();
     Collection<Statement> result = HashSetFactory.make();
-    workList.push(s);
+    for(Statement s : ss) {
+      workList.push(s);
+    }
     while (!workList.isEmpty()) {
       Statement root = workList.pop();
       rootsConsidered.add(root);
@@ -343,7 +353,7 @@ public class Slicer {
 
   /**
    * @param s
-   *            a statement of interest
+   *          a statement of interest
    * @return the backward slice of s.
    */
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pointerAnalysis)
