@@ -67,7 +67,7 @@ public class Exceptions implements Constants {
 
   /**
    * @param pei
-   *          a potentially-excepting insruction
+   *          a potentially-excepting instruction
    * @param cha
    *          the governing class hierarchy
    * @return the exception types that pei may throw
