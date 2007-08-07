@@ -34,6 +34,7 @@ import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SimpleVector;
 
 /**
@@ -309,8 +310,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
   }
 
   public IntSet getPredNodeNumbers(IBasicBlock node) {
-    Assertions.UNREACHABLE();
-    return null;
+    MutableSparseIntSet result = new MutableSparseIntSet();
+    for (Iterator<? extends IBasicBlock> it = getPredNodes(node); it.hasNext(); ) {
+      result.add(getNumber(it.next()));
+    }
+    return result;
   }
 
   public IntSet getSuccNodeNumbers(IBasicBlock node) {
