@@ -183,7 +183,7 @@ public class DFS {
    *          roots of traversal, in order to visit in outermost loop of DFS
    * @return iterator of nodes of G in order of DFS discover time
    */
-  public static <T> DFSDiscoverTimeIterator iterateDiscoverTime(Graph<T> G, Iterator<T> roots) {
+  public static <T> Iterator<T> iterateDiscoverTime(Graph<T> G, Iterator<T> roots) {
     if (G instanceof NumberedGraph) {
       return new NumberedDFSDiscoverTimeIterator<T>((NumberedGraph<T>) G, roots);
     } else {
