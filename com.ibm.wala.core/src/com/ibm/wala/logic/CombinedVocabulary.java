@@ -11,7 +11,6 @@
 package com.ibm.wala.logic;
 
 import java.util.Collection;
-import java.util.Set;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
