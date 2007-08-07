@@ -92,7 +92,7 @@ public class StringStuff {
 
   /**
    * Translate a type from a deployment descriptor string into the type expected
-   * for use in amethod descriptor
+   * for use in a method descriptor
    * 
    * eg. [[Ljava.lang.String;
    * 
