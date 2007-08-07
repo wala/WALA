@@ -286,8 +286,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
   }
 
   public int getMaxNumber() {
-    Assertions.UNREACHABLE();
-    return 0;
+    return getNumberOfNodes() - 1;
   }
 
   public IBasicBlock getNode(int number) {
@@ -296,13 +295,12 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     } else if (number == getNumberOfNodes() -1) {
       return exit();
     } else {
-      return normalNodes.get(number);
+      return normalNodes.get(number - 1);
     }
   }
 
-  public int getNumber(IBasicBlock N) {
-    Assertions.UNREACHABLE();
-    return 0;
+  public int getNumber(IBasicBlock n) {
+    return n.getNumber();
   }
 
   public Iterator<IBasicBlock> iterateNodes(IntSet s) {
@@ -357,7 +355,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
       } else if (isExitBlock()) {
         return getNumberOfNodes() -1;
       } else {
-        return instructionIndex;
+        return instructionIndex + 1;
       }
     }
 
@@ -449,6 +447,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
       } else {
         return original.iteratePis();
       }
+    }
+
+    @Override
+    public String toString() {
+      return "ExplodedBlock[" + getNumber() + "](original:" + original.toString() + ")";
     }
   }
 
