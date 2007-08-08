@@ -25,6 +25,7 @@ import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.dataflow.IFDS.TabulationSolver;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -190,7 +191,12 @@ public class Slicer {
    * @param ss
    *          a collection of statements of interest
    */
-  private static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
+  protected static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) {
+    return computeSlice(sdg, ss, cg, pa, new ModRef(), dOptions, cOptions, backward);
+  }
+
+  protected static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa, ModRef modRef,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) {
 
     if (VERBOSE) {
@@ -198,7 +204,7 @@ public class Slicer {
     }
 
     if (sdg == null) {
-      sdg = new SDG(cg, pa, dOptions, cOptions);
+      sdg = new SDG(cg, pa, modRef, dOptions, cOptions);
     }
 
     Collection<Statement> rootsConsidered = HashSetFactory.make();

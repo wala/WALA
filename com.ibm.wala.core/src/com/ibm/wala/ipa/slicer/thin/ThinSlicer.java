@@ -61,7 +61,11 @@ public class ThinSlicer {
   private final Graph<Statement> depGraph;
 
   public ThinSlicer(CallGraph cg, PointerAnalysis pa) {
-    SDG sdg = new SDG(cg, pa, DataDependenceOptions.NO_BASE_NO_HEAP, ControlDependenceOptions.NONE, null);
+    this(cg, pa, new ModRef());
+  }
+
+  public ThinSlicer(CallGraph cg, PointerAnalysis pa, ModRef modRef) {
+    SDG sdg = new SDG(cg, pa, modRef, DataDependenceOptions.NO_BASE_NO_HEAP, ControlDependenceOptions.NONE, null);
 
     Map<Statement, Set<PointerKey>> mod = scanForMod(sdg, pa);
     Map<Statement, Set<PointerKey>> ref = scanForRef(sdg, pa);
@@ -270,7 +274,7 @@ public class ThinSlicer {
       Statement st = it.next();
       switch (st.getKind()) {
       case NORMAL:
-        Set<PointerKey> c = HashSetFactory.make(ModRef.getMod(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
+	  Set<PointerKey> c = HashSetFactory.make((new ModRef()).getMod(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
             null));
         result.put(st, c);
         break;
@@ -290,7 +294,7 @@ public class ThinSlicer {
       Statement st = it.next();
       switch (st.getKind()) {
       case NORMAL:
-        Set<PointerKey> c = HashSetFactory.make(ModRef.getRef(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
+	  Set<PointerKey> c = HashSetFactory.make((new ModRef()).getRef(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
             null));
         result.put(st, c);
         break;

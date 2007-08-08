@@ -102,6 +102,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   
   private final CallGraph cg;
 
+  private final ModRef modRef;
+
   /**
    * @param mod
    *            the set of heap locations which may be written (transitively) by
@@ -114,7 +116,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    */
   public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
-      HeapExclusions exclusions, CallGraph cg) {
+	     HeapExclusions exclusions, CallGraph cg, ModRef modRef) {
 
     super();
     if (node == null) {
@@ -127,6 +129,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     this.dOptions = dOptions;
     this.mod = mod;
     this.exclusions = exclusions;
+    this.modRef = modRef;
     instructionIndices = computeInstructionIndices(node.getIR());
     createNodes(ref, cOptions);
     createScalarEdges(cOptions);
@@ -511,7 +514,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     };
     Collection<Statement> relevantStatements = Iterator2Collection.toCollection(new FilterIterator<Statement>(iterator(), f));
 
-    Map<Statement, OrdinalSet<Statement>> heapReachingDefs = dOptions.isIgnoreHeap() ? null : HeapReachingDefs.computeReachingDefs(
+    Map<Statement, OrdinalSet<Statement>> heapReachingDefs = dOptions.isIgnoreHeap() ? null : (new HeapReachingDefs(modRef)).computeReachingDefs(
         node, ir, pa, mod, relevantStatements, new HeapExclusions(SetComplement.complement(new SingletonSet(t))), cg);
 
     for (Statement st : heapReachingDefs.keySet()) {
@@ -930,7 +933,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     case NORMAL:
       NormalStatement st = (NormalStatement) N;
       if (!(IGNORE_ALLOC_HEAP_DEFS && st.getInstruction() instanceof SSANewInstruction)) {
-        Collection<PointerKey> ref = ModRef.getRef(node, heapModel, pa, st.getInstruction(), exclusions);
+	Collection<PointerKey> ref = modRef.getRef(node, heapModel, pa, st.getInstruction(), exclusions);
         for (PointerKey pk : ref) {
           createHeapDataDependenceEdges(pk);
         }
@@ -950,7 +953,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     case NORMAL:
       NormalStatement st = (NormalStatement) N;
       if (!(IGNORE_ALLOC_HEAP_DEFS && st.getInstruction() instanceof SSANewInstruction)) {
-        Collection<PointerKey> ref = ModRef.getMod(node, heapModel, pa, st.getInstruction(), exclusions);
+	  Collection<PointerKey> ref = modRef.getMod(node, heapModel, pa, st.getInstruction(), exclusions);
         for (PointerKey pk : ref) {
           createHeapDataDependenceEdges(pk);
         }

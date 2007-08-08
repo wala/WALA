@@ -69,6 +69,12 @@ public class HeapReachingDefs {
 
   private static final boolean VERBOSE = false;
 
+  private final ModRef modRef;
+
+  public HeapReachingDefs(ModRef modRef) {
+    this.modRef = modRef;
+  }
+
   /**
    * For each statement s, return the set of statements that may def the heap
    * value read by s.
@@ -93,7 +99,7 @@ public class HeapReachingDefs {
    * @throws IllegalArgumentException
    *             if statements is null
    */
-  public static Map<Statement, OrdinalSet<Statement>> computeReachingDefs(CGNode node, IR ir, PointerAnalysis pa,
+  public Map<Statement, OrdinalSet<Statement>> computeReachingDefs(CGNode node, IR ir, PointerAnalysis pa,
       Map<CGNode, OrdinalSet<PointerKey>> mod, Collection<Statement> statements, HeapExclusions exclusions, CallGraph cg) {
 
     if (statements == null) {
@@ -132,7 +138,7 @@ public class HeapReachingDefs {
         ssaInstructionIndex2Statement, exclusions, cg);
   }
 
-  private static class RDMap implements Map<Statement, OrdinalSet<Statement>> {
+  private class RDMap implements Map<Statement, OrdinalSet<Statement>> {
     final Map<Statement, OrdinalSet<Statement>> delegate = HashMapFactory.make();
 
     private final HeapExclusions exclusions;
@@ -194,7 +200,7 @@ public class HeapReachingDefs {
       return pointerKeyMod;
     }
 
-    private static MutableIntSet findOrCreateIntSet(Map<PointerKey, MutableIntSet> map, PointerKey key) {
+    private MutableIntSet findOrCreateIntSet(Map<PointerKey, MutableIntSet> map, PointerKey key) {
       MutableIntSet result = map.get(key);
       if (result == null) {
         result = new MutableSparseIntSet();
@@ -277,14 +283,14 @@ public class HeapReachingDefs {
      * For a statement s, compute the set of statements that may def the heap
      * value read by s.
      */
-    private OrdinalSet<Statement> computeResult(Statement s, Map<PointerKey, MutableIntSet> pointerKeyMod,
+    OrdinalSet<Statement> computeResult(Statement s, Map<PointerKey, MutableIntSet> pointerKeyMod,
         BitVectorSolver<IBasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
         PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
         Map<Integer, NormalStatement> ssaInstructionIndex2Statement) {
       switch (s.getKind()) {
       case NORMAL:
         NormalStatement n = (NormalStatement) s;
-        Collection<PointerKey> ref = ModRef.getRef(node, h, pa, n.getInstruction(), exclusions);
+        Collection<PointerKey> ref = modRef.getRef(node, h, pa, n.getInstruction(), exclusions);
         if (!ref.isEmpty()) {
           IBasicBlock bb = cfg.getBlockForInstruction(n.getInstructionIndex());
           BitVectorVariable v = (BitVectorVariable) solver.getIn(bb);
@@ -359,7 +365,7 @@ public class HeapReachingDefs {
    * For each statement s, compute the set of statements that may def the heap
    * value read by s.
    */
-  private static Map<Statement, OrdinalSet<Statement>> makeResult(BitVectorSolver<IBasicBlock> solver,
+  private Map<Statement, OrdinalSet<Statement>> makeResult(BitVectorSolver<IBasicBlock> solver,
       OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis pa,
       Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
       Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions, CallGraph cg) {
@@ -384,12 +390,12 @@ public class HeapReachingDefs {
     return true;
   }
 
-  private static Collection<PointerKey> getMod(Statement s, CGNode n, ExtendedHeapModel h, PointerAnalysis pa,
+  private Collection<PointerKey> getMod(Statement s, CGNode n, ExtendedHeapModel h, PointerAnalysis pa,
       HeapExclusions exclusions) {
     switch (s.getKind()) {
     case NORMAL:
       NormalStatement ns = (NormalStatement) s;
-      return ModRef.getMod(n, h, pa, ns.getInstruction(), exclusions);
+      return modRef.getMod(n, h, pa, ns.getInstruction(), exclusions);
     case HEAP_PARAM_CALLEE:
     case HEAP_RET_CALLER:
       HeapStatement hs = (HeapStatement) s;
@@ -437,7 +443,7 @@ public class HeapReachingDefs {
   /**
    * Reaching def flow functions
    */
-  private static class RD implements ITransferFunctionProvider<IBasicBlock> {
+  private class RD implements ITransferFunctionProvider<IBasicBlock> {
 
     private final CGNode node;
 
@@ -552,7 +558,7 @@ public class HeapReachingDefs {
             assert (domainIndex != -1);
             return heapReturnCaller.getRelated(domainIndex);
           } else {
-            Collection<PointerKey> gen = ModRef.getMod(node, h, pa, s, exclusions);
+            Collection<PointerKey> gen = modRef.getMod(node, h, pa, s, exclusions);
             if (gen.isEmpty()) {
               return null;
             } else {
@@ -587,7 +593,7 @@ public class HeapReachingDefs {
       if (s == null) {
         return null;
       } else {
-        Collection<PointerKey> mod = ModRef.getMod(node, h, pa, s, exclusions);
+        Collection<PointerKey> mod = modRef.getMod(node, h, pa, s, exclusions);
         if (mod.isEmpty()) {
           return null;
         } else {

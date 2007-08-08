@@ -106,20 +106,26 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
    */
   private final HeapExclusions heapExclude;
 
+  private final ModRef modRef;
 
   public SDG(final CallGraph cg, PointerAnalysis pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
-    this(cg, pa, dOptions, cOptions, null);
+    this(cg, pa, new ModRef(), dOptions, cOptions, null);
   }
 
-  public SDG(CallGraph cg, PointerAnalysis pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions, HeapExclusions heapExclude) throws IllegalArgumentException {
+  public SDG(final CallGraph cg, PointerAnalysis pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+    this(cg, pa, modRef, dOptions, cOptions, null);
+  }
+
+  public SDG(CallGraph cg, PointerAnalysis pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions, HeapExclusions heapExclude) throws IllegalArgumentException {
     super();
     if (dOptions == null) {
       throw new IllegalArgumentException("dOptions must not be null");
     }
+    this.modRef = modRef;
     this.cg = cg;
     this.pa = pa;
-    this.mod = dOptions.isIgnoreHeap() ? null : ModRef.computeMod(cg, pa, heapExclude);
-    this.ref = dOptions.isIgnoreHeap() ? null : ModRef.computeRef(cg, pa, heapExclude);
+    this.mod = dOptions.isIgnoreHeap() ? null : modRef.computeMod(cg, pa, heapExclude);
+    this.ref = dOptions.isIgnoreHeap() ? null : modRef.computeRef(cg, pa, heapExclude);
     this.dOptions = dOptions;
     this.cOptions = cOptions;
     this.heapExclude = heapExclude;
@@ -618,7 +624,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   public PDG getPDG(CGNode node) {
     PDG result = pdgMap.get(node);
     if (result == null) {
-      result = new PDG(node, pa, mod, ref, dOptions, cOptions, heapExclude, cg);
+	result = new PDG(node, pa, mod, ref, dOptions, cOptions, heapExclude, cg, modRef);
       pdgMap.put(node, result);
       for (Iterator<? extends Statement> it = result.iterator(); it.hasNext();) {
         nodeMgr.addNode(it.next());

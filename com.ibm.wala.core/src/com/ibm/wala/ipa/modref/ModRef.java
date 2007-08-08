@@ -57,7 +57,7 @@ public class ModRef {
    * @throws IllegalArgumentException  if cg is null
    * 
    */
-  public static Map<CGNode, OrdinalSet<PointerKey>> computeMod(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
+  public Map<CGNode, OrdinalSet<PointerKey>> computeMod(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
     if (cg == null) {
       throw new IllegalArgumentException("cg is null");
     }
@@ -71,7 +71,7 @@ public class ModRef {
    * @throws IllegalArgumentException  if cg is null
    * 
    */
-  public static Map<CGNode, OrdinalSet<PointerKey>> computeRef(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
+  public Map<CGNode, OrdinalSet<PointerKey>> computeRef(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
     if (cg == null) {
       throw new IllegalArgumentException("cg is null");
     }
@@ -84,7 +84,7 @@ public class ModRef {
    * model) may it write, including its callees transitively
    * 
    */
-  public static Map<CGNode, OrdinalSet<PointerKey>> computeMod(CallGraph cg, PointerAnalysis pa) {
+  public Map<CGNode, OrdinalSet<PointerKey>> computeMod(CallGraph cg, PointerAnalysis pa) {
     return computeMod(cg, pa, null);
   }
 
@@ -93,11 +93,11 @@ public class ModRef {
    * model) may it read, including its callees transitively
    * 
    */
-  public static Map<CGNode, OrdinalSet<PointerKey>> computeRef(CallGraph cg, PointerAnalysis pa) {
+  public Map<CGNode, OrdinalSet<PointerKey>> computeRef(CallGraph cg, PointerAnalysis pa) {
     return computeRef(cg, pa, null);
   }
 
-  private static Map<CGNode, OrdinalSet<PointerKey>> transitiveClosure(CallGraph cg, Map<CGNode, Collection<PointerKey>> scan) {
+  private Map<CGNode, OrdinalSet<PointerKey>> transitiveClosure(CallGraph cg, Map<CGNode, Collection<PointerKey>> scan) {
     GenReach<CGNode, PointerKey> gr = new GenReach<CGNode, PointerKey>(GraphInverter.invert(cg), scan);
     BitVectorSolver<CGNode> solver = new BitVectorSolver<CGNode>(gr);
     solver.solve();
@@ -116,7 +116,7 @@ public class ModRef {
    * 
    * @param heapExclude
    */
-  private static Map<CGNode, Collection<PointerKey>> scanForMod(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
+  private Map<CGNode, Collection<PointerKey>> scanForMod(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
     Map<CGNode, Collection<PointerKey>> result = HashMapFactory.make();
     for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
       CGNode n = it.next();
@@ -131,7 +131,7 @@ public class ModRef {
    * 
    * @param heapExclude
    */
-  private static Map<CGNode, Collection<PointerKey>> scanForRef(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
+  private Map<CGNode, Collection<PointerKey>> scanForRef(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
     Map<CGNode, Collection<PointerKey>> result = HashMapFactory.make();
     for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
       CGNode n = it.next();
@@ -146,10 +146,10 @@ public class ModRef {
    * 
    * @param heapExclude
    */
-  private static Collection<PointerKey> scanNodeForMod(final CGNode n, final PointerAnalysis pa, HeapExclusions heapExclude) {
+  private Collection<PointerKey> scanNodeForMod(final CGNode n, final PointerAnalysis pa, HeapExclusions heapExclude) {
     Collection<PointerKey> result = HashSetFactory.make();
     final ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
-    SSAInstruction.Visitor v = new ModVisitor(n, result, h, pa);
+    SSAInstruction.Visitor v = makeModVisitor(n, result, pa, h);
     IR ir = n.getIR();
     if (ir != null) {
       for (Iterator<SSAInstruction> it = ir.iterateNormalInstructions(); it.hasNext();) {
@@ -166,10 +166,10 @@ public class ModRef {
    * For a call graph node, what heap locations (as determined by a heap model)
    * may it read, <bf> NOT </bf> including it's callees transitively
    */
-  private static Collection<PointerKey> scanNodeForRef(final CGNode n, final PointerAnalysis pa, HeapExclusions heapExclude) {
+  private Collection<PointerKey> scanNodeForRef(final CGNode n, final PointerAnalysis pa, HeapExclusions heapExclude) {
     Collection<PointerKey> result = HashSetFactory.make();
     final ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
-    SSAInstruction.Visitor v = new RefVisitor(n, result, pa, h);
+    SSAInstruction.Visitor v = makeRefVisitor(n, result, pa, h);
     IR ir = n.getIR();
     if (ir != null) {
       for (Iterator<SSAInstruction> it = ir.iterateNormalInstructions(); it.hasNext();) {
@@ -182,7 +182,7 @@ public class ModRef {
     return result;
   }
 
-  private static final class RefVisitor extends SSAInstruction.Visitor {
+  protected static class RefVisitor extends SSAInstruction.Visitor {
     private final CGNode n;
 
     private final Collection<PointerKey> result;
@@ -191,7 +191,7 @@ public class ModRef {
 
     private final ExtendedHeapModel h;
 
-    private RefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
+    protected RefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
       this.n = n;
       this.result = result;
       this.pa = pa;
@@ -230,7 +230,7 @@ public class ModRef {
     }
   }
 
-  private static final class ModVisitor extends SSAInstruction.Visitor {
+  protected static class ModVisitor extends SSAInstruction.Visitor {
     private final CGNode n;
 
     private final Collection<PointerKey> result;
@@ -239,7 +239,8 @@ public class ModRef {
 
     private final PointerAnalysis pa;
 
-    private ModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis pa) {
+
+    protected ModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis pa) {
       this.n = n;
       this.result = result;
       this.h = h;
@@ -324,24 +325,32 @@ public class ModRef {
     }
   }
 
-  public static Collection<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s,
+  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
+      return new ModVisitor(n, result, h, pa);
+  }
+
+  public Collection<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s,
       HeapExclusions hexcl) {
     if (s == null) {
           throw new IllegalArgumentException("s is null");
         }
     Collection<PointerKey> result = HashSetFactory.make(2);
-    ModVisitor v = new ModVisitor(n, result, h, pa);
+    ModVisitor v = makeModVisitor(n, result, pa, h);
     s.visit(v);
     return hexcl == null ? result : hexcl.filter(result);
   }
 
-  public static Collection<PointerKey> getRef(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s,
+  protected RefVisitor makeRefVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
+    return new RefVisitor(n, result, pa, h);
+  }
+
+  public Collection<PointerKey> getRef(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s,
       HeapExclusions hexcl) {
     if (s == null) {
           throw new IllegalArgumentException("s is null");
         }
     Collection<PointerKey> result = HashSetFactory.make(2);
-    RefVisitor v = new RefVisitor(n, result, pa, h);
+    RefVisitor v = makeRefVisitor(n, result, pa, h);
     s.visit(v);
     return hexcl == null ? result : hexcl.filter(result);
   }
