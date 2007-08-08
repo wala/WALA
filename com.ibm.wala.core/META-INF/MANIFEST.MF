@@ -10,7 +10,8 @@ Require-Bundle: com.ibm.wala.emf;visibility:=reexport,
  com.ibm.wala.shrike;visibility:=reexport,
  org.eclipse.core.resources;visibility:=reexport,
  org.eclipse.jface,
- org.eclipse.jdt.core;visibility:=reexport
+ org.eclipse.jdt.core;visibility:=reexport,
+ org.eclipse.ui;visibility:=reexport
 Eclipse-LazyStart: true
 Export-Package: .,
  com.ibm.wala.analysis.pointers,
@@ -27,6 +28,7 @@ Export-Package: .,
  com.ibm.wala.dataflow.graph,
  com.ibm.wala.dataflow.ssa,
  com.ibm.wala.dynamic,
+ com.ibm.wala.eclipse,
  com.ibm.wala.eclipse.util,
  com.ibm.wala.emf.wrappers,
  com.ibm.wala.escape,
