@@ -15,7 +15,8 @@ import java.util.Collection;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IPlatformRunnable;
+import org.eclipse.equinox.app.IApplication;
+import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jdt.core.IJavaProject;
 
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
@@ -26,15 +27,13 @@ import com.ibm.wala.eclipse.util.JdtUtil;
  * 
  * This is for expository purposes, and tests some WALA eclipse functionality.
  * 
- * It appears (sigh) that IPlatformRunnable will be deprecated in Eclipse 3.3
- * and replaced by IApplication. Oh well. Going with the 3.2 API for now.
- * 
  * @author sjfink
  * 
  */
-public class Main implements IPlatformRunnable {
+public class Main implements IApplication {
 
-  public Object run(Object args) throws Exception {
+
+  public Object start(IApplicationContext context) throws Exception {
     Collection<IJavaProject> jp = JdtUtil.getWorkspaceJavaProjects();
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
     IPath workspaceRootPath = workspaceRoot.getLocation();
@@ -44,5 +43,8 @@ public class Main implements IPlatformRunnable {
       System.out.println("Path: " + path);
     }
     return null;
+  }
+
+  public void stop() {
   }
 }
