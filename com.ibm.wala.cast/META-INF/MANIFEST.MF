@@ -10,6 +10,8 @@ Require-Bundle: org.eclipse.core.runtime,
 Eclipse-LazyStart: true
 Export-Package: com.ibm.wala.cast.analysis.typeInference,
  com.ibm.wala.cast.ipa.callgraph,
+ com.ibm.wala.cast.ipa.cha,
+ com.ibm.wala.cast.ipa.modref,
  com.ibm.wala.cast.ir.cfg,
  com.ibm.wala.cast.ir.ssa,
  com.ibm.wala.cast.ir.ssa.analysis,
