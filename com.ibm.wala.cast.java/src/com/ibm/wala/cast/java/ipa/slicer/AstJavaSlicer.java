@@ -1,12 +1,13 @@
 package com.ibm.wala.cast.java.ipa.slicer;
 
-import com.ibm.wala.cast.java.ipa.modref.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.ipa.modref.*;
-import com.ibm.wala.ipa.slicer.*;
+import java.util.Collection;
 
-import java.util.*;
+import com.ibm.wala.cast.java.ipa.modref.AstJavaModRef;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.slicer.SDG;
+import com.ibm.wala.ipa.slicer.Slicer;
+import com.ibm.wala.ipa.slicer.Statement;
 
 public class AstJavaSlicer extends Slicer {
 

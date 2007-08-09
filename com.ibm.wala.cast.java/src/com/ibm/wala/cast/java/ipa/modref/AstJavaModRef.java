@@ -1,13 +1,15 @@
 package com.ibm.wala.cast.java.ipa.modref;
 
-import com.ibm.wala.cast.ipa.modref.*;
-import com.ibm.wala.cast.ir.ssa.*;
-import com.ibm.wala.cast.java.ssa.*;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.propagation.*;
-import com.ibm.wala.ipa.modref.*;
+import java.util.Collection;
 
-import java.util.*;
+import com.ibm.wala.cast.ipa.modref.AstModRef;
+import com.ibm.wala.cast.java.ssa.AstJavaInstructionVisitor;
+import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
+import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 
 public class AstJavaModRef extends AstModRef {
 
