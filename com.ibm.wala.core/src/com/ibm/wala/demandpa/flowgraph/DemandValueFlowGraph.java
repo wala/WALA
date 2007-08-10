@@ -1,0 +1,506 @@
+/*******************************************************************************
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html.
+ * 
+ * This file is a derivative of code released by the University of
+ * California under the terms listed below.  
+ *
+ * Refinement Analysis Tools is Copyright ©2007 The Regents of the
+ * University of California (Regents). Provided that this notice and
+ * the following two paragraphs are included in any distribution of
+ * Refinement Analysis Tools or its derivative work, Regents agrees
+ * not to assert any of Regents' copyright rights in Refinement
+ * Analysis Tools against recipient for recipient’s reproduction,
+ * preparation of derivative works, public display, public
+ * performance, distribution or sublicensing of Refinement Analysis
+ * Tools and derivative works, in source code and object code form.
+ * This agreement not to assert does not confer, by implication,
+ * estoppel, or otherwise any license or rights in any intellectual
+ * property of Regents, including, but not limited to, any patents
+ * of Regents or Regents’ employees.
+ * 
+ * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
+ * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
+ * INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE
+ * AND ITS DOCUMENTATION, EVEN IF REGENTS HAS BEEN ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *   
+ * REGENTS SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE AND FURTHER DISCLAIMS ANY STATUTORY
+ * WARRANTY OF NON-INFRINGEMENT. THE SOFTWARE AND ACCOMPANYING
+ * DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS
+ * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
+ * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+ */
+package com.ibm.wala.demandpa.flowgraph;
+
+import java.util.List;
+import java.util.Set;
+
+import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.classLoader.ArrayClass;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.demandpa.util.ArrayContents;
+import com.ibm.wala.demandpa.util.MemoryAccessMap;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitNode;
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ssa.DefUse;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAArrayLengthInstruction;
+import com.ibm.wala.ssa.SSAArrayLoadInstruction;
+import com.ibm.wala.ssa.SSAArrayStoreInstruction;
+import com.ibm.wala.ssa.SSABinaryOpInstruction;
+import com.ibm.wala.ssa.SSACheckCastInstruction;
+import com.ibm.wala.ssa.SSAComparisonInstruction;
+import com.ibm.wala.ssa.SSAConversionInstruction;
+import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
+import com.ibm.wala.ssa.SSAGetInstruction;
+import com.ibm.wala.ssa.SSAInstanceofInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSALoadClassInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.ssa.SSAPiInstruction;
+import com.ibm.wala.ssa.SSAPutInstruction;
+import com.ibm.wala.ssa.SSAReturnInstruction;
+import com.ibm.wala.ssa.SSAThrowInstruction;
+import com.ibm.wala.ssa.SSAUnaryOpInstruction;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.ssa.SSAInstruction.Visitor;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.MapUtil;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.warnings.ResolutionFailure;
+import com.ibm.wala.util.warnings.Warnings;
+
+/**
+ * A flow graph including both pointer and primitive values.
+ * 
+ * TODO share more code with {@link DemandPointerFlowGraph}
+ * 
+ * @author Manu Sridharan
+ * 
+ */
+public class DemandValueFlowGraph extends DemandFlowGraph {
+
+  public DemandValueFlowGraph(CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, ClassHierarchy cha) {
+    super(cg, heapModel, mam, cha);
+  }
+
+  @Override
+  protected void addNodesForParameters(CGNode node) {
+    IR ir = node.getIR();
+    SymbolTable symbolTable = ir.getSymbolTable();
+    int numParams = symbolTable.getNumberOfParameters();
+    for (int i = 0; i < numParams; i++) {
+      int parameter = symbolTable.getParameter(i);
+      PointerKey paramPk = heapModel.getPointerKeyForLocal(node, parameter);
+      addNode(paramPk);
+      params.put(paramPk, node);
+    }
+    PointerKey returnKey = heapModel.getPointerKeyForReturnValue(node);
+    addNode(returnKey);
+    returns.put(returnKey, node);
+    PointerKey exceptionReturnKey = heapModel.getPointerKeyForExceptionalReturnValue(node);
+    addNode(exceptionReturnKey);
+    returns.put(exceptionReturnKey, node);
+  }
+
+  @Override
+  protected FlowStatementVisitor makeVisitor(ExplicitNode node, IR ir, DefUse du) {
+    return new AllValsStatementVisitor(node, ir, du);
+  }
+
+  private class AllValsStatementVisitor extends Visitor implements FlowStatementVisitor {
+
+    /**
+     * The node whose statements we are currently traversing
+     */
+    protected final CGNode node;
+
+    /**
+     * The governing IR
+     */
+    protected final IR ir;
+
+    /**
+     * The basic block currently being processed
+     */
+    private IBasicBlock basicBlock;
+
+    /**
+     * Governing symbol table
+     */
+    protected final SymbolTable symbolTable;
+
+    /**
+     * Def-use information
+     */
+    protected final DefUse du;
+
+    public AllValsStatementVisitor(CGNode node, IR ir, DefUse du) {
+      this.node = node;
+      this.ir = ir;
+      this.symbolTable = ir.getSymbolTable();
+      if (Assertions.verifyAssertions) {
+        Assertions._assert(symbolTable != null);
+      }
+      this.du = du;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitArrayLoad(com.ibm.domo.ssa.SSAArrayLoadInstruction)
+     */
+    @Override
+    public void visitArrayLoad(SSAArrayLoadInstruction instruction) {
+      PointerKey result = heapModel.getPointerKeyForLocal(node, instruction.getDef());
+      PointerKey arrayRef = heapModel.getPointerKeyForLocal(node, instruction.getArrayRef());
+      // TODO optimizations for purely local stuff
+      addNode(result);
+      addNode(arrayRef);
+      addEdge(result, arrayRef, GetFieldLabel.make(ArrayContents.v()));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitArrayStore(com.ibm.domo.ssa.SSAArrayStoreInstruction)
+     */
+    @Override
+    public void visitArrayStore(SSAArrayStoreInstruction instruction) {
+      // make node for used value
+      PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getValue());
+      PointerKey arrayRef = heapModel.getPointerKeyForLocal(node, instruction.getArrayRef());
+      // TODO purely local optimizations
+      addNode(value);
+      addNode(arrayRef);
+      addEdge(arrayRef, value, PutFieldLabel.make(ArrayContents.v()));
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitCheckCast(com.ibm.domo.ssa.SSACheckCastInstruction)
+     */
+    @Override
+    public void visitCheckCast(SSACheckCastInstruction instruction) {
+      // Assertions.UNREACHABLE();
+
+      IClass cls = cha.lookupClass(instruction.getDeclaredResultType());
+      PointerKey result = null;
+      if (cls == null) {
+        // warnings.add(
+        // CheckcastFailure.create(instruction.getDeclaredResultType()));
+        // we failed to find the type.
+        // conservatively it would make sense to ignore the filter and
+        // be
+        // conservative, assuming
+        // java.lang.Object.
+        // however, this breaks the invariants downstream that assume
+        // every
+        // variable is
+        // strongly typed ... we can't have bad types flowing around.
+        // since things are broken anyway, just give up.
+        // result = getPointerKeyForLocal(node,
+        // instruction.getResult());
+        return;
+      } else {
+        result = heapModel.getFilteredPointerKeyForLocal(node, instruction.getResult(), new FilteredPointerKey.SingleClassFilter(
+            cls));
+      }
+      PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getVal());
+      // TODO actually use the cast type
+      addNode(result);
+      addNode(value);
+      addEdge(result, value, AssignLabel.v());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitReturn(com.ibm.domo.ssa.SSAReturnInstruction)
+     */
+    @Override
+    public void visitReturn(SSAReturnInstruction instruction) {
+      // skip returns of primitive type
+      if (instruction.returnsVoid()) {
+        return;
+      } else {
+        // just make a node for the def'd value
+        PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getResult());
+        addNode(def);
+        PointerKey returnValue = heapModel.getPointerKeyForReturnValue(node);
+        addNode(returnValue);
+        addEdge(returnValue, def, AssignLabel.v());
+      }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitGet(com.ibm.domo.ssa.SSAGetInstruction)
+     */
+    @Override
+    public void visitGet(SSAGetInstruction instruction) {
+      visitGetInternal(instruction.getDef(), instruction.getRef(), instruction.isStatic(), instruction.getDeclaredField());
+    }
+
+    protected void visitGetInternal(int lval, int ref, boolean isStatic, FieldReference field) {
+
+      IField f = cg.getClassHierarchy().resolveField(field);
+      if (f == null) {
+        Warnings.add(ResolutionFailure.create(node, field));
+        return;
+      }
+      PointerKey def = heapModel.getPointerKeyForLocal(node, lval);
+      if (Assertions.verifyAssertions) {
+        Assertions._assert(def != null);
+      }
+
+      if (isStatic) {
+        PointerKey fKey = heapModel.getPointerKeyForStaticField(f);
+        addNode(def);
+        addNode(fKey);
+        // TODO assign global edge for context-sensitive
+        addEdge(def, fKey, AssignGlobalLabel.v());
+      } else {
+        PointerKey refKey = heapModel.getPointerKeyForLocal(node, ref);
+        addNode(def);
+        addNode(refKey);
+        // TODO purely local optimizations
+        addEdge(def, refKey, GetFieldLabel.make(f));
+      }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.domo.ssa.Instruction.Visitor#visitPut(com.ibm.domo.ssa.PutInstruction)
+     */
+    @Override
+    public void visitPut(SSAPutInstruction instruction) {
+      visitPutInternal(instruction.getVal(), instruction.getRef(), instruction.isStatic(), instruction.getDeclaredField());
+    }
+
+    public void visitPutInternal(int rval, int ref, boolean isStatic, FieldReference field) {
+      IField f = cg.getClassHierarchy().resolveField(field);
+      if (f == null) {
+        Warnings.add(ResolutionFailure.create(node, field));
+        return;
+      }
+      PointerKey use = heapModel.getPointerKeyForLocal(node, rval);
+      if (Assertions.verifyAssertions) {
+        Assertions._assert(use != null);
+      }
+
+      if (isStatic) {
+        PointerKey fKey = heapModel.getPointerKeyForStaticField(f);
+        addNode(use);
+        addNode(fKey);
+        // TODO assign global edge
+        addEdge(fKey, use, AssignGlobalLabel.v());
+      } else {
+        PointerKey refKey = heapModel.getPointerKeyForLocal(node, ref);
+        addNode(use);
+        addNode(refKey);
+        addEdge(refKey, use, PutFieldLabel.make(f));
+      }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.domo.ssa.Instruction.Visitor#visitInvoke(com.ibm.domo.ssa.InvokeInstruction)
+     */
+    @Override
+    public void visitInvoke(SSAInvokeInstruction instruction) {
+
+      for (int i = 0; i < instruction.getNumberOfUses(); i++) {
+        // just make nodes for parameters; we'll get to them when
+        // traversing
+        // from the callee
+        PointerKey use = heapModel.getPointerKeyForLocal(node, instruction.getUse(i));
+        addNode(use);
+        Set<SSAInvokeInstruction> s = MapUtil.findOrCreateSet(callParams, use);
+        s.add(instruction);
+      }
+
+      // for any def'd values, keep track of the fact that they are def'd
+      // by a call
+      if (instruction.hasDef()) {
+        PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
+        addNode(def);
+        callDefs.put(def, instruction);
+      }
+      PointerKey exc = heapModel.getPointerKeyForLocal(node, instruction.getException());
+      addNode(exc);
+      callDefs.put(exc, instruction);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.domo.ssa.Instruction.Visitor#visitNew(com.ibm.domo.ssa.NewInstruction)
+     */
+    @Override
+    public void visitNew(SSANewInstruction instruction) {
+
+      InstanceKey iKey = heapModel.getInstanceKeyForAllocation(node, instruction.getNewSite());
+      if (iKey == null) {
+        // something went wrong. I hope someone raised a warning.
+        return;
+      }
+      PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
+      addNode(iKey);
+      addNode(def);
+      addEdge(def, iKey, NewLabel.v());
+
+      IClass klass = iKey.getConcreteType();
+      int dim = 0;
+      InstanceKey lastInstance = iKey;
+      PointerKey lastVar = def;
+      while (klass != null && klass.isArrayClass()) {
+        klass = ((ArrayClass) klass).getElementClass();
+        // klass == null means it's a primitive
+        if (klass != null && klass.isArrayClass()) {
+          InstanceKey ik = heapModel.getInstanceKeyForMultiNewArray(node, instruction.getNewSite(), dim);
+          PointerKey pk = heapModel.getPointerKeyForArrayContents(lastInstance);
+          // if (DEBUG_MULTINEWARRAY) {
+          // Trace.println("multinewarray constraint: ");
+          // Trace.println(" pk: " + pk);
+          // Trace.println(" ik: " + system.findOrCreateIndexForInstanceKey(ik)
+          // + " concrete type " + ik.getConcreteType()
+          // + " is " + ik);
+          // Trace.println(" klass:" + klass);
+          // }
+          addNode(ik);
+          addNode(pk);
+          addEdge(pk, ik, NewLabel.v());
+          addEdge(lastVar, pk, PutFieldLabel.make(ArrayContents.v()));
+          lastInstance = ik;
+          lastVar = pk;
+          dim++;
+        }
+      }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.domo.ssa.Instruction.Visitor#visitThrow(com.ibm.domo.ssa.ThrowInstruction)
+     */
+    @Override
+    public void visitThrow(SSAThrowInstruction instruction) {
+      // Assertions.UNREACHABLE();
+      // don't do anything: we handle exceptional edges
+      // in a separate pass
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.domo.ssa.Instruction.Visitor#visitGetCaughtException(com.ibm.domo.ssa.GetCaughtExceptionInstruction)
+     */
+    @Override
+    public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
+      List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, getBasicBlock());
+      PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
+
+      Set<TypeReference> types = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
+      addExceptionDefConstraints(ir, node, peis, def, types);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitPi(com.ibm.domo.ssa.SSAPiInstruction)
+     */
+    @Override
+    public void visitPi(SSAPiInstruction instruction) {
+      PointerKey src = heapModel.getPointerKeyForLocal(node, instruction.getDef());
+      PointerKey dst = heapModel.getPointerKeyForLocal(node, instruction.getVal());
+      addNode(src);
+      addNode(dst);
+      addEdge(src, dst, AssignLabel.v());
+    }
+
+    private void handleNonHeapInstruction(SSAInstruction instruction) {
+      for (int i = 0; i < instruction.getNumberOfDefs(); i++) {
+        int def = instruction.getDef(i);
+        PointerKey defPk = heapModel.getPointerKeyForLocal(node, def);
+        addNode(defPk);
+        for (int j = 0; j < instruction.getNumberOfUses(); j++) {
+          int use = instruction.getUse(j);
+          PointerKey usePk = heapModel.getPointerKeyForLocal(node, use);
+          addNode(usePk);
+          addEdge(defPk, usePk, AssignLabel.v());
+        }
+      }
+    }
+
+    @Override
+    public void visitArrayLength(SSAArrayLengthInstruction instruction) {
+      handleNonHeapInstruction(instruction);
+    }
+
+    @Override
+    public void visitBinaryOp(SSABinaryOpInstruction instruction) {
+      handleNonHeapInstruction(instruction);
+    }
+
+    @Override
+    public void visitComparison(SSAComparisonInstruction instruction) {
+      handleNonHeapInstruction(instruction);
+    }
+
+    @Override
+    public void visitConversion(SSAConversionInstruction instruction) {
+      handleNonHeapInstruction(instruction);
+    }
+
+    @Override
+    public void visitInstanceof(SSAInstanceofInstruction instruction) {
+      handleNonHeapInstruction(instruction);
+    }
+
+    @Override
+    public void visitUnaryOp(SSAUnaryOpInstruction instruction) {
+      handleNonHeapInstruction(instruction);
+    }
+
+    public IBasicBlock getBasicBlock() {
+      return basicBlock;
+    }
+
+    /**
+     * The calling loop must call this in each iteration!
+     */
+    public void setBasicBlock(IBasicBlock block) {
+      basicBlock = block;
+    }
+
+    @Override
+    public void visitLoadClass(SSALoadClassInstruction instruction) {
+      Assertions.UNREACHABLE();
+    }
+
+  }
+
+}
