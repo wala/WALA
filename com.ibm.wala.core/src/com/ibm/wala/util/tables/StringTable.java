@@ -70,28 +70,11 @@ public class StringTable extends Table<String> implements Cloneable {
   /**
    * read from a text file obtained as a resource
    * 
-   * @param fileName
-   * @throws IOException
-   * @throws WalaException
    */
   public static StringTable readFromTextFile(String fileName) throws IOException, WalaException {
     File f = FileProvider.getFile(fileName);
     return readFromTextFile(f);
   }
-
-//  /**
-//   * read from a text file obtained as a resource
-//   * 
-//   * @param fileName
-//   * @throws IllegalArgumentException  if p is null
-//   */
-//  public static StringTable readFromTextFile(Plugin p, String fileName) throws IOException {
-//    if (p == null) {
-//      throw new IllegalArgumentException("p is null");
-//    }
-//    File f = FileProvider.getFileFromPlugin(p, fileName);
-//    return readFromTextFile(f);
-//  }
 
   /**
    * @param f
@@ -157,7 +140,7 @@ public class StringTable extends Table<String> implements Cloneable {
     Assertions.productionAssertion(nColumns == getNumberOfColumns(), "expected " + getNumberOfColumns() + " got " + nColumns
         + " row " + row);
     SimpleVector<String> r = new SimpleVector<String>();
-    rows.set(row, r);
+    rows.add(row, r);
     for (int i = 0; i < nColumns; i++) {
       r.set(i, (String) st.nextElement());
     }

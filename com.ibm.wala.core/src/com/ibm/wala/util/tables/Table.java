@@ -10,21 +10,20 @@
  *******************************************************************************/
 package com.ibm.wala.util.tables;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.ibm.wala.util.StringStuff;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.SimpleVector;
 
 /**
- * @author sfink
- * @author Eran Yahav
- * @author Alexey Loginov
  */
 public class Table<T> implements Cloneable {
 
-  // table is implemented as a SimpleVector of rows. Each row is a SimpleVector<T>.
-  protected final SimpleVector<SimpleVector<T>> rows = new SimpleVector<SimpleVector<T>>();
+  // table is implemented as an ArrayList of rows. Each row is a SimpleVector<T>.
+  protected final ArrayList<SimpleVector<T>> rows = new ArrayList<SimpleVector<T>>();
 
   // SimpleVector<String> ... headings of columns
   protected final SimpleVector<String> columnHeadings = new SimpleVector<String>();
@@ -74,7 +73,7 @@ public class Table<T> implements Cloneable {
     return result.toString();
   }
 
-  public T getElement(int row, int column) {
+  public synchronized T getElement(int row, int column) {
     SimpleVector<T> r = rows.get(row);
     return r.get(column);
   }
@@ -82,7 +81,7 @@ public class Table<T> implements Cloneable {
   /**
    * Note that column indices start at zero
    */
-  public String getColumnHeading(int i) {
+  public synchronized String getColumnHeading(int i) {
     return columnHeadings.get(i);
   }
 
@@ -99,15 +98,15 @@ public class Table<T> implements Cloneable {
     return result;
   }
 
-  public int getNumberOfColumns() {
+  public synchronized int getNumberOfColumns() {
     return columnHeadings.getMaxIndex() + 1;
   }
 
-  public int getNumberOfRows() {
-    return rows.getMaxIndex() + 1;
+  public synchronized int getNumberOfRows() {
+    return rows.size();
   }
 
-  public Map<String,T> row2Map(int row) {
+  public synchronized Map<String,T> row2Map(int row) {
     Map<String,T> result = HashMapFactory.make();
     for (int j = 0; j < getNumberOfColumns(); j++) {
       result.put(getColumnHeading(j), getElement(row, j));
@@ -115,11 +114,27 @@ public class Table<T> implements Cloneable {
     return result;
   }
 
-  public void addRow(Map<String,T> p) {
+  public synchronized void addRow(Map<String,T> p) {
     SimpleVector<T> r = new SimpleVector<T>();
-    rows.set(rows.getMaxIndex() + 1, r);
+    rows.add(r);
     for (int i = 0; i < getNumberOfColumns(); i++) {
       r.set(i, p.get(getColumnHeading(i)));
     }
+  }
+  
+  public synchronized void removeRow(Map<String, T> p) {
+    BitVector toRemove = new BitVector();
+    for (int i = 0; i < rows.size(); i++) {
+      Map<String,T> row = row2Map(i);
+      if (row.equals(p)) {
+        toRemove.set(i);
+      }
+    }
+    for (int i = 0; i < rows.size(); i++) {
+      if (toRemove.get(i)) {
+        rows.remove(i);
+      }
+    }
+
   }
 }
