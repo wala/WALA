@@ -65,19 +65,7 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
   }
 
   public String prettyPrint(ILogicDecorator d) {
-    if (maxTerms.size() == 1) {
-      return getF1().prettyPrint(d);
-    } else {
-      StringBuffer result = new StringBuffer();
-      result.append(" ( ");
-      result.append(getF1().prettyPrint(d));
-      result.append(" ) ");
-      result.append(d.prettyPrint(getConnective()));
-      result.append(" ( ");
-      result.append(getF2().prettyPrint(d));
-      result.append(" )");
-      return result.toString();
-    }
+    return d.prettyPrint(this);
   }
 
   public static ICNFFormula make(IFormula f) {

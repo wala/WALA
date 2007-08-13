@@ -95,7 +95,7 @@ public class DefaultDecorator implements ILogicDecorator {
     return r.getSymbol();
   }
   
-  public String prettyPrint(BinaryFormula f) {
+  public String prettyPrint(AbstractBinaryFormula f) {
     StringBuffer result = new StringBuffer();
     result.append(" ( ");
     result.append(f.getF1().prettyPrint(this));

@@ -117,7 +117,7 @@ public class Disjunction extends AbstractBinaryFormula implements IMaxTerm {
     }
   }
 
-  public static Disjunction make(Collection<? extends IFormula> clauses) {
+  public static IMaxTerm make(Collection<? extends IFormula> clauses) {
     assert clauses.size() >= 2;
     Collection<IFormula> newClauses = HashSetFactory.make();
     for (IFormula c : clauses) {
@@ -126,25 +126,25 @@ public class Disjunction extends AbstractBinaryFormula implements IMaxTerm {
         newClauses.addAll(d.clauses);
       } else {
         if (Simplifier.isTautology(c)) {
-          return make(BooleanConstantFormula.TRUE);
+          return BooleanConstantFormula.TRUE;
         } else if (!Simplifier.isContradiction(c)) {
           newClauses.add(Simplifier.normalize(c));
         }
       }
     }
     if (newClauses.isEmpty()) {
-      return make(BooleanConstantFormula.FALSE);
+      return (BooleanConstantFormula.FALSE);
+    } else if (newClauses.size() == 1) {
+      IFormula f = newClauses.iterator().next();
+      assert f instanceof IMaxTerm;
+      return (IMaxTerm) f;
+    } else {
+      return new Disjunction(newClauses);
     }
-    return new Disjunction(newClauses);
   }
 
   public Collection<? extends IFormula> getClauses() {
     return Collections.unmodifiableCollection(clauses);
-  }
-
-  public static Disjunction make(BooleanConstantFormula f) {
-    Collection<? extends IFormula> c = Collections.singleton(f);
-    return new Disjunction(c);
   }
 
   @Override
