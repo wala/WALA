@@ -1,4 +1,12 @@
-/**
+/*******************************************************************************
+ * This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html.
+ * 
+ * This file is a derivative of code released by the University of
+ * California under the terms listed below.  
+ *
  * Refinement Analysis Tools is Copyright ©2007 The Regents of the
  * University of California (Regents). Provided that this notice and
  * the following two paragraphs are included in any distribution of
@@ -27,7 +35,6 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-
 package demandpa;
 
 class TestNastyPtrs {
