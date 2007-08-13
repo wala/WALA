@@ -96,19 +96,19 @@ public class JdtUtil {
     return className;
   }
 
-  public static String getMethodSignature(IMethod method) {
-    if (method == null) {
-      throw new IllegalArgumentException("method is null");
-    }
-    try {
-      String methodParamReturnInfo = method.getSignature();
-      String methodName = method.getElementName();
-      String methodSignature = methodName + " " + methodParamReturnInfo;
-      return methodSignature;
-    } catch (JavaModelException e) {
-    }
-    return "";
-  }
+//  public static String getMethodSignature(IMethod method) {
+//    if (method == null) {
+//      throw new IllegalArgumentException("method is null");
+//    }
+//    try {
+//      String methodParamReturnInfo = method.getSignature();
+//      String methodName = method.getElementName();
+//      String methodSignature = methodName + " " + methodParamReturnInfo;
+//      return methodSignature;
+//    } catch (JavaModelException e) {
+//    }
+//    return "";
+//  }
 
   /**
    * Return a unique string representing the specified Java element across
