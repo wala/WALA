@@ -1,4 +1,15 @@
 /*******************************************************************************
+ * Copyright (c) 2007 Manu Sridharan and Juergen Graf
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Manu Sridharan
+ *     Juergen Graf
+ *******************************************************************************/
+/*******************************************************************************
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,48 +49,22 @@
 package com.ibm.wala.util.graph.labeled;
 
 import java.util.Iterator;
+import java.util.Set;
 
-import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.NodeManager;
-import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
+import com.ibm.wala.util.graph.AbstractGraph;
 
-public abstract class AbstractLabeledGraph<T, U> implements LabeledGraph<T, U> {
-
-  /**
-   * @return the object which manages nodes in the graph
-   */
-  protected abstract NodeManager<T> getNodeManager();
+public abstract class AbstractLabeledGraph<T, U> extends AbstractGraph<T> implements LabeledGraph<T, U> {
 
   /**
    * @return the object which manages edges in the graph
    */
+  @Override
   protected abstract LabeledEdgeManager<T, U> getEdgeManager();
 
-  public void removeNodeAndEdges(T N) {
-    getEdgeManager().removeAllIncidentEdges(N);
-    getNodeManager().removeNode(N);
+  public void setDefaultLabel(U label) {
+    getEdgeManager().setDefaultLabel(label);
   }
-
-  public void addNode(T n) {
-    getNodeManager().addNode(n);
-  }
-
-  public boolean containsNode(T N) {
-    return getNodeManager().containsNode(N);
-  }
-
-  public int getNumberOfNodes() {
-    return getNodeManager().getNumberOfNodes();
-  }
-
-  public Iterator<T> iterator() {
-    return getNodeManager().iterator();
-  }
-
-  public void removeNode(T n) {
-    getNodeManager().removeNode(n);
-  }
-
+  
   public void addEdge(T src, T dst, U label) {
     getEdgeManager().addEdge(src, dst, label);
   }
@@ -112,37 +97,12 @@ public abstract class AbstractLabeledGraph<T, U> implements LabeledGraph<T, U> {
     return getEdgeManager().hasEdge(src, dst, label);
   }
 
-  public void removeAllIncidentEdges(T node) {
-    getEdgeManager().removeAllIncidentEdges(node);
-  }
-
   public void removeEdge(T src, T dst, U label) {
     getEdgeManager().removeEdge(src, dst, label);
   }
 
-  public void removeIncomingEdges(T node) {
-    getEdgeManager().removeIncomingEdges(node);
+  public Set<? extends U> getEdgeLabels(T src, T dst) {
+    return getEdgeManager().getEdgeLabels(src, dst);
   }
 
-  public void removeOutgoingEdges(T node) {
-    getEdgeManager().removeOutgoingEdges(node);
-  }
-
-  public Graph<T> convertToGraph() {
-    Graph<T> ret = new SlowSparseNumberedGraph<T>();
-    for (Iterator<? extends T> iter = iterator(); iter.hasNext();) {
-      T node = iter.next();
-      ret.addNode(node);
-      for (Iterator<? extends U> succLabelIter = getSuccLabels(node); succLabelIter.hasNext();) {
-        final U label = succLabelIter.next();
-        for (Iterator<? extends T> succNodeIter = getSuccNodes(node, label); succNodeIter.hasNext();) {
-          T succ = succNodeIter.next();
-          ret.addNode(succ);
-          ret.addEdge(node, succ);
-        }
-      }
-    }
-    return ret;
-
-  }
 }

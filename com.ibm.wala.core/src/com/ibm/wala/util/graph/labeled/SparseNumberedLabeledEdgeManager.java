@@ -1,4 +1,15 @@
 /*******************************************************************************
+ * Copyright (c) 2007 Manu Sridharan and Juergen Graf
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Manu Sridharan
+ *     Juergen Graf
+ *******************************************************************************/
+/*******************************************************************************
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -39,9 +50,11 @@ package com.ibm.wala.util.graph.labeled;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.ibm.wala.demandpa.genericutil.ArraySetMultiMap;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.SparseNumberedEdgeManager;
 
@@ -49,7 +62,7 @@ import com.ibm.wala.util.graph.impl.SparseNumberedEdgeManager;
  * @author manu
  * 
  */
-public class SparseNumberedLabeledEdgeManager<T, U> implements LabeledEdgeManager<T, U> {
+public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeManager<T, U> {
 
   private final NumberedNodeManager<T> nodeManager;
 
@@ -130,7 +143,6 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements LabeledEdgeManage
    *      java.lang.Object)
    */
   public boolean hasEdge(T src, T dst, U label) {
-    // TODO Auto-generated method stub
     return getManagerForLabel(label).hasEdge(src, dst);
   }
 
@@ -140,7 +152,6 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements LabeledEdgeManage
    * @see util.LabelledEdgeManager#removeAllIncidentEdges(java.lang.Object)
    */
   public void removeAllIncidentEdges(T node) {
-    // TODO Auto-generated method stub
     removeIncomingEdges(node);
     removeOutgoingEdges(node);
   }
@@ -151,7 +162,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements LabeledEdgeManage
    * @see util.LabelledEdgeManager#removeEdge(java.lang.Object,
    *      java.lang.Object, java.lang.Object)
    */
-  public void removeEdge(T src, T dst, U label) {
+  public void removeEdge(T src, T dst, U label) throws IllegalArgumentException {
     getManagerForLabel(label).removeEdge(src, dst);
   }
 
@@ -160,8 +171,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements LabeledEdgeManage
    * 
    * @see util.LabelledEdgeManager#removeIncomingEdges(java.lang.Object)
    */
-  public void removeIncomingEdges(T node) {
-    // TODO Auto-generated method stub
+  public void removeIncomingEdges(T node) throws IllegalArgumentException {
     for (Iterator<U> inLabelIter = nodeToPredLabels.get(node).iterator(); inLabelIter.hasNext();) {
       U label = inLabelIter.next();
       getManagerForLabel(label).removeIncomingEdges(node);
@@ -174,8 +184,7 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements LabeledEdgeManage
    * 
    * @see util.LabelledEdgeManager#removeOutgoingEdges(java.lang.Object)
    */
-  public void removeOutgoingEdges(T node) {
-    // TODO Auto-generated method stub
+  public void removeOutgoingEdges(T node) throws IllegalArgumentException {
     for (Iterator<U> outLabelIter = nodeToSuccLabels.get(node).iterator(); outLabelIter.hasNext();) {
       U label = outLabelIter.next();
       getManagerForLabel(label).removeOutgoingEdges(node);
@@ -183,18 +192,29 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements LabeledEdgeManage
 
   }
 
-  public SparseNumberedLabeledEdgeManager(final NumberedNodeManager<T> nodeManager) {
+  public SparseNumberedLabeledEdgeManager(final NumberedNodeManager<T> nodeManager, U defaultLabel) {
+    super(defaultLabel);
     this.nodeManager = nodeManager;
   }
 
   public Iterator<? extends U> getPredLabels(T N) {
-    // TODO Auto-generated method stub
     return nodeToPredLabels.get(N).iterator();
   }
 
   public Iterator<? extends U> getSuccLabels(T N) {
-    // TODO Auto-generated method stub
     return nodeToSuccLabels.get(N).iterator();
+  }
+
+  public Set<? extends U> getEdgeLabels(T src, T dst) {
+    Set<U> labels = HashSetFactory.make();
+
+    for (U key : edgeLabelToManager.keySet()) {
+      if (edgeLabelToManager.get(key).hasEdge(src, dst)) {
+        labels.add(key);
+      }
+    }
+
+    return labels;
   }
 
 }

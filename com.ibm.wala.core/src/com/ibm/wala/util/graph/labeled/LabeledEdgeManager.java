@@ -1,4 +1,15 @@
 /*******************************************************************************
+ * Copyright (c) 2007 Manu Sridharan and Juergen Graf
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Manu Sridharan
+ *     Juergen Graf
+ *******************************************************************************/
+/*******************************************************************************
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,8 +49,11 @@
 package com.ibm.wala.util.graph.labeled;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import org.w3c.dom.Node;
+
+import com.ibm.wala.util.graph.EdgeManager;
 
 /**
  * On object which tracks labelled edges in a graph.
@@ -49,8 +63,17 @@ import org.w3c.dom.Node;
  * @param <T>
  * @param <U>
  */
-public interface LabeledEdgeManager<T, U> {
+public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
 
+  /**
+   * Sets the default object used as label for operations where no specific
+   * edge label is provided. This is due to compatibility with the 
+   * EdgeManager interface
+   * 
+   * @param label
+   */
+  public void setDefaultLabel(U label);
+  
   /**
    * Return an Iterator over the immediate predecessor {@link Node nodes} of
    * this Node in the Graph on edges with some label.
@@ -111,14 +134,16 @@ public interface LabeledEdgeManager<T, U> {
    */
   public void addEdge(T src, T dst, U label);
 
-  public void removeEdge(T src, T dst, U label);
-
-  public void removeAllIncidentEdges(T node);
-
-  public void removeIncomingEdges(T node);
-
-  public void removeOutgoingEdges(T node);
+  public void removeEdge(T src, T dst, U label) throws UnsupportedOperationException;
 
   public boolean hasEdge(T src, T dst, U label);
+  
+  /**
+   * Returns a set of all labeled edges between node src and node dst
+   * @param src source node of the edge
+   * @param dst target node of the edge
+   * @return Set of edge labels
+   */
+  public Set<? extends U> getEdgeLabels(T src, T dst);
 
 }

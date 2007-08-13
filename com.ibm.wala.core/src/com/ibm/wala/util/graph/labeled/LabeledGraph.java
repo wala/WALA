@@ -1,4 +1,15 @@
 /*******************************************************************************
+ * Copyright (c) 2007 Manu Sridharan and Juergen Graf
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Manu Sridharan
+ *     Juergen Graf
+ *******************************************************************************/
+/*******************************************************************************
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,25 +49,13 @@
 package com.ibm.wala.util.graph.labeled;
 
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.NodeManager;
 
 /**
- * A graph with labelled edges.
+ * A graph with labeled edges.
  * 
  * @author manu
  * 
  */
-public interface LabeledGraph<T, U> extends NodeManager<T>, LabeledEdgeManager<T, U> {
+public interface LabeledGraph<T, U> extends Graph<T>, LabeledEdgeManager<T, U> {
 
-  /**
-   * remove a node and all its incident edges
-   * 
-   * @param N
-   */
-  public void removeNodeAndEdges(T N);
-
-  /**
-   * @return a {@link Graph} representation of this, with no edge labels
-   */
-  public Graph<T> convertToGraph();
 }

@@ -1,4 +1,15 @@
 /*******************************************************************************
+ * Copyright (c) 2007 Manu Sridharan and Juergen Graf
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     Manu Sridharan
+ *     Juergen Graf
+ *******************************************************************************/
+/*******************************************************************************
  * This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -41,22 +52,26 @@ import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.graph.impl.SlowNumberedNodeManager;
 
 /**
- * A labelled graph implementation suitable for sparse graphs.
+ * A labeled graph implementation suitable for sparse graphs.
  * 
  * @author Manu Sridharan
  * 
  * @param <T>
  * @param <U>
  */
-public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractLabeledGraph<T, U> {
+public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabeledGraph<T, U> {
 
   private final SlowNumberedNodeManager<T> nodeManager;
 
   private final SparseNumberedLabeledEdgeManager<T, U> edgeManager;
 
   public SlowSparseNumberedLabeledGraph() {
+    this(null);
+  }
+
+  public SlowSparseNumberedLabeledGraph(U defaultLabel) {
     nodeManager = new SlowNumberedNodeManager<T>();
-    edgeManager = new SparseNumberedLabeledEdgeManager<T, U>(nodeManager);
+    edgeManager = new SparseNumberedLabeledEdgeManager<T, U>(nodeManager, defaultLabel);
   }
 
   @Override
