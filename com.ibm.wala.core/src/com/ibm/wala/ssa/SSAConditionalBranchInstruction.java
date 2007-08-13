@@ -88,6 +88,10 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
     return (j == 0) ? val1 : val2;
   }
 
+  public TypeReference getType() {
+    return type;
+  }
+
   public boolean isObjectComparison() {
     return type == TypeReference.JavaLangObject;
   }
