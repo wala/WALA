@@ -456,8 +456,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       else {
 	Type leftType = left.type();
 	Type rightType = right.type();
-	if (leftType.isPrimitive()) {
-	  Assertions._assert(rightType.isPrimitive());
+	if (leftType.isPrimitive() && rightType.isPrimitive()) {
 	  CAstNode leftNode = walkNodes(left, wc);
 	  CAstNode rightNode = walkNodes(right, wc);
 	  
