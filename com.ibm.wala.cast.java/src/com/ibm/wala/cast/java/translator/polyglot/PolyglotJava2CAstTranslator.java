@@ -453,8 +453,33 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
         return makeNode(wc, fFactory, b, CAstNode.IF_EXPR, walkNodes(left, wc), walkNodes(right, wc), fFactory.makeConstant(false));
       else if (operator.equals(Binary.COND_OR))
         return makeNode(wc, fFactory, b, CAstNode.IF_EXPR, walkNodes(left, wc), fFactory.makeConstant(true), walkNodes(right, wc));
-      else
-        return makeNode(wc, fFactory, b, CAstNode.BINARY_EXPR, mapBinaryOpcode(operator), walkNodes(left, wc), walkNodes(right, wc));
+      else {
+	Type leftType = left.type();
+	Type rightType = right.type();
+	if (leftType.isPrimitive()) {
+	  Assertions._assert(rightType.isPrimitive());
+	  CAstNode leftNode = walkNodes(left, wc);
+	  CAstNode rightNode = walkNodes(right, wc);
+	  
+	  try {
+	    Type result = fTypeSystem.promote(leftType, rightType);
+
+	    if (! result.equals(leftType)) {
+	      leftNode = makeNode(wc, fFactory, b, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(result)), leftNode);
+	    }
+
+	    if (! result.equals(rightType)) {
+	      rightNode = makeNode(wc, fFactory, b, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(result)), rightNode);
+	    }
+	  } catch (SemanticException e) {
+
+	  }
+
+	  return makeNode(wc, fFactory, b, CAstNode.BINARY_EXPR, mapBinaryOpcode(operator), leftNode, rightNode);
+	} else {
+	  return makeNode(wc, fFactory, b, CAstNode.BINARY_EXPR, mapBinaryOpcode(operator), walkNodes(left, wc), walkNodes(right, wc));
+	}
+      }
     }
 
     @SuppressWarnings("unchecked")
