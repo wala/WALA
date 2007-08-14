@@ -175,7 +175,7 @@ public class PointsToMap {
   }
 
   protected int getNumberOfPointerKeys() {
-    return pointerKeys.getMappingSize();
+    return pointerKeys.getSize();
   }
 
   /**

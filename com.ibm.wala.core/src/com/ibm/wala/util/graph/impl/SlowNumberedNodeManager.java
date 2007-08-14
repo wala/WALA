@@ -45,7 +45,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
    * @see com.ibm.wala.util.graph.NumberedGraph#getMaxNumber()
    */
   public int getMaxNumber() {
-    return map.getMappingSize() - 1;
+    return map.getMaximumIndex();
   }
 
 
@@ -55,7 +55,7 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
 
 
   public int getNumberOfNodes() {
-    return map.getMappingSize();
+    return map.getSize();
   }
 
   public void addNode(T n) {

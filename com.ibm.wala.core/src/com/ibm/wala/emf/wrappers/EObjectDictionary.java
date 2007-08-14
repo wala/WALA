@@ -89,7 +89,7 @@ public class EObjectDictionary {
     if (container) {
       EContainer c = CommonFactory.eINSTANCE.createEContainer();
       // note: be careful to maintain iteration order here.
-      for (int i = 0; i < map.getMappingSize(); i++) {
+      for (int i = 0; i <= map.getMaximumIndex(); i++) {
         EObject o = map.getMappedObject(i);
         if (createUniqueIds && o instanceof EObjectWithContainerId) {
           EObjectWithContainerId x = (EObjectWithContainerId) o;
@@ -101,7 +101,7 @@ public class EObjectDictionary {
     } else {
       ENotContainer c = CommonFactory.eINSTANCE.createENotContainer();
       // note: be careful to maintain iteration order here.
-      for (int i = 0; i < map.getMappingSize(); i++) {
+      for (int i = 0; i <= map.getMaximumIndex(); i++) {
         c.getContents().add(map.getMappedObject(i));
       }
       return c;
@@ -128,6 +128,6 @@ public class EObjectDictionary {
    * @return the number of objects tracked by this dictionary
    */
   public int size() {
-    return map.getMappingSize();
+    return map.getSize();
   }
 }

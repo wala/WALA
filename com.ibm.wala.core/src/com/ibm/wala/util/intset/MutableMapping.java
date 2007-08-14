@@ -77,10 +77,6 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     return map.get(o) != null;
   }
 
-  public int getMappingSize() {
-    return nextIndex;
-  }
-
   /**
    * Add an object to the set of mapped objects.
    * 
@@ -168,6 +164,14 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     array[i] = o;
     nextIndex = Math.max(nextIndex, i+1);
 
+  }
+
+  public int getMaximumIndex() {
+    return nextIndex - 1;
+  }
+
+  public int getSize() {
+    return map.size();
   }
 
 }

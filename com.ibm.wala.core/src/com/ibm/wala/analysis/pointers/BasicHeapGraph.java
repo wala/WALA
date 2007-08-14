@@ -53,7 +53,7 @@ public class BasicHeapGraph extends HeapGraph {
   private final static boolean VERBOSE = false;
 
   private final static int VERBOSE_INTERVAL = 10000;
-  
+
   /**
    * Pointer analysis solution
    */
@@ -71,8 +71,9 @@ public class BasicHeapGraph extends HeapGraph {
 
   /**
    * @param P
-   *          governing pointer analysis
-   * @throws NullPointerException  if P is null
+   *            governing pointer analysis
+   * @throws NullPointerException
+   *             if P is null
    */
   public BasicHeapGraph(final PointerAnalysis P, final CallGraph callGraph) throws NullPointerException {
     super(P.getHeapModel());
@@ -86,7 +87,7 @@ public class BasicHeapGraph extends HeapGraph {
       }
 
       public int getNumberOfNodes() {
-        return pointerKeys.getMappingSize() + P.getInstanceKeyMapping().getMappingSize();
+        return pointerKeys.getSize() + P.getInstanceKeyMapping().getSize();
       }
 
       public void addNode(Object n) {
@@ -107,13 +108,13 @@ public class BasicHeapGraph extends HeapGraph {
             }
           }
           int inumber = P.getInstanceKeyMapping().getMappedIndex((InstanceKey) N);
-          return (inumber == -1) ? -1 : inumber + pointerKeys.getMappingSize();
+          return (inumber == -1) ? -1 : inumber + pointerKeys.getMaximumIndex();
         }
       }
 
       public Object getNode(int number) {
-        if (number >= pointerKeys.getMappingSize()) {
-          return P.getInstanceKeyMapping().getMappedObject(number - pointerKeys.getMappingSize());
+        if (number >= pointerKeys.getMaximumIndex()) {
+          return P.getInstanceKeyMapping().getMappedObject(number - pointerKeys.getMaximumIndex());
         } else {
           return pointerKeys.getMappedObject(number);
         }
@@ -173,7 +174,7 @@ public class BasicHeapGraph extends HeapGraph {
         public void addEdge(Object src, Object dst) {
           Assertions.UNREACHABLE();
         }
-        
+
         public void removeEdge(Object src, Object dst) {
           Assertions.UNREACHABLE();
         }
@@ -282,8 +283,7 @@ public class BasicHeapGraph extends HeapGraph {
    * @return R, y \in R(x,y) if the node y is a predecessor of node x
    */
   private IBinaryNaturalRelation computePredecessors(NumberedNodeManager<Object> nodeManager) {
-    BasicNaturalRelation R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE },
-        BasicNaturalRelation.SIMPLE);
+    BasicNaturalRelation R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE }, BasicNaturalRelation.SIMPLE);
 
     // we split the following loops to improve temporal locality,
     // particularly for locals
@@ -330,7 +330,7 @@ public class BasicHeapGraph extends HeapGraph {
         list.add((LocalPointerKey) n);
       }
     }
-    Object[] arr =  list.toArray();
+    Object[] arr = list.toArray();
     Arrays.sort(arr, new LocalPointerComparator());
 
     for (int i = 0; i < arr.length; i++) {
@@ -356,8 +356,8 @@ public class BasicHeapGraph extends HeapGraph {
    */
   private final class LocalPointerComparator implements Comparator<Object> {
     public int compare(Object arg1, Object arg2) {
-      LocalPointerKey o1 = (LocalPointerKey)arg1;
-      LocalPointerKey o2 = (LocalPointerKey)arg2;
+      LocalPointerKey o1 = (LocalPointerKey) arg1;
+      LocalPointerKey o2 = (LocalPointerKey) arg2;
       if (o1.getNode().equals(o2.getNode())) {
         return o1.getValueNumber() - o2.getValueNumber();
       } else {
@@ -447,7 +447,7 @@ public class BasicHeapGraph extends HeapGraph {
   public void addEdge(Object from, Object to) {
     Assertions.UNREACHABLE();
   }
-  
+
   public void removeEdge(Object from, Object to) {
     Assertions.UNREACHABLE();
   }
@@ -498,7 +498,6 @@ public class BasicHeapGraph extends HeapGraph {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
   }
-
 
   public void removeOutgoingEdges(Object node) {
     // TODO Auto-generated method stub

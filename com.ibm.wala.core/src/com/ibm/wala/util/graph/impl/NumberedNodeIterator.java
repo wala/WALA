@@ -27,8 +27,6 @@ public class NumberedNodeIterator<T> implements Iterator<T> {
   final NumberedNodeManager<T> nodeManager;
 
   /**
-   * @param s
-   * @param nodeManager
    * @throws IllegalArgumentException  if s is null
    */
   public NumberedNodeIterator(IntSet s, NumberedNodeManager<T> nodeManager) {

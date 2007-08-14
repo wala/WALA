@@ -40,7 +40,7 @@ public final class BitSet<T> {
     if (map == null) {
       throw new IllegalArgumentException("map is null");
     }
-    int length = map.getMappingSize();
+    int length = map.getMaximumIndex();
     vector = new BitVector(length);
     this.map = map;
   }

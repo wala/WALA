@@ -169,7 +169,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
     }
 
     public int size() {
-      return map.getMappingSize();
+      return map.getSize();
     }
 
     public int find(int i) {

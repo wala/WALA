@@ -37,9 +37,14 @@ public interface OrdinalSetMapping<T> extends Iterable<T> {
   public boolean hasMappedIndex(T o);
 
   /**
-   * @return the size of the domain of the bijection. 
+   * @return the maximum integer mapped to an object
    */
-  public int getMappingSize();
+  public int getMaximumIndex();
+  
+  /**
+   * @return the current size of the bijection
+   */
+  public int getSize();
   
   /**
    * Add an Object to the set of mapped objects.

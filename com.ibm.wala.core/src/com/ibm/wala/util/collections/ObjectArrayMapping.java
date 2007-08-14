@@ -59,9 +59,6 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
     return map.get(o) != null;
   }
 
-  public int getMappingSize() {
-    return array.length;
-  }
 
   public Iterator<T> iterator() {
     return map.keySet().iterator();
@@ -70,5 +67,13 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
   public int add(Object o) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return 0;
+  }
+
+  public int getMaximumIndex() {
+    return array.length -1;
+  }
+
+  public int getSize() {
+    return map.size();
   }
 }
