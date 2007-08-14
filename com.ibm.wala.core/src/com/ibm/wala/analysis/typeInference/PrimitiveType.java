@@ -67,10 +67,21 @@ public class PrimitiveType extends TypeAbstraction {
     } else if (rhs == this) {
       return this;
     } else if (rhs instanceof PrimitiveType) {
-      if (size() > ((PrimitiveType) rhs).size()) {
-        return this;
+      TypeReference other = ((PrimitiveType)rhs).reference;
+      if (reference == TypeReference.Double) {
+	return this;
+      } else if (other == TypeReference.Double) {
+	return rhs;
+      } else if (reference == TypeReference.Float) {
+	return this;
+      } else if (other == TypeReference.Float) {
+	return rhs;
       } else {
-        return rhs;
+	if (size() > ((PrimitiveType) rhs).size()) {
+	  return this;
+	} else {
+	  return rhs;
+	}
       }
     } else {
       return TOP;
