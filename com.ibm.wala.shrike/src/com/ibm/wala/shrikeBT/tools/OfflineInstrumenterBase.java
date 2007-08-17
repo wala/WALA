@@ -312,8 +312,12 @@ public abstract class OfflineInstrumenterBase {
    * the command-line is considered leftover
    * 
    * @return the arguments that were not understood
+   * @throws IllegalArgumentException  if args == null
    */
-  final public String[] parseStandardArgs(String[] args) throws IOException {
+  final public String[] parseStandardArgs(String[] args) throws IllegalArgumentException, IOException {
+    if (args == null) {
+      throw new IllegalArgumentException("args == null");
+    }
     ArrayList<String> leftover = new ArrayList<String>();
 
     for (int i = 0; i < args.length; i++) {
@@ -485,7 +489,10 @@ public abstract class OfflineInstrumenterBase {
     cachedBuf = buf;
   }
 
-  public static void copyStream(InputStream in, OutputStream out) throws IOException {
+  public static void copyStream(InputStream in, OutputStream out) throws IllegalArgumentException, IOException {
+    if (in == null) {
+      throw new IllegalArgumentException("in == null");
+    }
     byte[] buf = makeBuf();
     try {
       while (true) {

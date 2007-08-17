@@ -89,8 +89,12 @@ public final class LocalVariableTableWriter extends ClassWriter.Element {
    *          containing a (nameIndex, typeIndex) for each local variable; the
    *          pair (0,0) indicates that there is no information about that local
    *          variable at that offset
+   * @throws IllegalArgumentException  if varMap == null
    */
-  public static int[] makeRawTable(int[][] varMap) {
+  public static int[] makeRawTable(int[][] varMap) throws IllegalArgumentException {
+    if (varMap == null) {
+      throw new IllegalArgumentException("varMap == null");
+    }
     int varCount = 0;
     for (int i = 0; i < varMap.length; i++) {
       if (varMap[i] != null) {

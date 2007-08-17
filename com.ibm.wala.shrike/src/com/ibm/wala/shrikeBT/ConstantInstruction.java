@@ -461,7 +461,10 @@ public abstract class ConstantInstruction extends Instruction {
    */
   public abstract String getType();
 
-  public static ConstantInstruction make(String type, Object constant) {
+  public static ConstantInstruction make(String type, Object constant) throws IllegalArgumentException {
+    if (type == null && constant != null) {
+      throw new IllegalArgumentException("(type == null) and (constant != null)");
+    }
     if (constant == null) {
       return ConstNull.makeInternal();
     } else if (type.equals(TYPE_String)) {

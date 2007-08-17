@@ -207,8 +207,12 @@ public final class Util {
   /**
    * Compute the number of parameters given by method signature "type". Any
    * "this" parameter is not included.
+   * @throws IllegalArgumentException  if type == null
    */
-  static int getParamsCount(String type) {
+  static int getParamsCount(String type) throws IllegalArgumentException {
+    if (type == null) {
+      throw new IllegalArgumentException("type == null");
+    }
     int index = 1;
     int count = 0;
 
@@ -352,8 +356,12 @@ public final class Util {
 
   /**
    * Given a Java Method, compute the VM-style type signature.
+   * @throws IllegalArgumentException  if params == null
    */
-  public static String computeSignature(Class<?>[] params, Class<?> result) {
+  public static String computeSignature(Class<?>[] params, Class<?> result) throws IllegalArgumentException {
+    if (params == null) {
+      throw new IllegalArgumentException("params == null");
+    }
     StringBuffer buf = new StringBuffer();
     buf.append("(");
     for (int i = 0; i < params.length; i++) {
@@ -547,7 +555,10 @@ public final class Util {
     return r;
   }
 
-  public static void readFully(InputStream s, byte[] bytes) throws IOException {
+  public static void readFully(InputStream s, byte[] bytes) throws IllegalArgumentException, IOException {
+    if (bytes == null) {
+      throw new IllegalArgumentException("bytes == null");
+    }
     int offset = 0;
     while (offset < bytes.length) {
       int r = s.read(bytes, offset, bytes.length - offset);

@@ -68,6 +68,9 @@ final public class ArrayLoadInstruction extends Instruction {
       return getType();
     } else {
       String t = types[1];
+      if (t == null) {
+        throw new IllegalArgumentException("types[1] cannot be null");
+      }
       if (t.startsWith("[")) {
         return t.substring(1);
       } else if (t.equals(TYPE_null)) {

@@ -83,8 +83,12 @@ public final class LineNumberTableWriter extends ClassWriter.Element {
    *          to its line number (or 0 if there is no line or it's not known)
    * @return the line numbers in "raw" format, a flattened sequence of (startPC,
    *         lineNumber) pairs
+   * @throws IllegalArgumentException  if newLineMap == null
    */
-  public static int[] makeRawTable(int[] newLineMap) {
+  public static int[] makeRawTable(int[] newLineMap) throws IllegalArgumentException {
+    if (newLineMap == null) {
+      throw new IllegalArgumentException("newLineMap == null");
+    }
     int rawCount = 0;
     int last = -1;
     for (int i = 0; i < newLineMap.length; i++) {

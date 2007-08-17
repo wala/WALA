@@ -616,6 +616,9 @@ public final class ClassWriter implements ClassConstants {
       if (type < 1 || type > 0xFFFF) {
         throw new IllegalArgumentException("Type constant pool index out of range: " + name);
       }
+      if (attributes == null) {
+        throw new IllegalArgumentException("Atrtributes are null");
+      }
       if (attributes.length > 0xFFFF) {
         throw new IllegalArgumentException("Too many attributes: " + attributes.length);
       }
