@@ -79,6 +79,11 @@ public class CISlicer {
     return slice;
   }
 
+  public Collection<Statement> computeBackwardThinSlice(Collection<Statement> seeds) {
+    Collection<Statement> slice = DFS.getReachableNodes(depGraph, seeds);
+    return slice;
+  }
+
   /**
    * Compute the set of pointer keys each statement mods
    */
