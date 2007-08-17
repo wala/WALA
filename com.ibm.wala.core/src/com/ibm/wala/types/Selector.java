@@ -13,13 +13,11 @@ package com.ibm.wala.types;
 import com.ibm.wala.util.Atom;
 
 /**
- * 
- * A method selector; something like: foo(Ljava/langString;)Ljava/lang/Class;
+ * A method selector; something like: foo(Ljava/lang/String;)Ljava/lang/Class;
  * 
  * TODO: Canonicalize these?
  * 
  * @author sfink
- * 
  */
 public final class Selector {
 
