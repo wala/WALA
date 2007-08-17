@@ -193,6 +193,12 @@ public class FileProvider {
       Trace.println("FileProvider got url: " + url + " for " + fileName);
     }
     if (url == null) {
+      // couldn't load it from the class loader. try again from the
+      // system classloader
+      File f = new File(fileName);
+      if (f.exists()) {
+          return f;
+      }
       throw new FileNotFoundException(fileName);
     } else {
       return new File(filePathFromURL(url));
