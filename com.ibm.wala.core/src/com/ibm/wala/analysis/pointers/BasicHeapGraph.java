@@ -113,8 +113,8 @@ public class BasicHeapGraph extends HeapGraph {
       }
 
       public Object getNode(int number) {
-        if (number >= pointerKeys.getMaximumIndex()) {
-          return P.getInstanceKeyMapping().getMappedObject(number - pointerKeys.getMaximumIndex());
+        if (number > pointerKeys.getMaximumIndex()) {
+          return P.getInstanceKeyMapping().getMappedObject(number - pointerKeys.getSize());
         } else {
           return pointerKeys.getMappedObject(number);
         }
