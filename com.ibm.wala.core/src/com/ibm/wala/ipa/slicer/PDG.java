@@ -99,7 +99,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   private final Map<CGNode, OrdinalSet<PointerKey>> mod;
 
   private final DataDependenceOptions dOptions;
-  
+
   private final CallGraph cg;
 
   private final ModRef modRef;
@@ -116,7 +116,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    */
   public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
-	     HeapExclusions exclusions, CallGraph cg, ModRef modRef) {
+      HeapExclusions exclusions, CallGraph cg, ModRef modRef) {
 
     super();
     if (node == null) {
@@ -163,16 +163,17 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     ControlFlowGraph controlFlowGraph = ir.getControlFlowGraph();
     if (cOptions.equals(ControlDependenceOptions.NO_EXCEPTIONAL_EDGES)) {
       controlFlowGraph = ExceptionPrunedCFG.make(controlFlowGraph);
-      // In case the CFG has no nodes left because the only control dependencies were
+      // In case the CFG has no nodes left because the only control dependencies
+      // were
       // exceptional, simply return because at this point there are no nodes.
       // Otherwise, later this may raise an Exception.
       if (controlFlowGraph.getNumberOfNodes() == 0) {
         return;
       }
     } else {
-      Assertions.productionAssertion(cOptions.equals(ControlDependenceOptions.FULL)); 
+      Assertions.productionAssertion(cOptions.equals(ControlDependenceOptions.FULL));
     }
-    
+
     ControlDependenceGraph cdg = new ControlDependenceGraph(controlFlowGraph);
     for (IBasicBlock bb : cdg) {
       if (bb.isExitBlock()) {
@@ -191,15 +192,18 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         } else {
           src = ssaInstruction2Statement(s);
           // add edges from call statements to parameter passing and return
-          if (s instanceof SSAAbstractInvokeInstruction) {
-            SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
-            for (Statement st : callerParamStatements.get(call.getCallSite())) {
-              addEdge(src, st);
-            }
-            for (Statement st : callerReturnStatements.get(call.getCallSite())) {
-              addEdge(src, st);
-            }
-          }
+          // SJF: Alexey and I think that we should just define ParamStatements as
+          // being control dependent on nothing ... they only represent pure
+          // data dependence.  So, I'm commenting out the following.
+//          if (s instanceof SSAAbstractInvokeInstruction) {
+//            SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
+//            for (Statement st : callerParamStatements.get(call.getCallSite())) {
+//              addEdge(src, st);
+//            }
+//            for (Statement st : callerReturnStatements.get(call.getCallSite())) {
+//              addEdge(src, st);
+//            }
+//          }
         }
       }
       // add edges for every control-dependent statement in the IR, if there are
@@ -235,9 +239,12 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       }
     }
     // add CD from method entry to all callee parameter assignments
-    for (int i = 0; i < paramCalleeStatements.length; i++) {
-      addEdge(methodEntry, paramCalleeStatements[i]);
-    }
+    // SJF: Alexey and I think that we should just define ParamStatements as
+    // being control dependent on nothing ... they only represent pure
+    // data dependence.  So, I'm commenting out the following.
+//    for (int i = 0; i < paramCalleeStatements.length; i++) {
+//      addEdge(methodEntry, paramCalleeStatements[i]);
+//    }
   }
 
   /**
@@ -514,8 +521,9 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     };
     Collection<Statement> relevantStatements = Iterator2Collection.toCollection(new FilterIterator<Statement>(iterator(), f));
 
-    Map<Statement, OrdinalSet<Statement>> heapReachingDefs = dOptions.isIgnoreHeap() ? null : (new HeapReachingDefs(modRef)).computeReachingDefs(
-        node, ir, pa, mod, relevantStatements, new HeapExclusions(SetComplement.complement(new SingletonSet(t))), cg);
+    Map<Statement, OrdinalSet<Statement>> heapReachingDefs = dOptions.isIgnoreHeap() ? null : (new HeapReachingDefs(modRef))
+        .computeReachingDefs(node, ir, pa, mod, relevantStatements, new HeapExclusions(SetComplement
+            .complement(new SingletonSet(t))), cg);
 
     for (Statement st : heapReachingDefs.keySet()) {
       switch (st.getKind()) {
@@ -933,7 +941,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     case NORMAL:
       NormalStatement st = (NormalStatement) N;
       if (!(IGNORE_ALLOC_HEAP_DEFS && st.getInstruction() instanceof SSANewInstruction)) {
-	Collection<PointerKey> ref = modRef.getRef(node, heapModel, pa, st.getInstruction(), exclusions);
+        Collection<PointerKey> ref = modRef.getRef(node, heapModel, pa, st.getInstruction(), exclusions);
         for (PointerKey pk : ref) {
           createHeapDataDependenceEdges(pk);
         }
@@ -953,7 +961,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     case NORMAL:
       NormalStatement st = (NormalStatement) N;
       if (!(IGNORE_ALLOC_HEAP_DEFS && st.getInstruction() instanceof SSANewInstruction)) {
-	  Collection<PointerKey> ref = modRef.getMod(node, heapModel, pa, st.getInstruction(), exclusions);
+        Collection<PointerKey> ref = modRef.getMod(node, heapModel, pa, st.getInstruction(), exclusions);
         for (PointerKey pk : ref) {
           createHeapDataDependenceEdges(pk);
         }
