@@ -26,8 +26,12 @@ public class Query<T> {
 
   /**
    * SELECT * from t where column=value
+   * @throws IllegalArgumentException  if t == null
    */
-  public static <T> Collection<Map<String,T>> selectStarWhereEquals(Table<T> t, String column, T value) {
+  public static <T> Collection<Map<String,T>> selectStarWhereEquals(Table<T> t, String column, T value) throws IllegalArgumentException {
+    if (t == null) {
+      throw new IllegalArgumentException("t == null");
+    }
     Collection<Map<String,T>> result = new ArrayList<Map<String,T>>();
     for (int i = 0 ; i < t.getNumberOfRows(); i++) {
       Map<String,T> p = t.row2Map(i);

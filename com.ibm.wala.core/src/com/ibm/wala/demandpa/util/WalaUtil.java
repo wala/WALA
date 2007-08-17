@@ -77,7 +77,10 @@ public class WalaUtil {
     Trace.setTraceFile(fileName);
   }
 
-  public static void dumpAllIR(CallGraph cg, String benchName, Properties p) {
+  public static void dumpAllIR(CallGraph cg, String benchName, Properties p) throws IllegalArgumentException {
+    if (p == null) {
+      throw new IllegalArgumentException("p == null");
+    }
     System.err.print("dumping ir...");
     String irFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + benchName + "-ir.txt";
     try {

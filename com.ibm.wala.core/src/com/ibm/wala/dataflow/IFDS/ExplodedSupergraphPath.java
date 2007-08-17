@@ -454,8 +454,12 @@ public class ExplodedSupergraphPath<T> {
   /**
    * Create a brief(er) summary of a path, which includes only call and return
    * nodes
+   * @throws IllegalArgumentException  if L == null
    */
-  public static <T> List<ExplodedSupergraphNode<T>> pruneListForCallReturn(ISupergraph<T,?> supergraph, List<ExplodedSupergraphNode<T>> L) {
+  public static <T> List<ExplodedSupergraphNode<T>> pruneListForCallReturn(ISupergraph<T,?> supergraph, List<ExplodedSupergraphNode<T>> L) throws IllegalArgumentException {
+    if (L == null) {
+      throw new IllegalArgumentException("L == null");
+    }
     for (int i = 0; i < L.size(); i++) {
       ExplodedSupergraphNode<T> n = L.get(i);
       if (!supergraph.isEntry(n.getSupergraphNode()) && !supergraph.isExit(n.getSupergraphNode())

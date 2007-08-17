@@ -304,8 +304,12 @@ public class CodeScanner {
    * @param statements
    *          list of ssa statements
    * @return List of FieldReference
+   * @throws IllegalArgumentException  if statements == null
    */
-  public static List<FieldReference> getFieldsRead(SSAInstruction[] statements) {
+  public static List<FieldReference> getFieldsRead(SSAInstruction[] statements) throws IllegalArgumentException {
+    if (statements == null) {
+      throw new IllegalArgumentException("statements == null");
+    }
     final List<FieldReference> result = new LinkedList<FieldReference>();
     Visitor v = new Visitor() {
       @Override
@@ -326,8 +330,12 @@ public class CodeScanner {
    * @param statements
    *          list of ssa statements
    * @return List of FieldReference
+   * @throws IllegalArgumentException  if statements == null
    */
-  public static List<FieldReference> getFieldsWritten(SSAInstruction[] statements) {
+  public static List<FieldReference> getFieldsWritten(SSAInstruction[] statements) throws IllegalArgumentException {
+    if (statements == null) {
+      throw new IllegalArgumentException("statements == null");
+    }
     final List<FieldReference> result = new LinkedList<FieldReference>();
     Visitor v = new Visitor() {
       @Override

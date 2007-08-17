@@ -133,7 +133,10 @@ public class Util {
     return objArrayToString(o, "[", "]", ", ");
   }
 
-  public static String objArrayToString(Object[] o, String start, String end, String sep) {
+  public static String objArrayToString(Object[] o, String start, String end, String sep) throws IllegalArgumentException {
+    if (o == null) {
+      throw new IllegalArgumentException("o == null");
+    }
     StringBuffer s = new StringBuffer();
     s.append(start);
     for (int i = 0; i < o.length; i++) {
@@ -332,8 +335,12 @@ public class Util {
   /** Generate strings with fully qualified names or not */
   public static final boolean FULLY_QUALIFIED_NAMES = false;
 
-  /** Write object fields to string */
-  public static String objectFieldsToString(Object obj) {
+  /** Write object fields to string 
+   * @throws IllegalArgumentException  if obj == null*/
+  public static String objectFieldsToString(Object obj) throws IllegalArgumentException {
+    if (obj == null) {
+      throw new IllegalArgumentException("obj == null");
+    }
     // Temporarily disable the security manager
     SecurityManager oldsecurity = System.getSecurityManager();
     System.setSecurityManager(new SecurityManager() {

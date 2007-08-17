@@ -123,7 +123,10 @@ public class QuantifiedFormula implements IMaxTerm {
     return getQuantifier() + " " + getBoundVar()  + "." + getFormula();
   }
 
-  public String prettyPrint(ILogicDecorator d) {
+  public String prettyPrint(ILogicDecorator d) throws IllegalArgumentException {
+    if (d == null) {
+      throw new IllegalArgumentException("d == null");
+    }
     return d.prettyPrint(getQuantifier()) + " " + d.prettyPrint(getBoundVar()) + "." + getFormula().prettyPrint(d);
   }
   

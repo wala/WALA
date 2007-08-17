@@ -24,11 +24,17 @@ public class DefaultDecorator implements ILogicDecorator {
     return INSTANCE;
   }
 
-  public String prettyPrint(BinaryConnective b) {
+  public String prettyPrint(BinaryConnective b) throws IllegalArgumentException {
+    if (b == null) {
+      throw new IllegalArgumentException("b == null");
+    }
     return b.toString();
   }
 
-  public String prettyPrint(BooleanConstant c) {
+  public String prettyPrint(BooleanConstant c) throws IllegalArgumentException {
+    if (c == null) {
+      throw new IllegalArgumentException("c == null");
+    }
     return c.toString();
   }
 
@@ -40,7 +46,10 @@ public class DefaultDecorator implements ILogicDecorator {
     return q.toString();
   }
 
-  public String prettyPrint(IConstant constant) {
+  public String prettyPrint(IConstant constant) throws IllegalArgumentException {
+    if (constant == null) {
+      throw new IllegalArgumentException("constant == null");
+    }
     return constant.toString();
   }
 

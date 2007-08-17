@@ -48,7 +48,10 @@ public class AssignLabel implements IFlowLabel {
     return theInstance;
   }
 
-  public void visit(IFlowLabelVisitor v, Object dst) {
+  public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
+    if (v == null) {
+      throw new IllegalArgumentException("v == null");
+    }
     v.visitAssign(this, dst);
   }
 

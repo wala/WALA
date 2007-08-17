@@ -61,7 +61,10 @@ public abstract class AbstractVariable extends AbstractTerm implements Comparabl
     return "v" + getNumber();
   }
 
-  public String prettyPrint(ILogicDecorator d) {
+  public String prettyPrint(ILogicDecorator d) throws IllegalArgumentException {
+    if (d == null) {
+      throw new IllegalArgumentException("d == null");
+    }
     return d.prettyPrint(this);
   }
 

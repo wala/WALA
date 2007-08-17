@@ -470,8 +470,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * 
    * @return the unique pointer key which catches the exceptions thrown by a
    *         call
+   * @throws IllegalArgumentException  if ir == null
    */
-  public PointerKey getUniqueCatchKey(SSAAbstractInvokeInstruction call, IR ir, CGNode node) {
+  public PointerKey getUniqueCatchKey(SSAAbstractInvokeInstruction call, IR ir, CGNode node) throws IllegalArgumentException {
+    if (ir == null) {
+      throw new IllegalArgumentException("ir == null");
+    }
     IBasicBlock[] bb = ir.getBasicBlocksForCall(call.getCallSite());
     if (Assertions.verifyAssertions) {
       Assertions._assert(bb.length == 1);

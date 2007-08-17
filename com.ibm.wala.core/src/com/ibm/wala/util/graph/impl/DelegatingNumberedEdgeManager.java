@@ -166,7 +166,10 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
     n.removeOutgoingEdges();
   }
 
-  public boolean hasEdge(T src, T dst) {
+  public boolean hasEdge(T src, T dst) throws IllegalArgumentException {
+    if (dst == null) {
+      throw new IllegalArgumentException("dst == null");
+    }
     return getSuccNodeNumbers(src).contains(dst.getGraphNodeId());
   }
 

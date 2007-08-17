@@ -56,8 +56,9 @@ public class Assertions {
    * These assertions will be enabled in production!
    * @param b
    * @param string
+   * @throws UnimplementedError  if b == false
    */
-  public static void productionAssertion(boolean b, String string) {
+  public static void productionAssertion(boolean b, String string) throws UnimplementedError {
     if (!b)
       throw new UnimplementedError(string);
   }

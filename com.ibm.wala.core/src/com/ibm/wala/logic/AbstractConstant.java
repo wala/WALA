@@ -20,7 +20,10 @@ public abstract class AbstractConstant implements IConstant {
     return Kind.CONSTANT;
    }
 
-  public String prettyPrint(ILogicDecorator d) {
+  public String prettyPrint(ILogicDecorator d) throws IllegalArgumentException {
+    if (d == null) {
+      throw new IllegalArgumentException("d == null");
+    }
     return d.prettyPrint(this);
   }
 

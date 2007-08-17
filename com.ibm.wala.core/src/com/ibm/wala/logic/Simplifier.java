@@ -353,7 +353,10 @@ public class Simplifier {
     // Assertions.UNREACHABLE();
   }
 
-  public static IFormula innermost(QuantifiedFormula q) {
+  public static IFormula innermost(QuantifiedFormula q) throws IllegalArgumentException {
+    if (q == null) {
+      throw new IllegalArgumentException("q == null");
+    }
     IFormula g = q.getFormula();
     if (g.getKind().equals(IFormula.Kind.QUANTIFIED)) {
       return innermost((QuantifiedFormula) g);

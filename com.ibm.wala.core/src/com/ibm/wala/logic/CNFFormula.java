@@ -391,7 +391,10 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
   }
   
   // TODO: move this to Simplifier?
-  public static IMaxTerm normalize(IMaxTerm f) {
+  public static IMaxTerm normalize(IMaxTerm f) throws IllegalArgumentException {
+    if (f == null) {
+      throw new IllegalArgumentException("f == null");
+    }
     switch (f.getKind()) {
     case RELATION:
       RelationFormula r = (RelationFormula) f;

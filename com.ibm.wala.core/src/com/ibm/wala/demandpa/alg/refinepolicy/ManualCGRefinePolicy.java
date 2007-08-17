@@ -49,7 +49,10 @@ import com.ibm.wala.types.MethodReference;
  */
 public class ManualCGRefinePolicy implements CallGraphRefinePolicy {
 
-  public boolean shouldRefine(CallSiteAndCGNode callSiteAndCGNode) {
+  public boolean shouldRefine(CallSiteAndCGNode callSiteAndCGNode) throws IllegalArgumentException {
+    if (callSiteAndCGNode == null) {
+      throw new IllegalArgumentException("callSiteAndCGNode == null");
+    }
     MethodReference declaredTarget = callSiteAndCGNode.getCallSiteReference().getDeclaredTarget();
     if (declaredTarget.toString().indexOf("toString()Ljava/lang/String") != -1) {
       return false;

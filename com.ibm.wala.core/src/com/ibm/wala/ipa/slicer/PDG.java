@@ -140,11 +140,17 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     createControlDependenceEdges(cOptions);
   }
 
-  public Set<Statement> getCallerParamStatements(SSAAbstractInvokeInstruction call) {
+  public Set<Statement> getCallerParamStatements(SSAAbstractInvokeInstruction call) throws IllegalArgumentException {
+    if (call == null) {
+      throw new IllegalArgumentException("call == null");
+    }
     return callerParamStatements.get(call.getCallSite());
   }
 
-  public Set<Statement> getCallerReturnStatements(SSAAbstractInvokeInstruction call) {
+  public Set<Statement> getCallerReturnStatements(SSAAbstractInvokeInstruction call) throws IllegalArgumentException {
+    if (call == null) {
+      throw new IllegalArgumentException("call == null");
+    }
     return callerReturnStatements.get(call.getCallSite());
   }
 

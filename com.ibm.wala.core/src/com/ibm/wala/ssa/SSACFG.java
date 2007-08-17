@@ -767,7 +767,10 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.Graph#getPredNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<IBasicBlock> getPredNodes(IBasicBlock b) {
+  public Iterator<IBasicBlock> getPredNodes(IBasicBlock b) throws IllegalArgumentException {
+    if (b == null) {
+      throw new IllegalArgumentException("b == null");
+    }
     IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getPredNodes(n);
     return new Iterator<IBasicBlock>() {
@@ -798,7 +801,10 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.Graph#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<IBasicBlock> getSuccNodes(IBasicBlock b) {
+  public Iterator<IBasicBlock> getSuccNodes(IBasicBlock b) throws IllegalArgumentException {
+    if (b == null) {
+      throw new IllegalArgumentException("b == null");
+    }
     IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getSuccNodes(n);
     return new Iterator<IBasicBlock>() {
