@@ -35,41 +35,53 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.demandpa.flowgraph;
+package com.ibm.wala.util.math;
+
+import java.math.BigInteger;
 
 /**
- * @author Manu Sridharan
- *
+ * Factorial utilities
  */
-public class AssignBarLabel implements IFlowLabel {
+public class Factorial {
 
-  private static final AssignBarLabel theInstance = new AssignBarLabel();
-  
-  private AssignBarLabel() {}
-  
-  public static AssignBarLabel v() {
-      return theInstance;
+  /** Factorial */
+  public static long fact(long n) {
+    long result = 1;
+    for (long i = 1; i <= n; i++)
+      result *= i;
+    return result;
   }
 
-  /* (non-Javadoc)
-   * @see demandGraph.IFlowLabel#bar()
+  /** Factorial */
+  public static BigInteger fact(BigInteger n) {
+    BigInteger result = BigInteger.ONE;
+    for (BigInteger i = BigInteger.ONE; i.compareTo(n) <= 0; i = i.add(BigInteger.ONE))
+      result = result.multiply(i);
+    return result;
+  }
+
+  /**
+   * Factorial on doubles; avoids overflow problems present when using integers.
+   * 
+   * @param n
+   *            arg on which to compute factorial
+   * @return (<code>double</code> approximation to) factorial of largest
+   *         positive integer <= (n_ + epsilon)
    */
-  public AssignLabel bar() {
-    return AssignLabel.v();
+  public static double fact(double n) {
+    n += 1e-6;
+    double result = 1.0;
+    for (double i = 1; i <= n; i += 1.0)
+      result *= i;
+    return result;
   }
 
-  /* (non-Javadoc)
-   * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor, java.lang.Object)
-   */
-  public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
-    if (v == null) {
-      throw new IllegalArgumentException("v == null");
-    }
-    v.visitAssignBar(this, dst);
-  }
-
-  public boolean isBarred() {
-    return true;
+  /** Factorial */
+  public static int fact(int n) {
+    int result = 1;
+    for (int i = 1; i <= n; i++)
+      result *= i;
+    return result;
   }
 
 }

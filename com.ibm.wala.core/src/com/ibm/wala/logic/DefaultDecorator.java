@@ -87,7 +87,10 @@ public class DefaultDecorator implements ILogicDecorator {
     }
   }
 
-  public String prefixNotation(RelationFormula r) {
+  public String prefixNotation(RelationFormula r) throws IllegalArgumentException {
+    if (r == null) {
+      throw new IllegalArgumentException("r == null");
+    }
     StringBuffer result = new StringBuffer(prettyPrint(r.getRelation()));
     result.append("(");
     for (int i = 0; i < r.getRelation().getValence() - 1; i++) {
@@ -119,7 +122,10 @@ public class DefaultDecorator implements ILogicDecorator {
     return r.getSymbol();
   }
   
-  public String prettyPrint(AbstractBinaryFormula f) {
+  public String prettyPrint(AbstractBinaryFormula f) throws IllegalArgumentException {
+    if (f == null) {
+      throw new IllegalArgumentException("f == null");
+    }
     StringBuffer result = new StringBuffer();
     result.append(" ( ");
     result.append(f.getF1().prettyPrint(this));

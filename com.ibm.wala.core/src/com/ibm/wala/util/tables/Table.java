@@ -49,8 +49,12 @@ public class Table<T> implements Cloneable {
 
   /**
    * create an empty table with the given column headings
+   * @throws IllegalArgumentException  if columns == null
    */
-  public Table(String[] columns) {
+  public Table(String[] columns) throws IllegalArgumentException {
+    if (columns == null) {
+      throw new IllegalArgumentException("columns == null");
+    }
     for (int i = 0; i < columns.length; i++) {
       columnHeadings.set(i, columns[i]);
     }

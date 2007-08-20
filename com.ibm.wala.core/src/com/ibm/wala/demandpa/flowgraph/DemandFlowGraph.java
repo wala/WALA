@@ -349,13 +349,15 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
   }
 
   /**
-   * 
-   * 
    * @param sfk
    *            the static field
    * @return all the variables whose values are written to sfk
+   * @throws IllegalArgumentException  if sfk == null
    */
-  public Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk) {
+  public Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
+    if (sfk == null) {
+      throw new IllegalArgumentException("sfk == null");
+    }
     Collection<MemoryAccess> fieldWrites = mam.getFieldWrites(sfk.getField());
     for (MemoryAccess a : fieldWrites) {
       addSubgraphForNode(a.getNode());

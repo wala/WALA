@@ -246,8 +246,12 @@ public class CodeScanner {
   }
 
   /**
+   * @throws IllegalArgumentException  if statements == null
    */
-  public static Iterator<TypeReference> iterateCastTypes(SSAInstruction[] statements) {
+  public static Iterator<TypeReference> iterateCastTypes(SSAInstruction[] statements) throws IllegalArgumentException {
+    if (statements == null) {
+      throw new IllegalArgumentException("statements == null");
+    }
     final HashSet<TypeReference> result = HashSetFactory.make(10);
     for (int i = 0; i < statements.length; i++) {
       if (statements[i] != null) {
@@ -356,8 +360,11 @@ public class CodeScanner {
     return result;
   }
 
-  public static boolean hasObjectArrayLoad(SSAInstruction[] statements) {
+  public static boolean hasObjectArrayLoad(SSAInstruction[] statements) throws IllegalArgumentException {
 
+    if (statements == null) {
+      throw new IllegalArgumentException("statements == null");
+    }
     class ScanVisitor extends Visitor {
       boolean foundOne = false;
 

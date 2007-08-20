@@ -40,11 +40,9 @@ public class Assertions {
   }
 
   /**
-   * Method _assert.
-   * @param b
-   * @param string
+   * @throws UnimplementedError  if b == false
    */
-  public static void _assert(boolean b, String string) {
+  public static void _assert(boolean b, String string) throws UnimplementedError {
     checkGuard();
     if (!b)
       throw new UnimplementedError(string);

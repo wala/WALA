@@ -83,7 +83,10 @@ public class ArraySet<T> extends AbstractSet<T> {
   }
 
   @SuppressWarnings("all")
-  public ArraySet(ArraySet<T> other) {
+  public ArraySet(ArraySet<T> other) throws IllegalArgumentException {
+    if (other == null) {
+      throw new IllegalArgumentException("other == null");
+    }
     int size = other._curIndex;
     this._elems = (T[]) new Object[size];
     this.checkDupes = other.checkDupes;
@@ -91,7 +94,7 @@ public class ArraySet<T> extends AbstractSet<T> {
     System.arraycopy(other._elems, 0, _elems, 0, size);
   }
 
-  public ArraySet(Collection<T> other) {
+  private ArraySet(Collection<T> other) {
     this(other.size(), true);
     addAll(other);
   }
@@ -143,7 +146,10 @@ public class ArraySet<T> extends AbstractSet<T> {
     return false;
   }
 
-  public boolean intersects(ArraySet<T> other) {
+  public boolean intersects(ArraySet<T> other) throws IllegalArgumentException {
+    if (other == null) {
+      throw new IllegalArgumentException("other == null");
+    }
     for (int i = 0; i < other.size(); i++) {
       if (contains(other.get(i)))
         return true;
@@ -257,6 +263,10 @@ public class ArraySet<T> extends AbstractSet<T> {
 
   public static <T> ArraySet<T> make() {
     return new ArraySet<T>();
+  }
+  
+  public static <T> ArraySet<T> make(Collection<T> other) {
+    return new ArraySet<T>(other);
   }
 
 }

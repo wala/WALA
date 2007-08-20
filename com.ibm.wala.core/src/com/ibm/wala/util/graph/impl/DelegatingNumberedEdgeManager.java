@@ -123,8 +123,8 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
    *      com.ibm.wala.util.graph.Node)
    */
   public void addEdge(T src, T dst) {
-    if (dst == null) {
-      throw new IllegalArgumentException("dst is null");
+    if (dst == null || src == null) {
+      throw new IllegalArgumentException("parameter is null");
     }
     src.addSucc(dst.getGraphNodeId());
   }

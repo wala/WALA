@@ -45,7 +45,10 @@ public class BinaryFormula extends AbstractBinaryFormula {
     return result;
   }
 
-  public static IFormula and(IFormula f1, IFormula f2) {
+  public static IFormula and(IFormula f1, IFormula f2) throws IllegalArgumentException {
+    if (f1 == null) {
+      throw new IllegalArgumentException("f1 == null");
+    }
     if (f1.equals(BooleanConstantFormula.TRUE)) {
       return f2;
     } else if (f2.equals(BooleanConstantFormula.TRUE)) {
@@ -120,7 +123,10 @@ public class BinaryFormula extends AbstractBinaryFormula {
     return result;
   }
   
-  public String prettyPrint(ILogicDecorator d) {
+  public String prettyPrint(ILogicDecorator d) throws IllegalArgumentException {
+    if (d == null) {
+      throw new IllegalArgumentException("d == null");
+    }
     return d.prettyPrint(this);
   }
 

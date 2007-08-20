@@ -40,7 +40,6 @@ package com.ibm.wala.demandpa.genericutil;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
-import java.math.BigInteger;
 import java.security.Permission;
 import java.util.ArrayList;
 import java.util.BitSet;
@@ -60,70 +59,14 @@ public class Util {
   /** The empty {@link BitSet}. */
   public static final BitSet EMPTY_BITSET = new BitSet();
 
-  /** Factorial */
-  public static long fact(long n_) {
-    long result = 1;
-    for (long i = 1; i <= n_; i++)
-      result *= i;
-    return result;
-  }
-
-  /** Factorial */
-  public static BigInteger fact(BigInteger n_) {
-    BigInteger result = BigInteger.ONE;
-    for (BigInteger i = BigInteger.ONE; i.compareTo(n_) <= 0; i = i.add(BigInteger.ONE))
-      result = result.multiply(i);
-    return result;
-  }
-
-  /**
-   * Factorial on doubles; avoids overflow problems present when using integers.
-   * 
-   * @param n_
-   *            arg on which to compute factorial
-   * @return (<code>double</code> approximation to) factorial of largest
-   *         positive integer <= (n_ + epsilon)
-   */
-  public static double fact(double n_) {
-    n_ += 1e-6;
-    double result = 1.0;
-    for (double i = 1; i <= n_; i += 1.0)
-      result *= i;
-    return result;
-  }
-
-  /** Factorial */
-  public static int fact(int n_) {
-    int result = 1;
-    for (int i = 1; i <= n_; i++)
-      result *= i;
-    return result;
-  }
-
-  /** Binary log: finds the smallest power k such that 2^k>=n */
-  public static int binaryLogUp(int n_) {
-    int k = 0;
-    while ((1 << k) < n_)
-      k++;
-    return k;
-  }
-
-  /** Binary log: finds the smallest power k such that 2^k>=n */
-  public static int binaryLogUp(long n_) {
-    int k = 0;
-    while ((1 << k) < n_)
-      k++;
-    return k;
-  }
-
   /** Convert an int[] to a {@link String} for printing */
-  public static String str(int[] ints_) {
+  public static String str(int[] ints) {
     StringBuffer s = new StringBuffer();
     s.append("[");
-    for (int i = 0; i < ints_.length; i++) {
+    for (int i = 0; i < ints.length; i++) {
       if (i > 0)
         s.append(", ");
-      s.append(ints_[i]);
+      s.append(ints[i]);
     }
     s.append("]");
     return s.toString();
@@ -151,11 +94,11 @@ public class Util {
   }
 
   /** Get a {@link String} representation of a {@link Throwable}. */
-  public static String str(Throwable thrown_) {
+  public static String str(Throwable thrown) {
     // create a memory buffer to which to dump the trace
     ByteArrayOutputStream traceDump = new ByteArrayOutputStream();
     PrintWriter w = new PrintWriter(traceDump);
-    thrown_.printStackTrace(w);
+    thrown.printStackTrace(w);
     w.close();
     return traceDump.toString();
   }
@@ -178,8 +121,12 @@ public class Util {
    * satisfies the given {@link Predicate}.
    * 
    * @return The first element satisfying the predicate; otherwise null.
+   * @throws IllegalArgumentException  if c == null
    */
-  public static <T> T find(Collection<T> c, Predicate<T> p) {
+  public static <T> T find(Collection<T> c, Predicate<T> p) throws IllegalArgumentException {
+    if (c == null) {
+      throw new IllegalArgumentException("c == null");
+    }
     for (Iterator<T> iter = c.iterator(); iter.hasNext();) {
       T obj = iter.next();
       if (p.test(obj))
@@ -194,8 +141,12 @@ public class Util {
    * satisfies the given {@link Predicate}.
    * 
    * @return All the elements satisfying the predicate
+   * @throws IllegalArgumentException  if c == null
    */
-  public static <T> Collection<T> findAll(Collection<T> c, Predicate<T> p) {
+  public static <T> Collection<T> findAll(Collection<T> c, Predicate<T> p) throws IllegalArgumentException {
+    if (c == null) {
+      throw new IllegalArgumentException("c == null");
+    }
     Collection<T> result = new LinkedList<T>();
 
     for (Iterator<T> iter = c.iterator(); iter.hasNext();) {
@@ -210,8 +161,9 @@ public class Util {
   /**
    * Test whether <em>all</em> elements of the given {@link Collection}
    * satisfy the given {@link Predicate}.
+   * @throws NullPointerException  if c == null
    */
-  public static <T> boolean forAll(Collection<T> c, Predicate<T> p) {
+  public static <T> boolean forAll(Collection<T> c, Predicate<T> p) throws NullPointerException {
     for (T t : c) {
       if (!p.test(t))
         return false;
@@ -226,8 +178,12 @@ public class Util {
    *            the collection
    * @param v
    *            the visitor defining the action
+   * @throws IllegalArgumentException  if c == null
    */
-  public static <T> void doForAll(Collection<T> c, ObjectVisitor<T> v) {
+  public static <T> void doForAll(Collection<T> c, ObjectVisitor<T> v) throws IllegalArgumentException {
+    if (c == null) {
+      throw new IllegalArgumentException("c == null");
+    }
     for (Iterator<T> iter = c.iterator(); iter.hasNext();)
       v.visit(iter.next());
   }
@@ -260,8 +216,12 @@ public class Util {
    * {@link java.lang.reflect reflection} to create a list of the same type as
    * 'srcList', but reflection works really slowly in some implementations, so
    * it's best to avoid it.
+   * @throws IllegalArgumentException  if src == null
    */
-  public static <T> List<T> filter(Collection<T> src, Predicate<T> pred) {
+  public static <T> List<T> filter(Collection<T> src, Predicate<T> pred) throws IllegalArgumentException {
+    if (src == null) {
+      throw new IllegalArgumentException("src == null");
+    }
     ArrayList<T> result = new ArrayList<T>();
     for (Iterator<T> srcIter = src.iterator(); srcIter.hasNext();) {
       T curElem = srcIter.next();
@@ -281,8 +241,12 @@ public class Util {
    *            the predicate
    * @param result
    *            the list for the result. assumed to be empty
+   * @throws IllegalArgumentException  if src == null
    */
-  public static <T> void filter(Collection<T> src, Predicate<T> pred, List<T> result) {
+  public static <T> void filter(Collection<T> src, Predicate<T> pred, List<T> result) throws IllegalArgumentException {
+    if (src == null) {
+      throw new IllegalArgumentException("src == null");
+    }
     for (T t : src) {
       if (pred.test(t)) {
         result.add(t);
@@ -296,11 +260,16 @@ public class Util {
    * {@link java.lang.reflect reflection} to create a set of the same type as
    * 'srcSet', but reflection works really slowly in some implementations, so
    * it's best to avoid it.
+   * @throws IllegalArgumentException  if srcSet == null
    */
-  public static <T, U> Set<U> mapToSet(Collection<T> srcSet, Mapper<T, U> mapper) {
+  public static <T, U> Set<U> mapToSet(Collection<T> srcSet, Mapper<T, U> mapper) throws IllegalArgumentException {
+    if (srcSet == null) {
+      throw new IllegalArgumentException("srcSet == null");
+    }
     HashSet<U> result = new HashSet<U>();
-    for (Iterator<T> srcIter = srcSet.iterator(); srcIter.hasNext();)
+    for (Iterator<T> srcIter = srcSet.iterator(); srcIter.hasNext();) {
       result.add(mapper.map(srcIter.next()));
+    }
     return result;
   }
 
@@ -308,7 +277,10 @@ public class Util {
    * Grow an int[] -- i.e. allocate a new array of the given size, with the
    * initial segment equal to this int[].
    */
-  public static int[] realloc(int[] data, int newSize) {
+  public static int[] realloc(int[] data, int newSize) throws IllegalArgumentException {
+    if (data == null) {
+      throw new IllegalArgumentException("data == null");
+    }
     if (data.length < newSize) {
       int[] newData = new int[newSize];
       System.arraycopy(data, 0, newData, 0, data.length);
@@ -317,15 +289,24 @@ public class Util {
       return data;
   }
 
-  /** Clear a {@link BitSet}. */
-  public static void clear(BitSet bitSet) {
+  /** Clear a {@link BitSet}. 
+   * @throws IllegalArgumentException  if bitSet == null*/
+  public static void clear(BitSet bitSet) throws IllegalArgumentException {
+    if (bitSet == null) {
+      throw new IllegalArgumentException("bitSet == null");
+    }
     bitSet.and(EMPTY_BITSET);
   }
 
-  /** Replace all occurrences of a given substring in a given {@link String}. */
-  public static String replaceAll(String str, String sub, String newSub) {
-    if (str.indexOf(sub) == -1)
+  /** Replace all occurrences of a given substring in a given {@link String}. 
+   * @throws IllegalArgumentException  if str == null*/
+  public static String replaceAll(String str, String sub, String newSub) throws IllegalArgumentException {
+    if (str == null) {
+      throw new IllegalArgumentException("str == null");
+    }
+    if (str.indexOf(sub) == -1) {
       return str;
+    }
     int subLen = sub.length();
     int idx;
     StringBuffer result = new StringBuffer(str);
@@ -459,10 +440,6 @@ public class Util {
     });
   }
 
-  public static boolean stringContains(String str, String subStr) {
-    return str.indexOf(subStr) != -1;
-  }
-
   public static int getInt(Integer i) {
     return (i == null) ? 0 : i;
   }
@@ -471,10 +448,13 @@ public class Util {
    * given the name of a class C, returns the name of the top-most enclosing
    * class of class C. For example, given A$B$C, the method returns A
    * 
-   * @param typeStr
    * @return String name of top-most enclosing class
+   * @throws IllegalArgumentException  if typeStr == null
    */
-  public static String topLevelTypeString(String typeStr) {
+  public static String topLevelTypeString(String typeStr) throws IllegalArgumentException {
+    if (typeStr == null) {
+      throw new IllegalArgumentException("typeStr == null");
+    }
     int dollarIndex = typeStr.indexOf('$');
     String topLevelTypeStr = dollarIndex == -1 ? typeStr : typeStr.substring(0, dollarIndex);
     return topLevelTypeStr;

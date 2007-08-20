@@ -87,7 +87,10 @@ public class IntraProcFilter implements StateMachine<IFlowLabel> {
 
   }
 
-  public State transition(State prevState, IFlowLabel label) {
+  public State transition(State prevState, IFlowLabel label) throws IllegalArgumentException {
+    if (label == null) {
+      throw new IllegalArgumentException("label == null");
+    }
     // filter out all interprocedural edges
     InterprocFilterVisitor v = new InterprocFilterVisitor();
     label.visit(v, null);

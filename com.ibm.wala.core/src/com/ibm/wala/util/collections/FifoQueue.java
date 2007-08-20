@@ -134,8 +134,12 @@ public class FifoQueue<T> {
    * @param elements
    *          an Iterator of Objects to be added to the queue if not already
    *          queued.
+   * @throws IllegalArgumentException  if elements == null
    */
-  public void push(Iterator<? extends T> elements) {
+  public void push(Iterator<? extends T> elements) throws IllegalArgumentException {
+    if (elements == null) {
+      throw new IllegalArgumentException("elements == null");
+    }
     while (elements.hasNext()) {
       T element = elements.next();
       // if element is not in inQueue, then add() returns true.
