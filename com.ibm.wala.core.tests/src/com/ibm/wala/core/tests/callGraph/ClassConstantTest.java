@@ -49,7 +49,7 @@ public class ClassConstantTest extends WalaTestCase {
     // make call graph
     Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, TestConstants.CLASSCONSTANT_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope, false);
     Trace.println("\nCall graph:");
     Trace.println(cg);
 

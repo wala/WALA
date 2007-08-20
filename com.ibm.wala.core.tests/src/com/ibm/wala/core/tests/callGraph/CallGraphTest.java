@@ -73,58 +73,20 @@ public class CallGraphTest extends WalaTestCase {
     justThisTest(CallGraphTest.class);
   }
 
-  /**
-   * Constructor for SpecJTest.
-   * 
-   * @param arg0
-   */
   public CallGraphTest(String arg0) {
     super(arg0);
   }
+  
 
-  /*
-   * public void testOpenccg() { AnalysisScope scope =
-   * CallGraphTestUtil.makeJ2SEAnalysisScope(Config.OPENCCG); WarningSet
-   * warnings = new WarningSet(); ClassHierarchy cha =
-   * ClassHierarchy.buildClassHierarchy(scope, warnings); Entrypoints
-   * entrypoints =
-   * com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-   * Config.OPENCCG_CROSS_VALIDATE_REALIZER); AnalysisOptions options =
-   * CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-   * 
-   * Trace.println("OPENCCG Cross Validate Realizer set up warnings:\n");
-   * Trace.print(warnings.toString());
-   * 
-   * doCallGraphs(options, cha, scope, null, useShortProfile(), false); }
-   * 
-   * public void testKaba() { AnalysisScope scope =
-   * CallGraphTestUtil.makeJ2SEAnalysisScope(Config.KABA); WarningSet warnings =
-   * new WarningSet(); ClassHierarchy cha =
-   * ClassHierarchy.buildClassHierarchy(scope, warnings); Entrypoints
-   * entrypoints =
-   * com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-   * Config.KABA_MAIN); AnalysisOptions options =
-   * CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-   * 
-   * Trace.println("kaba verifier set up warnings:\n");
-   * Trace.print(warnings.toString());
-   * 
-   * doCallGraphs(options, cha, scope, null, useShortProfile(), false); }
-   * 
-   * public void testAntlr() { AnalysisScope scope =
-   * CallGraphTestUtil.makeJ2SEAnalysisScope(Config.ANTLR); WarningSet warnings =
-   * new WarningSet(); ClassHierarchy cha =
-   * ClassHierarchy.buildClassHierarchy(scope, warnings); Entrypoints
-   * entrypoints =
-   * com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-   * Config.ANTLR_MAIN); AnalysisOptions options =
-   * CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-   * 
-   * Trace.println("ANTLR verifier set up warnings:\n");
-   * Trace.print(warnings.toString());
-   * 
-   * doCallGraphs(options, cha, scope, null, useShortProfile(), false); }
-   */
+  public void testJava_cup() throws ClassHierarchyException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JAVA_CUP);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.JAVA_CUP_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    doCallGraphs(options, new AnalysisCache(), cha, scope, null, useShortProfile(), false, true);
+  }
 
   public void testBcelVerifier() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.BCEL);
@@ -136,15 +98,6 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCache(), cha, scope, null, useShortProfile(), false);
   }
 
-  public void testJava_cup() throws ClassHierarchyException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JAVA_CUP);
-    ClassHierarchy cha = ClassHierarchy.make(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-        TestConstants.JAVA_CUP_MAIN);
-    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-
-    doCallGraphs(options, new AnalysisCache(), cha, scope, null, useShortProfile(), false);
-  }
 
   public void testJLex() throws ClassHierarchyException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JLEX);
@@ -231,7 +184,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = makePrimordialPublicEntrypoints(scope, cha, "java/io");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope);
+    CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope, false);
   }
 
   public static Iterable<Entrypoint> makePrimordialPublicEntrypoints(AnalysisScope scope, ClassHierarchy cha, String pkg) {
@@ -264,7 +217,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = makePrimordialMainEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    CallGraphTestUtil.buildZeroCFA(options,new AnalysisCache(), cha, scope);
+    CallGraphTestUtil.buildZeroCFA(options,new AnalysisCache(), cha, scope, false);
   }
 
   /**
@@ -288,25 +241,17 @@ public class CallGraphTest extends WalaTestCase {
     };
   }
 
-  //
-  // public void testSPECjvm98AllEntrypoints() {
-  // AnalysisScope scope = CGTUtils.makeJ2SEAnalysisScope(Config.SPECJVM);
-  // WarningSet warnings = new WarningSet();
-  // ClassHierarchy cha = ClassHierarchy.buildClassHierarchy(scope, warnings);
-  // Entrypoints entrypoints = new AllApplicationEntrypoints(scope, cha);
-  // AnalysisOptions options = CGTUtils.makeAnalysisOptions(scope, entrypoints);
-  //
-  // Trace.println("SPECjvm98 set up warnings:\n");
-  // Trace.print(warnings.toString());
-  //
-  // doCallGraphs(options, cha, scope, null, useShortProfile(), true);
-  // }
 
+  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, String dcgFile,
+      boolean stopAfterZeroCFA, boolean stopAfterZeroContainerCFA) {
+    doCallGraphs(options, cache, cha, scope, dcgFile, stopAfterZeroCFA, stopAfterZeroContainerCFA, false);
+  }
+  
   /**
    * TODO: refactor this to avoid excessive code bloat.
    */
   public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, String dcgFile,
-      boolean stopAfterZeroCFA, boolean stopAfterZeroContainerCFA) {
+      boolean stopAfterZeroCFA, boolean stopAfterZeroContainerCFA, boolean testPAToString) {
 
     // ///////////////
     // // RTA /////
@@ -326,7 +271,7 @@ public class CallGraphTest extends WalaTestCase {
     // ///////////////
     // // 0-CFA /////
     // ///////////////
-    cg = CallGraphTestUtil.buildZeroCFA(options, cache,cha, scope);
+    cg = CallGraphTestUtil.buildZeroCFA(options, cache,cha, scope, testPAToString);
 
     // FIXME: annoying special cases caused by clone2assign mean using
     // the rta graph for proper graph subset checking does not work.
@@ -350,7 +295,7 @@ public class CallGraphTest extends WalaTestCase {
     // ///////////////
     // // 0-1-CFA ///
     // ///////////////
-    cg = CallGraphTestUtil.buildZeroOneCFA(options, cache,cha, scope);
+    cg = CallGraphTestUtil.buildZeroOneCFA(options, cache,cha, scope, testPAToString);
     Graph<MethodReference> squashZeroOne = checkCallGraph(cg, squashZero, null, "0-1-CFA");
 
     // ///////////////////////////////////////////////////

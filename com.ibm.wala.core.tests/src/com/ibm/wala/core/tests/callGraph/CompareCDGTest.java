@@ -403,7 +403,7 @@ public class CompareCDGTest extends WalaTestCase {
         TestConstants.JAVA_CUP_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    run(CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope));
+    run(CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope, false));
   }
 
   public void testBcelVerifier() throws ClassHierarchyException {
@@ -413,7 +413,7 @@ public class CompareCDGTest extends WalaTestCase {
         TestConstants.BCEL_VERIFIER_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    run(CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope));
+    run(CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope, false));
   }
 
   public void testJLex() throws ClassHierarchyException {
@@ -423,6 +423,6 @@ public class CompareCDGTest extends WalaTestCase {
         .makeMainEntrypoints(scope, cha, TestConstants.JLEX_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    run(CallGraphTestUtil.buildZeroCFA(options,new AnalysisCache(), cha, scope));
+    run(CallGraphTestUtil.buildZeroCFA(options,new AnalysisCache(), cha, scope, false));
   }
 }

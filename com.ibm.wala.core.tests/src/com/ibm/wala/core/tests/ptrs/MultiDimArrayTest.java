@@ -46,8 +46,6 @@ public class MultiDimArrayTest extends WalaTestCase {
   }
 
   /**
-   * Constructor for SpecJTest.
-   * 
    * @param arg0
    */
   public MultiDimArrayTest(String arg0) {

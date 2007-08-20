@@ -64,12 +64,15 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope) {
+  public static CallGraph buildZeroCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, boolean testPAtoString) {
     Stopwatch S = new Stopwatch("build ZeroCFA graph");
     S.start();
 
     CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options);
+    if (testPAtoString) {
+      builder.getPointerAnalysis().toString();
+    }
 
     S.stop();
     Trace.println(S.report());
@@ -78,7 +81,7 @@ public class CallGraphTestUtil {
 
   public static CallGraph buildVanillaZeroOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha,
       AnalysisScope scope) {
-    Stopwatch S = new Stopwatch("build Vanila 0-1-CFA graph");
+    Stopwatch S = new Stopwatch("build Vanilla 0-1-CFA graph");
     S.start();
 
     CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, cache, cha, scope);
@@ -89,12 +92,15 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope) {
+  public static CallGraph buildZeroOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, boolean testPAtoString) {
     Stopwatch S = new Stopwatch("build 0-1-CFA graph");
     S.start();
 
     CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
     CallGraph cg = builder.makeCallGraph(options);
+    if (testPAtoString) {
+      builder.getPointerAnalysis().toString();
+    }
 
     S.stop();
     Trace.println(S.report());
