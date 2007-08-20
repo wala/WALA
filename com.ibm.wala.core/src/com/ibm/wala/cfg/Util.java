@@ -83,8 +83,9 @@ public class Util {
         return s;
     }
 
-    Assertions.UNREACHABLE();
-    return null;
+    // under pathological conditions, b may have exactly one successor (in other words, the 
+    // branch is irrelevant
+    return fs;
   }
 
   /**
