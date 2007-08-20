@@ -84,7 +84,7 @@ public class PointsToMap {
   }
 
   /**
-   * If key is unifed, returns the representative for p.
+   * If key is unified, returns the representative for p.
    * 
    * @param p
    * @return get(p)
@@ -96,6 +96,9 @@ public class PointsToMap {
       }
     }
     int i = pointerKeys.getMappedIndex(p);
+    if (i == -1) {
+      return null;
+    }
     int repI = uf.find(i);
     PointsToSetVariable result = (PointsToSetVariable) pointsToSets.get(repI);
     if (result != null && p instanceof FilteredPointerKey && (!(result.getPointerKey() instanceof FilteredPointerKey))) {
@@ -170,8 +173,8 @@ public class PointsToMap {
   }
 
   public boolean isImplicit(PointerKey p) {
-    int i = findOrCreateIndex(p);
-    return pointsToSets.get(i) == IMPLICIT;
+    int i = getIndex(p);
+    return i != -1 && pointsToSets.get(i) == IMPLICIT;
   }
 
   protected int getNumberOfPointerKeys() {
