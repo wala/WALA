@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.IntIterator;
 
 /**
@@ -50,7 +51,7 @@ public class CompoundIntIterator implements IntIterator {
   }
 
   @Override
-  public int hashCode() {
+  public int hashCode() throws UnimplementedError {
     Assertions.UNREACHABLE("define a custom hash code to avoid non-determinism");
     return 0;
   }

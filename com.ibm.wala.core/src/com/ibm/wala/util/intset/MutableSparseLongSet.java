@@ -11,6 +11,7 @@
 package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * A sparse ordered, mutable duplicate-free, fully-encapsulated set of longs.
@@ -146,8 +147,9 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   }
 
   /**
+   * @throws UnimplementedError  if not ( that instanceof com.ibm.wala.util.intset.SparseLongSet ) 
    */
-  public void copySet(LongSet that) {
+  public void copySet(LongSet that) throws UnimplementedError {
     if (that instanceof SparseLongSet) {
       SparseLongSet set = (SparseLongSet) that;
       if (set.elements != null) {
@@ -255,8 +257,9 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
    * Add all elements from another int set.
    * 
    * @return true iff this set changes
+   * @throws UnimplementedError  if not ( set instanceof com.ibm.wala.util.intset.SparseLongSet ) 
    */
-  public boolean addAll(LongSet set) {
+  public boolean addAll(LongSet set) throws UnimplementedError {
     if (set instanceof SparseLongSet) {
       return addAll((SparseLongSet) set);
     } else {

@@ -1105,21 +1105,18 @@ public class TabulationSolver<T, P> {
   }
 
   /**
-   * @param n2
-   * @param d2
-   * @param n1
    * @return set of d1 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or
    *         null if none found
    */
   public IntSet getSummarySources(T n2, int d2, T n1) {
-    Assertions.UNREACHABLE("not currently supported.  be careful");
-    LocalSummaryEdges summaries = summaryEdges.get(supergraph.getProcOf(n1));
-    if (summaries == null) {
-      return null;
-    }
-    int num1 = supergraph.getLocalBlockNumber(n1);
-    int num2 = supergraph.getLocalBlockNumber(n2);
-    return summaries.getInvertedSummaryEdgesForTarget(num1, num2, d2);
+    throw new UnsupportedOperationException("not currently supported.  be careful");
+//    LocalSummaryEdges summaries = summaryEdges.get(supergraph.getProcOf(n1));
+//    if (summaries == null) {
+//      return null;
+//    }
+//    int num1 = supergraph.getLocalBlockNumber(n1);
+//    int num2 = supergraph.getLocalBlockNumber(n2);
+//    return summaries.getInvertedSummaryEdgesForTarget(num1, num2, d2);
   }
 
   public TabulationProblem<T,P> getProblem() {

@@ -78,7 +78,10 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     this.expensiveIntraproceduralAnalysis = expensiveIntraproceduralAnalysis;
   }
 
-  public boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex) throws WalaException {
+  public boolean mayBeLive(CGNode allocMethod, int allocPC, CGNode m, int instructionIndex) throws IllegalArgumentException, WalaException {
+    if (allocMethod == null) {
+      throw new IllegalArgumentException("allocMethod == null");
+    }
     NewSiteReference site = TrivialMethodEscape.findAlloc(allocMethod, allocPC);
     InstanceKey ik = heapGraph.getHeapModel().getInstanceKeyForAllocation(allocMethod, site);
     return mayBeLive(ik, m, instructionIndex);

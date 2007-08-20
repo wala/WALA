@@ -26,6 +26,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.impl.DelegatingNumberedNodeManager;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.graph.impl.SparseNumberedEdgeManager;
@@ -413,11 +414,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return nodeManager.iterator();
   }
 
-  /**
-   * @param src
-   * @param dst
-   */
-  public void addEdge(IBasicBlock src, IBasicBlock dst) {
+  public void addEdge(IBasicBlock src, IBasicBlock dst) throws UnimplementedError {
     Assertions.UNREACHABLE("Don't call me .. use addNormalEdge or addExceptionalEdge");
   }
 
@@ -501,14 +498,14 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /*
    * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
    */
-  public void removeNodeAndEdges(IBasicBlock N) {
+  public void removeNodeAndEdges(IBasicBlock N) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
   /*
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
-  public void removeNode(IBasicBlock n) {
+  public void removeNode(IBasicBlock n) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
@@ -570,7 +567,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
-  public void removeAllIncidentEdges(IBasicBlock node) {
+  public void removeAllIncidentEdges(IBasicBlock node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
@@ -602,12 +599,10 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   public void removeIncomingEdges(IBasicBlock node) {
-    // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
   }
 
-  public void removeOutgoingEdges(IBasicBlock node) {
-    // TODO Auto-generated method stub
+  public void removeOutgoingEdges(IBasicBlock node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 

@@ -295,8 +295,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     stateMachine = stateMachineFactory.make();
   }
 
-  public Pair<PointsToResult, Collection<InstanceKey>> getPointsTo(PointerKey pk, Predicate<Collection<InstanceKey>> p2setPred) {
-    Assertions._assert(pk instanceof LocalPointerKey, "only locals for now");
+  public Pair<PointsToResult, Collection<InstanceKey>> getPointsTo(PointerKey pk, Predicate<Collection<InstanceKey>> p2setPred) throws IllegalArgumentException {
+    if (!(pk instanceof com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)) {
+      throw new IllegalArgumentException("only locals for now");
+    }
     LocalPointerKey queriedPk = (LocalPointerKey) pk;
     if (DEBUG) {
       Trace.println("answering query for " + pk);

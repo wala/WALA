@@ -13,7 +13,6 @@ package com.ibm.wala.fixedpoint.impl;
 
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  *
@@ -25,9 +24,7 @@ public abstract class NullaryOperator extends AbstractOperator implements FixedP
 
   @Override
   public byte evaluate(IVariable lhs, IVariable[] rhs) {
-    // don't call this
-    Assertions.UNREACHABLE();
-    return 0;
+    throw new UnsupportedOperationException();
   }
   /** 
    * Evaluate this equation, setting a new value for the

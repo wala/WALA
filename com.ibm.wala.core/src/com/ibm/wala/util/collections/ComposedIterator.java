@@ -12,8 +12,6 @@ package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 
-import com.ibm.wala.util.debug.Assertions;
-
 /**
  *
  * A 2-level iterator.  has not been tested yet!
@@ -43,8 +41,8 @@ public abstract class ComposedIterator<O,I> implements Iterator<I> {
   
   public abstract Iterator<? extends I> makeInner(O outer);
   
-  public void remove() {
-    Assertions.UNREACHABLE();
+  public void remove() throws UnsupportedOperationException{
+    throw new UnsupportedOperationException();
   }
 
   public boolean hasNext() {

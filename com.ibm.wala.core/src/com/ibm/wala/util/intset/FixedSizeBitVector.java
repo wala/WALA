@@ -10,14 +10,17 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-public final class FixedSizeBitVector
-  implements Cloneable, java.io.Serializable {
+public final class FixedSizeBitVector implements Cloneable, java.io.Serializable {
   public static final long serialVersionUID = 33181877746462822L;
 
   private final static int LOG_BITS_PER_UNIT = 5;
+
   private final static int MASK = 0xffffffff;
+
   private final static int LOW_MASK = 0x1f;
+
   private int bits[];
+
   final private int nbits;
 
   /**
@@ -29,18 +32,24 @@ public final class FixedSizeBitVector
 
   /**
    * Creates an empty string with the specified size.
-   * @param nbits the size of the string
+   * 
+   * @param nbits
+   *            the size of the string
    */
   public FixedSizeBitVector(int nbits) {
-    // subscript(nbits) is the length of the array needed to 
-    // hold nbits 
+    // subscript(nbits) is the length of the array needed to
+    // hold nbits
     bits = new int[subscript(nbits) + 1];
     this.nbits = nbits;
   }
+
   /**
    * Creates a copy of a Bit String
-   * @param s the string to copy
-   * @throws IllegalArgumentException  if s is null
+   * 
+   * @param s
+   *            the string to copy
+   * @throws IllegalArgumentException
+   *             if s is null
    */
   public FixedSizeBitVector(FixedSizeBitVector s) {
     if (s == null) {
@@ -62,7 +71,9 @@ public final class FixedSizeBitVector
 
   /**
    * Sets a bit.
-   * @param bit the bit to be set
+   * 
+   * @param bit
+   *            the bit to be set
    */
   public void set(int bit) {
     int shiftBits = bit & LOW_MASK;
@@ -80,7 +91,9 @@ public final class FixedSizeBitVector
 
   /**
    * Clears a bit.
-   * @param bit the bit to be cleared
+   * 
+   * @param bit
+   *            the bit to be cleared
    */
   public void clear(int bit) {
     int shiftBits = bit & LOW_MASK;
@@ -89,7 +102,9 @@ public final class FixedSizeBitVector
 
   /**
    * Gets a bit.
-   * @param bit the bit to be gotten
+   * 
+   * @param bit
+   *            the bit to be gotten
    */
   public boolean get(int bit) {
     int shiftBits = bit & LOW_MASK;
@@ -105,6 +120,7 @@ public final class FixedSizeBitVector
       bits[i] ^= MASK;
     }
   }
+
   /**
    * Return the NOT of a bit string
    */
@@ -116,7 +132,9 @@ public final class FixedSizeBitVector
 
   /**
    * Logically ANDs this bit set with the specified set of bits.
-   * @param set the bit set to be ANDed with
+   * 
+   * @param set
+   *            the bit set to be ANDed with
    */
   public void and(FixedSizeBitVector set) {
     if (this == set) {
@@ -127,12 +145,11 @@ public final class FixedSizeBitVector
       bits[i] &= set.bits[i];
     }
   }
+
   /**
    * Return a new bit string as the AND of two others.
    */
-  public static FixedSizeBitVector and(
-    FixedSizeBitVector b1,
-    FixedSizeBitVector b2) {
+  public static FixedSizeBitVector and(FixedSizeBitVector b1, FixedSizeBitVector b2) {
     FixedSizeBitVector b = new FixedSizeBitVector(b1);
     b.and(b2);
     return b;
@@ -140,7 +157,9 @@ public final class FixedSizeBitVector
 
   /**
    * Logically ORs this bit set with the specified set of bits.
-   * @param set the bit set to be ORed with
+   * 
+   * @param set
+   *            the bit set to be ORed with
    */
   public void or(FixedSizeBitVector set) {
     if (this == set) { // should help alias analysis
@@ -151,12 +170,11 @@ public final class FixedSizeBitVector
       bits[i] |= set.bits[i];
     }
   }
+
   /**
    * Return a new FixedSizeBitVector as the OR of two others
    */
-  public static FixedSizeBitVector or(
-    FixedSizeBitVector b1,
-    FixedSizeBitVector b2) {
+  public static FixedSizeBitVector or(FixedSizeBitVector b1, FixedSizeBitVector b2) {
     FixedSizeBitVector b = new FixedSizeBitVector(b1);
     b.or(b2);
     return b;
@@ -164,8 +182,11 @@ public final class FixedSizeBitVector
 
   /**
    * Logically XORs this bit set with the specified set of bits.
-   * @param set the bit set to be XORed with
-   * @throws IllegalArgumentException  if set is null
+   * 
+   * @param set
+   *            the bit set to be XORed with
+   * @throws IllegalArgumentException
+   *             if set is null
    */
   public void xor(FixedSizeBitVector set) {
     if (set == null) {
@@ -179,7 +200,9 @@ public final class FixedSizeBitVector
 
   /**
    * Check if the intersection of the two sets is empty
-   * @param other the set to check intersection with
+   * 
+   * @param other
+   *            the set to check intersection with
    */
   public boolean intersectionEmpty(FixedSizeBitVector other) {
     int n = bits.length;
@@ -192,8 +215,11 @@ public final class FixedSizeBitVector
 
   /**
    * Copies the values of the bits in the specified set into this set.
-   * @param set the bit set to copy the bits from
-   * @throws IllegalArgumentException  if set is null
+   * 
+   * @param set
+   *            the bit set to copy the bits from
+   * @throws IllegalArgumentException
+   *             if set is null
    */
   public void copyBits(FixedSizeBitVector set) {
     if (set == null) {
@@ -229,8 +255,8 @@ public final class FixedSizeBitVector
   }
 
   /**
-   * Calculates and returns the set's size in bits.
-   * The maximum element in the set is the size - 1st element.
+   * Calculates and returns the set's size in bits. The maximum element in the
+   * set is the size - 1st element.
    */
   public int length() {
     return bits.length << LOG_BITS_PER_UNIT;
@@ -238,7 +264,9 @@ public final class FixedSizeBitVector
 
   /**
    * Compares this object against the specified object.
-   * @param obj the object to compare with
+   * 
+   * @param obj
+   *            the object to compare with
    * @return true if the objects are the same; false otherwise.
    */
   @Override
@@ -295,7 +323,7 @@ public final class FixedSizeBitVector
     StringBuffer buffer = new StringBuffer();
     boolean needSeparator = false;
     buffer.append('{');
-    //    int limit = length();
+    // int limit = length();
     int limit = this.nbits;
     for (int i = 0; i < limit; i++) {
       if (get(i)) {

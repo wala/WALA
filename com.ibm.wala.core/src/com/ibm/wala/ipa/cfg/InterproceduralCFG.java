@@ -33,6 +33,7 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
@@ -92,7 +93,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * nodes in the call graph.
    * 
    * @param CG
-   *          the call graph
+   *            the call graph
    */
   public InterproceduralCFG(CallGraph CG) {
     this(CG, IndiscriminateFilter.singleton(), false);
@@ -102,10 +103,10 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * Build an Interprocedural CFG from a call graph.
    * 
    * @param CG
-   *          the call graph
+   *            the call graph
    * @param relevant
-   *          a filter which accepts those call graph nodes which should be
-   *          included in the I-CFG. Other nodes are ignored.
+   *            a filter which accepts those call graph nodes which should be
+   *            included in the I-CFG. Other nodes are ignored.
    */
   public InterproceduralCFG(CallGraph CG, Filter relevant, boolean partitionExits) {
 
@@ -190,7 +191,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   /**
    * @param n
    * @return the cfg for n, or null if none found
-   * @throws IllegalArgumentException  if n == null
+   * @throws IllegalArgumentException
+   *             if n == null
    */
   public ControlFlowGraph getCFG(CGNode n) throws IllegalArgumentException {
     if (n == null) {
@@ -235,13 +237,13 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * Add edges to the IPCFG for the incoming edges incident on a basic block bb
    * 
    * @param n
-   *          a call graph node
+   *            a call graph node
    * @param cfg
-   *          the CFG for n
+   *            the CFG for n
    * @param instrs
-   *          the instructions for node n
+   *            the instructions for node n
    * @param bb
-   *          a basic block in the CFG
+   *            a basic block in the CFG
    */
   private void addEdgesToNonEntryBlock(CGNode n, ControlFlowGraph cfg, IInstruction[] instrs, IBasicBlock bb) {
 
@@ -364,9 +366,9 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * the caller
    * 
    * @param returnBlock
-   *          the return site for a call
+   *            the return site for a call
    * @param targetCFG
-   *          the called method
+   *            the called method
    */
   private void addEdgesFromExceptionalExitToReturn(CGNode caller, IBasicBlock returnBlock, CGNode target, TwoExitCFG targetCFG) {
     IBasicBlock texit = targetCFG.getExceptionalExit();
@@ -383,11 +385,11 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
 
   /**
    * @param cfg
-   *          the governing cfg
+   *            the governing cfg
    * @param ret
-   *          a return site for the call
+   *            a return site for the call
    * @param call
-   *          a basic block that ends in a call
+   *            a basic block that ends in a call
    * @return true iff bb is reached from pb by exceptional control flow
    */
   private boolean representsExceptionalReturn(ControlFlowGraph cfg, IBasicBlock ret, IBasicBlock call) {
@@ -404,9 +406,9 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * caller
    * 
    * @param returnBlock
-   *          the return site for a call
+   *            the return site for a call
    * @param targetCFG
-   *          the called method
+   *            the called method
    */
   private void addEdgesFromNormalExitToReturn(CGNode caller, IBasicBlock returnBlock, CGNode target, TwoExitCFG targetCFG) {
     IBasicBlock texit = targetCFG.getNormalExit();
@@ -423,7 +425,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
 
   /**
    * @param cfg
-   *          the governing cfg
+   *            the governing cfg
    * @return true iff bb is reached from pb by a normal return flow
    */
   private boolean representsNormalReturn(ControlFlowGraph cfg, IBasicBlock ret, IBasicBlock call) {
@@ -440,9 +442,9 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * caller
    * 
    * @param returnBlock
-   *          the return site for a call
+   *            the return site for a call
    * @param targetCFG
-   *          the called method
+   *            the called method
    */
   private void addEdgesFromExitToReturn(CGNode caller, IBasicBlock returnBlock, CGNode target, ControlFlowGraph targetCFG) {
     IBasicBlock texit = targetCFG.exit();
@@ -461,9 +463,9 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * Add the incoming edges to the entry() block for a call graph node.
    * 
    * @param n
-   *          a node in the call graph
+   *            a node in the call graph
    * @param bb
-   *          the entry() block for n
+   *            the entry() block for n
    */
   private void addEdgesToEntryBlock(CGNode n, IBasicBlock bb) {
 
@@ -514,7 +516,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * hasCallVector
    * 
    * @param cfg
-   *          a control-flow graph
+   *            a control-flow graph
    */
   private void addNodeForEachBasicBlock(ControlFlowGraph cfg, CGNode N) {
     for (Iterator bbs = cfg.iterator(); bbs.hasNext();) {
@@ -577,16 +579,14 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @see com.ibm.wala.util.graph.NodeManager#addNode(com.ibm.wala.util.graph.Node)
    */
   public void addNode(BasicBlockInContext n) {
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.NodeManager#removeNode(com.ibm.wala.util.graph.Node)
    */
   public void removeNode(BasicBlockInContext n) {
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   /*
@@ -622,11 +622,11 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    *      com.ibm.wala.util.graph.Node)
    */
   public void addEdge(BasicBlockInContext src, BasicBlockInContext dst) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   public void removeEdge(BasicBlockInContext src, BasicBlockInContext dst) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   /*
@@ -691,7 +691,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @return the set of CGNodes that B may call, according to the governing call
    *         graph.
    * @throws IllegalArgumentException
-   *           if B is null
+   *             if B is null
    */
   public Set<CGNode> getCallTargets(IBasicBlock B) {
     if (B == null) {
@@ -713,8 +713,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     IInvokeInstruction call = (IInvokeInstruction) statements[B.getLastInstructionIndex()];
     int pc = cfg.getProgramCounter(B.getLastInstructionIndex());
     CallSiteReference site = makeCallSiteReference(B.getMethod().getDeclaringClass().getClassLoader().getReference(), pc, call);
-    HashSet<CGNode> result = HashSetFactory.make(cg.getNumberOfTargets(Bnode,site));
-    for (Iterator<CGNode> it = cg.getPossibleTargets(Bnode,site).iterator(); it.hasNext();) {
+    HashSet<CGNode> result = HashSetFactory.make(cg.getNumberOfTargets(Bnode, site));
+    for (Iterator<CGNode> it = cg.getPossibleTargets(Bnode, site).iterator(); it.hasNext();) {
       CGNode target = it.next();
       result.add(target);
     }
@@ -722,15 +722,11 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   public void removeIncomingEdges(BasicBlockInContext node) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   public void removeOutgoingEdges(BasicBlockInContext node) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   public boolean hasEdge(BasicBlockInContext src, BasicBlockInContext dst) {
@@ -741,8 +737,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     return G.getNumber(N);
   }
 
-  public BasicBlockInContext getNode(int number) {
-    // TODO Auto-generated method stub
+  public BasicBlockInContext getNode(int number) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
@@ -772,10 +767,10 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
 
   /**
    * @param bb
-   *          node in the IPCFG that ends in a call
+   *            node in the IPCFG that ends in a call
    * @return the nodes that are return sites for this call.
    * @throws IllegalArgumentException
-   *           if bb is null
+   *             if bb is null
    */
   public Iterator<BasicBlockInContext> getReturnSites(BasicBlockInContext bb) {
     if (bb == null) {

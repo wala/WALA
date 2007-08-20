@@ -29,8 +29,12 @@ public class ReverseIterator<T> implements Iterator<T> {
   /**
    * @param other
    *          the iterator to reverse
+   * @throws IllegalArgumentException  if other == null
    */
-  public ReverseIterator(Iterator<T> other) {
+  public ReverseIterator(Iterator<T> other) throws IllegalArgumentException {
+    if (other == null) {
+      throw new IllegalArgumentException("other == null");
+    }
     while (other.hasNext()) {
       list.add(other.next());
     }

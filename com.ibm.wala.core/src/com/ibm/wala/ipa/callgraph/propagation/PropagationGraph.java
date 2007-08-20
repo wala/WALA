@@ -32,6 +32,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.SmallMap;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.Graph;
@@ -837,7 +838,7 @@ public class PropagationGraph implements IFixedPointSystem {
     return delegateGraph.containsNode(v);
   }
 
-  public void addStatement(IFixedPointStatement statement) {
+  public void addStatement(IFixedPointStatement statement) throws UnimplementedError {
     if (statement instanceof UnaryStatement) {
       addStatement((UnaryStatement) statement);
     } else if (statement instanceof GeneralStatement) {
@@ -849,7 +850,7 @@ public class PropagationGraph implements IFixedPointSystem {
 
   /**
    * A graph of just the variables in the system. v1 -> v2 iff there exists an
-   * Assingment equation e s.t. e uses v1 and e defs v2.
+   * assignment equation e s.t. e uses v1 and e defs v2.
    * 
    */
   public NumberedGraph<IVariable> getAssignmentGraph() {

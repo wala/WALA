@@ -44,11 +44,11 @@ public class SDGView implements ISDG {
   }
 
   public void addEdge(Statement src, Statement dst) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   public void addNode(Statement n) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   public boolean containsNode(Statement N) {
@@ -139,33 +139,27 @@ public class SDGView implements ISDG {
   }
 
   public void removeAllIncidentEdges(Statement node) {
-    Assertions.UNREACHABLE();
-    delegate.removeAllIncidentEdges(node);
+    throw new UnsupportedOperationException();
   }
 
   public void removeEdge(Statement src, Statement dst) {
-    Assertions.UNREACHABLE();
-    delegate.removeEdge(src, dst);
+    throw new UnsupportedOperationException();
   }
 
   public void removeIncomingEdges(Statement node) {
-    Assertions.UNREACHABLE();
-    delegate.removeIncomingEdges(node);
+    throw new UnsupportedOperationException();
   }
 
   public void removeNode(Statement n) {
-    Assertions.UNREACHABLE();
-    delegate.removeNode(n);
+    throw new UnsupportedOperationException();
   }
 
   public void removeNodeAndEdges(Statement N) {
-    Assertions.UNREACHABLE();
-    delegate.removeNodeAndEdges(N);
+    throw new UnsupportedOperationException();
   }
 
   public void removeOutgoingEdges(Statement node) {
-    Assertions.UNREACHABLE();
-    delegate.removeOutgoingEdges(node);
+    throw new UnsupportedOperationException();
   }
 
   public ControlDependenceOptions getCOptions() {

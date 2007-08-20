@@ -82,10 +82,6 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
     return result;
   }
 
-  public void dump(String filename) {
-    Assertions.UNREACHABLE();
-  }
-
   public IClassHierarchy getClassHierarchy() {
     return cg.getClassHierarchy();
   }

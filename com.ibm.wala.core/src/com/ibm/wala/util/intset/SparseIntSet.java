@@ -497,7 +497,10 @@ public class SparseIntSet implements IntSet {
     }
   }
 
-  public boolean containsAny(SparseIntSet set) {
+  public boolean containsAny(SparseIntSet set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     int i = 0;
     for (int j = 0; j < set.size; j++) {
       int x = set.elements[j];

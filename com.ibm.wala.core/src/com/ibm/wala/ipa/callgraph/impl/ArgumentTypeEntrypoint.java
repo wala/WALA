@@ -35,9 +35,12 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
   private final IClassHierarchy cha;
 
   /**
-   * @param method
+   * @throws IllegalArgumentException  if method == null
    */
-  protected TypeReference[][] makeParameterTypes(IMethod method) {
+  protected TypeReference[][] makeParameterTypes(IMethod method) throws IllegalArgumentException {
+    if (method == null) {
+      throw new IllegalArgumentException("method == null");
+    }
     TypeReference[][] result = new TypeReference[method.getNumberOfParameters()][];
     for (int i = 0; i < result.length; i++) {
       TypeReference t = method.getParameterType(i);
@@ -91,10 +94,6 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
     return null;
   }
 
-  /**
-   * @param method
-   * @param cha
-   */
   public ArgumentTypeEntrypoint(IMethod method, IClassHierarchy cha) {
     super(method);
     this.cha = cha;

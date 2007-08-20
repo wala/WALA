@@ -186,8 +186,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.capa.util.graph.AbstractNumberedGraph#getPredNodeNumbers(java.lang.Object)
    */
   @Override
@@ -201,23 +199,17 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.capa.util.graph.AbstractNumberedGraph#getSuccNodeNumbers(java.lang.Object)
    */
   @Override
-  public IntSet getSuccNodeNumbers(Object node) {
-    if (node instanceof StaticFieldKey) {
-      Assertions.UNREACHABLE();
-      return null;
-    } else {
-      return super.getSuccNodeNumbers(node);
+  public IntSet getSuccNodeNumbers(Object node) throws IllegalArgumentException {
+    if (node instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey) {
+      throw new IllegalArgumentException("node instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey");
     }
+    return super.getSuccNodeNumbers(node);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.capa.util.graph.AbstractGraph#getPredNodeCount(java.lang.Object)
    */
   @Override
@@ -231,23 +223,17 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.capa.util.graph.AbstractGraph#getPredNodes(java.lang.Object)
    */
   @Override
-  public Iterator<? extends Object> getPredNodes(Object N) {
-    if (N instanceof StaticFieldKey) {
-      Assertions.UNREACHABLE();
-      return null;
-    } else {
-      return super.getPredNodes(N);
+  public Iterator<? extends Object> getPredNodes(Object N) throws IllegalArgumentException {
+    if (N instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey) {
+      throw new IllegalArgumentException("N instanceof com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey");
     }
+    return super.getPredNodes(N);
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.capa.util.graph.AbstractGraph#getSuccNodeCount(java.lang.Object)
    */
   @Override

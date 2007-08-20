@@ -14,10 +14,8 @@ package com.ibm.wala.analysis.typeInference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * Abstraction of a Java type. These are immutable.
  * 
  * @author sfink
@@ -77,8 +75,7 @@ public abstract class TypeAbstraction implements ContextItem {
    * TODO: probably should get rid of it.
    */
   public IClass getType() {
-    Assertions.UNREACHABLE("getType not implemented for " + getClass());
-    return null;
+    throw new UnsupportedOperationException("getType not implemented for " + getClass());
   }
 
 }

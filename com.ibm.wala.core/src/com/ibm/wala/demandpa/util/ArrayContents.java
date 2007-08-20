@@ -44,6 +44,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * Pseudo-field modelling the contents of an array of reference type. Only for
@@ -63,59 +64,43 @@ public class ArrayContents implements IField {
   private ArrayContents() {
   }
 
-  public TypeReference getFieldTypeReference() {
-    if (Assertions.verifyAssertions) {
-      Assertions.UNREACHABLE();
-    }
+  public TypeReference getFieldTypeReference() throws UnimplementedError {
+    Assertions.UNREACHABLE();
     return null;
   }
 
-  public boolean isFinal() {
-    if (Assertions.verifyAssertions) {
-      Assertions.UNREACHABLE();
-    }
+  public boolean isFinal() throws UnimplementedError {
+    Assertions.UNREACHABLE();
     return false;
   }
 
-  public boolean isPrivate() {
-    if (Assertions.verifyAssertions) {
-      Assertions.UNREACHABLE();
-    }
+  public boolean isPrivate() throws UnimplementedError {
+    Assertions.UNREACHABLE();
     return false;
   }
 
-  public boolean isProtected() {
-    if (Assertions.verifyAssertions) {
-      Assertions.UNREACHABLE();
-    }
+  public boolean isProtected() throws UnimplementedError {
+    Assertions.UNREACHABLE();
     return false;
   }
 
-  public boolean isPublic() {
-    if (Assertions.verifyAssertions) {
-      Assertions.UNREACHABLE();
-    }
+  public boolean isPublic() throws UnimplementedError {
+    Assertions.UNREACHABLE();
     return false;
   }
 
-  public boolean isStatic() {
-    if (Assertions.verifyAssertions) {
-      Assertions.UNREACHABLE();
-    }
+  public boolean isStatic() throws UnimplementedError {
+    Assertions.UNREACHABLE();
     return false;
   }
 
   public IClass getDeclaringClass() {
-    if (Assertions.verifyAssertions) {
-      Assertions.UNREACHABLE();
-    }
+    Assertions.UNREACHABLE();
     return null;
   }
 
   public Atom getName() {
-    if (Assertions.verifyAssertions) {
-      Assertions.UNREACHABLE();
-    }
+    Assertions.UNREACHABLE();
     return null;
   }
 
@@ -125,12 +110,10 @@ public class ArrayContents implements IField {
   }
 
   public boolean isVolatile() {
-    // TODO Auto-generated method stub
     return false;
   }
 
-  public ClassHierarchy getClassHierarchy() {
-    // TODO Auto-generated method stub
+  public ClassHierarchy getClassHierarchy() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

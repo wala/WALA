@@ -65,6 +65,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * Simple field-based points-to analysis using {@link DemandPointerFlowGraph}.
@@ -79,7 +80,7 @@ public class TestNewGraphPointsTo extends AbstractDemandPointsTo {
     super(cg, model, fam, cha, options);
   }
 
-  public Collection<InstanceKey> getPointsTo(PointerKey pk) {
+  public Collection<InstanceKey> getPointsTo(PointerKey pk) throws UnimplementedError {
 
     Assertions._assert(pk instanceof LocalPointerKey, "we only handle locals");
     LocalPointerKey queriedPk = (LocalPointerKey) pk;

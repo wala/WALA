@@ -36,7 +36,7 @@ public class MapIterator<X,Y> implements Iterator<Y> {
     return i.hasNext();
   }
 
-  public void remove() {
+  public void remove() throws UnsupportedOperationException {
     throw new java.lang.UnsupportedOperationException();
   }
 

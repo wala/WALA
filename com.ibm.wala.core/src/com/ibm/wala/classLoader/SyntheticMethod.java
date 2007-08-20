@@ -162,16 +162,14 @@ public class SyntheticMethod implements IMethod {
    * @see com.ibm.wala.classLoader.IMethod#getMaxLocals()
    */
   public int getMaxLocals() {
-    Assertions.UNREACHABLE();
-    return 0;
+    throw new UnsupportedOperationException();
   }
 
   /**
    * @see com.ibm.wala.classLoader.IMethod#getMaxStackHeight()
    */
   public int getMaxStackHeight() {
-    Assertions.UNREACHABLE();
-    return 0;
+    throw new UnsupportedOperationException();
   }
 
   /**

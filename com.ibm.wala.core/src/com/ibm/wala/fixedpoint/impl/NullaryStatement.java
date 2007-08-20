@@ -11,8 +11,6 @@
 package com.ibm.wala.fixedpoint.impl;
 
 import com.ibm.wala.fixpoint.IVariable;
-import com.ibm.wala.util.debug.Assertions;
-
 
 /**
  * Represents a single step, restricted to a nullary
@@ -102,7 +100,6 @@ public abstract class NullaryStatement extends AbstractStatement {
   }
   
   public IVariable[] getRHS() {
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 }

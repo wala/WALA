@@ -29,6 +29,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.graph.impl.DelegatingNumberedNodeManager;
@@ -242,7 +243,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   }
 
   @Override
-  public void removeNodeAndEdges(CGNode N) {
+  public void removeNodeAndEdges(CGNode N) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 

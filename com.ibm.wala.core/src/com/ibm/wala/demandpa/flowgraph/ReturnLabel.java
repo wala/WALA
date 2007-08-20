@@ -49,7 +49,10 @@ public class ReturnLabel extends CallLabel {
     return new ReturnLabel(callSite);
   }
 
-  public void visit(IFlowLabelVisitor v, Object dst) {
+  public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
+    if (v == null) {
+      throw new IllegalArgumentException("v == null");
+    }
     v.visitReturn(this, dst);
   }
 

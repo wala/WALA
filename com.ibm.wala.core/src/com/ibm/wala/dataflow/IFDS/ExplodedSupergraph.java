@@ -42,7 +42,7 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
   }
 
   public void removeNodeAndEdges(ExplodedSupergraphNode N) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   public Iterator<ExplodedSupergraphNode<T>> iterator() {
@@ -56,13 +56,12 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
   }
 
   public void addNode(ExplodedSupergraphNode n) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
 
   }
 
   public void removeNode(ExplodedSupergraphNode n) {
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   public boolean containsNode(ExplodedSupergraphNode N) {

@@ -32,6 +32,7 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
@@ -152,7 +153,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     return ir.getInstructions();
   }
 
-  public IMethod getMethod() {
+  public IMethod getMethod() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
@@ -310,23 +311,20 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
   }
 
   public void removeAllIncidentEdges(IBasicBlock node) throws UnsupportedOperationException {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
 
   }
 
   public void removeEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   public void removeIncomingEdges(IBasicBlock node) throws UnsupportedOperationException {
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   public void removeOutgoingEdges(IBasicBlock node) throws UnsupportedOperationException {
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   public int getMaxNumber() {

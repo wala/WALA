@@ -59,8 +59,12 @@ public class Util {
   /** The empty {@link BitSet}. */
   public static final BitSet EMPTY_BITSET = new BitSet();
 
-  /** Convert an int[] to a {@link String} for printing */
-  public static String str(int[] ints) {
+  /** Convert an int[] to a {@link String} for printing 
+   * @throws IllegalArgumentException  if ints == null*/
+  public static String str(int[] ints) throws IllegalArgumentException {
+    if (ints == null) {
+      throw new IllegalArgumentException("ints == null");
+    }
     StringBuffer s = new StringBuffer();
     s.append("[");
     for (int i = 0; i < ints.length; i++) {
@@ -93,8 +97,12 @@ public class Util {
     return s.toString();
   }
 
-  /** Get a {@link String} representation of a {@link Throwable}. */
-  public static String str(Throwable thrown) {
+  /** Get a {@link String} representation of a {@link Throwable}. 
+   * @throws IllegalArgumentException  if thrown == null*/
+  public static String str(Throwable thrown) throws IllegalArgumentException {
+    if (thrown == null) {
+      throw new IllegalArgumentException("thrown == null");
+    }
     // create a memory buffer to which to dump the trace
     ByteArrayOutputStream traceDump = new ByteArrayOutputStream();
     PrintWriter w = new PrintWriter(traceDump);
@@ -107,9 +115,9 @@ public class Util {
    * Test whether <em>some</em> element of the given {@link Collection}
    * satisfies the given {@link Predicate}.
    */
-  public static <T> boolean forSome(Collection<T> c_, Predicate<T> p_) {
-    for (T t : c_) {
-      if (p_.test(t)) {
+  public static <T> boolean forSome(Collection<T> c, Predicate<T> p) {
+    for (T t : c) {
+      if (p.test(t)) {
         return true;
       }
     }

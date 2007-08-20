@@ -26,6 +26,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
@@ -197,8 +198,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getModifiers()
    */
-  public int getModifiers() {
-    // TODO Auto-generated method stub
+  public int getModifiers() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return 0;
   }

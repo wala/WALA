@@ -31,7 +31,10 @@ public class Iterator2Collection<T> implements Collection<T> {
     }
   }
   
-  public static <T> Iterator2Collection<T> toCollection(Iterator<? extends T> i) {
+  public static <T> Iterator2Collection<T> toCollection(Iterator<? extends T> i) throws IllegalArgumentException {
+    if (i == null) {
+      throw new IllegalArgumentException("i == null");
+    }
     return new Iterator2Collection<T>(i);
   }
 

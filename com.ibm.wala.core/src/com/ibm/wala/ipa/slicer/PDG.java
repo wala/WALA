@@ -57,6 +57,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
@@ -983,7 +984,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   }
 
   @Override
-  public int getSuccNodeCount(Statement N) {
+  public int getSuccNodeCount(Statement N) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return super.getSuccNodeCount(N);
   }
@@ -997,7 +998,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   }
 
   @Override
-  public boolean hasEdge(Statement src, Statement dst) {
+  public boolean hasEdge(Statement src, Statement dst) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return super.hasEdge(src, dst);
   }

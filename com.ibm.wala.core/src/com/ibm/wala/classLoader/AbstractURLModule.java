@@ -20,6 +20,7 @@ import java.util.Iterator;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 public abstract class AbstractURLModule implements Module, ModuleEntry {
 
@@ -59,7 +60,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
     return false;
   }
 
-  public Module asModule() {
+  public Module asModule() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

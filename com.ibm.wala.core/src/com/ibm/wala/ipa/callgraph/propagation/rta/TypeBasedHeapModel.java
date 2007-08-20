@@ -42,6 +42,7 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
@@ -194,12 +195,12 @@ public class TypeBasedHeapModel implements HeapModel {
     return iKeyFactory.getClassHierarchy();
   }
 
-  public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
+  public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
-  public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
+  public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
@@ -213,12 +214,12 @@ public class TypeBasedHeapModel implements HeapModel {
     return null;
   }
 
-  public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
+  public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
-  public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
+  public InstanceKey getInstanceKeyForClassObject(TypeReference type) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

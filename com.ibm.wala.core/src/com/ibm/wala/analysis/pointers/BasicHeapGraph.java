@@ -30,6 +30,7 @@ import com.ibm.wala.util.IntFunction;
 import com.ibm.wala.util.IntMapIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.NodeManager;
@@ -440,11 +441,11 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
-  public void removeNode(Object n) {
+  public void removeNode(Object n) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
-  public void addEdge(Object from, Object to) {
+  public void addEdge(Object from, Object to) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
@@ -452,7 +453,7 @@ public class BasicHeapGraph extends HeapGraph {
     Assertions.UNREACHABLE();
   }
 
-  public boolean hasEdge(Object from, Object to) {
+  public boolean hasEdge(Object from, Object to) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return false;
   }
@@ -495,23 +496,19 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   public void removeIncomingEdges(Object node) {
-    // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
   }
 
-  public void removeOutgoingEdges(Object node) {
-    // TODO Auto-generated method stub
+  public void removeOutgoingEdges(Object node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
-  public IntSet getSuccNodeNumbers(Object node) {
-    // TODO Auto-generated method stub
+  public IntSet getSuccNodeNumbers(Object node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
-  public IntSet getPredNodeNumbers(Object node) {
-    // TODO Auto-generated method stub
+  public IntSet getPredNodeNumbers(Object node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

@@ -11,6 +11,7 @@
 package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
@@ -145,7 +146,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#intersectWith(com.ibm.wala.util.intset.IntSet)
    */
-  public void intersectWith(IntSet set) {
+  public void intersectWith(IntSet set) throws UnimplementedError {
     if (set instanceof BimodalMutableIntSet) {
       BimodalMutableIntSet that = (BimodalMutableIntSet) set;
       impl.intersectWith(that.impl);

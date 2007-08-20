@@ -37,6 +37,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.IntSet;
@@ -1016,13 +1017,11 @@ public class SSACFG implements ControlFlowGraph {
   }
 
   public void removeIncomingEdges(IBasicBlock node) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   public void removeOutgoingEdges(IBasicBlock node) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {
@@ -1037,8 +1036,7 @@ public class SSACFG implements ControlFlowGraph {
     return cfg.getSuccNodeNumbers(n);
   }
 
-  public IntSet getPredNodeNumbers(IBasicBlock node) {
-    // TODO Auto-generated method stub
+  public IntSet getPredNodeNumbers(IBasicBlock node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

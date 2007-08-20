@@ -161,7 +161,7 @@ public class TwoExitCFG implements ControlFlowGraph {
    * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
    */
   public void removeNodeAndEdges(IBasicBlock N) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   public int getNumber(IBasicBlock N) {
@@ -308,26 +308,22 @@ public class TwoExitCFG implements ControlFlowGraph {
    *      java.lang.Object)
    */
   public void addEdge(IBasicBlock src, IBasicBlock dst) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
   
   public void removeEdge(IBasicBlock src, IBasicBlock dst) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {
-    Assertions.UNREACHABLE();
-    return false;
+    throw new UnsupportedOperationException();
   }
 
   public void removeAllIncidentEdges(IBasicBlock node) {
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   /**
-   * @author sfink
-   * 
    * An additional basic block to model exceptional exits
    */
   public final class ExceptionalExitBlock implements ISSABasicBlock {

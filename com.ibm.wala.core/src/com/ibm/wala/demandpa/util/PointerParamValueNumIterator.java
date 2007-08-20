@@ -90,8 +90,6 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Iterator#hasNext()
    */
   public boolean hasNext() {
@@ -99,8 +97,6 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Iterator#next()
    */
   public Integer next() {
@@ -113,11 +109,9 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Iterator#remove()
    */
-  public void remove() {
+  public void remove() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

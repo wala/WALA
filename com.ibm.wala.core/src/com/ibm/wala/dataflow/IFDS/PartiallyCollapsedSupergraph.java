@@ -38,6 +38,7 @@ import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.AbstractGraph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
@@ -255,13 +256,12 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  public CGNode getProcOf(Object n) {
+  public CGNode getProcOf(Object n) throws IllegalArgumentException {
+    if (!(n instanceof com.ibm.wala.ipa.cfg.BasicBlockInContext) && n instanceof com.ibm.wala.cfg.IBasicBlock) {
+      throw new IllegalArgumentException(
+          "(n instanceof com.ibm.wala.cfg.IBasicBlock) and (not ( n instanceof com.ibm.wala.ipa.cfg.BasicBlockInContext ) )");
+    }
     if (n instanceof IBasicBlock) {
-      if (Assertions.verifyAssertions) {
-        if (!(n instanceof BasicBlockInContext)) {
-          Assertions.UNREACHABLE(n.getClass().toString());
-        }
-      }
       return partialIPFG.getCGNode((IBasicBlock) n);
     } else {
       return nodeManager.getProcOfCollapsedNode(n);
@@ -941,8 +941,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     return nodeManager.getNumber(N);
   }
 
-  public Object getNode(int number) {
-    // TODO Auto-generated method stub
+  public Object getNode(int number) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
@@ -952,7 +951,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   public Iterator<Object> iterateNodes(IntSet s) {
-    // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
     return null;
   }

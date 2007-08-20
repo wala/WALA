@@ -98,45 +98,35 @@ public class FakeRootClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getModifiers()
    */
   public int getModifiers() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return 0;
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getSuperclass()
    */
   public IClass getSuperclass() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces()
    */
   public Collection<IClass> getAllImplementedInterfaces() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllAncestorInterfaces()
    */
   public Collection<IClass> getAllAncestorInterfaces() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
   public IMethod getMethod(Selector selector) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /*
@@ -163,18 +153,14 @@ public class FakeRootClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
   public Collection<IMethod> getDeclaredMethods() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredInstanceFields()
    */
   public Collection<IField> getDeclaredInstanceFields() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /*
