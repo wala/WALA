@@ -424,7 +424,10 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  public boolean containsAny(SparseLongSet set) {
+  public boolean containsAny(SparseLongSet set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     int i = 0;
     for (int j = 0; j < set.size; j++) {
       long x = set.elements[j];

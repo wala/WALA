@@ -343,7 +343,10 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
   }
 
-  public int getNumber(IBasicBlock n) {
+  public int getNumber(IBasicBlock n) throws IllegalArgumentException {
+    if (n == null) {
+      throw new IllegalArgumentException("n == null");
+    }
     return n.getNumber();
   }
 

@@ -660,7 +660,10 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     return false;
   }
 
-  public static boolean representsNullType(InstanceKey key) {
+  public static boolean representsNullType(InstanceKey key) throws IllegalArgumentException {
+    if (key == null) {
+      throw new IllegalArgumentException("key == null");
+    }
     IClass cls = key.getConcreteType();
     Language L = cls.getClassLoader().getLanguage();
     return L.isNullType(cls.getReference());

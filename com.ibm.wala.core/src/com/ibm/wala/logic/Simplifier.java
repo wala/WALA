@@ -211,8 +211,12 @@ public class Simplifier {
    * @param facts
    *            formulae that can be treated as axioms
    * @return true if we can easily prove f is a contradiction
+   * @throws IllegalArgumentException  if facts == null
    */
-  public static boolean isContradiction(IFormula f, Collection<IMaxTerm> facts) {
+  public static boolean isContradiction(IFormula f, Collection<IMaxTerm> facts) throws IllegalArgumentException {
+    if (facts == null) {
+      throw new IllegalArgumentException("facts == null");
+    }
     for (IMaxTerm d : facts) {
       if (contradicts(d, f)) {
         return true;
@@ -379,7 +383,10 @@ public class Simplifier {
   // some ad-hoc formula normalization
   // 1) change >, >= to <, <=
   // TODO: do normalization in a principled manner
-  public static IFormula normalize(IFormula f) {
+  public static IFormula normalize(IFormula f) throws IllegalArgumentException {
+    if (f == null) {
+      throw new IllegalArgumentException("f == null");
+    }
     switch (f.getKind()) {
     case RELATION:
       RelationFormula r = (RelationFormula) f;
@@ -397,8 +404,12 @@ public class Simplifier {
    * @param facts
    *            formulae that can be treated as axioms
    * @return true if we can easily prove f is a tautology
+   * @throws IllegalArgumentException  if facts == null
    */
-  public static boolean isTautology(IFormula f, Collection<IMaxTerm> facts) {
+  public static boolean isTautology(IFormula f, Collection<IMaxTerm> facts) throws IllegalArgumentException {
+    if (facts == null) {
+      throw new IllegalArgumentException("facts == null");
+    }
     for (IMaxTerm d : facts) {
       if (implies(d, f)) {
         return true;
@@ -717,8 +728,12 @@ public class Simplifier {
    * Attempt to distribute the NOT from a NotFormula
    * 
    * @return the original formula if the distribution is unsuccessful
+   * @throws IllegalArgumentException  if f == null
    */
-  public static IFormula distributeNot(NotFormula f) {
+  public static IFormula distributeNot(NotFormula f) throws IllegalArgumentException {
+    if (f == null) {
+      throw new IllegalArgumentException("f == null");
+    }
     IFormula f1 = f.getFormula();
     if (f1 instanceof RelationFormula) {
       RelationFormula r = (RelationFormula) f1;

@@ -36,8 +36,12 @@ public class Table<T> implements Cloneable {
 
   /**
    * create an empty table with the same column headings as t
+   * @throws IllegalArgumentException  if t == null
    */
-  public Table(Table<T> t) {
+  public Table(Table<T> t) throws IllegalArgumentException {
+    if (t == null) {
+      throw new IllegalArgumentException("t == null");
+    }
     for (int i = 0; i < t.getNumberOfColumns(); i++) {
       columnHeadings.set(i, t.getColumnHeading(i));
     }

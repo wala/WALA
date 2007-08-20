@@ -49,7 +49,10 @@ public class ParamLabel extends CallLabel {
     return new ParamLabel(callSite);
   }
 
-  public void visit(IFlowLabelVisitor v, Object dst) {
+  public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
+    if (v == null) {
+      throw new IllegalArgumentException("v == null");
+    }
     v.visitParam(this, dst);
   }
 

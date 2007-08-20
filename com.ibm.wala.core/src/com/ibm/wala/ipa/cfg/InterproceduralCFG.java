@@ -190,8 +190,12 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   /**
    * @param n
    * @return the cfg for n, or null if none found
+   * @throws IllegalArgumentException  if n == null
    */
-  public ControlFlowGraph getCFG(CGNode n) {
+  public ControlFlowGraph getCFG(CGNode n) throws IllegalArgumentException {
+    if (n == null) {
+      throw new IllegalArgumentException("n == null");
+    }
     ControlFlowGraph cfg = n.getCFG();
     if (cfg == null) {
       return null;

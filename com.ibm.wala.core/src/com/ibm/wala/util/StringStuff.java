@@ -288,9 +288,6 @@ public class StringStuff {
    * Given that name[start:start+length] is a Type name in JVM format, parse it
    * for the package
    * 
-   * @param name
-   * @param start
-   * @param length
    * @return an ImmutableByteArray that represents the package, or null if it's
    *         the unnamed package
    */

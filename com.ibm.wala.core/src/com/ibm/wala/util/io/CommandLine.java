@@ -27,9 +27,12 @@ public class CommandLine {
    * line args. if args[i] is "-foo" and args[i+1] is "bar", then the result
    * will define a property with key "foo" and value "bar"
    * 
-   * @throws WalaException
+   * @throws IllegalArgumentException  if args == null
    */
-  public static Properties parse(String[] args) throws WalaException {
+  public static Properties parse(String[] args) throws IllegalArgumentException, WalaException {
+    if (args == null) {
+      throw new IllegalArgumentException("args == null");
+    }
     Properties result = new Properties();
     for (int i = 0; i < args.length; i++) {
       String key = parseForKey(args[i]);

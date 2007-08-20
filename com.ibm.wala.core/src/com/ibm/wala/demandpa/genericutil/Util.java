@@ -80,7 +80,7 @@ public class Util {
    * Factorial on doubles; avoids overflow problems present when using integers.
    * 
    * @param n_
-   *          arg on which to compute factorial
+   *            arg on which to compute factorial
    * @return (<code>double</code> approximation to) factorial of largest
    *         positive integer <= (n_ + epsilon)
    */
@@ -179,10 +179,10 @@ public class Util {
    * 
    * @return The first element satisfying the predicate; otherwise null.
    */
-  public static <T> T find(Collection<T> c_, Predicate<T> p_) {
-    for (Iterator<T> iter = c_.iterator(); iter.hasNext();) {
+  public static <T> T find(Collection<T> c, Predicate<T> p) {
+    for (Iterator<T> iter = c.iterator(); iter.hasNext();) {
       T obj = iter.next();
-      if (p_.test(obj))
+      if (p.test(obj))
         return obj;
     }
 
@@ -195,12 +195,12 @@ public class Util {
    * 
    * @return All the elements satisfying the predicate
    */
-  public static <T> Collection<T> findAll(Collection<T> c_, Predicate<T> p_) {
+  public static <T> Collection<T> findAll(Collection<T> c, Predicate<T> p) {
     Collection<T> result = new LinkedList<T>();
 
-    for (Iterator<T> iter = c_.iterator(); iter.hasNext();) {
+    for (Iterator<T> iter = c.iterator(); iter.hasNext();) {
       T obj = iter.next();
-      if (p_.test(obj))
+      if (p.test(obj))
         result.add(obj);
     }
 
@@ -211,9 +211,9 @@ public class Util {
    * Test whether <em>all</em> elements of the given {@link Collection}
    * satisfy the given {@link Predicate}.
    */
-  public static <T> boolean forAll(Collection<T> c_, Predicate<T> p_) {
-    for (T t : c_) {
-      if (!p_.test(t))
+  public static <T> boolean forAll(Collection<T> c, Predicate<T> p) {
+    for (T t : c) {
+      if (!p.test(t))
         return false;
     }
     return true;
@@ -222,14 +222,14 @@ public class Util {
   /**
    * Perform an action for all elements in a collection.
    * 
-   * @param c_
-   *          the collection
-   * @param v_
-   *          the visitor defining the action
+   * @param c
+   *            the collection
+   * @param v
+   *            the visitor defining the action
    */
-  public static <T> void doForAll(Collection<T> c_, ObjectVisitor<T> v_) {
-    for (Iterator<T> iter = c_.iterator(); iter.hasNext();)
-      v_.visit(iter.next());
+  public static <T> void doForAll(Collection<T> c, ObjectVisitor<T> v) {
+    for (Iterator<T> iter = c.iterator(); iter.hasNext();)
+      v.visit(iter.next());
   }
 
   /**
@@ -238,11 +238,18 @@ public class Util {
    * {@link java.lang.reflect reflection} to create a list of the same type as
    * 'srcList', but reflection works really slowly in some implementations, so
    * it's best to avoid it.
+   * 
+   * @throws IllegalArgumentException
+   *             if srcList == null
    */
-  public static <T, U> List<U> map(List<T> srcList, Mapper<T, U> mapper_) {
+  public static <T, U> List<U> map(List<T> srcList, Mapper<T, U> mapper) throws IllegalArgumentException {
+    if (srcList == null) {
+      throw new IllegalArgumentException("srcList == null");
+    }
     ArrayList<U> result = new ArrayList<U>();
-    for (Iterator<T> srcIter = srcList.iterator(); srcIter.hasNext();)
-      result.add(mapper_.map(srcIter.next()));
+    for (Iterator<T> srcIter = srcList.iterator(); srcIter.hasNext();) {
+      result.add(mapper.map(srcIter.next()));
+    }
     return result;
   }
 
@@ -254,11 +261,11 @@ public class Util {
    * 'srcList', but reflection works really slowly in some implementations, so
    * it's best to avoid it.
    */
-  public static <T> List<T> filter(Collection<T> src_, Predicate<T> pred_) {
+  public static <T> List<T> filter(Collection<T> src, Predicate<T> pred) {
     ArrayList<T> result = new ArrayList<T>();
-    for (Iterator<T> srcIter = src_.iterator(); srcIter.hasNext();) {
+    for (Iterator<T> srcIter = src.iterator(); srcIter.hasNext();) {
       T curElem = srcIter.next();
-      if (pred_.test(curElem))
+      if (pred.test(curElem))
         result.add(curElem);
     }
     return result;
@@ -268,17 +275,17 @@ public class Util {
    * Filter a collection according to some predicate, placing the result in a
    * List
    * 
-   * @param src_
-   *          collection to be filtered
-   * @param pred_
-   *          the predicate
-   * @param result_
-   *          the list for the result. assumed to be empty
+   * @param src
+   *            collection to be filtered
+   * @param pred
+   *            the predicate
+   * @param result
+   *            the list for the result. assumed to be empty
    */
-  public static <T> void filter(Collection<T> src_, Predicate<T> pred_, List<T> result_) {
-    for (T t : src_) {
-      if (pred_.test(t)) {
-        result_.add(t);
+  public static <T> void filter(Collection<T> src, Predicate<T> pred, List<T> result) {
+    for (T t : src) {
+      if (pred.test(t)) {
+        result.add(t);
       }
     }
   }
@@ -290,10 +297,10 @@ public class Util {
    * 'srcSet', but reflection works really slowly in some implementations, so
    * it's best to avoid it.
    */
-  public static <T, U> Set<U> mapToSet(Collection<T> srcSet, Mapper<T, U> mapper_) {
+  public static <T, U> Set<U> mapToSet(Collection<T> srcSet, Mapper<T, U> mapper) {
     HashSet<U> result = new HashSet<U>();
     for (Iterator<T> srcIter = srcSet.iterator(); srcIter.hasNext();)
-      result.add(mapper_.map(srcIter.next()));
+      result.add(mapper.map(srcIter.next()));
     return result;
   }
 
@@ -301,42 +308,46 @@ public class Util {
    * Grow an int[] -- i.e. allocate a new array of the given size, with the
    * initial segment equal to this int[].
    */
-  public static int[] realloc(int[] data_, int newSize_) {
-    if (data_.length < newSize_) {
-      int[] newData = new int[newSize_];
-      System.arraycopy(data_, 0, newData, 0, data_.length);
+  public static int[] realloc(int[] data, int newSize) {
+    if (data.length < newSize) {
+      int[] newData = new int[newSize];
+      System.arraycopy(data, 0, newData, 0, data.length);
       return newData;
     } else
-      return data_;
+      return data;
   }
 
   /** Clear a {@link BitSet}. */
-  public static void clear(BitSet bitSet_) {
-    bitSet_.and(EMPTY_BITSET);
+  public static void clear(BitSet bitSet) {
+    bitSet.and(EMPTY_BITSET);
   }
 
   /** Replace all occurrences of a given substring in a given {@link String}. */
-  public static String replaceAll(String str_, String sub_, String newSub_) {
-    if (str_.indexOf(sub_) == -1)
-      return str_;
-    int subLen = sub_.length();
+  public static String replaceAll(String str, String sub, String newSub) {
+    if (str.indexOf(sub) == -1)
+      return str;
+    int subLen = sub.length();
     int idx;
-    StringBuffer result = new StringBuffer(str_);
-    while ((idx = result.toString().indexOf(sub_)) >= 0)
-      result.replace(idx, idx + subLen, newSub_);
+    StringBuffer result = new StringBuffer(str);
+    while ((idx = result.toString().indexOf(sub)) >= 0)
+      result.replace(idx, idx + subLen, newSub);
     return result.toString();
   }
 
   /** Remove all occurrences of a given substring in a given {@link String} */
-  public static String removeAll(String str_, String sub_) {
-    return replaceAll(str_, sub_, "");
+  public static String removeAll(String str, String sub) {
+    return replaceAll(str, sub, "");
   }
 
   /** Generate strings with fully qualified names or not */
   public static final boolean FULLY_QUALIFIED_NAMES = false;
 
-  /** Write object fields to string 
-   * @throws IllegalArgumentException  if obj == null*/
+  /**
+   * Write object fields to string
+   * 
+   * @throws IllegalArgumentException
+   *             if obj == null
+   */
   public static String objectFieldsToString(Object obj) throws IllegalArgumentException {
     if (obj == null) {
       throw new IllegalArgumentException("obj == null");
@@ -402,8 +413,13 @@ public class Util {
 
   /**
    * @return a hash code for the array
+   * @throws IllegalArgumentException
+   *             if objs == null
    */
-  public static int hashArray(Object[] objs) {
+  public static int hashArray(Object[] objs) throws IllegalArgumentException {
+    if (objs == null) {
+      throw new IllegalArgumentException("objs == null");
+    }
     // stolen from java.util.AbstractList
     int ret = 1;
     for (int i = 0; i < objs.length; i++) {
@@ -469,8 +485,11 @@ public class Util {
       vals.add(val);
     }
   }
-  
-  public static <T> List<T> pickNAtRandom(List<T> vals, int n, long seed) {
+
+  public static <T> List<T> pickNAtRandom(List<T> vals, int n, long seed) throws IllegalArgumentException {
+    if (vals == null) {
+      throw new IllegalArgumentException("vals == null");
+    }
     if (vals.size() <= n) {
       return vals;
     }
@@ -479,11 +498,11 @@ public class Util {
     for (int i = 0; i < n; i++) {
       boolean added = true;
       do {
-      int randIndex = rand.nextInt(n);
-      added = elems.add(vals.get(randIndex));
+        int randIndex = rand.nextInt(n);
+        added = elems.add(vals.get(randIndex));
       } while (!added);
-      
+
     }
-    return new ArrayList<T>(elems);    
+    return new ArrayList<T>(elems);
   }
 } // class Util

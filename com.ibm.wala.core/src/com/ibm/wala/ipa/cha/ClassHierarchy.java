@@ -1152,7 +1152,10 @@ public class ClassHierarchy implements IClassHierarchy {
     return root.getJavaClass();
   }
 
-  public boolean isRootClass(IClass c) {
+  public boolean isRootClass(IClass c) throws IllegalArgumentException {
+    if (c == null) {
+      throw new IllegalArgumentException("c == null");
+    }
     return c.equals(root.getJavaClass());
   }
 

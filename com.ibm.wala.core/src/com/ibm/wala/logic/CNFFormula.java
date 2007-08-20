@@ -64,7 +64,10 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
     return result;
   }
 
-  public String prettyPrint(ILogicDecorator d) {
+  public String prettyPrint(ILogicDecorator d) throws IllegalArgumentException {
+    if (d == null) {
+      throw new IllegalArgumentException("d == null");
+    }
     return d.prettyPrint(this);
   }
 

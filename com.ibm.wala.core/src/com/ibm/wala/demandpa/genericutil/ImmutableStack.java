@@ -157,14 +157,17 @@ public class ImmutableStack<T> {
   }
 
   /**
-   * 
-   * @param other
    * @return <code>true</code> iff other.size() = k, k <= this.size(), and the
    *         top k elements of this equal other
+   * @throws IllegalArgumentException  if other == null
    */
-  public boolean topMatches(ImmutableStack<T> other) {
-    if (other.size() > size())
+  public boolean topMatches(ImmutableStack<T> other) throws IllegalArgumentException {
+    if (other == null) {
+      throw new IllegalArgumentException("other == null");
+    }
+    if (other.size() > size()) {
       return false;
+    }
     for (int i = other.size() - 1, j = this.size() - 1; i >= 0; i--, j--) {
       if (!other.get(i).equals(get(j)))
         return false;

@@ -29,7 +29,10 @@ public class NotFormula implements IFormula {
     }
   }
 
-  public static IFormula make(IFormula f) {
+  public static IFormula make(IFormula f) throws IllegalArgumentException {
+    if (f == null) {
+      throw new IllegalArgumentException("f == null");
+    }
     switch (f.getKind()) {
     case RELATION:
       RelationFormula r = (RelationFormula) f;
@@ -92,7 +95,10 @@ public class NotFormula implements IFormula {
     return prettyPrint(DefaultDecorator.instance());
   }
 
-  public String prettyPrint(ILogicDecorator d) {
+  public String prettyPrint(ILogicDecorator d) throws IllegalArgumentException {
+    if (d == null) {
+      throw new IllegalArgumentException("d == null");
+    }
     return d.prettyPrint(this);
   }
 

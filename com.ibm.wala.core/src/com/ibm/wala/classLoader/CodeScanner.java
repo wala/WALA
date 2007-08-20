@@ -222,8 +222,12 @@ public class CodeScanner {
 
   /**
    * @return Set <TypeReference>
+   * @throws IllegalArgumentException  if statements == null
    */
-  public static Set<TypeReference> getCaughtExceptions(SSAInstruction[] statements) {
+  public static Set<TypeReference> getCaughtExceptions(SSAInstruction[] statements) throws IllegalArgumentException {
+    if (statements == null) {
+      throw new IllegalArgumentException("statements == null");
+    }
     final HashSet<TypeReference> result = HashSetFactory.make(10);
     Visitor v = new Visitor() {
       @Override
@@ -377,8 +381,11 @@ public class CodeScanner {
     return false;
   }
 
-  public static boolean hasObjectArrayStore(SSAInstruction[] statements) {
+  public static boolean hasObjectArrayStore(SSAInstruction[] statements) throws IllegalArgumentException {
 
+    if (statements == null) {
+      throw new IllegalArgumentException("statements == null");
+    }
     class ScanVisitor extends Visitor {
       boolean foundOne = false;
 

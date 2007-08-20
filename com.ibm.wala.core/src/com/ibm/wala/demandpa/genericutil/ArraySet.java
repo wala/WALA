@@ -117,7 +117,10 @@ public class ArraySet<T> extends AbstractSet<T> {
     return true;
   }
 
-  public boolean addAll(ArraySet<T> other) {
+  public boolean addAll(ArraySet<T> other) throws IllegalArgumentException {
+    if (other == null) {
+      throw new IllegalArgumentException("other == null");
+    }
     boolean ret = false;
     for (int i = 0; i < other.size(); i++) {
       boolean added = add(other.get(i));

@@ -59,7 +59,10 @@ public class CISlicer {
   }
 
   public CISlicer(CallGraph cg, PointerAnalysis pa, ModRef modRef,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
+    if (dOptions == null) {
+          throw new IllegalArgumentException("dOptions == null");
+        }
     if (dOptions.equals(DataDependenceOptions.NO_BASE_PTRS) ||
         dOptions.equals(DataDependenceOptions.FULL)) {
       throw new IllegalArgumentException("Heap data dependences requested in CISlicer!");

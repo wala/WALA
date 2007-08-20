@@ -38,11 +38,17 @@ public class DefaultDecorator implements ILogicDecorator {
     return c.toString();
   }
 
-  public String prettyPrint(AbstractVariable v) {
+  public String prettyPrint(AbstractVariable v) throws IllegalArgumentException {
+    if (v == null) {
+      throw new IllegalArgumentException("v == null");
+    }
     return v.toString();
   }
 
-  public String prettyPrint(Quantifier q) {
+  public String prettyPrint(Quantifier q) throws IllegalArgumentException {
+    if (q == null) {
+      throw new IllegalArgumentException("q == null");
+    }
     return q.toString();
   }
 
@@ -53,7 +59,10 @@ public class DefaultDecorator implements ILogicDecorator {
     return constant.toString();
   }
 
-  public String prettyPrint(FunctionTerm term) {
+  public String prettyPrint(FunctionTerm term) throws IllegalArgumentException {
+    if (term == null) {
+      throw new IllegalArgumentException("term == null");
+    }
     StringBuffer result = new StringBuffer(term.getFunction().getSymbol());
     result.append("(");
     for (int i = 0; i < term.getFunction().getNumberOfParameters() - 1; i++) {
@@ -67,7 +76,10 @@ public class DefaultDecorator implements ILogicDecorator {
     return result.toString();
   }
   
-  public String prettyPrint(RelationFormula r) {
+  public String prettyPrint(RelationFormula r) throws IllegalArgumentException {
+    if (r == null) {
+      throw new IllegalArgumentException("r == null");
+    }
     if (r.getRelation().getValence() == 2) {
       return infixNotation(r);
     } else {
@@ -100,7 +112,10 @@ public class DefaultDecorator implements ILogicDecorator {
     return result.toString();
   }
 
-  public String prettyPrint(IRelation r) {
+  public String prettyPrint(IRelation r) throws IllegalArgumentException {
+    if (r == null) {
+      throw new IllegalArgumentException("r == null");
+    }
     return r.getSymbol();
   }
   
@@ -116,7 +131,10 @@ public class DefaultDecorator implements ILogicDecorator {
     return result.toString();
   }
 
-  public String prettyPrint(NotFormula n) {
+  public String prettyPrint(NotFormula n) throws IllegalArgumentException {
+    if (n == null) {
+      throw new IllegalArgumentException("n == null");
+    }
     StringBuffer result = new StringBuffer();
     result.append("not ( ");
     result.append(n.getFormula().prettyPrint(this));

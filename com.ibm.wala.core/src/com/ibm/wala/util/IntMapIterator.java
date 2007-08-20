@@ -38,7 +38,7 @@ public class IntMapIterator<T> implements Iterator<T> {
     return i.hasNext();
   }
 
-  public void remove() {
+  public void remove() throws UnsupportedOperationException {
     throw new java.lang.UnsupportedOperationException();
   }
 

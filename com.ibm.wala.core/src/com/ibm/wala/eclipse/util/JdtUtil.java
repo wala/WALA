@@ -213,9 +213,12 @@ public class JdtUtil {
    * TODO: this is too slow. find a better way.
    * 
    * @return null if not found
+   * @throws IllegalArgumentException  if projects == null
    */
-  public static IType findJavaClassInProjects(String className, Collection<IJavaProject> projects) {
-
+  public static IType findJavaClassInProjects(String className, Collection<IJavaProject> projects) throws IllegalArgumentException {
+    if (projects == null) {
+      throw new IllegalArgumentException("projects == null");
+    }
     IJavaElement[] arr = new IJavaElement[projects.size()];
     projects.toArray(arr);
     IJavaSearchScope scope = SearchEngine.createJavaSearchScope(arr, false);
@@ -224,7 +227,6 @@ public class JdtUtil {
   }
 
   public static IType findJavaClassInResources(String className, Collection<IResource> resources) {
-
     Collection<IJavaProject> projects = HashSetFactory.make();
     for (IResource r : resources) {
       projects.add(JavaCore.create(r).getJavaProject());
@@ -324,7 +326,10 @@ public class JdtUtil {
     }
   }
 
-  public static Collection<String> getTypeParameterNames(IType type) throws JavaModelException {
+  public static Collection<String> getTypeParameterNames(IType type) throws IllegalArgumentException, JavaModelException {
+    if (type == null) {
+      throw new IllegalArgumentException("type == null");
+    }
     ITypeParameter[] tp = type.getTypeParameters();
     Collection<String> typeParameterNames = HashSetFactory.make(tp.length);
     for (ITypeParameter p : tp) {

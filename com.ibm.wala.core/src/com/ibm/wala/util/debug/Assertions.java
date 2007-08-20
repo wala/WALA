@@ -31,10 +31,9 @@ public class Assertions {
   }
 
   /**
-   * Method _assert.
-   * @param b
+   * @throws UnimplementedError  if b == false
    */
-  public static void _assert(boolean b) {
+  public static void _assert(boolean b) throws UnimplementedError {
     checkGuard();
     if (!b)
       throw new UnimplementedError();
@@ -67,8 +66,9 @@ public class Assertions {
    * An assertion which does not need to be guarded by verifyAssertions.
    * These assertions will be enabled in production!
    * @param b
+   * @throws UnimplementedError  if b == false
    */
-  public static void productionAssertion(boolean b) {
+  public static void productionAssertion(boolean b) throws UnimplementedError {
     if (!b)
       throw new UnimplementedError();
   }
@@ -97,9 +97,9 @@ public class Assertions {
   /**
    * This is only a convenience method, identical to _assert.
    * Allows the programmer to distinguish preconditions from other assertions.
-   * @param b
+   * @throws UnimplementedError  if b == false
    */
-  public static void precondition(boolean b) {
+  public static void precondition(boolean b) throws UnimplementedError {
     checkGuard();
     if (!b)
       throw new UnimplementedError();
@@ -108,10 +108,9 @@ public class Assertions {
   /**
    * This is only a convenience method, identical to _assert.
    * It allows the programmer to distinguish preconditions from other assertions.
-   * @param b
-   * @param string
+   * @throws UnimplementedError  if b == false
    */
-  public static void precondition(boolean b, String string) {
+  public static void precondition(boolean b, String string) throws UnimplementedError {
     checkGuard();
     if (!b)
       throw new UnimplementedError(string);
@@ -120,9 +119,9 @@ public class Assertions {
   /**
    * This is only a convenience method, identical to _assert.
    * Allows the programmer to distinguish postconditions from other assertions.
-   * @param b
+   * @throws UnimplementedError  if b == false
    */
-  public static void postcondition(boolean b) {
+  public static void postcondition(boolean b) throws UnimplementedError {
     checkGuard();
     if (!b)
       throw new UnimplementedError();
@@ -131,10 +130,9 @@ public class Assertions {
   /**
    * This is only a convenience method, identical to _assert.
    * It allows the programmer to distinguish postconditions from other assertions.
-   * @param b
-   * @param string
+   * @throws UnimplementedError  if b == false
    */
-  public static void postcondition(boolean b, String string) {
+  public static void postcondition(boolean b, String string) throws UnimplementedError {
     checkGuard();
     if (!b)
       throw new UnimplementedError(string);

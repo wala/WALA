@@ -72,13 +72,14 @@ public class CallGraphMapUtil {
    * the method, i.e., the only context for the method should be
    * Everywhere.EVERYWHERE.
    * 
-   * @param orig
-   * @param fromCG
-   * @param toCG
    * @return the corresponding node, or <code>null</code> if the method is not
    *         in the target call graph
+   * @throws IllegalArgumentException  if fromCG == null
    */
-  public static CGNode mapCGNode(CGNode orig, CallGraph fromCG, CallGraph toCG) {
+  public static CGNode mapCGNode(CGNode orig, CallGraph fromCG, CallGraph toCG) throws IllegalArgumentException {
+    if (fromCG == null) {
+      throw new IllegalArgumentException("fromCG == null");
+    }
     if (orig == fromCG.getFakeRootNode()) {
       return toCG.getFakeRootNode();
     } else {

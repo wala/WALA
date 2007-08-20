@@ -54,8 +54,6 @@ public class ReturnBarLabel extends CallLabel {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see demandGraph.IFlowLabel#bar()
    */
   public ReturnLabel bar() {
@@ -63,12 +61,13 @@ public class ReturnBarLabel extends CallLabel {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor,
    *      java.lang.Object)
    */
-  public void visit(IFlowLabelVisitor v, Object dst) {
+  public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
+    if (v == null) {
+      throw new IllegalArgumentException("v == null");
+    }
     v.visitReturnBar(this, dst);
   }
 

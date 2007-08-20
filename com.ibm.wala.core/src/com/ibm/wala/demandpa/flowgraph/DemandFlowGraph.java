@@ -149,8 +149,12 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
    * add representation of flow for a node, if not already present
    * 
    * @param node
+   * @throws IllegalArgumentException  if node == null
    */
-  public void addSubgraphForNode(CGNode node) {
+  public void addSubgraphForNode(CGNode node) throws IllegalArgumentException {
+    if (node == null) {
+      throw new IllegalArgumentException("node == null");
+    }
     if (node.getIR() == null) {
       throw new IllegalArgumentException("no ir for node " + node);
     }
@@ -360,13 +364,15 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
   }
 
   /**
-   * 
-   * 
    * @param sfk
    *            the static field
    * @return all the variables that get the value of sfk
+   * @throws IllegalArgumentException  if sfk == null
    */
-  public Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk) {
+  public Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
+    if (sfk == null) {
+      throw new IllegalArgumentException("sfk == null");
+    }
     Collection<MemoryAccess> fieldReads = mam.getFieldReads(sfk.getField());
     for (MemoryAccess a : fieldReads) {
       addSubgraphForNode(a.getNode());

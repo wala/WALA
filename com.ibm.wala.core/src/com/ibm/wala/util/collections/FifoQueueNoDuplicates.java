@@ -71,9 +71,13 @@ public class FifoQueueNoDuplicates<T> extends FifoQueue<T> {
    * @param elements
    *          an Iterator of Objects to be added to the queue if never already
    *          queued.
+   * @throws IllegalArgumentException  if elements == null
    */
   @Override
-  public void push(Iterator<? extends T> elements) {
+  public void push(Iterator<? extends T> elements) throws IllegalArgumentException {
+    if (elements == null) {
+      throw new IllegalArgumentException("elements == null");
+    }
     while (elements.hasNext()) {
       T element = elements.next();
       if (wasInQueue.add(element)) {

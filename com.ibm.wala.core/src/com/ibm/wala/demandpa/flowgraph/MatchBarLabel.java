@@ -53,8 +53,6 @@ public class MatchBarLabel implements IFlowLabel {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see demandGraph.IFlowLabel#bar()
    */
   public MatchLabel bar() {
@@ -62,12 +60,13 @@ public class MatchBarLabel implements IFlowLabel {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor,
    *      java.lang.Object)
    */
-  public void visit(IFlowLabelVisitor v, Object dst) {
+  public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
+    if (v == null) {
+      throw new IllegalArgumentException("v == null");
+    }
     v.visitMatchBar(this, dst);
   }
 

@@ -21,8 +21,6 @@ import java.util.Iterator;
 public class IteratorUtil {
 
   /**
-   * @param it
-   * @param o
    * @return true iff the Iterator returns some elements which equals() the
    *         object o
    */
@@ -35,7 +33,10 @@ public class IteratorUtil {
     return false;
   }
 
-  public final static <T> int count(Iterator<T> it) {
+  public final static <T> int count(Iterator<T> it) throws IllegalArgumentException {
+    if (it == null) {
+      throw new IllegalArgumentException("it == null");
+    }
     int count = 0;
     while (it.hasNext()) {
       it.next();

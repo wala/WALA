@@ -65,7 +65,10 @@ public class BinaryFormula extends AbstractBinaryFormula {
     return new BinaryFormula(connective, f1, f2);
   }
 
-  public static IFormula or(IFormula f1, IFormula f2) {
+  public static IFormula or(IFormula f1, IFormula f2) throws IllegalArgumentException {
+    if (f1 == null) {
+      throw new IllegalArgumentException("f1 == null");
+    }
     if (f1.equals(BooleanConstantFormula.FALSE)) {
       return f2;
     } else if (f2.equals(BooleanConstantFormula.FALSE)) {

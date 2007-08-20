@@ -64,7 +64,10 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
 
   int nextParameter;
   
-  public PointerParamValueNumIterator(CGNode node) {
+  public PointerParamValueNumIterator(CGNode node) throws IllegalArgumentException {
+    if (node == null) {
+      throw new IllegalArgumentException("node == null");
+    }
     IR ir = node.getIR();
     ti = new TypeInference(ir);
     symbolTable = ir.getSymbolTable();
