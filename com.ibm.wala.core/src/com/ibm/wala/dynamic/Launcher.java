@@ -74,7 +74,6 @@ public abstract class Launcher {
 
   /**
    * Spawn a process to execute the given command
-   * @param cmd
    * @return an object representing the process
    * @throws WalaException
    * @throws IllegalArgumentException
@@ -143,8 +142,6 @@ public abstract class Launcher {
   }
 
   /**
-   * @author sfink
-   * 
    * A thread that runs in a loop, performing the drain() action until a process
    * terminates
    */
@@ -212,7 +209,6 @@ public abstract class Launcher {
       b.write(data, 0, nRead);
     }
   }
-
 
   public boolean isCaptureOutput() {
     return captureOutput;
