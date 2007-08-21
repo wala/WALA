@@ -125,10 +125,10 @@ public class Disjunction extends AbstractBinaryFormula implements IMaxTerm {
         Disjunction d = (Disjunction) c;
         newClauses.addAll(d.clauses);
       } else {
-        if (Simplifier.isTautology(c)) {
+        if (AdHocSemiDecisionProcedure.singleton().isTautology(c)) {
           return BooleanConstantFormula.TRUE;
-        } else if (!Simplifier.isContradiction(c)) {
-          newClauses.add(Simplifier.normalize(c));
+        } else if (!AdHocSemiDecisionProcedure.singleton().isContradiction(c)) {
+          newClauses.add(AdHocSemiDecisionProcedure.normalize(c));
         }
       }
     }

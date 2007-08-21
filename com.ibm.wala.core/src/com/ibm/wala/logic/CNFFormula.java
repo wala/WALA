@@ -162,9 +162,9 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
   }
 
   private static IFormula trivialCleanup(IFormula f) {
-    if (Simplifier.isTautology(f)) {
+    if (AdHocSemiDecisionProcedure.singleton().isTautology(f)) {
       return BooleanConstantFormula.TRUE;
-    } else if (Simplifier.isContradiction(f)) {
+    } else if (AdHocSemiDecisionProcedure.singleton().isContradiction(f)) {
       return BooleanConstantFormula.FALSE;
     } else {
       switch (f.getKind()) {
@@ -301,9 +301,9 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
 
     switch (b.getConnective()) {
     case BICONDITIONAL:
-      if (Simplifier.isTautology(f1)) {
+      if (AdHocSemiDecisionProcedure.singleton().isTautology(f1)) {
         return f2;
-      } else if (Simplifier.isContradiction(f1)) {
+      } else if (AdHocSemiDecisionProcedure.singleton().isContradiction(f1)) {
         return BooleanConstantFormula.TRUE;
       } else {
         IFormula not1 = NotFormula.make(f1);
