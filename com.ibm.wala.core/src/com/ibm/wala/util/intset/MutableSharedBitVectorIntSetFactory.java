@@ -40,7 +40,10 @@ public class MutableSharedBitVectorIntSetFactory implements MutableIntSetFactory
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#makeCopy(com.ibm.wala.util.intset.IntSet)
    */
-  public MutableIntSet makeCopy(IntSet x) {
+  public MutableIntSet makeCopy(IntSet x) throws IllegalArgumentException {
+    if (x == null) {
+      throw new IllegalArgumentException("x == null");
+    }
     if (x instanceof MutableSharedBitVectorIntSet) {
       return new MutableSharedBitVectorIntSet((MutableSharedBitVectorIntSet) x);
     } else if (x instanceof SparseIntSet) {

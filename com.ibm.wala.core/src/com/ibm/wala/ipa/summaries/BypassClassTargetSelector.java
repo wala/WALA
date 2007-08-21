@@ -55,7 +55,10 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
    */
   private final BypassSyntheticClassLoader bypassLoader;
 
-  public BypassClassTargetSelector(ClassTargetSelector parent, Set<TypeReference> allocatableTypes, IClassHierarchy cha, IClassLoader bypassLoader) {
+  public BypassClassTargetSelector(ClassTargetSelector parent, Set<TypeReference> allocatableTypes, IClassHierarchy cha, IClassLoader bypassLoader) throws IllegalArgumentException {
+    if (bypassLoader == null) {
+      throw new IllegalArgumentException("bypassLoader == null");
+    }
     if (Assertions.verifyAssertions) {
       if (!(bypassLoader instanceof BypassSyntheticClassLoader)) {
         Assertions._assert(false, "unexpected bypass loader: " + bypassLoader.getClass());

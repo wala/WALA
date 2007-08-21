@@ -95,10 +95,10 @@ public class SparseLongSet implements LongSet {
     this.size = S.size;
   }
 
-  /**
-   * @param S
-   */
-  public SparseLongSet(IntSet S) {
+  public SparseLongSet(IntSet S) throws IllegalArgumentException {
+    if (S == null) {
+      throw new IllegalArgumentException("S == null");
+    }
     if (S instanceof SparseLongSet) {
       cloneState((SparseLongSet) S);
     } else {
@@ -165,7 +165,10 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  public boolean sameValue(LongSet that) throws UnimplementedError {
+  public boolean sameValue(LongSet that) throws IllegalArgumentException, UnimplementedError {
+    if (that == null) {
+      throw new IllegalArgumentException("that == null");
+    }
     if (that instanceof SparseLongSet) {
       return sameValueInternal((SparseLongSet) that);
     } else {

@@ -585,7 +585,10 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#addAll(com.ibm.wala.util.intset.IntSet)
    */
-  public boolean addAll(IntSet set) {
+  public boolean addAll(IntSet set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (set instanceof MutableSharedBitVectorIntSet) {
       boolean result = addAll((MutableSharedBitVectorIntSet) set);
       if (PARANOID) {

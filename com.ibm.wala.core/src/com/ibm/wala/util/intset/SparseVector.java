@@ -16,7 +16,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
- * 
  * a vector implementation designed for low occupancy. Note that get() from this
  * vector is a binary search.
  * 
@@ -36,9 +35,6 @@ public class SparseVector<T> implements IVector<T> {
 
   private Object[] data;
 
-  /**
-   * 
-   */
   public SparseVector() {
     data = new Object[DEF_INITIAL_SIZE];
     indices = new MutableSparseIntSet();
