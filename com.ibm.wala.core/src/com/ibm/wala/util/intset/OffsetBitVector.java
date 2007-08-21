@@ -251,9 +251,13 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * 
    * @param set
    *          the set to check intersection with
+   * @throws IllegalArgumentException  if set == null
    */
   @Override
-  public final boolean intersectionEmpty(OffsetBitVector set) {
+  public final boolean intersectionEmpty(OffsetBitVector set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (this == set) {
       return isZero();
     }
@@ -453,7 +457,10 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
   }
 
   @Override
-  public void andNot(OffsetBitVector set) {
+  public void andNot(OffsetBitVector set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (this == set) {
       clearAll();
       return;
