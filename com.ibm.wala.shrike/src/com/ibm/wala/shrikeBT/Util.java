@@ -230,8 +230,12 @@ public final class Util {
    *          null if the method is static, otherwise the type of "this"
    * @return an array of the parameter types in order, including "this" as the
    *         first parameter if thisClassType was non-null
+   * @throws IllegalArgumentException  if type == null
    */
-  public static String[] getParamsTypes(String thisClassType, String type) {
+  public static String[] getParamsTypes(String thisClassType, String type) throws IllegalArgumentException {
+    if (type == null) {
+      throw new IllegalArgumentException("type == null");
+    }
     int count = thisClassType != null ? 1 : 0;
     String[] r = new String[getParamsCount(type) + count];
     int index = 1;
@@ -254,8 +258,12 @@ public final class Util {
    * Compute the types of the local variables on entry to a method. Similar to
    * "getParamsTypes" except null array entries are inserted to account for
    * unused local variables because of 2-word parameter values.
+   * @throws IllegalArgumentException  if type == null
    */
-  public static String[] getParamsTypesInLocals(String thisClassType, String type) {
+  public static String[] getParamsTypesInLocals(String thisClassType, String type) throws IllegalArgumentException {
+    if (type == null) {
+      throw new IllegalArgumentException("type == null");
+    }
     int count = thisClassType != null ? 1 : 0;
     String[] r = new String[getParamsWordSize(type) + count];
     int index = 1;
@@ -555,7 +563,10 @@ public final class Util {
     return r;
   }
 
-  public static void readFully(InputStream s, byte[] bytes) throws IllegalArgumentException, IOException {
+  public static void readFully(InputStream s, byte[] bytes) throws IllegalArgumentException, IllegalArgumentException, IOException {
+    if (s == null) {
+      throw new IllegalArgumentException("s == null");
+    }
     if (bytes == null) {
       throw new IllegalArgumentException("bytes == null");
     }
