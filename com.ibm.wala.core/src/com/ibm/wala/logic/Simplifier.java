@@ -91,7 +91,7 @@ public class Simplifier {
    * 
    * This is inefficient.
    */
-  public static Collection<IFormula> simplify(Collection<IFormula> s, Collection<? extends IFormula> theory) {
+  public static Collection<IFormula> simplify(Collection<IFormula> s, Collection<? extends IFormula> theory, ISemiDecisionProcedure dec) {
     boolean changed = true;
     while (changed) {
       changed = false;
@@ -114,13 +114,13 @@ public class Simplifier {
         substitution = getNextEqualitySubstitution(s, theory, alreadyUsed);
       }
     }
-    return propositionalSimplify(s, theory);
+    return propositionalSimplify(s, theory, dec);
   }
 
   /**
    * Simplify the set s based on simple propositional logic.
    */
-  public static Collection<IFormula> propositionalSimplify(Collection<IFormula> s, Collection<? extends IFormula> t) {
+  public static Collection<IFormula> propositionalSimplify(Collection<IFormula> s, Collection<? extends IFormula> t, ISemiDecisionProcedure dec ) {
     debug1(s, t);
     Collection<ICNFFormula> cs = toCNF(s);
     Collection<ICNFFormula> ct = toCNF(t);
@@ -129,7 +129,7 @@ public class Simplifier {
 
     Collection<IFormula> result = HashSetFactory.make();
     for (ICNFFormula f : cs) {
-      Collection<? extends IMaxTerm> d = simplifyCNF(f, facts);
+      Collection<? extends IMaxTerm> d = simplifyCNF(f, facts, dec);
       result.add(CNFFormula.make(d));
     }
 
@@ -145,7 +145,7 @@ public class Simplifier {
   /**
    * Assuming a set of facts holds, simplify a CNF formula
    */
-  private static Collection<? extends IMaxTerm> simplifyCNF(ICNFFormula f, Collection<IMaxTerm> facts) {
+  private static Collection<? extends IMaxTerm> simplifyCNF(ICNFFormula f, Collection<IMaxTerm> facts, ISemiDecisionProcedure dec) {
     Collection<IMaxTerm> result = HashSetFactory.make();
     Collection<IMaxTerm> removedClauses = HashSetFactory.make();
     // for each clause in f ....
@@ -157,9 +157,9 @@ public class Simplifier {
       otherFacts.removeAll(removedClauses);
       
       
-      if (AdHocSemiDecisionProcedure.singleton().isContradiction(d, otherFacts)) {
+      if (dec.isContradiction(d, otherFacts)) {
         return Collections.singleton(BooleanConstantFormula.FALSE);
-      } else if (facts.contains(d) || AdHocSemiDecisionProcedure.singleton().isTautology(d, otherFacts)) {
+      } else if (facts.contains(d) || dec.isTautology(d, otherFacts)) {
         removedClauses.add(d);
       } else {
         result.add(d);
@@ -525,24 +525,24 @@ public class Simplifier {
     }
   }
 
-  public static IFormula simplify(IFormula f) {
+  public static IFormula simplify(IFormula f, ISemiDecisionProcedure dec) {
     Collection<Disjunction> emptyTheory = Collections.emptySet();
     Collection<IFormula> single = Collections.singleton(f);
-    Collection<IFormula> result = propositionalSimplify(single, emptyTheory);
+    Collection<IFormula> result = propositionalSimplify(single, emptyTheory, dec);
     assert result.size() == 1;
     return result.iterator().next();
   }
 
-  public static IFormula propositionalSimplify(IFormula f) {
+  public static IFormula propositionalSimplify(IFormula f, ISemiDecisionProcedure dec) {
     Collection<IFormula> emptySet = Collections.emptySet();
     Collection<IFormula> singleton = Collections.singleton(f);
-    Collection<IFormula> result = propositionalSimplify(singleton, emptySet);
+    Collection<IFormula> result = propositionalSimplify(singleton, emptySet, dec);
     assert result.size() == 1;
     return result.iterator().next();
   }
 
-  public static IFormula simplify(IFormula f, IFormula t) {
-    Collection<IFormula> s = simplify(Collections.singleton(f), Collections.singleton(t));
+  public static IFormula simplify(IFormula f, IFormula t, ISemiDecisionProcedure dec) {
+    Collection<IFormula> s = simplify(Collections.singleton(f), Collections.singleton(t), dec);
     assert s.size() == 1;
     return s.iterator().next();
   }
