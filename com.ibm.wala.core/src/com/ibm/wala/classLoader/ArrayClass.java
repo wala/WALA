@@ -207,8 +207,7 @@ public class ArrayClass implements IClass, Constants {
    * @see com.ibm.wala.classLoader.IClass#getDeclaredFields()
    */
   public Collection<IField> getDeclaredInstanceFields() {
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /*
@@ -233,8 +232,7 @@ public class ArrayClass implements IClass, Constants {
    * @see com.ibm.wala.classLoader.IClass#getAllAncestorInterfaces()
    */
   public Collection<IClass> getAllAncestorInterfaces() {
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /*

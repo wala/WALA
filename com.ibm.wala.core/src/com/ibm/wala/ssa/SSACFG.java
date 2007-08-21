@@ -843,42 +843,36 @@ public class SSACFG implements ControlFlowGraph {
    * @see com.ibm.wala.util.graph.NumberedGraph#addNode(com.ibm.wala.util.graph.Node)
    */
   public void addNode(IBasicBlock n) {
-    Assertions.UNREACHABLE("external agents shouldn't be adding nodes");
+    throw new UnsupportedOperationException();
   }
 
   public void addEdge(IBasicBlock src, IBasicBlock dst) {
-    Assertions.UNREACHABLE("external agents shouldn't be adding edges");
-
+    throw new UnsupportedOperationException();
   }
 
   public void removeEdge(IBasicBlock src, IBasicBlock dst) {
-    Assertions.UNREACHABLE("external agents shouldn't be removing edges");
-
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
   public void removeAllIncidentEdges(IBasicBlock node) {
-    Assertions.UNREACHABLE("external agents shouldn't be removing edges");
-
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
    */
   public void removeNodeAndEdges(IBasicBlock N) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
   public void removeNode(IBasicBlock n) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   /*
@@ -1020,11 +1014,11 @@ public class SSACFG implements ControlFlowGraph {
     throw new UnsupportedOperationException();
   }
 
-  public void removeOutgoingEdges(IBasicBlock node) {
+  public void removeOutgoingEdges(IBasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {
+  public boolean hasEdge(IBasicBlock src, IBasicBlock dst) throws UnimplementedError {
     // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
     return false;

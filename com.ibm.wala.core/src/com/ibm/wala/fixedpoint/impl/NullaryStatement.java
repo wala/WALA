@@ -99,7 +99,7 @@ public abstract class NullaryStatement extends AbstractStatement {
     return result;
   }
   
-  public IVariable[] getRHS() {
+  public IVariable[] getRHS() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 }

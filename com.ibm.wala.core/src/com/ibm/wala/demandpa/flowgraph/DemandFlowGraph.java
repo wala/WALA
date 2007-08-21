@@ -116,14 +116,14 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
    * Map: LocalPointerKey -> SSAInvokeInstruction. If we have (x, foo()), that
    * means that x was def'fed by the return value from the call to foo()
    */
-  Map<PointerKey, SSAInvokeInstruction> callDefs = HashMapFactory.make();
+  final Map<PointerKey, SSAInvokeInstruction> callDefs = HashMapFactory.make();
 
   /**
    * Map: {@link LocalPointerKey} -> Set<{@link SSAInvokeInstruction}>. If we
    * have (x, foo()), that means x was passed as a parameter to the call to
    * foo(). The parameter position is not represented and must be recovered.
    */
-  Map<PointerKey, Set<SSAInvokeInstruction>> callParams = HashMapFactory.make();
+  final Map<PointerKey, Set<SSAInvokeInstruction>> callParams = HashMapFactory.make();
 
   /**
    * Map: LocalPointerKey -> CGNode. If we have (x, foo), then x is a parameter
@@ -131,19 +131,19 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
    * this should just be a set; we can get the CGNode from the
    * {@link LocalPointerKey}
    */
-  Map<PointerKey, CGNode> params = HashMapFactory.make();
+  final Map<PointerKey, CGNode> params = HashMapFactory.make();
 
   /**
    * Map: {@link LocalPointerKey} -> {@link CGNode}. If we have (x, foo), then
    * x is a return value of method foo. Must re-discover if x is normal or
    * exceptional return value.
    */
-  Map<PointerKey, CGNode> returns = HashMapFactory.make();
+  final Map<PointerKey, CGNode> returns = HashMapFactory.make();
 
   /**
    * node numbers of CGNodes we have already visited
    */
-  BitVectorIntSet cgNodesVisited = new BitVectorIntSet();
+  final BitVectorIntSet cgNodesVisited = new BitVectorIntSet();
 
   /**
    * add representation of flow for a node, if not already present

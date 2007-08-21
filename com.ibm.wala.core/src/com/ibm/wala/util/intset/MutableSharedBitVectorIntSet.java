@@ -13,6 +13,7 @@ package com.ibm.wala.util.intset;
 import com.ibm.wala.util.collections.CompoundIntIterator;
 import com.ibm.wala.util.collections.EmptyIntIterator;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
@@ -321,7 +322,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
    */
-  public boolean sameValue(IntSet that) {
+  public boolean sameValue(IntSet that) throws UnimplementedError {
     if (that instanceof MutableSharedBitVectorIntSet) {
       return sameValue((MutableSharedBitVectorIntSet) that);
     } else if (that instanceof SparseIntSet) {

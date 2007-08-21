@@ -95,8 +95,7 @@ public class ArrayContents implements IField {
   }
 
   public IClass getDeclaringClass() {
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   public Atom getName() {

@@ -66,8 +66,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
   }
 
   public String getClassName() {
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   public Iterator<ModuleEntry> getEntries() {

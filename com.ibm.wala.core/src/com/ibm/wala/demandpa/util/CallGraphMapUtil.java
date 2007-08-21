@@ -56,6 +56,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * utility methods for mapping various program entities from one call graph to
@@ -102,7 +103,7 @@ public class CallGraphMapUtil {
     }
   }
 
-  public static InstanceKey mapInstKey(InstanceKey ik, CallGraph fromCG, CallGraph toCG, HeapModel heapModel) {
+  public static InstanceKey mapInstKey(InstanceKey ik, CallGraph fromCG, CallGraph toCG, HeapModel heapModel) throws NullPointerException {
     InstanceKey ret = null;
     if (ik instanceof InstanceKeyWithNode) {
       CGNode oldCGNode = ((InstanceKeyWithNode) ik).getNode();
@@ -135,7 +136,7 @@ public class CallGraphMapUtil {
     return ret;
   }
 
-  public static PointerKey mapPointerKey(PointerKey pk, CallGraph fromCG, CallGraph toCG, HeapModel heapModel) {
+  public static PointerKey mapPointerKey(PointerKey pk, CallGraph fromCG, CallGraph toCG, HeapModel heapModel) throws UnimplementedError {
     PointerKey ret = null;
     if (pk instanceof AbstractLocalPointerKey) {
       CGNode oldCGNode = ((AbstractLocalPointerKey) pk).getNode();

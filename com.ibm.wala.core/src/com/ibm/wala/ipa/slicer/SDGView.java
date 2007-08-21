@@ -18,6 +18,7 @@ import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 
@@ -43,11 +44,11 @@ public class SDGView implements ISDG {
     };
   }
 
-  public void addEdge(Statement src, Statement dst) {
+  public void addEdge(Statement src, Statement dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void addNode(Statement n) {
+  public void addNode(Statement n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -55,7 +56,7 @@ public class SDGView implements ISDG {
     return delegate.containsNode(N);
   }
 
-  public int getMaxNumber() {
+  public int getMaxNumber() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return delegate.getMaxNumber();
   }
@@ -69,7 +70,7 @@ public class SDGView implements ISDG {
     return delegate.getNumber(N);
   }
 
-  public int getNumberOfNodes() {
+  public int getNumberOfNodes() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return delegate.getNumberOfNodes();
   }
@@ -93,7 +94,7 @@ public class SDGView implements ISDG {
     return new FilterIterator<Statement>(delegate.getPredNodes(N), notExcluded);
   }
 
-  public int getSuccNodeCount(Statement N) {
+  public int getSuccNodeCount(Statement N) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return delegate.getSuccNodeCount(N);
   }
@@ -128,37 +129,37 @@ public class SDGView implements ISDG {
     return notExcluded.accepts(dst) && notExcluded.accepts(src) && delegate.hasEdge(src, dst);
   }
 
-  public Iterator<Statement> iterator() {
+  public Iterator<Statement> iterator() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return delegate.iterator();
   }
 
-  public Iterator<Statement> iterateNodes(IntSet s) {
+  public Iterator<Statement> iterateNodes(IntSet s) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return delegate.iterateNodes(s);
   }
 
-  public void removeAllIncidentEdges(Statement node) {
+  public void removeAllIncidentEdges(Statement node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeEdge(Statement src, Statement dst) {
+  public void removeEdge(Statement src, Statement dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeIncomingEdges(Statement node) {
+  public void removeIncomingEdges(Statement node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeNode(Statement n) {
+  public void removeNode(Statement n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeNodeAndEdges(Statement N) {
+  public void removeNodeAndEdges(Statement N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeOutgoingEdges(Statement node) {
+  public void removeOutgoingEdges(Statement node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

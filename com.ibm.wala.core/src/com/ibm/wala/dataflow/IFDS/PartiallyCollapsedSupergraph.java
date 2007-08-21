@@ -950,7 +950,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     return nodeManager.getMaxNumber();
   }
 
-  public Iterator<Object> iterateNodes(IntSet s) {
+  public Iterator<Object> iterateNodes(IntSet s) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

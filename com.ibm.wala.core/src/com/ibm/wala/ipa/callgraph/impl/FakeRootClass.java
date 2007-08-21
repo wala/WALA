@@ -97,35 +97,35 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getModifiers()
    */
-  public int getModifiers() {
+  public int getModifiers() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getSuperclass()
    */
-  public IClass getSuperclass() {
+  public IClass getSuperclass() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces()
    */
-  public Collection<IClass> getAllImplementedInterfaces() {
+  public Collection<IClass> getAllImplementedInterfaces() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllAncestorInterfaces()
    */
-  public Collection<IClass> getAllAncestorInterfaces() {
+  public Collection<IClass> getAllAncestorInterfaces() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
-  public IMethod getMethod(Selector selector) {
+  public IMethod getMethod(Selector selector) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -152,14 +152,14 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
-  public Collection<IMethod> getDeclaredMethods() {
+  public Collection<IMethod> getDeclaredMethods() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getDeclaredInstanceFields()
    */
-  public Collection<IField> getDeclaredInstanceFields() {
+  public Collection<IField> getDeclaredInstanceFields() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -185,18 +185,14 @@ public class FakeRootClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
    */
   public Collection<IClass> getDirectInterfaces() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
   public Collection<IField> getAllInstanceFields() throws ClassHierarchyException {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /*
@@ -209,9 +205,8 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
-  public Collection<IMethod> getAllMethods() throws ClassHierarchyException {
-    Assertions.UNREACHABLE();
-    return null;
+  public Collection<IMethod> getAllMethods() throws UnsupportedOperationException, ClassHierarchyException {
+    throw new UnsupportedOperationException();
   }
 
   /*

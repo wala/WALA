@@ -77,7 +77,10 @@ public class WalaUtil {
     Trace.setTraceFile(fileName);
   }
 
-  public static void dumpAllIR(CallGraph cg, String benchName, Properties p) throws IllegalArgumentException {
+  public static void dumpAllIR(CallGraph cg, String benchName, Properties p) throws IllegalArgumentException, IllegalArgumentException {
+    if (cg == null) {
+      throw new IllegalArgumentException("cg == null");
+    }
     if (p == null) {
       throw new IllegalArgumentException("p == null");
     }

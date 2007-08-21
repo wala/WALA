@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
@@ -41,30 +42,30 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
     this.flowFunctions = flowFunctions;
   }
 
-  public void removeNodeAndEdges(ExplodedSupergraphNode N) {
+  public void removeNodeAndEdges(ExplodedSupergraphNode N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public Iterator<ExplodedSupergraphNode<T>> iterator() {
+  public Iterator<ExplodedSupergraphNode<T>> iterator() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
-  public int getNumberOfNodes() {
+  public int getNumberOfNodes() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return 0;
   }
 
-  public void addNode(ExplodedSupergraphNode n) {
+  public void addNode(ExplodedSupergraphNode n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
 
   }
 
-  public void removeNode(ExplodedSupergraphNode n) {
+  public void removeNode(ExplodedSupergraphNode n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public boolean containsNode(ExplodedSupergraphNode N) {
+  public boolean containsNode(ExplodedSupergraphNode N) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return false;
   }
@@ -222,18 +223,15 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
   }
   
   public void removeEdge(ExplodedSupergraphNode src, ExplodedSupergraphNode dst) {
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   public void removeAllIncidentEdges(ExplodedSupergraphNode node) {
-    Assertions.UNREACHABLE();
-
+    Assertions.UNREACHABLE();throw new UnsupportedOperationException();
   }
 
   public void removeIncomingEdges(ExplodedSupergraphNode node) {
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   public void removeOutgoingEdges(ExplodedSupergraphNode node) throws UnsupportedOperationException {

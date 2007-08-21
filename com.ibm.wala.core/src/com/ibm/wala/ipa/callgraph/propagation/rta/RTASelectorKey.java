@@ -15,6 +15,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
@@ -56,8 +57,7 @@ public class RTASelectorKey implements PointerKey {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerKey#getTypeFilter()
    */
-  public IClass getTypeFilter() {
-    // TODO Auto-generated method stub
+  public IClass getTypeFilter() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

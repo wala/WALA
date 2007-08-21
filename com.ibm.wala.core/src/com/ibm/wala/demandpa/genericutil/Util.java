@@ -114,8 +114,12 @@ public class Util {
   /**
    * Test whether <em>some</em> element of the given {@link Collection}
    * satisfies the given {@link Predicate}.
+   * @throws IllegalArgumentException  if c == null
    */
-  public static <T> boolean forSome(Collection<T> c, Predicate<T> p) {
+  public static <T> boolean forSome(Collection<T> c, Predicate<T> p) throws IllegalArgumentException {
+    if (c == null) {
+      throw new IllegalArgumentException("c == null");
+    }
     for (T t : c) {
       if (p.test(t)) {
         return true;

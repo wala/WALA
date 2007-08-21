@@ -265,7 +265,10 @@ public class ArraySet<T> extends AbstractSet<T> {
     return new ArraySet<T>();
   }
   
-  public static <T> ArraySet<T> make(Collection<T> other) {
+  public static <T> ArraySet<T> make(Collection<T> other) throws IllegalArgumentException {
+    if (other == null) {
+      throw new IllegalArgumentException("other == null");
+    }
     return new ArraySet<T>(other);
   }
 

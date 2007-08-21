@@ -116,27 +116,27 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   /**
    * node numbers of CGNodes we have already visited
    */
-  BitVectorIntSet cgNodesVisited = new BitVectorIntSet();
+  final BitVectorIntSet cgNodesVisited = new BitVectorIntSet();
 
   /**
    * Map: LocalPointerKey -> IField. if we have (x,f), that means x was def'fed
    * by a getfield on f.
    */
-  Map<PointerKey, IField> getFieldDefs = HashMapFactory.make();
+  final Map<PointerKey, IField> getFieldDefs = HashMapFactory.make();
 
-  Collection<PointerKey> arrayDefs = new HashSet<PointerKey>();
+  final Collection<PointerKey> arrayDefs = new HashSet<PointerKey>();
 
   /**
    * Map: LocalPointerKey -> SSAInvokeInstruction. If we have (x, foo()), that
    * means that x was def'fed by the return value from a call to foo()
    */
-  Map<PointerKey, SSAInvokeInstruction> callDefs = HashMapFactory.make();
+  final Map<PointerKey, SSAInvokeInstruction> callDefs = HashMapFactory.make();
 
   /**
    * Map: LocalPointerKey -> CGNode. If we have (x, foo), then x is a parameter
    * of method foo. For now, we have to re-discover the parameter position.
    */
-  Map<PointerKey, CGNode> params = HashMapFactory.make();
+  final Map<PointerKey, CGNode> params = HashMapFactory.make();
 
   public SimpleDemandPointerFlowGraph(CallGraph cg, HeapModel heapModel, MemoryAccessMap fam, ClassHierarchy cha) {
     super();

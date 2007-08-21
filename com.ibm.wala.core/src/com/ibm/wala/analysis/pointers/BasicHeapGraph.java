@@ -459,7 +459,7 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   public void removeAllIncidentEdges(Object node) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   /*

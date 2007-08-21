@@ -17,7 +17,6 @@ import java.util.Set;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.util.collections.Filter;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.graph.traverse.DFS;
@@ -66,7 +65,7 @@ public abstract class HeapGraph implements NumberedGraph<Object> {
    * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
    */
   public void removeNodeAndEdges(Object N) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   /**

@@ -16,6 +16,7 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * A sparse ordered, duplicate-free, fully-encapsulated set of integers; not
@@ -155,7 +156,7 @@ public class SparseIntSet implements IntSet {
     }
   }
 
-  public boolean sameValue(IntSet that) {
+  public boolean sameValue(IntSet that) throws UnimplementedError {
     if (that instanceof SparseIntSet) {
       return sameValueInternal((SparseIntSet) that);
     } else if (that instanceof BimodalMutableIntSet) {

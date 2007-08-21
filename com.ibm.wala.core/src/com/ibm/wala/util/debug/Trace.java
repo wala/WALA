@@ -141,11 +141,13 @@ public class Trace {
   /**
    * print S iff s contains substring
    * 
-   * @param S
-   * @param substring
    * @return true if something is printed, false otherwise
+   * @throws IllegalArgumentException  if S == null
    */
-  public static boolean guardedPrintln(String S, String substring) {
+  public static boolean guardedPrintln(String S, String substring) throws IllegalArgumentException {
+    if (S == null) {
+      throw new IllegalArgumentException("S == null");
+    }
     if (substring == null || S.indexOf(substring) > -1) {
       println(S);
       return true;
@@ -160,8 +162,12 @@ public class Trace {
    * @param S
    * @param substring
    * @return true if something is printed, false otherwise
+   * @throws IllegalArgumentException  if S == null
    */
-  public static boolean guardedPrint(String S, String substring) {
+  public static boolean guardedPrint(String S, String substring) throws IllegalArgumentException {
+    if (S == null) {
+      throw new IllegalArgumentException("S == null");
+    }
     if (substring == null || S.indexOf(substring) > -1) {
       print(S);
       return true;

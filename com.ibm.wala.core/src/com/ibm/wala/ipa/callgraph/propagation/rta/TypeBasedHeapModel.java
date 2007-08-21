@@ -252,7 +252,7 @@ public class TypeBasedHeapModel implements HeapModel {
     }
   }
 
-  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
+  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

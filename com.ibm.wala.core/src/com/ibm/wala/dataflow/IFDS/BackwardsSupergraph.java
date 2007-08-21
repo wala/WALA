@@ -17,6 +17,7 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
@@ -54,9 +55,7 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMain()
    */
   public P getMain() {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   /*
@@ -142,8 +141,7 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
    * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
    */
   public void removeNodeAndEdges(Object N) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
 
   }
 
@@ -162,16 +160,14 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
    * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
    */
   public void addNode(Object n) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
    */
   public void removeNode(Object n) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
 
   }
 
@@ -220,22 +216,18 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
    *      java.lang.Object)
    */
   public void addEdge(Object src, Object dst) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
   
   public void removeEdge(Object src, Object dst) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
   public void removeAllIncidentEdges(Object node) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   /*
@@ -269,8 +261,7 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isReturn(java.lang.Object)
    */
-  public boolean isReturn(T n) {
-    // TODO Auto-generated method stub
+  public boolean isReturn(T n) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return false;
   }
@@ -316,15 +307,12 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   }
 
   public void removeIncomingEdges(Object node) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
     
   }
 
   public void removeOutgoingEdges(T node) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    
+    throw new UnsupportedOperationException();
   }
 
   /* 
@@ -370,8 +358,7 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
     return delegate.getPredNodeNumbers(node);
   }
 
-  public IntSet getPredNodeNumbers(Object node) {
-    // TODO Auto-generated method stub
+  public IntSet getPredNodeNumbers(Object node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

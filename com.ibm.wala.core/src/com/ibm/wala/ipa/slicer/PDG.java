@@ -930,7 +930,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   }
 
   @Override
-  public int getPredNodeCount(Statement N) {
+  public int getPredNodeCount(Statement N) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return super.getPredNodeCount(N);
   }

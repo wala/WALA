@@ -57,8 +57,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
   }
 
   public CGNode getFakeRootNode() {
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 
   public Collection<CGNode> getEntrypointNodes() {

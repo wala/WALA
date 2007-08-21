@@ -138,10 +138,12 @@ public class IntSetUtil {
   /**
    * Subtract two sets, i.e. a = a \ b.
    * 
-   * @param A
-   * @param B
+   * @throws IllegalArgumentException  if B == null
    */
-  public static MutableIntSet removeAll(MutableIntSet A, IntSet B) {
+  public static MutableIntSet removeAll(MutableIntSet A, IntSet B) throws IllegalArgumentException {
+    if (B == null) {
+      throw new IllegalArgumentException("B == null");
+    }
     if (A instanceof SemiSparseMutableIntSet && B instanceof SemiSparseMutableIntSet) {
       if (DEBUG) {
         Trace.println("call SemiSparseMutableIntSet.removeAll");

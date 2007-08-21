@@ -65,11 +65,11 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
 
   private static final int NUM_DECISIONS_TO_TRACK = 10;
 
-  private boolean[] decisions = new boolean[NUM_DECISIONS_TO_TRACK];
+  final private boolean[] decisions = new boolean[NUM_DECISIONS_TO_TRACK];
 
   private int curDecision;
 
-  private IClass[] encounteredClasses = new IClass[NUM_DECISIONS_TO_TRACK];
+  final private IClass[] encounteredClasses = new IClass[NUM_DECISIONS_TO_TRACK];
 
   public boolean shouldRefine(IField field) {
     if (field == ArrayContents.v())

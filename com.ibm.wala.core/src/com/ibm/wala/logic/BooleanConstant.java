@@ -16,7 +16,7 @@ public class BooleanConstant extends AbstractConstant {
   public static final BooleanConstant TRUE = new BooleanConstant(true);
   public static final BooleanConstant FALSE = new BooleanConstant(false);
   
-  private boolean val;
+  final private boolean val;
   
   private BooleanConstant(boolean val) {
     this.val = val;

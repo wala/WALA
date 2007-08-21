@@ -290,8 +290,12 @@ public class StringStuff {
    * 
    * @return an ImmutableByteArray that represents the package, or null if it's
    *         the unnamed package
+   * @throws IllegalArgumentException  if name == null
    */
-  public static ImmutableByteArray parseForPackage(ImmutableByteArray name, int start, int length) {
+  public static ImmutableByteArray parseForPackage(ImmutableByteArray name, int start, int length) throws IllegalArgumentException {
+    if (name == null) {
+      throw new IllegalArgumentException("name == null");
+    }
     int lastSlash = -1;
     for (int i = start; i < start + length; i++) {
       if (name.b[i] == '/') {
@@ -382,9 +386,13 @@ public class StringStuff {
    * array type. b: descriptor - something like "[Ljava/lang/String;" or "[[I"
    * 
    * @return dimensionality - something like "1" or "2"
+   * @throws IllegalArgumentException  if b == null
    */
-  public static short parseForArrayDimensionality(ImmutableByteArray b, int start, int length) throws IllegalArgumentException {
+  public static short parseForArrayDimensionality(ImmutableByteArray b, int start, int length) throws IllegalArgumentException, IllegalArgumentException {
 
+    if (b == null) {
+      throw new IllegalArgumentException("b == null");
+    }
     for (int i = start; i < start + length; ++i) {
       if (b.b[i] != '[') {
         return (short) (i - start);

@@ -292,12 +292,19 @@ public class Util {
    * @return Entrypoints for a set of J2SE Main classes
    * @throws IllegalArgumentException
    *             if classNames == null
+   * @throws IllegalArgumentException
+   *             if (classNames != null) and (0 < classNames.length) and
+   *             (classNames[0] == null)
    */
   public static Iterable<Entrypoint> makeMainEntrypoints(final ClassLoaderReference loaderRef, final IClassHierarchy cha,
-      final String[] classNames) throws IllegalArgumentException {
+      final String[] classNames) throws IllegalArgumentException, IllegalArgumentException {
     if (classNames == null) {
       throw new IllegalArgumentException("classNames == null");
     }
+    if (classNames[0] == null && 0 < classNames.length ) {
+      throw new IllegalArgumentException("(0 < classNames.length) and (classNames[0] == null)");
+    }
+
     for (int i = 0; i < classNames.length; i++) {
       if (classNames[i].indexOf("L") != 0) {
         Assertions.productionAssertion(false, "Expected class name to start with L " + classNames[i]);

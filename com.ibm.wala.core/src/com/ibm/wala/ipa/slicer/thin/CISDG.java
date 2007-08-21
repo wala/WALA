@@ -28,7 +28,7 @@ class CISDG implements ISDG {
   /**
    * the basic SDG, without interprocedural heap edges
    */
-  SDG noHeap;
+  final SDG noHeap;
 
   /**
    * What pointer keys does each statement ref?

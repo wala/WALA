@@ -16,11 +16,12 @@ import java.util.Iterator;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- *
- * Abstraction of a set of PointTypes.  These are immutable.
- * TODO: fix for efficiency if needed.
+ * 
+ * Abstraction of a set of PointTypes. These are immutable. TODO: fix for
+ * efficiency if needed.
  * 
  * @author sfink
  * 
@@ -28,8 +29,9 @@ import com.ibm.wala.util.debug.Assertions;
 public class SetType extends TypeAbstraction {
 
   private final HashSet<TypeReference> types;
+
   private final int hashCode;
-  
+
   public SetType(PointType[] points) {
     if (points == null) {
       throw new IllegalArgumentException("points is null");
@@ -39,7 +41,7 @@ public class SetType extends TypeAbstraction {
     }
     types = HashSetFactory.make(points.length);
     int h = 0;
-    for (int i = 0; i< points.length; i++) {
+    for (int i = 0; i < points.length; i++) {
       TypeReference T = points[i].getType().getReference();
       h ^= T.hashCode();
       types.add(T);
@@ -50,19 +52,18 @@ public class SetType extends TypeAbstraction {
   @Override
   public TypeReference getTypeReference() {
     Iterator ti = types.iterator();
-    TypeAbstraction T = (TypeAbstraction)ti.next();
+    TypeAbstraction T = (TypeAbstraction) ti.next();
     while (ti.hasNext()) {
-      T = T.meet((TypeAbstraction)ti.next());
+      T = T.meet((TypeAbstraction) ti.next());
     }
     return T.getTypeReference();
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.analysis.typeInference.TypeAbstraction#meet(com.ibm.wala.analysis.typeInference.TypeAbstraction)
+  /*
+   * @see com.ibm.wala.analysis.typeInference.TypeAbstraction#meet(com.ibm.wala.analysis.typeInference.TypeAbstrac )
    */
   @Override
-  public TypeAbstraction meet(TypeAbstraction rhs) {
-    // TODO Auto-generated method stub
+  public TypeAbstraction meet(TypeAbstraction rhs) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
@@ -71,7 +72,7 @@ public class SetType extends TypeAbstraction {
   public boolean equals(Object obj) {
     // TODO: make SetTypes of size 1 equal PointTypes.
     // need a factory facade for this.
-    
+
     // TODO: canonicalize?? How to improve this?
     if (obj == this) {
       return true;
@@ -80,7 +81,7 @@ public class SetType extends TypeAbstraction {
       if (hashCode() != obj.hashCode()) {
         return false;
       } else {
-        SetType other = (SetType)obj;
+        SetType other = (SetType) obj;
         return (types.equals(other.types));
       }
     } else {

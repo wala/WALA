@@ -305,7 +305,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
    */
-  public boolean containsAny(IntSet that) {
+  public boolean containsAny(IntSet that) throws UnimplementedError {
     if (that instanceof BimodalMutableIntSet) {
       BimodalMutableIntSet b = (BimodalMutableIntSet) that;
       return impl.containsAny(b.impl);

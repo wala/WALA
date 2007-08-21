@@ -1107,8 +1107,9 @@ public class TabulationSolver<T, P> {
   /**
    * @return set of d1 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or
    *         null if none found
+   * @throws UnsupportedOperationException  unconditionally
    */
-  public IntSet getSummarySources(T n2, int d2, T n1) {
+  public IntSet getSummarySources(T n2, int d2, T n1) throws UnsupportedOperationException {
     throw new UnsupportedOperationException("not currently supported.  be careful");
 //    LocalSummaryEdges summaries = summaryEdges.get(supergraph.getProcOf(n1));
 //    if (summaries == null) {

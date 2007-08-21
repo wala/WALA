@@ -50,7 +50,10 @@ public class BitVectorUnion extends AbstractMeetOperator implements FixedPointCo
    * @see com.ibm.wala.dataflow.fixpoint.Operator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable[])
    */
   @Override
-  public byte evaluate(IVariable lhs, IVariable[] rhs) {
+  public byte evaluate(IVariable lhs, IVariable[] rhs) throws IllegalArgumentException {
+    if (rhs == null) {
+      throw new IllegalArgumentException("rhs == null");
+    }
     BitVectorVariable L = (BitVectorVariable) lhs;
 
     BitVectorVariable U = new BitVectorVariable();

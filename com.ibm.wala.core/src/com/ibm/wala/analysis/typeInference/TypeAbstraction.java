@@ -73,8 +73,9 @@ public abstract class TypeAbstraction implements ContextItem {
   /**
    * This is here for convenience; it makes sense for Point and Cone Dispatch.
    * TODO: probably should get rid of it.
+   * @throws UnsupportedOperationException  unconditionally
    */
-  public IClass getType() {
+  public IClass getType() throws UnsupportedOperationException {
     throw new UnsupportedOperationException("getType not implemented for " + getClass());
   }
 

@@ -54,24 +54,18 @@ public class MemoryAccessMap {
   /**
    * Map: IField -> Set<MemoryAccess>
    */
-  private Map<IField, Set<MemoryAccess>> readMap = HashMapFactory.make();
+  final private Map<IField, Set<MemoryAccess>> readMap = HashMapFactory.make();
 
   /**
    * Map: IField -> Set<MemoryAccess>
    */
-  private Map<IField, Set<MemoryAccess>> writeMap = HashMapFactory.make();
+  final private Map<IField, Set<MemoryAccess>> writeMap = HashMapFactory.make();
 
   // TODO allow for more precise handling of arrays
 
-  /**
-   * Set<MemoryAccess>
-   */
-  private Set<MemoryAccess> arrayReads = HashSetFactory.make();
+  final private Set<MemoryAccess> arrayReads = HashSetFactory.make();
 
-  /**
-   * Set<MemoryAccess>
-   */
-  private Set<MemoryAccess> arrayWrites = HashSetFactory.make();
+  final private Set<MemoryAccess> arrayWrites = HashSetFactory.make();
 
   private final IClassHierarchy cha;
 

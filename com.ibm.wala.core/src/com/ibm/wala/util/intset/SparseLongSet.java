@@ -16,6 +16,7 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * A sparse ordered, duplicate-free, fully-encapsulated set of longs; not
@@ -164,7 +165,7 @@ public class SparseLongSet implements LongSet {
     }
   }
 
-  public boolean sameValue(LongSet that) {
+  public boolean sameValue(LongSet that) throws UnimplementedError {
     if (that instanceof SparseLongSet) {
       return sameValueInternal((SparseLongSet) that);
     } else {
@@ -347,7 +348,7 @@ public class SparseLongSet implements LongSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#intersect(com.ibm.wala.util.intset.IntSet)
    */
-  public LongSet intersection(LongSet that) {
+  public LongSet intersection(LongSet that) throws UnimplementedError {
     if (that instanceof SparseLongSet) {
       MutableSparseLongSet temp = new MutableSparseLongSet(this);
       temp.intersectWith((SparseLongSet) that);
@@ -399,7 +400,7 @@ public class SparseLongSet implements LongSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
    */
-  public boolean isSubset(LongSet that) {
+  public boolean isSubset(LongSet that) throws UnimplementedError {
     if (that instanceof SparseLongSet) {
       return isSubsetInternal((SparseLongSet) that);
     } else {

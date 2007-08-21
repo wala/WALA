@@ -20,13 +20,13 @@ import com.ibm.wala.ipa.callgraph.CGNode;
  */
 public class MemoryAccess {
 
-  private CGNode node;
+  final private CGNode node;
 
   /**
    * index of the field access instruction in a shrikeBt or SSA instruction
    * array
    */
-  int instructionIndex;
+  final int instructionIndex;
 
   public MemoryAccess(int index, CGNode node) {
     super();

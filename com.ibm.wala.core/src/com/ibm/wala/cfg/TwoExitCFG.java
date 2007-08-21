@@ -27,6 +27,7 @@ import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.FixedSizeBitVector;
@@ -137,8 +138,7 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   public IBasicBlock exit() {
-    Assertions.UNREACHABLE("Don't call me");
-    return null;
+    throw new UnsupportedOperationException("don't call this");
   }
 
   public BitVector getCatchBlocks() {
@@ -160,7 +160,7 @@ public class TwoExitCFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
    */
-  public void removeNodeAndEdges(IBasicBlock N) {
+  public void removeNodeAndEdges(IBasicBlock N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -207,15 +207,14 @@ public class TwoExitCFG implements ControlFlowGraph {
    * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
    */
   public void addNode(IBasicBlock n) {
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
    */
   public void removeNode(IBasicBlock n) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   /*
@@ -307,19 +306,19 @@ public class TwoExitCFG implements ControlFlowGraph {
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
    *      java.lang.Object)
    */
-  public void addEdge(IBasicBlock src, IBasicBlock dst) {
+  public void addEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
   
-  public void removeEdge(IBasicBlock src, IBasicBlock dst) {
+  public void removeEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {
+  public boolean hasEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeAllIncidentEdges(IBasicBlock node) {
+  public void removeAllIncidentEdges(IBasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -561,26 +560,21 @@ public class TwoExitCFG implements ControlFlowGraph {
     return null;
   }
 
-  public Collection<IBasicBlock> getNormalPredecessors(IBasicBlock b) {
+  public Collection<IBasicBlock> getNormalPredecessors(IBasicBlock b) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
-  public IntSet getSuccNodeNumbers(IBasicBlock node) {
-    // TODO Auto-generated method stub
+  public IntSet getSuccNodeNumbers(IBasicBlock node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
   public IntSet getPredNodeNumbers(IBasicBlock node) {
-    // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
     return null;
   }
 
-  /**
-   * @return Returns the delegate.
-   */
   public ControlFlowGraph getDelegate() {
     return delegate;
   }

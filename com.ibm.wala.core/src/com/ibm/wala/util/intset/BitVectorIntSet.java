@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.DeterministicHashCode;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
@@ -325,7 +326,7 @@ public final class BitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
    */
-  public boolean sameValue(IntSet that) {
+  public boolean sameValue(IntSet that) throws UnimplementedError {
     if (that instanceof BitVectorIntSet) {
       BitVectorIntSet b = (BitVectorIntSet) that;
       return bitVector.sameBits(b.bitVector);

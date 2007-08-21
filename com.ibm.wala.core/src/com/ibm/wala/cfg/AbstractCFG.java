@@ -419,7 +419,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   public void removeEdge(IBasicBlock src, IBasicBlock dst) {
-    Assertions.UNREACHABLE();
+    throw new UnsupportedOperationException();
   }
 
   public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {

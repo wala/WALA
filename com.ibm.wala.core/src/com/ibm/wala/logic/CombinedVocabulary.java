@@ -31,7 +31,10 @@ public class CombinedVocabulary extends AbstractVocabulary<Object> {
     }
   }
   
-  public static CombinedVocabulary make(IVocabulary a, IVocabulary b) {
+  public static CombinedVocabulary make(IVocabulary a, IVocabulary b) throws IllegalArgumentException {
+    if (b == null) {
+      throw new IllegalArgumentException("b == null");
+    }
     return new CombinedVocabulary(a,b);
   }
   
