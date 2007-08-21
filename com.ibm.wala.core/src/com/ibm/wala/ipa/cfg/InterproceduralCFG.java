@@ -557,7 +557,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   /*
    * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeNodeAndEdges(BasicBlockInContext N) {
+  public void removeNodeAndEdges(BasicBlockInContext N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -632,7 +632,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeAllIncidentEdges(BasicBlockInContext node) {
+  public void removeAllIncidentEdges(BasicBlockInContext node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

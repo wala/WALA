@@ -842,7 +842,7 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.NumberedGraph#addNode(com.ibm.wala.util.graph.Node)
    */
-  public void addNode(IBasicBlock n) {
+  public void addNode(IBasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -864,14 +864,14 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
    */
-  public void removeNodeAndEdges(IBasicBlock N) {
+  public void removeNodeAndEdges(IBasicBlock N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
-  public void removeNode(IBasicBlock n) {
+  public void removeNode(IBasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -1010,7 +1010,7 @@ public class SSACFG implements ControlFlowGraph {
     return new NumberedNodeIterator<IBasicBlock>(s, this);
   }
 
-  public void removeIncomingEdges(IBasicBlock node) {
+  public void removeIncomingEdges(IBasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

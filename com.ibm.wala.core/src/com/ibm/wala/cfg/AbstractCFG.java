@@ -418,7 +418,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     Assertions.UNREACHABLE("Don't call me .. use addNormalEdge or addExceptionalEdge");
   }
 
-  public void removeEdge(IBasicBlock src, IBasicBlock dst) {
+  public void removeEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

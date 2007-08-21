@@ -65,7 +65,7 @@ public abstract class AbstractURLModule implements Module, ModuleEntry {
     return null;
   }
 
-  public String getClassName() {
+  public String getClassName() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

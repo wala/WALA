@@ -54,7 +54,7 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMain()
    */
-  public P getMain() {
+  public P getMain() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -140,7 +140,7 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   /*
    * @see com.ibm.wala.util.graph.Graph#removeNodeAndEdges(java.lang.Object)
    */
-  public void removeNodeAndEdges(Object N) {
+  public void removeNodeAndEdges(Object N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
 
   }
@@ -159,14 +159,14 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
    */
-  public void addNode(Object n) {
+  public void addNode(Object n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
    */
-  public void removeNode(Object n) {
+  public void removeNode(Object n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
 
   }
@@ -215,11 +215,11 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
    * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
    *      java.lang.Object)
    */
-  public void addEdge(Object src, Object dst) {
+  public void addEdge(Object src, Object dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
   
-  public void removeEdge(Object src, Object dst) {
+  public void removeEdge(Object src, Object dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

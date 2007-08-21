@@ -56,7 +56,7 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
     return new PartialCallGraph(CG, partialRoots, partialGraph);
   }
 
-  public CGNode getFakeRootNode() {
+  public CGNode getFakeRootNode() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

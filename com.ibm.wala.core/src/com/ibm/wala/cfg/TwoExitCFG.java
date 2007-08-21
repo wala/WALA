@@ -206,7 +206,7 @@ public class TwoExitCFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
    */
-  public void addNode(IBasicBlock n) {
+  public void addNode(IBasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

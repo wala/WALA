@@ -222,15 +222,15 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
 
   }
   
-  public void removeEdge(ExplodedSupergraphNode src, ExplodedSupergraphNode dst) {
+  public void removeEdge(ExplodedSupergraphNode src, ExplodedSupergraphNode dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeAllIncidentEdges(ExplodedSupergraphNode node) {
-    Assertions.UNREACHABLE();throw new UnsupportedOperationException();
+  public void removeAllIncidentEdges(ExplodedSupergraphNode node) throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
 
-  public void removeIncomingEdges(ExplodedSupergraphNode node) {
+  public void removeIncomingEdges(ExplodedSupergraphNode node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

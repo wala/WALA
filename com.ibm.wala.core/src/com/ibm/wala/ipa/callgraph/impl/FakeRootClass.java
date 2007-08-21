@@ -184,14 +184,14 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
    */
-  public Collection<IClass> getDirectInterfaces() {
+  public Collection<IClass> getDirectInterfaces() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllInstanceFields()
    */
-  public Collection<IField> getAllInstanceFields() throws ClassHierarchyException {
+  public Collection<IField> getAllInstanceFields() throws UnsupportedOperationException, ClassHierarchyException {
     throw new UnsupportedOperationException();
   }
 

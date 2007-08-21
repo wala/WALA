@@ -94,7 +94,7 @@ public class ArrayContents implements IField {
     return false;
   }
 
-  public IClass getDeclaringClass() {
+  public IClass getDeclaringClass() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

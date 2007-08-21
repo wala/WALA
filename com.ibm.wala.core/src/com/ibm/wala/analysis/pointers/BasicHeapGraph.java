@@ -458,7 +458,7 @@ public class BasicHeapGraph extends HeapGraph {
     return false;
   }
 
-  public void removeAllIncidentEdges(Object node) {
+  public void removeAllIncidentEdges(Object node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
