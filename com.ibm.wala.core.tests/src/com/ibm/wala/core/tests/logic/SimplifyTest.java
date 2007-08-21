@@ -15,6 +15,7 @@ import java.util.Collections;
 
 import junit.framework.TestCase;
 
+import com.ibm.wala.logic.AdHocSemiDecisionProcedure;
 import com.ibm.wala.logic.BinaryFormula;
 import com.ibm.wala.logic.BinaryFunction;
 import com.ibm.wala.logic.BinaryRelation;
@@ -51,7 +52,7 @@ public class SimplifyTest extends TestCase {
 
     Collection<IFormula> c = Collections.singleton(f);
     Collection<IFormula> t = HashSetFactory.make();
-    c = Simplifier.propositionalSimplify(c, t);
+    c = Simplifier.propositionalSimplify(c, t, AdHocSemiDecisionProcedure.singleton());
     for (IFormula x : c) {
       System.out.println("after : " + x);
     }
@@ -73,7 +74,7 @@ public class SimplifyTest extends TestCase {
     Collection<IFormula> c = Collections.singleton(f);
     Collection<IFormula> t = HashSetFactory.make();
     t.add(f);
-    c = Simplifier.propositionalSimplify(c, t);
+    c = Simplifier.propositionalSimplify(c, t, AdHocSemiDecisionProcedure.singleton());
     for (IFormula x : c) {
       System.out.println("after : " + x);
     }
@@ -95,7 +96,7 @@ public class SimplifyTest extends TestCase {
     Collection<IFormula> c = Collections.singleton(f);
     Collection<IFormula> t = HashSetFactory.make();
     t.add(NotFormula.make(f));
-    c = Simplifier.propositionalSimplify(c, t);
+    c = Simplifier.propositionalSimplify(c, t, AdHocSemiDecisionProcedure.singleton());
     for (IFormula x : c) {
       System.out.println("after : " + x);
     }
@@ -121,7 +122,7 @@ public class SimplifyTest extends TestCase {
     IFormula rhs = NotFormula.make(f);
     IFormula axiom = BinaryFormula.biconditional(lhs, rhs);
     t.add(axiom);
-    c = Simplifier.propositionalSimplify(c, t);
+    c = Simplifier.propositionalSimplify(c, t, AdHocSemiDecisionProcedure.singleton());
     for (IFormula x : c) {
       System.out.println("after : " + x);
     }
@@ -145,7 +146,7 @@ public class SimplifyTest extends TestCase {
 
     IFormula axiom = QuantifiedFormula.forall(v, f);
     t.add(axiom);
-    c = Simplifier.simplify(c, t);
+    c = Simplifier.simplify(c, t, AdHocSemiDecisionProcedure.singleton());
     for (IFormula x : c) {
       System.out.println("after : " + x);
     }
@@ -170,7 +171,7 @@ public class SimplifyTest extends TestCase {
 
     IFormula axiom = QuantifiedFormula.forall(v, f);
     t.add(axiom);
-    c = Simplifier.simplify(c, t);
+    c = Simplifier.simplify(c, t, AdHocSemiDecisionProcedure.singleton());
     for (IFormula x : c) {
       System.out.println("after : " + x);
     }
@@ -197,7 +198,7 @@ public class SimplifyTest extends TestCase {
     IFormula g = RelationFormula.make(foo, v1, v1);
     IFormula axiom = QuantifiedFormula.forall(v1, g);
     t.add(axiom);
-    c = Simplifier.simplify(c, t);
+    c = Simplifier.simplify(c, t, AdHocSemiDecisionProcedure.singleton());
     for (IFormula x : c) {
       System.out.println("after : " + x);
     }
@@ -225,7 +226,7 @@ public class SimplifyTest extends TestCase {
     IFormula axiom = QuantifiedFormula.forall(v1, g);
     axiom = QuantifiedFormula.forall(v2, axiom);
     t.add(axiom);
-    c = Simplifier.simplify(c, t);
+    c = Simplifier.simplify(c, t, AdHocSemiDecisionProcedure.singleton());
     for (IFormula x : c) {
       System.out.println("after : " + x);
     }
@@ -253,7 +254,7 @@ public class SimplifyTest extends TestCase {
     IFormula axiom = QuantifiedFormula.forall(v2, g);
     axiom = QuantifiedFormula.forall(v1, axiom);
     t.add(axiom);
-    c = Simplifier.simplify(c, t);
+    c = Simplifier.simplify(c, t, AdHocSemiDecisionProcedure.singleton());
     for (IFormula x : c) {
       System.out.println("after : " + x);
     }
@@ -278,7 +279,7 @@ public class SimplifyTest extends TestCase {
     IFormula g = RelationFormula.make(foo, v1);
     IFormula axiom = QuantifiedFormula.forall(v1, g);
     t.add(axiom);
-    c = Simplifier.simplify(c, t);
+    c = Simplifier.simplify(c, t, AdHocSemiDecisionProcedure.singleton());
     for (IFormula x : c) {
       System.out.println("after : " + x);
     }
@@ -304,7 +305,7 @@ public class SimplifyTest extends TestCase {
     IFormula g = RelationFormula.makeEquals(FunctionTerm.make(foo,v1, v2), v2);
     IFormula axiom = QuantifiedFormula.forall(v1, v2, g);
     t.add(axiom);
-    c = Simplifier.simplify(c, t);
+    c = Simplifier.simplify(c, t, AdHocSemiDecisionProcedure.singleton());
     for (IFormula x : c) {
       System.out.println("after : " + x);
     }
