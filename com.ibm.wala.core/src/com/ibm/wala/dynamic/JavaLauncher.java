@@ -79,7 +79,7 @@ public class JavaLauncher extends Launcher {
    * @return the string that identifies the java.exe file
    */
   protected String getJavaExe() {
-    String java = System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + "java.exe";
+    String java = System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + "java";
     return java;
   }
 
