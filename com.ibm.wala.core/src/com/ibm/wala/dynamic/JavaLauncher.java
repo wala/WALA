@@ -11,6 +11,7 @@
 package com.ibm.wala.dynamic;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,28 +35,29 @@ public class JavaLauncher extends Launcher {
   /**
    * Paths that will be added to the current process's classpath
    */
-  private final List<String> xtraClasspath;
-  
+  private final List<String> xtraClasspath = new ArrayList<String>();;
+
   private Thread stdOutDrain;
-  
+
   private Thread stdInDrain;
 
   private JavaLauncher(String programArgs, String mainClass, List<String> xtraClasspath) {
     super();
     this.programArgs = programArgs;
     this.mainClass = mainClass;
-    this.xtraClasspath = xtraClasspath;
+    if (xtraClasspath != null) {
+      this.xtraClasspath.addAll(xtraClasspath);
+    }
   }
 
   public String getProgramArgs() {
     return programArgs;
   }
 
-  
   public String getMainClass() {
     return mainClass;
   }
-  
+
   public List<String> getXtraClassPath() {
     return xtraClasspath;
   }
@@ -83,9 +85,10 @@ public class JavaLauncher extends Launcher {
 
   /**
    * Launch the java process.
-   * @throws WalaException
    */
-  public Process start() throws WalaException{
+  public Process start() throws WalaException {
+    System.err.println(System.getProperty("user.dir"));
+
     String cp = makeClasspath();
 
     String heap = " -Xmx800M ";
@@ -97,7 +100,7 @@ public class JavaLauncher extends Launcher {
     stdInDrain = drainStdErr(p);
     return p;
   }
-  
+
   private String makeLibPath() {
     String libPath = System.getProperty("java.library.path");
     if (libPath == null) {
@@ -109,6 +112,7 @@ public class JavaLauncher extends Launcher {
 
   /**
    * Wait for the spawned process to terminate.
+   * 
    * @throws WalaException
    */
   public void join() throws WalaException {
@@ -123,12 +127,13 @@ public class JavaLauncher extends Launcher {
       setOutput(d.getCapture().toByteArray());
     }
   }
-  
+
   private String makeClasspath() {
     String cp = " -classpath " + System.getProperty("java.class.path");
     if (getXtraClassPath() == null || getXtraClassPath().isEmpty()) {
       return cp;
     } else {
+      cp += ";";
       for (Iterator it = getXtraClassPath().iterator(); it.hasNext();) {
         cp += (String) it.next();
         if (it.hasNext()) {
