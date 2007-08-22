@@ -110,7 +110,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       Trace.println("IR of " + ir.getMethod());
       Trace.println(ir);
       Trace.println("TypeInference of " + ir.getMethod());
-      for (int i = 0; i < ir.getSymbolTable().getMaxValueNumber(); i++) {
+      for (int i = 0; i <= ir.getSymbolTable().getMaxValueNumber(); i++) {
         if (ti.isUndefined(i)) {
           Trace.println("  value " + i + " is undefined");
         } else {
@@ -425,7 +425,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       SymbolTable targetST = targetIR.getSymbolTable();
 
       int av = -1;
-      for (int v = 0; v < targetST.getMaxValueNumber(); v++) {
+      for (int v = 0; v <= targetST.getMaxValueNumber(); v++) {
         String[] vns = targetIR.getLocalNames(1, v);
         for (int n = 0; vns != null && n < vns.length; n++) {
           if ("arguments".equals(vns[n])) {
