@@ -90,7 +90,7 @@ public class JavaLauncher extends Launcher {
 
     String heap = " -Xmx800M ";
 
-    String cmd = getJavaExe() + heap + cp + " " + getMainClass() + " " + getProgramArgs();
+    String cmd = getJavaExe() + heap + cp + " " + makeLibPath() + " " + getMainClass() + " " + getProgramArgs();
 
     Process p = spawnProcess(cmd);
     stdOutDrain = isCaptureOutput() ? captureStdOut(p) : drainStdOut(p);
@@ -98,6 +98,15 @@ public class JavaLauncher extends Launcher {
     return p;
   }
   
+  private String makeLibPath() {
+    String libPath = System.getProperty("java.library.path");
+    if (libPath == null) {
+      return "";
+    } else {
+      return "-Djava.library.path=" + libPath;
+    }
+  }
+
   /**
    * Wait for the spawned process to terminate.
    * @throws WalaException
