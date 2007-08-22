@@ -175,7 +175,7 @@ public class CompareToZeroOneCFADriver {
         IR ir = node.getIR();
         TypeInference ti = new TypeInference(ir);
         ti.solve();
-        for (int i = 1; i < ir.getSymbolTable().getMaxValueNumber(); i++) {
+        for (int i = 1; i <= ir.getSymbolTable().getMaxValueNumber(); i++) {
           TypeAbstraction t = ti.getType(i);
           if (t != null) {
             final HeapModel heapModel = dmp.getHeapModel();

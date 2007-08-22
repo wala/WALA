@@ -118,7 +118,7 @@ public class TestAgainstSimpleDriver {
     IR ir = main.getIR();
     TypeInference ti = new TypeInference(ir);
     ti.solve();
-    for (int i = 1; i < ir.getSymbolTable().getMaxValueNumber(); i++) {
+    for (int i = 1; i <= ir.getSymbolTable().getMaxValueNumber(); i++) {
       TypeAbstraction t = ti.getType(i);
       if (t != null) {
         LocalPointerKey v = (LocalPointerKey) dmp.getHeapModel().getPointerKeyForLocal(main, i);

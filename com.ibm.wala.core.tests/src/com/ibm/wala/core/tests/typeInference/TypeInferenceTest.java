@@ -86,7 +86,7 @@ public class TypeInferenceTest extends WalaTestCase {
     
     TypeInference ti = new TypeInference(ir);
     ti.solve();
-    for (int i = 1; i< ir.getSymbolTable().getMaxValueNumber(); i++) {
+    for (int i = 1; i<= ir.getSymbolTable().getMaxValueNumber(); i++) {
       System.err.println(i + " " + ti.getType(i));
     }
   }
