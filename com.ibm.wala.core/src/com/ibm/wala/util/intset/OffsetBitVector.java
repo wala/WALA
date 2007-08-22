@@ -282,9 +282,13 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param set
    *          the object to compare with
    * @return true if the objects are the same; false otherwise.
+   * @throws IllegalArgumentException  if set == null
    */
   @Override
-  public final boolean sameBits(OffsetBitVector set) {
+  public final boolean sameBits(OffsetBitVector set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (this == set) { // should help alias analysis
       return true;
     }
@@ -333,7 +337,10 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * @param other @return true iff this is a subset of other
    */
   @Override
-  public boolean isSubset(OffsetBitVector other) {
+  public boolean isSubset(OffsetBitVector other) throws IllegalArgumentException {
+    if (other == null) {
+      throw new IllegalArgumentException("other == null");
+    }
     if (this == other) { // should help alias analysis
       return true;
     }
@@ -384,9 +391,13 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * 
    * @param set
    *          the bit set to be ANDed with
+   * @throws IllegalArgumentException  if set == null
    */
   @Override
-  public final void and(OffsetBitVector set) {
+  public final void and(OffsetBitVector set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (this == set) {
       return;
     }
@@ -414,9 +425,13 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * 
    * @param set
    *          the bit set to be ORed with
+   * @throws IllegalArgumentException  if set == null
    */
   @Override
-  public final void or(OffsetBitVector set) {
+  public final void or(OffsetBitVector set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (this == set) { // should help alias analysis
       return;
     }
@@ -437,9 +452,13 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
    * 
    * @param set
    *          the bit set to be XORed with
+   * @throws IllegalArgumentException  if set == null
    */
   @Override
-  public final void xor(OffsetBitVector set) {
+  public final void xor(OffsetBitVector set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (this == set) {
       clearAll();
       return;
@@ -487,8 +506,12 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
   /**
    * Return a new bit string as the AND of two others.
+   * @throws IllegalArgumentException  if b2 == null
    */
-  public static OffsetBitVector and(OffsetBitVector b1, OffsetBitVector b2) {
+  public static OffsetBitVector and(OffsetBitVector b1, OffsetBitVector b2) throws IllegalArgumentException {
+    if (b2 == null) {
+      throw new IllegalArgumentException("b2 == null");
+    }
     OffsetBitVector b = new OffsetBitVector(b1);
     b.and(b2);
     return b;
@@ -496,8 +519,12 @@ public final class OffsetBitVector extends BitVectorBase<OffsetBitVector> {
 
   /**
    * Return a new FixedSizeBitVector as the OR of two others
+   * @throws IllegalArgumentException  if b2 == null
    */
-  public static OffsetBitVector or(OffsetBitVector b1, OffsetBitVector b2) {
+  public static OffsetBitVector or(OffsetBitVector b1, OffsetBitVector b2) throws IllegalArgumentException {
+    if (b2 == null) {
+      throw new IllegalArgumentException("b2 == null");
+    }
     OffsetBitVector b = new OffsetBitVector(b1);
     b.or(b2);
     return b;

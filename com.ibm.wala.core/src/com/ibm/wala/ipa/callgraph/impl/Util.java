@@ -612,7 +612,7 @@ public class Util {
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return new ZeroXCFABuilder(cha, options, cache, customSelector, customInterpreter, options.getReflectionSpec(),
+    return ZeroXCFABuilder.make(cha, options, cache, customSelector, customInterpreter, options.getReflectionSpec(),
         ZeroXInstanceKeys.NONE);
   }
 
@@ -640,7 +640,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
 
-    CallGraphBuilder builder = new OneCFABuilder(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec());
+    CallGraphBuilder builder = OneCFABuilder.make(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec());
     return builder;
   }
 
@@ -686,7 +686,7 @@ public class Util {
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return new ZeroXCFABuilder(cha, options, cache, customSelector, customInterpreter, options.getReflectionSpec(),
+    return ZeroXCFABuilder.make(cha, options, cache, customSelector, customInterpreter, options.getReflectionSpec(),
         ZeroXInstanceKeys.ALLOCATIONS);
   }
 
@@ -732,7 +732,7 @@ public class Util {
     addDefaultSelectors(options, cha);
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
-    return new ZeroXCFABuilder(cha, options, cache, customSelector, customInterpreter, options.getReflectionSpec(),
+    return ZeroXCFABuilder.make(cha, options, cache, customSelector, customInterpreter, options.getReflectionSpec(),
         ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
             | ZeroXInstanceKeys.SMUSH_STRINGS | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }

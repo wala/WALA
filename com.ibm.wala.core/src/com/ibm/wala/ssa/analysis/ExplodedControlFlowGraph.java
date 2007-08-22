@@ -204,7 +204,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
   }
 
-  public int getProgramCounter(int index) {
+  public int getProgramCounter(int index) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return 0;
   }
@@ -214,8 +214,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
   }
 
   public void addNode(IBasicBlock n) {
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   public boolean containsNode(IBasicBlock N) {
@@ -230,11 +229,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     return allNodes.iterator();
   }
 
-  public void removeNode(IBasicBlock n) {
+  public void removeNode(IBasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void addEdge(IBasicBlock src, IBasicBlock dst) {
+  public void addEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -302,7 +301,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
   }
 
-  public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {
+  public boolean hasEdge(IBasicBlock src, IBasicBlock dst) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return false;
   }
@@ -345,7 +344,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     return n.getNumber();
   }
 
-  public Iterator<IBasicBlock> iterateNodes(IntSet s) {
+  public Iterator<IBasicBlock> iterateNodes(IntSet s) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

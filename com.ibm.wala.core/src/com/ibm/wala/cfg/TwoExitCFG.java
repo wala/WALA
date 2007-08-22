@@ -137,7 +137,7 @@ public class TwoExitCFG implements ControlFlowGraph {
     return delegate.entry();
   }
 
-  public IBasicBlock exit() {
+  public IBasicBlock exit() throws UnsupportedOperationException {
     throw new UnsupportedOperationException("don't call this");
   }
 
@@ -213,7 +213,7 @@ public class TwoExitCFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#removeNode(java.lang.Object)
    */
-  public void removeNode(IBasicBlock n) {
+  public void removeNode(IBasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -544,18 +544,14 @@ public class TwoExitCFG implements ControlFlowGraph {
   }
 
   public void removeIncomingEdges(IBasicBlock node) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
   public void removeOutgoingEdges(IBasicBlock node) {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-
+    throw new UnsupportedOperationException();
   }
 
-  public Collection<IBasicBlock> getExceptionalPredecessors(IBasicBlock b) {
+  public Collection<IBasicBlock> getExceptionalPredecessors(IBasicBlock b) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
@@ -570,7 +566,7 @@ public class TwoExitCFG implements ControlFlowGraph {
     return null;
   }
 
-  public IntSet getPredNodeNumbers(IBasicBlock node) {
+  public IntSet getPredNodeNumbers(IBasicBlock node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

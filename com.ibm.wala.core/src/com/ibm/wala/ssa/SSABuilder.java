@@ -57,6 +57,11 @@ import com.ibm.wala.util.intset.IntPair;
  */
 public class SSABuilder extends AbstractIntStackMachine {
 
+  public static SSABuilder make(ShrikeCTMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
+      SymbolTable symbolTable, boolean buildLocalMap, boolean addPiNodes) {
+    return new SSABuilder(method, cfg, scfg, instructions, symbolTable, buildLocalMap, addPiNodes);
+  }
+
   /**
    * A wrapper around the method being analyzed.
    */
@@ -73,7 +78,7 @@ public class SSABuilder extends AbstractIntStackMachine {
    */
   private final SSA2LocalMap localMap;
 
-  public SSABuilder(ShrikeCTMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
+  private SSABuilder(ShrikeCTMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
       SymbolTable symbolTable, boolean buildLocalMap, boolean addPiNodes) {
     super(scfg);
     localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes(), maxLocals) : null;

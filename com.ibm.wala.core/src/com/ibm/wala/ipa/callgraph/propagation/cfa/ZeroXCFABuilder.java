@@ -33,7 +33,7 @@ public class ZeroXCFABuilder extends CFABuilder {
 
   private final int instancePolicy;
 
-  public ZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
+  private ZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
 
     super(cha, options, cache);
@@ -77,10 +77,15 @@ public class ZeroXCFABuilder extends CFABuilder {
    * @return a 0-1-Opt-CFA Call Graph Builder.
    * @throws IllegalArgumentException
    *             if options is null
+   * @throws IllegalArgumentException
+   *             if xmlFiles == null
    */
-  public static CFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
-      String[] xmlFiles, byte instancePolicy) {
+  public static CFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,
+      AnalysisScope scope, String[] xmlFiles, byte instancePolicy) throws IllegalArgumentException {
 
+    if (xmlFiles == null) {
+      throw new IllegalArgumentException("xmlFiles == null");
+    }
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
@@ -90,6 +95,12 @@ public class ZeroXCFABuilder extends CFABuilder {
     }
 
     return new ZeroXCFABuilder(cha, options, cache, null, null, options.getReflectionSpec(), instancePolicy);
+  }
+
+  public static ZeroXCFABuilder make(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect,
+      int instancePolicy) {
+    return new ZeroXCFABuilder(cha, options, cache, appContextSelector, appContextInterpreter, reflect, instancePolicy);
   }
 
   /*

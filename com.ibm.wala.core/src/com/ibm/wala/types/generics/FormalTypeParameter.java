@@ -51,7 +51,7 @@ public class FormalTypeParameter extends Signature {
 
   private final TypeSignature[] interfaceBounds;
 
-  public FormalTypeParameter(String s) throws IllegalArgumentException {
+  private FormalTypeParameter(String s) throws IllegalArgumentException {
     super(s);
     id = parseForId(s);
     classBound = parseForClassBound(s);

@@ -115,7 +115,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
       }
     } else {
       if (!(impl instanceof MutableSparseIntSet)) {
-        impl = new MutableSparseIntSet(impl);
+        impl = MutableSparseIntSet.make(impl);
       }
     }
     if (Assertions.verifyAssertions) {
@@ -165,7 +165,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#intersection(com.ibm.wala.util.intset.IntSet)
    */
-  public IntSet intersection(IntSet that) {
+  public IntSet intersection(IntSet that) throws UnimplementedError {
     if (that instanceof BimodalMutableIntSet) {
       BimodalMutableIntSet b = (BimodalMutableIntSet) that;
       return impl.intersection(b.impl);
@@ -220,7 +220,10 @@ public class BimodalMutableIntSet implements MutableIntSet {
     return impl.max();
   }
 
-  public static BimodalMutableIntSet makeCopy(IntSet B) {
+  public static BimodalMutableIntSet makeCopy(IntSet B) throws IllegalArgumentException {
+    if (B == null) {
+      throw new IllegalArgumentException("B == null");
+    }
     if (B instanceof BimodalMutableIntSet) {
       BimodalMutableIntSet that = (BimodalMutableIntSet) B;
       BimodalMutableIntSet result = new BimodalMutableIntSet();
@@ -277,7 +280,10 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.SparseIntSet)
    */
-  public boolean isSubset(IntSet that) {
+  public boolean isSubset(IntSet that) throws IllegalArgumentException {
+    if (that == null) {
+      throw new IllegalArgumentException("that == null");
+    }
     if (that instanceof BimodalMutableIntSet) {
       BimodalMutableIntSet b = (BimodalMutableIntSet) that;
       return impl.isSubset(b.impl);
@@ -305,7 +311,10 @@ public class BimodalMutableIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
    */
-  public boolean containsAny(IntSet that) throws UnimplementedError {
+  public boolean containsAny(IntSet that) throws IllegalArgumentException, UnimplementedError {
+    if (that == null) {
+      throw new IllegalArgumentException("that == null");
+    }
     if (that instanceof BimodalMutableIntSet) {
       BimodalMutableIntSet b = (BimodalMutableIntSet) that;
       return impl.containsAny(b.impl);

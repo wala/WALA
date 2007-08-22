@@ -41,7 +41,10 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
    */
-  public MutableIntSet makeCopy(IntSet x) {
+  public MutableIntSet makeCopy(IntSet x) throws IllegalArgumentException {
+    if (x == null) {
+      throw new IllegalArgumentException("x == null");
+    }
     return BimodalMutableIntSet.makeCopy(x);
   }
 

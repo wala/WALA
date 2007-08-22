@@ -103,7 +103,7 @@ public class CallGraphMapUtil {
     }
   }
 
-  public static InstanceKey mapInstKey(InstanceKey ik, CallGraph fromCG, CallGraph toCG, HeapModel heapModel) throws NullPointerException {
+  public static InstanceKey mapInstKey(InstanceKey ik, CallGraph fromCG, CallGraph toCG, HeapModel heapModel) throws UnimplementedError, NullPointerException {
     InstanceKey ret = null;
     if (ik instanceof InstanceKeyWithNode) {
       CGNode oldCGNode = ((InstanceKeyWithNode) ik).getNode();

@@ -64,7 +64,7 @@ public abstract class HeapGraph implements NumberedGraph<Object> {
   /*
    * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
    */
-  public void removeNodeAndEdges(Object N) {
+  public void removeNodeAndEdges(Object N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

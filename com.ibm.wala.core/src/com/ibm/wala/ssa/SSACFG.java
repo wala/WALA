@@ -846,18 +846,18 @@ public class SSACFG implements ControlFlowGraph {
     throw new UnsupportedOperationException();
   }
 
-  public void addEdge(IBasicBlock src, IBasicBlock dst) {
+  public void addEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeEdge(IBasicBlock src, IBasicBlock dst) {
+  public void removeEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeAllIncidentEdges(IBasicBlock node) {
+  public void removeAllIncidentEdges(IBasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

@@ -107,7 +107,7 @@ public class CallFlowEdges {
           if (R.getRelated(d2) == null) {
             result = SparseIntSet.singleton(d2);
           } else {
-            result = new MutableSparseIntSet(R.getRelated(d2));
+            result = MutableSparseIntSet.make(R.getRelated(d2));
             ((MutableSparseIntSet) result).add(d2);
           }
         } else {

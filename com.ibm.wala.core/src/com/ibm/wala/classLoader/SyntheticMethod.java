@@ -23,7 +23,6 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.bytecode.BytecodeStream;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
@@ -153,9 +152,8 @@ public class SyntheticMethod implements IMethod {
     return new InducedCFG(getStatements(), this, Everywhere.EVERYWHERE);
   }
 
-  public BytecodeStream getBytecodeStream() {
-    Assertions.UNREACHABLE();
-    return null;
+  public BytecodeStream getBytecodeStream()  {
+    throw new UnsupportedOperationException();
   }
 
   /**

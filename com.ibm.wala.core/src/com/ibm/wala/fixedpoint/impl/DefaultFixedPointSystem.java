@@ -22,6 +22,7 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.ReverseIterator;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.INodeWithNumber;
@@ -103,7 +104,10 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
     });
   }
 
-  public void addStatement(IFixedPointStatement statement) {
+  public void addStatement(IFixedPointStatement statement) throws IllegalArgumentException, UnimplementedError {
+    if (statement == null) {
+      throw new IllegalArgumentException("statement == null");
+    }
     if (statement instanceof UnaryStatement) {
       addStatement((UnaryStatement) statement);
     } else if (statement instanceof NullaryStatement) {
@@ -215,14 +219,18 @@ public class DefaultFixedPointSystem implements IFixedPointSystem  {
   /**
    * Build an Iterator over all the nodes in the graph, in an order
    * such that SCCs are visited in topological order.
+   * @throws IllegalArgumentException  if graph == null
    */
-  public static <T> Iterator<T> makeSCCTopOrder(Graph<T> graph) {
+  public static <T> Iterator<T> makeSCCTopOrder(Graph<T> graph) throws IllegalArgumentException {
     // the following code ensures a topological order over SCCs.
     // note that the first two lines of the following give a topological
     // order for dags, but that can get screwed up by cycles.  so 
     // instead, we use Tarjan's SCC algorithm, which happens to 
     // visit nodes in an order consistent with a top. order over SCCs.
     
+    if (graph == null) {
+      throw new IllegalArgumentException("graph == null");
+    }
     // finish time is post-order 
     // note that if you pay attention only to the first representative
     // of each SCC discovered, we have a top. order of these SCC

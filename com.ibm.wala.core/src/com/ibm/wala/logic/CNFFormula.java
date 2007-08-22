@@ -71,7 +71,10 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
     return d.prettyPrint(this);
   }
 
-  public static ICNFFormula make(IFormula f) {
+  public static ICNFFormula make(IFormula f) throws IllegalArgumentException {
+    if (f == null) {
+      throw new IllegalArgumentException("f == null");
+    }
     if (DEBUG) {
       System.err.println("make CNF " + f);
     }

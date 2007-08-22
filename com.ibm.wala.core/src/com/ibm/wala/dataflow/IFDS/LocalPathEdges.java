@@ -266,7 +266,7 @@ public class LocalPathEdges {
             if (related == null) {
               return SparseIntSet.singleton(0);
             } else {
-              MutableSparseIntSet result = new MutableSparseIntSet(related);
+              MutableSparseIntSet result = MutableSparseIntSet.make(related);
               result.add(0);
               return result;
             }
@@ -284,7 +284,7 @@ public class LocalPathEdges {
               return SparseIntSet.pair(0, d2);
             }
           } else {
-            MutableSparseIntSet result = new MutableSparseIntSet(related);
+            MutableSparseIntSet result = MutableSparseIntSet.make(related);
             result.add(d2);
             if (z != null && z.contains(n)) {
               result.add(0);
@@ -296,7 +296,7 @@ public class LocalPathEdges {
             return R.getRelated(n);
           } else {
             IntSet related = R.getRelated(n);
-            MutableSparseIntSet result = (related == null) ? new MutableSparseIntSet() : new MutableSparseIntSet(related);
+            MutableSparseIntSet result = (related == null) ? new MutableSparseIntSet() : MutableSparseIntSet.make(related);
             result.add(0);
             return result;
           }

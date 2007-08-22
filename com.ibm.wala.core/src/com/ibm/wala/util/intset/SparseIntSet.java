@@ -90,7 +90,10 @@ public class SparseIntSet implements IntSet {
     this.size = S.size;
   }
 
-  public SparseIntSet(IntSet S) {
+  public SparseIntSet(IntSet S) throws IllegalArgumentException {
+    if (S == null) {
+      throw new IllegalArgumentException("S == null");
+    }
     if (S instanceof SparseIntSet) {
       cloneState((SparseIntSet) S);
     } else {
@@ -156,7 +159,10 @@ public class SparseIntSet implements IntSet {
     }
   }
 
-  public boolean sameValue(IntSet that) throws UnimplementedError {
+  public boolean sameValue(IntSet that) throws IllegalArgumentException, UnimplementedError {
+    if (that == null) {
+      throw new IllegalArgumentException("that == null");
+    }
     if (that instanceof SparseIntSet) {
       return sameValueInternal((SparseIntSet) that);
     } else if (that instanceof BimodalMutableIntSet) {
@@ -344,16 +350,16 @@ public class SparseIntSet implements IntSet {
 
   public IntSet intersection(IntSet that) {
     if (that instanceof SparseIntSet) {
-      MutableSparseIntSet temp = new MutableSparseIntSet(this);
+      MutableSparseIntSet temp = MutableSparseIntSet.make(this);
       temp.intersectWith((SparseIntSet) that);
       return temp;
     } else if (that instanceof BitVectorIntSet) {
       SparseIntSet s = ((BitVectorIntSet) that).toSparseIntSet();
-      MutableSparseIntSet temp = new MutableSparseIntSet(this);
+      MutableSparseIntSet temp = MutableSparseIntSet.make(this);
       temp.intersectWith(s);
       return temp;
     } else if (that instanceof MutableSharedBitVectorIntSet) {
-      MutableSparseIntSet temp = new MutableSparseIntSet(this);
+      MutableSparseIntSet temp = MutableSparseIntSet.make(this);
       temp.intersectWith(that);
       return temp;
     } else {

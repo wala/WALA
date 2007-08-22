@@ -598,7 +598,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return new NumberedNodeIterator<IBasicBlock>(s, this);
   }
 
-  public void removeIncomingEdges(IBasicBlock node) {
+  public void removeIncomingEdges(IBasicBlock node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
@@ -635,7 +635,6 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   public IntSet getPredNodeNumbers(IBasicBlock node) {
-    // TODO Auto-generated method stub
     Assertions.UNREACHABLE();
     return null;
   }
@@ -646,7 +645,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   public IntSet getSuccNodeNumbers(IBasicBlock node) {
     int number = getNumber(node);
     IntSet s = normalEdgeManager.getSuccNodeNumbers(node);
-    MutableSparseIntSet result = s == null ? new MutableSparseIntSet() : new MutableSparseIntSet(s);
+    MutableSparseIntSet result = s == null ? new MutableSparseIntSet() : MutableSparseIntSet.make(s);
     s = exceptionalEdgeManager.getSuccNodeNumbers(node);
     if (s != null) {
       result.addAll(s);

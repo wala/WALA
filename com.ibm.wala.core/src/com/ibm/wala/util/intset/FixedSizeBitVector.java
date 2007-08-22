@@ -160,8 +160,12 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    * 
    * @param set
    *            the bit set to be ORed with
+   * @throws IllegalArgumentException  if set == null
    */
-  public void or(FixedSizeBitVector set) {
+  public void or(FixedSizeBitVector set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (this == set) { // should help alias analysis
       return;
     }
@@ -173,8 +177,12 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
 
   /**
    * Return a new FixedSizeBitVector as the OR of two others
+   * @throws IllegalArgumentException  if b2 == null
    */
-  public static FixedSizeBitVector or(FixedSizeBitVector b1, FixedSizeBitVector b2) {
+  public static FixedSizeBitVector or(FixedSizeBitVector b1, FixedSizeBitVector b2) throws IllegalArgumentException {
+    if (b2 == null) {
+      throw new IllegalArgumentException("b2 == null");
+    }
     FixedSizeBitVector b = new FixedSizeBitVector(b1);
     b.or(b2);
     return b;

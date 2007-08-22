@@ -43,10 +43,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
   private final static int TRAP_SIZE = 1000;
 
-  /**
-   * @param set
-   */
-  public MutableSparseIntSet(IntSet set) {
+  private MutableSparseIntSet(IntSet set) {
     super();
     copySet(set);
   }
@@ -174,10 +171,11 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   }
 
   /**
+   * @throws IllegalArgumentException  if that == null
    */
-  public void copySet(IntSet that) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(that != null);
+  public void copySet(IntSet that) throws IllegalArgumentException {
+    if (that == null) {
+      throw new IllegalArgumentException("that == null");
     }
     if (that instanceof SparseIntSet) {
       SparseIntSet set = (SparseIntSet) that;
@@ -297,10 +295,11 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
    * Add all elements from another int set.
    * 
    * @return true iff this set changes
+   * @throws IllegalArgumentException  if set == null
    */
-  public boolean addAll(IntSet set) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(set != null);
+  public boolean addAll(IntSet set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
     }
     if (set instanceof SparseIntSet) {
       return addAll((SparseIntSet) set);
@@ -491,6 +490,10 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     diff(MutableSparseIntSet A, MutableSparseIntSet B) 
   {
     return new MutableSparseIntSet(diffInternal(A, B));
+  }
+
+  public static MutableSparseIntSet make(IntSet set) {
+    return new MutableSparseIntSet(set);
   }
 
 

@@ -745,7 +745,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     return G.getMaxNumber();
   }
 
-  public Iterator<BasicBlockInContext> iterateNodes(IntSet s) {
+  public Iterator<BasicBlockInContext> iterateNodes(IntSet s) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

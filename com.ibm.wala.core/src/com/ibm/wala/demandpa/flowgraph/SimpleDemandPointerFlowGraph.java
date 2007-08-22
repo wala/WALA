@@ -68,6 +68,7 @@ import com.ibm.wala.util.ReferenceCleanser;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
@@ -189,7 +190,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
    * @see com.ibm.capa.util.graph.AbstractNumberedGraph#getPredNodeNumbers(java.lang.Object)
    */
   @Override
-  public IntSet getPredNodeNumbers(Object node) {
+  public IntSet getPredNodeNumbers(Object node) throws UnimplementedError {
     if (node instanceof StaticFieldKey) {
       Assertions.UNREACHABLE();
       return null;
@@ -213,7 +214,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
    * @see com.ibm.capa.util.graph.AbstractGraph#getPredNodeCount(java.lang.Object)
    */
   @Override
-  public int getPredNodeCount(Object N) {
+  public int getPredNodeCount(Object N) throws UnimplementedError {
     if (N instanceof StaticFieldKey) {
       Assertions.UNREACHABLE();
       return -1;
@@ -237,7 +238,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
    * @see com.ibm.capa.util.graph.AbstractGraph#getSuccNodeCount(java.lang.Object)
    */
   @Override
-  public int getSuccNodeCount(Object N) {
+  public int getSuccNodeCount(Object N) throws UnimplementedError {
     if (N instanceof StaticFieldKey) {
       Assertions.UNREACHABLE();
       return -1;

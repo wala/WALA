@@ -61,7 +61,7 @@ public class SDGView implements ISDG {
     return delegate.getMaxNumber();
   }
 
-  public Statement getNode(int number) {
+  public Statement getNode(int number) throws UnimplementedError {
     Assertions.UNREACHABLE(); 
     return delegate.getNode(number);
   }
@@ -75,7 +75,7 @@ public class SDGView implements ISDG {
     return delegate.getNumberOfNodes();
   }
 
-  public int getPredNodeCount(Statement N) {
+  public int getPredNodeCount(Statement N) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return delegate.getPredNodeCount(N);
   }

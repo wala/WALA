@@ -98,7 +98,7 @@ public class ArrayContents implements IField {
     throw new UnsupportedOperationException();
   }
 
-  public Atom getName() {
+  public Atom getName() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.INodeWithNumberedEdges;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.intset.IntIterator;
@@ -129,7 +130,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
     src.addSucc(dst.getGraphNodeId());
   }
 
-  public void removeEdge(T src, T dst) {
+  public void removeEdge(T src, T dst) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 

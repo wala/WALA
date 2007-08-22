@@ -196,7 +196,10 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  public boolean isCall(Object object) {
+  public boolean isCall(Object object) throws IllegalArgumentException {
+    if (object == null) {
+      throw new IllegalArgumentException("object == null");
+    }
     if (object instanceof IBasicBlock) {
       IBasicBlock b = (IBasicBlock) object;
       return partialIPFG.hasCall((BasicBlockInContext) b);
@@ -436,7 +439,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
           return partialIPFG.getPredNodeNumbers((BasicBlockInContext) node);
         } else {
           IntSet pred = partialIPFG.getPredNodeNumbers((BasicBlockInContext) node);
-          MutableSparseIntSet result = pred == null ? new MutableSparseIntSet() : new MutableSparseIntSet(pred);
+          MutableSparseIntSet result = pred == null ? new MutableSparseIntSet() : MutableSparseIntSet.make(pred);
           for (Iterator it = incoming.iterator(); it.hasNext();) {
             result.add(getNumber(it.next()));
           }
@@ -543,7 +546,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
           return partialIPFG.getSuccNodeNumbers((BasicBlockInContext) N);
         } else {
           IntSet succ = partialIPFG.getSuccNodeNumbers((BasicBlockInContext) N);
-          MutableSparseIntSet result = succ == null ? new MutableSparseIntSet() : new MutableSparseIntSet(succ);
+          MutableSparseIntSet result = succ == null ? new MutableSparseIntSet() : MutableSparseIntSet.make(succ);
           for (Iterator it = xverse.iterator(); it.hasNext();) {
             result.add(getNumber(it.next()));
           }
@@ -871,8 +874,11 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object,
    *      java.lang.Object)
    */
-  public byte classifyEdge(Object src, Object dest) {
+  public byte classifyEdge(Object src, Object dest) throws IllegalArgumentException {
 
+    if (src == null) {
+      throw new IllegalArgumentException("src == null");
+    }
     if (isCall(src)) {
       if (isEntry(dest)) {
         return CALL_EDGE;

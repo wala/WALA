@@ -11,7 +11,6 @@
 package com.ibm.wala.fixedpoint.impl;
 
 import com.ibm.wala.fixpoint.IVariable;
-import com.ibm.wala.util.debug.Assertions;
 
 
 /**
@@ -161,7 +160,6 @@ public abstract class UnaryStatement extends AbstractStatement {
   
   public IVariable[] getRHS() {
     // This should never be called ...use the more efficient getRightHandSide instead
-    Assertions.UNREACHABLE();
-    return null;
+    throw new UnsupportedOperationException();
   }
 }

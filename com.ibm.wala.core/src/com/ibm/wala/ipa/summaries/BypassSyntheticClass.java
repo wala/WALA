@@ -220,8 +220,7 @@ public class BypassSyntheticClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getDirectInterfaces()
    */
-  public Collection<IClass> getDirectInterfaces() {
-    // TODO Auto-generated method stub
+  public Collection<IClass> getDirectInterfaces() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

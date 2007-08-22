@@ -838,7 +838,10 @@ public class PropagationGraph implements IFixedPointSystem {
     return delegateGraph.containsNode(v);
   }
 
-  public void addStatement(IFixedPointStatement statement) throws UnimplementedError {
+  public void addStatement(IFixedPointStatement statement) throws IllegalArgumentException, UnimplementedError {
+    if (statement == null) {
+      throw new IllegalArgumentException("statement == null");
+    }
     if (statement instanceof UnaryStatement) {
       addStatement((UnaryStatement) statement);
     } else if (statement instanceof GeneralStatement) {

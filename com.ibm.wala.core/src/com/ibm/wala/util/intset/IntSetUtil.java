@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * Utilities for dealing with IntSets
@@ -52,10 +53,15 @@ public class IntSetUtil {
    * 
    * @param set
    * @return a new MutableIntSet object with the same value as set
+   * @throws UnimplementedError  if (not ( set instanceof com.ibm.wala.util.intset.SparseIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.BitVectorIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.BimodalMutableIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.DebuggingMutableIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.SemiSparseMutableIntSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.MutableSharedBitVectorIntSet ) )
+   * @throws IllegalArgumentException  if set == null
    */
-  public static MutableIntSet makeMutableCopy(IntSet set) {
+  public static MutableIntSet makeMutableCopy(IntSet set) throws IllegalArgumentException, UnimplementedError {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (set instanceof SparseIntSet) {
-      return new MutableSparseIntSet(set);
+      return MutableSparseIntSet.make(set);
     } else if (set instanceof BitVectorIntSet) {
       return new BitVectorIntSet(set);
     } else if (set instanceof BimodalMutableIntSet) {
@@ -209,17 +215,19 @@ public class IntSetUtil {
   }
 
   /**
-   * @param s
-   * @param j
    * @return a new sparse int set which adds j to s
+   * @throws IllegalArgumentException  if s == null
    */
-  public static IntSet add(IntSet s, int j) {
+  public static IntSet add(IntSet s, int j) throws IllegalArgumentException {
+    if (s == null) {
+      throw new IllegalArgumentException("s == null");
+    }
     if (s instanceof SparseIntSet) {
       SparseIntSet sis = (SparseIntSet) s;
       return SparseIntSet.add(sis, j);
     } else {
       // really slow.  optimize as needed.
-      MutableSparseIntSet result = new MutableSparseIntSet(s);
+      MutableSparseIntSet result = MutableSparseIntSet.make(s);
       result.add(j);
       return result;
     }

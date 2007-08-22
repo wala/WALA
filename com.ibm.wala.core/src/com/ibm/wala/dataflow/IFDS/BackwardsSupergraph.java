@@ -226,7 +226,7 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
-  public void removeAllIncidentEdges(Object node) {
+  public void removeAllIncidentEdges(Object node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -306,12 +306,12 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
     return "Backwards of delegate\n" + delegate;
   }
 
-  public void removeIncomingEdges(Object node) {
+  public void removeIncomingEdges(Object node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
     
   }
 
-  public void removeOutgoingEdges(T node) {
+  public void removeOutgoingEdges(T node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -348,8 +348,7 @@ public class BackwardsSupergraph<T,P> implements ISupergraph<T,P> {
     return delegate.getMaxNumber();
   }
 
-  public Iterator<T> iterateNodes(IntSet s) {
-    // TODO Auto-generated method stub
+  public Iterator<T> iterateNodes(IntSet s) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

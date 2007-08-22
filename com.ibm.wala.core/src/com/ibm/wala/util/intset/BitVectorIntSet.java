@@ -44,9 +44,10 @@ public final class BitVectorIntSet implements MutableIntSet {
     populationCount = UNDEFINED;
   }
 
-  public BitVectorIntSet(IntSet S) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(S != null);
+  public BitVectorIntSet(IntSet S) throws IllegalArgumentException {
+
+    if (S == null) {
+      throw new IllegalArgumentException("S == null");
     }
     copySet(S);
     this.hash = DeterministicHashCode.get();
@@ -55,7 +56,10 @@ public final class BitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSet#copySet(com.ibm.wala.util.intset.IntSet)
    */
-  public void copySet(IntSet set) {
+  public void copySet(IntSet set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (set instanceof BitVectorIntSet) {
       BitVectorIntSet S = (BitVectorIntSet) set;
       bitVector = new BitVector(S.bitVector);
@@ -108,8 +112,12 @@ public final class BitVectorIntSet implements MutableIntSet {
    * if the client doesn't care about the change or
    * the population count.
    * @param set
+   * @throws IllegalArgumentException  if set == null
    */
-  public void addAllOblivious(IntSet set) {
+  public void addAllOblivious(IntSet set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (set instanceof BitVectorIntSet) {
       BitVector B = ((BitVectorIntSet) set).bitVector;
       bitVector.or(B);
@@ -326,7 +334,10 @@ public final class BitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
    */
-  public boolean sameValue(IntSet that) throws UnimplementedError {
+  public boolean sameValue(IntSet that) throws IllegalArgumentException, UnimplementedError {
+    if (that == null) {
+      throw new IllegalArgumentException("that == null");
+    }
     if (that instanceof BitVectorIntSet) {
       BitVectorIntSet b = (BitVectorIntSet) that;
       return bitVector.sameBits(b.bitVector);
@@ -415,7 +426,10 @@ public final class BitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#containsAny(com.ibm.wala.util.intset.IntSet)
    */
-  public boolean containsAny(IntSet set) {
+  public boolean containsAny(IntSet set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (set instanceof BitVectorIntSet) {
       BitVectorIntSet b = (BitVectorIntSet) set;
       return !bitVector.intersectionEmpty(b.bitVector);
@@ -434,7 +448,10 @@ public final class BitVectorIntSet implements MutableIntSet {
    * @see com.ibm.wala.util.intset.MutableIntSet#addAllInIntersection(com.ibm.wala.util.intset.IntSet,
    *      com.ibm.wala.util.intset.IntSet)
    */
-  public boolean addAllInIntersection(IntSet other, IntSet filter) {
+  public boolean addAllInIntersection(IntSet other, IntSet filter) throws IllegalArgumentException {
+    if (other == null) {
+      throw new IllegalArgumentException("other == null");
+    }
     BitVectorIntSet o = new BitVectorIntSet(other);
     o.intersectWith(filter);
     return addAll(o);

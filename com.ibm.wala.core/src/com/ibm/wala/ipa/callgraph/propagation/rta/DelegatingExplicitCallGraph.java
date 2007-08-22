@@ -240,7 +240,7 @@ public class DelegatingExplicitCallGraph extends ExplicitCallGraph {
       if (superR == null) {
         return null;
       } else {
-        MutableSparseIntSet result = new MutableSparseIntSet(superR);
+        MutableSparseIntSet result = MutableSparseIntSet.make(superR);
         BitVectorIntSet allPossiblePreds = new BitVectorIntSet(superR);
         for (IntIterator it = superR.intIterator(); it.hasNext();) {
           int x = it.next();

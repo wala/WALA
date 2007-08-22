@@ -143,7 +143,7 @@ public class SparseVector<T> implements IVector<T> {
    * the iterator is active.
    */
   public IntIterator safeIterateIndices() {
-    return new MutableSparseIntSet(indices).intIterator();
+    return MutableSparseIntSet.make(indices).intIterator();
   }
 
   public void clear() {

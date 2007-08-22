@@ -433,9 +433,8 @@ public class BasicHeapGraph extends HeapGraph {
   /*
    * @see com.ibm.wala.util.graph.NodeManager#addNode(com.ibm.wala.util.graph.Node)
    */
-  public void addNode(Object n) {
+  public void addNode(Object n) throws UnimplementedError {
     Assertions.UNREACHABLE();
-
   }
 
   /*
@@ -449,7 +448,7 @@ public class BasicHeapGraph extends HeapGraph {
     Assertions.UNREACHABLE();
   }
 
-  public void removeEdge(Object from, Object to) {
+  public void removeEdge(Object from, Object to) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
@@ -495,7 +494,7 @@ public class BasicHeapGraph extends HeapGraph {
     return result.toString();
   }
 
-  public void removeIncomingEdges(Object node) {
+  public void removeIncomingEdges(Object node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 

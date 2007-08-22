@@ -81,7 +81,10 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     return result;
   }
 
-  public OrdinalSet<InstanceKey> getPointsToSet(PointerKey key) {
+  public OrdinalSet<InstanceKey> getPointsToSet(PointerKey key) throws IllegalArgumentException {
+    if (key == null) {
+      throw new IllegalArgumentException("key == null");
+    }
     IClass type = inferType(key);
     if (type == null) {
       return OrdinalSet.empty();

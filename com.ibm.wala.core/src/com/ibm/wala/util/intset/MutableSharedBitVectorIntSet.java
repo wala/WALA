@@ -49,7 +49,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       throw new IllegalArgumentException("set is null");
     }
     if (set.privatePart != null) {
-      this.privatePart = new MutableSparseIntSet(set.privatePart);
+      this.privatePart = MutableSparseIntSet.make(set.privatePart);
     }
     this.sharedPart = set.sharedPart;
   }
@@ -65,7 +65,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     if (s.size() == 0) {
       return;
     }
-    this.privatePart = new MutableSparseIntSet(s);
+    this.privatePart = MutableSparseIntSet.make(s);
     checkOverflow();
 
     if (PARANOID) {
@@ -97,7 +97,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       privatePart = null;
     } else if (s.size() < OVERFLOW) {
       sharedPart = null;
-      privatePart = new MutableSparseIntSet(s);
+      privatePart = MutableSparseIntSet.make(s);
     } else {
       sharedPart = BitVectorRepository.findOrCreateSharedSubset(s);
       if (sharedPart.size() == s.size()) {
@@ -106,7 +106,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
         BitVectorIntSet temp = new BitVectorIntSet(s);
         temp.removeAll(sharedPart);
         if (!temp.isEmpty()) {
-          privatePart = new MutableSparseIntSet(temp);
+          privatePart = MutableSparseIntSet.make(temp);
         } else {
           privatePart = null;
         }
@@ -142,7 +142,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
         sharedPart = BitVectorRepository.findOrCreateSharedSubset(temp);
         temp.removeAll(sharedPart);
         if (!temp.isEmpty())
-          privatePart = new MutableSparseIntSet(temp);
+          privatePart = MutableSparseIntSet.make(temp);
         else
           privatePart = null;
       } else {
@@ -154,7 +154,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
         sharedPart = BitVectorRepository.findOrCreateSharedSubset(temp);
         temp.removeAll(sharedPart);
         if (!temp.isEmpty())
-          privatePart = new MutableSparseIntSet(temp);
+          privatePart = MutableSparseIntSet.make(temp);
         else
           privatePart = null;
       }
@@ -322,7 +322,10 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#sameValue(com.ibm.wala.util.intset.IntSet)
    */
-  public boolean sameValue(IntSet that) throws UnimplementedError {
+  public boolean sameValue(IntSet that) throws IllegalArgumentException, UnimplementedError {
+    if (that == null) {
+      throw new IllegalArgumentException("that == null");
+    }
     if (that instanceof MutableSharedBitVectorIntSet) {
       return sameValue((MutableSharedBitVectorIntSet) that);
     } else if (that instanceof SparseIntSet) {
@@ -535,7 +538,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
                 if (privatePart.isSubset(that.privatePart)) {
                   return true;
                 } else {
-                  MutableSparseIntSet t = new MutableSparseIntSet(privatePart);
+                  MutableSparseIntSet t = MutableSparseIntSet.make(privatePart);
                   t.removeAll(that.privatePart);
                   if (t.isSubset(that.sharedPart)) {
                     return true;
@@ -566,7 +569,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     if (set instanceof MutableSharedBitVectorIntSet) {
       MutableSharedBitVectorIntSet other = (MutableSharedBitVectorIntSet) set;
       if (other.privatePart != null) {
-        this.privatePart = new MutableSparseIntSet(other.privatePart);
+        this.privatePart = MutableSparseIntSet.make(other.privatePart);
       } else {
         this.privatePart = null;
       }
@@ -655,7 +658,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     if (privatePart == null) {
       if (sharedPart == null) {
         if (!set.isEmpty()) {
-          privatePart = new MutableSparseIntSet(set);
+          privatePart = MutableSparseIntSet.make(set);
           sharedPart = null;
           checkOverflow();
           return true;
@@ -663,7 +666,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
           return false;
         }
       } else {
-        privatePart = new MutableSparseIntSet(set);
+        privatePart = MutableSparseIntSet.make(set);
         privatePart.removeAll(sharedPart);
         if (privatePart.isEmpty()) {
           privatePart = null;
@@ -698,7 +701,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     }
     if (isEmpty()) {
       if (set.privatePart != null) {
-        privatePart = new MutableSparseIntSet(set.privatePart);
+        privatePart = MutableSparseIntSet.make(set.privatePart);
       }
       sharedPart = set.sharedPart;
       return true;
@@ -751,7 +754,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
             // a heuristic: many times these are the same value,
             // so avoid looking up the shared subset in the bv repository
             if (temp.sameValue(other)) {
-              this.privatePart = new MutableSparseIntSet(set.privatePart);
+              this.privatePart = MutableSparseIntSet.make(set.privatePart);
               this.sharedPart = set.sharedPart;
             } else {
               // System.err.println("COPY " + this + " " + set);
@@ -875,7 +878,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
             privatePart = null;
             sharedPart = null;
           } else {
-            MutableSparseIntSet temp = new MutableSparseIntSet(set.privatePart);
+            MutableSparseIntSet temp = MutableSparseIntSet.make(set.privatePart);
             temp.intersectWith(this);
             sharedPart = null;
             if (temp.isEmpty()) {
@@ -933,10 +936,10 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       }
     } else {
       if (sharedPart == null) {
-        return new MutableSparseIntSet(privatePart);
+        return MutableSparseIntSet.make(privatePart);
       } else {
         /* privatePart != null, sharedPart != null */
-        MutableSparseIntSet result = new MutableSparseIntSet(privatePart);
+        MutableSparseIntSet result = MutableSparseIntSet.make(privatePart);
         result.addAll(sharedPart);
         return result;
       }
@@ -1051,7 +1054,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   private boolean addAllInIntersectionInternal(SparseIntSet other, IntSet filter) {
     if (sharedPart == null) {
       if (privatePart == null) {
-        privatePart = new MutableSparseIntSet(other);
+        privatePart = MutableSparseIntSet.make(other);
         privatePart.intersectWith(filter);
         if (privatePart.size() == 0) {
           privatePart = null;
@@ -1067,7 +1070,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
     } else {
       /** sharedPart != null */
       if (privatePart == null) {
-        privatePart = new MutableSparseIntSet(sharedPart);
+        privatePart = MutableSparseIntSet.make(sharedPart);
         sharedPart = null;
         boolean result = privatePart.addAllInIntersection(other, filter);
         checkOverflow();
@@ -1075,7 +1078,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
       } else {
         /** sharedPart != null, privatePart != null */
         // note that "other" is likely small
-        MutableSparseIntSet temp = new MutableSparseIntSet(other);
+        MutableSparseIntSet temp = MutableSparseIntSet.make(other);
         temp.intersectWith(filter);
         return addAll(temp);
       }

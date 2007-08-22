@@ -38,7 +38,10 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     this.densePart = densePart;
   }
 
-  public SemiSparseMutableIntSet(SemiSparseMutableIntSet set) {
+  public SemiSparseMutableIntSet(SemiSparseMutableIntSet set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     copySet(set);
   }
 
@@ -419,12 +422,15 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * Set the value of this to be the same as the value of set
    * 
-   * @param set
+   * @throws IllegalArgumentException  if set == null
    */
-  public void copySet(IntSet set) {
+  public void copySet(IntSet set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     if (set instanceof SemiSparseMutableIntSet) {
       SemiSparseMutableIntSet that = (SemiSparseMutableIntSet) set;
-      sparsePart = new MutableSparseIntSet(that.sparsePart);
+      sparsePart = MutableSparseIntSet.make(that.sparsePart);
       if (that.densePart == null) {
         densePart = null;
       } else {
@@ -446,10 +452,13 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * Add all members of set to this.
    * 
-   * @param set
    * @return true iff the value of this changes.
+   * @throws IllegalArgumentException  if set == null
    */
-  public boolean addAll(IntSet set) {
+  public boolean addAll(IntSet set) throws IllegalArgumentException {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
     boolean change = false;
     if (set instanceof SemiSparseMutableIntSet) {
       SemiSparseMutableIntSet that = (SemiSparseMutableIntSet) set;

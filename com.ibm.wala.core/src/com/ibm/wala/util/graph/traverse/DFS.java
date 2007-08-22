@@ -107,8 +107,12 @@ public class DFS {
    * @param G
    *          the graph containing n
    * @return Set
+   * @throws IllegalArgumentException  if G == null
    */
-  public static <T> Set<T> getReachableNodes(Graph<T> G) {
+  public static <T> Set<T> getReachableNodes(Graph<T> G) throws IllegalArgumentException {
+    if (G == null) {
+      throw new IllegalArgumentException("G == null");
+    }
     HashSet<T> result = HashSetFactory.make();
     Iterator<T> dfs = iterateFinishTime(G);
     while (dfs.hasNext()) {
@@ -178,12 +182,15 @@ public class DFS {
   }
 
   /**
-   * @param G
    * @param roots
    *          roots of traversal, in order to visit in outermost loop of DFS
    * @return iterator of nodes of G in order of DFS discover time
+   * @throws IllegalArgumentException  if roots == null
    */
-  public static <T> Iterator<T> iterateDiscoverTime(Graph<T> G, Iterator<T> roots) {
+  public static <T> Iterator<T> iterateDiscoverTime(Graph<T> G, Iterator<T> roots) throws IllegalArgumentException {
+    if (roots == null) {
+      throw new IllegalArgumentException("roots == null");
+    }
     if (G instanceof NumberedGraph) {
       return new NumberedDFSDiscoverTimeIterator<T>((NumberedGraph<T>) G, roots);
     } else {
@@ -208,8 +215,12 @@ public class DFS {
   /**
    * @param G
    * @return iterator of nodes of G in order of DFS finish time
+   * @throws IllegalArgumentException  if G == null
    */
-  public static <T> DFSFinishTimeIterator<T> iterateFinishTime(Graph<T> G) {
+  public static <T> DFSFinishTimeIterator<T> iterateFinishTime(Graph<T> G) throws IllegalArgumentException {
+    if (G == null) {
+      throw new IllegalArgumentException("G == null");
+    }
     if (G instanceof NumberedGraph) {
       return new NumberedDFSFinishTimeIterator<T>((NumberedGraph<T>) G);
     } else {

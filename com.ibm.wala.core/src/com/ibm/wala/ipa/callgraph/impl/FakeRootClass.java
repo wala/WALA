@@ -18,6 +18,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
@@ -143,8 +144,7 @@ public class FakeRootClass extends SyntheticClass {
   /*
    * @see com.ibm.wala.classLoader.IClass#getClassInitializer()
    */
-  public IMethod getClassInitializer() {
-    // TODO Auto-generated method stub
+  public IMethod getClassInitializer() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

@@ -12,6 +12,7 @@ package com.ibm.wala.util.intset;
 
 import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * A debugging factory that creates debugging bitsets that are implemented as
@@ -45,7 +46,7 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
     return make(backingStore);
   }
 
-  public MutableIntSet makeCopy(IntSet x) {
+  public MutableIntSet makeCopy(IntSet x) throws UnimplementedError {
     if (x instanceof DebuggingMutableIntSet) {
       DebuggingMutableIntSet db = (DebuggingMutableIntSet) x;
       MutableIntSet pr = primary.makeCopy(db.primaryImpl);

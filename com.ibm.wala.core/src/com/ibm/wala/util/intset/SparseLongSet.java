@@ -351,7 +351,10 @@ public class SparseLongSet implements LongSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#intersect(com.ibm.wala.util.intset.IntSet)
    */
-  public LongSet intersection(LongSet that) throws UnimplementedError {
+  public LongSet intersection(LongSet that) throws IllegalArgumentException, UnimplementedError {
+    if (that == null) {
+      throw new IllegalArgumentException("that == null");
+    }
     if (that instanceof SparseLongSet) {
       MutableSparseLongSet temp = new MutableSparseLongSet(this);
       temp.intersectWith((SparseLongSet) that);
@@ -403,7 +406,10 @@ public class SparseLongSet implements LongSet {
   /*
    * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
    */
-  public boolean isSubset(LongSet that) throws UnimplementedError {
+  public boolean isSubset(LongSet that) throws IllegalArgumentException, UnimplementedError {
+    if (that == null) {
+      throw new IllegalArgumentException("that == null");
+    }
     if (that instanceof SparseLongSet) {
       return isSubsetInternal((SparseLongSet) that);
     } else {
