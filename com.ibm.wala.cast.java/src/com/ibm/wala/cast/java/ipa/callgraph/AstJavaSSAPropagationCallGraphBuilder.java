@@ -99,7 +99,7 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
       Trace.println("IR of " + ir.getMethod());
       Trace.println(ir);
       Trace.println("TypeInference of " + ir.getMethod());
-      for (int i = 0; i < ir.getSymbolTable().getMaxValueNumber(); i++) {
+      for (int i = 0; i <= ir.getSymbolTable().getMaxValueNumber(); i++) {
         if (ti.isUndefined(i)) {
           Trace.println("  value " + i + " is undefined");
         } else {
