@@ -545,7 +545,7 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
    */
   private void addNodeConstantConstraints(CGNode node, IR ir) {
     SymbolTable symbolTable = ir.getSymbolTable();
-    for (int i = 1; i < symbolTable.getMaxValueNumber(); i++) {
+    for (int i = 1; i <= symbolTable.getMaxValueNumber(); i++) {
       if (symbolTable.isConstant(i)) {
         Object v = symbolTable.getConstantValue(i);
         if (!(v instanceof Number)) {
