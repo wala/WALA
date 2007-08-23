@@ -103,7 +103,7 @@ public class Util {
       appInterpreter = new CommandInterpreter(cha);
     }
 
-    return new ZeroXCFABuilder(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec(), ZeroXInstanceKeys.NONE);
+    return ZeroXCFABuilder.make(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec(), ZeroXInstanceKeys.NONE);
   }
 
   /**
@@ -135,7 +135,7 @@ public class Util {
       appInterpreter = new CommandInterpreter(cha);
     }
 
-    CallGraphBuilder builder = new OneCFABuilder(cha, options,cache, appSelector, appInterpreter, options.getReflectionSpec());
+    CallGraphBuilder builder = OneCFABuilder.make(cha, options,cache, appSelector, appInterpreter, options.getReflectionSpec());
     return builder;
   }
 
@@ -169,7 +169,7 @@ public class Util {
       appInterpreter = new CommandInterpreter(cha);
     }
 
-    return new ZeroXCFABuilder(cha, options, cache,appSelector, appInterpreter, options.getReflectionSpec(),
+    return ZeroXCFABuilder.make(cha, options, cache,appSelector, appInterpreter, options.getReflectionSpec(),
         ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
             | ZeroXInstanceKeys.SMUSH_STRINGS | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }
@@ -203,7 +203,7 @@ public class Util {
       appInterpreter = new CommandInterpreter(cha);
     }
 
-    return new ZeroXCFABuilder(cha, options, cache,appSelector, appInterpreter, options.getReflectionSpec(),
+    return ZeroXCFABuilder.make(cha, options, cache,appSelector, appInterpreter, options.getReflectionSpec(),
         ZeroXInstanceKeys.ALLOCATIONS);
   }
 
