@@ -109,7 +109,7 @@ public class BasicHeapGraph extends HeapGraph {
             }
           }
           int inumber = P.getInstanceKeyMapping().getMappedIndex((InstanceKey) N);
-          return (inumber == -1) ? -1 : inumber + pointerKeys.getMaximumIndex();
+          return (inumber == -1) ? -1 : inumber + pointerKeys.getMaximumIndex() + 1;
         }
       }
 
