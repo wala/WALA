@@ -37,9 +37,7 @@ import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.ipa.slicer.HeapStatement.ReturnCaller;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
-import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.*;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
 import com.ibm.wala.util.collections.Filter;
@@ -207,6 +205,10 @@ public class HeapReachingDefs {
         map.put(key, result);
       }
       return result;
+    }
+
+    public String toString() {
+      return delegate.toString();
     }
 
     public void clear() {
@@ -492,7 +494,7 @@ public class HeapReachingDefs {
 
     public UnaryOperator getEdgeTransferFunction(IBasicBlock src, IBasicBlock dst) {
       ExplodedBasicBlock s = (ExplodedBasicBlock) src;
-      if (s.getInstruction() != null && !(s.getInstruction() instanceof SSAInvokeInstruction)
+      if (s.getInstruction() != null && !(s.getInstruction() instanceof SSAAbstractInvokeInstruction)
           && !cfg.getNormalSuccessors(src).contains(dst)) {
         // if the edge only happens due to exceptional control flow, then no
         // heap locations
@@ -546,7 +548,7 @@ public class HeapReachingDefs {
         if (s == null) {
           return null;
         } else {
-          if (s instanceof SSAInvokeInstruction) {
+          if (s instanceof SSAAbstractInvokeInstruction) {
             // it's a normal statement ... we better be able to find it in the
             // domain.
             Statement st = ssaInstructionIndex2Statement.get(b.getLastInstructionIndex());
