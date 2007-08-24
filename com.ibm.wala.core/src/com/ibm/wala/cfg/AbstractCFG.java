@@ -634,7 +634,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return Iterator2Collection.toCollection(iterateNormalPredecessors(b));
   }
 
-  public IntSet getPredNodeNumbers(IBasicBlock node) {
+  public IntSet getPredNodeNumbers(IBasicBlock node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

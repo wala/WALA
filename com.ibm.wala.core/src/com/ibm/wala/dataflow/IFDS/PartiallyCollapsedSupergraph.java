@@ -264,8 +264,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       throw new IllegalArgumentException(
           "(n instanceof com.ibm.wala.cfg.IBasicBlock) and (not ( n instanceof com.ibm.wala.ipa.cfg.BasicBlockInContext ) )");
     }
-    if (n instanceof IBasicBlock) {
-      return partialIPFG.getCGNode((IBasicBlock) n);
+    if (n instanceof BasicBlockInContext) {
+      return partialIPFG.getCGNode((BasicBlockInContext) n);
     } else {
       return nodeManager.getProcOfCollapsedNode(n);
     }
@@ -294,9 +294,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      */
     private void computeTransverseEdges() {
       // compute transverse edges that originate from basic blocks
-      for (Iterator it = partialIPFG.iterator(); it.hasNext();) {
-        IBasicBlock bb = (IBasicBlock) it.next();
-        if (partialIPFG.hasCall((BasicBlockInContext) bb)) {
+      for (BasicBlockInContext bb:  partialIPFG) {
+        if (partialIPFG.hasCall(bb)) {
           Set targets = partialIPFG.getCallTargets(bb);
           for (Iterator it2 = targets.iterator(); it2.hasNext();) {
             CGNode n = (CGNode) it2.next();
@@ -851,8 +850,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isReturn(java.lang.Object)
    */
   public boolean isReturn(Object object) {
-    if (object instanceof IBasicBlock) {
-      return partialIPFG.isReturn(object);
+    if (object instanceof BasicBlockInContext) {
+      return partialIPFG.isReturn((BasicBlockInContext)object);
     } else {
       if (nodeManager.isCollapsedExit(object)) {
         CGNode node = getProcOf(object);

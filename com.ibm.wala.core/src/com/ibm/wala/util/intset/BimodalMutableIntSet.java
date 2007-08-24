@@ -220,7 +220,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
     return impl.max();
   }
 
-  public static BimodalMutableIntSet makeCopy(IntSet B) throws IllegalArgumentException {
+  public static BimodalMutableIntSet makeCopy(IntSet B) throws UnimplementedError, IllegalArgumentException {
     if (B == null) {
       throw new IllegalArgumentException("B == null");
     }

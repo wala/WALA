@@ -31,7 +31,10 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 public class OneCFABuilder extends CFABuilder {
 
   public static OneCFABuilder make(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) throws IllegalArgumentException {
+    if (options == null) {
+          throw new IllegalArgumentException("options == null");
+        }
     return new OneCFABuilder(cha, options, cache, appContextSelector, appContextInterpreter, reflect);
   }
 

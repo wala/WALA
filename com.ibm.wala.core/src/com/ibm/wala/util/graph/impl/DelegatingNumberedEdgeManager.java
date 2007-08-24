@@ -137,7 +137,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeAllIncidentEdges(T node) {
+  public void removeAllIncidentEdges(T node) throws UnimplementedError {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
@@ -148,7 +148,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeIncomingEdges(T node) {
+  public void removeIncomingEdges(T node) throws UnimplementedError {
     if (node == null) {
       throw new IllegalArgumentException("node cannot be null");
     }
@@ -159,7 +159,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeOutgoingEdges(T node) {
+  public void removeOutgoingEdges(T node) throws UnimplementedError {
     if (node == null) {
       throw new IllegalArgumentException("node cannot be null");
     }

@@ -213,7 +213,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     throw new UnsupportedOperationException();
   }
 
-  public void addNode(IBasicBlock n) {
+  public void addNode(IBasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

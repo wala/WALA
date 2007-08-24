@@ -356,7 +356,7 @@ public class SparseLongSet implements LongSet {
       throw new IllegalArgumentException("that == null");
     }
     if (that instanceof SparseLongSet) {
-      MutableSparseLongSet temp = new MutableSparseLongSet(this);
+      MutableSparseLongSet temp = MutableSparseLongSet.make(this);
       temp.intersectWith((SparseLongSet) that);
       return temp;
     } else {

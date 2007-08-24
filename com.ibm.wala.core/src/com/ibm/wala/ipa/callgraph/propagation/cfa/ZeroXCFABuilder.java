@@ -99,7 +99,10 @@ public class ZeroXCFABuilder extends CFABuilder {
 
   public static ZeroXCFABuilder make(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect,
-      int instancePolicy) {
+      int instancePolicy) throws IllegalArgumentException {
+    if (options == null) {
+      throw new IllegalArgumentException("options == null");
+    }
     return new ZeroXCFABuilder(cha, options, cache, appContextSelector, appContextInterpreter, reflect, instancePolicy);
   }
 

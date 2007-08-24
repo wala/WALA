@@ -158,7 +158,7 @@ public abstract class UnaryStatement extends AbstractStatement {
     return result;
   }
   
-  public IVariable[] getRHS() {
+  public IVariable[] getRHS() throws UnsupportedOperationException {
     // This should never be called ...use the more efficient getRightHandSide instead
     throw new UnsupportedOperationException();
   }

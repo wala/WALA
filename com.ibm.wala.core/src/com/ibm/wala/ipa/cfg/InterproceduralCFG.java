@@ -526,32 +526,32 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
       }
       BasicBlockInContext b = new BasicBlockInContext(N, bb);
       G.addNode(b);
-      if (hasCall(bb, cfg)) {
+      if (hasCall(b, cfg)) {
         hasCallVector.set(getNumber(b));
       }
     }
   }
 
   /**
-   * @param B
    * @return the original CFG from whence B came
+   * @throws IllegalArgumentException  if B == null
    */
-  public ControlFlowGraph getCFG(IBasicBlock B) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(B instanceof BasicBlockInContext);
+  public ControlFlowGraph getCFG(BasicBlockInContext B) throws IllegalArgumentException {
+    if (B == null) {
+      throw new IllegalArgumentException("B == null");
     }
     return getCFG(getCGNode(B));
   }
 
   /**
-   * @param B
    * @return the original CGNode from whence B came
+   * @throws IllegalArgumentException  if B == null
    */
-  public CGNode getCGNode(IBasicBlock B) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(B instanceof BasicBlockInContext);
+  public CGNode getCGNode(BasicBlockInContext B) throws IllegalArgumentException {
+    if (B == null) {
+      throw new IllegalArgumentException("B == null");
     }
-    return ((BasicBlockInContext) B).getNode();
+    return B.getNode();
   }
 
   /*
@@ -662,10 +662,9 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   /**
-   * @param B
    * @return true iff basic block B ends in a call instuction
    */
-  private boolean hasCall(IBasicBlock B, ControlFlowGraph cfg) {
+  private boolean hasCall(BasicBlockInContext B, ControlFlowGraph cfg) {
     IInstruction[] statements = cfg.getInstructions();
 
     int lastIndex = B.getLastInstructionIndex();
@@ -692,12 +691,9 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @throws IllegalArgumentException
    *             if B is null
    */
-  public Set<CGNode> getCallTargets(IBasicBlock B) {
+  public Set<CGNode> getCallTargets(BasicBlockInContext B) {
     if (B == null) {
       throw new IllegalArgumentException("B is null");
-    }
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(B instanceof BasicBlockInContext);
     }
     ControlFlowGraph cfg = getCFG(B);
     return getCallTargets(B, cfg, getCGNode(B));
@@ -814,11 +810,10 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     }
   };
 
-  public boolean isReturn(Object object) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(object instanceof BasicBlockInContext);
+  public boolean isReturn(BasicBlockInContext bb) throws IllegalArgumentException {
+    if (bb == null) {
+      throw new IllegalArgumentException("bb == null");
     }
-    BasicBlockInContext bb = (BasicBlockInContext) object;
     ControlFlowGraph cfg = getCFG(bb);
     for (Iterator it = cfg.getPredNodes(bb.getDelegate()); it.hasNext();) {
       IBasicBlock b = (IBasicBlock) it.next();

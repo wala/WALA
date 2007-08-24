@@ -152,7 +152,7 @@ public class SyntheticMethod implements IMethod {
     return new InducedCFG(getStatements(), this, Everywhere.EVERYWHERE);
   }
 
-  public BytecodeStream getBytecodeStream()  {
+  public BytecodeStream getBytecodeStream() throws UnsupportedOperationException  {
     throw new UnsupportedOperationException();
   }
 

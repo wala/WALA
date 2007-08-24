@@ -37,10 +37,12 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
    */
   private final static int INITIAL_NONEMPTY_SIZE = 2;
 
-  /**
-   * @param set
-   */
-  public MutableSparseLongSet(LongSet set) {
+
+  public static MutableSparseLongSet make(LongSet set) {
+    return new MutableSparseLongSet(set);
+  }
+
+  private MutableSparseLongSet(LongSet set) {
     super();
     copySet(set);
   }

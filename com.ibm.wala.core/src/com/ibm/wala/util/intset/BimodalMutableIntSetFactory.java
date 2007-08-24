@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import com.ibm.wala.util.debug.UnimplementedError;
+
 /**
  * 
  * An object that creates some bimodal mutable int sets.
@@ -41,7 +43,7 @@ public class BimodalMutableIntSetFactory implements MutableIntSetFactory {
   /*
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make(com.ibm.wala.util.intset.IntSet)
    */
-  public MutableIntSet makeCopy(IntSet x) throws IllegalArgumentException {
+  public MutableIntSet makeCopy(IntSet x) throws UnimplementedError, IllegalArgumentException {
     if (x == null) {
       throw new IllegalArgumentException("x == null");
     }

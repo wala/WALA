@@ -74,10 +74,15 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
    * implemented with a SimpleIntVector, and the 2nd and 3rd are implemented
    * with TwoLevelIntVector
    * @throws IllegalArgumentException  if implementation is null
+   * @throws IllegalArgumentException  if implementation.length == 0
    */
-  public BasicNaturalRelation(byte[] implementation, byte vectorImpl) {
+  public BasicNaturalRelation(byte[] implementation, byte vectorImpl) throws IllegalArgumentException {
+
     if (implementation == null) {
       throw new IllegalArgumentException("implementation is null");
+    }
+    if (implementation.length == 0) {
+      throw new IllegalArgumentException("implementation.length == 0");
     }
     smallStore = new IntVector[implementation.length];
     for (int i = 0; i < implementation.length; i++) {

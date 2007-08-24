@@ -543,11 +543,11 @@ public class TwoExitCFG implements ControlFlowGraph {
     return new NumberedNodeIterator<IBasicBlock>(s, this);
   }
 
-  public void removeIncomingEdges(IBasicBlock node) {
+  public void removeIncomingEdges(IBasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeOutgoingEdges(IBasicBlock node) {
+  public void removeOutgoingEdges(IBasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 

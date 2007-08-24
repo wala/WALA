@@ -52,8 +52,12 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
    *          an object to track nodes
    * @param normalCase
    *          what is the "normal" number of out edges for a node?
+   * @throws IllegalArgumentException  if normalCase < 0
    */
-  public SparseNumberedEdgeManager(NumberedNodeManager<T> nodeManager, int normalCase, byte delegateImpl) {
+  public SparseNumberedEdgeManager(NumberedNodeManager<T> nodeManager, int normalCase, byte delegateImpl) throws IllegalArgumentException {
+    if (normalCase < 0) {
+      throw new IllegalArgumentException("normalCase < 0");
+    }
     this.nodeManager = nodeManager;
     if (normalCase == 0) {
       successors = new BasicNaturalRelation(defaultImpl, delegateImpl);

@@ -217,7 +217,7 @@ public class ExplodedSupergraph<T> implements Graph<ExplodedSupergraphNode<T>> {
     return count;
   }
 
-  public void addEdge(ExplodedSupergraphNode src, ExplodedSupergraphNode dst) {
+  public void addEdge(ExplodedSupergraphNode src, ExplodedSupergraphNode dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
   

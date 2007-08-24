@@ -58,7 +58,10 @@ import com.ibm.wala.util.intset.IntPair;
 public class SSABuilder extends AbstractIntStackMachine {
 
   public static SSABuilder make(ShrikeCTMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
-      SymbolTable symbolTable, boolean buildLocalMap, boolean addPiNodes) {
+      SymbolTable symbolTable, boolean buildLocalMap, boolean addPiNodes) throws IllegalArgumentException {
+    if (scfg == null) {
+      throw new IllegalArgumentException("scfg == null");
+    }
     return new SSABuilder(method, cfg, scfg, instructions, symbolTable, buildLocalMap, addPiNodes);
   }
 
@@ -78,8 +81,8 @@ public class SSABuilder extends AbstractIntStackMachine {
    */
   private final SSA2LocalMap localMap;
 
-  private SSABuilder(ShrikeCTMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
-      SymbolTable symbolTable, boolean buildLocalMap, boolean addPiNodes) {
+  private SSABuilder(ShrikeCTMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions, SymbolTable symbolTable,
+      boolean buildLocalMap, boolean addPiNodes) {
     super(scfg);
     localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes(), maxLocals) : null;
     init(new SymbolTableMeeter(symbolTable, cfg, instructions, scfg), new SymbolicPropagator(scfg, instructions, symbolTable,
@@ -604,10 +607,10 @@ public class SSABuilder extends AbstractIntStackMachine {
         NewSiteReference ref = NewSiteReference.make(getCurrentProgramCounter(), t);
         if (t.isArrayType()) {
           int[] sizes = new int[t.getDimensionality()];
-          for (int i = 0; i<instruction.getArrayBoundsCount(); i++) {
+          for (int i = 0; i < instruction.getArrayBoundsCount(); i++) {
             sizes[i] = workingState.pop();
           }
-          for (int i = instruction.getArrayBoundsCount(); i< sizes.length; i++) {
+          for (int i = instruction.getArrayBoundsCount(); i < sizes.length; i++) {
             sizes[i] = symbolTable.getConstant(0);
           }
           emitInstruction(new SSANewInstruction(result, ref, sizes));
@@ -815,9 +818,9 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     /**
      * @param nInstructions
-     *          number of instructions in the bytecode for this method
+     *            number of instructions in the bytecode for this method
      * @param nBlocks
-     *          number of basic blocks in the CFG
+     *            number of basic blocks in the CFG
      */
     SSA2LocalMap(ShrikeCFG shrikeCfg, int nInstructions, int nBlocks, int maxLocals) {
       shrikeCFG = shrikeCfg;
@@ -862,9 +865,9 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     /**
      * @param index -
-     *          index into IR instruction array
+     *            index into IR instruction array
      * @param vn -
-     *          value number
+     *            value number
      */
     public String[] getLocalNames(int index, int vn) {
       try {
@@ -892,9 +895,9 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     /**
      * @param pc
-     *          a program counter (index into ShrikeBT instruction array)
+     *            a program counter (index into ShrikeBT instruction array)
      * @param vn
-     *          a value number
+     *            a value number
      * @return if we know that immediately after the given program counter, v_vn
      *         corresponds to some set of locals, then return an array of the
      *         local numbers. else return null.

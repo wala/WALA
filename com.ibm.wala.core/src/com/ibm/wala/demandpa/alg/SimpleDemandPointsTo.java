@@ -56,6 +56,7 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
 
 /**
@@ -74,7 +75,7 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
   }
 
   @SuppressWarnings("unchecked")
-  public Collection<InstanceKey> getPointsTo(PointerKey pk) {
+  public Collection<InstanceKey> getPointsTo(PointerKey pk) throws UnimplementedError {
 
     Assertions._assert(pk instanceof LocalPointerKey, "we only handle locals");
     LocalPointerKey lpk = (LocalPointerKey) pk;
