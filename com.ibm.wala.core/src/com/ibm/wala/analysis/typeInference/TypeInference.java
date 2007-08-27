@@ -661,7 +661,13 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     return ir;
   }
 
+  /**
+   * Return the type computed for a particular value number
+   */
   public TypeAbstraction getType(int valueNumber) {
+    if (valueNumber < 0) {
+      throw new IllegalArgumentException("bad value number " + valueNumber);
+    }
     if (Assertions.verifyAssertions) {
       if (getVariable(valueNumber) == null) {
         Assertions._assert(getVariable(valueNumber) != null, "null variable for value number " + valueNumber);
