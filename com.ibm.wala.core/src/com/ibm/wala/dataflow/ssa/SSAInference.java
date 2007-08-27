@@ -146,6 +146,9 @@ public abstract class SSAInference extends DefaultFixedPointSolver {
    * or null if none found.
    */
   protected IVariable getVariable(int valueNumber) {
+    if (valueNumber < 0) {
+      throw new IllegalArgumentException("Illegal valueNumber " + valueNumber);
+    }
     if (DEBUG) {
       Trace.println("getVariable for " + valueNumber + " returns " + vars[valueNumber]);
     }
