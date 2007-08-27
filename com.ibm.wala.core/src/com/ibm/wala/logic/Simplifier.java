@@ -69,7 +69,7 @@ public class Simplifier {
       return Collections.singleton(s);
     }
   }
-  
+
   /**
    * Eliminate quantifiers, by substituting every possible constant value for a
    * quantified variable
@@ -91,7 +91,8 @@ public class Simplifier {
    * 
    * This is inefficient.
    */
-  public static Collection<IFormula> simplify(Collection<IFormula> s, Collection<? extends IFormula> theory, ISemiDecisionProcedure dec) {
+  public static Collection<IFormula> simplify(Collection<IFormula> s, Collection<? extends IFormula> theory,
+      ISemiDecisionProcedure dec) {
     boolean changed = true;
     while (changed) {
       changed = false;
@@ -120,7 +121,8 @@ public class Simplifier {
   /**
    * Simplify the set s based on simple propositional logic.
    */
-  public static Collection<IFormula> propositionalSimplify(Collection<IFormula> s, Collection<? extends IFormula> t, ISemiDecisionProcedure dec ) {
+  public static Collection<IFormula> propositionalSimplify(Collection<IFormula> s, Collection<? extends IFormula> t,
+      ISemiDecisionProcedure dec) {
     debug1(s, t);
     Collection<ICNFFormula> cs = toCNF(s);
     Collection<ICNFFormula> ct = toCNF(t);
@@ -155,8 +157,11 @@ public class Simplifier {
       otherFacts.addAll(collectClauses(Collections.singleton(f)));
       otherFacts.remove(d);
       otherFacts.removeAll(removedClauses);
-      
-      
+
+      if (d instanceof Disjunction) {
+        d = simplifyDisjunction((Disjunction) d, otherFacts, dec);
+      }
+
       if (dec.isContradiction(d, otherFacts)) {
         return Collections.singleton(BooleanConstantFormula.FALSE);
       } else if (facts.contains(d) || dec.isTautology(d, otherFacts)) {
@@ -169,6 +174,20 @@ public class Simplifier {
       return Collections.singleton(BooleanConstantFormula.TRUE);
     }
     return result;
+  }
+
+  private static IMaxTerm simplifyDisjunction(Disjunction d, Collection<IMaxTerm> otherFacts, ISemiDecisionProcedure dec) {
+    Collection<IFormula> result = HashSetFactory.make();
+    for (IFormula f : d.getClauses()) {
+      if (dec.isContradiction(f, otherFacts)) {
+        result.add(BooleanConstantFormula.FALSE);
+      } else if (dec.isTautology(f, otherFacts)) {
+        result.add(BooleanConstantFormula.TRUE);
+      } else {
+        result.add(f);
+      }
+    }
+    return Disjunction.make(result);
   }
 
   /**
@@ -340,7 +359,6 @@ public class Simplifier {
     return Wildcard.make(max + 1);
   }
 
-
   /**
    * in formula f, substitute the term t2 for all free occurrences of t1
    * 
@@ -369,7 +387,7 @@ public class Simplifier {
       RelationFormula r = (RelationFormula) formula;
       List<ITerm> terms = new LinkedList<ITerm>();
       for (ITerm t : r.getTerms()) {
-        Map<Wildcard,ITerm> binding = HashMapFactory.make();
+        Map<Wildcard, ITerm> binding = HashMapFactory.make();
         terms.add(substitute(t, t1, t2, binding));
       }
       return RelationFormula.make(r.getRelation(), terms);
@@ -505,7 +523,8 @@ public class Simplifier {
    * Attempt to distribute the NOT from a NotFormula
    * 
    * @return the original formula if the distribution is unsuccessful
-   * @throws IllegalArgumentException  if f == null
+   * @throws IllegalArgumentException
+   *             if f == null
    */
   public static IFormula distributeNot(NotFormula f) throws IllegalArgumentException {
     if (f == null) {
