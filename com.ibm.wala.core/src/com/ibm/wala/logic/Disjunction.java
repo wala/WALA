@@ -56,19 +56,10 @@ public class Disjunction extends AbstractBinaryFormula implements IMaxTerm {
   }
 
   public String prettyPrint(ILogicDecorator d) {
-    if (clauses.size() == 1) {
-      return getF1().prettyPrint(d);
-    } else {
-      StringBuffer result = new StringBuffer();
-      result.append(" ( ");
-      result.append(getF1().prettyPrint(d));
-      result.append(" ) ");
-      result.append(d.prettyPrint(getConnective()));
-      result.append(" ( ");
-      result.append(getF2().prettyPrint(d));
-      result.append(" )");
-      return result.toString();
+    if (d == null) {
+      throw new IllegalArgumentException("d == null");
     }
+    return d.prettyPrint(this);
   }
 
   @Override
