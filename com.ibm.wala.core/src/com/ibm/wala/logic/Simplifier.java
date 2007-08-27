@@ -187,7 +187,13 @@ public class Simplifier {
         result.add(f);
       }
     }
-    return Disjunction.make(result);
+    if (result.size() == 1) {
+      IFormula f = result.iterator().next();
+      assert f instanceof IMaxTerm;
+      return (IMaxTerm)f;
+    } else {
+      return Disjunction.make(result);
+    }
   }
 
   /**
