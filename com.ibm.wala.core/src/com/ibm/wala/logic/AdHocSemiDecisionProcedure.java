@@ -13,7 +13,6 @@ package com.ibm.wala.logic;
 import java.util.Collection;
 
 import com.ibm.wala.logic.ILogicConstants.BinaryConnective;
-import com.ibm.wala.logic.ILogicConstants.Quantifier;
 
 /**
  * Ad-hoc decision logic.
@@ -74,34 +73,35 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
     if (AdHocSemiDecisionProcedure.normalize(axiom).equals(AdHocSemiDecisionProcedure.normalize(f))) {
       return true;
     }
-    if (axiom.getKind().equals(IFormula.Kind.QUANTIFIED)) {
-      QuantifiedFormula q = (QuantifiedFormula) axiom;
-  
-      if (!Simplifier.innerStructureMatches(q, f)) {
-        return false;
-      }
-  
-      if (q.getQuantifier().equals(Quantifier.FORALL)) {
-        AbstractVariable bound = q.getBoundVar();
-        IFormula body = q.getFormula();
-        // this could be inefficient. find a better algorithm.
-        for (ITerm t : f.getAllTerms()) {
-          if (q.getFreeVariables().contains(t)) {
-            AbstractVariable fresh = Simplifier.makeFreshIntVariable(q, f);
-            IFormula testBody = Simplifier.substitute(body, bound, fresh);
-            IFormula testF = Simplifier.substitute(f, t, fresh);
-            if (implies(testBody, testF)) {
-              return true;
-            }
-          } else {
-            IFormula testBody = Simplifier.substitute(body, bound, t);
-            if (implies(testBody, f)) {
-              return true;
-            }
-          }
-        }
-      }
-    }
+    // This is way too slow.  give up on it.
+//    if (axiom.getKind().equals(IFormula.Kind.QUANTIFIED)) {
+//      QuantifiedFormula q = (QuantifiedFormula) axiom;
+//  
+//      if (!Simplifier.innerStructureMatches(q, f)) {
+//        return false;
+//      }
+//  
+//      if (q.getQuantifier().equals(Quantifier.FORALL)) {
+//        AbstractVariable bound = q.getBoundVar();
+//        IFormula body = q.getFormula();
+//        // this could be inefficient. find a better algorithm.
+//        for (ITerm t : f.getAllTerms()) {
+//          if (q.getFreeVariables().contains(t)) {
+//            AbstractVariable fresh = Simplifier.makeFreshIntVariable(q, f);
+//            IFormula testBody = Simplifier.substitute(body, bound, fresh);
+//            IFormula testF = Simplifier.substitute(f, t, fresh);
+//            if (implies(testBody, testF)) {
+//              return true;
+//            }
+//          } else {
+//            IFormula testBody = Simplifier.substitute(body, bound, t);
+//            if (implies(testBody, f)) {
+//              return true;
+//            }
+//          }
+//        }
+//      }
+//    }
     return false;
   }
 
