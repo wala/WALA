@@ -35,7 +35,7 @@ public class JavaLauncher extends Launcher {
   /**
    * Paths that will be added to the current process's classpath
    */
-  private final List<String> xtraClasspath = new ArrayList<String>();;
+  private final List<String> xtraClasspath = new ArrayList<String>();
 
   private Thread stdOutDrain;
 
@@ -129,19 +129,15 @@ public class JavaLauncher extends Launcher {
   }
 
   private String makeClasspath() {
-    String cp = " -classpath " + System.getProperty("java.class.path");
+    String cp = System.getProperty("java.class.path");
     if (getXtraClassPath() == null || getXtraClassPath().isEmpty()) {
-      return cp;
+      return " -classpath \"" + cp + " \"";
     } else {
-      cp += ";";
       for (Iterator it = getXtraClassPath().iterator(); it.hasNext();) {
+        cp += ";";
         cp += (String) it.next();
-        if (it.hasNext()) {
-          cp += ";";
-        }
       }
-      cp += " ";
-      return cp;
+      return " -classpath \"" + cp + " \"";
     }
   }
 }
