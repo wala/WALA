@@ -171,10 +171,6 @@ public class IntSetUtil {
   }
 
   /**
-   * @param data
-   * @param key
-   * @param low
-   * @param high
    * @return index \in [low,high] s.t. data[index] = key, or -1 if not found
    */
   public static int binarySearch(int[] data, int key, int low, int high) throws IllegalArgumentException {

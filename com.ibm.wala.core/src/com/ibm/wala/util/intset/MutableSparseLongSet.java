@@ -38,7 +38,10 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   private final static int INITIAL_NONEMPTY_SIZE = 2;
 
 
-  public static MutableSparseLongSet make(LongSet set) {
+  public static MutableSparseLongSet make(LongSet set) throws UnimplementedError {
+    if (!(set instanceof SparseLongSet)) {
+      Assertions.UNREACHABLE("implement me");
+    }
     return new MutableSparseLongSet(set);
   }
 
