@@ -47,8 +47,20 @@ import com.ibm.wala.classLoader.IField;
  */
 public interface FieldRefinePolicy {
 
+  /**
+   * 
+   * @param field
+   * @return <code>true</code> if accesses to <code>field</code> should be
+   *         refined. Otherwise, <code>false</code> is returned, indicating
+   *         that the field can be handled with match edges.
+   */
   public boolean shouldRefine(IField field);
 
+  /**
+   * 
+   * @return <code>true</code> if more refinement can be done, and hence
+   *         another pass can be attempted; <code>false</code> otherwise
+   */
   public boolean nextPass();
 
 }

@@ -41,13 +41,26 @@ import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
 
 /**
  * Interface for specifying a policy for refining the call graph.
+ * 
  * @author Manu Sridharan
- *
+ * 
  */
 public interface CallGraphRefinePolicy {
 
+  /**
+   * 
+   * @param callSiteAndCGNode
+   * @return <code>true</code> if the analysis should attempt to determine
+   *         targets for the virtual call on-the-fly, and <code>false</code>
+   *         otherwise
+   */
   public boolean shouldRefine(CallSiteAndCGNode callSiteAndCGNode);
-  
+
+  /**
+   * 
+   * @return <code>true</code> if more refinement can be done, and hence
+   *         another pass can be attempted; <code>false</code> otherwise
+   */
   public boolean startNewPass();
 
 }

@@ -54,6 +54,10 @@ public class SinglePassRefinementPolicy implements RefinementPolicy {
     this.cgRefinePolicy = cgRefinePolicy;
   }
 
+
+  /**
+   * @return {@link Integer#MAX_VALUE}, setting no traversal budget
+   */
   public int getBudgetForPass(int passNum) {
     return Integer.MAX_VALUE;
   }
@@ -66,6 +70,9 @@ public class SinglePassRefinementPolicy implements RefinementPolicy {
     return fieldRefinePolicy;
   }
 
+  /**
+   * @return <code>1</code>, since we only want a single pass 
+   */
   public int getNumPasses() {
     return 1;
   }

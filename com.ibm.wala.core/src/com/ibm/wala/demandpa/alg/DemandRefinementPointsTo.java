@@ -44,7 +44,6 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -123,7 +122,6 @@ import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
 import com.ibm.wala.util.intset.OrdinalSet;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
-
 /**
  * Demand-driven refinement-based points-to analysis.
  * 
@@ -150,13 +148,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   private RefinementPolicyFactory refinementPolicyFactory;
 
   /**
-   * a {@link HeapModel} that delegates to another except for 
-   * pointer keys representing <code>this</code> parameters of methods,
-   * for which it returns a {@link FilteredPointerKey} for the type of
-   * the parameter
+   * a {@link HeapModel} that delegates to another except for pointer keys
+   * representing <code>this</code> parameters of methods, for which it
+   * returns a {@link FilteredPointerKey} for the type of the parameter
+   * 
    * @see #getPointerKeyForLocal(CGNode, int)
    * @author manu
-   *
+   * 
    */
   private static class FilteringHeapModel implements HeapModel {
 
@@ -275,8 +273,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     super(cg, new FilteringHeapModel(model, cha), fam, cha, options);
     this.stateMachineFactory = stateMachineFactory;
     g = new DemandPointerFlowGraph(cg, this.heapModel, fam, cha);
-    this.refinementPolicyFactory = new SinglePassRefinementPolicy.Factory(new NeverRefineFieldsPolicy(),
-        new NeverRefineCGPolicy());
+    this.refinementPolicyFactory = new SinglePassRefinementPolicy.Factory(new NeverRefineFieldsPolicy(), new NeverRefineCGPolicy());
   }
 
   public static enum PointsToResult {
@@ -295,7 +292,25 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     stateMachine = stateMachineFactory.make();
   }
 
-  public Pair<PointsToResult, Collection<InstanceKey>> getPointsTo(PointerKey pk, Predicate<Collection<InstanceKey>> p2setPred) throws IllegalArgumentException {
+  /**
+   * compute a points-to set for a pointer key, aiming to satisfy some predicate
+   * 
+   * @param pk
+   *            the pointer key
+   * @param p2setPred
+   *            the desired predicate that the points-to set should ideally
+   *            satisfy
+   * @return a pair consisting of (1) a {@link PointsToResult} indicating
+   *         whether a points-to set satisfying the predicate was computed, and
+   *         (2) the last computed points-to set for the variable (possibly
+   *         <code>null</code> if no points-to set could be computed in the
+   *         budget)
+   * @throws IllegalArgumentException
+   *             if <code>pk</code> is not a {@link LocalPointerKey}; to
+   *             eventually be fixed
+   */
+  public Pair<PointsToResult, Collection<InstanceKey>> getPointsTo(PointerKey pk, Predicate<Collection<InstanceKey>> p2setPred)
+      throws IllegalArgumentException {
     if (!(pk instanceof com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)) {
       throw new IllegalArgumentException("only locals for now");
     }
@@ -362,7 +377,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
   /**
    * @return the points-to set of <code>pk</code>, or <code>null</code> if
-   * the points-to set can't be computed in the allocated budget
+   *         the points-to set can't be computed in the allocated budget
    */
   public Collection<InstanceKey> getPointsTo(PointerKey pk) {
     return getPointsTo(pk, Predicate.<Collection<InstanceKey>> falsePred()).snd;
@@ -485,7 +500,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
   }
-
 
   /**
    * Points-to analysis algorithm code.
@@ -693,11 +707,12 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * 
      * @param curPkAndState
      * @param predPk
-     * @param label the label of the edge from curPk to predPk (must be barred)
-     * @return those {@link PointerKeyAndState}s whose points-to sets have
-     * been queried, such that the {@link PointerKey} is predPk, and 
-     * transitioning from its state on <code>label.bar()</code> yields the
-     * state of <code>curPkAndState</code>  
+     * @param label
+     *            the label of the edge from curPk to predPk (must be barred)
+     * @return those {@link PointerKeyAndState}s whose points-to sets have been
+     *         queried, such that the {@link PointerKey} is predPk, and
+     *         transitioning from its state on <code>label.bar()</code> yields
+     *         the state of <code>curPkAndState</code>
      */
     Collection<PointerKeyAndState> matchingPToQueried(PointerKeyAndState curPkAndState, PointerKey predPk, IFlowLabel label) {
       Collection<PointerKeyAndState> ret = ArraySet.make();
