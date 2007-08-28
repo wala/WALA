@@ -17,13 +17,10 @@ import junit.framework.TestCase;
 
 import com.ibm.wala.logic.AdHocSemiDecisionProcedure;
 import com.ibm.wala.logic.BinaryFormula;
-import com.ibm.wala.logic.BinaryFunction;
 import com.ibm.wala.logic.BinaryRelation;
 import com.ibm.wala.logic.BooleanConstant;
 import com.ibm.wala.logic.BooleanConstantFormula;
-import com.ibm.wala.logic.FunctionTerm;
 import com.ibm.wala.logic.IFormula;
-import com.ibm.wala.logic.IntConstant;
 import com.ibm.wala.logic.IntVariable;
 import com.ibm.wala.logic.NotFormula;
 import com.ibm.wala.logic.QuantifiedFormula;
@@ -129,29 +126,30 @@ public class SimplifyTest extends TestCase {
     assertTrue(c.iterator().next().equals(BooleanConstantFormula.FALSE));
   }
 
-  /**
-   * before: v1 = 0 theory: 
-   * FORALL v1. v1 = 0 
-   * after : true
-   */
-  public void test5() {
-    IntVariable v = IntVariable.make(1);
-    IFormula f = RelationFormula.makeEquals(v, 0);
-    System.out.println("before: " + f);
-    assertTrue(f != null);
-
-    Collection<IFormula> c = Collections.singleton(f);
-    Collection<IFormula> t = HashSetFactory.make();
-
-    IFormula axiom = QuantifiedFormula.forall(v, f);
-    t.add(axiom);
-    c = Simplifier.simplify(c, t, AdHocSemiDecisionProcedure.singleton());
-    for (IFormula x : c) {
-      System.out.println("after : " + x);
-    }
-    assertTrue(c.size() == 1);
-    assertTrue(c.iterator().next().equals(BooleanConstantFormula.TRUE));
-  }
+  // this simplification is disabled; doesn't always make sense.
+//  /**
+//   * before: v1 = 0 theory: 
+//   * FORALL v1. v1 = 0 
+//   * after : true
+//   */
+//  public void test5() {
+//    IntVariable v = IntVariable.make(1);
+//    IFormula f = RelationFormula.makeEquals(v, 0);
+//    System.out.println("before: " + f);
+//    assertTrue(f != null);
+//
+//    Collection<IFormula> c = Collections.singleton(f);
+//    Collection<IFormula> t = HashSetFactory.make();
+//
+//    IFormula axiom = QuantifiedFormula.forall(v, f);
+//    t.add(axiom);
+//    c = Simplifier.simplify(c, t, AdHocSemiDecisionProcedure.singleton());
+//    for (IFormula x : c) {
+//      System.out.println("after : " + x);
+//    }
+//    assertTrue(c.size() == 1);
+//    assertTrue(c.iterator().next().equals(BooleanConstantFormula.TRUE));
+//  }
 //
 //  /**
 //   * before: foo(v1,v1) 
@@ -289,29 +287,30 @@ public class SimplifyTest extends TestCase {
 //    assertTrue(c.iterator().next().equals(BooleanConstantFormula.TRUE));
 //  }
   
-  /**
-   * before: foo(3,4) == 4
-   * theory: FORALL v1. FORALL v2. foo(v1, v2) == v2 
-   * after : true
-   */
-  public void test11() {
-    BinaryFunction foo = BinaryFunction.make("foo");
-    IFormula f = RelationFormula.makeEquals(FunctionTerm.make(foo,IntConstant.make(3), IntConstant.make(4)), IntConstant.make(4));
-    System.out.println("before: " + f);
-    assertTrue(f != null);
-
-    Collection<IFormula> c = Collections.singleton(f);
-    Collection<IFormula> t = HashSetFactory.make();
-    IntVariable v1 = IntVariable.make(1);
-    IntVariable v2 = IntVariable.make(2);
-    IFormula g = RelationFormula.makeEquals(FunctionTerm.make(foo,v1, v2), v2);
-    IFormula axiom = QuantifiedFormula.forall(v1, v2, g);
-    t.add(axiom);
-    c = Simplifier.simplify(c, t, AdHocSemiDecisionProcedure.singleton());
-    for (IFormula x : c) {
-      System.out.println("after : " + x);
-    }
-    assertTrue(c.size() == 1);
-    assertTrue(c.iterator().next().equals(BooleanConstantFormula.TRUE));
-  }
+  // this simplification is disabled. doesn't always make sense.
+//  /**
+//   * before: foo(3,4) == 4
+//   * theory: FORALL v1. FORALL v2. foo(v1, v2) == v2 
+//   * after : true
+//   */
+//  public void test11() {
+//    BinaryFunction foo = BinaryFunction.make("foo");
+//    IFormula f = RelationFormula.makeEquals(FunctionTerm.make(foo,IntConstant.make(3), IntConstant.make(4)), IntConstant.make(4));
+//    System.out.println("before: " + f);
+//    assertTrue(f != null);
+//
+//    Collection<IFormula> c = Collections.singleton(f);
+//    Collection<IFormula> t = HashSetFactory.make();
+//    IntVariable v1 = IntVariable.make(1);
+//    IntVariable v2 = IntVariable.make(2);
+//    IFormula g = RelationFormula.makeEquals(FunctionTerm.make(foo,v1, v2), v2);
+//    IFormula axiom = QuantifiedFormula.forall(v1, v2, g);
+//    t.add(axiom);
+//    c = Simplifier.simplify(c, t, AdHocSemiDecisionProcedure.singleton());
+//    for (IFormula x : c) {
+//      System.out.println("after : " + x);
+//    }
+//    assertTrue(c.size() == 1);
+//    assertTrue(c.iterator().next().equals(BooleanConstantFormula.TRUE));
+//  }
 }
