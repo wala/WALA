@@ -18,7 +18,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author sfink
- *  
+ * 
  */
 public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
   private final int result;
@@ -29,22 +29,24 @@ public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new SSAArrayLoadInstruction(
-      defs == null ? result : defs[0],
-      uses == null ? getArrayRef() : uses[0],
-      uses == null ? getIndex() : uses[1], 
-      getDeclaredType());
+  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+    if (defs.length == 0) {
+      throw new IllegalArgumentException("defs.length == 0");
+    }
+    return new SSAArrayLoadInstruction(defs == null ? result : defs[0], uses == null ? getArrayRef() : uses[0],
+        uses == null ? getIndex() : uses[1], getDeclaredType());
   }
-    
+
   @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + " = arrayload " + getValueString(symbolTable, d, getArrayRef()) + "[" + getValueString(symbolTable, d, getIndex()) + "]";
+    return getValueString(symbolTable, d, result) + " = arrayload " + getValueString(symbolTable, d, getArrayRef()) + "["
+        + getValueString(symbolTable, d, getIndex()) + "]";
   }
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException  if v is null
+   * @throws IllegalArgumentException
+   *             if v is null
    */
   @Override
   public void visit(IVisitor v) {
