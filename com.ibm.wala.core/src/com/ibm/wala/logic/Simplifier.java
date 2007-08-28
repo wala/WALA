@@ -17,10 +17,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.ibm.wala.logic.ILogicConstants.Quantifier;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntPair;
 
@@ -93,28 +91,29 @@ public class Simplifier {
    */
   public static Collection<IFormula> simplify(Collection<IFormula> s, Collection<? extends IFormula> theory,
       ISemiDecisionProcedure dec) {
-    boolean changed = true;
-    while (changed) {
-      changed = false;
-      Collection<IFormula> alreadyUsed = HashSetFactory.make();
-      Pair<ITerm, ITerm> substitution = getNextEqualitySubstitution(s, theory, alreadyUsed);
-      while (substitution != null) {
-        Collection<IFormula> temp = HashSetFactory.make();
-        for (IFormula f : s) {
-          if (!defines(f, substitution.fst)) {
-            IFormula f2 = substitute(f, substitution.fst, substitution.snd);
-            temp.add(f2);
-            if (!f.equals(f2)) {
-              changed = true;
-            }
-          } else {
-            temp.add(f);
-          }
-        }
-        s = temp;
-        substitution = getNextEqualitySubstitution(s, theory, alreadyUsed);
-      }
-    }
+    // the following is ad hoc and bogus.
+//    boolean changed = true;
+//    while (changed) {
+//      changed = false;
+//      Collection<IFormula> alreadyUsed = HashSetFactory.make();
+//      Pair<ITerm, ITerm> substitution = getNextEqualitySubstitution(s, theory, alreadyUsed);
+//      while (substitution != null) {
+//        Collection<IFormula> temp = HashSetFactory.make();
+//        for (IFormula f : s) {
+//          if (!defines(f, substitution.fst)) {
+//            IFormula f2 = substitute(f, substitution.fst, substitution.snd);
+//            temp.add(f2);
+//            if (!f.equals(f2)) {
+//              changed = true;
+//            }
+//          } else {
+//            temp.add(f);
+//          }
+//        }
+//        s = temp;
+//        substitution = getNextEqualitySubstitution(s, theory, alreadyUsed);
+//      }
+//    }
     return propositionalSimplify(s, theory, dec);
   }
 
@@ -278,92 +277,95 @@ public class Simplifier {
     return IntVariable.make(max + 1);
   }
 
-  /**
-   * Is f of the form t = rhs?
-   */
-  private static boolean defines(IFormula f, ITerm t) {
-    if (f.getKind().equals(IFormula.Kind.RELATION)) {
-      RelationFormula r = (RelationFormula) f;
-      if (r.getRelation().equals(BinaryRelation.EQUALS)) {
-        return r.getTerms().get(0).equals(t);
-      }
-    }
-    return false;
-  }
+//  /**
+//   * Is f of the form t = rhs?
+//   */
+//  private static boolean defines(IFormula f, ITerm t) {
+//    if (f.getKind().equals(IFormula.Kind.RELATION)) {
+//      RelationFormula r = (RelationFormula) f;
+//      if (r.getRelation().equals(BinaryRelation.EQUALS)) {
+//        return r.getTerms().get(0).equals(t);
+//      }
+//    }
+//    return false;
+//  }
+//
+//  /**
+//   * does the structure of some formula f suggest an immediate substitution to
+//   * simplify the system, based on theory of equality?
+//   * 
+//   * @return a pair (p1, p2) meaning "substitute p2 for p1"
+//   */
+//  private static Pair<ITerm, ITerm> getNextEqualitySubstitution(Collection<IFormula> s, Collection<? extends IFormula> theory,
+//      Collection<IFormula> alreadyUsed) {
+//    Collection<IFormula> candidates = HashSetFactory.make();
+//    candidates.addAll(s);
+//    candidates.addAll(theory);
+//    for (IFormula f : candidates) {
+//      if (!alreadyUsed.contains(f)) {
+//        Pair<ITerm, ITerm> substitution = equalitySuggestsSubstitution(f);
+//        if (substitution != null) {
+//          alreadyUsed.add(f);
+//          return substitution;
+//        }
+//      }
+//    }
+//    return null;
+//  }
 
-  /**
-   * does the structure of some formula f suggest an immediate substitution to
-   * simplify the system, based on theory of equality?
-   * 
-   * @return a pair (p1, p2) meaning "substitute p2 for p1"
-   */
-  private static Pair<ITerm, ITerm> getNextEqualitySubstitution(Collection<IFormula> s, Collection<? extends IFormula> theory,
-      Collection<IFormula> alreadyUsed) {
-    Collection<IFormula> candidates = HashSetFactory.make();
-    candidates.addAll(s);
-    candidates.addAll(theory);
-    for (IFormula f : candidates) {
-      if (!alreadyUsed.contains(f)) {
-        Pair<ITerm, ITerm> substitution = equalitySuggestsSubstitution(f);
-        if (substitution != null) {
-          alreadyUsed.add(f);
-          return substitution;
-        }
-      }
-    }
-    return null;
-  }
+//  /**
+//   * does the structure of formula f suggest an immediate substitution to
+//   * simplify the system, based on theory of equality?
+//   * 
+//   * @return a pair (p1, p2) meaning "substitute p2 for p1"
+//   */
+//  private static Pair<ITerm, ITerm> equalitySuggestsSubstitution(IFormula f) {
+//    switch (f.getKind()) {
+//    case RELATION:
+//      // it's not clear at this level that a constant or variable is "simpler" than
+//      // e.g. a function term.  so, don't do anything.
+//      return null;
+////      RelationFormula r = (RelationFormula) f;
+////      if (r.getRelation().equals(BinaryRelation.EQUALS)) {
+////        ITerm lhs = r.getTerms().get(0);
+////        ITerm rhs = r.getTerms().get(1);
+////        if (rhs.getKind().equals(ITerm.Kind.CONSTANT) || rhs.getKind().equals(ITerm.Kind.VARIABLE)) {
+////          return Pair.make(lhs, rhs);
+////        } else {
+////          return null;
+////        }
+////      } else {
+////        return null;
+////      }
+//    case QUANTIFIED:
+//      QuantifiedFormula q = (QuantifiedFormula) f;
+//      if (q.getQuantifier().equals(Quantifier.FORALL)) {
+//        AbstractVariable bound = q.getBoundVar();
+//        Wildcard w = freshWildcard(q);
+//        IFormula g = substitute(q.getFormula(), bound, w);
+//        return equalitySuggestsSubstitution(g);
+//      } else {
+//        return null;
+//      }
+//    case BINARY:
+//    case CONSTANT:
+//    case NEGATION:
+//    default:
+//      // TODO
+//      return null;
+//    }
+//  }
 
-  /**
-   * does the structure of formula f suggest an immediate substitution to
-   * simplify the system, based on theory of equality?
-   * 
-   * @return a pair (p1, p2) meaning "substitute p2 for p1"
-   */
-  private static Pair<ITerm, ITerm> equalitySuggestsSubstitution(IFormula f) {
-    switch (f.getKind()) {
-    case RELATION:
-      RelationFormula r = (RelationFormula) f;
-      if (r.getRelation().equals(BinaryRelation.EQUALS)) {
-        ITerm lhs = r.getTerms().get(0);
-        ITerm rhs = r.getTerms().get(1);
-        if (rhs.getKind().equals(ITerm.Kind.CONSTANT) || rhs.getKind().equals(ITerm.Kind.VARIABLE)) {
-          return Pair.make(lhs, rhs);
-        } else {
-          return null;
-        }
-      } else {
-        return null;
-      }
-    case QUANTIFIED:
-      QuantifiedFormula q = (QuantifiedFormula) f;
-      if (q.getQuantifier().equals(Quantifier.FORALL)) {
-        AbstractVariable bound = q.getBoundVar();
-        Wildcard w = freshWildcard(q);
-        IFormula g = substitute(q.getFormula(), bound, w);
-        return equalitySuggestsSubstitution(g);
-      } else {
-        return null;
-      }
-    case BINARY:
-    case CONSTANT:
-    case NEGATION:
-    default:
-      // TODO
-      return null;
-    }
-  }
-
-  private static Wildcard freshWildcard(QuantifiedFormula q) {
-    int max = 0;
-    for (ITerm t : q.getAllTerms()) {
-      if (t instanceof Wildcard) {
-        Wildcard w = (Wildcard) t;
-        max = Math.max(max, w.getNumber());
-      }
-    }
-    return Wildcard.make(max + 1);
-  }
+//  private static Wildcard freshWildcard(QuantifiedFormula q) {
+//    int max = 0;
+//    for (ITerm t : q.getAllTerms()) {
+//      if (t instanceof Wildcard) {
+//        Wildcard w = (Wildcard) t;
+//        max = Math.max(max, w.getNumber());
+//      }
+//    }
+//    return Wildcard.make(max + 1);
+//  }
 
   /**
    * in formula f, substitute the term t2 for all free occurrences of t1
