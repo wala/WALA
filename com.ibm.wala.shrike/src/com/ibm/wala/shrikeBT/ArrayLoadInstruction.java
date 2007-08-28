@@ -63,10 +63,14 @@ final public class ArrayLoadInstruction extends Instruction {
   }
 
   @Override
-  public String getPushedType(String[] types) {
+  public String getPushedType(String[] types) throws IllegalArgumentException {
+
     if (types == null) {
       return getType();
     } else {
+      if (types.length <= 1) {
+        throw new IllegalArgumentException("types.length <= 1");
+      }
       String t = types[1];
       if (t == null) {
         throw new IllegalArgumentException("types[1] cannot be null");
