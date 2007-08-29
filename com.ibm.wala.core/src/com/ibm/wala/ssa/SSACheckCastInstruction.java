@@ -40,6 +40,9 @@ public class SSACheckCastInstruction extends SSAInstruction {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException("(defs != null) and (defs.length == 0)");
     }
+    if (uses != null && uses.length == 0) {
+      throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
+    }
     return new SSACheckCastInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], declaredResultType);
   }
 

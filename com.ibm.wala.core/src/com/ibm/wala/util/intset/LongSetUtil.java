@@ -31,6 +31,9 @@ public class LongSetUtil {
     if (low <= high && (low < 0 || high < 0)) {
       throw new IllegalArgumentException("can't search negative indices");
     }
+    if (high > data.length -1 ) {
+      high = data.length -1;
+    }
     if (low <= high) {
       int mid = (low + high) / 2;
       long midValue = data[mid];

@@ -61,6 +61,9 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
     if (defs != null && defs.length == 0) {
       throw new IllegalArgumentException("defs.length == 0");
     }
+    if (uses != null && uses.length == 0) {
+      throw new IllegalArgumentException("uses.length == 0");
+    }
     return new SSAPiInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], successorBlock, cause);
   }
 

@@ -30,8 +30,8 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
 
   @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    if (uses != null && uses.length == 0) {
-      throw new IllegalArgumentException("uses.length == 0");
+    if (uses != null && uses.length < 3) {
+      throw new IllegalArgumentException("uses.length < 3");
     }
     return new SSAArrayStoreInstruction(uses == null ? getArrayRef() : uses[0], uses == null ? getIndex() : uses[1],
         uses == null ? value : uses[2], getDeclaredType());

@@ -45,8 +45,8 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
-    if (uses != null && uses.length == 0) {
-      throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
+    if (uses != null && uses.length < 2) {
+      throw new IllegalArgumentException("(uses != null) and (uses.length < 2)");
     }
     return new SSAConditionalBranchInstruction(operator, type, uses == null ? val1 : uses[0], uses == null ? val2 : uses[1]);
   }
