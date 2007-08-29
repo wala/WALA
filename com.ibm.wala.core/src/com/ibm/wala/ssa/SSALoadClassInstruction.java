@@ -31,6 +31,9 @@ public class SSALoadClassInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+    if (defs != null && defs.length == 0) {
+      throw new IllegalArgumentException("(defs != null) and (defs.length == 0)");
+    }
     return new SSALoadClassInstruction(defs == null ? lval : defs[0], typeRef);
   }
 

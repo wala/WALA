@@ -42,6 +42,9 @@ public class SSABinaryOpInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+    if (uses != null && uses.length == 0) {
+      throw new IllegalArgumentException("uses.length == 0");
+    }
     return new SSABinaryOpInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
         uses == null ? val2 : uses[1]);
   }

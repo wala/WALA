@@ -18,7 +18,6 @@ package com.ibm.wala.util.intset;
  */
 public class LongSetUtil {
 
-
   /**
    * @return index \in [low,high] s.t. data[index] = key, or -1 if not found
    */
@@ -28,6 +27,9 @@ public class LongSetUtil {
     }
     if (data.length == 0) {
       return -1;
+    }
+    if (low <= high && (low < 0 || high < 0)) {
+      throw new IllegalArgumentException("can't search negative indices");
     }
     if (low <= high) {
       int mid = (low + high) / 2;

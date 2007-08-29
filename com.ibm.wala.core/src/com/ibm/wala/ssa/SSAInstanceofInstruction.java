@@ -35,6 +35,12 @@ public class SSAInstanceofInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+    if (defs != null && defs.length == 0) {
+      throw new IllegalArgumentException("defs.length == 0");
+    }
+    if (uses != null && uses.length == 0) {
+      throw new IllegalArgumentException("uses.length == 0");
+    }
     return new SSAInstanceofInstruction(defs == null || defs.length == 0 ? result : defs[0], uses == null ? ref : uses[0],
         checkedType);
   }

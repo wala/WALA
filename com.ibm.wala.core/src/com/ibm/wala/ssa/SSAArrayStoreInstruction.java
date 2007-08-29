@@ -17,7 +17,7 @@ import com.ibm.wala.util.Exceptions;
 
 /**
  * @author sfink
- *  
+ * 
  */
 public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
 
@@ -30,21 +30,23 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
 
   @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    return new SSAArrayStoreInstruction(
-      uses == null ? getArrayRef() : uses[0],
-      uses == null ? getIndex() : uses[1],
-      uses == null ? value : uses[2],
-      getDeclaredType());
+    if (uses != null && uses.length == 0) {
+      throw new IllegalArgumentException("uses.length == 0");
+    }
+    return new SSAArrayStoreInstruction(uses == null ? getArrayRef() : uses[0], uses == null ? getIndex() : uses[1],
+        uses == null ? value : uses[2], getDeclaredType());
   }
 
   @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return "arraystore " + getValueString(symbolTable, d, getArrayRef()) + "[" + getValueString(symbolTable, d, getIndex()) + "] = " + getValueString(symbolTable, d, value);
+    return "arraystore " + getValueString(symbolTable, d, getArrayRef()) + "[" + getValueString(symbolTable, d, getIndex())
+        + "] = " + getValueString(symbolTable, d, value);
   }
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException  if v is null
+   * @throws IllegalArgumentException
+   *             if v is null
    */
   @Override
   public void visit(IVisitor v) {

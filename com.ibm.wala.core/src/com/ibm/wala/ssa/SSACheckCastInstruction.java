@@ -37,6 +37,9 @@ public class SSACheckCastInstruction extends SSAInstruction {
 
   @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+    if (defs != null && defs.length == 0) {
+      throw new IllegalArgumentException("(defs != null) and (defs.length == 0)");
+    }
     return new SSACheckCastInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], declaredResultType);
   }
 

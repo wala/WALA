@@ -180,6 +180,9 @@ public class IntSetUtil {
     if (data.length == 0) {
       return -1;
     }
+    if (low <= high && (low < 0 || high < 0)) {
+      throw new IllegalArgumentException("can't search negative indices " + low + " " + high);
+    }
     if (low <= high) {
       int mid = (low + high) / 2;
       int midValue = data[mid];

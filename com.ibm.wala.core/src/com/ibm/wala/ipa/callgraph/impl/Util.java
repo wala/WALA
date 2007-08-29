@@ -295,13 +295,19 @@ public class Util {
    * @throws IllegalArgumentException
    *             if (classNames != null) and (0 < classNames.length) and
    *             (classNames[0] == null)
+   * @throws IllegalArgumentException
+   *             if classNames.length == 0
    */
   public static Iterable<Entrypoint> makeMainEntrypoints(final ClassLoaderReference loaderRef, final IClassHierarchy cha,
-      final String[] classNames) throws IllegalArgumentException, IllegalArgumentException {
+      final String[] classNames) throws IllegalArgumentException, IllegalArgumentException, IllegalArgumentException {
+
     if (classNames == null) {
       throw new IllegalArgumentException("classNames == null");
     }
-    if (classNames[0] == null && 0 < classNames.length ) {
+    if (classNames.length == 0) {
+      throw new IllegalArgumentException("classNames.length == 0");
+    }
+    if (classNames[0] == null && 0 < classNames.length) {
       throw new IllegalArgumentException("(0 < classNames.length) and (classNames[0] == null)");
     }
 

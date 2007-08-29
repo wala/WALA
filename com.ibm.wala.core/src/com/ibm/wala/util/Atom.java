@@ -95,12 +95,23 @@ public final class Atom {
     return findOrCreate(utf8);
   }
 
-  public static Atom findOrCreate(byte utf8[], int off, int len) throws IllegalArgumentException, IllegalArgumentException {
+  /**
+   * create an Atom from utf8[off] of length len
+   * @throws IllegalArgumentException  if utf8.length <= off
+   */
+  public static Atom findOrCreate(byte utf8[], int off, int len) throws IllegalArgumentException, IllegalArgumentException, IllegalArgumentException {
+
     if (utf8 == null) {
       throw new IllegalArgumentException("utf8 == null");
     }
     if (len < 0) {
       throw new IllegalArgumentException("len must be >= 0, " + len);
+    }
+    if (off < 0) {
+      throw new IllegalArgumentException("off must be >= 0, " + off);
+    }
+    if (utf8.length < off + len) {
+      throw new IllegalArgumentException("utf8.length < off + len");
     }
     byte val[] = new byte[len];
     for (int i = 0; i < len; ++i) {

@@ -29,7 +29,10 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
   }
 
   @Override
-  public SSAInstruction copyForSSA(int[] defs, int[] uses) {
+  public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
+    if (uses != null && uses.length == 0) {
+      throw new IllegalArgumentException("(uses != null) and (uses.length == 0)");
+    }
     return new SSAUnaryOpInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val : uses[0]);
   }
 
