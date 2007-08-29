@@ -1019,9 +1019,7 @@ public class SSACFG implements ControlFlowGraph {
   }
 
   public boolean hasEdge(IBasicBlock src, IBasicBlock dst) throws UnimplementedError {
-    // TODO Auto-generated method stub
-    Assertions.UNREACHABLE();
-    return false;
+    return getSuccNodeNumbers(src).contains(getNumber(dst));
   }
 
   public IntSet getSuccNodeNumbers(IBasicBlock node) {
