@@ -247,7 +247,7 @@ public class ShrikeCFG extends AbstractCFG {
         addNormalEdgeTo(next);
       }
       if (last instanceof ReturnInstruction) {
-        // link each return instrution to the exit block.
+        // link each return instruction to the exit block.
         BasicBlock exit = (BasicBlock) exit();
         addNormalEdgeTo(exit);
       }
