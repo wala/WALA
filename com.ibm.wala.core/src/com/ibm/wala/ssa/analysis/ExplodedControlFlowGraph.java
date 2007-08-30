@@ -237,7 +237,10 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     throw new UnsupportedOperationException();
   }
 
-  public int getPredNodeCount(IBasicBlock N) {
+  public int getPredNodeCount(IBasicBlock N) throws IllegalArgumentException {
+    if (N == null) {
+      throw new IllegalArgumentException("N == null");
+    }
     ExplodedBasicBlock b = (ExplodedBasicBlock) N;
     if (b.isEntryBlock()) {
       return 0;
@@ -249,7 +252,10 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
   }
 
-  public Iterator<? extends IBasicBlock> getPredNodes(IBasicBlock N) {
+  public Iterator<? extends IBasicBlock> getPredNodes(IBasicBlock N) throws IllegalArgumentException {
+    if (N == null) {
+      throw new IllegalArgumentException("N == null");
+    }
     ExplodedBasicBlock b = (ExplodedBasicBlock) N;
     if (b.isEntryBlock()) {
       return EmptyIterator.instance();

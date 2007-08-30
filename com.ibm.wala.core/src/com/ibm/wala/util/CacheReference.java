@@ -27,7 +27,9 @@ import com.ibm.wala.util.debug.Assertions;
 public final class CacheReference {
 
   private final static byte SOFT = 0;
+
   private final static byte WEAK = 1;
+
   private final static byte HARD = 2;
 
   // should be SOFT except during debugging.
@@ -36,31 +38,32 @@ public final class CacheReference {
   public final static Object make(final Object referent) {
 
     switch (choice) {
-      case SOFT :
-        return new SoftReference<Object>(referent);
-      case WEAK :
-        return new WeakReference<Object>(referent);
-      case HARD :
-        return referent;
-      default :
-        Assertions.UNREACHABLE();
-        return null;
+    case SOFT:
+      return new SoftReference<Object>(referent);
+    case WEAK:
+      return new WeakReference<Object>(referent);
+    case HARD:
+      return referent;
+    default:
+      Assertions.UNREACHABLE();
+      return null;
     }
   }
 
   public final static Object get(final Object reference) {
-    if (reference == null)
+    if (reference == null) {
       return null;
+    }
     switch (choice) {
-      case SOFT :
-        return ((SoftReference) reference).get();
-      case WEAK :
-        return ((WeakReference) reference).get();
-      case HARD :
-        return reference;
-      default :
-        Assertions.UNREACHABLE();
-        return null;
+    case SOFT:
+      return ((SoftReference) reference).get();
+    case WEAK:
+      return ((WeakReference) reference).get();
+    case HARD:
+      return reference;
+    default:
+      Assertions.UNREACHABLE();
+      return null;
     }
   }
 

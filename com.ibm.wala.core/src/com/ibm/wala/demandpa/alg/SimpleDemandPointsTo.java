@@ -75,8 +75,11 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
   }
 
   @SuppressWarnings("unchecked")
-  public Collection<InstanceKey> getPointsTo(PointerKey pk) throws UnimplementedError {
+  public Collection<InstanceKey> getPointsTo(PointerKey pk) throws IllegalArgumentException, UnimplementedError {
 
+    if (pk == null) {
+      throw new IllegalArgumentException("pk == null");
+    }
     Assertions._assert(pk instanceof LocalPointerKey, "we only handle locals");
     LocalPointerKey lpk = (LocalPointerKey) pk;
     // Create an (initially empty) dependence graph

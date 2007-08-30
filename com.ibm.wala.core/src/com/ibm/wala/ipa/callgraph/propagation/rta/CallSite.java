@@ -13,56 +13,30 @@ package com.ibm.wala.ipa.callgraph.propagation.rta;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.types.Selector;
-import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * A utility class consisting of a pair CallSiteReference x CGNode
  */
-public final class CallSite {
-  private final CallSiteReference site;
-
-  private final CGNode node;
+public final class CallSite extends Pair<CallSiteReference, CGNode>{
 
   public CallSite(CallSiteReference site, CGNode node) {
-    this.site = site;
-    this.node = node;
-  }
-
-  @Override
-  public int hashCode() {
-    return 3229 * site.hashCode() + node.hashCode();
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (o == null) {
-      return false;
-    }
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(getClass().equals(o.getClass()));
-    }
-    CallSite other = (CallSite) o;
-    return node.equals(other.node) && site.equals(other.site);
-  }
-
-  @Override
-  public String toString() {
-    return site.toString() + " " + node.toString();
+    super(site,node);
   }
 
   public CGNode getNode() {
-    return node;
+    return snd;
   }
 
   public CallSiteReference getSite() {
-    return site;
+    return fst;
   }
 
   /**
    * @return the Selector that identifies this site
    */
   public Selector getSelector() {
-    return site.getDeclaredTarget().getSelector();
+    return getSite().getDeclaredTarget().getSelector();
   }
 
 }

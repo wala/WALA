@@ -21,7 +21,6 @@ import com.ibm.wala.util.collections.Filter;
  * a regular expression
  * 
  * @author sjfink
- *
  */
 public class PackageExpressionFilter implements Filter {
 
@@ -31,7 +30,10 @@ public class PackageExpressionFilter implements Filter {
     this.pattern = Pattern.compile(pattern);
   }
 
-  public boolean accepts(Object o) {
+  public boolean accepts(Object o) throws IllegalArgumentException {
+    if (o == null) {
+      throw new IllegalArgumentException("o == null");
+    }
     IClass c = (IClass) o;
     if (c.getName().getPackage() == null) {
       return false;

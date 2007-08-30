@@ -31,7 +31,10 @@ public class UnaryBitVectorUnion extends UnaryOperator {
   
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable rhs) {
+  public byte evaluate(IVariable lhs, IVariable rhs) throws IllegalArgumentException {
+    if (lhs == null) {
+      throw new IllegalArgumentException("lhs == null");
+    }
     BitVectorVariable L = (BitVectorVariable) lhs;
     BitVectorVariable R = (BitVectorVariable) rhs;
 

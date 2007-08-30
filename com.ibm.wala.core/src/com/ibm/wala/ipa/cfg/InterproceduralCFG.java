@@ -348,7 +348,10 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     }
   }
 
-  public static CallSiteReference makeCallSiteReference(ClassLoaderReference loader, int pc, IInvokeInstruction call) {
+  public static CallSiteReference makeCallSiteReference(ClassLoaderReference loader, int pc, IInvokeInstruction call) throws IllegalArgumentException {
+    if (call == null) {
+      throw new IllegalArgumentException("call == null");
+    }
     CallSiteReference site = null;
     if (call instanceof InvokeInstruction) {
       InvokeInstruction c = (InvokeInstruction) call;

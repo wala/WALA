@@ -27,7 +27,10 @@ public final class TrueOperator extends UnaryOperator {
   }
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable rhs) {
+  public byte evaluate(IVariable lhs, IVariable rhs) throws IllegalArgumentException {
+    if (lhs == null) {
+      throw new IllegalArgumentException("lhs == null");
+    }
     BooleanVariable L = (BooleanVariable) lhs;
     if (L.getValue()) {
       return NOT_CHANGED;

@@ -11,7 +11,7 @@
 
 package com.ibm.wala.ipa.callgraph;
 
-import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * 
@@ -27,49 +27,25 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * @author sfink
  */
-public class CGEdge {
-  private final CGNode src;
+public class CGEdge extends Pair<CGNode,CGNode>{
 
-  private final CGNode dest;
 
   public CGEdge(CGNode src, CGNode dest) {
-    this.src = src;
-    this.dest = dest;
+    super(src,dest);
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(this.getClass().equals(obj.getClass()));
-    }
-    CGEdge other = (CGEdge) obj;
-    return src.equals(other.src) && dest.equals(other.dest);
-  }
-
-  @Override
-  public int hashCode() {
-    return 4027 * src.hashCode() + dest.hashCode();
-  }
-
-  @Override
-  public String toString() {
-    return "[" + src.toString() + "," + dest.toString() + "]";
-  }
 
   /**
    * @return the node at the tail of this edge
    */
   public CGNode getDest() {
-    return dest;
+    return snd;
   }
 
   /**
    * @return the node at the head of this edge.
    */
   public CGNode getSrc() {
-    return src;
+    return fst;
   }
 }
