@@ -108,7 +108,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
           Pair targetKey;
           CopyKey k = key;
           do {
-            targetKey = new Pair(oldTarget, k);
+            targetKey = Pair.make(oldTarget, k);
             if (k != null) {
               k = k.parent();
             } else {

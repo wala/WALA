@@ -28,12 +28,12 @@ public class CAstCloner extends CAstBasicRewriter {
 			       Map nodeMap) 
   {
     if (root instanceof CAstOperator) {
-      nodeMap.put(new Pair(root, c.key()), root);
+      nodeMap.put(Pair.make(root, c.key()), root);
       return root;
     } else if (root.getValue() != null) {
       CAstNode copy = Ast.makeConstant( root.getValue() );
       Assertions._assert(! nodeMap.containsKey(root));
-      nodeMap.put(new Pair(root, c.key()), copy);
+      nodeMap.put(Pair.make(root, c.key()), copy);
       return copy;
     } else {
       CAstNode newChildren[] = new CAstNode[ root.getChildCount() ];
@@ -44,7 +44,7 @@ public class CAstCloner extends CAstBasicRewriter {
 
       CAstNode copy = Ast.makeNode(root.getKind(), newChildren);
       Assertions._assert(! nodeMap.containsKey(root));
-      nodeMap.put(new Pair(root, c.key()), copy);
+      nodeMap.put(Pair.make(root, c.key()), copy);
       return copy;
     }
   }
