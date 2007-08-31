@@ -18,7 +18,6 @@ import com.ibm.wala.dataflow.graph.BitVectorIdentity;
 import com.ibm.wala.dataflow.graph.BitVectorSolver;
 import com.ibm.wala.dataflow.graph.BitVectorUnion;
 import com.ibm.wala.dataflow.graph.BitVectorUnionConstant;
-import com.ibm.wala.dataflow.graph.DataflowSolver;
 import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
@@ -120,9 +119,9 @@ public class GraphDataflowTest extends WalaTestCase {
    */
   private String solveNodeOnly(Graph<String> G) {
     final OrdinalSetMapping<String> values = new MutableMapping<String>(nodes);
-    ITransferFunctionProvider<String> functions = new ITransferFunctionProvider<String>() {
+    ITransferFunctionProvider<String, BitVectorVariable> functions = new ITransferFunctionProvider<String, BitVectorVariable>() {
 
-      public UnaryOperator getNodeTransferFunction(String node) {
+      public UnaryOperator<BitVectorVariable> getNodeTransferFunction(String node) {
         return new BitVectorUnionConstant(values.getMappedIndex(node));
       }
 
@@ -130,7 +129,7 @@ public class GraphDataflowTest extends WalaTestCase {
         return true;
       }
 
-      public UnaryOperator getEdgeTransferFunction(String from, String to) {
+      public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(String from, String to) {
         Assertions.UNREACHABLE();
         return null;
       }
@@ -139,23 +138,23 @@ public class GraphDataflowTest extends WalaTestCase {
         return false;
       }
 
-      public AbstractMeetOperator getMeetOperator() {
+      public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
         return BitVectorUnion.instance();
       }
 
     };
 
     BitVectorFramework<String,String> F = new BitVectorFramework<String,String>(G, functions, values);
-    DataflowSolver<String> s = new BitVectorSolver<String>(F);
+    BitVectorSolver<String> s = new BitVectorSolver<String>(F);
     s.solve();
     return result2String(s);
   }
 
   private String solveNodeEdge(Graph<String> G) {
     final OrdinalSetMapping<String> values = new MutableMapping<String>(nodes);
-    ITransferFunctionProvider<String> functions = new ITransferFunctionProvider<String>() {
+    ITransferFunctionProvider<String, BitVectorVariable> functions = new ITransferFunctionProvider<String, BitVectorVariable>() {
 
-      public UnaryOperator getNodeTransferFunction(String node) {
+      public UnaryOperator<BitVectorVariable> getNodeTransferFunction(String node) {
         return new BitVectorUnionConstant(values.getMappedIndex(node));
       }
 
@@ -175,7 +174,7 @@ public class GraphDataflowTest extends WalaTestCase {
         return b;
       }
 
-      public UnaryOperator getEdgeTransferFunction(String from, String to) {
+      public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(String from, String to) {
         if (from == nodes[1] && to == nodes[3])
           return new BitVectorFilter(zero());
         else if (from == nodes[1] && to == nodes[2])
@@ -189,19 +188,19 @@ public class GraphDataflowTest extends WalaTestCase {
         return true;
       }
 
-      public AbstractMeetOperator getMeetOperator() {
+      public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
         return BitVectorUnion.instance();
       }
 
     };
 
     BitVectorFramework<String,String> F = new BitVectorFramework<String,String>(G, functions, values);
-    DataflowSolver<String> s = new BitVectorSolver<String>(F);
+    BitVectorSolver<String> s = new BitVectorSolver<String>(F);
     s.solve();
     return result2String(s);
   }
 
-  public static String result2String(DataflowSolver<String> solver) {
+  public static String result2String(BitVectorSolver<String> solver) {
     StringBuffer result = new StringBuffer("------\n");
     for (int i = 0; i < nodes.length; i++) {
       String n = nodes[i];
