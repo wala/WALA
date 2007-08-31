@@ -1930,8 +1930,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       fPI = pi;
     }
 
-    public Collection<Pair<Type, Object>> getCatchTargets(Type label) {
-      return Collections.singleton(new Pair<Type, Object>(fREType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
+    public Collection getCatchTargets(Type label) {
+      return Collections.singleton(Pair.make(fREType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
     }
 
     public CodeInstance getEnclosingMethod() {
@@ -1943,7 +1943,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     @SuppressWarnings("unused")
     private final Try tryNode;
 
-    Collection<Pair<Type, Object>> fCatchNodes = new ArrayList<Pair<Type, Object>>();
+    Collection fCatchNodes = new ArrayList<Pair<Type, Object>>();
 
     TryCatchContext(WalkContext parent, Try tryNode) {
       super(parent);
@@ -1951,7 +1951,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       for (Iterator catchIter = tryNode.catchBlocks().iterator(); catchIter.hasNext();) {
         Catch c = (Catch) catchIter.next();
-        Pair<Type, Object> p = new Pair<Type, Object>(c.catchType(), c);
+        Pair p = Pair.make(c.catchType(), c);
 
         fCatchNodes.add(p);
       }
