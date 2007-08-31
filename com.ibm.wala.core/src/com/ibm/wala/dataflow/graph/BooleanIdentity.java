@@ -12,13 +12,12 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BooleanVariable;
-import com.ibm.wala.fixpoint.IVariable;
 
 
 /**
  * Operator OUT = IN
  */
-public class BooleanIdentity extends UnaryOperator {
+public class BooleanIdentity extends UnaryOperator<BooleanVariable> {
   
   private final static BooleanIdentity SINGLETON = new BooleanIdentity();
   
@@ -30,17 +29,15 @@ public class BooleanIdentity extends UnaryOperator {
   }
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable rhs) throws IllegalArgumentException {
+  public byte evaluate(BooleanVariable lhs, BooleanVariable rhs) throws IllegalArgumentException {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs == null");
     }
-    BooleanVariable L = (BooleanVariable) lhs;
-    BooleanVariable R = (BooleanVariable) rhs;
 
-    if (L.sameValue(R)) {
+    if (lhs.sameValue(rhs)) {
       return NOT_CHANGED;
     } else {
-      L.copyState(R);
+      lhs.copyState(rhs);
       return CHANGED;
     }
   }

@@ -20,15 +20,9 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
  * @author Stephen Fink
  * @author Julian Dolby
  */
-public abstract class AbstractStatement extends NodeWithNumber implements IFixedPointStatement{
+public abstract class AbstractStatement<T extends IVariable, O extends AbstractOperator<T>> extends NodeWithNumber implements IFixedPointStatement<T>{
 
-
-  /**
-   * Return the operator for this equation
-   * 
-   * @return the operator for this equation
-   */
-  public abstract AbstractOperator getOperator();
+  public abstract O getOperator();
 
   /**
    * Subclasses must implement this, to prevent non-determinism.

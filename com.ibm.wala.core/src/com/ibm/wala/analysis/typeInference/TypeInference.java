@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dataflow.ssa.SSAInference;
 import com.ibm.wala.fixedpoint.impl.AbstractOperator;
-import com.ibm.wala.fixedpoint.impl.AbstractVariable;
 import com.ibm.wala.fixedpoint.impl.NullaryOperator;
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IVariable;
@@ -32,8 +31,8 @@ import com.ibm.wala.ssa.SSACheckCastInstruction;
 import com.ibm.wala.ssa.SSAConversionInstruction;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
-import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInstanceofInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
@@ -50,7 +49,7 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * @author sfink
  */
-public class TypeInference extends SSAInference implements FixedPointConstants {
+public class TypeInference extends SSAInference<TypeVariable> implements FixedPointConstants {
 
   /**
    * The governing SSA form
@@ -65,9 +64,9 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
   /**
    * A singleton instance of the phi operator.
    */
-  private final static AbstractOperator phiOp = new PhiOperator();
+  private final static AbstractOperator<TypeVariable> phiOp = new PhiOperator();
 
-  private final static AbstractOperator primitivePropagateOp = new PrimitivePropagateOperator();
+  private final static AbstractOperator<TypeVariable> primitivePropagateOp = new PrimitivePropagateOperator();
 
   /**
    * A cone type for java.lang.Object
@@ -107,7 +106,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
   protected void initializeVariables() {
     int[] parameterValueNumbers = ir.getParameterValueNumbers();
     for (int i = 0; i < parameterValueNumbers.length; i++) {
-      TypeVariable v = (TypeVariable) getVariable(parameterValueNumbers[i]);
+      TypeVariable v = getVariable(parameterValueNumbers[i]);
       TypeReference t = ir.getParameterType(i);
 
       if (t.isReferenceType()) {
@@ -127,7 +126,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     if (st != null) {
       for (int i = 0; i <= st.getMaxValueNumber(); i++) {
         if (st.isConstant(i)) {
-          TypeVariable v = (TypeVariable) getVariable(i);
+          TypeVariable v = getVariable(i);
           v.setType(getConstantType(i));
         }
       }
@@ -137,7 +136,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       SSAInstruction s = it.next();
       if (s instanceof SSAAbstractInvokeInstruction) {
         SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
-        TypeVariable v = (TypeVariable) getVariable(call.getException());
+        TypeVariable v = getVariable(call.getException());
         Collection<TypeReference> defaultExceptions = call.getExceptionTypes();
         if (Assertions.verifyAssertions) {
           Assertions._assert(defaultExceptions.size() == 1);
@@ -181,7 +180,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
   /**
    * An operator which initializes a type to a declared type.
    */
-  protected final class DeclaredTypeOperator extends NullaryOperator {
+  protected final class DeclaredTypeOperator extends NullaryOperator<TypeVariable> {
     private final TypeAbstraction type;
 
     public DeclaredTypeOperator(TypeAbstraction type) {
@@ -192,12 +191,11 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * Note that we need evaluate this operator at most once
      */
     @Override
-    public byte evaluate(IVariable lhs) {
-      TypeVariable t = (TypeVariable) lhs;
-      if (t.type.equals(type)) {
+    public byte evaluate(TypeVariable lhs) {
+      if (lhs.type.equals(type)) {
         return NOT_CHANGED_AND_FIXED;
       } else {
-        t.setType(type);
+        lhs.setType(type);
         return CHANGED_AND_FIXED;
       }
     }
@@ -230,7 +228,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     }
   }
 
-  private static final class PhiOperator extends AbstractOperator {
+  private static final class PhiOperator extends AbstractOperator<TypeVariable> {
 
     private PhiOperator() {
     }
@@ -239,9 +237,8 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * TODO: work on efficiency shortcuts for this.
      */
     @Override
-    public byte evaluate(IVariable lhs, IVariable[] rhs) {
-      TypeVariable L = (TypeVariable) lhs;
-      TypeAbstraction lhsType = L.getType();
+    public byte evaluate(TypeVariable lhs, IVariable[] rhs) {
+      TypeAbstraction lhsType = lhs.getType();
       TypeAbstraction meet = TypeAbstraction.TOP;
       for (int i = 0; i < rhs.length; i++) {
         if (rhs[i] != null) {
@@ -252,7 +249,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       if (lhsType.equals(meet)) {
         return NOT_CHANGED;
       } else {
-        L.setType(meet);
+        lhs.setType(meet);
         return CHANGED;
       }
     }
@@ -273,7 +270,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     }
   }
 
-  private static final class PiOperator extends AbstractOperator {
+  private static final class PiOperator extends AbstractOperator<TypeVariable> {
 
     private PiOperator() {
     }
@@ -282,8 +279,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
      * TODO: work on efficiency shortcuts for this.
      */
     @Override
-    public byte evaluate(IVariable lhsOperand, IVariable[] rhsOperands) {
-      TypeVariable lhs = (TypeVariable) lhsOperand;
+    public byte evaluate(TypeVariable lhs, IVariable[] rhsOperands) {
       TypeAbstraction lhsType = lhs.getType();
 
       TypeVariable rhs = (TypeVariable) rhsOperands[0];
@@ -313,15 +309,14 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     }
   }
 
-  protected static class PrimitivePropagateOperator extends AbstractOperator {
+  protected static class PrimitivePropagateOperator extends AbstractOperator<TypeVariable> {
 
     protected PrimitivePropagateOperator() {
     }
 
     @Override
-    public byte evaluate(IVariable lhs, IVariable[] rhs) {
-      TypeVariable L = (TypeVariable) lhs;
-      TypeAbstraction lhsType = L.getType();
+    public byte evaluate(TypeVariable lhs, IVariable[] rhs) {
+      TypeAbstraction lhsType = lhs.getType();
       TypeAbstraction meet = TypeAbstraction.TOP;
       for (int i = 0; i < rhs.length; i++) {
         if (rhs[i] != null) {
@@ -332,7 +327,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
       if (lhsType.equals(meet)) {
         return NOT_CHANGED;
       } else {
-        L.setType(meet);
+        lhs.setType(meet);
         return CHANGED;
       }
     }
@@ -359,7 +354,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
    * 
    * TODO: why isn't this a nullary operator?
    */
-  private final class GetElementType extends AbstractOperator {
+  private final class GetElementType extends AbstractOperator<TypeVariable> {
     private final SSAArrayLoadInstruction load;
 
     GetElementType(SSAArrayLoadInstruction load) {
@@ -367,8 +362,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     }
 
     @Override
-    public byte evaluate(IVariable lhs, IVariable[] rhs) {
-      TypeVariable t = (TypeVariable) lhs;
+    public byte evaluate(TypeVariable lhs, IVariable[] rhs) {
       TypeAbstraction arrayType = getType(load.getArrayRef());
       if (arrayType.equals(TypeAbstraction.TOP)) {
         return NOT_CHANGED;
@@ -383,21 +377,21 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         Assertions.UNREACHABLE("Unexpected type " + arrayType.getClass());
       }
       if (elementType.isPrimitiveType()) {
-        if (doPrimitives && t.getType() == TypeAbstraction.TOP) {
-          t.setType(PrimitiveType.getPrimitive(elementType));
+        if (doPrimitives && lhs.getType() == TypeAbstraction.TOP) {
+          lhs.setType(PrimitiveType.getPrimitive(elementType));
           return CHANGED;
         }
         return NOT_CHANGED;
       }
 
-      if (t.getType() != TypeAbstraction.TOP) {
+      if (lhs.getType() != TypeAbstraction.TOP) {
         TypeReference tType = null;
-        if (t.getType() instanceof PointType) {
-          tType = ((PointType) t.getType()).getType().getReference();
-        } else if (t.getType() instanceof ConeType) {
-          tType = ((ConeType) t.getType()).getType().getReference();
+        if (lhs.getType() instanceof PointType) {
+          tType = ((PointType) lhs.getType()).getType().getReference();
+        } else if (lhs.getType() instanceof ConeType) {
+          tType = ((ConeType) lhs.getType()).getType().getReference();
         } else {
-          Assertions.UNREACHABLE("Unexpected type " + t.getType().getClass());
+          Assertions.UNREACHABLE("Unexpected type " + lhs.getType().getClass());
         }
         if (tType.equals(elementType)) {
           return NOT_CHANGED;
@@ -406,15 +400,15 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
           if (Assertions.verifyAssertions) {
             Assertions._assert(klass != null);
           }
-          t.setType(new ConeType(klass));
+          lhs.setType(new ConeType(klass));
           return CHANGED;
         }
       } else {
         IClass klass = cha.lookupClass(elementType);
         if (klass != null) {
-          t.setType(new ConeType(klass));
+          lhs.setType(new ConeType(klass));
         } else {
-          t.setType(TypeAbstraction.TOP);
+          lhs.setType(TypeAbstraction.TOP);
         }
 
         return CHANGED;
@@ -442,13 +436,13 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     }
   }
 
-  protected class TypeOperatorFactory extends SSAInstruction.Visitor implements OperatorFactory {
+  protected class TypeOperatorFactory extends SSAInstruction.Visitor implements OperatorFactory<TypeVariable> {
 
-    protected AbstractOperator result = null;
+    protected AbstractOperator<TypeVariable> result = null;
 
-    public AbstractOperator get(SSAInstruction instruction) {
+    public AbstractOperator<TypeVariable> get(SSAInstruction instruction) {
       instruction.visit(this);
-      AbstractOperator temp = result;
+      AbstractOperator<TypeVariable> temp = result;
       result = null;
       return temp;
     }
@@ -600,46 +594,6 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     }
   }
 
-  /**
-   * A type variable in the dataflow system.
-   */
-  protected static class TypeVariable extends AbstractVariable {
-
-    private TypeAbstraction type;
-
-    private final int hash;
-
-    public TypeVariable(TypeAbstraction type, int hashCode) {
-      this.type = type;
-      this.hash = hashCode;
-    }
-
-    public void copyState(IVariable v) {
-      TypeVariable other = (TypeVariable) v;
-      this.type = other.type;
-    }
-
-
-    public TypeAbstraction getType() {
-      return type;
-    }
-
-    public void setType(TypeAbstraction type) {
-      this.type = type;
-    }
-
-    @Override
-    public String toString() {
-      return type.toString();
-    }
-
-    @Override
-    public int hashCode() {
-      return hash;
-    }
-
-  }
-
   public class TypeVarFactory implements VariableFactory {
 
     public IVariable makeVariable(int valueNumber) {
@@ -673,7 +627,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
         Assertions._assert(getVariable(valueNumber) != null, "null variable for value number " + valueNumber);
       }
     }
-    return ((TypeVariable) getVariable(valueNumber)).getType();
+    return getVariable(valueNumber).getType();
   }
 
   public TypeAbstraction getConstantType(int valueNumber) {
@@ -706,7 +660,7 @@ public class TypeInference extends SSAInference implements FixedPointConstants {
     if (getVariable(valueNumber) == null) {
       return true;
     }
-    TypeAbstraction ta = ((TypeVariable) getVariable(valueNumber)).getType();
+    TypeAbstraction ta = getVariable(valueNumber).getType();
     return ta == BOTTOM || ta.getType() == null;
   }
 }

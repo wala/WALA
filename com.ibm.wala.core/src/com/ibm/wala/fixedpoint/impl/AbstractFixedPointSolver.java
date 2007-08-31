@@ -37,7 +37,7 @@ import com.ibm.wala.util.debug.VerboseAction;
  * @author Julian Dolby
  * 
  */
-public abstract class AbstractFixedPointSolver implements IFixedPointSolver, FixedPointConstants, VerboseAction {
+public abstract class AbstractFixedPointSolver<T extends IVariable> implements IFixedPointSolver<T>, FixedPointConstants, VerboseAction {
 
   static final boolean DEBUG = false;
 
@@ -129,6 +129,7 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    * @return true iff the evaluation of some equation caused a change in the
    *         value of some variable.
    */
+  @SuppressWarnings("unchecked")
   public boolean solve() {
 
     boolean globalChange = false;
@@ -209,7 +210,7 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
     }
   }
 
-  public void removeStatement(AbstractStatement s) {
+  public void removeStatement(AbstractStatement<T,?> s) {
     getFixedPointSystem().removeStatement(s);
   }
 
@@ -253,7 +254,7 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    * @param v
    *          the variable that has changed
    */
-  public void changedVariable(IVariable v) {
+  public void changedVariable(T v) {
     for (Iterator it = getFixedPointSystem().getStatementsThatUse(v); it.hasNext();) {
       AbstractStatement s = (AbstractStatement) it.next();
       addToWorkList(s);
@@ -273,13 +274,13 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    *          the step operator
    * @throws IllegalArgumentException  if lhs is null
    */
-  public void newStatement(final IVariable lhs, final NullaryOperator operator, final boolean toWorkList, final boolean eager) {
+  public void newStatement(final T lhs, final NullaryOperator<T> operator, final boolean toWorkList, final boolean eager) {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs is null");
     }
     // add to the list of graph
     lhs.setOrderNumber(nextOrderNumber++);
-    final NullaryStatement s = new BasicNullaryStatement(lhs, operator);
+    final NullaryStatement<T> s = new BasicNullaryStatement<T>(lhs, operator);
     if (getFixedPointSystem().containsStatement(s)) {
       return;
     }
@@ -289,11 +290,8 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
     topologicalCounter++;
   }
 
-  /**
-   * @param toWorkList
-   * @param eager
-   * @param s
-   */
+
+  @SuppressWarnings("unchecked")
   private void incorporateNewStatement(boolean toWorkList, boolean eager, AbstractStatement s) {
     if (eager) {
       byte code = s.evaluate();
@@ -329,12 +327,12 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    * @return true iff the system changes
    * @throws IllegalArgumentException  if operator is null
    */
-  public boolean newStatement(IVariable lhs, UnaryOperator operator, IVariable rhs, boolean toWorkList, boolean eager) {
+  public boolean newStatement(T lhs, UnaryOperator<T> operator, T rhs, boolean toWorkList, boolean eager) {
     if (operator == null) {
       throw new IllegalArgumentException("operator is null");
     }
     // add to the list of graph
-    UnaryStatement s = operator.makeEquation(lhs, rhs);
+    UnaryStatement<T> s = operator.makeEquation(lhs, rhs);
     if (getFixedPointSystem().containsStatement(s)) {
       return false;
     }
@@ -360,10 +358,10 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    * @param op2
    *          second operand on the rhs
    */
-  public void newStatement(IVariable lhs, AbstractOperator operator, IVariable op1, IVariable op2, boolean toWorkList, boolean eager) {
+  public void newStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, boolean toWorkList, boolean eager) {
     // add to the list of graph
 
-    GeneralStatement s = new GeneralStatement(lhs, operator, op1, op2);
+    GeneralStatement<T> s = new GeneralStatement<T>(lhs, operator, op1, op2);
     if (getFixedPointSystem().containsStatement(s)) {
       return;
     }
@@ -391,14 +389,14 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    *          third operand on the rhs
    * @throws IllegalArgumentException  if lhs is null
    */
-  public void newStatement(IVariable lhs, AbstractOperator operator, IVariable op1, IVariable op2, IVariable op3,
+  public void newStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, T op3,
       boolean toWorkList, boolean eager) {
     if (lhs == null) {
           throw new IllegalArgumentException("lhs is null");
         }
     // add to the list of graph
     lhs.setOrderNumber(nextOrderNumber++);
-    GeneralStatement s = new GeneralStatement(lhs, operator, op1, op2, op3);
+    GeneralStatement<T> s = new GeneralStatement<T>(lhs, operator, op1, op2, op3);
     if (getFixedPointSystem().containsStatement(s)) {
       nextOrderNumber--;
       return;
@@ -421,11 +419,11 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    * @param rhs
    *          the operands on the rhs
    */
-  public void newStatement(IVariable lhs, AbstractOperator operator, IVariable[] rhs, boolean toWorkList, boolean eager) {
+  public void newStatement(T lhs, AbstractOperator<T> operator, T[] rhs, boolean toWorkList, boolean eager) {
     // add to the list of graph
     if (lhs != null)
       lhs.setOrderNumber(nextOrderNumber++);
-    GeneralStatement s = new GeneralStatement(lhs, operator, rhs);
+    GeneralStatement<T> s = new GeneralStatement<T>(lhs, operator, rhs);
     if (getFixedPointSystem().containsStatement(s)) {
       nextOrderNumber--;
       return;
@@ -453,10 +451,10 @@ public abstract class AbstractFixedPointSolver implements IFixedPointSolver, Fix
    * @param s
    *          the equation that has been re-evaluated.
    */
-  private void updateWorkList(AbstractStatement s) {
+  private void updateWorkList(AbstractStatement<T,?> s) {
     // find each equation which uses this lattice cell, and
     // add it to the work list
-    IVariable v = s.getLHS();
+    T v = s.getLHS();
     if (v == null) {
       return;
     }

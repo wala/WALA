@@ -24,7 +24,6 @@ import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticClass;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -685,7 +684,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * TODO: these need to be canonicalized.
    * 
    */
-  public class FilterOperator extends UnaryOperator implements IPointerOperator {
+  public class FilterOperator extends UnaryOperator<PointsToSetVariable> implements IPointerOperator {
 
     protected FilterOperator() {
     }
@@ -695,29 +694,23 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      *      com.ibm.wala.dataflow.IVariable)
      */
     @Override
-    public byte evaluate(IVariable lhs, IVariable rhs) {
+    public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
 
-      PointsToSetVariable L = (PointsToSetVariable) lhs;
-      PointsToSetVariable R = (PointsToSetVariable) rhs;
-      FilteredPointerKey pk = (FilteredPointerKey) L.getPointerKey();
-
-      // String Sx = "EVAL Filter " + L.getPointerKey() + " " +
-      // R.getPointerKey();
-      // System.err.println(Sx);
+      FilteredPointerKey pk = (FilteredPointerKey) lhs.getPointerKey();
 
       boolean debug = false;
       if (DEBUG_FILTER) {
-        String S = "EVAL Filter " + L.getPointerKey() + " " + R.getPointerKey();
+        String S = "EVAL Filter " + lhs.getPointerKey() + " " + rhs.getPointerKey();
         S += "\nEVAL      " + lhs + " " + rhs;
         debug = Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
       }
-      if (R.size() == 0) {
+      if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
 
       boolean changed = false;
       FilteredPointerKey.TypeFilter filter = pk.getTypeFilter();
-      changed = filter.addFiltered(system, L, R);
+      changed = filter.addFiltered(system, lhs, rhs);
 
       // SJF: Do NOT propagate malleables through filters!
       // IntSet malleable = getMalleableInstances();
@@ -727,16 +720,16 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
       if (DEBUG_FILTER) {
         if (debug) {
-          Trace.println("RESULT " + L + (changed ? " (changed)" : ""));
+          Trace.println("RESULT " + lhs + (changed ? " (changed)" : ""));
         }
       }
 
       if (PropagationCallGraphBuilder.DEBUG_TRACK_INSTANCE) {
         if (changed) {
-          if (L.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)
-              && R.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)) {
-            System.err.println("Filter: FLOW FROM " + R.getPointerKey() + " TO " + L.getPointerKey());
-            Trace.println("Filter: FLOW FROM " + R.getPointerKey() + " TO " + L.getPointerKey());
+          if (lhs.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)
+              && rhs.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)) {
+            System.err.println("Filter: FLOW FROM " + rhs.getPointerKey() + " TO " + lhs.getPointerKey());
+            Trace.println("Filter: FLOW FROM " + rhs.getPointerKey() + " TO " + lhs.getPointerKey());
             Trace.println("   filter: " + filter);
             InstanceKey I = system.getInstanceKey(DEBUG_INSTANCE_KEY);
             Trace.println("   I type: " + I.getConcreteType());
@@ -1098,12 +1091,11 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     @Override
-    public byte evaluate(IVariable rhs) {
+    public byte evaluate(PointsToSetVariable rhs) {
       boolean debug = false;
       if (DEBUG_ARRAY_LOAD) {
-        PointsToSetVariable ref = (PointsToSetVariable) rhs;
         PointsToSetVariable def = getFixedSet();
-        String S = "EVAL ArrayLoad " + ref.getPointerKey() + " " + def.getPointerKey();
+        String S = "EVAL ArrayLoad " + rhs.getPointerKey() + " " + def.getPointerKey();
         debug = Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
         if (debug) {
           Trace.println("EVAL ArrayLoad " + def + " " + rhs);
@@ -1113,11 +1105,10 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
         }
       }
 
-      PointsToSetVariable ref = (PointsToSetVariable) rhs;
-      if (ref.size() == 0) {
+      if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
-      final PointerKey object = ref.getPointerKey();
+      final PointerKey object = rhs.getPointerKey();
 
       PointsToSetVariable def = getFixedSet();
       final PointerKey dVal = def.getPointerKey();
@@ -1146,10 +1137,10 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
         }
       };
       if (priorInstances != null) {
-        ref.getValue().foreachExcluding(priorInstances, action);
-        priorInstances.addAll(ref.getValue());
+        rhs.getValue().foreachExcluding(priorInstances, action);
+        priorInstances.addAll(rhs.getValue());
       } else {
-        ref.getValue().foreach(action);
+        rhs.getValue().foreach(action);
       }
       byte sideEffectMask = sideEffect.b ? (byte) SIDE_EFFECT_MASK : 0;
       return (byte) (NOT_CHANGED | sideEffectMask);
@@ -1194,28 +1185,26 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     @Override
-    public byte evaluate(IVariable rhs) {
+    public byte evaluate(PointsToSetVariable rhs) {
       boolean debug = false;
       if (DEBUG_ARRAY_STORE) {
-        PointsToSetVariable ref = (PointsToSetVariable) rhs;
         PointsToSetVariable val = getFixedSet();
-        String S = "EVAL ArrayStore " + ref.getPointerKey() + " " + val.getPointerKey();
+        String S = "EVAL ArrayStore " + rhs.getPointerKey() + " " + val.getPointerKey();
         debug = Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
         if (debug) {
           Trace.println("EVAL ArrayStore " + rhs + " " + getFixedSet());
         }
       }
 
-      PointsToSetVariable ref = (PointsToSetVariable) rhs;
-      if (ref.size() == 0) {
+      if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
-      PointerKey object = ref.getPointerKey();
+      PointerKey object = rhs.getPointerKey();
 
       PointsToSetVariable val = getFixedSet();
       PointerKey pVal = val.getPointerKey();
 
-      List<InstanceKey> instances = system.getInstances(ref.getValue());
+      List<InstanceKey> instances = system.getInstances(rhs.getValue());
       boolean sideEffect = false;
       for (Iterator<InstanceKey> it = instances.iterator(); it.hasNext();) {
         InstanceKey I = it.next();
@@ -1288,14 +1277,14 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     @Override
-    public byte evaluate(IVariable rhs) {
+    public byte evaluate(PointsToSetVariable rhs) {
       if (DEBUG_GET) {
         String S = "EVAL GetField " + getField() + " " + getFixedSet().getPointerKey() + " "
-            + ((PointsToSetVariable) rhs).getPointerKey() + getFixedSet() + " " + rhs;
+            + rhs.getPointerKey() + getFixedSet() + " " + rhs;
         Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
       }
 
-      PointsToSetVariable ref = (PointsToSetVariable) rhs;
+      PointsToSetVariable ref = rhs;
       if (ref.size() == 0) {
         return NOT_CHANGED;
       }
@@ -1419,24 +1408,23 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
 
     @Override
-    public byte evaluate(IVariable rhs) {
+    public byte evaluate(PointsToSetVariable rhs) {
       if (DEBUG_PUT) {
         String S = "EVAL PutField " + getField() + " " + (getFixedSet()).getPointerKey() + " "
-            + ((PointsToSetVariable) rhs).getPointerKey() + getFixedSet() + " " + rhs;
+            + rhs.getPointerKey() + getFixedSet() + " " + rhs;
         Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
       }
 
-      PointsToSetVariable ref = (PointsToSetVariable) rhs;
-      if (ref.size() == 0) {
+      if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
-      final PointerKey object = ref.getPointerKey();
+      final PointerKey object = rhs.getPointerKey();
 
       PointsToSetVariable val = getFixedSet();
       final PointerKey pVal = val.getPointerKey();
-      IntSet value = ref.getValue();
+      IntSet value = rhs.getValue();
       value = filterInstances(value);
-      final UnaryOperator assign = getPutAssignmentOperator();
+      final UnaryOperator<PointsToSetVariable> assign = getPutAssignmentOperator();
       if (assign == null) {
         Assertions.UNREACHABLE();
       }
@@ -1497,7 +1485,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * subclasses (e.g. XTA) can override this to enforce a filtered assignment.
      * returns null if there's a problem.
      */
-    public UnaryOperator getPutAssignmentOperator() {
+    public UnaryOperator<PointsToSetVariable> getPutAssignmentOperator() {
       return assignOperator;
     }
 
@@ -1517,7 +1505,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * Update the points-to-set for a field to include a particular instance key.
    */
-  public final class InstancePutFieldOperator extends UnaryOperator implements IPointerOperator {
+  public final class InstancePutFieldOperator extends UnaryOperator<PointsToSetVariable> implements IPointerOperator {
     final private IField field;
 
     final private InstanceKey instance;
@@ -1538,8 +1526,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * Simply add the instance to each relevant points-to set.
      */
     @Override
-    public byte evaluate(IVariable dummyLHS, IVariable var) {
-      PointsToSetVariable ref = (PointsToSetVariable) var;
+    public byte evaluate(PointsToSetVariable dummyLHS, PointsToSetVariable var) {
+      PointsToSetVariable ref = var;
       if (ref.size() == 0) {
         return NOT_CHANGED;
       }
@@ -1591,7 +1579,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * Update the points-to-set for an array contents to include a particular
    * instance key.
    */
-  public final class InstanceArrayStoreOperator extends UnaryOperator implements IPointerOperator {
+  public final class InstanceArrayStoreOperator extends UnaryOperator<PointsToSetVariable> implements IPointerOperator {
     final private InstanceKey instance;
 
     protected final MutableIntSet priorInstances = rememberGetPutHistory ? IntSetUtil.make() : null;
@@ -1609,8 +1597,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      * Simply add the instance to each relevant points-to set.
      */
     @Override
-    public byte evaluate(IVariable dummyLHS, IVariable var) {
-      PointsToSetVariable arrayref = (PointsToSetVariable) var;
+    public byte evaluate(PointsToSetVariable dummyLHS, PointsToSetVariable var) {
+      PointsToSetVariable arrayref = var;
       if (arrayref.size() == 0) {
         return NOT_CHANGED;
       }
@@ -1740,28 +1728,26 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
      *      com.ibm.wala.dataflow.IVariable)
      */
     @Override
-    public byte evaluate(IVariable lhs, IVariable rhs) {
+    public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
 
-      PointsToSetVariable L = (PointsToSetVariable) lhs;
-      PointsToSetVariable R = (PointsToSetVariable) rhs;
-      FilteredPointerKey pk = (FilteredPointerKey) L.getPointerKey();
+      FilteredPointerKey pk = (FilteredPointerKey) lhs.getPointerKey();
       FilteredPointerKey.TypeFilter filter = pk.getTypeFilter();
 
       boolean debug = false;
       if (DEBUG_FILTER) {
-        String S = "EVAL InverseFilter/" + filter + " " + L.getPointerKey() + " " + R.getPointerKey();
+        String S = "EVAL InverseFilter/" + filter + " " + lhs.getPointerKey() + " " + rhs.getPointerKey();
         S += "\nEVAL      " + lhs + " " + rhs;
         debug = Trace.guardedPrintln(S, DEBUG_METHOD_SUBSTRING);
       }
-      if (R.size() == 0) {
+      if (rhs.size() == 0) {
         return NOT_CHANGED;
       }
 
-      boolean changed = filter.addInverseFiltered(system, L, R);
+      boolean changed = filter.addInverseFiltered(system, lhs, rhs);
 
       if (DEBUG_FILTER) {
         if (debug) {
-          Trace.println("RESULT " + L + (changed ? " (changed)" : ""));
+          Trace.println("RESULT " + lhs + (changed ? " (changed)" : ""));
         }
       }
       return changed ? CHANGED : NOT_CHANGED;

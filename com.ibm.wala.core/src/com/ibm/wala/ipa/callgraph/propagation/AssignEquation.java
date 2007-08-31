@@ -10,23 +10,22 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import com.ibm.wala.fixedpoint.impl.AbstractOperator;
+import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixedpoint.impl.UnaryStatement;
-import com.ibm.wala.fixpoint.IVariable;
 
 /**
  * A specialized equation class introduced for efficiency
  * 
  * @author sfink
  */
-public final class AssignEquation extends UnaryStatement {
+public final class AssignEquation extends UnaryStatement<PointsToSetVariable> {
 
-  AssignEquation(IVariable lhs, IVariable rhs) {
+  AssignEquation(PointsToSetVariable lhs, PointsToSetVariable rhs) {
     super(lhs, rhs);
   }
 
   @Override
-  public AbstractOperator getOperator() {
+  public UnaryOperator<PointsToSetVariable> getOperator() {
     return PropagationCallGraphBuilder.assignOperator;
   }
 

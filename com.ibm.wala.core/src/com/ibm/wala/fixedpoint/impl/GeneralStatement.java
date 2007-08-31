@@ -18,23 +18,24 @@ import com.ibm.wala.fixpoint.IVariable;
  * @author Stephen Fink
  * @author Julian Dolby
  */
-public class GeneralStatement extends AbstractStatement {
+public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, AbstractOperator<T>> {
 
-  protected final IVariable lhs;
+  protected final T lhs;
 
   protected final IVariable[] rhs;
 
   private final int hashCode;
 
-  private final AbstractOperator operator;
+  private final AbstractOperator<T> operator;
 
   /**
    * Evaluate this equation, setting a new value for the left-hand side.
    * 
    * @return true if the lhs value changed. false otherwise
    */
+  @SuppressWarnings("unchecked")
   public byte evaluate() {
-    return operator.evaluate(lhs, rhs);
+    return operator.evaluate(lhs,  rhs);
   }
 
   /**
@@ -42,7 +43,7 @@ public class GeneralStatement extends AbstractStatement {
    * 
    * @return the lattice cell this equation computes
    */
-  public IVariable getLHS() {
+  public T getLHS() {
     return lhs;
   }
 
@@ -76,7 +77,7 @@ public class GeneralStatement extends AbstractStatement {
    * @param operator
    *          the equation operator
    */
-  public GeneralStatement(IVariable lhs, AbstractOperator operator) {
+  public GeneralStatement(T lhs, AbstractOperator<T> operator) {
     super();
     this.operator = operator;
     this.lhs = lhs;
@@ -96,7 +97,7 @@ public class GeneralStatement extends AbstractStatement {
    * @param op2
    *          the second operand on the rhs
    */
-  public GeneralStatement(IVariable lhs, AbstractOperator operator, IVariable op1, IVariable op2) {
+  public GeneralStatement(T lhs, AbstractOperator<T> operator, T op1, T op2) {
     super();
     this.operator = operator;
     this.lhs = lhs;
@@ -120,7 +121,7 @@ public class GeneralStatement extends AbstractStatement {
    * @param op3
    *          the third operand on the rhs
    */
-  public GeneralStatement(IVariable lhs, AbstractOperator operator, IVariable op1, IVariable op2, IVariable op3) {
+  public GeneralStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, T op3) {
     super();
     this.operator = operator;
     rhs = new IVariable[3];
@@ -143,7 +144,7 @@ public class GeneralStatement extends AbstractStatement {
    * @throws IllegalArgumentException
    *           if rhs is null
    */
-  public GeneralStatement(IVariable lhs, AbstractOperator operator, IVariable[] rhs) {
+  public GeneralStatement(T lhs, AbstractOperator<T> operator, T[] rhs) {
     super();
     if (rhs == null) {
       throw new IllegalArgumentException("rhs is null");
@@ -209,11 +210,12 @@ public class GeneralStatement extends AbstractStatement {
   }
 
   @Override
-  public AbstractOperator getOperator() {
+  public AbstractOperator<T> getOperator() {
     return operator;
   }
 
-  public IVariable[] getRHS() {
-    return rhs;
+  @SuppressWarnings("unchecked")
+  public T[] getRHS() {
+    return (T[]) rhs;
   }
 }

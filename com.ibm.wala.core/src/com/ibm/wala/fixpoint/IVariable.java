@@ -14,22 +14,13 @@ import com.ibm.wala.util.graph.INodeWithNumber;
 
 
 /**
- * 
  * Represents a single variable in a fixed-point iterative system.
  * 
- * IVariable.java
  * 
  * @author Stephen Fink
  */
 public interface IVariable extends INodeWithNumber {
 
-
-  /**
-   * Set this variable to have the same state as another one.
-   * 
-   * @param v
-   */
-  void copyState(IVariable v);
   
   /**
    * Variables must allow the solver implementation to get/set an order number,

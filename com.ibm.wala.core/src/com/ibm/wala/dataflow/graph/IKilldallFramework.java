@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.graph;
 
+import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.graph.Graph;
 
 /**
@@ -21,7 +22,7 @@ import com.ibm.wala.util.graph.Graph;
  * @author sfink
  * 
  */
-public interface IKilldallFramework<T> {
+public interface IKilldallFramework<T,V extends IVariable> {
 
   /**
    * @return the flow graph which induces this dataflow problem
@@ -31,5 +32,5 @@ public interface IKilldallFramework<T> {
   /**
    * @return an object which provides the flow function for each node in the graph
    */
-  public ITransferFunctionProvider<T> getTransferFunctionProvider();
+  public ITransferFunctionProvider<T,V> getTransferFunctionProvider();
 }

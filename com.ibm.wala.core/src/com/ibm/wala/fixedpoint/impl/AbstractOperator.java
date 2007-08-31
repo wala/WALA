@@ -22,7 +22,7 @@ import com.ibm.wala.fixpoint.IVariable;
  *
  * @author Stephen Fink
  */
-public abstract class AbstractOperator implements FixedPointConstants {
+public abstract class AbstractOperator<T extends IVariable> implements FixedPointConstants {
 
   /** 
    * Evaluate this equation, setting a new value for the
@@ -33,7 +33,7 @@ public abstract class AbstractOperator implements FixedPointConstants {
    *                                   we never have to evaluate the equation again, even
    *                                   if rhs operands change?
    */
-  public abstract byte evaluate(IVariable lhs, IVariable[] rhs);
+  public abstract byte evaluate(T lhs, IVariable[] rhs);
 
   @Override
   public abstract int hashCode();

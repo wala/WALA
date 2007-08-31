@@ -29,7 +29,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -1580,7 +1579,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * the dataflow information computed for the receiver. TODO: generalize this
    * to have other forms of context selection, such as CPA-style algorithms.
    */
-  final class DispatchOperator extends UnaryOperator implements IPointerOperator {
+  final class DispatchOperator extends UnaryOperator<PointsToSetVariable> implements IPointerOperator {
     private final SSAAbstractInvokeInstruction call;
 
     private final ExplicitCallGraph.ExplicitNode node;
@@ -1615,8 +1614,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      *      com.ibm.wala.dataflow.fixpoint.IVariable)
      */
     @Override
-    public byte evaluate(IVariable lhs, IVariable rhs) {
-      final IntSetVariable receivers = (IntSetVariable) rhs;
+    public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
+      final IntSetVariable receivers = rhs;
       final MutableBoolean sideEffect = new MutableBoolean();
 
       // compute the set of pointers that were not previously handled

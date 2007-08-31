@@ -19,6 +19,7 @@ import com.ibm.wala.dataflow.graph.BitVectorUnion;
 import com.ibm.wala.dataflow.graph.BitVectorUnionVector;
 import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
+import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.BitVector;
@@ -50,7 +51,7 @@ class GenReach<T, L> extends BitVectorFramework<T, L> {
     return result;
   }
 
-  static class GenFunctions<T, L> implements ITransferFunctionProvider<T> {
+  static class GenFunctions<T, L> implements ITransferFunctionProvider<T, BitVectorVariable> {
     private final Map<T, Collection<L>> gen;
 
     private OrdinalSetMapping<L> domain;
@@ -59,11 +60,11 @@ class GenReach<T, L> extends BitVectorFramework<T, L> {
       this.gen = gen;
     }
 
-    public AbstractMeetOperator getMeetOperator() {
+    public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
       return BitVectorUnion.instance();
     }
 
-    public UnaryOperator getNodeTransferFunction(T node) {
+    public UnaryOperator<BitVectorVariable> getNodeTransferFunction(T node) {
       BitVector v = getGen(node);
       return new BitVectorUnionVector(v);
     }
@@ -89,7 +90,7 @@ class GenReach<T, L> extends BitVectorFramework<T, L> {
       return true;
     }
 
-    public UnaryOperator getEdgeTransferFunction(T src, T dst) {
+    public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(T src, T dst) {
       Assertions.UNREACHABLE();
       return null;
     }

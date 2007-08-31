@@ -11,6 +11,7 @@
 package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
+import com.ibm.wala.fixpoint.IVariable;
 
 /**
  * 
@@ -22,13 +23,13 @@ import com.ibm.wala.fixedpoint.impl.UnaryOperator;
  * @author Julian Dolby (dolby@us.ibm.com)
  * 
  */
-public interface ITransferFunctionProvider<T> {
+public interface ITransferFunctionProvider<T, V extends IVariable> {
 
   /**
    * @param node
    * @return the transfer function from IN_node -> OUT_node
    */
-  public UnaryOperator getNodeTransferFunction(T node);
+  public UnaryOperator<V> getNodeTransferFunction(T node);
 
   /**
    * @return true if this provider provides node transfer functions
@@ -40,7 +41,7 @@ public interface ITransferFunctionProvider<T> {
    * @param dst
    * @return the transfer function from OUT_src -> EDGE_<src,dst>
    */
-  public UnaryOperator getEdgeTransferFunction(T src, T dst);
+  public UnaryOperator<V> getEdgeTransferFunction(T src, T dst);
 
   /**
    * @return true if this provider provides edge transfer functions
@@ -52,5 +53,5 @@ public interface ITransferFunctionProvider<T> {
    * an API to allow composition of the meet operator with the flow operator for
    * a given block, as an optimization?
    */
-  public AbstractMeetOperator getMeetOperator();
+  public AbstractMeetOperator<V> getMeetOperator();
 }

@@ -17,7 +17,7 @@ import com.ibm.wala.fixpoint.IVariable;
 /**
  * Operator U(n) = U(n) U U(j)
  */
-public class BitVectorUnion extends AbstractMeetOperator implements FixedPointConstants {
+public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> implements FixedPointConstants {
 
   private final static BitVectorUnion SINGLETON = new BitVectorUnion();
 
@@ -50,20 +50,18 @@ public class BitVectorUnion extends AbstractMeetOperator implements FixedPointCo
    * @see com.ibm.wala.dataflow.fixpoint.Operator#evaluate(com.ibm.wala.dataflow.fixpoint.IVariable[])
    */
   @Override
-  public byte evaluate(IVariable lhs, IVariable[] rhs) throws IllegalArgumentException {
+  public byte evaluate(BitVectorVariable lhs, IVariable[] rhs) throws IllegalArgumentException {
     if (rhs == null) {
       throw new IllegalArgumentException("rhs == null");
     }
-    BitVectorVariable L = (BitVectorVariable) lhs;
-
     BitVectorVariable U = new BitVectorVariable();
-    U.copyState(L);
+    U.copyState(lhs);
     for (int i = 0; i < rhs.length; i++) {
       BitVectorVariable R = (BitVectorVariable) rhs[i];
       U.addAll(R);
     }
-    if (!L.sameValue(U)) {
-      L.copyState(U);
+    if (!lhs.sameValue(U)) {
+      lhs.copyState(U);
       return CHANGED;
     } else {
       return NOT_CHANGED;

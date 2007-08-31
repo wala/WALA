@@ -27,17 +27,17 @@ import com.ibm.wala.util.graph.INodeWithNumber;
  * Intuitively, a statement definition corresponds to an "equation" in dataflow parlance, or
  * a "constraint" in constraint solvers.
  */
-public interface IFixedPointStatement extends INodeWithNumber {
+public interface IFixedPointStatement<T extends IVariable> extends INodeWithNumber {
   /**
    * @return the left-hand side of this statement.
    */
-  public IVariable getLHS();
+  public T getLHS();
   
   /**
    * returns the list of free variables appearing in the right-hand side of the
    * statement
    */
-  public IVariable[] getRHS();
+  public T[] getRHS();
 
   /**
    * Evaluate this statement, setting a new value for the left-hand side. The
@@ -56,5 +56,5 @@ public interface IFixedPointStatement extends INodeWithNumber {
    * 
    * @param v the variable in question
    */
-  public boolean hasVariable(IVariable v);
+  public boolean hasVariable(T v);
 }

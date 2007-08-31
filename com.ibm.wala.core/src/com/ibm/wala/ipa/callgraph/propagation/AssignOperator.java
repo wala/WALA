@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixedpoint.impl.UnaryStatement;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.debug.Trace;
 
 /**
@@ -24,37 +23,35 @@ import com.ibm.wala.util.debug.Trace;
  * this allows it to compose with other ops that define the same lhs, so long as
  * they're all Assign ops)
  */
-class AssignOperator extends UnaryOperator implements IPointerOperator {
+class AssignOperator extends UnaryOperator<PointsToSetVariable> implements IPointerOperator {
 
   @Override
-  public UnaryStatement makeEquation(IVariable lhs, IVariable rhs) {
+  public UnaryStatement<PointsToSetVariable> makeEquation(PointsToSetVariable lhs, PointsToSetVariable rhs) {
     return new AssignEquation(lhs, rhs);
   }
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable rhs) {
+  public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
 
-    PointsToSetVariable L = (PointsToSetVariable) lhs;
-    PointsToSetVariable R = (PointsToSetVariable) rhs;
 
     boolean debug = false;
     if (PropagationCallGraphBuilder.DEBUG_ASSIGN) {
-      String S = "EVAL Assign " + L.getPointerKey() + " " + R.getPointerKey();
+      String S = "EVAL Assign " + lhs.getPointerKey() + " " + rhs.getPointerKey();
       S = S + "\nEVAL " + lhs + " " + rhs;
       debug = Trace.guardedPrintln(S, PropagationCallGraphBuilder.DEBUG_METHOD_SUBSTRING);
     }
-    boolean changed = L.addAll(R);
+    boolean changed = lhs.addAll(rhs);
     if (PropagationCallGraphBuilder.DEBUG_ASSIGN) {
       if (debug) {
-        Trace.println("RESULT " + L + (changed ? " (changed)" : ""));
+        Trace.println("RESULT " + lhs + (changed ? " (changed)" : ""));
       }
     }
 
     if (PropagationCallGraphBuilder.DEBUG_TRACK_INSTANCE) {
       if (changed) {
-        if (L.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)
-            && R.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)) {
-          Trace.println("Assign: FLOW FROM " + R.getPointerKey() + " TO " + L.getPointerKey());
+        if (lhs.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)
+            && rhs.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)) {
+          Trace.println("Assign: FLOW FROM " + rhs.getPointerKey() + " TO " + lhs.getPointerKey());
         }
       }
     }

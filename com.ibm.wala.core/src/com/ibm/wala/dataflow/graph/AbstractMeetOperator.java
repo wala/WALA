@@ -11,12 +11,13 @@
 package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixedpoint.impl.AbstractOperator;
+import com.ibm.wala.fixpoint.IVariable;
 
 /**
  * @author sfink
  *
  */
-public abstract class AbstractMeetOperator extends AbstractOperator {
+public abstract class AbstractMeetOperator<T extends IVariable> extends AbstractOperator<T> {
 
   /**
    * subclasses can override if needed

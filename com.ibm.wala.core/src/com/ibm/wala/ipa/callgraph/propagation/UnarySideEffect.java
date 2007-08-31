@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
-import com.ibm.wala.fixpoint.IVariable;
 
 /**
  * 
@@ -27,7 +26,7 @@ import com.ibm.wala.fixpoint.IVariable;
  * 
  * @author sfink
  */
-public abstract class UnarySideEffect extends UnaryOperator {
+public abstract class UnarySideEffect extends UnaryOperator<PointsToSetVariable> {
   private PointsToSetVariable fixedSet;
 
   public UnarySideEffect(PointsToSetVariable fixedSet) {
@@ -35,11 +34,11 @@ public abstract class UnarySideEffect extends UnaryOperator {
   }
   
   @Override
-  public final byte evaluate(IVariable lhs, IVariable rhs) {
+  public final byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
     return evaluate(rhs);
   }
 
-  public abstract byte evaluate(IVariable rhs);
+  public abstract byte evaluate(PointsToSetVariable rhs);
   
   /**
    * @return Returns the fixed points-to-set associated with this side effect.

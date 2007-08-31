@@ -18,12 +18,12 @@ import com.ibm.wala.fixpoint.IVariable;
  *
  * @author Stephen Fink
  */
-public abstract class NullaryStatement extends AbstractStatement {
+public abstract class NullaryStatement<T extends IVariable> extends AbstractStatement<T, NullaryOperator<T>> {
 
   /**
    * The operands
    */
-  final protected IVariable lhs;
+  final protected T lhs;
 
   /** 
    * Evaluate this equation, setting a new value for the
@@ -32,7 +32,7 @@ public abstract class NullaryStatement extends AbstractStatement {
    * @return true if the lhs value changed. false otherwise
    */
   public byte evaluate() {
-    NullaryOperator op = (NullaryOperator) getOperator();
+    NullaryOperator<T> op = getOperator();
     return op.evaluate(lhs);
   }
 
@@ -41,7 +41,7 @@ public abstract class NullaryStatement extends AbstractStatement {
    * 
    * @return the lattice cell this equation computes
    */
-  public IVariable getLHS() {
+  public T getLHS() {
     return lhs;
   }
 
@@ -50,7 +50,7 @@ public abstract class NullaryStatement extends AbstractStatement {
    * @param cell the cell in question
    * @return true or false
    */
-  public boolean hasVariable(IVariable cell) {
+  public boolean hasVariable(T cell) {
     return lhs == cell;
   }
 
@@ -59,7 +59,7 @@ public abstract class NullaryStatement extends AbstractStatement {
    *
    * @param lhs the lattice cell set by this equation
    */
-  protected NullaryStatement(IVariable lhs) {
+  protected NullaryStatement(T lhs) {
     super();
     this.lhs = lhs;
   }
@@ -99,7 +99,7 @@ public abstract class NullaryStatement extends AbstractStatement {
     return result;
   }
   
-  public IVariable[] getRHS() throws UnsupportedOperationException {
+  public T[] getRHS() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 }

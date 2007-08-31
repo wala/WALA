@@ -28,8 +28,6 @@ import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixedpoint.impl.UnaryStatement;
 import com.ibm.wala.fixedpoint.impl.Worklist;
 import com.ibm.wala.fixpoint.IFixedPointSystem;
-import com.ibm.wala.fixpoint.IVariable;
-import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder.FilterOperator;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -60,7 +58,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * 
  * @author sfink
  */
-public class PropagationSystem extends DefaultFixedPointSolver {
+public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariable> {
 
   private final static boolean DEBUG = false;
 
@@ -113,7 +111,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * 
    * This maintains a map from PointsToSetVariable -> Set<UnarySideEffect>
    */
-  final private Map<PointsToSetVariable,Set<UnarySideEffect>> fixedSetMap = HashMapFactory.make();
+  final private Map<PointsToSetVariable, Set<UnarySideEffect>> fixedSetMap = HashMapFactory.make();
 
   /**
    * Governing call graph;
@@ -129,7 +127,8 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * @param instanceKeyFactory
    * @param refinement
    */
-  public PropagationSystem(CallGraph cg, PointerKeyFactory pointerKeyFactory, InstanceKeyFactory instanceKeyFactory, boolean refinement) {
+  public PropagationSystem(CallGraph cg, PointerKeyFactory pointerKeyFactory, InstanceKeyFactory instanceKeyFactory,
+      boolean refinement) {
     this.cg = cg;
     this.pointerKeyFactory = pointerKeyFactory;
     this.instanceKeyFactory = instanceKeyFactory;
@@ -197,7 +196,8 @@ public class PropagationSystem extends DefaultFixedPointSolver {
   /**
    * @return a set of integers representing the instance keys that correspond to
    *         a given class, or null if there are none.
-   * @throws IllegalArgumentException  if klass is null
+   * @throws IllegalArgumentException
+   *             if klass is null
    */
   public IntSet getInstanceKeysForClass(IClass klass) {
     if (klass == null) {
@@ -288,7 +288,8 @@ public class PropagationSystem extends DefaultFixedPointSolver {
             Assertions.UNREACHABLE("fpk.getTypeFilter() is null");
           }
           if (!fpk.getTypeFilter().equals(((FilteredPointerKey) key).getTypeFilter())) {
-	    Assertions.UNREACHABLE("Cannot use filter " + ((FilteredPointerKey) key).getTypeFilter() + " for " + key + ": previously created different filter "  + fpk.getTypeFilter());
+            Assertions.UNREACHABLE("Cannot use filter " + ((FilteredPointerKey) key).getTypeFilter() + " for " + key
+                + ": previously created different filter " + fpk.getTypeFilter());
           }
         }
       }
@@ -314,7 +315,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * 
    * @return true iff the system changes
    */
-  public boolean newConstraint(PointerKey lhs, UnaryOperator op, PointerKey rhs) {
+  public boolean newConstraint(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(lhs != null);
       Assertions._assert(op != null);
@@ -340,7 +341,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     return newStatement(L, op, R, true, true);
   }
 
-  public void newConstraint(PointerKey lhs, AbstractOperator op, PointerKey rhs) {
+  public void newConstraint(PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(lhs != null);
       Assertions._assert(op != null);
@@ -353,12 +354,12 @@ public class PropagationSystem extends DefaultFixedPointSolver {
       Assertions._assert(!pointsToMap.isUnified(lhs));
       Assertions._assert(!pointsToMap.isUnified(rhs));
     }
-    IntSetVariable L = findOrCreatePointsToSet(lhs);
-    IntSetVariable R = findOrCreatePointsToSet(rhs);
-    newStatement(L, op, new IVariable[] { R }, true, true);
+    PointsToSetVariable L = findOrCreatePointsToSet(lhs);
+    PointsToSetVariable R = findOrCreatePointsToSet(rhs);
+    newStatement(L, op, new PointsToSetVariable[] { R }, true, true);
   }
 
-  public void newConstraint(PointerKey lhs, AbstractOperator op, PointerKey rhs1, PointerKey rhs2) {
+  public void newConstraint(PointerKey lhs, AbstractOperator<PointsToSetVariable> op, PointerKey rhs1, PointerKey rhs2) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(lhs != null);
       Assertions._assert(op != null);
@@ -373,23 +374,23 @@ public class PropagationSystem extends DefaultFixedPointSolver {
       Assertions._assert(!pointsToMap.isUnified(rhs1));
       Assertions._assert(!pointsToMap.isUnified(rhs2));
     }
-    IntSetVariable L = findOrCreatePointsToSet(lhs);
-    IntSetVariable R1 = findOrCreatePointsToSet(rhs1);
-    IntSetVariable R2 = findOrCreatePointsToSet(rhs2);
+    PointsToSetVariable L = findOrCreatePointsToSet(lhs);
+    PointsToSetVariable R1 = findOrCreatePointsToSet(rhs1);
+    PointsToSetVariable R2 = findOrCreatePointsToSet(rhs2);
     newStatement(L, op, R1, R2, true, true);
   }
 
   /**
    * @return true iff the system changes
    */
-  public boolean newFieldWrite(PointerKey lhs, UnaryOperator op, PointerKey rhs, PointerKey container) {
+  public boolean newFieldWrite(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs, PointerKey container) {
     return newConstraint(lhs, op, rhs);
   }
 
   /**
    * @return true iff the system changes
    */
-  public boolean newFieldRead(PointerKey lhs, UnaryOperator op, PointerKey rhs, PointerKey container) {
+  public boolean newFieldRead(PointerKey lhs, UnaryOperator<PointsToSetVariable> op, PointerKey rhs, PointerKey container) {
     return newConstraint(lhs, op, rhs);
   }
 
@@ -405,7 +406,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     // we don't actually add a constraint.
     // instead, we immediately add the value to the points-to set.
     // This works since the solver is monotonic with TOP = {}
-    IntSetVariable L = findOrCreatePointsToSet(lhs);
+    PointsToSetVariable L = findOrCreatePointsToSet(lhs);
     int index = findOrCreateIndexForInstanceKey(value);
     if (L.contains(index)) {
       // a no-op
@@ -562,11 +563,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     }
   }
 
-  /**
-   * @param op
-   * @param arg0
-   */
-  public void newSideEffect(UnaryOperator op, PointerKey arg0) {
+  public void newSideEffect(UnaryOperator<PointsToSetVariable> op, PointerKey arg0) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(arg0 != null);
     }
@@ -576,16 +573,11 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     if (Assertions.verifyAssertions) {
       Assertions._assert(!pointsToMap.isUnified(arg0));
     }
-    IntSetVariable v1 = findOrCreatePointsToSet(arg0);
+    PointsToSetVariable v1 = findOrCreatePointsToSet(arg0);
     newStatement(null, op, v1, true, true);
   }
 
-  /**
-   * @param op
-   * @param arg0
-   * @param arg1
-   */
-  public void newSideEffect(AbstractOperator op, PointerKey arg0, PointerKey arg1) {
+  public void newSideEffect(AbstractOperator<PointsToSetVariable> op, PointerKey arg0, PointerKey arg1) {
     if (DEBUG) {
       Trace.println("add constraint D: " + op + " " + arg0);
     }
@@ -593,8 +585,8 @@ public class PropagationSystem extends DefaultFixedPointSolver {
       Assertions._assert(!pointsToMap.isUnified(arg0));
       Assertions._assert(!pointsToMap.isUnified(arg1));
     }
-    IntSetVariable v1 = findOrCreatePointsToSet(arg0);
-    IntSetVariable v2 = findOrCreatePointsToSet(arg1);
+    PointsToSetVariable v1 = findOrCreatePointsToSet(arg0);
+    PointsToSetVariable v2 = findOrCreatePointsToSet(arg1);
     newStatement(null, op, v1, v2, true, true);
   }
 
@@ -668,7 +660,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
   }
 
   @Override
-  public IFixedPointSystem getFixedPointSystem() {
+  public IFixedPointSystem<PointsToSetVariable> getFixedPointSystem() {
     return flowGraph;
   }
 
@@ -693,19 +685,19 @@ public class PropagationSystem extends DefaultFixedPointSolver {
     return workList;
   }
 
-  public Iterator<AbstractStatement> getStatementsThatUse(IVariable v) {
+  public Iterator<AbstractStatement> getStatementsThatUse(PointsToSetVariable v) {
     return flowGraph.getStatementsThatUse(v);
   }
 
-  public Iterator<AbstractStatement> getStatementsThatDef(IVariable v) {
+  public Iterator<AbstractStatement> getStatementsThatDef(PointsToSetVariable v) {
     return flowGraph.getStatementsThatDef(v);
   }
 
-  public NumberedGraph<IVariable> getAssignmentGraph() {
+  public NumberedGraph<PointsToSetVariable> getAssignmentGraph() {
     return flowGraph.getAssignmentGraph();
   }
 
-  public Graph<IVariable> getFilterAsssignmentGraph() {
+  public Graph<PointsToSetVariable> getFilterAsssignmentGraph() {
     return flowGraph.getFilterAssignmentGraph();
   }
 
@@ -737,7 +729,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
 
   /**
    * @param verboseInterval
-   *          The verboseInterval to set.
+   *            The verboseInterval to set.
    */
   public void setVerboseInterval(int verboseInterval) {
     this.verboseInterval = verboseInterval;
@@ -759,8 +751,9 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * Unify the points-to-sets for the variables identified by the set s
    * 
    * @param s
-   *          numbers of points-to-set variables
-   * @throws IllegalArgumentException  if s is null
+   *            numbers of points-to-set variables
+   * @throws IllegalArgumentException
+   *             if s is null
    */
   public void unify(IntSet s) {
     if (s == null) {
@@ -788,9 +781,9 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * Update side effect after unification
    * 
    * @param s
-   *          set of PointsToSetVariables that have been unified
+   *            set of PointsToSetVariables that have been unified
    * @param rep
-   *          number of the representative variable for the unified set.
+   *            number of the representative variable for the unified set.
    */
   private void updateSideEffectsForUnification(HashSet<PointsToSetVariable> s, int rep) {
     PointsToSetVariable pRef = pointsToMap.getPointsToSet(rep);
@@ -804,10 +797,11 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * Update equation def/uses after unification
    * 
    * @param s
-   *          set of PointsToSetVariables that have been unified
+   *            set of PointsToSetVariables that have been unified
    * @param rep
-   *          number of the representative variable for the unified set.
+   *            number of the representative variable for the unified set.
    */
+  @SuppressWarnings("unchecked")
   private void updateEquationsForUnification(HashSet<PointsToSetVariable> s, int rep) {
     PointsToSetVariable pRef = pointsToMap.getPointsToSet(rep);
     for (Iterator<PointsToSetVariable> it = s.iterator(); it.hasNext();) {
@@ -821,7 +815,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
 
           if (as instanceof AssignEquation) {
             AssignEquation assign = (AssignEquation) as;
-            PointsToSetVariable rhs = (PointsToSetVariable) assign.getRightHandSide();
+            PointsToSetVariable rhs = assign.getRightHandSide();
             int rhsRep = pointsToMap.getRepresentative(pointsToMap.getIndex(rhs.getPointerKey()));
             if (rhsRep == rep) {
               flowGraph.removeStatement(as);
@@ -837,7 +831,7 @@ public class PropagationSystem extends DefaultFixedPointSolver {
           AbstractStatement as = (AbstractStatement) u.next();
           if (as instanceof AssignEquation) {
             AssignEquation assign = (AssignEquation) as;
-            PointsToSetVariable lhs = (PointsToSetVariable) assign.getLHS();
+            PointsToSetVariable lhs = assign.getLHS();
             int lhsRep = pointsToMap.getRepresentative(pointsToMap.getIndex(lhs.getPointerKey()));
             if (lhsRep == rep) {
               flowGraph.removeStatement(as);
@@ -856,20 +850,21 @@ public class PropagationSystem extends DefaultFixedPointSolver {
   }
 
   /**
-   * replace all occurences of p on the rhs of a statement with pRef
+   * replace all occurrences of p on the rhs of a statement with pRef
    * 
    * @param as
-   *          a statement that uses p in it's right-hand side
+   *            a statement that uses p in it's right-hand side
    */
-  private void replaceRHS(PointsToSetVariable pRef, PointsToSetVariable p, AbstractStatement as) {
+  private void replaceRHS(PointsToSetVariable pRef, PointsToSetVariable p,
+      AbstractStatement<PointsToSetVariable, AbstractOperator<PointsToSetVariable>> as) {
     if (as instanceof UnaryStatement) {
       if (Assertions.verifyAssertions) {
         Assertions._assert(((UnaryStatement) as).getRightHandSide() == p);
       }
-      newStatement(as.getLHS(), (UnaryOperator) as.getOperator(), pRef, false, false);
+      newStatement(as.getLHS(), (UnaryOperator<PointsToSetVariable>) as.getOperator(), pRef, false, false);
     } else {
-      IVariable[] rhs = as.getRHS();
-      IVariable[] newRHS = new IVariable[rhs.length];
+      PointsToSetVariable[] rhs = as.getRHS();
+      PointsToSetVariable[] newRHS = new PointsToSetVariable[rhs.length];
       for (int i = 0; i < rhs.length; i++) {
         if (rhs[i].equals(p)) {
           newRHS[i] = pRef;
@@ -886,14 +881,15 @@ public class PropagationSystem extends DefaultFixedPointSolver {
    * replace all occurences of p on the lhs of a statement with pRef
    * 
    * @param as
-   *          a statement that defs p
+   *            a statement that defs p
    */
-  private void replaceLHS(PointsToSetVariable pRef, PointsToSetVariable p, AbstractStatement as) {
+  private void replaceLHS(PointsToSetVariable pRef, PointsToSetVariable p,
+      AbstractStatement<PointsToSetVariable, AbstractOperator<PointsToSetVariable>> as) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(as.getLHS() == p);
     }
     if (as instanceof UnaryStatement) {
-      newStatement(pRef, (UnaryOperator) as.getOperator(), ((UnaryStatement) as).getRightHandSide(), false, false);
+      newStatement(pRef, (UnaryOperator<PointsToSetVariable>) as.getOperator(), (PointsToSetVariable) ((UnaryStatement) as).getRightHandSide(), false, false);
     } else {
       newStatement(pRef, as.getOperator(), as.getRHS(), false, false);
     }

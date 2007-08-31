@@ -12,7 +12,6 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
@@ -20,7 +19,7 @@ import com.ibm.wala.util.intset.IntSet;
 /**
  * Operator OUT = IN - filterSet
  */
-public class BitVectorFilter extends UnaryOperator {
+public class BitVectorFilter extends UnaryOperator<BitVectorVariable> {
 
   private final BitVectorIntSet mask;
 
@@ -29,14 +28,12 @@ public class BitVectorFilter extends UnaryOperator {
   }
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable rhs) {
-    BitVectorVariable L = (BitVectorVariable) lhs;
-    BitVectorVariable R = (BitVectorVariable) rhs;
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
 
     BitVectorVariable U = new BitVectorVariable();
-    U.copyState(L);
+    U.copyState(lhs);
 
-    IntSet r = R.getValue();
+    IntSet r = rhs.getValue();
     if (r == null)
       return NOT_CHANGED;
 
@@ -44,12 +41,12 @@ public class BitVectorFilter extends UnaryOperator {
     rr.addAll(r);
     rr.removeAll(mask);
 
-    System.err.println("adding " + rr + " to " + L);
+    System.err.println("adding " + rr + " to " + lhs);
 
     U.addAll(rr.getBitVector());
 
-    if (!L.sameValue(U)) {
-      L.copyState(U);
+    if (!lhs.sameValue(U)) {
+      lhs.copyState(U);
       return CHANGED;
     } else {
       return NOT_CHANGED;

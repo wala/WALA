@@ -17,7 +17,7 @@ import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 /**
  * Operator U(n) = U(n) | U(j)
  */
-public final class UnaryOr extends UnaryOperator {
+public final class UnaryOr extends UnaryOperator<BooleanVariable> {
 
   private static final UnaryOr SINGLETON = new UnaryOr();
   
@@ -30,16 +30,14 @@ public final class UnaryOr extends UnaryOperator {
 
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable rhs) throws IllegalArgumentException {
+  public byte evaluate(BooleanVariable lhs, BooleanVariable rhs) throws IllegalArgumentException {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs == null");
     }
-    BooleanVariable L = (BooleanVariable) lhs;
-    BooleanVariable R = (BooleanVariable) rhs;
 
-    boolean old = L.getValue();
-    L.or(R);
-    return (L.getValue() != old) ? FixedPointConstants.CHANGED : FixedPointConstants.NOT_CHANGED;
+    boolean old = lhs.getValue();
+    lhs.or(rhs);
+    return (lhs.getValue() != old) ? FixedPointConstants.CHANGED : FixedPointConstants.NOT_CHANGED;
   }
 
   @Override

@@ -85,7 +85,7 @@ public class DeadAssignmentElimination {
   /**
    * A dataflow system which computes whether or not a value is dead
    */
-  private static class DeadValueSystem extends DefaultFixedPointSolver {
+  private static class DeadValueSystem extends DefaultFixedPointSolver<BooleanVariable> {
 
     /**
      * Map: value number -> BooleanVariable isLive

@@ -18,7 +18,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -28,6 +27,7 @@ import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph.ExplicitNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointsToSetVariable;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -116,7 +116,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
    * the dataflow information computed for the receiver. TODO: generalize this
    * to have other forms of context selection, such as CPA-style algorithms.
    */
-  private final class DispatchOperator extends UnaryOperator {
+  private final class DispatchOperator extends UnaryOperator<PointsToSetVariable> {
     private final CallSiteReference site;
     private final ExplicitCallGraph.ExplicitNode caller;
 
@@ -131,8 +131,8 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     final private MutableIntSet previousReceivers = IntSetUtil.getDefaultIntSetFactory().make();
 
     @Override
-    public byte evaluate(IVariable lhs, IVariable rhs) {
-      IntSetVariable receivers = (IntSetVariable) rhs;
+    public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
+      IntSetVariable receivers =rhs;
 
       // compute the set of pointers that were not previously handled
       IntSet value = receivers.getValue();
@@ -239,7 +239,7 @@ public class BasicRTABuilder extends AbstractRTABuilder {
    *      com.ibm.wala.ipa.callgraph.CGNode)
    */
   @Override
-  protected UnaryOperator makeDispatchOperator(CallSiteReference site, CGNode node) {
+  protected UnaryOperator<PointsToSetVariable> makeDispatchOperator(CallSiteReference site, CGNode node) {
     return new DispatchOperator(site, (ExplicitNode)node);
   }
 

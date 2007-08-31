@@ -29,7 +29,7 @@ import com.ibm.wala.util.debug.Trace;
  * 
  * @author sfink
  */
-public abstract class SSAInference extends DefaultFixedPointSolver {
+public abstract class SSAInference<T extends IVariable> extends DefaultFixedPointSolver<T> {
   static final boolean DEBUG = false;
 
   /**
@@ -47,14 +47,14 @@ public abstract class SSAInference extends DefaultFixedPointSolver {
    */
   private IVariable[] vars;
 
-  public interface OperatorFactory {
+  public interface OperatorFactory<T extends IVariable> {
     /**
      * Get the dataflow operator induced by an instruction in SSA form.
      * @param instruction
      * @return dataflow operator for the instruction, or null if the
      * instruction is not applicable to the dataflow system.
      */
-    AbstractOperator get(SSAInstruction instruction);
+    AbstractOperator<T> get(SSAInstruction instruction);
   }
 
   public interface VariableFactory {
@@ -68,7 +68,7 @@ public abstract class SSAInference extends DefaultFixedPointSolver {
   /**
    * initializer for SSA Inference equations.
    */
-  protected void init(IR ir, VariableFactory varFactory, OperatorFactory opFactory) {
+  protected void init(IR ir, VariableFactory varFactory, OperatorFactory<T> opFactory) {
 
     this.ir = ir;
     this.symbolTable = ir.getSymbolTable();
@@ -77,12 +77,7 @@ public abstract class SSAInference extends DefaultFixedPointSolver {
     createEquations(opFactory);
   }
 
-  /**
-   * Method createEquations.
-   * TODO: optimize more.
-   * @param opFactory
-   */
-  private void createEquations(OperatorFactory opFactory) {
+  private void createEquations(OperatorFactory<T> opFactory) {
     SSAInstruction[] instructions = ir.getInstructions();
     for (int i = 0; i < instructions.length; i++) {
       SSAInstruction s = instructions[i];
@@ -105,13 +100,14 @@ public abstract class SSAInference extends DefaultFixedPointSolver {
   /**
    * Create a dataflow equation induced by a given instruction
    */
-  private void makeEquationForInstruction(OperatorFactory opFactory, SSAInstruction s) {
+  @SuppressWarnings("unchecked")
+  private void makeEquationForInstruction(OperatorFactory<T> opFactory, SSAInstruction s) {
     if (s != null && s.hasDef()) {
-      AbstractOperator op = opFactory.get(s);
+      AbstractOperator<T> op = opFactory.get(s);
       if (op != null) {
-        IVariable def = getVariable(s.getDef());
+        T def = getVariable(s.getDef());
         if (op instanceof NullaryOperator) {
-          newStatement(def, (NullaryOperator)op, false, false);
+          newStatement(def, (NullaryOperator<T>)op, false, false);
         } else {
           int n = s.getNumberOfUses();
           IVariable[] uses = new IVariable[n];
@@ -123,7 +119,7 @@ public abstract class SSAInference extends DefaultFixedPointSolver {
               }
             }
           }
-          newStatement(def, op, uses, false, false);
+          newStatement(def, op, (T[])uses, false, false);
         }
       }
     }
@@ -145,7 +141,8 @@ public abstract class SSAInference extends DefaultFixedPointSolver {
    * @return the dataflow variable representing the value number,
    * or null if none found.
    */
-  protected IVariable getVariable(int valueNumber) {
+  @SuppressWarnings("unchecked")
+  protected T getVariable(int valueNumber) {
     if (valueNumber < 0) {
       throw new IllegalArgumentException("Illegal valueNumber " + valueNumber);
     }
@@ -157,7 +154,7 @@ public abstract class SSAInference extends DefaultFixedPointSolver {
         Assertions._assert(vars != null, "null vars array");
       }
     }
-    return vars[valueNumber];
+    return (T) vars[valueNumber];
   }
   /** 
    * Return a string representation of the system 

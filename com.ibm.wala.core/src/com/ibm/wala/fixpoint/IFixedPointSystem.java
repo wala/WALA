@@ -16,18 +16,18 @@ import java.util.Iterator;
  * Represents a set of {@link IFixedPointStatement}s to be solved by a
  * {@link IFixedPointSolver}
  */
-public interface IFixedPointSystem {
+public interface IFixedPointSystem<T extends IVariable> {
 
 
   /**
    * removes a given statement
    */
-  void removeStatement(IFixedPointStatement statement);
+  void removeStatement(IFixedPointStatement<T> statement);
 
   /**
    * Add a statement to the system
    */
-  public void addStatement(IFixedPointStatement statement);
+  public void addStatement(IFixedPointStatement<T> statement);
 
   /**
    * Return an Iterator of the {@link IFixedPointStatement}s in this system
@@ -44,34 +44,30 @@ public interface IFixedPointSystem {
   public Iterator getVariables();
 
   /**
-   * @param s
    * @return true iff this system already contains an equation that is equal()
    *         to s
    */
-  boolean containsStatement(IFixedPointStatement s);
+  boolean containsStatement(IFixedPointStatement<T> s);
 
   /**
-   * @param v
    * @return true iff this system already contains a variable that is equal() to
    *         v.
    */
-  boolean containsVariable(IVariable v);
+  boolean containsVariable(T v);
 
   /**
-   * @param v
    * @return Iterator <statement>, the statements that use the variable
    */
-  Iterator getStatementsThatUse(IVariable v);
+  Iterator getStatementsThatUse(T v);
 
   /**
-   * @param v
    * @return Iterator <statement>, the statements that def the variable
    */
-  Iterator getStatementsThatDef(IVariable v);
+  Iterator getStatementsThatDef(T v);
 
-  int getNumberOfStatementsThatUse(IVariable v);
+  int getNumberOfStatementsThatUse(T v);
 
-  int getNumberOfStatementsThatDef(IVariable v);
+  int getNumberOfStatementsThatDef(T v);
 
   /**
    * reorder the statements in this system

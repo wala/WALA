@@ -20,10 +20,10 @@ import com.ibm.wala.fixpoint.IVariable;
  *
  * @author Stephen Fink
  */
-public abstract class NullaryOperator extends AbstractOperator implements FixedPointConstants {
+public abstract class NullaryOperator<T extends IVariable> extends AbstractOperator<T> implements FixedPointConstants {
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable[] rhs) throws UnsupportedOperationException {
+  public byte evaluate(T lhs, IVariable[] rhs) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
   /** 
@@ -32,5 +32,5 @@ public abstract class NullaryOperator extends AbstractOperator implements FixedP
    * 
    * @return true if the lhs value changes. false otherwise.
    */
-  public abstract byte evaluate(IVariable lhs);
+  public abstract byte evaluate(T lhs);
 }

@@ -38,6 +38,7 @@ import com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointsToSetVariable;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationSystem;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
@@ -309,12 +310,12 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       if (DEBUG) {
         Trace.println("Add side effect, dispatch to " + site);
       }
-      UnaryOperator dispatchOperator = makeDispatchOperator(site, node);
+      UnaryOperator<PointsToSetVariable> dispatchOperator = makeDispatchOperator(site, node);
       system.newSideEffect(dispatchOperator, selector);
     }
   }
 
-  protected abstract UnaryOperator makeDispatchOperator(CallSiteReference site, CGNode node);
+  protected abstract UnaryOperator<PointsToSetVariable> makeDispatchOperator(CallSiteReference site, CGNode node);
 
   protected abstract PointerKey getKeyForSite(CallSiteReference site);
 

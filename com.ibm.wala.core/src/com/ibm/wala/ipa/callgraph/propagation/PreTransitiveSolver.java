@@ -76,7 +76,7 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
       getSystem().revertToPreTransitive();
 
       Collection<IVariable> complexUses = findComplexUses();
-      NumberedGraph<IVariable> ag = getSystem().getAssignmentGraph();
+      NumberedGraph<PointsToSetVariable> ag = getSystem().getAssignmentGraph();
 
       for (Iterator<IVariable> it = complexUses.iterator(); it.hasNext();) {
         PointsToSetVariable p = (PointsToSetVariable) it.next();
@@ -127,7 +127,7 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
    *          iteration, and thus have already cached the reachability.
    * @return the set of instance key numbers which flow to p through assignments
    */
-  private IntSet getLvals(Graph<IVariable> ag, PointerKey p, Path path, MutableIntSet visited) {
+  private IntSet getLvals(Graph<PointsToSetVariable> ag, PointerKey p, Path path, MutableIntSet visited) {
 
     if (path.contains(getSystem().getNumber(p))) {
       if (path.size() > 1) {

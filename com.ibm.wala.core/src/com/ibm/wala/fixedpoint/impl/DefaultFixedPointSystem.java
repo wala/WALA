@@ -37,7 +37,7 @@ import com.ibm.wala.util.graph.traverse.DFS;
  * 
  * @author sfink
  */
-public class DefaultFixedPointSystem implements IFixedPointSystem  {
+public class DefaultFixedPointSystem<T extends IVariable> implements IFixedPointSystem<T>  {
   static final boolean DEBUG = false;
 
   /**

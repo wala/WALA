@@ -13,12 +13,12 @@ package com.ibm.wala.fixpoint;
 /**
  * Solves a set of constraints
  */
-public interface IFixedPointSolver  {
+public interface IFixedPointSolver<T extends IVariable>  {
 
   /**
    * @return the set of statements solved by this {@link IFixedPointSolver}
    */
-  public IFixedPointSystem getFixedPointSystem();
+  public IFixedPointSystem<T> getFixedPointSystem();
   
   /**
    * Solve the problem.

@@ -18,14 +18,14 @@ import com.ibm.wala.fixpoint.IVariable;
  * 
  * @author sfink
  */
-public class BasicNullaryStatement extends NullaryStatement {
+public class BasicNullaryStatement<T extends IVariable> extends NullaryStatement<T> {
 
   /**
    * The operator in the equation
    */
-  private final NullaryOperator operator;
+  private final NullaryOperator<T> operator;
 
-  BasicNullaryStatement(IVariable lhs, NullaryOperator operator) {
+  BasicNullaryStatement(T lhs, NullaryOperator<T> operator) {
     super(lhs);
     this.operator = operator;
   }
@@ -34,7 +34,7 @@ public class BasicNullaryStatement extends NullaryStatement {
    * @return Returns the operator.
    */
   @Override
-  public AbstractOperator getOperator() {
+  public NullaryOperator<T> getOperator() {
     return operator;
   }
 }

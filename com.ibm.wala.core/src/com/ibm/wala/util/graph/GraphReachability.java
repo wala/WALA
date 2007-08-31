@@ -99,12 +99,12 @@ public class GraphReachability<T> {
    */
   public boolean solve() {
 
-    ITransferFunctionProvider<T> functions = new ITransferFunctionProvider<T>() {
+    ITransferFunctionProvider<T, BitVectorVariable> functions = new ITransferFunctionProvider<T, BitVectorVariable>() {
 
       /*
        * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getNodeTransferFunction(java.lang.Object)
        */
-      public UnaryOperator getNodeTransferFunction(T n) {
+      public UnaryOperator<BitVectorVariable> getNodeTransferFunction(T n) {
         int index = domain.getMappedIndex(n);
         if (index > -1) {
           return new BitVectorUnionConstant(index);
@@ -124,7 +124,7 @@ public class GraphReachability<T> {
        * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getEdgeTransferFunction(java.lang.Object,
        *      java.lang.Object)
        */
-      public UnaryOperator getEdgeTransferFunction(Object from, Object to) {
+      public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(Object from, Object to) {
         Assertions.UNREACHABLE();
         return null;
       }
@@ -139,7 +139,7 @@ public class GraphReachability<T> {
       /*
        * @see com.ibm.wala.dataflow.graph.ITransferFunctionProvider#getMeetOperator()
        */
-      public AbstractMeetOperator getMeetOperator() {
+      public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
         return BitVectorUnion.instance();
       }
     };

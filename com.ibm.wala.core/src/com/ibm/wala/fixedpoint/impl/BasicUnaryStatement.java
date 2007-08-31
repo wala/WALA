@@ -18,23 +18,17 @@ import com.ibm.wala.fixpoint.IVariable;
  * 
  * @author sfink
  */
-public class BasicUnaryStatement extends UnaryStatement {
+public class BasicUnaryStatement<T extends IVariable> extends UnaryStatement<T> {
 
-  /**
-   * The operator in the equation
-   */
-  private final UnaryOperator operator;
+  private final UnaryOperator<T> operator;
 
-  BasicUnaryStatement(IVariable lhs, UnaryOperator operator, IVariable rhs) {
+  BasicUnaryStatement(T lhs, UnaryOperator<T> operator, T rhs) {
     super(lhs, rhs);
     this.operator = operator;
   }
 
-  /**
-   * @return Returns the operator.
-   */
   @Override
-  public AbstractOperator getOperator() {
+  public UnaryOperator<T> getOperator() {
     return operator;
   }
 }

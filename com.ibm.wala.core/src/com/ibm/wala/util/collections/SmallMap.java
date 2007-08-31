@@ -52,11 +52,12 @@ public class SmallMap<K,V> implements Map<K,V> {
    * 
    * @return the ith key
    */
-  public Object getKey(int i) throws IllegalStateException {
+  @SuppressWarnings("unchecked")
+  public K getKey(int i) throws IllegalStateException {
     if (keysAndValues == null) {
       throw new IllegalStateException("getKey on empty map");
     }
-    return keysAndValues[i];
+    return (K) keysAndValues[i];
   }
 
   /**

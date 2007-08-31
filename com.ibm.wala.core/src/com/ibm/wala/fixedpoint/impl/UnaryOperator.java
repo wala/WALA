@@ -20,21 +20,21 @@ import com.ibm.wala.util.debug.UnimplementedError;
  * 
  * @author Stephen Fink
  */
-public abstract class UnaryOperator extends AbstractOperator implements FixedPointConstants {
+public abstract class UnaryOperator<T extends IVariable> extends AbstractOperator<T> implements FixedPointConstants {
 
   /**
    * Evaluate this equation, setting a new value for the left-hand side.
    * 
    * @return true if the lhs value changes. false otherwise.
    */
-  public abstract byte evaluate(IVariable lhs, IVariable rhs);
+  public abstract byte evaluate(T lhs, T rhs);
 
   /**
    * Create an equation which uses this operator Override in subclasses for
    * efficiency.
    */
-  public UnaryStatement makeEquation(IVariable lhs, IVariable rhs) {
-    return new BasicUnaryStatement(lhs, this, rhs);
+  public UnaryStatement<T> makeEquation(T lhs, T rhs) {
+    return new BasicUnaryStatement<T>(lhs, this, rhs);
   }
 
   public boolean isIdentity() {
@@ -42,7 +42,7 @@ public abstract class UnaryOperator extends AbstractOperator implements FixedPoi
   }
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable[] rhs) throws UnimplementedError {
+  public byte evaluate(T lhs, IVariable[] rhs) throws UnimplementedError {
     // this should never be called. Use the other, more efficient form.
     Assertions.UNREACHABLE();
     return 0;

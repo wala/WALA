@@ -12,14 +12,13 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 
 /**
  * Operator OUT = (IN - kill) U gen
  */
-public class BitVectorKillGen extends UnaryOperator {
+public class BitVectorKillGen extends UnaryOperator<BitVectorVariable> {
 
   private final BitVectorIntSet kill;
 
@@ -31,20 +30,17 @@ public class BitVectorKillGen extends UnaryOperator {
   }
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable rhs) {
-    BitVectorVariable L = (BitVectorVariable) lhs;
-    BitVectorVariable R = (BitVectorVariable) rhs;
-
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
     BitVectorVariable U = new BitVectorVariable();
     BitVectorIntSet bv = new BitVectorIntSet();
-    if (R.getValue() != null) {
-      bv.addAll(R.getValue());
+    if (rhs.getValue() != null) {
+      bv.addAll(rhs.getValue());
     }
     bv.removeAll(kill);
     bv.addAll(gen);
     U.addAll(bv.getBitVector());
-    if (!L.sameValue(U)) {
-      L.copyState(U);
+    if (!lhs.sameValue(U)) {
+      lhs.copyState(U);
       return CHANGED;
     } else {
       return NOT_CHANGED;

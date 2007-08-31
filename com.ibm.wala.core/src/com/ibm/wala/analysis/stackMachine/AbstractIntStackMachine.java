@@ -120,7 +120,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
   protected void init(Meeter meeter, final FlowProvider flow) {
     final MeetOperator meet = new MeetOperator(meeter);
-    ITransferFunctionProvider<IBasicBlock> xferFunctions = new ITransferFunctionProvider<IBasicBlock>() {
+    ITransferFunctionProvider<IBasicBlock, MachineState> xferFunctions = new ITransferFunctionProvider<IBasicBlock, MachineState>() {
       public boolean hasNodeTransferFunctions() {
         return flow.needsNodeFlow();
       }
@@ -129,19 +129,19 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         return flow.needsEdgeFlow();
       }
 
-      public UnaryOperator getNodeTransferFunction(final IBasicBlock node) {
-        return new UnaryOperator() {
+      public UnaryOperator<MachineState> getNodeTransferFunction(final IBasicBlock node) {
+        return new UnaryOperator<MachineState>() {
           @Override
-          public byte evaluate(IVariable lhs, IVariable rhs) {
+          public byte evaluate(MachineState lhs, MachineState rhs) {
 
-            MachineState exit = (MachineState) lhs;
-            MachineState entry = (MachineState) rhs;
+            MachineState exit = lhs;
+            MachineState entry = rhs;
 
             MachineState newExit = flow.flow(entry, (BasicBlock) node);
             if (newExit.stateEquals(exit)) {
               return NOT_CHANGED;
             } else {
-              lhs.copyState(newExit);
+              exit.copyState(newExit);
               return CHANGED;
             }
           }
@@ -163,19 +163,19 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         };
       }
 
-      public UnaryOperator getEdgeTransferFunction(final IBasicBlock from, final IBasicBlock to) {
-        return new UnaryOperator() {
+      public UnaryOperator<MachineState> getEdgeTransferFunction(final IBasicBlock from, final IBasicBlock to) {
+        return new UnaryOperator<MachineState>() {
           @Override
-          public byte evaluate(IVariable lhs, IVariable rhs) {
+          public byte evaluate(MachineState lhs, MachineState rhs) {
 
-            MachineState exit = (MachineState) lhs;
-            MachineState entry = (MachineState) rhs;
+            MachineState exit = lhs;
+            MachineState entry = rhs;
 
             MachineState newExit = flow.flow(entry, (BasicBlock) from, (BasicBlock) to);
             if (newExit.stateEquals(exit)) {
               return NOT_CHANGED;
             } else {
-              lhs.copyState(newExit);
+              exit.copyState(newExit);
               return CHANGED;
             }
           }
@@ -197,21 +197,21 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         };
       }
 
-      public AbstractMeetOperator getMeetOperator() {
+      public AbstractMeetOperator<MachineState> getMeetOperator() {
         return meet;
       }
     };
 
-    IKilldallFramework<IBasicBlock> problem = new BasicFramework<IBasicBlock>(cfg, xferFunctions);
-    solver = new DataflowSolver<IBasicBlock>(problem) {
-      private IVariable entry;
+    IKilldallFramework<IBasicBlock, MachineState> problem = new BasicFramework<IBasicBlock, MachineState>(cfg, xferFunctions);
+    solver = new DataflowSolver<IBasicBlock, MachineState>(problem) {
+      private MachineState entry;
 
       @Override
-      protected IVariable makeNodeVariable(IBasicBlock n, boolean IN) {
+      protected MachineState makeNodeVariable(IBasicBlock n, boolean IN) {
         if (Assertions.verifyAssertions) {
           Assertions._assert(n != null);
         }
-        IVariable result = new MachineState(71167 * n.hashCode() + (IN ? 0 : 1), (BasicBlock) n);
+        MachineState result = new MachineState(71167 * n.hashCode() + (IN ? 0 : 1), (BasicBlock) n);
         if (IN && n.equals(cfg.entry())) {
           entry = result;
         }
@@ -219,12 +219,12 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
 
       @Override
-      protected IVariable makeEdgeVariable(IBasicBlock from, IBasicBlock to) {
+      protected MachineState makeEdgeVariable(IBasicBlock from, IBasicBlock to) {
         if (Assertions.verifyAssertions) {
           Assertions._assert(from != null);
           Assertions._assert(to != null);
         }
-        IVariable result = new MachineState(71167 * (from.hashCode() + to.hashCode()), (BasicBlock) from);
+        MachineState result = new MachineState(71167 * (from.hashCode() + to.hashCode()), (BasicBlock) from);
 
         return result;
       }
@@ -271,7 +271,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     return (MachineState) solver.getIn(bb);
   }
 
-  private class MeetOperator extends AbstractMeetOperator {
+  private class MeetOperator extends AbstractMeetOperator<MachineState> {
 
     private final Meeter meeter;
 
@@ -285,13 +285,12 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
     @Override
-    public byte evaluate(IVariable lhs, IVariable[] rhs) {
-      MachineState L = (MachineState) lhs;
-      BasicBlock bb = L.getBasicBlock();
+    public byte evaluate(MachineState lhs, IVariable[] rhs) {
+      BasicBlock bb = lhs.getBasicBlock();
       if (!bb.isCatchBlock()) {
-        return meet(L, rhs, bb, meeter) ? CHANGED : NOT_CHANGED;
+        return meet(lhs, rhs, bb, meeter) ? CHANGED : NOT_CHANGED;
       } else {
-        return meetForCatchBlock(L, rhs, bb, meeter) ? CHANGED : NOT_CHANGED;
+        return meetForCatchBlock(lhs, rhs, bb, meeter) ? CHANGED : NOT_CHANGED;
       }
     }
 

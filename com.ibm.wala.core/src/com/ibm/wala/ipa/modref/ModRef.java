@@ -104,7 +104,7 @@ public class ModRef {
     Map<CGNode, OrdinalSet<PointerKey>> result = HashMapFactory.make();
     for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
       CGNode n = it.next();
-      BitVectorVariable bv = (BitVectorVariable) solver.getOut(n);
+      BitVectorVariable bv = solver.getOut(n);
       result.put(n, new OrdinalSet<PointerKey>(bv.getValue(), gr.getLatticeValues()));
     }
     return result;

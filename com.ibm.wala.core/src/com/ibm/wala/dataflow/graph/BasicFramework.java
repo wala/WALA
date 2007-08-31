@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.graph;
 
+import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.graph.Graph;
 
 /**
@@ -18,12 +19,12 @@ import com.ibm.wala.util.graph.Graph;
  * 
  * @author sfink
  */
-public class BasicFramework<T> implements IKilldallFramework<T> {
+public class BasicFramework<T, V extends IVariable> implements IKilldallFramework<T, V> {
 
   private final Graph<T> flowGraph;
-  private final ITransferFunctionProvider<T> transferFunctionProvider;
+  private final ITransferFunctionProvider<T, V> transferFunctionProvider;
 
-  public BasicFramework(Graph<T> flowGraph, ITransferFunctionProvider<T> transferFunctionProvider) {
+  public BasicFramework(Graph<T> flowGraph, ITransferFunctionProvider<T, V> transferFunctionProvider) {
     this.flowGraph = flowGraph;
     this.transferFunctionProvider = transferFunctionProvider;
   } 
@@ -38,7 +39,7 @@ public class BasicFramework<T> implements IKilldallFramework<T> {
   /*
    * @see com.ibm.wala.dataflow.graph.IKilldallFramework#getTransferFunctionMap()
    */
-  public ITransferFunctionProvider<T> getTransferFunctionProvider() {
+  public ITransferFunctionProvider<T, V> getTransferFunctionProvider() {
     return transferFunctionProvider;
   }
 }

@@ -27,33 +27,33 @@ import com.ibm.wala.util.intset.IntegerUnionFind;
  * 
  * @author sfink
  */
-public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
+public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixedPointSolver<V> {
 
   /**
    * the dataflow problem to solve
    */
-  private final IKilldallFramework<T> problem;
+  private final IKilldallFramework<T, V> problem;
 
   /**
    * The "IN" variable for each node.
    */
-  private final Map<Object, IVariable> node2In = HashMapFactory.make();
+  private final Map<Object, V> node2In = HashMapFactory.make();
 
   /**
    * The "OUT" variable for each node, when node transfer requested.
    */
-  private final Map<Object, IVariable> node2Out = HashMapFactory.make();
+  private final Map<Object, V> node2Out = HashMapFactory.make();
 
   /**
    * The variable for each edge, when edge transfers requested (indexed by
    * Pair(src, dst))
    */
-  private final Map<Object, IVariable> edge2Var = HashMapFactory.make();
+  private final Map<Object, V> edge2Var = HashMapFactory.make();
 
   /**
    * @param problem
    */
-  public DataflowSolver(IKilldallFramework<T> problem) {
+  public DataflowSolver(IKilldallFramework<T, V> problem) {
     // tune the implementation for common case of 2 uses for each
     // dataflow def
     super(2);
@@ -66,9 +66,9 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
    * @return a fresh variable to represent the lattice value at the IN or OUT of
    *         n
    */
-  protected abstract IVariable makeNodeVariable(T n, boolean IN);
+  protected abstract V makeNodeVariable(T n, boolean IN);
 
-  protected abstract IVariable makeEdgeVariable(T src, T dst);
+  protected abstract V makeEdgeVariable(T src, T dst);
 
   @Override
   protected void initializeVariables() {
@@ -78,7 +78,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
     for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
       T N = it.next();
       assert N != null;
-      IVariable v = makeNodeVariable(N, true);
+      V v = makeNodeVariable(N, true);
       node2In.put(N, v);
 
       if (functions.hasNodeTransferFunctions()) {
@@ -101,25 +101,25 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
     buildEquations(true, false);
   }
 
-  public IVariable getOut(Object node) {
+  public V getOut(Object node) {
     assert node != null;
-    IVariable v = node2Out.get(node);
+    V v = node2Out.get(node);
     assert v != null;
     return v;
   }
 
-  public IVariable getIn(Object node) {
+  public V getIn(Object node) {
     return node2In.get(node);
   }
 
-  public IVariable getEdge(Object key) {
+  public V getEdge(Object key) {
     return edge2Var.get(key);
   }
 
-  public IVariable getEdge(Object src, Object dst) {
+  public V getEdge(Object src, Object dst) {
     assert src != null;
     assert dst != null;
-    IVariable v = getEdge(new Pair<Object, Object>(src, dst));
+    V v = getEdge(new Pair<Object, Object>(src, dst));
     assert v != null;
     return v;
   }
@@ -133,7 +133,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
 
     final private Object[] allKeys;
 
-    private int mapIt(int i, Object[] allVars, Map<Object, IVariable> varMap) {
+    private int mapIt(int i, Object[] allVars, Map<Object, V> varMap) {
       for (Iterator<Object> it = varMap.keySet().iterator(); it.hasNext();) {
         Object key = it.next();
         allKeys[i] = key;
@@ -189,10 +189,11 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
     }
   }
 
+  @SuppressWarnings("unchecked")
   protected void buildEquations(boolean toWorkList, boolean eager) {
-    ITransferFunctionProvider<T> functions = problem.getTransferFunctionProvider();
+    ITransferFunctionProvider<T, V> functions = problem.getTransferFunctionProvider();
     Graph<T> G = problem.getFlowGraph();
-    AbstractMeetOperator meet = functions.getMeetOperator();
+    AbstractMeetOperator<V> meet = functions.getMeetOperator();
     UnionFind uf = new UnionFind();
     if (meet.isUnaryNoOp()) {
       shortCircuitUnaryMeets(G, functions, uf);
@@ -207,7 +208,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
       int nPred = G.getPredNodeCount(node);
       if (nPred >= meetThreshold) {
         // todo: optimize further using unary operators when possible?
-        IVariable[] rhs = new IVariable[nPred];
+        V[] rhs = (V[]) new IVariable[nPred];
         int i = 0;
         for (Iterator it2 = G.getPredNodes(node); it2.hasNext();) {
           rhs[i++] = (functions.hasEdgeTransferFunctions()) ? getEdge(it2.next(), node) : getOut(it2.next());
@@ -220,7 +221,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
     if (functions.hasNodeTransferFunctions()) {
       for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
         T node = it.next();
-        UnaryOperator f = functions.getNodeTransferFunction(node);
+        UnaryOperator<V> f = functions.getNodeTransferFunction(node);
         if (!f.isIdentity()) {
           newStatement(getOut(node), f, getIn(node), toWorkList, eager);
         }
@@ -233,7 +234,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
         T node = it.next();
         for (Iterator<? extends T> it2 = G.getSuccNodes(node); it2.hasNext();) {
           T succ = it2.next();
-          UnaryOperator f = functions.getEdgeTransferFunction(node, succ);
+          UnaryOperator<V> f = functions.getEdgeTransferFunction(node, succ);
           if (!f.isIdentity()) {
             newStatement(getEdge(node, succ), f, (functions.hasNodeTransferFunctions()) ? getOut(node) : getIn(node), toWorkList,
                 eager);
@@ -246,7 +247,7 @@ public abstract class DataflowSolver<T> extends DefaultFixedPointSolver {
   /**
    * Swap variables to account for identity transfer functions.
    */
-  private void shortCircuitIdentities(Graph<T> G, ITransferFunctionProvider<T> functions, UnionFind uf) {
+  private void shortCircuitIdentities(Graph<T> G, ITransferFunctionProvider<T, V> functions, UnionFind uf) {
     if (functions.hasNodeTransferFunctions()) {
       for (Iterator<? extends T> it = G.iterator(); it.hasNext();) {
         T node = it.next();

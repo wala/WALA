@@ -20,14 +20,13 @@ import com.ibm.wala.fixpoint.IVariable;
  * @author Stephen Fink
  * @author Julian Dolby
  */
-public abstract class UnaryStatement extends AbstractStatement {
-
+public abstract class UnaryStatement<T extends IVariable> extends AbstractStatement<T, UnaryOperator<T>> {
 
   /**
    * The operands
    */
-  final protected IVariable lhs;
-  final protected IVariable rhs;
+  final protected T lhs;
+  final protected T rhs;
 
   /** 
    * Evaluate this equation, setting a new value for the
@@ -36,7 +35,7 @@ public abstract class UnaryStatement extends AbstractStatement {
    * @return true if the lhs value changed. false otherwise
    */
   public byte evaluate() {
-    UnaryOperator op = (UnaryOperator) getOperator();
+    UnaryOperator<T> op = getOperator();
     return op.evaluate(lhs, rhs);
   }
 
@@ -45,20 +44,19 @@ public abstract class UnaryStatement extends AbstractStatement {
    * 
    * @return the lattice cell this equation computes
    */
-  public IVariable getLHS() {
+  public T getLHS() {
     return lhs;
   }
 
   /** 
    * @return the right-hand side of this equation.
    */
-  public IVariable getRightHandSide() {
+  public T getRightHandSide() {
     return rhs;
   }
 
   /** 
-   * Return the operandsin this equation.
-   * @return the operands in this equation.
+   * Return the operands in this equation.
    */
   public IVariable[] getOperands() {
     IVariable[] result = new IVariable[2];
@@ -72,7 +70,7 @@ public abstract class UnaryStatement extends AbstractStatement {
    * @param cell the cell in question
    * @return true or false
    */
-  public boolean hasVariable(IVariable cell) {
+  public boolean hasVariable(T cell) {
     if (lhs == cell)
       return true;
     if (rhs == cell)
@@ -102,7 +100,7 @@ public abstract class UnaryStatement extends AbstractStatement {
    * @param lhs the lattice cell set by this equation
    * @param rhs the first operand on the rhs
    */
-  protected UnaryStatement(IVariable lhs, IVariable rhs) {
+  protected UnaryStatement(T lhs, T rhs) {
     super();
     this.lhs = lhs;
     this.rhs = rhs;
@@ -158,7 +156,7 @@ public abstract class UnaryStatement extends AbstractStatement {
     return result;
   }
   
-  public IVariable[] getRHS() throws UnsupportedOperationException {
+  public T[] getRHS() throws UnsupportedOperationException {
     // This should never be called ...use the more efficient getRightHandSide instead
     throw new UnsupportedOperationException();
   }

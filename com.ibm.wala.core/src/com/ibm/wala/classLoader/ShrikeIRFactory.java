@@ -26,7 +26,6 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author Julian Dolby
- * 
  */
 public class ShrikeIRFactory implements IRFactory {
 

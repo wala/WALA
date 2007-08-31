@@ -296,7 +296,7 @@ public class HeapReachingDefs {
         Collection<PointerKey> ref = modRef.getRef(node, h, pa, n.getInstruction(), exclusions);
         if (!ref.isEmpty()) {
           IBasicBlock bb = cfg.getBlockForInstruction(n.getInstructionIndex());
-          BitVectorVariable v = (BitVectorVariable) solver.getIn(bb);
+          BitVectorVariable v = solver.getIn(bb);
           MutableSparseIntSet defs = new MutableSparseIntSet();
           for (PointerKey p : ref) {
             if (pointerKeyMod.get(p) != null) {
@@ -310,7 +310,7 @@ public class HeapReachingDefs {
       case HEAP_RET_CALLEE: {
         HeapStatement.ReturnCallee r = (HeapStatement.ReturnCallee) s;
         PointerKey p = r.getLocation();
-        BitVectorVariable v = (BitVectorVariable) solver.getIn(cfg.exit());
+        BitVectorVariable v = solver.getIn(cfg.exit());
         if (pointerKeyMod.get(p) == null) {
           return OrdinalSet.empty();
         }
@@ -319,7 +319,7 @@ public class HeapReachingDefs {
       case HEAP_RET_CALLER: {
         HeapStatement.ReturnCaller r = (HeapStatement.ReturnCaller) s;
         IBasicBlock bb = cfg.getBlockForInstruction(r.getCallIndex());
-        BitVectorVariable v = (BitVectorVariable) solver.getIn(bb);
+        BitVectorVariable v = solver.getIn(bb);
         if (allCalleesMod(cg, r, mod) || pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
           // do nothing ... force flow into and out of the callees
           return OrdinalSet.empty();
@@ -333,7 +333,7 @@ public class HeapReachingDefs {
         HeapStatement.ParamCaller r = (HeapStatement.ParamCaller) s;
         NormalStatement call = ssaInstructionIndex2Statement.get(r.getCallIndex());
         IBasicBlock callBlock = cfg.getBlockForInstruction(call.getInstructionIndex());
-        BitVectorVariable v = (BitVectorVariable) solver.getIn(callBlock);
+        BitVectorVariable v = solver.getIn(callBlock);
         if (pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
           // do nothing ... force flow into and out of the callees
           return OrdinalSet.empty();
@@ -446,7 +446,7 @@ public class HeapReachingDefs {
   /**
    * Reaching def flow functions
    */
-  private class RD implements ITransferFunctionProvider<IBasicBlock> {
+  private class RD implements ITransferFunctionProvider<IBasicBlock, BitVectorVariable> {
 
     private final CGNode node;
 
@@ -493,7 +493,7 @@ public class HeapReachingDefs {
       }
     }
 
-    public UnaryOperator getEdgeTransferFunction(IBasicBlock src, IBasicBlock dst) {
+    public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(IBasicBlock src, IBasicBlock dst) {
       ExplodedBasicBlock s = (ExplodedBasicBlock) src;
       if (s.getInstruction() != null && !(s.getInstruction() instanceof SSAAbstractInvokeInstruction)
           && !cfg.getNormalSuccessors(src).contains(dst)) {
@@ -520,11 +520,11 @@ public class HeapReachingDefs {
       }
     }
 
-    public AbstractMeetOperator getMeetOperator() {
+    public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
       return BitVectorUnion.instance();
     }
 
-    public UnaryOperator getNodeTransferFunction(IBasicBlock node) {
+    public UnaryOperator<BitVectorVariable> getNodeTransferFunction(IBasicBlock node) {
       Assertions.UNREACHABLE();
       return null;
     }

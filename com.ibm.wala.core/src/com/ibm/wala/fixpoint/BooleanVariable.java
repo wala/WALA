@@ -40,8 +40,7 @@ public class BooleanVariable extends AbstractVariable {
     this.hash = hash;
   }
 
-  public void copyState(IVariable v) throws NullPointerException {
-    BooleanVariable other = (BooleanVariable) v;
+  public void copyState(BooleanVariable other) throws NullPointerException {
     B = other.B;
   }
 

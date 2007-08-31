@@ -28,8 +28,7 @@ public abstract class IntSetVariable extends AbstractVariable {
 
   private MutableIntSet V;
 
-  public void copyState(IVariable v) {
-    IntSetVariable other = (IntSetVariable) v;
+  public void copyState(IntSetVariable other) {
     if (V == null) {
       if (other.V == null) {
         return;

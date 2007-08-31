@@ -12,13 +12,12 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
-import com.ibm.wala.fixpoint.IVariable;
 
 
 /**
  * Operator U(n) = U(n) U U(j)
  */
-public class UnaryBitVectorUnion extends UnaryOperator {
+public class UnaryBitVectorUnion extends UnaryOperator<BitVectorVariable> {
   
   private final static UnaryBitVectorUnion SINGLETON = new UnaryBitVectorUnion();
   
@@ -31,20 +30,18 @@ public class UnaryBitVectorUnion extends UnaryOperator {
   
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable rhs) throws IllegalArgumentException {
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) throws IllegalArgumentException {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs == null");
     }
-    BitVectorVariable L = (BitVectorVariable) lhs;
-    BitVectorVariable R = (BitVectorVariable) rhs;
 
     BitVectorVariable U = new BitVectorVariable();
-    U.copyState(L);
-    U.addAll(R);
-    if (L.sameValue(U)) {
+    U.copyState(lhs);
+    U.addAll(rhs);
+    if (lhs.sameValue(U)) {
       return NOT_CHANGED;
     } else {
-      L.copyState(U);
+      lhs.copyState(U);
       return CHANGED;
     }
   }

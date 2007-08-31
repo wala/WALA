@@ -11,25 +11,24 @@ package com.ibm.wala.dataflow.graph;
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 import com.ibm.wala.fixpoint.BooleanVariable;
-import com.ibm.wala.fixpoint.IVariable;
 
 /**
  * @author sfink
  */
-public class BooleanSolver<T> extends DataflowSolver<T> {
+public class BooleanSolver<T> extends DataflowSolver<T, BooleanVariable> {
 
-  public BooleanSolver(IKilldallFramework<T> problem) {
+  public BooleanSolver(IKilldallFramework<T, BooleanVariable> problem) {
     super(problem);
   }
 
   @Override
-  protected IVariable makeNodeVariable(Object n, boolean IN) {
+  protected BooleanVariable makeNodeVariable(Object n, boolean IN) {
     return new BooleanVariable(n.hashCode() * 97381 + (IN ? 0 : 1));
 
   }
 
   @Override
-  protected IVariable makeEdgeVariable(Object src, Object dst) {
+  protected BooleanVariable makeEdgeVariable(Object src, Object dst) {
     return new BooleanVariable(src.hashCode() ^ dst.hashCode());
 
   }
