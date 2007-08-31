@@ -124,7 +124,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private IMethod makeValueConstructor(IClass cls, int nargs, Object value) {
     Assertions._assert(nargs == 0 || nargs == 1);
 
-    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
 
@@ -159,7 +159,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private IMethod makeObjectConstructor(IClass cls, int nargs) {
     Assertions._assert(nargs == 0 || nargs == 1);
 
-    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
 
@@ -170,7 +170,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private IMethod makeObjectCall(IClass cls, int nargs) {
     Assertions._assert(nargs == 0);
 
-    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
 
@@ -223,7 +223,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeArrayConstructor(IClass cls, int nargs) {
-    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
 
@@ -258,7 +258,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private IMethod makeStringCall(IClass cls, int nargs) {
     Assertions._assert(nargs == 0 || nargs == 1);
 
-    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
 
@@ -293,7 +293,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   private IMethod makeNumberCall(IClass cls, int nargs) {
     Assertions._assert(nargs == 0 || nargs == 1);
 
-    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
 
@@ -302,7 +302,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeFunctionConstructor(IClass receiver, IClass cls) {
-    Pair<IClass, IClass> tableKey = new Pair<IClass, IClass>(receiver, cls);
+    Pair<IClass, IClass> tableKey = Pair.make(receiver, cls);
     if (constructors.containsKey(tableKey))
       return constructors.get(tableKey);
 
@@ -397,7 +397,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
   }
 
   private IMethod makeFunctionObjectConstructor(IClass cls, int nargs) {
-    Object key = new Pair<IClass, Integer>(cls, new Integer(nargs));
+    Object key = Pair.make(cls, new Integer(nargs));
     if (constructors.containsKey(key))
       return constructors.get(key);
 
