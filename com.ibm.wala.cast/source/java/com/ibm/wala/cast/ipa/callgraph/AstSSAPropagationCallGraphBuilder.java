@@ -460,8 +460,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         }
 
       } else {
-        system.newSideEffect(new UnaryOperator() {
-          public byte evaluate(IVariable lhs, IVariable rhs) {
+        system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
+          public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
             final IntSetVariable objects = (IntSetVariable) rhs;
             if (objects.getValue() != null) {
               objects.getValue().foreach(new IntSetAction() {
@@ -514,8 +514,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
 
       else {
-        system.newSideEffect(new UnaryOperator() {
-          public byte evaluate(IVariable lhs, IVariable rhs) {
+        system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
+          public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
             final IntSetVariable objects = (IntSetVariable) rhs;
             if (objects.getValue() != null) {
               objects.getValue().foreach(new IntSetAction() {
@@ -554,7 +554,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     //
     // /////////////////////////////////////////////////////////////////////////
 
-    private abstract class LexicalOperator extends UnaryOperator {
+    private abstract class LexicalOperator extends UnaryOperator<PointsToSetVariable> {
       private final AstCGNode node;
 
       private final Access[] accesses;
@@ -616,7 +616,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
         }
       }
 
-      public byte evaluate(IVariable lhs, IVariable rhs) {
+      public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
         doLexicalPointerKeys();
         return NOT_CHANGED;
       }
@@ -1016,8 +1016,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
             }
           }
 
-          system.newSideEffect(new UnaryOperator() {
-            public byte evaluate(IVariable lhs, IVariable rhs) {
+          system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
+            public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
               final IntSetVariable fields = (IntSetVariable) rhs;
               if (fields.getValue() != null) {
                 fields.getValue().foreach(new IntSetAction() {
@@ -1057,8 +1057,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           system.recordImplicitPointsToSet(fieldKey);
           final InstanceKey[] fieldsKeys = getInvariantContents(symtab, du, opNode, fieldsVn);
 
-          system.newSideEffect(new UnaryOperator() {
-            public byte evaluate(IVariable lhs, IVariable rhs) {
+          system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
+            public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
               final IntSetVariable objects = (IntSetVariable) rhs;
               if (objects.getValue() != null) {
                 objects.getValue().foreach(new IntSetAction() {
@@ -1103,8 +1103,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
           }, objKey);
 
         } else {
-          system.newSideEffect(new AbstractOperator() {
-            public byte evaluate(IVariable lhs, final IVariable[] rhs) {
+          system.newSideEffect(new AbstractOperator<PointsToSetVariable>() {
+            public byte evaluate(PointsToSetVariable lhs, final IVariable[] rhs) {
               final IntSetVariable receivers = (IntSetVariable) rhs[0];
               final IntSetVariable fields = (IntSetVariable) rhs[1];
               if (receivers.getValue() != null && fields.getValue() != null) {

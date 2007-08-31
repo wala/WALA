@@ -21,7 +21,6 @@ import com.ibm.wala.dataflow.graph.IKilldallFramework;
 import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -57,7 +56,7 @@ public class LiveAnalysis {
     final BitVectorIntSet liveAtExit = new BitVectorIntSet(considerLiveAtExit);
     final SSAInstruction[] instructions = (SSAInstruction[]) cfg.getInstructions();
 
-    final class ExitBlockGenKillOperator extends UnaryOperator {
+    final class ExitBlockGenKillOperator extends UnaryOperator<BitVectorVariable> {
       public String toString() {
         return "ExitGenKill";
       }
@@ -70,7 +69,7 @@ public class LiveAnalysis {
         return 37721;
       }
 
-      public byte evaluate(IVariable lhs, IVariable rhs) {
+      public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
         BitVectorVariable L = (BitVectorVariable) lhs;
         boolean changed = L.getValue() == null ? !considerLiveAtExit.isZero() : !L.getValue().sameValue(liveAtExit);
 
@@ -80,7 +79,7 @@ public class LiveAnalysis {
       }
     }
 
-    final class BlockValueGenKillOperator extends UnaryOperator {
+    final class BlockValueGenKillOperator extends UnaryOperator<BitVectorVariable> {
       private final SSACFG.BasicBlock block;
 
       BlockValueGenKillOperator(SSACFG.BasicBlock block) {
@@ -114,7 +113,7 @@ public class LiveAnalysis {
         }
       }
 
-      public byte evaluate(IVariable lhs, IVariable rhs) {
+      public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
         BitVectorVariable L = (BitVectorVariable) lhs;
         IntSet s = ((BitVectorVariable) rhs).getValue();
         BitVectorIntSet bits = new BitVectorIntSet();
@@ -171,7 +170,7 @@ public class LiveAnalysis {
             return false;
           }
 
-          public UnaryOperator getNodeTransferFunction(IBasicBlock node) {
+          public UnaryOperator<BitVectorVariable> getNodeTransferFunction(IBasicBlock node) {
             if (((SSACFG.BasicBlock) node).isExitBlock()) {
               return new ExitBlockGenKillOperator();
             } else {
@@ -179,12 +178,12 @@ public class LiveAnalysis {
             }
           }
 
-          public UnaryOperator getEdgeTransferFunction(IBasicBlock s, IBasicBlock d) {
+          public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(IBasicBlock s, IBasicBlock d) {
             Assertions.UNREACHABLE();
             return null;
           }
 
-          public AbstractMeetOperator getMeetOperator() {
+          public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
             return BitVectorUnion.instance();
           }
         };

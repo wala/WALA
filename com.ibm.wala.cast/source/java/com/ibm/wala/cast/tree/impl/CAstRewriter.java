@@ -71,7 +71,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     return oldTarget;
   }
 
-  private CAstControlFlowMap copyFlow(Map nodeMap, CAstControlFlowMap orig, CAstSourcePositionMap newSrc) {
+  private CAstControlFlowMap copyFlow(Map<CAstNode, CAstNode> nodeMap, CAstControlFlowMap orig, CAstSourcePositionMap newSrc) {
     Set<CAstNode> mappedOutsideNodes = HashSetFactory.make(1);
     CAstControlFlowRecorder newMap = new CAstControlFlowRecorder(newSrc);
     Collection oldSources = orig.getMappedNodes();
@@ -94,7 +94,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       if (oldSources.contains(oldSource)) {
         Iterator LS = orig.getTargetLabels(oldSource).iterator();
         if (orig.getTarget(oldSource, null) != null) {
-          LS = new IteratorPlusOne(LS, null);
+          LS = IteratorPlusOne.make(LS, null);
         }
 
         while (LS.hasNext()) {
