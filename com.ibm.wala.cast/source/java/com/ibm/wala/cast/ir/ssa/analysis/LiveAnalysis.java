@@ -153,15 +153,15 @@ public class LiveAnalysis {
       }
     }
 
-    final BitVectorSolver<IBasicBlock> S = new BitVectorSolver<IBasicBlock>(new IKilldallFramework<IBasicBlock>() {
+    final BitVectorSolver<IBasicBlock> S = new BitVectorSolver<IBasicBlock>(new IKilldallFramework<IBasicBlock, BitVectorVariable>() {
       private final Graph<IBasicBlock> G = GraphInverter.invert(cfg);
 
       public Graph<IBasicBlock> getFlowGraph() {
         return G;
       }
 
-      public ITransferFunctionProvider<IBasicBlock> getTransferFunctionProvider() {
-        return new ITransferFunctionProvider<IBasicBlock>() {
+      public ITransferFunctionProvider<IBasicBlock, BitVectorVariable> getTransferFunctionProvider() {
+        return new ITransferFunctionProvider<IBasicBlock, BitVectorVariable>() {
 
           public boolean hasNodeTransferFunctions() {
             return true;
