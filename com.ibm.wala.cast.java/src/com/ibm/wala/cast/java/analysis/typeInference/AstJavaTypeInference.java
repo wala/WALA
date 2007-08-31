@@ -14,6 +14,7 @@ import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
+import com.ibm.wala.analysis.typeInference.TypeVariable;
 import com.ibm.wala.cast.analysis.typeInference.AstTypeInference;
 import com.ibm.wala.cast.ir.ssa.AstConstants;
 import com.ibm.wala.cast.java.ssa.AstJavaInstructionVisitor;
@@ -122,7 +123,7 @@ public class AstJavaTypeInference extends AstTypeInference {
     private PrimAndStringOp() {
     }
 
-    public byte evaluate(IVariable lhs, IVariable[] rhs) {
+    public byte evaluate(TypeVariable lhs, IVariable[] rhs) {
       TypeAbstraction meet = null;
 
       for (int i = 0; i < rhs.length; i++) {
