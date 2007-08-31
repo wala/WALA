@@ -319,11 +319,11 @@ public class HeapTracer {
       Class c = contents.getClass();
       if (c.isArray()) {
         result.registerReachedFrom(root, root, contents);
-        arrayWorkList.push(new Pair<Field,Object>(root, contents));
+        arrayWorkList.push(Pair.make(root, contents));
       } else {
         result.registerReachedFrom(root, root, contents);
         if (internalClasses.contains(c)) {
-          contents = new Pair<Field,Object>(root, contents);
+          contents = Pair.make(root, contents);
         }
         scalarWorkList.push(contents);
       }
@@ -377,11 +377,11 @@ public class HeapTracer {
         Class klass = contents.getClass();
         if (klass.isArray()) {
           result.registerReachedFrom(root, container, contents);
-          contents = new Pair<Object,Object>(container, contents);
+          contents = Pair.make(container, contents);
           arrayWorkList.push(contents);
         } else {
           result.registerReachedFrom(root, container, contents);
-          contents = new Pair<Object,Object>(container, contents);
+          contents = Pair.make(container, contents);
           scalarWorkList.push(contents);
         }
       }
@@ -466,12 +466,12 @@ public class HeapTracer {
       Class klass = contents.getClass();
       if (klass.isArray()) {
         result.registerReachedFrom(root, container, contents);
-        contents = new Pair<Object,Object>(container, contents);
+        contents = Pair.make(container, contents);
         arrayWorkList.push(contents);
       } else {
         result.registerReachedFrom(root, container, contents);
         if (internalClasses.contains(klass)) {
-          contents = new Pair<Object,Object>(container, contents);
+          contents = Pair.make(container, contents);
         }
         scalarWorkList.push(contents);
       }
@@ -716,7 +716,7 @@ public class HeapTracer {
 
     public void registerReachedFrom(Field root, Object predecessor, Object contents) {
       Demographics d = findOrCreateDemographics(root);
-      d.registerObject(new Pair<Object,Class>(predecessor, contents.getClass()), contents);
+      d.registerObject(Pair.make(predecessor, contents.getClass()), contents);
     }
 
     public int getTotalSize() {

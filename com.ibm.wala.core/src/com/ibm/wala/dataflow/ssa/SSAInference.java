@@ -119,7 +119,7 @@ public abstract class SSAInference<T extends IVariable> extends DefaultFixedPoin
               }
             }
           }
-          newStatement(def, op, (T[])uses, false, false);
+          newStatement(def, op, uses, false, false);
         }
       }
     }

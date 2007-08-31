@@ -126,13 +126,11 @@ public class ExplodedSupergraphPath<T> {
   }
 
   /**
-   * @param src
-   * @param dest
    * @param callStack Stack<CGNode> which should not be traversed into
    * @return null if none found
    */
   private List<ExplodedSupergraphNode<T>> findOrCreateSLVP(ExplodedSupergraphNode<T> src, ExplodedSupergraphNode<T> dest, Stack<CGNode> callStack) {
-    Pair p = new Pair<ExplodedSupergraphNode,ExplodedSupergraphNode>(src, dest);
+    Pair p = Pair.make(src, dest);
     List<ExplodedSupergraphNode<T>> l = edge2SLVP.get(p);
     // a bit of a hack ... give up on some memoization
     if (l != null && !validInCallStack(l, callStack)) {

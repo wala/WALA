@@ -83,7 +83,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
         controlDependence.get(x).add(y);
         if (wantEdgeLabels) {
           Set<Object> labels = HashSetFactory.make();
-          edgeLabels.put(new Pair<Object, Object>(x, y), labels);
+          edgeLabels.put(Pair.make(x, y), labels);
           for (Iterator<? extends IBasicBlock> ss = cfg.getSuccNodes(x); ss.hasNext();) {
             IBasicBlock s = ss.next();
             if (RDF.isDominatedBy(s, y)) {
@@ -183,7 +183,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
         Object s = ss.next();
         sb.append("  --> ").append(s);
         if (edgeLabels != null)
-          for (Iterator labels = ((Set) edgeLabels.get(new Pair<IBasicBlock, Object>(n, s))).iterator(); labels.hasNext();)
+          for (Iterator labels = ((Set) edgeLabels.get(Pair.make(n, s))).iterator(); labels.hasNext();)
             sb.append("\n   label: ").append(labels.next());
         sb.append("\n");
       }
@@ -221,7 +221,7 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
    * wantEdgeLabels being true.
    */
   public Set<Object> getEdgeLabels(Object from, Object to) {
-    return edgeLabels.get(new Pair<Object, Object>(from, to));
+    return edgeLabels.get(Pair.make(from, to));
   }
 
   @Override

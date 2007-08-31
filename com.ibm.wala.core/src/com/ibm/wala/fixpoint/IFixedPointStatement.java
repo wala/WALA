@@ -37,7 +37,7 @@ public interface IFixedPointStatement<T extends IVariable> extends INodeWithNumb
    * returns the list of free variables appearing in the right-hand side of the
    * statement
    */
-  public T[] getRHS();
+  public IVariable[] getRHS();
 
   /**
    * Evaluate this statement, setting a new value for the left-hand side. The

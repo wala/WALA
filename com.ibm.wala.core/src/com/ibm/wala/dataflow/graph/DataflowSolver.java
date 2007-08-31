@@ -90,7 +90,7 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
         for (Iterator<? extends T> it2 = G.getSuccNodes(N); it2.hasNext();) {
           T S = it2.next();
           v = makeEdgeVariable(N, S);
-          edge2Var.put(new Pair<T, Object>(N, S), v);
+          edge2Var.put(Pair.make(N, S), v);
         }
       }
     }
@@ -119,7 +119,7 @@ public abstract class DataflowSolver<T, V extends IVariable> extends DefaultFixe
   public V getEdge(Object src, Object dst) {
     assert src != null;
     assert dst != null;
-    V v = getEdge(new Pair<Object, Object>(src, dst));
+    V v = getEdge(Pair.make(src, dst));
     assert v != null;
     return v;
   }

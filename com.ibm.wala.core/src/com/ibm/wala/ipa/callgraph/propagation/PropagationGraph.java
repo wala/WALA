@@ -203,7 +203,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       delegateGraph.addEdge(eq, lhs);
     }
     for (int i = 0; i < eq.getRHS().length; i++) {
-      PointsToSetVariable v = eq.getRHS()[i];
+      PointsToSetVariable v = (PointsToSetVariable) eq.getRHS()[i];
       if (v != null) {
         delegateGraph.addVariable(v);
         delegateGraph.addEdge(v, eq);

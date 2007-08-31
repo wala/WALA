@@ -144,7 +144,7 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
    * @throws IllegalArgumentException
    *           if rhs is null
    */
-  public GeneralStatement(T lhs, AbstractOperator<T> operator, T[] rhs) {
+  public GeneralStatement(T lhs, AbstractOperator<T> operator, IVariable[] rhs) {
     super();
     if (rhs == null) {
       throw new IllegalArgumentException("rhs is null");
@@ -214,8 +214,7 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
     return operator;
   }
 
-  @SuppressWarnings("unchecked")
-  public T[] getRHS() {
-    return (T[]) rhs;
+  public IVariable[] getRHS() {
+    return rhs;
   }
 }

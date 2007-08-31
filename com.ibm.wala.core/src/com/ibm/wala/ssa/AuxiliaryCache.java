@@ -98,7 +98,7 @@ public class AuxiliaryCache {
    */
   public synchronized Object find(IMethod m, Context C, SSAOptions options) {
     // methodMap: SSAOptions -> SoftReference
-    Pair p = new Pair<IMethod,Context>(m,C);
+    Pair p = Pair.make(m,C);
     Map methodMap = MapUtil.findOrCreateMap(dictionary, p);
     Object ref = methodMap.get(options);
     if (ref == null || CacheReference.get(ref) == null) {
@@ -122,7 +122,7 @@ public class AuxiliaryCache {
     if (nItems > RESET_THRESHOLD) {
       reset();
     }
-    Pair p = new Pair<IMethod,Context>(m,C);
+    Pair p = Pair.make(m,C);
     // methodMap: SSAOptions -> SoftReference
     Map<SSAOptions, Object> methodMap = MapUtil.findOrCreateMap(dictionary, p);
     Object ref = CacheReference.make(aux);
@@ -134,6 +134,6 @@ public class AuxiliaryCache {
    * @param method
    */
   public void invalidate(IMethod method, Context C) {
-    dictionary.remove(new Pair<IMethod,Context>(method,C));
+    dictionary.remove(Pair.make(method,C));
   }
 }

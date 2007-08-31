@@ -75,7 +75,7 @@ public class CFGCache {
 
     processResetLogic();
 
-    Pair<IMethod,Context> p = new Pair<IMethod,Context>(m, C);
+    Pair<IMethod,Context> p = Pair.make(m, C);
     Object ref = dictionary.get(p);
     if (ref == null || CacheReference.get(ref) == null) {
       ControlFlowGraph cfg = factory.makeCFG(m, C);
@@ -126,7 +126,7 @@ public class CFGCache {
    * @param method
    */
   public void invalidate(IMethod method, Context C) {
-    dictionary.remove(new Pair<IMethod,Context>(method, C));
+    dictionary.remove(Pair.make(method, C));
 
   }
 }

@@ -419,7 +419,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable> implements I
    * @param rhs
    *          the operands on the rhs
    */
-  public void newStatement(T lhs, AbstractOperator<T> operator, T[] rhs, boolean toWorkList, boolean eager) {
+  public void newStatement(T lhs, AbstractOperator<T> operator, IVariable[] rhs, boolean toWorkList, boolean eager) {
     // add to the list of graph
     if (lhs != null)
       lhs.setOrderNumber(nextOrderNumber++);

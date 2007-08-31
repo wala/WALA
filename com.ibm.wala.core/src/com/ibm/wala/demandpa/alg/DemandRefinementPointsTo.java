@@ -372,7 +372,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     } else {
       result = PointsToResult.NOMOREREFINE;
     }
-    return new Pair<PointsToResult, Collection<InstanceKey>>(result, lastP2Set);
+    return Pair.make(result, lastP2Set);
   }
 
   /**

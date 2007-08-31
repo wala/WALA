@@ -28,6 +28,7 @@ import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixedpoint.impl.UnaryStatement;
 import com.ibm.wala.fixedpoint.impl.Worklist;
 import com.ibm.wala.fixpoint.IFixedPointSystem;
+import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder.FilterOperator;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -863,13 +864,13 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       }
       newStatement(as.getLHS(), (UnaryOperator<PointsToSetVariable>) as.getOperator(), pRef, false, false);
     } else {
-      PointsToSetVariable[] rhs = as.getRHS();
+      IVariable[] rhs = as.getRHS();
       PointsToSetVariable[] newRHS = new PointsToSetVariable[rhs.length];
       for (int i = 0; i < rhs.length; i++) {
         if (rhs[i].equals(p)) {
           newRHS[i] = pRef;
         } else {
-          newRHS[i] = rhs[i];
+          newRHS[i] = (PointsToSetVariable) rhs[i];
         }
       }
       newStatement(as.getLHS(), as.getOperator(), newRHS, false, false);
