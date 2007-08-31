@@ -312,12 +312,12 @@ public class DemandCastChecker {
             } else {
               Trace.println("MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
             }
-            failing.add(new Pair<CGNode, SSACheckCastInstruction>(node, castInstr));
+            failing.add(Pair.make(node, castInstr));
             numMightFail++;
             break;
           case BUDGETEXCEEDED:
             Trace.println("MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
-            failing.add(new Pair<CGNode, SSACheckCastInstruction>(node, castInstr));
+            failing.add(Pair.make(node, castInstr));
             numMightFail++;
             break;
           default:
