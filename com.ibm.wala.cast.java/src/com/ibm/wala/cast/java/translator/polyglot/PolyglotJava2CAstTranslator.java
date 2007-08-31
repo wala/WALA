@@ -484,7 +484,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     @SuppressWarnings("unchecked")
     private void handleThrowsFromCall(ProcedureInstance procedureInstance, Node callAstNode, WalkContext wc) {
       List<Type> throwTypes = procedureInstance.throwTypes();
-      for (Iterator<Type> iter = new IteratorPlusOne<Type>(throwTypes.iterator(), fREType); iter.hasNext();) {
+      for (Iterator<Type> iter = IteratorPlusOne.make(throwTypes.iterator(), fREType); iter.hasNext();) {
         Type thrownType = (Type) iter.next();
         Collection/* <Pair<Type,Node>> */catchTargets = wc.getCatchTargets(thrownType);
 

@@ -19,7 +19,6 @@ import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -34,6 +33,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
+import com.ibm.wala.ipa.callgraph.propagation.PointsToSetVariable;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSANewInstruction;
@@ -203,8 +203,8 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
         }
 
       } else {
-        system.newSideEffect(new UnaryOperator() {
-          public byte evaluate(IVariable lhs, IVariable rhs) {
+        system.newSideEffect(new UnaryOperator<PointsToSetVariable>() {
+          public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
             IntSetVariable tv = (IntSetVariable) rhs;
             if (tv.getValue() != null) {
               tv.getValue().foreach(new IntSetAction() {
