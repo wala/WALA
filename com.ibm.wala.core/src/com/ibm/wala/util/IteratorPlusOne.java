@@ -13,18 +13,21 @@ package com.ibm.wala.util;
 import java.util.Iterator;
 
 /**
- *
  * A utility to efficiently compose an iterator and a singleton
  * 
  * @author sfink
  */
 public class IteratorPlusOne<T> implements Iterator<T> {
+  public static <T> IteratorPlusOne<T> make(Iterator<? extends T> it, T xtra) {
+    return new IteratorPlusOne<T>(it, xtra);
+  }
+
   private final Iterator<? extends T> it;
 
   // the following field will be nulled out after visiting xtra.
   private T xtra;
 
-  public IteratorPlusOne(Iterator<? extends T> it, T xtra) {
+  private IteratorPlusOne(Iterator<? extends T> it, T xtra) {
     this.it = it;
     this.xtra = xtra;
   }

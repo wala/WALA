@@ -253,7 +253,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
           return result.iterator();
         } else {
           if (number > 0 && fallThru.get(number - 1)) {
-            return new IteratorPlusOne<IBasicBlock>(normalEdgeManager.getPredNodes(N), getNode(number - 1));
+            return IteratorPlusOne.make(normalEdgeManager.getPredNodes(N), getNode(number - 1));
           } else {
             return normalEdgeManager.getPredNodes(N);
           }
@@ -319,7 +319,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   private Iterator<IBasicBlock> iterateExceptionalSuccessors(int number) {
     if (exceptionalEdgeManager.hasAnySuccessor(number)) {
       if (exceptionalToExit.get(number)) {
-        return new IteratorPlusOne<IBasicBlock>(exceptionalEdgeManager.getSuccNodes(number), exit());
+        return IteratorPlusOne.make(exceptionalEdgeManager.getSuccNodes(number), exit());
       } else {
         return exceptionalEdgeManager.getSuccNodes(number);
       }
@@ -356,7 +356,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     } else {
       int number = getNumber(N);
       if (number > 0 && fallThru.get(number - 1)) {
-        return new IteratorPlusOne<IBasicBlock>(normalEdgeManager.getPredNodes(N), getNode(number - 1));
+        return IteratorPlusOne.make(normalEdgeManager.getPredNodes(N), getNode(number - 1));
       } else {
         return normalEdgeManager.getPredNodes(N);
       }
@@ -368,11 +368,11 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
       if (normalToExit.get(number)) {
         return new IteratorPlusTwo<IBasicBlock>(normalEdgeManager.getSuccNodes(number), getNode(number + 1), exit());
       } else {
-        return new IteratorPlusOne<IBasicBlock>(normalEdgeManager.getSuccNodes(number), getNode(number + 1));
+        return IteratorPlusOne.make(normalEdgeManager.getSuccNodes(number), getNode(number + 1));
       }
     } else {
       if (normalToExit.get(number)) {
-        return new IteratorPlusOne<IBasicBlock>(normalEdgeManager.getSuccNodes(number), exit());
+        return IteratorPlusOne.make(normalEdgeManager.getSuccNodes(number), exit());
       } else {
         return normalEdgeManager.getSuccNodes(number);
       }
@@ -381,7 +381,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
 
   private Iterator<IBasicBlock> iterateNormalSuccessorsWithoutExit(int number) {
     if (fallThru.get(number)) {
-      return new IteratorPlusOne<IBasicBlock>(normalEdgeManager.getSuccNodes(number), getNode(number + 1));
+      return IteratorPlusOne.make(normalEdgeManager.getSuccNodes(number), getNode(number + 1));
     } else {
       return normalEdgeManager.getSuccNodes(number);
     }
