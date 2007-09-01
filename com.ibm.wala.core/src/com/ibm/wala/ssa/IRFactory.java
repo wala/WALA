@@ -19,17 +19,16 @@ import com.ibm.wala.ipa.callgraph.Context;
  * using this directly.
  * 
  * If you have a call graph in hand, to get the IR for a CGNode, use
- * callGraph.getInterpreter().getIR();
+ * node.getIR();
  * 
  * Otherwise, look at SSACache.
  * 
  * @author Julian Dolby
- * 
  */
-public interface IRFactory {
+public interface IRFactory<T extends IMethod> {
 
-  IR makeIR(IMethod method, Context C, SSAOptions options);
+  IR makeIR(T method, Context C, SSAOptions options);
 
-  ControlFlowGraph makeCFG(IMethod method, Context C);
+  ControlFlowGraph makeCFG(T method, Context C);
 
 }

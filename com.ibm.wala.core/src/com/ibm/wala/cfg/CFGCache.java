@@ -51,9 +51,9 @@ public class CFGCache {
   /**
    * The factory that actually creates new IR objects
    */
-  private final IRFactory factory;
+  private final IRFactory<IMethod> factory;
 
-  public CFGCache(IRFactory factory) {
+  public CFGCache(IRFactory<IMethod> factory) {
     this.factory = factory;
   }
 

@@ -27,24 +27,19 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * @author Julian Dolby
  */
-public class ShrikeIRFactory implements IRFactory {
+public class ShrikeIRFactory implements IRFactory<ShrikeCTMethod> {
 
   public final static boolean buildLocalMap = true;
 
-  public ControlFlowGraph makeCFG(final IMethod method, Context C) {
-    return new ShrikeCFG((ShrikeCTMethod) method);
+  public ControlFlowGraph makeCFG(final ShrikeCTMethod method, Context C) {
+    return new ShrikeCFG(method);
   }
 
-  public IR makeIR(final IMethod method, Context C, final SSAOptions options)
-      throws IllegalArgumentException {
-
-    if (!(method instanceof ShrikeCTMethod)) {
-      throw new IllegalArgumentException("method must be a ShrikeCTMethod");
-    }
+  public IR makeIR(final ShrikeCTMethod method, Context C, final SSAOptions options) throws IllegalArgumentException {
 
     com.ibm.wala.shrikeBT.Instruction[] shrikeInstructions;
     try {
-      shrikeInstructions = ((ShrikeCTMethod) method).getInstructions();
+      shrikeInstructions = method.getInstructions();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
@@ -72,8 +67,8 @@ public class ShrikeIRFactory implements IRFactory {
       @Override
       protected String instructionPosition(int instructionIndex) {
         try {
-          int bcIndex = ((ShrikeCTMethod) method).getBytecodeIndex(instructionIndex);
-          int lineNumber = ((ShrikeCTMethod) method).getLineNumber(bcIndex);
+          int bcIndex = method.getBytecodeIndex(instructionIndex);
+          int lineNumber = method.getLineNumber(bcIndex);
 
           if (lineNumber == -1) {
             return "";
@@ -91,8 +86,8 @@ public class ShrikeIRFactory implements IRFactory {
       }
 
       {
-        SSABuilder builder = SSABuilder.make((ShrikeCTMethod) method, newCfg, shrikeCFG, newInstrs, symbolTable, buildLocalMap,
-            options.getUsePiNodes());
+        SSABuilder builder = SSABuilder.make(method, newCfg, shrikeCFG, newInstrs, symbolTable, buildLocalMap, options
+            .getUsePiNodes());
         builder.build();
         if (buildLocalMap)
           localMap = builder.getLocalMap();

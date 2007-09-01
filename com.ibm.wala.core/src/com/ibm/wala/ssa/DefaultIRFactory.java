@@ -22,7 +22,7 @@ import com.ibm.wala.util.debug.Assertions;
  * @author Julian Dolby
  *
  */
-public class DefaultIRFactory implements IRFactory {
+public class DefaultIRFactory implements IRFactory<IMethod> {
   private final ShrikeIRFactory shrikeFactory = new ShrikeIRFactory();
 
   private final SyntheticIRFactory syntheticFactory = new SyntheticIRFactory();
@@ -37,7 +37,7 @@ public class DefaultIRFactory implements IRFactory {
     if (method.isSynthetic()) {
       return syntheticFactory.makeCFG(method, C);
     } else if (method instanceof ShrikeCTMethod) {
-      return shrikeFactory.makeCFG(method, C);
+      return shrikeFactory.makeCFG((ShrikeCTMethod) method, C);
     } else {
       Assertions.UNREACHABLE();
       return null;
@@ -54,7 +54,7 @@ public class DefaultIRFactory implements IRFactory {
     if (method.isSynthetic()) {
       return syntheticFactory.makeIR(method, C, options);
     } else if (method instanceof ShrikeCTMethod) {
-      return shrikeFactory.makeIR(method, C, options);
+      return shrikeFactory.makeIR((ShrikeCTMethod) method, C, options);
     } else {
       Assertions.UNREACHABLE();
       return null;

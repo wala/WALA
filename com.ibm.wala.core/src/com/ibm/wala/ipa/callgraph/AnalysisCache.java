@@ -25,13 +25,13 @@ import com.ibm.wala.util.ReferenceCleanser;
  * @author sjfink
  */
 public class AnalysisCache {
-  private final IRFactory irFactory;
+  private final IRFactory<IMethod> irFactory;
 
   private final SSACache ssaCache;
 
   private final CFGCache cfgCache;
 
-  public AnalysisCache(IRFactory irFactory) {
+  public AnalysisCache(IRFactory<IMethod> irFactory) {
     super();
     this.irFactory = irFactory;
     this.ssaCache = new SSACache(irFactory);
@@ -56,7 +56,7 @@ public class AnalysisCache {
     return cfgCache;
   }
 
-  public IRFactory getIRFactory() {
+  public IRFactory<IMethod> getIRFactory() {
     return irFactory;
   }
 

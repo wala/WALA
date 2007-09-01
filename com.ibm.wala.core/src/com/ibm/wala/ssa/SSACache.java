@@ -32,7 +32,7 @@ public class SSACache {
   /**
    * The factory that actually creates new IR objects
    */
-  private final IRFactory factory;
+  private final IRFactory<IMethod> factory;
 
   /**
    * A cache of SSA IRs
@@ -47,7 +47,7 @@ public class SSACache {
   /**
    * @param factory
    */
-  public SSACache(IRFactory factory) {
+  public SSACache(IRFactory<IMethod> factory) {
     this.factory = factory;
   }
 
