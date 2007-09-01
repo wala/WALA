@@ -118,7 +118,7 @@ public class AstIRFactory implements IRFactory {
     return newIR;
   }
 
-  public static IRFactory makeDefaultFactory(final boolean keepAstIRs) {
+  public static IRFactory<IMethod> makeDefaultFactory(final boolean keepAstIRs) {
     return new DefaultIRFactory() {
       private final AstIRFactory astFactory = new AstIRFactory(keepAstIRs);
 
