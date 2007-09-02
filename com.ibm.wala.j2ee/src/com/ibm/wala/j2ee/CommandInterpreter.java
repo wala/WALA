@@ -40,6 +40,7 @@ import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSAOptions;
@@ -309,7 +310,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
     return false;
   }
 
-  public ControlFlowGraph getCFG(CGNode N) {
+  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode N) {
     return getIR(N).getControlFlowGraph();
   }
  /**
