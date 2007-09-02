@@ -148,8 +148,8 @@ public class GVSDG {
   }
 
   private static Graph<Statement> pruneSDG(final SDG sdg) {
-    Filter f = new Filter() {
-      public boolean accepts(Object o) {
+    Filter<Statement> f = new Filter<Statement>() {
+      public boolean accepts(Statement o) {
         Statement s = (Statement) o;
         if (s.getNode().equals(sdg.getCallGraph().getFakeRootNode())) {
           return false;

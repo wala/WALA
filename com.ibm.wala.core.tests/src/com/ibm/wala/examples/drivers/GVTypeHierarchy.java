@@ -127,8 +127,8 @@ public class GVTypeHierarchy {
   }
 
   static Graph<EObject> pruneForAppLoader(Graph<EObject> g) throws WalaException {
-    Filter f = new Filter() {
-      public boolean accepts(Object o) {
+    Filter<EObject> f = new Filter<EObject>() {
+      public boolean accepts(EObject o) {
         if (o instanceof EJavaClass) {
           EJavaClass klass = (EJavaClass) o;
           return (klass.getLoader().equals(EClassLoaderName.APPLICATION_LITERAL));
@@ -141,10 +141,10 @@ public class GVTypeHierarchy {
     return pruneGraph(g, f);
   }
 
-  public static <T> Graph<T> pruneGraph(Graph<T> g, Filter f) throws WalaException {
+  public static <T> Graph<T> pruneGraph(Graph<T> g, Filter<T> f) throws WalaException {
 
     Collection<T> slice = GraphSlicer.slice(g, f);
-    return GraphSlicer.prune(g, new CollectionFilter(slice));
+    return GraphSlicer.prune(g, new CollectionFilter<T>(slice));
   }
 
   static ETypeHierarchy readTypeHierarchy() throws WalaException {

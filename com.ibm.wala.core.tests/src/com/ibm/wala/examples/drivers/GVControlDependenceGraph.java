@@ -25,6 +25,7 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.StringStuff;
 import com.ibm.wala.util.debug.Assertions;
@@ -101,7 +102,7 @@ public class GVControlDependenceGraph {
       }
 
       System.err.println(ir.toString());
-      ControlDependenceGraph cdg = new ControlDependenceGraph(ir.getControlFlowGraph());
+      ControlDependenceGraph<ISSABasicBlock> cdg = new ControlDependenceGraph<ISSABasicBlock>(ir.getControlFlowGraph());
 
       Properties wp = null;
       try {

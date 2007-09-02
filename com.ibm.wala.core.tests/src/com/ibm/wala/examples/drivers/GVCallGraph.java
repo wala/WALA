@@ -157,14 +157,14 @@ public class GVCallGraph {
    * <li> LocalPointerKey
    * </ul>
    */
-  private static class ApplicationLoaderFilter implements Filter {
+  private static class ApplicationLoaderFilter implements Filter<CGNode> {
 
     /*
      * (non-Javadoc)
      * 
      * @see com.ibm.capa.util.collections.Filter#accepts(java.lang.Object)
      */
-    public boolean accepts(Object o) {
+    public boolean accepts(CGNode o) {
       if (o instanceof CGNode) {
         CGNode n = (CGNode) o;
         return n.getMethod().getDeclaringClass().getClassLoader().getReference().equals(ClassLoaderReference.Application);

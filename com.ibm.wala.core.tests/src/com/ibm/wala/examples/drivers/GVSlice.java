@@ -237,8 +237,8 @@ public class GVSlice {
    * return a view of the sdg restricted to the statements in the slice
    */
   public static Graph<Statement> pruneSDG(SDG sdg, final Collection<Statement> slice) {
-    Filter f = new Filter() {
-      public boolean accepts(Object o) {
+    Filter<Statement> f = new Filter<Statement>() {
+      public boolean accepts(Statement o) {
         return slice.contains(o);
       }
     };

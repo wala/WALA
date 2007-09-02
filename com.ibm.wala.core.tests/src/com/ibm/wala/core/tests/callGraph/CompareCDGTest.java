@@ -35,6 +35,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
@@ -95,12 +96,12 @@ public class CompareCDGTest extends WalaTestCase {
         if (ir != null) {
           SSACFG cfg = ir.getControlFlowGraph();
           long startTime = System.currentTimeMillis();
-          ControlDependenceGraph cdg = new ControlDependenceGraph(cfg, true);
+          ControlDependenceGraph<ISSABasicBlock> cdg = new ControlDependenceGraph<ISSABasicBlock>(cfg, true);
           long diff = System.currentTimeMillis() - startTime;
           cdgTime += diff;
 
           startTime = System.currentTimeMillis();
-          BVControlDependenceGraph bvcdg = new BVControlDependenceGraph(cfg);
+          BVControlDependenceGraph<ISSABasicBlock> bvcdg = new BVControlDependenceGraph<ISSABasicBlock>(cfg);
           diff = System.currentTimeMillis() - startTime;
           bvTime += diff;
 
@@ -141,7 +142,7 @@ public class CompareCDGTest extends WalaTestCase {
     Trace.println("Time to compute BVControlDependenceGraph=" + bvTime);
   }
 
-  private static boolean compatible(SSACFG cfg, ControlDependenceGraph cdg, BVControlDependenceGraph bv) {
+  private static boolean compatible(SSACFG cfg, ControlDependenceGraph<ISSABasicBlock> cdg, BVControlDependenceGraph<ISSABasicBlock> bv) {
     boolean ret = true;
     for (Iterator<? extends IBasicBlock> it = cfg.iterator(); it.hasNext();) {
       SSACFG.BasicBlock ibb = (SSACFG.BasicBlock) it.next();
@@ -199,7 +200,7 @@ public class CompareCDGTest extends WalaTestCase {
     return ret;
   }
 
-  private static void dumpCDGInfo(SSACFG cfg, ControlDependenceGraph cdg) {
+  private static void dumpCDGInfo(SSACFG cfg, ControlDependenceGraph<ISSABasicBlock> cdg) {
     Trace.println("{\n");
     Vector<SSACFG.BasicBlock> seen = new Vector<SSACFG.BasicBlock>();
     SSACFG.BasicBlock entry = (SSACFG.BasicBlock) cfg.entry();
@@ -257,7 +258,7 @@ public class CompareCDGTest extends WalaTestCase {
     Trace.println("}\n");
   }
 
-  private static void dumpCDGInfo(SSACFG cfg, BVControlDependenceGraph cdg) {
+  private static void dumpCDGInfo(SSACFG cfg, BVControlDependenceGraph<ISSABasicBlock> cdg) {
     Trace.println("{\n");
     Vector<SSACFG.BasicBlock> seen = new Vector<SSACFG.BasicBlock>();
     SSACFG.BasicBlock entry = (SSACFG.BasicBlock) cfg.entry();
@@ -294,7 +295,7 @@ public class CompareCDGTest extends WalaTestCase {
       }
       Trace.print(")");
 
-      Iterator<IBasicBlock> pred = cfg.getPredNodes(ibb);
+      Iterator<ISSABasicBlock> pred = cfg.getPredNodes(ibb);
       Trace.print(" (PRED=");
       while (pred.hasNext()) {
         SSACFG.BasicBlock isc = (SSACFG.BasicBlock) pred.next();
