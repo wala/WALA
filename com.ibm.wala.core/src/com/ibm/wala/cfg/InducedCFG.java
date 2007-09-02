@@ -45,7 +45,7 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
  * This is a funny CFG ... we assume that there are always fallthru edges, even
  * from throws and returns.
  */
-public class InducedCFG extends AbstractCFG {
+public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
 
   private static final boolean DEBUG = false;
   /**
@@ -64,7 +64,6 @@ public class InducedCFG extends AbstractCFG {
    * @throws IllegalArgumentException  if instructions is null
    */
   public InducedCFG(SSAInstruction[] instructions, IMethod method, Context context) {
-
     super(method);
     if (instructions == null) {
       throw new IllegalArgumentException("instructions is null");
@@ -306,7 +305,7 @@ public class InducedCFG extends AbstractCFG {
     }
   }
 
-  public IBasicBlock getBlockForInstruction(int index) {
+  public BasicBlock getBlockForInstruction(int index) {
     if (i2block[index] == null) {
       Assertions.productionAssertion(false, "unexpected null for " + index);
     }
@@ -348,7 +347,7 @@ public class InducedCFG extends AbstractCFG {
       if (last.isPEI()) {
         // we don't currently model catch blocks here ... instead just link
         // to the exit block
-        addExceptionalEdgeTo((BasicBlock) exit());
+        addExceptionalEdgeTo(exit());
       }
     }
 
@@ -386,11 +385,11 @@ public class InducedCFG extends AbstractCFG {
         if (DEBUG) {
           Trace.println("Add fallthru to " + getNode(getGraphNodeId() + 1));
         }
-        addNormalEdgeTo((BasicBlock) getNode(getGraphNodeId() + 1));
+        addNormalEdgeTo(getNode(getGraphNodeId() + 1));
       }
       if (last instanceof SSAReturnInstruction) {
         // link each return instrution to the exit block.
-        BasicBlock exit = (BasicBlock) exit();
+        BasicBlock exit = exit();
         addNormalEdgeTo(exit);
       }
     }
@@ -414,7 +413,7 @@ public class InducedCFG extends AbstractCFG {
         // this is the last non-exit block
         return getInstructions().length - 1;
       } else {
-        BasicBlock next = (BasicBlock) getNode(getGraphNodeId() + 1);
+        BasicBlock next = getNode(getGraphNodeId() + 1);
         return next.getFirstInstructionIndex() - 1;
       }
     }
@@ -491,7 +490,7 @@ public class InducedCFG extends AbstractCFG {
         s.append("  ").append(j).append("  ").append(getInstructions()[j]).append("\n");
       }
 
-      Iterator<IBasicBlock> succNodes = getSuccNodes(bb);
+      Iterator<BasicBlock> succNodes = getSuccNodes(bb);
       while (succNodes.hasNext()) {
         s.append("    -> BB").append(getNumber(succNodes.next())).append("\n");
       }

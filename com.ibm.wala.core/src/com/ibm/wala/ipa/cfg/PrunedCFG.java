@@ -38,107 +38,110 @@ import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
 /**
- * A pruned view of a {@link ControlFlowGraph}.   Use this class along with
- * an {@link EdgeFilter} to produce a custom view of a CFG.
+ * A pruned view of a {@link ControlFlowGraph}. Use this class along with an
+ * {@link EdgeFilter} to produce a custom view of a CFG.
  * 
- * For example, you can use this class to produce a CFG view that ignores certain
- * types of exceptional edges.
+ * For example, you can use this class to produce a CFG view that ignores
+ * certain types of exceptional edges.
  */
-public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements ControlFlowGraph {
+public class PrunedCFG<T extends IBasicBlock> extends AbstractNumberedGraph<T> implements ControlFlowGraph<T> {
 
   /**
-   * @param cfg the original CFG that you want a view of
-   * @param filter an object that selectively filters edges in the original CFG
+   * @param cfg
+   *            the original CFG that you want a view of
+   * @param filter
+   *            an object that selectively filters edges in the original CFG
    * @return a view of cfg that includes only edges accepted by the filter.
-   * @throws IllegalArgumentException if cfg is null
+   * @throws IllegalArgumentException
+   *             if cfg is null
    */
-  public static PrunedCFG make(final ControlFlowGraph cfg, final EdgeFilter filter) {
+  public static <T extends IBasicBlock> PrunedCFG<T> make(final ControlFlowGraph<T> cfg, final EdgeFilter<T> filter) {
     if (cfg == null) {
       throw new IllegalArgumentException("cfg is null");
     }
-    return new PrunedCFG(cfg, filter);
+    return new PrunedCFG<T>(cfg, filter);
   }
 
-  private static class FilteredCFGEdges implements NumberedEdgeManager<IBasicBlock> {
-    private final ControlFlowGraph cfg;
+  private static class FilteredCFGEdges<T extends IBasicBlock> implements NumberedEdgeManager<T> {
+    private final ControlFlowGraph<T> cfg;
 
-    private final NumberedNodeManager<IBasicBlock> currentCFGNodes;
+    private final NumberedNodeManager<T> currentCFGNodes;
 
-    private final EdgeFilter filter;
+    private final EdgeFilter<T> filter;
 
-    FilteredCFGEdges(ControlFlowGraph cfg, NumberedNodeManager<IBasicBlock> currentCFGNodes, EdgeFilter filter) {
+    FilteredCFGEdges(ControlFlowGraph<T> cfg, NumberedNodeManager<T> currentCFGNodes, EdgeFilter<T> filter) {
       this.cfg = cfg;
       this.filter = filter;
       this.currentCFGNodes = currentCFGNodes;
     }
 
-    public Iterator<IBasicBlock> getExceptionalSuccessors(final IBasicBlock N) {
-      return new FilterIterator<IBasicBlock>(cfg.getExceptionalSuccessors(N).iterator(), new Filter() {
-        public boolean accepts(Object o) {
-          return currentCFGNodes.containsNode((IBasicBlock) o) && filter.hasExceptionalEdge(N, (IBasicBlock) o);
+    public Iterator<T> getExceptionalSuccessors(final T N) {
+      return new FilterIterator<T>(cfg.getExceptionalSuccessors(N).iterator(), new Filter<T>() {
+        public boolean accepts(T o) {
+          return currentCFGNodes.containsNode(o) && filter.hasExceptionalEdge(N, o);
         }
       });
     }
 
-    public Iterator<IBasicBlock> getNormalSuccessors(final IBasicBlock N) {
-      return new FilterIterator<IBasicBlock>(cfg.getNormalSuccessors(N).iterator(), new Filter() {
-        public boolean accepts(Object o) {
-          return currentCFGNodes.containsNode((IBasicBlock) o) && filter.hasNormalEdge(N, (IBasicBlock) o);
+    public Iterator<T> getNormalSuccessors(final T N) {
+      return new FilterIterator<T>(cfg.getNormalSuccessors(N).iterator(), new Filter<T>() {
+        public boolean accepts(T o) {
+          return currentCFGNodes.containsNode(o) && filter.hasNormalEdge(N, o);
         }
       });
     }
 
-    public Iterator<IBasicBlock> getExceptionalPredecessors(final IBasicBlock N) {
-      return new FilterIterator<IBasicBlock>(cfg.getExceptionalPredecessors(N).iterator(), new Filter() {
-        public boolean accepts(Object o) {
-          return currentCFGNodes.containsNode((IBasicBlock) o) && filter.hasExceptionalEdge((IBasicBlock) o, N);
+    public Iterator<T> getExceptionalPredecessors(final T N) {
+      return new FilterIterator<T>(cfg.getExceptionalPredecessors(N).iterator(), new Filter<T>() {
+        public boolean accepts(T o) {
+          return currentCFGNodes.containsNode(o) && filter.hasExceptionalEdge(o, N);
         }
       });
     }
 
-    public Iterator<IBasicBlock> getNormalPredecessors(final IBasicBlock N) {
-      return new FilterIterator<IBasicBlock>(cfg.getNormalPredecessors(N).iterator(), new Filter() {
-        public boolean accepts(Object o) {
-          return currentCFGNodes.containsNode((IBasicBlock) o) && filter.hasNormalEdge((IBasicBlock) o, N);
+    public Iterator<T> getNormalPredecessors(final T N) {
+      return new FilterIterator<T>(cfg.getNormalPredecessors(N).iterator(), new Filter<T>() {
+        public boolean accepts(T o) {
+          return currentCFGNodes.containsNode(o) && filter.hasNormalEdge(o, N);
         }
       });
     }
 
-    public Iterator<IBasicBlock> getSuccNodes(IBasicBlock N) {
-      return new CompoundIterator<IBasicBlock>(getNormalSuccessors(N), getExceptionalSuccessors(N));
+    public Iterator<T> getSuccNodes(T N) {
+      return new CompoundIterator<T>(getNormalSuccessors(N), getExceptionalSuccessors(N));
     }
 
-    public int getSuccNodeCount(IBasicBlock N) {
+    public int getSuccNodeCount(T N) {
       return Iterator2Collection.toCollection(getSuccNodes(N)).size();
     }
 
-    public IntSet getSuccNodeNumbers(IBasicBlock N) {
+    public IntSet getSuccNodeNumbers(T N) {
       MutableIntSet bits = IntSetUtil.make();
-      for (Iterator EE = getSuccNodes(N); EE.hasNext();) {
-        bits.add(((IBasicBlock) EE.next()).getNumber());
+      for (Iterator<T> EE = getSuccNodes(N); EE.hasNext();) {
+        bits.add(EE.next().getNumber());
       }
 
       return bits;
     }
 
-    public Iterator<IBasicBlock> getPredNodes(IBasicBlock N) {
-      return new CompoundIterator<IBasicBlock>(getNormalPredecessors(N), getExceptionalPredecessors(N));
+    public Iterator<T> getPredNodes(T N) {
+      return new CompoundIterator<T>(getNormalPredecessors(N), getExceptionalPredecessors(N));
     }
 
-    public int getPredNodeCount(IBasicBlock N) {
+    public int getPredNodeCount(T N) {
       return Iterator2Collection.toCollection(getPredNodes(N)).size();
     }
 
-    public IntSet getPredNodeNumbers(IBasicBlock N) {
+    public IntSet getPredNodeNumbers(T N) {
       MutableIntSet bits = IntSetUtil.make();
-      for (Iterator EE = getPredNodes(N); EE.hasNext();) {
-        bits.add(((IBasicBlock) EE.next()).getNumber());
+      for (Iterator<T> EE = getPredNodes(N); EE.hasNext();) {
+        bits.add(EE.next().getNumber());
       }
 
       return bits;
     }
 
-    public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {
+    public boolean hasEdge(T src, T dst) {
       for (Iterator EE = getSuccNodes(src); EE.hasNext();) {
         if (EE.next().equals(dst)) {
           return true;
@@ -148,46 +151,46 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
       return false;
     }
 
-    public void addEdge(IBasicBlock src, IBasicBlock dst) {
+    public void addEdge(T src, T dst) {
       throw new UnsupportedOperationException();
     }
 
-    public void removeEdge(IBasicBlock src, IBasicBlock dst) {
+    public void removeEdge(T src, T dst) {
       throw new UnsupportedOperationException();
     }
 
-    public void removeAllIncidentEdges(IBasicBlock node) {
+    public void removeAllIncidentEdges(T node) {
       throw new UnsupportedOperationException();
     }
 
-    public void removeIncomingEdges(IBasicBlock node) {
+    public void removeIncomingEdges(T node) {
       throw new UnsupportedOperationException();
     }
 
-    public void removeOutgoingEdges(IBasicBlock node) {
+    public void removeOutgoingEdges(T node) {
       throw new UnsupportedOperationException();
     }
   }
 
-  private static class FilteredNodes implements NumberedNodeManager<IBasicBlock> {
-    private final NumberedNodeManager<IBasicBlock> nodes;
+  private static class FilteredNodes<T extends IBasicBlock> implements NumberedNodeManager<T> {
+    private final NumberedNodeManager<T> nodes;
 
     private final Set subset;
 
-    FilteredNodes(NumberedNodeManager<IBasicBlock> nodes, Set subset) {
+    FilteredNodes(NumberedNodeManager<T> nodes, Set subset) {
       this.nodes = nodes;
       this.subset = subset;
     }
 
-    public int getNumber(IBasicBlock N) {
+    public int getNumber(T N) {
       if (subset.contains(N))
         return nodes.getNumber(N);
       else
         return -1;
     }
 
-    public IBasicBlock getNode(int number) {
-      IBasicBlock N = nodes.getNode(number);
+    public T getNode(int number) {
+      T N = nodes.getNode(number);
       if (subset.contains(N))
         return N;
       else
@@ -196,8 +199,8 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
 
     public int getMaxNumber() {
       int max = -1;
-      for (Iterator<? extends IBasicBlock> NS = nodes.iterator(); NS.hasNext();) {
-        IBasicBlock N = NS.next();
+      for (Iterator<? extends T> NS = nodes.iterator(); NS.hasNext();) {
+        T N = NS.next();
         if (subset.contains(N) && getNumber(N) > max) {
           max = getNumber(N);
         }
@@ -206,19 +209,19 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
       return max;
     }
 
-    private Iterator<IBasicBlock> filterNodes(Iterator nodeIterator) {
-      return new FilterIterator<IBasicBlock>(nodeIterator, new Filter() {
+    private Iterator<T> filterNodes(Iterator nodeIterator) {
+      return new FilterIterator<T>(nodeIterator, new Filter() {
         public boolean accepts(Object o) {
           return subset.contains(o);
         }
       });
     }
 
-    public Iterator<IBasicBlock> iterateNodes(IntSet s) {
+    public Iterator<T> iterateNodes(IntSet s) {
       return filterNodes(nodes.iterateNodes(s));
     }
 
-    public Iterator<IBasicBlock> iterator() {
+    public Iterator<T> iterator() {
       return filterNodes(nodes.iterator());
     }
 
@@ -226,84 +229,84 @@ public class PrunedCFG extends AbstractNumberedGraph<IBasicBlock> implements Con
       return subset.size();
     }
 
-    public void addNode(IBasicBlock n) {
+    public void addNode(T n) {
       throw new UnsupportedOperationException();
     }
 
-    public void removeNode(IBasicBlock n) {
+    public void removeNode(T n) {
       throw new UnsupportedOperationException();
     }
 
-    public boolean containsNode(IBasicBlock N) {
+    public boolean containsNode(T N) {
       return subset.contains(N);
     }
   }
 
-  private final ControlFlowGraph cfg;
+  private final ControlFlowGraph<T> cfg;
 
-  private final FilteredNodes nodes;
+  private final FilteredNodes<T> nodes;
 
-  private final FilteredCFGEdges edges;
+  private final FilteredCFGEdges<T> edges;
 
-  private PrunedCFG(final ControlFlowGraph cfg, final EdgeFilter filter) {
+  private PrunedCFG(final ControlFlowGraph<T> cfg, final EdgeFilter<T> filter) {
     this.cfg = cfg;
-    Graph<IBasicBlock> temp = new AbstractNumberedGraph<IBasicBlock>() {
-      private final EdgeManager<IBasicBlock> edges = new FilteredCFGEdges(cfg, cfg, filter);
+    Graph<T> temp = new AbstractNumberedGraph<T>() {
+      private final EdgeManager<T> edges = new FilteredCFGEdges<T>(cfg, cfg, filter);
 
       @Override
-      protected NodeManager<IBasicBlock> getNodeManager() {
+      protected NodeManager<T> getNodeManager() {
         return cfg;
       }
 
       @Override
-      protected EdgeManager<IBasicBlock> getEdgeManager() {
+      protected EdgeManager<T> getEdgeManager() {
         return edges;
       }
     };
 
-    Set<IBasicBlock> reachable = DFS.getReachableNodes(temp, Collections.singleton(cfg.entry()));
-    Set<IBasicBlock> back = DFS.getReachableNodes(GraphInverter.invert(temp), Collections.singleton(cfg.exit()));
+    Set<T> reachable = DFS.getReachableNodes(temp, Collections.singleton(cfg.entry()));
+    Set<T> back = DFS.getReachableNodes(GraphInverter.invert(temp), Collections.singleton(cfg.exit()));
     reachable.retainAll(back);
 
-    this.nodes = new FilteredNodes(cfg, reachable);
-    this.edges = new FilteredCFGEdges(cfg, nodes, filter);
+    this.nodes = new FilteredNodes<T>(cfg, reachable);
+    this.edges = new FilteredCFGEdges<T>(cfg, nodes, filter);
   }
 
   @Override
-  protected NodeManager<IBasicBlock> getNodeManager() {
+  protected NodeManager<T> getNodeManager() {
     return nodes;
   }
 
   @Override
-  protected EdgeManager<IBasicBlock> getEdgeManager() {
+  protected EdgeManager<T> getEdgeManager() {
     return edges;
   }
 
-  public Collection<IBasicBlock> getExceptionalSuccessors(final IBasicBlock N) {
+  public Collection<T> getExceptionalSuccessors(final T N) {
     return Iterator2Collection.toCollection(edges.getExceptionalSuccessors(N));
   }
 
-  public Collection<IBasicBlock> getNormalSuccessors(final IBasicBlock N) {
+  public Collection<T> getNormalSuccessors(final T N) {
     return Iterator2Collection.toCollection(edges.getNormalSuccessors(N));
   }
 
-  public Collection<IBasicBlock> getExceptionalPredecessors(final IBasicBlock N) {
+  public Collection<T> getExceptionalPredecessors(final T N) {
     return Iterator2Collection.toCollection(edges.getExceptionalPredecessors(N));
   }
 
-  public Collection<IBasicBlock> getNormalPredecessors(final IBasicBlock N) {
+  public Collection<T> getNormalPredecessors(final T N) {
     return Iterator2Collection.toCollection(edges.getNormalPredecessors(N));
   }
 
-  public IBasicBlock entry() {
+  public T entry() {
     return cfg.entry();
   }
 
-  public IBasicBlock exit() {
+  public T exit() {
     return cfg.exit();
   }
 
-  public IBasicBlock getBlockForInstruction(int index) {
+  public T getBlockForInstruction(int index) {
     return cfg.getBlockForInstruction(index);
   }
 

@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFramework;
 import com.ibm.wala.dataflow.graph.BitVectorIdentity;
@@ -37,7 +36,10 @@ import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.ipa.slicer.HeapStatement.ReturnCaller;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
 import com.ibm.wala.util.collections.Filter;
@@ -122,12 +124,12 @@ public class HeapReachingDefs {
     Map<Integer, NormalStatement> ssaInstructionIndex2Statement = mapInstructionsToStatements(domain);
 
     // solve reaching definitions as a dataflow problem
-    BitVectorFramework<IBasicBlock, Statement> rd = new BitVectorFramework<IBasicBlock, Statement>(cfg, new RD(node, cfg, pa,
+    BitVectorFramework<ISSABasicBlock, Statement> rd = new BitVectorFramework<ISSABasicBlock, Statement>(cfg, new RD(node, cfg, pa,
         domain, ssaInstructionIndex2Statement, exclusions), domain);
     if (VERBOSE) {
       System.err.println("Solve ");
     }
-    BitVectorSolver<IBasicBlock> solver = new BitVectorSolver<IBasicBlock>(rd);
+    BitVectorSolver<ISSABasicBlock> solver = new BitVectorSolver<ISSABasicBlock>(rd);
     solver.solve();
     if (VERBOSE) {
       System.err.println("Solved. ");
@@ -143,7 +145,7 @@ public class HeapReachingDefs {
 
     private final CallGraph cg;
 
-    RDMap(BitVectorSolver<IBasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
+    RDMap(BitVectorSolver<ISSABasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
         PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
         Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions, CallGraph cg) {
       if (VERBOSE) {
@@ -161,7 +163,7 @@ public class HeapReachingDefs {
       }
     }
 
-    private void eagerPopulate(Map<PointerKey, MutableIntSet> pointerKeyMod, BitVectorSolver<IBasicBlock> solver,
+    private void eagerPopulate(Map<PointerKey, MutableIntSet> pointerKeyMod, BitVectorSolver<ISSABasicBlock> solver,
         OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis pa,
         Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
         Map<Integer, NormalStatement> ssaInstruction2Statement) {
@@ -287,7 +289,7 @@ public class HeapReachingDefs {
      * value read by s.
      */
     OrdinalSet<Statement> computeResult(Statement s, Map<PointerKey, MutableIntSet> pointerKeyMod,
-        BitVectorSolver<IBasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
+        BitVectorSolver<ISSABasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
         PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
         Map<Integer, NormalStatement> ssaInstructionIndex2Statement) {
       switch (s.getKind()) {
@@ -295,7 +297,7 @@ public class HeapReachingDefs {
         NormalStatement n = (NormalStatement) s;
         Collection<PointerKey> ref = modRef.getRef(node, h, pa, n.getInstruction(), exclusions);
         if (!ref.isEmpty()) {
-          IBasicBlock bb = cfg.getBlockForInstruction(n.getInstructionIndex());
+          ISSABasicBlock bb = cfg.getBlockForInstruction(n.getInstructionIndex());
           BitVectorVariable v = solver.getIn(bb);
           MutableSparseIntSet defs = new MutableSparseIntSet();
           for (PointerKey p : ref) {
@@ -318,7 +320,7 @@ public class HeapReachingDefs {
       }
       case HEAP_RET_CALLER: {
         HeapStatement.ReturnCaller r = (HeapStatement.ReturnCaller) s;
-        IBasicBlock bb = cfg.getBlockForInstruction(r.getCallIndex());
+        ISSABasicBlock bb = cfg.getBlockForInstruction(r.getCallIndex());
         BitVectorVariable v = solver.getIn(bb);
         if (allCalleesMod(cg, r, mod) || pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
           // do nothing ... force flow into and out of the callees
@@ -332,7 +334,7 @@ public class HeapReachingDefs {
       case HEAP_PARAM_CALLER: {
         HeapStatement.ParamCaller r = (HeapStatement.ParamCaller) s;
         NormalStatement call = ssaInstructionIndex2Statement.get(r.getCallIndex());
-        IBasicBlock callBlock = cfg.getBlockForInstruction(call.getInstructionIndex());
+        ISSABasicBlock callBlock = cfg.getBlockForInstruction(call.getInstructionIndex());
         BitVectorVariable v = solver.getIn(callBlock);
         if (pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
           // do nothing ... force flow into and out of the callees
@@ -368,7 +370,7 @@ public class HeapReachingDefs {
    * For each statement s, compute the set of statements that may def the heap
    * value read by s.
    */
-  private Map<Statement, OrdinalSet<Statement>> makeResult(BitVectorSolver<IBasicBlock> solver,
+  private Map<Statement, OrdinalSet<Statement>> makeResult(BitVectorSolver<ISSABasicBlock> solver,
       OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis pa,
       Map<CGNode, OrdinalSet<PointerKey>> mod, ExplodedControlFlowGraph cfg,
       Map<Integer, NormalStatement> ssaInstructionIndex2Statement, HeapExclusions exclusions, CallGraph cg) {
@@ -446,7 +448,7 @@ public class HeapReachingDefs {
   /**
    * Reaching def flow functions
    */
-  private class RD implements ITransferFunctionProvider<IBasicBlock, BitVectorVariable> {
+  private class RD implements ITransferFunctionProvider<ISSABasicBlock, BitVectorVariable> {
 
     private final CGNode node;
 
@@ -493,7 +495,7 @@ public class HeapReachingDefs {
       }
     }
 
-    public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(IBasicBlock src, IBasicBlock dst) {
+    public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(ISSABasicBlock src, ISSABasicBlock dst) {
       ExplodedBasicBlock s = (ExplodedBasicBlock) src;
       if (s.getInstruction() != null && !(s.getInstruction() instanceof SSAAbstractInvokeInstruction)
           && !cfg.getNormalSuccessors(src).contains(dst)) {
@@ -524,7 +526,7 @@ public class HeapReachingDefs {
       return BitVectorUnion.instance();
     }
 
-    public UnaryOperator<BitVectorVariable> getNodeTransferFunction(IBasicBlock node) {
+    public UnaryOperator<BitVectorVariable> getNodeTransferFunction(ISSABasicBlock node) {
       Assertions.UNREACHABLE();
       return null;
     }

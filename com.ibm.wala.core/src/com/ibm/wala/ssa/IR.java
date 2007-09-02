@@ -13,7 +13,6 @@ package com.ibm.wala.ssa;
 import java.util.Iterator;
 import java.util.Map;
 
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -81,7 +80,7 @@ public abstract class IR {
   /**
    * Mapping from SSAInstruction to Basic Block, computed lazily
    */
-  private Map<SSAInstruction, IBasicBlock> instruction2Block;
+  private Map<SSAInstruction, ISSABasicBlock> instruction2Block;
 
   /**
    * subclasses must provide a source name mapping, if they want one
@@ -152,7 +151,7 @@ public abstract class IR {
     result.append(cfg.toString());
     result.append("Instructions:\n");
     for (int i = 0; i <= cfg.getMaxNumber(); i++) {
-      BasicBlock bb = (BasicBlock) cfg.getNode(i);
+      BasicBlock bb = cfg.getNode(i);
       int start = bb.getFirstInstructionIndex();
       int end = bb.getLastInstructionIndex();
       result.append("BB").append(bb.getNumber());
@@ -257,7 +256,7 @@ public abstract class IR {
     @SuppressWarnings("unchecked")
     DerivedNodeIterator() {
       currentBlockIndex = 0;
-      currentBlockIterator = ((BasicBlock) cfg.getNode(0)).iteratePhis();
+      currentBlockIterator = cfg.getNode(0).iteratePhis();
       if (!currentBlockIterator.hasNext()) {
         advanceBlock();
       }
@@ -281,7 +280,7 @@ public abstract class IR {
 
     private void advanceBlock() {
       for (int i = currentBlockIndex + 1; i <= cfg.getMaxNumber(); i++) {
-        Iterator<? extends SSAInstruction> it = getBlockIterator((BasicBlock) cfg.getNode(i));
+        Iterator<? extends SSAInstruction> it = getBlockIterator(cfg.getNode(i));
         if (it.hasNext()) {
           currentBlockIndex = i;
           currentBlockIterator = it;
@@ -566,12 +565,12 @@ public abstract class IR {
    * @return the basic block corresponding to this instruction
    * @throws IllegalArgumentException  if site is null
    */
-  public IBasicBlock[] getBasicBlocksForCall(final CallSiteReference site) {
+  public ISSABasicBlock[] getBasicBlocksForCall(final CallSiteReference site) {
     if (site == null) {
       throw new IllegalArgumentException("site is null");
     }
     final IntSet s = callSiteMapping.getRelated(site.getProgramCounter());
-    final IBasicBlock[] result = new IBasicBlock[s.size()];
+    final ISSABasicBlock[] result = new ISSABasicBlock[s.size()];
     int index = 0;
     for (final IntIterator it = s.intIterator(); it.hasNext();) {
       final int i = it.next();
@@ -586,7 +585,7 @@ public abstract class IR {
    * Be very careful; note the strange identity semantics of SSAInstruction,
    * using ==.  You can't mix SSAInstructions and IRs freely.
    */
-  public IBasicBlock getBasicBlockForInstruction(SSAInstruction s) {
+  public ISSABasicBlock getBasicBlockForInstruction(SSAInstruction s) {
     if (instruction2Block == null) {
       mapInstructions2Blocks();
     }
@@ -595,7 +594,7 @@ public abstract class IR {
 
   private void mapInstructions2Blocks() {
     instruction2Block = HashMapFactory.make();
-    for (IBasicBlock b : cfg) {
+    for (ISSABasicBlock b : cfg) {
       for (IInstruction s : b) {
         instruction2Block.put((SSAInstruction)s, b);
       }
@@ -656,7 +655,7 @@ public abstract class IR {
 
   }
 
-  public IBasicBlock getBasicBlockForCatch(SSAGetCaughtExceptionInstruction instruction) {
+  public ISSABasicBlock getBasicBlockForCatch(SSAGetCaughtExceptionInstruction instruction) {
     if (instruction == null) {
       throw new IllegalArgumentException("instruction is null");
     }

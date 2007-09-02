@@ -12,10 +12,10 @@ package com.ibm.wala.ipa.cfg;
 
 import com.ibm.wala.cfg.IBasicBlock;
 
-public interface EdgeFilter {
+public interface EdgeFilter<T extends IBasicBlock> {
 
-  boolean hasNormalEdge(IBasicBlock src, IBasicBlock dst);
+  boolean hasNormalEdge(T src, T dst);
 
-  boolean hasExceptionalEdge(IBasicBlock src, IBasicBlock dst);
+  boolean hasExceptionalEdge(T src, T dst);
 
 }

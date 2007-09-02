@@ -33,6 +33,7 @@ import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -268,7 +269,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
     return CodeScanner.iterateCastTypes(statements);
   }
 
-  public ControlFlowGraph getCFG(CGNode N) {
+  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode N) {
     return getIR(N).getControlFlowGraph();
   }
 

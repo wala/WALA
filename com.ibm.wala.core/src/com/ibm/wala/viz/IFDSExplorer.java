@@ -14,12 +14,12 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Properties;
 
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.properties.WalaProperties;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.InferGraphRoots;
@@ -91,7 +91,7 @@ public class IFDSExplorer  {
     }
     @SuppressWarnings("unchecked")
     public String getLabel(Object o) throws WalaException {
-      IBasicBlock bb = (IBasicBlock)o;
+      ISSABasicBlock bb = (ISSABasicBlock)o;
       Object b = new BasicBlockInContext(getCurrentNode(),bb);
       IntSet result = r.getResult(b);
       String label = result == null ? "no result" : result.toString();

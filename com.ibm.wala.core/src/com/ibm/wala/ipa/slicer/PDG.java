@@ -37,6 +37,7 @@ import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
@@ -167,7 +168,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     if (ir == null) {
       return;
     }
-    ControlFlowGraph controlFlowGraph = ir.getControlFlowGraph();
+    ControlFlowGraph<ISSABasicBlock> controlFlowGraph = ir.getControlFlowGraph();
     if (cOptions.equals(ControlDependenceOptions.NO_EXCEPTIONAL_EDGES)) {
       controlFlowGraph = ExceptionPrunedCFG.make(controlFlowGraph);
       // In case the CFG has no nodes left because the only control dependencies
@@ -181,8 +182,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       Assertions.productionAssertion(cOptions.equals(ControlDependenceOptions.FULL));
     }
 
-    ControlDependenceGraph cdg = new ControlDependenceGraph(controlFlowGraph);
-    for (IBasicBlock bb : cdg) {
+    ControlDependenceGraph<ISSABasicBlock> cdg = new ControlDependenceGraph<ISSABasicBlock>(controlFlowGraph);
+    for (ISSABasicBlock bb : cdg) {
       if (bb.isExitBlock()) {
         // nothing should be control-dependent on the exit block.
         continue;
@@ -234,8 +235,8 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     // the CDG does not represent control dependences from the entry node.
     // add these manually
     Statement methodEntry = new MethodEntryStatement(node);
-    for (Iterator<? extends IBasicBlock> it = cdg.iterator(); it.hasNext();) {
-      IBasicBlock bb = it.next();
+    for (Iterator<? extends ISSABasicBlock> it = cdg.iterator(); it.hasNext();) {
+      ISSABasicBlock bb = it.next();
       if (cdg.getPredNodeCount(bb) == 0) {
         // this is control dependent on the method entry.
         for (IInstruction s : bb) {

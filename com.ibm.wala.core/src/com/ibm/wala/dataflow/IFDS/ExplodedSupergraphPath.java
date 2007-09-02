@@ -202,7 +202,7 @@ public class ExplodedSupergraphPath<T> {
     final Collection<CGNode> exclusions;
 
     SLVPFinder(ExplodedSupergraphWithSummaryEdges<T> esg, Collection<ExplodedSupergraphNode<T>> sources, Collection<ExplodedSupergraphNode<T>> sinks, Collection<CGNode> exclusions) {
-      super(esg, sources.iterator(), new CollectionFilter(sinks));
+      super(esg, sources.iterator(), new CollectionFilter<ExplodedSupergraphNode<T>>(sinks));
       this.esg = esg;
       this.exclusions = exclusions;
       // Trace.println("FINDER");
@@ -262,6 +262,7 @@ public class ExplodedSupergraphPath<T> {
   static class NoReturnBackwardsPathFinder<T> extends BFSPathFinder<ExplodedSupergraphNode<T>> {
     final ExplodedSupergraphWithSummaryEdges<T> esg;
 
+    @SuppressWarnings("unchecked")
     NoReturnBackwardsPathFinder(ExplodedSupergraphWithSummaryEdges<T> esg, ExplodedSupergraphNode<T> sink) {
       super(GraphInverter.invert(esg), Collections.singleton(sink).iterator(), zeroFactFilter);
       this.esg = esg;

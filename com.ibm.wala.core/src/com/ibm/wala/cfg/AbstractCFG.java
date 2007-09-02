@@ -42,7 +42,7 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
  * 
  * @author sfink
  */
-public abstract class AbstractCFG implements ControlFlowGraph, Constants {
+public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowGraph<T>, Constants {
 
   /**
    * The method this AbstractCFG represents
@@ -52,18 +52,18 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /**
    * An object to track nodes in this cfg
    */
-  final private DelegatingNumberedNodeManager<IBasicBlock> nodeManager = new DelegatingNumberedNodeManager<IBasicBlock>();
+  final private DelegatingNumberedNodeManager<T> nodeManager = new DelegatingNumberedNodeManager<T>();
 
   /**
    * An object to track most normal edges in this cfg
    */
-  final private SparseNumberedEdgeManager<IBasicBlock> normalEdgeManager = new SparseNumberedEdgeManager<IBasicBlock>(nodeManager, 2,
+  final private SparseNumberedEdgeManager<T> normalEdgeManager = new SparseNumberedEdgeManager<T>(nodeManager, 2,
       BasicNaturalRelation.SIMPLE);
 
   /**
    * An object to track not-to-exit exceptional edges in this cfg
    */
-  final private SparseNumberedEdgeManager<IBasicBlock> exceptionalEdgeManager = new SparseNumberedEdgeManager<IBasicBlock>(nodeManager,
+  final private SparseNumberedEdgeManager<T> exceptionalEdgeManager = new SparseNumberedEdgeManager<T>(nodeManager,
       0, BasicNaturalRelation.SIMPLE);
 
   /**
@@ -89,7 +89,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /**
    * Cache here for efficiency
    */
-  private IBasicBlock exit;
+  private T exit;
 
   /**
    * @param method
@@ -121,7 +121,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    * 
    * @return the entry basic block for the CFG.
    */
-  public IBasicBlock entry() {
+  public T entry() {
     return getNode(0);
   }
 
@@ -130,11 +130,11 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    * 
    * @return the exit basic block for the CFG.
    */
-  public IBasicBlock exit() {
+  public T exit() {
     return exit;
   }
 
-  public int getPredNodeCount(IBasicBlock N) {
+  public int getPredNodeCount(T N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
     }
@@ -157,7 +157,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     }
   }
 
-  public int getNumberOfNormalIn(IBasicBlock N) {
+  public int getNumberOfNormalIn(T N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
     }
@@ -174,7 +174,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return normalEdgeManager.getPredNodeCount(N) + xtra;
   }
 
-  public int getNumberOfExceptionalIn(IBasicBlock N) {
+  public int getNumberOfExceptionalIn(T N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
     }
@@ -219,22 +219,22 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return exceptionalEdgeManager.getSuccNodeCount(number) + xtra;
   }
 
-  public int getNumberOfNormalOut(IBasicBlock N) {
+  public int getNumberOfNormalOut(T N) {
     return getNumberOfNormalOut(getNumber(N));
   }
 
-  public int getNumberOfExceptionalOut(final IBasicBlock N) {
+  public int getNumberOfExceptionalOut(final T N) {
     return getNumberOfExceptionalOut(getNumber(N));
   }
 
-  public Iterator<IBasicBlock> getPredNodes(IBasicBlock N) {
+  public Iterator<T> getPredNodes(T N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
     }
     if (N.equals(exit())) {
-      return new FilterIterator<IBasicBlock>(iterator(), new Filter() {
-        public boolean accepts(Object o) {
-          int i = getNumber((IBasicBlock) o);
+      return new FilterIterator<T>(iterator(), new Filter<T>() {
+        public boolean accepts(T o) {
+          int i = getNumber(o);
           return normalToExit.get(i) || exceptionalToExit.get(i);
         }
       });
@@ -244,7 +244,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
       boolean exceptionalIn = getNumberOfExceptionalIn(N) > 0;
       if (normalIn) {
         if (exceptionalIn) {
-          HashSet<IBasicBlock> result = HashSetFactory.make(getNumberOfNormalIn(N) + getNumberOfExceptionalIn(N));
+          HashSet<T> result = HashSetFactory.make(getNumberOfNormalIn(N) + getNumberOfExceptionalIn(N));
           result.addAll(Iterator2Collection.toCollection(normalEdgeManager.getPredNodes(N)));
           result.addAll(Iterator2Collection.toCollection(exceptionalEdgeManager.getPredNodes(N)));
           if (fallThru.get(number - 1)) {
@@ -269,7 +269,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     }
   }
 
-  public int getSuccNodeCount(IBasicBlock N) {
+  public int getSuccNodeCount(T N) {
     if (N == null) {
       throw new IllegalArgumentException("N is null");
     }
@@ -303,20 +303,20 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     }
   }
 
-  private int slowCountSuccNodes(IBasicBlock N) {
+  private int slowCountSuccNodes(T N) {
     return Iterator2Collection.toCollection(getSuccNodes(N)).size();
   }
 
-  public Iterator<IBasicBlock> getSuccNodes(IBasicBlock N) {
+  public Iterator<T> getSuccNodes(T N) {
     int number = getNumber(N);
     if (normalToExit.get(number) && exceptionalToExit.get(number)) {
-      return new CompoundIterator<IBasicBlock>(iterateNormalSuccessorsWithoutExit(number), iterateExceptionalSuccessors(number));
+      return new CompoundIterator<T>(iterateNormalSuccessorsWithoutExit(number), iterateExceptionalSuccessors(number));
     } else {
-      return new CompoundIterator<IBasicBlock>(iterateNormalSuccessors(number), iterateExceptionalSuccessors(number));
+      return new CompoundIterator<T>(iterateNormalSuccessors(number), iterateExceptionalSuccessors(number));
     }
   }
 
-  private Iterator<IBasicBlock> iterateExceptionalSuccessors(int number) {
+  private Iterator<T> iterateExceptionalSuccessors(int number) {
     if (exceptionalEdgeManager.hasAnySuccessor(number)) {
       if (exceptionalToExit.get(number)) {
         return IteratorPlusOne.make(exceptionalEdgeManager.getSuccNodes(number), exit());
@@ -325,18 +325,18 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
       }
     } else {
       if (exceptionalToExit.get(number)) {
-        return new NonNullSingletonIterator<IBasicBlock>(exit());
+        return new NonNullSingletonIterator<T>(exit());
       } else {
         return EmptyIterator.instance();
       }
     }
   }
 
-  Iterator<IBasicBlock> iterateExceptionalPredecessors(IBasicBlock N) {
+  Iterator<T> iterateExceptionalPredecessors(T N) {
     if (N.equals(exit())) {
-      return new FilterIterator<IBasicBlock>(iterator(), new Filter() {
-        public boolean accepts(Object o) {
-          int i = getNumber((IBasicBlock) o);
+      return new FilterIterator<T>(iterator(), new Filter<T>() {
+        public boolean accepts(T o) {
+          int i = getNumber(o);
           return exceptionalToExit.get(i);
         }
       });
@@ -345,11 +345,11 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     }
   }
 
-  Iterator<IBasicBlock> iterateNormalPredecessors(IBasicBlock N) {
+  Iterator<T> iterateNormalPredecessors(T N) {
     if (N.equals(exit())) {
-      return new FilterIterator<IBasicBlock>(iterator(), new Filter() {
-        public boolean accepts(Object o) {
-          int i = getNumber((IBasicBlock) o);
+      return new FilterIterator<T>(iterator(), new Filter<T>() {
+        public boolean accepts(T o) {
+          int i = getNumber(o);
           return normalToExit.get(i);
         }
       });
@@ -363,10 +363,10 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     }
   }
 
-  private Iterator<IBasicBlock> iterateNormalSuccessors(int number) {
+  private Iterator<T> iterateNormalSuccessors(int number) {
     if (fallThru.get(number)) {
       if (normalToExit.get(number)) {
-        return new IteratorPlusTwo<IBasicBlock>(normalEdgeManager.getSuccNodes(number), getNode(number + 1), exit());
+        return new IteratorPlusTwo<T>(normalEdgeManager.getSuccNodes(number), getNode(number + 1), exit());
       } else {
         return IteratorPlusOne.make(normalEdgeManager.getSuccNodes(number), getNode(number + 1));
       }
@@ -379,7 +379,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     }
   }
 
-  private Iterator<IBasicBlock> iterateNormalSuccessorsWithoutExit(int number) {
+  private Iterator<T> iterateNormalSuccessorsWithoutExit(int number) {
     if (fallThru.get(number)) {
       return IteratorPlusOne.make(normalEdgeManager.getSuccNodes(number), getNode(number + 1));
     } else {
@@ -390,7 +390,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /**
    * @param n
    */
-  public void addNode(IBasicBlock n) {
+  public void addNode(T n) {
     nodeManager.addNode(n);
   }
 
@@ -398,11 +398,11 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return nodeManager.getMaxNumber();
   }
 
-  public IBasicBlock getNode(int number) {
+  public T getNode(int number) {
     return nodeManager.getNode(number);
   }
 
-  public int getNumber(IBasicBlock N) {
+  public int getNumber(T N) {
     return nodeManager.getNumber(N);
   }
 
@@ -410,19 +410,19 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return nodeManager.getNumberOfNodes();
   }
 
-  public Iterator<IBasicBlock> iterator() {
+  public Iterator<T> iterator() {
     return nodeManager.iterator();
   }
 
-  public void addEdge(IBasicBlock src, IBasicBlock dst) throws UnimplementedError {
+  public void addEdge(T src, T dst) throws UnimplementedError {
     Assertions.UNREACHABLE("Don't call me .. use addNormalEdge or addExceptionalEdge");
   }
 
-  public void removeEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
+  public void removeEdge(T src, T dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {
+  public boolean hasEdge(T src, T dst) {
     if (dst == null) {
       throw new IllegalArgumentException("dst is null");
     }
@@ -435,7 +435,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return normalEdgeManager.hasEdge(src, dst) || exceptionalEdgeManager.hasEdge(src, dst);
   }
 
-  public boolean hasExceptionalEdge(IBasicBlock src, IBasicBlock dst) {
+  public boolean hasExceptionalEdge(T src, T dst) {
     if (dst == null) {
       throw new IllegalArgumentException("dst is null");
     }
@@ -446,7 +446,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
     return exceptionalEdgeManager.hasEdge(src, dst);
   }
 
-  public boolean hasNormalEdge(IBasicBlock src, IBasicBlock dst) {
+  public boolean hasNormalEdge(T src, T dst) {
     if (dst == null) {
       throw new IllegalArgumentException("dst is null");
     }
@@ -465,7 +465,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    * @throws IllegalArgumentException
    *           if dst is null
    */
-  public void addNormalEdge(IBasicBlock src, IBasicBlock dst) {
+  public void addNormalEdge(T src, T dst) {
     if (dst == null) {
       throw new IllegalArgumentException("dst is null");
     }
@@ -484,7 +484,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
    * @throws IllegalArgumentException
    *           if dst is null
    */
-  public void addExceptionalEdge(IBasicBlock src, IBasicBlock dst) {
+  public void addExceptionalEdge(T src, T dst) {
     if (dst == null) {
       throw new IllegalArgumentException("dst is null");
     }
@@ -498,21 +498,21 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /*
    * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
    */
-  public void removeNodeAndEdges(IBasicBlock N) throws UnimplementedError {
+  public void removeNodeAndEdges(T N) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
   /*
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
-  public void removeNode(IBasicBlock n) throws UnimplementedError {
+  public void removeNode(T n) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
   /*
    * @see com.ibm.wala.util.graph.NodeManager#containsNode(com.ibm.wala.util.graph.Node)
    */
-  public boolean containsNode(IBasicBlock N) {
+  public boolean containsNode(T N) {
     return nodeManager.containsNode(N);
   }
 
@@ -522,11 +522,11 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
-    for (Iterator it = iterator(); it.hasNext();) {
-      IBasicBlock bb = (IBasicBlock) it.next();
+    for (Iterator<T> it = iterator(); it.hasNext();) {
+      T bb = it.next();
       s.append("BB").append(getNumber(bb)).append("\n");
 
-      Iterator<IBasicBlock> succNodes = getSuccNodes(bb);
+      Iterator<T> succNodes = getSuccNodes(bb);
       while (succNodes.hasNext()) {
         s.append("    -> BB").append(getNumber(succNodes.next())).append("\n");
       }
@@ -567,14 +567,14 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(java.lang.Object)
    */
-  public void removeAllIncidentEdges(IBasicBlock node) throws UnimplementedError {
+  public void removeAllIncidentEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
   /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
+   * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.T)
    */
-  public Collection<IBasicBlock> getExceptionalSuccessors(IBasicBlock b) {
+  public Collection<T> getExceptionalSuccessors(T b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -582,9 +582,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
+   * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.T)
    */
-  public Collection<IBasicBlock> getNormalSuccessors(IBasicBlock b) {
+  public Collection<T> getNormalSuccessors(T b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -594,15 +594,15 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
-  public Iterator<IBasicBlock> iterateNodes(IntSet s) {
-    return new NumberedNodeIterator<IBasicBlock>(s, this);
+  public Iterator<T> iterateNodes(IntSet s) {
+    return new NumberedNodeIterator<T>(s, this);
   }
 
-  public void removeIncomingEdges(IBasicBlock node) throws UnimplementedError {
+  public void removeIncomingEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
-  public void removeOutgoingEdges(IBasicBlock node) throws UnimplementedError {
+  public void removeOutgoingEdges(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
   }
 
@@ -615,9 +615,9 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalPredecessors(com.ibm.wala.cfg.IBasicBlock)
+   * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalPredecessors(com.ibm.wala.cfg.T)
    */
-  public Collection<IBasicBlock> getExceptionalPredecessors(IBasicBlock b) {
+  public Collection<T> getExceptionalPredecessors(T b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -625,16 +625,16 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   }
 
   /*
-   * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalPredecessors(com.ibm.wala.cfg.IBasicBlock)
+   * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalPredecessors(com.ibm.wala.cfg.T)
    */
-  public Collection<IBasicBlock> getNormalPredecessors(IBasicBlock b) {
+  public Collection<T> getNormalPredecessors(T b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
     return Iterator2Collection.toCollection(iterateNormalPredecessors(b));
   }
 
-  public IntSet getPredNodeNumbers(IBasicBlock node) throws UnimplementedError {
+  public IntSet getPredNodeNumbers(T node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
@@ -642,7 +642,7 @@ public abstract class AbstractCFG implements ControlFlowGraph, Constants {
   /*
    * TODO: optimize this.
    */
-  public IntSet getSuccNodeNumbers(IBasicBlock node) {
+  public IntSet getSuccNodeNumbers(T node) {
     int number = getNumber(node);
     IntSet s = normalEdgeManager.getSuccNodeNumbers(node);
     MutableSparseIntSet result = s == null ? new MutableSparseIntSet() : MutableSparseIntSet.make(s);

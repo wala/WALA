@@ -49,7 +49,7 @@ public class BFSPathFinder<T> {
   /**
    * The Filter which defines the target set of nodes to find
    */
-  final private Filter filter;
+  final private Filter<T> filter;
 
   /**
    * an enumeration of all nodes to search from
@@ -63,7 +63,7 @@ public class BFSPathFinder<T> {
    * @param G
    *          the graph whose nodes to enumerate
    */
-  public BFSPathFinder(Graph<T> G, T N, Filter f) {
+  public BFSPathFinder(Graph<T> G, T N, Filter<T> f) {
     this.G = G;
     this.roots = new NonNullSingletonIterator<T>(N);
     this.filter = f;
@@ -86,8 +86,8 @@ public class BFSPathFinder<T> {
     if (!G.containsNode(src)) {
       throw new IllegalArgumentException("src is not in graph " + src);
     }
-    this.filter = new Filter() {
-      public boolean accepts(Object o) {
+    this.filter = new Filter<T>() {
+      public boolean accepts(T o) {
         return target.equals(o);
       }
     };
@@ -109,8 +109,8 @@ public class BFSPathFinder<T> {
     this.G = G;
     this.roots = new NonNullSingletonIterator<T>(src);
 
-    this.filter = new Filter() {
-      public boolean accepts(Object o) {
+    this.filter = new Filter<T>() {
+      public boolean accepts(T o) {
         return ts.contains(o);
       }
     };
@@ -126,8 +126,8 @@ public class BFSPathFinder<T> {
   public BFSPathFinder(Graph<T> G, Iterator<T> sources, final T target) {
     this.G = G;
     this.roots = sources;
-    this.filter = new Filter() {
-      public boolean accepts(Object o) {
+    this.filter = new Filter<T>() {
+      public boolean accepts(T o) {
         return target.equals(o);
       }
     };
@@ -140,7 +140,7 @@ public class BFSPathFinder<T> {
    * @param nodes
    *          the set of nodes from which to start searching
    */
-  public BFSPathFinder(Graph<T> G, Iterator<T> nodes, Filter f) {
+  public BFSPathFinder(Graph<T> G, Iterator<T> nodes, Filter<T> f) {
     this.G = G;
     this.roots = nodes;
     this.filter = f;

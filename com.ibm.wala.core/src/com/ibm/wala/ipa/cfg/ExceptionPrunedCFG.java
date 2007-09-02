@@ -18,17 +18,17 @@ import com.ibm.wala.cfg.IBasicBlock;
  */
 public class ExceptionPrunedCFG {
 
-  private static final EdgeFilter exceptionEdgePruner = new EdgeFilter() {
-    public boolean hasNormalEdge(IBasicBlock src, IBasicBlock dst) {
+  private static class ExceptionEdgePruner<T extends IBasicBlock> implements EdgeFilter<T>{
+    public boolean hasNormalEdge(T src, T dst) {
       return true;
     }
-    public boolean hasExceptionalEdge(IBasicBlock src, IBasicBlock dst) {
+    public boolean hasExceptionalEdge(T src, T dst) {
       return false;
     }
   };
 
-  public static PrunedCFG make(ControlFlowGraph cfg) {
-    return PrunedCFG.make(cfg, exceptionEdgePruner);
+  public static <T extends IBasicBlock> PrunedCFG<T> make(ControlFlowGraph<T> cfg) {
+    return PrunedCFG.make(cfg, new ExceptionEdgePruner<T>());
   }
 }
 

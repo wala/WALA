@@ -19,12 +19,10 @@ import com.ibm.wala.util.collections.Filter;
  * 
  * @author sfink
  */
-public class IndiscriminateFilter implements Filter {
+public class IndiscriminateFilter<T> implements Filter<T> {
 
-  private final static IndiscriminateFilter INSTANCE = new IndiscriminateFilter();
-
-  public static IndiscriminateFilter singleton() {
-    return INSTANCE;
+  public static <T> IndiscriminateFilter singleton() {
+    return new IndiscriminateFilter<T>();
   }
 
   /*

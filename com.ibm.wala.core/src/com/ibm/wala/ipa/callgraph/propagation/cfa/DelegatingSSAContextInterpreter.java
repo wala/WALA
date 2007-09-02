@@ -17,6 +17,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.DelegatingRTAContextInterpreter;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -81,7 +82,9 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
     result |= B.recordFactoryType(node, klass);
     return result;
   }
-  public ControlFlowGraph getCFG(CGNode node) {
+  
+  
+  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
         return A.getCFG(node);

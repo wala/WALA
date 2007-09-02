@@ -646,8 +646,8 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
    */
   protected void addNodeInstructionConstraints(CGNode node, IR ir, DefUse du) {
     FlowStatementVisitor v = makeVisitor((ExplicitCallGraph.ExplicitNode) node, ir, du);
-    ControlFlowGraph cfg = ir.getControlFlowGraph();
-    for (IBasicBlock b : cfg) {
+    ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
+    for (ISSABasicBlock b : cfg) {
       addBlockInstructionConstraints(node, cfg, b, v);
     }
   }
@@ -655,7 +655,7 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
   /**
    * Add constraints for a particular basic block.
    */
-  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph cfg, IBasicBlock b, FlowStatementVisitor v) {
+  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, ISSABasicBlock b, FlowStatementVisitor v) {
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.
@@ -669,7 +669,7 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     addPhiConstraints(node, cfg, b);
   }
 
-  private void addPhiConstraints(CGNode node, ControlFlowGraph cfg, IBasicBlock b) {
+  private void addPhiConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, ISSABasicBlock b) {
 
     // visit each phi instruction in each successor block
     for (Iterator<? extends IBasicBlock> iter = cfg.getSuccNodes(b); iter.hasNext();) {
@@ -727,9 +727,7 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
   }
 
   protected interface FlowStatementVisitor extends SSAInstruction.IVisitor {
-
-    void setBasicBlock(IBasicBlock b);
-
+    void setBasicBlock(ISSABasicBlock b);
   }
 
   public DemandFlowGraph(final CallGraph cg, final HeapModel heapModel, final MemoryAccessMap mam, final ClassHierarchy cha) {

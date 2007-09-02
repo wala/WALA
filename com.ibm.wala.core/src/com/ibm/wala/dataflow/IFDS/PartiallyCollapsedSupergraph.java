@@ -24,6 +24,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.InterproceduralCFG;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.CollectionFilter;
 import com.ibm.wala.util.CompoundIterator;
 import com.ibm.wala.util.IndiscriminateFilter;
@@ -101,6 +102,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    * @param noCollapse
    *          set of nodes in the call graph which cannot be collapsed
    */
+  @SuppressWarnings("unchecked")
   public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse) {
     this(cg, noCollapse, IndiscriminateFilter.singleton());
   }
@@ -114,7 +116,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    *          set of nodes which are relevant and should be included in the
    *          supergraph
    */
-  public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse, Filter relevant) {
+  public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse, Filter<CGNode> relevant) {
 
     EngineTimings.startVirtual("PartiallyCollapsedSupergraph.<init>");
 
@@ -129,7 +131,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       }
     }
     this.noCollapse = noCollapse;
-    this.partialIPFG = new InterproceduralCFG(cg, new Filtersection(relevant, new CollectionFilter(noCollapse)), true);
+    this.partialIPFG = new InterproceduralCFG(cg, new Filtersection<CGNode>(relevant, new CollectionFilter<CGNode>(noCollapse)), true);
     if (DEBUG_LEVEL > 0) {
       Trace.println("IPFG \n" + partialIPFG.toString());
     }
@@ -183,10 +185,10 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
 
   public Object[] getExitsForProcedure(CGNode node) {
     if (noCollapse.contains(node)) {
-      ControlFlowGraph cfg = partialIPFG.getCFG(node);
+      ControlFlowGraph<ISSABasicBlock> cfg = partialIPFG.getCFG(node);
       if (cfg instanceof TwoExitCFG) {
-        IBasicBlock o1 = ((TwoExitCFG) cfg).getNormalExit();
-        IBasicBlock o2 = ((TwoExitCFG) cfg).getExceptionalExit();
+        ISSABasicBlock o1 = ((TwoExitCFG) cfg).getNormalExit();
+        ISSABasicBlock o2 = ((TwoExitCFG) cfg).getExceptionalExit();
         return new Object[] { new BasicBlockInContext(node, o1), new BasicBlockInContext(node, o2) };
       } else {
         return new Object[] { new BasicBlockInContext(node, cfg.exit()) };
@@ -331,7 +333,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
         for (Iterator it2 = cg.getSuccNodes(node); it2.hasNext();) {
           CGNode outNode = (CGNode) it2.next();
           if (noCollapse.contains(outNode)) {
-            ControlFlowGraph cfg = partialIPFG.getCFG(outNode);
+            ControlFlowGraph<ISSABasicBlock> cfg = partialIPFG.getCFG(outNode);
             // add an edge to the entry block
             BasicBlockInContext entry = new BasicBlockInContext(outNode, cfg.entry());
             Set<Object> incoming = MapUtil.findOrCreateSet(incomingTransverseEdges, entry);

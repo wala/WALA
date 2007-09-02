@@ -14,9 +14,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import com.ibm.wala.cfg.CFGSanitizer;
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -60,7 +60,7 @@ public class GhostviewUtil {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
-    Graph<IBasicBlock> g = ir.getControlFlowGraph();
+    Graph<? extends ISSABasicBlock> g = ir.getControlFlowGraph();
 
     NodeDecorator labels = makeIRDecorator(ir);
     if (annotations != null) {

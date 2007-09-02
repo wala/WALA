@@ -12,7 +12,6 @@ package com.ibm.wala.analysis.stackMachine;
 
 import java.util.Iterator;
 
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.cfg.ShrikeCFG.BasicBlock;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
@@ -120,7 +119,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
   protected void init(Meeter meeter, final FlowProvider flow) {
     final MeetOperator meet = new MeetOperator(meeter);
-    ITransferFunctionProvider<IBasicBlock, MachineState> xferFunctions = new ITransferFunctionProvider<IBasicBlock, MachineState>() {
+    ITransferFunctionProvider<BasicBlock, MachineState> xferFunctions = new ITransferFunctionProvider<BasicBlock, MachineState>() {
       public boolean hasNodeTransferFunctions() {
         return flow.needsNodeFlow();
       }
@@ -129,7 +128,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         return flow.needsEdgeFlow();
       }
 
-      public UnaryOperator<MachineState> getNodeTransferFunction(final IBasicBlock node) {
+      public UnaryOperator<MachineState> getNodeTransferFunction(final BasicBlock node) {
         return new UnaryOperator<MachineState>() {
           @Override
           public byte evaluate(MachineState lhs, MachineState rhs) {
@@ -137,7 +136,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
             MachineState exit = lhs;
             MachineState entry = rhs;
 
-            MachineState newExit = flow.flow(entry, (BasicBlock) node);
+            MachineState newExit = flow.flow(entry, node);
             if (newExit.stateEquals(exit)) {
               return NOT_CHANGED;
             } else {
@@ -163,7 +162,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         };
       }
 
-      public UnaryOperator<MachineState> getEdgeTransferFunction(final IBasicBlock from, final IBasicBlock to) {
+      public UnaryOperator<MachineState> getEdgeTransferFunction(final BasicBlock from, final BasicBlock to) {
         return new UnaryOperator<MachineState>() {
           @Override
           public byte evaluate(MachineState lhs, MachineState rhs) {
@@ -171,7 +170,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
             MachineState exit = lhs;
             MachineState entry = rhs;
 
-            MachineState newExit = flow.flow(entry, (BasicBlock) from, (BasicBlock) to);
+            MachineState newExit = flow.flow(entry, from, to);
             if (newExit.stateEquals(exit)) {
               return NOT_CHANGED;
             } else {
@@ -202,16 +201,16 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
     };
 
-    IKilldallFramework<IBasicBlock, MachineState> problem = new BasicFramework<IBasicBlock, MachineState>(cfg, xferFunctions);
-    solver = new DataflowSolver<IBasicBlock, MachineState>(problem) {
+    IKilldallFramework<BasicBlock, MachineState> problem = new BasicFramework<BasicBlock, MachineState>(cfg, xferFunctions);
+    solver = new DataflowSolver<BasicBlock, MachineState>(problem) {
       private MachineState entry;
 
       @Override
-      protected MachineState makeNodeVariable(IBasicBlock n, boolean IN) {
+      protected MachineState makeNodeVariable(BasicBlock n, boolean IN) {
         if (Assertions.verifyAssertions) {
           Assertions._assert(n != null);
         }
-        MachineState result = new MachineState(71167 * n.hashCode() + (IN ? 0 : 1), (BasicBlock) n);
+        MachineState result = new MachineState(71167 * n.hashCode() + (IN ? 0 : 1), n);
         if (IN && n.equals(cfg.entry())) {
           entry = result;
         }
@@ -219,12 +218,12 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
 
       @Override
-      protected MachineState makeEdgeVariable(IBasicBlock from, IBasicBlock to) {
+      protected MachineState makeEdgeVariable(BasicBlock from, BasicBlock to) {
         if (Assertions.verifyAssertions) {
           Assertions._assert(from != null);
           Assertions._assert(to != null);
         }
-        MachineState result = new MachineState(71167 * (from.hashCode() + to.hashCode()), (BasicBlock) from);
+        MachineState result = new MachineState(71167 * (from.hashCode() + to.hashCode()), from);
 
         return result;
       }

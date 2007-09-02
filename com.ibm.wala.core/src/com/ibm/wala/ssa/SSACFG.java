@@ -50,7 +50,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * @author sfink
  */
 
-public class SSACFG implements ControlFlowGraph {
+public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
 
   private static final boolean DEBUG = false;
 
@@ -60,7 +60,7 @@ public class SSACFG implements ControlFlowGraph {
 
   final protected IMethod method;
 
-  final protected AbstractCFG cfg;
+  final protected AbstractCFG<IBasicBlock> cfg;
 
   /**
    * cache a ref to the exit block for efficient access
@@ -78,6 +78,7 @@ public class SSACFG implements ControlFlowGraph {
    * @throws IllegalArgumentException
    *             if method is null
    */
+  @SuppressWarnings("unchecked")
   public SSACFG(IMethod method, AbstractCFG cfg, SSAInstruction[] instructions) {
 
     if (method == null) {
@@ -686,7 +687,7 @@ public class SSACFG implements ControlFlowGraph {
   public String toString() {
     StringBuffer s = new StringBuffer("");
     for (int i = 0; i <= getNumber(exit()); i++) {
-      BasicBlock bb = (BasicBlock) getNode(i);
+      BasicBlock bb = getNode(i);
       s.append("BB").append(i).append("[").append(bb.getFirstInstructionIndex()).append("..").append(bb.getLastInstructionIndex())
           .append("]\n");
 
@@ -728,7 +729,7 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.NumberedGraph#getNumber(com.ibm.wala.util.graph.Node)
    */
-  public int getNumber(IBasicBlock N) throws IllegalArgumentException {
+  public int getNumber(ISSABasicBlock N) throws IllegalArgumentException {
     if (N == null) {
       throw new IllegalArgumentException("N == null");
     }
@@ -739,7 +740,7 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.NumberedGraph#getNode(int)
    */
-  public IBasicBlock getNode(int number) {
+  public BasicBlock getNode(int number) {
     return basicBlocks[number];
   }
 
@@ -753,9 +754,9 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.Graph#iterateNodes()
    */
-  public Iterator<IBasicBlock> iterator() {
-    ArrayList<IBasicBlock> list = new ArrayList<IBasicBlock>();
-    for (IBasicBlock b : basicBlocks) {
+  public Iterator<ISSABasicBlock> iterator() {
+    ArrayList<ISSABasicBlock> list = new ArrayList<ISSABasicBlock>();
+    for (BasicBlock b : basicBlocks) {
       list.add(b);
     }
     return list.iterator();
@@ -771,18 +772,18 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.Graph#getPredNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<IBasicBlock> getPredNodes(IBasicBlock b) throws IllegalArgumentException {
+  public Iterator<ISSABasicBlock> getPredNodes(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
       throw new IllegalArgumentException("b == null");
     }
     IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getPredNodes(n);
-    return new Iterator<IBasicBlock>() {
+    return new Iterator<ISSABasicBlock>() {
       public boolean hasNext() {
         return i.hasNext();
       }
 
-      public IBasicBlock next() {
+      public BasicBlock next() {
         IBasicBlock n = (IBasicBlock) i.next();
         int number = n.getNumber();
         return basicBlocks[number];
@@ -797,7 +798,7 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.Graph#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
-  public int getPredNodeCount(IBasicBlock b) throws IllegalArgumentException {
+  public int getPredNodeCount(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
       throw new IllegalArgumentException("b == null");
     }
@@ -808,18 +809,18 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.Graph#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<IBasicBlock> getSuccNodes(IBasicBlock b) throws IllegalArgumentException {
+  public Iterator<ISSABasicBlock> getSuccNodes(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
       throw new IllegalArgumentException("b == null");
     }
     IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getSuccNodes(n);
-    return new Iterator<IBasicBlock>() {
+    return new Iterator<ISSABasicBlock>() {
       public boolean hasNext() {
         return i.hasNext();
       }
 
-      public IBasicBlock next() {
+      public ISSABasicBlock next() {
         IBasicBlock n = (IBasicBlock) i.next();
         int number = n.getNumber();
         return basicBlocks[number];
@@ -834,7 +835,7 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.Graph#getSuccNodeCount(com.ibm.wala.util.graph.Node)
    */
-  public int getSuccNodeCount(IBasicBlock b) throws IllegalArgumentException {
+  public int getSuccNodeCount(ISSABasicBlock b) throws IllegalArgumentException {
     if (b == null) {
       throw new IllegalArgumentException("b == null");
     }
@@ -845,36 +846,36 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.NumberedGraph#addNode(com.ibm.wala.util.graph.Node)
    */
-  public void addNode(IBasicBlock n) throws UnsupportedOperationException {
+  public void addNode(ISSABasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void addEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
+  public void addEdge(ISSABasicBlock src, ISSABasicBlock dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
+  public void removeEdge(ISSABasicBlock src, ISSABasicBlock dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#removeEdges(com.ibm.wala.util.graph.Node)
    */
-  public void removeAllIncidentEdges(IBasicBlock node) throws UnsupportedOperationException {
+  public void removeAllIncidentEdges(ISSABasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.Graph#removeNode(com.ibm.wala.util.graph.Node)
    */
-  public void removeNodeAndEdges(IBasicBlock N) throws UnsupportedOperationException {
+  public void removeNodeAndEdges(ISSABasicBlock N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
   /*
    * @see com.ibm.wala.util.graph.NodeManager#remove(com.ibm.wala.util.graph.Node)
    */
-  public void removeNode(IBasicBlock n) throws UnsupportedOperationException {
+  public void removeNode(ISSABasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -889,7 +890,7 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.Graph#containsNode(com.ibm.wala.util.graph.Node)
    */
-  public boolean containsNode(IBasicBlock N) {
+  public boolean containsNode(ISSABasicBlock N) {
     if (N instanceof BasicBlock) {
       return basicBlocks[getNumber(N)] == N;
     } else {
@@ -907,13 +908,13 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
-  public Collection<IBasicBlock> getExceptionalSuccessors(final IBasicBlock b) {
+  public Collection<ISSABasicBlock> getExceptionalSuccessors(final ISSABasicBlock b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
     final IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getExceptionalSuccessors(n).iterator();
-    final Collection<IBasicBlock> c = HashSetFactory.make(getSuccNodeCount(b));
+    final Collection<ISSABasicBlock> c = HashSetFactory.make(getSuccNodeCount(b));
     for (; i.hasNext();) {
       final IBasicBlock s = (IBasicBlock) i.next();
       c.add(basicBlocks[cfg.getNumber(s)]);
@@ -924,17 +925,17 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
-  public Collection<IBasicBlock> getExceptionalPredecessors(IBasicBlock b) {
+  public Collection<ISSABasicBlock> getExceptionalPredecessors(ISSABasicBlock b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
     IBasicBlock n = cfg.getNode(b.getNumber());
-    Function<IBasicBlock, IBasicBlock> f = new Function<IBasicBlock, IBasicBlock>() {
-      public IBasicBlock apply(IBasicBlock object) {
+    Function<IBasicBlock, ISSABasicBlock> f = new Function<IBasicBlock, ISSABasicBlock>() {
+      public ISSABasicBlock apply(IBasicBlock object) {
         return basicBlocks[cfg.getNumber(object)];
       }
     };
-    return Iterator2Collection.toCollection(new MapIterator<IBasicBlock, IBasicBlock>(cfg.getExceptionalPredecessors(n).iterator(),
+    return Iterator2Collection.toCollection(new MapIterator<IBasicBlock, ISSABasicBlock>(cfg.getExceptionalPredecessors(n).iterator(),
         f));
   }
 
@@ -944,7 +945,7 @@ public class SSACFG implements ControlFlowGraph {
    * @throws IllegalArgumentException
    *             if dest is null
    */
-  public boolean hasExceptionalEdge(IBasicBlock src, IBasicBlock dest) {
+  public boolean hasExceptionalEdge(BasicBlock src, BasicBlock dest) {
     if (dest == null) {
       throw new IllegalArgumentException("dest is null");
     }
@@ -952,6 +953,7 @@ public class SSACFG implements ControlFlowGraph {
       int srcNum = getNumber(src);
       return cfg.getExceptionalToExit().get(srcNum);
     }
+    // this is horrible and fragile
     return cfg.hasExceptionalEdge(src, dest);
   }
 
@@ -961,7 +963,7 @@ public class SSACFG implements ControlFlowGraph {
    * @throws IllegalArgumentException
    *             if dest is null
    */
-  public boolean hasNormalEdge(IBasicBlock src, IBasicBlock dest) {
+  public boolean hasNormalEdge(BasicBlock src, BasicBlock dest) {
     if (dest == null) {
       throw new IllegalArgumentException("dest is null");
     }
@@ -969,19 +971,20 @@ public class SSACFG implements ControlFlowGraph {
       int srcNum = getNumber(src);
       return cfg.getNormalToExit().get(srcNum);
     }
+    // this is horrible and fragile.
     return cfg.hasNormalEdge(src, dest);
   }
 
   /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
-  public Collection<IBasicBlock> getNormalSuccessors(IBasicBlock b) {
+  public Collection<ISSABasicBlock> getNormalSuccessors(ISSABasicBlock b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
     IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getNormalSuccessors(n).iterator();
-    Collection<IBasicBlock> c = new ArrayList<IBasicBlock>(getSuccNodeCount(b));
+    Collection<ISSABasicBlock> c = new ArrayList<ISSABasicBlock>(getSuccNodeCount(b));
     for (; i.hasNext();) {
       IBasicBlock s = (IBasicBlock) i.next();
       c.add(basicBlocks[cfg.getNumber(s)]);
@@ -992,13 +995,13 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getNormalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
-  public Collection<IBasicBlock> getNormalPredecessors(IBasicBlock b) {
+  public Collection<ISSABasicBlock> getNormalPredecessors(ISSABasicBlock b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
     IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getNormalPredecessors(n).iterator();
-    Collection<IBasicBlock> c = new ArrayList<IBasicBlock>(getPredNodeCount(b));
+    Collection<ISSABasicBlock> c = new ArrayList<ISSABasicBlock>(getPredNodeCount(b));
     for (; i.hasNext();) {
       IBasicBlock s = (IBasicBlock) i.next();
       c.add(basicBlocks[cfg.getNumber(s)]);
@@ -1009,23 +1012,23 @@ public class SSACFG implements ControlFlowGraph {
   /*
    * @see com.ibm.wala.util.graph.NumberedNodeManager#iterateNodes(com.ibm.wala.util.intset.IntSet)
    */
-  public Iterator<IBasicBlock> iterateNodes(IntSet s) {
-    return new NumberedNodeIterator<IBasicBlock>(s, this);
+  public Iterator<ISSABasicBlock> iterateNodes(IntSet s) {
+    return new NumberedNodeIterator<ISSABasicBlock>(s, this);
   }
 
-  public void removeIncomingEdges(IBasicBlock node) throws UnsupportedOperationException {
+  public void removeIncomingEdges(ISSABasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeOutgoingEdges(IBasicBlock node) throws UnsupportedOperationException {
+  public void removeOutgoingEdges(ISSABasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public boolean hasEdge(IBasicBlock src, IBasicBlock dst) throws UnimplementedError {
+  public boolean hasEdge(ISSABasicBlock src, ISSABasicBlock dst) throws UnimplementedError {
     return getSuccNodeNumbers(src).contains(getNumber(dst));
   }
 
-  public IntSet getSuccNodeNumbers(IBasicBlock node) throws IllegalArgumentException {
+  public IntSet getSuccNodeNumbers(ISSABasicBlock node) throws IllegalArgumentException {
     if (node == null) {
       throw new IllegalArgumentException("node == null");
     }
@@ -1034,7 +1037,7 @@ public class SSACFG implements ControlFlowGraph {
     return cfg.getSuccNodeNumbers(n);
   }
 
-  public IntSet getPredNodeNumbers(IBasicBlock node) throws UnimplementedError {
+  public IntSet getPredNodeNumbers(ISSABasicBlock node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

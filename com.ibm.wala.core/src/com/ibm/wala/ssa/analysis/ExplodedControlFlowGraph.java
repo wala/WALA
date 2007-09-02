@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.IR;
@@ -44,7 +43,7 @@ import com.ibm.wala.util.intset.SimpleVector;
  * 
  * Prototype: Not terribly efficient.
  */
-public class ExplodedControlFlowGraph implements ControlFlowGraph {
+public class ExplodedControlFlowGraph implements ControlFlowGraph<ISSABasicBlock> {
 
   private final IR ir;
 
@@ -52,9 +51,9 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
    * The ith element of this vector is the basic block holding instruction i.
    * this basic block has number i+1.
    */
-  private final SimpleVector<IBasicBlock> normalNodes = new SimpleVector<IBasicBlock>();
+  private final SimpleVector<ISSABasicBlock> normalNodes = new SimpleVector<ISSABasicBlock>();
 
-  private final Collection<IBasicBlock> allNodes = HashSetFactory.make();
+  private final Collection<ISSABasicBlock> allNodes = HashSetFactory.make();
 
   private final ExplodedBasicBlock entry;
 
@@ -70,9 +69,9 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
   private void createNodes() {
     allNodes.add(entry);
     allNodes.add(exit);
-    for (IBasicBlock b : ir.getControlFlowGraph()) {
+    for (ISSABasicBlock b : ir.getControlFlowGraph()) {
       for (int i = b.getFirstInstructionIndex(); i <= b.getLastInstructionIndex(); i++) {
-        ExplodedBasicBlock bb = new ExplodedBasicBlock(i, (ISSABasicBlock) b);
+        ExplodedBasicBlock bb = new ExplodedBasicBlock(i, b);
         normalNodes.set(i, bb);
         allNodes.add(bb);
       }
@@ -83,15 +82,15 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     return new ExplodedControlFlowGraph(ir);
   }
 
-  public IBasicBlock entry() {
+  public ISSABasicBlock entry() {
     return entry;
   }
 
-  public IBasicBlock exit() {
+  public ISSABasicBlock exit() {
     return exit;
   }
 
-  public IBasicBlock getBlockForInstruction(int index) {
+  public ISSABasicBlock getBlockForInstruction(int index) {
     return normalNodes.get(index);
   }
 
@@ -109,15 +108,15 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     return result;
   }
 
-  public Collection<IBasicBlock> getExceptionalPredecessors(IBasicBlock b) {
+  public Collection<ISSABasicBlock> getExceptionalPredecessors(ISSABasicBlock b) {
     assert b != null;
     if (b.equals(entry)) {
       return Collections.emptySet();
     }
     ExplodedBasicBlock eb = (ExplodedBasicBlock) b;
     if (eb.isExitBlock() || eb.instructionIndex == eb.original.getFirstInstructionIndex()) {
-      List<IBasicBlock> result = new ArrayList<IBasicBlock>();
-      for (IBasicBlock s : ir.getControlFlowGraph().getExceptionalPredecessors(eb.original)) {
+      List<ISSABasicBlock> result = new ArrayList<ISSABasicBlock>();
+      for (ISSABasicBlock s : ir.getControlFlowGraph().getExceptionalPredecessors(eb.original)) {
         assert normalNodes.get(s.getLastInstructionIndex()) != null;
         result.add(normalNodes.get(s.getLastInstructionIndex()));
       }
@@ -127,15 +126,15 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
   }
 
-  public Collection<IBasicBlock> getExceptionalSuccessors(IBasicBlock b) {
+  public Collection<ISSABasicBlock> getExceptionalSuccessors(ISSABasicBlock b) {
     assert b != null;
     if (b.equals(exit)) {
       return Collections.emptySet();
     }
     ExplodedBasicBlock eb = (ExplodedBasicBlock) b;
     if (eb.isEntryBlock() || eb.instructionIndex == eb.original.getLastInstructionIndex()) {
-      List<IBasicBlock> result = new ArrayList<IBasicBlock>();
-      for (IBasicBlock s : ir.getControlFlowGraph().getExceptionalSuccessors(eb.original)) {
+      List<ISSABasicBlock> result = new ArrayList<ISSABasicBlock>();
+      for (ISSABasicBlock s : ir.getControlFlowGraph().getExceptionalSuccessors(eb.original)) {
         if (s.equals(ir.getControlFlowGraph().exit())) {
           result.add(exit());
         } else {
@@ -158,15 +157,15 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     return null;
   }
 
-  public Collection<IBasicBlock> getNormalPredecessors(IBasicBlock b) {
+  public Collection<ISSABasicBlock> getNormalPredecessors(ISSABasicBlock b) {
     assert b != null;
     if (b.equals(entry)) {
       return Collections.emptySet();
     }
     ExplodedBasicBlock eb = (ExplodedBasicBlock) b;
     if (eb.isExitBlock() || eb.instructionIndex == eb.original.getFirstInstructionIndex()) {
-      List<IBasicBlock> result = new ArrayList<IBasicBlock>();
-      for (IBasicBlock s : ir.getControlFlowGraph().getNormalPredecessors(eb.original)) {
+      List<ISSABasicBlock> result = new ArrayList<ISSABasicBlock>();
+      for (ISSABasicBlock s : ir.getControlFlowGraph().getNormalPredecessors(eb.original)) {
         if (s.equals(ir.getControlFlowGraph().entry())) {
           result.add(entry());
         } else {
@@ -181,15 +180,15 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
   }
 
-  public Collection<IBasicBlock> getNormalSuccessors(IBasicBlock b) {
+  public Collection<ISSABasicBlock> getNormalSuccessors(ISSABasicBlock b) {
     assert b != null;
     if (b.equals(exit)) {
       return Collections.emptySet();
     }
     ExplodedBasicBlock eb = (ExplodedBasicBlock) b;
     if (eb.isEntryBlock() || eb.instructionIndex == eb.original.getLastInstructionIndex()) {
-      List<IBasicBlock> result = new ArrayList<IBasicBlock>();
-      for (IBasicBlock s : ir.getControlFlowGraph().getNormalSuccessors(eb.original)) {
+      List<ISSABasicBlock> result = new ArrayList<ISSABasicBlock>();
+      for (ISSABasicBlock s : ir.getControlFlowGraph().getNormalSuccessors(eb.original)) {
         if (s.equals(ir.getControlFlowGraph().exit())) {
           result.add(exit());
         } else {
@@ -209,15 +208,15 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     return 0;
   }
 
-  public void removeNodeAndEdges(IBasicBlock N) throws UnsupportedOperationException {
+  public void removeNodeAndEdges(ISSABasicBlock N) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void addNode(IBasicBlock n) throws UnsupportedOperationException {
+  public void addNode(ISSABasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public boolean containsNode(IBasicBlock N) {
+  public boolean containsNode(ISSABasicBlock N) {
     return allNodes.contains(N);
   }
 
@@ -225,19 +224,19 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     return allNodes.size();
   }
 
-  public Iterator<IBasicBlock> iterator() {
+  public Iterator<ISSABasicBlock> iterator() {
     return allNodes.iterator();
   }
 
-  public void removeNode(IBasicBlock n) throws UnsupportedOperationException {
+  public void removeNode(ISSABasicBlock n) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void addEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
+  public void addEdge(ISSABasicBlock src, ISSABasicBlock dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public int getPredNodeCount(IBasicBlock N) throws IllegalArgumentException {
+  public int getPredNodeCount(ISSABasicBlock N) throws IllegalArgumentException {
     if (N == null) {
       throw new IllegalArgumentException("N == null");
     }
@@ -252,7 +251,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
   }
 
-  public Iterator<? extends IBasicBlock> getPredNodes(IBasicBlock N) throws IllegalArgumentException {
+  public Iterator<? extends ISSABasicBlock> getPredNodes(ISSABasicBlock N) throws IllegalArgumentException {
     if (N == null) {
       throw new IllegalArgumentException("N == null");
     }
@@ -261,9 +260,9 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
       return EmptyIterator.instance();
     }
     if (b.equals(exit) || b.instructionIndex == b.original.getFirstInstructionIndex()) {
-      List<IBasicBlock> result = new ArrayList<IBasicBlock>();
-      for (Iterator<IBasicBlock> it = ir.getControlFlowGraph().getPredNodes(b.original); it.hasNext();) {
-        IBasicBlock s = it.next();
+      List<ISSABasicBlock> result = new ArrayList<ISSABasicBlock>();
+      for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().getPredNodes(b.original); it.hasNext();) {
+        ISSABasicBlock s = it.next();
         if (s.isEntryBlock()) {
           result.add(entry);
         } else {
@@ -278,21 +277,21 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
   }
 
-  public int getSuccNodeCount(IBasicBlock N) throws UnimplementedError {
+  public int getSuccNodeCount(ISSABasicBlock N) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return 0;
   }
 
-  public Iterator<? extends IBasicBlock> getSuccNodes(IBasicBlock N) {
+  public Iterator<? extends ISSABasicBlock> getSuccNodes(ISSABasicBlock N) {
     assert N != null;
     if (N.equals(exit)) {
       return EmptyIterator.instance();
     }
     ExplodedBasicBlock b = (ExplodedBasicBlock) N;
     if (b.isEntryBlock() || b.instructionIndex == b.original.getLastInstructionIndex()) {
-      List<IBasicBlock> result = new ArrayList<IBasicBlock>();
-      for (Iterator<IBasicBlock> it = ir.getControlFlowGraph().getSuccNodes(b.original); it.hasNext();) {
-        IBasicBlock s = it.next();
+      List<ISSABasicBlock> result = new ArrayList<ISSABasicBlock>();
+      for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().getSuccNodes(b.original); it.hasNext();) {
+        ISSABasicBlock s = it.next();
         if (s.equals(ir.getControlFlowGraph().exit())) {
           result.add(exit());
         } else {
@@ -307,25 +306,25 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
   }
 
-  public boolean hasEdge(IBasicBlock src, IBasicBlock dst) throws UnimplementedError {
+  public boolean hasEdge(ISSABasicBlock src, ISSABasicBlock dst) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return false;
   }
 
-  public void removeAllIncidentEdges(IBasicBlock node) throws UnsupportedOperationException {
+  public void removeAllIncidentEdges(ISSABasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
 
   }
 
-  public void removeEdge(IBasicBlock src, IBasicBlock dst) throws UnsupportedOperationException {
+  public void removeEdge(ISSABasicBlock src, ISSABasicBlock dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeIncomingEdges(IBasicBlock node) throws UnsupportedOperationException {
+  public void removeIncomingEdges(ISSABasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  public void removeOutgoingEdges(IBasicBlock node) throws UnsupportedOperationException {
+  public void removeOutgoingEdges(ISSABasicBlock node) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
@@ -333,7 +332,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     return getNumberOfNodes() - 1;
   }
 
-  public IBasicBlock getNode(int number) {
+  public ISSABasicBlock getNode(int number) {
     if (number == 0) {
       return entry();
     } else if (number == getNumberOfNodes() - 1) {
@@ -343,27 +342,27 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph {
     }
   }
 
-  public int getNumber(IBasicBlock n) throws IllegalArgumentException {
+  public int getNumber(ISSABasicBlock n) throws IllegalArgumentException {
     if (n == null) {
       throw new IllegalArgumentException("n == null");
     }
     return n.getNumber();
   }
 
-  public Iterator<IBasicBlock> iterateNodes(IntSet s) throws UnimplementedError {
+  public Iterator<ISSABasicBlock> iterateNodes(IntSet s) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
-  public IntSet getPredNodeNumbers(IBasicBlock node) {
+  public IntSet getPredNodeNumbers(ISSABasicBlock node) {
     MutableSparseIntSet result = new MutableSparseIntSet();
-    for (Iterator<? extends IBasicBlock> it = getPredNodes(node); it.hasNext();) {
+    for (Iterator<? extends ISSABasicBlock> it = getPredNodes(node); it.hasNext();) {
       result.add(getNumber(it.next()));
     }
     return result;
   }
 
-  public IntSet getSuccNodeNumbers(IBasicBlock node) throws UnimplementedError {
+  public IntSet getSuccNodeNumbers(ISSABasicBlock node) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }

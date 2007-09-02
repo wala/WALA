@@ -130,7 +130,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         // didn't find anything but TOP
         return TOP;
       } else {
-        SSACFG.BasicBlock newBB = (com.ibm.wala.ssa.SSACFG.BasicBlock) cfg.getNode(shrikeCFG.getNumber(bb));
+        SSACFG.BasicBlock newBB = cfg.getNode(shrikeCFG.getNumber(bb));
         // if we already have a phi for this stack location
         SSAPhiInstruction phi = newBB.getPhiForStackSlot(slot);
         int result;
@@ -164,7 +164,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         // didn't find anything but TOP
         return TOP;
       } else {
-        SSACFG.BasicBlock newBB = (com.ibm.wala.ssa.SSACFG.BasicBlock) cfg.getNode(shrikeCFG.getNumber(bb));
+        SSACFG.BasicBlock newBB = cfg.getNode(shrikeCFG.getNumber(bb));
         if (bb.isExitBlock()) {
           // no phis in exit block please
           return TOP;

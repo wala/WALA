@@ -36,8 +36,8 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
   }
 
   public static PartialCallGraph make(final CallGraph CG, final Set<CGNode> partialRoots, final Collection<CGNode> nodes) {
-    Graph<CGNode> partialGraph = GraphSlicer.prune(CG, new Filter() {
-      public boolean accepts(Object o) {
+    Graph<CGNode> partialGraph = GraphSlicer.prune(CG, new Filter<CGNode>() {
+      public boolean accepts(CGNode o) {
         return nodes.contains(o);
       }
     });
@@ -47,8 +47,8 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
 
   public static PartialCallGraph make(CallGraph CG, Set<CGNode> partialRoots) {
     final Set<CGNode> nodes = DFS.getReachableNodes(CG, partialRoots);
-    Graph<CGNode> partialGraph = GraphSlicer.prune(CG, new Filter() {
-      public boolean accepts(Object o) {
+    Graph<CGNode> partialGraph = GraphSlicer.prune(CG, new Filter<CGNode>() {
+      public boolean accepts(CGNode o) {
         return nodes.contains(o);
       }
     });

@@ -28,7 +28,7 @@ import com.ibm.wala.util.warnings.WalaException;
  */
 public class GraphSlicer {
 
-  public static <T> Collection<T> slice(Graph<T> g, Filter f) throws WalaException {
+  public static <T> Collection<T> slice(Graph<T> g, Filter<T> f) throws WalaException {
 
     if (g == null) {
       throw new IllegalArgumentException("g is null");
@@ -47,7 +47,7 @@ public class GraphSlicer {
 
   }
 
-  public static <T> Graph<T> prune(final Graph<T> g, final Filter f) {
+  public static <T> Graph<T> prune(final Graph<T> g, final Filter<T> f) {
 
     final NodeManager<T> n = new NodeManager<T>() {
 

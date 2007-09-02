@@ -27,6 +27,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.IntFunction;
 import com.ibm.wala.util.IntMapIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
@@ -321,7 +322,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       return getCallGraph().getInterpreter(this).iterateNewSites(this);
     }
 
-    public ControlFlowGraph getCFG() {
+    public ControlFlowGraph<ISSABasicBlock> getCFG() {
       return getCallGraph().getInterpreter(this).getCFG(this);
     }
   }

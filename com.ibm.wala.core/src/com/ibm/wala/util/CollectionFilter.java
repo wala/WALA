@@ -22,19 +22,19 @@ import com.ibm.wala.util.collections.Filter;
  * 
  * @author sfink
  */
-public class CollectionFilter implements Filter {
+public class CollectionFilter<T> implements Filter<T> {
 
   @NonNull
-  private final Collection<? extends Object> S;
+  private final Collection<? extends T> S;
 
-  public CollectionFilter(Collection<? extends Object> S) {
+  public CollectionFilter(Collection<? extends T> S) {
     this.S = S;
   }
 
   /*
    * @see com.ibm.wala.util.Filter#accepts(java.lang.Object)
    */
-  public boolean accepts(Object o) {
+  public boolean accepts(T o) {
     return S.contains(o);
   }
 

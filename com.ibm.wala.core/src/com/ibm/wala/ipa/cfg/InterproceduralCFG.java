@@ -23,6 +23,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.InvokeInstruction;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.Function;
@@ -80,7 +81,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   /**
    * Filter that determines relevant call graph nodes
    */
-  private final Filter relevant;
+  private final Filter<CGNode> relevant;
 
   /**
    * a cache: for each node (Basic Block), does that block end in a call?
@@ -95,6 +96,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @param CG
    *            the call graph
    */
+  @SuppressWarnings("unchecked")
   public InterproceduralCFG(CallGraph CG) {
     this(CG, IndiscriminateFilter.singleton(), false);
   }
@@ -108,7 +110,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    *            a filter which accepts those call graph nodes which should be
    *            included in the I-CFG. Other nodes are ignored.
    */
-  public InterproceduralCFG(CallGraph CG, Filter relevant, boolean partitionExits) {
+  public InterproceduralCFG(CallGraph CG, Filter<CGNode> relevant, boolean partitionExits) {
 
     EngineTimings.startVirtual("InterproceduralCFG.<init>");
     this.cg = CG;
@@ -141,7 +143,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
       CGNode n = (CGNode) ns.next();
       if (relevant.accepts(n)) {
         // retrieve a cfg for node n.
-        ControlFlowGraph cfg = n.getCFG();
+        ControlFlowGraph<ISSABasicBlock> cfg = n.getCFG();
         if (cfg == null) {
           // n is an unmodelled native method
           continue;
@@ -152,7 +154,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
         IInstruction[] instrs = cfg.getInstructions();
         // create edges for node n.
         for (Iterator bbs = cfg.iterator(); bbs.hasNext();) {
-          IBasicBlock bb = (IBasicBlock) bbs.next();
+          ISSABasicBlock bb = (ISSABasicBlock) bbs.next();
           // entry node gets edges from callers
           if (bb == cfg.entry()) {
             addEdgesToEntryBlock(n, bb);
@@ -179,7 +181,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
         }
 
         // retrieve a cfg for node n.
-        ControlFlowGraph cfg = getCFG(n);
+        ControlFlowGraph<ISSABasicBlock> cfg = getCFG(n);
         if (cfg != null) {
           // create a node for each basic block.
           addNodeForEachBasicBlock(cfg, n);
@@ -189,16 +191,15 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   /**
-   * @param n
    * @return the cfg for n, or null if none found
    * @throws IllegalArgumentException
    *             if n == null
    */
-  public ControlFlowGraph getCFG(CGNode n) throws IllegalArgumentException {
+  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode n) throws IllegalArgumentException {
     if (n == null) {
       throw new IllegalArgumentException("n == null");
     }
-    ControlFlowGraph cfg = n.getCFG();
+    ControlFlowGraph<ISSABasicBlock> cfg = n.getCFG();
     if (cfg == null) {
       return null;
     }
@@ -245,7 +246,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @param bb
    *            a basic block in the CFG
    */
-  private void addEdgesToNonEntryBlock(CGNode n, ControlFlowGraph cfg, IInstruction[] instrs, IBasicBlock bb) {
+  private void addEdgesToNonEntryBlock(CGNode n, ControlFlowGraph<ISSABasicBlock> cfg, IInstruction[] instrs, ISSABasicBlock bb) {
 
     if (DEBUG_LEVEL > 0) {
       Trace.println("addEdgesForNonEntryBlock: " + bb);
@@ -254,7 +255,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     }
 
     for (Iterator ps = cfg.getPredNodes(bb); ps.hasNext();) {
-      IBasicBlock pb = (IBasicBlock) ps.next();
+      ISSABasicBlock pb = (ISSABasicBlock) ps.next();
       if (DEBUG_LEVEL > 0) {
         Trace.println("Consider previous block: " + pb);
       }
@@ -297,7 +298,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
             Trace.println("Relevant target: " + tn);
           }
           // add an edge from tn exit to this node
-          ControlFlowGraph tcfg = tn.getCFG();
+          ControlFlowGraph<ISSABasicBlock> tcfg = tn.getCFG();
           // tcfg might be null if tn is an unmodelled native method
           if (tcfg != null) {
             if (partitionExits) {
@@ -373,8 +374,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @param targetCFG
    *            the called method
    */
-  private void addEdgesFromExceptionalExitToReturn(CGNode caller, IBasicBlock returnBlock, CGNode target, TwoExitCFG targetCFG) {
-    IBasicBlock texit = targetCFG.getExceptionalExit();
+  private void addEdgesFromExceptionalExitToReturn(CGNode caller, ISSABasicBlock returnBlock, CGNode target, TwoExitCFG targetCFG) {
+    ISSABasicBlock texit = targetCFG.getExceptionalExit();
     BasicBlockInContext exit = new BasicBlockInContext(target, texit);
     BasicBlockInContext ret = new BasicBlockInContext(caller, returnBlock);
     if (Assertions.verifyAssertions) {
@@ -395,7 +396,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    *            a basic block that ends in a call
    * @return true iff bb is reached from pb by exceptional control flow
    */
-  private boolean representsExceptionalReturn(ControlFlowGraph cfg, IBasicBlock ret, IBasicBlock call) {
+  private boolean representsExceptionalReturn(ControlFlowGraph<ISSABasicBlock> cfg, ISSABasicBlock ret, ISSABasicBlock call) {
     for (Iterator it = cfg.getExceptionalSuccessors(call).iterator(); it.hasNext();) {
       if (ret.equals(it.next())) {
         return true;
@@ -413,8 +414,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @param targetCFG
    *            the called method
    */
-  private void addEdgesFromNormalExitToReturn(CGNode caller, IBasicBlock returnBlock, CGNode target, TwoExitCFG targetCFG) {
-    IBasicBlock texit = targetCFG.getNormalExit();
+  private void addEdgesFromNormalExitToReturn(CGNode caller, ISSABasicBlock returnBlock, CGNode target, TwoExitCFG targetCFG) {
+    ISSABasicBlock texit = targetCFG.getNormalExit();
     BasicBlockInContext exit = new BasicBlockInContext(target, texit);
     BasicBlockInContext ret = new BasicBlockInContext(caller, returnBlock);
     if (Assertions.verifyAssertions) {
@@ -431,7 +432,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    *            the governing cfg
    * @return true iff bb is reached from pb by a normal return flow
    */
-  private boolean representsNormalReturn(ControlFlowGraph cfg, IBasicBlock ret, IBasicBlock call) {
+  private boolean representsNormalReturn(ControlFlowGraph<ISSABasicBlock> cfg, ISSABasicBlock ret, ISSABasicBlock call) {
     for (Iterator it = cfg.getNormalSuccessors(call).iterator(); it.hasNext();) {
       if (ret.equals(it.next())) {
         return true;
@@ -449,8 +450,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @param targetCFG
    *            the called method
    */
-  private void addEdgesFromExitToReturn(CGNode caller, IBasicBlock returnBlock, CGNode target, ControlFlowGraph targetCFG) {
-    IBasicBlock texit = targetCFG.exit();
+  private void addEdgesFromExitToReturn(CGNode caller, ISSABasicBlock returnBlock, CGNode target, ControlFlowGraph<ISSABasicBlock> targetCFG) {
+    ISSABasicBlock texit = targetCFG.exit();
     BasicBlockInContext exit = new BasicBlockInContext(target, texit);
     BasicBlockInContext ret = new BasicBlockInContext(caller, returnBlock);
     if (Assertions.verifyAssertions) {
@@ -470,7 +471,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @param bb
    *            the entry() block for n
    */
-  private void addEdgesToEntryBlock(CGNode n, IBasicBlock bb) {
+  private void addEdgesToEntryBlock(CGNode n, ISSABasicBlock bb) {
 
     if (DEBUG_LEVEL > 0) {
       Trace.println("addEdgesToEntryBlock " + bb);
@@ -485,7 +486,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
         if (DEBUG_LEVEL > 0) {
           Trace.println("caller " + caller + "is relevant");
         }
-        ControlFlowGraph ccfg = caller.getCFG();
+        ControlFlowGraph<ISSABasicBlock> ccfg = caller.getCFG();
         IInstruction[] cinsts = ccfg.getInstructions();
 
         if (DEBUG_LEVEL > 0) {
@@ -503,7 +504,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
               if (DEBUG_LEVEL > 0) {
                 Trace.println("Adding edge " + ccfg.getBlockForInstruction(i) + " to " + bb);
               }
-              IBasicBlock callerBB = ccfg.getBlockForInstruction(i);
+              ISSABasicBlock callerBB = ccfg.getBlockForInstruction(i);
               BasicBlockInContext b1 = new BasicBlockInContext(caller, callerBB);
               BasicBlockInContext b2 = new BasicBlockInContext(n, bb);
               G.addEdge(b1, b2);
@@ -521,9 +522,9 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @param cfg
    *            a control-flow graph
    */
-  private void addNodeForEachBasicBlock(ControlFlowGraph cfg, CGNode N) {
-    for (Iterator bbs = cfg.iterator(); bbs.hasNext();) {
-      IBasicBlock bb = (IBasicBlock) bbs.next();
+  private void addNodeForEachBasicBlock(ControlFlowGraph<ISSABasicBlock> cfg, CGNode N) {
+    for (Iterator<ISSABasicBlock> bbs = cfg.iterator(); bbs.hasNext();) {
+      ISSABasicBlock bb = bbs.next();
       if (DEBUG_LEVEL > 0) {
         Trace.println("IPCFG Add basic block " + bb);
       }
@@ -539,7 +540,7 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @return the original CFG from whence B came
    * @throws IllegalArgumentException  if B == null
    */
-  public ControlFlowGraph getCFG(BasicBlockInContext B) throws IllegalArgumentException {
+  public ControlFlowGraph<ISSABasicBlock> getCFG(BasicBlockInContext B) throws IllegalArgumentException {
     if (B == null) {
       throw new IllegalArgumentException("B == null");
     }
@@ -758,8 +759,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
   }
 
   public Object getEntry(CGNode n) {
-    ControlFlowGraph cfg = getCFG(n);
-    IBasicBlock entry = cfg.entry();
+    ControlFlowGraph<ISSABasicBlock> cfg = getCFG(n);
+    ISSABasicBlock entry = cfg.entry();
     return new BasicBlockInContext(n, entry);
   }
 
@@ -794,16 +795,16 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     if (bb == null) {
       throw new IllegalArgumentException("bb is null");
     }
-    ControlFlowGraph cfg = getCFG(bb);
-    Iterator<? extends IBasicBlock> it = cfg.getPredNodes(bb.getDelegate());
+    ControlFlowGraph<ISSABasicBlock> cfg = getCFG(bb);
+    Iterator<? extends ISSABasicBlock> it = cfg.getPredNodes(bb.getDelegate());
     final CGNode node = bb.getNode();
-    Function<IBasicBlock, BasicBlockInContext> toContext = new Function<IBasicBlock, BasicBlockInContext>() {
-      public BasicBlockInContext apply(IBasicBlock object) {
-        IBasicBlock b = object;
+    Function<ISSABasicBlock, BasicBlockInContext> toContext = new Function<ISSABasicBlock, BasicBlockInContext>() {
+      public BasicBlockInContext apply(ISSABasicBlock object) {
+        ISSABasicBlock b = object;
         return new BasicBlockInContext(node, b);
       }
     };
-    MapIterator<IBasicBlock, BasicBlockInContext> m = new MapIterator<IBasicBlock, BasicBlockInContext>(it, toContext);
+    MapIterator<ISSABasicBlock, BasicBlockInContext> m = new MapIterator<ISSABasicBlock, BasicBlockInContext>(it, toContext);
     return new FilterIterator<BasicBlockInContext>(m, isCall);
   }
 
@@ -817,9 +818,9 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     if (bb == null) {
       throw new IllegalArgumentException("bb == null");
     }
-    ControlFlowGraph cfg = getCFG(bb);
-    for (Iterator it = cfg.getPredNodes(bb.getDelegate()); it.hasNext();) {
-      IBasicBlock b = (IBasicBlock) it.next();
+    ControlFlowGraph<ISSABasicBlock> cfg = getCFG(bb);
+    for (Iterator<? extends ISSABasicBlock> it = cfg.getPredNodes(bb.getDelegate()); it.hasNext();) {
+      ISSABasicBlock b = it.next();
       if (hasCall(new BasicBlockInContext(bb.getNode(), b))) {
         return true;
       }

@@ -17,6 +17,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
@@ -39,37 +40,37 @@ public class CFGSanitizer {
 
   /*
    */
-  public static Graph<IBasicBlock> sanitize(IR ir, IClassHierarchy cha) throws IllegalArgumentException, WalaException {
+  public static Graph<ISSABasicBlock> sanitize(IR ir, IClassHierarchy cha) throws IllegalArgumentException, WalaException {
  
     if (ir == null) {
       throw new IllegalArgumentException("ir cannot be null");
     }
 
-    ControlFlowGraph cfg = ir.getControlFlowGraph();
-    Graph<IBasicBlock> G = new SlowSparseNumberedGraph<IBasicBlock>();
+    ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
+    Graph<ISSABasicBlock> g = new SlowSparseNumberedGraph<ISSABasicBlock>();
     // add all nodes to the graph
-    for (Iterator<? extends IBasicBlock> it = cfg.iterator(); it.hasNext();) {
-      G.addNode(it.next());
+    for (Iterator<? extends ISSABasicBlock> it = cfg.iterator(); it.hasNext();) {
+      g.addNode(it.next());
     }
 
     // add all edges to the graph, except those that go to exit
     for (Iterator it = cfg.iterator(); it.hasNext();) {
-      IBasicBlock b = (IBasicBlock) it.next();
+      ISSABasicBlock b = (ISSABasicBlock) it.next();
       for (Iterator it2 = cfg.getSuccNodes(b); it2.hasNext();) {
-        IBasicBlock b2 = (IBasicBlock) it2.next();
+        ISSABasicBlock b2 = (ISSABasicBlock) it2.next();
 
         if (!b2.isExitBlock()) {
-          G.addEdge(b, b2);
+          g.addEdge(b, b2);
         }
       }
     }
 
     // now add edges to exit, ignoring undeclared exceptions
-    IBasicBlock exit = cfg.exit();
+    ISSABasicBlock exit = cfg.exit();
 
     for (Iterator it = cfg.getPredNodes(exit); it.hasNext();) {
       // for each predecessor of exit ...
-      IBasicBlock b = (IBasicBlock) it.next();
+      ISSABasicBlock b = (ISSABasicBlock) it.next();
 
       SSAInstruction s = ir.getInstructions()[b.getLastInstructionIndex()];
       if (s == null) {
@@ -78,7 +79,7 @@ public class CFGSanitizer {
       }
       if (s instanceof SSAReturnInstruction || s instanceof SSAThrowInstruction) {
         // return or athrow: add edge to exit
-        G.addEdge(b, exit);
+        g.addEdge(b, exit);
       } else {
         // compute types of exceptions the pei may throw
         TypeReference[] exceptions = null;
@@ -143,14 +144,14 @@ public class CFGSanitizer {
               }
               if (isDeclared) {
                 // found a declared exceptional edge
-                G.addEdge(b, exit);
+                g.addEdge(b, exit);
               }
             }
           }
         }
       }
     }
-    return G;
+    return g;
   }
 
   private static TypeReference[] computeExceptions(IClassHierarchy cha, SSAInstruction s) throws InvalidClassFileException {

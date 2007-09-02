@@ -495,8 +495,8 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
    */
   protected void addNodeInstructionConstraints(CGNode node, IR ir, DefUse du) {
     StatementVisitor v = makeVisitor((ExplicitCallGraph.ExplicitNode) node, ir, du);
-    ControlFlowGraph cfg = ir.getControlFlowGraph();
-    for (IBasicBlock b : cfg) {
+    ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
+    for (ISSABasicBlock b : cfg) {
       addBlockInstructionConstraints(node, cfg, b, v);
     }
   }
@@ -504,7 +504,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   /**
    * Add constraints for a particular basic block.
    */
-  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph cfg, IBasicBlock b, StatementVisitor v) {
+  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, ISSABasicBlock b, StatementVisitor v) {
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.
@@ -518,7 +518,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     addPhiConstraints(node, cfg, b);
   }
 
-  private void addPhiConstraints(CGNode node, ControlFlowGraph cfg, IBasicBlock b) {
+  private void addPhiConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, ISSABasicBlock b) {
 
     // visit each phi instruction in each successor block
     for (Iterator<? extends IBasicBlock> sbs = cfg.getSuccNodes(b); sbs.hasNext();) {
@@ -598,7 +598,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     /**
      * The basic block currently being processed
      */
-    private IBasicBlock basicBlock;
+    private ISSABasicBlock basicBlock;
 
     /**
      * Governing symbol table
@@ -1294,14 +1294,14 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       // }
     }
 
-    public IBasicBlock getBasicBlock() {
+    public ISSABasicBlock getBasicBlock() {
       return basicBlock;
     }
 
     /**
      * The calling loop must call this in each iteration!
      */
-    public void setBasicBlock(IBasicBlock block) {
+    public void setBasicBlock(ISSABasicBlock block) {
       basicBlock = block;
     }
 

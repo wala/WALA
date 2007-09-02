@@ -23,17 +23,17 @@ import com.ibm.wala.util.intset.BitVector;
  * @author cahoon
  * @author sfink
  */
-public interface ControlFlowGraph extends NumberedGraph<IBasicBlock> {
+public interface ControlFlowGraph<T extends IBasicBlock> extends NumberedGraph<T> {
 
   /**
    * Return the entry basic block in the CFG
    */
-  public IBasicBlock entry();
+  public T entry();
 
   /**
    * @return the synthetic exit block for the cfg
    */
-  public IBasicBlock exit();
+  public T exit();
 
   /**
    * @return the indices of the catch blocks, as a bit vector
@@ -45,7 +45,7 @@ public interface ControlFlowGraph extends NumberedGraph<IBasicBlock> {
    *          an instruction index
    * @return the basic block which contains this instruction.
    */
-  public IBasicBlock getBlockForInstruction(int index);
+  public T getBlockForInstruction(int index);
 
   /**
    * @return the instructions of this CFG, as an array.
@@ -72,7 +72,7 @@ public interface ControlFlowGraph extends NumberedGraph<IBasicBlock> {
    * @return the basic blocks which may be reached from b via exceptional
    *         control flow
    */
-  public Collection<IBasicBlock> getExceptionalSuccessors(IBasicBlock b);
+  public Collection<T> getExceptionalSuccessors(T b);
 
   /**
    * The order of blocks returned should be arbitrary but deterministic.
@@ -80,7 +80,7 @@ public interface ControlFlowGraph extends NumberedGraph<IBasicBlock> {
    * @return the basic blocks which may be reached from b via normal control
    *         flow
    */
-  public Collection<IBasicBlock> getNormalSuccessors(IBasicBlock b);
+  public Collection<T> getNormalSuccessors(T b);
   
   /**
    * The order of blocks returned should be arbitrary but deterministic.
@@ -89,7 +89,7 @@ public interface ControlFlowGraph extends NumberedGraph<IBasicBlock> {
    * @return the basic blocks from which b may be reached via exceptional
    *         control flow
    */
-  public Collection<IBasicBlock> getExceptionalPredecessors(IBasicBlock b);
+  public Collection<T> getExceptionalPredecessors(T b);
 
   /**
    * The order of blocks returned should be arbitrary but deterministic.
@@ -98,5 +98,5 @@ public interface ControlFlowGraph extends NumberedGraph<IBasicBlock> {
    * @return the basic blocks from which b may be reached via normal
    *         control flow
    */
-  public Collection<IBasicBlock> getNormalPredecessors(IBasicBlock b);
+  public Collection<T> getNormalPredecessors(T b);
 }

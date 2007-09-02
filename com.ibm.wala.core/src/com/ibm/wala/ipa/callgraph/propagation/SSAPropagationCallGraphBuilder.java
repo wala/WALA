@@ -44,6 +44,7 @@ import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
@@ -275,8 +276,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     ConstraintVisitor v = makeVisitor((ExplicitCallGraph.ExplicitNode) node);
 
     IR ir = getCFAContextInterpreter().getIR(node);
-    ControlFlowGraph cfg = ir.getControlFlowGraph();
-    for (Iterator<IBasicBlock> x = cfg.iterator(); x.hasNext();) {
+    ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
+    for (Iterator<ISSABasicBlock> x = cfg.iterator(); x.hasNext();) {
       BasicBlock b = (BasicBlock) x.next();
       addBlockInstructionConstraints(node, cfg, b, v);
       if (wasChanged(node)) {
@@ -288,7 +289,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /**
    * Add constraints for a particular basic block.
    */
-  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph cfg, BasicBlock b, ConstraintVisitor v) {
+  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, BasicBlock b, ConstraintVisitor v) {
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.
@@ -305,7 +306,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     addPhiConstraints(node, cfg, b, v);
   }
 
-  private void addPhiConstraints(CGNode node, ControlFlowGraph cfg, BasicBlock b, ConstraintVisitor v) {
+  private void addPhiConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, BasicBlock b, ConstraintVisitor v) {
     // visit each phi instruction in each successor block
     for (Iterator sbs = cfg.getSuccNodes(b); sbs.hasNext();) {
       BasicBlock sb = (BasicBlock) sbs.next();
@@ -446,13 +447,11 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   }
 
   /**
-   * @param call
-   * @param ir
    * @return true iff there's a unique catch block which catches all exceptions
    *         thrown by a certain call site.
    */
   protected static boolean hasUniqueCatchBlock(SSAAbstractInvokeInstruction call, IR ir) {
-    IBasicBlock[] bb = ir.getBasicBlocksForCall(call.getCallSite());
+    ISSABasicBlock[] bb = ir.getBasicBlocksForCall(call.getCallSite());
     if (bb.length == 1) {
       Iterator it = ir.getControlFlowGraph().getExceptionalSuccessors(bb[0]).iterator();
       // check that there's exactly one element in the iterator
@@ -479,7 +478,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     if (ir == null) {
       throw new IllegalArgumentException("ir == null");
     }
-    IBasicBlock[] bb = ir.getBasicBlocksForCall(call.getCallSite());
+    ISSABasicBlock[] bb = ir.getBasicBlocksForCall(call.getCallSite());
     if (Assertions.verifyAssertions) {
       Assertions._assert(bb.length == 1);
     }
@@ -499,16 +498,16 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @throws IllegalArgumentException
    *             if ir is null
    */
-  public static List<ProgramCounter> getIncomingPEIs(IR ir, IBasicBlock bb) {
+  public static List<ProgramCounter> getIncomingPEIs(IR ir, ISSABasicBlock bb) {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
     if (DEBUG) {
       Trace.println("getIncomingPEIs " + bb);
     }
-    ControlFlowGraph G = ir.getControlFlowGraph();
-    List<ProgramCounter> result = new ArrayList<ProgramCounter>(G.getPredNodeCount(bb));
-    for (Iterator it = G.getPredNodes(bb); it.hasNext();) {
+    ControlFlowGraph<ISSABasicBlock> g = ir.getControlFlowGraph();
+    List<ProgramCounter> result = new ArrayList<ProgramCounter>(g.getPredNodeCount(bb));
+    for (Iterator it = g.getPredNodes(bb); it.hasNext();) {
       BasicBlock pred = (BasicBlock) it.next();
       if (DEBUG) {
         Trace.println("pred: " + pred);
@@ -521,9 +520,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       // TODO: consider pruning CFG for unreachable blocks.
       if (pei != null && pei.isPEI()) {
         if (DEBUG) {
-          Trace.println("PEI: " + pei + " index " + index + " PC " + G.getProgramCounter(index));
+          Trace.println("PEI: " + pei + " index " + index + " PC " + g.getProgramCounter(index));
         }
-        result.add(new ProgramCounter(G.getProgramCounter(index)));
+        result.add(new ProgramCounter(g.getProgramCounter(index)));
       }
     }
     return result;
@@ -563,7 +562,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     /**
      * The basic block currently being processed
      */
-    private IBasicBlock basicBlock;
+    private ISSABasicBlock basicBlock;
 
     /**
      * Governing symbol table
@@ -1272,17 +1271,17 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     @Override
     public void visitPi(SSAPiInstruction instruction) {
       int dir;
-      ControlFlowGraph CFG = ir.getControlFlowGraph();
+      ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
       PointerKey src = getPointerKeyForLocal(instruction.getVal());
       if (hasNoInterestingUses(instruction.getDef())) {
         PointerKey dst = getPointerKeyForLocal(instruction.getDef());
         system.recordImplicitPointsToSet(dst);
       } else {
-        if (com.ibm.wala.cfg.Util.endsWithConditionalBranch(CFG, getBasicBlock()) && CFG.getSuccNodeCount(getBasicBlock()) == 2) {
-          SSAConditionalBranchInstruction cond = (SSAConditionalBranchInstruction) com.ibm.wala.cfg.Util.getLastInstruction(CFG,
+        if (com.ibm.wala.cfg.Util.endsWithConditionalBranch(cfg, getBasicBlock()) && cfg.getSuccNodeCount(getBasicBlock()) == 2) {
+          SSAConditionalBranchInstruction cond = (SSAConditionalBranchInstruction) com.ibm.wala.cfg.Util.getLastInstruction(cfg,
               getBasicBlock());
           SSAInstruction cause = instruction.getCause();
-          BasicBlock target = (BasicBlock) CFG.getNode(instruction.getSuccessor());
+          BasicBlock target = (BasicBlock) cfg.getNode(instruction.getSuccessor());
           if ((cause instanceof SSAInstanceofInstruction) && ((dir = booleanConstantTest(cond, cause.getDef())) != 0)) {
             TypeReference type = ((SSAInstanceofInstruction) cause).getCheckedType();
             IClass cls = getClassHierarchy().lookupClass(type);
@@ -1292,8 +1291,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               system.newConstraint(dst, assignOperator, src);
             } else {
               PointerKey dst = getFilteredPointerKeyForLocal(instruction.getDef(), new FilteredPointerKey.SingleClassFilter(cls));
-              if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(CFG, getBasicBlock()) && dir == 1)
-                  || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(CFG, getBasicBlock()) && dir == -1)) {
+              if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(cfg, getBasicBlock()) && dir == 1)
+                  || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(cfg, getBasicBlock()) && dir == -1)) {
                 system.newConstraint(dst, getBuilder().filterOperator, src);
                 // System.err.println("PI " + dst + " " + src);
               } else {
@@ -1301,8 +1300,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               }
             }
           } else if ((dir = nullConstantTest(cond, instruction.getVal())) != 0) {
-            if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(CFG, getBasicBlock()) && dir == -1)
-                || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(CFG, getBasicBlock()) && dir == 1)) {
+            if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(cfg, getBasicBlock()) && dir == -1)
+                || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(cfg, getBasicBlock()) && dir == 1)) {
               PointerKey dst = getPointerKeyForLocal(instruction.getDef());
               system.newConstraint(dst, assignOperator, src);
             }
@@ -1317,14 +1316,14 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
     }
 
-    public IBasicBlock getBasicBlock() {
+    public ISSABasicBlock getBasicBlock() {
       return basicBlock;
     }
 
     /**
      * The calling loop must call this in each iteration!
      */
-    public void setBasicBlock(IBasicBlock block) {
+    public void setBasicBlock(ISSABasicBlock block) {
       basicBlock = block;
     }
 

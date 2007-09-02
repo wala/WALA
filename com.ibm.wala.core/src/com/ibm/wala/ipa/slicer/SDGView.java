@@ -32,13 +32,13 @@ public class SDGView implements ISDG {
   
   private final ISDG delegate;
   
-  private final Filter notExcluded;
+  private final Filter<Statement> notExcluded;
 
   public SDGView(final ISDG sdg, final Collection<Statement> exclusions) {
     super();
     this.delegate = sdg;
-    this.notExcluded = new Filter() {
-      public boolean accepts(Object o) {
+    this.notExcluded = new Filter<Statement>() {
+      public boolean accepts(Statement o) {
         return !exclusions.contains(o);
       }
     };

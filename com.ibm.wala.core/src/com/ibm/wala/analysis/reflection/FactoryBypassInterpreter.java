@@ -49,6 +49,7 @@ import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
@@ -710,7 +711,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   /* 
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
    */
-  public ControlFlowGraph getCFG(CGNode N) {
+  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode N) {
     return getIR(N).getControlFlowGraph();
   }
 

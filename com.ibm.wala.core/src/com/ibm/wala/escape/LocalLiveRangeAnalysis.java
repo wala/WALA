@@ -14,9 +14,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
@@ -58,7 +58,7 @@ public class LocalLiveRangeAnalysis {
         Assertions.UNREACHABLE();
       }
     }
-    IBasicBlock queryBlock = findBlock(ir, instructionIndex);
+    ISSABasicBlock queryBlock = findBlock(ir, instructionIndex);
     SSAInstruction def = du.getDef(v);
     final SSACFG.BasicBlock defBlock = def == null ? null : findBlock(ir, def);
     final Collection<BasicBlock> uses = findBlocks(ir, du.getUses(v));
@@ -154,7 +154,7 @@ public class LocalLiveRangeAnalysis {
    * 
    * @return the basic block which contains the ith instruction
    */
-  private static IBasicBlock findBlock(IR ir, int i) {
+  private static ISSABasicBlock findBlock(IR ir, int i) {
     for (Iterator it = ir.getControlFlowGraph().iterator(); it.hasNext();) {
       SSACFG.BasicBlock b = (SSACFG.BasicBlock) it.next();
       if (i >= b.getFirstInstructionIndex() && i <= b.getLastInstructionIndex()) {

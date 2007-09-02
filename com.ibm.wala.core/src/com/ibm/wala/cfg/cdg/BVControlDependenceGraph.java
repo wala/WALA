@@ -34,31 +34,31 @@ import com.ibm.wala.util.graph.NodeManager;
  * @author Mangala Gowri Nanda
  * 
  */
-public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
+public class BVControlDependenceGraph<T extends IBasicBlock> extends AbstractNumberedGraph<T> {
 
   /**
    * Governing control flow-graph. The control dependence graph is computed from
    * this cfg.
    */
-  private final ControlFlowGraph cfg;
+  private final ControlFlowGraph<T> cfg;
 
   /**
    * the EdgeManager for the CDG. It implements the edge part of the standard
-   * Graph abstraction, using the control-dependence egdes of the cdg.
+   * Graph abstraction, using the control-dependence edges of the cdg.
    */
-  private final EdgeManager<IBasicBlock> edgeManager;
+  private final EdgeManager<T> edgeManager;
 
   private final boolean ignoreUnreachableCode;
 
-  private final HashMap<IBasicBlock, BasicBlock> bbMap = HashMapFactory.make();
+  private final HashMap<T, BasicBlock<T>> bbMap = HashMapFactory.make();
 
-  final private Vector<BasicBlock> seen = new Vector<BasicBlock>();
+  final private Vector<BasicBlock<T>> seen = new Vector<BasicBlock<T>>();
 
-  private BasicBlock entry;
+  private BasicBlock<T> entry;
 
-  final private Vector<BasicBlock> entryBlocks = new Vector<BasicBlock>();
+  final private Vector<BasicBlock<T>> entryBlocks = new Vector<BasicBlock<T>>();
 
-  private BasicBlock exitnode;
+  private BasicBlock<T> exitnode;
 
   private int count = 0;
 
@@ -77,17 +77,17 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
 
   /**
    * @param cfg
-   *          governing control flow graph wantEdgeLabels is always true
+   *            governing control flow graph wantEdgeLabels is always true
    */
-  public BVControlDependenceGraph(ControlFlowGraph cfg) {
+  public BVControlDependenceGraph(ControlFlowGraph<T> cfg) {
     this(cfg, false);
   }
 
   /**
    * @param cfg
-   *          governing control flow graph wantEdgeLabels is always true
+   *            governing control flow graph wantEdgeLabels is always true
    */
-  public BVControlDependenceGraph(ControlFlowGraph cfg, boolean ignoreUnreachableCode) {
+  public BVControlDependenceGraph(ControlFlowGraph<T> cfg, boolean ignoreUnreachableCode) {
     this.cfg = cfg;
     this.ignoreUnreachableCode = ignoreUnreachableCode;
     buildParallelGraph();
@@ -103,12 +103,12 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
    * Return the set of edge labels for the control flow edges that cause the
    * given edge in the CDG.
    */
-  public Set<? extends Object> getEdgeLabels(Object src, Object dst) {
-    BasicBlock csrc = bbMap.get(src);
+  public Set<T> getEdgeLabels(Object src, Object dst) {
+    BasicBlock<T> csrc = bbMap.get(src);
     if (csrc == null) {
       return Collections.emptySet();
     }
-    BasicBlock cdst = bbMap.get(dst);
+    BasicBlock<T> cdst = bbMap.get(dst);
     if (cdst == null) {
       return Collections.emptySet();
     }
@@ -116,31 +116,31 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
   }
 
   @Override
-  public NodeManager<IBasicBlock> getNodeManager() {
+  public NodeManager<T> getNodeManager() {
     return cfg;
   }
 
   @Override
-  public EdgeManager<IBasicBlock> getEdgeManager() {
+  public EdgeManager<T> getEdgeManager() {
     return edgeManager;
   }
 
   private void buildParallelGraph() {
-    for (Iterator<? extends IBasicBlock> it = cfg.iterator(); it.hasNext();) {
-      IBasicBlock bb = it.next();
-      BasicBlock cdgbb = new BasicBlock(bb);
+    for (Iterator<? extends T> it = cfg.iterator(); it.hasNext();) {
+      T bb = it.next();
+      BasicBlock<T> cdgbb = new BasicBlock<T>(bb);
       bbMap.put(bb, cdgbb);
       cfgCount++;
     }
 
     Object entryBB = cfg.entry(); // original entry node
-    entry = new BasicBlock(null); // parallel entry BasicBlock
+    entry = new BasicBlock<T>(null); // parallel entry BasicBlock
     exitnode = bbMap.get(cfg.exit());
     entryBlocks.add(entry);
 
-    for (Iterator<? extends IBasicBlock> it = cfg.iterator(); it.hasNext();) {
-      IBasicBlock bb = it.next();
-      BasicBlock cdgbb = bbMap.get(bb);
+    for (Iterator<? extends T> it = cfg.iterator(); it.hasNext();) {
+      T bb = it.next();
+      BasicBlock<T> cdgbb = bbMap.get(bb);
 
       // kludge for handling multi-entry CFGs
       if (!ignoreUnreachableCode && bb != entryBB) {
@@ -152,7 +152,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
       // build cfg edges for the parallel graph
       for (Iterator succ = cfg.getSuccNodes(bb); succ.hasNext();) {
         Object sbb = succ.next();
-        BasicBlock cdgsbb = bbMap.get(sbb);
+        BasicBlock<T> cdgsbb = bbMap.get(sbb);
         cfgEdge(cdgbb, cdgsbb);
       }
     }
@@ -171,7 +171,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
     // count and index the nodes
     count(exitnode);
     for (int i = 0; i < entryBlocks.size(); i++) {
-      BasicBlock en = entryBlocks.get(i);
+      BasicBlock<T> en = entryBlocks.get(i);
       count(en);
     }
 
@@ -191,7 +191,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
 
     // initialize the rest of the blocks
     for (int i = 1; i < count; i++) {
-      BasicBlock bb = seen.get(i);
+      BasicBlock<T> bb = seen.get(i);
       bb.index = i;
       SetVector(i);
     }
@@ -214,11 +214,11 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
     // to find the control dependence
     for (int n = count - 1; n >= 0; n--) {
       int i, j, k, tx;
-      BasicBlock bb = seen.get(n);
-      Vector succ = bb.getSuccessors();
+      BasicBlock<T> bb = seen.get(n);
+      Vector<BasicBlock<T>> succ = bb.getSuccessors();
       if (succ.size() > 1) {
         for (int m = 0; m < succ.size(); m++) {
-          BasicBlock sb = (BasicBlock) succ.get(m);
+          BasicBlock<T> sb = succ.get(m);
           for (i = 0, k = 0; i < BitvectorSize; i++) {
             // postdominates sb but does not postdominate bb
             tx = bitvectors[sb.index][i] & ~bitvectors[bb.index][i];
@@ -235,7 +235,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
         // If bb postdominates one of its successors sb, it is control dependent
         // on itself with label sb
         for (int m = 0; m < succ.size(); m++) {
-          BasicBlock sb = (BasicBlock) succ.get(m);
+          BasicBlock<T> sb = succ.get(m);
           if (postdominates(sb.index, bb.index)) {
             cdEdge(bb, bb, sb.item);
           }
@@ -247,25 +247,25 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
   /**
    * EdgeManager
    */
-  private EdgeManager<IBasicBlock> constructGraphEdges() {
-    return new EdgeManager<IBasicBlock>() {
-      public Iterator<IBasicBlock> getPredNodes(IBasicBlock N) {
-        BasicBlock cbb = bbMap.get(N);
+  private EdgeManager<T> constructGraphEdges() {
+    return new EdgeManager<T>() {
+      public Iterator<T> getPredNodes(T N) {
+        BasicBlock<T> cbb = bbMap.get(N);
         if (cbb == null) {
           return EmptyIterator.instance();
         }
         return cbb.getPredNodes();
       }
 
-      public int getPredNodeCount(IBasicBlock N) {
+      public int getPredNodeCount(T N) {
         BasicBlock cbb = bbMap.get(N);
         if (cbb == null)
           return 0;
         return cbb.getPredNodeCount();
       }
 
-      public Iterator<IBasicBlock> getSuccNodes(IBasicBlock N) {
-        BasicBlock cbb = bbMap.get(N);
+      public Iterator<T> getSuccNodes(T N) {
+        BasicBlock<T> cbb = bbMap.get(N);
         if (cbb == null) {
           return EmptyIterator.instance();
         }
@@ -314,10 +314,10 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
   @Override
   public String toString() {
     StringBuffer sb = new StringBuffer();
-    for (Iterator<? extends IBasicBlock> ns = iterator(); ns.hasNext();) {
-      IBasicBlock n = ns.next();
+    for (Iterator<T> ns = iterator(); ns.hasNext();) {
+      T n = ns.next();
       sb.append(n.toString()).append("\n");
-      for (Iterator<? extends IBasicBlock> ss = getSuccNodes(n); ss.hasNext();) {
+      for (Iterator<? extends T> ss = getSuccNodes(n); ss.hasNext();) {
         Object s = ss.next();
         sb.append("  --> ").append(s);
         for (Iterator labels = getEdgeLabels(n, s).iterator(); labels.hasNext();)
@@ -329,26 +329,26 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
     return sb.toString();
   }
 
-  private void count(BasicBlock bb) {
+  private void count(BasicBlock<T> bb) {
     // postorder
     if (bb.mark)
       return;
     bb.mark = true;
 
-    Vector succ = bb.getSuccessors();
+    Vector<BasicBlock<T>> succ = bb.getSuccessors();
     for (int i = 0; i < succ.size(); i++) {
-      BasicBlock bs = (BasicBlock) succ.get(i);
+      BasicBlock<T> bs = succ.get(i);
       count(bs);
     }
     seen.add(bb);
   }
 
-  private void cfgEdge(BasicBlock b1, BasicBlock b2) {
+  private void cfgEdge(BasicBlock<T> b1, BasicBlock<T> b2) {
     b2.linkPredecessor(b1);
     b1.linkSuccessor(b2);
   }
 
-  private void cdEdge(BasicBlock b1, BasicBlock b2, IBasicBlock label) {
+  private void cdEdge(BasicBlock<T> b1, BasicBlock<T> b2, T label) {
     if (b1 == entry)
       return;
     b2.linkCDpredecessor(b1);
@@ -414,25 +414,25 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
     return 0xffffffff;
   }
 
-  public static class BasicBlock {
+  public static class BasicBlock<T extends IBasicBlock> {
 
-    protected final IBasicBlock item;
+    protected final T item;
 
     protected boolean mark = false;
 
     protected int index;
 
-    final private Vector<BasicBlock> predecessors = new Vector<BasicBlock>(2);
+    final private Vector<BasicBlock<T>> predecessors = new Vector<BasicBlock<T>>(2);
 
-    final private Vector<BasicBlock> successors = new Vector<BasicBlock>(2);
+    final private Vector<BasicBlock<T>> successors = new Vector<BasicBlock<T>>(2);
 
-    final private Vector<IBasicBlock> cdPred = new Vector<IBasicBlock>(2);
+    final private Vector<T> cdPred = new Vector<T>(2);
 
-    final private Vector<IBasicBlock> cdSucc = new Vector<IBasicBlock>(2);
+    final private Vector<T> cdSucc = new Vector<T>(2);
 
-    final private HashMap<IBasicBlock, Set<IBasicBlock>> labelMap = HashMapFactory.make();
+    final private HashMap<T, Set<T>> labelMap = HashMapFactory.make();
 
-    private BasicBlock(IBasicBlock item) {
+    private BasicBlock(T item) {
       this.item = item;
     }
 
@@ -441,7 +441,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
       return item.toString();
     }
 
-    private void linkPredecessor(BasicBlock bb) {
+    private void linkPredecessor(BasicBlock<T> bb) {
       Assertions._assert(bb != null);
 
       if (!predecessors.contains(bb))
@@ -457,7 +457,7 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
      * private Vector getPredecessors () { return predecessors; }
      */
 
-    private void linkSuccessor(BasicBlock bb) {
+    private void linkSuccessor(BasicBlock<T> bb) {
       Assertions._assert(bb != null);
 
       if (!successors.contains(bb))
@@ -471,11 +471,11 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
      * successors.get(idx); }
      */
 
-    private Vector getSuccessors() {
+    private Vector<BasicBlock<T>> getSuccessors() {
       return successors;
     }
 
-    private void linkCDpredecessor(BasicBlock bb) {
+    private void linkCDpredecessor(BasicBlock<T> bb) {
       Assertions._assert(bb != null);
 
       if (!cdPred.contains(bb.item))
@@ -486,17 +486,17 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
       return cdPred.size();
     }
 
-    private Iterator<IBasicBlock> getPredNodes() {
+    private Iterator<T> getPredNodes() {
       return cdPred.iterator();
     }
 
-    private void linkCDsuccessor(BasicBlock bb, IBasicBlock label) {
+    private void linkCDsuccessor(BasicBlock<T> bb, T label) {
       Assertions._assert(bb != null);
 
       if (!cdSucc.contains(bb.item)) {
         cdSucc.add(bb.item);
       }
-      Set<IBasicBlock> labelSet = labelMap.get(bb.item);
+      Set<T> labelSet = labelMap.get(bb.item);
       if (labelSet == null) {
         labelSet = HashSetFactory.make(2);
         labelMap.put(bb.item, labelSet);
@@ -509,12 +509,12 @@ public class BVControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock>
       return cdSucc.size();
     }
 
-    private Iterator<IBasicBlock> getSuccNodes() {
+    private Iterator<T> getSuccNodes() {
       return cdSucc.iterator();
     }
 
-    private Set<IBasicBlock> getLabels(BasicBlock succ) {
-      Set<IBasicBlock> ret = labelMap.get(succ.item);
+    private Set<T> getLabels(BasicBlock<T> succ) {
+      Set<T> ret = labelMap.get(succ.item);
       if (ret == null) {
         return Collections.emptySet();
       }

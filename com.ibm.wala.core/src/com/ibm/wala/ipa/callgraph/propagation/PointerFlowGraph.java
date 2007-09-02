@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
@@ -254,7 +254,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
 
     private final IR ir;
 
-    private final IBasicBlock bb;
+    private final ISSABasicBlock bb;
 
     private final PointerAnalysis pa;
 

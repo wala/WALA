@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.ContextInsensitiveRTAInterpreter;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 
 /**
  * 
@@ -56,7 +57,7 @@ public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInter
     return false;
   }
 
-  public ControlFlowGraph getCFG(CGNode N) {
+  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode N) {
     IR ir = getIR(N);
     if (ir == null) {
       return null;

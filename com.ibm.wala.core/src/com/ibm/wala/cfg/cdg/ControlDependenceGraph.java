@@ -33,19 +33,19 @@ import com.ibm.wala.util.graph.impl.GraphInverter;
  * @author Julian Dolby
  * 
  */
-public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
+public class ControlDependenceGraph<T extends IBasicBlock> extends AbstractNumberedGraph<T> {
 
   /**
    * Governing control flow-graph. The control dependence graph is computed from
    * this cfg.
    */
-  private final ControlFlowGraph cfg;
+  private final ControlFlowGraph<T> cfg;
 
   /**
    * the EdgeManager for the CDG. It implements the edge part of the standard
    * Graph abstraction, using the control-dependence edges of the cdg.
    */
-  private final EdgeManager<IBasicBlock> edgeManager;
+  private final EdgeManager<T> edgeManager;
 
   /**
    * If requested, this is a map from parentXchild Pairs representing edges in
@@ -62,30 +62,30 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
    * 
    * @return Map: node n -> {x : n is control-dependent on x}
    */
-  private Map<IBasicBlock, Set<IBasicBlock>> buildControlDependence(boolean wantEdgeLabels) {
-    Map<IBasicBlock, Set<IBasicBlock>> controlDependence = HashMapFactory.make(cfg.getNumberOfNodes());
+  private Map<T, Set<T>> buildControlDependence(boolean wantEdgeLabels) {
+    Map<T, Set<T>> controlDependence = HashMapFactory.make(cfg.getNumberOfNodes());
 
-    DominanceFrontiers<IBasicBlock> RDF = new DominanceFrontiers<IBasicBlock>(GraphInverter.invert(cfg), cfg.exit());
+    DominanceFrontiers<T> RDF = new DominanceFrontiers<T>(GraphInverter.invert(cfg), cfg.exit());
 
     if (wantEdgeLabels) {
       edgeLabels = HashMapFactory.make();
     }
 
-    for (Iterator<? extends IBasicBlock> ns = cfg.iterator(); ns.hasNext();) {
-      HashSet<IBasicBlock> s = HashSetFactory.make(2);
+    for (Iterator<? extends T> ns = cfg.iterator(); ns.hasNext();) {
+      HashSet<T> s = HashSetFactory.make(2);
       controlDependence.put(ns.next(), s);
     }
 
-    for (Iterator<? extends IBasicBlock> ns = cfg.iterator(); ns.hasNext();) {
-      IBasicBlock y = ns.next();
-      for (Iterator<IBasicBlock> ns2 = RDF.getDominanceFrontier(y); ns2.hasNext();) {
-        IBasicBlock x = ns2.next();
+    for (Iterator<? extends T> ns = cfg.iterator(); ns.hasNext();) {
+      T y = ns.next();
+      for (Iterator<T> ns2 = RDF.getDominanceFrontier(y); ns2.hasNext();) {
+        T x = ns2.next();
         controlDependence.get(x).add(y);
         if (wantEdgeLabels) {
           Set<Object> labels = HashSetFactory.make();
           edgeLabels.put(Pair.make(x, y), labels);
-          for (Iterator<? extends IBasicBlock> ss = cfg.getSuccNodes(x); ss.hasNext();) {
-            IBasicBlock s = ss.next();
+          for (Iterator<? extends T> ss = cfg.getSuccNodes(x); ss.hasNext();) {
+            T s = ss.next();
             if (RDF.isDominatedBy(s, y)) {
               labels.add(s);
             }
@@ -102,16 +102,16 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
    * control parents to control children), this method creates an EdgeManager
    * that provides the edge half of the Graph abstraction.
    */
-  private EdgeManager<IBasicBlock> constructGraphEdges(final Map<IBasicBlock, Set<IBasicBlock>> forwardEdges) {
-    return new EdgeManager<IBasicBlock>() {
-      Map<IBasicBlock, Set<IBasicBlock>> backwardEdges = HashMapFactory.make(forwardEdges.size());
+  private EdgeManager<T> constructGraphEdges(final Map<T, Set<T>> forwardEdges) {
+    return new EdgeManager<T>() {
+      Map<T, Set<T>> backwardEdges = HashMapFactory.make(forwardEdges.size());
       {
-        for (Iterator<? extends IBasicBlock> x = cfg.iterator(); x.hasNext();) {
-          Set<IBasicBlock> s = HashSetFactory.make();
+        for (Iterator<? extends T> x = cfg.iterator(); x.hasNext();) {
+          Set<T> s = HashSetFactory.make();
           backwardEdges.put(x.next(), s);
         }
-        for (Iterator<IBasicBlock> ps = forwardEdges.keySet().iterator(); ps.hasNext();) {
-          IBasicBlock p = ps.next();
+        for (Iterator<T> ps = forwardEdges.keySet().iterator(); ps.hasNext();) {
+          T p = ps.next();
           for (Iterator ns = ((Set) forwardEdges.get(p)).iterator(); ns.hasNext();) {
             Object n = ns.next();
             backwardEdges.get(n).add(p);
@@ -119,55 +119,55 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
         }
       }
 
-      public Iterator<IBasicBlock> getPredNodes(IBasicBlock N) {
+      public Iterator<T> getPredNodes(T N) {
         if (backwardEdges.containsKey(N))
           return backwardEdges.get(N).iterator();
         else
           return EmptyIterator.instance();
       }
 
-      public int getPredNodeCount(IBasicBlock N) {
+      public int getPredNodeCount(T N) {
         if (backwardEdges.containsKey(N))
           return ((Set) backwardEdges.get(N)).size();
         else
           return 0;
       }
 
-      public Iterator<IBasicBlock> getSuccNodes(IBasicBlock N) {
+      public Iterator<T> getSuccNodes(T N) {
         if (forwardEdges.containsKey(N))
           return forwardEdges.get(N).iterator();
         else
           return EmptyIterator.instance();
       }
 
-      public int getSuccNodeCount(IBasicBlock N) {
+      public int getSuccNodeCount(T N) {
         if (forwardEdges.containsKey(N))
           return ((Set) forwardEdges.get(N)).size();
         else
           return 0;
       }
 
-      public boolean hasEdge(IBasicBlock src, IBasicBlock dst) {
+      public boolean hasEdge(T src, T dst) {
         return forwardEdges.containsKey(src) && ((Set) forwardEdges.get(src)).contains(dst);
       }
 
-      public void addEdge(IBasicBlock src, IBasicBlock dst) {
+      public void addEdge(T src, T dst) {
         throw new UnsupportedOperationException();
       }
 
-      public void removeEdge(IBasicBlock src, IBasicBlock dst) {
+      public void removeEdge(T src, T dst) {
         throw new UnsupportedOperationException();
       }
 
-      public void removeAllIncidentEdges(IBasicBlock node) {
+      public void removeAllIncidentEdges(T node) {
         throw new UnsupportedOperationException();
       }
 
-      public void removeIncomingEdges(IBasicBlock node) {
+      public void removeIncomingEdges(T node) {
         throw new UnsupportedOperationException();
       }
 
-      public void removeOutgoingEdges(IBasicBlock node) {
+      public void removeOutgoingEdges(T node) {
         throw new UnsupportedOperationException();
       }
     };
@@ -176,8 +176,8 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
   @Override
   public String toString() {
     StringBuffer sb = new StringBuffer();
-    for (Iterator<? extends IBasicBlock> ns = iterator(); ns.hasNext();) {
-      IBasicBlock n = ns.next();
+    for (Iterator<? extends T> ns = iterator(); ns.hasNext();) {
+      T n = ns.next();
       sb.append(n.toString()).append("\n");
       for (Iterator ss = getSuccNodes(n); ss.hasNext();) {
         Object s = ss.next();
@@ -194,20 +194,20 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
 
   /**
    * @param cfg
-   *          governing control flow graph
+   *            governing control flow graph
    * @param wantEdgeLabels
-   *          whether to compute edge labels for CDG edges
+   *            whether to compute edge labels for CDG edges
    */
-  public ControlDependenceGraph(ControlFlowGraph cfg, boolean wantEdgeLabels) {
+  public ControlDependenceGraph(ControlFlowGraph<T> cfg, boolean wantEdgeLabels) {
     this.cfg = cfg;
     this.edgeManager = constructGraphEdges(buildControlDependence(wantEdgeLabels));
   }
 
   /**
    * @param cfg
-   *          governing control flow graph
+   *            governing control flow graph
    */
-  public ControlDependenceGraph(ControlFlowGraph cfg) {
+  public ControlDependenceGraph(ControlFlowGraph<T> cfg) {
     this(cfg, false);
   }
 
@@ -225,22 +225,22 @@ public class ControlDependenceGraph extends AbstractNumberedGraph<IBasicBlock> {
   }
 
   @Override
-  public NodeManager<IBasicBlock> getNodeManager() {
+  public NodeManager<T> getNodeManager() {
     return cfg;
   }
 
   @Override
-  public EdgeManager<IBasicBlock> getEdgeManager() {
+  public EdgeManager<T> getEdgeManager() {
     return edgeManager;
   }
 
-  public boolean controlEquivalent(IBasicBlock bb1, IBasicBlock bb2) {
+  public boolean controlEquivalent(T bb1, T bb2) {
     if (getPredNodeCount(bb1) != getPredNodeCount(bb2)) {
       return false;
     }
 
-    for (Iterator pbs1 = getPredNodes(bb1); pbs1.hasNext();) {
-      if (!hasEdge((IBasicBlock) pbs1.next(), bb2)) {
+    for (Iterator<? extends T> pbs1 = getPredNodes(bb1); pbs1.hasNext();) {
+      if (!hasEdge(pbs1.next(), bb2)) {
         return false;
       }
     }

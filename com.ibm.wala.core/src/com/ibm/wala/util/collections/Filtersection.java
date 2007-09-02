@@ -18,18 +18,18 @@ import com.ibm.wala.annotations.NonNull;
  * 
  * @author sfink
  */
-public class Filtersection implements Filter {
+public class Filtersection<T> implements Filter<T> {
   
   @NonNull
-  final private Filter a;
-  final private Filter b;
+  final private Filter<T> a;
+  final private Filter<T> b;
   
-  public Filtersection(Filter a, Filter b) {
+  public Filtersection(Filter<T> a, Filter<T> b) {
     this.a = a;
     this.b = b;
   }
 
-  public boolean accepts(Object o) {
+  public boolean accepts(T o) {
     return a.accepts(o) && b.accepts(o);
   }
 

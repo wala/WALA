@@ -41,7 +41,7 @@ public class Util {
     return getLastInstruction(G, b) instanceof SSASwitchInstruction;
   }
 
-  public static IBasicBlock getFallThruBlock(ControlFlowGraph G, IBasicBlock b) {
+  public static <T extends IBasicBlock> T getFallThruBlock(ControlFlowGraph<T> G, T b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -52,10 +52,10 @@ public class Util {
   }
 
   /**
-   * Given that b ends with a conditional branch, return the basic block to which control
-   * transfers if the branch is not taken.
+   * Given that b ends with a conditional branch, return the basic block to
+   * which control transfers if the branch is not taken.
    */
-  public static IBasicBlock getNotTakenSuccessor(ControlFlowGraph G, IBasicBlock b) {
+  public static <T extends IBasicBlock> T getNotTakenSuccessor(ControlFlowGraph<T> G, T b) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -66,31 +66,32 @@ public class Util {
   }
 
   /**
-   * Given that b ends with a conditional branch, return the basic block to which control
-   * transfers if the branch is taken.
+   * Given that b ends with a conditional branch, return the basic block to
+   * which control transfers if the branch is taken.
    */
-  public static IBasicBlock getTakenSuccessor(ControlFlowGraph G, IBasicBlock b) {
+  public static <T extends IBasicBlock> T getTakenSuccessor(ControlFlowGraph<T> G, T b) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
     if (!endsWithConditionalBranch(G, b)) {
       throw new IllegalArgumentException(b.toString() + " does not end with a conditional branch");
     }
-    IBasicBlock fs = getNotTakenSuccessor(G, b);
-    for (Iterator ss = G.getSuccNodes(b); ss.hasNext();) {
-      IBasicBlock s = (IBasicBlock) ss.next();
+    T fs = getNotTakenSuccessor(G, b);
+    for (Iterator<? extends T> ss = G.getSuccNodes(b); ss.hasNext();) {
+      T s = ss.next();
       if (s != fs)
         return s;
     }
 
-    // under pathological conditions, b may have exactly one successor (in other words, the 
+    // under pathological conditions, b may have exactly one successor (in other
+    // words, the
     // branch is irrelevant
     return fs;
   }
 
   /**
-   * When the tested value of the switch statement in b has value c, which
-   * basic block does control transfer to.
+   * When the tested value of the switch statement in b has value c, which basic
+   * block does control transfer to.
    */
   public static IBasicBlock resolveSwitch(ControlFlowGraph G, IBasicBlock b, int c) {
     Assertions._assert(endsWithSwitch(G, b));
@@ -115,8 +116,8 @@ public class Util {
 
   /**
    * When a switch statement at the end of block b transfers control to block s,
-   * which case was taken?
-   * TODO: Is this correct?  Can't we have multiple cases that apply?  Check on this.
+   * which case was taken? TODO: Is this correct? Can't we have multiple cases
+   * that apply? Check on this.
    */
   public static int getSwitchLabel(ControlFlowGraph G, IBasicBlock b, IBasicBlock s) {
     Assertions._assert(endsWithSwitch(G, b));
@@ -132,7 +133,7 @@ public class Util {
     return -1;
   }
 
-  public static IBasicBlock resolveBranch(ControlFlowGraph G, IBasicBlock bb, int c1, int c2) {
+  public static <T extends IBasicBlock> T resolveBranch(ControlFlowGraph<T> G, T bb, int c1, int c2) {
     SSAConditionalBranchInstruction c = (SSAConditionalBranchInstruction) getLastInstruction(G, bb);
     switch ((ConditionalBranchInstruction.Operator) c.getOperator()) {
     case EQ:
@@ -174,11 +175,11 @@ public class Util {
   /**
    * Given that a is a predecessor of b in the cfg ..
    * 
-   * When we enumerate the predecessors of b in order, which is the first index in this
-   * order in which a appears?  Note that this order corresponds to the order of
-   * operands in a phi instruction.
+   * When we enumerate the predecessors of b in order, which is the first index
+   * in this order in which a appears? Note that this order corresponds to the
+   * order of operands in a phi instruction.
    */
-  public static int whichPred(ControlFlowGraph cfg, IBasicBlock a, IBasicBlock b) {
+  public static <T extends IBasicBlock> int whichPred(ControlFlowGraph<T> cfg, T a, T b) {
     if (cfg == null) {
       throw new IllegalArgumentException("cfg is null");
     }

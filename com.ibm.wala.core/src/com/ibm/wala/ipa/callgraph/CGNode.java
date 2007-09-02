@@ -18,6 +18,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.graph.INodeWithNumber;
 
 /**
@@ -95,7 +96,7 @@ public interface CGNode extends INodeWithNumber, ContextItem {
   /**
    * @return a CFG that represents the node, or null if it's an unmodelled native method
    */
-  public ControlFlowGraph getCFG();
+  public ControlFlowGraph<ISSABasicBlock> getCFG();
   
   /**
    * @return an Iterator of the types that may be allocated by a given

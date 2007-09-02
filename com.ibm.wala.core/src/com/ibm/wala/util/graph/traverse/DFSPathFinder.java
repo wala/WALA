@@ -45,7 +45,7 @@ public class DFSPathFinder<T> extends Stack<T> {
   /**
    * The Filter which defines the target set of nodes to find
    */
-  final private Filter filter;
+  final private Filter<T> filter;
 
   /**
    * an enumeration of all nodes to search from
@@ -64,7 +64,7 @@ public class DFSPathFinder<T> extends Stack<T> {
    * @param G the graph whose nodes to enumerate
    * @throws IllegalArgumentException  if G is null
    */
-  public DFSPathFinder(Graph<T> G, T N, Filter f) throws IllegalArgumentException {
+  public DFSPathFinder(Graph<T> G, T N, Filter<T> f) throws IllegalArgumentException {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -83,7 +83,7 @@ public class DFSPathFinder<T> extends Stack<T> {
    *
    * @param nodes the set of nodes from which to start searching
    */
-  public DFSPathFinder(Graph<T> G, Iterator<T> nodes, Filter f) {
+  public DFSPathFinder(Graph<T> G, Iterator<T> nodes, Filter<T> f) {
     this.G = G;
     this.roots = nodes;
     this.filter = f;
@@ -102,7 +102,7 @@ public class DFSPathFinder<T> extends Stack<T> {
       setPendingChildren(n, getConnected(n));
     }
     while (hasNext()) {
-      Object n = peek();
+      T n = peek();
       if (filter.accepts(n)) {
         return currentPath();
       }

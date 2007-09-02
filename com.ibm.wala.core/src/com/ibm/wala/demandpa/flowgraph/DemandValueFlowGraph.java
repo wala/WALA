@@ -40,7 +40,6 @@ package com.ibm.wala.demandpa.flowgraph;
 import java.util.List;
 import java.util.Set;
 
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -58,6 +57,7 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
@@ -139,7 +139,7 @@ public class DemandValueFlowGraph extends DemandFlowGraph {
     /**
      * The basic block currently being processed
      */
-    private IBasicBlock basicBlock;
+    private ISSABasicBlock basicBlock;
 
     /**
      * Governing symbol table
@@ -485,14 +485,14 @@ public class DemandValueFlowGraph extends DemandFlowGraph {
       handleNonHeapInstruction(instruction);
     }
 
-    public IBasicBlock getBasicBlock() {
+    public ISSABasicBlock getBasicBlock() {
       return basicBlock;
     }
 
     /**
      * The calling loop must call this in each iteration!
      */
-    public void setBasicBlock(IBasicBlock block) {
+    public void setBasicBlock(ISSABasicBlock block) {
       basicBlock = block;
     }
 

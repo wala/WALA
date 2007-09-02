@@ -37,13 +37,12 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
  * A graph of basic blocks.
  * 
  * @author sfink
  * @author roca
  */
-public class ShrikeCFG extends AbstractCFG {
+public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
 
   private static final boolean DEBUG = false;
 
@@ -208,7 +207,7 @@ public class ShrikeCFG extends AbstractCFG {
    * Return an instruction's basic block in the CFG given the index of the
    * instruction in the CFG's instruction array.
    */
-  public IBasicBlock getBlockForInstruction(int index) {
+  public BasicBlock getBlockForInstruction(int index) {
     return getNode(instruction2Block[index]);
   }
 
@@ -238,17 +237,17 @@ public class ShrikeCFG extends AbstractCFG {
       Instruction last = (Instruction) getInstructions()[getLastInstructionIndex()];
       int[] targets = last.getBranchTargets();
       for (int i = 0; i < targets.length; i++) {
-        BasicBlock b = (BasicBlock) getBlockForInstruction(targets[i]);
+        BasicBlock b = getBlockForInstruction(targets[i]);
         addNormalEdgeTo(b);
       }
       addExceptionalEdges(last);
       if (last.isFallThrough()) {
-        BasicBlock next = (BasicBlock) getNode(getNumber() + 1);
+        BasicBlock next = getNode(getNumber() + 1);
         addNormalEdgeTo(next);
       }
       if (last instanceof ReturnInstruction) {
         // link each return instruction to the exit block.
-        BasicBlock exit = (BasicBlock) exit();
+        BasicBlock exit = exit();
         addNormalEdgeTo(exit);
       }
     }
@@ -295,7 +294,7 @@ public class ShrikeCFG extends AbstractCFG {
             if (DEBUG) {
               Trace.println(" handler " + hs[j]);
             }
-            BasicBlock b = (BasicBlock) getBlockForInstruction(hs[j].getHandler());
+            BasicBlock b = getBlockForInstruction(hs[j].getHandler());
             if (DEBUG) {
               Trace.println(" target " + b);
             }
@@ -354,12 +353,12 @@ public class ShrikeCFG extends AbstractCFG {
           }
           // if needed, add an edge to the exit block.
           if (exceptionTypes == null || !exceptionTypes.isEmpty()) {
-            BasicBlock exit = (BasicBlock) exit();
+            BasicBlock exit = exit();
             addExceptionalEdgeTo(exit);
           }
         } else {
           // found no handler for this PEI ... link to the exit block.
-          BasicBlock exit = (BasicBlock) exit();
+          BasicBlock exit = exit();
           addExceptionalEdgeTo(exit);
         }
       }
@@ -418,7 +417,7 @@ public class ShrikeCFG extends AbstractCFG {
         // this is the last non-exit block
         return getInstructions().length - 1;
       } else {
-        BasicBlock next = (BasicBlock) getNode(getNumber() + 1);
+        BasicBlock next = getNode(getNumber() + 1);
         return next.getFirstInstructionIndex() - 1;
       }
     }
@@ -439,21 +438,21 @@ public class ShrikeCFG extends AbstractCFG {
     }
 
     /*
-     * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
+     * @see com.ibm.wala.cfg.BasicBlock#isExitBlock()
      */
     public boolean isExitBlock() {
       return this == ShrikeCFG.this.exit();
     }
 
     /*
-     * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
+     * @see com.ibm.wala.cfg.BasicBlock#isEntryBlock()
      */
     public boolean isEntryBlock() {
       return this == ShrikeCFG.this.entry();
     }
 
     /*
-     * @see com.ibm.wala.cfg.IBasicBlock#getMethod()
+     * @see com.ibm.wala.cfg.BasicBlock#getMethod()
      */
     public IMethod getMethod() {
       return ShrikeCFG.this.getMethod();
@@ -471,7 +470,7 @@ public class ShrikeCFG extends AbstractCFG {
     }
 
     /*
-     * @see com.ibm.wala.cfg.IBasicBlock#getNumber()
+     * @see com.ibm.wala.cfg.BasicBlock#getNumber()
      */
     public int getNumber() {
       return getGraphNodeId();
@@ -495,7 +494,7 @@ public class ShrikeCFG extends AbstractCFG {
         s.append("  ").append(j).append("  ").append(getInstructions()[j]).append("\n");
       }
 
-      Iterator<IBasicBlock> succNodes = getSuccNodes(bb);
+      Iterator<BasicBlock> succNodes = getSuccNodes(bb);
       while (succNodes.hasNext()) {
         s.append("    -> BB").append(getNumber(succNodes.next())).append("\n");
       }

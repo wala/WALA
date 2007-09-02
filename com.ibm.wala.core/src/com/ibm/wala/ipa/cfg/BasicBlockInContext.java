@@ -16,7 +16,7 @@ import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 
 /**
@@ -26,14 +26,11 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
  * @author sfink
  */
 public final class BasicBlockInContext extends NodeWithNumber implements IBasicBlock {
-  private final IBasicBlock delegate;
+  private final ISSABasicBlock delegate;
 
   private final CGNode node;
 
-  public BasicBlockInContext(CGNode node, IBasicBlock bb) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(!(bb instanceof BasicBlockInContext));
-    }
+  public BasicBlockInContext(CGNode node, ISSABasicBlock bb) {
     this.delegate = bb;
     this.node = node;
   }
@@ -109,7 +106,7 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
     return delegate.hashCode() + 229 * node.hashCode();
   }
 
-  public IBasicBlock getDelegate() {
+  public ISSABasicBlock getDelegate() {
     return delegate;
   }
 
