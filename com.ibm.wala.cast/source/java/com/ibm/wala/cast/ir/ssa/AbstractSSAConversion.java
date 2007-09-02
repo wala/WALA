@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
@@ -32,7 +32,7 @@ import com.ibm.wala.util.graph.Graph;
  * Abstract core of traditional SSA conversion (Cytron et al.).
  * 
  * This implementation is abstract in the sense that it is designed to work over
- * the instrutions and CFG of a Domo IR, but it is abstract with respect to
+ * the instructions and CFG of a Domo IR, but it is abstract with respect to
  * several integral portions of the traditional algorithm:
  * <UL>
  * <LI> The notion of uses and defs of a given instruction.
@@ -91,9 +91,9 @@ public abstract class AbstractSSAConversion {
 
   protected final SSACFG CFG;
 
-  protected final DominanceFrontiers<IBasicBlock> DF;
+  protected final DominanceFrontiers<ISSABasicBlock> DF;
 
-  private final Graph<IBasicBlock> dominatorTree;
+  private final Graph<ISSABasicBlock> dominatorTree;
 
   protected final int[] phiCounts;
 
@@ -115,7 +115,7 @@ public abstract class AbstractSSAConversion {
 
   protected AbstractSSAConversion(IR ir, SSAOptions options) {
     this.CFG = ir.getControlFlowGraph();
-    this.DF = new DominanceFrontiers<IBasicBlock>(ir.getControlFlowGraph(), ir.getControlFlowGraph().entry());
+    this.DF = new DominanceFrontiers<ISSABasicBlock>(ir.getControlFlowGraph(), ir.getControlFlowGraph().entry());
     this.dominatorTree = DF.dominatorTree();
     this.flags = new int[2 * ir.getControlFlowGraph().getNumberOfNodes()];
     this.instructions = getInstructions(ir);

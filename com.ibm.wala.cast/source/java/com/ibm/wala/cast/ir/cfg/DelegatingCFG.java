@@ -21,7 +21,7 @@ import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.intset.BitVector;
 
-public class DelegatingCFG extends AbstractNumberedGraph<IBasicBlock> implements ControlFlowGraph {
+public class DelegatingCFG extends AbstractNumberedGraph<IBasicBlock> implements ControlFlowGraph<IBasicBlock> {
 
   protected final ControlFlowGraph parent;
 

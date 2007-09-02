@@ -843,7 +843,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
-  protected final static class AstCFG extends AbstractCFG {
+  protected final static class AstCFG extends AbstractCFG<IBasicBlock> {
     private final IInstruction[] instructions;
 
     private final int[] instructionToBlockMap;
