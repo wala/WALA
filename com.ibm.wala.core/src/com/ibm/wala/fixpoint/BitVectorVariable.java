@@ -32,8 +32,7 @@ public class BitVectorVariable extends AbstractVariable {
     this.hash = DeterministicHashCode.get();
   }
 
-  public void copyState(IVariable v) {
-    BitVectorVariable other = (BitVectorVariable) v;
+  public void copyState(BitVectorVariable other) {
     if (V == null) {
       if (other.V == null) {
         return;

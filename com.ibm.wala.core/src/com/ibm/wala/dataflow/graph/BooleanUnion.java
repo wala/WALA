@@ -17,7 +17,7 @@ import com.ibm.wala.fixpoint.IVariable;
 /**
  * Operator U(n) = U(n) U U(j)
  */
-public class BooleanUnion extends AbstractMeetOperator implements FixedPointConstants {
+public class BooleanUnion extends AbstractMeetOperator<BooleanVariable> implements FixedPointConstants {
 
   private final static BooleanUnion SINGLETON = new BooleanUnion();
 
@@ -47,18 +47,17 @@ public class BooleanUnion extends AbstractMeetOperator implements FixedPointCons
   }
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable[] rhs) throws NullPointerException {
-    BooleanVariable L = (BooleanVariable) lhs;
-    BooleanVariable U = new BooleanVariable(L.hashCode());
-    U.copyState(L);
+  public byte evaluate(BooleanVariable lhs, IVariable[] rhs) throws NullPointerException {
+    BooleanVariable U = new BooleanVariable(lhs.hashCode());
+    U.copyState(lhs);
     for (int i = 0; i < rhs.length; i++) {
       BooleanVariable R = (BooleanVariable) rhs[i];
       if (R != null) {
         U.or(R);
       }
     }
-    if (!L.sameValue(U)) {
-      L.copyState(U);
+    if (!lhs.sameValue(U)) {
+      lhs.copyState(U);
       return CHANGED;
     } else {
       return NOT_CHANGED;

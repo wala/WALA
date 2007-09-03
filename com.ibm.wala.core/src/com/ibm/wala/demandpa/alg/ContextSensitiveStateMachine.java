@@ -204,6 +204,9 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
 
   }
 
+  /* 
+   * @see com.ibm.wala.demandpa.alg.statemachine.StateMachine#transition(com.ibm.wala.demandpa.alg.statemachine.StateMachine.State, java.lang.Object)
+   */
   public State transition(State prevState, IFlowLabel label) throws IllegalArgumentException {
     if (prevState == null) {
       throw new IllegalArgumentException("prevState == null");

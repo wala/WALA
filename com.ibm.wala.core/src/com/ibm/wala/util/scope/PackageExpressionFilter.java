@@ -22,7 +22,7 @@ import com.ibm.wala.util.collections.Filter;
  * 
  * @author sjfink
  */
-public class PackageExpressionFilter implements Filter {
+public class PackageExpressionFilter implements Filter<IClass> {
 
   private final Pattern pattern;
 
@@ -30,11 +30,10 @@ public class PackageExpressionFilter implements Filter {
     this.pattern = Pattern.compile(pattern);
   }
 
-  public boolean accepts(Object o) throws IllegalArgumentException {
-    if (o == null) {
-      throw new IllegalArgumentException("o == null");
+  public boolean accepts(IClass c) throws IllegalArgumentException {
+    if (c == null) {
+      throw new IllegalArgumentException("c == null");
     }
-    IClass c = (IClass) o;
     if (c.getName().getPackage() == null) {
       return false;
     }

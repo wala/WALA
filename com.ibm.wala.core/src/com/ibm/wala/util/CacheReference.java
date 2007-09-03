@@ -50,12 +50,16 @@ public final class CacheReference {
     }
   }
 
-  public final static Object get(final Object reference) {
+  public final static Object get(final Object reference) throws IllegalArgumentException {
+
     if (reference == null) {
       return null;
     }
     switch (choice) {
     case SOFT:
+      if (!(reference instanceof java.lang.ref.SoftReference)) {
+        throw new IllegalArgumentException("not ( reference instanceof java.lang.ref.SoftReference ) ");
+      }
       return ((SoftReference) reference).get();
     case WEAK:
       return ((WeakReference) reference).get();

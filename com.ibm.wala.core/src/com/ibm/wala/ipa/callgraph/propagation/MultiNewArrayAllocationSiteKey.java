@@ -25,8 +25,12 @@ public final class MultiNewArrayAllocationSiteKey extends AllocationSiteKey {
 
   /**
    * @return null if the element type is a primitive
+   * @throws IllegalArgumentException  if T == null
    */
-  private static IClass myElementType(IClass T, int d) {
+  private static IClass myElementType(IClass T, int d) throws IllegalArgumentException {
+    if (T == null) {
+      throw new IllegalArgumentException("T == null");
+    }
     if (d == 0) {
       return ((ArrayClass) T).getElementClass();
     } else {

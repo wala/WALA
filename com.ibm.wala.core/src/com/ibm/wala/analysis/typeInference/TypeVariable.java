@@ -10,7 +10,6 @@
  *******************************************************************************/package com.ibm.wala.analysis.typeInference;
 
 import com.ibm.wala.fixedpoint.impl.AbstractVariable;
-import com.ibm.wala.fixpoint.IVariable;
 
 /**
  * A type variable in the dataflow system.
@@ -26,8 +25,10 @@ public class TypeVariable extends AbstractVariable {
     this.hash = hashCode;
   }
 
-  public void copyState(IVariable v) {
-    TypeVariable other = (TypeVariable) v;
+  public void copyState(TypeVariable other) throws IllegalArgumentException {
+    if (other == null) {
+      throw new IllegalArgumentException("v == null");
+    }
     this.type = other.type;
   }
 

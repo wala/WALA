@@ -211,7 +211,10 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     }
   }
 
-  public void addStatement(UnaryStatement<PointsToSetVariable> eq) {
+  public void addStatement(UnaryStatement<PointsToSetVariable> eq) throws IllegalArgumentException {
+    if (eq == null) {
+      throw new IllegalArgumentException("eq == null");
+    }
     if (useImplicitRepresentation(eq)) {
       addImplicitStatement(eq);
     } else {
@@ -421,7 +424,10 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     }
   }
 
-  public void removeStatement(IFixedPointStatement<PointsToSetVariable> eq) {
+  public void removeStatement(IFixedPointStatement<PointsToSetVariable> eq) throws IllegalArgumentException {
+    if (eq == null) {
+      throw new IllegalArgumentException("eq == null");
+    }
     if (useImplicitRepresentation(eq)) {
       removeImplicitStatement((UnaryStatement<PointsToSetVariable>) eq);
     } else {
@@ -446,8 +452,6 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * @author sfink
-   * 
    * A graph of just the variables in the system. v1 -> v2 iff there exists
    * equation e s.t. e uses v1 and e defs v2.
    * 
@@ -783,7 +787,10 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     }
   }
 
-  public boolean containsStatement(IFixedPointStatement<PointsToSetVariable> eq) {
+  public boolean containsStatement(IFixedPointStatement<PointsToSetVariable> eq) throws IllegalArgumentException {
+    if (eq == null) {
+      throw new IllegalArgumentException("eq == null");
+    }
     if (useImplicitRepresentation(eq)) {
       UnaryStatement<PointsToSetVariable> ueq = (UnaryStatement<PointsToSetVariable>) eq;
       return containsImplicitStatement(ueq);
