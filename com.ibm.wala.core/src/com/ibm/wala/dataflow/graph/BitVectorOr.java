@@ -12,14 +12,13 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
-import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.util.intset.BitVector;
 
 
 /**
  * Operator OUT = IN U v
  */
-public class BitVectorOr extends UnaryOperator {
+public class BitVectorOr extends UnaryOperator<BitVectorVariable> {
   
   private final BitVector v;
   public BitVectorOr(BitVector v) {
@@ -28,16 +27,14 @@ public class BitVectorOr extends UnaryOperator {
   
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable rhs) {
-    BitVectorVariable L = (BitVectorVariable) lhs;
-    BitVectorVariable R = (BitVectorVariable) rhs;
-
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
+ 
     BitVectorVariable U = new BitVectorVariable();
-    U.copyState(L);
-    U.addAll(R);
+    U.copyState(lhs);
+    U.addAll(rhs);
     U.addAll(v);
-    if (!L.sameValue(U)) {
-      L.copyState(U);
+    if (!lhs.sameValue(U)) {
+      lhs.copyState(U);
       return CHANGED;
     } else {
       return NOT_CHANGED;

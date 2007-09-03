@@ -30,7 +30,10 @@ public class BitVectorKillGen extends UnaryOperator<BitVectorVariable> {
   }
 
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) throws IllegalArgumentException {
+    if (rhs == null) {
+      throw new IllegalArgumentException("rhs == null");
+    }
     BitVectorVariable U = new BitVectorVariable();
     BitVectorIntSet bv = new BitVectorIntSet();
     if (rhs.getValue() != null) {

@@ -28,8 +28,11 @@ public class BitVectorMinusVector extends UnaryOperator<BitVectorVariable> {
   
 
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) throws IllegalArgumentException {
 
+    if (rhs == null) {
+      throw new IllegalArgumentException("rhs == null");
+    }
     BitVectorVariable U = new BitVectorVariable();
     BitVectorIntSet bv = new BitVectorIntSet();
     bv.addAll(rhs.getValue());

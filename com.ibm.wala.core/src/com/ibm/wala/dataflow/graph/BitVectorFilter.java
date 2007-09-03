@@ -28,14 +28,18 @@ public class BitVectorFilter extends UnaryOperator<BitVectorVariable> {
   }
 
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) throws IllegalArgumentException {
 
+    if (rhs == null) {
+      throw new IllegalArgumentException("rhs == null");
+    }
     BitVectorVariable U = new BitVectorVariable();
     U.copyState(lhs);
 
     IntSet r = rhs.getValue();
-    if (r == null)
+    if (r == null) {
       return NOT_CHANGED;
+    }
 
     BitVectorIntSet rr = new BitVectorIntSet();
     rr.addAll(r);

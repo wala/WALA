@@ -27,8 +27,11 @@ public class BitVectorUnionVector extends UnaryOperator<BitVectorVariable> {
   
 
   @Override
-  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
+  public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) throws IllegalArgumentException {
 
+    if (lhs == null) {
+      throw new IllegalArgumentException("lhs == null");
+    }
     BitVectorVariable U = new BitVectorVariable();
     U.copyState(lhs);
     U.addAll(rhs);

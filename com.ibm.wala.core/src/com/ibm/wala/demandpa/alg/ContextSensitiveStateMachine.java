@@ -204,7 +204,10 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
 
   }
 
-  public State transition(State prevState, IFlowLabel label) {
+  public State transition(State prevState, IFlowLabel label) throws IllegalArgumentException {
+    if (prevState == null) {
+      throw new IllegalArgumentException("prevState == null");
+    }
     CallStack prevStack = (CallStack) prevState;
     if (!prevStack.isEmpty() && recursiveCallSites.contains(prevStack.peek())) {
       // just pop off the call site

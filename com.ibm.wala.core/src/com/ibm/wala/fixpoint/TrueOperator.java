@@ -15,7 +15,7 @@ import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 /**
  * Operator U(n) = true
  */
-public final class TrueOperator extends UnaryOperator {
+public final class TrueOperator extends UnaryOperator<BooleanVariable> {
 
   private static final TrueOperator SINGLETON = new TrueOperator();
 
@@ -27,15 +27,14 @@ public final class TrueOperator extends UnaryOperator {
   }
 
   @Override
-  public byte evaluate(IVariable lhs, IVariable rhs) throws IllegalArgumentException {
+  public byte evaluate(BooleanVariable lhs, BooleanVariable rhs) throws IllegalArgumentException {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs == null");
     }
-    BooleanVariable L = (BooleanVariable) lhs;
-    if (L.getValue()) {
+    if (lhs.getValue()) {
       return NOT_CHANGED;
     } else {
-      L.set(true);
+      lhs.set(true);
       return CHANGED;
     }
   }
