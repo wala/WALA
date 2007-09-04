@@ -468,7 +468,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @return the canonical FieldReference that represents a given field , or
+   * @return the canonical IField that represents a given field , or
    *         null if none found
    * @throws IllegalArgumentException
    *             if f is null
@@ -485,7 +485,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @return the canonical FieldReference that represents a given field , or
+   * @return the canonical IField that represents a given field , or
    *         null if none found
    * @throws IllegalArgumentException
    *             if f is null
@@ -955,8 +955,6 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this
    * implementation. Consider caching if necessary.
-   * 
-   * @return Set of IClasses
    */
   public Collection<IClass> computeSubClasses(TypeReference type) {
     IClass T = lookupClass(type);
@@ -1045,9 +1043,6 @@ public class ClassHierarchy implements IClassHierarchy {
     return Collections.unmodifiableSet(result);
   }
 
-  /**
-   * @return Iterator of IClass
-   */
   public Iterator<IClass> iterator() {
     return map.keySet().iterator();
   }
@@ -1164,8 +1159,6 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @author sfink
-   * 
    * A warning for when we fail to resolve the type for a checkcast
    */
   private static class ClassExclusion extends Warning {

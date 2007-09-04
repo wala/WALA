@@ -15,6 +15,10 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 
+/**
+ * General interface for a type hierarchy
+ *
+ */
 public interface IClassHierarchy extends Iterable<IClass> {
 
   public ClassLoaderFactory getFactory();
@@ -25,10 +29,16 @@ public interface IClassHierarchy extends Iterable<IClass> {
 
   public IClassLoader getLoader(ClassLoaderReference loaderRef);
 
-
+  /**
+   * @return true if the add succeeded; false if it failed for some reason
+   * @throws IllegalArgumentException
+   *             if klass is null
+   */
   public boolean addClass(IClass klass);
 
-
+  /**
+   * @return The number of classes present in the class hierarchy.
+   */
   public int getNumberOfClasses();
 
   public boolean isRootClass(IClass c);
@@ -37,43 +47,132 @@ public interface IClassHierarchy extends Iterable<IClass> {
 
   public int getNumber(IClass c);
 
-
+  /**
+   * Find the possible receivers of a call to a method reference
+   * 
+   * @param ref
+   *            method reference
+   * @return the set of IMethods that this call can resolve to.
+   * @throws IllegalArgumentException
+   *             if ref is null
+   */
   public Collection<IMethod> getPossibleTargets(MethodReference ref);
 
-
+  /**
+   * Return the unique receiver of an invocation of method on an object of type
+   * m.getDeclaredClass
+   * 
+   * @return IMethod, or null if no appropriate receiver is found.
+   * @throws IllegalArgumentException
+   *             if m is null
+   */
   public IMethod resolveMethod(MethodReference m);
 
+  /**
+   * @return the canonical IField that represents a given field , or
+   *         null if none found
+   * @throws IllegalArgumentException
+   *             if f is null
+   */
   public IField resolveField(FieldReference f);
 
+  /**
+   * @return the canonical IField that represents a given field , or
+   *         null if none found
+   * @throws IllegalArgumentException
+   *             if f is null
+   * @throws IllegalArgumentException
+   *             if klass is null
+   */
   public IField resolveField(IClass klass, FieldReference f);
 
+  /**
+   * Return the unique receiver of an invocation of method on an object of type
+   * declaringClass
+   * 
+   * @param receiverClass
+   *            type of receiver
+   * @param selector
+   *            method signature
+   * @return Method resolved method abstraction
+   * @throws IllegalArgumentException
+   *             if receiverClass is null
+   */
   public IMethod resolveMethod(IClass receiverClass, Selector selector);
 
+  /**
+   * Load a class using one of the loaders specified for this class hierarchy
+   * 
+   * @return null if can't find the class.
+   * @throws IllegalArgumentException
+   *             if A is null
+   */
   public IClass lookupClass(TypeReference A);
 
   public boolean isSyntheticClass(IClass c);
 
   public boolean isInterface(TypeReference type);
 
-
   public IClass getLeastCommonSuperclass(IClass A, IClass B);
 
   public TypeReference getLeastCommonSuperclass(TypeReference A, TypeReference B);
 
+  /**
+   * Is c a subclass of T?
+   * 
+   * @throws IllegalArgumentException
+   *             if c is null
+   */
   public boolean isSubclassOf(IClass c, IClass T);
 
+  /**
+   * Does c implement T?
+   *
+   * @return true iff T is an interface and c is a class that implements T,
+   */
   public boolean implementsInterface(IClass c, TypeReference T);
 
+  /**
+   * Return set of all subclasses of type in the Class Hierarchy
+   */
   public Collection<IClass> computeSubClasses(TypeReference type);
 
+  /**
+   * Solely for optimization; return a Collection<TypeReference> representing
+   * the subclassesOfError
+   * 
+   * kind of ugly. a better scheme?
+   */
   public Collection<TypeReference> getJavaLangErrorTypes();
 
+  /**
+   * @param type
+   *            an interface
+   * @return Set of IClass that represent implementors of the interface
+   */
   public Set<IClass> getImplementors(TypeReference type);
 
+  /**
+   * @return the number of classes that immediately extend klass.
+   */
   public int getNumberOfImmediateSubclasses(IClass klass);
 
+  /**
+   * @return the classes that immediately extend klass.
+   */
   public Collection<IClass> getImmediateSubclasses(IClass klass);
 
+  
+  /**
+   * Does an expression c1 x := c2 y typecheck?
+   * 
+   * i.e. is c2 a subtype of c1?
+   * 
+   * @throws IllegalArgumentException
+   *             if c1 is null
+   * @throws IllegalArgumentException
+   *             if c2 is null
+   */
   public boolean isAssignableFrom(IClass c1, IClass c2);
 
 }
