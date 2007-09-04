@@ -319,7 +319,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
 
   // TODO: share some common parts of this implementation with the ShrikeCFG
   // implementation! right now it's clone-and-owned :(
-  private class BasicBlock extends NodeWithNumber implements IBasicBlock {
+  public class BasicBlock extends NodeWithNumber implements IBasicBlock {
 
     @Override
     public boolean equals(Object arg0) {
