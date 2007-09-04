@@ -14,6 +14,7 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.ShrikeIRFactory;
+import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.summaries.SyntheticIRFactory;
 import com.ibm.wala.util.debug.Assertions;
@@ -35,7 +36,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
       throw new IllegalArgumentException("method cannot be null");
     }
     if (method.isSynthetic()) {
-      return syntheticFactory.makeCFG(method, C);
+      return syntheticFactory.makeCFG((SyntheticMethod)method, C);
     } else if (method instanceof ShrikeCTMethod) {
       return shrikeFactory.makeCFG((ShrikeCTMethod) method, C);
     } else {
@@ -52,7 +53,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
       throw new IllegalArgumentException("method cannot be null");
     }
     if (method.isSynthetic()) {
-      return syntheticFactory.makeIR(method, C, options);
+      return syntheticFactory.makeIR((SyntheticMethod)method, C, options);
     } else if (method instanceof ShrikeCTMethod) {
       return shrikeFactory.makeIR((ShrikeCTMethod) method, C, options);
     } else {

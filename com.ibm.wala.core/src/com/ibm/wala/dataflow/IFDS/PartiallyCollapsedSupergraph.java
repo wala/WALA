@@ -98,9 +98,9 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
 
   /**
    * @param cg
-   *          Governing call graph
+   *            Governing call graph
    * @param noCollapse
-   *          set of nodes in the call graph which cannot be collapsed
+   *            set of nodes in the call graph which cannot be collapsed
    */
   @SuppressWarnings("unchecked")
   public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse) {
@@ -109,12 +109,12 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
 
   /**
    * @param cg
-   *          Governing call graph
+   *            Governing call graph
    * @param noCollapse
-   *          set of nodes in the call graph which cannot be collapsed
+   *            set of nodes in the call graph which cannot be collapsed
    * @param relevant
-   *          set of nodes which are relevant and should be included in the
-   *          supergraph
+   *            set of nodes which are relevant and should be included in the
+   *            supergraph
    */
   public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse, Filter<CGNode> relevant) {
 
@@ -131,7 +131,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       }
     }
     this.noCollapse = noCollapse;
-    this.partialIPFG = new InterproceduralCFG(cg, new Filtersection<CGNode>(relevant, new CollectionFilter<CGNode>(noCollapse)), true);
+    this.partialIPFG = new InterproceduralCFG(cg, new Filtersection<CGNode>(relevant, new CollectionFilter<CGNode>(noCollapse)),
+        true);
     if (DEBUG_LEVEL > 0) {
       Trace.println("IPFG \n" + partialIPFG.toString());
     }
@@ -164,11 +165,10 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     return cg.getFakeRootNode();
   }
 
-  public Object getEntryForProcedure(Object p) {
+  public Object getEntryForProcedure(CGNode n) {
     if (Assertions.verifyAssertions) {
-      Assertions._assert(p != null);
+      Assertions._assert(n != null);
     }
-    CGNode n = (CGNode) p;
     if (noCollapse.contains(n)) {
       // p is cg node which is expanded in the IPFG
       return partialIPFG.getEntry(n);
@@ -179,7 +179,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   public Object[] getEntries(Object n) {
-    Object p = getProcOf(n);
+    CGNode p = getProcOf(n);
     return new Object[] { getEntryForProcedure(p) };
   }
 
@@ -202,9 +202,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     if (object == null) {
       throw new IllegalArgumentException("object == null");
     }
-    if (object instanceof IBasicBlock) {
-      IBasicBlock b = (IBasicBlock) object;
-      return partialIPFG.hasCall((BasicBlockInContext) b);
+    if (object instanceof BasicBlockInContext) {
+      return partialIPFG.hasCall((BasicBlockInContext) object);
     } else {
       if (Assertions.verifyAssertions) {
         if (!(object instanceof CollapsedNode)) {
@@ -244,7 +243,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   public Iterator<? extends Object> getReturnSites(Object object) {
-    if (object instanceof IBasicBlock) {
+    if (object instanceof BasicBlockInContext) {
       return partialIPFG.getReturnSites((BasicBlockInContext) object);
     } else {
       CGNode n = nodeManager.getProcOfCollapsedNode(object);
@@ -253,7 +252,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   }
 
   public Iterator<? extends Object> getCallSites(Object object) {
-    if (object instanceof IBasicBlock) {
+    if (object instanceof BasicBlockInContext) {
       return partialIPFG.getCallSites((BasicBlockInContext) object);
     } else {
       CGNode n = nodeManager.getProcOfCollapsedNode(object);
@@ -296,7 +295,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      */
     private void computeTransverseEdges() {
       // compute transverse edges that originate from basic blocks
-      for (BasicBlockInContext bb:  partialIPFG) {
+      for (BasicBlockInContext bb : partialIPFG) {
         if (partialIPFG.hasCall(bb)) {
           Set targets = partialIPFG.getCallTargets(bb);
           for (Iterator it2 = targets.iterator(); it2.hasNext();) {
@@ -698,7 +697,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      * TODO: refactor to avoid allocation?
      * 
      * @param n
-     *          a collapsible node
+     *            a collapsible node
      * @return an object that represents entry to this node
      */
     public CollapsedNode getCollapsedEntry(CGNode n) {
@@ -713,7 +712,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      * TODO: refactor to avoid allocation?
      * 
      * @param n
-     *          a collapsible node
+     *            a collapsible node
      * @return an object that represents entry to this node
      */
     public CollapsedNode getCollapsedExit(CGNode n) {
@@ -787,7 +786,11 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       return partialIPFG.iterator();
     }
 
-    public int getNumber(Object N) {
+    public int getNumber(Object N) throws IllegalArgumentException {
+      if (!(N instanceof BasicBlockInContext) && !(N instanceof CollapsedNode)) {
+        throw new IllegalArgumentException(
+            "(not ( N instanceof com.ibm.wala.ipa.cfg.BasicBlockInContext ) ) and (not ( N instanceof com.ibm.wala.dataflow.IFDS.PartiallyCollapsedSupergraph$CollapsedNode ) )");
+      }
       if (N instanceof CollapsedNode) {
         return ((CollapsedNode) N).number;
       } else {
@@ -853,7 +856,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    */
   public boolean isReturn(Object object) {
     if (object instanceof BasicBlockInContext) {
-      return partialIPFG.isReturn((BasicBlockInContext)object);
+      return partialIPFG.isReturn((BasicBlockInContext) object);
     } else {
       if (nodeManager.isCollapsedExit(object)) {
         CGNode node = getProcOf(object);

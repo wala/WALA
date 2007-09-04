@@ -729,11 +729,10 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
   /*
    * @see com.ibm.wala.util.graph.NumberedGraph#getNumber(com.ibm.wala.util.graph.Node)
    */
-  public int getNumber(ISSABasicBlock N) throws IllegalArgumentException {
-    if (N == null) {
+  public int getNumber(ISSABasicBlock b) throws IllegalArgumentException {
+    if (b == null) {
       throw new IllegalArgumentException("N == null");
     }
-    BasicBlock b = (BasicBlock) N;
     return b.getNumber();
   }
 
@@ -1028,11 +1027,10 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
     return getSuccNodeNumbers(src).contains(getNumber(dst));
   }
 
-  public IntSet getSuccNodeNumbers(ISSABasicBlock node) throws IllegalArgumentException {
-    if (node == null) {
-      throw new IllegalArgumentException("node == null");
+  public IntSet getSuccNodeNumbers(ISSABasicBlock b) throws IllegalArgumentException {
+    if (b == null) {
+      throw new IllegalArgumentException("b == null");
     }
-    BasicBlock b = (BasicBlock) node;
     IBasicBlock n = cfg.getNode(b.getNumber());
     return cfg.getSuccNodeNumbers(n);
   }

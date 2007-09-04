@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -75,7 +76,7 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
   }
 
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
-    IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
+    ArrayClass type = (ArrayClass) options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
       Warnings.add(ResolutionFailure.create(node, allocation));
       return null;

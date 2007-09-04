@@ -27,14 +27,14 @@ public final class MultiNewArrayAllocationSiteKey extends AllocationSiteKey {
    * @return null if the element type is a primitive
    * @throws IllegalArgumentException  if T == null
    */
-  private static IClass myElementType(IClass T, int d) throws IllegalArgumentException {
+  private static IClass myElementType(ArrayClass T, int d) throws IllegalArgumentException, IllegalArgumentException {
     if (T == null) {
       throw new IllegalArgumentException("T == null");
     }
     if (d == 0) {
-      return ((ArrayClass) T).getElementClass();
+      return T.getElementClass();
     } else {
-      IClass element = ((ArrayClass)T).getElementClass();
+      ArrayClass element = (ArrayClass) T.getElementClass();
       if (element == null) {
         return null;
       } else {
@@ -43,7 +43,7 @@ public final class MultiNewArrayAllocationSiteKey extends AllocationSiteKey {
     }
   }
 
-  public MultiNewArrayAllocationSiteKey(CGNode node, NewSiteReference allocation, IClass type, int dim) {
+  public MultiNewArrayAllocationSiteKey(CGNode node, NewSiteReference allocation, ArrayClass type, int dim) {
     super(node, allocation, myElementType(type, dim));
     this.dim = dim;
   }

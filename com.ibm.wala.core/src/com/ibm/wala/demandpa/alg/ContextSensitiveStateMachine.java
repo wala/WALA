@@ -207,9 +207,12 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
   /* 
    * @see com.ibm.wala.demandpa.alg.statemachine.StateMachine#transition(com.ibm.wala.demandpa.alg.statemachine.StateMachine.State, java.lang.Object)
    */
-  public State transition(State prevState, IFlowLabel label) throws IllegalArgumentException {
+  public State transition(State prevState, IFlowLabel label) throws IllegalArgumentException, IllegalArgumentException {
     if (prevState == null) {
       throw new IllegalArgumentException("prevState == null");
+    }
+    if (!(prevState instanceof CallStack)) {
+      throw new IllegalArgumentException("not ( prevState instanceof com.ibm.wala.demandpa.alg.CallStack ) ");
     }
     CallStack prevStack = (CallStack) prevState;
     if (!prevStack.isEmpty() && recursiveCallSites.contains(prevStack.peek())) {

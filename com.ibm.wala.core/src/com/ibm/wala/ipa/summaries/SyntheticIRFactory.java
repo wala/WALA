@@ -11,31 +11,25 @@
 package com.ibm.wala.ipa.summaries;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSAOptions;
-import com.ibm.wala.util.debug.Assertions;
 
-public class SyntheticIRFactory implements IRFactory {
+public class SyntheticIRFactory implements IRFactory<SyntheticMethod> {
 
-  public ControlFlowGraph makeCFG(IMethod method, Context C) {
+  public ControlFlowGraph makeCFG(SyntheticMethod method, Context C) {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
     }
-    Assertions._assert(method.isSynthetic());
-    SyntheticMethod sm = (SyntheticMethod) method;
-    return sm.makeControlFlowGraph();
+    return method.makeControlFlowGraph();
   }
 
-  public IR makeIR(IMethod method, Context C, SSAOptions options) {
+  public IR makeIR(SyntheticMethod method, Context C, SSAOptions options) {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
     }
-    Assertions._assert(method.isSynthetic());
-    SyntheticMethod sm = (SyntheticMethod) method;
-    return sm.makeIR(options);
+    return method.makeIR(options);
   }
 }
