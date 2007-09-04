@@ -15,18 +15,18 @@ import java.util.Collection;
 public class BasicTheory extends AbstractTheory {
 
   private final IVocabulary vocab;
-  private final Collection<? extends IFormula> sentences;
+  private final Collection<IFormula> sentences;
   
-  protected BasicTheory(IVocabulary vocab, Collection<? extends IFormula> sentences) {
+  protected BasicTheory(IVocabulary vocab, Collection<IFormula> sentences) {
     this.vocab = vocab;
     this.sentences = sentences;
   }
   
-  public static BasicTheory make(IVocabulary vocab, Collection<? extends IFormula> sentences) {
+  public static BasicTheory make(IVocabulary vocab, Collection<IFormula> sentences) {
     return new BasicTheory(vocab, sentences);
   }
   
-  public Collection<? extends IFormula> getSentences() {
+  public Collection<IFormula> getSentences() {
     return sentences;
   }
 
