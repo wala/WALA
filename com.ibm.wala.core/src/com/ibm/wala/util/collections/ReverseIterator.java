@@ -31,7 +31,7 @@ public class ReverseIterator<T> implements Iterator<T> {
    *          the iterator to reverse
    * @throws IllegalArgumentException  if other == null
    */
-  public ReverseIterator(Iterator<T> other) throws IllegalArgumentException {
+  private ReverseIterator(Iterator<T> other) throws IllegalArgumentException {
     if (other == null) {
       throw new IllegalArgumentException("other == null");
     }

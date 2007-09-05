@@ -237,7 +237,7 @@ public class DefaultFixedPointSystem<T extends IVariable> implements IFixedPoint
     // representatives
     Iterator<T> finishTime = DFS.iterateFinishTime(graph);
     // reverse postorder is usual topological sort.
-    Iterator<T> rev = new ReverseIterator<T>(finishTime);
+    Iterator<T> rev = ReverseIterator.reverse(finishTime);
     // the following statement helps out the GC; note that finishTime holds
     // on to a large array
     finishTime = null;

@@ -52,7 +52,7 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
    * determined by starting at a given set of nodes.
    */
   public SCCIterator(Graph<T> G, Iterator<T> nodes) {
-    Iterator<T> reverseFinishTime = new ReverseIterator<T>(DFS.iterateFinishTime(G, nodes));
+    Iterator<T> reverseFinishTime = ReverseIterator.reverse(DFS.iterateFinishTime(G, nodes));
 
     rev = DFS.iterateFinishTime(GraphInverter.invert(G), reverseFinishTime);
   }
