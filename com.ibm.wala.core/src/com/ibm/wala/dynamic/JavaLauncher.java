@@ -135,24 +135,29 @@ public class JavaLauncher extends Launcher {
   private String makeClasspath() {
     String cp = System.getProperty("java.class.path");
     if (getXtraClassPath() == null || getXtraClassPath().isEmpty()) {
-      return " -classpath " + quoteString(cp);
+      return " -classpath " + quoteStringIfNeeded(cp);
     } else {
       for (Iterator it = getXtraClassPath().iterator(); it.hasNext();) {
         cp += File.pathSeparatorChar;
         cp += (String) it.next();
       }
-      return " -classpath " + quoteString(cp);
+      return " -classpath " + quoteStringIfNeeded(cp);
     }
   }
 
   /**
-   * Quote input string for use as a classpath to handle spaces in paths.
-   * Macs can't handle the space before the closing quote and trailing
-   * separators are unsafe, so we have to escape the last backslash
+   * If the input string contains a space, quote it (for use as a classpath).
+   * TODO: Figure out how to make a Mac happy with quotes.
+   * Trailing separators are unsafe, so we have to escape the last backslash
    * (if present and unescaped), so it doesn't escape the closing quote.
    */
-  private String quoteString(String s) {
+  private String quoteStringIfNeeded(String s) {
     s = s.trim();
+    // Check if there's a space.  If not, skip quoting to make Macs happy.
+    // TODO: Add the check for an escaped space.
+    if (s.indexOf(' ') == -1) {
+      return s;
+    }
     if (s.charAt(s.length()-1) == '\\' && s.charAt(s.length()-2) != '\\') {
       s += '\\';  // Escape the last backslash, so it doesn't escape the quote.
     }
