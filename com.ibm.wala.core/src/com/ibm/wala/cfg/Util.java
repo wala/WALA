@@ -183,6 +183,12 @@ public class Util {
     if (cfg == null) {
       throw new IllegalArgumentException("cfg is null");
     }
+    if (a == null) {
+      throw new IllegalArgumentException("a is null");
+    }
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     int i = 0;
     for (Iterator it = cfg.getPredNodes(b); it.hasNext();) {
       if (it.next().equals(a)) {
