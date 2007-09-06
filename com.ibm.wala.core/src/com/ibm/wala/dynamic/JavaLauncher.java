@@ -28,7 +28,7 @@ public class JavaLauncher extends Launcher {
     return new JavaLauncher(programArgs, mainClass, classpathEntries);
   }
 
-  private final String programArgs;
+  private String programArgs;
 
   private final String mainClass;
 
@@ -48,6 +48,10 @@ public class JavaLauncher extends Launcher {
     if (xtraClasspath != null) {
       this.xtraClasspath.addAll(xtraClasspath);
     }
+  }
+  
+  public void setProgramArgs(String s) {
+    this.programArgs = s;
   }
 
   public String getProgramArgs() {
@@ -154,4 +158,5 @@ public class JavaLauncher extends Launcher {
     }
     return '\"' + s + '\"';
   }
+
 }
