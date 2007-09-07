@@ -184,7 +184,10 @@ public class Analyzer {
     return instructions;
   }
 
-  private void getReachableRecursive(int from, BitSet reachable, boolean followHandlers, BitSet mask) {
+  private void getReachableRecursive(int from, BitSet reachable, boolean followHandlers, BitSet mask) throws IllegalArgumentException {
+    if (from < 0) {
+      throw new IllegalArgumentException("from < 0");
+    }
     while (true) {
       // stop if we've already visited this instruction or if we've gone outside
       // the mask
