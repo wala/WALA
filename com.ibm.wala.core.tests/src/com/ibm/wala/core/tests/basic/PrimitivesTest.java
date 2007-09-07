@@ -459,7 +459,7 @@ public class PrimitivesTest extends WalaTestCase {
 
   private NumberedGraph<Integer> makeBFSTestGraph() {
     // test graph
-    NumberedGraph<Integer> G = new SlowSparseNumberedGraph<Integer>();
+    NumberedGraph<Integer> G = SlowSparseNumberedGraph.make();
 
     // add 10 nodes
     Integer[] nodes = new Integer[10];
@@ -483,7 +483,7 @@ public class PrimitivesTest extends WalaTestCase {
 
   public void testDominatorsA() {
     // test graph
-    Graph<Object> G = new SlowSparseNumberedGraph<Object>();
+    Graph<Object> G = SlowSparseNumberedGraph.make();
 
     // add nodes
     Object[] nodes = new Object[11];

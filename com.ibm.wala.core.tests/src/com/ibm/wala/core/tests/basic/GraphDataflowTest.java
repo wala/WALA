@@ -99,7 +99,7 @@ public class GraphDataflowTest extends WalaTestCase {
    * @return a graph with the expected structure
    */
   private static Graph<String> buildGraph() {
-    Graph<String> G = new SlowSparseNumberedGraph<String>();
+    Graph<String> G = SlowSparseNumberedGraph.make();
     for (int i = 0; i < nodeNames.length(); i++) {
       String n = nodeNames.substring(i, i + 1);
       G.addNode(n);
