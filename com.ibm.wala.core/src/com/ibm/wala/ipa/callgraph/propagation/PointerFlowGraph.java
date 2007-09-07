@@ -65,7 +65,7 @@ public class PointerFlowGraph extends AbstractGraph<PointerKey> {
 
   protected final CallGraph cg;
 
-  final protected SlowSparseNumberedGraph<PointerKey> delegate = new SlowSparseNumberedGraph<PointerKey>();
+  final protected SlowSparseNumberedGraph<PointerKey> delegate = SlowSparseNumberedGraph.make();
 
   /**
    * nodes for which we have processed the statements

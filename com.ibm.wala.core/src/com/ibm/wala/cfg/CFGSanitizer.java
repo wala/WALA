@@ -47,7 +47,7 @@ public class CFGSanitizer {
     }
 
     ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
-    Graph<ISSABasicBlock> g = new SlowSparseNumberedGraph<ISSABasicBlock>();
+    Graph<ISSABasicBlock> g = SlowSparseNumberedGraph.make();
     // add all nodes to the graph
     for (Iterator<? extends ISSABasicBlock> it = cfg.iterator(); it.hasNext();) {
       g.addNode(it.next());

@@ -30,7 +30,7 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
 
   private final SparseNumberedEdgeManager<T> edgeManager;
 
-  public SlowSparseNumberedGraph() {
+  protected SlowSparseNumberedGraph() {
     this(0);
   }
 
@@ -66,7 +66,7 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
    * @return a graph with the same nodes and edges as g
    */
   public static <T> SlowSparseNumberedGraph<T> duplicate(Graph<T> g) {
-    SlowSparseNumberedGraph<T> result = new SlowSparseNumberedGraph<T>();
+    SlowSparseNumberedGraph<T> result = make();
     copyInto(g, result);
     return result;
   }
@@ -84,5 +84,9 @@ public class SlowSparseNumberedGraph<T> extends AbstractNumberedGraph<T> {
         into.addEdge(n, it2.next());
       }
     }
+  }
+
+  public static <T> SlowSparseNumberedGraph<T> make() {
+    return new SlowSparseNumberedGraph<T>();
   }
 }

@@ -26,7 +26,7 @@ public class GraphPrint {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
-    SlowSparseNumberedGraph<T> sg = new SlowSparseNumberedGraph<T>();
+    SlowSparseNumberedGraph<T> sg = SlowSparseNumberedGraph.make();
     for (Iterator<? extends T> it = G.iterator(); it.hasNext(); ) {
       sg.addNode(it.next());
     }
