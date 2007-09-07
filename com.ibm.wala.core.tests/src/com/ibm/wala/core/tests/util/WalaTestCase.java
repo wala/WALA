@@ -74,7 +74,7 @@ public abstract class WalaTestCase extends TestCase {
    * calls this, to create a test suite consisting of just this test. Useful
    * when investigating a single failing test.
    */
-  protected static void justThisTest(Class<?> testClass) {
+  protected static void justThisTest(Class<? extends TestCase> testClass) {
     TestSuite suite = new TestSuite(testClass.getName());
     suite.addTestSuite(testClass);
     junit.textui.TestRunner.run(suite);
