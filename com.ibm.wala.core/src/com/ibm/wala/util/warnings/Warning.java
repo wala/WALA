@@ -51,6 +51,9 @@ public abstract class Warning implements Comparable {
    * @throws ClassCastException if o is not a Warning
    */
   public int compareTo(Object o) throws ClassCastException {
+    if (o == null) {
+      return -1;
+    }
     Warning other = (Warning) o;
     if (level < other.level) {
       return -1;

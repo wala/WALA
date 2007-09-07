@@ -349,9 +349,15 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
     }
   }
 
-  public static CallSiteReference makeCallSiteReference(ClassLoaderReference loader, int pc, IInvokeInstruction call) throws IllegalArgumentException {
+  public static CallSiteReference makeCallSiteReference(ClassLoaderReference loader, int pc, IInvokeInstruction call)
+      throws IllegalArgumentException, IllegalArgumentException {
+
     if (call == null) {
       throw new IllegalArgumentException("call == null");
+    }
+    if (!(call instanceof com.ibm.wala.ssa.SSAInvokeInstruction) && !(call instanceof com.ibm.wala.shrikeBT.InvokeInstruction)) {
+      throw new IllegalArgumentException(
+          "(not ( call instanceof com.ibm.wala.ssa.SSAInvokeInstruction ) ) and (not ( call instanceof com.ibm.wala.shrikeBT.InvokeInstruction ) )");
     }
     CallSiteReference site = null;
     if (call instanceof InvokeInstruction) {
@@ -450,7 +456,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
    * @param targetCFG
    *            the called method
    */
-  private void addEdgesFromExitToReturn(CGNode caller, ISSABasicBlock returnBlock, CGNode target, ControlFlowGraph<ISSABasicBlock> targetCFG) {
+  private void addEdgesFromExitToReturn(CGNode caller, ISSABasicBlock returnBlock, CGNode target,
+      ControlFlowGraph<ISSABasicBlock> targetCFG) {
     ISSABasicBlock texit = targetCFG.exit();
     BasicBlockInContext exit = new BasicBlockInContext(target, texit);
     BasicBlockInContext ret = new BasicBlockInContext(caller, returnBlock);
@@ -538,7 +545,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
 
   /**
    * @return the original CFG from whence B came
-   * @throws IllegalArgumentException  if B == null
+   * @throws IllegalArgumentException
+   *             if B == null
    */
   public ControlFlowGraph<ISSABasicBlock> getCFG(BasicBlockInContext B) throws IllegalArgumentException {
     if (B == null) {
@@ -549,7 +557,8 @@ public class InterproceduralCFG implements NumberedGraph<BasicBlockInContext> {
 
   /**
    * @return the original CGNode from whence B came
-   * @throws IllegalArgumentException  if B == null
+   * @throws IllegalArgumentException
+   *             if B == null
    */
   public CGNode getCGNode(BasicBlockInContext B) throws IllegalArgumentException {
     if (B == null) {
