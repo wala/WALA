@@ -129,7 +129,7 @@ public abstract class AstMethod implements IMethod {
   }
 
   public String getSignature() {
-    return ref.toString();
+    return ref.getSignature();
   }
 
   public Selector getSelector() {
