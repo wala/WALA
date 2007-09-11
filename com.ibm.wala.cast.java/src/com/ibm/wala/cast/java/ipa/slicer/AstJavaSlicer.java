@@ -23,7 +23,7 @@ public class AstJavaSlicer extends Slicer {
    * @param ss
    *          a collection of statements of interest
    */
-  protected static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
+  public static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) {
     return computeSlice(sdg, ss, cg, pa, new AstJavaModRef(), dOptions, cOptions, backward);
   }
