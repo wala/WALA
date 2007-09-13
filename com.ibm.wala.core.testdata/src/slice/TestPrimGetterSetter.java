@@ -28,6 +28,10 @@ public class TestPrimGetterSetter {
    */
   public static void main(String[] args) {
     IntWrapper w = new IntWrapper();
+    test(w);
+  }
+
+  public static void test(IntWrapper w) {
     int x = 3;
     w.setI(x);
     int y = w.getI();
