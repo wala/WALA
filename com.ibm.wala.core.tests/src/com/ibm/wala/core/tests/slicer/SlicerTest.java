@@ -14,8 +14,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
 import junit.framework.TestCase;
 
@@ -29,7 +28,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.impl.*;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.slicer.NormalStatement;
@@ -413,7 +412,32 @@ public class SlicerTest extends TestCase {
     assertEquals(2, countPutfields(slice));
   }
 
-  private int countAllocations(Collection<Statement> slice) {
+  public void testPrimGetterSetter() throws ClassHierarchyException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.SLICE_TEST_PRIM_GETTER_SETTER);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options);
+
+    CGNode test = findMethod(cg, "test");
+
+    PartialCallGraph pcg = PartialCallGraph.make(cg, Collections.singleton(test));
+
+    Statement s = findCallToDoNothing(test);
+    System.err.println("Statement: " + s);
+
+    // compute full slice
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, pcg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+        ControlDependenceOptions.FULL);
+    dumpSlice(slice);
+    assertEquals(0, countAllocations(slice));
+    assertEquals(1, countPutfields(slice));
+  }
+
+  public static int countAllocations(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
@@ -426,7 +450,7 @@ public class SlicerTest extends TestCase {
     return count;
   }
 
-  private int countAloads(Collection<Statement> slice) {
+  public static int countAloads(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
@@ -439,7 +463,7 @@ public class SlicerTest extends TestCase {
     return count;
   }
 
-  private int countConditionals(Collection<Statement> slice) {
+  public static int countConditionals(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
@@ -452,7 +476,7 @@ public class SlicerTest extends TestCase {
     return count;
   }
 
-  private int countPutfields(Collection<Statement> slice) {
+  public static int countPutfields(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
@@ -468,7 +492,7 @@ public class SlicerTest extends TestCase {
     return count;
   }
 
-  private int countPutstatics(Collection<Statement> slice) {
+  public static int countPutstatics(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
@@ -484,7 +508,7 @@ public class SlicerTest extends TestCase {
     return count;
   }
 
-  private int countGetstatics(Collection<Statement> slice) {
+  public static int countGetstatics(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
