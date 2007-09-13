@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarFile;
@@ -48,10 +47,8 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.MapUtil;
+import com.ibm.wala.util.*;
+import com.ibm.wala.util.collections.*;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.WalaException;
@@ -61,32 +58,61 @@ public abstract class IRTests extends WalaTestCase {
     super(name);
   }
 
-  protected static String javaHomePath = System.getProperty("java.home");
+  protected static String javaHomePath;
 
   protected static String testSrcPath = "." + File.separator + "testSrc";
 
   protected static List<String> rtJar;
 
+  static List<IRAssertion> emptyList = Collections.emptyList();
+
   static {
-    rtJar = new LinkedList<String>();
-    rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "rt.jar");
-    rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "core.jar");
-    rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "vm.jar");
-    rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "classes.jar");
+    boolean found = false;
     try {
       Properties p = WalaProperties.loadProperties();
-      String javaHomePath = p.getProperty(WalaProperties.J2SE_DIR);
-      rtJar.add(javaHomePath + File.separator + "classes.jar");
-      rtJar.add(javaHomePath + File.separator + "rt.jar");
-      rtJar.add(javaHomePath + File.separator + "core.jar");
-      rtJar.add(javaHomePath + File.separator + "vm.jar");    
+      javaHomePath = p.getProperty(WalaProperties.J2SE_DIR);
+
+      if (new File(javaHomePath).isDirectory()) {
+        if("Mac OS X".equals(System.getProperty("os.name"))) { //nick
+	  /**
+	   * todo: {@link WalaProperties#getJ2SEJarFiles()}
+	   */
+	  rtJar.add(javaHomePath + "/Classes/classes.jar");
+	  rtJar.add(javaHomePath + "/Classes/ui.jar");
+	} else {
+	  rtJar.add(javaHomePath + File.separator + "classes.jar");
+	  rtJar.add(javaHomePath + File.separator + "rt.jar");
+	  rtJar.add(javaHomePath + File.separator + "core.jar");
+	  rtJar.add(javaHomePath + File.separator + "vm.jar");
+	}
+	found = true;
+      }
     } catch (WalaException e) {
       // no properties
     }
 
+    if (! found) {
+      javaHomePath = System.getProperty("java.home");
+      rtJar = new LinkedList<String>();
+      if("Mac OS X".equals(System.getProperty("os.name"))) { //nick
+	rtJar.add(javaHomePath + "/../Classes/classes.jar");
+	rtJar.add(javaHomePath + "/../Classes/ui.jar");
+      } else {
+	rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "rt.jar");
+	rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "core.jar");
+	rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "vm.jar");
+	rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "classes.jar");
+      }
+    }
   }
 
-  protected static class EdgeAssertions {
+  interface IRAssertion {
+
+    void check(CallGraph cg) throws Exception;
+
+  }
+
+  protected static class EdgeAssertions implements IRAssertion {
     public final String srcDescriptor;
 
     public final List/* <String> */<String> tgtDescriptors = new ArrayList<String>();
@@ -125,45 +151,68 @@ public abstract class IRTests extends WalaTestCase {
       ea.tgtDescriptors.add(tgtDescriptor4);
       return ea;
     }
+
+    public void check(CallGraph callGraph) {
+      MethodReference srcMethod = descriptorToMethodRef(this.srcDescriptor, callGraph.getClassHierarchy());
+      Set<CGNode> srcNodes = callGraph.getNodes(srcMethod);
+
+      if (srcNodes.size() == 0) {
+        Trace.println("Unreachable/non-existent method: " + srcMethod);
+        return;
+      }
+      if (srcNodes.size() > 1) {
+        Trace.println("Context-sensitive call graph?");
+      }
+
+      // Assume only one node for src method
+      CGNode srcNode = srcNodes.iterator().next();
+
+      for (String target : this.tgtDescriptors) {
+        MethodReference tgtMethod = descriptorToMethodRef(target, callGraph.getClassHierarchy());
+        // Assume only one node for target method
+        Set<CGNode> tgtNodes = callGraph.getNodes(tgtMethod);
+        if (tgtNodes.size() == 0) {
+          Trace.println("Unreachable/non-existent method: " + tgtMethod);
+          continue;
+        }
+        CGNode tgtNode = tgtNodes.iterator().next();
+
+        boolean found = false;
+        for (Iterator<? extends CGNode> succIter = callGraph.getSuccNodes(srcNode); succIter.hasNext();) {
+          CGNode succ = succIter.next();
+
+          if (tgtNode == succ) {
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          Trace.println("Missing edge: " + srcMethod + " -> " + tgtMethod);
+        }
+      }
+    }
   }
 
-  protected static class GraphAssertions {
-    public final Set/* <EdgeAssertions> */<EdgeAssertions> nodeAssertions = HashSetFactory.make();
-
-    public GraphAssertions() {
-    }
-
-    public GraphAssertions(EdgeAssertions ea1) {
-      nodeAssertions.add(ea1);
-    }
-
-    public GraphAssertions(EdgeAssertions ea1, EdgeAssertions ea2) {
-      nodeAssertions.add(ea1);
-      nodeAssertions.add(ea2);
-    }
-
-    public GraphAssertions(EdgeAssertions ea1, EdgeAssertions ea2, EdgeAssertions ea3) {
-      nodeAssertions.add(ea1);
-      nodeAssertions.add(ea2);
-      nodeAssertions.add(ea3);
-    }
-
-    public GraphAssertions(EdgeAssertions ea1, EdgeAssertions ea2, EdgeAssertions ea3, EdgeAssertions ea4) {
-      nodeAssertions.add(ea1);
-      nodeAssertions.add(ea2);
-      nodeAssertions.add(ea3);
-      nodeAssertions.add(ea4);
-    }
-  }
-
-  protected static class SourceMapAssertion {
+  protected static class SourceMapAssertion implements IRAssertion {
+    private final String method;
     private final String variableName;
 
     private final int definingLineNumber;
 
-    protected SourceMapAssertion(String variableName, int definingLineNumber) {
+    protected SourceMapAssertion(String method, String variableName, int definingLineNumber) {
+      this.method = method;
       this.variableName = variableName;
       this.definingLineNumber = definingLineNumber;
+    }
+
+    public void check(CallGraph cg) {
+
+        MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
+
+        for (CGNode cgNode : cg.getNodes(mref)) {
+            Assert.assertTrue("failed for " + this.variableName + " in " + cgNode,
+              this.check(cgNode.getMethod(), cgNode.getIR()));
+        }
     }
 
     boolean check(IMethod m, IR ir) {
@@ -185,9 +234,9 @@ public abstract class IRTests extends WalaTestCase {
               Trace.println("    looking at def " + j + ": " + def);
               String[] names = ir.getLocalNames(i, def);
               if (names != null) {
-                for (int n = 0; n < names.length; n++) {
-                  Trace.println("      looking at name " + names[n]);
-                  if (names[n].equals(variableName)) {
+                for (String name : names) {
+                  Trace.println("      looking at name " + name);
+                  if (name.equals(variableName)) {
                     return true;
                   }
                 }
@@ -201,44 +250,15 @@ public abstract class IRTests extends WalaTestCase {
     }
   }
 
-  protected static class SourceMapAssertions {
-
-    private final Map<String, Set<SourceMapAssertion>> methodAssertions = HashMapFactory.make();
-
-    protected void addAssertion(String method, SourceMapAssertion a) {
-      Set<SourceMapAssertion> x = MapUtil.findOrCreateSet(methodAssertions, method);
-      x.add(a);
-    }
-
-    void check(CallGraph CG) {
-      for (Iterator ms = methodAssertions.entrySet().iterator(); ms.hasNext();) {
-        Map.Entry entry = (Map.Entry) ms.next();
-
-        Set s = (Set) entry.getValue();
-
-        String method = (String) entry.getKey();
-        MethodReference mref = descriptorToMethodRef(method, CG.getClassHierarchy());
-
-        for (Iterator ns = CG.getNodes(mref).iterator(); ns.hasNext();) {
-          CGNode n = (CGNode) ns.next();
-          for (Iterator as = s.iterator(); as.hasNext();) {
-            SourceMapAssertion a = (SourceMapAssertion) as.next();
-            Assert.assertTrue("failed for " + a.variableName + " in " + n, a.check(n.getMethod(), n.getIR()));
-          }
-        }
-      }
-    }
-  }
-
   protected abstract String singleInputForTest();
 
   protected abstract String singlePkgInputForTest(String pkgName);
 
-  protected Collection singleTestSrc() {
+  protected Collection<String> singleTestSrc() {
     return Collections.singletonList(testSrcPath + File.separator + singleInputForTest());
   }
 
-  protected Collection singlePkgTestSrc(String pkgName) {
+  protected Collection<String> singlePkgTestSrc(String pkgName) {
     return Collections.singletonList(testSrcPath + File.separator + singlePkgInputForTest(pkgName));
   }
 
@@ -252,8 +272,12 @@ public abstract class IRTests extends WalaTestCase {
 
   protected abstract JavaSourceAnalysisEngine getAnalysisEngine(String[] mainClassDescriptors);
 
-  public void runTest(Collection/* <String> */sources, List/* <String> */libs, String[] mainClassDescriptors, GraphAssertions ga,
-      SourceMapAssertions sa, boolean assertReachable) {
+  public Pair runTest(Collection<String> sources, 
+		      List<String> libs,
+		      String[] mainClassDescriptors, 
+		      List<? extends IRAssertion> ca, 
+		      boolean assertReachable) 
+  {
     try {
       JavaSourceAnalysisEngine engine = getAnalysisEngine(mainClassDescriptors);
 
@@ -266,14 +290,15 @@ public abstract class IRTests extends WalaTestCase {
       dumpIR(callGraph, assertReachable);
 
       // Now check any assertions as to source mapping
-      if (sa != null) {
-        sa.check(callGraph);
+      for (IRAssertion IRAssertion : ca) {
+        IRAssertion.check(callGraph);
       }
 
-      // Now check any assertions as to call-graph shape.
-      checkCallGraphShape(callGraph, ga);
-    } catch (IOException e) {
+      return Pair.make(callGraph, engine.getPointerAnalysis());
+
+    } catch (Exception e) {
       e.printStackTrace();
+      return null;
     }
   }
 
@@ -288,10 +313,10 @@ public abstract class IRTests extends WalaTestCase {
       if (clazz.isInterface())
         continue;
 
-      for (Iterator iterator = clazz.getDeclaredMethods().iterator(); iterator.hasNext();) {
-        IMethod m = (IMethod) iterator.next();
-        if (m.isAbstract())
+      for (IMethod m : clazz.getDeclaredMethods()) {
+        if (m.isAbstract()) {
           Trace.println(m);
+        }
         else {
           Iterator nodeIter = cg.getNodes(m.getReference()).iterator();
           if (!nodeIter.hasNext()) {
@@ -299,7 +324,7 @@ public abstract class IRTests extends WalaTestCase {
             unreachable.add(m);
             continue;
           }
-          CGNode node = (CGNode) nodeIter.next();
+          CGNode node = (CGNode)nodeIter.next();
           Trace.println(node.getIR());
         }
       }
@@ -310,84 +335,52 @@ public abstract class IRTests extends WalaTestCase {
     }
   }
 
-  private static void checkCallGraphShape(CallGraph callGraph, GraphAssertions ga) throws IOException {
-    for (Iterator<EdgeAssertions> nodeIter = ga.nodeAssertions.iterator(); nodeIter.hasNext();) {
-      EdgeAssertions ea = nodeIter.next();
 
-      MethodReference srcMethod = descriptorToMethodRef(ea.srcDescriptor, callGraph.getClassHierarchy());
-      Set/* <CGNode> */srcNodes = callGraph.getNodes(srcMethod);
-
-      if (srcNodes.size() == 0) {
-        Trace.println("Unreachable/non-existent method: " + srcMethod);
-        continue;
-      }
-      if (srcNodes.size() > 1) {
-        Trace.println("Context-sensitive call graph?");
-      }
-
-      // Assume only one node for src method
-      CGNode srcNode = (CGNode) srcNodes.iterator().next();
-
-      for (Iterator<String> edgeIter = ea.tgtDescriptors.iterator(); edgeIter.hasNext();) {
-        String target = edgeIter.next();
-        MethodReference tgtMethod = descriptorToMethodRef(target, callGraph.getClassHierarchy());
-        // Assume only one node for target method
-        Set tgtNodes = callGraph.getNodes(tgtMethod);
-        if (tgtNodes.size() == 0) {
-          Trace.println("Unreachable/non-existent method: " + tgtMethod);
-          continue;
-        }
-        CGNode tgtNode = (CGNode) tgtNodes.iterator().next();
-
-        boolean found = false;
-        for (Iterator succIter = callGraph.getSuccNodes(srcNode); succIter.hasNext();) {
-          CGNode succ = (CGNode) succIter.next();
-
-          if (tgtNode == succ) {
-            found = true;
-            break;
-          }
-        }
-        if (!found)
-          Trace.println("Missing edge: " + srcMethod + " -> " + tgtMethod);
-      }
-    }
-  }
-
-  private static MethodReference descriptorToMethodRef(String descrip, IClassHierarchy cha) {
-    String srcDescriptor = descrip; // ldr#type#methName#methSig
-    String[] ldrTypeMeth = srcDescriptor.split("\\#");
+  /**
+   *
+   * @param srcMethodDescriptor a full method descriptor of the form ldr#type#methName#methSig
+   * example: Source#Simple1#main#([Ljava/lang/String;)V
+   * @param cha
+   * @return
+   */
+  public static MethodReference descriptorToMethodRef(String srcMethodDescriptor, IClassHierarchy cha) {
+    String[] ldrTypeMeth = srcMethodDescriptor.split("\\#");
 
     String loaderName = ldrTypeMeth[0];
     String typeStr = ldrTypeMeth[1];
     String methName = ldrTypeMeth[2];
     String methSig = ldrTypeMeth[3];
 
+    TypeReference typeRef = findOrCreateTypeReference(loaderName, typeStr, cha);
+
+    return MethodReference.findOrCreate(typeRef, methName, methSig);
+  }
+
+  static TypeReference findOrCreateTypeReference(String loaderName, String typeStr,
+    IClassHierarchy cha) {
     ClassLoaderReference clr = findLoader(loaderName, cha);
     TypeName typeName = TypeName.string2TypeName("L" + typeStr);
     TypeReference typeRef = TypeReference.findOrCreate(clr, typeName);
-    MethodReference methodRef = MethodReference.findOrCreate(typeRef, methName, methSig);
-
-    return methodRef;
+    return typeRef;
   }
 
   private static ClassLoaderReference findLoader(String loaderName, IClassHierarchy cha) {
     Atom loaderAtom = Atom.findOrCreateUnicodeAtom(loaderName);
     IClassLoader[] loaders = cha.getLoaders();
-    for (int i = 0; i < loaders.length; i++) {
-      if (loaders[i].getName() == loaderAtom)
-        return loaders[i].getReference();
+    for (IClassLoader loader : loaders) {
+      if (loader.getName() == loaderAtom) {
+        return loader.getReference();
+      }
     }
     Assertions.UNREACHABLE();
     return null;
   }
 
-  protected static void populateScope(JavaSourceAnalysisEngine engine, Collection/* <String> */sources, List/* <String> */libs)
+  protected static void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs)
       throws IOException {
 
     boolean foundLib = false;
-    for (Iterator iter = libs.iterator(); iter.hasNext();) {
-      String lib = (String) iter.next();
+    for (String lib : libs) {
       File libFile = new File(lib);
       if (libFile.exists()) {
         foundLib = true;
@@ -396,14 +389,14 @@ public abstract class IRTests extends WalaTestCase {
     }
     Assertions._assert(foundLib);
 
-    for (Iterator iter = sources.iterator(); iter.hasNext();) {
-      String srcFilePath = (String) iter.next();
+    for (String srcFilePath : sources) {
       String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
       File f = new File(srcFilePath);
       Assert.assertTrue(f.exists());
       if (f.isDirectory()) {
         engine.addSourceModule(new SourceDirectoryTreeModule(f));
-      } else {
+      }
+      else {
         engine.addSourceModule(new SourceFileModule(f, srcFileName));
       }
     }

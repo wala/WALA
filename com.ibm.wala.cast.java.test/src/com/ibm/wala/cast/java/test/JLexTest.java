@@ -17,6 +17,8 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
+import java.util.*;
+
 public class JLexTest extends IRTests {
 
   public JLexTest() {
@@ -36,7 +38,7 @@ public class JLexTest extends IRTests {
   }
 
   public void testJLex() {
-    runTest(singleTestSrc(), rtJar, new String[] { "LJLex/Main" }, new GraphAssertions(), new SourceMapAssertions(), false);
+    runTest(singleTestSrc(), rtJar, new String[] { "LJLex/Main" }, emptyList, false);
   }
 
   protected String singlePkgInputForTest(String pkgName) {
