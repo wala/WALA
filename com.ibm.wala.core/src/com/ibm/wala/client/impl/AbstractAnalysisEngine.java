@@ -291,15 +291,14 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * @return Returns the pointerAnalysis.
    */
-  // TODO make this public so clients can get at it?
-  protected PointerAnalysis getPointerAnalysis() {
+  public PointerAnalysis getPointerAnalysis() {
     return pointerAnalysis;
   }
 
   /**
    * @return Returns the pointerFlowGraph.
    */
-  protected PointerFlowGraph getPointerFlowGraph() {
+  public PointerFlowGraph getPointerFlowGraph() {
     if (pointerFlowGraph == null) {
       pointerFlowGraph = pointerFlowGraphFactory.make(pointerAnalysis, cg);
     }
@@ -309,7 +308,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * @return Returns the heapGraph.
    */
-  protected HeapGraph getHeapGraph() {
+  public HeapGraph getHeapGraph() {
     if (heapGraph == null) {
       heapGraph = new BasicHeapGraph(getPointerAnalysis(), cg);
     }
