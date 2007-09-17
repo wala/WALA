@@ -10,8 +10,8 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.test;
 
-import com.ibm.wala.cast.examples.ast.*;
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
+import com.ibm.wala.cast.java.examples.ast.*;
 import com.ibm.wala.cast.java.translator.polyglot.*;
 import com.ibm.wala.cast.tree.*;
 import com.ibm.wala.cast.tree.impl.*;
