@@ -69,6 +69,8 @@ public abstract class IRTests extends WalaTestCase {
   static {
     boolean found = false;
     try {
+      rtJar = new LinkedList<String>();
+
       Properties p = WalaProperties.loadProperties();
       javaHomePath = p.getProperty(WalaProperties.J2SE_DIR);
 
@@ -93,7 +95,6 @@ public abstract class IRTests extends WalaTestCase {
 
     if (! found) {
       javaHomePath = System.getProperty("java.home");
-      rtJar = new LinkedList<String>();
       if("Mac OS X".equals(System.getProperty("os.name"))) { //nick
 	rtJar.add(javaHomePath + "/../Classes/classes.jar");
 	rtJar.add(javaHomePath + "/../Classes/ui.jar");
