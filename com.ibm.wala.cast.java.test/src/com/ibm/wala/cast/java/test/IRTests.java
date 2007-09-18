@@ -64,7 +64,7 @@ public abstract class IRTests extends WalaTestCase {
 
   protected static List<String> rtJar;
 
-  static List<IRAssertion> emptyList = Collections.emptyList();
+  protected static List<IRAssertion> emptyList = Collections.emptyList();
 
   static {
     boolean found = false;
