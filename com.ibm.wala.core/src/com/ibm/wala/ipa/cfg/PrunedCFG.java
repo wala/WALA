@@ -335,4 +335,19 @@ public class PrunedCFG<T extends IBasicBlock> extends AbstractNumberedGraph<T> i
     return result;
   }
 
+  public IntSet getPhiIndices(T bb) {
+    assert containsNode(bb);
+    assert cfg.containsNode(bb);
+    
+    int i = 0;
+    MutableIntSet valid = IntSetUtil.make();
+    for(Iterator<? extends T> pbs = cfg.getPredNodes(bb); pbs.hasNext(); i++) {
+      if (nodes.containsNode(pbs.next())) {
+	valid.add(i);
+      }
+    }
+
+    return valid;
+  }
+
 }
