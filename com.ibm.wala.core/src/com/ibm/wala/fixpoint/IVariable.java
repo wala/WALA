@@ -19,7 +19,7 @@ import com.ibm.wala.util.graph.INodeWithNumber;
  * 
  * @author Stephen Fink
  */
-public interface IVariable extends INodeWithNumber {
+public interface IVariable<T extends IVariable> extends INodeWithNumber {
 
   
   /**
@@ -43,5 +43,12 @@ public interface IVariable extends INodeWithNumber {
    * @param i
    */
   public abstract void setOrderNumber(int i);
+
+  /**
+    * Set this variable to have the same state as another one
+    * 
+    * @param v
+    */
+  public void copyState(T v);
 
 }

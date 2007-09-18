@@ -18,7 +18,7 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
  * 
  * @author Stephen Fink
  */
-public abstract class AbstractVariable extends NodeWithNumber implements IVariable {
+public abstract class AbstractVariable<T extends AbstractVariable> extends NodeWithNumber implements IVariable<T> {
 
   private int orderNumber;
 

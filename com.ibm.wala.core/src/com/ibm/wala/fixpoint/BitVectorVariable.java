@@ -23,7 +23,7 @@ import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
  * 
  * @author sfink
  */
-public class BitVectorVariable extends AbstractVariable {
+public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
 
   private MutableSharedBitVectorIntSet V;
   private final int hash;

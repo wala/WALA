@@ -24,11 +24,11 @@ import com.ibm.wala.util.intset.MutableIntSet;
  * 
  * @author sfink
  */
-public abstract class IntSetVariable extends AbstractVariable {
+public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractVariable<T> {
 
   private MutableIntSet V;
 
-  public void copyState(IntSetVariable other) {
+  public void copyState(T other) {
     if (V == null) {
       if (other.V == null) {
         return;
@@ -64,7 +64,7 @@ public abstract class IntSetVariable extends AbstractVariable {
    * 
    * @return true iff the contents of this variable changes.
    */
-  public boolean addAll(IntSetVariable other) {
+  public boolean addAll(T other) {
     if (V == null) {
       copyState(other);
       return (V != null);
@@ -157,7 +157,7 @@ public abstract class IntSetVariable extends AbstractVariable {
     return V.containsAny(instances);
   }
 
-  public boolean addAllInIntersection(IntSetVariable other, IntSet filter) {
+  public boolean addAllInIntersection(T other, IntSet filter) {
     if (V == null) {
       copyState(other);
       if (V != null) {

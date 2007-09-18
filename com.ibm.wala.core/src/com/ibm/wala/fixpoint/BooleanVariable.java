@@ -18,7 +18,7 @@ import com.ibm.wala.fixedpoint.impl.AbstractVariable;
  * 
  * @author sfink
  */
-public class BooleanVariable extends AbstractVariable {
+public class BooleanVariable extends AbstractVariable<BooleanVariable> {
 
   private boolean B;
 

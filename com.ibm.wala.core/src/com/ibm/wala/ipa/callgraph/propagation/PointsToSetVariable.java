@@ -17,7 +17,7 @@ import com.ibm.wala.util.debug.Assertions;
  * @author sfink
  * 
  */
-public class PointsToSetVariable extends IntSetVariable {
+public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
   private PointerKey pointerKey;
 
   public PointsToSetVariable(PointerKey key) {

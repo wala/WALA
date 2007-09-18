@@ -14,7 +14,7 @@ import com.ibm.wala.fixedpoint.impl.AbstractVariable;
 /**
  * A type variable in the dataflow system.
  */
-public class TypeVariable extends AbstractVariable {
+public class TypeVariable extends AbstractVariable<TypeVariable> {
 
   TypeAbstraction type;
 
