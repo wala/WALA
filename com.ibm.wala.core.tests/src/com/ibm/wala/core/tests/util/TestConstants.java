@@ -51,6 +51,7 @@ public interface TestConstants {
   public final static String SLICE_TESTRECURSION = "Lslice/TestRecursion";
   public final static String SLICE_TEST_PRIM_GETTER_SETTER = "Lslice/TestPrimGetterSetter";
   public final static String SLICE_TESTTHIN1 = "Lslice/TestThin1";
+  public final static String SLICE_TESTTHROWCATCH = "Lslice/TestThrowCatch";
   
 
 }

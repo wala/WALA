@@ -36,14 +36,7 @@ import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
-import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.SSAArrayLoadInstruction;
-import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
-import com.ibm.wala.ssa.SSAGetInstruction;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInvokeInstruction;
-import com.ibm.wala.ssa.SSANewInstruction;
-import com.ibm.wala.ssa.SSAPutInstruction;
+import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.util.Atom;
@@ -437,12 +430,48 @@ public class SlicerTest extends TestCase {
     assertEquals(1, countPutfields(slice));
   }
 
+  public void testTestThrowCatch() throws ClassHierarchyException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.SLICE_TESTTHROWCATCH);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options);
+
+    CGNode main = findMainMethod(cg);
+
+    Statement s = findCallToDoNothing(main);
+    System.err.println("Statement: " + s);
+    // compute a data slice
+    Collection<Statement> slice = Slicer.computeBackwardSlice(s, cg, builder.getPointerAnalysis(), DataDependenceOptions.FULL,
+        ControlDependenceOptions.NONE);
+    dumpSlice(slice);
+    assertEquals(1, countAllocations(slice));
+    assertEquals(1, countThrows(slice));
+    assertEquals(1, countGetfields(slice));
+  }
+
   public static int countAllocations(Collection<Statement> slice) {
     int count = 0;
     for (Statement s : slice) {
       if (s.getKind().equals(Statement.Kind.NORMAL)) {
         NormalStatement ns = (NormalStatement) s;
         if (ns.getInstruction() instanceof SSANewInstruction) {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+
+  public static int countThrows(Collection<Statement> slice) {
+    int count = 0;
+    for (Statement s : slice) {
+      if (s.getKind().equals(Statement.Kind.NORMAL)) {
+        NormalStatement ns = (NormalStatement) s;
+        if (ns.getInstruction() instanceof SSAAbstractThrowInstruction) {
           count++;
         }
       }
@@ -483,6 +512,22 @@ public class SlicerTest extends TestCase {
         NormalStatement ns = (NormalStatement) s;
         if (ns.getInstruction() instanceof SSAPutInstruction) {
           SSAPutInstruction p = (SSAPutInstruction) ns.getInstruction();
+          if (!p.isStatic()) {
+            count++;
+          }
+        }
+      }
+    }
+    return count;
+  }
+
+  public static int countGetfields(Collection<Statement> slice) {
+    int count = 0;
+    for (Statement s : slice) {
+      if (s.getKind().equals(Statement.Kind.NORMAL)) {
+        NormalStatement ns = (NormalStatement) s;
+        if (ns.getInstruction() instanceof SSAGetInstruction) {
+          SSAGetInstruction p = (SSAGetInstruction) ns.getInstruction();
           if (!p.isStatic()) {
             count++;
           }
