@@ -35,21 +35,7 @@ import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.ssa.DefUse;
-import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.ISSABasicBlock;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.ssa.SSAArrayLengthInstruction;
-import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
-import com.ibm.wala.ssa.SSACheckCastInstruction;
-import com.ibm.wala.ssa.SSAFieldAccessInstruction;
-import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
-import com.ibm.wala.ssa.SSAInstanceofInstruction;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSANewInstruction;
-import com.ibm.wala.ssa.SSAPhiInstruction;
-import com.ibm.wala.ssa.SSAPiInstruction;
-import com.ibm.wala.ssa.SSAReturnInstruction;
+import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
@@ -57,7 +43,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.MapUtil;
-import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.*;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVectorIntSet;
@@ -277,6 +263,38 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
     DefUse DU = node.getDU();
     SSAInstruction[] instructions = ir.getInstructions();
+
+    //
+    // TODO: teach some other bit of code about the uses of 
+    // GetCaughtException, and then delete this code.
+    //
+    if (! dOptions.isIgnoreExceptions()) {
+      for (ISSABasicBlock bb : ir.getControlFlowGraph()) {
+        if (bb.isCatchBlock()) {
+	  SSACFG.ExceptionHandlerBasicBlock ehbb = 
+	    (SSACFG.ExceptionHandlerBasicBlock)bb;
+
+	  if (ehbb.getCatchInstruction() != null) {
+	    Statement c = ssaInstruction2Statement(ehbb.getCatchInstruction());
+
+	    for (ISSABasicBlock pb : 
+		   ir.getControlFlowGraph().getExceptionalPredecessors(ehbb)) {
+	      SSAInstruction pi = instructions[ pb.getLastInstructionIndex() ];
+	      assert pi != null;
+
+	      if (pi instanceof SSAAbstractInvokeInstruction) {
+		SSAAbstractInvokeInstruction i = 
+		  (SSAAbstractInvokeInstruction)pi;
+		addEdge(new ParamStatement.ExceptionalReturnCaller(node, i), c);
+	      } else if (pi instanceof SSAAbstractThrowInstruction) {
+		addEdge(ssaInstruction2Statement(pi), c);	  
+	      }
+	    }
+	  }
+	}
+      }
+    }
+
     for (Iterator<? extends Statement> it = iterator(); it.hasNext();) {
       Statement s = it.next();
       switch (s.getKind()) {
