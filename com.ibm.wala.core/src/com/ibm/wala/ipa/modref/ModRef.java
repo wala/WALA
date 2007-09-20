@@ -255,10 +255,6 @@ public class ModRef {
           for (int d = 0; d < dim - 1; d++) {
             InstanceKey i = h.getInstanceKeyForMultiNewArray(n, instruction.getNewSite(), d);
             PointerKey pk = h.getPointerKeyForArrayContents(i);
-            if (pk == null) {
-              h.getPointerKeyForArrayContents(i);
-            }
-
             assert pk != null;
             result.add(pk);
             pk = h.getPointerKeyForArrayLength(i);
@@ -270,9 +266,6 @@ public class ModRef {
           // length field
           InstanceKey i = h.getInstanceKeyForAllocation(n, instruction.getNewSite());
           PointerKey pk = h.getPointerKeyForArrayContents(i);
-          if (pk == null) {
-            h.getPointerKeyForArrayContents(i);
-          }
           assert pk != null;
           result.add(pk);
           pk = h.getPointerKeyForArrayLength(i);
