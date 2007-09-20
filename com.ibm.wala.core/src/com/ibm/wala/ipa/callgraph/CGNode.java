@@ -44,24 +44,11 @@ public interface CGNode extends INodeWithNumber, ContextItem {
    */
   public Context getContext();
 
-//  /**
-//   * Return the set of CGNodes that represent possible targets 
-//   * of a particular call site when invoked in this context.
-//   */
-//  Set<CGNode> getPossibleTargets(CallSiteReference site);
-
   /**
    * @return Iterator of CallSiteReference
    */
   Iterator<CallSiteReference> iterateSites();
 
-//  /**
-//   * @param target
-//   * @return iterator of CallSiteReference, the call sites in this node that might
-//   * dispatch to the target node.
-//   */
-//  Iterator<CallSiteReference> getPossibleSites(CGNode target);
-//
   /**
    * This is for use only by call graph builders ... not by the general
    * public.  Clients should not use this.
