@@ -70,7 +70,7 @@ public class Slicer {
     private final String name;
 
     /**
-     * ingore data dependence edges representing base pointers? e.g for a
+     * Ignore data dependence edges representing base pointers? e.g for a
      * statement y = x.f, ignore the data dependence edges for x
      */
     private final boolean ignoreBasePtrs;
@@ -81,7 +81,7 @@ public class Slicer {
     private final boolean ignoreHeap;
 
     /**
-     * Ignore outgoing data dependence edges from a cast statments? [This is a
+     * Ignore outgoing data dependence edges from a cast statements? [This is a
      * special case option used for reflection processing]
      */
     private final boolean terminateAtCast;
