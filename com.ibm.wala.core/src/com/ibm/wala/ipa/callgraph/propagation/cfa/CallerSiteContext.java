@@ -19,11 +19,11 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
  * @author Julain Dolby (?)
  *
  */
-class CallerSiteContext extends CallerContext {
+public class CallerSiteContext extends CallerContext {
 
   private final CallSiteReference callSite;
 
-  CallerSiteContext(CGNode caller, CallSiteReference callSite) {
+  public CallerSiteContext(CGNode caller, CallSiteReference callSite) {
     super(caller);
     this.callSite = callSite;
   }
