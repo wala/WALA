@@ -662,7 +662,14 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   /**
    * Wrap an SSAInstruction in a Statement
    */
-  public Statement ssaInstruction2Statement(SSAInstruction s) {
+  private Statement ssaInstruction2Statement(SSAInstruction s) {
+    return ssaInstruction2Statement(s, instructionIndices);
+  }
+
+  public Statement 
+      ssaInstruction2Statement(SSAInstruction s, 
+			       Map<SSAInstruction, Integer> instructionIndices)
+  {
     assert s != null;
     if (s instanceof SSAPhiInstruction) {
       SSAPhiInstruction phi = (SSAPhiInstruction) s;
@@ -675,7 +682,9 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     } else {
       Integer x = instructionIndices.get(s);
       if (x == null) {
-        Assertions.UNREACHABLE(s.toString());
+        Assertions.UNREACHABLE(s.toString() +
+			       "\nnot found in map of\n" +
+			       node.getIR());
       }
       return new NormalStatement(node, x.intValue());
     }
@@ -685,7 +694,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * @return for each SSAInstruction, its instruction index in the ir
    *         instruction array
    */
-  private Map<SSAInstruction, Integer> computeInstructionIndices(IR ir) {
+  public static Map<SSAInstruction, Integer> computeInstructionIndices(IR ir) {
     Map<SSAInstruction, Integer> result = HashMapFactory.make();
     if (ir != null) {
       SSAInstruction[] instructions = ir.getInstructions();
