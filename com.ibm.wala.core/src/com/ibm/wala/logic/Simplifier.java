@@ -157,16 +157,17 @@ public class Simplifier {
       otherFacts.remove(d);
       otherFacts.removeAll(removedClauses);
 
+      IMaxTerm checkD = d;
       if (d instanceof Disjunction) {
-        d = simplifyDisjunction((Disjunction) d, otherFacts, dec);
+        checkD = simplifyDisjunction((Disjunction) d, otherFacts, dec);
       }
 
-      if (dec.isContradiction(d, otherFacts)) {
+      if (dec.isContradiction(checkD, otherFacts)) {
         return Collections.singleton(BooleanConstantFormula.FALSE);
-      } else if (facts.contains(d) || dec.isTautology(d, otherFacts)) {
+      } else if (facts.contains(checkD) || dec.isTautology(checkD, otherFacts)) {
         removedClauses.add(d);
       } else {
-        result.add(d);
+        result.add(checkD);
       }
     }
     if (result.isEmpty()) {
