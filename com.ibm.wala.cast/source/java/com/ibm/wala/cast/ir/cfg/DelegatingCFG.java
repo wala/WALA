@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.ir.cfg;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
@@ -65,7 +66,7 @@ public class DelegatingCFG extends AbstractNumberedGraph<IBasicBlock> implements
     return parent.getMethod();
   }
 
-  public Collection<IBasicBlock> getExceptionalSuccessors(IBasicBlock b) {
+  public List<IBasicBlock> getExceptionalSuccessors(IBasicBlock b) {
     return parent.getExceptionalSuccessors(b);
   }
 
