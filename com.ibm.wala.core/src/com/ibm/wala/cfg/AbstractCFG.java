@@ -542,9 +542,6 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
     return nodeManager.containsNode(N);
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
