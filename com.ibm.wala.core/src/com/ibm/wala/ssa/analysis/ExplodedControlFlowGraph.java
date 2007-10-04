@@ -508,5 +508,20 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
       return "ExplodedBlock[" + getNumber() + "](original:" + original.toString() + ")";
     }
   }
+  
+  @Override
+  public String toString() {
+    StringBuffer s = new StringBuffer("");
+    for (Iterator<ExplodedBasicBlock> it = iterator(); it.hasNext();) {
+      ExplodedBasicBlock bb = it.next();
+      s.append("BB").append(getNumber(bb)).append("\n");
+
+      Iterator<? extends ExplodedBasicBlock> succNodes = getSuccNodes(bb);
+      while (succNodes.hasNext()) {
+        s.append("    -> BB").append(getNumber(succNodes.next())).append("\n");
+      }
+    }
+    return s.toString();
+  }
 
 }
