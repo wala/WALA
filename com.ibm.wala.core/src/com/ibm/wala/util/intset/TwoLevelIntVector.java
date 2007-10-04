@@ -25,6 +25,8 @@ public class TwoLevelIntVector implements IntVector {
   private static final int PAGE_SIZE = 4096;
 
   private static final int LOG_PAGE_SIZE = Logs.log2(PAGE_SIZE);
+  
+  int maxIndex = -1;
 
   /**
    * Array of IntVector: data.get(i) holds data[i*PAGE_SIZE] ...
@@ -72,6 +74,7 @@ public class TwoLevelIntVector implements IntVector {
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   public void set(int x, int value) {
+    maxIndex = Math.max(maxIndex,x);
     int page = getPageNumber(x);
     IntVector v = findOrCreatePage(page);
     int localX = toLocalIndex(x, page);
@@ -100,6 +103,11 @@ public class TwoLevelIntVector implements IntVector {
   public void performVerboseAction() {
     Trace.println("stats of " + getClass());
     Trace.println("data: size = " + data.size());
+  }
+  
+  
+  public int getMaxIndex() {
+    return maxIndex;
   }
 
 }

@@ -25,14 +25,13 @@ public class SimpleIntVector implements IntVector {
   private final static float GROWTH_FACTOR = 1.5f;
 
   private final static int INITIAL_SIZE = 1;
+  
+  int maxIndex = -1;
 
   int[] store;
 
   final int defaultValue;
   
-  /**
-   * @param defaultValue
-   */
   public SimpleIntVector(int defaultValue) {
     this.defaultValue = defaultValue;
     store = new int[getInitialSize()];
@@ -74,6 +73,7 @@ public class SimpleIntVector implements IntVector {
     if (Assertions.verifyAssertions) {
       Assertions._assert(x >= 0);
     }
+    maxIndex = Math.max(maxIndex,x);
     if (value == defaultValue) {
       if (x >= store.length) {
         return;
@@ -120,6 +120,10 @@ public class SimpleIntVector implements IntVector {
     }
     int count = count1;
     return (double) count / (double) store.length;
+  }
+  
+  public int getMaxIndex() {
+    return maxIndex;
   }
 
 }

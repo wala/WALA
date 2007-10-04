@@ -19,15 +19,13 @@ import com.ibm.wala.util.debug.VerboseAction;
  */
 public interface IntVector extends VerboseAction {
 
-  /**
-   * @param x
-   */
   int get(int x);
 
-  /**
-   * @param x
-   * @param value
-   */
   void set(int x, int value);
+  
+  /**
+   * @return max i s.t set(i) was called.
+   */
+  public abstract int getMaxIndex();
 
 }

@@ -26,6 +26,7 @@ public class SparseIntVector implements IntVector {
 
   private final static int INITIAL_SIZE = 5;
   private final double EXPANSION = 1.5;
+  int maxIndex = -1;
 
   /**
    * if indices[i] = x, then data[i] == get(x)
@@ -57,6 +58,7 @@ public class SparseIntVector implements IntVector {
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   public void set(int x, int value) {
+    maxIndex = Math.max(maxIndex,x);
     int index = indices.getIndex(x);
     if (index == -1) {
       indices.add(x);
@@ -84,6 +86,10 @@ public class SparseIntVector implements IntVector {
     Trace.println(getClass() + " stats: ");
     Trace.println("data.length " + data.length);
     Trace.println("indices.size() " + indices.size());
-
+  }
+  
+  
+  public int getMaxIndex() {
+    return maxIndex;
   }
 }
