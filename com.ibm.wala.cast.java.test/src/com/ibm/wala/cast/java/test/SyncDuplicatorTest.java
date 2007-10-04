@@ -10,23 +10,27 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.test;
 
+import java.io.File;
+
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
-import com.ibm.wala.cast.java.examples.ast.*;
-import com.ibm.wala.cast.java.translator.polyglot.*;
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.impl.*;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.cast.java.examples.ast.SynchronizedBlockDuplicator;
+import com.ibm.wala.cast.java.translator.polyglot.IRTranslatorExtension;
+import com.ibm.wala.cast.java.translator.polyglot.JavaIRTranslatorExtension;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
+import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.*;
-
-import java.io.*;
-import java.util.*;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.Atom;
 
 public class SyncDuplicatorTest extends IRTests {
 

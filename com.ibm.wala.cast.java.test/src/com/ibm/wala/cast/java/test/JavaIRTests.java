@@ -13,27 +13,46 @@
  */
 package com.ibm.wala.cast.java.test;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import junit.framework.Assert;
+
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
-import com.ibm.wala.cast.java.ipa.slicer.*;
-import com.ibm.wala.cast.java.loader.*;
-import com.ibm.wala.classLoader.*;
+import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
+import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
+import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
-import com.ibm.wala.ipa.callgraph.*;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
-import com.ibm.wala.ipa.callgraph.propagation.*;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.ipa.slicer.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.*;
-import com.ibm.wala.util.collections.*;
-import com.ibm.wala.util.debug.*;
+import com.ibm.wala.ipa.slicer.Statement;
+import com.ibm.wala.ssa.SSAArrayLengthInstruction;
+import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
+import com.ibm.wala.ssa.SSAArrayStoreInstruction;
+import com.ibm.wala.ssa.SSAGetInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.FieldReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.Pair;
 
-import org.junit.*;
+
 
 public class JavaIRTests extends IRTests {
   public JavaIRTests(String name) {
