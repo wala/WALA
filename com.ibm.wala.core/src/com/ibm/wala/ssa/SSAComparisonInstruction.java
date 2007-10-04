@@ -11,6 +11,7 @@
 package com.ibm.wala.ssa;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.types.TypeReference;
@@ -125,7 +126,7 @@ public class SSAComparisonInstruction extends SSAInstruction {
    */
   @Override
   public Collection<TypeReference> getExceptionTypes() {
-    return null;
+    return Collections.emptySet();
   }
 
   /**

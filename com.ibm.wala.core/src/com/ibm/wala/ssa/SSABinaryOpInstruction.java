@@ -11,6 +11,7 @@
 package com.ibm.wala.ssa;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.types.TypeReference;
@@ -144,7 +145,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
     if (isPEI()) {
       return Exceptions.getArithmeticException();
     } else {
-      return null;
+      return Collections.emptySet();
     }
   }
 

@@ -11,6 +11,7 @@
 package com.ibm.wala.ssa;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -122,7 +123,7 @@ public class SSAInstanceofInstruction extends SSAInstruction {
    */
   @Override
   public Collection<TypeReference> getExceptionTypes() {
-    return null;
+    return Collections.emptySet();
   }
 
   public int getRef() {

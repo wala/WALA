@@ -240,8 +240,11 @@ public abstract class SSAInstruction implements IInstruction {
   }
 
   /**
-   * @return Colection<TypeReference> the set of exception types that an instruction might throw ...
+   * This method should never return null.
+   * 
+   * @return the set of exception types that an instruction might throw ...
    *         disregarding athrows and invokes.
+   *         
    */
   abstract public Collection<TypeReference> getExceptionTypes();
 
