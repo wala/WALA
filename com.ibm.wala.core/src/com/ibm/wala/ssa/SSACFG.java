@@ -33,7 +33,6 @@ import com.ibm.wala.util.MapIterator;
 import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -907,13 +906,13 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
   /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.IBasicBlock)
    */
-  public Collection<ISSABasicBlock> getExceptionalSuccessors(final ISSABasicBlock b) {
+  public List<ISSABasicBlock> getExceptionalSuccessors(final ISSABasicBlock b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
     final IBasicBlock n = cfg.getNode(b.getNumber());
     final Iterator i = cfg.getExceptionalSuccessors(n).iterator();
-    final Collection<ISSABasicBlock> c = HashSetFactory.make(getSuccNodeCount(b));
+    final List<ISSABasicBlock> c = new ArrayList<ISSABasicBlock>(getSuccNodeCount(b));
     for (; i.hasNext();) {
       final IBasicBlock s = (IBasicBlock) i.next();
       c.add(basicBlocks[cfg.getNumber(s)]);

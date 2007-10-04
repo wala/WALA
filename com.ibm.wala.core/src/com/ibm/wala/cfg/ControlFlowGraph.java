@@ -11,6 +11,7 @@
 package com.ibm.wala.cfg;
 
 import java.util.Collection;
+import java.util.List;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.IInstruction;
@@ -66,13 +67,15 @@ public interface ControlFlowGraph<T extends IBasicBlock> extends NumberedGraph<T
   public IMethod getMethod();
 
   /**
-   * The order of blocks returned should be arbitrary but deterministic.
+   * The order of blocks returned must indicate the exception-handling scope.
+   * So the first block is the first candidate catch block, and so on.
+   * With this invariant one can compute the exceptional control flow for
+   * a given exception type.
    * 
-   * @param b
    * @return the basic blocks which may be reached from b via exceptional
    *         control flow
    */
-  public Collection<T> getExceptionalSuccessors(T b);
+  public List<T> getExceptionalSuccessors(T b);
 
   /**
    * The order of blocks returned should be arbitrary but deterministic.

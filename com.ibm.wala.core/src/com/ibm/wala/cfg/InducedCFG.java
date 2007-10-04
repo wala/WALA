@@ -351,23 +351,17 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       }
     }
 
-    /**
-     * @param b
-     */
+
     private void addNormalEdgeTo(BasicBlock b) {
       addNormalEdge(this, b);
     }
 
-    /**
-     * @param b
-     */
+
     private void addExceptionalEdgeTo(BasicBlock b) {
       addExceptionalEdge(this, b);
     }
 
-    /**
-     * Method computeOutgoingEdges.
-     */
+
     private void computeOutgoingEdges() {
 
       if (DEBUG) {

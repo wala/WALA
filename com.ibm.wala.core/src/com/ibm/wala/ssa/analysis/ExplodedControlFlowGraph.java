@@ -125,10 +125,10 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     }
   }
 
-  public Collection<ExplodedBasicBlock> getExceptionalSuccessors(ExplodedBasicBlock eb) {
+  public List<ExplodedBasicBlock> getExceptionalSuccessors(ExplodedBasicBlock eb) {
     assert eb != null;
     if (eb.equals(exit)) {
-      return Collections.emptySet();
+      return Collections.emptyList();
     }
     if (eb.isEntryBlock() || eb.instructionIndex == eb.original.getLastInstructionIndex()) {
       List<ExplodedBasicBlock> result = new ArrayList<ExplodedBasicBlock>();
@@ -142,7 +142,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
       }
       return result;
     } else {
-      return Collections.emptySet();
+      return Collections.emptyList();
     }
   }
 
@@ -384,6 +384,10 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
 
     public int getLastInstructionIndex() {
       return instructionIndex;
+    }
+    
+    public ExplodedControlFlowGraph getCFG() {
+      return ExplodedControlFlowGraph.this;
     }
 
     public IMethod getMethod() {

@@ -10,9 +10,11 @@
  *****************************************************************************/
 package com.ibm.wala.ipa.cfg;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -282,8 +284,12 @@ public class PrunedCFG<T extends IBasicBlock> extends AbstractNumberedGraph<T> i
     return edges;
   }
 
-  public Collection<T> getExceptionalSuccessors(final T N) {
-    return Iterator2Collection.toCollection(edges.getExceptionalSuccessors(N));
+  public List<T> getExceptionalSuccessors(final T N) {
+    ArrayList<T> result = new ArrayList<T>();
+    for (Iterator<T> it = edges.getExceptionalSuccessors(N); it.hasNext(); ) {
+      result.add(it.next());
+    }
+    return result;
   }
 
   public Collection<T> getNormalSuccessors(final T N) {

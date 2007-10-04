@@ -10,10 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.cfg;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.IInstruction;
@@ -24,7 +25,6 @@ import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.util.IteratorPlusOne;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -477,14 +477,14 @@ public class TwoExitCFG implements ControlFlowGraph<ISSABasicBlock> {
   /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.ISSABasicBlock)
    */
-  public Collection<ISSABasicBlock> getExceptionalSuccessors(ISSABasicBlock b) {
+  public List<ISSABasicBlock> getExceptionalSuccessors(ISSABasicBlock b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
     if (b.equals(exceptionalExit)) {
-      return Collections.emptySet();
+      return Collections.emptyList();
     } else {
-      HashSet<ISSABasicBlock> c = HashSetFactory.make(getSuccNodeCount(b));
+      List<ISSABasicBlock> c = new ArrayList<ISSABasicBlock>(getSuccNodeCount(b));
       for (Iterator<ISSABasicBlock> it = delegate.getExceptionalSuccessors(b).iterator(); it.hasNext(); ) {
         ISSABasicBlock o = it.next();
         if (o.equals(delegate.exit())) {

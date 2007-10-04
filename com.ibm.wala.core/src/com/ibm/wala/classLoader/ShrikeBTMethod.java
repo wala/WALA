@@ -681,12 +681,6 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
   }
 
-  /**
-   * Method getHandlers.
-   * 
-   * @return ExceptionHandler[][]
-   * @throws InvalidClassFileException
-   */
   public ExceptionHandler[][] getHandlers() throws InvalidClassFileException {
     if (getBCInfo().decoder == null) {
       return null;
@@ -696,18 +690,16 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   /**
-   * Method getParameterType. By convention, for a non-static method,
-   * getParameterType(0) is the this pointer
-   * 
-   * @param i
-   * @return TypeReference
+   * By convention, for a non-static method, getParameterType(0) is the this
+   * pointer
    */
   public TypeReference getParameterType(int i) {
     if (!isStatic()) {
-      if (i == 0)
+      if (i == 0) {
         return declaringClass.getReference();
-      else
+      } else {
         return getReference().getParameterType(i - 1);
+      }
     } else {
       return getReference().getParameterType(i);
     }

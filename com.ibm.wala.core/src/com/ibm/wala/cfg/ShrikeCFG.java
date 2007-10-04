@@ -226,9 +226,6 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
       return ShrikeCFG.this.isCatchBlock(getNumber());
     }
 
-    /**
-     * Method computeOutgoingEdges.
-     */
     private void computeOutgoingEdges() {
       if (DEBUG) {
         Trace.println("Block " + this + ": computeOutgoingEdges()");
@@ -377,38 +374,16 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
       return hs;
     }
 
-    // /**
-    // * @return true iff exception extends RuntimeException or Error
-    // */
-    // private boolean isUndeclaredType(IClass exception) {
-    // IClass re = cha.lookupClass(TypeReference.JavaLangRuntimeException);
-    // IClass error = cha.lookupClass(TypeReference.JavaLangError);
-    // boolean result = cha.isSubclassOf(exception, re) ||
-    // cha.isSubclassOf(exception, error);
-    // return result;
-    // }
-
-    /**
-     * @param b
-     */
     private void addNormalEdgeTo(BasicBlock b) {
       addNormalEdge(this, b);
     }
 
-    /**
-     * @param b
-     */
     private void addExceptionalEdgeTo(BasicBlock b) {
       addExceptionalEdge(this, b);
     }
 
-    /**
-     * Method getLastInstructionIndex.
-     * 
-     * @return int
-     */
-    public int getLastInstructionIndex() {
 
+    public int getLastInstructionIndex() {
       if (this == entry() || this == exit()) {
         // these are the special end blocks
         return -2;
@@ -422,16 +397,10 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
       }
     }
 
-    /**
-     * Method getFirstInstructionIndex.
-     */
     public int getFirstInstructionIndex() {
       return startIndex;
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     @Override
     public String toString() {
       return "BB[Shrike]" + getNumber() + " - " + method.getDeclaringClass().getReference().getName() + "." + method.getName();
@@ -481,9 +450,6 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
     }
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
@@ -502,29 +468,17 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
     return s.toString();
   }
 
-  /**
-   * Method getMaxStackHeight.
-   * 
-   * @return int
-   */
+
   public int getMaxStackHeight() {
     return method.getMaxStackHeight();
   }
 
-  /**
-   * Method getMaxLocals
-   * 
-   * @return int
-   */
+
   public int getMaxLocals() {
     return method.getMaxLocals();
   }
 
-  /**
-   * Returns the exceptionHandlers.
-   * 
-   * @return Set
-   */
+
   public Set<ExceptionHandler> getExceptionHandlers() {
     return exceptionHandlers;
   }

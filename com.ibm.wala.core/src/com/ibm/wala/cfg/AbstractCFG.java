@@ -10,9 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.cfg;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.Constants;
@@ -35,6 +37,8 @@ import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.FixedSizeBitVector;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
+import com.ibm.wala.util.intset.SimpleIntVector;
+import com.ibm.wala.util.intset.SimpleVector;
 
 /**
  * 
@@ -63,8 +67,16 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
   /**
    * An object to track not-to-exit exceptional edges in this cfg
    */
-  final private SparseNumberedEdgeManager<T> exceptionalEdgeManager = new SparseNumberedEdgeManager<T>(nodeManager,
-      0, BasicNaturalRelation.SIMPLE);
+  final private SparseNumberedEdgeManager<T> exceptionalEdgeManager = new SparseNumberedEdgeManager<T>(nodeManager, 0,
+      BasicNaturalRelation.SIMPLE);
+
+  /**
+   * An object to track not-to-exit exceptional edges in this cfg, indexed by
+   * block number. exceptionalEdges[i] is a list of block numbers that are
+   * non-exit exceptional successors of block i, in order of increasing "catch
+   * scope".
+   */
+  final private SimpleVector<SimpleIntVector> exceptionalSuccessors = new SimpleVector<SimpleIntVector>();
 
   /**
    * Which basic blocks have a normal edge to exit()?
@@ -186,7 +198,7 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
 
   /**
    * @param number
-   *          number of a basic block in this cfg
+   *            number of a basic block in this cfg
    */
   boolean hasAnyNormalOut(int number) {
     return (fallThru.get(number) || normalEdgeManager.getSuccNodeCount(number) > 0 || normalToExit.get(number));
@@ -194,7 +206,7 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
 
   /**
    * @param number
-   *          number of a basic block in this cfg
+   *            number of a basic block in this cfg
    */
   private int getNumberOfNormalOut(int number) {
     int xtra = 0;
@@ -209,7 +221,7 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
 
   /**
    * @param number
-   *          number of a basic block in this cfg
+   *            number of a basic block in this cfg
    */
   public int getNumberOfExceptionalOut(int number) {
     int xtra = 0;
@@ -316,13 +328,23 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
     }
   }
 
+  /**
+   * @param number
+   *            of a basic block
+   * @return the exceptional successors of the basic block, in order of
+   *         increasing catch scope.
+   */
   private Iterator<T> iterateExceptionalSuccessors(int number) {
     if (exceptionalEdgeManager.hasAnySuccessor(number)) {
-      if (exceptionalToExit.get(number)) {
-        return IteratorPlusOne.make(exceptionalEdgeManager.getSuccNodes(number), exit());
-      } else {
-        return exceptionalEdgeManager.getSuccNodes(number);
+      List<T> result = new ArrayList<T>();
+      SimpleIntVector v = exceptionalSuccessors.get(number);
+      for (int i = 0; i <= v.getMaxIndex(); i++) {
+        result.add(getNode(v.get(i)));
       }
+      if (exceptionalToExit.get(number)) {
+        result.add(exit);
+      }
+      return result.iterator();
     } else {
       if (exceptionalToExit.get(number)) {
         return new NonNullSingletonIterator<T>(exit());
@@ -463,7 +485,7 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
    * @param src
    * @param dst
    * @throws IllegalArgumentException
-   *           if dst is null
+   *             if dst is null
    */
   public void addNormalEdge(T src, T dst) {
     if (dst == null) {
@@ -479,10 +501,8 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
   }
 
   /**
-   * @param src
-   * @param dst
    * @throws IllegalArgumentException
-   *           if dst is null
+   *             if dst is null
    */
   public void addExceptionalEdge(T src, T dst) {
     if (dst == null) {
@@ -492,6 +512,12 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
       exceptionalToExit.set(getNumber(src));
     } else {
       exceptionalEdgeManager.addEdge(src, dst);
+      SimpleIntVector v = exceptionalSuccessors.get(getNumber(src));
+      if (v == null) {
+        v = new SimpleIntVector(-1);
+        exceptionalSuccessors.set(getNumber(src), v);
+      }
+      v.set(v.getMaxIndex() + 1, getNumber(dst));
     }
   }
 
@@ -574,11 +600,15 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
   /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getExceptionalSuccessors(com.ibm.wala.cfg.T)
    */
-  public Collection<T> getExceptionalSuccessors(T b) {
+  public List<T> getExceptionalSuccessors(T b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    return Iterator2Collection.toCollection(iterateExceptionalSuccessors(b.getNumber()));
+    List<T> result = new ArrayList<T>();
+    for (Iterator<T> it = iterateExceptionalSuccessors(b.getNumber()); it.hasNext();) {
+      result.add(it.next());
+    }
+    return result;
   }
 
   /*

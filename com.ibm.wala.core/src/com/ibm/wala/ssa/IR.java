@@ -76,15 +76,15 @@ public abstract class IR {
    * Mapping from PEI program counters to instruction[] indices
    */
   final private Map<ProgramCounter, Integer> peiMapping = HashMapFactory.make();
-  
+
   /**
    * Mapping from SSAInstruction to Basic Block, computed lazily
    */
   private Map<SSAInstruction, ISSABasicBlock> instruction2Block;
 
   /**
-   * subclasses must provide a source name mapping, if they want one
-   * (or null otherwise)
+   * subclasses must provide a source name mapping, if they want one (or null
+   * otherwise)
    */
   protected abstract SSA2LocalMap getLocalMap();
 
@@ -97,9 +97,9 @@ public abstract class IR {
    * keep this package private: all calls should be through SSACache
    * 
    * @param method
-   *          the method to construct SSA form for
+   *            the method to construct SSA form for
    * @param options
-   *          governing ssa construction options
+   *            governing ssa construction options
    */
   protected IR(IMethod method, SSAInstruction[] instructions, SymbolTable symbolTable, SSACFG cfg, SSAOptions options) {
     if (method == null) {
@@ -143,7 +143,8 @@ public abstract class IR {
    * Create a string representation, with decoration for each variable
    * 
    * @param d
-   *          an object which provides string decorators for variables in the IR
+   *            an object which provides string decorators for variables in the
+   *            IR
    */
   public String toString(ValueDecorator d) {
     StringBuffer result = new StringBuffer(method.toString());
@@ -179,7 +180,7 @@ public abstract class IR {
           StringBuffer x = new StringBuffer(j + "   " + instructions[j].toString(symbolTable, d));
           StringStuff.padWithSpaces(x, 45);
           result.append(x);
-	  result.append(instructionPosition(j));
+          result.append(instructionPosition(j));
           result.append("\n");
         }
       }
@@ -389,7 +390,7 @@ public abstract class IR {
    * visit each normal (non-phi, non-pi, non-catch) instruction in this IR
    * 
    * @param v
-   *          a visitor
+   *            a visitor
    */
   public void visitNormalInstructions(SSAInstruction.Visitor v) {
     for (Iterator i = iterateNormalInstructions(); i.hasNext();) {
@@ -401,7 +402,7 @@ public abstract class IR {
    * visit each instruction in this IR
    * 
    * @param v
-   *          a visitor
+   *            a visitor
    */
   public void visitAllInstructions(SSAInstruction.Visitor v) {
     for (Iterator i = iterateAllInstructions(); i.hasNext();) {
@@ -468,7 +469,8 @@ public abstract class IR {
   /**
    * @param site
    * @return the invoke instructions corresponding to this call site
-   * @throws IllegalArgumentException  if site is null
+   * @throws IllegalArgumentException
+   *             if site is null
    */
   public SSAAbstractInvokeInstruction[] getCalls(CallSiteReference site) {
     if (site == null) {
@@ -487,7 +489,8 @@ public abstract class IR {
   /**
    * @param site
    * @return the instruction indices corresponding to this call site
-   * @throws IllegalArgumentException  if site is null
+   * @throws IllegalArgumentException
+   *             if site is null
    */
   public IntSet getCallInstructionIndices(CallSiteReference site) {
     if (site == null) {
@@ -516,7 +519,7 @@ public abstract class IR {
 
   /**
    * @param pc
-   *          a program counter
+   *            a program counter
    * @return the instruction (a PEI) at this program counter
    */
   public SSAInstruction getPEI(ProgramCounter pc) {
@@ -561,9 +564,10 @@ public abstract class IR {
 
   /**
    * @param site
-   *          a call site in this method
+   *            a call site in this method
    * @return the basic block corresponding to this instruction
-   * @throws IllegalArgumentException  if site is null
+   * @throws IllegalArgumentException
+   *             if site is null
    */
   public ISSABasicBlock[] getBasicBlocksForCall(final CallSiteReference site) {
     if (site == null) {
@@ -578,12 +582,12 @@ public abstract class IR {
     }
     return result;
   }
-  
+
   /**
-   * This is space-inefficient.  Use with care.
+   * This is space-inefficient. Use with care.
    * 
    * Be very careful; note the strange identity semantics of SSAInstruction,
-   * using ==.  You can't mix SSAInstructions and IRs freely.
+   * using ==. You can't mix SSAInstructions and IRs freely.
    */
   public ISSABasicBlock getBasicBlockForInstruction(SSAInstruction s) {
     if (instruction2Block == null) {
@@ -596,11 +600,11 @@ public abstract class IR {
     instruction2Block = HashMapFactory.make();
     for (ISSABasicBlock b : cfg) {
       for (IInstruction s : b) {
-        instruction2Block.put((SSAInstruction)s, b);
+        instruction2Block.put((SSAInstruction) s, b);
       }
     }
   }
-  
+
   /**
    * TODO: why do we need this? We should enforce instructions == null if
    * necessary, I think.
@@ -620,9 +624,9 @@ public abstract class IR {
 
   /**
    * @param index
-   *          an index into the IR instruction array
+   *            an index into the IR instruction array
    * @param vn
-   *          a value number
+   *            a value number
    * @return if we know that immediately after the given program counter, v_vn
    *         corresponds to one or more locals and local variable names are
    *         available, the name of the locals which v_vn represents. Otherwise,
@@ -643,9 +647,9 @@ public abstract class IR {
   public interface SSA2LocalMap {
     /**
      * @param index
-     *          an index into the IR instruction array
+     *            an index into the IR instruction array
      * @param vn
-     *          a value number
+     *            a value number
      * @return if we know that immediately after the given program counter, v_vn
      *         corresponds to one or more locals and local variable names are
      *         available, the name of the locals which v_vn represents.
