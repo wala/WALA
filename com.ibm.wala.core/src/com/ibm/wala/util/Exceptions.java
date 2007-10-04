@@ -224,6 +224,7 @@ public class Exceptions implements Constants {
     case OP_invokeinterface:
       return getNullPointerException();
     case OP_idiv:
+    case OP_irem:
       return getArithmeticException();
     case OP_new:
       return newScalarExceptions;
@@ -287,6 +288,7 @@ public class Exceptions implements Constants {
     case OP_invokespecial:
     case OP_invokestatic:
     case OP_invokeinterface:
+    case OP_irem:
     case OP_new:
     case OP_newarray:
     case OP_anewarray:
