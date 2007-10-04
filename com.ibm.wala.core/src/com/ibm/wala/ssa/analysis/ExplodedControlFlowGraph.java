@@ -27,6 +27,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
@@ -151,8 +152,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
   }
 
   public IMethod getMethod() throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return ir.getMethod();
   }
 
   public Collection<ExplodedBasicBlock> getNormalPredecessors(ExplodedBasicBlock eb) {
@@ -376,6 +376,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
       this.instructionIndex = instructionIndex;
       this.original = original;
       assert original != null;
+    }
+    
+    public Iterator<TypeReference> getCaughtExceptionTypes() {
+      ExceptionHandlerBasicBlock eb = (ExceptionHandlerBasicBlock)original;
+      return eb.getCaughtExceptionTypes();
     }
 
     public int getFirstInstructionIndex() {
