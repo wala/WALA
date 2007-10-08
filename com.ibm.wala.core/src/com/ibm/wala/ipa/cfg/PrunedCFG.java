@@ -109,8 +109,13 @@ public class PrunedCFG<T extends IBasicBlock> extends AbstractNumberedGraph<T> i
       });
     }
 
-    public Iterator<T> getSuccNodes(T N) {
-      return new CompoundIterator<T>(getNormalSuccessors(N), getExceptionalSuccessors(N));
+    public Iterator<T> getSuccNodes(final T N) {
+      return new FilterIterator<T>(cfg.getSuccNodes(N), new Filter<T>() {
+        public boolean accepts(T o) {
+          return currentCFGNodes.containsNode(o) && 
+	      (filter.hasNormalEdge(N, o) || filter.hasExceptionalEdge(N, o));
+        }
+      });
     }
 
     public int getSuccNodeCount(T N) {
@@ -126,8 +131,13 @@ public class PrunedCFG<T extends IBasicBlock> extends AbstractNumberedGraph<T> i
       return bits;
     }
 
-    public Iterator<T> getPredNodes(T N) {
-      return new CompoundIterator<T>(getNormalPredecessors(N), getExceptionalPredecessors(N));
+    public Iterator<T> getPredNodes(final T N) {
+      return new FilterIterator<T>(cfg.getPredNodes(N), new Filter<T>() {
+        public boolean accepts(T o) {
+          return currentCFGNodes.containsNode(o) && 
+	      (filter.hasNormalEdge(o, N) || filter.hasExceptionalEdge(o, N));
+        }
+      });
     }
 
     public int getPredNodeCount(T N) {
