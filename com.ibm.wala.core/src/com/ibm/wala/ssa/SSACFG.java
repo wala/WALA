@@ -675,7 +675,7 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
         // strange corner case
         // involving dead code. oh well .. keep on chugging until we have hard
         // evidence that this is a bug
-        result.add(catchInstruction);
+	result.add(0, catchInstruction);
       }
       return result;
     }
