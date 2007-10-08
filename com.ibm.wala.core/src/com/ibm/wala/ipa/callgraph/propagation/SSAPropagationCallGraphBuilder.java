@@ -34,9 +34,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ContextKey;
-import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
-import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
+import com.ibm.wala.ipa.callgraph.impl.*;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
@@ -1262,6 +1260,29 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         }
       } else {
         return 0;
+      }
+    }
+
+    @Override
+    public void visitPhi(SSAPhiInstruction instruction) {
+      if (ir.getMethod() instanceof AbstractRootMethod) {
+	PointerKey dst = getPointerKeyForLocal(instruction.getDef());
+	if (hasNoInterestingUses(instruction.getDef())) {
+	    system.recordImplicitPointsToSet(dst);
+	} else {
+	  for(int i = 0; i < instruction.getNumberOfUses(); i++) {
+	    PointerKey use = getPointerKeyForLocal(instruction.getUse(i));
+	    if (contentsAreInvariant(symbolTable, du, instruction.getUse(i))) {
+	      system.recordImplicitPointsToSet(use);
+              InstanceKey[] ik = getInvariantContents(instruction.getUse(i));
+              for (int j = 0; j < ik.length; j++) {
+		system.newConstraint(dst, ik[j]);
+              }
+            } else {
+	      system.newConstraint(dst, assignOperator, use);
+            }
+          }
+	}
       }
     }
 
