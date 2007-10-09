@@ -142,6 +142,14 @@ public class Simplifier {
     }
     return result;
   }
+  /**
+   * Simplify the set s based on simple propositional logic.
+   */
+  public static IFormula propositionalSimplify(IFormula f, Collection<? extends IFormula> t,
+      ISemiDecisionProcedure dec) {
+    Collection<IFormula> result = propositionalSimplify(Collections.singleton(f), t, dec);
+    return result.iterator().next();
+  }
 
   /**
    * Assuming a set of facts holds, simplify a CNF formula
