@@ -38,9 +38,7 @@ public class SubtypesEntrypoint extends DefaultEntrypoint {
     super(method, cha);
   }
 
-  /**
-   * @param method
-   */
+  @Override
   protected TypeReference[][] makeParameterTypes(IMethod method) {
     TypeReference[][] result = new TypeReference[method.getNumberOfParameters()][];
     for (int i = 0; i < result.length; i++) {
@@ -50,6 +48,7 @@ public class SubtypesEntrypoint extends DefaultEntrypoint {
     return result;
   }
 
+  @Override
   protected TypeReference[] makeParameterTypes(IMethod method, int i) {
     TypeReference nominal = method.getParameterType(i);
     if (nominal.isPrimitiveType() || nominal.isArrayType())
