@@ -102,6 +102,13 @@
 			<pathelement path="${eclipse.root}/plugins/org.eclipse.text_3.3.0.v20070606-0010.jar"/>
 			<pathelement path="${eclipse.root}/plugins/com.ibm.icu_3.6.1.v20070417.jar"/>
 			<pathelement path="${eclipse.root}/plugins/org.eclipse.team.core_3.3.0.I20070607.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.ui_3.3.0.I20070614-0800.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.ui.workbench_3.3.0.I20070608-1100.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.ui.workbench.compatibility_3.2.0.I20070319-0010/@dot"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.ui.workbench.compatibility_3.2.0.I20070319-0010/compatibility.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.help_3.3.0.v20070524.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.jface.databinding_1.1.0.I20070606-0010.jar"/>
+			<pathelement path="${eclipse.root}/plugins/org.eclipse.core.databinding_1.0.0.I20070606-0010.jar"/>
 		</path>
 		<!-- compile the source code -->
 		<javac destdir="${temp.folder}/@dot.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}"		>
