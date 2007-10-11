@@ -93,7 +93,7 @@ public class CompareToZeroOneCFADriver {
     Trace.println("=======---------------=============");
     Trace.println("ANALYZING " + mainClass + "\n\n");
     // describe the "scope", what is the program we're analyzing
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestInfo.SCOPE_FILE);
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestInfo.SCOPE_FILE, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     Object warnings = new Object();
 
     // build a type hierarchy

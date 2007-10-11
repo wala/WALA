@@ -23,7 +23,6 @@ import com.ibm.wala.util.Stopwatch;
 import com.ibm.wala.util.debug.Trace;
 
 /**
- * 
  * Utilities for call graph tests
  * 
  * @author sfink
@@ -44,9 +43,11 @@ public class CallGraphTestUtil {
     return options;
   }
 
-  public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile) {
-    return new EMFScopeWrapper(scopeFile, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
-  }
+  public static String REGRESSION_EXCLUSIONS = "Java60RegressionExclusions.xml";
+  
+//  public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile) {
+//    return new EMFScopeWrapper(scopeFile, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
+//  }
 
   public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile, String exclusionsFile) {
     return new EMFScopeWrapper(scopeFile, exclusionsFile, MY_CLASSLOADER);

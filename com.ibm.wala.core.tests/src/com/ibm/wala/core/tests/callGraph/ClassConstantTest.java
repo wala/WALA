@@ -39,7 +39,7 @@ public class ClassConstantTest extends WalaTestCase {
 
   public void testClassConstants() throws ClassHierarchyException {
 
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA);
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
 
     // make sure we have the test class

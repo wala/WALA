@@ -31,7 +31,7 @@ public class LibraryVersionTest extends WalaTestCase {
   public void testLibraryVersion() {
     AnalysisScope scope = new EMFScopeWrapper(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
     System.err.println("java library version is " + scope.getJavaLibraryVersion());
-    Assert.assertTrue(scope.isJava15Libraries()||scope.isJava14Libraries());
+    Assert.assertTrue(scope.isJava16Libraries() || scope.isJava15Libraries()||scope.isJava14Libraries());
   }
 
 }
