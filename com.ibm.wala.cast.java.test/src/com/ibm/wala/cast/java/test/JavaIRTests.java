@@ -36,6 +36,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
@@ -517,7 +518,7 @@ public class JavaIRTests extends IRTests {
     MethodReference sliceRootRef = 
       getSliceRootReference("MiniaturSliceBug", "validNonDispatchedCall", "(LIntWrapper;)V");
     Set roots = cg.getNodes( sliceRootRef );
-    Pair y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots);
+    Pair<Collection<Statement>, SDG>  y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots);
     Collection<Statement> slice = (Collection<Statement>) y.fst;
     SlicerTest.dumpSlice(slice);
     assertEquals(0, SlicerTest.countAllocations(slice));
