@@ -16,11 +16,11 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  * @author sfink
  *
  */
-public interface TabulationDomain extends OrdinalSetMapping<Object> {
+public interface TabulationDomain<T> extends OrdinalSetMapping<T> {
 
   /**
    * if this domain supports a partial order on facts, return true
-   * if d1 is weaker than d2 (intutitively d1 meet d2 = d1)
+   * if d1 is weaker than d2 (intuitively d1 meet d2 = d1)
    * 
    * return false otherwise
    */
