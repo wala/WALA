@@ -226,7 +226,7 @@ public class Slicer {
         System.err.println("Tabulate for " + root);
       }
 
-      TabulationSolver<Statement, PDG> solver = new TabulationSolver<Statement, PDG>(p);
+      TabulationSolver<Statement, PDG> solver = TabulationSolver.make(p);
       TabulationResult<Statement> tr = null;
       try {
         tr = solver.solve();
@@ -407,7 +407,7 @@ public class Slicer {
     public SliceProblem(Statement s, ISDG sdg, boolean backward) {
       this.src = s;
       SDGSupergraph forwards = new SDGSupergraph(sdg, src, backward);
-      this.supergraph = backward ? new BackwardsSupergraph<Statement, PDG>(forwards) : forwards;
+      this.supergraph = backward ? BackwardsSupergraph.make(forwards) : forwards;
       f = new SliceFunctions();
     }
 

@@ -53,6 +53,9 @@ import com.ibm.wala.util.perf.EngineTimings;
  * </ul>
  * <p>
  * 
+ * Type parameter T represents type of nodes in the supergraph.  Type parameter P represents
+ * the type of procedure (or box in RSM parlance)
+ * 
  * @author sfink
  */
 public class TabulationSolver<T, P> {
@@ -178,7 +181,7 @@ public class TabulationSolver<T, P> {
    *          a description of the dataflow problem to solve
    * @throws IllegalArgumentException  if p is null
    */
-  public TabulationSolver(TabulationProblem<T, P> p) {
+  private TabulationSolver(TabulationProblem<T, P> p) {
     if (p == null) {
       throw new IllegalArgumentException("p is null");
     }
@@ -189,6 +192,15 @@ public class TabulationSolver<T, P> {
       this.flowFunctionMap = IdentityFlowFunctions.singleton();
     }
     this.problem = p;
+  }
+  
+  /**
+   * @param p
+   *          a description of the dataflow problem to solve
+   * @throws IllegalArgumentException  if p is null
+   */
+  public static <T,P> TabulationSolver<T,P> make(TabulationProblem<T, P> p) {
+    return new TabulationSolver<T, P>(p);
   }
 
   /**
