@@ -471,7 +471,12 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
 
     @Override
     public void visitLoadClass(SSALoadClassInstruction instruction) {
-      Assertions.UNREACHABLE();
+      PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
+      InstanceKey iKey = heapModel.getInstanceKeyForClassObject(instruction.getLoadedClass());
+
+      addNode(iKey);
+      addNode(def);
+      addEdge(def, iKey, NewLabel.v());
     }
   }
 
