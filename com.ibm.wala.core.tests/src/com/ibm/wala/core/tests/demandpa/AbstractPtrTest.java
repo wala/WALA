@@ -164,6 +164,9 @@ public abstract class AbstractPtrTest extends TestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     final AnalysisCache analysisCache = new AnalysisCache();
+    // in general, RTA call graphs should not be used due to unsound handling
+    // of clone() for pointer analysis, but some tests rely on RTA CG precision
+    // so we use it here
     CallGraphBuilder cgBuilder = Util.makeRTABuilder(options, analysisCache, cha, scope);
     final CallGraph cg = cgBuilder.makeCallGraph(options);
     // System.err.println(cg.toString());

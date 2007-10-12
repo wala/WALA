@@ -60,7 +60,8 @@ public class NoRefinePtrTest extends AbstractPtrTest {
   }
 
   public void testHashSet() throws ClassHierarchyException {
-    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_HASH_SET, 5);
+    // result relies on analyzing 6.0 libraries
+    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_HASH_SET, 4);
   }
 
   public void testMethodRecursion() throws ClassHierarchyException {
