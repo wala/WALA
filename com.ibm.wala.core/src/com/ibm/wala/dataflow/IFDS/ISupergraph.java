@@ -140,7 +140,7 @@ public interface ISupergraph<T,P> extends NumberedGraph<T> {
 
 
   /**
-   * @return the unique entry node e_main for the main procedure
+   * @return the unique exit node e_main for the main procedure
    */
   T getMainExit();
 
