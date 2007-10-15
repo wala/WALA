@@ -22,6 +22,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -217,6 +218,10 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
 
     public abstract boolean addTarget(CallSiteReference reference, CGNode target);
 
+    
+    public IClassHierarchy getClassHierarchy() {
+      return method.getClassHierarchy();
+    }
   }
 
   @Override

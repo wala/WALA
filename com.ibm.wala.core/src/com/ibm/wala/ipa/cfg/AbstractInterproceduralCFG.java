@@ -655,7 +655,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     return new FilterIterator<BasicBlockInContext>(getSuccNodes(bb), isReturn);
   }
 
-  public Iterator<BasicBlockInContext> getCallSites(BasicBlockInContext<T> bb) {
+  public Iterator<BasicBlockInContext<T>> getCallSites(BasicBlockInContext<T> bb) {
     if (bb == null) {
       throw new IllegalArgumentException("bb is null");
     }
@@ -669,7 +669,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       }
     };
     MapIterator<T, BasicBlockInContext<T>> m = new MapIterator<T, BasicBlockInContext<T>>(it, toContext);
-    return new FilterIterator<BasicBlockInContext>(m, isCall);
+    return new FilterIterator<BasicBlockInContext<T>>(m, isCall);
   }
 
   private final Filter<BasicBlockInContext<T>> isCall = new Filter<BasicBlockInContext<T>>() {

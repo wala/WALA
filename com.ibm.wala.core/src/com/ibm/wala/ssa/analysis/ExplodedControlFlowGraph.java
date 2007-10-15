@@ -199,9 +199,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     }
   }
 
+  /* 
+   * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
+   */
   public int getProgramCounter(int index) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return 0;
+    return ir.getControlFlowGraph().getProgramCounter(index);
   }
 
   public void removeNodeAndEdges(ExplodedBasicBlock N) throws UnsupportedOperationException {

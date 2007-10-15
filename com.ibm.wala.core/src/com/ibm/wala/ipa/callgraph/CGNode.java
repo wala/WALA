@@ -15,6 +15,7 @@ import java.util.Iterator;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.graph.INodeWithNumber;
@@ -25,7 +26,7 @@ import com.ibm.wala.util.graph.INodeWithNumber;
  * @author Stephen Fink
  */
 
-public interface CGNode extends INodeWithNumber, ContextItem {
+public interface CGNode extends INodeWithNumber, ContextItem, IClassHierarchyDweller {
   /**
    * Return the {@link IMethod method} this CGNode represents.
    * This value will never be <code>null</code>.
