@@ -12,13 +12,11 @@ package com.ibm.wala.ipa.callgraph;
 
 import java.util.Iterator;
 
-import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.graph.INodeWithNumber;
 
 /**
@@ -58,17 +56,6 @@ public interface CGNode extends INodeWithNumber, ContextItem {
    */
   @Deprecated
   public boolean addTarget(CallSiteReference site, CGNode target);
-
-//  /**
-//   * @return the number of nodes that the call site current may resolve
-//   * to
-//   */
-//  public int getNumberOfTargets(CallSiteReference site);
-  
-//  /**
-//   * @return the call graph in which this node dwells
-//   */
-//  public CallGraph getCallGraph();
   
   /**
    * @return the "default" IR for this node used by the governing call graph
@@ -79,11 +66,6 @@ public interface CGNode extends INodeWithNumber, ContextItem {
    * @return DefUse for the "default" IR for this node used by the governing call graph
    */
   public DefUse getDU();
-  
-  /**
-   * @return a CFG that represents the node, or null if it's an unmodelled native method
-   */
-  public ControlFlowGraph<ISSABasicBlock> getCFG();
   
   /**
    * @return an Iterator of the types that may be allocated by a given

@@ -19,7 +19,6 @@ import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
-import com.ibm.wala.cfg.TwoExitCFG;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
@@ -131,8 +130,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       }
     }
     this.noCollapse = noCollapse;
-    this.partialIPFG = new InterproceduralCFG(cg, new Filtersection<CGNode>(relevant, new CollectionFilter<CGNode>(noCollapse)),
-        true);
+    this.partialIPFG = new InterproceduralCFG(cg, new Filtersection<CGNode>(relevant, new CollectionFilter<CGNode>(noCollapse)));
     if (DEBUG_LEVEL > 0) {
       Trace.println("IPFG \n" + partialIPFG.toString());
     }
@@ -186,13 +184,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   public Object[] getExitsForProcedure(CGNode node) {
     if (noCollapse.contains(node)) {
       ControlFlowGraph<ISSABasicBlock> cfg = partialIPFG.getCFG(node);
-      if (cfg instanceof TwoExitCFG) {
-        ISSABasicBlock o1 = ((TwoExitCFG) cfg).getNormalExit();
-        ISSABasicBlock o2 = ((TwoExitCFG) cfg).getExceptionalExit();
-        return new Object[] { new BasicBlockInContext(node, o1), new BasicBlockInContext(node, o2) };
-      } else {
-        return new Object[] { new BasicBlockInContext(node, cfg.exit()) };
-      }
+      return new Object[] { new BasicBlockInContext<ISSABasicBlock>(node, cfg.exit()) };
     } else {
       return new Object[] { nodeManager.getCollapsedExit(node) };
     }
@@ -251,9 +243,10 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
+  @SuppressWarnings("unchecked")
   public Iterator<? extends Object> getCallSites(Object object) {
     if (object instanceof BasicBlockInContext) {
-      return partialIPFG.getCallSites((BasicBlockInContext) object);
+      return partialIPFG.getCallSites((BasicBlockInContext<ISSABasicBlock>) object);
     } else {
       CGNode n = nodeManager.getProcOfCollapsedNode(object);
       return new NonNullSingletonIterator<CollapsedNode>(nodeManager.getCollapsedEntry(n));
@@ -334,35 +327,19 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
           if (noCollapse.contains(outNode)) {
             ControlFlowGraph<ISSABasicBlock> cfg = partialIPFG.getCFG(outNode);
             // add an edge to the entry block
-            BasicBlockInContext entry = new BasicBlockInContext(outNode, cfg.entry());
+            BasicBlockInContext<ISSABasicBlock> entry = new BasicBlockInContext<ISSABasicBlock>(outNode, cfg.entry());
             Set<Object> incoming = MapUtil.findOrCreateSet(incomingTransverseEdges, entry);
             incoming.add(n);
             Set<Object> outgoing = MapUtil.findOrCreateSet(outgoingTransverseEdges, n);
             outgoing.add(entry);
 
             // add the edge representing the return from the call.
-            if (cfg instanceof TwoExitCFG) {
-              TwoExitCFG t2 = (TwoExitCFG) cfg;
-              BasicBlockInContext exit = new BasicBlockInContext(outNode, t2.getNormalExit());
-              Object retSite = nodeManager.getCollapsedExit(node);
-              incoming = MapUtil.findOrCreateSet(incomingTransverseEdges, retSite);
-              incoming.add(exit);
-              outgoing = MapUtil.findOrCreateSet(outgoingTransverseEdges, exit);
-              outgoing.add(retSite);
-
-              exit = new BasicBlockInContext(outNode, t2.getExceptionalExit());
-              incoming.add(exit);
-              outgoing = MapUtil.findOrCreateSet(outgoingTransverseEdges, exit);
-              outgoing.add(retSite);
-
-            } else {
-              IBasicBlock exit = cfg.exit();
-              Object retSite = nodeManager.getCollapsedExit(node);
-              incoming = MapUtil.findOrCreateSet(incomingTransverseEdges, retSite);
-              incoming.add(exit);
-              outgoing = MapUtil.findOrCreateSet(outgoingTransverseEdges, exit);
-              outgoing.add(retSite);
-            }
+            IBasicBlock exit = cfg.exit();
+            Object retSite = nodeManager.getCollapsedExit(node);
+            incoming = MapUtil.findOrCreateSet(incomingTransverseEdges, retSite);
+            incoming.add(exit);
+            outgoing = MapUtil.findOrCreateSet(outgoingTransverseEdges, exit);
+            outgoing.add(retSite);
           }
         }
       }
@@ -840,11 +817,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     if (noCollapse.contains(n)) {
       // p is cg node which is expanded in the IPFG
       ControlFlowGraph cfg = partialIPFG.getCFG(n);
-      if (cfg instanceof TwoExitCFG) {
-        return ((TwoExitCFG) cfg).getNormalExit();
-      } else {
-        return cfg.exit();
-      }
+      return cfg.exit();
     } else {
       // p is a collapsed node, for which all blocks map to the node itself;
       return nodeManager.getCollapsedExit(n);
@@ -854,6 +827,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isReturn(java.lang.Object)
    */
+  @SuppressWarnings("unchecked")
   public boolean isReturn(Object object) {
     if (object instanceof BasicBlockInContext) {
       return partialIPFG.isReturn((BasicBlockInContext) object);

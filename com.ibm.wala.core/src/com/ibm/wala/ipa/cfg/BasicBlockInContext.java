@@ -25,12 +25,12 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
  * 
  * @author sfink
  */
-public final class BasicBlockInContext extends NodeWithNumber implements IBasicBlock {
-  private final ISSABasicBlock delegate;
+public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWithNumber implements IBasicBlock {
+  private final T delegate;
 
   private final CGNode node;
 
-  public BasicBlockInContext(CGNode node, ISSABasicBlock bb) {
+  public BasicBlockInContext(CGNode node, T bb) {
     this.delegate = bb;
     this.node = node;
   }
@@ -106,7 +106,7 @@ public final class BasicBlockInContext extends NodeWithNumber implements IBasicB
     return delegate.hashCode() + 229 * node.hashCode();
   }
 
-  public ISSABasicBlock getDelegate() {
+  public T getDelegate() {
     return delegate;
   }
 

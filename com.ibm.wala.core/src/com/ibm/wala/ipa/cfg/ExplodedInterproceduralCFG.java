@@ -13,7 +13,9 @@ package com.ibm.wala.ipa.cfg;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
+import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
 import com.ibm.wala.util.collections.Filtersection;
 
 /**
@@ -26,14 +28,18 @@ import com.ibm.wala.util.collections.Filtersection;
  * @author sfink
  * @author Julian Dolby
  */
-public class InterproceduralCFG extends AbstractInterproceduralCFG<ISSABasicBlock> {
+public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<ExplodedBasicBlock> {
 
 
-  public InterproceduralCFG(CallGraph CG) {
+  public static ExplodedInterproceduralCFG make(CallGraph CG) {
+    return new ExplodedInterproceduralCFG(CG);
+  }
+
+  private ExplodedInterproceduralCFG(CallGraph CG) {
     super(CG);
   }
 
-  public InterproceduralCFG(CallGraph cg, Filtersection<CGNode> filtersection) {
+  public ExplodedInterproceduralCFG(CallGraph cg, Filtersection<CGNode> filtersection) {
     super(cg,filtersection);
   }
 
@@ -43,16 +49,12 @@ public class InterproceduralCFG extends AbstractInterproceduralCFG<ISSABasicBloc
    *             if n == null
    */
   @Override
-  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode n) throws IllegalArgumentException {
+  public ControlFlowGraph<ExplodedBasicBlock> getCFG(CGNode n) throws IllegalArgumentException {
     if (n == null) {
       throw new IllegalArgumentException("n == null");
     }
-    ControlFlowGraph<ISSABasicBlock> cfg = n.getIR().getControlFlowGraph();
-    if (cfg == null) {
-      return null;
-    }
-
-    return cfg;
+    IR ir = n.getIR();
+    return ExplodedControlFlowGraph.make(ir);
   }
 
 }
