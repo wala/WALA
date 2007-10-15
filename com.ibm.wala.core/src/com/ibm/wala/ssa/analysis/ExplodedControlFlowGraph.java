@@ -398,8 +398,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     }
 
     public IMethod getMethod() {
-      Assertions.UNREACHABLE();
-      return null;
+      return ExplodedControlFlowGraph.this.getMethod();
     }
 
     public int getNumber() {

@@ -32,7 +32,6 @@ import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.NumberedGraph;
@@ -167,7 +166,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       CGNode n = (CGNode) ns.next();
       if (relevant.accepts(n)) {
         if (DEBUG_LEVEL > 0) {
-          Trace.println("Found a relevant node: " + n);
+          System.err.println("Found a relevant node: " + n);
         }
 
         // retrieve a cfg for node n.
@@ -195,15 +194,14 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   private void addEdgesToNonEntryBlock(CGNode n, ControlFlowGraph<T> cfg, IInstruction[] instrs, T bb) {
 
     if (DEBUG_LEVEL > 0) {
-      Trace.println("addEdgesForNonEntryBlock: " + bb);
-      Trace.println("cfg class: " + cfg.getClass());
-      Trace.println("nPred: " + cfg.getPredNodeCount(bb));
+      System.err.println("addEdgesToNonEntryBlock: " + bb);
+      System.err.println("nPred: " + cfg.getPredNodeCount(bb));
     }
 
     for (Iterator<? extends T> ps = cfg.getPredNodes(bb); ps.hasNext();) {
       T pb = ps.next();
       if (DEBUG_LEVEL > 0) {
-        Trace.println("Consider previous block: " + pb);
+        System.err.println("Consider previous block: " + pb);
       }
 
       if (pb.getLastInstructionIndex() < 0) {
@@ -218,7 +216,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       int index = pb.getLastInstructionIndex();
       IInstruction inst = instrs[index];
       if (DEBUG_LEVEL > 0) {
-        Trace.println("Last instruction is : " + inst);
+        System.err.println("Last instruction is : " + inst);
       }
       if (inst instanceof IInvokeInstruction) {
         // a previous instruction is a call instruction. If necessary,
@@ -227,21 +225,21 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         CallSiteReference site = makeCallSiteReference(n.getMethod().getDeclaringClass().getClassLoader().getReference(), cfg
             .getProgramCounter(index), call);
         if (DEBUG_LEVEL > 0) {
-          Trace.println("got Site: " + site);
+          System.err.println("got Site: " + site);
         }
         boolean irrelevantTargets = false;
         for (Iterator ts = cg.getPossibleTargets(n, site).iterator(); ts.hasNext();) {
           CGNode tn = (CGNode) ts.next();
           if (!relevant.accepts(tn)) {
             if (DEBUG_LEVEL > 0) {
-              Trace.println("Irrelevant target: " + tn);
+              System.err.println("Irrelevant target: " + tn);
             }
             irrelevantTargets = true;
             continue;
           }
 
           if (DEBUG_LEVEL > 0) {
-            Trace.println("Relevant target: " + tn);
+            System.err.println("Relevant target: " + tn);
           }
           // add an edge from tn exit to this node
           ControlFlowGraph<? extends T> tcfg = getCFG(tn);
@@ -316,6 +314,9 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         Assertions._assert(g.containsNode(ret), "IPCFG does not contain " + ret);
       }
     }
+    if (DEBUG_LEVEL > 0) {
+      System.err.println("addEdgeFromExitToReturn " + exit + ret);
+    }
     g.addEdge(exit, ret);
   }
 
@@ -330,35 +331,35 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   private void addEdgesToEntryBlock(CGNode n, T bb) {
 
     if (DEBUG_LEVEL > 0) {
-      Trace.println("addEdgesToEntryBlock " + bb);
+      System.err.println("addEdgesToEntryBlock " + bb);
     }
 
     for (Iterator callers = cg.getPredNodes(n); callers.hasNext();) {
       CGNode caller = (CGNode) callers.next();
       if (DEBUG_LEVEL > 0) {
-        Trace.println("got caller " + caller);
+        System.err.println("got caller " + caller);
       }
       if (relevant.accepts(caller)) {
         if (DEBUG_LEVEL > 0) {
-          Trace.println("caller " + caller + "is relevant");
+          System.err.println("caller " + caller + "is relevant");
         }
         ControlFlowGraph<? extends T> ccfg = getCFG(caller);
         IInstruction[] cinsts = ccfg.getInstructions();
 
         if (DEBUG_LEVEL > 0) {
-          Trace.println("Visiting " + cinsts.length + " instructions");
+          System.err.println("Visiting " + cinsts.length + " instructions");
         }
         for (int i = 0; i < cinsts.length; i++) {
           if (cinsts[i] instanceof IInvokeInstruction) {
             if (DEBUG_LEVEL > 0) {
-              Trace.println("Checking invokeinstruction: " + cinsts[i]);
+              System.err.println("Checking invokeinstruction: " + cinsts[i]);
             }
             IInvokeInstruction call = (IInvokeInstruction) cinsts[i];
             CallSiteReference site = makeCallSiteReference(n.getMethod().getDeclaringClass().getClassLoader().getReference(), ccfg
                 .getProgramCounter(i), call);
             if (cg.getPossibleTargets(caller, site).contains(n)) {
               if (DEBUG_LEVEL > 0) {
-                Trace.println("Adding edge " + ccfg.getBlockForInstruction(i) + " to " + bb);
+                System.err.println("Adding edge " + ccfg.getBlockForInstruction(i) + " to " + bb);
               }
               T callerBB = ccfg.getBlockForInstruction(i);
               BasicBlockInContext<T> b1 = new BasicBlockInContext<T>(caller, callerBB);
@@ -382,7 +383,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     for (Iterator<? extends T> bbs = cfg.iterator(); bbs.hasNext();) {
       T bb = bbs.next();
       if (DEBUG_LEVEL > 0) {
-        Trace.println("IPCFG Add basic block " + bb);
+        System.err.println("IPCFG Add basic block " + bb);
       }
       BasicBlockInContext<T> b = new BasicBlockInContext<T>(N, bb);
       g.addNode(b);

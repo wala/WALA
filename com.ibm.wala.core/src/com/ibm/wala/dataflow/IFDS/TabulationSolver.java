@@ -268,7 +268,7 @@ public class TabulationSolver<T, P> {
 
       final PathEdge edge = popFromWorkList();
       if (DEBUG_LEVEL > 0) {
-        Trace.println("TABULATE " + edge);
+        System.err.println("TABULATE " + edge);
       }
       int j = merge(edge.s_p, edge.d1, edge.n, edge.d2);
       if (j != edge.d2) {
@@ -311,9 +311,9 @@ public class TabulationSolver<T, P> {
   protected final void performVerboseAction() {
     verboseCounter++;
     if (verboseCounter % VERBOSE_INTERVAL == 0) {
-      Trace.println("Tabulation Solver " + verboseCounter);
+      System.err.println("Tabulation Solver " + verboseCounter);
       if (MORE_VERBOSE) {
-        Trace.println("  " + peekFromWorkList());
+        System.err.println("  " + peekFromWorkList());
       }
       if (VERBOSE_TRACE_MEMORY) {
         ReferenceCleanser.clearSoftCaches();
@@ -331,12 +331,12 @@ public class TabulationSolver<T, P> {
    */
   private void processNormal(final PathEdge edge) {
     if (DEBUG_LEVEL > 0) {
-      Trace.println("process normal: " + edge);
+      System.err.println("process normal: " + edge);
     }
     for (Iterator<? extends T> it = supergraph.getSuccNodes(edge.n); it.hasNext();) {
       final T m = it.next();
       if (DEBUG_LEVEL > 0) {
-        Trace.println("normal successor: " + m);
+        System.err.println("normal successor: " + m);
       }
       IUnaryFlowFunction f = flowFunctionMap.getNormalFlowFunction(edge.n, m);
       SparseIntSet D3 = computeFlow(edge.d2, f);
@@ -360,7 +360,7 @@ public class TabulationSolver<T, P> {
    */
   protected void processExit(final PathEdge edge) {
     if (DEBUG_LEVEL > 0) {
-      Trace.println("process exit: " + edge);
+      System.err.println("process exit: " + edge);
     }
 
     // succ:= successor nodes of edge.n (the return block in the callee)
@@ -389,7 +389,7 @@ public class TabulationSolver<T, P> {
       final T c = it.next();
       final int cNum = supergraph.getLocalBlockNumber(c);
       if (DEBUG_LEVEL > 0) {
-        Trace.println("caller: " + c + " " + cNum);
+        System.err.println("caller: " + c + " " + cNum);
       }
 
       // [23] for each d4 s.t. <c,d4> -> <s_p,d1> occrurred earlier
@@ -443,7 +443,7 @@ public class TabulationSolver<T, P> {
         continue;
       }
       if (DEBUG_LEVEL > 1) {
-        Trace.println("process return site: " + retSite);
+        System.err.println("process return site: " + retSite);
       }
       final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(c, edge.n, retSite);
       if (retf instanceof IBinaryReturnFlowFunction) {
@@ -451,8 +451,8 @@ public class TabulationSolver<T, P> {
       } else {
         final SparseIntSet D5 = computeFlow(edge.d2, (IUnaryFlowFunction) retf);
         if (DEBUG_LEVEL > 1) {
-          Trace.println("D4" + D4);
-          Trace.println("D5 " + D5);
+          System.err.println("D4" + D4);
+          System.err.println("D5 " + D5);
         }
         IntSetAction action = new IntSetAction() {
           public void act(final int d4) {
@@ -470,11 +470,11 @@ public class TabulationSolver<T, P> {
                   for (int i = 0; i < entries.length; i++) {
                     final T s_p = entries[i];
                     if (DEBUG_LEVEL > 1) {
-                      Trace.println(" do entry " + s_p);
+                      System.err.println(" do entry " + s_p);
                     }
                     IntSet D3 = getInversePathEdges(s_p, c, d4);
                     if (DEBUG_LEVEL > 1) {
-                      Trace.println("D3" + D3);
+                      System.err.println("D3" + D3);
                     }
                     if (D3 != null) {
                       D3.foreach(new IntSetAction() {
@@ -533,11 +533,11 @@ public class TabulationSolver<T, P> {
               for (int i = 0; i < entries.length; i++) {
                 final T s_p = entries[i];
                 if (DEBUG_LEVEL > 1) {
-                  Trace.println(" do entry " + s_p);
+                  System.err.println(" do entry " + s_p);
                 }
                 IntSet D3 = getInversePathEdges(s_p, c, d4);
                 if (DEBUG_LEVEL > 1) {
-                  Trace.println("D3" + D3);
+                  System.err.println("D3" + D3);
                 }
                 if (D3 != null) {
                   D3.foreach(new IntSetAction() {
@@ -577,7 +577,7 @@ public class TabulationSolver<T, P> {
    */
   protected void processCall(final PathEdge edge) {
     if (DEBUG_LEVEL > 0) {
-      Trace.println("process call: " + edge);
+      System.err.println("process call: " + edge);
     }
     boolean foundACallee = false;
     // c:= number of the call node
@@ -590,13 +590,13 @@ public class TabulationSolver<T, P> {
       final T callee = it.next();
       foundACallee = true;
       if (DEBUG_LEVEL > 0) {
-        Trace.println(" process callee: " + callee);
+        System.err.println(" process callee: " + callee);
       }
       IUnaryFlowFunction f = flowFunctionMap.getCallFlowFunction(edge.n, callee);
       // reached := {d1} that reach the callee
       SparseIntSet reached = computeFlow(edge.d2, f);
       if (DEBUG_LEVEL > 0) {
-        Trace.println(" reached: " + reached);
+        System.err.println(" reached: " + reached);
       }
       if (reached != null) {
         final LocalSummaryEdges summaries = summaryEdges.get(supergraph.getProcOf(callee));
@@ -665,7 +665,7 @@ public class TabulationSolver<T, P> {
     for (Iterator<? extends T> it = supergraph.getNormalSuccessors(edge.n); it.hasNext();) {
       final T m = it.next();
       if (DEBUG_LEVEL > 0) {
-        Trace.println("normal successor: " + m);
+        System.err.println("normal successor: " + m);
       }
       IUnaryFlowFunction f = flowFunctionMap.getNormalFlowFunction(edge.n, m);
       SparseIntSet D3 = computeFlow(edge.d2, f);
@@ -682,7 +682,7 @@ public class TabulationSolver<T, P> {
     // we modify this to handle each return site individually
     for (final T returnSite : returnSites) {
       if (DEBUG_LEVEL > 0) {
-        Trace.println(" process return site: " + returnSite);
+        System.err.println(" process return site: " + returnSite);
       }
       IUnaryFlowFunction f = null;
       if (foundACallee) {
@@ -692,7 +692,7 @@ public class TabulationSolver<T, P> {
       }
       SparseIntSet reached = computeFlow(edge.d2, f);
       if (DEBUG_LEVEL > 0) {
-        Trace.println("reached: " + reached);
+        System.err.println("reached: " + reached);
       }
       if (reached != null) {
         reached.foreach(new IntSetAction() {
@@ -714,7 +714,7 @@ public class TabulationSolver<T, P> {
    */
   protected SparseIntSet computeBinaryFlow(int call_d, int exit_d, IBinaryReturnFlowFunction f) {
     if (DEBUG_LEVEL > 0) {
-      Trace.println("got flow function " + f);
+      System.err.println("got flow function " + f);
     }
     SparseIntSet result = f.getTargets(call_d, exit_d);
     // we know that every context will have fact 0. eagerly
@@ -737,7 +737,7 @@ public class TabulationSolver<T, P> {
    */
   protected SparseIntSet computeFlow(int d1, IUnaryFlowFunction f) {
     if (DEBUG_LEVEL > 0) {
-      Trace.println("got flow function " + f);
+      System.err.println("got flow function " + f);
     }
     SparseIntSet result = f.getTargets(d1);
 
@@ -803,7 +803,7 @@ public class TabulationSolver<T, P> {
 
     if (!pLocal.contains(i, number, j)) {
       if (DEBUG_LEVEL > 0) {
-        Trace.println("propagate " + s_p + "  " + i + " " + number + " " + j);
+        System.err.println("propagate " + s_p + "  " + i + " " + number + " " + j);
       }
       pLocal.addPathEdge(i, number, j);
       addToWorkList(s_p, i, n, j);
