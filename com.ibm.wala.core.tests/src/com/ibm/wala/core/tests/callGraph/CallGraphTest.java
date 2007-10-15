@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
@@ -42,6 +41,7 @@ import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.InterproceduralCFG;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.Atom;
@@ -346,9 +346,9 @@ public class CallGraphTest extends WalaTestCase {
 
     // perform a little icfg exercise
     int count = 0;
-    for (Iterator<? extends BasicBlockInContext> it = icfg.iterator(); it.hasNext();) {
-      IBasicBlock bb = (IBasicBlock) it.next();
-      if (icfg.hasCall((BasicBlockInContext) bb)) {
+    for (Iterator<BasicBlockInContext<ISSABasicBlock>> it = icfg.iterator(); it.hasNext();) {
+      BasicBlockInContext<ISSABasicBlock> bb = it.next();
+      if (icfg.hasCall((BasicBlockInContext<ISSABasicBlock>) bb)) {
         count++;
       }
     }
