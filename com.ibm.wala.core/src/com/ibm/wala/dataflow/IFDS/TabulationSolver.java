@@ -29,7 +29,6 @@ import com.ibm.wala.util.collections.Heap;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.ToStringComparator;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.heapTrace.HeapTracer;
