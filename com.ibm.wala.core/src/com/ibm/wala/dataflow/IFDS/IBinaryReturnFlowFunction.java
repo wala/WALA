@@ -14,7 +14,7 @@ import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
  * 
- * A binary flow function corresponding to a return statments combining
+ * A binary flow function corresponding to a return statements combining
  * information from the call site and the exit site.
  * 
  * This function should be pairwise distributive for use with the Tabulation
