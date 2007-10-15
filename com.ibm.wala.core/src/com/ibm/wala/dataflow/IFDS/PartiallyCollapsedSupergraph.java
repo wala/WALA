@@ -190,12 +190,13 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
+  @SuppressWarnings("unchecked")
   public boolean isCall(Object object) throws IllegalArgumentException {
     if (object == null) {
       throw new IllegalArgumentException("object == null");
     }
     if (object instanceof BasicBlockInContext) {
-      return partialIPFG.hasCall((BasicBlockInContext) object);
+      return partialIPFG.hasCall((BasicBlockInContext<ISSABasicBlock>) object);
     } else {
       if (Assertions.verifyAssertions) {
         if (!(object instanceof CollapsedNode)) {
@@ -234,6 +235,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     return new FilterIterator<Object>(edgeManager.getSuccNodes(n), isEntry);
   }
 
+  @SuppressWarnings("unchecked")
   public Iterator<? extends Object> getReturnSites(Object object) {
     if (object instanceof BasicBlockInContext) {
       return partialIPFG.getReturnSites((BasicBlockInContext) object);
@@ -288,7 +290,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      */
     private void computeTransverseEdges() {
       // compute transverse edges that originate from basic blocks
-      for (BasicBlockInContext bb : partialIPFG) {
+      for (BasicBlockInContext<ISSABasicBlock> bb : partialIPFG) {
         if (partialIPFG.hasCall(bb)) {
           Set targets = partialIPFG.getCallTargets(bb);
           for (Iterator it2 = targets.iterator(); it2.hasNext();) {
@@ -409,6 +411,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       }
     }
 
+    @SuppressWarnings("unchecked")
     public IntSet getPredNodeNumbers(Object node) {
       if (node instanceof IBasicBlock) {
         Set incoming = incomingTransverseEdges.get(node);
@@ -473,6 +476,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     /*
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
      */
+    @SuppressWarnings("unchecked")
     public Iterator<? extends Object> getSuccNodes(Object N) {
       if (N instanceof IBasicBlock) {
         Set<Object> xverse = outgoingTransverseEdges.get(N);
@@ -516,6 +520,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     /*
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
      */
+    @SuppressWarnings("unchecked")
     public IntSet getSuccNodeNumbers(Object N) {
       if (N instanceof IBasicBlock) {
         Set xverse = outgoingTransverseEdges.get(N);
@@ -567,6 +572,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      * This can be really slow: this will need tuning.
      * 
      */
+    @SuppressWarnings("unchecked")
     public boolean hasEdge(Object src, Object dst) {
       if (src instanceof IBasicBlock) {
         if (dst instanceof IBasicBlock) {
@@ -730,6 +736,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     /*
      * @see com.ibm.wala.util.graph.NodeManager#containsNode(java.lang.Object)
      */
+    @SuppressWarnings("unchecked")
     public boolean containsNode(Object N) {
       if (N instanceof BasicBlockInContext) {
         return partialIPFG.containsNode((BasicBlockInContext) N);
@@ -763,6 +770,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       return partialIPFG.iterator();
     }
 
+    @SuppressWarnings("unchecked")
     public int getNumber(Object N) throws IllegalArgumentException {
       if (!(N instanceof BasicBlockInContext) && !(N instanceof CollapsedNode)) {
         throw new IllegalArgumentException(

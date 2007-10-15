@@ -52,7 +52,7 @@ import com.ibm.wala.util.perf.EngineTimings;
  * @author sfink
  * @author Julian Dolby
  */
-public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> implements NumberedGraph<BasicBlockInContext> {
+public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> implements NumberedGraph<BasicBlockInContext<T>> {
 
   private static final int DEBUG_LEVEL = 0;
 
@@ -64,7 +64,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /**
    * Graph implementation we delegate to.
    */
-  final private NumberedGraph<BasicBlockInContext> G = new SlowSparseNumberedGraph<BasicBlockInContext>(2);
+  final private NumberedGraph<BasicBlockInContext<T>> g = new SlowSparseNumberedGraph<BasicBlockInContext<T>>(2);
 
   /**
    * Governing call graph
@@ -209,9 +209,9 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       if (pb.getLastInstructionIndex() < 0) {
         // pb is the entry block for a cfg with
         // no instructions.
-        BasicBlockInContext p = new BasicBlockInContext<T>(n, pb);
-        BasicBlockInContext b = new BasicBlockInContext<T>(n, bb);
-        G.addEdge(p, b);
+        BasicBlockInContext<T> p = new BasicBlockInContext<T>(n, pb);
+        BasicBlockInContext<T> b = new BasicBlockInContext<T>(n, bb);
+        g.addEdge(p, b);
         continue;
       }
 
@@ -254,21 +254,21 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         if (irrelevantTargets || CALL_TO_RETURN_EDGES) {
           // at least one call target was ignored. So add a "normal" edge
           // from the predecessor block to this block.
-          BasicBlockInContext p = new BasicBlockInContext<ISSABasicBlock>(n, pb);
-          BasicBlockInContext b = new BasicBlockInContext<ISSABasicBlock>(n, bb);
-          G.addEdge(p, b);
+          BasicBlockInContext<T> p = new BasicBlockInContext<T>(n, pb);
+          BasicBlockInContext<T> b = new BasicBlockInContext<T>(n, bb);
+          g.addEdge(p, b);
         }
       } else {
         // previous instruction is not a call instruction.
-        BasicBlockInContext p = new BasicBlockInContext<ISSABasicBlock>(n, pb);
-        BasicBlockInContext b = new BasicBlockInContext<ISSABasicBlock>(n, bb);
+        BasicBlockInContext<T> p = new BasicBlockInContext<T>(n, pb);
+        BasicBlockInContext<T> b = new BasicBlockInContext<T>(n, bb);
         if (Assertions.verifyAssertions) {
-          if (!G.containsNode(p) || !G.containsNode(b)) {
-            Assertions._assert(G.containsNode(p), "IPCFG does not contain " + p);
-            Assertions._assert(G.containsNode(b), "IPCFG does not contain " + b);
+          if (!g.containsNode(p) || !g.containsNode(b)) {
+            Assertions._assert(g.containsNode(p), "IPCFG does not contain " + p);
+            Assertions._assert(g.containsNode(b), "IPCFG does not contain " + b);
           }
         }
-        G.addEdge(p, b);
+        g.addEdge(p, b);
       }
     }
   }
@@ -308,15 +308,15 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   private void addEdgesFromExitToReturn(CGNode caller, T returnBlock, CGNode target,
       ControlFlowGraph<? extends T> targetCFG) {
     T texit = targetCFG.exit();
-    BasicBlockInContext exit = new BasicBlockInContext<T>(target, texit);
-    BasicBlockInContext ret = new BasicBlockInContext<T>(caller, returnBlock);
+    BasicBlockInContext<T> exit = new BasicBlockInContext<T>(target, texit);
+    BasicBlockInContext<T> ret = new BasicBlockInContext<T>(caller, returnBlock);
     if (Assertions.verifyAssertions) {
-      if (!G.containsNode(exit) || !G.containsNode(ret)) {
-        Assertions._assert(G.containsNode(exit), "IPCFG does not contain " + exit);
-        Assertions._assert(G.containsNode(ret), "IPCFG does not contain " + ret);
+      if (!g.containsNode(exit) || !g.containsNode(ret)) {
+        Assertions._assert(g.containsNode(exit), "IPCFG does not contain " + exit);
+        Assertions._assert(g.containsNode(ret), "IPCFG does not contain " + ret);
       }
     }
-    G.addEdge(exit, ret);
+    g.addEdge(exit, ret);
   }
 
   /**
@@ -361,9 +361,9 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
                 Trace.println("Adding edge " + ccfg.getBlockForInstruction(i) + " to " + bb);
               }
               T callerBB = ccfg.getBlockForInstruction(i);
-              BasicBlockInContext b1 = new BasicBlockInContext<T>(caller, callerBB);
-              BasicBlockInContext b2 = new BasicBlockInContext<T>(n, bb);
-              G.addEdge(b1, b2);
+              BasicBlockInContext<T> b1 = new BasicBlockInContext<T>(caller, callerBB);
+              BasicBlockInContext<T> b2 = new BasicBlockInContext<T>(n, bb);
+              g.addEdge(b1, b2);
             }
           }
         }
@@ -384,8 +384,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       if (DEBUG_LEVEL > 0) {
         Trace.println("IPCFG Add basic block " + bb);
       }
-      BasicBlockInContext b = new BasicBlockInContext<T>(N, bb);
-      G.addNode(b);
+      BasicBlockInContext<T> b = new BasicBlockInContext<T>(N, bb);
+      g.addNode(b);
       if (hasCall(b, cfg)) {
         hasCallVector.set(getNumber(b));
       }
@@ -426,15 +426,15 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.NodeManager#iterateNodes()
    */
-  public Iterator<BasicBlockInContext> iterator() {
-    return G.iterator();
+  public Iterator<BasicBlockInContext<T>> iterator() {
+    return g.iterator();
   }
 
   /*
    * @see com.ibm.wala.util.graph.NodeManager#getNumberOfNodes()
    */
   public int getNumberOfNodes() {
-    return G.getNumberOfNodes();
+    return g.getNumberOfNodes();
   }
 
   /*
@@ -454,29 +454,29 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<? extends BasicBlockInContext> getPredNodes(BasicBlockInContext N) {
-    return G.getPredNodes(N);
+  public Iterator<? extends BasicBlockInContext<T>> getPredNodes(BasicBlockInContext<T> N) {
+    return g.getPredNodes(N);
   }
 
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(com.ibm.wala.util.graph.Node)
    */
-  public int getPredNodeCount(BasicBlockInContext N) {
-    return G.getPredNodeCount(N);
+  public int getPredNodeCount(BasicBlockInContext<T> N) {
+    return g.getPredNodeCount(N);
   }
 
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(com.ibm.wala.util.graph.Node)
    */
-  public Iterator<? extends BasicBlockInContext> getSuccNodes(BasicBlockInContext N) {
-    return G.getSuccNodes(N);
+  public Iterator<? extends BasicBlockInContext<T>> getSuccNodes(BasicBlockInContext<T> N) {
+    return g.getSuccNodes(N);
   }
 
   /*
    * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(com.ibm.wala.util.graph.Node)
    */
-  public int getSuccNodeCount(BasicBlockInContext N) {
-    return G.getSuccNodeCount(N);
+  public int getSuccNodeCount(BasicBlockInContext<T> N) {
+    return g.getSuccNodeCount(N);
   }
 
   /*
@@ -500,21 +500,21 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
   @Override
   public String toString() {
-    return G.toString();
+    return g.toString();
   }
 
   /*
    * @see com.ibm.wala.util.graph.Graph#containsNode(com.ibm.wala.util.graph.Node)
    */
-  public boolean containsNode(BasicBlockInContext N) {
-    return G.containsNode(N);
+  public boolean containsNode(BasicBlockInContext<T> N) {
+    return g.containsNode(N);
   }
 
   /**
    * @param B
    * @return true iff basic block B ends in a call instuction
    */
-  public boolean hasCall(BasicBlockInContext B) {
+  public boolean hasCall(BasicBlockInContext<T> B) {
     if (Assertions.verifyAssertions) {
       if (!containsNode(B)) {
         Assertions._assert(containsNode(B));
@@ -586,34 +586,34 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     throw new UnsupportedOperationException();
   }
 
-  public boolean hasEdge(BasicBlockInContext src, BasicBlockInContext dst) {
-    return G.hasEdge(src, dst);
+  public boolean hasEdge(BasicBlockInContext<T> src, BasicBlockInContext<T> dst) {
+    return g.hasEdge(src, dst);
   }
 
-  public int getNumber(BasicBlockInContext N) {
-    return G.getNumber(N);
+  public int getNumber(BasicBlockInContext<T> N) {
+    return g.getNumber(N);
   }
 
-  public BasicBlockInContext getNode(int number) throws UnimplementedError {
+  public BasicBlockInContext<T> getNode(int number) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
   public int getMaxNumber() {
-    return G.getMaxNumber();
+    return g.getMaxNumber();
   }
 
-  public Iterator<BasicBlockInContext> iterateNodes(IntSet s) throws UnimplementedError {
+  public Iterator<BasicBlockInContext<T>> iterateNodes(IntSet s) throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
 
-  public IntSet getSuccNodeNumbers(BasicBlockInContext node) {
-    return G.getSuccNodeNumbers(node);
+  public IntSet getSuccNodeNumbers(BasicBlockInContext<T> node) {
+    return g.getSuccNodeNumbers(node);
   }
 
-  public IntSet getPredNodeNumbers(BasicBlockInContext node) {
-    return G.getPredNodeNumbers(node);
+  public IntSet getPredNodeNumbers(BasicBlockInContext<T> node) {
+    return g.getPredNodeNumbers(node);
   }
 
   public BasicBlockInContext<T> getEntry(CGNode n) {
@@ -635,7 +635,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @throws IllegalArgumentException
    *             if bb is null
    */
-  public Iterator<BasicBlockInContext> getReturnSites(BasicBlockInContext bb) {
+  public Iterator<BasicBlockInContext> getReturnSites(BasicBlockInContext<T> bb) {
     if (bb == null) {
       throw new IllegalArgumentException("bb is null");
     }
@@ -672,9 +672,9 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     return new FilterIterator<BasicBlockInContext>(m, isCall);
   }
 
-  private final Filter isCall = new Filter() {
-    public boolean accepts(Object o) {
-      return hasCall((BasicBlockInContext) o);
+  private final Filter<BasicBlockInContext<T>> isCall = new Filter<BasicBlockInContext<T>>() {
+    public boolean accepts(BasicBlockInContext<T> o) {
+      return hasCall(o);
     }
   };
 
