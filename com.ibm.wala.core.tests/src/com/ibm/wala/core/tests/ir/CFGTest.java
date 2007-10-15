@@ -11,7 +11,6 @@
 package com.ibm.wala.core.tests.ir;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.cfg.TwoExitCFG;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
@@ -70,7 +69,6 @@ public class CFGTest extends WalaTestCase {
         assertTrue(" failed cfg integrity check for " + methodSig, false);
       }
 
-      cfg = new TwoExitCFG(cfg);
       try {
         GraphIntegrity.check(cfg);
       } catch (UnsoundGraphException e) {
