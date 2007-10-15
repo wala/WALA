@@ -54,6 +54,7 @@ public interface ControlFlowGraph<T extends IBasicBlock> extends NumberedGraph<T
   IInstruction[] getInstructions();
 
   /**
+   * TODO: move this into IR?
    * @param index
    *          an instruction index
    * @return the program counter (bytecode index) corresponding to that
