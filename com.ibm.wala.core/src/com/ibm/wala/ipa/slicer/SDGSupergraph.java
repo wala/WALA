@@ -23,6 +23,7 @@ import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
@@ -49,6 +50,11 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     this.sdg = sdg;
     this.srcStatement = src;
     this.backward = backward;
+  }
+  
+  public Graph<PDG> getProcedureGraph() {
+    Assertions.UNREACHABLE();
+    return null;
   }
 
   public Object[] getEntry(Statement n) {

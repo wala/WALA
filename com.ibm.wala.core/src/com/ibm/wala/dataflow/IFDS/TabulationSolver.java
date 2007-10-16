@@ -67,7 +67,7 @@ public class TabulationSolver<T, P> {
    * <li>2 Detailed debugging
    * </ul>
    */
-  protected static final int DEBUG_LEVEL = 0;
+  protected static final int DEBUG_LEVEL = 2;
 
   static protected final boolean verbose = true && ("true".equals(System.getProperty("com.ibm.wala.util.fixedpoint.impl.verbose")) ? true
       : false);
@@ -208,7 +208,7 @@ public class TabulationSolver<T, P> {
    * @return a representation of the result
    * @throws SolverInterruptedException
    */
-  public TabulationResult<T> solve() throws SolverInterruptedException {
+  public TabulationResult<T, P> solve() throws SolverInterruptedException {
     EngineTimings.startVirtual("TabulationSolver.solve()");
 
     EngineTimings.startVirtual("TabulationSolver.initialize");
@@ -604,12 +604,13 @@ public class TabulationSolver<T, P> {
 
         reached.foreach(new IntSetAction() {
           public void act(int d1) {
-            // eagerly propagate 0 into the callee for fact d1. this is a
-            // heuristic intended
-            // to realize better order for merges
-            if (d1 != 0) {
-              propagate(callee, d1, callee, 0);
-            }
+            // This is buggy.  Who says 0 always propagates?
+//            // eagerly propagate 0 into the callee for fact d1. this is a
+//            // heuristic intended
+//            // to realize better order for merges
+//            if (d1 != 0) {
+//              propagate(callee, d1, callee, 0);
+//            }
             propagate(callee, d1, callee, d1);
             // cache the fact that we've flowed <c, d2> -> <callee, d1> by a
             // call flow
@@ -970,7 +971,7 @@ public class TabulationSolver<T, P> {
   /**
    * @author sfink
    */
-  public class Result implements TabulationResult<T> {
+  public class Result implements TabulationResult<T, P> {
 
     /**
      * get the bitvector of facts that hold at the entry to a given node
@@ -1050,7 +1051,7 @@ public class TabulationSolver<T, P> {
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationResult#getProblem()
      */
-    public TabulationProblem getProblem() {
+    public TabulationProblem<T,P> getProblem() {
       return problem;
     }
 

@@ -30,12 +30,13 @@ import com.ibm.wala.util.warnings.WalaException;
  * 
  */
 public class DotUtil {
+  
+  /**
+   * Recent versions of dot appear to croak on long labels.  Sigh.
+   */
+  private final static int MAX_LABEL_LENGTH = 75;
 
   /**
-   * @param g
-   * @param labels
-   * @throws WalaException
-   * @throws IllegalArgumentException  if g is null
    */
   public static <T> void dotify(Graph<T> g, NodeDecorator labels, String dotFile, String psFile, String dotExe) throws WalaException {
     if (g == null) {
@@ -283,12 +284,17 @@ public class DotUtil {
   // }
   //
   private static String getLabel(Object o, NodeDecorator d) throws WalaException {
+    String result = null;
     if (d == null) {
-      return o.toString();
+      result =  o.toString();
     } else {
-      String result = d.getLabel(o);
-      return result == null ? o.toString() : result;
+      result = d.getLabel(o);
+      result = result == null ? o.toString() : result;
     }
+    if (result.length() >= MAX_LABEL_LENGTH) {
+      result = result.substring(0, MAX_LABEL_LENGTH - 3) + "...";
+    }
+    return result;
   }
 
   private static String getPort(Object o, NodeDecorator d) throws WalaException {

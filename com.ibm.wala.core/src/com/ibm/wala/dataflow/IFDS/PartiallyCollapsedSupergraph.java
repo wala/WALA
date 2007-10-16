@@ -40,6 +40,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.AbstractGraph;
+import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
 import com.ibm.wala.util.graph.NumberedNodeManager;
@@ -94,6 +95,10 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
       return isEntry(o);
     }
   };
+  
+  public Graph<CGNode> getProcedureGraph() {
+    return cg;
+  }
 
   /**
    * @param cg

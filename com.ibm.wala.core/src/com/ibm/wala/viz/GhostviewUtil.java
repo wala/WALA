@@ -92,8 +92,6 @@ public class GhostviewUtil {
   }
 
   /**
-   * @author sfink
-   * 
    * A node decorator which concatenates the labels from two other node
    * decorators
    */

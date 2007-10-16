@@ -21,7 +21,7 @@ import com.ibm.wala.util.intset.SparseIntSet;
  * 
  * @author sfink
  */
-public interface TabulationResult<T> {
+public interface TabulationResult<T, P> {
   /**
    * get the bitvector of facts that hold at the entry to a given node
    * 
@@ -33,7 +33,7 @@ public interface TabulationResult<T> {
   /**
    * @return the governing IFDS problem
    */
-  public TabulationProblem getProblem();
+  public TabulationProblem<T, P> getProblem();
 
   /**
    * @return the set of supergraph nodes for which any fact is reached

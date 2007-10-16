@@ -116,7 +116,7 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
 
   @Override
   public String toString() {
-    return delegate.toString() + "(node:" + node.getGraphNodeId() + ")";
+    return delegate.toString();
   }
 
 }

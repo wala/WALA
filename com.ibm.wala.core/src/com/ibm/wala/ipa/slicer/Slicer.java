@@ -227,7 +227,7 @@ public class Slicer {
       }
 
       TabulationSolver<Statement, PDG> solver = TabulationSolver.make(p);
-      TabulationResult<Statement> tr = null;
+      TabulationResult<Statement, PDG> tr = null;
       try {
         tr = solver.solve();
       } catch (SolverInterruptedException e) {
@@ -371,7 +371,7 @@ public class Slicer {
    * Convert the results of the tabulation to a slice, represented as a
    * Collection<Statement>
    */
-  private static Collection<Statement> result2Slice(final TabulationResult<Statement> result) {
+  private static Collection<Statement> result2Slice(final TabulationResult<Statement, PDG> result) {
     return result.getSupergraphNodesReached();
     // final Collection<Statement> nodes = new
     // Iterator2Collection<Statement>(sdg.iterateLazyNodes());

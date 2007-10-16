@@ -12,6 +12,7 @@ package com.ibm.wala.dataflow.IFDS;
 
 import java.util.Iterator;
 
+import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedGraph;
 
 /**
@@ -45,6 +46,11 @@ public interface ISupergraph<T,P> extends NumberedGraph<T> {
    * @return an identifier for the main procedure for this supergraph
    */
   P getMain();
+  
+  /**
+   * @return the graph of procedures (e.g. a call graph) over which this supergraph is induced.
+   */
+  Graph<P> getProcedureGraph();
 
   /**
    * @param n

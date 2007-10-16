@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -70,7 +71,7 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
    * @generated
    * @ordered
    */
-  final protected List<ViewIRAction> popUpActions = new LinkedList<ViewIRAction>();
+  final protected List<IAction> popUpActions = new LinkedList<IAction>();
 
   /**
    * <!-- begin-user-doc --> <!-- end-user-doc -->
@@ -132,7 +133,7 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
    * <!-- begin-user-doc --> <!-- end-user-doc -->
    * @generated
    */
-  public List<ViewIRAction> getPopUpActions() {
+  public List<IAction> getPopUpActions() {
     return popUpActions;
   }
 
@@ -236,7 +237,7 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
       if (getPopUpActions().size() > 0) {
         MenuManager mm = new MenuManager();
         treeViewer.getTree().setMenu(mm.createContextMenu(treeViewer.getTree()));
-        for (Iterator<ViewIRAction> it = getPopUpActions().iterator(); it.hasNext(); ) {
+        for (Iterator<IAction> it = getPopUpActions().iterator(); it.hasNext(); ) {
           mm.add(it.next());
         }
       }

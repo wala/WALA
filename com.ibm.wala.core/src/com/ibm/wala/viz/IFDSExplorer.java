@@ -15,30 +15,24 @@ import java.util.Collection;
 import java.util.Properties;
 
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.properties.WalaProperties;
-import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.InferGraphRoots;
-import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
- * Explore the result of an IFDS problem with an SWT viewer and
- * ghostview.
+ * Explore the result of an IFDS problem with an SWT viewer and ghostview.
  * 
  * @author Stephen Fink
  */
-public class IFDSExplorer  {
+public class IFDSExplorer {
 
   /**
    * absolute path name to invoke dot
    */
   protected static String dotExe = null;
-
 
   /**
    * Absolute path name to invoke ghostview
@@ -53,19 +47,23 @@ public class IFDSExplorer  {
     gvExe = newGvExe;
   }
 
-  public static void viewIFDS(CallGraph cg, TabulationResult r) throws WalaException {
-    
+  /**
+   * We pass in the supergraph to allow viewing of a forward supergraph with the results of a backwards problem.
+   */
+  public static <T,P> void viewIFDS(TabulationResult<T, P> r) throws WalaException {
+
     if (r == null) {
       throw new IllegalArgumentException("r is null");
     }
     assert gvExe != null;
     assert dotExe != null;
-    
+
     // dump the domain to stderr
     System.err.println("Domain:\n" + r.getProblem().getDomain().toString());
     Trace.println("Domain:\n" + r.getProblem().getDomain().toString());
-    
-    Properties p = null;;
+
+    Properties p = null;
+    ;
     try {
       p = WalaProperties.loadProperties();
     } catch (WalaException e) {
@@ -76,28 +74,13 @@ public class IFDSExplorer  {
     String dotFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + "ir.dt";
 
     final SWTTreeViewer v = new SWTTreeViewer();
-    v.setGraphInput(cg);
+    Graph<P> g = r.getProblem().getSupergraph().getProcedureGraph();
+    v.setGraphInput(g);
     v.setBlockInput(true);
-    Collection<CGNode> roots = InferGraphRoots.inferRoots(cg);
+    Collection<P> roots = InferGraphRoots.inferRoots(g);
     v.setRootsInput(roots);
-    v.getPopUpActions().add(new ViewAnnotatedIRAction(v,cg,psFile,dotFile,dotExe,gvExe, new IFDSAnnotator(r)));
+    v.getPopUpActions().add(new ViewIFDSLocalAction<T, P>(v, r, psFile, dotFile, dotExe, gvExe));
     v.run();
-  }
-  
-  private final static class IFDSAnnotator extends BasicBlockDecorator {
-    final private TabulationResult r;
-    public IFDSAnnotator(TabulationResult r) {
-     this.r = r;
-    }
-    @SuppressWarnings("unchecked")
-    public String getLabel(Object o) throws WalaException {
-      ISSABasicBlock bb = (ISSABasicBlock)o;
-      Object b = new BasicBlockInContext(getCurrentNode(),bb);
-      IntSet result = r.getResult(b);
-      String label = result == null ? "no result" : result.toString();
-      return label + "\\n-----\\n";
-    }
-    
   }
 
   public static String getDotExe() {
