@@ -106,7 +106,6 @@ public class ViewIFDSLocalAction<T, P> extends Action {
     try {
       final P proc = getProcedureForSelection();
       Filter<T> filter = new Filter<T>() {
-        @Override
         public boolean accepts(T o) {
           return supergraph.getProcOf(o).equals(proc);
         }
