@@ -277,9 +277,9 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     if (call == null) {
       throw new IllegalArgumentException("call == null");
     }
-    if (!(call instanceof com.ibm.wala.ssa.SSAInvokeInstruction) && !(call instanceof com.ibm.wala.shrikeBT.InvokeInstruction)) {
+    if (!(call instanceof com.ibm.wala.ssa.SSAAbstractInvokeInstruction) && !(call instanceof com.ibm.wala.shrikeBT.InvokeInstruction)) {
       throw new IllegalArgumentException(
-          "(not ( call instanceof com.ibm.wala.ssa.SSAInvokeInstruction ) ) and (not ( call instanceof com.ibm.wala.shrikeBT.InvokeInstruction ) )");
+          "(not ( call instanceof com.ibm.wala.ssa.SSAAbstractInvokeInstruction ) ) and (not ( call instanceof com.ibm.wala.shrikeBT.InvokeInstruction ) )");
     }
     CallSiteReference site = null;
     if (call instanceof InvokeInstruction) {
@@ -287,7 +287,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       site = CallSiteReference.make(pc, MethodReference.findOrCreate(loader, c.getClassType(), c.getMethodName(), c
           .getMethodSignature()), call.getInvocationCode());
     } else {
-      com.ibm.wala.ssa.SSAInvokeInstruction c = (com.ibm.wala.ssa.SSAInvokeInstruction) call;
+      com.ibm.wala.ssa.SSAAbstractInvokeInstruction c = (com.ibm.wala.ssa.SSAAbstractInvokeInstruction) call;
       site = CallSiteReference.make(pc, c.getDeclaredTarget(), call.getInvocationCode());
     }
     return site;
