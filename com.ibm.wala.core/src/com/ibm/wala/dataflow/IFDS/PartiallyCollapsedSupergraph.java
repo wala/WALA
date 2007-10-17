@@ -263,7 +263,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
   public CGNode getProcOf(Object n) throws IllegalArgumentException {
     if (!(n instanceof com.ibm.wala.ipa.cfg.BasicBlockInContext) && n instanceof com.ibm.wala.cfg.IBasicBlock) {
       throw new IllegalArgumentException(
-          "(n instanceof com.ibm.wala.cfg.IBasicBlock) and (not ( n instanceof com.ibm.wala.ipa.cfg.BasicBlockInContext ) )");
+        "(n instanceof com.ibm.wala.cfg.IBasicBlock) and (not ( n instanceof com.ibm.wala.ipa.cfg.BasicBlockInContext ) ): " + n + ", " + n.getClass());
     }
     if (n instanceof BasicBlockInContext) {
       return partialIPFG.getCGNode((BasicBlockInContext) n);
@@ -341,7 +341,8 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
             outgoing.add(entry);
 
             // add the edge representing the return from the call.
-            IBasicBlock exit = cfg.exit();
+            BasicBlockInContext<ISSABasicBlock> exit = new BasicBlockInContext<ISSABasicBlock>(outNode, cfg.exit());
+            // IBasicBlock exit = cfg.exit();
             Object retSite = nodeManager.getCollapsedExit(node);
             incoming = MapUtil.findOrCreateSet(incomingTransverseEdges, retSite);
             incoming.add(exit);
