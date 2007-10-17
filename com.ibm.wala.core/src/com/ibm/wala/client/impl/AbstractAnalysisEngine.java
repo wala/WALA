@@ -368,4 +368,8 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return cache;
   }
 
+  public AnalysisOptions getOptions() {
+    return options;
+  }
+
 }
