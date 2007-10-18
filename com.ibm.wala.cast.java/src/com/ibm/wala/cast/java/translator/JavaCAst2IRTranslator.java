@@ -334,23 +334,26 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     protected void leaveCast(CAstNode n, Context c, CAstVisitor visitor) {
       WalkContext context = (WalkContext)c;
       int result = getValue(n);
-      CAstType type = (CAstType) n.getChild(0).getValue();
-      TypeReference ref = makeType(type);
+      CAstType toType = (CAstType) n.getChild(0).getValue();
+      TypeReference toRef = makeType(toType);
 
-      if (ref.isPrimitiveType()) {
+      CAstType fromType = (CAstType) n.getChild(2).getValue();
+      TypeReference fromRef = makeType(fromType);
+
+      if (toRef.isPrimitiveType()) {
     	context.cfg().addInstruction(
     	  SSAInstructionFactory.ConversionInstruction(
             result, 
             getValue(n.getChild(1)), 
-            ref,
-            ref));
+            fromRef,
+            toRef));
      
       } else {
         context.cfg().addInstruction(
           SSAInstructionFactory.CheckCastInstruction(
             result, 
             getValue(n.getChild(1)), 
-            ref));
+            toRef));
 
 	processExceptions(n, context);
       }

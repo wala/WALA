@@ -464,11 +464,11 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 	    Type result = fTypeSystem.promote(leftType, rightType);
 
 	    if (! result.equals(leftType)) {
-	      leftNode = makeNode(wc, fFactory, b, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(result)), leftNode);
+	      leftNode = makeNode(wc, fFactory, b, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(result)), leftNode, fFactory.makeConstant(getTypeDict().getCAstTypeFor(leftType)));
 	    }
 
 	    if (! result.equals(rightType)) {
-	      rightNode = makeNode(wc, fFactory, b, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(result)), rightNode);
+	      rightNode = makeNode(wc, fFactory, b, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(result)), rightNode, fFactory.makeConstant(getTypeDict().getCAstTypeFor(rightType)));
 	    }
 	  } catch (SemanticException e) {
 
@@ -594,10 +594,12 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
     public CAstNode visit(Cast c, WalkContext wc) {
       Expr arg = c.expr();
+      Type castedFrom = arg.type();
       Type castedTo = c.castType().type();
 
       CAstNode ast = makeNode(wc, fFactory, c, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(castedTo)),
-          walkNodes(arg, wc));
+          walkNodes(arg, wc),
+	  fFactory.makeConstant(getTypeDict().getCAstTypeFor(castedFrom)));
 
       Collection excTargets = wc.getCatchTargets(fCCEType);
       if (!excTargets.isEmpty()) {
