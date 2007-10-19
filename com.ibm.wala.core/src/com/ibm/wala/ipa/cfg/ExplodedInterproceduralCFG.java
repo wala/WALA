@@ -54,6 +54,9 @@ public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<Explo
       throw new IllegalArgumentException("n == null");
     }
     IR ir = n.getIR();
+    if (ir == null) {
+      return null;
+    }
     return ExplodedControlFlowGraph.make(ir);
   }
 
