@@ -51,6 +51,10 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class TypeInference extends SSAInference<TypeVariable> implements FixedPointConstants {
 
+  public static TypeInference make(IR ir, boolean doPrimitives) {
+    return new TypeInference(ir, doPrimitives);
+  }
+
   /**
    * The governing SSA form
    */
@@ -83,7 +87,9 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
    */
   protected final boolean doPrimitives;
 
-  public TypeInference(IR ir, boolean doPrimitives) {
+  private boolean solved = false;
+
+  protected TypeInference(IR ir, boolean doPrimitives) {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
@@ -92,10 +98,18 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     this.doPrimitives = doPrimitives;
     this.BOTTOM = new ConeType(cha.getRootClass());
     initialize();
+    solve();
   }
 
-  public TypeInference(IR ir) {
-    this(ir, false);
+  @Override
+  public boolean solve() {
+    if (solved) {
+      return false;
+    } else {
+      boolean result = super.solve();
+      solved = true;
+      return result;
+    }
   }
 
   protected void initialize() {

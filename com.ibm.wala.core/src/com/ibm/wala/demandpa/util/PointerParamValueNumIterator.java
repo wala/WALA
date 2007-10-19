@@ -69,7 +69,7 @@ public class PointerParamValueNumIterator implements Iterator<Integer> {
       throw new IllegalArgumentException("node == null");
     }
     IR ir = node.getIR();
-    ti = new TypeInference(ir);
+    ti = TypeInference.make(ir, false);
     symbolTable = ir.getSymbolTable();
     numParams = symbolTable.getNumberOfParameters();
     paramInd = 0;

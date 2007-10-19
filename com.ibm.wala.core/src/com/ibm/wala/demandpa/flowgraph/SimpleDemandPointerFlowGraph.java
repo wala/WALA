@@ -164,7 +164,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   private void addNodesForParameters(CGNode node) {
     // TODO Auto-generated method stub
     IR ir = node.getIR();
-    TypeInference ti = new TypeInference(ir);
+    TypeInference ti = TypeInference.make(ir, false);
     SymbolTable symbolTable = ir.getSymbolTable();
     for (int i = 0; i < symbolTable.getNumberOfParameters(); i++) {
       int parameter = symbolTable.getParameter(i);

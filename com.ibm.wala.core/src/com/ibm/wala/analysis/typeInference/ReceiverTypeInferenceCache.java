@@ -51,8 +51,7 @@ public class ReceiverTypeInferenceCache {
         SSAOptions options = SSAOptions.defaultOptions();
         options.setUsePiNodes(true);
         IR ir = analysisCache.getSSACache().findOrCreateIR(n.getMethod(), n.getContext(),  options);
-        TypeInference T = new TypeInference(ir);
-        T.solve();
+        TypeInference T = TypeInference.make(ir, false);
 
         result = new ReceiverTypeInference(T);
         ref = CacheReference.make(result);
