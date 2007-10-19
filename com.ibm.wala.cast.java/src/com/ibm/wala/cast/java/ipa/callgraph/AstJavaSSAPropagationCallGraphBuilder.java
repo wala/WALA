@@ -93,7 +93,6 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
 
   protected TypeInference makeTypeInference(IR ir, IClassHierarchy cha) {
     TypeInference ti = new AstJavaTypeInference(ir, cha, false);
-    ti.solve();
 
     if (DEBUG_TYPE_INFERENCE) {
       Trace.println("IR of " + ir.getMethod());
