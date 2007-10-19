@@ -22,12 +22,12 @@ import com.ibm.wala.logic.ILogicConstants.BinaryConnective;
 public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
 
   private final static AdHocSemiDecisionProcedure INSTANCE = new AdHocSemiDecisionProcedure();
-  
+
   public static AdHocSemiDecisionProcedure singleton() {
     return INSTANCE;
   }
-  
-  private AdHocSemiDecisionProcedure() {
+
+  protected AdHocSemiDecisionProcedure() {
   }
 
   /*
@@ -67,41 +67,41 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
   }
 
   /**
-   * Does axiom imply f?
+   * TODO .. fix this. Does axiom imply f?
    */
   private static boolean implies(IFormula axiom, IFormula f) {
     if (AdHocSemiDecisionProcedure.normalize(axiom).equals(AdHocSemiDecisionProcedure.normalize(f))) {
       return true;
     }
-    // This is way too slow.  give up on it.
-//    if (axiom.getKind().equals(IFormula.Kind.QUANTIFIED)) {
-//      QuantifiedFormula q = (QuantifiedFormula) axiom;
-//  
-//      if (!Simplifier.innerStructureMatches(q, f)) {
-//        return false;
-//      }
-//  
-//      if (q.getQuantifier().equals(Quantifier.FORALL)) {
-//        AbstractVariable bound = q.getBoundVar();
-//        IFormula body = q.getFormula();
-//        // this could be inefficient. find a better algorithm.
-//        for (ITerm t : f.getAllTerms()) {
-//          if (q.getFreeVariables().contains(t)) {
-//            AbstractVariable fresh = Simplifier.makeFreshIntVariable(q, f);
-//            IFormula testBody = Simplifier.substitute(body, bound, fresh);
-//            IFormula testF = Simplifier.substitute(f, t, fresh);
-//            if (implies(testBody, testF)) {
-//              return true;
-//            }
-//          } else {
-//            IFormula testBody = Simplifier.substitute(body, bound, t);
-//            if (implies(testBody, f)) {
-//              return true;
-//            }
-//          }
-//        }
-//      }
-//    }
+    // This is way too slow. give up on it.
+    // if (axiom.getKind().equals(IFormula.Kind.QUANTIFIED)) {
+    // QuantifiedFormula q = (QuantifiedFormula) axiom;
+    //  
+    // if (!Simplifier.innerStructureMatches(q, f)) {
+    // return false;
+    // }
+    //  
+    // if (q.getQuantifier().equals(Quantifier.FORALL)) {
+    // AbstractVariable bound = q.getBoundVar();
+    // IFormula body = q.getFormula();
+    // // this could be inefficient. find a better algorithm.
+    // for (ITerm t : f.getAllTerms()) {
+    // if (q.getFreeVariables().contains(t)) {
+    // AbstractVariable fresh = Simplifier.makeFreshIntVariable(q, f);
+    // IFormula testBody = Simplifier.substitute(body, bound, fresh);
+    // IFormula testF = Simplifier.substitute(f, t, fresh);
+    // if (implies(testBody, testF)) {
+    // return true;
+    // }
+    // } else {
+    // IFormula testBody = Simplifier.substitute(body, bound, t);
+    // if (implies(testBody, f)) {
+    // return true;
+    // }
+    // }
+    // }
+    // }
+    // }
     return false;
   }
 
@@ -170,6 +170,26 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
             return true;
           }
         }
+      } else if (r.getRelation().equals(BinaryRelation.LT)) {
+        ITerm lhs = r.getTerms().get(0);
+        ITerm rhs = r.getTerms().get(1);
+        if (lhs.getKind().equals(ITerm.Kind.CONSTANT) && rhs.getKind().equals(ITerm.Kind.CONSTANT)) {
+          if (lhs instanceof IntConstant && rhs instanceof IntConstant) {
+            IntConstant c1 = (IntConstant) lhs;
+            IntConstant c2 = (IntConstant) rhs;
+            return c1.getVal() >= c2.getVal();
+          }
+        }
+      } else if (r.getRelation().equals(BinaryRelation.LE)) {
+        ITerm lhs = r.getTerms().get(0);
+        ITerm rhs = r.getTerms().get(1);
+        if (lhs.getKind().equals(ITerm.Kind.CONSTANT) && rhs.getKind().equals(ITerm.Kind.CONSTANT)) {
+          if (lhs instanceof IntConstant && rhs instanceof IntConstant) {
+            IntConstant c1 = (IntConstant) lhs;
+            IntConstant c2 = (IntConstant) rhs;
+            return c1.getVal() > c2.getVal();
+          }
+        }
       }
       break;
     }
@@ -202,6 +222,8 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
       }
       if (b.getConnective().equals(BinaryConnective.OR)) {
         if (tautology(b.getF1(), facts) || tautology(b.getF2(), facts)) {
+          return true;
+        } else if (b.getF1().equals(NotFormula.make(b.getF2()))) {
           return true;
         }
       }
