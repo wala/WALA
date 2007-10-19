@@ -32,7 +32,8 @@ public interface IMergeFunction {
    *          a new factoid number which has been discovered to hold at a
    *          program point
    * @return the factoid number z which should actually be propagated, based on
-   *         a merge of the new fact j into the old state represented by x
+   *         a merge of the new fact j into the old state represented by x.
+   *         return -1 if no fact should be propagated.
    */
   int merge(IntSet x, int j);
 

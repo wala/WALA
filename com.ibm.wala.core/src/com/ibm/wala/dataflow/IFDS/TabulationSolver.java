@@ -52,8 +52,8 @@ import com.ibm.wala.util.perf.EngineTimings;
  * </ul>
  * <p>
  * 
- * Type parameter T represents type of nodes in the supergraph.  Type parameter P represents
- * the type of procedure (or box in RSM parlance)
+ * Type parameter T represents type of nodes in the supergraph. Type parameter P
+ * represents the type of procedure (or box in RSM parlance)
  * 
  * @author sfink
  */
@@ -125,12 +125,12 @@ public class TabulationSolver<T, P> {
    * solver allows interruption
    */
   static protected final boolean INTERRUPTIBLE = true;
-  
+
   /**
    * how frequently to check for interruption?
    */
   static final private int INTERRUPT_LATENCY = 20;
-  
+
   /**
    * The supergraph which induces this dataflow problem
    */
@@ -177,8 +177,9 @@ public class TabulationSolver<T, P> {
 
   /**
    * @param p
-   *          a description of the dataflow problem to solve
-   * @throws IllegalArgumentException  if p is null
+   *            a description of the dataflow problem to solve
+   * @throws IllegalArgumentException
+   *             if p is null
    */
   private TabulationSolver(TabulationProblem<T, P> p) {
     if (p == null) {
@@ -192,13 +193,14 @@ public class TabulationSolver<T, P> {
     }
     this.problem = p;
   }
-  
+
   /**
    * @param p
-   *          a description of the dataflow problem to solve
-   * @throws IllegalArgumentException  if p is null
+   *            a description of the dataflow problem to solve
+   * @throws IllegalArgumentException
+   *             if p is null
    */
-  public static <T,P> TabulationSolver<T,P> make(TabulationProblem<T, P> p) {
+  public static <T, P> TabulationSolver<T, P> make(TabulationProblem<T, P> p) {
     return new TabulationSolver<T, P>(p);
   }
 
@@ -255,7 +257,7 @@ public class TabulationSolver<T, P> {
         tendToSoftCaches();
       }
       if (INTERRUPTIBLE) {
-        // checking Thread.interrupted is expensive.  Don't do it every time.
+        // checking Thread.interrupted is expensive. Don't do it every time.
         interrupt++;
         if (interrupt % INTERRUPT_LATENCY == 0) {
           interrupt = 0;
@@ -270,20 +272,23 @@ public class TabulationSolver<T, P> {
         System.err.println("TABULATE " + edge);
       }
       int j = merge(edge.s_p, edge.d1, edge.n, edge.d2);
-      if (j != edge.d2) {
-        // this means that we don't want to push the edge. instead,
-        // we'll push the merged fact. a little tricky, but i think should work.
-        propagate(edge.s_p, edge.d1, edge.n, j);
-      } else {
-        if (supergraph.isCall(edge.n)) {
-          // [13]
-          processCall(edge);
-        } else if (supergraph.isExit(edge.n)) {
-          // [21]
-          processExit(edge);
+      if (j != -1) {
+        if (j != edge.d2) {
+          // this means that we don't want to push the edge. instead,
+          // we'll push the merged fact. a little tricky, but i think should
+          // work.
+          propagate(edge.s_p, edge.d1, edge.n, j);
         } else {
-          // [33]
-          processNormal(edge);
+          if (supergraph.isCall(edge.n)) {
+            // [13]
+            processCall(edge);
+          } else if (supergraph.isExit(edge.n)) {
+            // [21]
+            processExit(edge);
+          } else {
+            // [33]
+            processNormal(edge);
+          }
         }
       }
     }
@@ -365,7 +370,8 @@ public class TabulationSolver<T, P> {
     // succ:= successor nodes of edge.n (the return block in the callee)
     IntSet succ = supergraph.getSuccNodeNumbers(edge.n);
     if (succ == null) {
-      // This should only happen for return from the entry point of the supergraph
+      // This should only happen for return from the entry point of the
+      // supergraph
       // (fake root method for whole-program analysis).
       if (DEBUG_LEVEL > 0) {
         CGNode n = (CGNode) supergraph.getProcOf(edge.n);
@@ -408,15 +414,15 @@ public class TabulationSolver<T, P> {
    * [23] for each d5 s.t. <s_p,d2> -> <returnSite(c),d5> ..
    * 
    * @param edge
-   *          the edge being processed
+   *            the edge being processed
    * @param succ
-   *          numbers of the nodes that are successors of edge.n (the return
-   *          block in the callee) in the call graph.
+   *            numbers of the nodes that are successors of edge.n (the return
+   *            block in the callee) in the call graph.
    * @param c
-   *          a call site of edge.s_p
+   *            a call site of edge.s_p
    * @param D4
-   *          set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as call
-   *          flow
+   *            set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as
+   *            call flow
    */
   private void propagateToReturnSites(final PathEdge edge, IntSet succ, final T c, final IntSet D4) {
 
@@ -499,19 +505,19 @@ public class TabulationSolver<T, P> {
    * [23] for each d5 s.t. <s_p,d2> -> <returnSite(c),d5> ..
    * 
    * @param edge
-   *          the edge being processed
+   *            the edge being processed
    * @param c
-   *          a call site of edge.s_p
+   *            a call site of edge.s_p
    * @param D4
-   *          set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as call
-   *          flow
+   *            set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as
+   *            call flow
    * @param entries
-   *          the blocks in the supergraph that are entries for the procedure of
-   *          c
+   *            the blocks in the supergraph that are entries for the procedure
+   *            of c
    * @param retSite
-   *          the return site being propagated to
+   *            the return site being propagated to
    * @param retf
-   *          the flow function
+   *            the flow function
    */
   private void propagateToReturnSiteWithBinaryFlowFunction(final PathEdge edge, final T c, final IntSet D4, final T[] entries,
       final T retSite, final IFlowFunction retf) {
@@ -557,7 +563,7 @@ public class TabulationSolver<T, P> {
    * @param s_p
    * @param n
    * @param d2
-   *          note that s_p must be an entry for procof(n)
+   *            note that s_p must be an entry for procof(n)
    * @return set of d1 s.t. <s_p, d1> -> <n, d2> is a path edge, or null if none
    *         found
    */
@@ -578,16 +584,16 @@ public class TabulationSolver<T, P> {
     if (DEBUG_LEVEL > 0) {
       System.err.println("process call: " + edge);
     }
-    boolean foundACallee = false;
+
     // c:= number of the call node
     final int c = supergraph.getNumber(edge.n);
 
     final Collection<T> returnSites = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.n));
+    final Collection<T> returnSitesWithCallee = HashSetFactory.make();
 
     // [14 - 16]
     for (Iterator<? extends T> it = supergraph.getCalledNodes(edge.n); it.hasNext();) {
       final T callee = it.next();
-      foundACallee = true;
       if (DEBUG_LEVEL > 0) {
         System.err.println(" process callee: " + callee);
       }
@@ -603,21 +609,13 @@ public class TabulationSolver<T, P> {
         final int s_p_num = supergraph.getLocalBlockNumber(callee);
 
         reached.foreach(new IntSetAction() {
-          public void act(int d1) {
-            // This is buggy.  Who says 0 always propagates?
-//            // eagerly propagate 0 into the callee for fact d1. this is a
-//            // heuristic intended
-//            // to realize better order for merges
-//            if (d1 != 0) {
-//              propagate(callee, d1, callee, 0);
-//            }
+          public void act(final int d1) {
             propagate(callee, d1, callee, d1);
             // cache the fact that we've flowed <c, d2> -> <callee, d1> by a
             // call flow
             callFlow.addCallEdge(c, edge.d2, d1);
             // handle summary edges now as well. this is different from the PoPL
-            // 95
-            // paper.
+            // 95 paper.
             if (summaries != null) {
               // for each exit from the callee
               P p = supergraph.getProcOf(callee);
@@ -632,6 +630,7 @@ public class TabulationSolver<T, P> {
                 for (Iterator<? extends T> succ = supergraph.getSuccNodes(exit); succ.hasNext();) {
                   final T returnSite = succ.next();
                   if (returnSites.contains(returnSite)) {
+                    returnSitesWithCallee.add(returnSite);
                     int x_num = supergraph.getLocalBlockNumber(exit);
                     // reachedBySummary := {d2} s.t. <callee,d1> -> <exit,d2>
                     // was recorded as a summary edge
@@ -640,14 +639,24 @@ public class TabulationSolver<T, P> {
                       final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(edge.n, exit, returnSite);
                       reachedBySummary.foreach(new IntSetAction() {
                         public void act(int d2) {
-                          // TODO!! Fix me.
-                          final SparseIntSet D5 = computeFlow(d2, (IUnaryFlowFunction) retf);
-                          if (D5 != null) {
-                            D5.foreach(new IntSetAction() {
-                              public void act(int d5) {
-                                propagate(edge.s_p, edge.d1, returnSite, d5);
-                              }
-                            });
+                          if (retf instanceof IBinaryReturnFlowFunction) {
+                            final SparseIntSet D5 = computeBinaryFlow(edge.d2, d2, (IBinaryReturnFlowFunction) retf);
+                            if (D5 != null) {
+                              D5.foreach(new IntSetAction() {
+                                public void act(int d5) {
+                                  propagate(edge.s_p, edge.d1, returnSite, d5);
+                                }
+                              });
+                            }
+                          } else {
+                            final SparseIntSet D5 = computeFlow(d2, (IUnaryFlowFunction) retf);
+                            if (D5 != null) {
+                              D5.foreach(new IntSetAction() {
+                                public void act(int d5) {
+                                  propagate(edge.s_p, edge.d1, returnSite, d5);
+                                }
+                              });
+                            }
                           }
                         }
                       });
@@ -685,7 +694,7 @@ public class TabulationSolver<T, P> {
         System.err.println(" process return site: " + returnSite);
       }
       IUnaryFlowFunction f = null;
-      if (foundACallee) {
+      if (returnSitesWithCallee.contains(returnSite)) {
         f = flowFunctionMap.getCallToReturnFlowFunction(edge.n, returnSite);
       } else {
         f = flowFunctionMap.getCallNoneToReturnFlowFunction(edge.n, returnSite);
@@ -714,21 +723,10 @@ public class TabulationSolver<T, P> {
    */
   protected SparseIntSet computeBinaryFlow(int call_d, int exit_d, IBinaryReturnFlowFunction f) {
     if (DEBUG_LEVEL > 0) {
-      System.err.println("got flow function " + f);
+      System.err.println("got binary flow function " + f);
     }
     SparseIntSet result = f.getTargets(call_d, exit_d);
-    // we know that every context will have fact 0. eagerly
-    // propagate it. with merging, we hope that this will lead to
-    // better orders.
-    if (result == null) {
-      return SparseIntSet.singleton(0);
-    } else if (!result.contains(0)) {
-      MutableSparseIntSet x = MutableSparseIntSet.make(result);
-      x.add(0);
-      return x;
-    } else {
-      return result;
-    }
+    return result;
   }
 
   /**
@@ -777,13 +775,13 @@ public class TabulationSolver<T, P> {
    * propagate <s_p,i> -> <n, \alpha(j,x,y,z) > !!!
    * 
    * @param s_p
-   *          entry block
+   *            entry block
    * @param i
-   *          dataflow fact on entry
+   *            dataflow fact on entry
    * @param n
-   *          reached block
+   *            reached block
    * @param j
-   *          dataflow fact reached
+   *            dataflow fact reached
    */
   protected void propagate(T s_p, int i, T n, int j) {
     int number = supergraph.getLocalBlockNumber(n);
@@ -816,35 +814,25 @@ public class TabulationSolver<T, P> {
    * 
    * let \alpha be the merge function. then instead of <s_p,i> -> <n,j>, we
    * propagate <s_p,i> -> <n, \alpha(j,x,y,z) > !!!
+   * 
+   * return -1 if no fact should be propagated
    */
   private int merge(T s_p, int i, T n, int j) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(j >= 0);
-    }
-    if (j == 0) {
-      return 0;
     }
     IMergeFunction alpha = problem.getMergeFunction();
     if (alpha != null) {
       LocalPathEdges lp = pathEdges.get(s_p);
       IntSet preExistFacts = lp.getReachable(supergraph.getLocalBlockNumber(n), i);
       if (preExistFacts == null) {
-        if (Assertions.verifyAssertions) {
-          Assertions._assert(j == 0);
-        }
         return j;
       } else {
         int size = preExistFacts.size();
-        if (preExistFacts.contains(0)) {
-          size--;
-        }
         if ((size == 0) || ((size == 1) && preExistFacts.contains(j))) {
           return j;
         } else {
           int result = alpha.merge(preExistFacts, j);
-          if (Assertions.verifyAssertions) {
-            Assertions._assert(result >= 0);
-          }
           return result;
         }
       }
@@ -1051,7 +1039,7 @@ public class TabulationSolver<T, P> {
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationResult#getProblem()
      */
-    public TabulationProblem<T,P> getProblem() {
+    public TabulationProblem<T, P> getProblem() {
       return problem;
     }
 
@@ -1076,7 +1064,7 @@ public class TabulationSolver<T, P> {
   /**
    * @return Returns the supergraph.
    */
-  public ISupergraph<T,P> getSupergraph() {
+  public ISupergraph<T, P> getSupergraph() {
     return supergraph;
   }
 
@@ -1105,7 +1093,8 @@ public class TabulationSolver<T, P> {
    * @param n2
    * @return set of d2 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or
    *         null if none found
-   * @throws UnimplementedError  unconditionally
+   * @throws UnimplementedError
+   *             unconditionally
    */
   public IntSet getSummaryTargets(T n1, int d1, T n2) throws UnimplementedError {
     Assertions.UNREACHABLE("not currently supported.  be careful");
@@ -1121,20 +1110,21 @@ public class TabulationSolver<T, P> {
   /**
    * @return set of d1 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or
    *         null if none found
-   * @throws UnsupportedOperationException  unconditionally
+   * @throws UnsupportedOperationException
+   *             unconditionally
    */
   public IntSet getSummarySources(T n2, int d2, T n1) throws UnsupportedOperationException {
     throw new UnsupportedOperationException("not currently supported.  be careful");
-//    LocalSummaryEdges summaries = summaryEdges.get(supergraph.getProcOf(n1));
-//    if (summaries == null) {
-//      return null;
-//    }
-//    int num1 = supergraph.getLocalBlockNumber(n1);
-//    int num2 = supergraph.getLocalBlockNumber(n2);
-//    return summaries.getInvertedSummaryEdgesForTarget(num1, num2, d2);
+    // LocalSummaryEdges summaries = summaryEdges.get(supergraph.getProcOf(n1));
+    // if (summaries == null) {
+    // return null;
+    // }
+    // int num1 = supergraph.getLocalBlockNumber(n1);
+    // int num2 = supergraph.getLocalBlockNumber(n2);
+    // return summaries.getInvertedSummaryEdgesForTarget(num1, num2, d2);
   }
 
-  public TabulationProblem<T,P> getProblem() {
+  public TabulationProblem<T, P> getProblem() {
     return problem;
   }
 }
