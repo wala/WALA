@@ -36,6 +36,7 @@ public class SliceFunctions implements IFlowFunctionMap<Statement> {
     switch (s.getKind()) {
     case NORMAL_RET_CALLER:
     case PARAM_CALLER:
+    case EXC_RET_CALLER:
       // uh oh.  anything that flows into the missing function will be killed.
       return ReachabilityFunctions.killReachability;
     case HEAP_PARAM_CALLEE:
