@@ -84,8 +84,7 @@ public class TypeInferenceTest extends WalaTestCase {
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions() );
     System.out.println(ir);
     
-    TypeInference ti = new TypeInference(ir);
-    ti.solve();
+    TypeInference ti = TypeInference.make(ir, false);
     for (int i = 1; i<= ir.getSymbolTable().getMaxValueNumber(); i++) {
       System.err.println(i + " " + ti.getType(i));
     }

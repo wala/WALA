@@ -116,8 +116,7 @@ public class TestAgainstSimpleDriver {
     CGNode main = cg.getEntrypointNodes().iterator().next();
 
     IR ir = main.getIR();
-    TypeInference ti = new TypeInference(ir);
-    ti.solve();
+    TypeInference ti = TypeInference.make(ir, false);
     for (int i = 1; i <= ir.getSymbolTable().getMaxValueNumber(); i++) {
       TypeAbstraction t = ti.getType(i);
       if (t != null) {

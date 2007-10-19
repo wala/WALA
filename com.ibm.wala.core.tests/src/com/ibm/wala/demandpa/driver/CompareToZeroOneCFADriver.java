@@ -173,8 +173,7 @@ public class CompareToZeroOneCFADriver {
         }
         Trace.println("METHOD " + node);
         IR ir = node.getIR();
-        TypeInference ti = new TypeInference(ir);
-        ti.solve();
+        TypeInference ti = TypeInference.make(ir, false);
         for (int i = 1; i <= ir.getSymbolTable().getMaxValueNumber(); i++) {
           TypeAbstraction t = ti.getType(i);
           if (t != null) {
