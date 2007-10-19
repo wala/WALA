@@ -31,13 +31,19 @@ public class SSABinaryOpInstruction extends SSAInstruction {
   private final int val2;
 
   private final BinaryOpInstruction.IOperator operator;
+  
+  /**
+   * Might this instruction represent integer arithmetic?
+   */
+  private final boolean mayBeInteger;
 
-  SSABinaryOpInstruction(BinaryOpInstruction.IOperator operator, int result, int val1, int val2) {
+  SSABinaryOpInstruction(BinaryOpInstruction.IOperator operator, int result, int val1, int val2, boolean mayBeInteger) {
     super();
     this.result = result;
     this.val1 = val1;
     this.val2 = val2;
     this.operator = operator;
+    this.mayBeInteger = mayBeInteger;
     Assertions._assert(val1 != -1 && val2 != -1);
   }
 
@@ -47,7 +53,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
       throw new IllegalArgumentException("uses.length < 2");
     }
     return new SSABinaryOpInstruction(operator, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
-        uses == null ? val2 : uses[1]);
+        uses == null ? val2 : uses[1], mayBeInteger);
   }
 
   @Override
@@ -65,18 +71,12 @@ public class SSABinaryOpInstruction extends SSAInstruction {
   }
 
   /**
-   * UGH! This must be the Shrike OPCODE, not the Shrike OPERATOR code!!!!!
-   * 
-   * @artifact 38486
-   * @return instruction opcode
+   * Ugh.  clean up shrike operator stuff.
    */
   public BinaryOpInstruction.IOperator getOperator() {
     return operator;
   }
 
-  /**
-   * @see com.ibm.wala.ssa.SSAInstruction#getDef()
-   */
   @Override
   public boolean hasDef() {
     return true;
@@ -126,7 +126,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
    */
   @Override
   public boolean isPEI() {
-    return operator == BinaryOpInstruction.Operator.DIV || operator == BinaryOpInstruction.Operator.REM;
+    return mayBeInteger && operator == BinaryOpInstruction.Operator.DIV || operator == BinaryOpInstruction.Operator.REM;
   }
 
   /*

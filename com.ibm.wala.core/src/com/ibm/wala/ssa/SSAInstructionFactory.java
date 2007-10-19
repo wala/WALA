@@ -40,8 +40,8 @@ public final class SSAInstructionFactory {
   public static SSAArrayStoreInstruction ArrayStoreInstruction(int arrayref, int index, int value, TypeReference declaredType) {
     return new SSAArrayStoreInstruction(arrayref, index, value, declaredType);
   }
-  public static SSABinaryOpInstruction BinaryOpInstruction(BinaryOpInstruction.IOperator operator, int result, int val1, int val2) {
-    return new SSABinaryOpInstruction(operator, result, val1, val2);
+  public static SSABinaryOpInstruction BinaryOpInstruction(BinaryOpInstruction.IOperator operator, int result, int val1, int val2, boolean mayBeInteger) {
+    return new SSABinaryOpInstruction(operator, result, val1, val2, mayBeInteger);
   }
   public static SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference type) {
     return new SSACheckCastInstruction(result, val, type);

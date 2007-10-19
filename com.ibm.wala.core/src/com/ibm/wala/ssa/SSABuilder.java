@@ -415,12 +415,12 @@ public class SSABuilder extends AbstractIntStackMachine {
        */
       @Override
       public void visitBinaryOp(com.ibm.wala.shrikeBT.BinaryOpInstruction instruction) {
-
         int val2 = workingState.pop();
         int val1 = workingState.pop();
         int result = reuseOrCreateDef();
         workingState.push(result);
-        emitInstruction(new SSABinaryOpInstruction(instruction.getOperator(), result, val1, val2));
+        boolean isFloat = instruction.getType().equals(TYPE_double) || instruction.getType().equals(TYPE_float);
+        emitInstruction(new SSABinaryOpInstruction(instruction.getOperator(), result, val1, val2, !isFloat));
       }
 
       /**
@@ -662,7 +662,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         int val1 = workingState.pop();
         int result = reuseOrCreateDef();
         workingState.push(result);
-        emitInstruction(new SSABinaryOpInstruction(instruction.getOperator(), result, val1, val2));
+        emitInstruction(new SSABinaryOpInstruction(instruction.getOperator(), result, val1, val2, true));
       }
 
       /**
