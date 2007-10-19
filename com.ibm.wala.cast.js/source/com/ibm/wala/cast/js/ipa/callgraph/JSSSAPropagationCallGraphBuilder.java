@@ -104,7 +104,6 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
   protected TypeInference makeTypeInference(IR ir, IClassHierarchy cha) {
     TypeInference ti = new JSTypeInference(ir, cha);
-    ti.solve();
 
     if (DEBUG_TYPE_INFERENCE) {
       Trace.println("IR of " + ir.getMethod());
