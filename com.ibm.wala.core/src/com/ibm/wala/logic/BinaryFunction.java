@@ -15,7 +15,7 @@ public class BinaryFunction implements IFunction {
 
   private final String symbol;
 
-  private BinaryFunction(String symbol) {
+  protected BinaryFunction(String symbol) {
     this.symbol = symbol;
   }
 
