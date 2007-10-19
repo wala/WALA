@@ -1,16 +1,16 @@
 package com.ibm.wala.cast.java.examples.ast;
 
-import com.ibm.wala.cast.java.translator.TranslatorToCAst;
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.impl.*;
-import com.ibm.wala.cast.util.CAstPrinter;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.collections.*;
-import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.*;
+import java.util.Map;
 
-import java.util.*;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstControlFlowMap;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.impl.CAstOperator;
+import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.util.collections.Pair;
 
 public class SynchronizedBlockDuplicator
   extends CAstRewriter<CAstRewriter.RewriteContext<SynchronizedBlockDuplicator.UnwindKey>,SynchronizedBlockDuplicator.UnwindKey>
