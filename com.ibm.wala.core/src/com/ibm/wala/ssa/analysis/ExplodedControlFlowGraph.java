@@ -61,6 +61,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
   private final ExplodedBasicBlock exit;
 
   private ExplodedControlFlowGraph(IR ir) {
+    assert ir != null;
     this.ir = ir;
     this.entry = new ExplodedBasicBlock(-2, ir.getControlFlowGraph().entry());
     this.exit = new ExplodedBasicBlock(-2, ir.getControlFlowGraph().exit());
@@ -80,6 +81,9 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
   }
 
   public static ExplodedControlFlowGraph make(IR ir) {
+    if (ir == null) {
+      throw new IllegalArgumentException("ir == null");
+    }
     return new ExplodedControlFlowGraph(ir);
   }
 
