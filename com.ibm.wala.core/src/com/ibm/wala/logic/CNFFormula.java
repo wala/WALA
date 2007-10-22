@@ -175,6 +175,13 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
         AbstractBinaryFormula b = (AbstractBinaryFormula) f;
         return BinaryFormula.make(b.getConnective(), trivialCleanup(b.getF1()), trivialCleanup(b.getF2()));
       case RELATION:
+        RelationFormula r = (RelationFormula)f;
+        if (r.getRelation().equals(BinaryRelation.NE)) {
+          if (r.getTerms().get(1).equals(BooleanConstant.FALSE)) {
+            return RelationFormula.makeEquals(r.getTerms().get(0), BooleanConstant.TRUE);
+          }
+        }
+        return f;
       case CONSTANT:
       case NEGATION:
       case QUANTIFIED:
