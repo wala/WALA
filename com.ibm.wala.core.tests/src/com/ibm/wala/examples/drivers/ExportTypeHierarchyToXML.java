@@ -17,6 +17,7 @@ import java.util.Properties;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ecore.java.ETypeHierarchy;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFBridge;
@@ -120,7 +121,7 @@ public class ExportTypeHierarchyToXML {
   }
 
   public static ETypeHierarchy buildTypeHierarchy(String classpath) throws WalaException {
-    EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(classpath);
+    EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(classpath, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     
     // generate a WALA-consumable wrapper around the incoming scope object
     EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);

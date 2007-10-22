@@ -104,7 +104,7 @@ public class GVSDG {
    */
   public static Process run(String appJar, String mainClass, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
     try {
-      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar);
+      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
       // generate a WALA-consumable wrapper around the incoming scope object
       EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);

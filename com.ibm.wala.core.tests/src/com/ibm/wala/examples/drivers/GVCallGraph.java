@@ -13,6 +13,7 @@ package com.ibm.wala.examples.drivers;
 import java.io.File;
 import java.util.Properties;
 
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
@@ -104,7 +105,7 @@ public class GVCallGraph {
    * @return a call graph
    */
   public static Graph<CGNode> buildPrunedCallGraph(String appJar, String exclusionFile) throws WalaException {
-    EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar);
+    EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     if (exclusionFile != null) {
       escope.setExclusionFileName(exclusionFile);
     }

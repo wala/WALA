@@ -145,7 +145,7 @@ public class GVSlice {
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
     try {
       // create an analysis scope representing the appJar as a J2SE application
-      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar);
+      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
       EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
 
       // build a class hierarchy, call graph, and system dependence graph

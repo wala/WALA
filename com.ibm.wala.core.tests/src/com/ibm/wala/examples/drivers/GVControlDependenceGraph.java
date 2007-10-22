@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
@@ -81,7 +82,7 @@ public class GVControlDependenceGraph {
       if (SWTCallGraph.isDirectory(appJar)) {
         appJar = SWTCallGraph.findJarFiles(new String[] { appJar });
       }
-      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar);
+      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
       EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
       ClassHierarchy cha = ClassHierarchy.make(scope);

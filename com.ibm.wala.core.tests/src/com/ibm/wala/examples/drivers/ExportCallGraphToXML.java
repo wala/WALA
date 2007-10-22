@@ -19,6 +19,7 @@ import java.util.Properties;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ecore.java.ECallSite;
 import com.ibm.wala.ecore.java.EJavaClass;
 import com.ibm.wala.ecore.java.EJavaMethod;
@@ -77,9 +78,10 @@ public class ExportCallGraphToXML {
   public static void run(String appJar) {
     try {
 
-      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar);
+      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
       EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
+      
       System.err.println("Build class hierarchy...");
       ClassHierarchy cha = ClassHierarchy.make(scope);
 

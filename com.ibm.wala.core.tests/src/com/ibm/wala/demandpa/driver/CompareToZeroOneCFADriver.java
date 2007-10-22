@@ -121,7 +121,7 @@ public class CompareToZeroOneCFADriver {
     Trace.println("ANALYZING " + appJar + "\n\n");
     EMFScopeWrapper scope = null;
     try {
-      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar);
+      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
       // generate a DOMO-consumable wrapper around the incoming scope object
       scope = EMFScopeWrapper.generateScope(escope);
