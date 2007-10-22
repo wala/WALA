@@ -145,13 +145,14 @@ public class JavaScopeUtil {
     return aClassFile;
   }
 
-  public static EJavaAnalysisScope makeAnalysisScope(String classpath) throws WalaException {
+  public static EJavaAnalysisScope makeAnalysisScope(String classpath, String exclusions) throws WalaException {
 
     if (classpath == null) {
       throw new IllegalArgumentException("classpath is null");
     }
     // create an EJavaAnalysisScope and deposit it into the output PAS
     EJavaAnalysisScope scope = JavaScopeFactory.eINSTANCE.createEJavaAnalysisScope();
+    scope.setExclusionFileName(exclusions);
 
     // populate the analysis scope according to the contents of the classpath
     populateScope(scope, classpath);
@@ -159,8 +160,8 @@ public class JavaScopeUtil {
     return scope;
   }
 
-  public static EJavaAnalysisScope makePrimordialScope() throws WalaException {
-    return makeAnalysisScope("");
+  public static EJavaAnalysisScope makePrimordialScope(String exclusions) throws WalaException {
+    return makeAnalysisScope("", exclusions);
   }
 
   /**
