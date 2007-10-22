@@ -2597,7 +2597,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     Assertions._assert(getValue(r) != -1, CAstPrinter.print(n));
     Assertions._assert(getValue(l) != -1, CAstPrinter.print(n));
     context.cfg().addInstruction(
-        SSAInstructionFactory.BinaryOpInstruction(translateBinaryOpcode(n.getChild(0)), result, getValue(l), getValue(r)));
+        SSAInstructionFactory.BinaryOpInstruction(translateBinaryOpcode(n.getChild(0)), result, getValue(l), getValue(r), true));
   }
 
   protected boolean visitUnaryExpr(CAstNode n, Context c, CAstVisitor visitor) {
@@ -2905,7 +2905,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     int rval = getValue(v);
     CAstNode op = a.getChild(2);
     int temp2 = context.currentScope().allocateTempValue();
-    context.cfg().addInstruction(SSAInstructionFactory.BinaryOpInstruction(translateBinaryOpcode(op), temp2, temp, rval));
+    context.cfg().addInstruction(SSAInstructionFactory.BinaryOpInstruction(translateBinaryOpcode(op), temp2, temp, rval, true));
     return temp2;
   }
 
