@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -162,5 +163,13 @@ public class FunctionTerm extends AbstractTerm {
       result.addAll(t.getAllTerms());
     }
     return result;
+  }
+
+  public static ITerm make(NaryFunction f, ITerm t1, ITerm t2, ITerm t3) {
+    List<ITerm> l = new ArrayList<ITerm>(3);
+    l.add(t1);
+    l.add(t2);
+    l.add(t3);
+    return make(f,l);
   }
 }
