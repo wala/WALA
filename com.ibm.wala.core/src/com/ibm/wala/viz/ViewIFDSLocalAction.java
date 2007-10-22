@@ -10,12 +10,15 @@
  *******************************************************************************/
 package com.ibm.wala.viz;
 
+import java.util.Iterator;
+
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
+import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.debug.Assertions;
@@ -90,7 +93,12 @@ public class ViewIFDSLocalAction<T, P> extends Action {
         BasicBlockInContext bb = (BasicBlockInContext)t;
         if (bb.getDelegate() instanceof ExplodedBasicBlock) { 
           ExplodedBasicBlock delegate = (ExplodedBasicBlock) bb.getDelegate();
-          return delegate.getNumber() + " " + result.getResult(t) +  " " + delegate.getInstruction();
+          String s = delegate.getNumber() + " " + result.getResult(t) +  " " + delegate.getInstruction();
+          for (Iterator<SSAPhiInstruction> phis = delegate.iteratePhis(); phis.hasNext(); ) {
+            SSAPhiInstruction phi = phis.next();
+            s += " " + phi;
+          }
+          return s;
         }
       }
       return t + " " + result.getResult(t);
