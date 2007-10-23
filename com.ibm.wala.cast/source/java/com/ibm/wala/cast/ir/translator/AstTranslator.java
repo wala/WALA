@@ -349,9 +349,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   public static final boolean DEBUG_CFG = DEBUG_ALL || false;
 
-  public static final boolean DEBUG_NAMES = DEBUG_ALL || true;
+  public static final boolean DEBUG_NAMES = DEBUG_ALL || false;
 
-  public static final boolean DEBUG_LEXICAL = DEBUG_ALL || true;
+  public static final boolean DEBUG_LEXICAL = DEBUG_ALL || false;
 
   protected final static class PreBasicBlock implements INodeWithNumber, IBasicBlock {
     private static final int NORMAL = 0;
@@ -2589,6 +2589,30 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     return false;
   }
 
+  private boolean
+    handleBinaryOpThrow(CAstNode n, CAstNode op, WalkContext context)
+  {
+    // currently, only integer / and % throw exceptions
+    boolean mayBeInteger = false;
+    Collection labels = context.getControlFlow().getTargetLabels(n);
+    if (! labels.isEmpty()) {
+      context.cfg().addPreNode(n, context.getUnwindState());
+
+      mayBeInteger = true;
+      assert op==CAstOperator.OP_DIV||op==CAstOperator.OP_MOD : CAstPrinter.print(n);
+      for (Iterator iter = labels.iterator(); iter.hasNext();) {
+	Object label = iter.next();
+	CAstNode target = context.getControlFlow().getTarget(n, label);
+	if (target == CAstControlFlowMap.EXCEPTION_TO_EXIT)
+	  context.cfg().addPreEdgeToExit(n, true);
+	else
+	  context.cfg().addPreEdge(n, target, true);
+      }
+    }
+
+    return mayBeInteger;
+  }
+
   protected void leaveBinaryExpr(CAstNode n, Context c, CAstVisitor visitor) {
     WalkContext context = (WalkContext) c;
     int result = getValue(n);
@@ -2596,8 +2620,15 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     CAstNode r = n.getChild(2);
     Assertions._assert(getValue(r) != -1, CAstPrinter.print(n));
     Assertions._assert(getValue(l) != -1, CAstPrinter.print(n));
+    
+    boolean mayBeInteger = handleBinaryOpThrow(n, n.getChild(0), context);
+
     context.cfg().addInstruction(
-        SSAInstructionFactory.BinaryOpInstruction(translateBinaryOpcode(n.getChild(0)), result, getValue(l), getValue(r), true));
+      SSAInstructionFactory.BinaryOpInstruction(translateBinaryOpcode(n.getChild(0)), result, getValue(l), getValue(r), mayBeInteger));
+
+    if (mayBeInteger) {
+      context.cfg().newBlock(true);
+    }
   }
 
   protected boolean visitUnaryExpr(CAstNode n, Context c, CAstVisitor visitor) {
@@ -2905,7 +2936,15 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     int rval = getValue(v);
     CAstNode op = a.getChild(2);
     int temp2 = context.currentScope().allocateTempValue();
-    context.cfg().addInstruction(SSAInstructionFactory.BinaryOpInstruction(translateBinaryOpcode(op), temp2, temp, rval, true));
+
+    boolean mayBeInteger = handleBinaryOpThrow(a, op, context);
+
+    context.cfg().addInstruction(SSAInstructionFactory.BinaryOpInstruction(translateBinaryOpcode(op), temp2, temp, rval, mayBeInteger));
+
+    if (mayBeInteger) {
+      context.cfg().newBlock(true);
+    }
+
     return temp2;
   }
 
