@@ -589,7 +589,6 @@ public class TabulationSolver<T, P> {
     final int c = supergraph.getNumber(edge.n);
 
     final Collection<T> returnSites = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.n));
-    final Collection<T> returnSitesWithCallee = HashSetFactory.make();
 
     // [14 - 16]
     for (Iterator<? extends T> it = supergraph.getCalledNodes(edge.n); it.hasNext();) {
@@ -630,7 +629,6 @@ public class TabulationSolver<T, P> {
                 for (Iterator<? extends T> succ = supergraph.getSuccNodes(exit); succ.hasNext();) {
                   final T returnSite = succ.next();
                   if (returnSites.contains(returnSite)) {
-                    returnSitesWithCallee.add(returnSite);
                     int x_num = supergraph.getLocalBlockNumber(exit);
                     // reachedBySummary := {d2} s.t. <callee,d1> -> <exit,d2>
                     // was recorded as a summary edge
@@ -694,7 +692,7 @@ public class TabulationSolver<T, P> {
         System.err.println(" process return site: " + returnSite);
       }
       IUnaryFlowFunction f = null;
-      if (returnSitesWithCallee.contains(returnSite)) {
+      if (hasCallee(returnSite)) {
         f = flowFunctionMap.getCallToReturnFlowFunction(edge.n, returnSite);
       } else {
         f = flowFunctionMap.getCallNoneToReturnFlowFunction(edge.n, returnSite);
@@ -715,6 +713,20 @@ public class TabulationSolver<T, P> {
         });
       }
     }
+  }
+
+  private boolean hasCallee(T returnSite) {
+    // if the supergraph says returnSite has a predecessor which indicates a
+    // return
+    // edge, then we say this return site has a callee.
+    for (Iterator<? extends T>  it = supergraph.getPredNodes(returnSite); it.hasNext(); ) {
+      T pred = it.next();
+      if (!supergraph.getProcOf(pred).equals(supergraph.getProcOf(returnSite))) {
+        // an interprocedural edge.   there must be a callee.
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
