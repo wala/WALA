@@ -100,7 +100,6 @@ public abstract class SSAInference<T extends IVariable> extends DefaultFixedPoin
   /**
    * Create a dataflow equation induced by a given instruction
    */
-  @SuppressWarnings("unchecked")
   private void makeEquationForInstruction(OperatorFactory<T> opFactory, SSAInstruction s) {
     if (s != null && s.hasDef()) {
       AbstractOperator<T> op = opFactory.get(s);
