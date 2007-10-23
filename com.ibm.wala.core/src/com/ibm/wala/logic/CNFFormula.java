@@ -20,8 +20,6 @@ import com.ibm.wala.util.debug.Assertions;
 /**
  * A formula in conjunctive normal form.
  * 
- * TODO: rename and refactor
- * 
  * @author sjfink
  */
 public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
@@ -78,7 +76,7 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
     if (DEBUG) {
       System.err.println("make CNF " + f);
     }
-    if (f instanceof CNFFormula) {
+    if (f instanceof ICNFFormula) {
       return (ICNFFormula) f;
     } else {
       switch (f.getKind()) {
@@ -403,6 +401,20 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
     }
   }
   
+  public static IFormula make(ICNFFormula cnf, IMaxTerm t) {
+    Collection<IMaxTerm> c = HashSetFactory.make();
+    c.addAll(cnf.getMaxTerms());
+    c.add(t);
+    return make(c);
+  }
+  
+  public static IFormula make(ICNFFormula f1, ICNFFormula f2) {
+    Collection<IMaxTerm> c = HashSetFactory.make();
+    c.addAll(f1.getMaxTerms());
+    c.addAll(f2.getMaxTerms());
+    return make(c);
+  }
+  
   // TODO: move this to Simplifier?
   public static IMaxTerm normalize(IMaxTerm f) throws IllegalArgumentException {
     if (f == null) {
@@ -421,6 +433,5 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
     }
   }
 
-  
-  
+
 }

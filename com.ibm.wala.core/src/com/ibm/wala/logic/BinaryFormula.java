@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -56,7 +57,20 @@ public class BinaryFormula extends AbstractBinaryFormula {
     } else if (f1.equals(BooleanConstantFormula.FALSE) || f2.equals(BooleanConstantFormula.FALSE)) {
       return BooleanConstantFormula.FALSE;
     } else {
-      return new BinaryFormula(BinaryConnective.AND, f1, f2);
+      if (f1 instanceof IMaxTerm && f2 instanceof IMaxTerm) {
+        Collection<IMaxTerm> c = new ArrayList<IMaxTerm>(2);
+        c.add((IMaxTerm) f1);
+        c.add((IMaxTerm) f2);
+        return CNFFormula.make(c);
+      } else if (f1 instanceof ICNFFormula && f2 instanceof IMaxTerm) {
+        return CNFFormula.make((ICNFFormula) f1, (IMaxTerm) f2);
+      } else if (f1 instanceof IMaxTerm && f2 instanceof ICNFFormula) {
+        return CNFFormula.make((ICNFFormula) f2, (IMaxTerm) f1);
+      } else if (f1 instanceof ICNFFormula && f2 instanceof ICNFFormula) {
+        return CNFFormula.make((ICNFFormula) f1, (ICNFFormula) f2);
+      }else {
+        return new BinaryFormula(BinaryConnective.AND, f1, f2);
+      }
     }
   }
 
@@ -65,7 +79,11 @@ public class BinaryFormula extends AbstractBinaryFormula {
   }
 
   public static IFormula make(BinaryConnective connective, IFormula f1, IFormula f2) {
-    return new BinaryFormula(connective, f1, f2);
+    if (connective.equals(BinaryConnective.AND)) {
+      return and(f1, f2);
+    } else {
+      return new BinaryFormula(connective, f1, f2);
+    }
   }
 
   public static IFormula or(IFormula f1, IFormula f2) throws IllegalArgumentException {
@@ -108,7 +126,7 @@ public class BinaryFormula extends AbstractBinaryFormula {
     result.addAll(f2.getFreeVariables());
     return result;
   }
-  
+
   public Collection<? extends ITerm> getAllTerms() {
     Collection<ITerm> result = HashSetFactory.make();
     result.addAll(f1.getAllTerms());
@@ -122,7 +140,7 @@ public class BinaryFormula extends AbstractBinaryFormula {
     result.addAll(f2.getConstants());
     return result;
   }
-  
+
   public String prettyPrint(ILogicDecorator d) throws IllegalArgumentException {
     if (d == null) {
       throw new IllegalArgumentException("d == null");
