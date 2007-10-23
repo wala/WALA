@@ -154,6 +154,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
   protected Type fREType; // RuntimeException
 
+  protected Type fDivByZeroType;
+
   protected final ClassLoaderReference fClassLoaderRef;
 
   private CAstTypeDictionary fTypeDict;
@@ -410,11 +412,40 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
     private CAstNode processAssign(Assign la, WalkContext wc) {
       WalkContext lvc = new AssignmentContext(wc);
-      if (la.operator() == Assign.ASSIGN)
+      if (la.operator() == Assign.ASSIGN) {
         return makeNode(wc, fFactory, la, CAstNode.ASSIGN, walkNodes(la.left(), lvc), walkNodes(la.right(), wc));
-      else
-        return makeNode(wc, fFactory, la, CAstNode.ASSIGN_PRE_OP, walkNodes(la.left(), lvc), walkNodes(la.right(), wc),
-            mapAssignOperator(la.operator()));
+      } else {
+	CAstNode op = 
+	  makeNode(wc, 
+		   fFactory, 
+		   la, 
+		   CAstNode.ASSIGN_PRE_OP,
+		   walkNodes(la.left(), lvc),
+		   walkNodes(la.right(), wc),
+		   mapAssignOperator(la.operator()));
+
+
+	  if (la.type().isLongOrLess() &&
+	      (mapAssignOperator(la.operator())==CAstOperator.OP_DIV ||
+	       mapAssignOperator(la.operator())==CAstOperator.OP_MOD))
+	  {
+	    Collection excTargets = wc.getCatchTargets(fDivByZeroType);
+	    if (!excTargets.isEmpty()) {
+	      for (Iterator iterator = excTargets.iterator(); 
+		   iterator.hasNext();) 
+	      {
+		Pair catchPair = (Pair) iterator.next();
+		wc.cfg().add(op, catchPair.snd, fDivByZeroType);
+	      }
+	    } else {
+	      wc.cfg().add(op, 
+			   CAstControlFlowMap.EXCEPTION_TO_EXIT, 
+			   fDivByZeroType);
+	    }
+	  }
+
+	  return op;
+      }
     }
 
     protected CAstOperator mapAssignOperator(Assign.Operator op) {
@@ -474,7 +505,30 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
 	  }
 
-	  return makeNode(wc, fFactory, b, CAstNode.BINARY_EXPR, mapBinaryOpcode(operator), leftNode, rightNode);
+	  CAstNode op = makeNode(wc, fFactory, b, CAstNode.BINARY_EXPR, mapBinaryOpcode(operator), leftNode, rightNode);
+
+	  if (leftType.isLongOrLess() &&
+	      rightType.isLongOrLess() &&
+	      (mapBinaryOpcode(operator)==CAstOperator.OP_DIV ||
+	       mapBinaryOpcode(operator)==CAstOperator.OP_MOD))
+	  {
+	    Collection excTargets = wc.getCatchTargets(fDivByZeroType);
+	    if (!excTargets.isEmpty()) {
+	      for (Iterator iterator = excTargets.iterator(); 
+		   iterator.hasNext();) 
+	      {
+		Pair catchPair = (Pair) iterator.next();
+		wc.cfg().add(op, catchPair.snd, fDivByZeroType);
+	      }
+	    } else {
+	      wc.cfg().add(op, 
+			   CAstControlFlowMap.EXCEPTION_TO_EXIT, 
+			   fDivByZeroType);
+	    }
+	  }
+
+	  return op;
+	  
 	} else {
 	  return makeNode(wc, fFactory, b, CAstNode.BINARY_EXPR, mapBinaryOpcode(operator), walkNodes(left, wc), walkNodes(right, wc));
 	}
@@ -2132,6 +2186,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       fNPEType = fTypeSystem.typeForName("java.lang.NullPointerException");
       fCCEType = fTypeSystem.typeForName("java.lang.ClassCastException");
       fREType = fTypeSystem.typeForName("java.lang.RuntimeException");
+      fDivByZeroType = fTypeSystem.typeForName("java.lang.ArithmeticException");
     } catch (SemanticException e) {
       Assertions.UNREACHABLE("Couldn't find Polyglot type for NPE/RE!");
     }
