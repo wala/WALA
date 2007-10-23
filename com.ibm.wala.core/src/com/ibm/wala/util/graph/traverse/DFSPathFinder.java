@@ -58,6 +58,11 @@ public class DFSPathFinder<T> extends Stack<T> {
   final private Map<T, Iterator<? extends T>> pendingChildren = HashMapFactory.make(25);
 
   /**
+   *  Flag recording whether initialization has happened.
+   */
+  private boolean initialized = false;
+
+  /**
    * Construct a depth-first enumerator starting with a particular node
    * in a directed graph. 
    *
@@ -89,22 +94,30 @@ public class DFSPathFinder<T> extends Stack<T> {
     this.filter = f;
   }
 
+  private void init() {
+    initialized = true;
+    if (roots.hasNext()) {
+      T n = roots.next();
+      push(n);
+      setPendingChildren(n, getConnected(n));
+    }
+  }
+
   /**
    * @return a List of nodes that specifies the first path found
    * from a root to a node accepted by the filter.  Returns null if
    * no path found.
    */
   public List find() {
-
-    if (roots.hasNext()) {
-      T n = roots.next();
-      push(n);
-      setPendingChildren(n, getConnected(n));
+    if (!initialized) {
+      init();
     }
     while (hasNext()) {
       T n = peek();
       if (filter.accepts(n)) {
-        return currentPath();
+	List path = currentPath();
+	advance();
+        return path;
       }
       advance();
     }
@@ -113,8 +126,8 @@ public class DFSPathFinder<T> extends Stack<T> {
 
   private List<T> currentPath() {
     ArrayList<T> result = new ArrayList<T>();
-    while (!empty()) {
-      result.add(pop());
+    for(Iterator<T> path = iterator(); path.hasNext(); ) {
+      result.add(0, path.next());
     }
     return result;
   }
