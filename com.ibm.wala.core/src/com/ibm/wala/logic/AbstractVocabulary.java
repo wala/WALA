@@ -16,7 +16,6 @@ public abstract class AbstractVocabulary<T extends IConstant> implements IVocabu
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
-    result.append(getConstants());
     result.append("Functions:\n");
     if (getFunctions().isEmpty()) {
       result.append(" <none> ");
@@ -31,6 +30,22 @@ public abstract class AbstractVocabulary<T extends IConstant> implements IVocabu
     } else {
       for (IRelation r : getRelations()) {
         result.append(r).append("\n");
+      }
+    }
+    result.append("Constants:\n");
+    if (getConstants().isEmpty()) {
+      result.append(" <none> ");
+    } else {
+      for (IConstant c : getConstants()) {
+        result.append(c).append("\n");
+      }
+    }
+    result.append("Variables:\n");
+    if (getVariables().isEmpty()) {
+      result.append(" <none> ");
+    } else {
+      for (AbstractVariable v : getVariables()) {
+        result.append(v).append("\n");
       }
     }
     return result.toString();

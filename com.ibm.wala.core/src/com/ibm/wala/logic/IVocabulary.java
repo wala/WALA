@@ -22,6 +22,8 @@ import java.util.Collection;
  */
 public interface IVocabulary<T extends IConstant> {
   
+  Collection<AbstractVariable> getVariables();
+  
   Collection<T> getConstants();
 
   Collection<? extends IRelation> getRelations();

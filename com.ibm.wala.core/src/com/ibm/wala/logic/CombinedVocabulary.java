@@ -50,6 +50,14 @@ public class CombinedVocabulary extends AbstractVocabulary<IConstant> {
     s.addAll(b.getRelations());
     return s;
   }
+  
+  @SuppressWarnings("unchecked")
+  public Collection<AbstractVariable> getVariables() {
+    Collection<AbstractVariable> s = HashSetFactory.make();
+    s.addAll(a.getVariables());
+    s.addAll(b.getVariables());
+    return s;
+  }
 
   @SuppressWarnings("unchecked")
   public Collection<IConstant> getConstants() {
