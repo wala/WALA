@@ -211,7 +211,7 @@ public class BasicHeapGraph extends HeapGraph {
   }
 
   private OrdinalSetMapping<PointerKey> getPointerKeys() {
-    MutableMapping<PointerKey> result = new MutableMapping<PointerKey>();
+    MutableMapping<PointerKey> result = MutableMapping.make();
 
     for (Iterator<PointerKey> it = pointerAnalysis.getPointerKeys().iterator(); it.hasNext();) {
       PointerKey p = it.next();

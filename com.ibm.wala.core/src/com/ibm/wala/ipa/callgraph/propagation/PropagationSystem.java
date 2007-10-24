@@ -82,7 +82,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * bijection from InstanceKey <=>Integer
    */
-  protected final MutableMapping<InstanceKey> instanceKeys = new MutableMapping<InstanceKey>();
+  protected final MutableMapping<InstanceKey> instanceKeys = MutableMapping.make();
 
   /**
    * A mapping from IClass -> MutableSharedBitVectorIntSet The range represents

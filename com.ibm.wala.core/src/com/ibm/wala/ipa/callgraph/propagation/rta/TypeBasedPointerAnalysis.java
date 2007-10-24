@@ -71,7 +71,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
    */
   private static MutableMapping<InstanceKey> makeInstanceKeys(Collection<IClass> c) {
     assert c != null;
-    MutableMapping<InstanceKey> result = new MutableMapping<InstanceKey>();
+    MutableMapping<InstanceKey> result = MutableMapping.make();
     for (Iterator<IClass> it = c.iterator(); it.hasNext();) {
       IClass klass = it.next();
       if (!klass.isAbstract() && !klass.isInterface()) {

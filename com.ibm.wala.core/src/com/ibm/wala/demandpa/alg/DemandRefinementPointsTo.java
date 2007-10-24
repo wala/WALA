@@ -564,7 +564,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     /**
      * for numbering {@link InstanceKey}, {@link State} pairs
      */
-    private final OrdinalSetMapping<InstanceKeyAndState> ikAndStates = new MutableMapping<InstanceKeyAndState>();
+    private final OrdinalSetMapping<InstanceKeyAndState> ikAndStates = MutableMapping.make();
 
     private final MutableIntSetFactory intSetFactory = new MutableSparseIntSetFactory(); // new
 

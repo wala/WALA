@@ -44,7 +44,8 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
   }
   
   public static <T> OffsetOrdinalSetMapping<T> make(int offset) {
-    return new OffsetOrdinalSetMapping<T>(new MutableMapping<T>(), offset);
+    MutableMapping<T> m = MutableMapping.make();
+    return new OffsetOrdinalSetMapping<T>(m, offset);
   }
 
   public int add(T o) {

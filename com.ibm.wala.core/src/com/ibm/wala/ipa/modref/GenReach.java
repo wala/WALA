@@ -42,7 +42,7 @@ class GenReach<T, L> extends BitVectorFramework<T, L> {
   }
 
   private static <T, L> OrdinalSetMapping<L> makeDomain(Map<T, Collection<L>> gen) {
-    MutableMapping<L> result = new MutableMapping<L>();
+    MutableMapping<L> result = MutableMapping.make();
     for (Collection<L> c : gen.values()) {
       for (L p : c) {
         result.add(p);

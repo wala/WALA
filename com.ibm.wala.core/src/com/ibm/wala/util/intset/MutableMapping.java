@@ -28,6 +28,10 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
 
   private static final int INITIAL_CAPACITY = 20;
 
+  public static <T> MutableMapping<T> make() {
+    return new MutableMapping<T>();
+  }
+
   private Object[] array;
 
   private int nextIndex = 0;
@@ -53,7 +57,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     nextIndex = array.length;
   }
 
-  public MutableMapping() {
+  protected MutableMapping() {
     array = new Object[INITIAL_CAPACITY];
     nextIndex = 0;
   }

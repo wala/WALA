@@ -34,7 +34,7 @@ public class PointsToMap {
   /**
    * An object that manages the numbering of pointer keys
    */
-  private final MutableMapping<PointerKey> pointerKeys = new MutableMapping<PointerKey>();
+  private final MutableMapping<PointerKey> pointerKeys = MutableMapping.make();
 
   /**
    * pointsToSets[i] can be

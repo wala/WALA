@@ -22,7 +22,7 @@ public class UnaryFunction implements IFunction {
 
   private final String symbol;
 
-  private UnaryFunction(String symbol) {
+  protected UnaryFunction(String symbol) {
     this.symbol = symbol;
   }
 
