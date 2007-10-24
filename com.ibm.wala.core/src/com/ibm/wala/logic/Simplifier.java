@@ -20,7 +20,6 @@ import java.util.Map;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.intset.IntPair;
 
 /**
  * Utilities for simplifying logic expressions
@@ -51,21 +50,23 @@ public class Simplifier {
    * quantified variable
    */
   private static Collection<? extends IFormula> eliminateQuantifiers(IFormula s) {
-    if (s.getKind().equals(IFormula.Kind.QUANTIFIED)) {
-      Collection<IFormula> result = HashSetFactory.make();
-      QuantifiedFormula f = (QuantifiedFormula) s;
-      assert f.getBoundVar() instanceof ConstrainedIntVariable;
-      ConstrainedIntVariable v = (ConstrainedIntVariable) f.getBoundVar();
-      IntPair range = v.getRange();
-      assert range.getX() >= 0;
-      assert range.getY() >= range.getX();
-      for (int i = range.getX(); i <= range.getY(); i++) {
-        result.add(substitute(f.getFormula(), v, IntConstant.make(i)));
-      }
-      return result;
-    } else {
-      return Collections.singleton(s);
-    }
+    Assertions.UNREACHABLE("implement me");
+    return null;
+//    if (s.getKind().equals(IFormula.Kind.QUANTIFIED)) {
+//      Collection<IFormula> result = HashSetFactory.make();
+//      QuantifiedFormula f = (QuantifiedFormula) s;
+//      assert f.getBoundVar() instanceof ConstrainedIntVariable;
+//      ConstrainedIntVariable v = (ConstrainedIntVariable) f.getBoundVar();
+//      IntPair range = v.getRange();
+//      assert range.getX() >= 0;
+//      assert range.getY() >= range.getX();
+//      for (int i = range.getX(); i <= range.getY(); i++) {
+//        result.add(substitute(f.getFormula(), v, IntConstant.make(i)));
+//      }
+//      return result;
+//    } else {
+//      return Collections.singleton(s);
+//    }
   }
 
   /**

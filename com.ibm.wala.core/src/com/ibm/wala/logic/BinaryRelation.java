@@ -10,16 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.intset.IBinaryNaturalRelation;
-import com.ibm.wala.util.intset.IntIterator;
-import com.ibm.wala.util.intset.IntPair;
-import com.ibm.wala.util.intset.IntSet;
 
 public class BinaryRelation implements IRelation {
 
@@ -95,55 +88,6 @@ public class BinaryRelation implements IRelation {
 
   public String getSymbol() {
     return symbol;
-  }
-
-  /**
-   * build a constraint saying v \in s
-   * 
-   * @throws IllegalArgumentException
-   *             if s is null
-   */
-  public static IFormula makeSetConstraint(ConstrainedIntVariable v, IntSet s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
-    if (s.isEmpty()) {
-      // a hack. TODO: support primitives for "true" and "false"
-      return RelationFormula.makeEquals(IntConstant.make(0), IntConstant.make(1));
-    }
-    IntIterator it = s.intIterator();
-    int first = it.next();
-    IFormula result = RelationFormula.makeEquals(v, first);
-    while (it.hasNext()) {
-      int i = it.next();
-      result = BinaryFormula.or(result, RelationFormula.makeEquals(v, i));
-    }
-    return result;
-  }
-
-  /**
-   * Build constraints which ensure that the relation r fully defines the
-   * relation R over the given range of integers.
-   * 
-   * @throws IllegalArgumentException
-   *             if domain is null
-   * 
-   */
-  public static Collection<IFormula> buildConstraints(IBinaryNaturalRelation r, BinaryRelation R, IntPair domain) {
-    if (domain == null) {
-      throw new IllegalArgumentException("domain is null");
-    }
-    Set<IFormula> result = HashSetFactory.make();
-    for (int i = domain.getX(); i <= domain.getY(); i++) {
-      IntSet s = r.getRelated(i);
-      if (s != null) {
-        ConstrainedIntVariable v0 = ConstrainedIntVariable.make(0, domain);
-        IFormula inSet = makeSetConstraint(v0, s);
-        IFormula f = BinaryFormula.biconditional(inSet, RelationFormula.make(R, i, v0));
-        result.add(QuantifiedFormula.forall(v0, f));
-      }
-    }
-    return result;
   }
 
   public static BinaryRelation make(String symbol) {
