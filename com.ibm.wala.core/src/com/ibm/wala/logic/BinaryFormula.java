@@ -120,8 +120,8 @@ public class BinaryFormula extends AbstractBinaryFormula {
     return f2;
   }
 
-  public Collection<AbstractNumberedVariable> getFreeVariables() {
-    Collection<AbstractNumberedVariable> result = HashSetFactory.make();
+  public Collection<AbstractVariable> getFreeVariables() {
+    Collection<AbstractVariable> result = HashSetFactory.make();
     result.addAll(f1.getFreeVariables());
     result.addAll(f2.getFreeVariables());
     return result;

@@ -10,24 +10,18 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * A term that represents a variable in a formula
  * 
  * @author sjfink
  */
-public abstract class AbstractNumberedVariable extends AbstractTerm implements Comparable<AbstractNumberedVariable> {
+public abstract class AbstractNumberedVariable extends AbstractVariable implements Comparable<AbstractNumberedVariable> {
 
   private final int number;
 
   protected AbstractNumberedVariable(int number) {
     this.number = number;
-  }
-
-  public final Kind getKind() {
-    return Kind.VARIABLE;
   }
 
   @Override
@@ -61,26 +55,8 @@ public abstract class AbstractNumberedVariable extends AbstractTerm implements C
     return "v" + getNumber();
   }
 
-  public String prettyPrint(ILogicDecorator d) throws IllegalArgumentException {
-    if (d == null) {
-      throw new IllegalArgumentException("d == null");
-    }
-    return d.prettyPrint(this);
-  }
-
-  public final Collection<AbstractNumberedVariable> getFreeVariables() {
-    return Collections.singleton(this);
-  }
-  
-  public final Collection<? extends IConstant> getConstants() {
-    return Collections.emptySet();
-  }
-
   public final int compareTo(AbstractNumberedVariable o) throws NullPointerException {
     return this.getNumber() - o.getNumber();
   }
 
-  public final Collection<? extends ITerm> getAllTerms() {
-    return Collections.singleton(this);
-  }
 }

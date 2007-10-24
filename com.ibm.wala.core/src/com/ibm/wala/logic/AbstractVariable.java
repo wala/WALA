@@ -13,12 +13,30 @@ package com.ibm.wala.logic;
 import java.util.Collection;
 import java.util.Collections;
 
+/**
+ * A term that represents a variable in a formula
+ * 
+ * @author sjfink
+ */
+public abstract class AbstractVariable extends AbstractTerm {
 
-public abstract class AbstractConstant implements IConstant {
+
+  protected AbstractVariable() {
+  }
+
+  public final Kind getKind() {
+    return Kind.VARIABLE;
+  }
+
+  @Override
+  public abstract int hashCode();
+
+  @Override
+  public abstract boolean equals(Object obj);
+
   
-  public Kind getKind() {
-    return Kind.CONSTANT;
-   }
+  @Override
+  public abstract String toString();
 
   public String prettyPrint(ILogicDecorator d) throws IllegalArgumentException {
     if (d == null) {
@@ -27,23 +45,15 @@ public abstract class AbstractConstant implements IConstant {
     return d.prettyPrint(this);
   }
 
-  public Collection<AbstractVariable> getFreeVariables() {
+  public final Collection<AbstractVariable> getFreeVariables() {
+    return Collections.singleton(this);
+  }
+  
+  public final Collection<? extends IConstant> getConstants() {
     return Collections.emptySet();
   }
 
-  public Collection<? extends IConstant> getConstants() {
+  public final Collection<? extends ITerm> getAllTerms() {
     return Collections.singleton(this);
   }
-
-  public Collection<? extends ITerm> getAllTerms() {
-    return Collections.singleton(this);
-  }
-  
-
-  @Override
-  public abstract boolean equals(Object obj);
-
-  @Override
-  public abstract int hashCode();
-  
 }

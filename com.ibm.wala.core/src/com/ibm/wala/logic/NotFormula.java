@@ -78,7 +78,7 @@ public class NotFormula implements IFormula {
     return f;
   }
 
-  public Collection<AbstractNumberedVariable> getFreeVariables() {
+  public Collection<AbstractVariable> getFreeVariables() {
     return f.getFreeVariables();
   }
   

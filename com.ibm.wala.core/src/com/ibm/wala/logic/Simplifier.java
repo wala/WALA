@@ -275,16 +275,16 @@ public class Simplifier {
     }
   }
 
-  static AbstractNumberedVariable makeFreshIntVariable(IFormula f, IFormula g) {
-    int max = 0;
-    for (AbstractNumberedVariable v : f.getFreeVariables()) {
-      max = Math.max(max, v.getNumber());
-    }
-    for (AbstractNumberedVariable v : g.getFreeVariables()) {
-      max = Math.max(max, v.getNumber());
-    }
-    return IntVariable.make(max + 1);
-  }
+//  static AbstractNumberedVariable makeFreshIntVariable(IFormula f, IFormula g) {
+//    int max = 0;
+//    for (AbstractVariable v : f.getFreeVariables()) {
+//      max = Math.max(max, v.getNumber());
+//    }
+//    for (AbstractVariable v : g.getFreeVariables()) {
+//      max = Math.max(max, v.getNumber());
+//    }
+//    return IntVariable.make(max + 1);
+//  }
 
 //  /**
 //   * Is f of the form t = rhs?
@@ -525,11 +525,11 @@ public class Simplifier {
     }
   }
 
-  public static Collection<AbstractNumberedVariable> getFreeVariables(Collection<? extends IFormula> constraints) {
+  public static Collection<AbstractVariable> getFreeVariables(Collection<? extends IFormula> constraints) {
     if (constraints == null) {
       throw new IllegalArgumentException("constraints is null");
     }
-    Collection<AbstractNumberedVariable> free = HashSetFactory.make();
+    Collection<AbstractVariable> free = HashSetFactory.make();
     for (IFormula f : constraints) {
       free.addAll(f.getFreeVariables());
     }

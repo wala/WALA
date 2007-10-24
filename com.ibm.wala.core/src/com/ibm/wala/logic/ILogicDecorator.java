@@ -19,7 +19,7 @@ public interface ILogicDecorator {
 
   String prettyPrint(BooleanConstant c);
 
-  String prettyPrint(AbstractNumberedVariable v);
+  String prettyPrint(AbstractVariable v);
 
   String prettyPrint(Quantifier quantifier);
 
