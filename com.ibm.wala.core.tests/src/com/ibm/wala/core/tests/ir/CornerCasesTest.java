@@ -39,7 +39,7 @@ public class CornerCasesTest extends WalaTestCase {
   private static final ClassLoader MY_CLASSLOADER = CornerCasesTest.class.getClassLoader();
 
   /**
-   * test that getMethod() works even if a declared ancester interface doesn't
+   * test that getMethod() works even if a declared ancestor interface doesn't
    * exist
    * 
    * @throws ClassHierarchyException
