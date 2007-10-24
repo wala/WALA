@@ -26,5 +26,6 @@ public interface IFunction {
    * @return a string which uniquely identifies this relation
    */
   String getSymbol();
+  
 
 }

@@ -14,8 +14,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.util.intset.IntPair;
-import com.ibm.wala.util.intset.MutableMapping;
-import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
  * A simple class to define a simple vocabulary of functions
@@ -24,12 +22,12 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  * @author sjfink
  *
  */
-public class BasicVocabulary<T> extends AbstractVocabulary<T> {
+public class BasicVocabulary<T extends IConstant> extends AbstractVocabulary<T> {
 
   private final Collection<? extends IFunction> functions;
   private final Collection<? extends IRelation> relations;
   
-  private BasicVocabulary(final Collection<? extends IFunction> functions, final Collection<? extends IRelation> relations) {
+  protected BasicVocabulary(final Collection<? extends IFunction> functions, final Collection<? extends IRelation> relations) {
     super();
     this.functions = functions;
     this.relations = relations;
@@ -47,23 +45,22 @@ public class BasicVocabulary<T> extends AbstractVocabulary<T> {
     return Collections.unmodifiableCollection(relations);
   }
 
-  public static <T> BasicVocabulary<T> make(IFunction f) {
+  public static <T extends IConstant> BasicVocabulary<T> make(IFunction f) {
     Collection<IRelation> empty = Collections.emptySet();
     return new BasicVocabulary<T>(Collections.singleton(f), empty);
   }
   
-  public static <T> BasicVocabulary<T> make(Collection<IFunction> f) {
+  public static <T extends IConstant> BasicVocabulary<T> make(Collection<IFunction> f) {
     Collection<IRelation> empty = Collections.emptySet();
     return new BasicVocabulary<T>(f, empty);
   }
   
-  public static <T> BasicVocabulary<T> make(Collection<? extends IFunction> f, Collection<IRelation> r) {
+  public static <T extends IConstant> BasicVocabulary<T> make(Collection<? extends IFunction> f, Collection<IRelation> r) {
     return new BasicVocabulary<T>(f, r);
   }
 
-  public OrdinalSetMapping<T> getConstants() {
-    // TODO: implement empty mapping
-    return new MutableMapping<T>();
+  public Collection<T> getConstants() {
+    return Collections.emptySet();
   }
 
 }

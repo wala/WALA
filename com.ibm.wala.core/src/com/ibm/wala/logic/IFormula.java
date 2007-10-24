@@ -33,7 +33,7 @@ public interface IFormula {
   /**
    * @return the free variables in this formula
    */
-  public Collection<AbstractVariable> getFreeVariables();
+  public Collection<AbstractNumberedVariable> getFreeVariables();
   
   /**
    * @return the constants that appear in this formula

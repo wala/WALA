@@ -38,7 +38,7 @@ public class DefaultDecorator implements ILogicDecorator {
     return c.toString();
   }
 
-  public String prettyPrint(AbstractVariable v) throws IllegalArgumentException {
+  public String prettyPrint(AbstractNumberedVariable v) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException("v == null");
     }

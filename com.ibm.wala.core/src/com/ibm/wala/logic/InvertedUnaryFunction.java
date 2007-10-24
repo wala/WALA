@@ -14,8 +14,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.util.intset.IntPair;
-import com.ibm.wala.util.intset.MutableMapping;
-import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 public class InvertedUnaryFunction extends BinaryRelation {
 
@@ -53,10 +51,10 @@ public class InvertedUnaryFunction extends BinaryRelation {
       return Collections.singleton(result);
     }
 
-    public IVocabulary getVocabulary() {
-      return new IVocabulary<Object>() {
-        public OrdinalSetMapping<Object> getConstants() {
-          return new MutableMapping<Object>();
+    public IVocabulary<IConstant> getVocabulary() {
+      return new IVocabulary<IConstant>() {
+        public Collection<IConstant> getConstants() {
+          return Collections.emptySet();
         }
         public IntPair getDomain() {
           return AbstractVocabulary.emptyDomain();

@@ -54,8 +54,8 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
     return result;
   }
 
-  public Collection<AbstractVariable> getFreeVariables() {
-    Collection<AbstractVariable> result = HashSetFactory.make();
+  public Collection<AbstractNumberedVariable> getFreeVariables() {
+    Collection<AbstractNumberedVariable> result = HashSetFactory.make();
     for (IFormula f : maxTerms) {
       result.addAll(f.getFreeVariables());
     }

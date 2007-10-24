@@ -15,10 +15,8 @@ import java.util.Collection;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntPair;
-import com.ibm.wala.util.intset.MutableMapping;
-import com.ibm.wala.util.intset.OrdinalSetMapping;
 
-public class CombinedVocabulary extends AbstractVocabulary<Object> {
+public class CombinedVocabulary extends AbstractVocabulary<IConstant> {
 
   private final IVocabulary a;
   private final IVocabulary b;
@@ -73,20 +71,14 @@ public class CombinedVocabulary extends AbstractVocabulary<Object> {
   }
 
   @SuppressWarnings("unchecked")
-  public OrdinalSetMapping<Object> getConstants() {
-    OrdinalSetMapping<Object> ma = a.getConstants();
-    OrdinalSetMapping<Object> mb = b.getConstants();
+  public Collection<IConstant> getConstants() {
+    Collection<IConstant> ma = a.getConstants();
+    Collection<IConstant> mb = b.getConstants();
     assert ma != null;
     assert mb != null;
-    MutableMapping<Object> result = new MutableMapping<Object>();
-    for (Object o : ma) {
-      int i = ma.getMappedIndex(o);
-      result.put(i,o);
-    }
-    for (Object o : mb) {
-      int i = mb.getMappedIndex(o);
-      result.put(i, o);
-    }
+    Collection<IConstant> result = HashSetFactory.make();
+    result.addAll(ma);
+    result.addAll(mb);
     return result;
   }
 }

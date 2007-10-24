@@ -16,7 +16,7 @@ package com.ibm.wala.logic;
  * 
  * @author sjfink
  */
-public class IntVariable extends AbstractVariable {
+public class IntVariable extends AbstractNumberedVariable {
 
   protected IntVariable(int number) {
    super(number);

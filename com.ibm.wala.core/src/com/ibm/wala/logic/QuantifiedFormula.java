@@ -21,28 +21,28 @@ public class QuantifiedFormula implements IMaxTerm {
 
   private final Quantifier q;
 
-  private final AbstractVariable boundV;
+  private final AbstractNumberedVariable boundV;
 
-  private QuantifiedFormula(final Quantifier q, final AbstractVariable boundV, final IFormula f) {
+  private QuantifiedFormula(final Quantifier q, final AbstractNumberedVariable boundV, final IFormula f) {
     super();
     this.f = f;
     this.q = q;
     this.boundV = boundV;
   }
 
-  public static QuantifiedFormula forall(AbstractVariable v, IFormula formula) {
+  public static QuantifiedFormula forall(AbstractNumberedVariable v, IFormula formula) {
     return new QuantifiedFormula(Quantifier.FORALL, v, formula);
   }
 
-  public static QuantifiedFormula forall(AbstractVariable v1, AbstractVariable v2, IFormula formula) {
+  public static QuantifiedFormula forall(AbstractNumberedVariable v1, AbstractNumberedVariable v2, IFormula formula) {
     return new QuantifiedFormula(Quantifier.FORALL, v1, forall(v2, formula));
   }
 
-  public static QuantifiedFormula forall(AbstractVariable v1, AbstractVariable v2, AbstractVariable v3, IFormula formula) {
+  public static QuantifiedFormula forall(AbstractNumberedVariable v1, AbstractNumberedVariable v2, AbstractNumberedVariable v3, IFormula formula) {
     return new QuantifiedFormula(Quantifier.FORALL, v1, forall(v2, v3, formula));
   }
 
-  public static IFormula make(Quantifier q, AbstractVariable v, IFormula f) {
+  public static IFormula make(Quantifier q, AbstractNumberedVariable v, IFormula f) {
     return new QuantifiedFormula(q, v, f);
   }
 
@@ -50,7 +50,7 @@ public class QuantifiedFormula implements IMaxTerm {
     return Kind.QUANTIFIED;
   }
 
-  public AbstractVariable getBoundVar() {
+  public AbstractNumberedVariable getBoundVar() {
     return boundV;
   }
 
@@ -99,8 +99,8 @@ public class QuantifiedFormula implements IMaxTerm {
     return true;
   }
 
-  public Collection<AbstractVariable> getFreeVariables() {
-    Collection<AbstractVariable> result = f.getFreeVariables();
+  public Collection<AbstractNumberedVariable> getFreeVariables() {
+    Collection<AbstractNumberedVariable> result = f.getFreeVariables();
     result.remove(boundV);
     return result;
   }

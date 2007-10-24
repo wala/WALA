@@ -12,7 +12,7 @@ package com.ibm.wala.logic;
 
 import com.ibm.wala.util.intset.IntPair;
 
-public abstract class AbstractVocabulary<T> implements IVocabulary<T> {
+public abstract class AbstractVocabulary<T extends IConstant> implements IVocabulary<T> {
 
   private static final IntPair EMPTY = IntPair.make(-1, -1);
 

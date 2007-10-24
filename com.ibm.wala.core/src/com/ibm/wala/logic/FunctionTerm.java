@@ -109,8 +109,8 @@ public class FunctionTerm extends AbstractTerm {
     return Collections.unmodifiableList(parameters);
   }
 
-  public Collection<AbstractVariable> getFreeVariables() {
-    Collection<AbstractVariable> result = HashSetFactory.make();
+  public Collection<AbstractNumberedVariable> getFreeVariables() {
+    Collection<AbstractNumberedVariable> result = HashSetFactory.make();
     for (ITerm t : parameters) {
       result.addAll(t.getFreeVariables());
     }

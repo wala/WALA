@@ -18,11 +18,11 @@ import java.util.Collections;
  * 
  * @author sjfink
  */
-public abstract class AbstractVariable extends AbstractTerm implements Comparable<AbstractVariable> {
+public abstract class AbstractNumberedVariable extends AbstractTerm implements Comparable<AbstractNumberedVariable> {
 
   private final int number;
 
-  protected AbstractVariable(int number) {
+  protected AbstractNumberedVariable(int number) {
     this.number = number;
   }
 
@@ -46,7 +46,7 @@ public abstract class AbstractVariable extends AbstractTerm implements Comparabl
       return false;
     if (getClass() != obj.getClass())
       return false;
-    final AbstractVariable other = (AbstractVariable) obj;
+    final AbstractNumberedVariable other = (AbstractNumberedVariable) obj;
     if (number != other.number)
       return false;
     return true;
@@ -68,7 +68,7 @@ public abstract class AbstractVariable extends AbstractTerm implements Comparabl
     return d.prettyPrint(this);
   }
 
-  public final Collection<AbstractVariable> getFreeVariables() {
+  public final Collection<AbstractNumberedVariable> getFreeVariables() {
     return Collections.singleton(this);
   }
   
@@ -76,7 +76,7 @@ public abstract class AbstractVariable extends AbstractTerm implements Comparabl
     return Collections.emptySet();
   }
 
-  public final int compareTo(AbstractVariable o) throws NullPointerException {
+  public final int compareTo(AbstractNumberedVariable o) throws NullPointerException {
     return this.getNumber() - o.getNumber();
   }
 

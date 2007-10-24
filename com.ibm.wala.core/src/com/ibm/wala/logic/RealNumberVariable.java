@@ -16,7 +16,7 @@ package com.ibm.wala.logic;
  * 
  * @author sjfink
  */
-public class RealNumberVariable extends AbstractVariable {
+public class RealNumberVariable extends AbstractNumberedVariable {
 
   protected RealNumberVariable(int number) {
    super(number);

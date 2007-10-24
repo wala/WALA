@@ -13,7 +13,6 @@ package com.ibm.wala.logic;
 import java.util.Collection;
 
 import com.ibm.wala.util.intset.IntPair;
-import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
  * Vocabulary of a calculus
@@ -23,7 +22,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  * @author sjfink
  *
  */
-public interface IVocabulary<T> {
+public interface IVocabulary<T extends IConstant> {
   
   /**
    * The range [low,high] of integer values which are considered valid assignments for variables in this vocabulary
@@ -33,7 +32,7 @@ public interface IVocabulary<T> {
   /**
    * each i \in getDomain() maps to a constant of type T
    */
-  OrdinalSetMapping<T> getConstants();
+  Collection<T> getConstants();
 
   Collection<? extends IRelation> getRelations();
   

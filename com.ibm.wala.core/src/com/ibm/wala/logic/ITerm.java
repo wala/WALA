@@ -27,7 +27,7 @@ public interface ITerm {
   
   public Kind getKind();
 
-  public Collection<AbstractVariable> getFreeVariables();
+  public Collection<AbstractNumberedVariable> getFreeVariables();
 
   public String prettyPrint(ILogicDecorator d);
 
