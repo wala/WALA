@@ -10,20 +10,12 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-import com.ibm.wala.util.intset.IntPair;
 
 public abstract class AbstractVocabulary<T extends IConstant> implements IVocabulary<T> {
-
-  private static final IntPair EMPTY = IntPair.make(-1, -1);
-
-  public static IntPair emptyDomain() {
-    return EMPTY;
-  }
 
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
-    result.append("Domain: " + getDomain() + "\n");
     result.append(getConstants());
     result.append("Functions:\n");
     if (getFunctions().isEmpty()) {

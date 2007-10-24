@@ -13,8 +13,6 @@ package com.ibm.wala.logic;
 import java.util.Collection;
 
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.intset.IntPair;
 
 public class CombinedVocabulary extends AbstractVocabulary<IConstant> {
 
@@ -51,23 +49,6 @@ public class CombinedVocabulary extends AbstractVocabulary<IConstant> {
     s.addAll(a.getRelations());
     s.addAll(b.getRelations());
     return s;
-  }
-
-  public IntPair getDomain() {
-    IntPair ad = a.getDomain();
-    IntPair bd = b.getDomain();
-    if (ad.equals(AbstractVocabulary.emptyDomain())) {
-      return bd;
-    }
-    if (bd.equals(AbstractVocabulary.emptyDomain())) {
-      return ad;
-    }
-    
-    if ((ad.getY() + 1) != bd.getX()) {
-      // TODO: fix this.
-      Assertions.UNREACHABLE(ad + " " + bd);
-    }
-    return IntPair.make(ad.getX(), bd.getY());
   }
 
   @SuppressWarnings("unchecked")

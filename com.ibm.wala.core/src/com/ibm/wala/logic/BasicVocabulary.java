@@ -13,8 +13,6 @@ package com.ibm.wala.logic;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.ibm.wala.util.intset.IntPair;
-
 /**
  * A simple class to define a simple vocabulary of functions
  * and relations
@@ -32,11 +30,7 @@ public class BasicVocabulary<T extends IConstant> extends AbstractVocabulary<T> 
     this.functions = functions;
     this.relations = relations;
   }
-
-  public IntPair getDomain() {
-    return AbstractVocabulary.emptyDomain();
-  }
-
+  
   public Collection<? extends IFunction> getFunctions() {
     return Collections.unmodifiableCollection(functions);
   }

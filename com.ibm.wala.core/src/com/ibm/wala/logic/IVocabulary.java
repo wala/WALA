@@ -12,8 +12,6 @@ package com.ibm.wala.logic;
 
 import java.util.Collection;
 
-import com.ibm.wala.util.intset.IntPair;
-
 /**
  * Vocabulary of a calculus
  * 
@@ -24,14 +22,6 @@ import com.ibm.wala.util.intset.IntPair;
  */
 public interface IVocabulary<T extends IConstant> {
   
-  /**
-   * The range [low,high] of integer values which are considered valid assignments for variables in this vocabulary
-   */
-  public IntPair getDomain();
-  
-  /**
-   * each i \in getDomain() maps to a constant of type T
-   */
   Collection<T> getConstants();
 
   Collection<? extends IRelation> getRelations();
