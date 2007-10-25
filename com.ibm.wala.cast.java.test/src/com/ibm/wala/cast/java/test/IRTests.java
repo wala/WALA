@@ -62,7 +62,7 @@ public abstract class IRTests extends WalaTestCase {
 
   protected static String testSrcPath = "." + File.separator + "testSrc";
 
-  protected static List<String> rtJar;
+  public static List<String> rtJar;
 
   protected static List<IRAssertion> emptyList = Collections.emptyList();
 
