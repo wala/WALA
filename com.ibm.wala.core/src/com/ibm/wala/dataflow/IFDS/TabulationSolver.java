@@ -272,6 +272,9 @@ public class TabulationSolver<T, P> {
         System.err.println("TABULATE " + edge);
       }
       int j = merge(edge.s_p, edge.d1, edge.n, edge.d2);
+      if (j == -1 && DEBUG_LEVEL > 0) {
+        System.err.println("merge -1: DROPPING");
+      }
       if (j != -1) {
         if (j != edge.d2) {
           // this means that we don't want to push the edge. instead,
