@@ -159,10 +159,10 @@ public class Simplifier {
     Collection<IMaxTerm> result = HashSetFactory.make();
     Collection<IMaxTerm> removedClauses = HashSetFactory.make();
     // for each clause in f ....
-    for (IMaxTerm d : collectClauses(Collections.singleton(f))) {
+    for (IMaxTerm d : f.getMaxTerms()) {
       // otherFacts := facts U live clauses of f - d
       Collection<IMaxTerm> otherFacts = HashSetFactory.make(facts);
-      otherFacts.addAll(collectClauses(Collections.singleton(f)));
+      otherFacts.addAll(f.getMaxTerms());
       otherFacts.remove(d);
       otherFacts.removeAll(removedClauses);
 

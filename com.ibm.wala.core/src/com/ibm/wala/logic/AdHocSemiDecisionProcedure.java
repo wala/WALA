@@ -269,6 +269,14 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
           IntConstant y = (IntConstant) rhs;
           return x.getVal() < y.getVal();
         }
+      } else if (r.getRelation().equals(BinaryRelation.LE)) {
+        ITerm lhs = r.getTerms().get(0);
+        ITerm rhs = r.getTerms().get(1);
+        if (lhs instanceof IntConstant && rhs instanceof IntConstant) {
+          IntConstant x = (IntConstant) lhs;
+          IntConstant y = (IntConstant) rhs;
+          return x.getVal() <= y.getVal();
+        }
       }
       break;
     }
