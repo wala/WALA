@@ -165,7 +165,7 @@ public class FunctionTerm extends AbstractTerm {
     return result;
   }
 
-  public static ITerm make(NaryFunction f, ITerm t1, ITerm t2, ITerm t3) {
+  public static FunctionTerm make(NaryFunction f, ITerm t1, ITerm t2, ITerm t3) {
     List<ITerm> l = new ArrayList<ITerm>(3);
     l.add(t1);
     l.add(t2);
