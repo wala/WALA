@@ -50,6 +50,8 @@ import com.ibm.wala.util.debug.Assertions;
  * @author sfink
  */
 public class TypeInference extends SSAInference<TypeVariable> implements FixedPointConstants {
+  
+  private static final boolean DEBUG = false;
 
   public static TypeInference make(IR ir, boolean doPrimitives) {
     return new TypeInference(ir, doPrimitives);
@@ -252,6 +254,15 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
      */
     @Override
     public byte evaluate(TypeVariable lhs, IVariable[] rhs) {
+      
+      if (DEBUG) {
+        System.err.print("PhiOperator.meet " + lhs + " ");
+        for (IVariable v : rhs) {
+          System.err.print(v + " ");
+        }
+        System.err.println();
+      }
+      
       TypeAbstraction lhsType = lhs.getType();
       TypeAbstraction meet = TypeAbstraction.TOP;
       for (int i = 0; i < rhs.length; i++) {
