@@ -50,6 +50,9 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     if (Malleable.isMalleable(allocation.getDeclaredType())) {
       return null;
     }
+    if (options.getClassTargetSelector() == null) {
+      throw new IllegalStateException("options did not specify class target selector");
+    }
     IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
       Warnings.add(ResolutionFailure.create(node, allocation));
