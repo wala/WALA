@@ -516,8 +516,12 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
       if (v == null) {
         v = new SimpleIntVector(-1);
         exceptionalSuccessors.set(getNumber(src), v);
+        v.set(0, getNumber(dst));
+        return;
       }
-      v.set(v.getMaxIndex() + 1, getNumber(dst));
+      if (v.get(v.getMaxIndex()) != getNumber(dst)) {
+        v.set(v.getMaxIndex() + 1, getNumber(dst));
+      }
     }
   }
 
