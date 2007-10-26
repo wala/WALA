@@ -23,7 +23,6 @@ import org.eclipse.jdt.core.JavaCore;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.io.CommandLine;
-import com.ibm.wala.util.warnings.WalaException;
 
 public class HeadlessUtil {
 
@@ -39,7 +38,7 @@ public class HeadlessUtil {
     System.arraycopy(cmdLine, 1, x, 0, x.length);
     try {
       p = CommandLine.parse(x);
-    } catch (WalaException e) {
+    } catch (IllegalArgumentException e) {
       e.printStackTrace();
       System.err.println("Length " + x.length);
       for (String s : x) {

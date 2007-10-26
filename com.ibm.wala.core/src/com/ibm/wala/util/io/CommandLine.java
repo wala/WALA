@@ -12,8 +12,6 @@ package com.ibm.wala.util.io;
 
 import java.util.Properties;
 
-import com.ibm.wala.util.warnings.WalaException;
-
 /**
  * 
  * utilities for parsing a command line
@@ -29,7 +27,7 @@ public class CommandLine {
    * 
    * @throws IllegalArgumentException  if args == null
    */
-  public static Properties parse(String[] args) throws IllegalArgumentException, WalaException {
+  public static Properties parse(String[] args) throws IllegalArgumentException {
     if (args == null) {
       throw new IllegalArgumentException("args == null");
     }
@@ -41,7 +39,7 @@ public class CommandLine {
           result.put(key, args[i].substring(args[i].indexOf('=') + 1));
         } else {
           if ((i + 1) >= args.length || args[i + 1].charAt(0) == '-') {
-            throw new WalaException("Malformed command-line.  Must be of form -key=value or -key value");
+            throw new IllegalArgumentException("Malformed command-line.  Must be of form -key=value or -key value");
           }
           result.put(key, args[i + 1]);
           i++;
