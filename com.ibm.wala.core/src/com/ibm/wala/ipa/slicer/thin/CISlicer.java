@@ -55,7 +55,7 @@ public class CISlicer {
 
   public CISlicer(CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
-    this(cg, pa, new ModRef(), dOptions, cOptions);
+    this(cg, pa, ModRef.make(), dOptions, cOptions);
   }
 
   public CISlicer(CallGraph cg, PointerAnalysis pa, ModRef modRef,
@@ -97,7 +97,7 @@ public class CISlicer {
       Statement st = it.next();
       switch (st.getKind()) {
       case NORMAL:
-	  Set<PointerKey> c = HashSetFactory.make((new ModRef()).getMod(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
+	  Set<PointerKey> c = HashSetFactory.make((ModRef.make()).getMod(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
             null));
         result.put(st, c);
         break;
@@ -117,7 +117,7 @@ public class CISlicer {
       Statement st = it.next();
       switch (st.getKind()) {
       case NORMAL:
-	  Set<PointerKey> c = HashSetFactory.make((new ModRef()).getRef(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
+	  Set<PointerKey> c = HashSetFactory.make((ModRef.make()).getRef(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
             null));
         result.put(st, c);
         break;

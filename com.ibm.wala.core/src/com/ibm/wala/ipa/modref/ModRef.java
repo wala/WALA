@@ -51,6 +51,14 @@ import com.ibm.wala.util.intset.OrdinalSet;
  */
 public class ModRef {
 
+  public static ModRef make() {
+    return new ModRef();
+  }
+
+
+  protected ModRef() {}
+
+  
   /**
    * For each call graph node, what heap locations (as determined by a heap
    * model) may it write, including its callees transitively

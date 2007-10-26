@@ -193,7 +193,7 @@ public class Slicer {
    */
   protected static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) {
-    return computeSlice(sdg, ss, cg, pa, new ModRef(), dOptions, cOptions, backward);
+    return computeSlice(sdg, ss, cg, pa, ModRef.make(), dOptions, cOptions, backward);
   }
 
   protected static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa, ModRef modRef,

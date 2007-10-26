@@ -109,7 +109,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   private final ModRef modRef;
 
   public SDG(final CallGraph cg, PointerAnalysis pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
-    this(cg, pa, new ModRef(), dOptions, cOptions, null);
+    this(cg, pa, ModRef.make(), dOptions, cOptions, null);
   }
 
   public SDG(final CallGraph cg, PointerAnalysis pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
