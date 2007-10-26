@@ -103,12 +103,21 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     }
   }
 
+  /**
+   * Compute the set of {@link InstanceKey}s which may represent a particular type.
+   */
   private OrdinalSet<InstanceKey> computeOrdinalInstanceSet(IClass type) {
     Collection<IClass> klasses = null;
     if (type.isInterface()) {
       klasses = getCallGraph().getClassHierarchy().getImplementors(type.getReference());
     } else {
-      klasses = getCallGraph().getClassHierarchy().computeSubClasses(type.getReference());
+      Collection<IClass> sc = getCallGraph().getClassHierarchy().computeSubClasses(type.getReference());
+      klasses = HashSetFactory.make();
+      for (IClass c : sc) {
+        if (!c.isInterface()) {
+          klasses.add(c);
+        }
+      }
     }
     klasses = HashSetFactory.make(klasses);
     klasses.retainAll(this.klasses);
@@ -116,10 +125,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     return result;
   }
 
-  /**
-   * @param c
-   *          Collection<IClass>
-   */
+
   private OrdinalSet<InstanceKey> toOrdinalInstanceKeySet(Collection c) {
     BimodalMutableIntSet s = new BimodalMutableIntSet();
     for (Iterator it = c.iterator(); it.hasNext();) {
