@@ -15,8 +15,9 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- *
+ * 
  * Abstraction of a Java type. These are immutable.
+ * 
  * @author sfink
  */
 public class PointType extends TypeAbstraction {
@@ -25,7 +26,9 @@ public class PointType extends TypeAbstraction {
 
   /**
    * Private constructor ... only for internal use.
-   * @throws IllegalArgumentException  if type is null
+   * 
+   * @throws IllegalArgumentException
+   *             if type is null
    */
   public PointType(IClass type) {
     if (type == null) {
@@ -48,7 +51,7 @@ public class PointType extends TypeAbstraction {
           return this;
         } else if (type.isArrayClass() || other.type.isArrayClass()) {
           // give up on arrays. We don't care anyway.
-	    return new ConeType(type.getClassHierarchy().getRootClass());
+          return new ConeType(type.getClassHierarchy().getRootClass());
         } else {
           return new ConeType(type.getClassHierarchy().getLeastCommonSuperclass(this.type, other.type));
         }
@@ -57,7 +60,7 @@ public class PointType extends TypeAbstraction {
         TypeReference T = other.getType().getReference();
         if (type.isArrayClass() || T.isArrayType()) {
           // give up on arrays. We don't care anyway.
-	    return new ConeType(type.getClassHierarchy().getRootClass());
+          return new ConeType(type.getClassHierarchy().getRootClass());
         }
         IClass typeKlass = type;
         if (type.getClassHierarchy().isSubclassOf(typeKlass, other.getType())) {
