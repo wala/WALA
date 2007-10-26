@@ -185,7 +185,8 @@ public class SymbolTable {
   }
 
   public String getValueString(int valueNumber) {
-    if (valueNumber < 0 || valueNumber > getMaxValueNumber() || values[valueNumber] == null) {
+    if (valueNumber < 0 || valueNumber > getMaxValueNumber() || values[valueNumber] == null
+        || values[valueNumber] instanceof PhiValue) {
       return "v" + valueNumber;
     } else {
       return "v" + valueNumber + ":" + values[valueNumber].toString();
