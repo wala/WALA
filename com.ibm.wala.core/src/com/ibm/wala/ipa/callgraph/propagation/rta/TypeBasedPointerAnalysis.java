@@ -59,7 +59,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
    *          Collection<IClass>
    * @throws AssertionError  if klasses is null
    */
-  public TypeBasedPointerAnalysis(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) throws AssertionError {
+  private TypeBasedPointerAnalysis(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) throws AssertionError {
     super(cg, makeInstanceKeys(klasses));
     this.klasses = klasses;
     heapModel = new TypeBasedHeapModel(options, klasses, cg);
@@ -79,6 +79,11 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
       }
     }
     return result;
+  }
+
+  public static TypeBasedPointerAnalysis make(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg)
+      throws AssertionError {
+    return new TypeBasedPointerAnalysis(options, klasses, cg);
   }
 
   public OrdinalSet<InstanceKey> getPointsToSet(PointerKey key) throws IllegalArgumentException {

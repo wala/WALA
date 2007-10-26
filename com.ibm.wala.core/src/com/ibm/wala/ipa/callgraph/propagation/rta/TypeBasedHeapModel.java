@@ -195,13 +195,11 @@ public class TypeBasedHeapModel implements HeapModel {
   }
 
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return iKeyFactory.getInstanceKeyForAllocation(node, allocation);
   }
 
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return iKeyFactory.getInstanceKeyForMultiNewArray(node, allocation, dim);
   }
 
   public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {

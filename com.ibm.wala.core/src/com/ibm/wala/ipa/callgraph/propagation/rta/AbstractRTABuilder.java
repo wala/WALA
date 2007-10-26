@@ -471,6 +471,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    */
   @Override
   public PointerAnalysis getPointerAnalysis() {
-    return new TypeBasedPointerAnalysis(getOptions(), allocatedClasses, getCallGraph());
+    return TypeBasedPointerAnalysis.make(getOptions(), allocatedClasses, getCallGraph());
   }
 }
