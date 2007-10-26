@@ -31,7 +31,6 @@ import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
@@ -71,6 +70,10 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
     init();
     computeI2BMapping();
     computeEdges();
+    
+    if (DEBUG) {
+      System.err.println(this);
+    }
   }
 
   @Override
@@ -228,7 +231,7 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
 
     private void computeOutgoingEdges() {
       if (DEBUG) {
-        Trace.println("Block " + this + ": computeOutgoingEdges()");
+        System.err.println("Block " + this + ": computeOutgoingEdges()");
       }
 
       Instruction last = (Instruction) getInstructions()[getLastInstructionIndex()];
@@ -289,11 +292,11 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
 
           for (int j = 0; j < hs.length; j++) {
             if (DEBUG) {
-              Trace.println(" handler " + hs[j]);
+              System.err.println(" handler " + hs[j]);
             }
             BasicBlock b = getBlockForInstruction(hs[j].getHandler());
             if (DEBUG) {
-              Trace.println(" target " + b);
+              System.err.println(" target " + b);
             }
             if (goToAllHandlers) {
               // add an edge to the catch block.
