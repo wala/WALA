@@ -26,6 +26,7 @@ import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.PlatformUI;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -34,113 +35,60 @@ import com.ibm.wala.util.warnings.WalaException;
 
 /**
  */
-public class SWTTreeViewer extends EJfaceApplicationRunner  {
-  /**
-   * The cached value of the '{@link #getGraphInput() <em>Graph Input</em>}' attribute.
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @see #getGraphInput()
-   * @generated
-   * @ordered
-   */
+public class SWTTreeViewer extends EJfaceApplicationRunner {
+
   protected Graph graphInput;
 
 
-  /**
-   * The cached value of the '{@link #getRootsInput() <em>Roots Input</em>}' attribute.
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @see #getRootsInput()
-   * @generated
-   * @ordered
-   */
   protected Collection<? extends Object> rootsInput = null;
 
 
-  /**
-   * The cached value of the '{@link #getNodeDecoratorInput() <em>Node Decorator Input</em>}' attribute.
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @see #getNodeDecoratorInput()
-   * @generated
-   * @ordered
-   */
   protected NodeDecorator nodeDecoratorInput = null;
 
-  /**
-   * The cached value of the '{@link #getPopUpActions() <em>Pop Up Actions</em>}' attribute list.
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @see #getPopUpActions()
-   * @generated
-   * @ordered
-   */
+
   final protected List<IAction> popUpActions = new LinkedList<IAction>();
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
+
   public SWTTreeViewer() {
     super();
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
+
   public Graph getGraphInput() {
     return graphInput;
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
+
   public void setGraphInput(Graph newGraphInput) {
     graphInput = newGraphInput;
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
+
   public Collection<? extends Object> getRootsInput() {
     return rootsInput;
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
+
   public void setRootsInput(Collection<? extends Object> newRootsInput) {
     rootsInput = newRootsInput;
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
+
   public NodeDecorator getNodeDecoratorInput() {
     return nodeDecoratorInput;
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
+
   public void setNodeDecoratorInput(NodeDecorator newNodeDecoratorInput) {
     nodeDecoratorInput = newNodeDecoratorInput;
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
+
   public List<IAction> getPopUpActions() {
     return popUpActions;
   }
 
-  /**
-   * <!-- begin-user-doc --> <!-- end-user-doc -->
-   * @generated
-   */
+
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer(super.toString());
@@ -165,36 +113,54 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
     final ApplicationWindow w = new GraphViewer(getGraphInput());
     setApplicationWindow(w);
     w.setBlockOnOpen(true);
-    Runnable r = new Runnable() {
-      public void run() {
-        w.open();
-        Display.getCurrent().dispose();
+
+    if (PlatformUI.isWorkbenchRunning()) {
+      // run the code on the UI thread
+      Display d = PlatformUI.getWorkbench().getDisplay();
+      Runnable r = new Runnable() {
+        public void run() {
+          try {
+            w.open();
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+      };
+      if (isBlockInput()) {
+        d.syncExec(r);
+      } else {
+        d.asyncExec(r);
       }
-    };
-    Thread t = new Thread(r);
-    t.start();
-    if (isBlockInput()) {
-      try {
-        t.join();
-      } catch (InterruptedException e) {
-        throw new WalaException("unexpected interruption", e);
+    } else {
+      Runnable r = new Runnable() {
+        public void run() {
+          w.open();
+          Display.getCurrent().dispose();
+        }
+      };
+      Thread t = new Thread(r);
+      t.start();
+      if (isBlockInput()) {
+        try {
+          t.join();
+        } catch (InterruptedException e) {
+          throw new WalaException("unexpected interruption", e);
+        }
       }
     }
   }
-
-
 
   /**
    * @throws IllegalStateException
    */
   public IStructuredSelection getSelection() throws IllegalStateException {
-    GraphViewer viewer = (GraphViewer)getApplicationWindow();
+    GraphViewer viewer = (GraphViewer) getApplicationWindow();
     if (viewer == null || viewer.treeViewer == null) {
       throw new IllegalStateException();
     }
     return (IStructuredSelection) viewer.treeViewer.getSelection();
   }
-  
+
   /**
    * @author sfink
    * 
@@ -206,7 +172,7 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
      * Graph to visualize
      */
     private final Graph graph;
-    
+
     /**
      * JFace component implementing the tree viewer
      */
@@ -237,13 +203,12 @@ public class SWTTreeViewer extends EJfaceApplicationRunner  {
       if (getPopUpActions().size() > 0) {
         MenuManager mm = new MenuManager();
         treeViewer.getTree().setMenu(mm.createContextMenu(treeViewer.getTree()));
-        for (Iterator<IAction> it = getPopUpActions().iterator(); it.hasNext(); ) {
+        for (Iterator<IAction> it = getPopUpActions().iterator(); it.hasNext();) {
           mm.add(it.next());
         }
       }
       return treeViewer.getTree();
     }
-
 
     /**
      * @author sfink
