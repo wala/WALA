@@ -30,7 +30,7 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory {
       throw new IllegalArgumentException("set is null");
     }
     if (set.length == 0) {
-      return new MutableSparseIntSet();
+      return MutableSparseIntSet.makeEmpty();
     } else {
       // XXX not very efficient.
       TreeSet<Integer> T = new TreeSet<Integer>();
@@ -70,7 +70,7 @@ public class MutableSparseIntSetFactory implements MutableIntSetFactory {
    * @see com.ibm.wala.util.intset.MutableIntSetFactory#make()
    */
   public MutableIntSet make() {
-    return new MutableSparseIntSet();
+    return MutableSparseIntSet.makeEmpty();
   }
 
 }

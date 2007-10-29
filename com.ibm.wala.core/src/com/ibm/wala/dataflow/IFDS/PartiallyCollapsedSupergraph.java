@@ -425,7 +425,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
           return partialIPFG.getPredNodeNumbers((BasicBlockInContext) node);
         } else {
           IntSet pred = partialIPFG.getPredNodeNumbers((BasicBlockInContext) node);
-          MutableSparseIntSet result = pred == null ? new MutableSparseIntSet() : MutableSparseIntSet.make(pred);
+          MutableSparseIntSet result = pred == null ? MutableSparseIntSet.makeEmpty() : MutableSparseIntSet.make(pred);
           for (Iterator it = incoming.iterator(); it.hasNext();) {
             result.add(getNumber(it.next()));
           }
@@ -433,7 +433,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
         }
       } else {
         if (isEntry(node)) {
-          MutableSparseIntSet result = new MutableSparseIntSet();
+          MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
           CGNode n = nodeManager.getProcOfCollapsedNode(node);
           for (Iterator it = cg.getPredNodes(n); it.hasNext();) {
             CGNode p = (CGNode) it.next();
@@ -450,7 +450,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
           return result;
         } else {
           // node is a collapsed exit
-          MutableSparseIntSet result = new MutableSparseIntSet();
+          MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
           CGNode n = nodeManager.getProcOfCollapsedNode(node);
           for (Iterator it = cg.getSuccNodes(n); it.hasNext();) {
             CGNode s = (CGNode) it.next();
@@ -534,7 +534,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
           return partialIPFG.getSuccNodeNumbers((BasicBlockInContext) N);
         } else {
           IntSet succ = partialIPFG.getSuccNodeNumbers((BasicBlockInContext) N);
-          MutableSparseIntSet result = succ == null ? new MutableSparseIntSet() : MutableSparseIntSet.make(succ);
+          MutableSparseIntSet result = succ == null ? MutableSparseIntSet.makeEmpty() : MutableSparseIntSet.make(succ);
           for (Iterator it = xverse.iterator(); it.hasNext();) {
             result.add(getNumber(it.next()));
           }

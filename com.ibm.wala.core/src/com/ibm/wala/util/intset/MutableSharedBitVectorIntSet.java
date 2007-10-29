@@ -773,14 +773,14 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   public boolean add(int i) {
     if (privatePart == null) {
       if (sharedPart == null) {
-        privatePart = new MutableSparseIntSet();
+        privatePart = MutableSparseIntSet.makeEmpty();
         privatePart.add(i);
         return true;
       } else {
         if (sharedPart.contains(i)) {
           return false;
         } else {
-          privatePart = new MutableSparseIntSet();
+          privatePart = MutableSparseIntSet.makeEmpty();
           privatePart.add(i);
           return true;
         }
@@ -930,7 +930,7 @@ public class MutableSharedBitVectorIntSet implements MutableIntSet {
   MutableSparseIntSet makeSparseCopy() {
     if (privatePart == null) {
       if (sharedPart == null) {
-        return new MutableSparseIntSet();
+        return MutableSparseIntSet.makeEmpty();
       } else {
         return (MutableSparseIntSet) new MutableSparseIntSetFactory().makeCopy(sharedPart);
       }

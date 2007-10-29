@@ -272,7 +272,7 @@ class DebuggingMutableIntSet implements MutableIntSet {
    * @see com.ibm.wala.util.intset.IntSet#intIterator()
    */
   public IntIterator intIterator() {
-    MutableSparseIntSet bits = new MutableSparseIntSet();
+    MutableSparseIntSet bits = MutableSparseIntSet.makeEmpty();
     for (IntIterator pi = primaryImpl.intIterator(); pi.hasNext();) {
       int x = pi.next();
       Assertions._assert(!bits.contains(x));

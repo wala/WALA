@@ -65,10 +65,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     }
   }
 
-  /**
-   * 
-   */
-  public MutableSparseIntSet() {
+  protected MutableSparseIntSet() {
     super();
   }
 
@@ -494,6 +491,10 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
   public static MutableSparseIntSet make(IntSet set) {
     return new MutableSparseIntSet(set);
+  }
+
+  public static MutableSparseIntSet makeEmpty() {
+    return new MutableSparseIntSet();
   }
 
 

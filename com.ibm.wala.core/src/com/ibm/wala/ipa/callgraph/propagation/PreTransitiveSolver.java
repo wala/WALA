@@ -173,7 +173,7 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
   }
 
   private void unifyCycle(Path path, int number) {
-    MutableSparseIntSet cycle = new MutableSparseIntSet();
+    MutableSparseIntSet cycle = MutableSparseIntSet.makeEmpty();
     cycle.add(number);
     int index = path.size() - 1;
     while (true) {

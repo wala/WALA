@@ -31,13 +31,13 @@ public class SparseVector<T> implements IVector<T> {
   /**
    * if indices[i] = x, then data[i] == get(x)
    */
-  private MutableSparseIntSet indices = new MutableSparseIntSet();
+  private MutableSparseIntSet indices = MutableSparseIntSet.makeEmpty();
 
   private Object[] data;
 
   public SparseVector() {
     data = new Object[DEF_INITIAL_SIZE];
-    indices = new MutableSparseIntSet();
+    indices = MutableSparseIntSet.makeEmpty();
   }
 
   /**
@@ -148,7 +148,7 @@ public class SparseVector<T> implements IVector<T> {
 
   public void clear() {
     data = new Object[DEF_INITIAL_SIZE];
-    indices = new MutableSparseIntSet();
+    indices = MutableSparseIntSet.makeEmpty();
   }
 
   public void remove(int x) {

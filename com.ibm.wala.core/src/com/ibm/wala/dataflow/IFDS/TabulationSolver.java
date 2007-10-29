@@ -993,7 +993,7 @@ public class TabulationSolver<T, P> {
       }
       int n = supergraph.getLocalBlockNumber(node);
       Object[] entries = supergraph.getEntriesForProcedure(proc);
-      MutableSparseIntSet result = new MutableSparseIntSet();
+      MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
 
       for (int i = 0; i < entries.length; i++) {
         Object s_p = entries[i];

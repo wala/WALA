@@ -246,7 +246,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtPi(CGNode node, SSAPiInstruction instruction) {
-    MutableSparseIntSet S = new MutableSparseIntSet();
+    MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
     for (int i = 0; i < instruction.getNumberOfUses(); i++) {
       int vn = instruction.getUse(i);
       if (vn != -1) {
@@ -262,7 +262,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtPhi(CGNode node, SSAPhiInstruction instruction) {
-    MutableSparseIntSet S = new MutableSparseIntSet();
+    MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
     for (int i = 0; i < instruction.getNumberOfUses(); i++) {
       int vn = instruction.getUse(i);
       if (vn != -1) {
@@ -279,7 +279,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
 
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtALoad(CGNode node, SSAArrayLoadInstruction instruction) {
     PointerKey arrayRef = pointerKeys.getPointerKeyForLocal(node, instruction.getArrayRef());
-    MutableSparseIntSet S = new MutableSparseIntSet();
+    MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
     OrdinalSet refs = getPointsToSet(arrayRef);
     for (Iterator it = refs.iterator(); it.hasNext();) {
       InstanceKey ik = (InstanceKey) it.next();
@@ -307,7 +307,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       return getPointsToSet(fKey);
     } else {
       PointerKey ref = pointerKeys.getPointerKeyForLocal(node, refVn);
-      MutableSparseIntSet S = new MutableSparseIntSet();
+      MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
       OrdinalSet refs = getPointsToSet(ref);
       for (Iterator it = refs.iterator(); it.hasNext();) {
         InstanceKey ik = (InstanceKey) it.next();
@@ -326,7 +326,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     IR ir = node.getIR();
     List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getBasicBlockForCatch(instruction));
     Set caughtTypes = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
-    MutableSparseIntSet S = new MutableSparseIntSet();
+    MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
     // add the instances from each incoming pei ...
     for (Iterator<ProgramCounter> it = peis.iterator(); it.hasNext();) {
       ProgramCounter peiLoc = it.next();
@@ -375,7 +375,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtCheckCast(CGNode node, SSACheckCastInstruction instruction) {
     PointerKey rhs = pointerKeys.getPointerKeyForLocal(node, instruction.getVal());
     OrdinalSet<InstanceKey> rhsSet = getPointsToSet(rhs);
-    MutableSparseIntSet S = new MutableSparseIntSet();
+    MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
     IClass klass = getCallGraph().getClassHierarchy().lookupClass(instruction.getDeclaredResultType());
     if (klass == null) {
       // could not find the type. conservatively assume Object
@@ -411,7 +411,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   }
 
   private OrdinalSet<InstanceKey> toOrdinalSet(InstanceKey[] ik) {
-    MutableSparseIntSet s = new MutableSparseIntSet();
+    MutableSparseIntSet s = MutableSparseIntSet.makeEmpty();
     for (int i = 0; i < ik.length; i++) {
       int index = instanceKeys.getMappedIndex(ik[i]);
       if (index != -1) {
@@ -428,7 +428,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
    *         particular call site
    */
   private OrdinalSet<InstanceKey> computeImplicitExceptionsForCall(CGNode node, SSAInvokeInstruction call) {
-    MutableSparseIntSet S = new MutableSparseIntSet();
+    MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
     for (Iterator it = getCallGraph().getPossibleTargets(node, call.getCallSite()).iterator(); it.hasNext();) {
       CGNode target = (CGNode) it.next();
       PointerKey retVal = pointerKeys.getPointerKeyForExceptionalReturnValue(target);

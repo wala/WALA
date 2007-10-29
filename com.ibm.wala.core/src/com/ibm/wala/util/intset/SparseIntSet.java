@@ -364,7 +364,7 @@ public class SparseIntSet implements IntSet {
       return temp;
     } else {
       // this is really slow.  optimize as needed.
-      MutableSparseIntSet temp = new MutableSparseIntSet();
+      MutableSparseIntSet temp = MutableSparseIntSet.makeEmpty();
       for (IntIterator it = intIterator(); it.hasNext(); ) {
         int x = it.next();
         if (that.contains(x)) {

@@ -160,7 +160,7 @@ public class OrdinalSet<T> implements Iterable<T> {
     if (c == null) {
       throw new IllegalArgumentException("c is null");
     }
-    MutableSparseIntSet s = new MutableSparseIntSet();
+    MutableSparseIntSet s = MutableSparseIntSet.makeEmpty();
     for (Iterator<T> it = c.iterator(); it.hasNext();) {
       int index = m.getMappedIndex(it.next());
       if (Assertions.verifyAssertions) {

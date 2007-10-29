@@ -203,7 +203,7 @@ public class HeapReachingDefs {
     private MutableIntSet findOrCreateIntSet(Map<PointerKey, MutableIntSet> map, PointerKey key) {
       MutableIntSet result = map.get(key);
       if (result == null) {
-        result = new MutableSparseIntSet();
+        result = MutableSparseIntSet.makeEmpty();
         map.put(key, result);
       }
       return result;
@@ -299,7 +299,7 @@ public class HeapReachingDefs {
         if (!ref.isEmpty()) {
           ISSABasicBlock bb = cfg.getBlockForInstruction(n.getInstructionIndex());
           BitVectorVariable v = solver.getIn(bb);
-          MutableSparseIntSet defs = new MutableSparseIntSet();
+          MutableSparseIntSet defs = MutableSparseIntSet.makeEmpty();
           for (PointerKey p : ref) {
             if (pointerKeyMod.get(p) != null) {
               defs.addAll(pointerKeyMod.get(p).intersection(v.getValue()));

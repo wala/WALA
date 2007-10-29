@@ -676,7 +676,7 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
   public IntSet getSuccNodeNumbers(T node) {
     int number = getNumber(node);
     IntSet s = normalEdgeManager.getSuccNodeNumbers(node);
-    MutableSparseIntSet result = s == null ? new MutableSparseIntSet() : MutableSparseIntSet.make(s);
+    MutableSparseIntSet result = s == null ? MutableSparseIntSet.makeEmpty() : MutableSparseIntSet.make(s);
     s = exceptionalEdgeManager.getSuccNodeNumbers(node);
     if (s != null) {
       result.addAll(s);

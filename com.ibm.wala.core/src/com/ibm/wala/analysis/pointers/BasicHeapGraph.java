@@ -255,7 +255,7 @@ public class BasicHeapGraph extends HeapGraph {
             Assertions._assert(klass != null, "null klass for type " + T);
           }
         }
-        MutableSparseIntSet result = new MutableSparseIntSet();
+        MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
         try {
           for (Iterator<IField> it = klass.getAllInstanceFields().iterator(); it.hasNext();) {
             IField f = it.next();

@@ -402,7 +402,7 @@ public final class BitVectorIntSet implements MutableIntSet {
    * 
    */
   public SparseIntSet toSparseIntSet() {
-    MutableSparseIntSet result = new MutableSparseIntSet();
+    MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
     for (IntIterator it = intIterator(); it.hasNext();) {
       result.add(it.next());
     }

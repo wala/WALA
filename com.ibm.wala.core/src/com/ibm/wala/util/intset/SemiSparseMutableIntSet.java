@@ -26,7 +26,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   private OffsetBitVector densePart = null;
 
   public SemiSparseMutableIntSet() {
-    this(new MutableSparseIntSet());
+    this(MutableSparseIntSet.makeEmpty());
   }
 
   private SemiSparseMutableIntSet(MutableSparseIntSet sparsePart) {
@@ -438,7 +438,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
       }
     } else {
       densePart = null;
-      sparsePart = new MutableSparseIntSet();
+      sparsePart = MutableSparseIntSet.makeEmpty();
       for (IntIterator bits = set.intIterator(); bits.hasNext();) {
         add(bits.next());
       }

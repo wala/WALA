@@ -249,7 +249,7 @@ public class BimodalMutableIntSet implements MutableIntSet {
   }
 
   public BimodalMutableIntSet() {
-    impl = new MutableSparseIntSet();
+    impl = MutableSparseIntSet.makeEmpty();
   }
 
   public BimodalMutableIntSet(int initialSize, float expansionFactor) {

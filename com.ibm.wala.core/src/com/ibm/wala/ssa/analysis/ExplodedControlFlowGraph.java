@@ -354,7 +354,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
   }
 
   public IntSet getPredNodeNumbers(ExplodedBasicBlock node) {
-    MutableSparseIntSet result = new MutableSparseIntSet();
+    MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
     for (Iterator<? extends ExplodedBasicBlock> it = getPredNodes(node); it.hasNext();) {
       result.add(getNumber(it.next()));
     }

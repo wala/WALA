@@ -592,7 +592,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
 
     public IntSet getPredNodeNumbers(Statement node) {
       // TODO: optimize me.
-      MutableSparseIntSet result = new MutableSparseIntSet();
+      MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
       for (Iterator<? extends Statement> it = getPredNodes(node); it.hasNext();) {
         Statement s = it.next();
         result.add(getNumber(s));
@@ -602,7 +602,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
 
     public IntSet getSuccNodeNumbers(Statement node) {
       // TODO: optimize me.
-      MutableSparseIntSet result = new MutableSparseIntSet();
+      MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
       for (Iterator<? extends Statement> it = getSuccNodes(node); it.hasNext();) {
         Statement s = it.next();
         result.add(getNumber(s));

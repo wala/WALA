@@ -296,7 +296,7 @@ public class LocalPathEdges {
             return R.getRelated(n);
           } else {
             IntSet related = R.getRelated(n);
-            MutableSparseIntSet result = (related == null) ? new MutableSparseIntSet() : MutableSparseIntSet.make(related);
+            MutableSparseIntSet result = (related == null) ? MutableSparseIntSet.makeEmpty() : MutableSparseIntSet.make(related);
             result.add(0);
             return result;
           }
@@ -361,7 +361,7 @@ public class LocalPathEdges {
    * @return set of d2 s.t. d1->d2 is a path edge for node n
    */
   private IntSet getReachableSlow(int n, int d1) {
-    MutableSparseIntSet result = new MutableSparseIntSet();
+    MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
     if (paths.size() > 0) {
       // this is convoluted on purpose for efficiency: to avoid random access to
       // the sparse vector, we do parallel iteration with the vector's indices
@@ -416,7 +416,7 @@ public class LocalPathEdges {
    * @return set of d2 s.t \exists d1 s.t. d1->d2 is a path edge for node n
    */
   public IntSet getReachable(int n) {
-    MutableSparseIntSet result = new MutableSparseIntSet();
+    MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
     if (paths.size() > 0) {
       // this is convoluted on purpose for efficiency: to avoid random access to
       // the sparse vector, we do parallel iteration with the vector's indices
@@ -464,7 +464,7 @@ public class LocalPathEdges {
    * @return set of node numbers that are reached by any fact
    */
   public IntSet getReachedNodeNumbers() {
-    MutableSparseIntSet result = new MutableSparseIntSet();
+    MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
     if (paths.size() > 0) {
       for (IBinaryNaturalRelation R : paths) {
         for (IntPair p : R) {
