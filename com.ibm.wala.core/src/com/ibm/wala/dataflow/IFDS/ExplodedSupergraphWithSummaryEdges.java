@@ -15,6 +15,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 
@@ -55,7 +56,9 @@ public class ExplodedSupergraphWithSummaryEdges<T> extends ExplodedSupergraph<T>
     if (getSupergraph().isCall(src.getSupergraphNode())) {
       for (Iterator<? extends T> it = getSupergraph().getReturnSites(src.getSupergraphNode()); it.hasNext();) {
         T dest = it.next();
-        IntSet summary = solver.getSummaryTargets(src.getSupergraphNode(), src.getFact(), dest);
+        Assertions.UNREACHABLE();
+        IntSet summary = null;
+//        IntSet summary = solver.getSummaryTargets(src.getSupergraphNode(), src.getFact(), dest);
         if (summary != null) {
           for (IntIterator ii = summary.intIterator(); ii.hasNext();) {
             int d2 = ii.next();

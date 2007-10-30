@@ -39,5 +39,14 @@ public interface TabulationResult<T, P> {
    * @return the set of supergraph nodes for which any fact is reached
    */
   public Collection<T> getSupergraphNodesReached();
+  
+  /**
+   * @param n1
+   * @param d1
+   * @param n2
+   * @return set of d2 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or
+   *         null if none found
+   */
+  public IntSet getSummaryTargets(T n1, int d1, T n2);
 
 }

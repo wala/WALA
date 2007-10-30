@@ -29,10 +29,13 @@ import com.ibm.wala.util.collections.Heap;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.ToStringComparator;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.heapTrace.HeapTracer;
-import com.ibm.wala.util.intset.*;
+import com.ibm.wala.util.intset.IntIterator;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetAction;
+import com.ibm.wala.util.intset.MutableIntSet;
+import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.perf.EngineTimings;
 
 /**
@@ -967,9 +970,6 @@ public class TabulationSolver<T, P> {
     }
   }
 
-  /**
-   * @author sfink
-   */
   public class Result implements TabulationResult<T, P> {
 
     /**
@@ -1070,6 +1070,23 @@ public class TabulationSolver<T, P> {
 
       return result;
     }
+
+    /**
+     * @param n1
+     * @param d1
+     * @param n2
+     * @return set of d2 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or
+     *         null if none found
+     */
+    public IntSet getSummaryTargets(T n1, int d1, T n2) {
+      LocalSummaryEdges summaries = summaryEdges.get(supergraph.getProcOf(n1));
+      if (summaries == null) {
+        return null;
+      }
+      int num1 = supergraph.getLocalBlockNumber(n1);
+      int num2 = supergraph.getLocalBlockNumber(n2);
+      return summaries.getSummaryEdges(num1, num2, d1);
+    }
   }
 
   /**
@@ -1098,25 +1115,7 @@ public class TabulationSolver<T, P> {
     }
   }
 
-  /**
-   * @param n1
-   * @param d1
-   * @param n2
-   * @return set of d2 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or
-   *         null if none found
-   * @throws UnimplementedError
-   *             unconditionally
-   */
-  public IntSet getSummaryTargets(T n1, int d1, T n2) throws UnimplementedError {
-    Assertions.UNREACHABLE("not currently supported.  be careful");
-    LocalSummaryEdges summaries = summaryEdges.get(supergraph.getProcOf(n1));
-    if (summaries == null) {
-      return null;
-    }
-    int num1 = supergraph.getLocalBlockNumber(n1);
-    int num2 = supergraph.getLocalBlockNumber(n2);
-    return summaries.getSummaryEdges(num1, num2, d1);
-  }
+
 
   /**
    * @return set of d1 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or
