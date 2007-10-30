@@ -12,6 +12,7 @@ package com.ibm.wala.viz;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Properties;
 
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
@@ -19,7 +20,6 @@ import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
@@ -63,7 +63,6 @@ public class IFDSExplorer {
     Trace.println("Domain:\n" + r.getProblem().getDomain().toString());
 
     Properties p = null;
-    ;
     try {
       p = WalaProperties.loadProperties();
     } catch (WalaException e) {
@@ -77,7 +76,7 @@ public class IFDSExplorer {
     Graph<P> g = r.getProblem().getSupergraph().getProcedureGraph();
     v.setGraphInput(g);
     v.setBlockInput(true);
-    Collection<P> roots = InferGraphRoots.inferRoots(g);
+    Collection<P> roots =  Collections.singleton(r.getProblem().getSupergraph().getMain());
     v.setRootsInput(roots);
     v.getPopUpActions().add(new ViewIFDSLocalAction<T, P>(v, r, psFile, dotFile, dotExe, gvExe));
     v.run();
