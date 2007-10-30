@@ -63,4 +63,23 @@ public interface LongSet {
    */
   public boolean isSubset(LongSet that);
 
+  /**
+   * @return a perhaps more efficient iterator
+   */
+  public LongIterator longIterator();
+
+  /**
+   * Invoke an action on each element of the Set
+   * 
+   * @param action
+   */
+  public void foreach(LongSetAction action);
+
+  /**
+   * Invoke an action on each element of the Set, excluding elements of Set X
+   * 
+   * @param action
+   */
+  public void foreachExcluding(LongSet X, LongSetAction action);
+
 }

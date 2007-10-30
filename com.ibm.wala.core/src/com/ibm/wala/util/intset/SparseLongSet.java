@@ -365,6 +365,39 @@ public class SparseLongSet implements LongSet {
     }
   }
 
+  /*
+   * @see com.ibm.wala.util.intset.IntSet#iterator()
+   */
+  public LongIterator longIterator() {
+    return new LongIterator() {
+      int i = 0;
+
+      public boolean hasNext() {
+        return (i < size);
+      }
+
+      public long next() throws NoSuchElementException {
+        if (elements == null) {
+          throw new NoSuchElementException();
+        }
+        return elements[i++];
+      }
+    };
+  }
+
+  public void foreach(LongSetAction action) {
+    for (int i = 0; i < size; i++)
+      action.act(elements[i]);
+  }
+
+  public void foreachExcluding(LongSet X, LongSetAction action) {
+    for (int i = 0; i < size; i++) {
+      if (!X.contains(elements[i])) {
+        action.act(elements[i]);
+      }
+    }
+  }
+
   /**
    * @return the largest element in the set
    */

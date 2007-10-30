@@ -10,13 +10,135 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.debug.UnimplementedError;
+
 /**
- * 
  * Utilities for dealing with LongSets
  * 
  * @author sfink
  */
 public class LongSetUtil {
+
+  public static final String INT_SET_FACTORY_CONFIG_PROPERTY_NAME = "com.ibm.wala.mutableLongSetFactory";
+
+  private static MutableLongSetFactory defaultLongSetFactory;
+
+  static {
+    MutableLongSetFactory defaultFactory = new MutableSparseLongSetFactory();
+    if (System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME) != null) {
+      try {
+        Class intSetFactoryClass = Class.forName(System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+        MutableLongSetFactory intSetFactory = (MutableLongSetFactory) intSetFactoryClass.newInstance();
+        setDefaultLongSetFactory(intSetFactory);
+      } catch (Exception e) {
+        Trace.println("Cannot use int set factory " + System.getProperty(INT_SET_FACTORY_CONFIG_PROPERTY_NAME));
+        setDefaultLongSetFactory(defaultFactory);
+      }
+    } else {
+      setDefaultLongSetFactory(defaultFactory);
+    }
+    assert defaultLongSetFactory != null;
+  }
+
+  public static MutableLongSet make() {
+    return defaultLongSetFactory.make();
+  }
+
+  private final static boolean DEBUG = false;
+
+  /**
+   * This method constructs an appropriate mutable copy of set.
+   * 
+   * @param set
+   * @return a new MutableLongSet object with the same value as set
+   * @throws UnimplementedError  if (not ( set instanceof com.ibm.wala.util.intset.SparseLongSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.BitVectorLongSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.BimodalMutableLongSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.DebuggingMutableLongSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.SemiSparseMutableLongSet ) ) and (not ( set instanceof com.ibm.wala.util.intset.MutableSharedBitVectorLongSet ) )
+   * @throws IllegalArgumentException  if set == null
+   */
+  public static MutableLongSet makeMutableCopy(LongSet set) throws IllegalArgumentException, UnimplementedError {
+    if (set == null) {
+      throw new IllegalArgumentException("set == null");
+    }
+    if (set instanceof SparseLongSet) {
+      return MutableSparseLongSet.make(set);
+    } else {
+      Assertions.UNREACHABLE(set.getClass().toString());
+      return null;
+    }
+  }
+
+  /**
+   * Compute the asymmetric difference of two sets, a \ b.
+   * 
+   * @param A
+   * @param B
+   */
+  public static LongSet diff(LongSet A, LongSet B) {
+    return diff(A, B, LongSetUtil.getDefaultLongSetFactory());
+  }
+
+  private static LongSet defaultSlowDiff(LongSet A, LongSet B, MutableLongSetFactory factory) {
+    // TODO: this is slow ... optimize please.
+    MutableLongSet result = factory.makeCopy(A);
+    if (DEBUG) {
+      Trace.println("initial result " + result + " " + result.getClass());
+    }
+    for (LongIterator it = B.longIterator(); it.hasNext();) {
+      long I = it.next();
+      result.remove(I);
+      if (DEBUG) {
+        Trace.println("removed " + I + " now is " + result);
+      }
+    }
+    if (DEBUG) {
+      Trace.println("return " + result);
+    }
+    return result;
+  }
+
+  /**
+   * Compute the asymmetric difference of two sets, a \ b.
+   * 
+   * @param A
+   * @param B
+   */
+  public static LongSet diff(LongSet A, LongSet B, MutableLongSetFactory factory) {
+    if (DEBUG) {
+      Trace.println("diff " + A + " " + B);
+    }
+    if (A instanceof SparseLongSet && B instanceof SparseLongSet) {
+      if (DEBUG) {
+        Trace.println("call SparseLongSet.diff");
+      }
+      return SparseLongSet.diff((SparseLongSet) A, (SparseLongSet) B);
+
+    } else {
+      return defaultSlowDiff(A, B, factory);
+    }
+  }
+
+  /**
+   * Subtract two sets, i.e. a = a \ b.
+   * 
+   * @throws IllegalArgumentException  if B == null
+   */
+  public static MutableLongSet removeAll(MutableLongSet A, LongSet B) throws IllegalArgumentException {
+    if (B == null) {
+      throw new IllegalArgumentException("B == null");
+    }
+    for (LongIterator it = B.longIterator(); it.hasNext();) {
+      long I = it.next();
+      A.remove(I);
+      if (DEBUG) {
+        Trace.println("removed " + I + " now is " + A);
+      }
+    }
+    if (DEBUG) {
+      Trace.println("return " + A);
+    }
+    return A;
+  }
 
   /**
    * @return index \in [low,high] s.t. data[index] = key, or -1 if not found
@@ -46,6 +168,40 @@ public class LongSetUtil {
       }
     } else {
       return -1;
+    }
+  }
+
+  /**
+   * @return Returns the defaultLongSetFactory.
+   */
+  public static MutableLongSetFactory getDefaultLongSetFactory() {
+    return defaultLongSetFactory;
+  }
+
+  /**
+   * @param defaultLongSetFactory
+   *          The defaultLongSetFactory to set.
+   */
+  public static void setDefaultLongSetFactory(MutableLongSetFactory defaultLongSetFactory) {
+    LongSetUtil.defaultLongSetFactory = defaultLongSetFactory;
+  }
+
+  /**
+   * @return a new sparse int set which adds j to s
+   * @throws IllegalArgumentException  if s == null
+   */
+  public static LongSet add(LongSet s, int j) throws IllegalArgumentException {
+    if (s == null) {
+      throw new IllegalArgumentException("s == null");
+    }
+    if (s instanceof SparseLongSet) {
+      SparseLongSet sis = (SparseLongSet) s;
+      return SparseLongSet.add(sis, j);
+    } else {
+      // really slow.  optimize as needed.
+      MutableSparseLongSet result = MutableSparseLongSet.make(s);
+      result.add(j);
+      return result;
     }
   }
 }
