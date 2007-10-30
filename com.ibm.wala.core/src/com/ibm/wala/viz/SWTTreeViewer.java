@@ -276,9 +276,7 @@ public class SWTTreeViewer extends EJfaceApplicationRunner {
     }
 
     /**
-     * @author sfink
-     * 
-     * Simplel graph label provider. TODO: finish this implementation.
+     * Simple graph label provider. TODO: finish this implementation.
      */
     private class GraphLabelProvider extends LabelProvider {
 
