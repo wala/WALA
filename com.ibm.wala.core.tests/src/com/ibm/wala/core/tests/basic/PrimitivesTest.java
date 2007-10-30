@@ -28,24 +28,7 @@ import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.graph.traverse.BFSPathFinder;
 import com.ibm.wala.util.graph.traverse.BoundedBFSIterator;
-import com.ibm.wala.util.intset.BasicNaturalRelation;
-import com.ibm.wala.util.intset.BimodalMutableIntSetFactory;
-import com.ibm.wala.util.intset.BitVector;
-import com.ibm.wala.util.intset.BitVectorBase;
-import com.ibm.wala.util.intset.BitVectorIntSetFactory;
-import com.ibm.wala.util.intset.IBinaryNaturalRelation;
-import com.ibm.wala.util.intset.IntPair;
-import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetUtil;
-import com.ibm.wala.util.intset.IntegerUnionFind;
-import com.ibm.wala.util.intset.MutableIntSet;
-import com.ibm.wala.util.intset.MutableIntSetFactory;
-import com.ibm.wala.util.intset.MutableSharedBitVectorIntSetFactory;
-import com.ibm.wala.util.intset.MutableSparseIntSetFactory;
-import com.ibm.wala.util.intset.OffsetBitVector;
-import com.ibm.wala.util.intset.SemiSparseMutableIntSet;
-import com.ibm.wala.util.intset.SemiSparseMutableIntSetFactory;
-import com.ibm.wala.util.intset.SparseIntSet;
+import com.ibm.wala.util.intset.*;
 
 /**
  * 
@@ -347,6 +330,258 @@ public class PrimitivesTest extends WalaTestCase {
    */
   public void testSemiSparseMutableIntSet() {
     doMutableIntSet(new SemiSparseMutableIntSetFactory());
+  }
+
+  /**
+   * Test the MutableSparseIntSet implementation
+   */
+  private void doMutableLongSet(MutableLongSetFactory factory) {
+    MutableLongSet v = factory.parse("{9,17}");
+    MutableLongSet w = factory.make(new long[] {});
+    MutableLongSet x = factory.make(new long[] { 7, 4, 2, 4, 2, 2 });
+    MutableLongSet y = factory.make(new long[] { 7, 7, 7, 2, 7, 1 });
+    MutableLongSet z = factory.parse("{ 9 }");
+
+    Trace.println(w); // { }
+    Trace.println(x); // { 2 4 7 }
+    Trace.println(y); // { 1 2 7 }
+    Trace.println(z); // { 9 }
+
+    MutableLongSet temp = factory.makeCopy(x);
+    temp.intersectWith(y);
+    Trace.println(temp); // { 2 7 }
+    temp.copySet(x);
+    temp.addAll(y);
+    Trace.println(temp); // { 1 2 4 7 }
+    temp.copySet(x);
+    Trace.println(LongSetUtil.diff(x, y, factory)); // { 4 }
+    Trace.println(LongSetUtil.diff(v, z, factory)); // { 17 }
+    Trace.println(LongSetUtil.diff(z, v, factory)); // { }
+
+    // assertTrue(x.union(z).intersection(y.union(z)).equals(x.intersection(y).union(z)));
+    MutableLongSet temp1 = factory.makeCopy(x);
+    MutableLongSet temp2 = factory.makeCopy(x);
+    MutableLongSet tempY = factory.makeCopy(y);
+    temp1.addAll(z);
+    tempY.addAll(z);
+    temp1.intersectWith(tempY);
+    temp2.intersectWith(y);
+    temp2.addAll(z);
+    assertTrue(temp1.sameValue(temp2));
+
+    // assertTrue(x.union(z).diff(z).equals(x));
+    assertTrue(w.isEmpty());
+    assertTrue(LongSetUtil.diff(x, x, factory).isEmpty());
+    assertTrue(LongSetUtil.diff(z, v, factory).isEmpty());
+    assertTrue(LongSetUtil.diff(v, z, factory).sameValue(SparseLongSet.singleton(17)));
+    assertTrue(LongSetUtil.diff(z, v, factory).isEmpty());
+    assertTrue(z.isSubset(v));
+    temp = factory.make();
+    temp.add(4);
+    Trace.println(temp); // { 4 }
+    temp.add(7);
+    Trace.println(temp); // { 4 7 }
+    temp.add(2);
+    Trace.println(temp); // { 2 4 7 }
+    Trace.println(x); // { 2 4 7 }
+    assertTrue(temp.sameValue(x));
+
+    MutableLongSet a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
+    Trace.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
+    // 35
+    // 37 39 41 43 45 47 49 51 53 55 57 59 }
+    assertTrue(a.sameValue(a));
+    LongSet i = a.intersection(temp);
+    assertTrue(i.sameValue(SparseLongSet.singleton(7)));
+    a.add(100);
+    assertTrue(a.sameValue(a));
+
+    MutableLongSet b = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
+    assertTrue(a.sameValue(b));
+    assertTrue(a.isSubset(b));
+
+    LongSet f = LongSetUtil.diff(b, factory.parse("{7,8,9}"), factory);
+    Trace.println(f);
+    assertFalse(f.contains(7));
+    assertFalse(f.contains(8));
+    assertFalse(f.contains(9));
+    assertFalse(f.sameValue(b));
+    assertTrue(f.isSubset(b));
+
+    LongSet tmp = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
+    f = LongSetUtil.diff(b, tmp, factory);
+    Trace.println(f);
+    assertFalse(f.sameValue(b));
+    assertTrue(f.isSubset(b));
+    assertFalse(f.contains(51));
+    assertFalse(f.contains(53));
+    assertFalse(f.contains(55));
+    assertFalse(f.contains(57));
+    assertFalse(f.contains(59));
+    assertTrue(f.contains(100));
+
+    tmp = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63,100}");
+    f = LongSetUtil.diff(b, tmp, factory);
+    Trace.println(f);
+    assertFalse(f.sameValue(b));
+    assertTrue(f.isSubset(b));
+    assertFalse(f.contains(51));
+    assertFalse(f.contains(53));
+    assertFalse(f.contains(55));
+    assertFalse(f.contains(57));
+    assertFalse(f.contains(59));
+    assertFalse(f.contains(100));
+
+    b = factory.makeCopy(a);
+    assertTrue(a.sameValue(b));
+    b.remove(1);
+    b.add(0);
+    assertTrue(!a.sameValue(b));
+
+    a = factory.parse("{1}");
+    assertFalse(a.isSubset(b));
+    b.remove(0);
+    assertFalse(a.isSubset(b));
+    a.remove(1);
+    assertTrue(a.isEmpty());
+    i = a.intersection(temp);
+    assertTrue(a.isEmpty());
+
+    temp2 = factory.make();
+    assertTrue(temp2.sameValue(a));
+
+    a = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
+    b = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62}");
+    MutableLongSet c = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
+    MutableLongSet d = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
+    MutableLongSet e = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34}");
+
+    assertTrue(e.isSubset(d));
+    e.addAll(d);
+    assertTrue(e.isSubset(d));
+    e.remove(12);
+    assertTrue(e.isSubset(d));
+    e.add(105);
+    assertFalse(e.isSubset(d));
+
+    assertFalse(b.isSubset(a));
+
+    b.add(53);
+    assertFalse(b.isSubset(a));
+
+    a.add(52);
+    a.remove(52);
+    assertFalse(b.isSubset(a));
+
+    c.add(55);
+    assertFalse(c.isSubset(b));
+
+    d.add(53);
+    assertTrue(d.isSubset(b));
+
+    d = factory.make();
+    d.copySet(c);
+    assertFalse(d.isSubset(b));
+
+    a = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
+    b = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48}");
+    assertFalse(a.sameValue(b));
+    b.add(50);
+    assertTrue(a.sameValue(b));
+    a.add(11);
+    b.add(11);
+    assertTrue(a.sameValue(b));
+
+    a = factory.parse("{2,4,6,8,10,12,14,16,18,20,50}");
+    b = factory.parse("{24,26,28,30,32,34,36,38,40,42,44,46,48}");
+    c = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
+    a.addAll(b);
+    a.add(22);
+    assertTrue(a.sameValue(c));
+
+    a = factory.parse("{2,4,6,8,10,12,14,16,18,20,50}");
+    b = factory.parse("{24,26,28,30,32,34,36,38,40,42,44,46,48}");
+    c = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
+    b.addAll(factory.parse("{22}"));
+    a.addAll(b);
+    assertTrue(a.sameValue(c));
+
+    a = factory.parse("{2,4,6,8,10,12,14,16,18,20}");
+    b = factory.parse("{22,24,26,28,30,32,34,36,38,40,42,44,46,48}");
+    c = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50}");
+    c.remove(22);
+    a.addAll(b);
+    assertFalse(a.sameValue(c));
+
+    a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
+    Trace.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
+    // 35
+    // 37 39 41 43 45 47 49 51 53 55 57 59 }
+    assertTrue(a.sameValue(a));
+    i = a.intersection(temp);
+    assertTrue(i.sameValue(SparseLongSet.singleton(7)));
+    a.add(100);
+    assertTrue(a.sameValue(a));
+
+    b = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,100}");
+    assertTrue(a.sameValue(b));
+    assertTrue(a.isSubset(b));
+
+    b = factory.makeCopy(a);
+    assertTrue(a.sameValue(b));
+    b.remove(1);
+    b.add(0);
+    assertTrue(!a.sameValue(b));
+
+    a = factory.parse("{1}");
+    assertFalse(a.isSubset(b));
+    b.remove(0);
+    assertFalse(a.isSubset(b));
+    a.remove(1);
+    assertTrue(a.isEmpty());
+    i = a.intersection(temp);
+    assertTrue(a.isEmpty());
+
+    temp2 = factory.make();
+    assertTrue(temp2.sameValue(a));
+
+    for(int idx = 500; idx < 550; ) {
+      for(int xx = 0; xx < 50; xx++,idx++) {
+	temp2.add(idx);
+      }
+      Trace.println(temp2);
+    }
+
+    for(int idx = 3000; idx < 3200; ) {
+      for(int xx = 0; xx < 50; xx++,idx++) {
+	temp2.add(idx);
+      }
+      Trace.println(temp2);
+    }
+
+
+    temp2 = factory.make();
+    assertTrue(temp2.sameValue(a));
+
+    for(int idx = 500; idx < 550; ) {
+      for(int xx = 0; xx < 50; xx++,idx++) {
+	temp2.add(idx);
+      }
+      Trace.println(temp2);
+    }
+
+    for(int idx = 0; idx < 25; idx++) {
+      temp2.add(idx);
+      Trace.println(temp2);
+    }
+
+  }
+
+  /**
+   * Test the MutableSparseLongSet implementation
+   */
+  public void testMutableSparseLongSet() {
+    doMutableLongSet(new MutableSparseLongSetFactory());
   }
 
   public void testSmallMap() {
