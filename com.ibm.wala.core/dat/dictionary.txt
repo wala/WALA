@@ -19,3 +19,13 @@ ghostview
 defacto
 instanceof
 reachability
+getfield
+yices
+roca
+stats
+sic
+parlance
+demote
+despoil
+iff
+bitvector
