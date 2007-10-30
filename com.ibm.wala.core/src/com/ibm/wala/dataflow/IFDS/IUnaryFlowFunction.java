@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.IFDS;
 
-import com.ibm.wala.util.intset.SparseIntSet;
+import com.ibm.wala.util.intset.IntSet;
 
 /**
  *
@@ -28,6 +28,6 @@ public interface IUnaryFlowFunction extends IFlowFunction {
    * @return set of d2 such that (d1,d2) is an edge in this distributive
    * function's graph representation, or null if there are none
    */
-  public SparseIntSet getTargets(int d1);
+  public IntSet getTargets(int d1);
 
 }

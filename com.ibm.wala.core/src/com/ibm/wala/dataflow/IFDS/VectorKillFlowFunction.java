@@ -30,11 +30,11 @@ public class VectorKillFlowFunction implements IReversibleFlowFunction {
     this.kill = kill;
   }
 
-  public SparseIntSet getTargets(int i) {
+  public IntSet getTargets(int i) {
     return (kill.contains(i)) ? null : SparseIntSet.singleton(i);
   }
 
-  public SparseIntSet getSources(int i) {
+  public IntSet getSources(int i) {
     return (kill.contains(i)) ? null : SparseIntSet.singleton(i);
   }
 

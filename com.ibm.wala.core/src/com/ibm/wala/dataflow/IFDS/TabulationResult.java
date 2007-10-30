@@ -12,7 +12,7 @@ package com.ibm.wala.dataflow.IFDS;
 
 import java.util.Collection;
 
-import com.ibm.wala.util.intset.SparseIntSet;
+import com.ibm.wala.util.intset.IntSet;
 
 /**
  * The solution of a tabulation problem: a mapping from supergraph node ->
@@ -28,7 +28,7 @@ public interface TabulationResult<T, P> {
    * @param node
    * @return SparseIntSet efficiently representing the bitvector
    */
-  public SparseIntSet getResult(T node);
+  public IntSet getResult(T node);
   
   /**
    * @return the governing IFDS problem

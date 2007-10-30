@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.IFDS;
 
-import com.ibm.wala.util.intset.SparseIntSet;
+import com.ibm.wala.util.intset.IntSet;
 
 /**
  * A flow function corresponding to an edge in the supergraph.
@@ -29,6 +29,6 @@ public interface IReversibleFlowFunction extends IUnaryFlowFunction {
    * @return set of d1 such that (d1,d2) is an edge in this distributive
    * function's graph representation, or null if there are none
    */
-  public SparseIntSet getSources(int d2);
+  public IntSet getSources(int d2);
 
 }

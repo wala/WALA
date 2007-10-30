@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.IFDS;
 
-import com.ibm.wala.util.intset.SparseIntSet;
+import com.ibm.wala.util.intset.IntSet;
 
 /**
  * 
@@ -42,7 +42,7 @@ public interface TabulationProblem<T,P> {
    * @return the set of facts that are live on entry to the analysis. This set
    *         MUST include the universal truth, 0.
    */
-  public SparseIntSet getReachableOnEntry();
+  public IntSet getReachableOnEntry();
 
   /**
    * Special case: if supportsMerge(), then the problem is not really IFDS

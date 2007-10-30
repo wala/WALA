@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.IFDS;
 
-import com.ibm.wala.util.intset.SparseIntSet;
+import com.ibm.wala.util.intset.*;
 
 /**
  * 
@@ -20,20 +20,20 @@ import com.ibm.wala.util.intset.SparseIntSet;
  */
 public class VectorGenFlowFunction implements IReversibleFlowFunction {
 
-  private final SparseIntSet gen;
+  private final IntSet gen;
   
   /**
    * @param gen the intset of facts which are gen'ned by this flow function
    */
-  private VectorGenFlowFunction(SparseIntSet gen) {
+  private VectorGenFlowFunction(IntSet gen) {
     this.gen = gen;
   }
 
-  public SparseIntSet getTargets(int i) {
+  public IntSet getTargets(int i) {
     return (i == 0) ? gen : gen.contains(i) ? null : SparseIntSet.singleton(i);
   }
 
-  public SparseIntSet getSources(int i) {
+  public IntSet getSources(int i) {
     return (gen.contains(i)) ? SparseIntSet.singleton(0) : SparseIntSet.singleton(i);
   }
 
@@ -41,7 +41,7 @@ public class VectorGenFlowFunction implements IReversibleFlowFunction {
    * @param gen the intset of facts which should be gen'ed by a function
    * @return an instance of a flow function which gens these facts
    */
-  public static VectorGenFlowFunction make(SparseIntSet gen) {
+  public static VectorGenFlowFunction make(IntSet gen) {
     return new VectorGenFlowFunction(gen);
   }
 

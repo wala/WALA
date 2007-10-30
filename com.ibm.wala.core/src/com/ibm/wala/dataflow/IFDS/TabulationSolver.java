@@ -32,11 +32,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.heapTrace.HeapTracer;
-import com.ibm.wala.util.intset.IntIterator;
-import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetAction;
-import com.ibm.wala.util.intset.MutableSparseIntSet;
-import com.ibm.wala.util.intset.SparseIntSet;
+import com.ibm.wala.util.intset.*;
 import com.ibm.wala.util.perf.EngineTimings;
 
 /**
@@ -346,7 +342,7 @@ public class TabulationSolver<T, P> {
         System.err.println("normal successor: " + m);
       }
       IUnaryFlowFunction f = flowFunctionMap.getNormalFlowFunction(edge.n, m);
-      SparseIntSet D3 = computeFlow(edge.d2, f);
+      IntSet D3 = computeFlow(edge.d2, f);
       if (D3 != null) {
         D3.foreach(new IntSetAction() {
           public void act(int d3) {
@@ -457,7 +453,7 @@ public class TabulationSolver<T, P> {
       if (retf instanceof IBinaryReturnFlowFunction) {
         propagateToReturnSiteWithBinaryFlowFunction(edge, c, D4, entries, retSite, retf);
       } else {
-        final SparseIntSet D5 = computeFlow(edge.d2, (IUnaryFlowFunction) retf);
+        final IntSet D5 = computeFlow(edge.d2, (IUnaryFlowFunction) retf);
         if (DEBUG_LEVEL > 1) {
           System.err.println("D4" + D4);
           System.err.println("D5 " + D5);
@@ -526,7 +522,7 @@ public class TabulationSolver<T, P> {
       final T retSite, final IFlowFunction retf) {
     D4.foreach(new IntSetAction() {
       public void act(final int d4) {
-        final SparseIntSet D5 = computeBinaryFlow(d4, edge.d2, (IBinaryReturnFlowFunction) retf);
+        final IntSet D5 = computeBinaryFlow(d4, edge.d2, (IBinaryReturnFlowFunction) retf);
         if (D5 != null) {
           D5.foreach(new IntSetAction() {
             public void act(final int d5) {
@@ -601,7 +597,7 @@ public class TabulationSolver<T, P> {
       }
       IUnaryFlowFunction f = flowFunctionMap.getCallFlowFunction(edge.n, callee);
       // reached := {d1} that reach the callee
-      SparseIntSet reached = computeFlow(edge.d2, f);
+      IntSet reached = computeFlow(edge.d2, f);
       if (DEBUG_LEVEL > 0) {
         System.err.println(" reached: " + reached);
       }
@@ -641,7 +637,7 @@ public class TabulationSolver<T, P> {
                       reachedBySummary.foreach(new IntSetAction() {
                         public void act(int d2) {
                           if (retf instanceof IBinaryReturnFlowFunction) {
-                            final SparseIntSet D5 = computeBinaryFlow(edge.d2, d2, (IBinaryReturnFlowFunction) retf);
+                            final IntSet D5 = computeBinaryFlow(edge.d2, d2, (IBinaryReturnFlowFunction) retf);
                             if (D5 != null) {
                               D5.foreach(new IntSetAction() {
                                 public void act(int d5) {
@@ -650,7 +646,7 @@ public class TabulationSolver<T, P> {
                               });
                             }
                           } else {
-                            final SparseIntSet D5 = computeFlow(d2, (IUnaryFlowFunction) retf);
+                            final IntSet D5 = computeFlow(d2, (IUnaryFlowFunction) retf);
                             if (D5 != null) {
                               D5.foreach(new IntSetAction() {
                                 public void act(int d5) {
@@ -678,7 +674,7 @@ public class TabulationSolver<T, P> {
         System.err.println("normal successor: " + m);
       }
       IUnaryFlowFunction f = flowFunctionMap.getNormalFlowFunction(edge.n, m);
-      SparseIntSet D3 = computeFlow(edge.d2, f);
+      IntSet D3 = computeFlow(edge.d2, f);
       if (D3 != null) {
         D3.foreach(new IntSetAction() {
           public void act(int d3) {
@@ -700,7 +696,7 @@ public class TabulationSolver<T, P> {
       } else {
         f = flowFunctionMap.getCallNoneToReturnFlowFunction(edge.n, returnSite);
       }
-      SparseIntSet reached = computeFlow(edge.d2, f);
+      IntSet reached = computeFlow(edge.d2, f);
       if (DEBUG_LEVEL > 0) {
         System.err.println("reached: " + reached);
       }
@@ -736,11 +732,11 @@ public class TabulationSolver<T, P> {
    * @return f(call_d, exit_d);
    * 
    */
-  protected SparseIntSet computeBinaryFlow(int call_d, int exit_d, IBinaryReturnFlowFunction f) {
+  protected IntSet computeBinaryFlow(int call_d, int exit_d, IBinaryReturnFlowFunction f) {
     if (DEBUG_LEVEL > 0) {
       System.err.println("got binary flow function " + f);
     }
-    SparseIntSet result = f.getTargets(call_d, exit_d);
+    IntSet result = f.getTargets(call_d, exit_d);
     return result;
   }
 
@@ -748,11 +744,11 @@ public class TabulationSolver<T, P> {
    * @return f(d1)
    * 
    */
-  protected SparseIntSet computeFlow(int d1, IUnaryFlowFunction f) {
+  protected IntSet computeFlow(int d1, IUnaryFlowFunction f) {
     if (DEBUG_LEVEL > 0) {
       System.err.println("got flow function " + f);
     }
-    SparseIntSet result = f.getTargets(d1);
+    IntSet result = f.getTargets(d1);
 
     if (result == null) {
       return null;
@@ -764,7 +760,7 @@ public class TabulationSolver<T, P> {
   /**
    * @return f^{-1}(d2)
    */
-  protected SparseIntSet computeInverseFlow(int d2, IReversibleFlowFunction f) {
+  protected IntSet computeInverseFlow(int d2, IReversibleFlowFunction f) {
     return f.getSources(d2);
   }
 
@@ -980,9 +976,9 @@ public class TabulationSolver<T, P> {
      * get the bitvector of facts that hold at the entry to a given node
      * 
      * @param node
-     * @return SparseIntSet representing the bitvector
+     * @return IntSet representing the bitvector
      */
-    public SparseIntSet getResult(T node) {
+    public IntSet getResult(T node) {
 
       if (Assertions.verifyAssertions) {
         Assertions._assert(node != null);
@@ -993,7 +989,7 @@ public class TabulationSolver<T, P> {
       }
       int n = supergraph.getLocalBlockNumber(node);
       Object[] entries = supergraph.getEntriesForProcedure(proc);
-      MutableSparseIntSet result = MutableSparseIntSet.makeEmpty();
+      MutableIntSet result = MutableSparseIntSet.makeEmpty();
 
       for (int i = 0; i < entries.length; i++) {
         Object s_p = entries[i];
