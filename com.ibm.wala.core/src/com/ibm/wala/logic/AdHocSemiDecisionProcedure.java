@@ -67,47 +67,18 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
   }
 
   /**
-   * TODO .. fix this. Does axiom imply f?
+   * Primitive logic to determine if axiom implies f.  This CANNOT invoke tautology or contradiction recursively.
    */
-  private static boolean implies(IFormula axiom, IFormula f) {
+  protected boolean atomicImplies(IFormula axiom, IFormula f) {
     if (AdHocSemiDecisionProcedure.normalize(axiom).equals(AdHocSemiDecisionProcedure.normalize(f))) {
       return true;
     }
-    // This is way too slow. give up on it.
-    // if (axiom.getKind().equals(IFormula.Kind.QUANTIFIED)) {
-    // QuantifiedFormula q = (QuantifiedFormula) axiom;
-    //  
-    // if (!Simplifier.innerStructureMatches(q, f)) {
-    // return false;
-    // }
-    //  
-    // if (q.getQuantifier().equals(Quantifier.FORALL)) {
-    // AbstractVariable bound = q.getBoundVar();
-    // IFormula body = q.getFormula();
-    // // this could be inefficient. find a better algorithm.
-    // for (ITerm t : f.getAllTerms()) {
-    // if (q.getFreeVariables().contains(t)) {
-    // AbstractVariable fresh = Simplifier.makeFreshIntVariable(q, f);
-    // IFormula testBody = Simplifier.substitute(body, bound, fresh);
-    // IFormula testF = Simplifier.substitute(f, t, fresh);
-    // if (implies(testBody, testF)) {
-    // return true;
-    // }
-    // } else {
-    // IFormula testBody = Simplifier.substitute(body, bound, t);
-    // if (implies(testBody, f)) {
-    // return true;
-    // }
-    // }
-    // }
-    // }
-    // }
     return false;
   }
 
-  private static boolean contradicts(IMaxTerm axiom, IFormula f) {
+  private boolean contradicts(IMaxTerm axiom, IFormula f) {
     IFormula notF = NotFormula.make(f);
-    return AdHocSemiDecisionProcedure.implies(axiom, notF);
+    return atomicImplies(axiom, notF);
   }
 
   /**
@@ -117,12 +88,12 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
    * @throws IllegalArgumentException
    *             if facts == null
    */
-  private static boolean contradiction(IFormula f, Collection<IMaxTerm> facts) throws IllegalArgumentException {
+  private boolean contradiction(IFormula f, Collection<IMaxTerm> facts) throws IllegalArgumentException {
     if (facts == null) {
       throw new IllegalArgumentException("facts == null");
     }
     for (IMaxTerm d : facts) {
-      if (AdHocSemiDecisionProcedure.contradicts(d, f)) {
+      if (contradicts(d, f)) {
         return true;
       }
     }
@@ -134,11 +105,11 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
           return true;
         }
         IFormula not1 = NotFormula.make(b.getF1());
-        if (AdHocSemiDecisionProcedure.implies(b.getF2(), not1)) {
+        if (atomicImplies(b.getF2(), not1)) {
           return true;
         }
         IFormula not2 = NotFormula.make(b.getF2());
-        if (AdHocSemiDecisionProcedure.implies(b.getF1(), not2)) {
+        if (atomicImplies(b.getF1(), not2)) {
           return true;
         }
       } else if (b.getConnective().equals(BinaryConnective.OR)) {
@@ -203,12 +174,12 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
    * @throws IllegalArgumentException
    *             if facts == null
    */
-  private static boolean tautology(IFormula f, Collection<IMaxTerm> facts) throws IllegalArgumentException {
+  private boolean tautology(IFormula f, Collection<IMaxTerm> facts) throws IllegalArgumentException {
     if (facts == null) {
       throw new IllegalArgumentException("facts == null");
     }
     for (IMaxTerm d : facts) {
-      if (AdHocSemiDecisionProcedure.implies(d, f)) {
+      if (atomicImplies(d, f)) {
         return true;
       }
     }
