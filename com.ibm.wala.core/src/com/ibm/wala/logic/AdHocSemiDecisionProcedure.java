@@ -223,7 +223,7 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
       if (b.getConnective().equals(BinaryConnective.OR)) {
         if (tautology(b.getF1(), facts) || tautology(b.getF2(), facts)) {
           return true;
-        } else if (b.getF1().equals(NotFormula.make(b.getF2()))) {
+        } else if (b.getF1().equals(normalize(NotFormula.make(b.getF2())))) {
           return true;
         }
       }
