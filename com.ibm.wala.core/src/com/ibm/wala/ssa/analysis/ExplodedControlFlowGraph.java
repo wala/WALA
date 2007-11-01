@@ -416,7 +416,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     }
 
     public boolean isCatchBlock() {
-      return original.isCatchBlock();
+      return (original.isCatchBlock() && instructionIndex == original.getFirstInstructionIndex());
     }
 
     public SSAGetCaughtExceptionInstruction getCatchInstruction() {

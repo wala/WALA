@@ -98,6 +98,9 @@ public class ViewIFDSLocalAction<T, P> extends Action {
             SSAPhiInstruction phi = phis.next();
             s += " " + phi;
           }
+          if (delegate.isCatchBlock()) {
+            s += " " + delegate.getCatchInstruction();
+          }
           return s;
         }
       }
