@@ -180,7 +180,7 @@ public class TabulationSolver<T, P> {
    * @throws IllegalArgumentException
    *             if p is null
    */
-  private TabulationSolver(TabulationProblem<T, P> p) {
+  protected TabulationSolver(TabulationProblem<T, P> p) {
     if (p == null) {
       throw new IllegalArgumentException("p is null");
     }
