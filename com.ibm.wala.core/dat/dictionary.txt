@@ -29,3 +29,4 @@ demote
 despoil
 iff
 bitvector
+arraylength
