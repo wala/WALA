@@ -205,7 +205,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
   };
     
   public void testTry() throws IOException {
-    CallGraph CG = Util.makeScriptCG("tests", "try.js");
+    CallGraph CG = Util.makeScriptCG("tests", "try.js", true);
     verifyGraphAssertions(CG, assertionsForTry);
   }
 
