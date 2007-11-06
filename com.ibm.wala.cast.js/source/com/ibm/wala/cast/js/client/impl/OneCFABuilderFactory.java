@@ -25,13 +25,13 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  * 
  * A factory to create call graph builders using 0-CFA
  */
-public class ZeroCFABuilderFactory implements CallGraphBuilderFactory {
+public class OneCFABuilderFactory implements CallGraphBuilderFactory {
 
   public CallGraphBuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope,
       boolean keepPointsTo) {
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     options.setSelector(new StandardFunctionTargetSelector(cha, options.getMethodTargetSelector()));
 
-    return new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, null, ZeroXInstanceKeys.NONE, false);
+    return new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, null, ZeroXInstanceKeys.NONE, true);
   }
 }

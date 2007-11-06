@@ -8,8 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
-import com.ibm.wala.cast.js.ipa.callgraph.JSCFABuilder;
-import com.ibm.wala.cast.js.ipa.callgraph.JSZeroXCFABuilder;
+import com.ibm.wala.cast.js.ipa.callgraph.*;
 import com.ibm.wala.cast.js.ipa.callgraph.Util;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -31,7 +30,7 @@ class dumpCallGraph {
     AnalysisOptions options = Util.makeOptions(scope, false, cha, roots);
     AnalysisCache cache = Util.makeCache(false);
     
-    JSCFABuilder builder = new JSZeroXCFABuilder(cha, options, cache, null, null, null, ZeroXInstanceKeys.ALLOCATIONS);
+    JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, null, ZeroXInstanceKeys.ALLOCATIONS, false);
 
     CallGraph cg = builder.makeCallGraph(options);
 
