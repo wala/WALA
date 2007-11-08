@@ -23,12 +23,12 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
 
   private final int index;
 
-  private final TypeReference declaredType;
+  private final TypeReference elementType;
 
-  SSAArrayReferenceInstruction(int arrayref, int index, TypeReference declaredType) {
+  SSAArrayReferenceInstruction(int arrayref, int index, TypeReference elementType) {
     this.arrayref = arrayref;
     this.index = index;
-    this.declaredType = declaredType;
+    this.elementType = elementType;
   }
 
   /*
@@ -44,8 +44,9 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
+    if (Assertions.verifyAssertions) {
       Assertions._assert(j <= 1);
+    }
     return (j == 0) ? arrayref : index;
   }
 
@@ -63,15 +64,15 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
     return index;
   }
 
-  public TypeReference getDeclaredType() {
-    return declaredType;
+  public TypeReference getElementType() {
+    return elementType;
   }
 
   /**
    * @return true iff this represents an aload of a primitive type element
    */
   public boolean typeIsPrimitive() {
-    return declaredType.isPrimitiveType();
+    return elementType.isPrimitiveType();
   }
 
   /*

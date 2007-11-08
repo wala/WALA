@@ -12,7 +12,7 @@ package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.propagation.ArrayInstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.ArrayContentsKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceFieldKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -72,6 +72,6 @@ public class CFAPointerKeys implements PointerKeyFactory {
   }
 
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
-    return new ArrayInstanceKey(I);
+    return new ArrayContentsKey(I);
   }
 }

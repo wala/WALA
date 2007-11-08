@@ -15,15 +15,15 @@ import com.ibm.wala.classLoader.ArrayClass;
 /**
  * A pointer key which represents the contents of an array instance.
  */
-public final class ArrayInstanceKey extends AbstractFieldPointerKey implements FilteredPointerKey {
-  public ArrayInstanceKey(InstanceKey instance) {
+public final class ArrayContentsKey extends AbstractFieldPointerKey implements FilteredPointerKey {
+  public ArrayContentsKey(InstanceKey instance) {
     super(instance);
   }
 
   @Override
   public boolean equals(Object obj) {
-    if (obj instanceof ArrayInstanceKey) {
-      ArrayInstanceKey other = (ArrayInstanceKey) obj;
+    if (obj instanceof ArrayContentsKey) {
+      ArrayContentsKey other = (ArrayContentsKey) obj;
       return instance.equals(other.instance);
     } else {
       return false;

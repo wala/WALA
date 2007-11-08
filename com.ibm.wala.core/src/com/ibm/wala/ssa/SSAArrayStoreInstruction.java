@@ -34,7 +34,7 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
       throw new IllegalArgumentException("uses.length < 3");
     }
     return new SSAArrayStoreInstruction(uses == null ? getArrayRef() : uses[0], uses == null ? getIndex() : uses[1],
-        uses == null ? value : uses[2], getDeclaredType());
+        uses == null ? value : uses[2], getElementType());
   }
 
   @Override

@@ -388,7 +388,6 @@ public class SSABuilder extends AbstractIntStackMachine {
        */
       @Override
       public void visitArrayLoad(com.ibm.wala.shrikeBT.ArrayLoadInstruction instruction) {
-
         int index = workingState.pop();
         int arrayRef = workingState.pop();
         int result = reuseOrCreateDef();

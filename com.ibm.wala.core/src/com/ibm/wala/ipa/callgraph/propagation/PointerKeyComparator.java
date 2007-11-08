@@ -147,10 +147,10 @@ public class PointerKeyComparator implements Comparator {
 	return -1;
   }
 
-  private int compareArrayKey(ArrayInstanceKey key1, Object key2) {
-    if (key2 instanceof ArrayInstanceKey) {
+  private int compareArrayKey(ArrayContentsKey key1, Object key2) {
+    if (key2 instanceof ArrayContentsKey) {
       ArrayClass k1 = (ArrayClass)key1.getInstanceKey().getConcreteType();
-      ArrayClass k2 = (ArrayClass)((ArrayInstanceKey)key2).getInstanceKey().getConcreteType();
+      ArrayClass k2 = (ArrayClass)((ArrayContentsKey)key2).getInstanceKey().getConcreteType();
       int d1 = k1.getDimensionality();
       int d2 = k2.getDimensionality();
       if (d1 != d2) {
@@ -225,12 +225,12 @@ public class PointerKeyComparator implements Comparator {
     }
 
     // at this point, neither key is local or retval, expretval, field, static
-    else if (key1 instanceof ArrayInstanceKey) {
-      return compareArrayKey((ArrayInstanceKey)key1, key2);
+    else if (key1 instanceof ArrayContentsKey) {
+      return compareArrayKey((ArrayContentsKey)key1, key2);
     }
 
-    else if (key2 instanceof ArrayInstanceKey) {
-      return -1*compareArrayKey((ArrayInstanceKey)key2, key1);
+    else if (key2 instanceof ArrayContentsKey) {
+      return -1*compareArrayKey((ArrayContentsKey)key2, key1);
     }
 
     else {

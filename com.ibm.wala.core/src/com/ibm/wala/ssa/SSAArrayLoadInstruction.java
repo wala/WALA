@@ -17,14 +17,16 @@ import com.ibm.wala.util.Exceptions;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
+ * SSA instruction representing an array load.
+ * 
  * @author sfink
  * 
  */
 public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
   private final int result;
 
-  SSAArrayLoadInstruction(int result, int arrayref, int index, TypeReference declaredType) {
-    super(arrayref, index, declaredType);
+  SSAArrayLoadInstruction(int result, int arrayref, int index, TypeReference elementType) {
+    super(arrayref, index, elementType);
     this.result = result;
   }
 
@@ -37,7 +39,7 @@ public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
       throw new IllegalArgumentException("uses.length < 2");
     }
     return new SSAArrayLoadInstruction(defs == null ? result : defs[0], uses == null ? getArrayRef() : uses[0],
-        uses == null ? getIndex() : uses[1], getDeclaredType());
+        uses == null ? getIndex() : uses[1], getElementType());
   }
 
   @Override

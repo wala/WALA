@@ -18,7 +18,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractPointerAnalysis;
-import com.ibm.wala.ipa.callgraph.propagation.ArrayInstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.ArrayContentsKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
@@ -150,8 +150,8 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     } else if (key instanceof InstanceFieldKey) {
       InstanceFieldKey i = (InstanceFieldKey) key;
       return getCallGraph().getClassHierarchy().lookupClass(i.getField().getFieldTypeReference());
-    } else if (key instanceof ArrayInstanceKey) {
-      ArrayInstanceKey i = (ArrayInstanceKey) key;
+    } else if (key instanceof ArrayContentsKey) {
+      ArrayContentsKey i = (ArrayContentsKey) key;
       FilteredPointerKey.TypeFilter filter = i.getTypeFilter();
       Assertions._assert(filter instanceof FilteredPointerKey.SingleClassFilter);
       return ((FilteredPointerKey.SingleClassFilter)filter).getConcreteType();
