@@ -20,6 +20,7 @@ import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.impl.CAstRewriter;
 import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -38,34 +39,29 @@ public class SyncDuplicatorTest extends IRTests {
     super("SyncDuplicatorTest");
   }
 
-  private final static CallSiteReference testMethod =
-    CallSiteReference.make(
-      0, 
-      MethodReference.findOrCreate(
-        TypeReference.findOrCreate(
-	  EclipseProjectPath.SOURCE_REF,
-	  TypeName.string2TypeName("LMonitor2")),
-	Atom.findOrCreateUnicodeAtom("test"),
-	Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)Z")),
-      IInvokeInstruction.Dispatch.STATIC);
+  private final static CallSiteReference testMethod = CallSiteReference.make(0, MethodReference.findOrCreate(TypeReference
+      .findOrCreate(EclipseProjectPath.SOURCE_REF, TypeName.string2TypeName("LMonitor2")), Atom.findOrCreateUnicodeAtom("test"),
+      Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)Z")), IInvokeInstruction.Dispatch.STATIC);
 
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
-    return new JavaSourceAnalysisEngine() {
+    JavaSourceAnalysisEngine engine = new JavaSourceAnalysisEngine() {
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
         return Util.makeMainEntrypoints(EclipseProjectPath.SOURCE_REF, cha, mainClassDescriptors);
       }
 
       public IRTranslatorExtension getTranslatorExtension() {
-	JavaIRTranslatorExtension ext =  new JavaIRTranslatorExtension();
-	ext.setCAstRewriterFactory(new CAstRewriterFactory() {
-	  public CAstRewriter createCAstRewriter(CAst ast) {
-	    return new SynchronizedBlockDuplicator(ast, true, testMethod);
-	  }
-	}); 
-	return ext;
+        JavaIRTranslatorExtension ext = new JavaIRTranslatorExtension();
+        ext.setCAstRewriterFactory(new CAstRewriterFactory() {
+          public CAstRewriter createCAstRewriter(CAst ast) {
+            return new SynchronizedBlockDuplicator(ast, true, testMethod);
+          }
+        });
+        return ext;
       }
 
     };
+    engine.setExclusionsFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    return engine;
   }
 
   protected String singleInputForTest() {

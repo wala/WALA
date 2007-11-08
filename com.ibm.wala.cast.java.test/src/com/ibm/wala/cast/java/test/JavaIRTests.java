@@ -27,6 +27,7 @@ import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -61,11 +62,13 @@ public class JavaIRTests extends IRTests {
   }
 
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
-    return new JavaSourceAnalysisEngine() {
+    JavaSourceAnalysisEngine engine = new JavaSourceAnalysisEngine() {
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
         return Util.makeMainEntrypoints(EclipseProjectPath.SOURCE_REF, cha, mainClassDescriptors);
       }
     };
+    engine.setExclusionsFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    return engine;
   }
 
   protected String singleInputForTest() {
