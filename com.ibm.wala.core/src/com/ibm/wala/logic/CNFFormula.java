@@ -142,8 +142,14 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
       }
     case NEGATION:
       NotFormula n = (NotFormula) f;
-      IMaxTerm t = NotFormulaMaxTerm.make(n.getFormula());
-      return Collections.singleton(t);
+      if (n.getFormula() instanceof RelationFormula) {
+        IMaxTerm t = NotFormulaMaxTerm.make((RelationFormula)n.getFormula());
+        return Collections.singleton(t);
+      } else {
+        // should not get here if other logic is working.
+        Assertions.UNREACHABLE(n.getFormula());
+        return null;
+      }
     default:
       Assertions.UNREACHABLE(f);
       return null;
@@ -173,7 +179,7 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
         AbstractBinaryFormula b = (AbstractBinaryFormula) f;
         return BinaryFormula.make(b.getConnective(), trivialCleanup(b.getF1()), trivialCleanup(b.getF2()));
       case RELATION:
-        RelationFormula r = (RelationFormula)f;
+        RelationFormula r = (RelationFormula) f;
         if (r.getRelation().equals(BinaryRelation.NE)) {
           if (r.getTerms().get(1).equals(BooleanConstant.FALSE)) {
             return RelationFormula.makeEquals(r.getTerms().get(0), BooleanConstant.TRUE);
@@ -400,21 +406,21 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
       return new CNFFormula(c);
     }
   }
-  
+
   public static IFormula make(ICNFFormula cnf, IMaxTerm t) {
     Collection<IMaxTerm> c = HashSetFactory.make();
     c.addAll(cnf.getMaxTerms());
     c.add(t);
     return make(c);
   }
-  
+
   public static IFormula make(ICNFFormula f1, ICNFFormula f2) {
     Collection<IMaxTerm> c = HashSetFactory.make();
     c.addAll(f1.getMaxTerms());
     c.addAll(f2.getMaxTerms());
     return make(c);
   }
-  
+
   // TODO: move this to Simplifier?
   public static IMaxTerm normalize(IMaxTerm f) throws IllegalArgumentException {
     if (f == null) {
@@ -423,7 +429,7 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
     switch (f.getKind()) {
     case RELATION:
       RelationFormula r = (RelationFormula) f;
-      if (r.getRelation().equals(BinaryRelation.GE )|| r.getRelation().equals(BinaryRelation.GT)) {
+      if (r.getRelation().equals(BinaryRelation.GE) || r.getRelation().equals(BinaryRelation.GT)) {
         BinaryRelation swap = BinaryRelation.swap(r.getRelation());
         return RelationFormula.make(swap, r.getTerms().get(1), r.getTerms().get(0));
       }
@@ -432,6 +438,5 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
       return f;
     }
   }
-
 
 }

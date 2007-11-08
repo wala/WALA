@@ -17,6 +17,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.ibm.wala.logic.ILogicConstants.BinaryConnective;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
@@ -557,9 +558,34 @@ public class Simplifier {
       } else {
         return RelationFormula.make(negate, r.getTerms());
       }
-    } else {
-      return f;
+    } else if (f1 instanceof AbstractBinaryFormula) {
+      AbstractBinaryFormula bf = (AbstractBinaryFormula)f1;
+      if (bf.getConnective().equals(BinaryConnective.AND)) {
+        // DeMorgan: not(a and b) = not(a) or not(b)
+        IFormula notA = NotFormula.make(bf.getF1());
+        IFormula notB = NotFormula.make(bf.getF2());
+        if (notA instanceof NotFormula) {
+          notA = distributeNot((NotFormula) notA);
+        }
+        if (notB instanceof NotFormula) {
+          notB = distributeNot((NotFormula) notB);
+        }
+        return BinaryFormula.or(notA, notB);
+      } else if (bf.getConnective().equals(BinaryConnective.OR)) {
+        // DeMorgan: not(a or b) = not(a) and not(b)
+        IFormula notA = NotFormula.make(bf.getF1());
+        IFormula notB = NotFormula.make(bf.getF2());
+        if (notA instanceof NotFormula) {
+          notA = distributeNot((NotFormula) notA);
+        }
+        if (notB instanceof NotFormula) {
+          notB = distributeNot((NotFormula) notB);
+        }
+        return BinaryFormula.and(notA, notB);
+        
+      }
     }
+    return f;
   }
 
   public static IFormula simplify(IFormula f, ISemiDecisionProcedure dec) {
