@@ -56,8 +56,9 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
 
   /**
    * @param klasses
-   *          Collection<IClass>
-   * @throws AssertionError  if klasses is null
+   *            Collection<IClass>
+   * @throws AssertionError
+   *             if klasses is null
    */
   private TypeBasedPointerAnalysis(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) throws AssertionError {
     super(cg, makeInstanceKeys(klasses));
@@ -67,7 +68,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
 
   /**
    * @param c
-   *          Collection<IClass>
+   *            Collection<IClass>
    */
   private static MutableMapping<InstanceKey> makeInstanceKeys(Collection<IClass> c) {
     assert c != null;
@@ -104,7 +105,8 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
   }
 
   /**
-   * Compute the set of {@link InstanceKey}s which may represent a particular type.
+   * Compute the set of {@link InstanceKey}s which may represent a particular
+   * type.
    */
   private OrdinalSet<InstanceKey> computeOrdinalInstanceSet(IClass type) {
     Collection<IClass> klasses = null;
@@ -119,12 +121,18 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
         }
       }
     }
-    klasses = HashSetFactory.make(klasses);
-    klasses.retainAll(this.klasses);
-    OrdinalSet<InstanceKey> result = toOrdinalInstanceKeySet(klasses);
+    Collection<IClass> c = HashSetFactory.make();
+    for (IClass klass : klasses) {
+      if (klass.isArrayClass()) {
+        c.add(klass);
+      } else if (this.klasses.contains(klass)) {
+        c.add(klass);
+      }
+
+    }
+    OrdinalSet<InstanceKey> result = toOrdinalInstanceKeySet(c);
     return result;
   }
-
 
   private OrdinalSet<InstanceKey> toOrdinalInstanceKeySet(Collection c) {
     BimodalMutableIntSet s = new BimodalMutableIntSet();
@@ -143,7 +151,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
       LocalPointerKeyWithFilter lpk = (LocalPointerKeyWithFilter) key;
       FilteredPointerKey.TypeFilter filter = lpk.getTypeFilter();
       Assertions._assert(filter instanceof FilteredPointerKey.SingleClassFilter);
-      return ((FilteredPointerKey.SingleClassFilter)filter).getConcreteType();
+      return ((FilteredPointerKey.SingleClassFilter) filter).getConcreteType();
     } else if (key instanceof StaticFieldKey) {
       StaticFieldKey s = (StaticFieldKey) key;
       return getCallGraph().getClassHierarchy().lookupClass(s.getField().getFieldTypeReference());
@@ -154,7 +162,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
       ArrayContentsKey i = (ArrayContentsKey) key;
       FilteredPointerKey.TypeFilter filter = i.getTypeFilter();
       Assertions._assert(filter instanceof FilteredPointerKey.SingleClassFilter);
-      return ((FilteredPointerKey.SingleClassFilter)filter).getConcreteType();
+      return ((FilteredPointerKey.SingleClassFilter) filter).getConcreteType();
     } else {
       Assertions.UNREACHABLE("inferType " + key.getClass());
       return null;
