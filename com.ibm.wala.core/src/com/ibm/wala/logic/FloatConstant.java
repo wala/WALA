@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-public class FloatConstant extends AbstractConstant {
+public class FloatConstant extends NumberConstant {
   private final float val;
   
   protected FloatConstant(float val) {
@@ -21,7 +21,8 @@ public class FloatConstant extends AbstractConstant {
     return new FloatConstant(val);
   }
   
-  public float getVal() {
+  @Override
+  public Number getVal() {
     return val;
   }
 

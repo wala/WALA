@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-public class DoubleConstant extends AbstractConstant {
+public class DoubleConstant extends NumberConstant {
   private final double val;
   
   protected DoubleConstant(double val) {
@@ -21,7 +21,8 @@ public class DoubleConstant extends AbstractConstant {
     return new DoubleConstant(val);
   }
   
-  public double getVal() {
+  @Override
+  public Number getVal() {
     return val;
   }
 

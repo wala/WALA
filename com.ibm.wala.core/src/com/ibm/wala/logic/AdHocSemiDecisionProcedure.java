@@ -148,7 +148,7 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
           if (lhs instanceof IntConstant && rhs instanceof IntConstant) {
             IntConstant c1 = (IntConstant) lhs;
             IntConstant c2 = (IntConstant) rhs;
-            return c1.getVal() >= c2.getVal();
+            return c1.getVal().intValue() >= c2.getVal().intValue();
           }
         }
       } else if (r.getRelation().equals(BinaryRelation.LE)) {
@@ -158,7 +158,7 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
           if (lhs instanceof IntConstant && rhs instanceof IntConstant) {
             IntConstant c1 = (IntConstant) lhs;
             IntConstant c2 = (IntConstant) rhs;
-            return c1.getVal() > c2.getVal();
+            return c1.getVal().intValue() > c2.getVal().intValue();
           }
         }
       }
@@ -230,7 +230,7 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
         if (lhs instanceof IntConstant && rhs instanceof IntConstant) {
           IntConstant x = (IntConstant) lhs;
           IntConstant y = (IntConstant) rhs;
-          return x.getVal() >= y.getVal();
+          return x.getVal().intValue() >= y.getVal().intValue();
         }
       } else if (r.getRelation().equals(BinaryRelation.LT)) {
         ITerm lhs = r.getTerms().get(0);
@@ -238,7 +238,7 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
         if (lhs instanceof IntConstant && rhs instanceof IntConstant) {
           IntConstant x = (IntConstant) lhs;
           IntConstant y = (IntConstant) rhs;
-          return x.getVal() < y.getVal();
+          return x.getVal().intValue() < y.getVal().intValue();
         }
       } else if (r.getRelation().equals(BinaryRelation.LE)) {
         ITerm lhs = r.getTerms().get(0);
@@ -246,7 +246,7 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
         if (lhs instanceof IntConstant && rhs instanceof IntConstant) {
           IntConstant x = (IntConstant) lhs;
           IntConstant y = (IntConstant) rhs;
-          return x.getVal() <= y.getVal();
+          return x.getVal().intValue() <= y.getVal().intValue();
         }
       }
       break;

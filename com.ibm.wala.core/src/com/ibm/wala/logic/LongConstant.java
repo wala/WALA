@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-public class LongConstant extends AbstractConstant {
+public class LongConstant extends NumberConstant {
   private final long val;
   
   protected LongConstant(long val) {
@@ -21,7 +21,8 @@ public class LongConstant extends AbstractConstant {
     return new LongConstant(val);
   }
   
-  public long getVal() {
+  @Override
+  public Number getVal() {
     return val;
   }
 
