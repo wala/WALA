@@ -10,18 +10,18 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-public class IntConstant extends AbstractConstant {
-  private final int val;
+public class LongConstant extends AbstractConstant {
+  private final long val;
   
-  protected IntConstant(int val) {
+  protected LongConstant(long val) {
     this.val = val;
   }
   
-  public static IntConstant make(int val) {
-    return new IntConstant(val);
+  public static LongConstant make(long val) {
+    return new LongConstant(val);
   }
   
-  public int getVal() {
+  public long getVal() {
     return val;
   }
 
@@ -35,7 +35,7 @@ public class IntConstant extends AbstractConstant {
   public int hashCode() {
     final int PRIME = 31;
     int result = 1;
-    result = PRIME * result + val;
+    result = (int) (PRIME * result + val);
     return result;
   }
 
@@ -47,7 +47,7 @@ public class IntConstant extends AbstractConstant {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    final IntConstant other = (IntConstant) obj;
+    final LongConstant other = (LongConstant) obj;
     if (val != other.val)
       return false;
     return true;
