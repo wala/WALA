@@ -227,10 +227,8 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
       } else if (r.getRelation().equals(BinaryRelation.GE)) {
         ITerm lhs = r.getTerms().get(0);
         ITerm rhs = r.getTerms().get(1);
-        if (lhs instanceof IntConstant && rhs instanceof IntConstant) {
-          IntConstant x = (IntConstant) lhs;
-          IntConstant y = (IntConstant) rhs;
-          return x.getVal().intValue() >= y.getVal().intValue();
+        if (isLE(rhs, lhs)) {
+          return true;
         }
       } else if (r.getRelation().equals(BinaryRelation.LT)) {
         ITerm lhs = r.getTerms().get(0);
@@ -243,14 +241,49 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
       } else if (r.getRelation().equals(BinaryRelation.LE)) {
         ITerm lhs = r.getTerms().get(0);
         ITerm rhs = r.getTerms().get(1);
-        if (lhs instanceof IntConstant && rhs instanceof IntConstant) {
-          IntConstant x = (IntConstant) lhs;
-          IntConstant y = (IntConstant) rhs;
-          return x.getVal().intValue() <= y.getVal().intValue();
+        if (isLE(lhs, rhs)) {
+          return true;
         }
       }
       break;
     }
     return false;
   }
+  
+  /**
+   * do we know a <= b ?
+   * 
+   * @return false if no or maybe
+   */
+  public boolean isLE(ITerm a, ITerm b) {
+
+    if (a.equals(b)) {
+      return true;
+    }
+
+    if (a instanceof IntConstant && b instanceof IntConstant) {
+      IntConstant ac = (IntConstant) a;
+      IntConstant bc = (IntConstant) b;
+      return ac.getVal().intValue() <= bc.getVal().intValue();
+    }
+    if (a instanceof LongConstant && b instanceof LongConstant) {
+      LongConstant ac = (LongConstant) a;
+      LongConstant bc = (LongConstant) b;
+      return ac.getVal().longValue() <= bc.getVal().longValue();
+    }
+    if (a instanceof DoubleConstant && b instanceof DoubleConstant) {
+      DoubleConstant ac = (DoubleConstant) a;
+      DoubleConstant bc = (DoubleConstant) b;
+      return ac.getVal().doubleValue() <= bc.getVal().doubleValue();
+    }
+    if (a instanceof FloatConstant && b instanceof FloatConstant) {
+      FloatConstant ac = (FloatConstant) a;
+      FloatConstant bc = (FloatConstant) b;
+      return ac.getVal().floatValue() <= bc.getVal().floatValue();
+    }
+
+    return false;
+  }
+  
+  
 }
