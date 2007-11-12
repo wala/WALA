@@ -63,7 +63,7 @@ public class ParanoidHashMap<K, V> extends HashMap<K, V> {
     if (arg0 == null) {
       throw new IllegalArgumentException("arg0 is null");
     }
-    for (Map.Entry<K,V> E: entrySet()) {
+    for (Map.Entry<? extends K, ? extends V> E: arg0.entrySet()) {
       put(E.getKey(), E.getValue());
     }
   }
