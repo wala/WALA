@@ -67,7 +67,8 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
   }
 
   /**
-   * Primitive logic to determine if axiom implies f.  This CANNOT invoke tautology or contradiction recursively.
+   * Primitive logic to determine if axiom implies f. This CANNOT invoke
+   * tautology or contradiction recursively.
    */
   protected boolean atomicImplies(IFormula axiom, IFormula f) {
     if (AdHocSemiDecisionProcedure.normalize(axiom).equals(AdHocSemiDecisionProcedure.normalize(f))) {
@@ -209,10 +210,8 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
       if (r.getRelation().equals(BinaryRelation.EQUALS)) {
         ITerm lhs = r.getTerms().get(0);
         ITerm rhs = r.getTerms().get(1);
-        if (lhs.getKind().equals(ITerm.Kind.CONSTANT) && rhs.getKind().equals(ITerm.Kind.CONSTANT)) {
-          if (lhs.equals(rhs)) {
-            return true;
-          }
+        if (lhs.equals(rhs)) {
+          return true;
         }
       } else if (r.getRelation().equals(BinaryRelation.NE)) {
         ITerm lhs = r.getTerms().get(0);
@@ -247,7 +246,7 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
     }
     return false;
   }
-  
+
   /**
    * do we know a <= b ?
    * 
@@ -282,6 +281,5 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
 
     return false;
   }
-  
-  
+
 }
