@@ -136,10 +136,8 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
       } else if (r.getRelation().equals(BinaryRelation.NE)) {
         ITerm lhs = r.getTerms().get(0);
         ITerm rhs = r.getTerms().get(1);
-        if (lhs.getKind().equals(ITerm.Kind.CONSTANT) && rhs.getKind().equals(ITerm.Kind.CONSTANT)) {
-          if (lhs.equals(rhs)) {
-            return true;
-          }
+        if (lhs.equals(rhs)) {
+          return true;
         }
       } else if (r.getRelation().equals(BinaryRelation.LT)) {
         ITerm lhs = r.getTerms().get(0);
