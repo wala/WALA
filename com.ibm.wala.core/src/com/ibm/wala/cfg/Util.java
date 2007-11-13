@@ -16,6 +16,7 @@ import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAConditionalBranchInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSASwitchInstruction;
+import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -133,6 +134,14 @@ public class Util {
     return -1;
   }
 
+  /**
+   * To which {@link IBasicBlock} does control flow from basic block bb, which ends in a
+   * conditional branch, when the conditional branch operands evaluate to the
+   * constants c1 and c2, respectively.
+   * 
+   * Callers must resolve the constant values from the {@link SymbolTable}
+   * before calling this method. These integers are <bf>not</bf> value numbers;
+   */
   public static <T extends IBasicBlock> T resolveBranch(ControlFlowGraph<T> G, T bb, int c1, int c2) {
     SSAConditionalBranchInstruction c = (SSAConditionalBranchInstruction) getLastInstruction(G, bb);
     switch ((ConditionalBranchInstruction.Operator) c.getOperator()) {

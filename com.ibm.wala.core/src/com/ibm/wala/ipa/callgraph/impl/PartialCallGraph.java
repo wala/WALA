@@ -33,6 +33,12 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 
+/**
+ * a view of a portion of a call graph.
+ * 
+ * @author Julian Dolby
+ *
+ */
 public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGraph {
 
   private final CallGraph cg;
@@ -55,6 +61,11 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
     return new PartialCallGraph(CG, partialRoots, partialGraph);
   }
 
+  /**
+   * @param CG the original call graph
+   * @param partialRoots roots of the new, partial graph
+   * the result contains only nodes reachable from the partialRoots in the original call graph.
+   */
   public static PartialCallGraph make(CallGraph CG, Collection<CGNode> partialRoots) {
     final Set<CGNode> nodes = DFS.getReachableNodes(CG, partialRoots);
     Graph<CGNode> partialGraph = GraphSlicer.prune(CG, new Filter<CGNode>() {
