@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.test;
 import java.io.IOException;
 
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 
@@ -50,7 +51,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 		 new String[]{"prologue.js/abs"}}
   };
 
-  public void testSimple() throws IOException {
+  public void testSimple() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "simple.js");
     verifyGraphAssertions(CG, assertionsForSimple);
   }
@@ -70,7 +71,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 			      "tests/objects.js/whatever"}}};
     
   
-  public void testObjects() throws IOException {
+  public void testObjects() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "objects.js");
     verifyGraphAssertions(CG, assertionsForObjects);
   }
@@ -92,7 +93,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 */
   };
 
-  public void testInherit() throws IOException {
+  public void testInherit() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "inherit.js");
     verifyGraphAssertions(CG, assertionsForInherit);
   }
@@ -106,7 +107,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 				"ctor 3/_fromctor"}}
   };
 
-  public void testNewfn() throws IOException {
+  public void testNewfn() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "newfn.js");
     verifyGraphAssertions(CG, assertionsForNewfn);
   }
@@ -122,7 +123,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 				"tests/control-flow.js/testReturn"}}
   };
     
-  public void testControlflow() throws IOException {
+  public void testControlflow() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "control-flow.js");
     verifyGraphAssertions(CG, assertionsForControlflow);
   }
@@ -139,7 +140,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 				"tests/more-control-flow.js/testReturn"}}
   };
     
-  public void testMoreControlflow() throws IOException {
+  public void testMoreControlflow() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "more-control-flow.js");
     verifyGraphAssertions(CG, assertionsForMoreControlflow);
   }
@@ -154,7 +155,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 				"tests/forin.js/testForIn2"}}
   };
     
-  public void testForin() throws IOException {
+  public void testForin() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "forin.js");
     verifyGraphAssertions(CG, assertionsForForin);
   }
@@ -177,7 +178,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 				"tests/simple-lexical.js/outer/inner3"}}
   };
     
-  public void testSimpleLexical() throws IOException {
+  public void testSimpleLexical() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "simple-lexical.js");
     verifyGraphAssertions(CG, assertionsForSimpleLexical);
   }
@@ -204,7 +205,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 				"tests/try.js/two"}}
   };
     
-  public void testTry() throws IOException {
+  public void testTry() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "try.js", true);
     verifyGraphAssertions(CG, assertionsForTry);
   }
@@ -217,7 +218,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 				"tests/string-op.js/plusNum"}}
   };
 
-  public void testStringOp() throws IOException {
+  public void testStringOp() throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder B =
       Util.makeScriptCGBuilder("tests", "string-op.js");
     B.getOptions().setTraceStringConstants( true );
@@ -235,7 +236,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 				"tests/upward.js/tester2"}}
   };
     
-  public void testUpward() throws IOException {
+  public void testUpward() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "upward.js");
     verifyGraphAssertions(CG, assertionsForUpward);
   }
@@ -248,7 +249,7 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
 				"prologue.js/toUpperCase"}}
   };
 
-  public void testStringPrims() throws IOException {
+  public void testStringPrims() throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder B =
       Util.makeScriptCGBuilder("tests", "string-prims.js");
     B.getOptions().setTraceStringConstants( true );

@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 
 public class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
@@ -30,7 +31,7 @@ public class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
   };
 
-  public void testAjaxslt() throws IOException {
+  public void testAjaxslt() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xslt.html");
     CallGraph CG = Util.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForAjaxslt);
@@ -40,7 +41,7 @@ public class TestAjaxsltCallGraphShape extends TestJSCallGraphShape {
 
   };
 
-  public void testAjaxpath() throws IOException {
+  public void testAjaxpath() throws IOException, IllegalArgumentException, CancelException {
     URL url = getClass().getClassLoader().getResource("ajaxslt/test/xpath.html");
     CallGraph CG = Util.makeHTMLCG(url);
     verifyGraphAssertions(CG, assertionsForAjaxpath);

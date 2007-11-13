@@ -21,6 +21,7 @@ import com.ibm.wala.cast.js.ipa.callgraph.*;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.util.WebUtil;
 import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -57,18 +58,18 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
     return makeScriptCGBuilder(dir, name, false);
   }
 
-  public static CallGraph makeScriptCG(String dir, String name) throws IOException {
+  public static CallGraph makeScriptCG(String dir, String name) throws IOException, IllegalArgumentException, CancelException {
     return makeScriptCG(dir, name, false);
   }
 
-  public static CallGraph makeScriptCG(String dir, String name, boolean useOneCFA) throws IOException {
+  public static CallGraph makeScriptCG(String dir, String name, boolean useOneCFA) throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder b = makeScriptCGBuilder(dir, name, useOneCFA);
     CallGraph CG = b.makeCallGraph(b.getOptions());
     dumpCG(b, CG);
     return CG;
   }
 
-  public static CallGraph makeScriptCG(SourceFileModule[] scripts, boolean useOneCFA) throws IOException {
+  public static CallGraph makeScriptCG(SourceFileModule[] scripts, boolean useOneCFA) throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder b = makeCGBuilder(scripts, useOneCFA);
     CallGraph CG = b.makeCallGraph(b.getOptions());
     dumpCG(b, CG);
@@ -80,7 +81,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
     return makeCGBuilder(new SourceFileModule[] { script }, false);
   }
 
-  public static CallGraph makeHTMLCG(URL url) throws IOException {
+  public static CallGraph makeHTMLCG(URL url) throws IOException, IllegalArgumentException, CancelException {
     PropagationCallGraphBuilder b = makeHTMLCGBuilder(url);
     CallGraph CG = b.makeCallGraph(b.getOptions());
     dumpCG(b, CG);
