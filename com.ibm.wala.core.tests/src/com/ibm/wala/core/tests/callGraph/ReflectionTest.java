@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ecore.java.impl.JavaPackageImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -41,7 +42,7 @@ public class ReflectionTest extends WalaTestCase {
     justThisTest(ReflectionTest.class);
   }
 
-  public void testReflect1() throws WalaException {
+  public void testReflect1() throws WalaException, IllegalArgumentException, CancelException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.xml");
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.REFLECT1_MAIN);

@@ -44,6 +44,7 @@ import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.CallGraphMapUtil;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.WalaUtil;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
@@ -89,7 +90,7 @@ public class CompareToZeroOneCFADriver {
   }
 
   @SuppressWarnings("unused")
-  private static void runUnitTestCase(String mainClass) {
+  private static void runUnitTestCase(String mainClass) throws IllegalArgumentException, CancelException {
     Trace.println("=======---------------=============");
     Trace.println("ANALYZING " + mainClass + "\n\n");
     // describe the "scope", what is the program we're analyzing
@@ -116,7 +117,7 @@ public class CompareToZeroOneCFADriver {
   }
 
   @SuppressWarnings("unused")
-  private static void runApplication(String appJar) {
+  private static void runApplication(String appJar) throws IllegalArgumentException, CancelException {
     Trace.println("=======---------------=============");
     Trace.println("ANALYZING " + appJar + "\n\n");
     EMFScopeWrapper scope = null;
@@ -146,7 +147,7 @@ public class CompareToZeroOneCFADriver {
     Trace.println("ALL FINE");
   }
 
-  private static void doTests(AnalysisScope scope, final ClassHierarchy cha, AnalysisOptions options) {
+  private static void doTests(AnalysisScope scope, final ClassHierarchy cha, AnalysisOptions options) throws IllegalArgumentException, CancelException {
     final SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
     final CallGraph oldCG = builder.makeCallGraph(options);
     final PointerAnalysis pa = builder.getPointerAnalysis();

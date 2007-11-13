@@ -40,11 +40,12 @@ package com.ibm.wala.core.tests.demandpa;
 import com.ibm.wala.demandpa.alg.IntraProcFilter;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 
 public class IntraprocTest extends AbstractPtrTest {
 
-  public void testId() throws ClassHierarchyException {
+  public void testId() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ID, 0);
   }
 

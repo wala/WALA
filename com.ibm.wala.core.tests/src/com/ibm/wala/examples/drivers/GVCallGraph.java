@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.Properties;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
@@ -51,8 +52,10 @@ public class GVCallGraph {
    * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" 
    * The "jar file name" should be
    * something like "c:/temp/testdata/java_cup.jar"
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public static void main(String[] args) throws WalaException {
+  public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException {
     run(args);
   }
 
@@ -60,8 +63,10 @@ public class GVCallGraph {
    * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" 
    * The "jar file name" should be
    * something like "c:/temp/testdata/java_cup.jar"
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public static Process run(String[] args) throws WalaException {
+  public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
     return run(p.getProperty("appJar"), p.getProperty("exclusionFile"));
@@ -69,9 +74,11 @@ public class GVCallGraph {
 
   /**
    * @param appJar
-   *          something like "c:/temp/testdata/java_cup.jar"
+   *            something like "c:/temp/testdata/java_cup.jar"
+   * @throws CancelException
+   * @throws IllegalArgumentException
    */
-  public static Process run(String appJar, String exclusionFile) {
+  public static Process run(String appJar, String exclusionFile) throws IllegalArgumentException, CancelException {
     try {
 
       Graph<CGNode> g = buildPrunedCallGraph(appJar, exclusionFile);
@@ -103,8 +110,10 @@ public class GVCallGraph {
    * @param appJar
    *          something like "c:/temp/testdata/java_cup.jar"
    * @return a call graph
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public static Graph<CGNode> buildPrunedCallGraph(String appJar, String exclusionFile) throws WalaException {
+  public static Graph<CGNode> buildPrunedCallGraph(String appJar, String exclusionFile) throws WalaException, IllegalArgumentException, CancelException {
     EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     if (exclusionFile != null) {
       escope.setExclusionFileName(exclusionFile);

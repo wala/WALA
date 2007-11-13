@@ -16,6 +16,7 @@ import junit.framework.Assert;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -37,7 +38,7 @@ import com.ibm.wala.util.debug.Trace;
  */
 public class ClassConstantTest extends WalaTestCase {
 
-  public void testClassConstants() throws ClassHierarchyException {
+  public void testClassConstants() throws ClassHierarchyException, IllegalArgumentException, CancelException {
 
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);

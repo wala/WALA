@@ -49,6 +49,7 @@ import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.genericutil.Predicate;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.WalaUtil;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -93,8 +94,10 @@ public class DemandCastChecker {
 
   /**
    * @param args
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IllegalArgumentException, CancelException {
     WalaUtil.initializeTraceFile();
     try {
       p = new Properties();
@@ -118,7 +121,7 @@ public class DemandCastChecker {
     runTestCase("Lpolyglot/main/Main", "polyglot.xml", "polyglot");
   }
 
-  private static void runTestCase(String mainClass, String scopeFile, String benchName) {
+  private static void runTestCase(String mainClass, String scopeFile, String benchName) throws IllegalArgumentException, CancelException {
     Trace.println("=====BENCHMARK " + benchName + "=====");
     System.err.println("analyzing " + benchName);
     DemandRefinementPointsTo dmp = null;
@@ -137,7 +140,7 @@ public class DemandCastChecker {
   }
 
   private static DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass, String benchName)
-      throws ClassHierarchyException {
+      throws ClassHierarchyException, IllegalArgumentException, CancelException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, getExclusions(benchName));
     // build a type hierarchy
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -195,8 +198,10 @@ public class DemandCastChecker {
    * @param cha
    * @param options
    * @return
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  private static CallGraph buildCallGraph(AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options) {
+  private static CallGraph buildCallGraph(AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options) throws IllegalArgumentException, CancelException {
     CallGraph ret = null;
     final AnalysisCache cache = new AnalysisCache();
     if (CHEAP_CG) {

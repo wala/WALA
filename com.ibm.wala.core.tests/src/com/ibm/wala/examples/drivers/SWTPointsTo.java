@@ -16,6 +16,7 @@ import org.eclipse.jface.window.ApplicationWindow;
 
 import com.ibm.wala.analysis.pointers.BasicHeapGraph;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
@@ -76,7 +77,7 @@ public class SWTPointsTo {
     }
   }
 
-  public static Graph<Object> buildPointsTo(String appJar) throws WalaException {
+  public static Graph<Object> buildPointsTo(String appJar) throws WalaException, IllegalArgumentException, CancelException {
     EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
     EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);

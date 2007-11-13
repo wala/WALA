@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.Properties;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
@@ -62,15 +63,19 @@ public class GVSDG {
    * 
    * @param args
    * @throws WalaException
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public static void main(String[] args) throws WalaException {
+  public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException {
     run(args);
   }
 
   /**
    * @throws WalaException
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public static Process run(String[] args) throws WalaException {
+  public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
     return run(p.getProperty("appJar"), p.getProperty("mainClass"), getDataDependenceOptions(p), getControlDependenceOptions(p));
@@ -101,8 +106,10 @@ public class GVSDG {
   /**
    * @param appJar
    *            something like "c:/temp/testdata/java_cup.jar"
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public static Process run(String appJar, String mainClass, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+  public static Process run(String appJar, String mainClass, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
     try {
       EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 

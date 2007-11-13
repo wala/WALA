@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.callGraph;
 
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -53,7 +54,7 @@ public class CallGraphTestUtil {
     return new EMFScopeWrapper(scopeFile, exclusionsFile, MY_CLASSLOADER);
   }
 
-  public static CallGraph buildRTA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope) {
+  public static CallGraph buildRTA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope) throws IllegalArgumentException, CancelException {
     Stopwatch S = new Stopwatch("build RTA graph");
     S.start();
 
@@ -65,7 +66,7 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, boolean testPAtoString) {
+  public static CallGraph buildZeroCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, boolean testPAtoString) throws IllegalArgumentException, CancelException {
     Stopwatch S = new Stopwatch("build ZeroCFA graph");
     S.start();
 
@@ -81,7 +82,7 @@ public class CallGraphTestUtil {
   }
 
   public static CallGraph buildVanillaZeroOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha,
-      AnalysisScope scope) {
+      AnalysisScope scope) throws IllegalArgumentException, CancelException {
     Stopwatch S = new Stopwatch("build Vanilla 0-1-CFA graph");
     S.start();
 
@@ -93,7 +94,7 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, boolean testPAtoString) {
+  public static CallGraph buildZeroOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, boolean testPAtoString) throws IllegalArgumentException, CancelException {
     Stopwatch S = new Stopwatch("build 0-1-CFA graph");
     S.start();
 
@@ -109,7 +110,7 @@ public class CallGraphTestUtil {
   }
 
   public static CallGraph buildZeroContainerCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha,
-      AnalysisScope scope) {
+      AnalysisScope scope) throws IllegalArgumentException, CancelException {
     Stopwatch S = new Stopwatch("build 0-1-Container-CFA graph");
     S.start();
 
@@ -122,7 +123,7 @@ public class CallGraphTestUtil {
   }
 
   public static CallGraph buildZeroOneContainerCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha,
-      AnalysisScope scope) {
+      AnalysisScope scope) throws IllegalArgumentException, CancelException {
     Stopwatch S = new Stopwatch("build 0-1-Container-CFA graph");
     S.start();
 
@@ -134,7 +135,7 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope) {
+  public static CallGraph buildOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope) throws IllegalArgumentException, CancelException {
     Stopwatch S = new Stopwatch("build 1-CFA graph");
     S.start();
 

@@ -20,6 +20,7 @@ import java.util.Properties;
 import org.eclipse.emf.ecore.EObject;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ecore.java.ECallSite;
 import com.ibm.wala.ecore.java.EJavaClass;
 import com.ibm.wala.ecore.java.EJavaMethod;
@@ -55,8 +56,10 @@ public class ExportCallGraphToXML {
    * should be something like "c:/temp/testdata/java_cup.jar"
    * 
    * @param args
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IllegalArgumentException, CancelException {
     run(args);
   }
 
@@ -65,8 +68,10 @@ public class ExportCallGraphToXML {
    * something like "c:/temp/testdata/java_cup.jar"
    * 
    * @param args
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public static void run(String[] args) {
+  public static void run(String[] args) throws IllegalArgumentException, CancelException {
     validateCommandLine(args);
     run(args[1]);
   }
@@ -74,8 +79,10 @@ public class ExportCallGraphToXML {
   /**
    * @param appJar
    *          something like "c:/temp/testdata/java_cup.jar"
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public static void run(String appJar) {
+  public static void run(String appJar) throws IllegalArgumentException, CancelException {
     try {
 
       EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);

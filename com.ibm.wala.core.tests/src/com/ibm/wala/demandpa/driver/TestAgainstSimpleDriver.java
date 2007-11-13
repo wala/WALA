@@ -46,6 +46,7 @@ import com.ibm.wala.demandpa.alg.statemachine.DummyStateMachine;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.WalaUtil;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -73,7 +74,7 @@ public class TestAgainstSimpleDriver {
 
   private static final boolean VERBOSE = false;
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IllegalArgumentException, CancelException {
 
     WalaUtil.initializeTraceFile();
     // for (String String : ALL_TEST_CASES) {
@@ -83,7 +84,7 @@ public class TestAgainstSimpleDriver {
     System.err.println("computed all points-to sets successfully");
   }
 
-  private static void runAnalysisForTestCase(String mainClass) {
+  private static void runAnalysisForTestCase(String mainClass) throws IllegalArgumentException, CancelException {
     Trace.println("=======---------------=============");
     Trace.println("ANALYZING " + mainClass + "\n\n");
     // describe the "scope", what is the program we're analyzing

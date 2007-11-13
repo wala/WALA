@@ -11,6 +11,7 @@
 package com.ibm.wala.core.tests.callGraph;
 
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.util.intset.BimodalMutableIntSetFactory;
 import com.ibm.wala.util.intset.BitVectorIntSetFactory;
@@ -40,7 +41,7 @@ public class DebuggingBitsetCallGraphTest extends WalaTestCase {
     graphTest = new CallGraphTest(arg0);
   }
 
-  private void runBitsetTest(MutableIntSetFactory p, MutableIntSetFactory s) throws ClassHierarchyException {
+  private void runBitsetTest(MutableIntSetFactory p, MutableIntSetFactory s) throws ClassHierarchyException, IllegalArgumentException, CancelException {
     MutableIntSetFactory save = IntSetUtil.getDefaultIntSetFactory();
     try {
       IntSetUtil.setDefaultIntSetFactory(new DebuggingMutableIntSetFactory(p, s));
@@ -50,23 +51,23 @@ public class DebuggingBitsetCallGraphTest extends WalaTestCase {
     }
   }
 
-  public void testBimodalSparse() throws ClassHierarchyException {
+  public void testBimodalSparse() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     runBitsetTest(new BimodalMutableIntSetFactory(), new MutableSparseIntSetFactory());
   }
 
-  public void testSharedBimodal() throws ClassHierarchyException {
+  public void testSharedBimodal() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     runBitsetTest(new MutableSharedBitVectorIntSetFactory(), new BimodalMutableIntSetFactory());
   }
 
-  public void testSharedSparse() throws ClassHierarchyException {
+  public void testSharedSparse() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     runBitsetTest(new MutableSharedBitVectorIntSetFactory(), new MutableSparseIntSetFactory());
   }
 
-  public void testSharedBitVector() throws ClassHierarchyException {
+  public void testSharedBitVector() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     runBitsetTest(new MutableSharedBitVectorIntSetFactory(), new BitVectorIntSetFactory());
   }
 
-  public void testSemiSparseShared() throws ClassHierarchyException {
+  public void testSemiSparseShared() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     runBitsetTest(new SemiSparseMutableIntSetFactory(), new MutableSharedBitVectorIntSetFactory());
   }
 

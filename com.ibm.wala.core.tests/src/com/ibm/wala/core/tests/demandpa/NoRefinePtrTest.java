@@ -38,6 +38,7 @@
 package com.ibm.wala.core.tests.demandpa;
 
 import com.ibm.wala.demandpa.util.WalaUtil;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 
 public class NoRefinePtrTest extends AbstractPtrTest {
@@ -47,60 +48,60 @@ public class NoRefinePtrTest extends AbstractPtrTest {
     WalaUtil.initializeTraceFile();
   }
 
-  public void testOnTheFlySimple() throws ClassHierarchyException {
+  public void testOnTheFlySimple() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ONTHEFLY_SIMPLE, 2);
   }
 
-  public void testArraySet() throws ClassHierarchyException {
+  public void testArraySet() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ARRAY_SET, 2);
   }
 
-  public void testArraySetIter() throws ClassHierarchyException {
+  public void testArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ARRAY_SET_ITER, 2);
   }
 
-  public void testHashSet() throws ClassHierarchyException {
+  public void testHashSet() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     // result relies on analyzing 6.0 libraries
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_HASH_SET, 4);
   }
 
-  public void testMethodRecursion() throws ClassHierarchyException {
+  public void testMethodRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_METHOD_RECURSION, 2);
   }
 
-  public void testFooId() throws ClassHierarchyException {
+  public void testFooId() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ID, 2);
   }
 
-  public void testLocals() throws ClassHierarchyException {
+  public void testLocals() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_LOCALS, 1);
   }
 
-  public void testArrays() throws ClassHierarchyException {
+  public void testArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ARRAYS, 3);
   }
 
-  public void testFields() throws ClassHierarchyException {
+  public void testFields() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_FIELDS, 2);
   }
 
-  public void testFieldsHarder() throws ClassHierarchyException {
+  public void testFieldsHarder() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_FIELDS_HARDER, 2);
   }
 
-  public void testGetterSetter() throws ClassHierarchyException {
+  public void testGetterSetter() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_GETTER_SETTER, 2);
   }
 
-  public void testException() throws ClassHierarchyException {
+  public void testException() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_EXCEPTION, 4);
   }
 
-  public void testMultiDim() throws ClassHierarchyException {
+  public void testMultiDim() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_MULTI_DIM, 5);
   }
 
-  public void testGlobal() throws ClassHierarchyException {
+  public void testGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_GLOBAL, 1);
   }
 

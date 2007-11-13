@@ -16,6 +16,7 @@ import java.util.Properties;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
@@ -87,6 +88,8 @@ public class GVSlice {
    * the statement that calls "srcCallee" from "srcCaller"
    * <li> "data dependence options" can be one of "-full", "-no_base_ptrs",
    * "-no_base_no_heap", "-no_heap", "-no_base_no_heap_no_cast", or "-none".
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    * 
    * @see com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions
    *      <li> "control dependence options" can be "-full" or "-none"
@@ -95,14 +98,17 @@ public class GVSlice {
    *      </ul>
    * 
    */
-  public static void main(String[] args) throws WalaException {
+  public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException {
     run(args);
   }
 
   /**
    * see main(), above, for command-line arguments
+   * 
+   * @throws CancelException
+   * @throws IllegalArgumentException
    */
-  public static Process run(String[] args) throws WalaException {
+  public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException {
     // parse the command-line into a Properties object
     Properties p = CommandLine.parse(args);
     // validate that the command-line has the expected format
@@ -125,24 +131,26 @@ public class GVSlice {
    * visualize the result
    * 
    * @param appJar
-   *          should be something like "c:/temp/testdata/java_cup.jar"
+   *            should be something like "c:/temp/testdata/java_cup.jar"
    * @param mainClass
-   *          should be something like "c:/temp/testdata/java_cup.jar"
+   *            should be something like "c:/temp/testdata/java_cup.jar"
    * @param srcCaller
-   *          name of the method containing the statement of interest
+   *            name of the method containing the statement of interest
    * @param srcCallee
-   *          name of the method called by the statement of interest
+   *            name of the method called by the statement of interest
    * @param goBackward
-   *          do a backward slice?
+   *            do a backward slice?
    * @param dOptions
-   *          options controlling data dependence
+   *            options controlling data dependence
    * @param cOptions
-   *          options controlling control dependence
+   *            options controlling control dependence
    * @return a Process running ghostview to visualize the dot'ted representation
    *         of the slice
+   * @throws CancelException
+   * @throws IllegalArgumentException
    */
   public static Process run(String appJar, String mainClass, String srcCaller, String srcCallee, boolean goBackward,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
     try {
       // create an analysis scope representing the appJar as a J2SE application
       EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);

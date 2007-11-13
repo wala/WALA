@@ -16,6 +16,7 @@ import java.util.jar.JarFile;
 
 import com.ibm.wala.classLoader.*;
 import com.ibm.wala.client.impl.*;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.*;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.*;
@@ -136,8 +137,10 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
 
   /**
    * The heart of the analysis.
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public Set<IClass> gatherThreadEscapingClasses() throws IOException, ClassHierarchyException {
+  public Set<IClass> gatherThreadEscapingClasses() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
 
     //
     // set the application to analyze
@@ -308,8 +311,10 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
    * do not have races since there are no writes to them, and volatile fields
    * have atomic read and write semantics provided by trhe VM. Hence, this piece
    * of code produces a list of all other fields.
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public static void main(String[] args) throws IOException, ClassHierarchyException {
+  public static void main(String[] args) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
     String mainClassName = args[0];
 
     Set<JarFile> jars = HashSetFactory.make();

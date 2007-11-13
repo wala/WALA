@@ -50,6 +50,7 @@ import com.ibm.wala.demandpa.alg.statemachine.DummyStateMachine;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -135,7 +136,7 @@ public abstract class AbstractPtrTest extends TestCase {
     return null;
   }
 
-  protected void doPointsToSizeTest(String scopeFile, String mainClass, int expectedSize) throws ClassHierarchyException {
+  protected void doPointsToSizeTest(String scopeFile, String mainClass, int expectedSize) throws ClassHierarchyException, IllegalArgumentException, CancelException {
     Collection<InstanceKey> pointsTo = getPointsToSetToTest(scopeFile, mainClass);
     if (debug) {
       System.err.println("points-to for " + mainClass + ": " + pointsTo);
@@ -143,7 +144,7 @@ public abstract class AbstractPtrTest extends TestCase {
     assertEquals(expectedSize, pointsTo.size());
   }
 
-  protected Collection<InstanceKey> getPointsToSetToTest(String scopeFile, String mainClass) throws ClassHierarchyException {
+  protected Collection<InstanceKey> getPointsToSetToTest(String scopeFile, String mainClass) throws ClassHierarchyException, IllegalArgumentException, CancelException {
     final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(scopeFile, mainClass);
 
     // find the testThisVar call, and check the parameter's points-to set
@@ -153,7 +154,7 @@ public abstract class AbstractPtrTest extends TestCase {
     return pointsTo;
   }
 
-  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass) throws ClassHierarchyException {
+  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass) throws ClassHierarchyException, IllegalArgumentException, CancelException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, "Java60RegressionExclusions.xml");
     // build a type hierarchy
     ClassHierarchy cha = ClassHierarchy.make(scope);
