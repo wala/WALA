@@ -32,3 +32,6 @@ bitvector
 arraylength
 overapproximation
 entrypoints
+callees
+mod
+putstatic
