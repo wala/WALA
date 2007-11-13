@@ -29,6 +29,7 @@ import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -511,7 +512,7 @@ public class JavaIRTests extends IRTests {
     return MethodReference.findOrCreate(clsRef, nameAtom, descr);
   }
 
-  public void testMiniaturSliceBug() {
+  public void testMiniaturSliceBug() throws IllegalArgumentException, CancelException {
     Pair x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
 
     PointerAnalysis pa = (PointerAnalysis) x.snd;
