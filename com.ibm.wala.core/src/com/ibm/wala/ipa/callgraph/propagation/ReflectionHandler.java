@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.SyntheticMethod;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -60,8 +61,10 @@ public class ReflectionHandler {
    * results to checkcasts
    * 
    * @return true if anything has changed
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  protected boolean updateForReflection() {
+  protected boolean updateForReflection() throws IllegalArgumentException, CancelException {
 
     EngineTimings.startVirtual("ReflectionHandler.updateForReflection()");
 

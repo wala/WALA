@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import com.ibm.wala.eclipse.util.CancelException;
+
 
 /**
  * abstract base class for solver for pointer analysis
@@ -35,7 +37,7 @@ public abstract class AbstractPointsToSolver implements IPointsToSolver {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
    */
-  public abstract void solve();
+  public abstract void solve() throws IllegalArgumentException, CancelException;
 
   protected PropagationCallGraphBuilder getBuilder() {
     return builder;

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.perf.EngineTimings;
 
@@ -33,7 +34,7 @@ public class StandardSolver extends AbstractPointsToSolver {
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
    */
   @Override
-  public void solve() {
+  public void solve() throws IllegalArgumentException, CancelException {
     
     EngineTimings.startVirtual("StandardSolver.solve()");
     int i = 0;

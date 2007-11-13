@@ -23,6 +23,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticClass;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -258,7 +259,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /*
    * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#makeCallGraph(com.ibm.wala.ipa.callgraph.AnalysisOptions)
    */
-  public CallGraph makeCallGraph(AnalysisOptions options) {
+  public CallGraph makeCallGraph(AnalysisOptions options) throws IllegalArgumentException, CancelException {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }

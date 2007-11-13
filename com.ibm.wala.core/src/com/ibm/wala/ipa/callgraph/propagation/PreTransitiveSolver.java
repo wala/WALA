@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.fixedpoint.impl.AbstractFixedPointSolver;
 import com.ibm.wala.fixedpoint.impl.AbstractStatement;
 import com.ibm.wala.fixedpoint.impl.UnaryStatement;
@@ -61,7 +62,7 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
    */
   @Override
-  public void solve() {
+  public void solve() throws IllegalArgumentException, CancelException {
 
     EngineTimings.startVirtual("PreTransitiveSolver.solve()");
 

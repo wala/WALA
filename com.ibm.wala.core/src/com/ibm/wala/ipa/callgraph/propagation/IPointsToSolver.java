@@ -10,11 +10,13 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import com.ibm.wala.eclipse.util.CancelException;
+
 /**
  * @author sfink
  *
  */
 public interface IPointsToSolver {
 
-  public void solve();
+  public void solve() throws IllegalArgumentException, CancelException;
 }

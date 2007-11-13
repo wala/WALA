@@ -18,11 +18,11 @@ import com.ibm.wala.dataflow.IFDS.BackwardsSupergraph;
 import com.ibm.wala.dataflow.IFDS.IFlowFunctionMap;
 import com.ibm.wala.dataflow.IFDS.IMergeFunction;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
-import com.ibm.wala.dataflow.IFDS.SolverInterruptedException;
 import com.ibm.wala.dataflow.IFDS.TabulationDomain;
 import com.ibm.wala.dataflow.IFDS.TabulationProblem;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.dataflow.IFDS.TabulationSolver;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.modref.ModRef;
@@ -147,9 +147,10 @@ public class Slicer {
    * @param s
    *          a statement of interest
    * @return the backward slice of s.
+   * @throws CancelException 
    */
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
     return computeSlice(null, Collections.singleton(s), cg, pa, dOptions, cOptions, true);
   }
 
@@ -157,47 +158,52 @@ public class Slicer {
    * @param s
    *          a statement of interest
    * @return the forward slice of s.
+   * @throws CancelException 
    */
   public static Collection<Statement> computeForwardSlice(Statement s, CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
     return computeSlice(null, Collections.singleton(s), cg, pa, dOptions, cOptions, false);
   }
 
   /**
    * Use the passed-in SDG
+   * @throws CancelException 
    */
   public static Collection<Statement> computeBackwardSlice(SDG sdg, Statement s, CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, Collections.singleton(s), cg, pa, dOptions, cOptions, true);
   }
 
   /**
    * Use the passed-in SDG
+   * @throws CancelException 
    */
   public static Collection<Statement> computeForwardSlice(SDG sdg, Statement s, CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, Collections.singleton(s), cg, pa, dOptions, cOptions, false);
   }
 
   /**
    * Use the passed-in SDG
+   * @throws CancelException 
    */
   public static Collection<Statement> computeBackwardSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, ss, cg, pa, dOptions, cOptions, true);
   }
 
   /**
    * @param ss
    *          a collection of statements of interest
+   * @throws CancelException 
    */
   protected static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) throws CancelException {
     return computeSlice(sdg, ss, cg, pa, ModRef.make(), dOptions, cOptions, backward);
   }
 
   protected static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa, ModRef modRef,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) throws CancelException {
 
     if (VERBOSE) {
       System.err.println("Build SDG...");
@@ -227,13 +233,8 @@ public class Slicer {
       }
 
       TabulationSolver<Statement, PDG> solver = TabulationSolver.make(p);
-      TabulationResult<Statement, PDG> tr = null;
-      try {
-        tr = solver.solve();
-      } catch (SolverInterruptedException e) {
-        e.printStackTrace();
-        Assertions.UNREACHABLE();
-      }
+      TabulationResult<Statement, PDG> tr = solver.solve();
+
       if (DEBUG) {
         System.err.println("RESULT");
         System.err.println(tr);
@@ -361,9 +362,10 @@ public class Slicer {
    * @param s
    *          a statement of interest
    * @return the backward slice of s.
+   * @throws CancelException 
    */
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pointerAnalysis)
-      throws IllegalArgumentException {
+      throws IllegalArgumentException, CancelException {
     return computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
   }
 

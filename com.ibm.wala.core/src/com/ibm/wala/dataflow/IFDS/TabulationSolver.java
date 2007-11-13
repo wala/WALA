@@ -20,7 +20,11 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.eclipse.util.MonitorUtil;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.util.ReferenceCleanser;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -121,16 +125,6 @@ public class TabulationSolver<T, P> {
   };
 
   /**
-   * solver allows interruption
-   */
-  static protected final boolean INTERRUPTIBLE = true;
-
-  /**
-   * how frequently to check for interruption?
-   */
-  static final private int INTERRUPT_LATENCY = 20;
-
-  /**
    * The supergraph which induces this dataflow problem
    */
   protected final ISupergraph<T, P> supergraph;
@@ -173,6 +167,11 @@ public class TabulationSolver<T, P> {
    * The worklist
    */
   final protected Worklist worklist = new Worklist();
+  
+  /**
+   * A progress monitor.  can be null.
+   */
+  private final IProgressMonitor progressMonitor;
 
   /**
    * @param p
@@ -180,7 +179,7 @@ public class TabulationSolver<T, P> {
    * @throws IllegalArgumentException
    *             if p is null
    */
-  protected TabulationSolver(TabulationProblem<T, P> p) {
+  protected TabulationSolver(TabulationProblem<T, P> p, IProgressMonitor monitor) {
     if (p == null) {
       throw new IllegalArgumentException("p is null");
     }
@@ -191,6 +190,7 @@ public class TabulationSolver<T, P> {
       this.flowFunctionMap = IdentityFlowFunctions.singleton();
     }
     this.problem = p;
+    this.progressMonitor = monitor;
   }
 
   /**
@@ -200,16 +200,15 @@ public class TabulationSolver<T, P> {
    *             if p is null
    */
   public static <T, P> TabulationSolver<T, P> make(TabulationProblem<T, P> p) {
-    return new TabulationSolver<T, P>(p);
+    return new TabulationSolver<T, P>(p, null);
   }
 
   /**
    * Solve the dataflow problem.
    * 
    * @return a representation of the result
-   * @throws SolverInterruptedException
    */
-  public TabulationResult<T, P> solve() throws SolverInterruptedException {
+  public TabulationResult<T, P> solve() throws CancelException {
     EngineTimings.startVirtual("TabulationSolver.solve()");
 
     EngineTimings.startVirtual("TabulationSolver.initialize");
@@ -244,26 +243,16 @@ public class TabulationSolver<T, P> {
   /**
    * See POPL 95 paper for this algorithm, Figure 3
    * 
-   * @throws SolverInterruptedException
+   * @throws CancelException
    */
-  private void forwardTabulateSLRPs() throws SolverInterruptedException {
-    int interrupt = 0;
+  private void forwardTabulateSLRPs() throws CancelException {
     while (worklist.size() > 0) {
+      MonitorUtil.throwExceptionIfCanceled(progressMonitor);
       if (verbose) {
         performVerboseAction();
       }
       if (PERIODIC_WIPE_SOFT_CACHES) {
         tendToSoftCaches();
-      }
-      if (INTERRUPTIBLE) {
-        // checking Thread.interrupted is expensive. Don't do it every time.
-        interrupt++;
-        if (interrupt % INTERRUPT_LATENCY == 0) {
-          interrupt = 0;
-          if (Thread.interrupted()) {
-            throw new SolverInterruptedException();
-          }
-        }
       }
 
       final PathEdge edge = popFromWorkList();

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2002 - 2006 IBM Corporation.
+ * Copyright (c) 2007 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,13 +8,22 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.dataflow.IFDS;
+package com.ibm.wala.eclipse.util;
 
-public class SolverInterruptedException extends Exception {
+/**
+ * An exception for when work is canceled in eclipse.
+ * 
+ * @author sjfink
+ * 
+ */
+public class CancelException extends Exception {
 
-  /**
-   * UID
-   */
-  private static final long serialVersionUID = -32488844370356591L;
+  private CancelException(String msg) {
+    super(msg);
+  }
+
+  public static CancelException make(String msg) {
+    return new CancelException(msg);
+  }
 
 }

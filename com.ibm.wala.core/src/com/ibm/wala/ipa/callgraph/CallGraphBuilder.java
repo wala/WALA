@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
 
@@ -27,8 +28,10 @@ public interface CallGraphBuilder {
    * @param options an object representing controlling options that the call
    * graph building algorithm needs to know.
    * @return the built call graph
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public CallGraph makeCallGraph(AnalysisOptions options);
+  public CallGraph makeCallGraph(AnalysisOptions options) throws IllegalArgumentException, CancelException;
 
   /**
    * @return the Pointer Analysis information computed as a side-effect of

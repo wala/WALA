@@ -22,6 +22,7 @@ import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.AnalysisEngine;
 import com.ibm.wala.client.CallGraphBuilderFactory;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -149,7 +150,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return getCallGraphBuilderFactory().make(options, cache, cha, getScope(),  false);
   }
 
-  protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis) {
+  protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis) throws IllegalArgumentException, CancelException {
     Assertions.productionAssertion(getCallGraphBuilderFactory() != null, "must initialize callGraphBuilderFactory!");
 
     CallGraphBuilder builder = getCallGraphBuilder(cha, options, cache);
@@ -349,8 +350,10 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * Builds the call graph for the analysis scope in effect, using all of the
    * given entry points.
+   * @throws CancelException 
+   * @throws IllegalArgumentException 
    */
-  public CallGraphBuilder defaultCallGraphBuilder() {
+  public CallGraphBuilder defaultCallGraphBuilder() throws IllegalArgumentException, CancelException {
     buildAnalysisScope();
     IClassHierarchy cha = buildClassHierarchy();
     setClassHierarchy(cha);
@@ -360,7 +363,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return buildCallGraph(cha, options, true);
   }
 
-  public CallGraph buildDefaultCallGraph() {
+  public CallGraph buildDefaultCallGraph() throws IllegalArgumentException, CancelException {
     return defaultCallGraphBuilder().makeCallGraph(options);
   }
 
