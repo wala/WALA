@@ -50,7 +50,7 @@ public class SynchronizedBlockDuplicator
     }
   }
 
-  private static final boolean DEBUG = false;
+//  private static final boolean DEBUG = false;
 
   private final CallSiteReference f;
 
