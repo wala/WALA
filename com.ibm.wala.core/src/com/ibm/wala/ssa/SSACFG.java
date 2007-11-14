@@ -271,16 +271,16 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
           return result.iterator();
         }
       } else {
-        if (localPhis == null) {
-          LinkedList<SSAPhiInstruction> result = new LinkedList<SSAPhiInstruction>();
-          for (SSAPhiInstruction phi : stackSlotPhis) {
-            if (phi != null) {
-              result.add(phi);
-            }
+        // stackSlotPhis != null
+        LinkedList<SSAPhiInstruction> result = new LinkedList<SSAPhiInstruction>();
+        for (SSAPhiInstruction phi : stackSlotPhis) {
+          if (phi != null) {
+            result.add(phi);
           }
+        }
+        if (localPhis == null) {
           return result.iterator();
         } else {
-          LinkedList<SSAPhiInstruction> result = new LinkedList<SSAPhiInstruction>();
           for (SSAPhiInstruction phi : localPhis) {
             if (phi != null) {
               result.add(phi);
