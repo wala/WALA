@@ -25,7 +25,6 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * Eliminate dead assignments (phis) from an SSA IR.
@@ -38,7 +37,6 @@ public class DeadAssignmentElimination {
 
   /**
    * eliminate dead phis from an ir
-   * @param ir
    * @throws IllegalArgumentException  if ir is null
    */
   public static void perform(IR ir) {
@@ -61,7 +59,7 @@ public class DeadAssignmentElimination {
     for (Iterator x = cfg.iterator(); x.hasNext();) {
       BasicBlock b = (BasicBlock) x.next();
       if (DEBUG) {
-        Trace.println("eliminateDeadPhis: " + b);
+        System.err.println("eliminateDeadPhis: " + b);
       }
       if (b.hasPhi()) {
         HashSet<SSAPhiInstruction> toRemove = HashSetFactory.make(5);
@@ -71,7 +69,7 @@ public class DeadAssignmentElimination {
             int def = phi.getDef();
             if (solution.isDead(def)) {
               if (DEBUG) {
-                Trace.println("Will remove phi: " + phi);
+                System.err.println("Will remove phi: " + phi);
               }
               toRemove.add(phi);
             }
