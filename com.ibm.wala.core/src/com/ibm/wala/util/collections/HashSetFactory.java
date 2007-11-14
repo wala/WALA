@@ -12,11 +12,12 @@ package com.ibm.wala.util.collections;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 /**
  *
  * A debugging aid.  When HashSetFactory.DEBUG is set, this class creates ParanoidHashSets.  Otherwise,
- * it returns java.util.HashSets
+ * it returns {@link LinkedHashSet}s
  * @author sfink
  */
 public class HashSetFactory {
@@ -33,7 +34,7 @@ public class HashSetFactory {
     if (DEBUG) {
       return new ParanoidHashSet<T>(size);
     } else {
-      return new HashSet<T>(size);
+      return new LinkedHashSet<T>(size);
     }
   }
 
@@ -44,7 +45,7 @@ public class HashSetFactory {
     if (DEBUG) {
       return new ParanoidHashSet<T>();
     } else {
-      return new HashSet<T>();
+      return new LinkedHashSet<T>();
     }
   }
 
@@ -67,7 +68,7 @@ public class HashSetFactory {
     if (DEBUG) {
       return new ParanoidHashSet<T>(s);
     } else {
-      return new HashSet<T>(s);
+      return new LinkedHashSet<T>(s);
     }
   }
 }

@@ -11,12 +11,13 @@
 package com.ibm.wala.util.collections;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * 
  * A debugging aid.  When HashSetFactory.DEBUG is set, this class creates ParanoidHashMaps.  Otherwise,
- * it returns java.util.HashMaps
+ * it returns {@link LinkedHashMap}
  * 
  * @author sfink
  */
@@ -24,37 +25,37 @@ public class HashMapFactory {
 
   /**
    * @param size
-   * @return A ParanoidHashMap if DEBUG = true, a java.util.HashMap otherwise
+   * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
   public static <K,V> HashMap<K,V> make(int size) {
     if (HashSetFactory.DEBUG) {
       return new ParanoidHashMap<K,V>(size);
     } else {
-      return new HashMap<K,V>(size);
+      return new LinkedHashMap<K,V>(size);
     }
   }
 
   /**
-   * @return A ParanoidHashMap if DEBUG = true, a java.util.HashMap otherwise
+   * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
   public static <K,V> HashMap<K,V> make() {
     if (HashSetFactory.DEBUG) {
       return new ParanoidHashMap<K,V>();
     } else {
-      return new HashMap<K,V>();
+      return new LinkedHashMap<K,V>();
     }
   }
 
 
   /**
    * @param t
-   * @return A ParanoidHashMap if DEBUG = true, a java.util.HashMap otherwise
+   * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
   public static <K,V> HashMap<K,V> make(Map<K,V> t) {
     if (HashSetFactory.DEBUG) {
       return new ParanoidHashMap<K,V>(t);
     } else {
-      return new HashMap<K,V>(t);
+      return new LinkedHashMap<K,V>(t);
     }
   }
 }
