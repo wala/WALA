@@ -421,7 +421,7 @@ public class Simplifier {
   /**
    * in term t, substitute t2 for free occurrences of t1
    */
-  private static ITerm substitute(ITerm t, ITerm t1, ITerm t2, Map<Wildcard, ITerm> binding) {
+  public static ITerm substitute(ITerm t, ITerm t1, ITerm t2, Map<Wildcard, ITerm> binding) {
     assert t != null;
     assert t1 != null;
     assert t2 != null;
