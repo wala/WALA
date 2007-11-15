@@ -57,7 +57,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
  * @author sfink
  */
 public class TypeBasedHeapModel implements HeapModel {
-  
+
   private final static boolean DEBUG = false;
 
   final CFAPointerKeys pointerKeys = new CFAPointerKeys();
@@ -80,9 +80,9 @@ public class TypeBasedHeapModel implements HeapModel {
 
   /**
    * @param klasses
-   *          Collection<IClass>
+   *            Collection<IClass>
    * @throws IllegalArgumentException
-   *           if cg is null
+   *             if cg is null
    */
   public TypeBasedHeapModel(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) {
     if (cg == null) {
@@ -118,11 +118,11 @@ public class TypeBasedHeapModel implements HeapModel {
   }
 
   private Map<PointerKey, Object> computePointerKeys(CGNode node) {
-    
+
     if (DEBUG) {
       System.err.println("computePointerKeys " + node);
     }
-    
+
     IR ir = node.getIR();
     if (ir == null) {
       return Collections.emptyMap();
@@ -140,12 +140,15 @@ public class TypeBasedHeapModel implements HeapModel {
       }
       if (s.isConstant(i)) {
         if (s.isStringConstant(i)) {
-          TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(s.getStringValue(i));
+          TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(
+              s.getStringValue(i));
           result.put(pointerKeys.getPointerKeyForLocal(node, i), getInstanceKeyForConstant(type, s.getConstantValue(i)));
         }
       } else {
         TypeAbstraction t = ti.getType(i);
-        System.err.println(" type " + t);
+        if (DEBUG) {
+          System.err.println(" type " + t);
+        }
         if (t.getType() != null && t.getType().isReferenceType()) {
           result.put(pointerKeys.getPointerKeyForLocal(node, i), pointerKeys.getFilteredPointerKeyForLocal(node, i,
               new FilteredPointerKey.SingleClassFilter(t.getType())));
@@ -227,10 +230,12 @@ public class TypeBasedHeapModel implements HeapModel {
   }
 
   /**
-   * Note that this always returns a  {@link FilteredPointerKey}, since the {@link TypeBasedPointerAnalysis} relies on the
-   * type filter to compute points to sets.
+   * Note that this always returns a {@link FilteredPointerKey}, since the
+   * {@link TypeBasedPointerAnalysis} relies on the type filter to compute
+   * points to sets.
    * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.wala.ipa.callgraph.CGNode, int)
+   * @see com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory#getPointerKeyForLocal(com.ibm.wala.ipa.callgraph.CGNode,
+   *      int)
    */
   public FilteredPointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
     initPKeysForNode(node);
@@ -260,7 +265,8 @@ public class TypeBasedHeapModel implements HeapModel {
     }
   }
 
-  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) throws UnimplementedError {
+  public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter)
+      throws UnimplementedError {
     Assertions.UNREACHABLE();
     return null;
   }
