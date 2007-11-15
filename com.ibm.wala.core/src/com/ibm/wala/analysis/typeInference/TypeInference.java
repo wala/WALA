@@ -50,7 +50,7 @@ import com.ibm.wala.util.debug.Assertions;
  * @author sfink
  */
 public class TypeInference extends SSAInference<TypeVariable> implements FixedPointConstants {
-  
+
   private static final boolean DEBUG = false;
 
   public static TypeInference make(IR ir, boolean doPrimitives) {
@@ -120,18 +120,30 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
 
   @Override
   protected void initializeVariables() {
+
+    if (DEBUG) {
+      System.err.println("initializeVariables " + ir.getMethod());
+    }
+
     int[] parameterValueNumbers = ir.getParameterValueNumbers();
     for (int i = 0; i < parameterValueNumbers.length; i++) {
       TypeVariable v = getVariable(parameterValueNumbers[i]);
       TypeReference t = ir.getParameterType(i);
 
+      if (DEBUG) {
+        System.err.println("parameter " + parameterValueNumbers[i] + " " + t);
+      }
+
       if (t.isReferenceType()) {
         IClass klass = cha.lookupClass(t);
+        if (DEBUG) {
+          System.err.println("klass " + klass);
+        }
         if (klass != null) {
           v.setType(new ConeType(klass));
         } else {
-          v.setType(TypeAbstraction.TOP);
-          // v.setType(BOTTOM);
+          // give up .. default to java.lang.Object (BOTTOM)
+          v.setType(BOTTOM);
         }
       } else if (doPrimitives) {
         v.setType(PrimitiveType.getPrimitive(t));
@@ -254,7 +266,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
      */
     @Override
     public byte evaluate(TypeVariable lhs, IVariable[] rhs) {
-      
+
       if (DEBUG) {
         System.err.print("PhiOperator.meet " + lhs + " ");
         for (IVariable v : rhs) {
@@ -262,7 +274,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
         }
         System.err.println();
       }
-      
+
       TypeAbstraction lhsType = lhs.getType();
       TypeAbstraction meet = TypeAbstraction.TOP;
       for (int i = 0; i < rhs.length; i++) {
