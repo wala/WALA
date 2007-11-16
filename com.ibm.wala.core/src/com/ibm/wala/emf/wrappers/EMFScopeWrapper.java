@@ -30,7 +30,6 @@ import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.ecore.j2ee.scope.impl.J2EEScopePackageImpl;
-import com.ibm.wala.ecore.java.impl.JavaPackageImpl;
 import com.ibm.wala.ecore.java.scope.EBuiltInModule;
 import com.ibm.wala.ecore.java.scope.EBuiltInResource;
 import com.ibm.wala.ecore.java.scope.EClassFile;
@@ -89,7 +88,6 @@ public class EMFScopeWrapper extends AnalysisScope {
   private static final Object SUCCESS = new Object();
 
   static {
-    JavaPackageImpl.init();
     JavaScopePackageImpl.init();
     J2EEScopePackageImpl.init();
     Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
