@@ -19,7 +19,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.ecore.java.impl.JavaPackageImpl;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -53,9 +52,6 @@ import com.ibm.wala.util.warnings.Warnings;
 
 public class CallGraphTest extends WalaTestCase {
 
-  static {
-    JavaPackageImpl.init();
-  }
 
   public static void main(String[] args) {
     justThisTest(CallGraphTest.class);

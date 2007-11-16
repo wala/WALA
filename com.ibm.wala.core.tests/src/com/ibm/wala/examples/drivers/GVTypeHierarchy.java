@@ -14,12 +14,8 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Properties;
 
-import org.eclipse.emf.ecore.EObject;
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.ecore.java.EClassLoaderName;
-import com.ibm.wala.ecore.java.EJavaClass;
 import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
 import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.emf.wrappers.JavaScopeUtil;
@@ -92,21 +88,6 @@ public class GVTypeHierarchy {
       e.printStackTrace();
       return null;
     }
-  }
-
-  static Graph<EObject> pruneForAppLoader(Graph<EObject> g) throws WalaException {
-    Filter<EObject> f = new Filter<EObject>() {
-      public boolean accepts(EObject o) {
-        if (o instanceof EJavaClass) {
-          EJavaClass klass = (EJavaClass) o;
-          return (klass.getLoader().equals(EClassLoaderName.APPLICATION_LITERAL));
-        } else {
-          return false;
-        }
-      }
-    };
-
-    return pruneGraph(g, f);
   }
 
   public static <T> Graph<T> pruneGraph(Graph<T> g, Filter<T> f) throws WalaException {
