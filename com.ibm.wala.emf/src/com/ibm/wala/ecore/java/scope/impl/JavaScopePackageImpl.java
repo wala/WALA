@@ -38,8 +38,6 @@ import com.ibm.wala.ecore.java.scope.ESourceFile;
 import com.ibm.wala.ecore.java.scope.EStandardClassLoader;
 import com.ibm.wala.ecore.java.scope.JavaScopeFactory;
 import com.ibm.wala.ecore.java.scope.JavaScopePackage;
-import com.ibm.wala.ecore.perf.PerfPackage;
-import com.ibm.wala.ecore.perf.impl.PerfPackageImpl;
 import com.ibm.wala.ecore.regex.RegexPackage;
 import com.ibm.wala.ecore.regex.impl.RegexPackageImpl;
 
@@ -187,7 +185,6 @@ public class JavaScopePackageImpl extends EPackageImpl implements JavaScopePacka
     GraphPackageImpl theGraphPackage = (GraphPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(GraphPackage.eNS_URI) instanceof GraphPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(GraphPackage.eNS_URI) : GraphPackage.eINSTANCE);
     CommonPackageImpl theCommonPackage = (CommonPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI) instanceof CommonPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI) : CommonPackage.eINSTANCE);
     RegexPackageImpl theRegexPackage = (RegexPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RegexPackage.eNS_URI) instanceof RegexPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RegexPackage.eNS_URI) : RegexPackage.eINSTANCE);
-    PerfPackageImpl thePerfPackage = (PerfPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PerfPackage.eNS_URI) instanceof PerfPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PerfPackage.eNS_URI) : PerfPackage.eINSTANCE);
     JavaPackageImpl theJavaPackage = (JavaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(JavaPackage.eNS_URI) instanceof JavaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(JavaPackage.eNS_URI) : JavaPackage.eINSTANCE);
     CallGraphPackageImpl theCallGraphPackage = (CallGraphPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CallGraphPackage.eNS_URI) instanceof CallGraphPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CallGraphPackage.eNS_URI) : CallGraphPackage.eINSTANCE);
     PointerAnalysisPackageImpl thePointerAnalysisPackage = (PointerAnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PointerAnalysisPackage.eNS_URI) instanceof PointerAnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PointerAnalysisPackage.eNS_URI) : PointerAnalysisPackage.eINSTANCE);
@@ -198,7 +195,6 @@ public class JavaScopePackageImpl extends EPackageImpl implements JavaScopePacka
     theGraphPackage.createPackageContents();
     theCommonPackage.createPackageContents();
     theRegexPackage.createPackageContents();
-    thePerfPackage.createPackageContents();
     theJavaPackage.createPackageContents();
     theCallGraphPackage.createPackageContents();
     thePointerAnalysisPackage.createPackageContents();
@@ -209,7 +205,6 @@ public class JavaScopePackageImpl extends EPackageImpl implements JavaScopePacka
     theGraphPackage.initializePackageContents();
     theCommonPackage.initializePackageContents();
     theRegexPackage.initializePackageContents();
-    thePerfPackage.initializePackageContents();
     theJavaPackage.initializePackageContents();
     theCallGraphPackage.initializePackageContents();
     thePointerAnalysisPackage.initializePackageContents();
