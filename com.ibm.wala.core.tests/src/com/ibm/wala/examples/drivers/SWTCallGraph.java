@@ -36,7 +36,6 @@ import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.io.FileUtil;
-import com.ibm.wala.util.perf.EngineTimings;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.SWTTreeViewer;
 import com.ibm.wala.viz.ViewIRAction;
@@ -141,9 +140,7 @@ public class SWTCallGraph {
     } catch (Exception e) {
       e.printStackTrace();
       return null;
-    } finally {
-      EngineTimings.report();
-    }
+    } 
   }
 
   // private static CallGraphConstructionAlgorithm chooseAlgorithm(Properties p)
