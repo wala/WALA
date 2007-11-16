@@ -10,10 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.translator;
 
-import java.io.IOException;
-import java.util.Set;
-
-import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.tree.CAstEntity;
 
 public interface TranslatorToIR {
 

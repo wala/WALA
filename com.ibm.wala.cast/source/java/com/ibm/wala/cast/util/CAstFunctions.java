@@ -21,7 +21,7 @@ import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;
 
 public class CAstFunctions {
 
-  public static CAstNode findIf(CAstNode tree, Filter f) {
+  public static CAstNode findIf(CAstNode tree, Filter<CAstNode> f) {
     if (f.accepts(tree)) {
       return tree;
     } else {
@@ -73,7 +73,7 @@ public class CAstFunctions {
     };
   }
 
-  public static Iterator findAll(CAstNode tree, Filter f) {
+  public static Iterator<CAstNode> findAll(CAstNode tree, Filter<?> f) {
     return new FilterIterator<CAstNode>(iterateNodes(tree), f);
   }
 

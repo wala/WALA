@@ -1,27 +1,43 @@
 package com.ibm.wala.cast.ir.translator;
 
-import com.ibm.wala.cast.ir.translator.NativeBridge;
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.cast.tree.impl.*;
-import com.ibm.wala.cast.tree.visit.*;
-import com.ibm.wala.cast.util.*;
-import com.ibm.wala.util.collections.*;
-import com.ibm.wala.util.debug.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstControlFlowMap;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstNodeTypeMap;
+import com.ibm.wala.cast.tree.CAstQualifier;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.tree.CAstType;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
+import com.ibm.wala.cast.tree.impl.AbstractSourcePosition;
+import com.ibm.wala.cast.tree.impl.CAstControlFlowRecorder;
+import com.ibm.wala.cast.tree.impl.CAstNodeTypeMapRecorder;
+import com.ibm.wala.cast.tree.impl.CAstSourcePositionRecorder;
+import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.debug.Assertions;
 
 public abstract class NativeTranslatorToCAst extends NativeBridge {
 
   protected abstract class NativeEntity implements CAstEntity {
     private Position sourcePosition;
-    
-    private final Map scopedEntities = 
-      new HashMap();
 
-    public Map getAllScopedEntities() {
+    private final Map<CAstNode, Collection<CAstEntity>> scopedEntities = HashMapFactory.make();
+
+    public Map<CAstNode, Collection<CAstEntity>> getAllScopedEntities() {
       return scopedEntities;
     }
 
@@ -38,30 +54,30 @@ public abstract class NativeTranslatorToCAst extends NativeBridge {
       return sourcePosition;
     }
 
-    public Iterator getScopedEntities(CAstNode construct) {
+    public Iterator<?> getScopedEntities(CAstNode construct) {
       if (scopedEntities.containsKey(construct)) {
-	return ((Set)scopedEntities.get(construct)).iterator();
+        return scopedEntities.get(construct).iterator();
       } else {
-	return EmptyIterator.instance();
+        return EmptyIterator.instance();
       }
     }
 
+    @SuppressWarnings("unused")
     private void addScopedEntity(CAstNode construct, CAstEntity child) {
       if (!scopedEntities.containsKey(construct)) {
-	scopedEntities.put(construct, new HashSet(1));
+        Collection<CAstEntity> set = HashSetFactory.make(1);
+        scopedEntities.put(construct, set);
       }
-
-      ((Set)scopedEntities.get(construct)).add( child );
+      scopedEntities.get(construct).add(child);
     }
   }
 
   protected abstract class NativeCodeEntity extends NativeEntity {
-    protected final CAstSourcePositionRecorder src =       
-      new CAstSourcePositionRecorder();
-    protected final CAstControlFlowRecorder cfg = 
-      new CAstControlFlowRecorder(src);
-    protected final CAstNodeTypeMapRecorder types =
-      new CAstNodeTypeMapRecorder();
+    protected final CAstSourcePositionRecorder src = new CAstSourcePositionRecorder();
+
+    protected final CAstControlFlowRecorder cfg = new CAstControlFlowRecorder(src);
+
+    protected final CAstNodeTypeMapRecorder types = new CAstNodeTypeMapRecorder();
 
     protected final CAstType type;
 
@@ -96,11 +112,11 @@ public abstract class NativeTranslatorToCAst extends NativeBridge {
     }
 
     public void setLabelledGotoTarget(CAstNode from, CAstNode to, Object label) {
-      if (! cfg.isMapped(from)) {
-	cfg.map(from, from);
+      if (!cfg.isMapped(from)) {
+        cfg.map(from, from);
       }
-      if (! cfg.isMapped(to)) {
-	cfg.map(to, to);
+      if (!cfg.isMapped(to)) {
+        cfg.map(to, to);
       }
       cfg.add(from, to, label);
     }
@@ -146,19 +162,21 @@ public abstract class NativeTranslatorToCAst extends NativeBridge {
 
   protected class NativeFieldEntity extends NativeDataEntity {
     private final String name;
-    private final Set modifiers;
+
+    private final Set<CAstQualifier> modifiers;
+
     private final CAstEntity declaringClass;
 
-    public NativeFieldEntity(String name, Set modifiers, boolean isStatic, CAstEntity declaringClass) {
+    public NativeFieldEntity(String name, Set<CAstQualifier> modifiers, boolean isStatic, CAstEntity declaringClass) {
       this.name = name;
       this.declaringClass = declaringClass;
 
-      this.modifiers = new HashSet();
+      this.modifiers = new HashSet<CAstQualifier>();
       if (modifiers != null) {
-	this.modifiers.addAll(modifiers);
+        this.modifiers.addAll(modifiers);
       }
       if (isStatic) {
-	this.modifiers.add(CAstQualifier.STATIC);
+        this.modifiers.add(CAstQualifier.STATIC);
       }
     }
 
@@ -179,7 +197,7 @@ public abstract class NativeTranslatorToCAst extends NativeBridge {
       return null;
     }
 
-    public Collection getQualifiers() {
+    public Collection<CAstQualifier> getQualifiers() {
       return modifiers;
     }
   }
@@ -207,11 +225,11 @@ public abstract class NativeTranslatorToCAst extends NativeBridge {
       return type;
     }
 
-    public Collection getQualifiers() {
+    public Collection<CAstQualifier> getQualifiers() {
       return type.getQualifiers();
     }
   };
-     
+
   protected class NativeScriptEntity extends NativeCodeEntity {
     private final File file;
 
@@ -237,7 +255,7 @@ public abstract class NativeTranslatorToCAst extends NativeBridge {
     }
 
     public String[] getArgumentNames() {
-      return new String[]{ "script object" };
+      return new String[] { "script object" };
     }
 
     public CAstNode[] getArgumentDefaults() {
@@ -248,10 +266,10 @@ public abstract class NativeTranslatorToCAst extends NativeBridge {
       return 1;
     }
 
-    public Collection getQualifiers() {
-      return Collections.EMPTY_SET;
+    public Collection<CAstQualifier> getQualifiers() {
+      return Collections.emptySet();
     }
- 
+
     public String getFileName() {
       return file.getAbsolutePath();
     }
@@ -261,43 +279,56 @@ public abstract class NativeTranslatorToCAst extends NativeBridge {
 
   protected final String sourceFileName;
 
-  protected NativeTranslatorToCAst(CAst Ast,
-				   URL sourceURL,
-				   String sourceFileName) 
-  {
+  protected NativeTranslatorToCAst(CAst Ast, URL sourceURL, String sourceFileName) {
     super(Ast);
     this.sourceURL = sourceURL;
     this.sourceFileName = sourceFileName;
   }
 
+  @SuppressWarnings("unused")
   private String getLocalFile() {
     return sourceFileName;
   }
 
+  @SuppressWarnings("unused")
   private String getFile() {
     return sourceURL.getFile();
   }
 
-  private Position makeLocation(final int fl, 
-				final int fc, 
-				final int ll,
-				final int lc) 
-  {
+  @SuppressWarnings("unused")
+  private Position makeLocation(final int fl, final int fc, final int ll, final int lc) {
     return new AbstractSourcePosition() {
-      public int getFirstLine() { return fl; }
-      public int getLastLine() { return ll; }
-      public int getFirstCol() { return fc; }
-      public int getLastCol() { return lc; }
-      public URL getURL() { return sourceURL; }
-      public InputStream getInputStream() throws IOException { 
+      public int getFirstLine() {
+        return fl;
+      }
+
+      public int getLastLine() {
+        return ll;
+      }
+
+      public int getFirstCol() {
+        return fc;
+      }
+
+      public int getLastCol() {
+        return lc;
+      }
+
+      public URL getURL() {
+        return sourceURL;
+      }
+
+      public InputStream getInputStream() throws IOException {
         return new FileInputStream(sourceFileName);
       }
+
       public String toString() {
         String urlString = sourceURL.toString();
-	if (urlString.lastIndexOf( File.separator ) == -1)
-	  return "["+fl+":"+fc+"]->["+ll+":"+lc+"]";
-	else
-	  return urlString.substring(urlString.lastIndexOf(File.separator)+1)+"@["+fl+":"+fc+"]->["+ll+":"+lc+"]";
+        if (urlString.lastIndexOf(File.separator) == -1)
+          return "[" + fl + ":" + fc + "]->[" + ll + ":" + lc + "]";
+        else
+          return urlString.substring(urlString.lastIndexOf(File.separator) + 1) + "@[" + fl + ":" + fc + "]->[" + ll + ":" + lc
+              + "]";
       }
     };
   }

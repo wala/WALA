@@ -34,7 +34,7 @@ public interface CAstType {
     public interface Class extends Reference {
       boolean isInterface();
 
-      Collection getQualifiers();
+      Collection<CAstQualifier> getQualifiers();
     }
 
     public interface Array extends Reference {
