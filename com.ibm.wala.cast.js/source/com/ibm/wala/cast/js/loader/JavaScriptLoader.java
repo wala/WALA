@@ -19,10 +19,7 @@ import java.util.Set;
 
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
-import com.ibm.wala.cast.loader.AstClass;
-import com.ibm.wala.cast.loader.AstDynamicPropertyClass;
-import com.ibm.wala.cast.loader.AstFunctionClass;
-import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.loader.*;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.tree.CAstQualifier;
@@ -47,7 +44,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
-public class JavaScriptLoader implements IClassLoader {
+public class JavaScriptLoader extends CAstAbstractLoader {
 
   public final static Language JS = new Language() {
 
@@ -89,24 +86,18 @@ public class JavaScriptLoader implements IClassLoader {
     }
   };
 
-  private final Map<TypeName,IClass> types = HashMapFactory.make();
-  
   private static final Map<Selector,IMethod> emptyMap1 = Collections.emptyMap();
   private static final Map<Atom,IField> emptyMap2 = Collections.emptyMap();
 
   private final JavaScriptTranslatorFactory translatorFactory;
 
-  private final IClassHierarchy cha;
-
   public JavaScriptLoader(IClassHierarchy cha, JavaScriptTranslatorFactory translatorFactory) {
-    this.cha = cha;
+    super(cha);
     this.translatorFactory = translatorFactory;
   }
 
   class JavaScriptClass extends AstClass {
     private IClass superClass;
-    
-
 
     private JavaScriptClass(IClassLoader loader, TypeReference classRef, TypeReference superRef,
         CAstSourcePositionMap.Position sourcePosition) {
@@ -320,66 +311,16 @@ public class JavaScriptLoader implements IClassLoader {
 
   final JavaScriptClass STRING_OBJECT = new JavaScriptClass(this, JavaScriptTypes.StringObject, JavaScriptTypes.Object, null);
 
-  public IClass lookupClass(String className, IClassHierarchy cha) {
-    Assertions._assert(this.cha == cha);
-    return (IClass) types.get(TypeName.string2TypeName(className));
-  }
-
-  public IClass lookupClass(TypeName className) {
-    return (IClass) types.get(className);
+  public Language getLanguage() {
+    return JS;
   }
 
   public ClassLoaderReference getReference() {
     return JavaScriptTypes.jsLoader;
   }
 
-  public Iterator<IClass> iterateAllClasses() {
-    return types.values().iterator();
-  }
-
-  public int getNumberOfClasses() {
-    return 0;
-  }
-
-  public Atom getName() {
-    return getReference().getName();
-  }
-
-  public Language getLanguage() {
-    return JS;
-  }
-
-  public int getNumberOfMethods() {
-    return types.size();
-  }
-
-  public String getSourceFileName(IClass klass) {
-    return klass.getSourceFileName();
-  }
-
-  public IClassLoader getParent() {
-    // currently, JavaScript land does not interact with any other loaders
-    Assertions.UNREACHABLE("JavaScriptLoader.getParent() called?!?");
-    return null;
-  }
-
   public void init(Set modules) throws IOException {
     translatorFactory.make(this).translate(modules);
-  }
-
-  public void removeAll(Collection toRemove) {
-    Set<TypeName> keys = HashSetFactory.make();
-
-    for (Iterator<Map.Entry<TypeName,IClass>> EE = types.entrySet().iterator(); EE.hasNext();) {
-      Map.Entry<TypeName,IClass> E =  EE.next();
-      if (toRemove.contains(E.getValue())) {
-        keys.add(E.getKey());
-      }
-    }
-
-    for (Iterator KK = keys.iterator(); KK.hasNext();) {
-      types.remove(KK.next());
-    }
   }
 
 }

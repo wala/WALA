@@ -15,11 +15,11 @@ import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 
 public interface JavaScriptTranslatorFactory {
 
-  TranslatorToIR make(JavaScriptLoader loader);
+  TranslatorBase make(JavaScriptLoader loader);
 
   public static class CAstRhinoFactory implements JavaScriptTranslatorFactory {
 
-    public TranslatorToIR make(JavaScriptLoader loader) {
+    public TranslatorBase make(JavaScriptLoader loader) {
        return new CAstRhinoTranslator(loader);
     }
   }
