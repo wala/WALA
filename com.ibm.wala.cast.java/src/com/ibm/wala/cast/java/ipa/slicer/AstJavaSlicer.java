@@ -35,10 +35,10 @@ public class AstJavaSlicer extends Slicer {
     return computeSlice(sdg, ss, cg, pa, new AstJavaModRef(), dOptions, cOptions, backward);
   }
 
-  public static Set gatherAssertions(CallGraph CG, Collection partialRoots) {
-    Set result = new HashSet();
-    for (Iterator ns = DFS.getReachableNodes(CG, partialRoots).iterator(); ns.hasNext();) {
-      CGNode n = (CGNode) ns.next();
+  public static Set<Statement> gatherAssertions(CallGraph CG, Collection<CGNode> partialRoots) {
+    Set<Statement> result = new HashSet<Statement>();
+    for (Iterator<CGNode> ns = DFS.getReachableNodes(CG, partialRoots).iterator(); ns.hasNext();) {
+      CGNode n = ns.next();
       IR nir = n.getIR();
       SSAInstruction insts[] = nir.getInstructions();
       for (int i = 0; i < insts.length; i++) {
@@ -51,8 +51,8 @@ public class AstJavaSlicer extends Slicer {
     return result;
   }
 
-  public static Pair<Collection<Statement>, SDG> computeAssertionSlice(CallGraph CG, PointerAnalysis pa, Collection partialRoots) throws IllegalArgumentException, CancelException {
-    CallGraph pcg = PartialCallGraph.make(CG, new LinkedHashSet(partialRoots));
+  public static Pair<Collection<Statement>, SDG> computeAssertionSlice(CallGraph CG, PointerAnalysis pa, Collection<CGNode> partialRoots) throws IllegalArgumentException, CancelException {
+    CallGraph pcg = PartialCallGraph.make(CG, new LinkedHashSet<CGNode>(partialRoots));
     SDG sdg = new SDG(pcg, pa, new AstJavaModRef(), DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     Trace.println("SDG:\n" + sdg);
     return Pair.make(AstJavaSlicer.computeBackwardSlice(sdg, gatherAssertions(CG, partialRoots), pcg, pa,
