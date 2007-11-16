@@ -1106,7 +1106,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * temporarily marking this internal to avoid infinite sleep with randomly
-   * chosen IProgressMonitor. TODO: nanny for testgen
+   * chosen IProgressMonitor. 
    */
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, IProgressMonitor monitor) throws ClassHierarchyException {
@@ -1120,7 +1120,7 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * temporarily marking this internal to avoid infinite sleep with randomly
-   * chosen IProgressMonitor. TODO: nanny for testgen
+   * chosen IProgressMonitor. 
    */
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor monitor)

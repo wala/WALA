@@ -10,21 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.emf.wrappers;
 
-import java.io.UTFDataFormatException;
-import java.util.Iterator;
-
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ecore.java.ECallSite;
 import com.ibm.wala.ecore.java.EClassLoaderName;
 import com.ibm.wala.ecore.java.EJavaClass;
-import com.ibm.wala.ecore.java.EJavaMethod;
 import com.ibm.wala.ecore.java.JavaFactory;
-import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
-import com.ibm.wala.ipa.cha.ClassHierarchyException;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -35,56 +24,6 @@ import com.ibm.wala.util.debug.Assertions;
  * @author sfink
  */
 public class EMFBridge {
-
-  /**
-   * @param method
-   *          an EMF method
-   * @param site
-   *          a WALA name for a call site
-   * @return an EMF call site
-   * @throws IllegalArgumentException  if site is null
-   */
-  public static ECallSite makeCallSite(EJavaMethod method, CallSiteReference site) {
-    if (site == null) {
-      throw new IllegalArgumentException("site is null");
-    }
-    ECallSite result = JavaFactory.eINSTANCE.createECallSite();
-    result.setBytecodeIndex(site.getProgramCounter());
-    result.setJavaMethod(method);
-    result.setDeclaredTarget(makeJavaMethod(site.getDeclaredTarget()));
-    return result;
-  }
-
-  /**
-   * @return EMF method representing the WALA fake root method
-   */
-  public static EJavaMethod makeFakeRootMethod() {
-    return makeJavaMethod(FakeRootMethod.getRootMethod());
-  }
-
-  /**
-   * @param m
-   *          method reference
-   * @return corresponding EMF method
-   * @throws IllegalArgumentException  if m is null
-   */
-  public static EJavaMethod makeJavaMethod(MethodReference m) {
-    if (m == null) {
-      throw new IllegalArgumentException("m is null");
-    }
-    try {
-      EJavaMethod result = JavaFactory.eINSTANCE.createEJavaMethod();
-      EJavaClass klass = makeJavaClass(m.getDeclaringClass());
-      result.setJavaClass(klass);
-      result.setDescriptor(m.getDescriptor().toUnicodeString());
-      result.setMethodName(m.getName().toUnicodeString());
-      return result;
-    } catch (UTFDataFormatException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
-    }
-  }
 
   public static EJavaClass makeJavaClass(TypeReference t) {
     if (t == null) {
@@ -114,103 +53,5 @@ public class EMFBridge {
       return null;
     }
 
-  }
-
-  /**
-   * @param cha
-   *          a WALA class hierarchy
-   * @return a EMF class hierarchy
-   */
-  public static com.ibm.wala.emf.wrappers.EClassHierarchyWrapper makeClassHierarchy(IClassHierarchy cha)
-      throws IllegalArgumentException {
-    if (cha == null) {
-      throw new IllegalArgumentException("cha must not be null");
-    }
-
-    com.ibm.wala.emf.wrappers.EClassHierarchyWrapper result = new com.ibm.wala.emf.wrappers.EClassHierarchyWrapper();
-    // create nodes
-    for (IClass klass : cha) {
-      if (!klass.isInterface()) {
-        EJavaClass javaKlass = makeJavaClass(klass.getReference());
-        result.addClass(javaKlass);
-      }
-    }
-    // create edges
-    for (IClass parent : cha) {
-      EJavaClass parentClass = makeJavaClass(parent.getReference());
-      if (!parent.isInterface()) {
-        for (IClass child : cha.getImmediateSubclasses(parent)) {
-          if (!child.isInterface()) {
-            EJavaClass childClass = makeJavaClass(child.getReference());
-            result.addSubClass(parentClass, childClass);
-          }
-        }
-      }
-    }
-    return result;
-  }
-
-  /**
-   * @param cha
-   *          a WALA class hierarchy
-   * @return a EMF interface hierarchy
-   * @throws IllegalArgumentException  if cha is null
-   */
-  public static EInterfaceHierarchyWrapper makeInterfaceHierarchy(IClassHierarchy cha) {
-    if (cha == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
-    EInterfaceHierarchyWrapper result = new EInterfaceHierarchyWrapper();
-    // create nodes
-    for (IClass klass : cha) {
-      if (klass.isInterface()) {
-        EJavaClass javaKlass = makeJavaClass(klass.getReference());
-        result.addInterface(javaKlass);
-      }
-    }
-    // create edges
-    for (IClass parent : cha) {
-      EJavaClass parentClass = makeJavaClass(parent.getReference());
-      if (parent.isInterface()) {
-        for (IClass child : cha.getImmediateSubclasses(parent)) {
-          if (child.isInterface()) {
-            EJavaClass childClass = makeJavaClass(child.getReference());
-            result.addSubClass(parentClass, childClass);
-          }
-        }
-      }
-    }
-    return result;
-  }
-
-  /**
-   * @param cha
-   *          a WALA class hierarchy
-   * @return a EMF type hierarchy
-   * @throws IllegalArgumentException  if cha is null
-   */
-  public static ETypeHierarchyWrapper makeTypeHierarchy(IClassHierarchy cha) {
-    if (cha == null) {
-      throw new IllegalArgumentException("cha is null");
-    }
-    com.ibm.wala.emf.wrappers.EClassHierarchyWrapper c = makeClassHierarchy(cha);
-    com.ibm.wala.emf.wrappers.EInterfaceHierarchyWrapper i = makeInterfaceHierarchy(cha);
-    ETypeHierarchyWrapper result = new ETypeHierarchyWrapper(c, i);
-    for (IClass klass : cha) {
-      EJavaClass eklass = makeJavaClass(klass.getReference());
-      if (!klass.isInterface()) {
-        try {
-          for (Iterator<IClass> it2 = klass.getDirectInterfaces().iterator(); it2.hasNext();) {
-            IClass iface = it2.next();
-            EJavaClass eIface = makeJavaClass(iface.getReference());
-            result.recordImplements(eklass, eIface);
-          }
-        } catch (ClassHierarchyException e) {
-          e.printStackTrace();
-          Assertions.UNREACHABLE();
-        }
-      }
-    }
-    return result;
   }
 }
