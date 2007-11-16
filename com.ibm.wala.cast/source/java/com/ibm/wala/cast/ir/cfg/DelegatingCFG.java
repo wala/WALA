@@ -24,9 +24,9 @@ import com.ibm.wala.util.intset.BitVector;
 
 public class DelegatingCFG extends AbstractNumberedGraph<IBasicBlock> implements ControlFlowGraph<IBasicBlock> {
 
-  protected final ControlFlowGraph parent;
+  protected final ControlFlowGraph<IBasicBlock> parent;
 
-  public DelegatingCFG(ControlFlowGraph parent) {
+  public DelegatingCFG(ControlFlowGraph<IBasicBlock> parent) {
     this.parent = parent;
   }
 
