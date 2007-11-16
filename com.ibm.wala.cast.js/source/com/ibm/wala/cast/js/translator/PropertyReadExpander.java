@@ -3,9 +3,12 @@ package com.ibm.wala.cast.js.translator;
 import java.util.Map;
 
 import com.ibm.wala.cast.ir.translator.AstTranslator.InternalCAstSymbol;
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.impl.*;
-import com.ibm.wala.util.collections.*;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.impl.CAstBasicRewriter;
+import com.ibm.wala.cast.tree.impl.CAstOperator;
+import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
 public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.RewriteContext, CAstBasicRewriter.NoKey> {

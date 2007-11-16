@@ -10,7 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.translator;
 
-import com.ibm.wala.cast.ir.translator.TranslatorToIR;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 
 public interface JavaScriptTranslatorFactory {
