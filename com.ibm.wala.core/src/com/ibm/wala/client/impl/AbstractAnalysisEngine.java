@@ -220,7 +220,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   }
 
   /**
-   * Add the application modules to the analyis scope.
+   * Add the application modules to the analysis scope.
    */
   protected void addApplicationModulesToScope() {
     ClassLoaderReference app = scope.getApplicationLoader();
@@ -260,45 +260,26 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     this.closedWorld = b;
   }
 
-  /**
-   * @return Returns the closedWorld.
-   */
   public boolean isClosedWorld() {
     return closedWorld;
   }
 
-  /**
-   * @return Returns the scope.
-   */
   protected AnalysisScope getScope() {
     return scope;
   }
 
-  /**
-   * @return Returns the callGraphBuilderFactory.
-   */
   protected CallGraphBuilderFactory getCallGraphBuilderFactory() {
     return callGraphBuilderFactory;
   }
 
-  /**
-   * @param callGraphBuilderFactory
-   *          The callGraphBuilderFactory to set.
-   */
   protected void setCallGraphBuilderFactory(CallGraphBuilderFactory callGraphBuilderFactory) {
     this.callGraphBuilderFactory = callGraphBuilderFactory;
   }
 
-  /**
-   * @return Returns the pointerAnalysis.
-   */
   public PointerAnalysis getPointerAnalysis() {
     return pointerAnalysis;
   }
 
-  /**
-   * @return Returns the pointerFlowGraph.
-   */
   public PointerFlowGraph getPointerFlowGraph() {
     if (pointerFlowGraph == null) {
       pointerFlowGraph = pointerFlowGraphFactory.make(pointerAnalysis, cg);
@@ -306,9 +287,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return pointerFlowGraph;
   }
 
-  /**
-   * @return Returns the heapGraph.
-   */
   public HeapGraph getHeapGraph() {
     if (heapGraph == null) {
       heapGraph = new BasicHeapGraph(getPointerAnalysis(), cg);
@@ -316,17 +294,10 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return heapGraph;
   }
 
-  /**
-   * @return Returns the exclusionsFile.
-   */
   public String getExclusionsFile() {
     return exclusionsFile;
   }
 
-  /**
-   * @param exclusionsFile
-   *          The exclusionsFile to set.
-   */
   public void setExclusionsFile(String exclusionsFile) {
     this.exclusionsFile = exclusionsFile;
   }
