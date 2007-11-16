@@ -1,13 +1,18 @@
 package com.ibm.wala.cast.loader;
 
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.collections.*;
-import com.ibm.wala.util.debug.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-import java.util.*;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.debug.Assertions;
 
 public abstract class CAstAbstractLoader implements IClassLoader {
 

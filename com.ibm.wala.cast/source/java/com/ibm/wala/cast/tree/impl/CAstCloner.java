@@ -13,8 +13,13 @@ package com.ibm.wala.cast.tree.impl;
 import java.util.Collection;
 import java.util.Map;
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.util.collections.*;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstControlFlowMap;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstNodeTypeMap;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
 public class CAstCloner extends CAstBasicRewriter {

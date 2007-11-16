@@ -1,17 +1,29 @@
 package com.ibm.wala.cast.loader;
 
-import com.ibm.wala.cast.ir.translator.*;
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.impl.*;
-import com.ibm.wala.cast.util.*;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.cha.*;
-import com.ibm.wala.types.*;
-import com.ibm.wala.util.debug.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.Set;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import com.ibm.wala.cast.ir.translator.NativeTranslatorToCAst;
+import com.ibm.wala.cast.ir.translator.TranslatorToIR;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.impl.CAstImpl;
+import com.ibm.wala.cast.util.CAstPrinter;
+import com.ibm.wala.cast.util.TemporaryFile;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.ModuleEntry;
+import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.SourceURLModule;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.TypeName;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
 
 public abstract class CAstAbstractNativeLoader extends CAstAbstractLoader {
     

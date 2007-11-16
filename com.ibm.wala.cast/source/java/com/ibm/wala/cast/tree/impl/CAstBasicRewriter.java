@@ -1,9 +1,10 @@
 package com.ibm.wala.cast.tree.impl;
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.util.debug.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.*;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.util.debug.Assertions;
 
 public abstract class CAstBasicRewriter
   extends CAstRewriter<CAstBasicRewriter.NonCopyingContext, 

@@ -10,7 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.translator;
 
-import com.ibm.wala.cast.tree.*;
+import com.ibm.wala.cast.tree.CAst;
 
 public class NativeBridge {
 

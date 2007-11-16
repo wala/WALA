@@ -10,13 +10,27 @@
  *****************************************************************************/
 package com.ibm.wala.cast.tree.impl;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.util.*;
-import com.ibm.wala.util.*;
-import com.ibm.wala.util.collections.*;
-import com.ibm.wala.util.debug.*;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstControlFlowMap;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.CAstNode;
+import com.ibm.wala.cast.tree.CAstNodeTypeMap;
+import com.ibm.wala.cast.tree.CAstSourcePositionMap;
+import com.ibm.wala.cast.util.CAstPrinter;
+import com.ibm.wala.util.IteratorPlusOne;
+import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.Trace;
 
 public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K extends CAstRewriter.CopyKey<K>> {
 
