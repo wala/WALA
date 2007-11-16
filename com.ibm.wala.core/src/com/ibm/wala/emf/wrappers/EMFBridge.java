@@ -20,11 +20,9 @@ import com.ibm.wala.ecore.java.EClassLoaderName;
 import com.ibm.wala.ecore.java.EJavaClass;
 import com.ibm.wala.ecore.java.EJavaMethod;
 import com.ibm.wala.ecore.java.JavaFactory;
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -37,42 +35,6 @@ import com.ibm.wala.util.debug.Assertions;
  * @author sfink
  */
 public class EMFBridge {
-
-  /**
-   * @param cg
-   *          a WALA call graph
-   * @return a EMF object representing a WALA callgraph
-   */
-  public static com.ibm.wala.emf.wrappers.ECallGraphWrapper makeCallGraph(CallGraph cg) throws IllegalArgumentException {
-    if (cg == null) {
-      throw new IllegalArgumentException("cg must not be null");
-    }
-    com.ibm.wala.emf.wrappers.ECallGraphWrapper result = new com.ibm.wala.emf.wrappers.ECallGraphWrapper();
-    for (Iterator it = cg.iterator(); it.hasNext();) {
-      CGNode n = (CGNode) it.next();
-      EJavaMethod method = makeJavaMethod(n.getMethod().getReference());
-      result.addNode(method);
-      for (Iterator it2 = n.iterateSites(); it2.hasNext();) {
-        CallSiteReference site = (CallSiteReference) it2.next();
-        ECallSite eSite = makeCallSite(method, site);
-        result.addNode(eSite);
-        result.addEdge(method, eSite);
-      }
-    }
-    for (Iterator it = cg.iterator(); it.hasNext();) {
-      CGNode n = (CGNode) it.next();
-      EJavaMethod method = makeJavaMethod(n.getMethod().getReference());
-      for (Iterator it2 = n.iterateSites(); it2.hasNext();) {
-        CallSiteReference site = (CallSiteReference) it2.next();
-        ECallSite eSite = makeCallSite(method, site);
-        for (Iterator it3 = cg.getPossibleTargets(n,site).iterator(); it3.hasNext();) {
-          CGNode target = (CGNode) it3.next();
-          result.addEdge(eSite, makeJavaMethod(target.getMethod().getReference()));
-        }
-      }
-    }
-    return result;
-  }
 
   /**
    * @param method
