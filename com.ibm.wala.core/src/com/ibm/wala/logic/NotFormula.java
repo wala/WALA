@@ -62,8 +62,11 @@ public class NotFormula implements IFormula {
         assert f.equals(BooleanConstantFormula.FALSE);
         return BooleanConstantFormula.TRUE;
       }
-    case BINARY:
     case NEGATION:
+      // NOT(NOT(g)) == g
+      NotFormula n = (NotFormula)f;
+      return n.getFormula();
+    case BINARY:
     case QUANTIFIED:
       default:
         return new NotFormula(f);
