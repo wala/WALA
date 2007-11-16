@@ -20,11 +20,7 @@ import com.ibm.wala.ecore.graph.impl.GraphPackageImpl;
 import com.ibm.wala.ecore.j2ee.scope.J2EEScopePackage;
 import com.ibm.wala.ecore.j2ee.scope.impl.J2EEScopePackageImpl;
 import com.ibm.wala.ecore.java.JavaPackage;
-import com.ibm.wala.ecore.java.callGraph.CallGraphPackage;
-import com.ibm.wala.ecore.java.callGraph.impl.CallGraphPackageImpl;
 import com.ibm.wala.ecore.java.impl.JavaPackageImpl;
-import com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisPackage;
-import com.ibm.wala.ecore.java.pointerAnalysis.impl.PointerAnalysisPackageImpl;
 import com.ibm.wala.ecore.java.scope.EBuiltInModule;
 import com.ibm.wala.ecore.java.scope.EBuiltInResource;
 import com.ibm.wala.ecore.java.scope.EClassFile;
@@ -186,8 +182,6 @@ public class JavaScopePackageImpl extends EPackageImpl implements JavaScopePacka
     CommonPackageImpl theCommonPackage = (CommonPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI) instanceof CommonPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI) : CommonPackage.eINSTANCE);
     RegexPackageImpl theRegexPackage = (RegexPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RegexPackage.eNS_URI) instanceof RegexPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RegexPackage.eNS_URI) : RegexPackage.eINSTANCE);
     JavaPackageImpl theJavaPackage = (JavaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(JavaPackage.eNS_URI) instanceof JavaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(JavaPackage.eNS_URI) : JavaPackage.eINSTANCE);
-    CallGraphPackageImpl theCallGraphPackage = (CallGraphPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CallGraphPackage.eNS_URI) instanceof CallGraphPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CallGraphPackage.eNS_URI) : CallGraphPackage.eINSTANCE);
-    PointerAnalysisPackageImpl thePointerAnalysisPackage = (PointerAnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PointerAnalysisPackage.eNS_URI) instanceof PointerAnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PointerAnalysisPackage.eNS_URI) : PointerAnalysisPackage.eINSTANCE);
     J2EEScopePackageImpl theJ2EEScopePackage = (J2EEScopePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(J2EEScopePackage.eNS_URI) instanceof J2EEScopePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(J2EEScopePackage.eNS_URI) : J2EEScopePackage.eINSTANCE);
 
     // Create package meta-data objects
@@ -196,8 +190,6 @@ public class JavaScopePackageImpl extends EPackageImpl implements JavaScopePacka
     theCommonPackage.createPackageContents();
     theRegexPackage.createPackageContents();
     theJavaPackage.createPackageContents();
-    theCallGraphPackage.createPackageContents();
-    thePointerAnalysisPackage.createPackageContents();
     theJ2EEScopePackage.createPackageContents();
 
     // Initialize created meta-data
@@ -206,8 +198,6 @@ public class JavaScopePackageImpl extends EPackageImpl implements JavaScopePacka
     theCommonPackage.initializePackageContents();
     theRegexPackage.initializePackageContents();
     theJavaPackage.initializePackageContents();
-    theCallGraphPackage.initializePackageContents();
-    thePointerAnalysisPackage.initializePackageContents();
     theJ2EEScopePackage.initializePackageContents();
 
     // Mark meta-data to indicate it can't be changed

@@ -28,10 +28,6 @@ import com.ibm.wala.ecore.java.EJavaMethod;
 import com.ibm.wala.ecore.java.ETypeHierarchy;
 import com.ibm.wala.ecore.java.JavaFactory;
 import com.ibm.wala.ecore.java.JavaPackage;
-import com.ibm.wala.ecore.java.callGraph.CallGraphPackage;
-import com.ibm.wala.ecore.java.callGraph.impl.CallGraphPackageImpl;
-import com.ibm.wala.ecore.java.pointerAnalysis.PointerAnalysisPackage;
-import com.ibm.wala.ecore.java.pointerAnalysis.impl.PointerAnalysisPackageImpl;
 import com.ibm.wala.ecore.java.scope.JavaScopePackage;
 import com.ibm.wala.ecore.java.scope.impl.JavaScopePackageImpl;
 import com.ibm.wala.ecore.regex.RegexPackage;
@@ -153,8 +149,6 @@ public class JavaPackageImpl extends EPackageImpl implements JavaPackage {
     GraphPackageImpl theGraphPackage = (GraphPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(GraphPackage.eNS_URI) instanceof GraphPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(GraphPackage.eNS_URI) : GraphPackage.eINSTANCE);
     CommonPackageImpl theCommonPackage = (CommonPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI) instanceof CommonPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI) : CommonPackage.eINSTANCE);
     RegexPackageImpl theRegexPackage = (RegexPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RegexPackage.eNS_URI) instanceof RegexPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RegexPackage.eNS_URI) : RegexPackage.eINSTANCE);
-    CallGraphPackageImpl theCallGraphPackage = (CallGraphPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CallGraphPackage.eNS_URI) instanceof CallGraphPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CallGraphPackage.eNS_URI) : CallGraphPackage.eINSTANCE);
-    PointerAnalysisPackageImpl thePointerAnalysisPackage = (PointerAnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(PointerAnalysisPackage.eNS_URI) instanceof PointerAnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(PointerAnalysisPackage.eNS_URI) : PointerAnalysisPackage.eINSTANCE);
     JavaScopePackageImpl theJavaScopePackage = (JavaScopePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(JavaScopePackage.eNS_URI) instanceof JavaScopePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(JavaScopePackage.eNS_URI) : JavaScopePackage.eINSTANCE);
     J2EEScopePackageImpl theJ2EEScopePackage = (J2EEScopePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(J2EEScopePackage.eNS_URI) instanceof J2EEScopePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(J2EEScopePackage.eNS_URI) : J2EEScopePackage.eINSTANCE);
 
@@ -163,8 +157,6 @@ public class JavaPackageImpl extends EPackageImpl implements JavaPackage {
     theGraphPackage.createPackageContents();
     theCommonPackage.createPackageContents();
     theRegexPackage.createPackageContents();
-    theCallGraphPackage.createPackageContents();
-    thePointerAnalysisPackage.createPackageContents();
     theJavaScopePackage.createPackageContents();
     theJ2EEScopePackage.createPackageContents();
 
@@ -173,8 +165,6 @@ public class JavaPackageImpl extends EPackageImpl implements JavaPackage {
     theGraphPackage.initializePackageContents();
     theCommonPackage.initializePackageContents();
     theRegexPackage.initializePackageContents();
-    theCallGraphPackage.initializePackageContents();
-    thePointerAnalysisPackage.initializePackageContents();
     theJavaScopePackage.initializePackageContents();
     theJ2EEScopePackage.initializePackageContents();
 
@@ -435,15 +425,11 @@ public class JavaPackageImpl extends EPackageImpl implements JavaPackage {
     setNsURI(eNS_URI);
 
     // Obtain other dependent packages
-    CallGraphPackage theCallGraphPackage = (CallGraphPackage)EPackage.Registry.INSTANCE.getEPackage(CallGraphPackage.eNS_URI);
-    PointerAnalysisPackage thePointerAnalysisPackage = (PointerAnalysisPackage)EPackage.Registry.INSTANCE.getEPackage(PointerAnalysisPackage.eNS_URI);
     JavaScopePackage theJavaScopePackage = (JavaScopePackage)EPackage.Registry.INSTANCE.getEPackage(JavaScopePackage.eNS_URI);
     CommonPackage theCommonPackage = (CommonPackage)EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI);
     GraphPackage theGraphPackage = (GraphPackage)EPackage.Registry.INSTANCE.getEPackage(GraphPackage.eNS_URI);
 
     // Add subpackages
-    getESubpackages().add(theCallGraphPackage);
-    getESubpackages().add(thePointerAnalysisPackage);
     getESubpackages().add(theJavaScopePackage);
 
     // Add supertypes to classes
