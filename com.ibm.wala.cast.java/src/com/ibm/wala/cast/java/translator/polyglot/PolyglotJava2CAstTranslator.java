@@ -1373,6 +1373,10 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       }
     }
 
+    public Collection getQualifiers() {
+      return mapFlagsToQualifiers(fType.flags());
+    }
+
     public boolean isInterface() {
       return fType.flags().isInterface();
     }
