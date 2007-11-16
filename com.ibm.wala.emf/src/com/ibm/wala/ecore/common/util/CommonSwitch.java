@@ -15,11 +15,6 @@ import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.common.CommonPackage;
 import com.ibm.wala.ecore.common.ECollection;
 import com.ibm.wala.ecore.common.EContainer;
-import com.ibm.wala.ecore.common.ENotContainer;
-import com.ibm.wala.ecore.common.EObjectWithContainerId;
-import com.ibm.wala.ecore.common.EPair;
-import com.ibm.wala.ecore.common.ERelation;
-import com.ibm.wala.ecore.common.EStringHolder;
 
 /**
  * <!-- begin-user-doc -->
@@ -102,20 +97,7 @@ public class CommonSwitch {
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case CommonPackage.EPAIR: {
-        EPair ePair = (EPair)theEObject;
-        Object result = caseEPair(ePair);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case CommonPackage.ERELATION: {
-        ERelation eRelation = (ERelation)theEObject;
-        Object result = caseERelation(eRelation);
-        if (result == null) result = caseEContainer(eRelation);
-        if (result == null) result = caseECollection(eRelation);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
+     
       case CommonPackage.ECONTAINER: {
         EContainer eContainer = (EContainer)theEObject;
         Object result = caseEContainer(eContainer);
@@ -123,25 +105,7 @@ public class CommonSwitch {
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case CommonPackage.ENOT_CONTAINER: {
-        ENotContainer eNotContainer = (ENotContainer)theEObject;
-        Object result = caseENotContainer(eNotContainer);
-        if (result == null) result = caseECollection(eNotContainer);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case CommonPackage.ESTRING_HOLDER: {
-        EStringHolder eStringHolder = (EStringHolder)theEObject;
-        Object result = caseEStringHolder(eStringHolder);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case CommonPackage.EOBJECT_WITH_CONTAINER_ID: {
-        EObjectWithContainerId eObjectWithContainerId = (EObjectWithContainerId)theEObject;
-        Object result = caseEObjectWithContainerId(eObjectWithContainerId);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
+     
       default: return defaultCase(theEObject);
     }
   }
@@ -162,36 +126,6 @@ public class CommonSwitch {
   }
 
   /**
-   * Returns the result of interpretting the object as an instance of '<em>EPair</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpretting the object as an instance of '<em>EPair</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public Object caseEPair(EPair object) {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpretting the object as an instance of '<em>ERelation</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpretting the object as an instance of '<em>ERelation</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public Object caseERelation(ERelation object) {
-    return null;
-  }
-
-  /**
    * Returns the result of interpretting the object as an instance of '<em>EContainer</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -203,51 +137,6 @@ public class CommonSwitch {
    * @generated
    */
   public Object caseEContainer(EContainer object) {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpretting the object as an instance of '<em>ENot Container</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpretting the object as an instance of '<em>ENot Container</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public Object caseENotContainer(ENotContainer object) {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpretting the object as an instance of '<em>EString Holder</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpretting the object as an instance of '<em>EString Holder</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public Object caseEStringHolder(EStringHolder object) {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpretting the object as an instance of '<em>EObject With Container Id</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpretting the object as an instance of '<em>EObject With Container Id</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public Object caseEObjectWithContainerId(EObjectWithContainerId object) {
     return null;
   }
 

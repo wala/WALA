@@ -15,11 +15,6 @@ import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.common.CommonPackage;
 import com.ibm.wala.ecore.common.ECollection;
 import com.ibm.wala.ecore.common.EContainer;
-import com.ibm.wala.ecore.common.ENotContainer;
-import com.ibm.wala.ecore.common.EObjectWithContainerId;
-import com.ibm.wala.ecore.common.EPair;
-import com.ibm.wala.ecore.common.ERelation;
-import com.ibm.wala.ecore.common.EStringHolder;
 
 /**
  * <!-- begin-user-doc -->
@@ -80,23 +75,8 @@ public class CommonAdapterFactory extends AdapterFactoryImpl {
       public Object caseECollection(ECollection object) {
         return createECollectionAdapter();
       }
-      public Object caseEPair(EPair object) {
-        return createEPairAdapter();
-      }
-      public Object caseERelation(ERelation object) {
-        return createERelationAdapter();
-      }
       public Object caseEContainer(EContainer object) {
         return createEContainerAdapter();
-      }
-      public Object caseENotContainer(ENotContainer object) {
-        return createENotContainerAdapter();
-      }
-      public Object caseEStringHolder(EStringHolder object) {
-        return createEStringHolderAdapter();
-      }
-      public Object caseEObjectWithContainerId(EObjectWithContainerId object) {
-        return createEObjectWithContainerIdAdapter();
       }
       public Object defaultCase(EObject object) {
         return createEObjectAdapter();

@@ -21,11 +21,6 @@ import com.ibm.wala.ecore.common.CommonFactory;
 import com.ibm.wala.ecore.common.CommonPackage;
 import com.ibm.wala.ecore.common.ECollection;
 import com.ibm.wala.ecore.common.EContainer;
-import com.ibm.wala.ecore.common.ENotContainer;
-import com.ibm.wala.ecore.common.EObjectWithContainerId;
-import com.ibm.wala.ecore.common.EPair;
-import com.ibm.wala.ecore.common.ERelation;
-import com.ibm.wala.ecore.common.EStringHolder;
 import com.ibm.wala.ecore.j2ee.scope.J2EEScopePackage;
 import com.ibm.wala.ecore.j2ee.scope.impl.J2EEScopePackageImpl;
 import com.ibm.wala.ecore.java.scope.JavaScopePackage;
@@ -439,24 +434,8 @@ public class CommonPackageImpl extends EPackageImpl implements CommonPackage {
     initEClass(eCollectionEClass, ECollection.class, "ECollection", IS_ABSTRACT, IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getECollection_Contents(), ecorePackage.getEObject(), null, "contents", null, 0, -1, ECollection.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(ePairEClass, EPair.class, "EPair", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getEPair_X(), ecorePackage.getEObject(), null, "X", null, 1, 1, EPair.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getEPair_Y(), ecorePackage.getEObject(), null, "Y", null, 1, 1, EPair.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(eRelationEClass, ERelation.class, "ERelation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getERelation_Name(), ecorePackage.getEString(), "name", null, 0, 1, ERelation.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
     initEClass(eContainerEClass, EContainer.class, "EContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getEContainer_Containees(), ecorePackage.getEObject(), null, "containees", null, 0, -1, EContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(eNotContainerEClass, ENotContainer.class, "ENotContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getENotContainer_Elements(), ecorePackage.getEObject(), null, "elements", null, 0, -1, ENotContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(eStringHolderEClass, EStringHolder.class, "EStringHolder", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getEStringHolder_Value(), ecorePackage.getEString(), "value", null, 1, 1, EStringHolder.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(eObjectWithContainerIdEClass, EObjectWithContainerId.class, "EObjectWithContainerId", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getEObjectWithContainerId_Id(), ecorePackage.getEInt(), "id", "-1", 1, 1, EObjectWithContainerId.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Initialize data types
     initEDataType(eJavaCollectionEDataType, Collection.class, "EJavaCollection", !IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS);
