@@ -10,34 +10,24 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.callGraph;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import org.eclipse.emf.ecore.EObject;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.ecore.java.ECallSite;
-import com.ibm.wala.ecore.java.EJavaMethod;
 import com.ibm.wala.ecore.java.impl.JavaPackageImpl;
-import com.ibm.wala.emf.wrappers.ECallGraphWrapper;
-import com.ibm.wala.emf.wrappers.EMFBridge;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.AllApplicationEntrypoints;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
-import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.InterproceduralCFG;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -52,7 +42,6 @@ import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
-import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
@@ -67,8 +56,6 @@ public class CallGraphTest extends WalaTestCase {
   static {
     JavaPackageImpl.init();
   }
-
-  private static final String[] IGNORE_STRINGS = { "finalize", "java.lang.ThreadLocal", "java.lang.ref.Reference.get()" };
 
   public static void main(String[] args) {
     justThisTest(CallGraphTest.class);
@@ -86,7 +73,7 @@ public class CallGraphTest extends WalaTestCase {
         TestConstants.JAVA_CUP_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, new AnalysisCache(), cha, scope, null, useShortProfile(), false, true);
+    doCallGraphs(options, new AnalysisCache(), cha, scope,  useShortProfile(), false, true);
   }
 
   public void testBcelVerifier() throws ClassHierarchyException, IllegalArgumentException, CancelException {
@@ -96,7 +83,7 @@ public class CallGraphTest extends WalaTestCase {
         TestConstants.BCEL_VERIFIER_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, new AnalysisCache(), cha, scope, null, useShortProfile(), false);
+    doCallGraphs(options, new AnalysisCache(), cha, scope, useShortProfile(), false);
   }
 
 
@@ -107,7 +94,7 @@ public class CallGraphTest extends WalaTestCase {
         .makeMainEntrypoints(scope, cha, TestConstants.JLEX_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options,new AnalysisCache(), cha, scope, null, useShortProfile(), false);
+    doCallGraphs(options,new AnalysisCache(), cha, scope,  useShortProfile(), false);
   }
 
   public void testCornerCases() throws ClassHierarchyException, IllegalArgumentException, CancelException {
@@ -116,7 +103,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options,new AnalysisCache(), cha, scope, null, useShortProfile(), false);
+    doCallGraphs(options,new AnalysisCache(), cha, scope, useShortProfile(), false);
 
     // we expect a warning or two about class Abstract1, which has no concrete
     // subclasses
@@ -157,7 +144,7 @@ public class CallGraphTest extends WalaTestCase {
         TestConstants.HELLO_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, new AnalysisCache(), cha, scope, null, false, false);
+    doCallGraphs(options, new AnalysisCache(), cha, scope, false, false);
   }
 
   public void testRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException {
@@ -167,7 +154,7 @@ public class CallGraphTest extends WalaTestCase {
         TestConstants.RECURSE_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, new AnalysisCache(),cha, scope, null, useShortProfile(), false);
+    doCallGraphs(options, new AnalysisCache(),cha, scope, useShortProfile(), false);
   }
 
   public void testHelloAllEntrypoints() throws ClassHierarchyException, IllegalArgumentException, CancelException {
@@ -176,7 +163,7 @@ public class CallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
-    doCallGraphs(options, new AnalysisCache(),cha, scope, null, useShortProfile(), false);
+    doCallGraphs(options, new AnalysisCache(),cha, scope, useShortProfile(), false);
   }
 
   public void testIO() throws ClassHierarchyException, IllegalArgumentException, CancelException {
@@ -243,9 +230,9 @@ public class CallGraphTest extends WalaTestCase {
   }
 
 
-  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, String dcgFile,
+  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, 
       boolean stopAfterZeroCFA, boolean stopAfterZeroContainerCFA) throws IllegalArgumentException, CancelException {
-    doCallGraphs(options, cache, cha, scope, dcgFile, stopAfterZeroCFA, stopAfterZeroContainerCFA, false);
+    doCallGraphs(options, cache, cha, scope, stopAfterZeroCFA, stopAfterZeroContainerCFA, false);
   }
   
   /**
@@ -253,7 +240,7 @@ public class CallGraphTest extends WalaTestCase {
    * @throws CancelException 
    * @throws IllegalArgumentException 
    */
-  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, String dcgFile,
+  public static void doCallGraphs(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, 
       boolean stopAfterZeroCFA, boolean stopAfterZeroContainerCFA, boolean testPAToString) throws IllegalArgumentException, CancelException {
 
     // ///////////////
@@ -317,10 +304,6 @@ public class CallGraphTest extends WalaTestCase {
     checkCallGraph(cg, squashZeroContainer, null, "0-1-Container-CFA");
     checkCallGraph(cg, squashZeroOne, null, "0-1-Container-CFA");
 
-    if (dcgFile != null) {
-      checkAgainstDCG(cg, dcgFile);
-    }
-
     // test ICFG
     checkICFG(cg);
     return;
@@ -355,154 +338,6 @@ public class CallGraphTest extends WalaTestCase {
         count++;
       }
     }
-  }
-
-  /**
-   * Check that cg is a superset of the dynamic call graph encoded in the
-   * dcgFile
-   * 
-   * @param cg
-   * @param dcgFile
-   */
-  private static void checkAgainstDCG(CallGraph cg, String dcgFile) {
-
-    Set<CGNode> synthLeaves = getSyntheticLeaves(cg);
-
-    com.ibm.wala.emf.wrappers.ECallGraphWrapper subG = com.ibm.wala.emf.wrappers.ECallGraphWrapper.load(dcgFile,
-        CallGraphTest.class.getClassLoader());
-    com.ibm.wala.emf.wrappers.ECallGraphWrapper superG = EMFBridge.makeCallGraph(cg);
-
-    prune(subG, synthLeaves);
-    prune(superG, synthLeaves);
-
-    checkGraphSubset(superG, subG);
-  }
-
-  /**
-   * @param superG
-   * @param subG
-   */
-  public static void checkGraphSubset(ECallGraphWrapper superG, ECallGraphWrapper subG) {
-    Set<EObject> nodeDiff = Util.setify(subG.iterator());
-    nodeDiff.removeAll(Util.setify(superG.iterator()));
-    Set<EObject> toRemove = HashSetFactory.make();
-    for (Iterator<EObject> it = nodeDiff.iterator(); it.hasNext();) {
-      EObject o = it.next();
-      if (o instanceof ECallSite) {
-        toRemove.add(o);
-      }
-    }
-    // a bogus hack: ignore some stuff in the dcg that we haven't
-    // cleaned out; TODO: figure out what's happening and delete this
-    outer: for (Iterator<EObject> it = nodeDiff.iterator(); it.hasNext();) {
-      EObject o = it.next();
-      for (int i = 0; i < IGNORE_STRINGS.length; i++) {
-        if (o.toString().indexOf(IGNORE_STRINGS[i]) > -1) {
-          toRemove.add(o);
-          continue outer;
-        }
-      }
-    }
-    nodeDiff.removeAll(toRemove);
-
-    if (!nodeDiff.isEmpty()) {
-      Trace.println("supergraph: ");
-      Trace.println(superG.toString());
-      Trace.println("subgraph: ");
-      Trace.println(subG.toString());
-      Trace.println("nodeDiff: ");
-      for (Iterator<EObject> it = nodeDiff.iterator(); it.hasNext();) {
-        Trace.println(it.next().toString());
-      }
-      Assertions.productionAssertion(nodeDiff.isEmpty(), "bad superset, see tracefile\n");
-    }
-  }
-
-  /**
-   * <ul>
-   * <li>remove all methods from G that correspond to synthetic methods
-   * <li>remove all nodes from G that are no longer reachable from the fake
-   * root.
-   * <ul>
-   * 
-   * @param G
-   *            an EMF format call graph
-   * @param synthetic
-   *            a set of synthetic methods
-   */
-  private static void prune(ECallGraphWrapper G, Set<CGNode> synthetic) {
-    // compute synthetic nodes
-    Set<EObject> toRemove = HashSetFactory.make();
-    for (Iterator<CGNode> it = synthetic.iterator(); it.hasNext();) {
-      CGNode n = it.next();
-      EJavaMethod node = EMFBridge.makeJavaMethod(n.getMethod().getReference());
-      if (node != null) {
-        toRemove.add(node);
-      }
-    }
-
-    removeNodes(G, toRemove);
-
-    // compute nodes reachable from the fake root
-    EJavaMethod fakeRoot = EMFBridge.makeFakeRootMethod();
-    Assertions._assert(fakeRoot != null);
-    Collection<EObject> c = DFS.getReachableNodes(G, Collections.singleton(fakeRoot));
-
-    // remove other nodes
-    toRemove = HashSetFactory.make();
-    for (Iterator<? extends EObject> it = G.iterator(); it.hasNext();) {
-      EObject n = it.next();
-      if (!c.contains(n)) {
-        toRemove.add(n);
-      }
-    }
-    removeNodes(G, toRemove);
-
-    // remove call site nodes with no targets (these won't appear in the dcg)
-    toRemove = HashSetFactory.make();
-    for (Iterator<? extends EObject> it = G.iterator(); it.hasNext();) {
-      EObject n = it.next();
-      if (n instanceof ECallSite) {
-        if (G.getSuccNodeCount(n) == 0) {
-          toRemove.add(n);
-        }
-      }
-    }
-    removeNodes(G, toRemove);
-
-  }
-
-  /**
-   * @param G
-   * @param toRemove
-   */
-  private static void removeNodes(ECallGraphWrapper G, Set<EObject> toRemove) {
-    // remove all these nodes
-    for (Iterator<EObject> it = toRemove.iterator(); it.hasNext();) {
-      EObject n = it.next();
-      if (G.containsNode(n)) {
-        G.removeNodeAndEdges(n);
-      }
-    }
-  }
-
-  /**
-   * @param cg
-   * @return Set <CGNode>in cg that are synthetic and have no call sites
-   */
-  private static Set<CGNode> getSyntheticLeaves(CallGraph cg) {
-    HashSet<CGNode> result = HashSetFactory.make();
-    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
-      CGNode node = (CGNode) it.next();
-      if (!node.equals(cg.getFakeRootNode())) {
-        if (node.getMethod().isSynthetic()) {
-          if (!node.iterateSites().hasNext()) {
-            result.add(node);
-          }
-        }
-      }
-    }
-    return result;
   }
 
   /**
