@@ -15,12 +15,8 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 
 import com.ibm.wala.ecore.common.CommonPackage;
 import com.ibm.wala.ecore.common.impl.CommonPackageImpl;
-import com.ibm.wala.ecore.graph.GraphPackage;
-import com.ibm.wala.ecore.graph.impl.GraphPackageImpl;
 import com.ibm.wala.ecore.j2ee.scope.J2EEScopePackage;
 import com.ibm.wala.ecore.j2ee.scope.impl.J2EEScopePackageImpl;
-import com.ibm.wala.ecore.java.JavaPackage;
-import com.ibm.wala.ecore.java.impl.JavaPackageImpl;
 import com.ibm.wala.ecore.java.scope.EBuiltInModule;
 import com.ibm.wala.ecore.java.scope.EBuiltInResource;
 import com.ibm.wala.ecore.java.scope.EClassFile;
@@ -178,26 +174,20 @@ public class JavaScopePackageImpl extends EPackageImpl implements JavaScopePacka
     isInited = true;
 
     // Obtain or create and register interdependencies
-    GraphPackageImpl theGraphPackage = (GraphPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(GraphPackage.eNS_URI) instanceof GraphPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(GraphPackage.eNS_URI) : GraphPackage.eINSTANCE);
     CommonPackageImpl theCommonPackage = (CommonPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI) instanceof CommonPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI) : CommonPackage.eINSTANCE);
     RegexPackageImpl theRegexPackage = (RegexPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RegexPackage.eNS_URI) instanceof RegexPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RegexPackage.eNS_URI) : RegexPackage.eINSTANCE);
-    JavaPackageImpl theJavaPackage = (JavaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(JavaPackage.eNS_URI) instanceof JavaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(JavaPackage.eNS_URI) : JavaPackage.eINSTANCE);
     J2EEScopePackageImpl theJ2EEScopePackage = (J2EEScopePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(J2EEScopePackage.eNS_URI) instanceof J2EEScopePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(J2EEScopePackage.eNS_URI) : J2EEScopePackage.eINSTANCE);
 
     // Create package meta-data objects
     theJavaScopePackage.createPackageContents();
-    theGraphPackage.createPackageContents();
     theCommonPackage.createPackageContents();
     theRegexPackage.createPackageContents();
-    theJavaPackage.createPackageContents();
     theJ2EEScopePackage.createPackageContents();
 
     // Initialize created meta-data
     theJavaScopePackage.initializePackageContents();
-    theGraphPackage.initializePackageContents();
     theCommonPackage.initializePackageContents();
     theRegexPackage.initializePackageContents();
-    theJavaPackage.initializePackageContents();
     theJ2EEScopePackage.initializePackageContents();
 
     // Mark meta-data to indicate it can't be changed

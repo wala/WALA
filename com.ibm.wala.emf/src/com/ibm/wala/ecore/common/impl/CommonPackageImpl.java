@@ -26,12 +26,8 @@ import com.ibm.wala.ecore.common.EObjectWithContainerId;
 import com.ibm.wala.ecore.common.EPair;
 import com.ibm.wala.ecore.common.ERelation;
 import com.ibm.wala.ecore.common.EStringHolder;
-import com.ibm.wala.ecore.graph.GraphPackage;
-import com.ibm.wala.ecore.graph.impl.GraphPackageImpl;
 import com.ibm.wala.ecore.j2ee.scope.J2EEScopePackage;
 import com.ibm.wala.ecore.j2ee.scope.impl.J2EEScopePackageImpl;
-import com.ibm.wala.ecore.java.JavaPackage;
-import com.ibm.wala.ecore.java.impl.JavaPackageImpl;
 import com.ibm.wala.ecore.java.scope.JavaScopePackage;
 import com.ibm.wala.ecore.java.scope.impl.JavaScopePackageImpl;
 import com.ibm.wala.ecore.regex.RegexPackage;
@@ -171,25 +167,19 @@ public class CommonPackageImpl extends EPackageImpl implements CommonPackage {
     isInited = true;
 
     // Obtain or create and register interdependencies
-    GraphPackageImpl theGraphPackage = (GraphPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(GraphPackage.eNS_URI) instanceof GraphPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(GraphPackage.eNS_URI) : GraphPackage.eINSTANCE);
     RegexPackageImpl theRegexPackage = (RegexPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RegexPackage.eNS_URI) instanceof RegexPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RegexPackage.eNS_URI) : RegexPackage.eINSTANCE);
-    JavaPackageImpl theJavaPackage = (JavaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(JavaPackage.eNS_URI) instanceof JavaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(JavaPackage.eNS_URI) : JavaPackage.eINSTANCE);
     JavaScopePackageImpl theJavaScopePackage = (JavaScopePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(JavaScopePackage.eNS_URI) instanceof JavaScopePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(JavaScopePackage.eNS_URI) : JavaScopePackage.eINSTANCE);
     J2EEScopePackageImpl theJ2EEScopePackage = (J2EEScopePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(J2EEScopePackage.eNS_URI) instanceof J2EEScopePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(J2EEScopePackage.eNS_URI) : J2EEScopePackage.eINSTANCE);
 
     // Create package meta-data objects
     theCommonPackage.createPackageContents();
-    theGraphPackage.createPackageContents();
     theRegexPackage.createPackageContents();
-    theJavaPackage.createPackageContents();
     theJavaScopePackage.createPackageContents();
     theJ2EEScopePackage.createPackageContents();
 
     // Initialize created meta-data
     theCommonPackage.initializePackageContents();
-    theGraphPackage.initializePackageContents();
     theRegexPackage.initializePackageContents();
-    theJavaPackage.initializePackageContents();
     theJavaScopePackage.initializePackageContents();
     theJ2EEScopePackage.initializePackageContents();
 

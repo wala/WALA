@@ -13,15 +13,11 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.common.CommonPackage;
 import com.ibm.wala.ecore.common.impl.CommonPackageImpl;
-import com.ibm.wala.ecore.graph.GraphPackage;
-import com.ibm.wala.ecore.graph.impl.GraphPackageImpl;
 import com.ibm.wala.ecore.j2ee.scope.EEarFile;
 import com.ibm.wala.ecore.j2ee.scope.EJ2EEAnalysisScope;
 import com.ibm.wala.ecore.j2ee.scope.EWarFile;
 import com.ibm.wala.ecore.j2ee.scope.J2EEScopeFactory;
 import com.ibm.wala.ecore.j2ee.scope.J2EEScopePackage;
-import com.ibm.wala.ecore.java.JavaPackage;
-import com.ibm.wala.ecore.java.impl.JavaPackageImpl;
 import com.ibm.wala.ecore.java.scope.JavaScopePackage;
 import com.ibm.wala.ecore.java.scope.impl.JavaScopePackageImpl;
 import com.ibm.wala.ecore.regex.RegexPackage;
@@ -113,26 +109,20 @@ public class J2EEScopePackageImpl extends EPackageImpl implements J2EEScopePacka
     isInited = true;
 
     // Obtain or create and register interdependencies
-    GraphPackageImpl theGraphPackage = (GraphPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(GraphPackage.eNS_URI) instanceof GraphPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(GraphPackage.eNS_URI) : GraphPackage.eINSTANCE);
     CommonPackageImpl theCommonPackage = (CommonPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI) instanceof CommonPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CommonPackage.eNS_URI) : CommonPackage.eINSTANCE);
     RegexPackageImpl theRegexPackage = (RegexPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(RegexPackage.eNS_URI) instanceof RegexPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(RegexPackage.eNS_URI) : RegexPackage.eINSTANCE);
-    JavaPackageImpl theJavaPackage = (JavaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(JavaPackage.eNS_URI) instanceof JavaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(JavaPackage.eNS_URI) : JavaPackage.eINSTANCE);
     JavaScopePackageImpl theJavaScopePackage = (JavaScopePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(JavaScopePackage.eNS_URI) instanceof JavaScopePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(JavaScopePackage.eNS_URI) : JavaScopePackage.eINSTANCE);
 
     // Create package meta-data objects
     theJ2EEScopePackage.createPackageContents();
-    theGraphPackage.createPackageContents();
     theCommonPackage.createPackageContents();
     theRegexPackage.createPackageContents();
-    theJavaPackage.createPackageContents();
     theJavaScopePackage.createPackageContents();
 
     // Initialize created meta-data
     theJ2EEScopePackage.initializePackageContents();
-    theGraphPackage.initializePackageContents();
     theCommonPackage.initializePackageContents();
     theRegexPackage.initializePackageContents();
-    theJavaPackage.initializePackageContents();
     theJavaScopePackage.initializePackageContents();
 
     // Mark meta-data to indicate it can't be changed
