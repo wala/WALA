@@ -40,7 +40,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
-import com.ibm.wala.util.perf.EngineTimings;
 
 /**
  * 
@@ -167,9 +166,9 @@ public class TabulationSolver<T, P> {
    * The worklist
    */
   final protected Worklist worklist = new Worklist();
-  
+
   /**
-   * A progress monitor.  can be null.
+   * A progress monitor. can be null.
    */
   private final IProgressMonitor progressMonitor;
 
@@ -209,21 +208,10 @@ public class TabulationSolver<T, P> {
    * @return a representation of the result
    */
   public TabulationResult<T, P> solve() throws CancelException {
-    EngineTimings.startVirtual("TabulationSolver.solve()");
 
-    EngineTimings.startVirtual("TabulationSolver.initialize");
     initialize();
-    EngineTimings.finishVirtual("TabulationSolver.initialize");
-
-    EngineTimings.startVirtual("TabulationSolver.tabulate");
     forwardTabulateSLRPs();
-    EngineTimings.finishVirtual("TabulationSolver.tabulate");
-
-    EngineTimings.startVirtual("TabulationSolver.result");
     Result r = new Result();
-    EngineTimings.finishVirtual("TabulationSolver.result");
-
-    EngineTimings.finishVirtual("TabulationSolver.solve()");
     return r;
   }
 
@@ -710,10 +698,10 @@ public class TabulationSolver<T, P> {
     // if the supergraph says returnSite has a predecessor which indicates a
     // return
     // edge, then we say this return site has a callee.
-    for (Iterator<? extends T>  it = supergraph.getPredNodes(returnSite); it.hasNext(); ) {
+    for (Iterator<? extends T> it = supergraph.getPredNodes(returnSite); it.hasNext();) {
       T pred = it.next();
       if (!supergraph.getProcOf(pred).equals(supergraph.getProcOf(returnSite))) {
-        // an interprocedural edge.   there must be a callee.
+        // an interprocedural edge. there must be a callee.
         return true;
       }
     }
@@ -1064,8 +1052,8 @@ public class TabulationSolver<T, P> {
      * @param n1
      * @param d1
      * @param n2
-     * @return set of d2 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or
-     *         null if none found
+     * @return set of d2 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge,
+     *         or null if none found
      */
     public IntSet getSummaryTargets(T n1, int d1, T n2) {
       LocalSummaryEdges summaries = summaryEdges.get(supergraph.getProcOf(n1));
@@ -1103,8 +1091,6 @@ public class TabulationSolver<T, P> {
       return false;
     }
   }
-
-
 
   /**
    * @return set of d1 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or

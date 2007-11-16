@@ -48,13 +48,12 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.intset.BimodalMutableIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
-import com.ibm.wala.util.perf.EngineTimings;
 
 /**
  * 
  * A Supergraph customized for the case when some nodes are "collapsible",
  * meaning the result for every basic block in a collapsible node is identical.
- * This graph is an InterproceduralCFG for uncollapsable nodes, hooked up to
+ * This graph is an InterproceduralCFG for uncollapsible nodes, hooked up to
  * collapsed nodes.
  * 
  * @author sfink
@@ -122,8 +121,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    */
   public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse, Filter<CGNode> relevant) {
 
-    EngineTimings.startVirtual("PartiallyCollapsedSupergraph.<init>");
-
     this.cg = cg;
     if (DEBUG_LEVEL > 0) {
       Trace.println("Call graph \n" + cg.toString());
@@ -141,8 +138,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
     this.nodeManager = new NodeManager();
     this.edgeManager = new EdgeManager();
-
-    EngineTimings.finishVirtual("PartiallyCollapsedSupergraph.<init>");
   }
 
   /*

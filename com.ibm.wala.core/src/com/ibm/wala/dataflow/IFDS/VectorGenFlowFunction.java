@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.IFDS;
 
-import com.ibm.wala.util.intset.*;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
  * 

@@ -39,7 +39,6 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.perf.EngineTimings;
 
 /**
  * 
@@ -106,7 +105,6 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    */
   public AbstractInterproceduralCFG(CallGraph CG, Filter<CGNode> relevant) {
 
-    EngineTimings.startVirtual("InterproceduralCFG.<init>");
     this.cg = CG;
     this.relevant = relevant;
 
@@ -124,7 +122,6 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         Assertions.UNREACHABLE();
       }
     }
-    EngineTimings.finishVirtual("InterproceduralCFG.<init>");
   }
 
   /**

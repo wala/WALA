@@ -31,7 +31,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
-import com.ibm.wala.util.perf.EngineTimings;
 
 /**
  * 
@@ -63,8 +62,6 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
    */
   @Override
   public void solve() throws IllegalArgumentException, CancelException {
-
-    EngineTimings.startVirtual("PreTransitiveSolver.solve()");
 
     getBuilder().addConstraintsFromNewNodes();
 
@@ -100,8 +97,6 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
         }
       }
     } while (changed);
-    
-    EngineTimings.finishVirtual("PreTransitiveSolver.solve()");
   }
 
   private boolean isComplexStatement(AbstractStatement s) {

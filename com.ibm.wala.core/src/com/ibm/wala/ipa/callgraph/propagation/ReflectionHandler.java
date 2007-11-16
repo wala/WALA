@@ -38,7 +38,6 @@ import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.perf.EngineTimings;
 
 /**
  * 
@@ -65,8 +64,6 @@ public class ReflectionHandler {
    * @throws IllegalArgumentException 
    */
   protected boolean updateForReflection() throws IllegalArgumentException, CancelException {
-
-    EngineTimings.startVirtual("ReflectionHandler.updateForReflection()");
 
     Collection<Statement> returnStatements = computeFactoryReturnStatements();
     Set<CGNode> changedNodes = HashSetFactory.make();
@@ -99,7 +96,6 @@ public class ReflectionHandler {
     for (Iterator<CGNode> it = changedNodes.iterator(); it.hasNext();) {
       builder.addConstraintsFromChangedNode(it.next());
     }
-    EngineTimings.finishVirtual("ReflectionHandler.updateForReflection()");
     return changedNodes.size() > 0;
 
   }
