@@ -15,12 +15,7 @@ import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.common.EObjectWithContainerId;
 import com.ibm.wala.ecore.graph.EGraph;
 import com.ibm.wala.ecore.graph.ETree;
-import com.ibm.wala.ecore.java.ECallSite;
-import com.ibm.wala.ecore.java.EClassHierarchy;
-import com.ibm.wala.ecore.java.EInterfaceHierarchy;
 import com.ibm.wala.ecore.java.EJavaClass;
-import com.ibm.wala.ecore.java.EJavaMethod;
-import com.ibm.wala.ecore.java.ETypeHierarchy;
 import com.ibm.wala.ecore.java.JavaPackage;
 
 /**
@@ -81,21 +76,6 @@ public class JavaAdapterFactory extends AdapterFactoryImpl {
     new JavaSwitch() {
       public Object caseEJavaClass(EJavaClass object) {
         return createEJavaClassAdapter();
-      }
-      public Object caseEJavaMethod(EJavaMethod object) {
-        return createEJavaMethodAdapter();
-      }
-      public Object caseECallSite(ECallSite object) {
-        return createECallSiteAdapter();
-      }
-      public Object caseEClassHierarchy(EClassHierarchy object) {
-        return createEClassHierarchyAdapter();
-      }
-      public Object caseEInterfaceHierarchy(EInterfaceHierarchy object) {
-        return createEInterfaceHierarchyAdapter();
-      }
-      public Object caseETypeHierarchy(ETypeHierarchy object) {
-        return createETypeHierarchyAdapter();
       }
       public Object caseEObjectWithContainerId(EObjectWithContainerId object) {
         return createEObjectWithContainerIdAdapter();

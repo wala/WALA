@@ -19,13 +19,8 @@ import com.ibm.wala.ecore.graph.GraphPackage;
 import com.ibm.wala.ecore.graph.impl.GraphPackageImpl;
 import com.ibm.wala.ecore.j2ee.scope.J2EEScopePackage;
 import com.ibm.wala.ecore.j2ee.scope.impl.J2EEScopePackageImpl;
-import com.ibm.wala.ecore.java.ECallSite;
-import com.ibm.wala.ecore.java.EClassHierarchy;
 import com.ibm.wala.ecore.java.EClassLoaderName;
-import com.ibm.wala.ecore.java.EInterfaceHierarchy;
 import com.ibm.wala.ecore.java.EJavaClass;
-import com.ibm.wala.ecore.java.EJavaMethod;
-import com.ibm.wala.ecore.java.ETypeHierarchy;
 import com.ibm.wala.ecore.java.JavaFactory;
 import com.ibm.wala.ecore.java.JavaPackage;
 import com.ibm.wala.ecore.java.scope.JavaScopePackage;
@@ -444,27 +439,9 @@ public class JavaPackageImpl extends EPackageImpl implements JavaPackage {
     initEAttribute(getEJavaClass_ClassName(), ecorePackage.getEString(), "className", null, 1, 1, EJavaClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
     initEAttribute(getEJavaClass_Loader(), this.getEClassLoaderName(), "loader", null, 1, 1, EJavaClass.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(eJavaMethodEClass, EJavaMethod.class, "EJavaMethod", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getEJavaMethod_MethodName(), ecorePackage.getEString(), "methodName", null, 1, 1, EJavaMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getEJavaMethod_Descriptor(), ecorePackage.getEString(), "descriptor", null, 1, 1, EJavaMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getEJavaMethod_JavaClass(), this.getEJavaClass(), null, "javaClass", null, 1, 1, EJavaMethod.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getEJavaMethod_Signature(), ecorePackage.getEString(), "signature", null, 0, 1, EJavaMethod.class, IS_TRANSIENT, IS_VOLATILE, !IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
     addEOperation(eJavaMethodEClass, ecorePackage.getEBoolean(), "isClinit", 0, 1);
 
-    initEClass(eCallSiteEClass, ECallSite.class, "ECallSite", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getECallSite_BytecodeIndex(), ecorePackage.getEInt(), "bytecodeIndex", null, 0, 1, ECallSite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getECallSite_JavaMethod(), this.getEJavaMethod(), null, "javaMethod", null, 1, 1, ECallSite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getECallSite_DeclaredTarget(), this.getEJavaMethod(), null, "declaredTarget", null, 1, 1, ECallSite.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-    initEClass(eClassHierarchyEClass, EClassHierarchy.class, "EClassHierarchy", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(eInterfaceHierarchyEClass, EInterfaceHierarchy.class, "EInterfaceHierarchy", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-
-    initEClass(eTypeHierarchyEClass, ETypeHierarchy.class, "ETypeHierarchy", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getETypeHierarchy_Classes(), this.getEClassHierarchy(), null, "classes", null, 1, 1, ETypeHierarchy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getETypeHierarchy_Interfaces(), this.getEInterfaceHierarchy(), null, "interfaces", null, 1, 1, ETypeHierarchy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getETypeHierarchy_Implements(), theCommonPackage.getERelation(), null, "implements", null, 1, 1, ETypeHierarchy.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     // Initialize enums and add enum literals
     initEEnum(eClassLoaderNameEEnum, EClassLoaderName.class, "EClassLoaderName");

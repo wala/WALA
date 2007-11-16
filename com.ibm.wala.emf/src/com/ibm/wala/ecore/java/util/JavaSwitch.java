@@ -15,12 +15,7 @@ import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.ecore.common.EObjectWithContainerId;
 import com.ibm.wala.ecore.graph.EGraph;
 import com.ibm.wala.ecore.graph.ETree;
-import com.ibm.wala.ecore.java.ECallSite;
-import com.ibm.wala.ecore.java.EClassHierarchy;
-import com.ibm.wala.ecore.java.EInterfaceHierarchy;
 import com.ibm.wala.ecore.java.EJavaClass;
-import com.ibm.wala.ecore.java.EJavaMethod;
-import com.ibm.wala.ecore.java.ETypeHierarchy;
 import com.ibm.wala.ecore.java.JavaPackage;
 
 /**
@@ -105,41 +100,6 @@ public class JavaSwitch {
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
-      case JavaPackage.EJAVA_METHOD: {
-        EJavaMethod eJavaMethod = (EJavaMethod)theEObject;
-        Object result = caseEJavaMethod(eJavaMethod);
-        if (result == null) result = caseEObjectWithContainerId(eJavaMethod);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case JavaPackage.ECALL_SITE: {
-        ECallSite eCallSite = (ECallSite)theEObject;
-        Object result = caseECallSite(eCallSite);
-        if (result == null) result = caseEObjectWithContainerId(eCallSite);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case JavaPackage.ECLASS_HIERARCHY: {
-        EClassHierarchy eClassHierarchy = (EClassHierarchy)theEObject;
-        Object result = caseEClassHierarchy(eClassHierarchy);
-        if (result == null) result = caseETree(eClassHierarchy);
-        if (result == null) result = caseEGraph(eClassHierarchy);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case JavaPackage.EINTERFACE_HIERARCHY: {
-        EInterfaceHierarchy eInterfaceHierarchy = (EInterfaceHierarchy)theEObject;
-        Object result = caseEInterfaceHierarchy(eInterfaceHierarchy);
-        if (result == null) result = caseEGraph(eInterfaceHierarchy);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
-      case JavaPackage.ETYPE_HIERARCHY: {
-        ETypeHierarchy eTypeHierarchy = (ETypeHierarchy)theEObject;
-        Object result = caseETypeHierarchy(eTypeHierarchy);
-        if (result == null) result = defaultCase(theEObject);
-        return result;
-      }
       default: return defaultCase(theEObject);
     }
   }
@@ -156,81 +116,6 @@ public class JavaSwitch {
    * @generated
    */
   public Object caseEJavaClass(EJavaClass object) {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpretting the object as an instance of '<em>EJava Method</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpretting the object as an instance of '<em>EJava Method</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public Object caseEJavaMethod(EJavaMethod object) {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpretting the object as an instance of '<em>ECall Site</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpretting the object as an instance of '<em>ECall Site</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public Object caseECallSite(ECallSite object) {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpretting the object as an instance of '<em>EClass Hierarchy</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpretting the object as an instance of '<em>EClass Hierarchy</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public Object caseEClassHierarchy(EClassHierarchy object) {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpretting the object as an instance of '<em>EInterface Hierarchy</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpretting the object as an instance of '<em>EInterface Hierarchy</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public Object caseEInterfaceHierarchy(EInterfaceHierarchy object) {
-    return null;
-  }
-
-  /**
-   * Returns the result of interpretting the object as an instance of '<em>EType Hierarchy</em>'.
-   * <!-- begin-user-doc -->
-   * This implementation returns null;
-   * returning a non-null result will terminate the switch.
-   * <!-- end-user-doc -->
-   * @param object the target of the switch.
-   * @return the result of interpretting the object as an instance of '<em>EType Hierarchy</em>'.
-   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-   * @generated
-   */
-  public Object caseETypeHierarchy(ETypeHierarchy object) {
     return null;
   }
 

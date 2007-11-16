@@ -14,13 +14,8 @@ import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
 
 import com.ibm.wala.annotations.Internal;
-import com.ibm.wala.ecore.java.ECallSite;
-import com.ibm.wala.ecore.java.EClassHierarchy;
 import com.ibm.wala.ecore.java.EClassLoaderName;
-import com.ibm.wala.ecore.java.EInterfaceHierarchy;
 import com.ibm.wala.ecore.java.EJavaClass;
-import com.ibm.wala.ecore.java.EJavaMethod;
-import com.ibm.wala.ecore.java.ETypeHierarchy;
 import com.ibm.wala.ecore.java.JavaFactory;
 import com.ibm.wala.ecore.java.JavaPackage;
 
@@ -69,11 +64,6 @@ public class JavaFactoryImpl extends EFactoryImpl implements JavaFactory {
   public EObject create(EClass eClass) {
     switch (eClass.getClassifierID()) {
       case JavaPackage.EJAVA_CLASS: return createEJavaClass();
-      case JavaPackage.EJAVA_METHOD: return createEJavaMethod();
-      case JavaPackage.ECALL_SITE: return createECallSite();
-      case JavaPackage.ECLASS_HIERARCHY: return createEClassHierarchy();
-      case JavaPackage.EINTERFACE_HIERARCHY: return createEInterfaceHierarchy();
-      case JavaPackage.ETYPE_HIERARCHY: return createETypeHierarchy();
       default:
         throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
     }
@@ -115,56 +105,6 @@ public class JavaFactoryImpl extends EFactoryImpl implements JavaFactory {
   public EJavaClass createEJavaClass() {
     EJavaClassImpl eJavaClass = new EJavaClassImpl();
     return eJavaClass;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EJavaMethod createEJavaMethod() {
-    EJavaMethodImpl eJavaMethod = new EJavaMethodImpl();
-    return eJavaMethod;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ECallSite createECallSite() {
-    ECallSiteImpl eCallSite = new ECallSiteImpl();
-    return eCallSite;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EClassHierarchy createEClassHierarchy() {
-    EClassHierarchyImpl eClassHierarchy = new EClassHierarchyImpl();
-    return eClassHierarchy;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EInterfaceHierarchy createEInterfaceHierarchy() {
-    EInterfaceHierarchyImpl eInterfaceHierarchy = new EInterfaceHierarchyImpl();
-    return eInterfaceHierarchy;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public ETypeHierarchy createETypeHierarchy() {
-    ETypeHierarchyImpl eTypeHierarchy = new ETypeHierarchyImpl();
-    return eTypeHierarchy;
   }
 
   /**

@@ -35,51 +35,6 @@ public interface JavaFactory extends EFactory {
   EJavaClass createEJavaClass();
 
   /**
-   * Returns a new object of class '<em>EJava Method</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>EJava Method</em>'.
-   * @generated
-   */
-  EJavaMethod createEJavaMethod();
-
-  /**
-   * Returns a new object of class '<em>ECall Site</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>ECall Site</em>'.
-   * @generated
-   */
-  ECallSite createECallSite();
-
-  /**
-   * Returns a new object of class '<em>EClass Hierarchy</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>EClass Hierarchy</em>'.
-   * @generated
-   */
-  EClassHierarchy createEClassHierarchy();
-
-  /**
-   * Returns a new object of class '<em>EInterface Hierarchy</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>EInterface Hierarchy</em>'.
-   * @generated
-   */
-  EInterfaceHierarchy createEInterfaceHierarchy();
-
-  /**
-   * Returns a new object of class '<em>EType Hierarchy</em>'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return a new object of class '<em>EType Hierarchy</em>'.
-   * @generated
-   */
-  ETypeHierarchy createETypeHierarchy();
-
-  /**
    * Returns the package supported by this factory.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
