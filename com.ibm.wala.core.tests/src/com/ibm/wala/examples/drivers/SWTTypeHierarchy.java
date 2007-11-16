@@ -12,53 +12,68 @@ package com.ibm.wala.examples.drivers;
 
 import java.util.Collection;
 
-import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.window.ApplicationWindow;
 
-import com.ibm.wala.ecore.java.ETypeHierarchy;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
+import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
+import com.ibm.wala.emf.wrappers.JavaScopeUtil;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.CollectionFilter;
+import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.graph.InferGraphRoots;
+import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
+import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.SWTTreeViewer;
 
 /**
  * 
- * This application is a WALA client: it invokes an SWT TreeViewer to visualize
- * a TypeHierarchy in a precomputed file serialized on disk. So, you must run
- * ExportTypeHierarchyToXML before running this, to compute the type hierarchy and
- * serialize it to disk.
+ * This is a simple example WALA application. It's neither efficient nor
+ * concise, but is intended to demonstrate some basic framework concepts.
+ * 
+ * This application builds a type hierarchy visualizes it with an SWT
+ * {@link TreeViewer}.
  * 
  * @author sfink
  */
 public class SWTTypeHierarchy {
+  // This example takes one command-line argument, so args[1] should be the
+  // "-classpath" parameter
+  final static int CLASSPATH_INDEX = 1;
 
   /**
-   * Usage: SWTTreeViewerBasicPipeline
+   * Usage: SWTTypeHierarchy -classpath [classpath]
    */
   public static void main(String[] args) {
-    run();
+    // check that the command-line is kosher
+    validateCommandLine(args);
+    run(args[CLASSPATH_INDEX]);
   }
 
-  public static ApplicationWindow run()  {
+  public static ApplicationWindow run(String classpath) {
 
     try {
-      ETypeHierarchy th = GVTypeHierarchy.readTypeHierarchy();
-      if (th.getClasses().getNodes().getContents().size() <1) {
-        System.err.println("PANIC: th # classes=" + th.getClasses().getNodes().getContents().size());
-        System.exit(-1);
-      }
+      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(classpath, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
-      Graph<EObject> g = GVTypeHierarchy.typeHierarchy2Graph(th);
-      g = GVTypeHierarchy.pruneForAppLoader(g);
-      
-      if (g.getNumberOfNodes() == 0) {
-        System.err.println("ERROR: The type hierarchy in " + ExportTypeHierarchyToXML.getFileName() + " has no nodes from the Application loader");
-        System.exit(-1);
-      }
-      
+      // generate a WALA-consumable wrapper around the incoming scope object
+      EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
+
+      // invoke WALA to build a class hierarchy
+      ClassHierarchy cha = ClassHierarchy.make(scope);
+
+      Graph<IClass> g = typeHierarchy2Graph(cha);
+      g = pruneForAppLoader(g);
+
       // create and run the viewer
-      final SWTTreeViewer v =new SWTTreeViewer();
+      final SWTTreeViewer v = new SWTTreeViewer();
       v.setGraphInput(g);
-      Collection<EObject> roots = InferGraphRoots.inferRoots(g);
+      Collection<IClass> roots = InferGraphRoots.inferRoots(g);
       if (roots.size() < 1) {
         System.err.println("PANIC: roots.size()=" + roots.size());
         System.exit(-1);
@@ -70,6 +85,60 @@ public class SWTTypeHierarchy {
     } catch (Exception e) {
       e.printStackTrace();
       return null;
-    } 
+    }
+  }
+  
+  public static Graph<IClass> typeHierarchy2Graph(IClassHierarchy cha) throws WalaException {
+    Graph<IClass> result = SlowSparseNumberedGraph.make();
+    
+    for (IClass c : cha) {
+      result.addNode(c);
+    }
+    
+    for (IClass c : cha) {
+      for (IClass x : cha.getImmediateSubclasses(c)) {
+        result.addEdge(c, x);
+      }
+      if (c.isInterface()) {
+        for (IClass x : cha.getImplementors(c.getReference())) {
+          result.addEdge(c,x);
+        }
+      }
+    }
+
+    return result;
+  }
+
+  static Graph<IClass> pruneForAppLoader(Graph<IClass> g) throws WalaException {
+    Filter<IClass> f = new Filter<IClass>() {
+      public boolean accepts(IClass c) {
+        return (c.getClassLoader().getReference().equals(ClassLoaderReference.Application));
+      }
+    };
+
+    return pruneGraph(g, f);
+  }
+  
+  public static <T> Graph<T> pruneGraph(Graph<T> g, Filter<T> f) throws WalaException {
+    Collection<T> slice = GraphSlicer.slice(g, f);
+    return GraphSlicer.prune(g, new CollectionFilter<T>(slice));
+  }
+
+  /**
+   * Validate that the command-line arguments obey the expected usage.
+   * 
+   * Usage: args[0] : "-classpath" args[1] : String, a ";"-delimited class path
+   * 
+   * @param args
+   * @throws UnsupportedOperationException
+   *             if command-line is malformed.
+   */
+  static void validateCommandLine(String[] args) {
+    if (args.length < 2) {
+      throw new UnsupportedOperationException("must have at least 2 command-line arguments");
+    }
+    if (!args[0].equals("-classpath")) {
+      throw new UnsupportedOperationException("invalid command-line, args[0] should be -classpath, but is " + args[0]);
+    }
   }
 }

@@ -12,19 +12,19 @@ package com.ibm.wala.examples.drivers;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 
 import org.eclipse.emf.ecore.EObject;
 
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ecore.java.EClassLoaderName;
 import com.ibm.wala.ecore.java.EJavaClass;
-import com.ibm.wala.ecore.java.ETypeHierarchy;
-import com.ibm.wala.emf.wrappers.EObjectGraphImpl;
-import com.ibm.wala.emf.wrappers.ETypeHierarchyWrapper;
-import com.ibm.wala.emf.wrappers.EUtil;
+import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
+import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
+import com.ibm.wala.emf.wrappers.JavaScopeUtil;
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.CollectionFilter;
 import com.ibm.wala.util.collections.Filter;
@@ -62,23 +62,24 @@ public class GVTypeHierarchy {
   }
 
   public static void main(String[] args) {
-    run(args, false);
+    run(args);
   }
 
-  public static Process run(String[] args, boolean readFromFile) {
+  public static Process run(String[] args) {
     try {
-      ETypeHierarchy th = null;
-      if (readFromFile) {
-        th = readTypeHierarchy();
-      } else {
-        ExportTypeHierarchyToXML.validateCommandLine(args);
-        String classpath = args[ExportTypeHierarchyToXML.CLASSPATH_INDEX];
-        th = ExportTypeHierarchyToXML.buildTypeHierarchy(classpath);
-      }
+      SWTTypeHierarchy.validateCommandLine(args);
+      String classpath = args[SWTTypeHierarchy.CLASSPATH_INDEX];
+      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(classpath, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
-      Graph<EObject> g = typeHierarchy2Graph(th);
+      // generate a WALA-consumable wrapper around the incoming scope object
+      EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
 
-      g = pruneForAppLoader(g);
+      // invoke WALA to build a class hierarchy
+      ClassHierarchy cha = ClassHierarchy.make(scope);
+
+      Graph<IClass> g = SWTTypeHierarchy.typeHierarchy2Graph(cha);
+
+      g = SWTTypeHierarchy.pruneForAppLoader(g);
       String dotFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + DOT_FILE;
       String psFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + PS_FILE;
       String dotExe = p.getProperty(WalaExamplesProperties.DOT_EXE);
@@ -91,39 +92,6 @@ public class GVTypeHierarchy {
       e.printStackTrace();
       return null;
     }
-  }
-
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.capa.core.EAnalysisEngine#processImpl()
-   */
-  public static Graph<EObject> typeHierarchy2Graph(ETypeHierarchy et) throws WalaException {
-    ETypeHierarchyWrapper t = new ETypeHierarchyWrapper(et);
-    EObjectGraphImpl dg = new EObjectGraphImpl();
-    for (Iterator<? extends EObject> it = t.getClasses().iterator(); it.hasNext();) {
-      dg.addNode(it.next());
-    }
-    for (Iterator<? extends EObject> it = t.getInterfaces().iterator(); it.hasNext();) {
-      dg.addNode(it.next());
-    }
-    for (Iterator<? extends EObject> it = t.getClasses().iterator(); it.hasNext();) {
-      EJavaClass x = (EJavaClass) it.next();
-      for (Iterator<? extends EObject> it2 = t.getClasses().getSuccNodes(x); it2.hasNext();) {
-        dg.addEdge(x, it2.next());
-      }
-      for (Iterator<? extends EObject> it2 = t.getImplements(x).iterator(); it2.hasNext();) {
-        dg.addEdge(it2.next(), x);
-      }
-    }
-    for (Iterator<? extends EObject> it = t.getInterfaces().iterator(); it.hasNext();) {
-      EJavaClass x = (EJavaClass) it.next();
-      for (Iterator<? extends EObject> it2 = t.getInterfaces().getSuccNodes(x); it2.hasNext();) {
-        dg.addEdge(x, it2.next());
-      }
-    }
-
-    return dg;
   }
 
   static Graph<EObject> pruneForAppLoader(Graph<EObject> g) throws WalaException {
@@ -142,14 +110,7 @@ public class GVTypeHierarchy {
   }
 
   public static <T> Graph<T> pruneGraph(Graph<T> g, Filter<T> f) throws WalaException {
-
     Collection<T> slice = GraphSlicer.slice(g, f);
     return GraphSlicer.prune(g, new CollectionFilter<T>(slice));
-  }
-
-  static ETypeHierarchy readTypeHierarchy() throws WalaException {
-
-    List<EObject> l = EUtil.readEObjects(ExportTypeHierarchyToXML.getFileName(), ExportTypeHierarchyToXML.class.getClassLoader());
-    return (ETypeHierarchy) l.get(0);
   }
 }
