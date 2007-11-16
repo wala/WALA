@@ -16,8 +16,11 @@ package com.ibm.wala.cast.java.translator;
 import java.io.PrintWriter;
 
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
-import com.ibm.wala.cast.tree.*;
-import com.ibm.wala.cast.tree.impl.*;
+import com.ibm.wala.cast.tree.CAst;
+import com.ibm.wala.cast.tree.CAstEntity;
+import com.ibm.wala.cast.tree.impl.CAstImpl;
+import com.ibm.wala.cast.tree.impl.CAstRewriter;
+import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
 import com.ibm.wala.cast.util.CAstPrinter;
 
 public class Java2IRTranslator {

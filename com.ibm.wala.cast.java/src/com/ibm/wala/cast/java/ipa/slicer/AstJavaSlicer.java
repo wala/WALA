@@ -1,19 +1,27 @@
 package com.ibm.wala.cast.java.ipa.slicer;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import com.ibm.wala.cast.ir.ssa.*;
+import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
 import com.ibm.wala.cast.java.ipa.modref.AstJavaModRef;
-import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.ipa.callgraph.*;
-import com.ibm.wala.ipa.callgraph.impl.*;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.impl.PartialCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.slicer.*;
-import com.ibm.wala.ssa.*;
-import com.ibm.wala.util.collections.*;
-import com.ibm.wala.util.debug.*;
-import com.ibm.wala.util.graph.traverse.*;
+import com.ibm.wala.ipa.slicer.NormalStatement;
+import com.ibm.wala.ipa.slicer.SDG;
+import com.ibm.wala.ipa.slicer.Slicer;
+import com.ibm.wala.ipa.slicer.Statement;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.util.collections.Pair;
+import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.graph.traverse.DFS;
 
 public class AstJavaSlicer extends Slicer {
 

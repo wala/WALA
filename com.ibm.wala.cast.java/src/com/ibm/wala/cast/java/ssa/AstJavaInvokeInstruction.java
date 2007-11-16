@@ -17,6 +17,7 @@ import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSAInstruction.IVisitor;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Exceptions;
 import com.ibm.wala.util.debug.Assertions;
