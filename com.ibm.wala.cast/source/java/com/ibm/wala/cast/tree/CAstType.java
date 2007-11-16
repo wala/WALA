@@ -33,6 +33,8 @@ public interface CAstType {
 
     public interface Class extends Reference {
       boolean isInterface();
+
+      Collection getQualifiers();
     }
 
     public interface Array extends Reference {

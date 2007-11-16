@@ -10,6 +10,9 @@ Java_com_ibm_wala_cast_ir_translator_NativeBridge_initialize(
   JNIEnv *env, 
   jclass cls)
 {
+
+  fprintf(stderr, "got here\n");
+
   TRY(exp, env)
 
   jclass CAstNode = env->FindClass( "com/ibm/wala/cast/tree/CAstNode" );

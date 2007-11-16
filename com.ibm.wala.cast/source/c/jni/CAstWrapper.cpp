@@ -6,7 +6,7 @@
 #include <string.h>
 #include <CAstWrapper.h>
 
-#if defined(__MINGW32__) || defined(_MSC_VER)
+#if defined(__MINGW32__) || defined(_MSC_VER) || defined(__APPLE__)
 #define strndup(s,n) strdup(s)
 #endif
 
@@ -14,6 +14,9 @@
 
 #define __CTN "com/ibm/wala/cast/tree/CAst"
 #define __CTS __SIG(  __CTN )
+
+#define __CEN "com/ibm/wala/cast/tree/CAstEntity"
+#define __CES __SIG(  __CEN )
 
 #define __CNN "com/ibm/wala/cast/tree/CAstNode"
 #define __CNS __SIG( __CNN )
@@ -46,13 +49,52 @@ static const char *doubleSig = "(D)" __CNS;
 static const char *floatSig = "(F)" __CNS;
 static const char *objectSig = "(" __OBJS ")" __CNS;
 
-CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject Ast) 
-  : java_ex(ex), env(env), Ast(Ast) 
+
+#define XLATOR_PKG "com/ibm/wala/cast/ir/translator/"
+
+#define XLATOR_CLS_NAME "NativeTranslatorToCAst"
+
+#define XLATOR_CLS(cls) XLATOR_PKG XLATOR_CLS_NAME "$" cls
+
+static const char *XlatorCls = XLATOR_PKG XLATOR_CLS_NAME;
+
+static const char *EntityCls = XLATOR_CLS("NativeEntity");
+static const char *CodeEntityCls = XLATOR_CLS("NativeCodeEntity");
+static const char *ScriptCls = XLATOR_CLS("NativeScriptEntity");
+static const char *FieldCls = XLATOR_CLS("NativeFieldEntity");
+
+CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject xlator) 
+  : java_ex(ex), env(env), xlator(xlator)
 {
   this->CAstNode = env->FindClass( __CNN );
   this->CAstInterface = env->FindClass( __CTN );
   this->HashSet = env->FindClass("java/util/HashSet");
   this->LinkedList = env->FindClass("java/util/LinkedList");
+  this->NativeBridge =
+    env->FindClass("com/ibm/wala/cast/ir/translator/NativeBridge");
+  this->NativeTranslatorToCAst =
+    env->FindClass("com/ibm/wala/cast/ir/translator/NativeTranslatorToCAst");
+
+  jfieldID castFieldID = env->GetFieldID(NativeBridge, "Ast", "Lcom/ibm/wala/cast/tree/CAst;");
+  this->Ast = env->GetObjectField(xlator, castFieldID);
+
+  jclass xlatorCls = env->FindClass( XlatorCls );
+  this->_makeLocation = env->GetMethodID(xlatorCls, "makeLocation", "(IIII)Lcom/ibm/wala/cast/tree/CAstSourcePositionMap$Position;");
+  THROW_ANY_EXCEPTION(java_ex);
+
+  this->NativeEntity = env->FindClass(EntityCls);
+  this->addScopedEntity = env->GetMethodID(NativeEntity, "addScopedEntity", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstEntity;)V");
+  this->entityGetType = env->GetMethodID(NativeEntity, "getType", "()Lcom/ibm/wala/cast/tree/CAstType;");
+
+  this->NativeCodeEntity = env->FindClass(CodeEntityCls);
+  this->astField = env->GetFieldID(NativeCodeEntity, "Ast", "Lcom/ibm/wala/cast/tree/CAstNode;");
+  this->codeSetGotoTarget = env->GetMethodID(NativeCodeEntity, "setGotoTarget", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstNode;)V");
+  this->codeSetLabelledGotoTarget = env->GetMethodID(NativeCodeEntity, "setLabelledGotoTarget", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstNode;Ljava/lang/Object;)V");
+  this->setNodePosition = env->GetMethodID(NativeCodeEntity, "setNodePosition", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstSourcePositionMap$Position;)V");
+  this->setPosition = env->GetMethodID(NativeEntity, "setPosition", "(Lcom/ibm/wala/cast/tree/CAstSourcePositionMap$Position;)V");
+
+  this->NativeFieldEntity = env->FindClass(FieldCls);
+  this->fieldEntityInit = env->GetMethodID(NativeFieldEntity, "<init>", "(Lcom/ibm/wala/cast/ir/translator/NativeTranslatorToCAst;Ljava/lang/String;Ljava/util/Set;Z" __CES ")V");
 
   this->makeNode0 = env->GetMethodID(CAstInterface, __MN, zeroSig);
   this->makeNode1 = env->GetMethodID(CAstInterface, __MN, oneSig);
@@ -540,3 +582,73 @@ jobject
   return s;
 }
 
+void CAstWrapper::addChildEntity(jobject parent, jobject n, jobject child) 
+{
+  env->CallVoidMethod(parent, addScopedEntity, n, child);
+}
+
+void CAstWrapper::setGotoTarget(jobject entity, jobject from, jobject to) {
+  env->CallVoidMethod(entity, codeSetGotoTarget, from, to);
+}
+
+void CAstWrapper::setGotoTarget(jobject entity, jobject from, jobject to, bool label) {
+  jobject javaLabel;
+  jclass boolean = env->FindClass("java/lang/Boolean");
+  if (label) {
+    jfieldID trueId =
+      env->GetStaticFieldID(boolean, "TRUE", "Ljava/lang/Boolean;");
+    javaLabel = env->GetStaticObjectField(boolean, trueId);
+  } else {
+    jfieldID falseId =
+      env->GetStaticFieldID(boolean, "FALSE", "Ljava/lang/Boolean;");
+    javaLabel = env->GetStaticObjectField(boolean, falseId);
+  }
+  setGotoTarget(entity, from, to, javaLabel);
+}
+
+void CAstWrapper::setGotoTarget(jobject entity, jobject from, jobject to, jobject label) {
+  env->CallVoidMethod(entity, codeSetLabelledGotoTarget, from, to, label);
+}
+
+void CAstWrapper::setLocation(jobject entity, jobject loc) {
+  env->CallVoidMethod(entity, setPosition, loc);
+}
+
+void CAstWrapper::setAstNodeLocation(jobject entity, jobject astNode, jobject loc) {
+  env->CallVoidMethod(entity, setNodePosition, astNode, loc);
+}
+
+jobject CAstWrapper::makeLocation(int fl, int fc, int ll, int lc) {
+  return env->CallObjectMethod(xlator, _makeLocation, fl, fc, ll, lc);
+}
+
+jobject CAstWrapper::makeFieldEntity(jobject declaringClass, jobject name, bool isStatic, list<jobject> *modifiers) {
+
+  jobject entity = env->NewObject(NativeFieldEntity, fieldEntityInit, xlator, getConstantValue(name), makeSet(modifiers), isStatic, declaringClass);
+
+  THROW_ANY_EXCEPTION(java_ex);
+  return entity;
+}
+
+jobject CAstWrapper::getEntityAst(jobject entity) {
+  jobject result = env->GetObjectField(entity, astField);
+  THROW_ANY_EXCEPTION(java_ex);
+  LOG(result);
+  return result;
+}
+
+void CAstWrapper::setEntityAst(jobject entity, jobject ast) {
+  env->SetObjectField(entity, astField, ast);
+  THROW_ANY_EXCEPTION(java_ex);
+}
+
+jobject CAstWrapper::getEntityType(jobject entity) {
+  jobject result = env->CallObjectMethod(entity, entityGetType);
+  THROW_ANY_EXCEPTION(java_ex);
+  return result;
+}
+ 
+void CAstWrapper::die(const char *message) {
+  THROW(java_ex, message);
+}
+ 

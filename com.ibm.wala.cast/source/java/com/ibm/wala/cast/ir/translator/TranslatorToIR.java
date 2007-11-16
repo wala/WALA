@@ -13,12 +13,10 @@ package com.ibm.wala.cast.ir.translator;
 import java.io.IOException;
 import java.util.Set;
 
-import com.ibm.wala.classLoader.ModuleEntry;
+import com.ibm.wala.cast.tree.*;
 
 public interface TranslatorToIR {
 
-  void translate(ModuleEntry S, String N) throws IOException;
-
-  void translate(Set modules) throws IOException;
+  void translate(CAstEntity S, String N);
 
 }

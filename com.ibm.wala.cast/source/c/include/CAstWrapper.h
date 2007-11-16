@@ -28,29 +28,35 @@ class DLLEXPORT CAstWrapper {
 /**
  *  This class is a simple wrapper that provides a C++ object veneer
  * over JNI calls to a CAst object in Javaland.  This wrapper is used
- * by the grammar rules of the bison grammar that defines PHP to build
- * a CAst tree in Javaland.
+ * by native code to build a CAst tree in Javaland.
  */
 class CAstWrapper {
 #endif
 
 
 protected:
-  jobject Ast;
   JNIEnv *env;
   Exceptions &java_ex;
+  jobject xlator;
+  jobject Ast;
   jclass HashSet;
+  jclass LinkedList;
   jmethodID hashSetInit;
   jmethodID hashSetAdd;
-  jclass LinkedList;
   jmethodID linkedListInit;
   jmethodID linkedListAdd;
+  jfieldID astField;
 
 private:
   jclass CAstNode;
   jclass CAstInterface;
   jclass CAstPrinter;
   jclass CAstSymbol;
+  jclass NativeEntity;
+  jclass NativeCodeEntity;
+  jclass NativeFieldEntity;
+  jclass NativeBridge;
+  jclass NativeTranslatorToCAst;
   jmethodID castPrint;
   jmethodID makeNode0;
   jmethodID makeNode1;
@@ -81,7 +87,14 @@ private:
   jmethodID castSymbolInit2;
   jmethodID castSymbolInit3;
   jmethodID castSymbolInit4;
-
+  jmethodID addScopedEntity;
+  jmethodID entityGetType;
+  jmethodID fieldEntityInit;
+  jmethodID _makeLocation;
+  jmethodID setNodePosition;
+  jmethodID setPosition;
+  jmethodID codeSetGotoTarget;
+  jmethodID codeSetLabelledGotoTarget;
   jobject callReference;
 
 public:
@@ -187,6 +200,30 @@ public:
   jobject makeSymbol(const char *, bool, bool, jobject);
 
   void log(jobject);
+
+  void addChildEntity(jobject, jobject, jobject);
+
+  void setGotoTarget(jobject, jobject, jobject);
+  
+  void setGotoTarget(jobject, jobject, jobject, bool);
+  
+  void setGotoTarget(jobject, jobject, jobject, jobject);
+  
+  void setAstNodeLocation(jobject, jobject, jobject);
+
+  void setLocation(jobject, jobject);
+
+  jobject makeLocation(int, int, int, int);
+
+  jobject makeFieldEntity(jobject, jobject, bool, list<jobject> *);
+
+  jobject getEntityAst(jobject);
+
+  virtual void setEntityAst(jobject, jobject);
+
+  jobject getEntityType(jobject);
+
+  void die(const char *);
 };
 #endif
 

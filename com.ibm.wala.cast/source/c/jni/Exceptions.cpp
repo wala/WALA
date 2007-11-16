@@ -19,11 +19,11 @@ Exceptions::Exceptions(JNIEnv *java_env, jmp_buf& c_env) :
 			  "(Ljava/lang/String;Ljava/lang/Throwable;)V");
 }
 
-void Exceptions::throwAnyException(char *file_name, int line_number) {
+void Exceptions::throwAnyException(const char *file_name, int line_number) {
   if (_java_env->ExceptionCheck()) throwException(file_name, line_number);
 }
 
-void Exceptions::throwException(char *file_name, int line_number) {
+void Exceptions::throwException(const char *file_name, int line_number) {
   jthrowable real_ex = _java_env->ExceptionOccurred();
   _java_env->ExceptionClear();
 
@@ -52,7 +52,7 @@ void Exceptions::throwException(char *file_name, int line_number) {
 }
 
 void 
-Exceptions::throwException(char *file_name, int line_number, char *c_message) {
+Exceptions::throwException(const char *file_name, int line_number, const char *c_message) {
 #ifdef _MSC_VER
   int msglen = strlen(file_name) + strlen(c_message) + 1024;
   char* msg = (char*)_alloca(msglen);

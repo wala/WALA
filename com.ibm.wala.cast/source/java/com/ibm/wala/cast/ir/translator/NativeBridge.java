@@ -10,7 +10,15 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.translator;
 
+import com.ibm.wala.cast.tree.*;
+
 public class NativeBridge {
+
+  protected final CAst Ast;
+
+  protected NativeBridge(CAst Ast) {
+    this.Ast = Ast;
+  }
 
   protected static native void initialize();
   

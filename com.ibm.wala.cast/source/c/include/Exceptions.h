@@ -67,8 +67,8 @@ private:
 public:
   Exceptions(JNIEnv *java_env, jmp_buf& c_env);
 
-  void throwException(char *file_name, int line_number);
-  void throwAnyException(char *file_name, int line_number);
-  void throwException(char *file_name, int line_number, char *c_message);
+  void throwException(const char *file_name, int line_number);
+  void throwAnyException(const char *file_name, int line_number);
+  void throwException(const char *file_name, int line_number, const char *c_message);
 };
 #endif

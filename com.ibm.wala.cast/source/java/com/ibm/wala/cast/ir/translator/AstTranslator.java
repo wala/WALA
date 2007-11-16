@@ -81,7 +81,9 @@ import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 /**
  * @author Julian Dolby TODO: document me.
  */
-public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandler {
+public abstract class AstTranslator extends CAstVisitor 
+    implements ArrayOpHandler, TranslatorToIR 
+{
 
   protected abstract boolean useDefaultInitValues();
 

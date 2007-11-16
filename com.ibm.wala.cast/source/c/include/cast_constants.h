@@ -13,7 +13,7 @@
 }
 
 #else 
-#error "bad use of CAst constants
+#error "bad use of CAst constants"
 
 #endif
 
