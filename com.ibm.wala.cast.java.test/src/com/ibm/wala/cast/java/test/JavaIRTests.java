@@ -513,7 +513,7 @@ public class JavaIRTests extends IRTests {
   }
 
   public void testMiniaturSliceBug() throws IllegalArgumentException, CancelException {
-    Pair x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
+    Pair<?, ?> x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
 
     PointerAnalysis pa = (PointerAnalysis) x.snd;
     CallGraph cg = (CallGraph) x.fst;
@@ -521,9 +521,9 @@ public class JavaIRTests extends IRTests {
     // test partial slice 
     MethodReference sliceRootRef = 
       getSliceRootReference("MiniaturSliceBug", "validNonDispatchedCall", "(LIntWrapper;)V");
-    Set roots = cg.getNodes( sliceRootRef );
+    Set<CGNode> roots = cg.getNodes( sliceRootRef );
     Pair<Collection<Statement>, SDG>  y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots);
-    Collection<Statement> slice = (Collection<Statement>) y.fst;
+    Collection<Statement> slice = y.fst;
     SlicerTest.dumpSlice(slice);
     assertEquals(0, SlicerTest.countAllocations(slice));
     assertEquals(1, SlicerTest.countPutfields(slice));
@@ -533,7 +533,7 @@ public class JavaIRTests extends IRTests {
       getSliceRootReference("MiniaturSliceBug", "main", "([Ljava/lang/String;)V");
     roots = cg.getNodes( sliceRootRef );
     y = AstJavaSlicer.computeAssertionSlice(cg, pa, roots);
-    slice = (Collection<Statement>) y.fst;
+    slice = y.fst;
     SlicerTest.dumpSlice(slice);
     assertEquals(2, SlicerTest.countAllocations(slice));
     assertEquals(2, SlicerTest.countPutfields(slice));
