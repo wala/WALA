@@ -209,10 +209,16 @@ public class TabulationSolver<T, P> {
    */
   public TabulationResult<T, P> solve() throws CancelException {
 
-    initialize();
-    forwardTabulateSLRPs();
-    Result r = new Result();
-    return r;
+    try {
+      initialize();
+      forwardTabulateSLRPs();
+      Result r = new Result();
+      return r;
+    } catch (CancelException e) {
+      // store a partially-tabulated result in the thrown exception.
+      Result r = new Result();
+      throw new TabulationCancelException(e, r);
+    }
   }
 
   /**

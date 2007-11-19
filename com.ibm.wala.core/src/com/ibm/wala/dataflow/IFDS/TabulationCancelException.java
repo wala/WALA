@@ -8,26 +8,28 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.eclipse.util;
+package com.ibm.wala.dataflow.IFDS;
+
+import com.ibm.wala.dataflow.IFDS.TabulationSolver.Result;
+import com.ibm.wala.eclipse.util.CancelException;
 
 /**
- * An exception for when work is canceled in eclipse.
+ * A {@link CancelException} thrown during tabulation; holds a pointer to a partial {@link Result}.
+ * Use with care, this can hold on to a lot of memory.
  * 
  * @author sjfink
- * 
  */
-public class CancelException extends Exception {
-
-  protected CancelException(String msg) {
-    super(msg);
-  }
+public class TabulationCancelException extends CancelException {
   
-  protected CancelException(Exception cause) {
+  private final Result result;
+
+  protected TabulationCancelException(CancelException cause, Result r) {
     super(cause);
+    this.result = r;
   }
 
-  public static CancelException make(String msg) {
-    return new CancelException(msg);
+  public Result getResult() {
+    return result;
   }
 
 }
