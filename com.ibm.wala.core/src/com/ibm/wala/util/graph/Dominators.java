@@ -78,11 +78,12 @@ public abstract class Dominators<T> {
     this.vertex = (T[]) new Object[G.getNumberOfNodes() + 1];
   }
 
-  public static <T> Dominators make(Graph<T> G, T root) {
-    if (G instanceof NumberedGraph) {
+  @SuppressWarnings("unchecked")
+  public static <T> Dominators<T> make(Graph<T> G, T root) {
+    if (G instanceof NumberedGraph && root instanceof INodeWithNumber) {
       return new NumberedDominators((NumberedGraph)G, (INodeWithNumber)root);
     } else {
-      return new GenericDominators(G, root);
+      return new GenericDominators<T>(G, root);
     }
   }
 
@@ -566,6 +567,7 @@ public abstract class Dominators<T> {
     getInfo(node).semiDominator = semi;
   }
 
+  @Override
   public String toString() {
     StringBuffer sb = new StringBuffer();
     for (Iterator<? extends T> i = G.iterator(); i.hasNext();) {

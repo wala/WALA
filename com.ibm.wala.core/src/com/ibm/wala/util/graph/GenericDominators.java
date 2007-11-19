@@ -10,18 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph;
 
-import java.util.Iterator;
 import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
 
-import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;
-import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
 
 /**
  * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS
@@ -51,6 +42,7 @@ public class GenericDominators<T> extends Dominators<T> {
    */
   private final Map<Object, DominatorInfo> infoMap;
 
+  @Override
   protected DominatorInfo getInfo(T node) {
     if (!infoMap.containsKey(node))
       infoMap.put(node, new DominatorInfo(node));

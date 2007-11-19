@@ -17,7 +17,6 @@ import java.util.Set;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.graph.*;
 import com.ibm.wala.util.graph.traverse.DFS;
 
 /**
