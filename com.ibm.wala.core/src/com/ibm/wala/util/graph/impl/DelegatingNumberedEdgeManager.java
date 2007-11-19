@@ -128,6 +128,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
       throw new IllegalArgumentException("parameter is null");
     }
     src.addSucc(dst.getGraphNodeId());
+    dst.addPred(src.getGraphNodeId());
   }
 
   public void removeEdge(T src, T dst) throws UnimplementedError {
