@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph;
 
-
 /**
  * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS
  * 1(1), July 1979. This implementation uses path compression and results in a
@@ -23,19 +22,15 @@ package com.ibm.wala.util.graph;
  * @author Julian Dolby
  */
 
-public class NumberedDominators<T extends INodeWithNumber> 
-    extends Dominators<T> 
-{
+public class NumberedDominators<T> extends Dominators<T> {
 
   @SuppressWarnings("unchecked")
-  public NumberedDominators(NumberedGraph<T> G, T root) 
-      throws IllegalArgumentException 
-  {
+  public NumberedDominators(NumberedGraph<T> G, T root) throws IllegalArgumentException {
     super(G, root);
 
-    this.infoMap = new Object[ G.getMaxNumber()+1 ];
-    for(T n : G) {
-      infoMap[ n.getGraphNodeId() ] = new DominatorInfo(n);
+    this.infoMap = new Object[G.getMaxNumber() + 1];
+    for (T n : G) {
+      infoMap[G.getNumber(n)] = new DominatorInfo(n);
     }
 
     analyze();
@@ -43,17 +38,17 @@ public class NumberedDominators<T extends INodeWithNumber>
 
   @Override
   public NumberedGraph<T> getGraph() {
-    return (NumberedGraph<T>)G;
+    return (NumberedGraph<T>) G;
   }
 
   /*
    * Look-aside table for DominatorInfo objects
    */
   private final Object[] infoMap;
-  
+
   @Override
   protected final DominatorInfo getInfo(T node) {
-    return (DominatorInfo)infoMap[ node.getGraphNodeId() ];
+    return (DominatorInfo) infoMap[getGraph().getNumber(node)];
   }
 
 }

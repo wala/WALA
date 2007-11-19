@@ -60,10 +60,11 @@ public abstract class Dominators<T> {
 
   /**
    * @param G
-   *          The graph
+   *            The graph
    * @param root
-   *          The root from which to compute dominators
-   * @throws IllegalArgumentException  if G is null
+   *            The root from which to compute dominators
+   * @throws IllegalArgumentException
+   *             if G is null
    */
   @SuppressWarnings("unchecked")
   public Dominators(Graph<T> G, T root) throws IllegalArgumentException {
@@ -78,10 +79,9 @@ public abstract class Dominators<T> {
     this.vertex = (T[]) new Object[G.getNumberOfNodes() + 1];
   }
 
-  @SuppressWarnings("unchecked")
   public static <T> Dominators<T> make(Graph<T> G, T root) {
-    if (G instanceof NumberedGraph && root instanceof INodeWithNumber) {
-      return new NumberedDominators((NumberedGraph)G, (INodeWithNumber)root);
+    if (G instanceof NumberedGraph) {
+      return new NumberedDominators<T>((NumberedGraph<T>) G, root);
     } else {
       return new GenericDominators<T>(G, root);
     }
@@ -340,7 +340,7 @@ public abstract class Dominators<T> {
    * See TOPLAS 1(1), July 1979, p 128 for details.
    * 
    * @param node
-   *          the node to evaluate
+   *            the node to evaluate
    * @return the node as described above
    */
   private T EVAL(T node) {
@@ -363,7 +363,7 @@ public abstract class Dominators<T> {
    * This recursive method performs the path compression
    * 
    * @param node
-   *          node of interest
+   *            node of interest
    */
   private void compress(T node) {
     if (getAncestor(getAncestor(node)) != null) {
@@ -382,9 +382,9 @@ public abstract class Dominators<T> {
    * the number of nodes.
    * 
    * @param node1
-   *          a basic node corresponding to the source of the new edge
+   *            a basic node corresponding to the source of the new edge
    * @param node2
-   *          a basic node corresponding to the source of the new edge
+   *            a basic node corresponding to the source of the new edge
    */
   private void LINK(T node1, T node2) {
     if (DEBUG) {
@@ -579,5 +579,5 @@ public abstract class Dominators<T> {
     }
     return sb.toString();
   }
-    
+
 }
