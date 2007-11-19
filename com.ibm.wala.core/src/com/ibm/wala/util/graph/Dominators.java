@@ -35,7 +35,7 @@ import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
  * @author Julian Dolby
  */
 
-public class Dominators<T> {
+public abstract class Dominators<T> {
   static final boolean DEBUG = false;
 
   /**
@@ -76,8 +76,14 @@ public class Dominators<T> {
       throw new IllegalArgumentException("G has no nodes");
     }
     this.vertex = (T[]) new Object[G.getNumberOfNodes() + 1];
-    this.infoMap = HashMapFactory.make(G.getNumberOfNodes());
-    analyze();
+  }
+
+  public static <T> Dominators make(Graph<T> G, T root) {
+    if (G instanceof NumberedGraph) {
+      return new NumberedDominators((NumberedGraph)G, (INodeWithNumber)root);
+    } else {
+      return new GenericDominators(G, root);
+    }
   }
 
   public boolean isDominatedBy(T node, T master) {
@@ -86,6 +92,10 @@ public class Dominators<T> {
         return true;
 
     return false;
+  }
+
+  public Graph<T> getGraph() {
+    return G;
   }
 
   public T getIdom(T node) {
@@ -207,7 +217,7 @@ public class Dominators<T> {
   /**
    * analyze dominators
    */
-  private void analyze() {
+  protected void analyze() {
     if (DEBUG)
       System.out.println("Dominators for " + G);
 
@@ -223,7 +233,7 @@ public class Dominators<T> {
     step3();
 
     if (DEBUG)
-      printResults(G);
+      System.err.println(this);
   }
 
   /**
@@ -425,7 +435,7 @@ public class Dominators<T> {
   // IMPLEMENTATION -- LOOK-ASIDE TABLE FOR PER-NODE STATE AND ITS ACCESSORS
   //
 
-  private class DominatorInfo {
+  protected final class DominatorInfo {
     /*
      * The result of this computation: the immediate dominator of this node
      */
@@ -481,13 +491,7 @@ public class Dominators<T> {
   /*
    * Look-aside table for DominatorInfo objects
    */
-  private final Map<Object, DominatorInfo> infoMap;
-
-  private DominatorInfo getInfo(T node) {
-    if (!infoMap.containsKey(node))
-      infoMap.put(node, new DominatorInfo(node));
-    return infoMap.get(node);
-  }
+  protected abstract DominatorInfo getInfo(T node);
 
   private Iterator<T> iterateBucket(T node) {
     return getInfo(node).bucket.iterator();
@@ -562,18 +566,16 @@ public class Dominators<T> {
     getInfo(node).semiDominator = semi;
   }
 
-  /**
-   * Print the nodes that dominate each basic node
-   */
-  private void printResults(Graph<T> G) {
+  public String toString() {
+    StringBuffer sb = new StringBuffer();
     for (Iterator<? extends T> i = G.iterator(); i.hasNext();) {
       T node = i.next();
-      System.out.print("Dominators of " + node + ": ");
+      sb.append("Dominators of " + node + ":\n");
       for (Iterator j = dominators(node); j.hasNext();)
-        System.out.print(j.next() + "  ");
-      System.out.println();
+        sb.append("   " + j.next() + "\n");
+      sb.append("\n");
     }
-    System.out.println("\n");
+    return sb.toString();
   }
-
+    
 }

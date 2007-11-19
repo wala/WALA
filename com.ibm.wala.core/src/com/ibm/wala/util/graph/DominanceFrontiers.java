@@ -17,6 +17,7 @@ import java.util.Set;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
+import com.ibm.wala.util.graph.*;
 import com.ibm.wala.util.graph.traverse.DFS;
 
 /**
@@ -25,9 +26,15 @@ import com.ibm.wala.util.graph.traverse.DFS;
  * 
  * @author Julian Dolby
  */
-public class DominanceFrontiers<T> extends Dominators<T> {
+public class DominanceFrontiers<T> {
 
   final private Map<T, Set<T>> DF = HashMapFactory.make();
+
+  final private Dominators<T> dom;
+
+  final private Graph<T> G;
+
+  final private T root;
 
   /**
    * @param G
@@ -36,7 +43,9 @@ public class DominanceFrontiers<T> extends Dominators<T> {
    *          The root from which to compute dominators
    */
   public DominanceFrontiers(Graph<T> G, T root) {
-    super(G, root);
+    this.root = root;
+    this.G = G;
+    this.dom = Dominators.make(G, root);
     analyze();
   }
 
@@ -44,8 +53,20 @@ public class DominanceFrontiers<T> extends Dominators<T> {
     return DF.get(n).iterator();
   }
 
+  public boolean isDominatedBy(T node, T master) {
+    return dom.isDominatedBy(node, master);
+  }
+
+  public Iterator<T> dominators(T node) {
+    return dom.dominators(node);
+  }
+
+  public Graph<T> dominatorTree() {
+    return dom.dominatorTree();
+  }
+
   private void analyze() {
-    Graph<T> DT = dominatorTree();
+    Graph<T> DT = dom.dominatorTree();
 
     Iterator<T> XS = DFS.iterateFinishTime(DT, new NonNullSingletonIterator<T>(root));
     while (XS.hasNext()) {
@@ -56,7 +77,7 @@ public class DominanceFrontiers<T> extends Dominators<T> {
       // DF_local
       for (Iterator<? extends T> YS = G.getSuccNodes(X); YS.hasNext();) {
         T Y = YS.next();
-        if (getIdom(Y) != X) {
+        if (dom.getIdom(Y) != X) {
           DF_X.add(Y);
         }
       }
@@ -66,7 +87,7 @@ public class DominanceFrontiers<T> extends Dominators<T> {
         T Z = ZS.next();
         for (Iterator<T> YS2 = getDominanceFrontier(Z); YS2.hasNext();) {
           T Y2 = YS2.next();
-          if (getIdom(Y2) != X)
+          if (dom.getIdom(Y2) != X)
             DF_X.add(Y2);
         }
       }
