@@ -764,7 +764,7 @@ public class PrimitivesTest extends WalaTestCase {
     G.addEdge(nodes[9], nodes[6]);
 
     // compute dominators
-    Dominators<Object> D = new Dominators<Object>(G, nodes[10]);
+    Dominators<Object> D = Dominators.make(G, nodes[10]);
 
     // assertions
     int i = 0;
