@@ -78,7 +78,7 @@ public abstract class TestCallGraphShape extends WalaTestCase {
 
         while (srcs.hasNext()) {
           CGNode src = (CGNode) srcs.next();
-          for (Iterator sites = src.iterateSites(); sites.hasNext();) {
+          for (Iterator sites = src.iterateCallSites(); sites.hasNext();) {
             CallSiteReference sr = (CallSiteReference) sites.next();
 
             Iterator dsts = getNodes(CG, ((String[]) assertionData[i][1])[j]).iterator();
