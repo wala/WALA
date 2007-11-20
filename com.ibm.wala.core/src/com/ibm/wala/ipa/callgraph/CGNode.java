@@ -44,11 +44,6 @@ public interface CGNode extends INodeWithNumber, ContextItem, IClassHierarchyDwe
   public Context getContext();
 
   /**
-   * @return Iterator of CallSiteReference
-   */
-  Iterator<CallSiteReference> iterateSites();
-
-  /**
    * This is for use only by call graph builders ... not by the general
    * public.  Clients should not use this.
    * 

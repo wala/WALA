@@ -27,7 +27,6 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 
 /**
- * 
  * Basic analysis; context-insensitive except for newInstance and clone
  * 
  * @author sfink

@@ -231,7 +231,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
       CGNode n = (CGNode) i.next();
       result.append(n + "\n");
       if (n.getMethod() != null) {
-        for (Iterator sites = n.iterateSites(); sites.hasNext();) {
+        for (Iterator sites = n.iterateCallSites(); sites.hasNext();) {
           CallSiteReference site = (CallSiteReference) sites.next();
           Iterator targets = getPossibleTargets(n, site).iterator();
           if (targets.hasNext()) {

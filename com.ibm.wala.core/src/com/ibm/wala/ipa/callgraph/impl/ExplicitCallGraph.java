@@ -181,7 +181,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
      */
     protected Iterator<CallSiteReference> getPossibleSites(final CGNode to) {
       final int n = getCallGraph().getNumber(to);
-      return new FilterIterator<CallSiteReference>(iterateSites(), new Filter() {
+      return new FilterIterator<CallSiteReference>(iterateCallSites(), new Filter() {
         public boolean accepts(Object o) {
           IntSet s = getPossibleTargetNumbers((CallSiteReference) o);
           return s == null ? false : s.contains(n);
@@ -239,14 +239,6 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
           }
         }
       }
-    }
-
-
-    /*
-     * @see com.ibm.wala.ipa.callgraph.CGNode#iterateSites()
-     */
-    public Iterator<CallSiteReference> iterateSites() {
-      return getCallGraph().getInterpreter(this).iterateCallSites(this);
     }
 
     /*
