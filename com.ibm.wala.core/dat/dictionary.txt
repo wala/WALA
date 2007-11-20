@@ -45,3 +45,4 @@ accessors
 lite
 collapsible
 uncollapsible
+snugglebug
