@@ -53,7 +53,7 @@ public class CloneTest extends WalaTestCase {
 
     // Check there's exactly one target for each super call in
     // MessageFormat.clone()
-    for (Iterator<CallSiteReference> i = node.iterateSites(); i.hasNext();) {
+    for (Iterator<CallSiteReference> i = node.iterateCallSites(); i.hasNext();) {
       CallSiteReference site = (CallSiteReference) i.next();
       if (site.isSpecial()) {
         if (site.getDeclaredTarget().getDeclaringClass().equals(TypeReference.JavaLangObject)) {

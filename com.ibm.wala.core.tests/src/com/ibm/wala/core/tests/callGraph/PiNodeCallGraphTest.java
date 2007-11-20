@@ -89,7 +89,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
 
     for (Iterator<CGNode> nodes = callerNodes.iterator(); nodes.hasNext();) {
       CGNode n = (CGNode) nodes.next();
-      for (Iterator<CallSiteReference> sites = n.iterateSites(); sites.hasNext();) {
+      for (Iterator<CallSiteReference> sites = n.iterateCallSites(); sites.hasNext();) {
         CallSiteReference csRef = (CallSiteReference) sites.next();
         if (csRef.getDeclaredTarget().equals(unary2Ref)) {
           numberOfCalls++;
