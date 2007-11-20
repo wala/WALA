@@ -51,30 +51,35 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
     this.partialRoots = partialRoots;
   }
 
-  public static PartialCallGraph make(final CallGraph CG, final Collection<CGNode> partialRoots, final Collection<CGNode> nodes) {
-    Graph<CGNode> partialGraph = GraphSlicer.prune(CG, new Filter<CGNode>() {
+  /**
+   * @param cg the original call graph
+   * @param partialRoots roots of the new, partial graph
+   * @param nodes set of nodes that will be included in the new, partial call graph
+   */
+  public static PartialCallGraph make(final CallGraph cg, final Collection<CGNode> partialRoots, final Collection<CGNode> nodes) {
+    Graph<CGNode> partialGraph = GraphSlicer.prune(cg, new Filter<CGNode>() {
       public boolean accepts(CGNode o) {
         return nodes.contains(o);
       }
     });
 
-    return new PartialCallGraph(CG, partialRoots, partialGraph);
+    return new PartialCallGraph(cg, partialRoots, partialGraph);
   }
 
   /**
-   * @param CG the original call graph
+   * @param cg the original call graph
    * @param partialRoots roots of the new, partial graph
    * the result contains only nodes reachable from the partialRoots in the original call graph.
    */
-  public static PartialCallGraph make(CallGraph CG, Collection<CGNode> partialRoots) {
-    final Set<CGNode> nodes = DFS.getReachableNodes(CG, partialRoots);
-    Graph<CGNode> partialGraph = GraphSlicer.prune(CG, new Filter<CGNode>() {
+  public static PartialCallGraph make(CallGraph cg, Collection<CGNode> partialRoots) {
+    final Set<CGNode> nodes = DFS.getReachableNodes(cg, partialRoots);
+    Graph<CGNode> partialGraph = GraphSlicer.prune(cg, new Filter<CGNode>() {
       public boolean accepts(CGNode o) {
         return nodes.contains(o);
       }
     });
 
-    return new PartialCallGraph(CG, partialRoots, partialGraph);
+    return new PartialCallGraph(cg, partialRoots, partialGraph);
   }
 
   public CGNode getFakeRootNode() throws UnsupportedOperationException {
