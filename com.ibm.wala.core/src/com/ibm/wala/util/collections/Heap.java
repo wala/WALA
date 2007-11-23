@@ -13,17 +13,14 @@ package com.ibm.wala.util.collections;
 import java.util.NoSuchElementException;
 
 /**
- * 
  * Simple Heap data structure.
  * 
- * @author Julian Dolby\
+ * @author Julian Dolby
  */
 
 public abstract class Heap {
 
   /**
-   * @param elt1
-   * @param elt2
    * @return true iff elt1 is considered < elt2
    */
   abstract protected boolean compareElements(Object elt1, Object elt2);
