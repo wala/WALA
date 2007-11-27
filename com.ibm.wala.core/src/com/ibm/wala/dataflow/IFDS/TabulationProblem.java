@@ -23,7 +23,7 @@ import com.ibm.wala.util.intset.IntSet;
  * interprocedural dataflow and ESP-style property simulation, and various other
  * things.
  * 
- * Note that at the momemt, the data structures in the TabulationSolver are not
+ * Note that at the moment, the data structures in the TabulationSolver are not
  * set up to do merge efficiently. TODO.
  * 
  * See Reps, Horwitz, Sagiv POPL 95

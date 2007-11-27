@@ -15,8 +15,8 @@ import com.ibm.wala.util.intset.IntSet;
 /**
  * A flow function corresponding to an edge in the supergraph.
  * A reversible flow-function supports a getSources operation that allows
- * computing backwards flow. At the very least, this is requried in IFDS by 
- * call functions for which sources need to be found the handle insertion of 
+ * computing backwards flow. At the very least, this is required in IFDS by 
+ * call functions for which sources need to be found to handle insertion of 
  * summary edges.
  *  
  *  @author Stephen Fink

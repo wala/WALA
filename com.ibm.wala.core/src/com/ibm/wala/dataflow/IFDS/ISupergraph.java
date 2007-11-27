@@ -24,7 +24,7 @@ import com.ibm.wala.util.graph.NumberedGraph;
  * a call node too. Similarly for exit nodes. The solver is coded to deal with
  * this appropriately.
  * <p>
- * Additionally, due to expectional control flow, each method might have
+ * Additionally, due to exceptional control flow, each method might have
  * multiple exits or multiple entries.
  * 
  * T type of node in the supergraph

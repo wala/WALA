@@ -55,7 +55,7 @@ public class LocalPathEdges {
    * 
    * Note that this representation is not good for merges. See below.
    * 
-   * TODO: more representation optimization. A special represention for triples?
+   * TODO: more representation optimization. A special representation for triples?
    * sparse representations for CFG? exploit shorts for ints?
    */
   private final SparseVector<IBinaryNaturalRelation> paths = new SparseVector<IBinaryNaturalRelation>(1, 1.1f);
@@ -128,7 +128,7 @@ public class LocalPathEdges {
       } else {
         IBinaryNaturalRelation R = paths.get(j);
         if (R == null) {
-          // we expect the first dimention of R to be dense, the second sparse
+          // we expect the first dimension of R to be dense, the second sparse
           R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
               BasicNaturalRelation.TWO_LEVEL);
           paths.set(j, R);
@@ -138,7 +138,7 @@ public class LocalPathEdges {
         if (altPaths != null) {
           IBinaryNaturalRelation R2 = altPaths.get(i);
           if (R2 == null) {
-            // we expect the first dimention of R to be dense, the second sparse
+            // we expect the first dimension of R to be dense, the second sparse
             R2 = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
                 BasicNaturalRelation.TWO_LEVEL);
             altPaths.set(i, R2);
@@ -204,7 +204,7 @@ public class LocalPathEdges {
     if (altPaths != null) {
       IBinaryNaturalRelation R = altPaths.get(0);
       if (R == null) {
-        // we expect the first dimention of R to be dense, the second sparse
+        // we expect the first dimension of R to be dense, the second sparse
         R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
             BasicNaturalRelation.TWO_LEVEL);
         altPaths.set(0, R);

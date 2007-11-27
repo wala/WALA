@@ -22,7 +22,6 @@ import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * 
  * A "reversed" supergraph for backwards analysis.
  * 
  * In this view, a return is treated like a call, and vice-versa. All normal

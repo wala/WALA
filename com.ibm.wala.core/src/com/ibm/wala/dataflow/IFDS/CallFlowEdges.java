@@ -36,7 +36,7 @@ public class CallFlowEdges {
    * 
    * Note that we handle paths of the form <c, d1> -> <s_p,d1> specially, below.
    * 
-   * TODO: more representation optimization. A special represention for triples?
+   * TODO: more representation optimization. A special representation for triples?
    * sparse representations for CFG? exploit shorts for ints?
    */
   private final SparseVector<IBinaryNaturalRelation> edges = new SparseVector<IBinaryNaturalRelation>(1, 1.1f);
