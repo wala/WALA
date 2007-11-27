@@ -92,6 +92,9 @@ public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGra
 
   public CGNode getNode(IMethod method, Context C) {
     CGNode x = cg.getNode(method, C);
+    if (x == null) {
+      return null;
+    }
     return (containsNode(x) ? x : null);
   }
 
