@@ -100,7 +100,7 @@ public class FileUtil {
    * delete all files (recursively) in a directory.
    * This is dangerous. Use with care.
    */
-  public static void deleteContents(String directory) throws WalaException {
+  public static void deleteContents(String directory)  {
     Collection fl = listFiles(directory, null, true);
 
     for (Iterator it = fl.iterator(); it.hasNext();) {
