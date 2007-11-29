@@ -651,9 +651,6 @@ public class Util {
   /**
    * @return a 0-1-CFA Call Graph Builder.
    * 
-   * This version uses the DEDUCED_PLUS_STRINGSTUFF policy to avoid
-   * disambiguating uninteresting types.
-   * 
    * @param options
    *            options that govern call graph construction
    * @param cha
@@ -696,9 +693,6 @@ public class Util {
 
   /**
    * @return a 0-1-CFA Call Graph Builder.
-   * 
-   * This version uses the DEDUCED_PLUS_STRINGSTUFF policy to avoid
-   * disambiguating uninteresting types.
    * 
    * @param options
    *            options that govern call graph construction
