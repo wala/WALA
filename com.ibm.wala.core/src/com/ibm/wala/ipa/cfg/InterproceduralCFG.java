@@ -47,6 +47,9 @@ public class InterproceduralCFG extends AbstractInterproceduralCFG<ISSABasicBloc
     if (n == null) {
       throw new IllegalArgumentException("n == null");
     }
+    if (n.getIR() == null) {
+      return null;
+    }
     ControlFlowGraph<ISSABasicBlock> cfg = n.getIR().getControlFlowGraph();
     if (cfg == null) {
       return null;

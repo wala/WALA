@@ -150,7 +150,7 @@ public class ClassHierarchy implements IClassHierarchy {
     // now is a good time to clear the warnings globally.
     // TODO: think of a better way to guard against warning leaks.
     Warnings.clear();
-    
+
     if (factory == null) {
       throw new IllegalArgumentException();
     }
@@ -468,8 +468,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @return the canonical IField that represents a given field , or
-   *         null if none found
+   * @return the canonical IField that represents a given field , or null if
+   *         none found
    * @throws IllegalArgumentException
    *             if f is null
    */
@@ -485,8 +485,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @return the canonical IField that represents a given field , or
-   *         null if none found
+   * @return the canonical IField that represents a given field , or null if
+   *         none found
    * @throws IllegalArgumentException
    *             if f is null
    * @throws IllegalArgumentException
@@ -876,17 +876,21 @@ public class ClassHierarchy implements IClassHierarchy {
         return true;
       } else if (T.getReference().isArrayType()) {
         TypeReference elementType = T.getReference().getArrayElementType();
-        IClass elementKlass = lookupClass(elementType);
-        if (elementKlass == null) {
-          // uh oh.
-          Warnings.add(ClassHierarchyWarning.create("could not find " + elementType));
-          return false;
+        if (elementType.isPrimitiveType()) {
+          return elementType.equals(c.getReference().getArrayElementType());
+        } else {
+          IClass elementKlass = lookupClass(elementType);
+          if (elementKlass == null) {
+            // uh oh.
+            Warnings.add(ClassHierarchyWarning.create("could not find " + elementType));
+            return false;
+          }
+          IClass ce = ((ArrayClass) c).getElementClass();
+          if (ce == null) {
+            return false;
+          }
+          return isSubclassOf(ce, elementKlass);
         }
-        IClass ce = ((ArrayClass) c).getElementClass();
-        if (ce == null) {
-          return false;
-        }
-        return isSubclassOf(ce, elementKlass);
       } else {
         return false;
       }
@@ -1106,21 +1110,20 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * temporarily marking this internal to avoid infinite sleep with randomly
-   * chosen IProgressMonitor. 
+   * chosen IProgressMonitor.
    */
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, IProgressMonitor monitor) throws ClassHierarchyException {
     return make(scope, new ClassLoaderFactoryImpl(scope.getExclusions()), monitor);
   }
 
-  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory)
-      throws ClassHierarchyException {
+  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory) throws ClassHierarchyException {
     return new ClassHierarchy(scope, factory, new NullProgressMonitor());
   }
 
   /**
    * temporarily marking this internal to avoid infinite sleep with randomly
-   * chosen IProgressMonitor. 
+   * chosen IProgressMonitor.
    */
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor monitor)
@@ -1138,8 +1141,8 @@ public class ClassHierarchy implements IClassHierarchy {
    * chosen IProgressMonitor. TODO: nanny for testgen
    */
   @Internal
-  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Language language,
-      IProgressMonitor monitor) throws ClassHierarchyException {
+  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Language language, IProgressMonitor monitor)
+      throws ClassHierarchyException {
     return new ClassHierarchy(scope, factory, language, monitor);
   }
 

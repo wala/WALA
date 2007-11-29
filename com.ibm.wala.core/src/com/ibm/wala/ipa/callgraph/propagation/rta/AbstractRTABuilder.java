@@ -110,6 +110,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/ArithmeticException"),
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/ArrayStoreException"),
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/ClassCastException"),
+      TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/ClassNotFoundException"),
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/IndexOutOfBoundsException"),
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/NegativeArraySizeException"),
       TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/ExceptionInInitializerError"),
@@ -133,6 +134,8 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    */
   @Override
   protected boolean addConstraintsFromNode(CGNode node) {
+    
+    
     if (haveAlreadyVisited(node)) {
       return false;
     } else {
@@ -201,11 +204,9 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     }
   }
 
-  /**
-   * @param klass
-   */
+ 
   protected void processClassInitializer(IClass klass) {
-
+    
     if (clinitProcessed.contains(klass)) {
       return;
     }
@@ -253,7 +254,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     if (DEBUG) {
       Trace.println("visitInvoke: " + site);
     }
-
+    
     // if non-virtual, add callgraph edges directly
     IInvokeInstruction.IDispatch code = site.getInvocationCode();
 
@@ -441,6 +442,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
   @Override
   protected boolean unconditionallyAddConstraintsFromNode(CGNode node) {
+    
     // add all relevant constraints
     addNewConstraints(node);
     addCallConstraints(node);

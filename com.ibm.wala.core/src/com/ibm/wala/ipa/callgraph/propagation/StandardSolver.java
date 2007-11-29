@@ -51,6 +51,9 @@ public class StandardSolver extends AbstractPointsToSolver {
       getBuilder().addConstraintsFromNewNodes();
 
       getReflectionHandler().updateForReflection();
+      
+      // Handling reflection may have discovered new nodes!
+      getBuilder().addConstraintsFromNewNodes();
       // Note that we may have added stuff to the
       // worklist; so,
     } while (!getSystem().emptyWorkList());

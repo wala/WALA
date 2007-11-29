@@ -30,7 +30,6 @@ import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * 
  * An SSA IR
  * 
  * @author sfink

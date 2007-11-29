@@ -63,8 +63,6 @@ public class Util {
    */
   private static final String nativeSpec = "natives.xml";
 
-  private static final String benignSpec = "benign.xml";
-
   /**
    * Set up an AnalysisOptions object with default selectors, corresponding to
    * class hierarchy lookup
@@ -828,7 +826,6 @@ public class Util {
   }
 
   public static void addDefaultBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, IClassHierarchy cha) {
-    addBypassLogic(options, scope, cl, benignSpec, cha);
     addBypassLogic(options, scope, cl, nativeSpec, cha);
   }
 

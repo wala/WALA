@@ -33,18 +33,14 @@ class AssignOperator extends UnaryOperator<PointsToSetVariable> implements IPoin
   @Override
   public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
 
-
-    boolean debug = false;
     if (PropagationCallGraphBuilder.DEBUG_ASSIGN) {
       String S = "EVAL Assign " + lhs.getPointerKey() + " " + rhs.getPointerKey();
       S = S + "\nEVAL " + lhs + " " + rhs;
-      debug = Trace.guardedPrintln(S, PropagationCallGraphBuilder.DEBUG_METHOD_SUBSTRING);
+      Trace.println(S);
     }
     boolean changed = lhs.addAll(rhs);
     if (PropagationCallGraphBuilder.DEBUG_ASSIGN) {
-      if (debug) {
         Trace.println("RESULT " + lhs + (changed ? " (changed)" : ""));
-      }
     }
 
     if (PropagationCallGraphBuilder.DEBUG_TRACK_INSTANCE) {

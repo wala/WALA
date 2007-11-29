@@ -202,18 +202,22 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         } else {
           src = ssaInstruction2Statement(s);
           // add edges from call statements to parameter passing and return
-          // SJF: Alexey and I think that we should just define ParamStatements as
+          // SJF: Alexey and I think that we should just define ParamStatements
+          // as
           // being control dependent on nothing ... they only represent pure
-          // data dependence.  So, I'm commenting out the following.
-//          if (s instanceof SSAAbstractInvokeInstruction) {
-//            SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
-//            for (Statement st : callerParamStatements.get(call.getCallSite())) {
-//              addEdge(src, st);
-//            }
-//            for (Statement st : callerReturnStatements.get(call.getCallSite())) {
-//              addEdge(src, st);
-//            }
-//          }
+          // data dependence. So, I'm commenting out the following.
+          // if (s instanceof SSAAbstractInvokeInstruction) {
+          // SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction)
+          // s;
+          // for (Statement st : callerParamStatements.get(call.getCallSite()))
+          // {
+          // addEdge(src, st);
+          // }
+          // for (Statement st : callerReturnStatements.get(call.getCallSite()))
+          // {
+          // addEdge(src, st);
+          // }
+          // }
         }
       }
       // add edges for every control-dependent statement in the IR, if there are
@@ -251,10 +255,10 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     // add CD from method entry to all callee parameter assignments
     // SJF: Alexey and I think that we should just define ParamStatements as
     // being control dependent on nothing ... they only represent pure
-    // data dependence.  So, I'm commenting out the following.
-//    for (int i = 0; i < paramCalleeStatements.length; i++) {
-//      addEdge(methodEntry, paramCalleeStatements[i]);
-//    }
+    // data dependence. So, I'm commenting out the following.
+    // for (int i = 0; i < paramCalleeStatements.length; i++) {
+    // addEdge(methodEntry, paramCalleeStatements[i]);
+    // }
   }
 
   /**
@@ -281,33 +285,30 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     SSAInstruction[] instructions = ir.getInstructions();
 
     //
-    // TODO: teach some other bit of code about the uses of 
+    // TODO: teach some other bit of code about the uses of
     // GetCaughtException, and then delete this code.
     //
-    if (! dOptions.isIgnoreExceptions()) {
+    if (!dOptions.isIgnoreExceptions()) {
       for (ISSABasicBlock bb : ir.getControlFlowGraph()) {
         if (bb.isCatchBlock()) {
-	  SSACFG.ExceptionHandlerBasicBlock ehbb = 
-	    (SSACFG.ExceptionHandlerBasicBlock)bb;
+          SSACFG.ExceptionHandlerBasicBlock ehbb = (SSACFG.ExceptionHandlerBasicBlock) bb;
 
-	  if (ehbb.getCatchInstruction() != null) {
-	    Statement c = ssaInstruction2Statement(ehbb.getCatchInstruction());
+          if (ehbb.getCatchInstruction() != null) {
+            Statement c = ssaInstruction2Statement(ehbb.getCatchInstruction());
 
-	    for (ISSABasicBlock pb : 
-		   ir.getControlFlowGraph().getExceptionalPredecessors(ehbb)) {
-	      SSAInstruction pi = instructions[ pb.getLastInstructionIndex() ];
-	      assert pi != null;
+            for (ISSABasicBlock pb : ir.getControlFlowGraph().getExceptionalPredecessors(ehbb)) {
+              SSAInstruction pi = instructions[pb.getLastInstructionIndex()];
+              assert pi != null;
 
-	      if (pi instanceof SSAAbstractInvokeInstruction) {
-		SSAAbstractInvokeInstruction i = 
-		  (SSAAbstractInvokeInstruction)pi;
-		addEdge(new ParamStatement.ExceptionalReturnCaller(node, i), c);
-	      } else if (pi instanceof SSAAbstractThrowInstruction) {
-		addEdge(ssaInstruction2Statement(pi), c);	  
-	      }
-	    }
-	  }
-	}
+              if (pi instanceof SSAAbstractInvokeInstruction) {
+                SSAAbstractInvokeInstruction i = (SSAAbstractInvokeInstruction) pi;
+                addEdge(new ParamStatement.ExceptionalReturnCaller(node, i), c);
+              } else if (pi instanceof SSAAbstractThrowInstruction) {
+                addEdge(ssaInstruction2Statement(pi), c);
+              }
+            }
+          }
+        }
       }
     }
 
@@ -682,10 +683,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     return ssaInstruction2Statement(s, instructionIndices);
   }
 
-  public Statement 
-      ssaInstruction2Statement(SSAInstruction s, 
-			       Map<SSAInstruction, Integer> instructionIndices)
-  {
+  public Statement ssaInstruction2Statement(SSAInstruction s, Map<SSAInstruction, Integer> instructionIndices) {
     assert s != null;
     if (s instanceof SSAPhiInstruction) {
       SSAPhiInstruction phi = (SSAPhiInstruction) s;
@@ -698,9 +696,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     } else {
       Integer x = instructionIndices.get(s);
       if (x == null) {
-        Assertions.UNREACHABLE(s.toString() +
-			       "\nnot found in map of\n" +
-			       node.getIR());
+        Assertions.UNREACHABLE(s.toString() + "\nnot found in map of\n" + node.getIR());
       }
       return new NormalStatement(node, x.intValue());
     }

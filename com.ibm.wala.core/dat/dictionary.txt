@@ -46,3 +46,15 @@ lite
 collapsible
 uncollapsible
 snugglebug
+popup
+precomputed
+pre
+hoc
+uglified
+int
+ints
+temp
+intensional
+ith
+filesystem
+idempotent

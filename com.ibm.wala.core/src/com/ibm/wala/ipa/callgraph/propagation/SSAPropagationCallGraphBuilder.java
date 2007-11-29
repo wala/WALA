@@ -258,9 +258,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   }
 
   /**
-   * @param node
-   * @param ir
-   * @param callGraph
    * @return a visitor to examine instructions in the ir
    */
   protected ConstraintVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node) {
@@ -269,9 +266,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   /**
    * Add pointer flow constraints based on instructions in a given node
-   * 
-   * @param node
-   * @param ir
    */
   protected void addNodeInstructionConstraints(CGNode node) {
     ConstraintVisitor v = makeVisitor((ExplicitCallGraph.ExplicitNode) node);
@@ -1143,6 +1137,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     @Override
     public void visitNew(SSANewInstruction instruction) {
       InstanceKey iKey = getInstanceKeyForAllocation(instruction.getNewSite());
+      
       if (iKey == null) {
         // something went wrong. I hope someone raised a warning.
         return;
@@ -1824,7 +1819,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   }
 
   /**
-   * @author sfink sets bingo to true when it visits an interesting instruction
+   * sets bingo to true when it visits an interesting instruction
    */
   protected static class InterestingVisitor extends SSAInstruction.Visitor {
     protected final int vn;
