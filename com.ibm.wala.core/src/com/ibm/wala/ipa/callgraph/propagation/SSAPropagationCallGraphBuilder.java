@@ -171,7 +171,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    */
   private final boolean usePreTransitiveSolver;
 
-  protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, PointerKeyFactory pointerKeyFactory) {
+  protected SSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+      PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
     this.usePreTransitiveSolver = options.usePreTransitiveSolver();
   }
@@ -463,10 +464,13 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * 
    * @return the unique pointer key which catches the exceptions thrown by a
    *         call
-   * @throws IllegalArgumentException  if ir == null
-   * @throws IllegalArgumentException  if call == null
+   * @throws IllegalArgumentException
+   *             if ir == null
+   * @throws IllegalArgumentException
+   *             if call == null
    */
-  public PointerKey getUniqueCatchKey(SSAAbstractInvokeInstruction call, IR ir, CGNode node) throws IllegalArgumentException, IllegalArgumentException {
+  public PointerKey getUniqueCatchKey(SSAAbstractInvokeInstruction call, IR ir, CGNode node) throws IllegalArgumentException,
+      IllegalArgumentException {
     if (call == null) {
       throw new IllegalArgumentException("call == null");
     }
@@ -597,7 +601,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     protected AnalysisOptions getOptions() {
       return builder.options;
     }
-    
+
     protected AnalysisCache getAnalysisCache() {
       return builder.getAnalysisCache();
     }
@@ -638,13 +642,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return getBuilder().getInstanceKeyForMultiNewArray(node, allocation, dim);
     }
 
-    public InstanceKey getInstanceKeyForConstant(Object S) {
+    public <T> InstanceKey getInstanceKeyForConstant(T S) {
       TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(S);
       return getBuilder().getInstanceKeyForConstant(type, S);
-    }
-
-    public String getStringConstantForInstanceKey(InstanceKey I) {
-      return getBuilder().getStringConstantForInstanceKey(I);
     }
 
     public InstanceKey getInstanceKeyForPEI(ProgramCounter instr, TypeReference type) {
@@ -1137,7 +1137,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     @Override
     public void visitNew(SSANewInstruction instruction) {
       InstanceKey iKey = getInstanceKeyForAllocation(instruction.getNewSite());
-      
+
       if (iKey == null) {
         // something went wrong. I hope someone raised a warning.
         return;
@@ -1264,23 +1264,23 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     @Override
     public void visitPhi(SSAPhiInstruction instruction) {
       if (ir.getMethod() instanceof AbstractRootMethod) {
-	PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-	if (hasNoInterestingUses(instruction.getDef())) {
-	    system.recordImplicitPointsToSet(dst);
-	} else {
-	  for(int i = 0; i < instruction.getNumberOfUses(); i++) {
-	    PointerKey use = getPointerKeyForLocal(instruction.getUse(i));
-	    if (contentsAreInvariant(symbolTable, du, instruction.getUse(i))) {
-	      system.recordImplicitPointsToSet(use);
+        PointerKey dst = getPointerKeyForLocal(instruction.getDef());
+        if (hasNoInterestingUses(instruction.getDef())) {
+          system.recordImplicitPointsToSet(dst);
+        } else {
+          for (int i = 0; i < instruction.getNumberOfUses(); i++) {
+            PointerKey use = getPointerKeyForLocal(instruction.getUse(i));
+            if (contentsAreInvariant(symbolTable, du, instruction.getUse(i))) {
+              system.recordImplicitPointsToSet(use);
               InstanceKey[] ik = getInvariantContents(instruction.getUse(i));
               for (int j = 0; j < ik.length; j++) {
-		system.newConstraint(dst, ik[j]);
+                system.newConstraint(dst, ik[j]);
               }
             } else {
-	      system.newConstraint(dst, assignOperator, use);
+              system.newConstraint(dst, assignOperator, use);
             }
           }
-	}
+        }
       }
     }
 
@@ -1692,7 +1692,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               Trace.println("Warning: null target for call " + call + " " + iKey);
             }
           } else {
-            IntSet targets = getCallGraph().getPossibleTargetNumbers(node,call.getCallSite());
+            IntSet targets = getCallGraph().getPossibleTargetNumbers(node, call.getCallSite());
             if (targets != null && targets.contains(target.getGraphNodeId())) {
               // do nothing; we've previously discovered and handled this
               // receiver for this call site.
@@ -2046,13 +2046,34 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       boolean ensureIndexes) {
     InstanceKey[] result;
     if (isConstantRef(symbolTable, valueNumber)) {
-      Object S = symbolTable.getConstantValue(valueNumber);
-      TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(S);
-      InstanceKey ik = hm.getInstanceKeyForConstant(type, S);
-      if (ik != null) {
-        result = new InstanceKey[] { ik };
+      Object x = symbolTable.getConstantValue(valueNumber);
+      if (x instanceof String) {
+        // this is always the case in Java.  use strong typing in the call to getInstanceKeyForConstant.
+        String S = (String)x;
+        TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(S);
+        if (type == null) {
+          return new InstanceKey[0];
+        }
+        InstanceKey ik = hm.getInstanceKeyForConstant(type, S);
+        if (ik != null) {
+          result = new InstanceKey[] { ik };
+        } else {
+          result = new InstanceKey[0];
+        }
       } else {
-        result = new InstanceKey[0];
+        // some non-built in type (e.g. Integer).  give up on strong typing.
+        // language-specific subclasses (e.g. Javascript) should override this method to get strong typing
+        // with generics if desired.
+        TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(x);
+        if (type == null) {
+          return new InstanceKey[0];
+        }
+        InstanceKey ik = hm.getInstanceKeyForConstant(type, x);
+        if (ik != null) {
+          result = new InstanceKey[] { ik };
+        } else {
+          result = new InstanceKey[0];
+        }
       }
     } else {
       SSANewInstruction def = (SSANewInstruction) du.getDef(valueNumber);

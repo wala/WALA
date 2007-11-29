@@ -86,19 +86,11 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
     return key;
   }
 
-  public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
+  public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
     if (options.getUseConstantSpecificKeys())
-      return new ConstantKey(S, cha.lookupClass(type));
+      return new ConstantKey<T>(S, cha.lookupClass(type));
     else
       return new ConcreteTypeKey(cha.lookupClass(type));
-  }
-
-  public String getStringConstantForInstanceKey(InstanceKey I) {
-    if (I instanceof StringConstantKey) {
-      return ((StringConstantKey) I).getString();
-    } else {
-      return null;
-    }
   }
 
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter pei, TypeReference type) {

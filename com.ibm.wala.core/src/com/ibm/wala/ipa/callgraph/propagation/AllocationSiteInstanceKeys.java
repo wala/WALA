@@ -45,7 +45,7 @@ public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
 
   /**
    * @param options
-   *          Governing call graph construction options
+   *            Governing call graph construction options
    */
   public AllocationSiteInstanceKeys(AnalysisOptions options, IClassHierarchy cha) {
     this.options = options;
@@ -85,16 +85,17 @@ public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
     return key;
   }
 
-  public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
-    if (options.getUseConstantSpecificKeys())
-      return new ConstantKey(S, cha.lookupClass(type));
-    else
+  public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
+    if (options.getUseConstantSpecificKeys()) {
+      return new ConstantKey<T>(S, cha.lookupClass(type));
+    } else {
       return new ConcreteTypeKey(cha.lookupClass(type));
+    }
   }
 
-  public String getStringConstantForInstanceKey(InstanceKey I) {
-    if (I instanceof StringConstantKey) {
-      return ((StringConstantKey) I).getString();
+  public Object getConstantForInstanceKey(InstanceKey I) {
+    if (I instanceof ConstantKey) {
+      return ((ConstantKey) I).getValue();
     } else {
       return null;
     }

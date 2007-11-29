@@ -15,12 +15,12 @@ import com.ibm.wala.classLoader.IClass;
 /**
  * An instance key which represents a unique set for each String constant
  */
-public final class ConstantKey implements InstanceKey {
-  private final Object value;
+public final class ConstantKey<T> implements InstanceKey {
+  private final T value;
 
   private final IClass valueClass;
 
-  public ConstantKey(Object value, IClass valueClass) {
+  public ConstantKey(T value, IClass valueClass) {
     this.value = value;
     this.valueClass = valueClass;
   }
@@ -55,7 +55,7 @@ public final class ConstantKey implements InstanceKey {
     return valueClass;
   }
 
-  public Object getValue() {
+  public T getValue() {
     return value;
   }
 }

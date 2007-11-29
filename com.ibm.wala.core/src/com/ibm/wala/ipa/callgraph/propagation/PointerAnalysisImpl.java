@@ -461,13 +461,8 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       return iKeyFactory.getInstanceKeyForMultiNewArray(node, allocation, dim);
     }
 
-    public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
+    public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
       return iKeyFactory.getInstanceKeyForConstant(type, S);
-    }
-
-    public String getStringConstantForInstanceKey(InstanceKey I) {
-      Assertions.UNREACHABLE();
-      return null;
     }
 
     public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter peiLoc, TypeReference type) {

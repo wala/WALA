@@ -27,7 +27,7 @@ public interface InstanceKeyFactory {
   public abstract InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation);
 
   /**
-   * @return the instance key that represents the array allocated as the dimth
+   * @return the instance key that represents the array allocated as the dim_th
    *         dimension at a particular allocation
    */
   public abstract InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim);
@@ -35,13 +35,7 @@ public interface InstanceKeyFactory {
   /**
    * @return the instance key that represents a constant with value S, when considered as a particular type
    */
-  public abstract InstanceKey getInstanceKeyForConstant(TypeReference type, Object S);
-
-  /**
-   * @return if I was allocated by this for a specific string constant, return
-   *         that constant (return null otherwise).
-   */
-  public abstract String getStringConstantForInstanceKey(InstanceKey I);
+  public abstract <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S);
 
   /**
    * @param node

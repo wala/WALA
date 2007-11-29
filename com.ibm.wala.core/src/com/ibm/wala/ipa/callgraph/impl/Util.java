@@ -688,7 +688,7 @@ public class Util {
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
 
     return ZeroXCFABuilder.make(cha, options, cache, customSelector, customInterpreter, options.getReflectionSpec(),
-        ZeroXInstanceKeys.ALLOCATIONS);
+        ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.CONSTANT_SPECIFIC);
   }
 
   /**
@@ -809,6 +809,7 @@ public class Util {
     addDefaultBypassLogic(options, scope, Util.class.getClassLoader(), cha);
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
+    options.setUseConstantSpecificKeys(true);
 
     return new ZeroOneContainerCFABuilder(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec()) {
       @Override

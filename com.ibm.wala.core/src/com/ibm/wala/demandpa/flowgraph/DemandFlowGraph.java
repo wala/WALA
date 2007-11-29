@@ -149,7 +149,8 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
    * add representation of flow for a node, if not already present
    * 
    * @param node
-   * @throws IllegalArgumentException  if node == null
+   * @throws IllegalArgumentException
+   *             if node == null
    */
   public void addSubgraphForNode(CGNode node) throws IllegalArgumentException {
     if (node == null) {
@@ -352,7 +353,8 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
    * @param sfk
    *            the static field
    * @return all the variables whose values are written to sfk
-   * @throws IllegalArgumentException  if sfk == null
+   * @throws IllegalArgumentException
+   *             if sfk == null
    */
   public Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
     if (sfk == null) {
@@ -369,7 +371,8 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
    * @param sfk
    *            the static field
    * @return all the variables that get the value of sfk
-   * @throws IllegalArgumentException  if sfk == null
+   * @throws IllegalArgumentException
+   *             if sfk == null
    */
   public Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
     if (sfk == null) {
@@ -539,9 +542,6 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
 
   /**
    * add constraints for reference constants assigned to vars
-   * 
-   * @param node
-   * @param ir
    */
   private void addNodeConstantConstraints(CGNode node, IR ir) {
     SymbolTable symbolTable = ir.getSymbolTable();
@@ -551,12 +551,14 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
         if (!(v instanceof Number)) {
           Object S = symbolTable.getConstantValue(i);
           TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(S);
-          InstanceKey ik = heapModel.getInstanceKeyForConstant(type, S);
-          if (ik != null) {
-            PointerKey pk = heapModel.getPointerKeyForLocal(node, i);
-            addNode(pk);
-            addNode(ik);
-            addEdge(pk, ik, NewLabel.v());
+          if (type != null) {
+            InstanceKey ik = heapModel.getInstanceKeyForConstant(type, S);
+            if (ik != null) {
+              PointerKey pk = heapModel.getPointerKeyForLocal(node, i);
+              addNode(pk);
+              addNode(ik);
+              addEdge(pk, ik, NewLabel.v());
+            }
           }
         }
       }
@@ -566,9 +568,6 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
   /**
    * Add constraints to represent the flow of exceptions to the exceptional
    * return value for this node
-   * 
-   * @param node
-   * @param ir
    */
   protected void addNodePassthruExceptionConstraints(CGNode node, IR ir) {
     // add constraints relating to thrown exceptions that reach the exit
@@ -655,7 +654,8 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
   /**
    * Add constraints for a particular basic block.
    */
-  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, ISSABasicBlock b, FlowStatementVisitor v) {
+  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, ISSABasicBlock b,
+      FlowStatementVisitor v) {
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.

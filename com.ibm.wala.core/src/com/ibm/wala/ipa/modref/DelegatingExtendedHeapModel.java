@@ -54,7 +54,7 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
     return h.getInstanceKeyForClassObject(type);
   }
 
-  public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
+  public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
     return h.getInstanceKeyForConstant(type, S);
   }
 
@@ -94,10 +94,6 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
 
   public PointerKey getPointerKeyForStaticField(IField f) {
     return h.getPointerKeyForStaticField(f);
-  }
-
-  public String getStringConstantForInstanceKey(InstanceKey I) {
-    return h.getStringConstantForInstanceKey(I);
   }
 
   public Iterator<PointerKey> iteratePointerKeys() {

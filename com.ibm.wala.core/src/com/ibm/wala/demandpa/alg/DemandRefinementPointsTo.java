@@ -249,10 +249,6 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       return delegate.getPointerKeyForStaticField(f);
     }
 
-    public String getStringConstantForInstanceKey(InstanceKey I) {
-      return delegate.getStringConstantForInstanceKey(I);
-    }
-
     public Iterator<PointerKey> iteratePointerKeys() {
       return delegate.iteratePointerKeys();
     }

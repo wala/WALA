@@ -24,6 +24,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.ClassBasedInstanceKeys;
+import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.SmushedAllocationSiteInstanceKeys;
@@ -47,7 +48,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
 
   public final static TypeReference JavaLangStringBuffer = TypeReference.findOrCreate(ClassLoaderReference.Primordial,
       JavaLangStringBufferName);
-  
+
   private final static TypeName JavaLangStringBuilderName = TypeName.string2TypeName("Ljava/lang/StringBuilder");
 
   public final static TypeReference JavaLangStringBuilder = TypeReference.findOrCreate(ClassLoaderReference.Primordial,
@@ -94,6 +95,11 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   public static final int SMUSH_MANY = 16;
 
   /**
+   * Should we use constant-specific keys?
+   */
+  public static final int CONSTANT_SPECIFIC = 32;
+
+  /**
    * When using smushing, how many sites in a node will be kept distinct before
    * smushing?
    */
@@ -135,13 +141,16 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
    */
   final Map<CGNode, Set> smushMap = HashMapFactory.make();
 
-  public ZeroXInstanceKeys(AnalysisOptions options, IClassHierarchy cha, RTAContextInterpreter contextInterpreter,
-      int policy) {
+  public ZeroXInstanceKeys(AnalysisOptions options, IClassHierarchy cha, RTAContextInterpreter contextInterpreter, int policy) {
+    this.policy = policy;
+    if (disambiguateConstants()) {
+      // this is an ugly hack. TODO: clean it all up.
+      options.setUseConstantSpecificKeys(true);
+    }
     classBased = new ClassBasedInstanceKeys(options, cha);
     siteBased = new AllocationSiteInstanceKeys(options, cha);
     smushed = new SmushedAllocationSiteInstanceKeys(options, cha);
     this.cha = cha;
-    this.policy = policy;
     this.contextInterpreter = contextInterpreter;
   }
 
@@ -166,6 +175,10 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
 
   private boolean smushPrimHolders() {
     return (policy & SMUSH_PRIMITIVE_HOLDERS) > 0;
+  }
+
+  public boolean disambiguateConstants() {
+    return (policy & CONSTANT_SPECIFIC) > 0;
   }
 
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
@@ -193,8 +206,6 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   /**
    * side effect: populates the smush map.
    * 
-   * @param c
-   * @param node
    * @return true iff the node contains too many allocation sites of type c
    */
   private boolean exceedsSmushLimit(IClass c, CGNode node) {
@@ -216,7 +227,6 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   }
 
   /**
-   * @param node
    * @return Map: IClass -> Integer, the number of allocation sites for each
    *         type.
    */
@@ -245,15 +255,15 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     }
   }
 
-  public InstanceKey getInstanceKeyForConstant(TypeReference type, Object S) {
-    return classBased.getInstanceKeyForConstant(type, S);
-  }
-
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getStringConstantForInstanceKey(com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
-   */
-  public String getStringConstantForInstanceKey(InstanceKey I) {
-    return classBased.getStringConstantForInstanceKey(I);
+  public <T> InstanceKey getInstanceKeyForConstant(TypeReference type, T S) {
+    if (type == null) {
+      throw new IllegalArgumentException("null type");
+    }
+    if (disambiguateConstants()) {
+      return new ConstantKey<T>(S, getClassHierarchy().lookupClass(type));
+    } else {
+      return classBased.getInstanceKeyForConstant(type, S);
+    }
   }
 
   /*
@@ -291,7 +301,8 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     if (C == null) {
       throw new IllegalArgumentException("C is null");
     }
-    return C.getReference().equals(TypeReference.JavaLangString) || C.getReference().equals(JavaLangStringBuffer) || C.getReference().equals(JavaLangStringBuilder);
+    return C.getReference().equals(TypeReference.JavaLangString) || C.getReference().equals(JavaLangStringBuffer)
+        || C.getReference().equals(JavaLangStringBuilder);
   }
 
   public boolean isThrowable(IClass C) {
@@ -329,9 +340,6 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     }
   }
 
-  /**
-   * @return Returns the cha.
-   */
   protected IClassHierarchy getClassHierarchy() {
     return cha;
   }

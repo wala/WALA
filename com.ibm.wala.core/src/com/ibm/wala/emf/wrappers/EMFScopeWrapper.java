@@ -233,10 +233,7 @@ public class EMFScopeWrapper extends AnalysisScope {
     addClassFileToScope(loader, file);
   }
 
-  /**
-   * @param m
-   * @param loader
-   */
+
   private void processJarFile(EJarFile m, ClassLoaderReference loader) throws IllegalArgumentException {
     String fileName = m.getUrl();
     Assertions.productionAssertion(fileName != null, "null jar file name specified");

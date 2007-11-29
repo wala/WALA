@@ -101,10 +101,10 @@ public class AnalysisOptions {
   /**
    * Use distinct instance keys for distinct string constants?
    * 
-   * TODO: possibly, this option should moved somewhere into the creation of
+   * TODO: Probably, this option should moved somewhere into the creation of
    * instance keys. However, those factories are created within the various
    * builders right now, and this is the most convenient place for an engine
-   * user to set an option which the creation of instance keys laters picks up.
+   * user to set an option which the creation of instance keys later picks up.
    */
   private boolean useConstantSpecificKeys = false;
 
