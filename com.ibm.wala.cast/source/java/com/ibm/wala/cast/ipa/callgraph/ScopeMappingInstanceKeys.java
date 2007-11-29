@@ -163,10 +163,6 @@ abstract public class ScopeMappingInstanceKeys implements InstanceKeyFactory {
     return basic.getInstanceKeyForConstant(type, S);
   }
 
-  public String getStringConstantForInstanceKey(InstanceKey I) {
-    return basic.getStringConstantForInstanceKey(I);
-  }
-
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
     return basic.getInstanceKeyForPEI(node, instr, type);
   }

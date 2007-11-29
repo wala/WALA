@@ -69,10 +69,6 @@ public class CrossLanguageInstanceKeys implements InstanceKeyFactory {
     return getSelector(type).getInstanceKeyForConstant(type, S);
   }
 
-  public String getStringConstantForInstanceKey(InstanceKey I) {
-    return getSelector(I.getConcreteType().getReference()).getStringConstantForInstanceKey(I);
-  }
-
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
     assert getSelector(type) != null : "no instance keys for " + type;
     return getSelector(type).getInstanceKeyForPEI(node, instr, type);
