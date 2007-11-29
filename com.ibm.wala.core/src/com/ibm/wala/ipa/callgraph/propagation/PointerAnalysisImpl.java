@@ -37,6 +37,7 @@ import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
@@ -109,10 +110,27 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis#getPointsToSet(com.ibm.wala.ipa.callgraph.propagation.PointerKey)
    */
+  @SuppressWarnings("unchecked")
   public OrdinalSet<InstanceKey> getPointsToSet(PointerKey key) {
     if (pointsToMap.isImplicit(key)) {
       return computeImplicitPointsToSet(key);
     }
+    
+    // special logic to handle contents of char[] from string constants.
+    if (key instanceof InstanceFieldKey) {
+      InstanceFieldKey ifk = (InstanceFieldKey)key;
+      if (ifk.getInstanceKey() instanceof ConstantKey) {
+        ConstantKey<?> i = (ConstantKey<?>)ifk.getInstanceKey();
+        if (i.getValue() instanceof String) {
+          StringConstantCharArray contents = StringConstantCharArray.make((ConstantKey<String>) i);
+          instanceKeys.add(contents);
+          Collection<InstanceKey> singleton = HashSetFactory.make();
+          singleton.add(contents);
+          return OrdinalSet.toOrdinalSet(singleton, instanceKeys);
+        }
+      }
+    }
+    
     PointsToSetVariable v = pointsToMap.getPointsToSet(key);
 
     if (Assertions.verifyAssertions) {

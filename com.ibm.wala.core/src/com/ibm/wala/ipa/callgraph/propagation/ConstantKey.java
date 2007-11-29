@@ -13,7 +13,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import com.ibm.wala.classLoader.IClass;
 
 /**
- * An instance key which represents a unique set for each String constant
+ * An instance key which represents a unique, constant object
  */
 public final class ConstantKey<T> implements InstanceKey {
   private final T value;
