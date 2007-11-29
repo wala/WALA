@@ -89,9 +89,12 @@ public class SWTPointsTo {
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(),cha, scope, null, null);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(),cha, scope, null, null);
     CallGraph cg = builder.makeCallGraph(options);
     PointerAnalysis pointerAnalysis = builder.getPointerAnalysis();
+    
+    System.err.println(pointerAnalysis);
+    
     return new BasicHeapGraph(pointerAnalysis, cg);
   }
 }

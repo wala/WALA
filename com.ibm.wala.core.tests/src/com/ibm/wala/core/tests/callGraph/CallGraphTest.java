@@ -44,7 +44,6 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
  * Tests for Call Graph construction
  * 
  * @author sfink
@@ -249,6 +248,7 @@ public class CallGraphTest extends WalaTestCase {
       e1.printStackTrace();
       assertTrue(e1.getMessage(), false);
     }
+    
     Set<MethodReference> rtaMethods = CallGraphStats.collectMethods(cg);
     Trace.println("RTA methods reached: " + rtaMethods.size());
     Trace.println(CallGraphStats.getStats(cg));
@@ -368,7 +368,10 @@ public class CallGraphTest extends WalaTestCase {
         Set<MethodReference> temp = HashSetFactory.make();
         temp.addAll(callGraphMethods);
         temp.removeAll(superMethods);
-        Trace.printCollection("Violations", temp);
+        System.err.println("Violations");
+        for (MethodReference m : temp) {
+          System.err.println(m);
+        }
         Assertions.UNREACHABLE();
       }
     }

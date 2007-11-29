@@ -88,8 +88,9 @@ public class GVSlice {
    * the statement that calls "srcCallee" from "srcCaller"
    * <li> "data dependence options" can be one of "-full", "-no_base_ptrs",
    * "-no_base_no_heap", "-no_heap", "-no_base_no_heap_no_cast", or "-none".
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
+   * 
+   * @throws CancelException
+   * @throws IllegalArgumentException
    * 
    * @see com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions
    *      <li> "control dependence options" can be "-full" or "-none"
@@ -160,7 +161,9 @@ public class GVSlice {
       ClassHierarchy cha = ClassHierarchy.make(scope);
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, mainClass);
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-      CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(),cha, scope);
+      CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
+      // CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new
+      // AnalysisCache(), cha, scope);
       CallGraph cg = builder.makeCallGraph(options);
       SDG sdg = new SDG(cg, builder.getPointerAnalysis(), dOptions, cOptions);
 
@@ -168,8 +171,7 @@ public class GVSlice {
       CGNode callerNode = SlicerTest.findMethod(cg, srcCaller);
       Statement s = SlicerTest.findCallTo(callerNode, srcCallee);
       System.err.println("Statement: " + s);
-      
-      
+
       // compute the slice as a collection of statements
       Collection<Statement> slice = null;
       if (goBackward) {
@@ -184,6 +186,7 @@ public class GVSlice {
 
       // create a view of the SDG restricted to nodes in the slice
       Graph<Statement> g = pruneSDG(sdg, slice);
+
       sanityCheck(slice, g);
 
       // load Properties from standard WALA and the WALA examples project
@@ -212,7 +215,8 @@ public class GVSlice {
   }
 
   /**
-   * check that g is a well-formed graph, and that it contains exactly the number of nodes in the slice
+   * check that g is a well-formed graph, and that it contains exactly the
+   * number of nodes in the slice
    */
   private static void sanityCheck(Collection<Statement> slice, Graph<Statement> g) {
     try {
@@ -254,7 +258,8 @@ public class GVSlice {
   }
 
   /**
-   * @return a NodeDecorator that decorates statements in a slice for a dot-ted representation
+   * @return a NodeDecorator that decorates statements in a slice for a dot-ted
+   *         representation
    */
   public static NodeDecorator makeNodeDecorator() {
     return new NodeDecorator() {
@@ -269,16 +274,18 @@ public class GVSlice {
           return s.getKind() + "\\n" + h.getNode() + "\\n" + h.getLocation();
         case NORMAL:
           NormalStatement n = (NormalStatement) s;
-          return n.getNode() + "\\n" + n.getInstruction();
+          return n.getInstruction() + "\\n" + n.getNode().getMethod().getSignature();
         case PARAM_CALLEE:
         case PARAM_CALLER:
           if (s instanceof ValueNumberCarrier) {
             ValueNumberCarrier vc = (ValueNumberCarrier) s;
             if (s instanceof CallStatementCarrier) {
               CallStatementCarrier cc = (CallStatementCarrier) s;
-              return s.getKind() + "\\n" + s.getNode() + "\\n" + cc.getCall() + "\\nv" + vc.getValueNumber();
+
+              return s.getKind() + " " + vc.getValueNumber() + "\\n" + s.getNode().getMethod().getName() + "\\n"
+                  + cc.getCall().getCallSite().getDeclaredTarget().getName();
             } else {
-              return s.getKind() + "\\n" + s.getNode() + "\\nv" + vc.getValueNumber();
+              return s.getKind() + " " + vc.getValueNumber() + "\\n" + s.getNode().getMethod().getName();
             }
           } else {
             if (s instanceof CallStatementCarrier) {
@@ -288,6 +295,7 @@ public class GVSlice {
               return s.toString();
             }
           }
+
         case EXC_RET_CALLEE:
         case EXC_RET_CALLER:
         case NORMAL_RET_CALLEE:
@@ -316,7 +324,7 @@ public class GVSlice {
    * <li> args[5] : something like "main"
    * 
    * @throws UnsupportedOperationException
-   *           if command-line is malformed.
+   *             if command-line is malformed.
    */
   static void validateCommandLine(Properties p) {
     if (p.get("appJar") == null) {
