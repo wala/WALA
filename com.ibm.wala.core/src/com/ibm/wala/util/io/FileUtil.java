@@ -99,18 +99,26 @@ public class FileUtil {
   /**
    * delete all files (recursively) in a directory.
    * This is dangerous. Use with care.
+   * @throws IOException if there's a problem deleting some file
    */
-  public static void deleteContents(String directory)  {
+  public static void deleteContents(String directory) throws IOException  {
     Collection fl = listFiles(directory, null, true);
 
     for (Iterator it = fl.iterator(); it.hasNext();) {
       File f = (File) it.next();
       if (!f.isDirectory()) {
-        f.delete();
+        boolean result = f.delete();
+        if (!result) {
+          throw new IOException("Failed to delete " + f);
+        }
       }
-    }
+    } 
+    int lastCount = Integer.MAX_VALUE;
     do {
       Collection f2 = listFiles(directory, null, true);
+      if (f2.size() == lastCount) {
+        throw new IOException("got stuck deleting directories");
+      }
 
       for (Iterator it = f2.iterator(); it.hasNext();) {
         File f = (File) it.next();
