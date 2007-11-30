@@ -116,8 +116,6 @@ public class JavaLauncher extends Launcher {
 
   /**
    * Wait for the spawned process to terminate.
-   * 
-   * @throws WalaException
    */
   public void join() throws WalaException {
     try {
