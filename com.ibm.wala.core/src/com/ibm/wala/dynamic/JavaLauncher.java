@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.ibm.wala.util.warnings.WalaException;
-
 /**
  * A Java process launcher
  * 
@@ -31,7 +29,7 @@ public class JavaLauncher extends Launcher {
    * @param classpathEntries  Paths that will be added to the default classpath
    */
   public static JavaLauncher make(String programArgs, String mainClass, List<String> classpathEntries) {
-    return new JavaLauncher(programArgs, mainClass, true, classpathEntries);
+    return new JavaLauncher(programArgs, mainClass, true, classpathEntries, false);
   }
 
   /**
@@ -39,9 +37,10 @@ public class JavaLauncher extends Launcher {
    * @param mainClass Declaring class of the main() method to run.
    * @param inheritClasspath Should the spawned process inherit all classpath entries of the currently running process?
    * @param classpathEntries  Paths that will be added to the default classpath
+   * @param captureOutput should the launcher capture the stdout and stderr from the subprocess?
    */
-  public static JavaLauncher make(String programArgs, String mainClass, boolean inheritClasspath, List<String> classpathEntries) {
-    return new JavaLauncher(programArgs, mainClass, inheritClasspath, classpathEntries);
+  public static JavaLauncher make(String programArgs, String mainClass, boolean inheritClasspath, List<String> classpathEntries, boolean captureOutput) {
+    return new JavaLauncher(programArgs, mainClass, inheritClasspath, classpathEntries, captureOutput);
   }
 
   /**
@@ -75,8 +74,8 @@ public class JavaLauncher extends Launcher {
    */
   private Thread stdInDrain;
 
-  private JavaLauncher(String programArgs, String mainClass, boolean inheritClasspath, List<String> xtraClasspath) {
-    super();
+  private JavaLauncher(String programArgs, String mainClass, boolean inheritClasspath, List<String> xtraClasspath, boolean captureOutput) {
+    super(captureOutput);
     this.programArgs = programArgs;
     this.mainClass = mainClass;
     this.inheritClasspath = inheritClasspath;
@@ -154,12 +153,13 @@ public class JavaLauncher extends Launcher {
   /**
    * Wait for the spawned process to terminate.
    */
-  public void join() throws WalaException {
+  public void join() {
     try {
       stdOutDrain.join();
       stdInDrain.join();
     } catch (InterruptedException e) {
-      throw new WalaException("Internal error", e);
+      e.printStackTrace();
+      throw new InternalError("Internal error in JavaLauncher.join()");
     }
     if (isCaptureOutput()) {
       Drainer d = (Drainer) stdOutDrain;
