@@ -119,6 +119,7 @@ public class FileUtil {
       if (f2.size() == lastCount) {
         throw new IOException("got stuck deleting directories");
       }
+      lastCount = f2.size();
 
       for (Iterator it = f2.iterator(); it.hasNext();) {
         File f = (File) it.next();
