@@ -23,12 +23,10 @@ public class EmptyTheory extends AbstractTheory {
 
   private EmptyTheory() {}
   
-  @Override
   public Collection<? extends IFormula> getSentences() {
     return Collections.emptySet();
   }
 
-  @Override
   public IVocabulary getVocabulary() {
     return BasicVocabulary.make(Collections.emptySet());
   }
