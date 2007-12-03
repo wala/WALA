@@ -11,6 +11,7 @@
 package com.ibm.wala.dynamic;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,27 +25,61 @@ import com.ibm.wala.util.warnings.WalaException;
  */
 public class JavaLauncher extends Launcher {
 
+  /**
+   * @param programArgs arguments to be passed to the Java program
+   * @param mainClass Declaring class of the main() method to run.
+   * @param classpathEntries  Paths that will be added to the default classpath
+   */
   public static JavaLauncher make(String programArgs, String mainClass, List<String> classpathEntries) {
-    return new JavaLauncher(programArgs, mainClass, classpathEntries);
+    return new JavaLauncher(programArgs, mainClass, true, classpathEntries);
   }
 
+  /**
+   * @param programArgs arguments to be passed to the Java program
+   * @param mainClass Declaring class of the main() method to run.
+   * @param inheritClasspath Should the spawned process inherit all classpath entries of the currently running process?
+   * @param classpathEntries  Paths that will be added to the default classpath
+   */
+  public static JavaLauncher make(String programArgs, String mainClass, boolean inheritClasspath, List<String> classpathEntries) {
+    return new JavaLauncher(programArgs, mainClass, inheritClasspath, classpathEntries);
+  }
+
+  /**
+   * arguments to be passed to the Java program
+   */
   private String programArgs;
 
+  /**
+   * Declaring class of the main() method to run.
+   */
   private final String mainClass;
 
   /**
-   * Paths that will be added to the current process's classpath
+   * Should the spawned process inherit all classpath entries of the currently running process?
+   */
+  private final boolean inheritClasspath;
+  
+  
+  /**
+   * Paths that will be added to the default classpath
    */
   private final List<String> xtraClasspath = new ArrayList<String>();
 
+  /**
+   * A {@link Thread} which spins and drains stdout of the running process.
+   */
   private Thread stdOutDrain;
 
+  /**
+   * A {@link Thread} which spins and drains stderr of the running process.
+   */
   private Thread stdInDrain;
 
-  private JavaLauncher(String programArgs, String mainClass, List<String> xtraClasspath) {
+  private JavaLauncher(String programArgs, String mainClass, boolean inheritClasspath, List<String> xtraClasspath) {
     super();
     this.programArgs = programArgs;
     this.mainClass = mainClass;
+    this.inheritClasspath = inheritClasspath;
     if (xtraClasspath != null) {
       this.xtraClasspath.addAll(xtraClasspath);
     }
@@ -89,8 +124,10 @@ public class JavaLauncher extends Launcher {
 
   /**
    * Launch the java process.
+   * @throws IOException 
+   * @throws IllegalArgumentException 
    */
-  public Process start() throws WalaException {
+  public Process start() throws IllegalArgumentException, IOException  {
     System.err.println(System.getProperty("user.dir"));
 
     String cp = makeClasspath();
@@ -130,8 +167,11 @@ public class JavaLauncher extends Launcher {
     }
   }
 
+  /**
+   * Compute the classpath for the spawned process
+   */
   private String makeClasspath() {
-    String cp = System.getProperty("java.class.path");
+    String cp = inheritClasspath ? System.getProperty("java.class.path") : "" ;
     if (getXtraClassPath() == null || getXtraClassPath().isEmpty()) {
       return " -classpath " + quoteStringIfNeeded(cp);
     } else {

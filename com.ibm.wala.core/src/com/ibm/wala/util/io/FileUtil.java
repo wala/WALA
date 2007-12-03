@@ -117,7 +117,7 @@ public class FileUtil {
     do {
       Collection f2 = listFiles(directory, null, true);
       if (f2.size() == lastCount) {
-        throw new IOException("got stuck deleting directories");
+        throw new IOException("got stuck deleting directories. Probably some other process is preventing deletion.");
       }
       lastCount = f2.size();
 

@@ -30,7 +30,7 @@ public abstract class Launcher {
   protected Map env = null;
 
   protected byte[] output = null;
-  
+
   private byte[] input = null;
 
   private final boolean captureOutput;
@@ -74,23 +74,20 @@ public abstract class Launcher {
 
   /**
    * Spawn a process to execute the given command
+   * 
    * @return an object representing the process
    * @throws WalaException
    * @throws IllegalArgumentException
+   * @throws IOException 
    */
-  protected Process spawnProcess(String cmd) throws WalaException, IllegalArgumentException {
+  protected Process spawnProcess(String cmd) throws IllegalArgumentException, IOException {
     if (cmd == null) {
       throw new IllegalArgumentException("cmd cannot be null");
     }
     System.out.println("spawning process " + cmd);
     String[] ev = getEnv() == null ? null : buildEnv(getEnv());
-    try {
-      Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
-      return p;
-    } catch (IOException e) {
-      e.printStackTrace();
-      throw new WalaException("IOException in " + getClass());
-    }
+    Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
+    return p;
   }
 
   private String[] buildEnv(Map ev) {

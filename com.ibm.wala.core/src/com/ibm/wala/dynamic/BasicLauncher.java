@@ -51,8 +51,9 @@ public class BasicLauncher extends Launcher {
    * Launch the process and wait until it is finished.
    * @throws WalaException
    * @throws IllegalArgumentException
+   * @throws IOException 
    */
-  public void launch() throws WalaException, IllegalArgumentException {
+  public void launch() throws WalaException, IllegalArgumentException, IOException {
     Process p = spawnProcess(getCmd());
 
     Thread d1 = drainStdErr(p);
