@@ -58,3 +58,11 @@ intensional
 ith
 filesystem
 idempotent
+smushes
+smush
+smushing
+smushed
+generics
+javascript
+classpath
+primordial
