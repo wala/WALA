@@ -1382,7 +1382,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       }
     }
 
-    public Collection getQualifiers() {
+    public Collection<CAstQualifier> getQualifiers() {
       return mapFlagsToQualifiers(fType.flags());
     }
 
@@ -2012,7 +2012,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     @SuppressWarnings("unused")
     private final Try tryNode;
 
-    Collection fCatchNodes = new ArrayList<Pair<Type, Object>>();
+    Collection<Pair<Type,Object>> fCatchNodes = new ArrayList<Pair<Type, Object>>();
 
     TryCatchContext(WalkContext parent, Try tryNode) {
       super(parent);
@@ -2020,7 +2020,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       for (Iterator catchIter = tryNode.catchBlocks().iterator(); catchIter.hasNext();) {
         Catch c = (Catch) catchIter.next();
-        Pair p = Pair.make(c.catchType(), c);
+        Pair<Type,Object> p = Pair.make(c.catchType(), (Object)c);
 
         fCatchNodes.add(p);
       }
@@ -2375,7 +2375,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     FieldReference getFieldRef(FieldRep field);
   }
 
-  protected static Collection mapFlagsToQualifiers(Flags flags) {
+  protected static Collection<CAstQualifier> mapFlagsToQualifiers(Flags flags) {
     Set<CAstQualifier> quals = new LinkedHashSet<CAstQualifier>();
 
     if (flags.isAbstract())
