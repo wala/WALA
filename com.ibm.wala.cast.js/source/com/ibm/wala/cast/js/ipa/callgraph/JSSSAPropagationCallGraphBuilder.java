@@ -71,7 +71,8 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
   public static final boolean DEBUG_TYPE_INFERENCE = false;
 
-  protected JSSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options,AnalysisCache cache, PointerKeyFactory pointerKeyFactory) {
+  protected JSSSAPropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+      PointerKeyFactory pointerKeyFactory) {
     super(cha, options, cache, pointerKeyFactory);
   }
 
@@ -346,7 +347,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     //
     // ///////////////////////////////////////////////////////////////////////////
 
-    class JSDispatchOperator extends UnaryOperator {
+    class JSDispatchOperator extends UnaryOperator<PointsToSetVariable> {
       private final JavaScriptInvoke call;
 
       private final ExplicitCallGraph.ExplicitNode node;
@@ -386,7 +387,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
       private MutableIntSet previousReceivers = IntSetUtil.getDefaultIntSetFactory().make();
 
-      public byte evaluate(IVariable lhs, IVariable rhs) {
+      public byte evaluate(PointsToSetVariable lhs, PointsToSetVariable rhs) {
         final IntSetVariable receivers = (IntSetVariable) rhs;
         if (receivers.getValue() != null) {
           receivers.getValue().foreachExcluding(previousReceivers, new IntSetAction() {
@@ -453,8 +454,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
         } else {
           PointerKey A = getBuilder().getPointerKeyForLocal(caller, instruction.getUse(i));
-          system.newConstraint(F, (F instanceof FilteredPointerKey) ? (UnaryOperator) getBuilder().filterOperator
-              : (UnaryOperator) assignOperator, A);
+          system.newConstraint(F, (F instanceof FilteredPointerKey) ? getBuilder().filterOperator : assignOperator, A);
 
           if (av != -1)
             newFieldWrite(target, av, fn, F);
@@ -528,7 +528,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
       final int arg1 = instruction.getUse(0);
       final int arg2 = instruction.getUse(1);
 
-      class BinaryOperator extends AbstractOperator {
+      class BinaryOperator extends AbstractOperator<PointsToSetVariable> {
 
         private CGNode getNode() {
           return node;
@@ -591,7 +591,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           }
         }
 
-        public byte evaluate(IVariable lhs, final IVariable[] rhs) {
+        public byte evaluate(PointsToSetVariable lhs, final IVariable[] rhs) {
           boolean doDefault = false;
           byte changed = NOT_CHANGED;
 
