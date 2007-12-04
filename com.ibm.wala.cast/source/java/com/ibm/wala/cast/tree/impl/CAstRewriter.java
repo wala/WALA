@@ -193,8 +193,8 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     }
   }
 
-  private Map copyChildren(Map nodeMap, Map children) {
-    final Map newChildren = new LinkedHashMap();
+  private Map<CAstNode, Collection<CAstEntity>> copyChildren(Map<CAstNode, CAstNode> nodeMap, Map<CAstNode, Collection<CAstEntity>> children) {
+    final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<CAstNode, Collection<CAstEntity>>();
 
     for (Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
       Map.Entry entry = (Map.Entry) NS.next();
@@ -204,7 +204,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       CAstNode newNode = (CAstNode) entry.getValue();
 
       if (children.containsKey(oldNode)) {
-        Set newEntities = new LinkedHashSet();
+        Set<CAstEntity> newEntities = new LinkedHashSet<CAstEntity>();
         newChildren.put(newNode, newEntities);
         for (Iterator oldEntities = ((Collection) children.get(oldNode)).iterator(); oldEntities.hasNext();) {
           newEntities.add(rewrite((CAstEntity) oldEntities.next()));
@@ -212,11 +212,11 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       }
     }
 
-    for (Iterator keys = children.entrySet().iterator(); keys.hasNext();) {
-      Map.Entry entry = (Map.Entry) keys.next();
-      Object key = entry.getKey();
+    for (Iterator<Map.Entry<CAstNode, Collection<CAstEntity>>> keys = children.entrySet().iterator(); keys.hasNext();) {
+      Map.Entry<CAstNode, Collection<CAstEntity>> entry = keys.next();
+      CAstNode key = entry.getKey();
       if (!(key instanceof CAstNode)) {
-        Set newEntities = new LinkedHashSet();
+        Set<CAstEntity> newEntities = new LinkedHashSet<CAstEntity>();
         newChildren.put(key, newEntities);
         for (Iterator oldEntities = ((Collection) entry.getValue()).iterator(); oldEntities.hasNext();) {
           newEntities.add(rewrite((CAstEntity) oldEntities.next()));

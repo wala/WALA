@@ -28,38 +28,32 @@ public class CAstCloner extends CAstBasicRewriter {
     super(Ast, false);
   }
 
-  protected CAstNode copyNodes(CAstNode root, 
-			       NonCopyingContext c,
-			       Map nodeMap) 
-  {
+  @SuppressWarnings("unchecked")
+  protected CAstNode copyNodes(CAstNode root, NonCopyingContext c, Map nodeMap) {
     if (root instanceof CAstOperator) {
       nodeMap.put(Pair.make(root, c.key()), root);
       return root;
     } else if (root.getValue() != null) {
-      CAstNode copy = Ast.makeConstant( root.getValue() );
-      Assertions._assert(! nodeMap.containsKey(root));
+      CAstNode copy = Ast.makeConstant(root.getValue());
+      Assertions._assert(!nodeMap.containsKey(root));
       nodeMap.put(Pair.make(root, c.key()), copy);
       return copy;
     } else {
-      CAstNode newChildren[] = new CAstNode[ root.getChildCount() ];
+      CAstNode newChildren[] = new CAstNode[root.getChildCount()];
 
-      for(int i = 0; i < root.getChildCount(); i++) {
-	newChildren[i] = copyNodes(root.getChild(i), c, nodeMap);
+      for (int i = 0; i < root.getChildCount(); i++) {
+        newChildren[i] = copyNodes(root.getChild(i), c, nodeMap);
       }
 
       CAstNode copy = Ast.makeNode(root.getKind(), newChildren);
-      Assertions._assert(! nodeMap.containsKey(root));
+      Assertions._assert(!nodeMap.containsKey(root));
       nodeMap.put(Pair.make(root, c.key()), copy);
       return copy;
     }
   }
 
-  public Rewrite copy(CAstNode root, 
-		      final CAstControlFlowMap cfg,
-		      final CAstSourcePositionMap pos,
-		      final CAstNodeTypeMap types,
-		      final Map<CAstNode,Collection<CAstEntity>> children) 
-  {
+  public Rewrite copy(CAstNode root, final CAstControlFlowMap cfg, final CAstSourcePositionMap pos, final CAstNodeTypeMap types,
+      final Map<CAstNode, Collection<CAstEntity>> children) {
     return rewrite(root, cfg, pos, types, children);
   }
 }
