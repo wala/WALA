@@ -106,7 +106,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
       }
 
       if (oldSources.contains(oldSource)) {
-        Iterator LS = orig.getTargetLabels(oldSource).iterator();
+        Iterator<Object> LS = orig.getTargetLabels(oldSource).iterator();
         if (orig.getTarget(oldSource, null) != null) {
           LS = IteratorPlusOne.make(LS, null);
         }

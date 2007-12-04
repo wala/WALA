@@ -86,11 +86,11 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
       return null;
   }
 
-  public Collection getTargetLabels(CAstNode from) {
+  public Collection<Object> getTargetLabels(CAstNode from) {
     if (labelMap.containsKey(CAstToNode.get(from))) {
-      return (Set) labelMap.get(CAstToNode.get(from));
+      return labelMap.get(CAstToNode.get(from));
     } else {
-      return Collections.EMPTY_SET;
+      return Collections.emptySet();
     }
   }
 

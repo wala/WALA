@@ -13,7 +13,6 @@ package com.ibm.wala.cast.ir.ssa.analysis;
 import java.util.Iterator;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorSolver;
 import com.ibm.wala.dataflow.graph.BitVectorUnion;
@@ -22,6 +21,7 @@ import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
@@ -48,11 +48,11 @@ public class LiveAnalysis {
     BitVector getLiveBefore(int instr);
   }
 
-  public static LiveAnalysis.Result perform(final ControlFlowGraph cfg, final SymbolTable symtab) {
+  public static LiveAnalysis.Result perform(final ControlFlowGraph<ISSABasicBlock> cfg, final SymbolTable symtab) {
     return perform(cfg, symtab, new BitVector());
   }
 
-  public static LiveAnalysis.Result perform(final ControlFlowGraph cfg, final SymbolTable symtab, final BitVector considerLiveAtExit) {
+  public static LiveAnalysis.Result perform(final ControlFlowGraph<ISSABasicBlock> cfg, final SymbolTable symtab, final BitVector considerLiveAtExit) {
     final BitVectorIntSet liveAtExit = new BitVectorIntSet(considerLiveAtExit);
     final SSAInstruction[] instructions = (SSAInstruction[]) cfg.getInstructions();
 
@@ -152,15 +152,15 @@ public class LiveAnalysis {
       }
     }
 
-    final BitVectorSolver<IBasicBlock> S = new BitVectorSolver<IBasicBlock>(new IKilldallFramework<IBasicBlock, BitVectorVariable>() {
-      private final Graph<IBasicBlock> G = GraphInverter.invert(cfg);
+    final BitVectorSolver<ISSABasicBlock> S = new BitVectorSolver<ISSABasicBlock>(new IKilldallFramework<ISSABasicBlock, BitVectorVariable>() {
+      private final Graph<ISSABasicBlock> G = GraphInverter.invert(cfg);
 
-      public Graph<IBasicBlock> getFlowGraph() {
+      public Graph<ISSABasicBlock> getFlowGraph() {
         return G;
       }
 
-      public ITransferFunctionProvider<IBasicBlock, BitVectorVariable> getTransferFunctionProvider() {
-        return new ITransferFunctionProvider<IBasicBlock, BitVectorVariable>() {
+      public ITransferFunctionProvider<ISSABasicBlock, BitVectorVariable> getTransferFunctionProvider() {
+        return new ITransferFunctionProvider<ISSABasicBlock, BitVectorVariable>() {
 
           public boolean hasNodeTransferFunctions() {
             return true;
@@ -170,7 +170,7 @@ public class LiveAnalysis {
             return false;
           }
 
-          public UnaryOperator<BitVectorVariable> getNodeTransferFunction(IBasicBlock node) {
+          public UnaryOperator<BitVectorVariable> getNodeTransferFunction(ISSABasicBlock node) {
             if (((SSACFG.BasicBlock) node).isExitBlock()) {
               return new ExitBlockGenKillOperator();
             } else {
@@ -178,7 +178,7 @@ public class LiveAnalysis {
             }
           }
 
-          public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(IBasicBlock s, IBasicBlock d) {
+          public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(ISSABasicBlock s, ISSABasicBlock d) {
             Assertions.UNREACHABLE();
             return null;
           }

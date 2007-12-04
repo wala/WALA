@@ -3168,7 +3168,7 @@ public abstract class AstTranslator extends CAstVisitor
     visitor.visit(switchValue, context, visitor);
     int v = getValue(switchValue);
 
-    Collection caseLabels = ctrl.getTargetLabels(n);
+    Collection<Object> caseLabels = ctrl.getTargetLabels(n);
     Map<Object, PreBasicBlock> labelToBlock = new LinkedHashMap<Object, PreBasicBlock>();
     for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
       Object x = kases.next();
