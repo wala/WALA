@@ -122,9 +122,6 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   
   public final static MethodReference servletInit = MethodReference.findOrCreate(Servlet,initName,initDesc);
 
-  /**
-   * Set of Entrypoint
-   */
   private Set<Entrypoint> entrypoints = HashSetFactory.make();
 
   /**
@@ -215,20 +212,10 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.callgraph.Entrypoints#iterator()
-   */
   public Iterator<Entrypoint> iterator() {
     return entrypoints.iterator();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
   public String toString() {
     StringBuffer result = new StringBuffer();
     result.append("Servlets:");

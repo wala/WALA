@@ -24,7 +24,6 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 
 /**
- * 
  * Description of analysis for EJBs
  * 
  * @author sfink

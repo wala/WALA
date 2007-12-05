@@ -18,7 +18,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.Atom;
 
 /**
- * 
  * Entrypoints for an EAR file.
  * 
  * @author sfink

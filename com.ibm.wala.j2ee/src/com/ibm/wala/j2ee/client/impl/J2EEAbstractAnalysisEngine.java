@@ -31,7 +31,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * abstract base class for analysis engine implementations
  * 
  * @author sfink
@@ -86,7 +85,7 @@ public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine 
   }
 
   /**
-   * Add the application modules to the analyis scope.
+   * Add the application modules to the analysis scope.
    */
   @SuppressWarnings( { "restriction", "unchecked" })
   protected void addApplicationModulesToScope() {
@@ -103,8 +102,6 @@ public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine 
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.atk.AppAnalysisEngine#setJ2EELibrary(java.util.jar.JarFile)
    */
   public void setJ2EELibraries(JarFile[] libs) {
@@ -127,32 +124,22 @@ public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine 
     }
   }
 
-  /**
-   * @return Returns the dmd.
-   */
+
   protected DeploymentMetaData getDmd() {
     return dmd;
   }
 
-  /**
-   * @param dmd
-   *            The dmd to set.
-   */
+
   protected void setDmd(DeploymentMetaData dmd) {
     this.dmd = dmd;
   }
 
-  /**
-   * @return Returns the dependentJars.
-   */
+
   public boolean isDependentJars() {
     return dependentJars;
   }
 
-  /**
-   * @param dependentJars
-   *            The dependentJars to set.
-   */
+
   public void setDependentJars(boolean dependentJars) {
     this.dependentJars = dependentJars;
   }
