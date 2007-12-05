@@ -58,6 +58,11 @@ public class JavaLauncher extends Launcher {
    */
   private final boolean inheritClasspath;
   
+  /**
+   * Should assertions be enabled in the subprocess?  default false.
+   */
+  private boolean enableAssertions;
+  
   
   /**
    * Paths that will be added to the default classpath
@@ -132,8 +137,10 @@ public class JavaLauncher extends Launcher {
     String cp = makeClasspath();
 
     String heap = " -Xmx800M ";
+    
+    String ea = enableAssertions ? " -ea " : "";
 
-    String cmd = getJavaExe() + heap + cp + " " + makeLibPath() + " " + getMainClass() + " " + getProgramArgs();
+    String cmd = getJavaExe() + heap + cp + " " + makeLibPath() + " " + ea + getMainClass() + " " + getProgramArgs();
 
     Process p = spawnProcess(cmd);
     stdOutDrain = isCaptureOutput() ? captureStdOut(p) : drainStdOut(p);
@@ -200,6 +207,14 @@ public class JavaLauncher extends Launcher {
       s += '\\';  // Escape the last backslash, so it doesn't escape the quote.
     }
     return '\"' + s + '\"';
+  }
+
+  public boolean isEnableAssertions() {
+    return enableAssertions;
+  }
+
+  public void setEnableAssertions(boolean enableAssertions) {
+    this.enableAssertions = enableAssertions;
   }
 
 }
