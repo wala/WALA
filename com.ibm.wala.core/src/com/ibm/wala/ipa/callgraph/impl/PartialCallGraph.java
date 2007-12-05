@@ -41,11 +41,11 @@ import com.ibm.wala.util.intset.MutableIntSet;
  */
 public class PartialCallGraph extends DelegatingGraph<CGNode> implements CallGraph {
 
-  private final CallGraph cg;
+  protected final CallGraph cg;
 
-  private final Collection<CGNode> partialRoots;
+  protected final Collection<CGNode> partialRoots;
 
-  private PartialCallGraph(CallGraph cg, Collection<CGNode> partialRoots, Graph<CGNode> partialGraph) {
+  protected PartialCallGraph(CallGraph cg, Collection<CGNode> partialRoots, Graph<CGNode> partialGraph) {
     super(partialGraph);
     this.cg = cg;
     this.partialRoots = partialRoots;
