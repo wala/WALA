@@ -28,11 +28,7 @@ public class MethodImpl extends MemberImpl implements IMethod {
     descriptor = M.getDescriptor().toString();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.atk.Method#getDescriptor()
-   */
+
   public String getDescriptor() {
     return descriptor;
   }
@@ -48,20 +44,12 @@ public class MethodImpl extends MemberImpl implements IMethod {
     return s;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
+
   public String toString() {
     return getSignature();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
+
   public boolean equals(Object arg0) {
     if (arg0 == null) {
       return false;
@@ -75,21 +63,13 @@ public class MethodImpl extends MemberImpl implements IMethod {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#hashCode()
-   */
+
   public int hashCode() {
     return getDeclaringClass().hashCode() * 4001 + getClassLoaderName().hashCode() * 4003 + getName().hashCode()
         + descriptor.hashCode();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.j2ee.client.IMethod#getSelector()
-   */
+
   public String getSelector() {
     return getName() + descriptor;
   }

@@ -29,35 +29,25 @@ public abstract class MemberImpl {
     this.name = m.getName().toString();
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.atk.Method#getDeclaringClass()
-   */
+
   public IClass getDeclaringClass() {
     return declaringClass;
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.atk.Method#getClassLoaderName()
-   */
+
   public String getClassLoaderName() {
     return declaringClass.getClassLoaderName();
   }
 
-  /* (non-Javadoc)
-   * @see com.ibm.wala.atk.Method#getName()
-   */
+
   public String getName() {
     return name;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
+
   public int hashCode() {
     return getDeclaringClass().hashCode() * 4001 + getClassLoaderName().hashCode() * 4003 + getName().hashCode();
   }
-  /* (non-Javadoc)
-   * @see java.lang.Object#equals(java.lang.Object)
-   */
+
   public abstract boolean equals(Object arg0);
 }
