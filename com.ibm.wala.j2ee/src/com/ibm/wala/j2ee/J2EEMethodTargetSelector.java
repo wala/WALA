@@ -1017,6 +1017,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       }
     }
 
+    IClass servlet = cha.lookupClass(ServletEntrypoints.Servlet);
     // special logic for MDB onMessage entrypoints
     if (FakeRootMethod.isFakeRootMethod(N.getMethod().getReference())) {
       if (deployment.isMessageDriven(m.getDeclaringClass())) {
@@ -1025,7 +1026,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
         }
       }
       // special logic for servlet entrypoints
-      else if (receiver != null && cha.implementsInterface(receiver, ServletEntrypoints.Servlet)) {
+      else if (receiver != null && cha.implementsInterface(receiver, servlet)) {
         IMethod resolved = cha.resolveMethod(receiver, m.getSelector());
         if (!resolved.isInit() && !resolved.isClinit()) {
           return hijackServletEntrypoint(m);

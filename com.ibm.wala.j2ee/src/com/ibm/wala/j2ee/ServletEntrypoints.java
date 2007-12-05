@@ -158,6 +158,7 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     ClassLoaderReference appLoaderRef = scope.getApplicationLoader();
     IClassLoader appLoader = cha.getLoader(appLoaderRef);
 
+    IClass servlet = cha.lookupClass(servletType);
     for (Iterator<IClass> it = appLoader.iterateAllClasses(); it.hasNext();) {
       IClass klass = (IClass) it.next();
       if (DEBUG) {
@@ -172,7 +173,7 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
           continue;
         }
       }
-      if (cha.implementsInterface(klass, servletType)) {
+      if (cha.implementsInterface(klass, servlet)) {
         servlets.add(klass);
         final TypeReference type = klass.getReference();
         
