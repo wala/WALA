@@ -402,7 +402,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
       if (klass.isInterface()) {
         for (Iterator it = rhsSet.iterator(); it.hasNext();) {
           InstanceKey ik = (InstanceKey) it.next();
-          if (getCallGraph().getClassHierarchy().implementsInterface(ik.getConcreteType(), klass.getReference())) {
+          if (getCallGraph().getClassHierarchy().implementsInterface(ik.getConcreteType(), klass)) {
             S.add(getInstanceKeyMapping().getMappedIndex(ik));
           }
         }

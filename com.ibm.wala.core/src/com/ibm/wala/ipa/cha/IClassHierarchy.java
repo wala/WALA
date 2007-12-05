@@ -126,11 +126,11 @@ public interface IClassHierarchy extends Iterable<IClass> {
   public boolean isSubclassOf(IClass c, IClass T);
 
   /**
-   * Does c implement T?
+   * Does c implement i?
    *
-   * @return true iff T is an interface and c is a class that implements T,
+   * @return true iff i is an interface and c is a class that implements i,
    */
-  public boolean implementsInterface(IClass c, TypeReference T);
+  public boolean implementsInterface(IClass c, IClass i);
 
   /**
    * Return set of all subclasses of type in the Class Hierarchy

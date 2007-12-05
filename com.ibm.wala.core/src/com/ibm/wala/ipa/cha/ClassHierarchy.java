@@ -249,7 +249,7 @@ public class ClassHierarchy implements IClassHierarchy {
     Collection loadedSuperInterfaces;
     try {
       loadedSuperclasses = computeSuperclasses(klass);
-      loadedSuperInterfaces = klass.isInterface() ? null : klass.getAllImplementedInterfaces();
+      loadedSuperInterfaces = klass.getAllImplementedInterfaces();
     } catch (ClassHierarchyException e) {
       // a little cleanup
       if (klass instanceof ShrikeClass) {
@@ -399,10 +399,9 @@ public class ClassHierarchy implements IClassHierarchy {
       }
       for (Iterator it = impls.iterator(); it.hasNext();) {
         IClass klass = (IClass) it.next();
-        if (Assertions.verifyAssertions) {
-          Assertions._assert(!klass.isInterface());
+        if (!klass.isInterface()) {
+          result.addAll(computeTargetsNotInterface(ref, klass));
         }
-        result.addAll(computeTargetsNotInterface(ref, klass));
       }
       return result;
     } else {
@@ -932,24 +931,17 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Does c implement T?
+   * Does c implement i?
    * 
-   * @param c
-   * @param T
-   * @return true iff T is an interface and c is a class that implements T,
+   * @return true iff i is an interface and c is a class that implements i, r
+   *         c is an interface that extends i.
    * 
    */
-  public boolean implementsInterface(IClass c, TypeReference T) {
-    IClass tClass = lookupClass(T);
-    if (Assertions.verifyAssertions) {
-      if (tClass == null) {
-        Assertions._assert(false, "null klass for " + T);
-      }
-    }
-    if (!tClass.isInterface()) {
+  public boolean implementsInterface(IClass c, IClass i) {
+    if (!i.isInterface()) {
       return false;
     }
-    Set impls = implementors.get(tClass);
+    Set impls = implementors.get(i);
     if (impls != null && impls.contains(c)) {
       return true;
     }
@@ -1204,11 +1196,7 @@ public class ClassHierarchy implements IClassHierarchy {
       throw new IllegalArgumentException("c1 is null");
     }
     if (c1.isInterface()) {
-      if (c2.isInterface()) {
-        return isSubclassOf(c2, c1);
-      } else {
-        return implementsInterface(c2, c1.getReference());
-      }
+      return implementsInterface(c2, c1);
     } else {
       if (c2.isInterface()) {
         return c1.equals(getRootClass());

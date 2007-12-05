@@ -487,7 +487,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   private void registerArrayInstanceWithAllInterfacesOfElement(int index, IClass elementClass, int dim) {
     Collection ifaces = null;
     try {
-      ifaces = (elementClass.isInterface()) ? elementClass.getAllAncestorInterfaces() : elementClass.getAllImplementedInterfaces();
+      ifaces = elementClass.getAllImplementedInterfaces();
     } catch (ClassHierarchyException e) {
       Warnings.add(ClassHierarchyWarning.create(e.getMessage()));
       return;

@@ -833,7 +833,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           if (cls.isInterface()) {
             for (int i = 0; i < ik.length; i++) {
               system.findOrCreateIndexForInstanceKey(ik[i]);
-              if (getClassHierarchy().implementsInterface(ik[i].getConcreteType(), cls.getReference())) {
+              if (getClassHierarchy().implementsInterface(ik[i].getConcreteType(), cls)) {
                 system.newConstraint(result, ik[i]);
               }
             }

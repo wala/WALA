@@ -66,7 +66,7 @@ public class PointType extends TypeAbstraction {
         if (type.getClassHierarchy().isSubclassOf(typeKlass, other.getType())) {
           return other;
         } else if (other.isInterface()) {
-          if (type.getClassHierarchy().implementsInterface(typeKlass, T)) {
+          if (type.getClassHierarchy().implementsInterface(typeKlass, other.getType())) {
             return other;
           }
         }

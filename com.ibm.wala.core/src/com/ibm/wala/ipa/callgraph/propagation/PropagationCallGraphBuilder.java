@@ -1601,7 +1601,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
           }
           PointerKey p = getPointerKeyForArrayContents(I);
           if (contents.isInterface()) {
-            if (getClassHierarchy().implementsInterface(instance.getConcreteType(), contents.getReference())) {
+            if (getClassHierarchy().implementsInterface(instance.getConcreteType(), contents)) {
               sideEffect.b |= system.newConstraint(p, instance);
             }
           } else {

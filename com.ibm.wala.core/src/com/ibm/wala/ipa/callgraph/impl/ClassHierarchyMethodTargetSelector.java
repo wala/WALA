@@ -118,7 +118,7 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
       return false;
     } else {
       if (resolvedType.isInterface()) {
-        return cha.implementsInterface(dispatchType,resolvedType.getReference());
+        return cha.implementsInterface(dispatchType,resolvedType);
       } else {
         return cha.isSubclassOf(dispatchType,resolvedType);
       }

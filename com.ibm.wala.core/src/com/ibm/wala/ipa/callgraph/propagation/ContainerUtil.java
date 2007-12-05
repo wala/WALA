@@ -55,16 +55,16 @@ public class ContainerUtil {
     }
     if (ClassLoaderReference.Primordial.equals(C.getClassLoader().getReference())&& 
         TypeReference.JavaUtilCollection.getName().getPackage().equals(C.getReference().getName().getPackage())) {
+      IClass collection = cha.lookupClass(TypeReference.JavaUtilCollection);
+      IClass map = cha.lookupClass(TypeReference.JavaUtilMap);
       if (C.isInterface()) {
-        IClass collection = cha.lookupClass(TypeReference.JavaUtilCollection);
-        IClass map = cha.lookupClass(TypeReference.JavaUtilMap);
         if (Assertions.verifyAssertions) {
           Assertions._assert(collection != null);
           Assertions._assert(map != null);
         }
         Collection s;
         try {
-          s = C.getAllAncestorInterfaces();
+          s = C.getAllImplementedInterfaces();
         } catch (ClassHierarchyException e) {
           // give up
           return false;
@@ -73,7 +73,7 @@ public class ContainerUtil {
           return true;
         }
       } else {
-        if (cha.implementsInterface(C, TypeReference.JavaUtilCollection) || cha.implementsInterface(C, TypeReference.JavaUtilMap)) {
+        if (cha.implementsInterface(C, collection) || cha.implementsInterface(C, map)) {
           return true;
         }
       }

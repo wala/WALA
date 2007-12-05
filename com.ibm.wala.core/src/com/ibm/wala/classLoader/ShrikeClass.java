@@ -503,8 +503,7 @@ public final class ShrikeClass implements IClass {
     // didn't find it yet. special logic for interfaces
     try {
       if (isInterface() || isAbstract()) {
-        final Iterator<IClass> it = (isInterface()) ? getAllAncestorInterfaces().iterator() : getAllImplementedInterfaces()
-            .iterator();
+        final Iterator<IClass> it = getAllImplementedInterfaces().iterator();
         // try each superinterface
         while (it.hasNext()) {
           IClass k = it.next();
@@ -544,8 +543,7 @@ public final class ShrikeClass implements IClass {
       }
       // try superinterfaces
       try {
-        Collection<IClass> ifaces = isInterface() ? getAllAncestorInterfaces() : getAllImplementedInterfaces();
-        for (IClass i : ifaces) {
+        for (IClass i : getAllImplementedInterfaces()) {
           f = i.getField(name);
           if (f != null) {
             fieldMap.put(name, f);
@@ -604,26 +602,6 @@ public final class ShrikeClass implements IClass {
   }
 
   public Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException {
-    if (Assertions.verifyAssertions) {
-      if (isInterface()) {
-        Assertions.UNREACHABLE("shouldn't ask for implemented interfaces of an interface " + this);
-      }
-    }
-    if (allInterfaces != null) {
-      return allInterfaces;
-    } else {
-      Collection<IClass> C = computeAllInterfacesAsCollection();
-      allInterfaces = Collections.unmodifiableCollection(C);
-      return allInterfaces;
-    }
-  }
-
-  public Collection<IClass> getAllAncestorInterfaces() throws ClassHierarchyException {
-    if (Assertions.verifyAssertions) {
-      if (!isInterface()) {
-        Assertions.UNREACHABLE();
-      }
-    }
     if (allInterfaces != null) {
       return allInterfaces;
     } else {
