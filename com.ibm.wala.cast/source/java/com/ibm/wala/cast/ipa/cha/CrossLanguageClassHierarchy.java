@@ -179,8 +179,8 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     return getHierarchy(c).isSubclassOf(c, T);
   }
 
-  public boolean implementsInterface(IClass c, TypeReference T) {
-    return getHierarchy(c).implementsInterface(c, T);
+  public boolean implementsInterface(IClass c, IClass i) {
+    return getHierarchy(c).implementsInterface(c, i);
   }
 
   public Collection<IClass> computeSubClasses(TypeReference type) {

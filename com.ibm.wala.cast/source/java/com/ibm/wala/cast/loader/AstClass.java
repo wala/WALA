@@ -116,14 +116,9 @@ abstract public class AstClass implements IClass, ClassConstants {
   public abstract Collection<IClass> getDirectInterfaces() throws ClassHierarchyException;
    
   public Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException {
-    Assertions._assert(! isInterface());
     return gatherInterfaces();
   }
-  
-  public Collection<IClass> getAllAncestorInterfaces() throws ClassHierarchyException {
-    Assertions._assert(isInterface());
-    return gatherInterfaces();
-  }
+
 
   public IMethod getClassInitializer() {
     return getMethod( MethodReference.clinitSelector );
