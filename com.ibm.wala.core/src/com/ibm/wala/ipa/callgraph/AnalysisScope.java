@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,6 +26,7 @@ import java.util.jar.Manifest;
 import com.ibm.wala.classLoader.ArrayClassLoader;
 import com.ibm.wala.classLoader.ClassFileModule;
 import com.ibm.wala.classLoader.JarFileModule;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
@@ -86,6 +88,8 @@ public class AnalysisScope {
    */
   final private Map<ClassLoaderReference, Set<Module>> moduleMap = HashMapFactory.make(3);
 
+  private final Set<Language> languages = new HashSet<Language>();
+
   public AnalysisScope() {
     super();
     ClassLoaderReference primordial = 
@@ -140,6 +144,36 @@ public class AnalysisScope {
    */
   public ClassLoaderReference getSyntheticLoader() {
     return getLoader(SYNTHETIC);
+  }
+
+  /**
+   * Adds the given language to the set of languages that will
+   * be processed during this analysis session.
+   * @param lang
+   */
+  public void addLanguageToScope(Language lang) {
+    languages.add(lang);
+  }
+
+  /**
+   * @return the set of languages to be processed during this analysis session.
+   */
+  public Set<Language> getLanguages() {
+    return Collections.unmodifiableSet(languages);
+  }
+
+  /**
+   * @return the set of "base languages," each of which defines a family of
+   * compatible languages, and therefore induces a distinct ClassHierarchy
+   */
+  public Set<Language> getBaseLanguages() {
+    Set<Language> result= new HashSet<Language>();
+    for (Language language : languages) {
+      if (language.getBaseLanguage() == null) {
+        result.add(language);
+      }
+    }
+    return result;
   }
 
   /**
