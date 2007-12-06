@@ -58,7 +58,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
 
   private final AnalysisScope analysisScope;
 
-  private final Map hierarchies;
+  private final Map<Atom, IClassHierarchy> hierarchies;
 
   public ClassLoaderFactory getFactory() {
     return loaderFactory;
@@ -216,25 +216,20 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     };
   }
 
-  private CrossLanguageClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Map hierarchies) {
+  private CrossLanguageClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Map<Atom, IClassHierarchy> hierarchies) {
     this.analysisScope = scope;
     this.loaderFactory = factory;
     this.hierarchies = hierarchies;
   }
 
-  public static CrossLanguageClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, 
-      Map languageMap) throws ClassHierarchyException {
-    Set<Atom> languages = HashSetFactory.make();
-    for (Iterator ldrs = scope.getLoaders().iterator(); ldrs.hasNext();) {
-      languages.add(((ClassLoaderReference) ldrs.next()).getLanguage());
-    }
-
+  public static CrossLanguageClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory)
+      throws ClassHierarchyException {
+    Set<Language> languages = scope.getBaseLanguages();
     Map<Atom, IClassHierarchy> hierarchies = HashMapFactory.make();
     for (Iterator ls = languages.iterator(); ls.hasNext();) {
-      Atom l = (Atom) ls.next();
-      Language L = (Language) languageMap.get(l);
-      assert L != null : l.toString();
-      hierarchies.put(l, ClassHierarchy.make(scope, factory, L));
+      Language L = (Language) ls.next();
+
+      hierarchies.put(L.getName(), ClassHierarchy.make(scope, factory, L.getDerivedLanguages()));
     }
 
     return new CrossLanguageClassHierarchy(scope, factory, hierarchies);
