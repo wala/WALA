@@ -73,15 +73,21 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
   }
 
   public static AnalysisScope makeScope(String[] files, JavaScriptLoaderFactory loaders) throws IOException {
-    return new CAstAnalysisScope(files, loaders);
+    AnalysisScope result = new CAstAnalysisScope(files, loaders);
+    result.addLanguageToScope(JavaScriptLoader.JS);
+    return result;
   }
 
   public static AnalysisScope makeScope(SourceFileModule[] files, JavaScriptLoaderFactory loaders) throws IOException {
-    return new CAstAnalysisScope(files, loaders);
+    AnalysisScope result =  new CAstAnalysisScope(files, loaders);
+    result.addLanguageToScope(JavaScriptLoader.JS);
+    return result;
   }
 
   public static AnalysisScope makeScope(URL[] files, JavaScriptLoaderFactory loaders) throws IOException {
-    return new CAstAnalysisScope(files, loaders);
+    AnalysisScope result =  new CAstAnalysisScope(files, loaders);
+    result.addLanguageToScope(JavaScriptLoader.JS);
+    return result;
   }
 
   public static IClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders)
