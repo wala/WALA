@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.XMLResource.XMLMap;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.ecore.j2ee.scope.impl.J2EEScopePackageImpl;
 import com.ibm.wala.ecore.java.scope.EBuiltInModule;
@@ -101,12 +102,14 @@ public class EMFScopeWrapper extends AnalysisScope {
     this.classloader = loader;
     this.scopeFile = null;
     this.exclusionsFile = null;
+    addLanguageToScope(Language.JAVA);
   }
 
   public EMFScopeWrapper(String scopeFile, String exclusionsFile, ClassLoader loader, boolean scopeAsFile) {
     super();
     this.scopeFile = scopeFile;
     this.classloader = loader;
+    addLanguageToScope(Language.JAVA);
 
     if (DEBUG_LEVEL > 0) {
       Trace.println(getClass() + " ctor " + scopeFile);
