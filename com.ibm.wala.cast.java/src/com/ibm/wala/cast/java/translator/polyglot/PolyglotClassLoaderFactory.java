@@ -14,6 +14,8 @@
 package com.ibm.wala.cast.java.translator.polyglot;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.ClassLoaderImpl;
@@ -26,17 +28,25 @@ import com.ibm.wala.types.ClassLoaderReference;
 
 public class PolyglotClassLoaderFactory extends ClassLoaderFactoryImpl {
 
-  final protected IRTranslatorExtension fExtInfo;
+  /**
+   * A map from ClassLoaderReference to IRTranslatorExtension, so that source files
+   * in different languages are processed by the right kind of IRTranslatorExtension.
+   */
+  final protected Map<ClassLoaderReference,IRTranslatorExtension> fExtensionMap= new HashMap<ClassLoaderReference,IRTranslatorExtension>();
 
-  public PolyglotClassLoaderFactory(SetOfClasses exclusions, IRTranslatorExtension extInfo) {
+  public PolyglotClassLoaderFactory(SetOfClasses exclusions, IRTranslatorExtension javaExtInfo) {
     super(exclusions);
-    fExtInfo = extInfo;
+    fExtensionMap.put(EclipseProjectPath.SOURCE_REF, javaExtInfo);
+  }
+
+  protected IRTranslatorExtension getExtensionFor(ClassLoaderReference clr) {
+    return fExtensionMap.get(clr);
   }
 
   protected IClassLoader makeNewClassLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, IClassLoader parent,
       AnalysisScope scope) throws IOException {
     if (classLoaderReference.equals(EclipseProjectPath.SOURCE_REF)) {
-      ClassLoaderImpl cl = new PolyglotSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, fExtInfo);
+      ClassLoaderImpl cl = new PolyglotSourceLoaderImpl(classLoaderReference, parent, getExclusions(), cha, getExtensionFor(classLoaderReference));
       cl.init(scope.getModules(classLoaderReference));
       return cl;
     } else {
