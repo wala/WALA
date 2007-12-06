@@ -18,6 +18,7 @@ import java.net.URL;
 import junit.framework.Assert;
 
 import com.ibm.wala.cast.js.ipa.callgraph.*;
+import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.util.WebUtil;
 import com.ibm.wala.classLoader.SourceFileModule;
@@ -49,6 +50,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
       scope = makeScope(new URL[] { script }, loaders);
     } else {
       scope = makeScope(new SourceFileModule[] { makeSourceModule(script, dir, name) }, loaders);
+      scope.addLanguageToScope(JavaScriptLoader.JS);
     }
 
     return makeCG(loaders, true, scope, useOneCFA);
