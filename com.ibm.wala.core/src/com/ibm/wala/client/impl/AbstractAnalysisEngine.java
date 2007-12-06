@@ -19,6 +19,7 @@ import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.JarFileModule;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.AnalysisEngine;
 import com.ibm.wala.client.CallGraphBuilderFactory;
@@ -174,7 +175,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    */
   protected void buildAnalysisScope() {
     if (j2seLibs == null) {
-      Assertions.UNREACHABLE("no j2selibs specificed. You probably did not call AppAnalysisEngine.setJ2SELibrary.");
+      Assertions.UNREACHABLE("no j2selibs specified. You probably did not call AppAnalysisEngine.setJ2SELibrary.");
     }
 
     scope = new EMFScopeWrapper(BASIC_FILE, getExclusionsFile(), getClass().getClassLoader());
@@ -186,6 +187,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
 
     // add user stuff
     addApplicationModulesToScope();
+    scope.addLanguageToScope(Language.JAVA);
   }
 
   /**
