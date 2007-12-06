@@ -13,6 +13,7 @@ package com.ibm.wala.ssa;
 import java.util.Collection;
 
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Exceptions;
 import com.ibm.wala.util.debug.Assertions;
@@ -41,7 +42,7 @@ public class SSANewInstruction extends SSAInstruction {
       throw new IllegalArgumentException("site cannot be null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(!site.getDeclaredType().isArrayType());
+      Assertions._assert(!site.getDeclaredType().isArrayType() || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java);
     }
     this.result = result;
     this.site = site;
@@ -63,7 +64,7 @@ public class SSANewInstruction extends SSAInstruction {
       throw new IllegalArgumentException("site is null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(site.getDeclaredType().isArrayType());
+      Assertions._assert(site.getDeclaredType().isArrayType() || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java);
     }
     this.result = result;
     this.site = site;
