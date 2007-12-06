@@ -9,17 +9,14 @@ import com.ibm.wala.util.Atom;
 public interface Language {
 
   public static Language JAVA = new LanguageImpl() {
-    @Override
     public Atom getName() {
       return ClassLoaderReference.Java;
     }
 
-    @Override
     public TypeReference getRootType() {
       return TypeReference.JavaLangObject;
     }
 
-    @Override
     public TypeReference getConstantType(Object o) {
       if (o instanceof String) {
         return TypeReference.JavaLangString;
@@ -28,7 +25,6 @@ public interface Language {
       }
     }
 
-    @Override
     public boolean isNullType(TypeReference type) {
       return false;
     }
