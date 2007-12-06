@@ -56,6 +56,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
       SourceFileModule[] files = (SourceFileModule[]) moduleFiles.toArray(new SourceFileModule[moduleFiles.size()]);
 
       scope = new CAstAnalysisScope(files, loaderFactory);
+      scope.addLanguageToScope(JavaScriptLoader.JS);
     } catch (IOException e) {
       Assertions.UNREACHABLE(e.toString());
     }
