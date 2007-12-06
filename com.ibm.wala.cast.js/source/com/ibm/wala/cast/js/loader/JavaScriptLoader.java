@@ -34,6 +34,7 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.LanguageImpl;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SymbolTable;
@@ -48,7 +49,7 @@ import com.ibm.wala.util.debug.Trace;
 
 public class JavaScriptLoader extends CAstAbstractLoader {
 
-  public final static Language JS = new Language() {
+  public final static Language JS = new LanguageImpl() {
 
     public Atom getName() {
       return Atom.findOrCreateUnicodeAtom("JavaScript");
