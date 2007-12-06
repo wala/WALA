@@ -32,6 +32,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.JarFileModule;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -378,7 +379,7 @@ public abstract class IRTests extends WalaTestCase {
     return null;
   }
 
-  protected static void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs)
+  protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs)
       throws IOException {
 
     boolean foundLib = false;
