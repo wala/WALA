@@ -64,11 +64,18 @@ public class ClassHierarchy implements IClassHierarchy {
   private static final boolean DEBUG = false;
 
   /**
-   * Language of classes represented in this hierarchy
+   * Languages that contribute classes to the set represented in this hierarchy.
+   * The languages may for example be related by inheritance (e.g. X10 derives
+   * from Java, and shares a common type hierarchy rooted at java.lang.Object).
    */
-  private final Language language;
+  private final Set<Language> languages = new HashSet<Language>();
 
   final private HashMap<IClass, Node> map = HashMapFactory.make();
+
+  /**
+   * TypeReference for the root type
+   */
+  private TypeReference rootTypeRef;
 
   /**
    * root node of the class hierarchy
@@ -140,12 +147,22 @@ public class ClassHierarchy implements IClassHierarchy {
     return result;
   }
 
-  protected ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor monitor)
-      throws ClassHierarchyException {
-    this(scope, factory, Language.JAVA, monitor);
-  }
+//  protected ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor monitor)
+//      throws ClassHierarchyException {
+//    this(scope, factory, Language.JAVA, monitor);
+//  }
 
   private ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Language language, IProgressMonitor progressMonitor)
+      throws ClassHierarchyException, IllegalArgumentException {
+    this(scope, factory, Collections.singleton(language), progressMonitor);
+  }
+
+  private ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor progressMonitor)
+      throws ClassHierarchyException, IllegalArgumentException {
+    this(scope, factory, scope.getLanguages(), progressMonitor);
+  }
+
+  private ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Set<Language> languages, IProgressMonitor progressMonitor)
       throws ClassHierarchyException, IllegalArgumentException {
     // now is a good time to clear the warnings globally.
     // TODO: think of a better way to guard against warning leaks.
@@ -154,16 +171,30 @@ public class ClassHierarchy implements IClassHierarchy {
     if (factory == null) {
       throw new IllegalArgumentException();
     }
-    if (language == null) {
-      throw new IllegalArgumentException();
+    if (scope.getLanguages().size() == 0) {
+      throw new IllegalArgumentException("AnalysisScope must contain at least 1 language");
     }
     this.scope = scope;
     this.factory = factory;
-    this.language = language;
+    Set<Atom> langNames= new HashSet<Atom>();
+    for(Language lang: languages) {
+      this.languages.add(lang);
+      this.languages.addAll(lang.getDerivedLanguages());
+      langNames.add(lang.getName());
+    }
+    for(Language lang: this.languages) {
+      if (lang.getRootType() != null) {
+        if (this.rootTypeRef != null) {
+          throw new IllegalArgumentException("AnalysisScope must have only 1 root type");
+        } else {
+          this.rootTypeRef= lang.getRootType();
+        }
+      }
+    }
     try {
       int numLoaders = 0;
       for (ClassLoaderReference ref : scope.getLoaders()) {
-        if (ref.getLanguage().equals(language.getName())) {
+        if (langNames.contains(ref.getLanguage())) {
           numLoaders++;
         }
       }
@@ -181,7 +212,7 @@ public class ClassHierarchy implements IClassHierarchy {
           }
         }
 
-        if (ref.getLanguage().equals(language.getName())) {
+        if (langNames.contains(ref.getLanguage())) {
           IClassLoader icl = factory.getLoader(ref, this, scope);
           loaders[idx++] = icl;
           addAllClasses(icl, progressMonitor);
@@ -200,7 +231,7 @@ public class ClassHierarchy implements IClassHierarchy {
     }
 
     if (root == null) {
-      throw new ClassHierarchyException("failed to load root " + language.getRootType() + " of class hierarchy");
+      throw new ClassHierarchyException("failed to load root " + rootTypeRef + " of class hierarchy");
     }
 
     // perform numbering for subclass tests.
@@ -262,7 +293,7 @@ public class ClassHierarchy implements IClassHierarchy {
     }
     Node node = findOrCreateNode(klass);
 
-    if (klass.getReference().equals(language.getRootType())) {
+    if (klass.getReference().equals(this.rootTypeRef)) {
       // there is only one root
       Assertions._assert(root == null);
       root = node;
@@ -284,7 +315,7 @@ public class ClassHierarchy implements IClassHierarchy {
           Trace.println("addChild " + node.getJavaClass() + " to " + supernode.getJavaClass());
         }
         supernode.addChild(node);
-        if (supernode.getJavaClass().getReference().equals(language.getRootType())) {
+        if (supernode.getJavaClass().getReference().equals(rootTypeRef)) {
           node = null;
         } else {
           node = supernode;
@@ -1121,6 +1152,11 @@ public class ClassHierarchy implements IClassHierarchy {
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor monitor)
       throws ClassHierarchyException {
     return new ClassHierarchy(scope, factory, monitor);
+  }
+
+  public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Set<Language> languages)
+      throws ClassHierarchyException {
+    return new ClassHierarchy(scope, factory, languages, new NullProgressMonitor());
   }
 
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Language language)
