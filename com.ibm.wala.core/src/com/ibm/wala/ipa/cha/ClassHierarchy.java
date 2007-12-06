@@ -339,9 +339,6 @@ public class ClassHierarchy implements IClassHierarchy {
           if (!iface.isInterface()) {
             Assertions._assert(false, "not an interface: " + iface);
           }
-          if (klass.isInterface()) {
-            Assertions._assert(false, "an interface: " + klass);
-          }
         }
         recordImplements(klass, iface);
       }
