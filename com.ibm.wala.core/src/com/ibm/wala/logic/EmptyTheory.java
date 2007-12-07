@@ -10,8 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 public class EmptyTheory extends AbstractTheory {
 
@@ -28,7 +27,7 @@ public class EmptyTheory extends AbstractTheory {
   }
 
   public IVocabulary getVocabulary() {
-    return BasicVocabulary.make(Collections.emptySet());
+    return BasicVocabulary.make(Collections.<IFunction>emptySet());
   }
 
 }
