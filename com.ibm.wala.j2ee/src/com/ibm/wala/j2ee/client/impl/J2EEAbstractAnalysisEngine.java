@@ -125,7 +125,7 @@ public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine 
   }
 
 
-  protected DeploymentMetaData getDmd() {
+  public DeploymentMetaData getDmd() {
     return dmd;
   }
 
