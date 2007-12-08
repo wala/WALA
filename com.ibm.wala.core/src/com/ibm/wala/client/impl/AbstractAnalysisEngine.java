@@ -193,7 +193,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * @return a IClassHierarchy object for this analysis scope
    */
-  protected IClassHierarchy buildClassHierarchy() {
+  public IClassHierarchy buildClassHierarchy() {
     IClassHierarchy cha = null;
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(getScope().getExclusions() );
     try {
@@ -206,7 +206,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return cha;
   }
 
-  protected IClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return cha;
   }
 
