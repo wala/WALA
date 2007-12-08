@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<version pluginID="com.ibm.wala.shrike"
+         versionID="1.0.1">
+</version>
