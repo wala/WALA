@@ -119,12 +119,12 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   /**
    * Governing call graph
    */
-  private CallGraph cg;
+  protected CallGraph cg;
 
   /**
    * Results of pointer analysis
    */
-  private PointerAnalysis pointerAnalysis;
+  protected PointerAnalysis pointerAnalysis;
 
   /**
    * Factory to create graph view of flow of pointers in the heap.
