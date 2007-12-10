@@ -137,7 +137,7 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     return new PolyglotClassLoaderFactory(exclusions, extInfo);
   }
 
-  protected IClassHierarchy buildClassHierarchy() {
+  public IClassHierarchy buildClassHierarchy() {
     IClassHierarchy cha = null;
     ClassLoaderFactory factory = getClassLoaderFactory(scope.getExclusions(), getTranslatorExtension());
 
