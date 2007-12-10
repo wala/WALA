@@ -20,6 +20,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.ipa.callgraph.*;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -121,7 +122,8 @@ public abstract class TestCAstTranslator extends WalaTestCase {
   public ClassHierarchy runTranslator(SourceFileModule[] fileNames) throws Exception {
     SingleClassLoaderFactory loaders = getClassLoaderFactory();
 
-    CAstAnalysisScope scope = new CAstAnalysisScope(fileNames, loaders);
+    AnalysisScope scope = 
+      Util.makeScope(fileNames, loaders, getLanguage());
 
     ClassHierarchy cha = ClassHierarchy.make(scope, loaders, getLanguage());
 
