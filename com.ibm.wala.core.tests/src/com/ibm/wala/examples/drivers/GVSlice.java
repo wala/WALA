@@ -41,8 +41,10 @@ import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.properties.WalaProperties;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -236,6 +238,11 @@ public class GVSlice {
     if (s.getKind() == Kind.NORMAL) {
       SSAInstruction st = ((NormalStatement) s).getInstruction();
       if (st instanceof SSAInvokeInstruction) {
+        SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction)st;
+        if (call.getCallSite().getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
+          throw new IllegalArgumentException("this driver computes forward slices from the return value of calls.\n" +   "" 
+              + "Method " +call.getCallSite().getDeclaredTarget().getSignature() + " returns void.");
+        }
         return new ParamStatement.NormalReturnCaller(s.getNode(), (SSAInvokeInstruction) st);
       } else {
         return s;
