@@ -32,5 +32,6 @@ public interface AstInstructionVisitor extends SSAInstruction.IVisitor {
 
   public void visitIsDefined(AstIsDefinedInstruction inst);
 
+  public void visitEcho(AstEchoInstruction inst);
 }
 

@@ -10,14 +10,14 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Iterator;
+import java.io.*;
+import java.net.*;
+import java.util.*;
 
-import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.cast.ir.ssa.*;
+import com.ibm.wala.cast.loader.*;
+import com.ibm.wala.classLoader.*;
+import com.ibm.wala.ipa.callgraph.*;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
@@ -43,6 +43,28 @@ public class Util {
     Assertions._assert(hackedName.endsWith(scriptName), scriptName + " does not match file " + script.getFile());
 
     return new SourceFileModule(scriptFile, scriptName);
+  }
+
+    public static AnalysisScope makeScope(String[] files, SingleClassLoaderFactory loaders, Language language) throws IOException {
+    CAstAnalysisScope result = new CAstAnalysisScope(files, loaders);
+    result.addLanguageToScope(language);
+    return result;
+  }
+
+  public static AnalysisScope makeScope(SourceFileModule[] files, SingleClassLoaderFactory loaders, Language language) throws IOException {
+    CAstAnalysisScope result = new CAstAnalysisScope(files, loaders);
+    result.addLanguageToScope(language);
+    return result;
+  }
+
+  public static AnalysisScope makeScope(URL[] files, SingleClassLoaderFactory loaders, Language language) throws IOException {
+    CAstAnalysisScope result = new CAstAnalysisScope(files, loaders);
+    result.addLanguageToScope(language);
+    return result;
+  }
+
+  public static AnalysisCache makeCache(boolean keepIRs) {
+    return new AnalysisCache(AstIRFactory.makeDefaultFactory(keepIRs));
   }
 
   public static void dumpCG(PropagationCallGraphBuilder builder, CallGraph CG) {

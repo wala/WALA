@@ -741,6 +741,17 @@ public abstract class CAstVisitor {
       break;
     }
 
+    case CAstNode.ECHO: {
+      if (visitor.visitEcho(n, context, visitor)) {
+	break;
+      }
+      for(int i = 0; i < n.getChildCount(); i++) {
+	visitor.visit(n.getChild(i), context, visitor);
+      }
+      visitor.leaveEcho(n, context, visitor);
+      break;
+    }
+
     default: {
       if (!visitor.doVisit(n, context, visitor)) {
         Trace.println("looking at unhandled " + n + "(" + NT + ")" + " of " + n.getClass());
@@ -1625,4 +1636,12 @@ public abstract class CAstVisitor {
    * @param c a visitor-specific context
    */
   protected void leaveIsDefinedExpr(CAstNode n, Context c, CAstVisitor visitor) { visitor.leaveNode(n, c, visitor); }
+
+  protected boolean visitEcho(CAstNode n, Context c, CAstVisitor visitor) { return visitor.visitNode(n, c, visitor); }
+  /**
+   * Leave an ECHO node.
+   * @param n the node to process
+   * @param c a visitor-specific context
+   */
+  protected void leaveEcho(CAstNode n, Context c, CAstVisitor visitor) { visitor.leaveNode(n, c, visitor); }
 }

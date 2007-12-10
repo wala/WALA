@@ -10,16 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.cfg;
 
-import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
-import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
-import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
-import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
-import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
-import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
-import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
-import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
-import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
-import com.ibm.wala.cast.ir.ssa.NonExceptingThrowInstruction;
+import com.ibm.wala.cast.ir.ssa.*;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -68,6 +59,10 @@ public class AstInducedCFG extends InducedCFG {
     public void visitIsDefined(AstIsDefinedInstruction inst) {
 
     }
+
+    public void visitEcho(AstEchoInstruction inst) {
+
+    }
   }
     
   protected class AstBranchVisitor extends BranchVisitor implements AstInstructionVisitor {
@@ -103,6 +98,8 @@ public class AstInducedCFG extends InducedCFG {
     public void visitIsDefined(AstIsDefinedInstruction inst) {
     }
 
+    public void visitEcho(AstEchoInstruction inst) {
+    }
   }
     
   protected BranchVisitor makeBranchVisitor(boolean[] r) {

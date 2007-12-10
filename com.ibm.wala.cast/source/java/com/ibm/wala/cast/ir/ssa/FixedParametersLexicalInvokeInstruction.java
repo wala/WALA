@@ -33,9 +33,13 @@ public abstract class FixedParametersLexicalInvokeInstruction
    */
   private final int[] params;
 
-  public FixedParametersLexicalInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
-    super(result, exception, site);
+  public FixedParametersLexicalInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site) {
+    super(results, exception, site);
     this.params = params;
+  }
+
+  public FixedParametersLexicalInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
+    this(new int[]{result}, params, exception, site);
   }
 
   /**
@@ -44,15 +48,15 @@ public abstract class FixedParametersLexicalInvokeInstruction
    * @param params
    */
   public FixedParametersLexicalInvokeInstruction(int[] params, int exception, CallSiteReference site) {
-    this(-1, params, exception, site);
+    this(null, params, exception, site);
   }
 
-  protected FixedParametersLexicalInvokeInstruction(int result, int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites) {
-    super(result, exception, site, lexicalReads, lexicalWrites);
+  protected FixedParametersLexicalInvokeInstruction(int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites) {
+    super(results, exception, site, lexicalReads, lexicalWrites);
     this.params = params;
   }
 
-  protected abstract SSAInstruction copyInstruction(int result, int[] params, int exception, Access[] lexicalReads, Access[] lexicalWrites);
+  protected abstract SSAInstruction copyInstruction(int result[], int[] params, int exception, Access[] lexicalReads, Access[] lexicalWrites);
 
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     int newParams[] = params;
@@ -72,15 +76,23 @@ public abstract class FixedParametersLexicalInvokeInstruction
       }
     }
 
-    int newLval = result;
+    int newLvals[] = null;
+    if (getNumberOfReturnValues() > 0) {
+      newLvals = new int[ results.length ];
+      System.arraycopy(results, 0, newLvals, 0, results.length);
+    }
     int newExp = exception;
     Access[] writes = lexicalWrites;
     
     if (defs != null) {
       int i = 0;
-      if (result != -1) newLval = defs[i++];
+      if (getNumberOfReturnValues() > 0) {
+	newLvals[0] = defs[i++];
+      }
       newExp = defs[i++];
-      
+      for(int j = 1; j < getNumberOfReturnValues(); j++) {
+	newLvals[j] = defs[i++];
+      }
       if (lexicalWrites != null) {
 	writes = new Access[ lexicalWrites.length ];
 	for(int j = 0; j < writes.length; j++)
@@ -88,7 +100,7 @@ public abstract class FixedParametersLexicalInvokeInstruction
       }
     }
 
-    return copyInstruction(newLval, newParams, newExp, reads, writes);
+    return copyInstruction(newLvals, newParams, newExp, reads, writes);
   }
 
   public int getNumberOfParameters() {

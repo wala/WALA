@@ -10,10 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.cha;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.IClass;
@@ -228,8 +225,9 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     Map<Atom, IClassHierarchy> hierarchies = HashMapFactory.make();
     for (Iterator ls = languages.iterator(); ls.hasNext();) {
       Language L = (Language) ls.next();
-
-      hierarchies.put(L.getName(), ClassHierarchy.make(scope, factory, L.getDerivedLanguages()));
+      Set ll = new HashSet(L.getDerivedLanguages());
+      ll.add(L);
+      hierarchies.put(L.getName(), ClassHierarchy.make(scope, factory, ll));
     }
 
     return new CrossLanguageClassHierarchy(scope, factory, hierarchies);

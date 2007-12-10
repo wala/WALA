@@ -17,18 +17,7 @@ import java.util.Set;
 import com.ibm.wala.analysis.reflection.FactoryBypassInterpreter;
 import com.ibm.wala.cast.ipa.callgraph.AstCallGraph.AstCGNode;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
-import com.ibm.wala.cast.ir.ssa.AbstractLexicalInvoke;
-import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
-import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
-import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
-import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
-import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
-import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
-import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
-import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
-import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
-import com.ibm.wala.cast.ir.ssa.NonExceptingThrowInstruction;
-import com.ibm.wala.cast.ir.ssa.SSAConversion;
+import com.ibm.wala.cast.ir.ssa.*;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory.AstIR;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
@@ -167,6 +156,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       public void visitIsDefined(AstIsDefinedInstruction inst) {
 
       }
+
+      public void visitEcho(AstEchoInstruction inst) {
+
+      }
     }
 
     protected AstPointerFlowGraph(PointerAnalysis pa, CallGraph cg) {
@@ -237,6 +230,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       public void visitIsDefined(AstIsDefinedInstruction inst) {
 
       }
+      
+      public void visitEcho(AstEchoInstruction inst) {
+
+      }
     }
   };
 
@@ -289,6 +286,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     }
 
     public void visitIsDefined(AstIsDefinedInstruction inst) {
+
+    }
+
+    public void visitEcho(AstEchoInstruction inst) {
 
     }
   }
@@ -545,6 +546,10 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     }
 
     public void visitIsDefined(AstIsDefinedInstruction inst) {
+
+    }
+
+    public void visitEcho(AstEchoInstruction inst) {
 
     }
 

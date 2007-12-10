@@ -32,27 +32,34 @@ import com.ibm.wala.util.debug.Assertions;
  *
  */
 public abstract class AbstractLexicalInvoke 
-  extends SSAAbstractInvokeInstruction
+  extends MultiReturnValueInvokeInstruction
 {
 
   protected Access[] lexicalReads = null;
 
   protected Access[] lexicalWrites = null;
 
+  protected AbstractLexicalInvoke(int results[], 
+				  int exception,
+				  CallSiteReference site) 
+  {
+      super(results, exception, site);
+  }
+
   protected AbstractLexicalInvoke(int result, 
 				  int exception,
 				  CallSiteReference site) 
   {
-    super(result, exception, site);
+      this(new int[]{result}, exception, site);
   }
 
-  protected AbstractLexicalInvoke(int result,
+  protected AbstractLexicalInvoke(int results[],
 				  int exception,
 				  CallSiteReference site,
 				  Access[] lexicalReads,
 				  Access[] lexicalWrites)
   {
-    this(result, exception, site);
+    this(results, exception, site);
     this.lexicalReads = lexicalReads;
     this.lexicalWrites = lexicalWrites;
   }

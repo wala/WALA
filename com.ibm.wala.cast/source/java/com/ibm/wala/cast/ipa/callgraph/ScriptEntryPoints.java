@@ -38,11 +38,15 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
 
     public TypeReference[] getParameterTypes(int i) {
       Assertions._assert(i == 0);
-      return new TypeReference[] { getMethod().getDeclaringClass().getReference() };
+      if (getMethod().isStatic()) {
+	return new TypeReference[0];
+      } else {
+	return new TypeReference[] { getMethod().getDeclaringClass().getReference() };
+      }
     }
 
     public int getNumberOfParameters() {
-      return 1;
+      return getMethod().isStatic()? 0: 1;
     }
 
     public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m){
@@ -52,8 +56,8 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
         return null;
       }
 
-      int functionVn = makeArgument(m, 0);
-      int paramVns[] = new int[getNumberOfParameters() - 1];
+      int functionVn = getMethod().isStatic()? -1: makeArgument(m, 0);
+      int paramVns[] = new int[Math.max(0, getNumberOfParameters() - 1)];
       for (int j = 0; j < paramVns.length; j++) {
         paramVns[j] = makeArgument(m, j + 1);
       }

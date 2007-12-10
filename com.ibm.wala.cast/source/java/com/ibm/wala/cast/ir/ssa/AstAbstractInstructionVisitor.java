@@ -53,5 +53,9 @@ public abstract class AstAbstractInstructionVisitor
 
   }
 
+  public void visitEcho(AstEchoInstruction inst) {
+
+  }
+
 }
 

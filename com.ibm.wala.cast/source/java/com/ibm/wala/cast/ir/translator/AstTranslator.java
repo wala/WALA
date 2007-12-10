@@ -21,17 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import com.ibm.wala.cast.ir.ssa.AssignInstruction;
-import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
-import com.ibm.wala.cast.ir.ssa.AstConstants;
-import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
-import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
-import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
-import com.ibm.wala.cast.ir.ssa.AstLexicalAccess;
-import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
-import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
-import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
-import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
+import com.ibm.wala.cast.ir.ssa.*;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
@@ -3415,6 +3405,21 @@ public abstract class AstTranslator extends CAstVisitor
     } else {
       doIsFieldDefined(wc, result, ref, n.getChild(1));
     }
+  }
+
+  protected boolean visitEcho(CAstNode n, Context c, CAstVisitor visitor) {
+    return false;
+  }
+
+  protected void leaveEcho(CAstNode n, Context c, CAstVisitor visitor) {
+    WalkContext wc = (WalkContext) c;
+
+    int rvals[] = new int[ n.getChildCount() ];
+    for(int i = 0; i <n.getChildCount(); i++) {
+      rvals[i] = getValue(n.getChild(i));
+    }
+
+    wc.cfg().addInstruction(new AstEchoInstruction(rvals));
   }
 
   protected final void walkEntities(CAstEntity N, Context c) {

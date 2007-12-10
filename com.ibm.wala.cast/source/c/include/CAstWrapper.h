@@ -2,7 +2,7 @@
 #define _CAST_WRAPPER_H
 
 #include <list>
-#include <jni.h>
+#include "jni.h"
 #include "Exceptions.h"
 
 using namespace std;

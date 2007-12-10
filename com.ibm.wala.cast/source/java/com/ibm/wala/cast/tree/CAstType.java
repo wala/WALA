@@ -13,8 +13,7 @@
  */
 package com.ibm.wala.cast.tree;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public interface CAstType {
     /**
@@ -54,4 +53,16 @@ public interface CAstType {
     public interface Method extends Function {
 	CAstType getDeclaringType();
     }
+
+    public static final CAstType DYNAMIC = new CAstType() {
+    
+      public String getName() {
+	return "DYNAMIC";
+      }
+
+      public Collection/*<CAstType>*/ getSupertypes() {
+	return Collections.EMPTY_SET;
+      }
+ 
+   };
 }

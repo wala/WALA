@@ -13,16 +13,7 @@ package com.ibm.wala.cast.analysis.typeInference;
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.analysis.typeInference.TypeInference;
-import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
-import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
-import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
-import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
-import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
-import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
-import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
-import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
-import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
-import com.ibm.wala.cast.ir.ssa.NonExceptingThrowInstruction;
+import com.ibm.wala.cast.ir.ssa.*;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 
@@ -62,6 +53,10 @@ public abstract class AstTypeInference extends TypeInference {
       if (doPrimitives) {
         result = new DeclaredTypeOperator(booleanType);
       }
+    }
+
+    public void visitEcho(AstEchoInstruction inst) {
+
     }
   };
 

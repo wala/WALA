@@ -21,6 +21,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.debug.*;
 
 public class StandardFunctionTargetSelector implements MethodTargetSelector {  
   private final IClassHierarchy cha;
@@ -32,17 +33,39 @@ public class StandardFunctionTargetSelector implements MethodTargetSelector {
   }
 
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
-    if (receiver != null) {
-      ClassLoaderReference loader = receiver.getClassLoader().getReference();
-      TypeReference functionTypeRef =
-	TypeReference.findOrCreate(loader, AstTypeReference.functionTypeName);
+   ClassLoaderReference loader =
+      (site.isStatic() || receiver==null)? 
+	site.getDeclaredTarget().getDeclaringClass().getClassLoader(): 
+	receiver.getClassLoader().getReference();
 
-      if (cha.isSubclassOf(receiver, cha.lookupClass(functionTypeRef))) {
-	return receiver.getMethod(AstMethodReference.fnSelector);
-      }
+    TypeReference functionTypeRef =
+      TypeReference.findOrCreate(loader, AstTypeReference.functionTypeName);
+
+    IClass declarer = 
+      site.isStatic()?
+	cha.lookupClass(site.getDeclaredTarget().getDeclaringClass()):
+	receiver;
+
+    if (declarer == null) {
+      Trace.println(
+        "cannot find declarer for " +
+	site + ", " + receiver + " in " + caller);
     }
 
-    return base.getCalleeTarget(caller, site, receiver);
+    IClass fun = cha.lookupClass(functionTypeRef);
+
+    if (fun == null) {
+      Trace.println(
+        "cannot find function " + functionTypeRef + " for " +
+	site + ", " + receiver + " in " + caller);
+    }
+
+    if (fun != null && declarer != null && cha.isSubclassOf(declarer, fun)) {
+      return declarer.getMethod(AstMethodReference.fnSelector);
+
+    } else {
+      return base.getCalleeTarget(caller, site, receiver);
+    }
   }
 
   public boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site) {
