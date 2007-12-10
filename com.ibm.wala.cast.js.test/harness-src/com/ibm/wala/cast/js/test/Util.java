@@ -47,10 +47,9 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
 
     AnalysisScope scope;
     if (script.openConnection() instanceof JarURLConnection) {
-      scope = makeScope(new URL[] { script }, loaders);
+      scope = makeScope(new URL[] { script }, loaders, JavaScriptLoader.JS);
     } else {
-      scope = makeScope(new SourceFileModule[] { makeSourceModule(script, dir, name) }, loaders);
-      scope.addLanguageToScope(JavaScriptLoader.JS);
+      scope = makeScope(new SourceFileModule[] { makeSourceModule(script, dir, name) }, loaders, JavaScriptLoader.JS);
     }
 
     return makeCG(loaders, true, scope, useOneCFA);
@@ -92,7 +91,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
 
   public static PropagationCallGraphBuilder makeCGBuilder(SourceFileModule[] scripts, boolean useOneCFA) throws IOException {
     JavaScriptLoaderFactory loaders = makeLoaders();
-    AnalysisScope scope = makeScope(scripts, loaders);
+    AnalysisScope scope = makeScope(scripts, loaders, JavaScriptLoader.JS);
     return makeCG(loaders, true, scope, useOneCFA);
   }
 
