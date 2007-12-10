@@ -100,10 +100,12 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
     return exception;
   }
 
+  @Override
   public boolean hasDef() {
     return getNumberOfReturnValues()>0;
   }
 
+  @Override
   public int getDef() {
     return getReturnValue(0);
   }
