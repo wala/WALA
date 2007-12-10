@@ -144,7 +144,8 @@ public abstract class TestCAstTranslator extends WalaTestCase {
         IMethod mth = (IMethod) mths.next();
         if (mth.isStatic())
           Trace.print("static ");
-        Trace.println("method " + mth);
+        Trace.println("method " + mth + " with " + 
+	  mth.getNumberOfParameters() + " parameters");
         for (int i = 0; i < mth.getNumberOfParameters(); i++) {
           Trace.println("param " + i + ": " + mth.getParameterType(i));
         }
