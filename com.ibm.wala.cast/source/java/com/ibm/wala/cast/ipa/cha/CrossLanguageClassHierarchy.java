@@ -225,7 +225,7 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     Map<Atom, IClassHierarchy> hierarchies = HashMapFactory.make();
     for (Iterator ls = languages.iterator(); ls.hasNext();) {
       Language L = (Language) ls.next();
-      Set ll = new HashSet(L.getDerivedLanguages());
+      Set<Language> ll = HashSetFactory.make(L.getDerivedLanguages());
       ll.add(L);
       hierarchies.put(L.getName(), ClassHierarchy.make(scope, factory, ll));
     }
