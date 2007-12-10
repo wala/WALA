@@ -10,21 +10,16 @@
  *****************************************************************************/
 package com.ibm.wala.cast.js.ipa.callgraph;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.Collection;
 
-import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ipa.callgraph.StandardFunctionTargetSelector;
-import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.types.AstMethodReference;
-import com.ibm.wala.classLoader.*;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
+import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
