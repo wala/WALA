@@ -30,25 +30,24 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
 
   private int function;
 
+  private JavaScriptInvoke(int function, int results[], int[] params, int exception, CallSiteReference site) {
+    super(results, exception, site);
+    this.function = function;
+    this.params = params;
+  }
+
+  private JavaScriptInvoke(int function, int results[], int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites) {
+    super(results, exception, site, lexicalReads, lexicalWrites);
+    this.function = function;
+    this.params = params;
+  }
+
   public JavaScriptInvoke(int function, int result, int[] params, int exception, CallSiteReference site) {
-    super(result, exception, site);
-    this.function = function;
-    this.params = params;
+    this(function, new int[]{result}, params, exception, site);
   }
 
-  private JavaScriptInvoke(int function, int result, int[] params, int exception, CallSiteReference site, Access[] lexicalReads, Access[] lexicalWrites) {
-    super(result, exception, site, lexicalReads, lexicalWrites);
-    this.function = function;
-    this.params = params;
-  }
-
-  /**
-   * Constructor InvokeInstruction. This case for void return values
-   * @param i
-   * @param params
-   */
   public JavaScriptInvoke(int function, int[] params, int exception, CallSiteReference site) {
-    this(function, -1, params, exception, site);
+    this(function, null, params, exception, site);
   }
 
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
@@ -72,15 +71,21 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
       }
     }
 
-    int newLval = result;
+    int newLvals[] = new int[ results.length ];
+    System.arraycopy(results, 0, newLvals, 0, results.length);
     int newExp = exception;
     Access[] writes = lexicalWrites;
     
     if (defs != null) {
       int i = 0;
-      newLval = defs[i++];
+      if (getNumberOfReturnValues() > 0) {
+	newLvals[0] = defs[i++];
+      }
       newExp = defs[i++];
-      
+      for(int j = 1; j < getNumberOfReturnValues(); j++) {
+	newLvals[j] = defs[i++];
+      }
+
       if (lexicalWrites != null) {
 	writes = new Access[ lexicalWrites.length ];
 	for(int j = 0; j < writes.length; j++)
@@ -88,13 +93,14 @@ public class JavaScriptInvoke extends AbstractLexicalInvoke {
       }
     }
 
-    return new JavaScriptInvoke(fn, newLval, newParams, newExp, site, reads, writes);
+    return new JavaScriptInvoke(fn, newLvals, newParams, newExp, site, reads, writes);
   }
     
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     StringBuffer s = new StringBuffer();
-    if (result != -1) {
-      s.append(getValueString(symbolTable, d, result)).append(" = ");
+    if (getNumberOfReturnValues() > 0) {
+      s.append(getValueString(symbolTable, d, getReturnValue(0)));
+      s.append(" = ");
     }
     if (site.getDeclaredTarget().equals(JavaScriptMethods.ctorReference))
       s.append("construct ");

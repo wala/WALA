@@ -23,8 +23,7 @@ import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.types.AstMethodReference;
-import com.ibm.wala.classLoader.ClassLoaderFactory;
-import com.ibm.wala.classLoader.SourceFileModule;
+import com.ibm.wala.classLoader.*;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -49,10 +48,6 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
     return translatorFactory;
   }
   
-  public static AnalysisCache makeCache(boolean keepIRs) {
-    return new AnalysisCache(AstIRFactory.makeDefaultFactory(keepIRs));
-  }
-
   public static AnalysisOptions makeOptions(AnalysisScope scope, boolean keepIRs, IClassHierarchy cha, Iterable<Entrypoint> roots) {
     final AnalysisOptions options = new AnalysisOptions(scope, /* AstIRFactory.makeDefaultFactory(keepIRs), */ roots);
 
@@ -70,24 +65,6 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
 
   public static JavaScriptLoaderFactory makeLoaders() {
     return new JavaScriptLoaderFactory(translatorFactory);
-  }
-
-  public static AnalysisScope makeScope(String[] files, JavaScriptLoaderFactory loaders) throws IOException {
-    AnalysisScope result = new CAstAnalysisScope(files, loaders);
-    result.addLanguageToScope(JavaScriptLoader.JS);
-    return result;
-  }
-
-  public static AnalysisScope makeScope(SourceFileModule[] files, JavaScriptLoaderFactory loaders) throws IOException {
-    AnalysisScope result =  new CAstAnalysisScope(files, loaders);
-    result.addLanguageToScope(JavaScriptLoader.JS);
-    return result;
-  }
-
-  public static AnalysisScope makeScope(URL[] files, JavaScriptLoaderFactory loaders) throws IOException {
-    AnalysisScope result =  new CAstAnalysisScope(files, loaders);
-    result.addLanguageToScope(JavaScriptLoader.JS);
-    return result;
   }
 
   public static IClassHierarchy makeHierarchy(AnalysisScope scope, ClassLoaderFactory loaders)
