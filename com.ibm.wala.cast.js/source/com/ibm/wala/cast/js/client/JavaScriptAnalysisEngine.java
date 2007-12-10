@@ -62,7 +62,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
     }
   }
 
-  protected IClassHierarchy buildClassHierarchy() {
+  public IClassHierarchy buildClassHierarchy() {
     try {
       return ClassHierarchy.make(getScope(), loaderFactory, JavaScriptLoader.JS);
     } catch (ClassHierarchyException e) {
