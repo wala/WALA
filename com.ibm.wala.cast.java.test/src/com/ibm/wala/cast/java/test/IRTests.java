@@ -32,7 +32,6 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.JarFileModule;
-import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.core.tests.util.WalaTestCase;
