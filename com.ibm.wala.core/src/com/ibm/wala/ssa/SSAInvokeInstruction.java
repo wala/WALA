@@ -24,6 +24,8 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
 
+  private final int result;
+
   /**
    * The value numbers of the arguments passed to the call. For non-static
    * methods, params[0] == this. If params == null, this should be a static
@@ -32,7 +34,8 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
   private final int[] params;
 
   public SSAInvokeInstruction(int result, int[] params, int exception, CallSiteReference site) {
-    super(result, exception, site);
+    super(exception, site);
+    this.result = result;
     this.params = params;
     if (Assertions.verifyAssertions) {
       assertParamsKosher(result, params, site);
@@ -58,9 +61,9 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
     if (site == null) {
       throw new IllegalArgumentException("site cannot be null");
     }
-    if (!site.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
-      if (result == -1) {
-        Assertions._assert(result != -1, "bogus call to " + site);
+    if (site.getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
+      if (result != -1) {
+        Assertions._assert(result == -1, "bogus call to " + site);
       }
     }
 
@@ -113,6 +116,17 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
   @Override
   public int getNumberOfParameters() {
     return getNumberOfUses();
+  }
+
+  @Override
+  public int getNumberOfReturnValues() {
+    return (result == -1)? 0: 1;
+  }
+
+  @Override
+  public int getReturnValue(int i) {
+    assert i == 0 && result != -1;
+    return result;
   }
 
   /**

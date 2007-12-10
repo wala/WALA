@@ -23,8 +23,8 @@ public abstract class ReflectiveInvokeInstruction extends SSAAbstractInvokeInstr
    */
   protected final int function;
 
-  protected ReflectiveInvokeInstruction(int function, int result, int exception, CallSiteReference site) {
-    super(result, exception, site);
+  protected ReflectiveInvokeInstruction(int function, int exception, CallSiteReference site) {
+    super(exception, site);
     this.function = function;
   }
 

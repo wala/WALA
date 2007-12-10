@@ -23,12 +23,6 @@ import com.ibm.wala.util.debug.Assertions;
 public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implements IInvokeInstruction {
 
   /**
-   * The value number of the return value of this call, or -1 if the method
-   * returns void
-   */
-  protected final int result;
-
-  /**
    * The value number which represents the exception object which the call may
    * throw.
    */
@@ -40,21 +34,11 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
    */
   protected final CallSiteReference site;
 
-  protected SSAAbstractInvokeInstruction(int result, int exception, CallSiteReference site) {
-    this.result = result;
+  protected SSAAbstractInvokeInstruction(int exception, CallSiteReference site) {
     this.exception = exception;
     this.site = site;
   }
 
-  @Override
-  public int getDef() {
-    return result;
-  }
-
-  @Override
-  public boolean hasDef() {
-    return result != -1;
-  }
 
   public CallSiteReference getCallSite() {
     return site;
@@ -92,21 +76,43 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
   }
 
   @Override
+  public int getNumberOfDefs() {
+    return getNumberOfReturnValues() + 1;
+  }
+
+  @Override
   public int getDef(int i) {
-    Assertions._assert(i < 2);
-    return (i == 0 && result != -1) ? result : exception;
+    if (getNumberOfReturnValues() == 0) {
+      assert i == 0;
+      return exception;
+    } else {
+      if (i == 0) {
+	return getReturnValue(0);
+      } else if (i == 1) {
+	return exception;
+      } else {
+	return getReturnValue(i-1);
+      }
+    }
   }
 
   public int getException() {
     return exception;
   }
 
-  @Override
-  public int getNumberOfDefs() {
-    return (result == -1) ? 1 : 2;
+  public boolean hasDef() {
+    return getNumberOfReturnValues()>0;
+  }
+
+  public int getDef() {
+    return getReturnValue(0);
   }
 
   public abstract int getNumberOfParameters();
+
+  public abstract int getNumberOfReturnValues();  
+
+  public abstract int getReturnValue(int i);  
 
   /**
    * Method getDeclaredResultType. TODO: push this logic into shrike.
@@ -151,8 +157,8 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
     String code = site.getInvocationString();
     StringBuffer s = new StringBuffer();
-    if (result != -1) {
-      s.append(getValueString(symbolTable, d, result)).append(" = ");
+    if (hasDef()) {
+      s.append(getValueString(symbolTable, d, getDef())).append(" = ");
     }
     s.append("invoke").append(code);
     s.append(" ");
