@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.js.client;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.jar.JarFile;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
@@ -55,8 +56,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
 
       SourceFileModule[] files = (SourceFileModule[]) moduleFiles.toArray(new SourceFileModule[moduleFiles.size()]);
 
-      scope = new CAstAnalysisScope(files, loaderFactory);
-      scope.addLanguageToScope(JavaScriptLoader.JS);
+      scope = new CAstAnalysisScope(files, loaderFactory, Collections.singleton(JavaScriptLoader.JS));
     } catch (IOException e) {
       Assertions.UNREACHABLE(e.toString());
     }
