@@ -122,7 +122,6 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     
     // add user stuff
     addApplicationModulesToScope();
-    scope.addLanguageToScope(Language.JAVA);
   }
 
   protected AnalysisScope makeSourceAnalysisScope() {
