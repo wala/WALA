@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.zip.ZipException;
@@ -99,17 +100,16 @@ public class EMFScopeWrapper extends AnalysisScope {
    * files provided)
    */
   protected EMFScopeWrapper(final ClassLoader loader) {
+    super(Collections.singleton(Language.JAVA));
     this.classloader = loader;
     this.scopeFile = null;
     this.exclusionsFile = null;
-    addLanguageToScope(Language.JAVA);
   }
 
   public EMFScopeWrapper(String scopeFile, String exclusionsFile, ClassLoader loader, boolean scopeAsFile) {
-    super();
+    super(Collections.singleton(Language.JAVA));
     this.scopeFile = scopeFile;
     this.classloader = loader;
-    addLanguageToScope(Language.JAVA);
 
     if (DEBUG_LEVEL > 0) {
       Trace.println(getClass() + " ctor " + scopeFile);

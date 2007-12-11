@@ -19,7 +19,6 @@ import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.JarFileModule;
-import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.AnalysisEngine;
 import com.ibm.wala.client.CallGraphBuilderFactory;
@@ -187,7 +186,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
 
     // add user stuff
     addApplicationModulesToScope();
-    scope.addLanguageToScope(Language.JAVA);
   }
 
   /**

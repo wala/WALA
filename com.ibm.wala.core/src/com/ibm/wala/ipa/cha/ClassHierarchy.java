@@ -162,7 +162,7 @@ public class ClassHierarchy implements IClassHierarchy {
     this(scope, factory, scope.getLanguages(), progressMonitor);
   }
 
-  private ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Set<Language> languages, IProgressMonitor progressMonitor)
+  private ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Collection<Language> languages, IProgressMonitor progressMonitor)
       throws ClassHierarchyException, IllegalArgumentException {
     // now is a good time to clear the warnings globally.
     // TODO: think of a better way to guard against warning leaks.

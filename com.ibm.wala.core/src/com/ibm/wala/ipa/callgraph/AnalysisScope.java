@@ -68,6 +68,10 @@ public class AnalysisScope {
 
   public static final Atom SYNTHETIC = Atom.findOrCreateUnicodeAtom("Synthetic");
 
+  public static AnalysisScope createAnalysisScope(Set<Language> languages) {
+    return new AnalysisScope(languages);
+  }
+
   /**
    * A set of classes to exclude from the analysis entirely.
    */
@@ -88,10 +92,11 @@ public class AnalysisScope {
    */
   final private Map<ClassLoaderReference, Set<Module>> moduleMap = HashMapFactory.make(3);
 
-  private final Set<Language> languages = new HashSet<Language>();
+  private final Collection<Language> languages;
 
-  public AnalysisScope() {
+  protected AnalysisScope(Collection<Language> languages) {
     super();
+    this.languages = languages;
     ClassLoaderReference primordial = 
       new ClassLoaderReference(PRIMORDIAL, ClassLoaderReference.Java);
     ClassLoaderReference extension =
@@ -147,19 +152,10 @@ public class AnalysisScope {
   }
 
   /**
-   * Adds the given language to the set of languages that will
-   * be processed during this analysis session.
-   * @param lang
-   */
-  public void addLanguageToScope(Language lang) {
-    languages.add(lang);
-  }
-
-  /**
    * @return the set of languages to be processed during this analysis session.
    */
-  public Set<Language> getLanguages() {
-    return Collections.unmodifiableSet(languages);
+  public Collection<Language> getLanguages() {
+    return Collections.unmodifiableCollection(languages);
   }
 
   /**
