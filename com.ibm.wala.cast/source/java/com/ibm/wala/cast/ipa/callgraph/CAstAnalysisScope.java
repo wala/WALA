@@ -1,20 +1,18 @@
-/******************************************************************************
- * Copyright (c) 2002 - 2006 IBM Corporation.
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Contributors:
- *     IBM Corporation - initial API and implementation
- *****************************************************************************/
+/*******************************************************************************
+ * Copyright (c) 2002 - 2006 IBM Corporation. All rights reserved. This program
+ * and the accompanying materials are made available under the terms of the
+ * Eclipse Public License v1.0 which accompanies this distribution, and is
+ * available at http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors: IBM Corporation - initial API and implementation
+ ******************************************************************************/
 // Licensed Materials - Property of IBM
 // 5724-D15
-// (C) Copyright IBM Corporation 2004. All Rights Reserved. 
-// Note to U.S. Government Users Restricted Rights:  Use, duplication or disclosure restricted by GSA ADP  Schedule Contract with IBM Corp. 
+// (C) Copyright IBM Corporation 2004. All Rights Reserved.
+// Note to U.S. Government Users Restricted Rights: Use, duplication or
+// disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
 //                                                                             
-// --------------------------------------------------------------------------- 
-
+// ---------------------------------------------------------------------------
 package com.ibm.wala.cast.ipa.callgraph;
 
 import java.io.File;
@@ -25,6 +23,7 @@ import java.util.Collections;
 
 import com.ibm.wala.cast.loader.SingleClassLoaderFactory;
 import com.ibm.wala.classLoader.ArrayClassLoader;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -35,32 +34,35 @@ import com.ibm.wala.util.debug.Assertions;
 public class CAstAnalysisScope extends AnalysisScope {
   private final ClassLoaderReference theLoader;
 
-  public CAstAnalysisScope(SingleClassLoaderFactory loaders) {
+  public CAstAnalysisScope(SingleClassLoaderFactory loaders, Collection<Language> languages) {
+    super(languages);
     this.theLoader = loaders.getTheReference();
   }
 
-  public CAstAnalysisScope(String[] sourceFileNames, SingleClassLoaderFactory loaders) throws IOException {
-    this(loaders);
-    for(int i = 0; i < sourceFileNames.length; i++) {
-      File F = new File( sourceFileNames[i] );
+  public CAstAnalysisScope(String[] sourceFileNames, SingleClassLoaderFactory loaders, Collection<Language> languages)
+      throws IOException {
+    this(loaders, languages);
+    for (int i = 0; i < sourceFileNames.length; i++) {
+      File F = new File(sourceFileNames[i]);
       addSourceFileToScope(theLoader, F, F.getParent());
     }
   }
-    
-  public CAstAnalysisScope(URL[] sources, SingleClassLoaderFactory loaders) throws IOException {
-    this(loaders);
-    for(int i = 0; i < sources.length; i++) {
+
+  public CAstAnalysisScope(URL[] sources, SingleClassLoaderFactory loaders, Collection<Language> languages) throws IOException {
+    this(loaders, languages);
+    for (int i = 0; i < sources.length; i++) {
       addToScope(theLoader, new SourceURLModule(sources[i]));
     }
   }
-    
-  public CAstAnalysisScope(SourceFileModule[] sources, SingleClassLoaderFactory loaders) throws IOException {
-    this(loaders);
-    for(int i = 0; i < sources.length; i++) {
+
+  public CAstAnalysisScope(SourceFileModule[] sources, SingleClassLoaderFactory loaders, Collection<Language> languages)
+      throws IOException {
+    this(loaders, languages);
+    for (int i = 0; i < sources.length; i++) {
       addToScope(theLoader, sources[i]);
     }
   }
-    
+
   /**
    * Return the information regarding the primordial loader.
    * 
@@ -118,7 +120,7 @@ public class CAstAnalysisScope extends AnalysisScope {
   public void addClassFileToScope(ClassLoaderReference loader, File file) {
     Assertions.UNREACHABLE();
   }
-  
+
   /**
    * @return the ClassLoaderReference specified by <code>name</code>.
    */

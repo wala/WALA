@@ -45,21 +45,19 @@ public class Util {
     return new SourceFileModule(scriptFile, scriptName);
   }
 
-    public static AnalysisScope makeScope(String[] files, SingleClassLoaderFactory loaders, Language language) throws IOException {
-    CAstAnalysisScope result = new CAstAnalysisScope(files, loaders);
-    result.addLanguageToScope(language);
+  public static AnalysisScope makeScope(String[] files, SingleClassLoaderFactory loaders, Language language) throws IOException {
+    CAstAnalysisScope result = new CAstAnalysisScope(files, loaders, Collections.singleton(language));
     return result;
   }
 
-  public static AnalysisScope makeScope(SourceFileModule[] files, SingleClassLoaderFactory loaders, Language language) throws IOException {
-    CAstAnalysisScope result = new CAstAnalysisScope(files, loaders);
-    result.addLanguageToScope(language);
+  public static AnalysisScope makeScope(SourceFileModule[] files, SingleClassLoaderFactory loaders, Language language)
+      throws IOException {
+    CAstAnalysisScope result = new CAstAnalysisScope(files, loaders, Collections.singleton(language));
     return result;
   }
 
   public static AnalysisScope makeScope(URL[] files, SingleClassLoaderFactory loaders, Language language) throws IOException {
-    CAstAnalysisScope result = new CAstAnalysisScope(files, loaders);
-    result.addLanguageToScope(language);
+    CAstAnalysisScope result = new CAstAnalysisScope(files, loaders, Collections.singleton(language));
     return result;
   }
 
