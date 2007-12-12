@@ -45,9 +45,9 @@ import com.ibm.wala.demandpa.util.CallGraphMapUtil;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.WalaUtil;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
-import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
-import com.ibm.wala.emf.wrappers.JavaScopeUtil;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -120,15 +120,8 @@ public class CompareToZeroOneCFADriver {
   private static void runApplication(String appJar) throws IllegalArgumentException, CancelException {
     Trace.println("=======---------------=============");
     Trace.println("ANALYZING " + appJar + "\n\n");
-    EMFScopeWrapper scope = null;
-    try {
-      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
-      // generate a DOMO-consumable wrapper around the incoming scope object
-      scope = EMFScopeWrapper.generateScope(escope);
-    } catch (WalaException e) {
-      Assertions.UNREACHABLE();
-    }
+    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
     // TODO: return the warning set (need a CAPA type)
     // invoke DOMO to build a DOMO class hierarchy object

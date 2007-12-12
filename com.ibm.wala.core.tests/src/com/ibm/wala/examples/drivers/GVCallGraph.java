@@ -15,9 +15,9 @@ import java.util.Properties;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
-import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
-import com.ibm.wala.emf.wrappers.JavaScopeUtil;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -114,12 +114,13 @@ public class GVCallGraph {
    * @throws IllegalArgumentException 
    */
   public static Graph<CGNode> buildPrunedCallGraph(String appJar, String exclusionFile) throws WalaException, IllegalArgumentException, CancelException {
-    EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    if (exclusionFile != null) {
-      escope.setExclusionFileName(exclusionFile);
-    }
-
-    EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
+    AnalysisScope scope =
+      AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+        appJar, 
+	exclusionFile != null? 
+	  exclusionFile: 
+	  CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    
     ClassHierarchy cha = ClassHierarchy.make(scope);
 
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);

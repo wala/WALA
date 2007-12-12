@@ -17,9 +17,9 @@ import org.eclipse.jface.window.ApplicationWindow;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
-import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
-import com.ibm.wala.emf.wrappers.JavaScopeUtil;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -59,10 +59,10 @@ public class SWTTypeHierarchy {
   public static ApplicationWindow run(String classpath) {
 
     try {
-      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(classpath, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
       // generate a WALA-consumable wrapper around the incoming scope object
-      EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
+      
 
       // invoke WALA to build a class hierarchy
       ClassHierarchy cha = ClassHierarchy.make(scope);

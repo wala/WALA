@@ -18,9 +18,9 @@ import java.util.Properties;
 import org.eclipse.jface.window.ApplicationWindow;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
-import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
-import com.ibm.wala.emf.wrappers.JavaScopeUtil;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -91,14 +91,16 @@ public class SWTCallGraph {
       if (isDirectory(appJar)) {
         appJar = SWTCallGraph.findJarFiles(new String[] { appJar });
       }
-      EJavaAnalysisScope escope = JavaScopeUtil.makeAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
       String exclusionFile = p.getProperty("exclusions");
-      if (exclusionFile != null) {
-        escope.setExclusionFileName(exclusionFile);
-      }
 
-      EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
+      AnalysisScope scope = 
+	AnalysisScopeReader.makeJavaBinaryAnalysisScope(
+          appJar,
+	  exclusionFile != null?
+	  exclusionFile:
+	  CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+      
       ClassHierarchy cha = ClassHierarchy.make(scope);
 
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);

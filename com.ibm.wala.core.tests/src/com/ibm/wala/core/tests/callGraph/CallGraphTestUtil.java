@@ -10,8 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.callGraph;
 
+import com.ibm.wala.classLoader.*;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -44,14 +45,16 @@ public class CallGraphTestUtil {
     return options;
   }
 
-  public static String REGRESSION_EXCLUSIONS = "Java60RegressionExclusions.xml";
+  public static String REGRESSION_EXCLUSIONS = "Java60RegressionExclusions.txt";
   
 //  public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile) {
-//    return new EMFScopeWrapper(scopeFile, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
+//    return AnalysisScopeReader.read(scopeFile, "J2SEClassHierarchyExclusions.txt", MY_CLASSLOADER);
 //  }
 
   public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile, String exclusionsFile) {
-    return new EMFScopeWrapper(scopeFile, exclusionsFile, MY_CLASSLOADER);
+    AnalysisScope scope =
+      AnalysisScopeReader.read(scopeFile, exclusionsFile, MY_CLASSLOADER);
+    return scope;
   }
 
   public static CallGraph buildRTA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope) throws IllegalArgumentException, CancelException {

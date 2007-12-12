@@ -162,7 +162,7 @@ public class CallGraphTest extends WalaTestCase {
   }
 
   public void testIO() throws ClassHierarchyException, IllegalArgumentException, CancelException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.xml", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = makePrimordialPublicEntrypoints(scope, cha, "java/io");
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
@@ -195,7 +195,7 @@ public class CallGraphTest extends WalaTestCase {
       return;
     }
 
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.xml", "GUIExclusions.xml");
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.txt", "GUIExclusions.txt");
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = makePrimordialMainEntrypoints(scope, cha);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);

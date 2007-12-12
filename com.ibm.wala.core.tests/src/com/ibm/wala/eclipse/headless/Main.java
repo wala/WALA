@@ -15,8 +15,8 @@ import java.util.Collection;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.equinox.app.IApplication;
-import org.eclipse.equinox.app.IApplicationContext;
+//import org.eclipse.equinox.app.IApplication;
+//import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jdt.core.IJavaProject;
 
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
@@ -30,9 +30,9 @@ import com.ibm.wala.eclipse.util.JdtUtil;
  * @author sjfink
  * 
  */
-public class Main implements IApplication {
+public class Main /* implements IApplication */ {
 
-
+    /*
   public Object start(IApplicationContext context) throws Exception {
     Collection<IJavaProject> jp = JdtUtil.getWorkspaceJavaProjects();
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
@@ -44,6 +44,7 @@ public class Main implements IApplication {
     }
     return null;
   }
+    */
 
   public void stop() {
   }

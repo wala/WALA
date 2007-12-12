@@ -12,22 +12,22 @@ package com.ibm.wala.core.tests.util;
 
 public interface TestConstants {
 
-  public final static String WALA_TESTDATA = "wala.testdata.xml";
+  public final static String WALA_TESTDATA = "wala.testdata.txt";
   
   public static final String CLASSCONSTANT_MAIN = "LclassConstant/ClassConstant";
   public static final String PI_TEST_MAIN = "Lpi/PiNodeCallGraphTestCase";
   public static final String RECURSE_MAIN = "Lrecurse/NList";
   
-  public final static String HELLO = "hello.xml";
+  public final static String HELLO = "hello.txt";
   public final static String HELLO_MAIN = "Lhello/Hello";
   
-  public final static String BCEL = "bcel.xml";
+  public final static String BCEL = "bcel.txt";
   public final static String BCEL_VERIFIER_MAIN = "Lorg/apache/bcel/verifier/Verifier";
 
-  public final static String JLEX = "JLex.xml";
+  public final static String JLEX = "JLex.txt";
   public final static String JLEX_MAIN = "LJLex/Main";
   
-  public final static String JAVA_CUP = "java_cup.xml";
+  public final static String JAVA_CUP = "java_cup.txt";
   public final static String JAVA_CUP_MAIN = "Ljava_cup/Main";
   
   public final static String MULTI_DIM_MAIN = "LmultiDim/TestMultiDim";

@@ -14,9 +14,9 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.ecore.java.scope.EJavaAnalysisScope;
-import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
-import com.ibm.wala.emf.wrappers.JavaScopeUtil;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
@@ -44,9 +44,9 @@ public class CFGTest extends WalaTestCase {
    */
   private void doMethod(String methodSig) {
     try {
-      EJavaAnalysisScope escope = JavaScopeUtil.makePrimordialScope(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+     AnalysisScope scope = AnalysisScopeReader.makePrimordialScope(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
-      EMFScopeWrapper scope = EMFScopeWrapper.generateScope(escope);
+      
       
       ClassHierarchy cha = ClassHierarchy.make(scope);
 

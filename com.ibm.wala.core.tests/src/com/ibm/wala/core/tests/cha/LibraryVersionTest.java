@@ -15,7 +15,7 @@ import junit.framework.Assert;
 import com.ibm.wala.core.tests.ir.DeterministicIRTest;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 
 /**
@@ -29,7 +29,7 @@ public class LibraryVersionTest extends WalaTestCase {
   private static final ClassLoader MY_CLASSLOADER = DeterministicIRTest.class.getClassLoader();
 
   public void testLibraryVersion() {
-    AnalysisScope scope = new EMFScopeWrapper(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
+    AnalysisScope scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
     System.err.println("java library version is " + scope.getJavaLibraryVersion());
     Assert.assertTrue(scope.isJava16Libraries() || scope.isJava15Libraries()||scope.isJava14Libraries());
   }

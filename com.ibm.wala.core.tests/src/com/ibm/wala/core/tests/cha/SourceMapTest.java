@@ -13,7 +13,7 @@ package com.ibm.wala.core.tests.cha;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -31,7 +31,7 @@ public class SourceMapTest extends WalaTestCase {
 
   public void testHello() throws ClassHierarchyException {
     AnalysisScope scope = null;
-    scope = new EMFScopeWrapper(TestConstants.HELLO, null, MY_CLASSLOADER);
+    scope = AnalysisScopeReader.read(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
     // see feature 38676
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -45,7 +45,7 @@ public class SourceMapTest extends WalaTestCase {
 
   public void testFromJar() throws ClassHierarchyException {
     AnalysisScope scope = null;
-    scope = new EMFScopeWrapper(TestConstants.HELLO, null, MY_CLASSLOADER);
+    scope = AnalysisScopeReader.read(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
     // open a feature to fix this
     ClassHierarchy cha = ClassHierarchy.make(scope);

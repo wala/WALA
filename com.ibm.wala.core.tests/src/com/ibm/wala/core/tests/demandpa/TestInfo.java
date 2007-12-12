@@ -39,7 +39,7 @@ package com.ibm.wala.core.tests.demandpa;
 
 public class TestInfo {
 
-  public static final String SCOPE_FILE = "wala.testdata.xml";
+  public static final String SCOPE_FILE = "wala.testdata.txt";
 
   // public static final String TEST1 = "Ldemandpa/Test1";
 
