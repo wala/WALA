@@ -37,7 +37,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.Value;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.config.XMLSetOfClasses;
+import com.ibm.wala.util.config.FileOfClasses;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -113,7 +113,7 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
 
     if (getExclusionsFile() != null) {
       ClassLoader loader = getClass().getClassLoader();
-      scope.setExclusions(new XMLSetOfClasses(getExclusionsFile(), loader));
+      scope.setExclusions(new FileOfClasses(getExclusionsFile(), loader));
     }
 
     for( Module M : this.systemEntries) {
