@@ -93,3 +93,7 @@ phi
 shrike
 superinterface
 subtype
+junit
+backedge
+lhs
+bytecode
