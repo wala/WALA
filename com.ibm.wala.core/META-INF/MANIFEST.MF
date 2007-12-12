@@ -6,8 +6,7 @@ Bundle-Version: 1.0.0
 Bundle-Activator: com.ibm.wala.core.plugin.CorePlugin
 Bundle-Vendor: IBM
 Bundle-Localization: plugin
-Require-Bundle: com.ibm.wala.emf;visibility:=reexport,
- com.ibm.wala.shrike;visibility:=reexport,
+Require-Bundle: com.ibm.wala.shrike;visibility:=reexport,
  org.eclipse.core.resources;visibility:=reexport,
  org.eclipse.jface,
  org.eclipse.jdt.core;visibility:=reexport,
@@ -36,7 +35,6 @@ Export-Package: .,
  com.ibm.wala.dynamic,
  com.ibm.wala.eclipse,
  com.ibm.wala.eclipse.util,
- com.ibm.wala.emf.wrappers,
  com.ibm.wala.escape,
  com.ibm.wala.fixedpoint.impl,
  com.ibm.wala.fixpoint,

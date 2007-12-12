@@ -67,16 +67,14 @@ public class FileProvider {
    *         if not found.
    */
   public static Module getJarFileModule(String fileName) throws IOException {
-    // try {
-    // return (CorePlugin.getDefault() == null) ?
-    // getJarFileFromClassLoader(fileName) : getFromPlugin(fileName);
-    // } catch (IOException e) {
-    // System.err.println("Problem with file " + fileName);
-    // throw e;
-    // }
+    return getJarFileModule(fileName, FileProvider.class.getClassLoader());
+  }
 
+  public static Module getJarFileModule(String fileName, ClassLoader loader)
+    throws IOException 
+  {
     if (CorePlugin.getDefault() == null) {
-      return getJarFileFromClassLoader(fileName);
+      return getJarFileFromClassLoader(fileName, loader);
     } else {
       // try to load the path as a full path
       try {
@@ -97,7 +95,16 @@ public class FileProvider {
   /**
    */
   public static File getFile(String fileName) throws IOException {
-    return (CorePlugin.getDefault() == null) ? getFileFromClassLoader(fileName) : getFileFromPlugin(CorePlugin.getDefault(), fileName);
+    return getFile(fileName, FileProvider.class.getClassLoader());
+  }
+  
+  public static File getFile(String fileName, ClassLoader loader)
+    throws IOException 
+  {
+    return
+      (CorePlugin.getDefault() == null) ? 
+	getFileFromClassLoader(fileName, loader) :
+	getFileFromPlugin(CorePlugin.getDefault(), fileName);
   }
 
   /**
@@ -187,8 +194,10 @@ public class FileProvider {
   /**
    * @throws FileNotFoundException
    */
-  public static File getFileFromClassLoader(String fileName) throws FileNotFoundException {
-    URL url = FileProvider.class.getClassLoader().getResource(fileName);
+  public static File getFileFromClassLoader(String fileName, ClassLoader loader)
+    throws FileNotFoundException 
+  {
+    URL url = loader.getResource(fileName);
     if (DEBUG_LEVEL > 0) {
       Trace.println("FileProvider got url: " + url + " for " + fileName);
     }
@@ -211,8 +220,11 @@ public class FileProvider {
    *         if not found: wrapped as a JarFileModule or a NestedJarFileModule
    * @throws IOException
    */
-  public static Module getJarFileFromClassLoader(String fileName) throws IOException {
-    URL url = FileProvider.class.getClassLoader().getResource(fileName);
+  public static Module 
+    getJarFileFromClassLoader(String fileName, ClassLoader loader) 
+    throws IOException 
+  {
+    URL url = loader.getResource(fileName);
     if (DEBUG_LEVEL > 0) {
       Trace.println("FileProvider got url: " + url + " for " + fileName);
     }

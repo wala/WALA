@@ -23,7 +23,6 @@ import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.AnalysisEngine;
 import com.ibm.wala.client.CallGraphBuilderFactory;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -39,6 +38,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.config.*;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -177,7 +177,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
       Assertions.UNREACHABLE("no j2selibs specified. You probably did not call AppAnalysisEngine.setJ2SELibrary.");
     }
 
-    scope = new EMFScopeWrapper(BASIC_FILE, getExclusionsFile(), getClass().getClassLoader());
+    scope = AnalysisScopeReader.read(BASIC_FILE, getExclusionsFile(), getClass().getClassLoader());
 
     // add standard libraries
     for (int i = 0; i < j2seLibs.length; i++) {

@@ -10,17 +10,14 @@
  *******************************************************************************/
 package com.ibm.wala.util.config;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ecore.common.EContainer;
-import com.ibm.wala.emf.wrappers.EUtil;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.PatternSetUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WalaException;
+
+import java.io.*;
+import java.util.regex.*;
 
 /**
  * 
@@ -28,7 +25,7 @@ import com.ibm.wala.util.warnings.WalaException;
  * 
  * @author sfink
  */
-public class XMLSetOfClasses extends SetOfClasses {
+public class FileOfClasses extends SetOfClasses {
 
   private static final boolean DEBUG = false;
 
@@ -38,19 +35,27 @@ public class XMLSetOfClasses extends SetOfClasses {
 
   private boolean needsCompile = true;
 
-  public XMLSetOfClasses(String xmlFile, ClassLoader loader) {
-    super();
-
-    EContainer c = null;
+  public FileOfClasses(String textFileName, ClassLoader loader) {
     try {
-      c = (EContainer) EUtil.readEObjects(xmlFile, loader).get(0);
-    } catch (WalaException e) {
+      File textFile = FileProvider.getFile(textFileName, loader);
+      BufferedReader is = new BufferedReader(new FileReader(textFile));
+    
+      StringBuffer regex =  null;
+      String line;
+      while ((line = is.readLine()) != null) {
+	if (regex == null) {
+	  regex = new StringBuffer("(" + line + ")");
+	} else {
+	  regex.append("|(" + line + ")");
+	}
+      }
+
+      this.regex = regex.toString();
+      needsCompile = true;
+    } catch (IOException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
     }
-
-    regex = PatternSetUtil.composeRegularExpression(c);
-    needsCompile = true;
   }
 
   private void compile() {

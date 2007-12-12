@@ -109,6 +109,8 @@ public class AnalysisScope {
     application.setParent(extension);
     synthetic.setParent(application);
 
+    setLoaderImpl(synthetic, "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
+
     loadersByName.put(PRIMORDIAL, primordial);
     loadersByName.put(EXTENSION, extension);
     loadersByName.put(APPLICATION, application);
@@ -254,8 +256,7 @@ public class AnalysisScope {
     return loaderImplByRef.get(ref);
   }
 
-  // todo: nuke this?
-  protected void setLoaderImpl(ClassLoaderReference ref, String implClass) {
+  public void setLoaderImpl(ClassLoaderReference ref, String implClass) {
     loaderImplByRef.put(ref, implClass);
   }
 

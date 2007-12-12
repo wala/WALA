@@ -36,13 +36,13 @@ import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.client.impl.AbstractAnalysisEngine;
-import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
+import com.ibm.wala.util.config.*;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -220,7 +220,7 @@ public class EclipseProjectPath {
       Set<Module> s = MapUtil.findOrCreateSet(binaryModules, Loader.APPLICATION);
       s.add(new BinaryDirectoryTreeModule(makeAbsolute(project.getOutputLocation()).toFile()));
 
-      AnalysisScope scope = new EMFScopeWrapper(AbstractAnalysisEngine.BASIC_FILE, exclusionsFile, classLoader);
+      AnalysisScope scope = AnalysisScopeReader.read(AbstractAnalysisEngine.BASIC_FILE, exclusionsFile, classLoader);
 
       for (Loader loader : Loader.values()) {
         for (Module m : binaryModules.get(loader)) {
