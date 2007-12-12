@@ -48,7 +48,8 @@ public class ArgumentTypeEntrypoint extends Entrypoint {
         IClass klass = cha.lookupClass(t);
         if (klass == null) {
           t = null;
-        } else if (klass.isAbstract()) {
+        } else if (!klass.isInterface() && klass.isAbstract()) {
+          // yes, I've seen classes that are marked as "abstract interface" :)
           t = chooseAConcreteSubClass(klass);
         } else if (klass.isInterface()) {
           t = chooseAnImplementor(klass);
