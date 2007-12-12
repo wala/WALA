@@ -130,7 +130,7 @@ public class ClassHierarchy implements IClassHierarchy {
   private Set<IClass> computeSuperclasses(IClass klass) throws ClassHierarchyException {
 
     if (DEBUG) {
-      Trace.println("computeSuperclasses: " + klass);
+      System.err.println("computeSuperclasses: " + klass);
     }
 
     Set<IClass> result = HashSetFactory.make(3);
@@ -146,11 +146,6 @@ public class ClassHierarchy implements IClassHierarchy {
     }
     return result;
   }
-
-//  protected ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor monitor)
-//      throws ClassHierarchyException {
-//    this(scope, factory, Language.JAVA, monitor);
-//  }
 
   private ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Language language, IProgressMonitor progressMonitor)
       throws ClassHierarchyException, IllegalArgumentException {
