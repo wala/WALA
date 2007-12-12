@@ -150,7 +150,7 @@ public class GVCallGraph {
    * @throws UnsupportedOperationException
    *           if command-line is malformed.
    */
-  static void validateCommandLine(Properties p) {
+  public static void validateCommandLine(Properties p) {
     if (p.get("appJar") == null) {
       throw new UnsupportedOperationException("expected command-line to include -appJar");
     }
