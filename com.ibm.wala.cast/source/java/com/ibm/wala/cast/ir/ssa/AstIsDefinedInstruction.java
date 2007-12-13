@@ -55,7 +55,10 @@ public class AstIsDefinedInstruction extends SSAInstruction {
   }
 
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
-    Assertions._assert(fieldVal == -1 || fieldRef == null);
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(fieldVal == -1 || fieldRef == null);
+    }
+    
     return new AstIsDefinedInstruction(
       (defs==null)? lval: defs[0],
       (uses==null)? rval: uses[0],
@@ -93,7 +96,10 @@ public class AstIsDefinedInstruction extends SSAInstruction {
   }
 
   public int getDef(int i) {
-    Assertions._assert(i == 0);
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(i == 0);
+    }
+    
     return lval;
   }
 
