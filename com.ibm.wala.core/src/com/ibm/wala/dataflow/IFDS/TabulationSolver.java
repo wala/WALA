@@ -47,10 +47,13 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
  * <p>
  * See Reps, Horwitz, Sagiv POPL 95.
  * <p>
- * This version is tweaked for Java; in particular it handles
+ * This version differs in some ways from the POPL algorithm.  In particular ...
  * <ul>
- * <li>exceptional control flow ... there may be several return sites for each
+ * <li>to support exceptional control flow ... there may be several return sites for each
  * call site.
+ * <li>it supports an optional merge operator, useful for non-IFDS problems and widening
+ * <li> it store summary edges at each callee instead of at each call site, to avoid unnecessary
+ * propagation during demand-driven tabulation.
  * </ul>
  * <p>
  * 
