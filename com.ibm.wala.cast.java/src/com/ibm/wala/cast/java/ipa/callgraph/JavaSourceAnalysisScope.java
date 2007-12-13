@@ -13,7 +13,8 @@
  */
 package com.ibm.wala.cast.java.ipa.callgraph;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
 
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
@@ -26,7 +27,7 @@ public class JavaSourceAnalysisScope extends AnalysisScope {
     this(Collections.singleton(Language.JAVA));
   }
 
-  public JavaSourceAnalysisScope(Set languages) {
+  public JavaSourceAnalysisScope(Collection<Language> languages) {
     super(languages);
     EclipseProjectPath.SOURCE_REF.setParent(getLoader(APPLICATION));
     getLoader(SYNTHETIC).setParent(EclipseProjectPath.SOURCE_REF);

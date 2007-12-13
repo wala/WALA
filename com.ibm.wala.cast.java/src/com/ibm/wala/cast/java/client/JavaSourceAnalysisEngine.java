@@ -19,7 +19,6 @@ import com.ibm.wala.cast.java.translator.polyglot.IRTranslatorExtension;
 import com.ibm.wala.cast.java.translator.polyglot.JavaIRTranslatorExtension;
 import com.ibm.wala.cast.java.translator.polyglot.PolyglotClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
-import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.impl.AbstractAnalysisEngine;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
