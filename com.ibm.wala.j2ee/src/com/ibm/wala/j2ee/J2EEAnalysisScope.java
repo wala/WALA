@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.j2ee;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.jar.JarFile;
 
@@ -17,11 +18,12 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.xmi.impl.XMIResourceFactoryImpl;
 
 import com.ibm.wala.classLoader.JarFileModule;
+import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.ecore.j2ee.scope.impl.J2EEScopePackageImpl;
-import com.ibm.wala.emf.wrappers.EMFScopeWrapper;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileOfClasses;
 
 /**
  * Description of analysis for EJBs
@@ -29,7 +31,7 @@ import com.ibm.wala.types.ClassLoaderReference;
  * @author sfink
  */
 @SuppressWarnings("unchecked")
-public class J2EEAnalysisScope extends EMFScopeWrapper {
+public class J2EEAnalysisScope extends AnalysisScope {
 
   private final static String BASIC_FILE = "SyntheticContainerModel.xml";
 
@@ -40,7 +42,6 @@ public class J2EEAnalysisScope extends EMFScopeWrapper {
   private final boolean lifecycleEntrypoints;
 
   static {
-    J2EEScopePackageImpl.init();
     Resource.Factory.Registry.INSTANCE.getExtensionToFactoryMap().put("*", new XMIResourceFactoryImpl());
   }
 
@@ -59,7 +60,18 @@ public class J2EEAnalysisScope extends EMFScopeWrapper {
    *          entrypoints?
    */
   public J2EEAnalysisScope(String baseScope, ClassLoader loader, String exclusionsFile, boolean lifecycleEntrypoints) {
-    super(baseScope, exclusionsFile, loader);
+    super(Collections.singleton(Language.JAVA));
+    AnalysisScope base = AnalysisScopeReader.read(baseScope, exclusionsFile, loader);
+    
+    for (ClassLoaderReference cl : base.getLoaders()) {
+      for (Module m : base.getModules(cl)) {
+        addToScope(cl, m);
+      }
+    }
+    if (exclusionsFile != null) {
+      FileOfClasses file = new FileOfClasses(exclusionsFile, loader);
+      setExclusions(file);
+    }
     this.lifecycleEntrypoints = lifecycleEntrypoints;
   }
 
