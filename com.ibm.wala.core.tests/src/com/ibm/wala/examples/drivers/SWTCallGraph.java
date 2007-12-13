@@ -71,16 +71,16 @@ public class SWTCallGraph {
 
   /**
    * @param p
-   *          should contain at least the following properties:
-   *          <ul>
-   *          <li>appJar should be something like
-   *          "c:/temp/testdata/java_cup.jar"
-   *          <li>algorithm (optional) can be one of:
-   *          <ul>
-   *          <li> "ZERO_CFA" (default value)
-   *          <li> "RTA"
-   *          </ul>
-   *          </ul>
+   *            should contain at least the following properties:
+   *            <ul>
+   *            <li>appJar should be something like
+   *            "c:/temp/testdata/java_cup.jar"
+   *            <li>algorithm (optional) can be one of:
+   *            <ul>
+   *            <li> "ZERO_CFA" (default value)
+   *            <li> "RTA"
+   *            </ul>
+   *            </ul>
    * 
    * @throws WalaException
    */
@@ -94,13 +94,9 @@ public class SWTCallGraph {
 
       String exclusionFile = p.getProperty("exclusions");
 
-      AnalysisScope scope = 
-	AnalysisScopeReader.makeJavaBinaryAnalysisScope(
-          appJar,
-	  exclusionFile != null?
-	  exclusionFile:
-	  CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-      
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, exclusionFile != null ? exclusionFile
+          : CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+
       ClassHierarchy cha = ClassHierarchy.make(scope);
 
       Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
@@ -109,7 +105,8 @@ public class SWTCallGraph {
       // //
       // build the call graph
       // //
-      com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(),cha, scope, null, null);
+      com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope, null,
+          null);
       CallGraph cg = builder.makeCallGraph(options);
 
       System.out.println(CallGraphStats.getStats(cg));
@@ -142,7 +139,7 @@ public class SWTCallGraph {
     } catch (Exception e) {
       e.printStackTrace();
       return null;
-    } 
+    }
   }
 
   // private static CallGraphConstructionAlgorithm chooseAlgorithm(Properties p)
@@ -176,7 +173,7 @@ public class SWTCallGraph {
 
   /**
    * @param s
-   *          Collection<String>
+   *            Collection<String>
    */
   private static String composeString(Collection<String> s) {
     StringBuffer result = new StringBuffer();
