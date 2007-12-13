@@ -10,14 +10,17 @@
  *******************************************************************************/
 package com.ibm.wala.util.config;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.WalaException;
-
-import java.io.*;
-import java.util.regex.*;
 
 /**
  * 

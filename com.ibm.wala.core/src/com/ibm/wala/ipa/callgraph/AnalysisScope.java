@@ -97,14 +97,10 @@ public class AnalysisScope {
   protected AnalysisScope(Collection<Language> languages) {
     super();
     this.languages = languages;
-    ClassLoaderReference primordial = 
-      new ClassLoaderReference(PRIMORDIAL, ClassLoaderReference.Java);
-    ClassLoaderReference extension =
-      new ClassLoaderReference(EXTENSION, ClassLoaderReference.Java);
-    ClassLoaderReference application =
-      new ClassLoaderReference(APPLICATION, ClassLoaderReference.Java);
-    ClassLoaderReference synthetic =
-      new ClassLoaderReference(SYNTHETIC, ClassLoaderReference.Java);
+    ClassLoaderReference primordial = new ClassLoaderReference(PRIMORDIAL, ClassLoaderReference.Java);
+    ClassLoaderReference extension = new ClassLoaderReference(EXTENSION, ClassLoaderReference.Java);
+    ClassLoaderReference application = new ClassLoaderReference(APPLICATION, ClassLoaderReference.Java);
+    ClassLoaderReference synthetic = new ClassLoaderReference(SYNTHETIC, ClassLoaderReference.Java);
     extension.setParent(primordial);
     application.setParent(extension);
     synthetic.setParent(application);
@@ -162,10 +158,11 @@ public class AnalysisScope {
 
   /**
    * @return the set of "base languages," each of which defines a family of
-   * compatible languages, and therefore induces a distinct ClassHierarchy
+   *         compatible languages, and therefore induces a distinct
+   *         ClassHierarchy
    */
   public Set<Language> getBaseLanguages() {
-    Set<Language> result= new HashSet<Language>();
+    Set<Language> result = new HashSet<Language>();
     for (Language language : languages) {
       if (language.getBaseLanguage() == null) {
         result.add(language);
@@ -180,7 +177,7 @@ public class AnalysisScope {
    * @param loader
    * @param file
    */
-  public void addSourceFileToScope(ClassLoaderReference loader, File file, String fileName) throws IllegalArgumentException  {
+  public void addSourceFileToScope(ClassLoaderReference loader, File file, String fileName) throws IllegalArgumentException {
     Set<Module> s = MapUtil.findOrCreateSet(moduleMap, loader);
     s.add(new SourceFileModule(file, fileName));
   }
@@ -229,9 +226,10 @@ public class AnalysisScope {
 
   /**
    * @return the ClassLoaderReference specified by <code>name</code>.
-   * @throws IllegalArgumentException  if name is null
+   * @throws IllegalArgumentException
+   *             if name is null
    */
-  public ClassLoaderReference getLoader(Atom name) throws IllegalArgumentException  {
+  public ClassLoaderReference getLoader(Atom name) throws IllegalArgumentException {
     if (name == null) {
       throw new IllegalArgumentException("name is null");
     }
@@ -366,7 +364,7 @@ public class AnalysisScope {
   public boolean isJava16Libraries() throws IllegalStateException {
     return getJavaLibraryVersion().startsWith("1.6");
   }
-  
+
   public boolean isJava15Libraries() throws IllegalStateException {
     return getJavaLibraryVersion().startsWith("1.5");
   }
