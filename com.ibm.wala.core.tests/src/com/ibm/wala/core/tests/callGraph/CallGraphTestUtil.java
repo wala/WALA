@@ -45,18 +45,19 @@ public class CallGraphTestUtil {
   }
 
   public static String REGRESSION_EXCLUSIONS = "Java60RegressionExclusions.txt";
-  
-//  public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile) {
-//    return AnalysisScopeReader.read(scopeFile, "J2SEClassHierarchyExclusions.txt", MY_CLASSLOADER);
-//  }
+
+  // public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile) {
+  // return AnalysisScopeReader.read(scopeFile,
+  // "J2SEClassHierarchyExclusions.txt", MY_CLASSLOADER);
+  // }
 
   public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile, String exclusionsFile) {
-    AnalysisScope scope =
-      AnalysisScopeReader.read(scopeFile, exclusionsFile, MY_CLASSLOADER);
+    AnalysisScope scope = AnalysisScopeReader.read(scopeFile, exclusionsFile, MY_CLASSLOADER);
     return scope;
   }
 
-  public static CallGraph buildRTA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope) throws IllegalArgumentException, CancelException {
+  public static CallGraph buildRTA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope)
+      throws IllegalArgumentException, CancelException {
     Stopwatch S = new Stopwatch("build RTA graph");
     S.start();
 
@@ -68,7 +69,8 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, boolean testPAtoString) throws IllegalArgumentException, CancelException {
+  public static CallGraph buildZeroCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope,
+      boolean testPAtoString) throws IllegalArgumentException, CancelException {
     Stopwatch S = new Stopwatch("build ZeroCFA graph");
     S.start();
 
@@ -96,7 +98,8 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildZeroOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope, boolean testPAtoString) throws IllegalArgumentException, CancelException {
+  public static CallGraph buildZeroOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope,
+      boolean testPAtoString) throws IllegalArgumentException, CancelException {
     Stopwatch S = new Stopwatch("build 0-1-CFA graph");
     S.start();
 
@@ -137,7 +140,8 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope) throws IllegalArgumentException, CancelException {
+  public static CallGraph buildOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope)
+      throws IllegalArgumentException, CancelException {
     Stopwatch S = new Stopwatch("build 1-CFA graph");
     S.start();
 
