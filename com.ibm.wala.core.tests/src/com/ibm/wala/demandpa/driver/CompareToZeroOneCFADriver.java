@@ -45,9 +45,6 @@ import com.ibm.wala.demandpa.util.CallGraphMapUtil;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.WalaUtil;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -64,10 +61,10 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.OrdinalSet;
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * Driver that tests analysis results against ZeroOneCFA analysis.

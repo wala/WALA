@@ -44,10 +44,8 @@ public class CFGTest extends WalaTestCase {
    */
   private void doMethod(String methodSig) {
     try {
-     AnalysisScope scope = AnalysisScopeReader.makePrimordialScope(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+      AnalysisScope scope = AnalysisScopeReader.makePrimordialScope(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
 
-      
-      
       ClassHierarchy cha = ClassHierarchy.make(scope);
 
       MethodReference mr = StringStuff.makeMethodReference(methodSig);
