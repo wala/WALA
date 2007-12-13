@@ -27,7 +27,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * Implementation of IClass for array classes.
+ * Implementation of {@link IClass} for array classes.
  * 
  * @author Alan Donovan
  * @author sfink
@@ -35,7 +35,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
 public class ArrayClass implements IClass, Constants {
 
   private final IClassHierarchy cha;
-  
+
   /**
    * Package-visible constructor; only for use by ArrayClassLoader class.
    * 'loader' must be the Primordial IClassLoader.
@@ -54,7 +54,9 @@ public class ArrayClass implements IClass, Constants {
           Assertions.UNREACHABLE("caller should not attempt to create an array with type " + type);
         }
       } else {
-        Assertions._assert(loader.getReference().equals(ClassLoaderReference.Primordial));
+        if (Assertions.verifyAssertions) {
+          Assertions._assert(loader.getReference().equals(ClassLoaderReference.Primordial));
+        }
       }
     }
   }
@@ -109,7 +111,9 @@ public class ArrayClass implements IClass, Constants {
     try {
       IClass elt = getElementClass();
 
-      Assertions._assert(getReference().getArrayElementType().isPrimitiveType() || elt != null);
+      if (Assertions.verifyAssertions) {
+        Assertions._assert(getReference().getArrayElementType().isPrimitiveType() || elt != null);
+      }
 
       // super is Ljava/lang/Object in two cases:
       // 1) [Ljava/lang/Object
@@ -284,8 +288,8 @@ public class ArrayClass implements IClass, Constants {
     Assertions.UNREACHABLE();
     return null;
   }
-  
-  /* 
+
+  /*
    * @see com.ibm.wala.classLoader.IClass#getAllStaticFields()
    */
   public Collection<IField> getAllStaticFields() throws UnimplementedError, ClassHierarchyException {
@@ -293,20 +297,20 @@ public class ArrayClass implements IClass, Constants {
     return null;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
   public Collection<IMethod> getAllMethods() throws UnimplementedError, ClassHierarchyException {
-	Assertions.UNREACHABLE();
-	return null;
+    Assertions.UNREACHABLE();
+    return null;
   }
-  
-  /* 
+
+  /*
    * @see com.ibm.wala.classLoader.IClass#getAllFields()
    */
   public Collection<IField> getAllFields() throws UnimplementedError, ClassHierarchyException {
-	Assertions.UNREACHABLE();
-	return null;
+    Assertions.UNREACHABLE();
+    return null;
   }
 
   public IClassHierarchy getClassHierarchy() {

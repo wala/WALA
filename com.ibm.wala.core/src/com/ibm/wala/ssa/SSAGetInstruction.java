@@ -11,7 +11,6 @@
 
 package com.ibm.wala.ssa;
 
-
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -74,7 +73,9 @@ public class SSAGetInstruction extends SSAFieldAccessInstruction {
 
   @Override
   public int getDef(int i) {
-    Assertions._assert(i == 0);
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(i == 0);
+    }
     return result;
   }
 

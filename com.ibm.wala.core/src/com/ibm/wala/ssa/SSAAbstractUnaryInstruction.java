@@ -15,11 +15,12 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author sfink
- *
+ * 
  */
 public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
 
   protected final int result;
+
   protected final int val;
 
   protected SSAAbstractUnaryInstruction(int result, int val) {
@@ -43,7 +44,9 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    Assertions._assert(i == 0);
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(i == 0);
+    }
     return result;
   }
 
@@ -75,7 +78,7 @@ public abstract class SSAAbstractUnaryInstruction extends SSAInstruction {
     return val * 1663 ^ result * 4027;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ssa.Instruction#isFallThrough()
    */
   @Override

@@ -32,7 +32,8 @@ public class SSAComparisonInstruction extends SSAInstruction {
   private final short opcode;
 
   /**
-   * @param opcode opcode from list in {@link Constants}
+   * @param opcode
+   *            opcode from list in {@link Constants}
    */
   SSAComparisonInstruction(short opcode, int result, int val1, int val2) {
     super();
@@ -45,7 +46,7 @@ public class SSAComparisonInstruction extends SSAInstruction {
   @Override
   public SSAInstruction copyForSSA(int[] defs, int[] uses) throws IllegalArgumentException {
     // TODO: Julian ... is this correct?
-    if (uses!= null && uses.length != 2) {
+    if (uses != null && uses.length != 2) {
       throw new IllegalArgumentException("expected 2 uses, got " + uses.length);
     }
     return new SSAComparisonInstruction(opcode, defs == null || defs.length == 0 ? result : defs[0], uses == null ? val1 : uses[0],
@@ -81,7 +82,9 @@ public class SSAComparisonInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    Assertions._assert(i == 0);
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(i == 0);
+    }
     return result;
   }
 

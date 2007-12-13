@@ -18,7 +18,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author sfink
- *  
+ * 
  */
 public class SSACheckCastInstruction extends SSAInstruction {
 
@@ -48,12 +48,14 @@ public class SSACheckCastInstruction extends SSAInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + " = checkcast " + declaredResultType.getName() + " " + getValueString(symbolTable, d, val);
+    return getValueString(symbolTable, d, result) + " = checkcast " + declaredResultType.getName() + " "
+        + getValueString(symbolTable, d, val);
   }
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException  if v is null
+   * @throws IllegalArgumentException
+   *             if v is null
    */
   @Override
   public void visit(IVisitor v) {
@@ -78,7 +80,9 @@ public class SSACheckCastInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    Assertions._assert(i == 0);
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(i == 0);
+    }
     return result;
   }
 

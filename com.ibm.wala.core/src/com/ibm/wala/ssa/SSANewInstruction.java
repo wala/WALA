@@ -42,7 +42,8 @@ public class SSANewInstruction extends SSAInstruction {
       throw new IllegalArgumentException("site cannot be null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(!site.getDeclaredType().isArrayType() || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java);
+      Assertions._assert(!site.getDeclaredType().isArrayType()
+          || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java);
     }
     this.result = result;
     this.site = site;
@@ -51,8 +52,11 @@ public class SSANewInstruction extends SSAInstruction {
 
   /**
    * Create a new instruction to allocate an array.
-   * @throws IllegalArgumentException  if site is null
-   * @throws IllegalArgumentException  if params is null
+   * 
+   * @throws IllegalArgumentException
+   *             if site is null
+   * @throws IllegalArgumentException
+   *             if params is null
    */
   public SSANewInstruction(int result, NewSiteReference site, int[] params) {
 
@@ -64,7 +68,8 @@ public class SSANewInstruction extends SSAInstruction {
       throw new IllegalArgumentException("site is null");
     }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(site.getDeclaredType().isArrayType() || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java);
+      Assertions._assert(site.getDeclaredType().isArrayType()
+          || site.getDeclaredType().getClassLoader().getLanguage() != ClassLoaderReference.Java);
     }
     this.result = result;
     this.site = site;
@@ -77,20 +82,20 @@ public class SSANewInstruction extends SSAInstruction {
     if (params == null) {
       return new SSANewInstruction(defs == null ? result : defs[0], site);
     } else {
-      return new SSANewInstruction(defs == null ? result : defs[0], 
-				   site,
-				   uses == null ? params: uses);
+      return new SSANewInstruction(defs == null ? result : defs[0], site, uses == null ? params : uses);
     }
   }
 
   @Override
   public String toString(SymbolTable symbolTable, ValueDecorator d) {
-      return getValueString(symbolTable, d, result) + " = new " + site.getDeclaredType() + "@" + site.getProgramCounter() + (params==null?"":" dims: "+params.length);
+    return getValueString(symbolTable, d, result) + " = new " + site.getDeclaredType() + "@" + site.getProgramCounter()
+        + (params == null ? "" : " dims: " + params.length);
   }
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException  if v is null
+   * @throws IllegalArgumentException
+   *             if v is null
    */
   @Override
   public void visit(IVisitor v) {
@@ -115,7 +120,9 @@ public class SSANewInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    Assertions._assert(i == 0);
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(i == 0);
+    }
     return result;
   }
 

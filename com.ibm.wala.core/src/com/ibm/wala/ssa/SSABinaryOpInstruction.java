@@ -31,7 +31,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
   private final int val2;
 
   private final BinaryOpInstruction.IOperator operator;
-  
+
   /**
    * Might this instruction represent integer arithmetic?
    */
@@ -44,7 +44,9 @@ public class SSABinaryOpInstruction extends SSAInstruction {
     this.val2 = val2;
     this.operator = operator;
     this.mayBeInteger = mayBeInteger;
-    Assertions._assert(val1 != -1 && val2 != -1);
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(val1 != -1 && val2 != -1);
+    }
   }
 
   @Override
@@ -71,7 +73,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
   }
 
   /**
-   * Ugh.  clean up shrike operator stuff.
+   * Ugh. clean up shrike operator stuff.
    */
   public BinaryOpInstruction.IOperator getOperator() {
     return operator;
@@ -89,7 +91,9 @@ public class SSABinaryOpInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    Assertions._assert(i == 0);
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(i == 0);
+    }
     return result;
   }
 

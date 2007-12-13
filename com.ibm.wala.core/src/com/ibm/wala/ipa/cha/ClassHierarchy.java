@@ -157,8 +157,8 @@ public class ClassHierarchy implements IClassHierarchy {
     this(scope, factory, scope.getLanguages(), progressMonitor);
   }
 
-  private ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Collection<Language> languages, IProgressMonitor progressMonitor)
-      throws ClassHierarchyException, IllegalArgumentException {
+  private ClassHierarchy(AnalysisScope scope, ClassLoaderFactory factory, Collection<Language> languages,
+      IProgressMonitor progressMonitor) throws ClassHierarchyException, IllegalArgumentException {
     // now is a good time to clear the warnings globally.
     // TODO: think of a better way to guard against warning leaks.
     Warnings.clear();
@@ -171,18 +171,18 @@ public class ClassHierarchy implements IClassHierarchy {
     }
     this.scope = scope;
     this.factory = factory;
-    Set<Atom> langNames= new HashSet<Atom>();
-    for(Language lang: languages) {
+    Set<Atom> langNames = new HashSet<Atom>();
+    for (Language lang : languages) {
       this.languages.add(lang);
       this.languages.addAll(lang.getDerivedLanguages());
       langNames.add(lang.getName());
     }
-    for(Language lang: this.languages) {
+    for (Language lang : this.languages) {
       if (lang.getRootType() != null) {
         if (this.rootTypeRef != null) {
           throw new IllegalArgumentException("AnalysisScope must have only 1 root type");
         } else {
-          this.rootTypeRef= lang.getRootType();
+          this.rootTypeRef = lang.getRootType();
         }
       }
     }
@@ -290,7 +290,9 @@ public class ClassHierarchy implements IClassHierarchy {
 
     if (klass.getReference().equals(this.rootTypeRef)) {
       // there is only one root
-      Assertions._assert(root == null);
+      if (Assertions.verifyAssertions) {
+        Assertions._assert(root == null);
+      }
       root = node;
     }
 
@@ -956,8 +958,8 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * Does c implement i?
    * 
-   * @return true iff i is an interface and c is a class that implements i, r
-   *         c is an interface that extends i.
+   * @return true iff i is an interface and c is a class that implements i, r c
+   *         is an interface that extends i.
    * 
    */
   public boolean implementsInterface(IClass c, IClass i) {
