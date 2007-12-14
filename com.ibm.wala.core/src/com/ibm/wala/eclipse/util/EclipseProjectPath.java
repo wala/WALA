@@ -220,7 +220,7 @@ public class EclipseProjectPath {
       Set<Module> s = MapUtil.findOrCreateSet(binaryModules, Loader.APPLICATION);
       s.add(new BinaryDirectoryTreeModule(makeAbsolute(project.getOutputLocation()).toFile()));
 
-      AnalysisScope scope = AnalysisScopeReader.read(AbstractAnalysisEngine.BASIC_FILE, exclusionsFile, classLoader);
+      AnalysisScope scope = AnalysisScopeReader.read(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile, classLoader);
 
       for (Loader loader : Loader.values()) {
         for (Module m : binaryModules.get(loader)) {

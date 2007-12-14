@@ -147,11 +147,16 @@ public class FileProvider {
     URL url = FileLocator.find(p.getBundle(), new Path(fileName), null);
     if (url == null) {
       // try lib/fileName
-      fileName = "lib/" + fileName;
-      url = FileLocator.find(p.getBundle(), new Path(fileName), null);
+      String libFileName = "lib/" + fileName;
+      url = FileLocator.find(p.getBundle(), new Path(libFileName), null);
       if (url == null) {
-        // give up
-        return null;
+        // try bin/fileName
+        String binFileName = "bin/" + fileName;
+        url = FileLocator.find(p.getBundle(), new Path(binFileName), null);
+        if (url == null) {
+          // give up
+          return null;
+        }
       }
     }
     url = FileLocator.toFileURL(url);

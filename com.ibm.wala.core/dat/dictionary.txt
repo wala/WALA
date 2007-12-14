@@ -106,3 +106,7 @@ manu
 sridharan
 grafj
 superclasses
+classloaders
+jdolby
+smarkstr
+plugin

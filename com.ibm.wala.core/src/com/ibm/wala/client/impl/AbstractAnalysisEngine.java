@@ -57,7 +57,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     Iterable<Entrypoint> createEntrypoints(AnalysisScope scope, IClassHierarchy cha);
   }
 
-  public final static String BASIC_FILE = "SyntheticJ2SEModel.xml";
+  public final static String SYNTHETIC_J2SE_MODEL = "SyntheticJ2SEModel.txt";
 
   /**
    * DEBUG_LEVEL:
@@ -73,7 +73,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    * Name of the file which holds the class hierarchy exclusions directives for
    * this analysis.
    */
-  private String exclusionsFile = "J2SEClassHierarchyExclusions.xml";
+  private String exclusionsFile = "J2SEClassHierarchyExclusions.txt";
 
   /**
    * The modules to analyze
@@ -177,7 +177,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
       Assertions.UNREACHABLE("no j2selibs specified. You probably did not call AppAnalysisEngine.setJ2SELibrary.");
     }
 
-    scope = AnalysisScopeReader.read(BASIC_FILE, getExclusionsFile(), getClass().getClassLoader());
+    scope = AnalysisScopeReader.read(SYNTHETIC_J2SE_MODEL, getExclusionsFile(), getClass().getClassLoader());
 
     // add standard libraries
     for (int i = 0; i < j2seLibs.length; i++) {
