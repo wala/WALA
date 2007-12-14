@@ -543,7 +543,7 @@ public abstract class AstTranslator extends CAstVisitor
 
           while (sourceContext != null && (targetContext == null || !targetContext.covers(sourceContext))) {
             final CAstRewriter.Rewrite ast = (new CAstCloner(new CAstImpl()) {
-              protected CAstNode flowOutTo(Map<CAstNode, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget,
+              protected CAstNode flowOutTo(Map<Pair, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget,
                   CAstControlFlowMap orig, CAstSourcePositionMap src) {
                 if (exception && !isExceptionLabel(label)) {
                   return dummy;

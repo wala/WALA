@@ -78,14 +78,14 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     this.rootContext = rootContext;
   }
 
-  protected abstract CAstNode copyNodes(CAstNode root, C context, Map nodeMap);
+  protected abstract CAstNode copyNodes(CAstNode root, C context, Map<Pair,CAstNode> nodeMap);
 
-  protected CAstNode flowOutTo(Map<CAstNode, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget,
+  protected CAstNode flowOutTo(Map<Pair, CAstNode> nodeMap, CAstNode oldSource, Object label, CAstNode oldTarget,
       CAstControlFlowMap orig, CAstSourcePositionMap src) {
     return oldTarget;
   }
 
-  private CAstControlFlowMap copyFlow(Map<CAstNode, CAstNode> nodeMap, CAstControlFlowMap orig, CAstSourcePositionMap newSrc) {
+  private CAstControlFlowMap copyFlow(Map<Pair, CAstNode> nodeMap, CAstControlFlowMap orig, CAstSourcePositionMap newSrc) {
     Set<CAstNode> mappedOutsideNodes = HashSetFactory.make(1);
     CAstControlFlowRecorder newMap = new CAstControlFlowRecorder(newSrc);
     Collection oldSources = orig.getMappedNodes();
@@ -193,7 +193,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
     }
   }
 
-  private Map<CAstNode, Collection<CAstEntity>> copyChildren(Map<CAstNode, CAstNode> nodeMap, Map<CAstNode, Collection<CAstEntity>> children) {
+  private Map<CAstNode, Collection<CAstEntity>> copyChildren(Map<Pair, CAstNode> nodeMap, Map<CAstNode, Collection<CAstEntity>> children) {
     final Map<CAstNode, Collection<CAstEntity>> newChildren = new LinkedHashMap<CAstNode, Collection<CAstEntity>>();
 
     for (Iterator NS = nodeMap.entrySet().iterator(); NS.hasNext();) {
@@ -229,7 +229,7 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
 
   public Rewrite rewrite(CAstNode root, final CAstControlFlowMap cfg, final CAstSourcePositionMap pos, final CAstNodeTypeMap types,
       final Map<CAstNode, Collection<CAstEntity>> children) {
-    final Map<CAstNode, CAstNode> nodes = HashMapFactory.make();
+    final Map<Pair, CAstNode> nodes = HashMapFactory.make();
     final CAstNode newRoot = copyNodes(root, rootContext, nodes);
     return new Rewrite() {
       private CAstControlFlowMap theCfg = null;
