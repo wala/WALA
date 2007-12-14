@@ -52,15 +52,12 @@ public class FlowLabelGraph extends SlowSparseNumberedLabeledGraph<Object, IFlow
   
   
   private final static IFlowLabel defaultLabel = new IFlowLabel() {
-    @Override
     public IFlowLabel bar() {
       return defaultLabel;
     }
-    @Override
     public boolean isBarred() {
       return false;
     }
-    @Override
     public void visit(IFlowLabelVisitor v, Object dst) {
     }
     
