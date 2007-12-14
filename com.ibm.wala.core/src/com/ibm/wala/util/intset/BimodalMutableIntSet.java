@@ -178,6 +178,17 @@ public class BimodalMutableIntSet implements MutableIntSet {
   }
 
   /*
+   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
+   */
+  public IntSet union(IntSet that) {
+    BimodalMutableIntSet temp = new BimodalMutableIntSet();
+    temp.addAll(this);
+    temp.addAll(that);
+
+    return temp;
+  }
+
+  /*
    * @see com.ibm.wala.util.intset.IntSet#isEmpty()
    */
   public boolean isEmpty() {

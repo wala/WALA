@@ -107,6 +107,36 @@ public class OrdinalSet<T> implements Iterable<T> {
     return new OrdinalSet<T>(isect, A.mapping);
   }
 
+  /**
+   * Creates the union of two ordinal sets.
+   * @param A ordinal set a
+   * @param B ordinal set b
+   * @return union of a and b
+   * @throws IllegalArgumentException iff A or B is null
+   */
+  public static <T> OrdinalSet<T> unify(OrdinalSet<T> A, OrdinalSet<T> B) {
+    if (A == null) {
+      throw new IllegalArgumentException("A is null");
+    }
+    if (B == null) {
+      throw new IllegalArgumentException("B is null");
+    }
+    if (Assertions.verifyAssertions) {
+      if (A.size() != 0 && B.size() != 0) {
+        Assertions._assert(A.mapping.equals(B.mapping));
+      }
+    }
+    
+    if (A.S != null && B.S == null) {
+      return new OrdinalSet<T>(A.S, A.mapping);
+    } else if (A.S == null && B.S != null) {
+      return new OrdinalSet<T>(B.S, B.mapping);
+    }
+
+    IntSet union = A.S.union(B.S);
+    return new OrdinalSet<T>(union, A.mapping);
+  }
+
   @Override
   public String toString() {
     return Iterator2Collection.toCollection(iterator()).toString();

@@ -147,6 +147,17 @@ class DebuggingMutableIntSet implements MutableIntSet {
     }
   }
 
+  /*
+   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
+   */
+  public IntSet union(IntSet that) {
+    MutableSparseIntSet temp = new MutableSparseIntSet();
+    temp.addAll(this);
+    temp.addAll(that);
+
+    return temp;
+  }
+
   /**
    * @return true iff <code>this</code> has the same value as
    *         <code>that</code>.

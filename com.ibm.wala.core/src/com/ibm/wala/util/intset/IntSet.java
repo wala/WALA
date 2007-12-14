@@ -37,6 +37,13 @@ public interface IntSet {
   public IntSet intersection(IntSet that);
 
   /**
+   * This implementation must not despoil the original value of "this"
+   * 
+   * @return a new IntSet containing all elements of this and that
+   */
+  public IntSet union(IntSet that);
+
+  /**
    * @return true iff this set is empty
    */
   public boolean isEmpty();

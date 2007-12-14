@@ -377,6 +377,17 @@ public class SparseIntSet implements IntSet {
   }
 
   /*
+   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
+   */
+  public IntSet union(IntSet that) {
+    MutableSparseIntSet temp = new MutableSparseIntSet();
+    temp.addAll(this);
+    temp.addAll(that);
+
+    return temp;
+  }
+
+  /*
    * @see com.ibm.wala.util.intset.IntSet#iterator()
    */
   public IntIterator intIterator() {

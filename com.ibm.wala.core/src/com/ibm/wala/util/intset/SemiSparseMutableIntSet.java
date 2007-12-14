@@ -274,6 +274,17 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
     return newThis;
   }
 
+  /*
+   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
+   */
+  public IntSet union(IntSet that) {
+    SemiSparseMutableIntSet temp = new SemiSparseMutableIntSet();
+    temp.addAll(this);
+    temp.addAll(that);
+
+    return temp;
+  }
+
   /**
    * @return true iff this set is empty
    */

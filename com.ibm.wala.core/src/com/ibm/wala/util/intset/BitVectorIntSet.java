@@ -179,6 +179,17 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   /*
+   * @see com.ibm.wala.util.intset.IntSet#union(com.ibm.wala.util.intset.IntSet)
+   */
+  public IntSet union(IntSet that) {
+    BitVectorIntSet temp = new BitVectorIntSet();
+    temp.addAll(this);
+    temp.addAll(that);
+
+    return temp;
+  }
+
+  /*
    * @see com.ibm.wala.util.intset.IntSet#isEmpty()
    */
   public boolean isEmpty() {
