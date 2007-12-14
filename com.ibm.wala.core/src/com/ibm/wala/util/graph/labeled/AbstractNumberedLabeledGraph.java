@@ -23,10 +23,6 @@ public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumbere
   @Override
   protected abstract LabeledEdgeManager<T, U> getEdgeManager();
 
-  public void setDefaultLabel(U label) {
-    getEdgeManager().setDefaultLabel(label);
-  }
-  
   public void addEdge(T src, T dst, U label) {
     getEdgeManager().addEdge(src, dst, label);
   }
@@ -67,4 +63,7 @@ public abstract class AbstractNumberedLabeledGraph<T, U> extends AbstractNumbere
     return getEdgeManager().getEdgeLabels(src, dst);
   }
 
+  public U getDefaultLabel() {
+    return getEdgeManager().getDefaultLabel();
+  }
 }

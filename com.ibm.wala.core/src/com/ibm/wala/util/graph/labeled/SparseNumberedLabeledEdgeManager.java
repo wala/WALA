@@ -48,6 +48,7 @@
  */
 package com.ibm.wala.util.graph.labeled;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -55,14 +56,20 @@ import java.util.Set;
 import com.ibm.wala.demandpa.genericutil.ArraySetMultiMap;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.SparseNumberedEdgeManager;
 
 /**
  * @author manu
- * 
+ * @author Stephen Fink
  */
-public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeManager<T, U> {
+public class SparseNumberedLabeledEdgeManager<T, U> implements LabeledEdgeManager<T, U> {
+
+  /**
+   * the label to be attached to an edge when no label is specified
+   */
+  private final U defaultLabel;
 
   private final NumberedNodeManager<T> nodeManager;
 
@@ -85,8 +92,6 @@ public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeM
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see util.LabelledEdgeManager#addEdge(java.lang.Object, java.lang.Object,
    *      java.lang.Object)
    */
@@ -97,8 +102,6 @@ public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeM
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see util.LabelledEdgeManager#getPredNodeCount(java.lang.Object,
    *      java.lang.Object)
    */
@@ -107,8 +110,6 @@ public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeM
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see util.LabelledEdgeManager#getPredNodes(java.lang.Object,
    *      java.lang.Object)
    */
@@ -117,8 +118,6 @@ public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeM
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see util.LabelledEdgeManager#getSuccNodeCount(java.lang.Object,
    *      java.lang.Object)
    */
@@ -127,8 +126,6 @@ public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeM
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see util.LabelledEdgeManager#getSuccNodes(java.lang.Object,
    *      java.lang.Object)
    */
@@ -137,8 +134,6 @@ public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeM
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see util.LabelledEdgeManager#hasEdge(java.lang.Object, java.lang.Object,
    *      java.lang.Object)
    */
@@ -157,8 +152,6 @@ public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeM
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see util.LabelledEdgeManager#removeEdge(java.lang.Object,
    *      java.lang.Object, java.lang.Object)
    */
@@ -167,8 +160,6 @@ public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeM
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see util.LabelledEdgeManager#removeIncomingEdges(java.lang.Object)
    */
   public void removeIncomingEdges(T node) throws IllegalArgumentException {
@@ -180,8 +171,6 @@ public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeM
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see util.LabelledEdgeManager#removeOutgoingEdges(java.lang.Object)
    */
   public void removeOutgoingEdges(T node) throws IllegalArgumentException {
@@ -193,8 +182,12 @@ public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeM
   }
 
   public SparseNumberedLabeledEdgeManager(final NumberedNodeManager<T> nodeManager, U defaultLabel) {
-    super(defaultLabel);
+    super();
+    this.defaultLabel = defaultLabel;
     this.nodeManager = nodeManager;
+    if (defaultLabel == null) {
+      throw new IllegalArgumentException("null default label");
+    }
   }
 
   public Iterator<? extends U> getPredLabels(T N) {
@@ -215,6 +208,55 @@ public class SparseNumberedLabeledEdgeManager<T, U> extends AbstractLabeledEdgeM
     }
 
     return labels;
+  }
+
+  public void addEdge(T src, T dst) {
+    addEdge(src, dst, defaultLabel);
+  }
+
+  public int getPredNodeCount(T N) {
+    int count = 0;
+    for (U label : nodeToPredLabels.get(N)) {
+      count += getPredNodeCount(N, label);
+    }
+    return count;
+  }
+
+  public Iterator<? extends T> getPredNodes(T N) {
+    Collection<T> preds = HashSetFactory.make();
+    for (U label : nodeToPredLabels.get(N)) {
+      preds.addAll(Iterator2Collection.toCollection(getPredNodes(N, label)));
+    }
+    return preds.iterator();
+  }
+
+  public int getSuccNodeCount(T N) {
+    int count = 0;
+    for (U label : nodeToSuccLabels.get(N)) {
+      count += getSuccNodeCount(N, label);
+    }
+    return count;
+  }
+
+  public Iterator<? extends T> getSuccNodes(T N) {
+    Collection<T> succs = HashSetFactory.make();
+    for (U label : nodeToSuccLabels.get(N)) {
+      succs.addAll(Iterator2Collection.toCollection(getSuccNodes(N, label)));
+    }
+    return succs.iterator();
+  }
+
+  public boolean hasEdge(T src, T dst) {
+    return hasEdge(src, dst, defaultLabel);
+  }
+
+  public void removeEdge(T src, T dst) throws UnsupportedOperationException {
+    removeEdge(src, dst, defaultLabel);
+  }
+
+  @Override
+  public U getDefaultLabel() {
+    return defaultLabel;
   }
 
 }

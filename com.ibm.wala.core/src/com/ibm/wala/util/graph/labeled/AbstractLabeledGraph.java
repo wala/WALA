@@ -61,10 +61,6 @@ public abstract class AbstractLabeledGraph<T, U> extends AbstractGraph<T> implem
   @Override
   protected abstract LabeledEdgeManager<T, U> getEdgeManager();
 
-  public void setDefaultLabel(U label) {
-    getEdgeManager().setDefaultLabel(label);
-  }
-  
   public void addEdge(T src, T dst, U label) {
     getEdgeManager().addEdge(src, dst, label);
   }

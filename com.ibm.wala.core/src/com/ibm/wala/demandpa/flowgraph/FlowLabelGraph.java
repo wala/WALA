@@ -49,6 +49,26 @@ import com.ibm.wala.util.graph.labeled.SlowSparseNumberedLabeledGraph;
  *
  */
 public class FlowLabelGraph extends SlowSparseNumberedLabeledGraph<Object, IFlowLabel> {
+  
+  
+  private final static IFlowLabel defaultLabel = new IFlowLabel() {
+    @Override
+    public IFlowLabel bar() {
+      return defaultLabel;
+    }
+    @Override
+    public boolean isBarred() {
+      return false;
+    }
+    @Override
+    public void visit(IFlowLabelVisitor v, Object dst) {
+    }
+    
+  };
+
+  public FlowLabelGraph() {
+    super(defaultLabel);
+  }
 
   /**
    * Apply a visitor to the successors of some node.
@@ -76,8 +96,5 @@ public class FlowLabelGraph extends SlowSparseNumberedLabeledGraph<Object, IFlow
         label.visit(v, predNodeIter.next());
       }
     }
-    
   }
-  
-
 }

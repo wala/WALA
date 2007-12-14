@@ -56,12 +56,12 @@ import org.w3c.dom.Node;
 import com.ibm.wala.util.graph.EdgeManager;
 
 /**
- * On object which tracks labelled edges in a graph.
+ * On object which tracks labeled edges in a graph.
  * 
  * @author Manu Sridharan
  * 
- * @param <T>
- * @param <U>
+ * @param <T> type of nodes in this graph
+ * @param <U> types of edge labels.
  */
 public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
 
@@ -69,10 +69,8 @@ public interface LabeledEdgeManager<T, U> extends EdgeManager<T> {
    * Sets the default object used as label for operations where no specific
    * edge label is provided. This is due to compatibility with the 
    * EdgeManager interface
-   * 
-   * @param label
    */
-  public void setDefaultLabel(U label);
+  public U getDefaultLabel();
   
   /**
    * Return an Iterator over the immediate predecessor {@link Node nodes} of
