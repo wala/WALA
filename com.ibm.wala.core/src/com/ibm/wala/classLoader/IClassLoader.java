@@ -21,7 +21,6 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.util.Atom;
 
 /**
- *
  * Base class for an object that represents a single
  * Java classloader for analysis purposes.
  * 
