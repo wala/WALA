@@ -254,7 +254,6 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements LabeledEdgeManage
     removeEdge(src, dst, defaultLabel);
   }
 
-  @Override
   public U getDefaultLabel() {
     return defaultLabel;
   }
