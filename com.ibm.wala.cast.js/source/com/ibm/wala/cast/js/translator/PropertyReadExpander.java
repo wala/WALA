@@ -113,7 +113,7 @@ public class PropertyReadExpander extends CAstRewriter<PropertyReadExpander.Rewr
         CAstNode.VAR, Ast.makeConstant(receiverTemp)), Ast.makeNode(CAstNode.VAR, Ast.makeConstant(elementTemp))));
   }
 
-  protected CAstNode copyNodes(CAstNode root, RewriteContext context, Map nodeMap) {
+  protected CAstNode copyNodes(CAstNode root, RewriteContext context, Map<Pair,CAstNode> nodeMap) {
     int kind = root.getKind();
 
     if (kind == CAstNode.OBJECT_REF && context.inRead()) {
