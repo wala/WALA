@@ -2227,6 +2227,14 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     public int getLastCol() {
       return p.endColumn();
     }
+     
+    public int getFirstOffset() {
+      return p.offset();
+    }
+
+    public int getLastOffset() {
+      return p.endOffset();
+    }
 
     public URL getURL() {
       try {
