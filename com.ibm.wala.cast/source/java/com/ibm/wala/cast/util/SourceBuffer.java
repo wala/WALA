@@ -84,6 +84,8 @@ public class SourceBuffer {
 	public int getLastLine() { return hack.getFirstLine(); }
 	public int getFirstCol() { return hack.getFirstCol(); }
 	public int getLastCol() { return hack.getFirstCol(); }
+	public int getFirstOffset() { return hack.getFirstOffset(); }
+	public int getLastOffset() { return hack.getFirstOffset(); }
 	public URL getURL() { return hack.getURL(); }
 	public InputStream getInputStream() throws IOException { 
 	  return hack.getInputStream();

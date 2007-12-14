@@ -40,6 +40,8 @@ public interface CAstSourcePositionMap {
     int getLastLine();
     int getFirstCol();
     int getLastCol();
+    int getFirstOffset();
+    int getLastOffset(); 
     URL getURL();
     InputStream getInputStream() throws IOException;
   }

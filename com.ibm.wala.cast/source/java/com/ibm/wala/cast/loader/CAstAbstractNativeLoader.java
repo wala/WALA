@@ -64,13 +64,17 @@ public abstract class CAstAbstractNativeLoader extends CAstAbstractLoader {
 
             CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 
-            Trace.println(CAstPrinter.print(fileEntity));
+	    if (fileEntity != null) {
+	      Trace.println(CAstPrinter.print(fileEntity));
 
-            xlatorToIR.translate(fileEntity, fn);
+	      xlatorToIR.translate(fileEntity, fn);
+	    }
           } catch (MalformedURLException e) {
             Trace.println("unpected problems with " + f);
             Assertions.UNREACHABLE();
-          }
+          } catch (RuntimeException e) {
+            Trace.println("unpected problems with " + f);
+	  }
 
         } else if (moduleEntry instanceof SourceURLModule) {
           java.net.URL url = ((SourceURLModule) moduleEntry).getURL();
@@ -86,15 +90,19 @@ public abstract class CAstAbstractNativeLoader extends CAstAbstractLoader {
 
             CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 
-            Trace.println(CAstPrinter.print(fileEntity));
+	    if (fileEntity != null) {
+	      Trace.println(CAstPrinter.print(fileEntity));
 
-            xlatorToIR.translate(fileEntity, fileName);
+	      xlatorToIR.translate(fileEntity, fileName);
+	    }
 
             F.delete();
           } catch (IOException e) {
             Trace.println("unpected problems with " + fileName);
             Assertions.UNREACHABLE();
-          }
+          } catch (RuntimeException e) {
+            Trace.println("unpected problems with " + fileName);
+	  }
         }
       }
 

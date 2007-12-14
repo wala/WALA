@@ -63,6 +63,8 @@ public class CAstSourcePositionRecorder implements CAstSourcePositionMap {
 	public int getLastLine() { return ll; }
 	public int getFirstCol() { return fc; }
 	public int getLastCol() { return lc; }
+	public int getFirstOffset() { return -1; }
+	public int getLastOffset() { return -1; }
 	public URL getURL() { return url; }
 	public InputStream getInputStream() throws IOException { 
 	  return file.openConnection().getInputStream();

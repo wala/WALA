@@ -314,6 +314,14 @@ public abstract class NativeTranslatorToCAst extends NativeBridge {
         return lc;
       }
 
+      public int getFirstOffset() {
+        return -1;
+      }
+
+      public int getLastOffset() {
+        return -1;
+      }
+      
       public URL getURL() {
         return sourceURL;
       }

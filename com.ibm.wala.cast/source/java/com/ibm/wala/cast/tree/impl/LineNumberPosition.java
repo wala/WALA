@@ -32,6 +32,10 @@ public class LineNumberPosition extends AbstractSourcePosition {
   public int getFirstCol() { return -1; }
 
   public int getLastCol() { return -1; }
+  
+  public int getFirstOffset() { return -1; }
+ 
+  public int getLastOffset() { return -1; }
 
   public URL getURL() { return url; }
 	
