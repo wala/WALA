@@ -1999,8 +1999,9 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       fPI = pi;
     }
 
-    public Collection getCatchTargets(Type label) {
-      return Collections.singleton(Pair.make(fREType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
+    public Collection<Pair<Type, Object>> getCatchTargets(Type label) {
+      Collection<Pair<Type, Object>> result = Collections.singleton(Pair.<Type,Object>make(fREType, CAstControlFlowMap.EXCEPTION_TO_EXIT));
+      return result;
     }
 
     public CodeInstance getEnclosingMethod() {
