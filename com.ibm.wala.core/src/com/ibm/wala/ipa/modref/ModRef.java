@@ -55,14 +55,15 @@ public class ModRef {
     return new ModRef();
   }
 
+  protected ModRef() {
+  }
 
-  protected ModRef() {}
-
-  
   /**
    * For each call graph node, what heap locations (as determined by a heap
    * model) may it write, including its callees transitively
-   * @throws IllegalArgumentException  if cg is null
+   * 
+   * @throws IllegalArgumentException
+   *             if cg is null
    * 
    */
   public Map<CGNode, OrdinalSet<PointerKey>> computeMod(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
@@ -76,7 +77,9 @@ public class ModRef {
   /**
    * For each call graph node, what heap locations (as determined by a heap
    * model) may it read, including its callees transitively
-   * @throws IllegalArgumentException  if cg is null
+   * 
+   * @throws IllegalArgumentException
+   *             if cg is null
    * 
    */
   public Map<CGNode, OrdinalSet<PointerKey>> computeRef(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
@@ -247,7 +250,6 @@ public class ModRef {
 
     private final PointerAnalysis pa;
 
-
     protected ModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis pa) {
       this.n = n;
       this.result = result;
@@ -262,6 +264,24 @@ public class ModRef {
         if (dim > 1) {
           for (int d = 0; d < dim - 1; d++) {
             InstanceKey i = h.getInstanceKeyForMultiNewArray(n, instruction.getNewSite(), d);
+            // note that i can be null depending on class hierarchy exclusions
+            // or for incomplete programs. If so, just ignore it and keep going.
+            if (i != null) {
+              PointerKey pk = h.getPointerKeyForArrayContents(i);
+              assert pk != null;
+              result.add(pk);
+              pk = h.getPointerKeyForArrayLength(i);
+              assert pk != null;
+              result.add(pk);
+            }
+          }
+        } else {
+          // allocation of 1D arr "writes" the contents of the array and the
+          // length field
+          InstanceKey i = h.getInstanceKeyForAllocation(n, instruction.getNewSite());
+          // note that i can be null depending on class hierarchy exclusions or
+          // for incomplete programs. If so, just ignore it and keep going.
+          if (i != null) {
             PointerKey pk = h.getPointerKeyForArrayContents(i);
             assert pk != null;
             result.add(pk);
@@ -269,16 +289,6 @@ public class ModRef {
             assert pk != null;
             result.add(pk);
           }
-        } else {
-          // allocation of 1D arr "writes" the contents of the array and the
-          // length field
-          InstanceKey i = h.getInstanceKeyForAllocation(n, instruction.getNewSite());
-          PointerKey pk = h.getPointerKeyForArrayContents(i);
-          assert pk != null;
-          result.add(pk);
-          pk = h.getPointerKeyForArrayLength(i);
-          assert pk != null;
-          result.add(pk);
         }
 
       } else {
@@ -327,14 +337,13 @@ public class ModRef {
   }
 
   protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
-      return new ModVisitor(n, result, h, pa);
+    return new ModVisitor(n, result, h, pa);
   }
 
-  public Collection<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s,
-      HeapExclusions hexcl) {
+  public Collection<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl) {
     if (s == null) {
-          throw new IllegalArgumentException("s is null");
-        }
+      throw new IllegalArgumentException("s is null");
+    }
     Collection<PointerKey> result = HashSetFactory.make(2);
     ModVisitor v = makeModVisitor(n, result, pa, h);
     s.visit(v);
@@ -345,11 +354,10 @@ public class ModRef {
     return new RefVisitor(n, result, pa, h);
   }
 
-  public Collection<PointerKey> getRef(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s,
-      HeapExclusions hexcl) {
+  public Collection<PointerKey> getRef(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl) {
     if (s == null) {
-          throw new IllegalArgumentException("s is null");
-        }
+      throw new IllegalArgumentException("s is null");
+    }
     Collection<PointerKey> result = HashSetFactory.make(2);
     RefVisitor v = makeRefVisitor(n, result, pa, h);
     s.visit(v);
