@@ -40,6 +40,7 @@ import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
+import com.ibm.wala.ipa.slicer.thin.ThinSlicer;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
@@ -468,6 +469,27 @@ public class SlicerTest extends TestCase {
     assertEquals(1, countAllocations(slice));
     assertEquals(1, countThrows(slice));
     assertEquals(1, countGetfields(slice));
+  }
+  
+  public void testTestMessageFormat() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.SLICE_TESTMESSAGEFORMAT);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+
+    CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope);
+    CallGraph cg = builder.makeCallGraph(options);
+
+    CGNode main = findMainMethod(cg);
+    Statement seed = new NormalStatement(main, 2);
+
+    System.err.println("Statement: " + seed);
+    // compute a backwards thin slice
+    ThinSlicer ts = new ThinSlicer(cg, builder.getPointerAnalysis());
+    Collection<Statement> slice = ts.computeBackwardThinSlice(seed);
+    dumpSlice(slice);
+
   }
 
   public static int countAllocations(Collection<Statement> slice) {
