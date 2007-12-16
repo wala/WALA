@@ -30,11 +30,11 @@ public class FileOfClasses extends SetOfClasses {
 
   private static final boolean DEBUG = false;
 
-  private Pattern pattern;
+  private Pattern pattern = null;
 
-  private String regex;
+  private String regex = null;
 
-  private boolean needsCompile = true;
+  private boolean needsCompile = false;
 
   public FileOfClasses(String textFileName, ClassLoader loader) {
     try {
@@ -57,7 +57,7 @@ public class FileOfClasses extends SetOfClasses {
       if (regex != null) {
 	this.regex = regex.toString();
 	needsCompile = true;
-      }
+      } 
 
       is.close();
     } catch (IOException e) {
