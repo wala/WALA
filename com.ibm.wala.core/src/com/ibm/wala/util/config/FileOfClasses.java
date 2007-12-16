@@ -54,8 +54,10 @@ public class FileOfClasses extends SetOfClasses {
 	}
       }
 
-      this.regex = regex.toString();
-      needsCompile = true;
+      if (regex != null) {
+	this.regex = regex.toString();
+	needsCompile = true;
+      }
 
       is.close();
     } catch (IOException e) {
@@ -85,6 +87,9 @@ public class FileOfClasses extends SetOfClasses {
     if (needsCompile) {
       compile();
     }
+    if (pattern == null) {
+      return false;
+    }
     Matcher m = pattern.matcher(klassName);
     if (DEBUG) {
       if (m.matches()) {
@@ -104,7 +109,11 @@ public class FileOfClasses extends SetOfClasses {
     if (klass == null) {
       throw new IllegalArgumentException("klass is null");
     }
-    regex = regex + '|' + klass.getReference().getName().toString();
+    if (regex == null) {
+      regex = klass.getReference().getName().toString();
+    } else {
+      regex = regex + '|' + klass.getReference().getName().toString();
+    }
     needsCompile = true;
   }
 }
