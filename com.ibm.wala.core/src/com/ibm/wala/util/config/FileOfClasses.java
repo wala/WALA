@@ -10,10 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.config;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,8 +38,11 @@ public class FileOfClasses extends SetOfClasses {
 
   public FileOfClasses(String textFileName, ClassLoader loader) {
     try {
-      File textFile = FileProvider.getFile(textFileName, loader);
-      BufferedReader is = new BufferedReader(new FileReader(textFile));
+      URL textFile = FileProvider.getResource(textFileName, loader);
+      BufferedReader is = 
+	new BufferedReader(
+	  new InputStreamReader(
+	    textFile.openConnection().getInputStream()));
     
       StringBuffer regex =  null;
       String line;
@@ -55,6 +56,8 @@ public class FileOfClasses extends SetOfClasses {
 
       this.regex = regex.toString();
       needsCompile = true;
+
+      is.close();
     } catch (IOException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();

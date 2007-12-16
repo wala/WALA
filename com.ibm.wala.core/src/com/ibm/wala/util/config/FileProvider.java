@@ -92,6 +92,21 @@ public class FileProvider {
 
   }
 
+  public static URL getResource(String fileName) throws IOException {
+    return getResource(fileName, FileProvider.class.getClassLoader());
+  }
+  
+  public static URL getResource(String fileName, ClassLoader loader)
+    throws IOException 
+  {
+    return
+      (CorePlugin.getDefault() == null) ? 
+	loader.getResource(fileName):
+	FileLocator.find(
+	  CorePlugin.getDefault().getBundle(), 
+	  new Path(fileName), null);
+  }
+    
   /**
    */
   public static File getFile(String fileName) throws IOException {
