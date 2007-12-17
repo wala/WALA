@@ -110,3 +110,5 @@ classloaders
 jdolby
 smarkstr
 plugin
+wacky
+stdin

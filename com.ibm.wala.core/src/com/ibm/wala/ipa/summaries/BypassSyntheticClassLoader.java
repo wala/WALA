@@ -108,7 +108,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
   }
 
   /**
-   * @return an Iterator of all classees loaded by this loader
+   * @return an Iterator of all classes loaded by this loader
    */
   public Iterator<IClass> iterateAllClasses() {
     return syntheticClasses.values().iterator();

@@ -927,27 +927,17 @@ public class ClassHierarchy implements IClassHierarchy {
       }
       Node n1 = map.get(c);
       if (n1 == null) {
-        // some very wacky case, like a FakeRootClass
+        // some wacky case, like a FakeRootClass
         return false;
       }
       Node n2 = map.get(T);
       if (n2 == null) {
-        // some very wacky case, like a FakeRootClass
+        // some wacky case, like a FakeRootClass
         return false;
       }
       if (n1.left == -1) {
-        /**
-         * not necessary any more, due to `new Function' in javaScript if
-         * (Assertions.verifyAssertions)
-         * Assertions._assert(isSyntheticClass(c));
-         */
         return slowIsSubclass(c, T);
       } else if (n2.left == -1) {
-        /**
-         * not necessary any more, due to `new Function' in javaScript if
-         * (Assertions.verifyAssertions)
-         * Assertions._assert(isSyntheticClass(T));
-         */
         return slowIsSubclass(c, T);
       } else {
         return (n2.left <= n1.left) && (n1.left <= n2.right);

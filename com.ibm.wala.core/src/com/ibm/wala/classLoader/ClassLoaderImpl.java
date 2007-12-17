@@ -333,7 +333,7 @@ public class ClassLoaderImpl implements IClassLoader {
    * @throws IOException
    * @throws IllegalArgumentException  if modules is null
    */
-  public void init(Set modules) throws IOException {
+  public void init(Set<Module> modules) throws IOException {
 
     if (modules == null) {
       throw new IllegalArgumentException("modules is null");

@@ -77,8 +77,14 @@ public interface IClassLoader {
    */
   public abstract IClassLoader getParent();
 
-  public abstract void init(Set modules) throws IOException;
-
+  /**
+   * Initialize internal data structures.
+   * 
+   * @throws IOException
+   * @throws IllegalArgumentException  if modules is null
+   */
+  public void init(Set<Module> modules) throws IOException;
+  
   /**
    * blow away references to any classes in the set
    * @param toRemove Collection<IClass>
