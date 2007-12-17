@@ -29,20 +29,32 @@ public abstract class Launcher {
 
   protected Map env = null;
 
-  protected byte[] output = null;
+  protected byte[] stdOut = null;
+  
+  protected byte[] stdErr = null;
 
   private byte[] input = null;
 
+  /**
+   * capture the contents of stdout?
+   */
   private final boolean captureOutput;
+  
+  /**
+   * capture the contents of stderr?
+   */
+  private final boolean captureErr;
 
   protected Launcher() {
     super();
     this.captureOutput = false;
+    this.captureErr = false;
   }
 
-  protected Launcher(boolean captureOutput) {
+  protected Launcher(boolean captureOutput, boolean captureErr) {
     super();
     this.captureOutput = captureOutput;
+    this.captureErr = true;
   }
 
   public File getWorkingDir() {
@@ -137,6 +149,20 @@ public abstract class Launcher {
     result.start();
     return result;
   }
+  
+  protected Drainer captureStdErr(Process p) {
+    final BufferedInputStream out = new BufferedInputStream(p.getErrorStream());
+    final ByteArrayOutputStream b = new ByteArrayOutputStream();
+    Drainer result = new Drainer(p) {
+      @Override
+      void drain() throws IOException {
+        drainAndCatch(out, b);
+      }
+    };
+    result.setCapture(b);
+    result.start();
+    return result;
+  }
 
   /**
    * A thread that runs in a loop, performing the drain() action until a process
@@ -210,13 +236,25 @@ public abstract class Launcher {
   public boolean isCaptureOutput() {
     return captureOutput;
   }
-
-  public byte[] getOutput() {
-    return output;
+  
+  public boolean isCaptureErr() {
+    return captureErr;
   }
 
-  protected void setOutput(byte[] newOutput) {
-    output = newOutput;
+  public byte[] getStdOut() {
+    return stdOut;
+  }
+  
+  public byte[] getStderr() {
+    return stdErr;
+  }
+  
+  protected void setStdOut(byte[] newOutput) {
+    stdOut = newOutput;
+  }
+  
+  protected void setStdErr(byte[] newErr) {
+    stdErr = newErr;
   }
 
   public byte[] getInput() {

@@ -22,8 +22,8 @@ public class BasicLauncher extends Launcher {
 
   protected String cmd;
 
-  public BasicLauncher(boolean captureOutput) {
-    super(captureOutput);
+  public BasicLauncher(boolean captureOutput, boolean captureErr) {
+    super(captureOutput, captureErr);
   }
 
   public String getCmd() {
@@ -39,29 +39,25 @@ public class BasicLauncher extends Launcher {
     StringBuffer result = new StringBuffer(super.toString());
     result.append(" (cmd: ");
     result.append(cmd);
-    result.append(", captureOutput: ");
-    result.append(isCaptureOutput());
-    result.append(", Output: ");
-    result.append(output);
-    result.append(')');
     return result.toString();
   }
 
   /**
    * Launch the process and wait until it is finished.
+   * 
    * @throws WalaException
    * @throws IllegalArgumentException
-   * @throws IOException 
+   * @throws IOException
    */
   public void launch() throws WalaException, IllegalArgumentException, IOException {
     Process p = spawnProcess(getCmd());
 
-    Thread d1 = drainStdErr(p);
+    Thread d1 = isCaptureErr() ? captureStdErr(p) : drainStdErr(p);
     Thread d2 = isCaptureOutput() ? captureStdOut(p) : drainStdOut(p);
     if (getInput() != null) {
       final BufferedOutputStream input = new BufferedOutputStream(p.getOutputStream());
       try {
-        input.write(getInput(),0,getInput().length);
+        input.write(getInput(), 0, getInput().length);
         input.flush();
       } catch (IOException e) {
         e.printStackTrace();
@@ -74,9 +70,13 @@ public class BasicLauncher extends Launcher {
     } catch (InterruptedException e) {
       throw new WalaException("Internal error", e);
     }
+    if (isCaptureErr()) {
+      Drainer d = (Drainer) d1;
+      setStdErr(d.getCapture().toByteArray());
+    }
     if (isCaptureOutput()) {
       Drainer d = (Drainer) d2;
-      setOutput(d.getCapture().toByteArray());
+      setStdOut(d.getCapture().toByteArray());
     }
   }
 }

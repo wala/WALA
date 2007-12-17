@@ -24,23 +24,35 @@ import java.util.List;
 public class JavaLauncher extends Launcher {
 
   /**
-   * @param programArgs arguments to be passed to the Java program
-   * @param mainClass Declaring class of the main() method to run.
-   * @param classpathEntries  Paths that will be added to the default classpath
+   * @param programArgs
+   *            arguments to be passed to the Java program
+   * @param mainClass
+   *            Declaring class of the main() method to run.
+   * @param classpathEntries
+   *            Paths that will be added to the default classpath
    */
   public static JavaLauncher make(String programArgs, String mainClass, List<String> classpathEntries) {
-    return new JavaLauncher(programArgs, mainClass, true, classpathEntries, false);
+    return new JavaLauncher(programArgs, mainClass, true, classpathEntries, false, false);
   }
 
   /**
-   * @param programArgs arguments to be passed to the Java program
-   * @param mainClass Declaring class of the main() method to run.
-   * @param inheritClasspath Should the spawned process inherit all classpath entries of the currently running process?
-   * @param classpathEntries  Paths that will be added to the default classpath
-   * @param captureOutput should the launcher capture the stdout and stderr from the subprocess?
+   * @param programArgs
+   *            arguments to be passed to the Java program
+   * @param mainClass
+   *            Declaring class of the main() method to run.
+   * @param inheritClasspath
+   *            Should the spawned process inherit all classpath entries of the
+   *            currently running process?
+   * @param classpathEntries
+   *            Paths that will be added to the default classpath
+   * @param captureOutput
+   *            should the launcher capture the stdout from the subprocess? 
+   * @param captureErr
+   *            should the launcher capture the stderr from the subprocess?
    */
-  public static JavaLauncher make(String programArgs, String mainClass, boolean inheritClasspath, List<String> classpathEntries, boolean captureOutput) {
-    return new JavaLauncher(programArgs, mainClass, inheritClasspath, classpathEntries, captureOutput);
+  public static JavaLauncher make(String programArgs, String mainClass, boolean inheritClasspath, List<String> classpathEntries,
+      boolean captureOutput, boolean captureErr) {
+    return new JavaLauncher(programArgs, mainClass, inheritClasspath, classpathEntries, captureOutput, captureErr);
   }
 
   /**
@@ -54,16 +66,16 @@ public class JavaLauncher extends Launcher {
   private final String mainClass;
 
   /**
-   * Should the spawned process inherit all classpath entries of the currently running process?
+   * Should the spawned process inherit all classpath entries of the currently
+   * running process?
    */
   private final boolean inheritClasspath;
-  
+
   /**
-   * Should assertions be enabled in the subprocess?  default false.
+   * Should assertions be enabled in the subprocess? default false.
    */
   private boolean enableAssertions;
-  
-  
+
   /**
    * Paths that will be added to the default classpath
    */
@@ -73,14 +85,15 @@ public class JavaLauncher extends Launcher {
    * A {@link Thread} which spins and drains stdout of the running process.
    */
   private Thread stdOutDrain;
-
+  
   /**
    * A {@link Thread} which spins and drains stderr of the running process.
    */
-  private Thread stdInDrain;
+  private Thread stdErrDrain;
 
-  private JavaLauncher(String programArgs, String mainClass, boolean inheritClasspath, List<String> xtraClasspath, boolean captureOutput) {
-    super(captureOutput);
+  private JavaLauncher(String programArgs, String mainClass, boolean inheritClasspath, List<String> xtraClasspath,
+      boolean captureOutput, boolean captureErr) {
+    super(captureOutput, captureErr);
     this.programArgs = programArgs;
     this.mainClass = mainClass;
     this.inheritClasspath = inheritClasspath;
@@ -88,7 +101,7 @@ public class JavaLauncher extends Launcher {
       this.xtraClasspath.addAll(xtraClasspath);
     }
   }
-  
+
   public void setProgramArgs(String s) {
     this.programArgs = s;
   }
@@ -128,23 +141,24 @@ public class JavaLauncher extends Launcher {
 
   /**
    * Launch the java process.
-   * @throws IOException 
-   * @throws IllegalArgumentException 
+   * 
+   * @throws IOException
+   * @throws IllegalArgumentException
    */
-  public Process start() throws IllegalArgumentException, IOException  {
+  public Process start() throws IllegalArgumentException, IOException {
     System.err.println(System.getProperty("user.dir"));
 
     String cp = makeClasspath();
 
     String heap = " -Xmx800M ";
-    
+
     String ea = enableAssertions ? " -ea " : "";
 
     String cmd = getJavaExe() + heap + cp + " " + makeLibPath() + " " + ea + getMainClass() + " " + getProgramArgs();
 
     Process p = spawnProcess(cmd);
+    stdErrDrain = isCaptureErr() ? captureStdErr(p) : drainStdErr(p);
     stdOutDrain = isCaptureOutput() ? captureStdOut(p) : drainStdOut(p);
-    stdInDrain = drainStdErr(p);
     return p;
   }
 
@@ -163,14 +177,18 @@ public class JavaLauncher extends Launcher {
   public void join() {
     try {
       stdOutDrain.join();
-      stdInDrain.join();
+      stdErrDrain.join();
     } catch (InterruptedException e) {
       e.printStackTrace();
       throw new InternalError("Internal error in JavaLauncher.join()");
     }
+    if (isCaptureErr()) {
+      Drainer d = (Drainer) stdErrDrain;
+      setStdErr(d.getCapture().toByteArray());
+    }
     if (isCaptureOutput()) {
       Drainer d = (Drainer) stdOutDrain;
-      setOutput(d.getCapture().toByteArray());
+      setStdOut(d.getCapture().toByteArray());
     }
   }
 
@@ -178,7 +196,7 @@ public class JavaLauncher extends Launcher {
    * Compute the classpath for the spawned process
    */
   private String makeClasspath() {
-    String cp = inheritClasspath ? System.getProperty("java.class.path") : "" ;
+    String cp = inheritClasspath ? System.getProperty("java.class.path") : "";
     if (getXtraClassPath() == null || getXtraClassPath().isEmpty()) {
       return " -classpath " + quoteStringIfNeeded(cp);
     } else {
@@ -192,19 +210,19 @@ public class JavaLauncher extends Launcher {
 
   /**
    * If the input string contains a space, quote it (for use as a classpath).
-   * TODO: Figure out how to make a Mac happy with quotes.
-   * Trailing separators are unsafe, so we have to escape the last backslash
-   * (if present and unescaped), so it doesn't escape the closing quote.
+   * TODO: Figure out how to make a Mac happy with quotes. Trailing separators
+   * are unsafe, so we have to escape the last backslash (if present and
+   * unescaped), so it doesn't escape the closing quote.
    */
   private String quoteStringIfNeeded(String s) {
     s = s.trim();
-    // Check if there's a space.  If not, skip quoting to make Macs happy.
+    // Check if there's a space. If not, skip quoting to make Macs happy.
     // TODO: Add the check for an escaped space.
     if (s.indexOf(' ') == -1) {
       return s;
     }
-    if (s.charAt(s.length()-1) == '\\' && s.charAt(s.length()-2) != '\\') {
-      s += '\\';  // Escape the last backslash, so it doesn't escape the quote.
+    if (s.charAt(s.length() - 1) == '\\' && s.charAt(s.length() - 2) != '\\') {
+      s += '\\'; // Escape the last backslash, so it doesn't escape the quote.
     }
     return '\"' + s + '\"';
   }
