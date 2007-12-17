@@ -166,6 +166,9 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
         SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
         TypeVariable v = getVariable(call.getException());
         Collection<TypeReference> defaultExceptions = call.getExceptionTypes();
+        if (defaultExceptions.size() == 0) {
+          continue;
+        }
         if (Assertions.verifyAssertions) {
           Assertions._assert(defaultExceptions.size() == 1);
         }

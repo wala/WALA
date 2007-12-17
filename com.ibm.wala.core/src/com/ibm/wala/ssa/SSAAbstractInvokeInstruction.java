@@ -39,7 +39,6 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
     this.site = site;
   }
 
-
   public CallSiteReference getCallSite() {
     return site;
   }
@@ -55,9 +54,9 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
   public boolean isDispatch() {
     return getSite().isDispatch();
   }
-  
+
   public boolean isSpecial() {
-	return getSite().isSpecial();
+    return getSite().isSpecial();
   }
 
   /**
@@ -66,7 +65,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
   public int getReceiver() {
     if (Assertions.verifyAssertions) {
       IInvokeInstruction.IDispatch code = site.getInvocationCode();
-      Assertions._assert(code!=IInvokeInstruction.Dispatch.STATIC, toString());
+      Assertions._assert(code != IInvokeInstruction.Dispatch.STATIC, toString());
     }
     return getUse(0);
   }
@@ -87,11 +86,11 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
       return exception;
     } else {
       if (i == 0) {
-	return getReturnValue(0);
+        return getReturnValue(0);
       } else if (i == 1) {
-	return exception;
+        return exception;
       } else {
-	return getReturnValue(i-1);
+        return getReturnValue(i - 1);
       }
     }
   }
@@ -102,7 +101,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
 
   @Override
   public boolean hasDef() {
-    return getNumberOfReturnValues()>0;
+    return getNumberOfReturnValues() > 0;
   }
 
   @Override
@@ -112,9 +111,9 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
 
   public abstract int getNumberOfParameters();
 
-  public abstract int getNumberOfReturnValues();  
+  public abstract int getNumberOfReturnValues();
 
-  public abstract int getReturnValue(int i);  
+  public abstract int getReturnValue(int i);
 
   /**
    * Method getDeclaredResultType. TODO: push this logic into shrike.

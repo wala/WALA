@@ -146,8 +146,6 @@ public class Exceptions implements Constants {
   }
 
   /**
-   * @author sfink
-   * 
    * A warning for when we fail to resolve the type for a checkcast
    */
   private static class MethodResolutionFailure extends Warning {
@@ -175,9 +173,9 @@ public class Exceptions implements Constants {
 
   /**
    * @param pei
-   *          a potentially-excepting insruction
+   *          a potentially-excepting instruction
    * @return the exception types that pei may throw, independent of the class
-   *         hierarchy
+   *         hierarchy.   null if none.
    * 
    * Notes
    * <ul>
@@ -220,7 +218,6 @@ public class Exceptions implements Constants {
     case OP_putfield:
     case OP_invokevirtual:
     case OP_invokespecial:
-    case OP_invokestatic:
     case OP_invokeinterface:
       return getNullPointerException();
     case OP_idiv:

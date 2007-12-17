@@ -11,6 +11,7 @@
 package com.ibm.wala.ssa;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
@@ -153,6 +154,7 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
 
   @Override
   public Collection<TypeReference> getExceptionTypes() {
-    return Exceptions.getNullPointerException();
+    Collection<TypeReference> empty = Collections.emptySet();
+    return isStatic() ? empty : Exceptions.getNullPointerException();
   }
 }
