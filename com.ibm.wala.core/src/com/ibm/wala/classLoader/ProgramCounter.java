@@ -13,8 +13,7 @@ package com.ibm.wala.classLoader;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
- * Simple object that represents a program counter value (ie., an instruction in
+ * Simple object that represents a program counter value (i.e., an instruction in
  * the bytecode)
  * 
  * @author sfink
@@ -66,7 +65,7 @@ public class ProgramCounter implements IProgramCounter {
 
   @Override
   public int hashCode() {
-    return programCounter;
+    return programCounter + 77;
   }
 
   @Override

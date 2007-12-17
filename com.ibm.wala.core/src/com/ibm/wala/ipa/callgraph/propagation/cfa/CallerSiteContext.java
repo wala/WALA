@@ -16,8 +16,9 @@ import com.ibm.wala.ipa.callgraph.ContextItem;
 import com.ibm.wala.ipa.callgraph.ContextKey;
 
 /**
- * @author Julain Dolby (?)
- *
+ * A context which is a <CGNode, CallSiteReference> pair
+ * 
+ * @author sfink
  */
 public class CallerSiteContext extends CallerContext {
 
@@ -40,9 +41,8 @@ public class CallerSiteContext extends CallerContext {
   @Override
   public boolean equals(Object obj) {
     if (getClass().equals(obj.getClass())) {
-      CallerSiteContext other = (CallerSiteContext)obj;
-      return getCaller().equals(other.getCaller()) &&
-	     callSite.equals(other.callSite);
+      CallerSiteContext other = (CallerSiteContext) obj;
+      return getCaller().equals(other.getCaller()) && callSite.equals(other.callSite);
     } else {
       return false;
     }
@@ -50,7 +50,7 @@ public class CallerSiteContext extends CallerContext {
 
   @Override
   public int hashCode() {
-    return callSite.hashCode() * super.hashCode();
+    return callSite.hashCode() * 19 + super.hashCode();
   }
 
   @Override

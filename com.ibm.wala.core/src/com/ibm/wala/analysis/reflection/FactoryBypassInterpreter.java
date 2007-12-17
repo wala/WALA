@@ -38,6 +38,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.ReflectionSummary;
@@ -153,7 +154,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
       MemberReference m = site.getCaller().getMethod().getReference();
       ReflectionSummary summary = spec.getSummary(m);
       if (summary != null) {
-        Set types = summary.getTypesForProgramLocation(site.getSite().getProgramCounter());
+        Set types = summary.getTypesForProgramLocation(site.getCallSite().getProgramCounter());
         if (types != null) {
           return types;
         }
