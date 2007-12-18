@@ -22,7 +22,6 @@ import java.util.StringTokenizer;
 import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.SimpleVector;
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * @author sfink
@@ -69,9 +68,8 @@ public class StringTable extends Table<String> implements Cloneable {
 
   /**
    * read from a text file obtained as a resource
-   * 
    */
-  public static StringTable readFromTextFile(String fileName) throws IOException, WalaException {
+  public static StringTable readFromTextFile(String fileName) throws IOException {
     File f = FileProvider.getFile(fileName);
     return readFromTextFile(f);
   }
