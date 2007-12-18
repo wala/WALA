@@ -385,8 +385,12 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     }
     
     public Iterator<TypeReference> getCaughtExceptionTypes() {
-      ExceptionHandlerBasicBlock eb = (ExceptionHandlerBasicBlock)original;
-      return eb.getCaughtExceptionTypes();
+      if (original instanceof ExceptionHandlerBasicBlock) {
+        ExceptionHandlerBasicBlock eb = (ExceptionHandlerBasicBlock)original;
+        return eb.getCaughtExceptionTypes();
+      } else {
+        return EmptyIterator.instance();
+      }
     }
 
     public int getFirstInstructionIndex() {
@@ -484,8 +488,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     }
 
     public SSAInstruction getLastInstruction() {
-      Assertions.UNREACHABLE();
-      return null;
+      if (getLastInstructionIndex() < 0) {
+        return null;
+      } else {
+        return ir.getInstructions()[getLastInstructionIndex()];
+      }
     }
 
     public Iterator<SSAPhiInstruction> iteratePhis() {
