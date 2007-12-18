@@ -12,11 +12,14 @@ package com.ibm.wala.ipa.cfg;
 
 import java.util.Iterator;
 
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.SSAPiInstruction;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 
 /**
@@ -25,7 +28,7 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
  * 
  * @author sfink
  */
-public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWithNumber implements IBasicBlock {
+public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWithNumber implements ISSABasicBlock {
   private final T delegate;
 
   private final CGNode node;
@@ -117,6 +120,22 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   @Override
   public String toString() {
     return delegate.toString();
+  }
+
+  public Iterator<TypeReference> getCaughtExceptionTypes() {
+    return delegate.getCaughtExceptionTypes();
+  }
+
+  public SSAInstruction getLastInstruction() {
+    return delegate.getLastInstruction();
+  }
+
+  public Iterator<SSAPhiInstruction> iteratePhis() {
+    return delegate.iteratePhis();
+  }
+
+  public Iterator<SSAPiInstruction> iteratePis() {
+    return delegate.iteratePis();
   }
 
 }

@@ -49,7 +49,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
    * @param forwardGraph
    *            the graph to ``reverse''
    */
-  private BackwardsSupergraph(ISupergraph<T, P> forwardGraph) {
+  protected BackwardsSupergraph(ISupergraph<T, P> forwardGraph) {
     this.delegate = forwardGraph;
   }
 

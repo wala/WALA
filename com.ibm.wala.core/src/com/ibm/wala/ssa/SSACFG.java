@@ -601,6 +601,15 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
     public SSAInstruction getLastInstruction() {
       return instructions[getLastInstructionIndex()];
     }
+
+    /**
+     * The {@link ExceptionHandlerBasicBlock} subclass will override this.
+     * 
+     * @see com.ibm.wala.ssa.ISSABasicBlock#getCaughtExceptionTypes()
+     */
+    public Iterator<TypeReference> getCaughtExceptionTypes() {
+      return EmptyIterator.instance();
+    }
   }
 
   public class ExceptionHandlerBasicBlock extends BasicBlock {
@@ -631,6 +640,7 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
       this.catchInstruction = catchInstruction;
     }
 
+    @Override
     public Iterator<TypeReference> getCaughtExceptionTypes() {
       return new Iterator<TypeReference>() {
         int next = 0;

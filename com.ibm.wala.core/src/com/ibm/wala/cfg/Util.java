@@ -94,7 +94,7 @@ public class Util {
    * When the tested value of the switch statement in b has value c, which basic
    * block does control transfer to.
    */
-  public static IBasicBlock resolveSwitch(ControlFlowGraph G, IBasicBlock b, int c) {
+  public static <T extends IBasicBlock> T resolveSwitch(ControlFlowGraph<T> G, T b, int c) {
     Assertions._assert(endsWithSwitch(G, b));
     SSASwitchInstruction s = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = s.getCasesAndLabels();
@@ -105,7 +105,7 @@ public class Util {
     return G.getBlockForInstruction(s.getDefault());
   }
 
-  public static boolean isSwitchDefault(ControlFlowGraph G, IBasicBlock b, IBasicBlock s) {
+  public static <T extends IBasicBlock >boolean isSwitchDefault(ControlFlowGraph<T> G, T b, T s) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -120,7 +120,7 @@ public class Util {
    * which case was taken? TODO: Is this correct? Can't we have multiple cases
    * that apply? Check on this.
    */
-  public static int getSwitchLabel(ControlFlowGraph G, IBasicBlock b, IBasicBlock s) {
+  public static <T extends IBasicBlock> int getSwitchLabel(ControlFlowGraph<T> G, T b, T s) {
     Assertions._assert(endsWithSwitch(G, b));
     SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = sw.getCasesAndLabels();

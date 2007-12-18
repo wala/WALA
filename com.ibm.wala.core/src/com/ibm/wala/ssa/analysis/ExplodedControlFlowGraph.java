@@ -397,10 +397,6 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
       return instructionIndex;
     }
     
-    public ExplodedControlFlowGraph getCFG() {
-      return ExplodedControlFlowGraph.this;
-    }
-
     public IMethod getMethod() {
       return ExplodedControlFlowGraph.this.getMethod();
     }
