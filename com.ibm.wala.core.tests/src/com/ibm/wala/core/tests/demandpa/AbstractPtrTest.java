@@ -136,15 +136,43 @@ public abstract class AbstractPtrTest extends TestCase {
     return null;
   }
 
-  protected void doPointsToSizeTest(String scopeFile, String mainClass, int expectedSize) throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  /**
+   * analysis scope from latest test
+   */
+  protected AnalysisScope scope = null;
+
+  protected void doPointsToSizeTest(String scopeFile, String mainClass, int expected14Size, int expected15Size, int expected16Size)
+      throws ClassHierarchyException, IllegalArgumentException, CancelException {
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(scope == null);
+    }
     Collection<InstanceKey> pointsTo = getPointsToSetToTest(scopeFile, mainClass);
     if (debug) {
       System.err.println("points-to for " + mainClass + ": " + pointsTo);
     }
-    assertEquals(expectedSize, pointsTo.size());
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(scope != null);
+    }
+    if (scope.isJava16Libraries()) {
+      assertEquals(expected16Size, pointsTo.size());
+    } else if (scope.isJava15Libraries()) {
+      assertEquals(expected15Size, pointsTo.size());
+    } else if (scope.isJava14Libraries()) {
+      assertEquals(expected14Size, pointsTo.size());
+    } else {
+      Assertions.UNREACHABLE("unexpected library version");
+    }
+    // don't hold on to a scope pointer
+    scope = null;
   }
 
-  protected Collection<InstanceKey> getPointsToSetToTest(String scopeFile, String mainClass) throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  protected void doPointsToSizeTest(String scopeFile, String mainClass, int expectedSize) throws ClassHierarchyException,
+      IllegalArgumentException, CancelException {
+    doPointsToSizeTest(scopeFile, mainClass, expectedSize, expectedSize, expectedSize);
+  }
+
+  protected Collection<InstanceKey> getPointsToSetToTest(String scopeFile, String mainClass) throws ClassHierarchyException,
+      IllegalArgumentException, CancelException {
     final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(scopeFile, mainClass);
 
     // find the testThisVar call, and check the parameter's points-to set
@@ -154,8 +182,10 @@ public abstract class AbstractPtrTest extends TestCase {
     return pointsTo;
   }
 
-  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass) throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass) throws ClassHierarchyException,
+      IllegalArgumentException, CancelException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, "Java60RegressionExclusions.txt");
+    this.scope = scope;
     // build a type hierarchy
     ClassHierarchy cha = ClassHierarchy.make(scope);
 

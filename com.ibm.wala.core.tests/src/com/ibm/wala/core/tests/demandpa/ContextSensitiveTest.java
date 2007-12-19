@@ -125,13 +125,11 @@ public class ContextSensitiveTest extends AbstractPtrTest {
   }
 
   public void testHashSet() throws ClassHierarchyException, IllegalArgumentException, CancelException {
-    // result of 1 relies on using 6.0 libraries
-    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_HASH_SET, 1);
+    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_HASH_SET, 2, 2, 1);
   }
 
   public void testHashMapGet() throws ClassHierarchyException, IllegalArgumentException, CancelException {
-    // result of 1 relies on using 6.0 libraries
-    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_HASHMAP_GET, 1);
+    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_HASHMAP_GET, 2, 1, 1);
   }
 
   public void testMethodRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException {
