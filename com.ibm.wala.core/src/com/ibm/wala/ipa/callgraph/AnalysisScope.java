@@ -335,6 +335,10 @@ public class AnalysisScope {
         if (JF.getName().endsWith(File.separator + "core.jar")) {
           return JF;
         }
+        // hack for Mac
+        if (JF.getName().equals("/System/Library/Frameworks/JavaVM.framework/Classes/classes.jar")) {
+          return JF;
+        }
       }
     }
     return null;
