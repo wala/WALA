@@ -17,6 +17,7 @@ import java.util.Set;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.ISDG;
 import com.ibm.wala.ipa.slicer.PDG;
 import com.ibm.wala.ipa.slicer.SDG;
@@ -211,5 +212,9 @@ class CISDG implements ISDG {
   public String toString() {
     Assertions.UNREACHABLE();
     return noHeap.toString();
+  }
+
+  public IClassHierarchy getClassHierarchy() {
+    return noHeap.getClassHierarchy();
   }
 }

@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
@@ -173,6 +174,10 @@ public class SDGView implements ISDG {
 
   public Iterator<? extends Statement> iterateLazyNodes() {
     return delegate.iterateLazyNodes();
+  }
+
+  public IClassHierarchy getClassHierarchy() {
+    return delegate.getClassHierarchy();
   }
 
 }

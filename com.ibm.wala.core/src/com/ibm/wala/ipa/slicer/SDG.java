@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
@@ -102,7 +103,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   private final Map<CGNode, OrdinalSet<PointerKey>> ref;
   
   /**
-   * If non-null, represents the heap locations to exlude from data dependence
+   * If non-null, represents the heap locations to exclude from data dependence
    */
   private final HeapExclusions heapExclude;
 
@@ -639,6 +640,10 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
 
   public CallGraph getCallGraph() {
     return cg;
+  }
+
+  public IClassHierarchy getClassHierarchy() {
+    return cg.getClassHierarchy();
   }
 
 }

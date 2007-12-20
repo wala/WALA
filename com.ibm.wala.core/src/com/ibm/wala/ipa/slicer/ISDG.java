@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.slicer;
 import java.util.Iterator;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.util.graph.NumberedGraph;
 
@@ -22,7 +23,7 @@ import com.ibm.wala.util.graph.NumberedGraph;
  * @author sjfink
  *
  */
-public interface ISDG extends NumberedGraph<Statement>{
+public interface ISDG extends NumberedGraph<Statement>, IClassHierarchyDweller {
 
   ControlDependenceOptions getCOptions();
 
