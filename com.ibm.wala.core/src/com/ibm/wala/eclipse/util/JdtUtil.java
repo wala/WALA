@@ -179,6 +179,10 @@ public class JdtUtil {
       throw new IllegalArgumentException("appJar is null");
     }
     String projectName = appJar.getProject().getName();
+    return getJavaProject(projectName);
+  }
+
+  public static IJavaProject getJavaProject(String projectName) {
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
     IJavaModel javaModel = JavaCore.create(workspaceRoot);
     IJavaProject javaProject = javaModel.getJavaProject(projectName);
