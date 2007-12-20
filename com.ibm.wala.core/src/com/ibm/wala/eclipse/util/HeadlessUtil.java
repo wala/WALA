@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.eclipse.util;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import org.eclipse.core.resources.IProject;
@@ -19,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.util.debug.Assertions;
@@ -51,8 +53,10 @@ public class HeadlessUtil {
 
   /**
    * compute the analysis scope for a project in the current workspace
+   * @throws IOException 
+   * @throws JavaModelException 
    */
-  public static AnalysisScope computeScope(String projectName) {
+  public static AnalysisScope computeScope(String projectName) throws JavaModelException, IOException {
     IJavaProject jp = getProjectFromWorkspace(projectName);
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
     EclipseProjectPath path = EclipseProjectPath.make(workspaceRoot.getLocation(), jp);

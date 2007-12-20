@@ -100,7 +100,7 @@ public class EclipseProjectPath {
 
   private final Collection<IClasspathEntry> alreadyResolved = HashSetFactory.make();
 
-  private EclipseProjectPath(IPath workspaceRootPath, IJavaProject project) {
+  private EclipseProjectPath(IPath workspaceRootPath, IJavaProject project) throws JavaModelException, IOException {
     this.workspaceRootPath = workspaceRootPath;
     this.project = project;
     assert workspaceRootPath != null;
@@ -109,9 +109,10 @@ public class EclipseProjectPath {
       MapUtil.findOrCreateSet(binaryModules, loader);
       MapUtil.findOrCreateSet(sourceModules, loader);
     }
+    resolveProjectClasspathEntries();
   }
 
-  public static EclipseProjectPath make(IPath workspaceRootPath, IJavaProject project) {
+  public static EclipseProjectPath make(IPath workspaceRootPath, IJavaProject project) throws JavaModelException, IOException {
     if (workspaceRootPath == null) {
       throw new IllegalArgumentException("workspaceRootPath is null");
     }
@@ -216,7 +217,6 @@ public class EclipseProjectPath {
    */
   public AnalysisScope toAnalysisScope(final ClassLoader classLoader, final String exclusionsFile) {
     try {
-      resolveProjectClasspathEntries();
       Set<Module> s = MapUtil.findOrCreateSet(binaryModules, Loader.APPLICATION);
       s.add(new BinaryDirectoryTreeModule(makeAbsolute(project.getOutputLocation()).toFile()));
 
@@ -235,11 +235,7 @@ public class EclipseProjectPath {
       e.printStackTrace();
       Assertions.UNREACHABLE();
       return null;
-    } catch (IOException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
-    }
+    } 
   }
   
   public AnalysisScope toAnalysisScope(final String exclusionsFile) {

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.eclipse;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,6 +19,7 @@ import java.util.Iterator;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -61,8 +63,10 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
 
   /**
    * Compute an analysis scope for the current selection
+   * @throws IOException 
+   * @throws JavaModelException 
    */
-  protected AnalysisScope computeScope() {
+  protected AnalysisScope computeScope() throws JavaModelException, IOException {
     IStructuredSelection selection = (IStructuredSelection) currentSelection;
     Collection<EclipseProjectPath> projectPaths = HashSetFactory.make();
     for (Iterator it = selection.iterator(); it.hasNext();) {
