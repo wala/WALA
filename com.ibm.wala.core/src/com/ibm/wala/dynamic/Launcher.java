@@ -30,7 +30,7 @@ public abstract class Launcher {
   protected Map env = null;
 
   protected byte[] stdOut = null;
-  
+
   protected byte[] stdErr = null;
 
   private byte[] input = null;
@@ -39,7 +39,7 @@ public abstract class Launcher {
    * capture the contents of stdout?
    */
   private final boolean captureOutput;
-  
+
   /**
    * capture the contents of stderr?
    */
@@ -90,7 +90,7 @@ public abstract class Launcher {
    * @return an object representing the process
    * @throws WalaException
    * @throws IllegalArgumentException
-   * @throws IOException 
+   * @throws IOException
    */
   protected Process spawnProcess(String cmd) throws IllegalArgumentException, IOException {
     if (cmd == null) {
@@ -149,7 +149,7 @@ public abstract class Launcher {
     result.start();
     return result;
   }
-  
+
   protected Drainer captureStdErr(Process p) {
     final BufferedInputStream out = new BufferedInputStream(p.getErrorStream());
     final ByteArrayOutputStream b = new ByteArrayOutputStream();
@@ -188,7 +188,7 @@ public abstract class Launcher {
           try {
             Thread.sleep(500);
           } catch (InterruptedException e1) {
-            e1.printStackTrace();
+            // e1.printStackTrace();
             // just ignore and continue
           }
           drain();
@@ -218,7 +218,7 @@ public abstract class Launcher {
   }
 
   private void drainAndPrint(BufferedInputStream s, PrintStream p) throws IOException {
-    if (s.available() > 0) {
+    while (s.available() > 0) {
       byte[] data = new byte[s.available()];
       s.read(data);
       p.print(new String(data));
@@ -226,7 +226,7 @@ public abstract class Launcher {
   }
 
   private void drainAndCatch(BufferedInputStream s, ByteArrayOutputStream b) throws IOException {
-    if (s.available() > 0) {
+    while (s.available() > 0) {
       byte[] data = new byte[s.available()];
       int nRead = s.read(data);
       b.write(data, 0, nRead);
@@ -236,7 +236,7 @@ public abstract class Launcher {
   public boolean isCaptureOutput() {
     return captureOutput;
   }
-  
+
   public boolean isCaptureErr() {
     return captureErr;
   }
@@ -244,15 +244,15 @@ public abstract class Launcher {
   public byte[] getStdOut() {
     return stdOut;
   }
-  
+
   public byte[] getStderr() {
     return stdErr;
   }
-  
+
   protected void setStdOut(byte[] newOutput) {
     stdOut = newOutput;
   }
-  
+
   protected void setStdErr(byte[] newErr) {
     stdErr = newErr;
   }
