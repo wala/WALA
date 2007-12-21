@@ -29,7 +29,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * 
  * A synthetic implementation of a class
  * 
  * @author Julian Dolby
@@ -255,5 +254,9 @@ public class BypassSyntheticClass extends SyntheticClass {
 
   public boolean isPublic() {
     return realType.isPublic();
+  }
+  
+  public boolean isStatic() {
+    return realType.isStatic();
   }
 }
