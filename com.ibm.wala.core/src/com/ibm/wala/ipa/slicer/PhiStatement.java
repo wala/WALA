@@ -39,7 +39,7 @@ public class PhiStatement extends Statement {
     }
     if (getClass().equals(obj.getClass())) {
       PhiStatement other = (PhiStatement) obj;
-      return getNode().equals(other.getNode()) && phi.equals(other.phi);
+      return getNode().equals(other.getNode()) && phi.getDef() == other.phi.getDef();
     } else {
       return false;
     }
@@ -52,7 +52,7 @@ public class PhiStatement extends Statement {
 
   @Override
   public String toString() {
-    return getNode() + ":" + phi;
+    return "PHI " + getNode() + ":" + phi;
   }
 
   public SSAPhiInstruction getPhi() {

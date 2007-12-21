@@ -23,7 +23,7 @@ import com.ibm.wala.util.intset.SparseIntSet;
  * @author sjfink
  * 
  */
-class ReachabilityFunctions implements IFlowFunctionMap {
+public class ReachabilityFunctions implements IFlowFunctionMap {
 
   private static final ReachabilityFunctions instance = new ReachabilityFunctions();
 
@@ -31,9 +31,9 @@ class ReachabilityFunctions implements IFlowFunctionMap {
     return instance;
   }
 
-  private final VectorGenFlowFunction f = VectorGenFlowFunction.make(SparseIntSet.singleton(0));
+  public final static VectorGenFlowFunction FLOW_REACHES = VectorGenFlowFunction.make(SparseIntSet.singleton(0));
 
-  protected final static IUnaryFlowFunction killReachability = new IUnaryFlowFunction() {
+  public final static IUnaryFlowFunction KILL_FLOW = new IUnaryFlowFunction() {
     public SparseIntSet getTargets(int d1) {
       // kill even the reachability predicate 0.
       return new SparseIntSet();
@@ -48,27 +48,27 @@ class ReachabilityFunctions implements IFlowFunctionMap {
   }
 
   public IUnaryFlowFunction getCallFlowFunction(Object src, Object dest) {
-    return f;
+    return FLOW_REACHES;
   }
 
   /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallNoneToReturnFlowFunction(java.lang.Object, java.lang.Object)
    */
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(Object src, Object dest) {
-    return f;
+    return FLOW_REACHES;
   }
 
   public IUnaryFlowFunction getCallToReturnFlowFunction(Object src, Object dest) {
     // force flow into callee and back.
-    return killReachability;
+    return KILL_FLOW;
   }
 
   public IUnaryFlowFunction getNormalFlowFunction(Object src, Object dest) {
-    return f;
+    return FLOW_REACHES;
   }
 
   public IFlowFunction getReturnFlowFunction(Object call, Object src, Object dest) {
-    return f;
+    return FLOW_REACHES;
   }
 
 }

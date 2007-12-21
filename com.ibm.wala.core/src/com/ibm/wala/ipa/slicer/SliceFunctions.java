@@ -38,7 +38,7 @@ public class SliceFunctions implements IFlowFunctionMap<Statement> {
     case PARAM_CALLER:
     case EXC_RET_CALLER:
       // uh oh.  anything that flows into the missing function will be killed.
-      return ReachabilityFunctions.killReachability;
+      return ReachabilityFunctions.KILL_FLOW;
     case HEAP_PARAM_CALLEE:
     case HEAP_PARAM_CALLER:
     case HEAP_RET_CALLEE:
@@ -49,15 +49,15 @@ public class SliceFunctions implements IFlowFunctionMap<Statement> {
         if (hs.getLocation().equals(hd.getLocation())) {
           return IdentityFlowFunction.identity();
         } else {
-          return ReachabilityFunctions.killReachability;
+          return ReachabilityFunctions.KILL_FLOW;
         }
       } else {
-        return ReachabilityFunctions.killReachability;
+        return ReachabilityFunctions.KILL_FLOW;
       }
     case NORMAL:
       // only control dependence flows into the missing function.
       // this control dependence does not flow back to the caller.
-      return ReachabilityFunctions.killReachability;
+      return ReachabilityFunctions.KILL_FLOW;
     default: 
       Assertions.UNREACHABLE(s.getKind().toString());
       return null;

@@ -63,6 +63,7 @@ public class Slicer {
     FULL("full", false, false, false, false),
     NO_BASE_PTRS("no_base_ptrs", true, false, false, false),
     NO_BASE_NO_HEAP("no_base_no_heap", true, true, false, false),
+    NO_BASE_NO_HEAP_NO_EXCEPTIONS("no_base_no_heap_no_exceptions", true, true, false, true),
     NO_HEAP("no_heap", false, true, false, false),
     NONE("none", true, true, true, true),
     REFLECTION("no_base_no_heap_no_cast", true, true, true, true);
@@ -145,9 +146,9 @@ public class Slicer {
 
   /**
    * @param s
-   *          a statement of interest
+   *            a statement of interest
    * @return the backward slice of s.
-   * @throws CancelException 
+   * @throws CancelException
    */
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
@@ -156,9 +157,9 @@ public class Slicer {
 
   /**
    * @param s
-   *          a statement of interest
+   *            a statement of interest
    * @return the forward slice of s.
-   * @throws CancelException 
+   * @throws CancelException
    */
   public static Collection<Statement> computeForwardSlice(Statement s, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
@@ -167,7 +168,8 @@ public class Slicer {
 
   /**
    * Use the passed-in SDG
-   * @throws CancelException 
+   * 
+   * @throws CancelException
    */
   public static Collection<Statement> computeBackwardSlice(SDG sdg, Statement s, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
@@ -176,7 +178,8 @@ public class Slicer {
 
   /**
    * Use the passed-in SDG
-   * @throws CancelException 
+   * 
+   * @throws CancelException
    */
   public static Collection<Statement> computeForwardSlice(SDG sdg, Statement s, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
@@ -185,7 +188,8 @@ public class Slicer {
 
   /**
    * Use the passed-in SDG
-   * @throws CancelException 
+   * 
+   * @throws CancelException
    */
   public static Collection<Statement> computeBackwardSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
@@ -194,16 +198,16 @@ public class Slicer {
 
   /**
    * @param ss
-   *          a collection of statements of interest
-   * @throws CancelException 
+   *            a collection of statements of interest
+   * @throws CancelException
    */
   protected static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) throws CancelException {
-    return computeSlice(sdg, ss, cg, pa, ModRef.make(), dOptions, cOptions, backward);
+    return new Slicer().computeSlice(sdg, ss, cg, pa, ModRef.make(), dOptions, cOptions, backward);
   }
 
-  protected static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa, ModRef modRef,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) throws CancelException {
+  protected Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
+      ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) throws CancelException {
 
     if (VERBOSE) {
       System.err.println("Build SDG...");
@@ -216,7 +220,7 @@ public class Slicer {
     Collection<Statement> rootsConsidered = HashSetFactory.make();
     Stack<Statement> workList = new Stack<Statement>();
     Collection<Statement> result = HashSetFactory.make();
-    for(Statement s : ss) {
+    for (Statement s : ss) {
       workList.push(s);
     }
     while (!workList.isEmpty()) {
@@ -224,7 +228,7 @@ public class Slicer {
       rootsConsidered.add(root);
       Collection<Statement> empty = Collections.emptySet();
       ISDG sdgView = new SDGView(sdg, empty);
-      SliceProblem p = new SliceProblem(root, sdgView, backward);
+      SliceProblem p = makeSliceProblem(root, sdgView, backward);
 
       if (VERBOSE) {
         System.err.println("worklist now: " + workList.size());
@@ -265,6 +269,14 @@ public class Slicer {
     }
 
     return result;
+  }
+
+  /**
+   * Return an object which encapsulates the tabulation logic for the slice problem. 
+   * Subclasses can override this method to implement special semantics.
+   */
+  protected SliceProblem makeSliceProblem(Statement root, ISDG sdgView, boolean backward) {
+    return new SliceProblem(root, sdgView, backward);
   }
 
   private static Collection<Statement> computeNewRoots(Collection<Statement> slice, Statement root,
@@ -360,9 +372,9 @@ public class Slicer {
 
   /**
    * @param s
-   *          a statement of interest
+   *            a statement of interest
    * @return the backward slice of s.
-   * @throws CancelException 
+   * @throws CancelException
    */
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pointerAnalysis)
       throws IllegalArgumentException, CancelException {
@@ -398,7 +410,7 @@ public class Slicer {
    * Tabulation problem representing slicing
    * 
    */
-  private static class SliceProblem implements TabulationProblem<Statement, PDG> {
+  protected static class SliceProblem implements TabulationProblem<Statement, PDG> {
 
     private final Statement src;
 
