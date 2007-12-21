@@ -135,7 +135,6 @@ public class SSAPhiInstruction extends SSAInstruction {
    */
   @Override
   protected String getValueString(SymbolTable symbolTable, ValueDecorator d, int valueNumber) {
-
     if (valueNumber == AbstractIntStackMachine.TOP) {
       return "TOP";
     } else {
