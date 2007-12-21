@@ -45,7 +45,6 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * A synthetic class that models aspects of the J2EE Container.
  * 
  * @author Julian Dolby
@@ -401,6 +400,10 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
   }
 
   public boolean isPublic() {
+    return false;
+  }
+
+  public boolean isStatic() {
     return false;
   }
 }
