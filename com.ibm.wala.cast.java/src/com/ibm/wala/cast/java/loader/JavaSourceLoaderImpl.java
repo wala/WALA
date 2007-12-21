@@ -64,7 +64,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
   public Map<CAstEntity, IClass> fTypeMap = HashMapFactory.make();
 
   /**
-   * DOMO representation of a Java class residing in a source file
+   * WALA representation of a Java class residing in a source file
    * 
    * @author rfuhrer
    */
