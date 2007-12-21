@@ -40,7 +40,7 @@ public class AstJavaSlicer extends Slicer {
    */
   public static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) throws CancelException {
-    return computeSlice(sdg, ss, cg, pa, new AstJavaModRef(), dOptions, cOptions, backward);
+    return new AstJavaSlicer().computeSlice(sdg, ss, cg, pa, new AstJavaModRef(), dOptions, cOptions, backward);
   }
 
   public static Set<Statement> gatherAssertions(CallGraph CG, Collection<CGNode> partialRoots) {
