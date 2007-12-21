@@ -162,6 +162,7 @@ public abstract class AbstractGraph<T> implements Graph<T> {
         sb.append("  --> ").append(s);
         sb.append("\n");
       }
+      sb.append("\n");
     }
 
     return sb.toString();
