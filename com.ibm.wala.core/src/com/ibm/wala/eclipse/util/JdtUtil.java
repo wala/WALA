@@ -96,19 +96,19 @@ public class JdtUtil {
     return className;
   }
 
-//  public static String getMethodSignature(IMethod method) {
-//    if (method == null) {
-//      throw new IllegalArgumentException("method is null");
-//    }
-//    try {
-//      String methodParamReturnInfo = method.getSignature();
-//      String methodName = method.getElementName();
-//      String methodSignature = methodName + " " + methodParamReturnInfo;
-//      return methodSignature;
-//    } catch (JavaModelException e) {
-//    }
-//    return "";
-//  }
+  // public static String getMethodSignature(IMethod method) {
+  // if (method == null) {
+  // throw new IllegalArgumentException("method is null");
+  // }
+  // try {
+  // String methodParamReturnInfo = method.getSignature();
+  // String methodName = method.getElementName();
+  // String methodSignature = methodName + " " + methodParamReturnInfo;
+  // return methodSignature;
+  // } catch (JavaModelException e) {
+  // }
+  // return "";
+  // }
 
   /**
    * Return a unique string representing the specified Java element across
@@ -141,7 +141,6 @@ public class JdtUtil {
     try {
       return cu.getAllTypes();
     } catch (JavaModelException e) {
-
     }
     return null;
   }
@@ -212,22 +211,33 @@ public class JdtUtil {
   }
 
   /**
-   * Find the IType in the workspace corresponding to a class name.
-   * 
-   * TODO: this is too slow. find a better way.
+   * Find the {@link IType} in the workspace corresponding to a class name.
    * 
    * @return null if not found
-   * @throws IllegalArgumentException  if projects == null
+   * @throws IllegalArgumentException
+   *             if projects == null
    */
-  public static IType findJavaClassInProjects(String className, Collection<IJavaProject> projects) throws IllegalArgumentException {
+  public static IType findJavaClassInProjects(String fullyQualifiedName, Collection<IJavaProject> projects) throws IllegalArgumentException {
     if (projects == null) {
       throw new IllegalArgumentException("projects == null");
     }
-    IJavaElement[] arr = new IJavaElement[projects.size()];
-    projects.toArray(arr);
-    IJavaSearchScope scope = SearchEngine.createJavaSearchScope(arr, false);
-
-    return searchForJavaClass(className, scope);
+    for (IJavaProject project : projects) {
+      try {
+        IType t = project.findType(fullyQualifiedName);
+        if (t != null) {
+          return t;
+        }
+      } catch (JavaModelException e) {
+        e.printStackTrace();
+      }
+    }
+    System.err.println("failed to find " + fullyQualifiedName);
+    return null;
+//    IJavaElement[] arr = new IJavaElement[projects.size()];
+//    projects.toArray(arr);
+//    IJavaSearchScope scope = SearchEngine.createJavaSearchScope(arr, false);
+//
+//    return searchForJavaClass(className, scope);
   }
 
   public static IType findJavaClassInResources(String className, Collection<IResource> resources) {
@@ -238,32 +248,32 @@ public class JdtUtil {
     return findJavaClassInProjects(className, projects);
   }
 
-  private static IType searchForJavaClass(String className, IJavaSearchScope scope) {
-    SearchPattern p = SearchPattern.createPattern(className, IJavaSearchConstants.CLASS_AND_INTERFACE,
-        IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
-    SearchEngine engine = new SearchEngine();
-    final Collection<IJavaElement> kludge = HashSetFactory.make();
-    SearchRequestor requestor = new SearchRequestor() {
-
-      @Override
-      public void acceptSearchMatch(SearchMatch match) throws CoreException {
-        kludge.add((IJavaElement) match.getElement());
-      }
-
-    };
-    try {
-      engine.search(p, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, requestor, null);
-    } catch (CoreException e) {
-      e.printStackTrace();
-    }
-    if (kludge.size() == 1) {
-      System.err.println("Found " + className);
-      return (IType) kludge.iterator().next();
-    } else {
-      System.err.println("Failed to find " + className + " " + kludge.size());
-      return null;
-    }
-  }
+//  private static IType searchForJavaClass(String className, IJavaSearchScope scope) {
+//    SearchPattern p = SearchPattern.createPattern(className, IJavaSearchConstants.CLASS_AND_INTERFACE,
+//        IJavaSearchConstants.DECLARATIONS, SearchPattern.R_EXACT_MATCH);
+//    SearchEngine engine = new SearchEngine();
+//    final Collection<IJavaElement> kludge = HashSetFactory.make();
+//    SearchRequestor requestor = new SearchRequestor() {
+//
+//      @Override
+//      public void acceptSearchMatch(SearchMatch match) throws CoreException {
+//        kludge.add((IJavaElement) match.getElement());
+//      }
+//
+//    };
+//    try {
+//      engine.search(p, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, requestor, null);
+//    } catch (CoreException e) {
+//      e.printStackTrace();
+//    }
+//    if (kludge.size() == 1) {
+//      System.err.println("Found " + className);
+//      return (IType) kludge.iterator().next();
+//    } else {
+//      System.err.println("Failed to find " + className + " " + kludge.size());
+//      return null;
+//    }
+//  }
 
   /**
    * Find the IMethod in the workspace corresponding to a method selector.
@@ -495,24 +505,39 @@ public class JdtUtil {
    * Use the search engine to find all methods in a java element
    */
   public static Collection<IMethod> findMethods(IJavaElement elt) {
-    final Collection<IMethod> result = HashSetFactory.make();
-    SearchPattern p = SearchPattern.createPattern("*", IJavaSearchConstants.METHOD, IJavaSearchConstants.DECLARATIONS,
-        SearchPattern.R_PATTERN_MATCH);
-    IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new IJavaElement[] { elt }, IJavaSearchScope.SOURCES);
-    SearchEngine engine = new SearchEngine();
-    SearchRequestor requestor = new SearchRequestor() {
-      @Override
-      public void acceptSearchMatch(SearchMatch match) throws CoreException {
-        result.add((IMethod) match.getElement());
-      }
-    };
-    try {
-      engine.search(p, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, requestor, null);
-    } catch (CoreException e) {
-      e.printStackTrace();
-    }
 
-    return result;
+    if (elt instanceof ICompilationUnit) {
+      Collection<IMethod> result = HashSetFactory.make();
+      for (IType type : getClasses((ICompilationUnit)elt)) {
+        try {
+          for (IMethod m : type.getMethods()) {
+            result.add(m);
+          }
+        } catch (JavaModelException e) {
+          e.printStackTrace();
+        }
+      }
+      return result;
+    } else {
+      final Collection<IMethod> result = HashSetFactory.make();
+      SearchPattern p = SearchPattern.createPattern("*", IJavaSearchConstants.METHOD, IJavaSearchConstants.DECLARATIONS,
+          SearchPattern.R_PATTERN_MATCH);
+      IJavaSearchScope scope = SearchEngine.createJavaSearchScope(new IJavaElement[] { elt }, IJavaSearchScope.SOURCES);
+      SearchEngine engine = new SearchEngine();
+      SearchRequestor requestor = new SearchRequestor() {
+        @Override
+        public void acceptSearchMatch(SearchMatch match) throws CoreException {
+          result.add((IMethod) match.getElement());
+        }
+      };
+      try {
+        engine.search(p, new SearchParticipant[] { SearchEngine.getDefaultSearchParticipant() }, scope, requestor, null);
+      } catch (CoreException e) {
+        e.printStackTrace();
+      }
+
+      return result;
+    }
   }
 
 }
