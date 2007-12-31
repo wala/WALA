@@ -71,9 +71,11 @@ public abstract class CAstAbstractNativeLoader extends CAstAbstractLoader {
 	    }
           } catch (MalformedURLException e) {
             Trace.println("unpected problems with " + f);
+	    e.printStackTrace( Trace.getTraceStream() );
             Assertions.UNREACHABLE();
           } catch (RuntimeException e) {
             Trace.println("unpected problems with " + f);
+	    e.printStackTrace( Trace.getTraceStream() );
 	  }
 
         } else if (moduleEntry instanceof SourceURLModule) {
@@ -99,9 +101,11 @@ public abstract class CAstAbstractNativeLoader extends CAstAbstractLoader {
             F.delete();
           } catch (IOException e) {
             Trace.println("unpected problems with " + fileName);
+	    e.printStackTrace( Trace.getTraceStream() );
             Assertions.UNREACHABLE();
           } catch (RuntimeException e) {
             Trace.println("unpected problems with " + fileName);
+	    e.printStackTrace( Trace.getTraceStream() );
 	  }
         }
       }
