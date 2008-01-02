@@ -76,34 +76,34 @@ public abstract class IRTests extends WalaTestCase {
       javaHomePath = p.getProperty(WalaProperties.J2SE_DIR);
 
       if (new File(javaHomePath).isDirectory()) {
-        if("Mac OS X".equals(System.getProperty("os.name"))) { //nick
-	  /**
-	   * todo: {@link WalaProperties#getJ2SEJarFiles()}
-	   */
-	  rtJar.add(javaHomePath + "/Classes/classes.jar");
-	  rtJar.add(javaHomePath + "/Classes/ui.jar");
-	} else {
-	  rtJar.add(javaHomePath + File.separator + "classes.jar");
-	  rtJar.add(javaHomePath + File.separator + "rt.jar");
-	  rtJar.add(javaHomePath + File.separator + "core.jar");
-	  rtJar.add(javaHomePath + File.separator + "vm.jar");
-	}
-	found = true;
+        if ("Mac OS X".equals(System.getProperty("os.name"))) { // nick
+          /**
+           * todo: {@link WalaProperties#getJ2SEJarFiles()}
+           */
+          rtJar.add(javaHomePath + "/Classes/classes.jar");
+          rtJar.add(javaHomePath + "/Classes/ui.jar");
+        } else {
+          rtJar.add(javaHomePath + File.separator + "classes.jar");
+          rtJar.add(javaHomePath + File.separator + "rt.jar");
+          rtJar.add(javaHomePath + File.separator + "core.jar");
+          rtJar.add(javaHomePath + File.separator + "vm.jar");
+        }
+        found = true;
       }
     } catch (WalaException e) {
       // no properties
     }
 
-    if (! found) {
+    if (!found) {
       javaHomePath = System.getProperty("java.home");
-      if("Mac OS X".equals(System.getProperty("os.name"))) { //nick
-	rtJar.add(javaHomePath + "/../Classes/classes.jar");
-	rtJar.add(javaHomePath + "/../Classes/ui.jar");
+      if ("Mac OS X".equals(System.getProperty("os.name"))) { // nick
+        rtJar.add(javaHomePath + "/../Classes/classes.jar");
+        rtJar.add(javaHomePath + "/../Classes/ui.jar");
       } else {
-	rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "rt.jar");
-	rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "core.jar");
-	rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "vm.jar");
-	rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "classes.jar");
+        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "rt.jar");
+        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "core.jar");
+        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "vm.jar");
+        rtJar.add(javaHomePath + File.separator + "lib" + File.separator + "classes.jar");
       }
     }
   }
@@ -197,6 +197,7 @@ public abstract class IRTests extends WalaTestCase {
 
   protected static class SourceMapAssertion implements IRAssertion {
     private final String method;
+
     private final String variableName;
 
     private final int definingLineNumber;
@@ -209,12 +210,11 @@ public abstract class IRTests extends WalaTestCase {
 
     public void check(CallGraph cg) {
 
-        MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
+      MethodReference mref = descriptorToMethodRef(method, cg.getClassHierarchy());
 
-        for (CGNode cgNode : cg.getNodes(mref)) {
-            Assert.assertTrue("failed for " + this.variableName + " in " + cgNode,
-              this.check(cgNode.getMethod(), cgNode.getIR()));
-        }
+      for (CGNode cgNode : cg.getNodes(mref)) {
+        Assert.assertTrue("failed for " + this.variableName + " in " + cgNode, this.check(cgNode.getMethod(), cgNode.getIR()));
+      }
     }
 
     boolean check(IMethod m, IR ir) {
@@ -274,12 +274,8 @@ public abstract class IRTests extends WalaTestCase {
 
   protected abstract JavaSourceAnalysisEngine getAnalysisEngine(String[] mainClassDescriptors);
 
-  public Pair runTest(Collection<String> sources, 
-		      List<String> libs,
-		      String[] mainClassDescriptors, 
-		      List<? extends IRAssertion> ca, 
-		      boolean assertReachable) 
-  {
+  public Pair runTest(Collection<String> sources, List<String> libs, String[] mainClassDescriptors, List<? extends IRAssertion> ca,
+      boolean assertReachable) {
     try {
       JavaSourceAnalysisEngine engine = getAnalysisEngine(mainClassDescriptors);
 
@@ -318,15 +314,14 @@ public abstract class IRTests extends WalaTestCase {
       for (IMethod m : clazz.getDeclaredMethods()) {
         if (m.isAbstract()) {
           Trace.println(m);
-        }
-        else {
+        } else {
           Iterator nodeIter = cg.getNodes(m.getReference()).iterator();
           if (!nodeIter.hasNext()) {
             Trace.println("Method " + m.getReference() + " not reachable?");
             unreachable.add(m);
             continue;
           }
-          CGNode node = (CGNode)nodeIter.next();
+          CGNode node = (CGNode) nodeIter.next();
           Trace.println(node.getIR());
         }
       }
@@ -337,11 +332,11 @@ public abstract class IRTests extends WalaTestCase {
     }
   }
 
-
   /**
-   *
-   * @param srcMethodDescriptor a full method descriptor of the form ldr#type#methName#methSig
-   * example: Source#Simple1#main#([Ljava/lang/String;)V
+   * 
+   * @param srcMethodDescriptor
+   *            a full method descriptor of the form ldr#type#methName#methSig
+   *            example: Source#Simple1#main#([Ljava/lang/String;)V
    * @param cha
    * @return
    */
@@ -358,8 +353,7 @@ public abstract class IRTests extends WalaTestCase {
     return MethodReference.findOrCreate(typeRef, methName, methSig);
   }
 
-  static TypeReference findOrCreateTypeReference(String loaderName, String typeStr,
-    IClassHierarchy cha) {
+  static TypeReference findOrCreateTypeReference(String loaderName, String typeStr, IClassHierarchy cha) {
     ClassLoaderReference clr = findLoader(loaderName, cha);
     TypeName typeName = TypeName.string2TypeName("L" + typeStr);
     TypeReference typeRef = TypeReference.findOrCreate(clr, typeName);
@@ -378,8 +372,7 @@ public abstract class IRTests extends WalaTestCase {
     return null;
   }
 
-  protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs)
-      throws IOException {
+  protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) throws IOException {
 
     boolean foundLib = false;
     for (String lib : libs) {
@@ -397,8 +390,7 @@ public abstract class IRTests extends WalaTestCase {
       Assert.assertTrue(f.exists());
       if (f.isDirectory()) {
         engine.addSourceModule(new SourceDirectoryTreeModule(f));
-      }
-      else {
+      } else {
         engine.addSourceModule(new SourceFileModule(f, srcFileName));
       }
     }
