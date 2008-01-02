@@ -10,19 +10,21 @@
  *******************************************************************************/
 package com.ibm.wala.util.config;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * 
- * An object which represents a set of classes read from an XML file.
+ * An object which represents a set of classes read from a text file.
  * 
  * @author sfink
  */
@@ -36,34 +38,26 @@ public class FileOfClasses extends SetOfClasses {
 
   private boolean needsCompile = false;
 
-  public FileOfClasses(String textFileName, ClassLoader loader) {
-    try {
-      URL textFile = FileProvider.getResource(textFileName, loader);
-      BufferedReader is = 
-	new BufferedReader(
-	  new InputStreamReader(
-	    textFile.openConnection().getInputStream()));
-    
-      StringBuffer regex =  null;
-      String line;
-      while ((line = is.readLine()) != null) {
-	if (regex == null) {
-	  regex = new StringBuffer("(" + line + ")");
-	} else {
-	  regex.append("|(" + line + ")");
-	}
+  public FileOfClasses(File textFile) throws IOException {
+
+    BufferedReader is = new BufferedReader(new InputStreamReader(new FileInputStream(textFile)));
+
+    StringBuffer regex = null;
+    String line;
+    while ((line = is.readLine()) != null) {
+      if (regex == null) {
+        regex = new StringBuffer("(" + line + ")");
+      } else {
+        regex.append("|(" + line + ")");
       }
-
-      if (regex != null) {
-	this.regex = regex.toString();
-	needsCompile = true;
-      } 
-
-      is.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
     }
+
+    if (regex != null) {
+      this.regex = regex.toString();
+      needsCompile = true;
+    }
+
+    is.close();
   }
 
   private void compile() {

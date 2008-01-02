@@ -63,6 +63,7 @@ public class Slicer {
     FULL("full", false, false, false, false),
     NO_BASE_PTRS("no_base_ptrs", true, false, false, false),
     NO_BASE_NO_HEAP("no_base_no_heap", true, true, false, false),
+    NO_BASE_NO_EXCEPTIONS("no_base_no_exceptions", true, false, false, true),
     NO_BASE_NO_HEAP_NO_EXCEPTIONS("no_base_no_heap_no_exceptions", true, true, false, true),
     NO_HEAP("no_heap", false, true, false, false),
     NONE("none", true, true, true, true),

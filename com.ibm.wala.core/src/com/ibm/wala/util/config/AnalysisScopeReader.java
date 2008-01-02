@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2007 IBM Corporation.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     IBM Corporation - initial API and implementation
+ *******************************************************************************/
 package com.ibm.wala.util.config;
 
 import java.io.BufferedReader;
@@ -18,19 +28,23 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
 
+/**
+ * Reads {@link AnalysisScope} from a text file.
+ *
+ */
 public class AnalysisScopeReader {
 
   private static final ClassLoader MY_CLASSLOADER = AnalysisScopeReader.class.getClassLoader();
 
   private static final String BASIC_FILE = "primordial.txt";
 
-  public static AnalysisScope read(String scopeFileName, String exclusionsFile, ClassLoader javaLoader) {
+  public static AnalysisScope read(String scopeFileName, File exclusionsFile, ClassLoader javaLoader) {
     AnalysisScope scope = AnalysisScope.createAnalysisScope(Collections.singleton(Language.JAVA));
 
     return read(scope, scopeFileName, exclusionsFile, javaLoader);
   }
 
-  public static AnalysisScope read(AnalysisScope scope, String scopeFileName, String exclusionsFile, ClassLoader javaLoader) {
+  public static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader) {
     try {
       File scopeFile = FileProvider.getFile(scopeFileName, javaLoader);
       assert scopeFile.exists();
@@ -76,7 +90,7 @@ public class AnalysisScopeReader {
       }
 
       if (exclusionsFile != null) {
-        scope.setExclusions(new FileOfClasses(exclusionsFile, javaLoader));
+        scope.setExclusions(new FileOfClasses(exclusionsFile));
       }
 
     } catch (IOException e) {
@@ -86,11 +100,11 @@ public class AnalysisScopeReader {
     return scope;
   }
 
-  public static AnalysisScope makePrimordialScope(String exclusionsFile) {
+  public static AnalysisScope makePrimordialScope(File exclusionsFile) {
     return read(BASIC_FILE, exclusionsFile, MY_CLASSLOADER);
   }
 
-  public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, String exclusionsFile) {
+  public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile) {
     AnalysisScope scope = makePrimordialScope(exclusionsFile);
     ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
 

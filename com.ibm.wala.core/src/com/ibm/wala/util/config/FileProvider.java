@@ -38,7 +38,7 @@ import com.ibm.wala.util.debug.Trace;
 
 /**
  * 
- * This class provides Jar files that are packaged with this plug-in
+ * This class provides files that are packaged with this plug-in
  * 
  * @author sfink
  */
@@ -70,9 +70,7 @@ public class FileProvider {
     return getJarFileModule(fileName, FileProvider.class.getClassLoader());
   }
 
-  public static Module getJarFileModule(String fileName, ClassLoader loader)
-    throws IOException 
-  {
+  public static Module getJarFileModule(String fileName, ClassLoader loader) throws IOException {
     if (CorePlugin.getDefault() == null) {
       return getJarFileFromClassLoader(fileName, loader);
     } else {
@@ -95,38 +93,29 @@ public class FileProvider {
   public static URL getResource(String fileName) throws IOException {
     return getResource(fileName, FileProvider.class.getClassLoader());
   }
-  
-  public static URL getResource(String fileName, ClassLoader loader)
-    throws IOException 
-  {
-    return
-      (CorePlugin.getDefault() == null) ? 
-	loader.getResource(fileName):
-	FileLocator.find(
-	  CorePlugin.getDefault().getBundle(), 
-	  new Path(fileName), null);
+
+  public static URL getResource(String fileName, ClassLoader loader) throws IOException {
+    return (CorePlugin.getDefault() == null) ? loader.getResource(fileName) : FileLocator.find(CorePlugin.getDefault().getBundle(),
+        new Path(fileName), null);
   }
-    
+
   /**
    */
   public static File getFile(String fileName) throws IOException {
     return getFile(fileName, FileProvider.class.getClassLoader());
   }
-  
-  public static File getFile(String fileName, ClassLoader loader)
-    throws IOException 
-  {
-    return
-      (CorePlugin.getDefault() == null) ? 
-	getFileFromClassLoader(fileName, loader) :
-	getFileFromPlugin(CorePlugin.getDefault(), fileName);
+
+  public static File getFile(String fileName, ClassLoader loader) throws IOException {
+    return (CorePlugin.getDefault() == null) ? getFileFromClassLoader(fileName, loader) : getFileFromPlugin(
+        CorePlugin.getDefault(), fileName);
   }
 
   /**
    * @param fileName
    * @return the jar file packaged with this plug-in of the given name, or null
    *         if not found.
-   * @throws IllegalArgumentException  if p is null
+   * @throws IllegalArgumentException
+   *             if p is null
    */
   public static File getFileFromPlugin(Plugin p, String fileName) throws IOException {
 
@@ -154,7 +143,7 @@ public class FileProvider {
    * get a file URL for a file from a plugin
    * 
    * @param fileName
-   *          the file name
+   *            the file name
    * @return the URL, or <code>null</code> if the file is not found
    * @throws IOException
    */
@@ -214,9 +203,7 @@ public class FileProvider {
   /**
    * @throws FileNotFoundException
    */
-  public static File getFileFromClassLoader(String fileName, ClassLoader loader)
-    throws FileNotFoundException 
-  {
+  public static File getFileFromClassLoader(String fileName, ClassLoader loader) throws FileNotFoundException {
     URL url = loader.getResource(fileName);
     if (DEBUG_LEVEL > 0) {
       Trace.println("FileProvider got url: " + url + " for " + fileName);
@@ -226,7 +213,7 @@ public class FileProvider {
       // system classloader
       File f = new File(fileName);
       if (f.exists()) {
-          return f;
+        return f;
       }
       throw new FileNotFoundException(fileName);
     } else {
@@ -240,10 +227,7 @@ public class FileProvider {
    *         if not found: wrapped as a JarFileModule or a NestedJarFileModule
    * @throws IOException
    */
-  public static Module 
-    getJarFileFromClassLoader(String fileName, ClassLoader loader) 
-    throws IOException 
-  {
+  public static Module getJarFileFromClassLoader(String fileName, ClassLoader loader) throws IOException {
     URL url = loader.getResource(fileName);
     if (DEBUG_LEVEL > 0) {
       Trace.println("FileProvider got url: " + url + " for " + fileName);
@@ -274,7 +258,8 @@ public class FileProvider {
    * 
    * @param url
    * @return the path name for the url
-   * @throws IllegalArgumentException  if url is null
+   * @throws IllegalArgumentException
+   *             if url is null
    */
   public static String filePathFromURL(URL url) {
     if (url == null) {

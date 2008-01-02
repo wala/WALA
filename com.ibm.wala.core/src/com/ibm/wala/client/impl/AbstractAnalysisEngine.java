@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.client.impl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.jar.JarFile;
@@ -38,7 +40,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.config.*;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -171,13 +173,14 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
 
   /**
    * Set up the AnalysisScope object
+   * @throws IOException 
    */
-  protected void buildAnalysisScope() {
+  protected void buildAnalysisScope() throws IOException {
     if (j2seLibs == null) {
       Assertions.UNREACHABLE("no j2selibs specified. You probably did not call AppAnalysisEngine.setJ2SELibrary.");
     }
 
-    scope = AnalysisScopeReader.read(SYNTHETIC_J2SE_MODEL, getExclusionsFile(), getClass().getClassLoader());
+    scope = AnalysisScopeReader.read(SYNTHETIC_J2SE_MODEL, new File(getExclusionsFile()), getClass().getClassLoader());
 
     // add standard libraries
     for (int i = 0; i < j2seLibs.length; i++) {
@@ -323,8 +326,9 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    * given entry points.
    * @throws CancelException 
    * @throws IllegalArgumentException 
+   * @throws IOException 
    */
-  public CallGraphBuilder defaultCallGraphBuilder() throws IllegalArgumentException, CancelException {
+  public CallGraphBuilder defaultCallGraphBuilder() throws IllegalArgumentException, CancelException, IOException {
     buildAnalysisScope();
     IClassHierarchy cha = buildClassHierarchy();
     setClassHierarchy(cha);
@@ -334,7 +338,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     return buildCallGraph(cha, options, true);
   }
 
-  public CallGraph buildDefaultCallGraph() throws IllegalArgumentException, CancelException {
+  public CallGraph buildDefaultCallGraph() throws IllegalArgumentException, CancelException, IOException {
     return defaultCallGraphBuilder().makeCallGraph(options);
   }
 

@@ -215,7 +215,7 @@ public class EclipseProjectPath {
   /**
    * Convert this path to a WALA analysis scope
    */
-  public AnalysisScope toAnalysisScope(final ClassLoader classLoader, final String exclusionsFile) {
+  public AnalysisScope toAnalysisScope(ClassLoader classLoader, File exclusionsFile) {
     try {
       Set<Module> s = MapUtil.findOrCreateSet(binaryModules, Loader.APPLICATION);
       s.add(new BinaryDirectoryTreeModule(makeAbsolute(project.getOutputLocation()).toFile()));
@@ -238,7 +238,7 @@ public class EclipseProjectPath {
     } 
   }
   
-  public AnalysisScope toAnalysisScope(final String exclusionsFile) {
+  public AnalysisScope toAnalysisScope(final File exclusionsFile) {
     return toAnalysisScope(getClass().getClassLoader(), exclusionsFile);
   }
 
