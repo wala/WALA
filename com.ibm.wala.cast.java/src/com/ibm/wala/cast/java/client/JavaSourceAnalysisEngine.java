@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.client;
 
+import java.io.IOException;
 import java.util.Set;
 
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
@@ -37,6 +38,7 @@ import com.ibm.wala.ssa.Value;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.FileOfClasses;
+import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -107,18 +109,17 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     }
   }
 
-  protected void buildAnalysisScope() {
+  protected void buildAnalysisScope() throws IOException {
     scope = makeSourceAnalysisScope();
 
     if (getExclusionsFile() != null) {
-      ClassLoader loader = getClass().getClassLoader();
-      scope.setExclusions(new FileOfClasses(getExclusionsFile(), loader));
+      scope.setExclusions(new FileOfClasses(FileProvider.getFile(getExclusionsFile())));
     }
 
-    for( Module M : this.systemEntries) {
+    for (Module M : this.systemEntries) {
       scope.addToScope(scope.getPrimordialLoader(), M);
     }
-    
+
     // add user stuff
     addApplicationModulesToScope();
   }
@@ -140,7 +141,7 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     ClassLoaderFactory factory = getClassLoaderFactory(scope.getExclusions(), getTranslatorExtension());
 
     try {
-      cha = ClassHierarchy.make(getScope(), factory );
+      cha = ClassHierarchy.make(getScope(), factory);
     } catch (ClassHierarchyException e) {
       System.err.println("Class Hierarchy construction failed");
       System.err.println(e.toString());
@@ -159,7 +160,7 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
   }
 
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> entrypoints) {
-    AnalysisOptions options = new AnalysisOptions(getScope(),entrypoints);
+    AnalysisOptions options = new AnalysisOptions(getScope(), entrypoints);
 
     SSAOptions ssaOptions = new SSAOptions();
     ssaOptions.setDefaultValues(new SSAOptions.DefaultValues() {
