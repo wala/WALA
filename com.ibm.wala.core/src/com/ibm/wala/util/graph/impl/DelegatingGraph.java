@@ -43,6 +43,11 @@ public class DelegatingGraph<T> implements Graph<T> {
     return delegate.getNumberOfNodes();
   }
 
+  @Override
+  public String toString() {
+    return delegate.toString();
+  }
+
   public int getPredNodeCount(T N) throws IllegalArgumentException{
     return delegate.getPredNodeCount(N);
   }
