@@ -61,7 +61,8 @@ public interface MethodTargetSelector {
   boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site);
 
   /**
-   * @return true if there's a possibility that getCalleeTarget on this declared tag3et
+   * @return true if there's a possibility that getCalleeTarget here might return a 
+   * synthetic method.
    */
   boolean mightReturnSyntheticMethod(MethodReference declaredTarget);
 
