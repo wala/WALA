@@ -358,7 +358,7 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       }
       // invoke the desired entrypoint
       CallSiteReference site = CallSiteReference.make(summ.getNextProgramCounter(), m, IInvokeInstruction.Dispatch.VIRTUAL);
-      if (summ.getReturnType() != null) {
+      if (!summ.getReturnType().equals(TypeReference.Void)) {
         summ.addStatement(new SSAInvokeInstruction(returnVN, params, EXCEPTION_VN, site));
         summ.addStatement(new SSAReturnInstruction(returnVN, summ.getReturnType().isPrimitiveType()));
       } else {

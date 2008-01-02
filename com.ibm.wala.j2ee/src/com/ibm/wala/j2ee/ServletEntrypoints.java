@@ -17,6 +17,7 @@ import java.util.Set;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -149,7 +150,7 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
    * @param cha
    *          loaded class hierarchy
    */
-  public ServletEntrypoints(J2EEAnalysisScope scope, IClassHierarchy cha) {
+  public ServletEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
 
     TypeReference servletType = TypeReference.findOrCreate(scope.getExtensionLoader(), servletName);
     TypeReference actionServletType = TypeReference.findOrCreate(scope.getApplicationLoader(), actionServlet);
@@ -159,6 +160,7 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     IClassLoader appLoader = cha.getLoader(appLoaderRef);
 
     IClass servlet = cha.lookupClass(servletType);
+    assert servlet != null;
     for (Iterator<IClass> it = appLoader.iterateAllClasses(); it.hasNext();) {
       IClass klass = (IClass) it.next();
       if (DEBUG) {

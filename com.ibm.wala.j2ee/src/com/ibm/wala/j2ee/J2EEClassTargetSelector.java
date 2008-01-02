@@ -68,6 +68,7 @@ public class J2EEClassTargetSelector implements ClassTargetSelector {
     this.metaData = metaData;
     this.bypassLoader = (BypassSyntheticClassLoader) bypassLoader;
 
+    assert metaData != null;
     IClass x = new J2EEContainerModel(metaData, cha);
     this.bypassLoader.registerClass(J2EEContainerModel.containerModelName, x);
   }
