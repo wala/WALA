@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.examples.drivers;
 
+import java.io.File;
 import java.util.Collection;
 
 import org.eclipse.jface.viewers.TreeViewer;
@@ -59,7 +60,7 @@ public class SWTTypeHierarchy {
   public static ApplicationWindow run(String classpath) {
 
     try {
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // generate a WALA-consumable wrapper around the incoming scope object
       

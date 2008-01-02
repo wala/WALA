@@ -29,6 +29,7 @@
  */
 package com.ibm.wala.demandpa.driver;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -96,8 +97,9 @@ public class DemandCastChecker {
    * @param args
    * @throws CancelException 
    * @throws IllegalArgumentException 
+   * @throws IOException 
    */
-  public static void main(String[] args) throws IllegalArgumentException, CancelException {
+  public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {
     WalaUtil.initializeTraceFile();
     try {
       p = new Properties();
@@ -121,7 +123,7 @@ public class DemandCastChecker {
     runTestCase("Lpolyglot/main/Main", "polyglot.xml", "polyglot");
   }
 
-  private static void runTestCase(String mainClass, String scopeFile, String benchName) throws IllegalArgumentException, CancelException {
+  private static void runTestCase(String mainClass, String scopeFile, String benchName) throws IllegalArgumentException, CancelException, IOException {
     Trace.println("=====BENCHMARK " + benchName + "=====");
     System.err.println("analyzing " + benchName);
     DemandRefinementPointsTo dmp = null;
@@ -140,7 +142,7 @@ public class DemandCastChecker {
   }
 
   private static DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass, String benchName)
-      throws ClassHierarchyException, IllegalArgumentException, CancelException {
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, getExclusions(benchName));
     // build a type hierarchy
     ClassHierarchy cha = ClassHierarchy.make(scope);

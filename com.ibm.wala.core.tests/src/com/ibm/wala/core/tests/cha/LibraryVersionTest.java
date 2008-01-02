@@ -10,13 +10,16 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.cha;
 
+import java.io.IOException;
+
 import junit.framework.Assert;
 
 import com.ibm.wala.core.tests.ir.DeterministicIRTest;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileProvider;
 
 /**
  * Test code that attempts to find the library version from
@@ -28,8 +31,8 @@ public class LibraryVersionTest extends WalaTestCase {
   
   private static final ClassLoader MY_CLASSLOADER = DeterministicIRTest.class.getClassLoader();
 
-  public void testLibraryVersion() {
-    AnalysisScope scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
+  public void testLibraryVersion() throws IOException {
+    AnalysisScope scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.xml"), MY_CLASSLOADER);
     System.err.println("java library version is " + scope.getJavaLibraryVersion());
     Assert.assertTrue(scope.isJava16Libraries() || scope.isJava15Libraries()||scope.isJava14Libraries());
   }

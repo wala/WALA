@@ -156,7 +156,7 @@ public class GVSlice {
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
     try {
       // create an analysis scope representing the appJar as a J2SE application
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
       
 
       // build a class hierarchy, call graph, and system dependence graph

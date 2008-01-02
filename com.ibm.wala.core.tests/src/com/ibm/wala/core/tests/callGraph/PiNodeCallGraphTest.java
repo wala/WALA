@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.callGraph;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -69,7 +70,7 @@ public class PiNodeCallGraphTest extends WalaTestCase {
   private static final MemberReference unary2Ref = MethodReference.findOrCreate(whateverRef,
       Atom.findOrCreateUnicodeAtom("unary2"), Descriptor.findOrCreateUTF8("()V"));
 
-  private CallGraph doGraph(boolean usePiNodes) throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  private CallGraph doGraph(boolean usePiNodes) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
@@ -101,11 +102,11 @@ public class PiNodeCallGraphTest extends WalaTestCase {
     Assertions._assert(numberOfCalls == desiredNumberOfCalls);
   }
 
-  public void testNoPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testNoPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     checkCallAssertions(doGraph(false), 2, 2);
   }
 
-  public void testPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testPiNodes() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     checkCallAssertions(doGraph(true), 1, 2);
   }
 

@@ -15,12 +15,10 @@ import java.util.Properties;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -30,6 +28,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.io.CommandLine;
@@ -49,22 +48,24 @@ public class GVCallGraph {
   private final static String PS_FILE = "cg.ps";
 
   /**
-   * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" 
-   * The "jar file name" should be
-   * something like "c:/temp/testdata/java_cup.jar"
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
+   * Usage: args = "-appJar [jar file name] {-exclusionFile
+   * [exclusionFileName]}" The "jar file name" should be something like
+   * "c:/temp/testdata/java_cup.jar"
+   * 
+   * @throws CancelException
+   * @throws IllegalArgumentException
    */
   public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException {
     run(args);
   }
 
   /**
-   * Usage: args = "-appJar [jar file name] {-exclusionFile [exclusionFileName]}" 
-   * The "jar file name" should be
-   * something like "c:/temp/testdata/java_cup.jar"
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
+   * Usage: args = "-appJar [jar file name] {-exclusionFile
+   * [exclusionFileName]}" The "jar file name" should be something like
+   * "c:/temp/testdata/java_cup.jar"
+   * 
+   * @throws CancelException
+   * @throws IllegalArgumentException
    */
   public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException {
     Properties p = CommandLine.parse(args);
@@ -81,7 +82,7 @@ public class GVCallGraph {
   public static Process run(String appJar, String exclusionFile) throws IllegalArgumentException, CancelException {
     try {
 
-      Graph<CGNode> g = buildPrunedCallGraph(appJar, exclusionFile);
+      Graph<CGNode> g = buildPrunedCallGraph(appJar, new File(exclusionFile));
 
       Properties p = null;
       try {
@@ -108,19 +109,16 @@ public class GVCallGraph {
 
   /**
    * @param appJar
-   *          something like "c:/temp/testdata/java_cup.jar"
+   *            something like "c:/temp/testdata/java_cup.jar"
    * @return a call graph
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
+   * @throws CancelException
+   * @throws IllegalArgumentException
    */
-  public static Graph<CGNode> buildPrunedCallGraph(String appJar, String exclusionFile) throws WalaException, IllegalArgumentException, CancelException {
-    AnalysisScope scope =
-      AnalysisScopeReader.makeJavaBinaryAnalysisScope(
-        appJar, 
-	exclusionFile != null? 
-	  exclusionFile: 
-	  CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    
+  public static Graph<CGNode> buildPrunedCallGraph(String appJar, File exclusionFile) throws WalaException,
+      IllegalArgumentException, CancelException {
+    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, exclusionFile != null ? exclusionFile
+        : new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+
     ClassHierarchy cha = ClassHierarchy.make(scope);
 
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha);
@@ -129,7 +127,8 @@ public class GVCallGraph {
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(),cha, scope, null, null);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope, null,
+        null);
     CallGraph cg = builder.makeCallGraph(options);
 
     Graph<CGNode> g = pruneForAppLoader(cg);
@@ -149,7 +148,7 @@ public class GVCallGraph {
    * <li> args[1] : something like "c:/temp/testdata/java_cup.jar" </ul?
    * 
    * @throws UnsupportedOperationException
-   *           if command-line is malformed.
+   *             if command-line is malformed.
    */
   public static void validateCommandLine(Properties p) {
     if (p.get("appJar") == null) {

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.callGraph;
 
+import java.io.IOException;
+
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -21,6 +23,7 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.Stopwatch;
 import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Trace;
 
 /**
@@ -51,8 +54,8 @@ public class CallGraphTestUtil {
   // "J2SEClassHierarchyExclusions.txt", MY_CLASSLOADER);
   // }
 
-  public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile, String exclusionsFile) {
-    AnalysisScope scope = AnalysisScopeReader.read(scopeFile, exclusionsFile, MY_CLASSLOADER);
+  public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile, String exclusionsFile) throws IOException {
+    AnalysisScope scope = AnalysisScopeReader.read(scopeFile, FileProvider.getFile(exclusionsFile), MY_CLASSLOADER);
     return scope;
   }
 

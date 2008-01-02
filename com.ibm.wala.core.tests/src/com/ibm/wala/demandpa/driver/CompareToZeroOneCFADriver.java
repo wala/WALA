@@ -29,6 +29,8 @@
  */
 package com.ibm.wala.demandpa.driver;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -87,7 +89,7 @@ public class CompareToZeroOneCFADriver {
   }
 
   @SuppressWarnings("unused")
-  private static void runUnitTestCase(String mainClass) throws IllegalArgumentException, CancelException {
+  private static void runUnitTestCase(String mainClass) throws IllegalArgumentException, CancelException, IOException {
     Trace.println("=======---------------=============");
     Trace.println("ANALYZING " + mainClass + "\n\n");
     // describe the "scope", what is the program we're analyzing
@@ -118,7 +120,7 @@ public class CompareToZeroOneCFADriver {
     Trace.println("=======---------------=============");
     Trace.println("ANALYZING " + appJar + "\n\n");
 
-    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     // TODO: return the warning set (need a CAPA type)
     // invoke DOMO to build a DOMO class hierarchy object

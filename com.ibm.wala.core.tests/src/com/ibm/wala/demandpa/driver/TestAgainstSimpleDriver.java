@@ -29,6 +29,7 @@
  */
 package com.ibm.wala.demandpa.driver;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -74,7 +75,7 @@ public class TestAgainstSimpleDriver {
 
   private static final boolean VERBOSE = false;
 
-  public static void main(String[] args) throws IllegalArgumentException, CancelException {
+  public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {
 
     WalaUtil.initializeTraceFile();
     // for (String String : ALL_TEST_CASES) {
@@ -84,7 +85,7 @@ public class TestAgainstSimpleDriver {
     System.err.println("computed all points-to sets successfully");
   }
 
-  private static void runAnalysisForTestCase(String mainClass) throws IllegalArgumentException, CancelException {
+  private static void runAnalysisForTestCase(String mainClass) throws IllegalArgumentException, CancelException, IOException {
     Trace.println("=======---------------=============");
     Trace.println("ANALYZING " + mainClass + "\n\n");
     // describe the "scope", what is the program we're analyzing

@@ -65,7 +65,7 @@ public class GVTypeHierarchy {
     try {
       SWTTypeHierarchy.validateCommandLine(args);
       String classpath = args[SWTTypeHierarchy.CLASSPATH_INDEX];
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // generate a WALA-consumable wrapper around the incoming scope object
       

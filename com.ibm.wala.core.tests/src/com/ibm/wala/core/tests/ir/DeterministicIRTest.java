@@ -17,7 +17,6 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -30,6 +29,8 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.ImmutableByteArray;
 import com.ibm.wala.util.UTF8Convert;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.warnings.Warnings;
@@ -59,8 +60,7 @@ public class DeterministicIRTest extends WalaTestCase {
 
   protected void setUp() throws Exception {
 
-    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
-
+    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.xml"), MY_CLASSLOADER);
     options = new AnalysisOptions(scope, null);
     cache = new AnalysisCache();
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions() );

@@ -76,9 +76,7 @@ public class GVWalaIR {
       if (SWTCallGraph.isDirectory(appJar)) {
         appJar = SWTCallGraph.findJarFiles(new String[] { appJar });
       }
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-
-      
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       ClassHierarchy cha = ClassHierarchy.make(scope);
 

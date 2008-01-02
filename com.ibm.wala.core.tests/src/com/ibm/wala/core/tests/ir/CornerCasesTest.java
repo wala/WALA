@@ -10,13 +10,14 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.ir;
 
+import java.io.IOException;
+
 import com.ibm.wala.analysis.typeInference.TypeInference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -28,6 +29,8 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileProvider;
 
 /**
  * tests for weird corner cases, such as when the input program doesn't verify
@@ -43,10 +46,11 @@ public class CornerCasesTest extends WalaTestCase {
    * exist
    * 
    * @throws ClassHierarchyException
+   * @throws IOException 
    */
-  public void testBug38484() throws ClassHierarchyException {
+  public void testBug38484() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
+    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.xml"), MY_CLASSLOADER);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "YuckyInterface");
     IClass klass = cha.lookupClass(t);
@@ -60,10 +64,11 @@ public class CornerCasesTest extends WalaTestCase {
    * field's declared type cannot be loaded
    * 
    * @throws ClassHierarchyException
+   * @throws IOException 
    */
-  public void testBug38540() throws ClassHierarchyException {
+  public void testBug38540() throws ClassHierarchyException, IOException {
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
+    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.xml"), MY_CLASSLOADER);
     AnalysisOptions options = new AnalysisOptions();
     ClassHierarchy cha = ClassHierarchy.make(scope);
     TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "Main");

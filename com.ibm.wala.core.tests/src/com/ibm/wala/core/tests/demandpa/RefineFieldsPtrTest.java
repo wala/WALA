@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
+import java.io.IOException;
+
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineFieldsPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.NeverRefineCGPolicy;
@@ -46,44 +48,45 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 
 public class RefineFieldsPtrTest extends AbstractPtrTest {
 
-  public void testNastyPtrs() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testNastyPtrs() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_NASTY_PTRS, 10);
   }
 
-  public void testGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_GLOBAL, 1);
   }
 
-  public void testFields() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testFields() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_FIELDS, 1);
   }
 
-  public void testFieldsHarder() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testFieldsHarder() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_FIELDS_HARDER, 1);
   }
 
-  public void testArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ARRAYS, 2);
   }
 
-  public void testGetterSetter() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testGetterSetter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_GETTER_SETTER, 1);
   }
 
-  public void testArraySet() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testArraySet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ARRAY_SET, 2);
   }
 
-  public void testArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testArraySetIter() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ARRAY_SET_ITER, 2);
   }
 
-  public void testMultiDim() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testMultiDim() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_MULTI_DIM, 2);
   }
 
   @Override
-  public DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass) throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass) throws ClassHierarchyException,
+      IllegalArgumentException, CancelException, IOException {
     DemandRefinementPointsTo dmp = super.makeDemandPointerAnalysis(scopeFile, mainClass);
     dmp
         .setRefinementPolicyFactory(new SinglePassRefinementPolicy.Factory(new AlwaysRefineFieldsPolicy(),

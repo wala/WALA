@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.examples.drivers;
 
+import java.io.File;
 import java.util.Properties;
 
 import org.eclipse.jface.window.ApplicationWindow;
@@ -78,7 +79,7 @@ public class SWTPointsTo {
   }
 
   public static Graph<Object> buildPointsTo(String appJar) throws WalaException, IllegalArgumentException, CancelException {
-    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
     
     ClassHierarchy cha = ClassHierarchy.make(scope);

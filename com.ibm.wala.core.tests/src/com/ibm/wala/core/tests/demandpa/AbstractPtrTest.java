@@ -37,6 +37,7 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -142,7 +143,7 @@ public abstract class AbstractPtrTest extends TestCase {
   protected AnalysisScope scope = null;
 
   protected void doPointsToSizeTest(String scopeFile, String mainClass, int expected14Size, int expected15Size, int expected16Size)
-      throws ClassHierarchyException, IllegalArgumentException, CancelException {
+      throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     if (Assertions.verifyAssertions) {
       Assertions._assert(scope == null);
     }
@@ -167,12 +168,12 @@ public abstract class AbstractPtrTest extends TestCase {
   }
 
   protected void doPointsToSizeTest(String scopeFile, String mainClass, int expectedSize) throws ClassHierarchyException,
-      IllegalArgumentException, CancelException {
+      IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(scopeFile, mainClass, expectedSize, expectedSize, expectedSize);
   }
 
   protected Collection<InstanceKey> getPointsToSetToTest(String scopeFile, String mainClass) throws ClassHierarchyException,
-      IllegalArgumentException, CancelException {
+      IllegalArgumentException, CancelException, IOException {
     final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(scopeFile, mainClass);
 
     // find the testThisVar call, and check the parameter's points-to set
@@ -183,7 +184,7 @@ public abstract class AbstractPtrTest extends TestCase {
   }
 
   protected DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass) throws ClassHierarchyException,
-      IllegalArgumentException, CancelException {
+      IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, "Java60RegressionExclusions.txt");
     this.scope = scope;
     // build a type hierarchy

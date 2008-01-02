@@ -16,7 +16,6 @@ import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
-import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -28,6 +27,8 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.ImmutableByteArray;
 import com.ibm.wala.util.UTF8Convert;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
@@ -46,7 +47,7 @@ public class TypeInferenceTest extends WalaTestCase {
   private ClassHierarchy cha;
 
   private AnalysisOptions options;
-  
+
   private AnalysisCache cache;
 
   public static void main(String[] args) {
@@ -55,11 +56,11 @@ public class TypeInferenceTest extends WalaTestCase {
 
   protected void setUp() throws Exception {
 
-    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.xml", MY_CLASSLOADER);
+    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.xml"), MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
     cache = new AnalysisCache();
-    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions() );
+    ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions());
 
     try {
       cha = ClassHierarchy.make(scope, factory);
@@ -81,11 +82,11 @@ public class TypeInferenceTest extends WalaTestCase {
     assertNotNull("method not found", method);
     IMethod imethod = cha.resolveMethod(method);
     assertNotNull("imethod not found", imethod);
-    IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions() );
+    IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
     System.out.println(ir);
-    
+
     TypeInference ti = TypeInference.make(ir, false);
-    for (int i = 1; i<= ir.getSymbolTable().getMaxValueNumber(); i++) {
+    for (int i = 1; i <= ir.getSymbolTable().getMaxValueNumber(); i++) {
       System.err.println(i + " " + ti.getType(i));
     }
   }

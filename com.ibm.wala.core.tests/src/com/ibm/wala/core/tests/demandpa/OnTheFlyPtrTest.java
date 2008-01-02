@@ -37,6 +37,8 @@
  */
 package com.ibm.wala.core.tests.demandpa;
 
+import java.io.IOException;
+
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineCGPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineFieldsPolicy;
@@ -46,12 +48,12 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 
 public class OnTheFlyPtrTest extends AbstractPtrTest {
 
-  public void testOnTheFlySimple() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testOnTheFlySimple() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ONTHEFLY_SIMPLE, 1);
   }
 
   @Override
-  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass) throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  protected DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass) throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     DemandRefinementPointsTo dmp = super.makeDemandPointerAnalysis(scopeFile, mainClass);
     dmp.setRefinementPolicyFactory(new SinglePassRefinementPolicy.Factory(new AlwaysRefineFieldsPolicy(),
         new AlwaysRefineCGPolicy()));

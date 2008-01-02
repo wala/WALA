@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.core.tests.callGraph;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -61,7 +62,7 @@ public class CallGraphTest extends WalaTestCase {
   }
   
 
-  public void testJava_cup() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testJava_cup() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JAVA_CUP, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
@@ -71,7 +72,7 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCache(), cha, scope,  useShortProfile(), false, true);
   }
 
-  public void testBcelVerifier() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testBcelVerifier() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.BCEL, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
@@ -82,7 +83,7 @@ public class CallGraphTest extends WalaTestCase {
   }
 
 
-  public void testJLex() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testJLex() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.JLEX, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util
@@ -92,7 +93,7 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options,new AnalysisCache(), cha, scope,  useShortProfile(), false);
   }
 
-  public void testCornerCases() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testCornerCases() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
@@ -132,7 +133,7 @@ public class CallGraphTest extends WalaTestCase {
   // doCallGraphs(options, cha, scope, Config.SPECJVM_DCG, false, false);
   // }
   //
-  public void testHello() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testHello() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.HELLO, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
@@ -142,7 +143,7 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCache(), cha, scope, false, false);
   }
 
-  public void testRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
@@ -152,7 +153,7 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCache(),cha, scope, useShortProfile(), false);
   }
 
-  public void testHelloAllEntrypoints() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testHelloAllEntrypoints() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.HELLO, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = new AllApplicationEntrypoints(scope, cha);
@@ -161,7 +162,7 @@ public class CallGraphTest extends WalaTestCase {
     doCallGraphs(options, new AnalysisCache(),cha, scope, useShortProfile(), false);
   }
 
-  public void testIO() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testIO() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope("primordial.txt", CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     Iterable<Entrypoint> entrypoints = makePrimordialPublicEntrypoints(scope, cha, "java/io");
@@ -190,7 +191,7 @@ public class CallGraphTest extends WalaTestCase {
     };
   }
 
-  public void testPrimordial() throws ClassHierarchyException, IllegalArgumentException, CancelException {
+  public void testPrimordial() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     if (useShortProfile()) {
       return;
     }
