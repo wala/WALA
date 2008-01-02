@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.j2ee.client.impl;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.jar.JarFile;
 
@@ -62,15 +63,17 @@ public abstract class J2EEAbstractAnalysisEngine extends AbstractAnalysisEngine 
 
   /**
    * Set up the AnalysisScope object
+   * @throws IOException 
    */
-  protected void buildAnalysisScope() {
+  protected void buildAnalysisScope() throws IOException {
     buildAnalysisScope(null);
   }
 
   /**
    * Set up the AnalysisScope object
+   * @throws IOException 
    */
-  protected void buildAnalysisScope(String exclusionsFile) {
+  protected void buildAnalysisScope(String exclusionsFile) throws IOException {
     // set up the scope of the analysis
     ClassLoader cl = J2EEAbstractAnalysisEngine.class.getClassLoader();
     if (j2seLibs == null) {

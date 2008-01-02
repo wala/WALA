@@ -21,6 +21,7 @@ public class HttpServletRequest
   private final java.util.Hashtable<String, String> headers = new java.util.Hashtable<String, String>();
 
   public HttpServletRequest() {
+    super();
     headers.put("header", "value");
     headers.get("header");
   }

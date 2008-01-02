@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.j2ee;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.jar.JarFile;
@@ -24,6 +26,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileOfClasses;
+import com.ibm.wala.util.config.FileProvider;
 
 /**
  * Description of analysis for EJBs
@@ -49,17 +52,19 @@ public class J2EEAnalysisScope extends AnalysisScope {
    * @param lifecycleEntrypoints
    *          Should EJB lifecycle entrypoints be considered as call graph
    *          entrypoints?
+   * @throws IOException 
    */
-  public J2EEAnalysisScope(String baseScope, ClassLoader loader, boolean lifecycleEntrypoints) {
-    this(baseScope, loader, EXCLUSIONS_FILE, lifecycleEntrypoints);
+  public J2EEAnalysisScope(String baseScope, ClassLoader loader, boolean lifecycleEntrypoints) throws IOException {
+    this(baseScope, loader, FileProvider.getFile(EXCLUSIONS_FILE), lifecycleEntrypoints);
   }
 
   /**
    * @param lifecycleEntrypoints
    *          Should EJB lifecycle entrypoints be considered as call graph
    *          entrypoints?
+   * @throws IOException 
    */
-  public J2EEAnalysisScope(String baseScope, ClassLoader loader, String exclusionsFile, boolean lifecycleEntrypoints) {
+  public J2EEAnalysisScope(String baseScope, ClassLoader loader, File exclusionsFile, boolean lifecycleEntrypoints) throws IOException {
     super(Collections.singleton(Language.JAVA));
     AnalysisScope base = AnalysisScopeReader.read(baseScope, exclusionsFile, loader);
     
@@ -69,7 +74,7 @@ public class J2EEAnalysisScope extends AnalysisScope {
       }
     }
     if (exclusionsFile != null) {
-      FileOfClasses file = new FileOfClasses(exclusionsFile, loader);
+      FileOfClasses file = new FileOfClasses(exclusionsFile);
       setExclusions(file);
     }
     this.lifecycleEntrypoints = lifecycleEntrypoints;
@@ -80,12 +85,13 @@ public class J2EEAnalysisScope extends AnalysisScope {
    * @param lifecycleEntrypoints
    *          Should EJB lifecycle entrypoints be considered as call graph
    *          entrypoints?
+   * @throws IOException 
    */
-  public static J2EEAnalysisScope makeDefault(ClassLoader loader, boolean lifecycleEntrypoints) {
+  public static J2EEAnalysisScope makeDefault(ClassLoader loader, boolean lifecycleEntrypoints) throws IOException {
     return new J2EEAnalysisScope(DEFAULT_FILE, loader, lifecycleEntrypoints);
   }
 
-  public static J2EEAnalysisScope make(JarFile[] J2SELibs, JarFile[] J2EELibs, ClassLoader loader, boolean lifecycleEntrypoints) {
+  public static J2EEAnalysisScope make(JarFile[] J2SELibs, JarFile[] J2EELibs, ClassLoader loader, boolean lifecycleEntrypoints) throws IOException {
     return make(J2SELibs, J2EELibs, EXCLUSIONS_FILE, loader, lifecycleEntrypoints);
   }
 
@@ -95,11 +101,12 @@ public class J2EEAnalysisScope extends AnalysisScope {
    * @param lifecycleEntrypoints
    *          Should EJB lifecycle entrypoints be considered as call graph
    *          entrypoints?
+   * @throws IOException 
    */
   public static J2EEAnalysisScope make(JarFile[] J2SELibs, JarFile[] J2EELibs, String exclusionsFile, ClassLoader loader,
-      boolean lifecycleEntrypoints) {
+      boolean lifecycleEntrypoints) throws IOException {
     J2EEAnalysisScope scope;
-    scope = new J2EEAnalysisScope(BASIC_FILE, loader, exclusionsFile, lifecycleEntrypoints);
+    scope = new J2EEAnalysisScope(BASIC_FILE, loader, new File(exclusionsFile), lifecycleEntrypoints);
     for (int i = 0; i < J2SELibs.length; i++) {
       JarFileModule lib = new JarFileModule(J2SELibs[i]);
       scope.addToScope(scope.getPrimordialLoader(), lib);
@@ -116,14 +123,15 @@ public class J2EEAnalysisScope extends AnalysisScope {
    * @param lifecycleEntrypoints
    *          Should EJB lifecycle entrypoints be considered as call graph
    *          entrypoints?
+   * @throws IOException 
    */
   public static J2EEAnalysisScope make(Module[] J2SELibs, Module[] J2EELibs, String exclusionsFile, ClassLoader loader,
-      boolean lifecycleEntrypoints) {
+      boolean lifecycleEntrypoints) throws IOException {
     J2EEAnalysisScope scope;
     if (exclusionsFile == null) {
       exclusionsFile = EXCLUSIONS_FILE;
     }
-    scope = new J2EEAnalysisScope(BASIC_FILE, loader, exclusionsFile, lifecycleEntrypoints);
+    scope = new J2EEAnalysisScope(BASIC_FILE, loader, new File(exclusionsFile), lifecycleEntrypoints);
     for (int i = 0; i < J2SELibs.length; i++) {
       scope.addToScope(scope.getPrimordialLoader(), J2SELibs[i]);
     }
