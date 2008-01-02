@@ -19,8 +19,22 @@ public class ServletRequest implements javax.servlet.ServletRequest {
   private final java.util.Hashtable<String, String> parameters = new java.util.Hashtable<String, String>();
   private String encoding = "iso88591-1";
 
+  /**
+   * The semantics of this are bogus ... be careful to hijack this.
+   */
+  private static String getInputString() {
+    return "some input string";
+  }
+  
+  /**
+   * The semantics of this are bogus ... be careful to hijack this.
+   */
   public ServletRequest() {
-    parameters.put("key", "value");
+    parameters.put(getInputString(), getInputString());
+    parameters.put(getInputString(), getInputString());
+    parameters.put(getInputString(), getInputString());
+    parameters.put(getInputString(), getInputString());
+    parameters.put(getInputString(), getInputString());
   }
 
   public Object getAttribute(String name) {
