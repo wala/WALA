@@ -87,7 +87,8 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
    * @param ignoredPackages
    * @param cha
    */
-  public BypassMethodTargetSelector(MethodTargetSelector parent, Map<MethodReference, MethodSummary> methodSummaries, Set<Atom> ignoredPackages, IClassHierarchy cha) {
+  public BypassMethodTargetSelector(MethodTargetSelector parent, Map<MethodReference, MethodSummary> methodSummaries,
+      Set<Atom> ignoredPackages, IClassHierarchy cha) {
     this.methodSummaries = methodSummaries;
     this.ignoredPackages = ignoredPackages;
     this.parent = parent;
@@ -97,7 +98,9 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   /**
    * Check to see if a particular call site should be bypassed, before checking
    * normal resolution of the receiver.
-   * @throws IllegalArgumentException  if site is null
+   * 
+   * @throws IllegalArgumentException
+   *             if site is null
    */
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass dispatchType) {
 
@@ -123,31 +126,33 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     IMethod target = (resolved == null) ? findOrCreateSyntheticMethod(ref, site.isStatic()) : getBypassInternal(resolved, site
         .isStatic());
 
-    if (DEBUG) Trace.println("target is initially " + target);
+    if (DEBUG)
+      Trace.println("target is initially " + target);
 
     if (target != null) {
       return target;
     } else {
       if (canIgnore(site.getDeclaredTarget())) {
-	if (DEBUG) Trace.println("ignoring " + site);
+        if (DEBUG)
+          Trace.println("ignoring " + site);
         return null;
       }
       target = parent.getCalleeTarget(caller, site, dispatchType);
 
-      if (DEBUG) Trace.println("target becomes " + target);
+      if (DEBUG)
+        Trace.println("target becomes " + target);
 
       if (target != null) {
         IMethod bypassTarget = getBypassInternal(target, site.isStatic());
 
-	if (DEBUG) Trace.println("bypassTarget is " + target);
+        if (DEBUG)
+          Trace.println("bypassTarget is " + target);
 
         return (bypassTarget == null) ? target : bypassTarget;
       } else
         return target;
     }
   }
-
-
 
   /**
    * Lookup bypass rules based on a resolved method
@@ -166,7 +171,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
 
   /**
    * @param m
-   *          a method reference
+   *            a method reference
    * @return a SyntheticMethod corresponding to m; or null if none is available.
    */
   private SyntheticMethod findOrCreateSyntheticMethod(MethodReference m, boolean isStatic) {
@@ -205,7 +210,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
 
   /**
    * @param m
-   *          a method reference
+   *            a method reference
    * @return a SyntheticMethod corresponding to m; or null if none is available.
    */
   private SyntheticMethod findOrCreateSyntheticMethod(IMethod m, boolean isStatic) {
