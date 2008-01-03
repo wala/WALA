@@ -26,7 +26,7 @@ import com.ibm.wala.util.debug.Trace;
 
 /**
  * 
- * A ClassTargetSelector that looks up the declared type of a NewSiteReference
+ * A ClassTargetSelector that looks up the declared type of a {@link NewSiteReference}
  * based on bypass rules.
  * 
  * @author dolby
