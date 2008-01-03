@@ -115,11 +115,6 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
 
   public abstract int getReturnValue(int i);
 
-  /**
-   * Method getDeclaredResultType. TODO: push this logic into shrike.
-   * 
-   * @return TypeReference
-   */
   public TypeReference getDeclaredResultType() {
     return site.getDeclaredTarget().getReturnType();
   }
