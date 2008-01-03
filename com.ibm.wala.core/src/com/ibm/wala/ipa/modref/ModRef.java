@@ -354,6 +354,9 @@ public class ModRef {
     return new RefVisitor(n, result, pa, h);
   }
 
+  /**
+   * compute the set of pointerKeys that instruction s uses
+   */
   public Collection<PointerKey> getRef(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
