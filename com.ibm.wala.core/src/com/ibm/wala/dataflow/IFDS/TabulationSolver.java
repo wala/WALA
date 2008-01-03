@@ -332,6 +332,9 @@ public class TabulationSolver<T, P> {
       }
       IUnaryFlowFunction f = flowFunctionMap.getNormalFlowFunction(edge.n, m);
       IntSet D3 = computeFlow(edge.d2, f);
+      if (DEBUG_LEVEL > 0) {
+        System.err.println(" reached: " + D3);
+      }
       if (D3 != null) {
         D3.foreach(new IntSetAction() {
           public void act(int d3) {
