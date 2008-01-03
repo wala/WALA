@@ -132,6 +132,11 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     this.heapExclude = heapExclude;
   }
 
+  /** 
+   * Use this with care.  This forces eager construction of the SDG, and SDGs can be big.
+   * 
+   * @see com.ibm.wala.util.graph.AbstractGraph#toString()
+   */
   @Override
   public String toString() {
     eagerConstruction();
