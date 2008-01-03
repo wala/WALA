@@ -127,3 +127,4 @@ finicky
 rfuhrer
 microbenchmarks
 stringish
+allocatable
