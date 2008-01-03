@@ -7,8 +7,6 @@ Bundle-Vendor: %VENDORNAME
 Bundle-Localization: plugin
 Export-Package: .,
  com.ibm.wala.j2ee,
- com.ibm.wala.j2ee.client,
- com.ibm.wala.j2ee.client.impl,
  com.ibm.wala.j2ee.util
 Require-Bundle: com.ibm.wala.core;visibility:=reexport,
  org.eclipse.jem;visibility:=reexport,
