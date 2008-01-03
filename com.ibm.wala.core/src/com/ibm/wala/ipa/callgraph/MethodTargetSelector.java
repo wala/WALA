@@ -26,7 +26,7 @@ import com.ibm.wala.types.MethodReference;
  *
  * Such policies are consulted by the different analysis mechanisms,
  * both the flow-based and non-flow algorithms.  The current
- * menchanism is that the policy object are registered with the
+ * mechanism is that the policy object are registered with the
  * AnalysisOptions object, and all analyses that need to analyze
  * invocations ask that object for the method selector to use.
  *
@@ -44,7 +44,7 @@ public interface MethodTargetSelector {
    * Given a calling node, a call site and (optionally) a dispatch
    * type, return the target method to be called.
    *
-   * @param caller the GCNode in the call graph containg the call
+   * @param caller the GCNode in the call graph containing the call
    * @param site the call site reference of the call site
    * @param receiver the type of the target object or null
    * @return the method to be called.
@@ -53,6 +53,7 @@ public interface MethodTargetSelector {
 
 
   /**
+   * TODO: make this go away?  an unnecessary optimization?
    * @param caller
    * @param site
    * @return true if there's a possibility that getCalleeTarget here might return a 
@@ -61,6 +62,7 @@ public interface MethodTargetSelector {
   boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site);
 
   /**
+   *    * TODO: make this go away?  an unnecessary optimization?
    * @return true if there's a possibility that getCalleeTarget here might return a 
    * synthetic method.
    */
