@@ -51,7 +51,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     this.srcStatement = src;
     this.backward = backward;
   }
-  
+
   public Graph<PDG> getProcedureGraph() {
     Assertions.UNREACHABLE();
     return null;
@@ -62,8 +62,9 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     return null;
   }
 
-  /* 
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object, java.lang.Object)
+  /*
+   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object,
+   *      java.lang.Object)
    */
   public byte classifyEdge(Statement src, Statement dest) {
     Assertions.UNREACHABLE();

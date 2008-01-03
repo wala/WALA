@@ -21,6 +21,7 @@ public abstract class HeapStatement extends Statement {
   public HeapStatement(CGNode node, PointerKey loc) {
 
     super(node);
+    
     if (loc == null) {
       throw new IllegalArgumentException("loc is null");
     }
