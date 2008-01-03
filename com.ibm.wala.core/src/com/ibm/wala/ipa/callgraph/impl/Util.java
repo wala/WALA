@@ -32,9 +32,8 @@ import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.OneCFABuilder;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroContainerCFABuilder;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroOneContainerCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXCFABuilder;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXContainerCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.rta.BasicRTABuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -758,7 +757,7 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
 
-    return new ZeroContainerCFABuilder(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec());
+    return new ZeroXContainerCFABuilder(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec(), ZeroXInstanceKeys.NONE);
   }
 
   /**
@@ -784,7 +783,8 @@ public class Util {
     ContextSelector appSelector = null;
     SSAContextInterpreter appInterpreter = null;
 
-    return new ZeroOneContainerCFABuilder(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec());
+    return new ZeroXContainerCFABuilder(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec(),  ZeroXInstanceKeys.ALLOCATIONS | ZeroXInstanceKeys.SMUSH_MANY | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS
+        | ZeroXInstanceKeys.SMUSH_STRINGS | ZeroXInstanceKeys.SMUSH_THROWABLES);
   }
 
   /**
@@ -811,13 +811,8 @@ public class Util {
     SSAContextInterpreter appInterpreter = null;
     options.setUseConstantSpecificKeys(true);
 
-    return new ZeroOneContainerCFABuilder(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec()) {
-      @Override
-      protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy c, AnalysisOptions o, SSAContextInterpreter contextInterpreter) {
-        ZeroXInstanceKeys zik = new ZeroXInstanceKeys(o, c, contextInterpreter, ZeroXInstanceKeys.ALLOCATIONS);
-        return zik;
-      }
-    };
+    return new ZeroXContainerCFABuilder(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec(),  ZeroXInstanceKeys.ALLOCATIONS);
+
   }
 
   public static void addDefaultBypassLogic(AnalysisOptions options, AnalysisScope scope, ClassLoader cl, IClassHierarchy cha) {

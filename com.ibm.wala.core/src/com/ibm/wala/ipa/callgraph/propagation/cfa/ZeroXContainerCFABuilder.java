@@ -14,53 +14,49 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
-import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 
- * 0-CFA Call graph builder which analyzes calls to "container methods" in a
+ * 0-X-CFA Call graph builder which analyzes calls to "container methods" in a
  * context which is defined by the receiver instance.
  * 
  * @author sfink
  */
-public class ZeroContainerCFABuilder extends CFABuilder {
+public class ZeroXContainerCFABuilder extends ZeroXCFABuilder {
 
   /**
    * @param cha
-   *          governing class hierarchy
+   *            governing class hierarchy
    * @param options
-   *          call graph construction options
+   *            call graph construction options
    * @param appContextSelector
-   *          application-specific logic to choose contexts
+   *            application-specific logic to choose contexts
    * @param appContextInterpreter
-   *          application-specific logic to interpret a method in context
+   *            application-specific logic to interpret a method in context
    * @param reflect
-   *          reflection specification
+   *            reflection specification
    * @throws IllegalArgumentException
-   *           if options is null
+   *             if options is null
    */
-  public ZeroContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
+  public ZeroXContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
 
-    super(cha, options, cache);
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
+    super(cha, options, cache, appContextSelector, appContextInterpreter, reflect, instancePolicy);
 
-    setInstanceKeys(new ZeroXInstanceKeys(options, cha, null, ZeroXInstanceKeys.NONE));
-
-    ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
-    ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
-
-    ContainerContextSelector CCS = new ContainerContextSelector(cha, (ZeroXInstanceKeys) getInstanceKeys());
+    ContextSelector CCS = makeContainerContextSelector(cha, (ZeroXInstanceKeys) getInstanceKeys());
     DelegatingContextSelector DCS = new DelegatingContextSelector(CCS, contextSelector);
     setContextSelector(DCS);
+  }
 
-    setContextInterpreter(makeDefaultContextInterpreters(appContextInterpreter, options, reflect));
 
+  /**
+   * @return an object which creates contexts for call graph nodes based on the
+   *         container disambiguation policy
+   */
+  protected ContextSelector makeContainerContextSelector(IClassHierarchy cha, ZeroXInstanceKeys keys) {
+    return new ContainerContextSelector(cha, keys);
   }
 
   /*

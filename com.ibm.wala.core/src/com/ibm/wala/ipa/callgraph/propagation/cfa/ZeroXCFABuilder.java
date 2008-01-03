@@ -33,7 +33,7 @@ public class ZeroXCFABuilder extends CFABuilder {
 
   private final int instancePolicy;
 
-  protected ZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
+  public ZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
 
     super(cha, options, cache);
