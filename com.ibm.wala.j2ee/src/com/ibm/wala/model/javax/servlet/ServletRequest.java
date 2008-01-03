@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.model.javax.servlet;
 
+import java.io.IOException;
+
 import javax.servlet.ServletInputStream;
 
 import com.ibm.wala.model.SyntheticFactory;
@@ -63,9 +65,14 @@ public class ServletRequest implements javax.servlet.ServletRequest {
 
   public javax.servlet.ServletInputStream getInputStream() {
     return new ServletInputStream() {
-      public int read() throws java.io.IOException {
-        return 0;
+      @Override
+      public int read() throws IOException {
+        // kind of a bogus model, but ok for now ...
+        String s = getInputString();
+        int n = s.charAt(0);
+        return n;
       }
+      
     };
   }
 
