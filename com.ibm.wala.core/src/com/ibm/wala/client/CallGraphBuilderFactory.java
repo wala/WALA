@@ -17,30 +17,11 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 
- * A factory for call graph builders; tailored to J2EE
+ * A factory for call graph builders
  * 
  * @author sfink
  */
 public interface CallGraphBuilderFactory {
-
-  public final static String IMPL_PROPERTY = "callGraphBuilderFactoryImplementation";
-  
-  public final static String RTA_BUILDER_FACTORY = "com.ibm.wala.j2ee.client.impl.RTABuilderFactory";
-
-  public final static String XTA_BUILDER_FACTORY = "com.ibm.wala.j2ee.client.impl.XTABuilderFactory";
-
-  public final static String XTA_CONTAINER_BUILDER_FACTORY = "com.ibm.wala.j2ee.client.impl.XTAContainerBuilderFactory";
-
-  public final static String ZERO_CFA_BUILDER_FACTORY = "com.ibm.wala.j2ee.client.impl.ZeroCFABuilderFactory";
-
-  public final static String ZERO_CONTAINER_CFA_BUILDER_FACTORY = "com.ibm.wala.j2ee.client.impl.ZeroContainerCFABuilderFactory";
-
-  public final static String ZERO_ONE_CFA_BUILDER_FACTORY = "com.ibm.wala.j2ee.client.impl.ZeroOneCFABuilderFactory";
-
-  public final static String ZERO_ONE_CONTAINER_CFA_BUILDER_FACTORY = "com.ibm.wala.j2ee.client.impl.ZeroOneContainerCFABuilderFactory";
-
-  public final static String OBJECT_SENSITIVE_CONTAINER_HACK_CFA_BUILDER_FACTORY = "com.ibm.wala.j2ee.client.impl.ObjectSensitiveContainerHackCFABuilderFactory";
 
   /**
    * @param options
