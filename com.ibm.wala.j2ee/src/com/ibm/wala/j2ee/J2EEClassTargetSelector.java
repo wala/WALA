@@ -24,7 +24,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
- * 
  * A class that selects concrete types for new statements.
  * 
  * @author Julian Dolby (dolby@us.ibm.com)
