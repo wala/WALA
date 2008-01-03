@@ -22,8 +22,7 @@ public class HttpServletRequest
 
   public HttpServletRequest() {
     super();
-    headers.put("header", "value");
-    headers.get("header");
+    headers.put(getInputString(), getInputString());
   }
 
   public String getAuthType() {

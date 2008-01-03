@@ -33,10 +33,6 @@ public class ServletRequest implements javax.servlet.ServletRequest {
    */
   public ServletRequest() {
     parameters.put(getInputString(), getInputString());
-    parameters.put(getInputString(), getInputString());
-    parameters.put(getInputString(), getInputString());
-    parameters.put(getInputString(), getInputString());
-    parameters.put(getInputString(), getInputString());
   }
 
   public Object getAttribute(String name) {
