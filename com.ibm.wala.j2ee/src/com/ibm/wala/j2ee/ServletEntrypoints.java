@@ -143,6 +143,12 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     concreteParameterMap.put(servletContext, WalaServletContextModel);
     concreteParameterMap.put(servletConfig, WalaServletConfigModel);
   }
+  
+  private final AnalysisScope scope;
+  
+  private final IClassHierarchy cha;
+  
+  private boolean isInitialized;
 
   /**
    * @param scope
@@ -151,17 +157,22 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
    *          loaded class hierarchy
    */
   public ServletEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
+    this.scope = scope;
+    this.cha = cha;
+  }
 
+  private void init() {
+    if (isInitialized) {
+      return;
+    }
+    isInitialized = true;
     TypeReference servletType = TypeReference.findOrCreate(scope.getExtensionLoader(), servletName);
     TypeReference actionServletType = TypeReference.findOrCreate(scope.getApplicationLoader(), actionServlet);
     IClass actionServletClass = cha.lookupClass(actionServletType);
     
-    ClassLoaderReference appLoaderRef = scope.getApplicationLoader();
-    IClassLoader appLoader = cha.getLoader(appLoaderRef);
-
     IClass servlet = cha.lookupClass(servletType);
     assert servlet != null;
-    for (Iterator<IClass> it = appLoader.iterateAllClasses(); it.hasNext();) {
+    for (Iterator<IClass> it = getCandidateEntryClasses(cha); it.hasNext();) {
       IClass klass = (IClass) it.next();
       if (DEBUG) {
         Trace.println(getClass() + " consider " + klass);
@@ -215,11 +226,21 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     }
   }
 
+  /**
+   * return the set of classes that should be examined when searching for servlet entrypoints.
+   */
+  protected Iterator<IClass> getCandidateEntryClasses(IClassHierarchy cha) {
+    IClassLoader appLoader = cha.getLoader(ClassLoaderReference.Application);
+    return appLoader.iterateAllClasses();
+  }
+
   public Iterator<Entrypoint> iterator() {
+    init();
     return entrypoints.iterator();
   }
 
   public String toString() {
+    init();
     StringBuffer result = new StringBuffer();
     result.append("Servlets:");
     Iterator<IClass> it = servlets.iterator();
