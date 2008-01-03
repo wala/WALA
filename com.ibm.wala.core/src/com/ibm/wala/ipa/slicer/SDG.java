@@ -651,4 +651,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     return cg.getClassHierarchy();
   }
 
+  public PointerAnalysis getPointerAnalysis() {
+    return pa;
+  }
+
 }
