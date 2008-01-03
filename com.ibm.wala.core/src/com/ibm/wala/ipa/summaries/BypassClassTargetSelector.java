@@ -25,8 +25,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
- * 
- * A ClassTargetSelector that looks up the declared type of a {@link NewSiteReference}
+ * A {@link ClassTargetSelector} that looks up the declared type of a {@link NewSiteReference}
  * based on bypass rules.
  * 
  * @author dolby
@@ -36,7 +35,7 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
   private static final boolean DEBUG = false;
 
   /**
-   * Set of TypeReference that should be considered allocatable
+   * Set of {@link TypeReference} that should be considered allocatable
    */
   private final Set<TypeReference> allocatableTypes;
 
