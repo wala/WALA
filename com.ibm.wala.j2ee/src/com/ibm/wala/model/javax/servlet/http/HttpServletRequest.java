@@ -35,7 +35,10 @@ public class HttpServletRequest
   }
 
   public Cookie[] getCookies() {
-    return null;
+    Cookie cookie = new Cookie(getInputString(), getInputString());
+    cookie.setComment(getInputString());
+    return new Cookie[] { cookie } ;
+    
   }
 
   public long getDateHeader(String name) {

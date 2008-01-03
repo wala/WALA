@@ -22,7 +22,7 @@ public class ServletRequest implements javax.servlet.ServletRequest {
   /**
    * The semantics of this are bogus ... be careful to hijack this.
    */
-  private static String getInputString() {
+  protected static String getInputString() {
     return "some input string";
   }
   
