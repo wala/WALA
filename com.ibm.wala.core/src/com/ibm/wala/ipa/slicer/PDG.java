@@ -144,6 +144,9 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     createControlDependenceEdges(cOptions);
   }
 
+  /**
+   * return the set of all PARAM_CALLER and HEAP_PARAM_CALLER statements associated with a given call
+   */
   public Set<Statement> getCallerParamStatements(SSAAbstractInvokeInstruction call) throws IllegalArgumentException {
     if (call == null) {
       throw new IllegalArgumentException("call == null");
@@ -151,6 +154,9 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     return callerParamStatements.get(call.getCallSite());
   }
 
+  /**
+   * return the set of all NORMAL_RETURN_CALLER and HEAP_RETURN_CALLER statements associated with a given call.
+   */
   public Set<Statement> getCallerReturnStatements(SSAAbstractInvokeInstruction call) throws IllegalArgumentException {
     if (call == null) {
       throw new IllegalArgumentException("call == null");
