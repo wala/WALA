@@ -12,7 +12,7 @@ package com.ibm.wala.cast.java.ipa.callgraph;
 
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.CFAPointerKeys;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
@@ -21,7 +21,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 public class AstJavaCFABuilder extends AstJavaSSAPropagationCallGraphBuilder {
 
   public AstJavaCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
-    super(cha, options, cache, new CFAPointerKeys());
+    super(cha, options, cache, new DefaultPointerKeyFactory());
   }
 
 }
