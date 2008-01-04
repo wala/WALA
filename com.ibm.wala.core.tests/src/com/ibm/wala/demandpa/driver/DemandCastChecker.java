@@ -61,7 +61,7 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.CFABuilder;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.properties.WalaProperties;
@@ -208,12 +208,12 @@ public class DemandCastChecker {
     final AnalysisCache cache = new AnalysisCache();
     if (CHEAP_CG) {
       // ret = CallGraphTestUtil.buildRTA(options, cha, scope, warnings);
-      CFABuilder builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
+      SSAPropagationCallGraphBuilder builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
       ret = builder.makeCallGraph(options);
       // we want vanilla 0-1 CFA, which has one abstract loc per allocation
       heapModel = Util.makeVanillaZeroOneCFABuilder(options, cache, cha, scope);
     } else {
-      final CFABuilder builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
+      final SSAPropagationCallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
       heapModel = builder;
       ret = builder.makeCallGraph(options);
 
