@@ -154,6 +154,7 @@
 			<src path="dat/"			/>
 			<src path="src/"			/>
 			<src path="lib/"			/>
+			<exclude name="**/bak/"/>
 			<compilerarg value="@${basedir}/javaCompiler...args" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
 			<compilerarg line="-log '${temp.folder}/@dot.bin${logExtension}'" compiler="org.eclipse.jdt.core.JDTCompilerAdapter"/>
 		</javac>
