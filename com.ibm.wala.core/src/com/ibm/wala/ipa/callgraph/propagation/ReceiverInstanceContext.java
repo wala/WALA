@@ -16,8 +16,7 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
- * This is a context which is customized for the instance key of the receiver.
+ * This is a context which is customized for the {@link InstanceKey} of the receiver.
  * 
  * @author sfink
  */

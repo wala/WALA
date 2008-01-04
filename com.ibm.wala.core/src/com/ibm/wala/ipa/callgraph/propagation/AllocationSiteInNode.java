@@ -15,13 +15,13 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * An instance key which represents a unique set for each allocation site in
- * each CGNode
+ * An {@link InstanceKey} which represents a {@link NewSiteReference} in some
+ * {@link CGNode}.
  */
-public abstract class AllocationSiteKey extends AbstractAllocationSiteKey {
+public abstract class AllocationSiteInNode extends AbstractTypeInNode {
   private final NewSiteReference site;
 
-  public AllocationSiteKey(CGNode node, NewSiteReference allocation, IClass type) {
+  public AllocationSiteInNode(CGNode node, NewSiteReference allocation, IClass type) {
     super(node,type);
     this.site = allocation;
   }

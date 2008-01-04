@@ -43,7 +43,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationSystem;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.StandardSolver;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.CFAPointerKeys;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.rta.DelegatingExplicitCallGraph.DelegatingCGNode;
@@ -118,7 +118,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
   protected AbstractRTABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
-    super(cha, options, cache, new CFAPointerKeys());
+    super(cha, options, cache, new DefaultPointerKeyFactory());
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha));
     setContextSelector(makeContextSelector(appContextSelector));
     setContextInterpreter(makeContextInterpreter(appContextInterpreter, reflect));

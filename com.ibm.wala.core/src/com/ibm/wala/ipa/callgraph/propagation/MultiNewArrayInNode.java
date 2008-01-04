@@ -17,10 +17,10 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * An instance key which represents a unique set for each multinewarray
- * allocation site
+ * An {@link InstanceKey} which represents a multinewarray allocation
+ * site in a {@link CGNode}.
  */
-public final class MultiNewArrayAllocationSiteKey extends AllocationSiteKey {
+public final class MultiNewArrayInNode extends AllocationSiteInNode {
   private final int dim;
 
   /**
@@ -43,7 +43,7 @@ public final class MultiNewArrayAllocationSiteKey extends AllocationSiteKey {
     }
   }
 
-  public MultiNewArrayAllocationSiteKey(CGNode node, NewSiteReference allocation, ArrayClass type, int dim) {
+  public MultiNewArrayInNode(CGNode node, NewSiteReference allocation, ArrayClass type, int dim) {
     super(node, allocation, myElementType(type, dim));
     this.dim = dim;
   }
@@ -51,8 +51,8 @@ public final class MultiNewArrayAllocationSiteKey extends AllocationSiteKey {
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
-    if (obj instanceof MultiNewArrayAllocationSiteKey) {
-      MultiNewArrayAllocationSiteKey other = (MultiNewArrayAllocationSiteKey) obj;
+    if (obj instanceof MultiNewArrayInNode) {
+      MultiNewArrayInNode other = (MultiNewArrayInNode) obj;
       return (dim == other.dim && getNode().equals(other.getNode()) && getSite().equals(other.getSite()));
     } else {
       return false;

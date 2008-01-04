@@ -16,7 +16,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteKey;
+import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNode;
 import com.ibm.wala.ipa.callgraph.propagation.ContainerUtil;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.ReceiverInstanceContext;
@@ -109,7 +109,11 @@ public class ContainerContextSelector implements ContextSelector {
     }
   }
 
-  private static boolean isWellKnownStaticFactory(MethodReference m) {
+  /**
+   * Does m represent a static factory method we know about from the standard libraries, that we
+   * usually wish to model with one level of call-string context?
+   */
+  public static boolean isWellKnownStaticFactory(MethodReference m) {
     if (m.equals(synthArraycopy)) {
       return true;
     }
@@ -133,8 +137,8 @@ public class ContainerContextSelector implements ContextSelector {
     if (result != null) {
       return result;
     } else {
-      if (receiver instanceof AllocationSiteKey) {
-        AllocationSiteKey a = (AllocationSiteKey) receiver;
+      if (receiver instanceof AllocationSiteInNode) {
+        AllocationSiteInNode a = (AllocationSiteInNode) receiver;
         IMethod m = a.getNode().getMethod();
         return findRecursiveMatchingContext(m, C);
       } else {
@@ -156,10 +160,10 @@ public class ContainerContextSelector implements ContextSelector {
     }
     if (C instanceof ReceiverInstanceContext) {
       ReceiverInstanceContext ric = (ReceiverInstanceContext) C;
-      if (!(ric.getReceiver() instanceof AllocationSiteKey)) {
+      if (!(ric.getReceiver() instanceof AllocationSiteInNode)) {
         return null;
       }
-      AllocationSiteKey I = (AllocationSiteKey) ric.getReceiver();
+      AllocationSiteInNode I = (AllocationSiteInNode) ric.getReceiver();
       CGNode N = I.getNode();
       if (N.getMethod().equals(M)) {
         return N;
@@ -230,8 +234,8 @@ public class ContainerContextSelector implements ContextSelector {
       if (!delegate.isInteresting(receiver.getConcreteType())) {
         return false;
       }
-      if (receiver instanceof AllocationSiteKey) {
-        AllocationSiteKey I = (AllocationSiteKey) receiver;
+      if (receiver instanceof AllocationSiteInNode) {
+        AllocationSiteInNode I = (AllocationSiteInNode) receiver;
         CGNode N = I.getNode();
         if (N.getContext() instanceof ReceiverInstanceContext) {
           return true;
@@ -246,9 +250,9 @@ public class ContainerContextSelector implements ContextSelector {
    */
   protected boolean isContainer(IClass C) {
     if (DEBUG) {
-      System.err.println("isContainer? " + C + " " + ContainerUtil.isContainer(C, cha));
+      System.err.println("isContainer? " + C + " " + ContainerUtil.isContainer(C));
     }
-    return ContainerUtil.isContainer(C, cha);
+    return ContainerUtil.isContainer(C);
   }
 
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {

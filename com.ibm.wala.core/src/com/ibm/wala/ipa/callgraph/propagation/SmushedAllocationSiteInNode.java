@@ -14,19 +14,21 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
+ * An {@link InstanceKey} which represents the set of all allocation sites
+ * of a given type in a {@link CGNode}.
  * An instance key which represents a unique set for ALL allocation sites of a
  * given type in a CGNode
  */
-public class SmushedAllocationSiteKey extends AbstractAllocationSiteKey {
-  public SmushedAllocationSiteKey(CGNode node, IClass type) {
+public class SmushedAllocationSiteInNode extends AbstractTypeInNode {
+  public SmushedAllocationSiteInNode(CGNode node, IClass type) {
     super(node, type);
   }
 
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
-    if (obj instanceof SmushedAllocationSiteKey) {
-      SmushedAllocationSiteKey other = (SmushedAllocationSiteKey) obj;
+    if (obj instanceof SmushedAllocationSiteInNode) {
+      SmushedAllocationSiteInNode other = (SmushedAllocationSiteInNode) obj;
       return getNode().equals(other.getNode()) && getConcreteType().equals(other.getConcreteType());
     } else {
       return false;

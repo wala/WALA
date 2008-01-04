@@ -31,7 +31,7 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.CFAPointerKeys;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
@@ -60,7 +60,7 @@ public class TypeBasedHeapModel implements HeapModel {
 
   private final static boolean DEBUG = false;
 
-  final CFAPointerKeys pointerKeys = new CFAPointerKeys();
+  final DefaultPointerKeyFactory pointerKeys = new DefaultPointerKeyFactory();
 
   private final ClassBasedInstanceKeys iKeyFactory;
 

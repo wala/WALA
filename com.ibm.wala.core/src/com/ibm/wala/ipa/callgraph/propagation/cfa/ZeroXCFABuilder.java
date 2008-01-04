@@ -20,23 +20,23 @@ import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * 
- * 0-1-CFA Call graph builder, optimized to not disambiguate instances of
- * "uninteresting" types
+ * 0-1-CFA Call graph builder, optimized to not disambiguate instances of "uninteresting" types
  * 
  * @author sfink
  */
-public class ZeroXCFABuilder extends CFABuilder {
+public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
 
   private final int instancePolicy;
 
   public ZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
 
-    super(cha, options, cache);
+    super(cha, options, cache, new DefaultPointerKeyFactory());
 
     this.instancePolicy = instancePolicy;
 
@@ -72,16 +72,15 @@ public class ZeroXCFABuilder extends CFABuilder {
    * @param scope
    *            representation of the analysis scope
    * @param xmlFiles
-   *            set of Strings that are names of XML files holding bypass logic
-   *            specifications.
+   *            set of Strings that are names of XML files holding bypass logic specifications.
    * @return a 0-1-Opt-CFA Call Graph Builder.
    * @throws IllegalArgumentException
    *             if options is null
    * @throws IllegalArgumentException
    *             if xmlFiles == null
    */
-  public static CFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,
-      AnalysisScope scope, String[] xmlFiles, byte instancePolicy) throws IllegalArgumentException {
+  public static SSAPropagationCallGraphBuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+      ClassLoader cl, AnalysisScope scope, String[] xmlFiles, byte instancePolicy) throws IllegalArgumentException {
 
     if (xmlFiles == null) {
       throw new IllegalArgumentException("xmlFiles == null");

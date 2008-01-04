@@ -14,7 +14,6 @@ import java.util.Collection;
 
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
@@ -45,26 +44,25 @@ public class ContainerUtil {
   }
   
   /**
-   * @param C
    * @return true iff C is a container class from java.util
    * @throws IllegalArgumentException  if C is null
    */
-  public static boolean isContainer(IClass C, IClassHierarchy cha) {
-    if (C == null) {
-      throw new IllegalArgumentException("C is null");
+  public static boolean isContainer(IClass c) {
+    if (c == null) {
+      throw new IllegalArgumentException("c is null");
     }
-    if (ClassLoaderReference.Primordial.equals(C.getClassLoader().getReference())&& 
-        TypeReference.JavaUtilCollection.getName().getPackage().equals(C.getReference().getName().getPackage())) {
-      IClass collection = cha.lookupClass(TypeReference.JavaUtilCollection);
-      IClass map = cha.lookupClass(TypeReference.JavaUtilMap);
-      if (C.isInterface()) {
+    if (ClassLoaderReference.Primordial.equals(c.getClassLoader().getReference())&& 
+        TypeReference.JavaUtilCollection.getName().getPackage().equals(c.getReference().getName().getPackage())) {
+      IClass collection = c.getClassHierarchy().lookupClass(TypeReference.JavaUtilCollection);
+      IClass map = c.getClassHierarchy().lookupClass(TypeReference.JavaUtilMap);
+      if (c.isInterface()) {
         if (Assertions.verifyAssertions) {
           Assertions._assert(collection != null);
           Assertions._assert(map != null);
         }
         Collection s;
         try {
-          s = C.getAllImplementedInterfaces();
+          s = c.getAllImplementedInterfaces();
         } catch (ClassHierarchyException e) {
           // give up
           return false;
@@ -73,17 +71,17 @@ public class ContainerUtil {
           return true;
         }
       } else {
-        if (cha.implementsInterface(C, collection) || cha.implementsInterface(C, map)) {
+        if (c.getClassHierarchy().implementsInterface(c, collection) || c.getClassHierarchy().implementsInterface(c, map)) {
           return true;
         }
       }
     }
-    if (miscContainers.contains(C.getReference())) {
+    if (miscContainers.contains(c.getReference())) {
       return true;
     }
     
-    if (C.isArrayClass() && ((ArrayClass) C).getElementClass() != null
-        && ((ArrayClass) C).getElementClass().getReference().isReferenceType()) {
+    if (c.isArrayClass() && ((ArrayClass) c).getElementClass() != null
+        && ((ArrayClass) c).getElementClass().getReference().isReferenceType()) {
       return true;
     }
     return false;

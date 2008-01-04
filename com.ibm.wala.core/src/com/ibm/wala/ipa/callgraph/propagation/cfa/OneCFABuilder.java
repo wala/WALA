@@ -20,6 +20,7 @@ import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.ClassBasedInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
@@ -28,7 +29,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  * 
  * @author sfink
  */
-public class OneCFABuilder extends CFABuilder {
+public class OneCFABuilder extends SSAPropagationCallGraphBuilder {
 
   public static OneCFABuilder make(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) throws IllegalArgumentException {
@@ -41,7 +42,7 @@ public class OneCFABuilder extends CFABuilder {
   private OneCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
 
-    super(cha, options, cache);
+    super(cha, options, cache, new DefaultPointerKeyFactory());
 
     setInstanceKeys(new ClassBasedInstanceKeys(options, cha));
 

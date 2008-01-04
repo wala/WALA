@@ -43,13 +43,13 @@ import com.ibm.wala.analysis.reflection.InstanceKeyWithNode;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractLocalPointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteKey;
+import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNode;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.MultiNewArrayAllocationSiteKey;
-import com.ibm.wala.ipa.callgraph.propagation.NormalAllocationSiteKey;
+import com.ibm.wala.ipa.callgraph.propagation.MultiNewArrayInNode;
+import com.ibm.wala.ipa.callgraph.propagation.NormalAllocationInNode;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
@@ -111,11 +111,11 @@ public class CallGraphMapUtil {
       if (newCGNode == null) {
         return null;
       }
-      if (ik instanceof AllocationSiteKey) {
-        if (ik instanceof NormalAllocationSiteKey) {
-          ret = heapModel.getInstanceKeyForAllocation(newCGNode, ((AllocationSiteKey) ik).getSite());
-        } else if (ik instanceof MultiNewArrayAllocationSiteKey) {
-          MultiNewArrayAllocationSiteKey mnik = (MultiNewArrayAllocationSiteKey) ik;
+      if (ik instanceof AllocationSiteInNode) {
+        if (ik instanceof NormalAllocationInNode) {
+          ret = heapModel.getInstanceKeyForAllocation(newCGNode, ((AllocationSiteInNode) ik).getSite());
+        } else if (ik instanceof MultiNewArrayInNode) {
+          MultiNewArrayInNode mnik = (MultiNewArrayInNode) ik;
 
           ret = heapModel.getInstanceKeyForMultiNewArray(newCGNode, mnik.getSite(), mnik.getDim());
         } else {

@@ -30,7 +30,7 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.CFABuilder;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.OneCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXContainerCFABuilder;
@@ -587,7 +587,7 @@ public class Util {
    *            representation of the analysis scope
    * @return a 0-CFA Call Graph Builder.
    */
-  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope) {
+  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, AnalysisScope scope) {
     return makeZeroCFABuilder(options, cache, cha, scope, null, null);
   }
 
@@ -606,7 +606,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder makeZeroCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static SSAPropagationCallGraphBuilder makeZeroCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
       AnalysisScope scope, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -657,7 +657,7 @@ public class Util {
    * @param scope
    *            representation of the analysis scope
    */
-  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
       AnalysisScope scope) {
     return makeZeroOneCFABuilder(options, cache, cha, scope, null, null);
   }
@@ -677,7 +677,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
       AnalysisScope scope, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -700,7 +700,7 @@ public class Util {
    * @param scope
    *            representation of the analysis scope
    */
-  public static CFABuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
       AnalysisScope scope) {
     return makeVanillaZeroOneCFABuilder(options, cache, cha, scope, null, null);
   }
@@ -720,7 +720,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder makeZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static SSAPropagationCallGraphBuilder makeZeroOneCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
       AnalysisScope scope, ContextSelector customSelector, SSAContextInterpreter customInterpreter) {
 
     if (options == null) {
@@ -746,7 +746,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder makeZeroContainerCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static SSAPropagationCallGraphBuilder makeZeroContainerCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
       AnalysisScope scope) {
 
     if (options == null) {
@@ -772,7 +772,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static SSAPropagationCallGraphBuilder makeZeroOneContainerCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
       AnalysisScope scope) {
 
     if (options == null) {
@@ -799,7 +799,7 @@ public class Util {
    * @throws IllegalArgumentException
    *             if options is null
    */
-  public static CFABuilder makeVanillaZeroOneContainerCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
+  public static SSAPropagationCallGraphBuilder makeVanillaZeroOneContainerCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
       AnalysisScope scope) {
 
     if (options == null) {

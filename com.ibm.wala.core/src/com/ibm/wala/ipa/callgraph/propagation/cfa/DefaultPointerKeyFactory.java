@@ -24,9 +24,12 @@ import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.util.debug.Assertions;
 
-public class CFAPointerKeys implements PointerKeyFactory {
+/**
+ * Default implementation of {@link PointerKeyFactory}
+ */
+public class DefaultPointerKeyFactory implements PointerKeyFactory {
 
-  public CFAPointerKeys() {
+  public DefaultPointerKeyFactory() {
   }
 
   public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {

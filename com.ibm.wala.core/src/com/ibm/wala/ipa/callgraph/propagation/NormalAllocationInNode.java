@@ -15,18 +15,18 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * An instance key which represents the set of objects allocated at a 
- * "normal" (not multinewarray) bytecode
+ * An {@link InstanceKey} which represents a "normal" (not multinewarray)
+ * {@link NewSiteReference} in a {@link CGNode}.
  */
-public final class NormalAllocationSiteKey extends AllocationSiteKey {
-  public NormalAllocationSiteKey(CGNode node, NewSiteReference allocation, IClass type) {
+public final class NormalAllocationInNode extends AllocationSiteInNode {
+  public NormalAllocationInNode(CGNode node, NewSiteReference allocation, IClass type) {
     super(node, allocation, type);
   }
   @Override
   public boolean equals(Object obj) {
     // instanceof is OK because this class is final
-    if (obj instanceof NormalAllocationSiteKey) {
-      AllocationSiteKey other = (AllocationSiteKey) obj;
+    if (obj instanceof NormalAllocationInNode) {
+      AllocationSiteInNode other = (AllocationSiteInNode) obj;
       return getNode().equals(other.getNode()) && getSite().equals(other.getSite());
     } else {
       return false;

@@ -16,13 +16,14 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * A base class for allocation site instance keys
+ * Abstract base class for {@link InstanceKey} which represents at least some
+ * {@link IClass} in some {@link CGNode}
  */
-public abstract class AbstractAllocationSiteKey implements InstanceKeyWithNode {
+public abstract class AbstractTypeInNode implements InstanceKeyWithNode {
   private final IClass type;
   private final CGNode node;
 
-  public AbstractAllocationSiteKey(CGNode node, IClass type) {
+  public AbstractTypeInNode(CGNode node, IClass type) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(node != null);
       if (type != null && type.isInterface()) {

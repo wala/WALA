@@ -21,8 +21,7 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
- * A context interpreter that first checks with A, then defaults to B.
+ * An {@link SSAContextInterpreter} that first checks with A, then defaults to B.
  * 
  * @author sfink
  */
@@ -32,6 +31,9 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
 
   private final SSAContextInterpreter B;
 
+  /**
+   * TODO: really shouldn't allow A to be null.
+   */
   public DelegatingSSAContextInterpreter(SSAContextInterpreter A, SSAContextInterpreter B) {
     super(A, B);
     this.A = A;

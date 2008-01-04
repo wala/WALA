@@ -66,11 +66,11 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
       IMethod m = node.getMethod();
       CGNode n = ContainerContextSelector.findNodeRecursiveMatchingContext(m, node.getContext());
       if (n != null) {
-        return new SmushedAllocationSiteKey(n, type);
+        return new SmushedAllocationSiteInNode(n, type);
       }
     }
 
-    InstanceKey key = new SmushedAllocationSiteKey(node, type);
+    InstanceKey key = new SmushedAllocationSiteInNode(node, type);
 
     return key;
   }
@@ -81,7 +81,7 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
       Warnings.add(ResolutionFailure.create(node, allocation));
       return null;
     }
-    InstanceKey key = new MultiNewArrayAllocationSiteKey(node, allocation, type, dim);
+    InstanceKey key = new MultiNewArrayInNode(node, allocation, type, dim);
 
     return key;
   }

@@ -24,12 +24,21 @@ import com.ibm.wala.util.warnings.ResolutionFailure;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * This class provides Instance Key call backs where each instance is in the
- * same equivalence class as all other instances allocated at the same site.
+ * A factory which tries by default to create {@link InstanceKey}s which are
+ * {@link AllocationSiteInNode}s.
+ * 
+ * Notes:
+ * <ul>
+ * <li> This class checks to avoid creating recursive contexts when {@link CGNode}s
+ * are based on {@link ReceiverInstanceContext}, as in object-sensitivity.
+ * <li> Up till recursion, this class will happily create unlimited object sensitivity, so be careful.
+ * <li> This class resorts to {@link ClassBasedInstanceKeys} for exceptions from PEIs and class objects.
+ * <li> This class consults the {@link AnalysisOptions} to determine whether to disambiguate individual constants.
+ * </ul>
  * 
  * @author sfink
  */
-public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
+public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
 
   /**
    * Governing call graph construction options
@@ -47,7 +56,7 @@ public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
    * @param options
    *            Governing call graph construction options
    */
-  public AllocationSiteInstanceKeys(AnalysisOptions options, IClassHierarchy cha) {
+  public AllocationSiteInNodeFactory(AnalysisOptions options, IClassHierarchy cha) {
     this.options = options;
     this.cha = cha;
     this.classBased = new ClassBasedInstanceKeys(options, cha);
@@ -65,11 +74,11 @@ public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
       IMethod m = node.getMethod();
       CGNode n = ContainerContextSelector.findNodeRecursiveMatchingContext(m, node.getContext());
       if (n != null) {
-        return new NormalAllocationSiteKey(n, allocation, type);
+        return new NormalAllocationInNode(n, allocation, type);
       }
     }
 
-    InstanceKey key = new NormalAllocationSiteKey(node, allocation, type);
+    InstanceKey key = new NormalAllocationInNode(node, allocation, type);
 
     return key;
   }
@@ -80,7 +89,7 @@ public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
       Warnings.add(ResolutionFailure.create(node, allocation));
       return null;
     }
-    InstanceKey key = new MultiNewArrayAllocationSiteKey(node, allocation, type, dim);
+    InstanceKey key = new MultiNewArrayInNode(node, allocation, type, dim);
 
     return key;
   }
@@ -93,13 +102,6 @@ public class AllocationSiteInstanceKeys implements InstanceKeyFactory {
     }
   }
 
-  public Object getConstantForInstanceKey(InstanceKey I) {
-    if (I instanceof ConstantKey) {
-      return ((ConstantKey) I).getValue();
-    } else {
-      return null;
-    }
-  }
 
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter pei, TypeReference type) {
     return classBased.getInstanceKeyForPEI(node, pei, type);

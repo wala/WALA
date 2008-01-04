@@ -22,7 +22,7 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInstanceKeys;
+import com.ibm.wala.ipa.callgraph.propagation.AllocationSiteInNodeFactory;
 import com.ibm.wala.ipa.callgraph.propagation.ClassBasedInstanceKeys;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
@@ -39,8 +39,10 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author sfink
+ * Flexible class to create {@link InstanceKey}s depending on various policies ranging from
+ * class-based (i.e. 0-CFA) to allocation-site-based (0-1-CFA variants).
  * 
+ * @author sfink
  */
 public class ZeroXInstanceKeys implements InstanceKeyFactory {
 
@@ -72,7 +74,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   public static final int SMUSH_STRINGS = 2;
 
   /**
-   * A policy variant where Throwable instances are NOT disambiguated according
+   * A policy variant where {@link Throwable} instances are NOT disambiguated according
    * to allocation site.
    * 
    */
@@ -118,7 +120,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   /**
    * A delegate object to create allocation site-based abstract instances
    */
-  private final AllocationSiteInstanceKeys siteBased;
+  private final AllocationSiteInNodeFactory siteBased;
 
   /**
    * A delegate object to create "abstract allocation site" - based abstract
@@ -148,7 +150,7 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
       options.setUseConstantSpecificKeys(true);
     }
     classBased = new ClassBasedInstanceKeys(options, cha);
-    siteBased = new AllocationSiteInstanceKeys(options, cha);
+    siteBased = new AllocationSiteInNodeFactory(options, cha);
     smushed = new SmushedAllocationSiteInstanceKeys(options, cha);
     this.cha = cha;
     this.contextInterpreter = contextInterpreter;
