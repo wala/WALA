@@ -114,6 +114,11 @@ public class ContainerContextSelector implements ContextSelector {
    * usually wish to model with one level of call-string context?
    */
   public static boolean isWellKnownStaticFactory(MethodReference m) {
+    if (m.getDeclaringClass().equals(TypeReference.JavaLangSystem)) {
+      if (m.getName().toString().equals("arraycopy")) {
+        return true;
+      }
+    }
     if (m.equals(synthArraycopy)) {
       return true;
     }
