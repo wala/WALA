@@ -529,7 +529,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
   /**
    * Create heap data dependence edges in this PDG relevant to a particular
-   * statement.
+   * {@link PointerKey}.
    */
   private void createHeapDataDependenceEdges(final PointerKey pk) {
 
@@ -797,7 +797,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       list.add(e);
     }
     if (!dOptions.isIgnoreHeap()) {
-      for (PointerKey p : mod.get(node)) {
+      for (PointerKey p : mod.get(node)) {        
         Statement h = new HeapStatement.ReturnCallee(node, p);
         addNode(h);
         list.add(h);
