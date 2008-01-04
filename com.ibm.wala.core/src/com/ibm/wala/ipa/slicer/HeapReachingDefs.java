@@ -335,12 +335,17 @@ public class HeapReachingDefs {
         HeapStatement.ParamCaller r = (HeapStatement.ParamCaller) s;
         NormalStatement call = ssaInstructionIndex2Statement.get(r.getCallIndex());
         ISSABasicBlock callBlock = cfg.getBlockForInstruction(call.getInstructionIndex());
+        if (callBlock.isEntryBlock()) {
+          int x = domain.getMappedIndex(new HeapStatement.ParamCallee(node,r.getLocation()));
+          assert x >= 0;
+          IntSet xset = SparseIntSet.singleton(x);
+          return new OrdinalSet<Statement>(xset,domain);
+        }
         BitVectorVariable v = solver.getIn(callBlock);
         if (pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
           // do nothing ... force flow into and out of the callees
           return OrdinalSet.empty();
         } else {
-
           return new OrdinalSet<Statement>(pointerKeyMod.get(r.getLocation()).intersection(v.getValue()), domain);
         }
       }
