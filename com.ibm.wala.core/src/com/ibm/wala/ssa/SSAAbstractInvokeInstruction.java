@@ -43,20 +43,16 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
     return site;
   }
 
-  public CallSiteReference getSite() {
-    return site;
-  }
-
   public boolean isStatic() {
-    return getSite().isStatic();
+    return getCallSite().isStatic();
   }
 
   public boolean isDispatch() {
-    return getSite().isDispatch();
+    return getCallSite().isDispatch();
   }
 
   public boolean isSpecial() {
-    return getSite().isSpecial();
+    return getCallSite().isSpecial();
   }
 
   /**

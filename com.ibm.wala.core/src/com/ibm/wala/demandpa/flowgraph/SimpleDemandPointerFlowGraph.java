@@ -333,7 +333,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     boolean isExceptional = pk.getValueNumber() == callInstr.getException();
 
     // get call targets
-    Collection<CGNode> possibleCallees = cg.getPossibleTargets(pk.getNode(), callInstr.getSite());
+    Collection<CGNode> possibleCallees = cg.getPossibleTargets(pk.getNode(), callInstr.getCallSite());
     // construct graph for each target
     for (CGNode callee : possibleCallees) {
       addSubgraphForNode(callee);

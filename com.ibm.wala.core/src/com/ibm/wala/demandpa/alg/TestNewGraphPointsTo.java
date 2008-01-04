@@ -176,7 +176,7 @@ public class TestNewGraphPointsTo extends AbstractDemandPointsTo {
         if (callInstr != null) {
           boolean isExceptional = localPk.getValueNumber() == callInstr.getException();
 
-          CallSiteReference callSiteRef = callInstr.getSite();
+          CallSiteReference callSiteRef = callInstr.getCallSite();
           // get call targets
           Set<CGNode> possibleCallees = cg.getPossibleTargets(localPk.getNode(), callSiteRef);
           // construct graph for each target

@@ -552,7 +552,7 @@ public abstract class IR {
       public CallSiteReference next() {
         int index = callSiteMapping.getRelated(i).max();
         advance();
-        return ((SSAAbstractInvokeInstruction) instructions[index]).getSite();
+        return ((SSAAbstractInvokeInstruction) instructions[index]).getCallSite();
       }
 
       public void remove() {

@@ -1054,7 +1054,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           CGNode caller = localPk.getNode();
           boolean isExceptional = localPk.getValueNumber() == callInstr.getException();
 
-          CallSiteReference callSiteRef = callInstr.getSite();
+          CallSiteReference callSiteRef = callInstr.getCallSite();
           CallSiteAndCGNode callSiteAndCGNode = new CallSiteAndCGNode(callSiteRef, caller);
           // get call targets
           Set<CGNode> possibleCallees = cg.getPossibleTargets(caller, callSiteRef);
@@ -1373,7 +1373,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           for (int i = 0; i < callInstr.getNumberOfUses(); i++) {
             if (localPk.getValueNumber() != callInstr.getUse(i))
               continue;
-            CallSiteReference callSiteRef = callInstr.getSite();
+            CallSiteReference callSiteRef = callInstr.getCallSite();
             CallSiteAndCGNode callSiteAndCGNode = new CallSiteAndCGNode(callSiteRef, caller);
             // get call targets
             Set<CGNode> possibleCallees = cg.getPossibleTargets(caller, callSiteRef);

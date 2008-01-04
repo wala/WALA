@@ -1463,7 +1463,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     caller.addTarget(instruction.getCallSite(), target);
 
     if (FakeRootMethod.isFakeRootMethod(caller.getMethod().getReference())) {
-      if (entrypointCallSites.contains(instruction.getSite())) {
+      if (entrypointCallSites.contains(instruction.getCallSite())) {
         callGraph.registerEntrypoint(target);
       }
     }
@@ -1509,7 +1509,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       return;
     }
 
-    boolean needsFilter = !instruction.getSite().isStatic() && needsFilterForReceiver(instruction, target);
+    boolean needsFilter = !instruction.getCallSite().isStatic() && needsFilterForReceiver(instruction, target);
     // we're a little sloppy for now ... we don't filter calls to
     // java.lang.Object.
     // TODO: we need much more precise filters than cones in order to handle
@@ -1683,7 +1683,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             }
           }
 
-          target = getTargetForCall(node, call.getSite(), iKey);
+          target = getTargetForCall(node, call.getCallSite(), iKey);
 
           if (target == null) {
             // This indicates an error; I sure hope getTargetForCall
@@ -1733,17 +1733,17 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * @return true iff we never have to eval this dispatch operator again
      */
     private boolean willNeverChangeAgain(IntSet receivers) {
-      int bound = getBoundOnNumberOfTargets(node, call.getSite());
+      int bound = getBoundOnNumberOfTargets(node, call.getCallSite());
       if (bound > -1) {
-        int nTargets = getCallGraph().getNumberOfTargets(node, call.getSite());
+        int nTargets = getCallGraph().getNumberOfTargets(node, call.getCallSite());
         if (Assertions.verifyAssertions) {
           if (nTargets > bound) {
             Trace.println("node: " + node);
-            Trace.println("site: " + call.getSite());
+            Trace.println("site: " + call.getCallSite());
             Trace.println("instruction " + call);
             Trace.println("nTargets: " + nTargets);
             Trace.println("bound:    " + bound);
-            for (Iterator it = getCallGraph().getPossibleTargets(node, call.getSite()).iterator(); it.hasNext();) {
+            for (Iterator it = getCallGraph().getPossibleTargets(node, call.getCallSite()).iterator(); it.hasNext();) {
               Trace.println("  " + it.next());
             }
             for (IntIterator intIt = receivers.intIterator(); intIt.hasNext();) {
@@ -1915,7 +1915,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     // don't need to filter for invokestatic
-    if (instruction.getSite().isStatic() || instruction.getSite().isSpecial()) {
+    if (instruction.getCallSite().isStatic() || instruction.getCallSite().isSpecial()) {
       return false;
     }
 

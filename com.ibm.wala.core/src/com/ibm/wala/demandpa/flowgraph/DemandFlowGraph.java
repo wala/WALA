@@ -246,7 +246,7 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
       for (int i = 0; i < callInstr.getNumberOfUses(); i++) {
         if (pk.getValueNumber() != callInstr.getUse(i))
           continue;
-        CallSiteReference callSiteRef = callInstr.getSite();
+        CallSiteReference callSiteRef = callInstr.getCallSite();
         // get call targets
         Collection<CGNode> possibleCallees = cg.getPossibleTargets(pk.getNode(), callSiteRef);
         // construct graph for each target
@@ -290,7 +290,7 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     ArrayList<PointerKeyAndCallSite> returnSuccs = new ArrayList<PointerKeyAndCallSite>();
     boolean isExceptional = pk.getValueNumber() == callInstr.getException();
 
-    CallSiteReference callSiteRef = callInstr.getSite();
+    CallSiteReference callSiteRef = callInstr.getCallSite();
     // get call targets
     Collection<CGNode> possibleCallees = cg.getPossibleTargets(pk.getNode(), callSiteRef);
     // construct graph for each target
