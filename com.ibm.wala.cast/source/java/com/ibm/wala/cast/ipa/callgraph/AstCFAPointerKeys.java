@@ -10,12 +10,12 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ipa.callgraph;
 
-import com.ibm.wala.ipa.callgraph.propagation.cfa.CFAPointerKeys;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;
 
 public class AstCFAPointerKeys extends DelegatingAstPointerKeys {
 
   public AstCFAPointerKeys() {
-    super(new CFAPointerKeys());
+    super(new DefaultPointerKeyFactory());
   }
 
 }
