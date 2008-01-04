@@ -393,7 +393,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           receivers.getValue().foreachExcluding(previousReceivers, new IntSetAction() {
             public void act(int ptr) {
               InstanceKey iKey = system.getInstanceKey(ptr);
-              CGNode target = getTargetForCall(node, call.getSite(), iKey);
+              CGNode target = getTargetForCall(node, call.getCallSite(), iKey);
               if (target != null) {
                 processJSCall(node, call, target, iKey, constParams, uniqueCatch);
                 if (!getBuilder().haveAlreadyVisited(target)) {
