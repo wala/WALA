@@ -35,7 +35,7 @@ public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<Explo
     return new ExplodedInterproceduralCFG(CG);
   }
 
-  private ExplodedInterproceduralCFG(CallGraph CG) {
+  protected ExplodedInterproceduralCFG(CallGraph CG) {
     super(CG);
   }
 
