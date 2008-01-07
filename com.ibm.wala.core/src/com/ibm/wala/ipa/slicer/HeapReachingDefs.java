@@ -510,15 +510,12 @@ public class HeapReachingDefs {
       if (DEBUG) {
         System.err.println("getEdgeXfer: " + src + " " + dst + " " + src.isEntryBlock());
       }
-      IntSet gen = null;
       if (src.isEntryBlock()) {
         if (DEBUG) {
           System.err.println("heapEntry " + heapEntryStatements());
         }
-        gen = new BitVectorIntSet(heapEntryStatements()).toSparseIntSet();
-      } else {
-        gen = new SparseIntSet();
-      }
+        return new BitVectorUnionVector(new BitVectorIntSet(heapEntryStatements()).getBitVector());
+      } 
       if (src.getInstruction() != null && !(src.getInstruction() instanceof SSAAbstractInvokeInstruction)
           && !cfg.getNormalSuccessors(src).contains(dst)) {
         // if the edge only happens due to exceptional control flow, then no
@@ -530,8 +527,7 @@ public class HeapReachingDefs {
         return BitVectorIdentity.instance();
       } else {
         BitVector kill = kill(src);
-        IntSet gen2 = gen(src);
-        gen = gen2 == null ? gen : gen.union(gen2);
+        IntSet gen = gen(src);
         if (DEBUG) {
           System.err.println("gen: " + gen + " kill: " + kill);
         }

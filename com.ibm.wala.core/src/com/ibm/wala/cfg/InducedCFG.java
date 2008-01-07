@@ -42,12 +42,12 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
 /**
  * A ControlFlowGraph computed from a set of SSA instructions
  * 
- * This is a funny CFG ... we assume that there are always fallthru edges, even
- * from throws and returns.
+ * This is a funny CFG ... we assume that there are always fallthru edges, even from throws and returns.
  */
 public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
 
-  private static final boolean DEBUG = false;
+  private static final boolean DEBUG = true;
+
   /**
    * A partial map from Instruction -> BasicBlock
    */
@@ -57,11 +57,16 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
 
   private final IInstruction[] instructions;
 
+  private BasicBlock entry;
+
+  private BasicBlock exit;
+
   /**
    * TODO: we do not yet support induced CFGS with exception handlers.
    * 
    * @param instructions
-   * @throws IllegalArgumentException  if instructions is null
+   * @throws IllegalArgumentException
+   *             if instructions is null
    */
   public InducedCFG(SSAInstruction[] instructions, IMethod method, Context context) {
     super(method);
@@ -70,15 +75,8 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     }
     this.context = context;
     this.instructions = instructions;
-    if (DEBUG) {
-      Trace.println("compute InducedCFG: " + method);
-    }
     i2block = new BasicBlock[instructions.length];
-    if (instructions.length == 0) {
-      makeEmptyBlocks();
-    } else {
-      makeBasicBlocks();
-    }
+    makeBasicBlocks();
     init();
     computeEdges();
 
@@ -94,14 +92,13 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
 
   @Override
   public int hashCode() {
-    return context.hashCode() ^ getMethod().hashCode();
+    return context.hashCode() + 77 * getMethod().hashCode();
   }
 
   @Override
   public boolean equals(Object o) {
-      return (o instanceof InducedCFG) &&
-	  getMethod().equals(((InducedCFG)o).getMethod()) &&
-	  context.equals(((InducedCFG)o).context);
+    return (o instanceof InducedCFG) && getMethod().equals(((InducedCFG) o).getMethod())
+        && context.equals(((InducedCFG) o).context);
   }
 
   public IInstruction[] getInstructions() {
@@ -116,16 +113,32 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       BasicBlock b = (BasicBlock) it.next();
       if (b.equals(exit()))
         continue;
-      b.computeOutgoingEdges();
+      if (b.equals(entry())) {
+        addNormalEdge(b, getNode(b.getGraphNodeId() + 1));
+        continue;
+      }
+      SSAInstruction last = (SSAInstruction) getInstructions()[b.getLastInstructionIndex()];
+       if (last.isPEI()) {
+        // we don't currently model catch blocks here ... instead just link
+        // to the exit block
+        addExceptionalEdge(b,exit());
+      }
+      // this CFG is odd in that we assume fallthru might always
+      // happen .. this is because I'm too lazy to code control
+      // flow in all method summaries yet.
+      if (true) {
+        // if (last.isFallThrough()) {
+        if (DEBUG) {
+          Trace.println("Add fallthru to " + getNode(b.getGraphNodeId() + 1));
+        }
+        addNormalEdge(b, getNode(b.getGraphNodeId() + 1));
+      }
+      if (last instanceof SSAReturnInstruction) {
+        // link each return instruction to the exit block.
+        BasicBlock exit = exit();
+        addNormalEdge(b, exit);
+      }
     }
-  }
-
-  /**
-   * Create basic blocks for an empty method
-   */
-  private void makeEmptyBlocks() {
-    BasicBlock b = new BasicBlock(-1);
-    addNode(b);
   }
 
   protected BranchVisitor makeBranchVisitor(boolean[] r) {
@@ -140,49 +153,54 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
    * Walk through the instructions and compute basic block boundaries.
    */
   private void makeBasicBlocks() {
+    // allocate the entry block
+    BasicBlock entry = new BasicBlock(-1, -2);
+    addNode(entry);
+    this.entry = entry;
+
     SSAInstruction[] instructions = (SSAInstruction[]) getInstructions();
-    final boolean[] r = new boolean[instructions.length];
+    if (instructions.length > 0) {
+      final boolean[] r = new boolean[instructions.length];
 
-    // Compute r so r[i] == true iff instruction i begins a basic block.
-    // While doing so count the number of blocks.
-    r[0] = true;
-    BranchVisitor branchVisitor = makeBranchVisitor(r);
-    PEIVisitor peiVisitor = makePEIVisitor(r);
-    for (int i = 0; i < instructions.length; i++) {
-      if (instructions[i] != null) {
-        branchVisitor.setIndex(i);
-        instructions[i].visit(branchVisitor);
-        // TODO: deal with exception handlers
-        peiVisitor.setIndex(i);
-        instructions[i].visit(peiVisitor);
-      }
-    }
-
-    BasicBlock b = null;
-    for (int i = 0; i < r.length; i++) {
-      if (r[i]) {
-        b = new BasicBlock(i);
-        addNode(b);
-
-        if (DEBUG) {
-          Trace.println("Add basic block " + b);
+      // Compute r so r[i] == true iff instruction i begins a basic block.
+      // While doing so count the number of blocks.
+      r[0] = true;
+      BranchVisitor branchVisitor = makeBranchVisitor(r);
+      PEIVisitor peiVisitor = makePEIVisitor(r);
+      for (int i = 0; i < instructions.length; i++) {
+        if (instructions[i] != null) {
+          branchVisitor.setIndex(i);
+          instructions[i].visit(branchVisitor);
+          // TODO: deal with exception handlers
+          peiVisitor.setIndex(i);
+          instructions[i].visit(peiVisitor);
         }
       }
-      i2block[i] = b;
+
+      BasicBlock b = null;
+      for (int i = 0; i < r.length; i++) {
+        if (r[i]) {
+          int end = instructions.length - 1;
+          for (int j = i; j < instructions.length; j++) {
+            if (r[j]) {
+              end = j;
+              break;
+            }
+          }
+          b = new BasicBlock(i, end);
+          addNode(b);
+        }
+        i2block[i] = b;
+      }
     }
     // allocate the exit block
-    BasicBlock exit = new BasicBlock(-1);
-    if (DEBUG) {
-      Trace.println("Add exit block " + exit);
-    }
+    BasicBlock exit = new BasicBlock(-3, -4);
     addNode(exit);
+    this.exit = exit;
   }
 
   /**
-   * @author sfink
-   * 
-   * This visitor identifies basic block boundaries induced by branch
-   * instructions.
+   * This visitor identifies basic block boundaries induced by branch instructions.
    */
   public class BranchVisitor extends SSAInstruction.Visitor {
     final private boolean[] r;
@@ -190,6 +208,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     protected BranchVisitor(boolean[] r) {
       this.r = r;
     }
+
     int index = 0;
 
     void setIndex(int i) {
@@ -211,11 +230,11 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     @Override
     public void visitSwitch(SSASwitchInstruction instruction) {
       Assertions.UNREACHABLE("haven't implemented logic for switch yet.");
-//      breakBasicBlock();
-//      int[] targets = instruction.getTargets();
-//      for (int i = 0; i < targets.length; i++) {
-//        r[targets[i]] = true;
-//      }
+      // breakBasicBlock();
+      // int[] targets = instruction.getTargets();
+      // for (int i = 0; i < targets.length; i++) {
+      // r[targets[i]] = true;
+      // }
     }
 
     @Override
@@ -234,6 +253,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       }
     }
   }
+
   // TODO: extend the following to deal with catch blocks. Right now
   // it simply breaks basic blocks at PEIs.
   public class PEIVisitor extends SSAInstruction.Visitor {
@@ -242,6 +262,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     protected PEIVisitor(boolean[] r) {
       this.r = r;
     }
+
     int index = 0;
 
     void setIndex(int i) {
@@ -330,86 +351,21 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
         return false;
       }
     }
+
     private final int start;
 
-    BasicBlock(int start) {
+    private final int end;
+
+    BasicBlock(int start, int end) {
       this.start = start;
+      this.end = end;
     }
-
-    /**
-     * Add any exceptional edges generated by the last instruction in a basic
-     * block.
-     * 
-     * @param last
-     *          the last instruction in a basic block.
-     */
-    private void addExceptionalEdges(SSAInstruction last) {
-      if (last.isPEI()) {
-        // we don't currently model catch blocks here ... instead just link
-        // to the exit block
-        addExceptionalEdgeTo(exit());
-      }
-    }
-
-
-    private void addNormalEdgeTo(BasicBlock b) {
-      addNormalEdge(this, b);
-    }
-
-
-    private void addExceptionalEdgeTo(BasicBlock b) {
-      addExceptionalEdge(this, b);
-    }
-
-
-    private void computeOutgoingEdges() {
-
-      if (DEBUG) {
-        Trace.println("Block " + this + ": computeOutgoingEdges()");
-      }
-      // TODO: we don't currently model branches
-
-      SSAInstruction last = (SSAInstruction) getInstructions()[getLastInstructionIndex()];
-      addExceptionalEdges(last);
-      // this CFG is odd in that we assume fallthru might always
-      // happen .. this is because I'm too lazy to code control
-      // flow in all method summaries yet.
-      if (true) {
-        //      if (last.isFallThrough()) {
-        if (DEBUG) {
-          Trace.println("Add fallthru to " + getNode(getGraphNodeId() + 1));
-        }
-        addNormalEdgeTo(getNode(getGraphNodeId() + 1));
-      }
-      if (last instanceof SSAReturnInstruction) {
-        // link each return instrution to the exit block.
-        BasicBlock exit = exit();
-        addNormalEdgeTo(exit);
-      }
-    }
-
     public int getFirstInstructionIndex() {
       return start;
     }
 
-    /**
-     * Method getLastInstructionIndex.
-     * 
-     * @return int
-     */
     public int getLastInstructionIndex() {
-      int exitNumber = InducedCFG.this.getNumber(exit());
-      if (getGraphNodeId() == exitNumber) {
-        // this is the exit block
-        return -2;
-      }
-      if (getGraphNodeId() == (exitNumber - 1)) {
-        // this is the last non-exit block
-        return getInstructions().length - 1;
-      } else {
-        BasicBlock next = getNode(getGraphNodeId() + 1);
-        return next.getFirstInstructionIndex() - 1;
-      }
+      return end;
     }
 
     public boolean isCatchBlock() {
@@ -434,14 +390,14 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
      * @see com.ibm.wala.cfg.IBasicBlock#isExitBlock()
      */
     public boolean isExitBlock() {
-      return getLastInstructionIndex() == -2;
+      return this.equals(exit);
     }
 
     /*
      * @see com.ibm.wala.cfg.IBasicBlock#isEntryBlock()
      */
     public boolean isEntryBlock() {
-      return getNumber() == 0;
+      return this.equals(entry);
     }
 
     /*
@@ -465,9 +421,9 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     public int getNumber() {
       return InducedCFG.this.getNumber(this);
     }
-    
+
     public Iterator<IInstruction> iterator() {
-      return new ArrayIterator<IInstruction>(getInstructions(),getFirstInstructionIndex(),getLastInstructionIndex());
+      return new ArrayIterator<IInstruction>(getInstructions(), getFirstInstructionIndex(), getLastInstructionIndex());
     }
   }
 
@@ -493,8 +449,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
   }
 
   /**
-   * Since this CFG is synthetic, for now we assume the instruction index is the
-   * same as the program counter
+   * Since this CFG is synthetic, for now we assume the instruction index is the same as the program counter
    * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
    */
@@ -505,6 +460,5 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       return index;
     }
   }
-  
-  
+
 }
