@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.client;
 
-import com.ibm.wala.util.Stopwatch;
+import com.ibm.wala.util.perf.StopwatchGC;
 
 
 /**
@@ -39,5 +39,5 @@ public interface EngineStopwatch {
   /**
    * Returns access to class encapsulating time events results, related to the given category.
    */
-  public Stopwatch getTimer(byte category);
+  public StopwatchGC getTimer(byte category);
 }

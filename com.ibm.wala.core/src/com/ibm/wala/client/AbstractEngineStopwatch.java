@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.client;
 
-import com.ibm.wala.util.Stopwatch;
+import com.ibm.wala.util.perf.StopwatchGC;
 
 /**
  *
@@ -30,12 +30,12 @@ public abstract class AbstractEngineStopwatch implements EngineStopwatch {
    */
   protected abstract String[] getCategoryNames();
   
-  protected final Stopwatch[] stopwatch;
+  protected final StopwatchGC[] stopwatch;
 
   protected AbstractEngineStopwatch() {
-    stopwatch = new Stopwatch[getNumberOfCategories()];
+    stopwatch = new StopwatchGC[getNumberOfCategories()];
     for (int i = 0; i < getNumberOfCategories(); i++) {
-      stopwatch[i] = new Stopwatch(getCategoryNames()[i]);
+      stopwatch[i] = new StopwatchGC(getCategoryNames()[i]);
     }
   }
 
@@ -64,7 +64,7 @@ public abstract class AbstractEngineStopwatch implements EngineStopwatch {
     stopwatch[category].stop();
   }
   
-  public Stopwatch getTimer(byte category) {
+  public StopwatchGC getTimer(byte category) {
   	return stopwatch[category];
   }
   

@@ -8,16 +8,17 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util;
+package com.ibm.wala.util.perf;
+
 
 /**
- * 
- * Basic class to time events. The resolution is one millisecond.
+ * A {@link Stopwatch} that also queries the free memory from the GC.
+ * This is mostly useless.
  * 
  * @author sfink
  * @author dgrove
  */
-public class Stopwatch extends com.ibm.wala.util.perf.Stopwatch {
+public class StopwatchGC extends com.ibm.wala.util.perf.Stopwatch {
 
   final private String name;
 
@@ -25,7 +26,7 @@ public class Stopwatch extends com.ibm.wala.util.perf.Stopwatch {
 
   private long endMemory;
 
-  public Stopwatch(String name) {
+  public StopwatchGC(String name) {
     super();
     this.name = name;
   }
