@@ -60,12 +60,13 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- * Computation of reaching definitions for heap locations, relying on pointer
- * analysis
+ * Computation of reaching definitions for heap locations, relying on pointer analysis
  * 
  * @author sjfink
  */
 public class HeapReachingDefs {
+
+  private static final boolean DEBUG = false;
 
   private static final boolean VERBOSE = false;
 
@@ -76,8 +77,7 @@ public class HeapReachingDefs {
   }
 
   /**
-   * For each statement s, return the set of statements that may def the heap
-   * value read by s.
+   * For each statement s, return the set of statements that may def the heap value read by s.
    * 
    * @param node
    *            the node we are computing heap reaching defs for
@@ -86,13 +86,12 @@ public class HeapReachingDefs {
    * @param pa
    *            governing pointer analysis
    * @param mod
-   *            the set of heap locations which may be written (transitively) by
-   *            this node. These are logically return values in the SDG.
+   *            the set of heap locations which may be written (transitively) by this node. These are logically return
+   *            values in the SDG.
    * @param statements
    *            the statements whose def-use are considered interesting
    * @param exclusions
-   *            heap locations that should be excluded from data dependence
-   *            tracking
+   *            heap locations that should be excluded from data dependence tracking
    * 
    * @throws IllegalArgumentException
    *             if pa is null
@@ -108,9 +107,13 @@ public class HeapReachingDefs {
     if (pa == null) {
       throw new IllegalArgumentException("pa is null");
     }
-    if (VERBOSE) {
+    if (VERBOSE | DEBUG) {
       System.err.println("Reaching Defs " + node);
       System.err.println(statements.size());
+    }
+
+    if (DEBUG) {
+      System.err.println(ir);
     }
 
     // create a control flow graph with one instruction per basic block.
@@ -124,8 +127,8 @@ public class HeapReachingDefs {
     Map<Integer, NormalStatement> ssaInstructionIndex2Statement = mapInstructionsToStatements(domain);
 
     // solve reaching definitions as a dataflow problem
-    BitVectorFramework<ExplodedBasicBlock, Statement> rd = new BitVectorFramework<ExplodedBasicBlock, Statement>(cfg, new RD(node, cfg, pa,
-        domain, ssaInstructionIndex2Statement, exclusions), domain);
+    BitVectorFramework<ExplodedBasicBlock, Statement> rd = new BitVectorFramework<ExplodedBasicBlock, Statement>(cfg, new RD(node,
+        cfg, pa, domain, ssaInstructionIndex2Statement, exclusions), domain);
     if (VERBOSE) {
       System.err.println("Solve ");
     }
@@ -285,8 +288,7 @@ public class HeapReachingDefs {
     }
 
     /**
-     * For a statement s, compute the set of statements that may def the heap
-     * value read by s.
+     * For a statement s, compute the set of statements that may def the heap value read by s.
      */
     OrdinalSet<Statement> computeResult(Statement s, Map<PointerKey, MutableIntSet> pointerKeyMod,
         BitVectorSolver<? extends ISSABasicBlock> solver, OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h,
@@ -300,9 +302,11 @@ public class HeapReachingDefs {
           ISSABasicBlock bb = cfg.getBlockForInstruction(n.getInstructionIndex());
           BitVectorVariable v = solver.getIn(bb);
           MutableSparseIntSet defs = MutableSparseIntSet.makeEmpty();
-          for (PointerKey p : ref) {
-            if (pointerKeyMod.get(p) != null) {
-              defs.addAll(pointerKeyMod.get(p).intersection(v.getValue()));
+          if (v.getValue() != null) {
+            for (PointerKey p : ref) {
+              if (pointerKeyMod.get(p) != null) {
+                defs.addAll(pointerKeyMod.get(p).intersection(v.getValue()));
+              }
             }
           }
           return new OrdinalSet<Statement>(defs, domain);
@@ -313,6 +317,9 @@ public class HeapReachingDefs {
         HeapStatement.ReturnCallee r = (HeapStatement.ReturnCallee) s;
         PointerKey p = r.getLocation();
         BitVectorVariable v = solver.getIn(cfg.exit());
+        if (DEBUG) {
+          System.err.println("computeResult " + cfg.exit() + " " + s + " " + pointerKeyMod.get(p) + " " + v);
+        }
         if (pointerKeyMod.get(p) == null) {
           return OrdinalSet.empty();
         }
@@ -336,10 +343,10 @@ public class HeapReachingDefs {
         NormalStatement call = ssaInstructionIndex2Statement.get(r.getCallIndex());
         ISSABasicBlock callBlock = cfg.getBlockForInstruction(call.getInstructionIndex());
         if (callBlock.isEntryBlock()) {
-          int x = domain.getMappedIndex(new HeapStatement.ParamCallee(node,r.getLocation()));
+          int x = domain.getMappedIndex(new HeapStatement.ParamCallee(node, r.getLocation()));
           assert x >= 0;
           IntSet xset = SparseIntSet.singleton(x);
-          return new OrdinalSet<Statement>(xset,domain);
+          return new OrdinalSet<Statement>(xset, domain);
         }
         BitVectorVariable v = solver.getIn(callBlock);
         if (pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
@@ -372,8 +379,7 @@ public class HeapReachingDefs {
   }
 
   /**
-   * For each statement s, compute the set of statements that may def the heap
-   * value read by s.
+   * For each statement s, compute the set of statements that may def the heap value read by s.
    */
   private Map<Statement, OrdinalSet<Statement>> makeResult(BitVectorSolver<? extends ISSABasicBlock> solver,
       OrdinalSetMapping<Statement> domain, CGNode node, ExtendedHeapModel h, PointerAnalysis pa,
@@ -384,8 +390,7 @@ public class HeapReachingDefs {
   }
 
   /**
-   * Do all callees corresponding to the given call site def the pointer key
-   * being tracked by r?
+   * Do all callees corresponding to the given call site def the pointer key being tracked by r?
    */
   private static boolean allCalleesMod(CallGraph cg, ReturnCaller r, Map<CGNode, OrdinalSet<PointerKey>> mod) {
     Collection<CGNode> targets = cg.getPossibleTargets(r.getNode(), r.getCall().getCallSite());
@@ -400,8 +405,7 @@ public class HeapReachingDefs {
     return true;
   }
 
-  private Collection<PointerKey> getMod(Statement s, CGNode n, ExtendedHeapModel h, PointerAnalysis pa,
-      HeapExclusions exclusions) {
+  private Collection<PointerKey> getMod(Statement s, CGNode n, ExtendedHeapModel h, PointerAnalysis pa, HeapExclusions exclusions) {
     switch (s.getKind()) {
     case NORMAL:
       NormalStatement ns = (NormalStatement) s;
@@ -470,9 +474,8 @@ public class HeapReachingDefs {
     private final HeapExclusions exclusions;
 
     /**
-     * if (i,j) \in heapReturnCaller, then statement j is a
-     * HeapStatement.ReturnCaller for statement i, a NormalStatement
-     * representing an invoke
+     * if (i,j) \in heapReturnCaller, then statement j is a HeapStatement.ReturnCaller for statement i, a
+     * NormalStatement representing an invoke
      */
     private final IBinaryNaturalRelation heapReturnCaller = new BasicNaturalRelation();
 
@@ -491,6 +494,9 @@ public class HeapReachingDefs {
     private void initHeapReturnCaller() {
       for (Statement s : domain) {
         if (s.getKind().equals(Kind.HEAP_RET_CALLER)) {
+          if (DEBUG) {
+            System.err.println("initHeapReturnCaller " + s);
+          }
           HeapStatement.ReturnCaller r = (ReturnCaller) s;
           NormalStatement call = ssaInstructionIndex2Statement.get(r.getCallIndex());
           int i = domain.getMappedIndex(call);
@@ -501,15 +507,34 @@ public class HeapReachingDefs {
     }
 
     public UnaryOperator<BitVectorVariable> getEdgeTransferFunction(ExplodedBasicBlock src, ExplodedBasicBlock dst) {
+      if (DEBUG) {
+        System.err.println("getEdgeXfer: " + src + " " + dst + " " + src.isEntryBlock());
+      }
+      IntSet gen = null;
+      if (src.isEntryBlock()) {
+        if (DEBUG) {
+          System.err.println("heapEntry " + heapEntryStatements());
+        }
+        gen = new BitVectorIntSet(heapEntryStatements()).toSparseIntSet();
+      } else {
+        gen = new SparseIntSet();
+      }
       if (src.getInstruction() != null && !(src.getInstruction() instanceof SSAAbstractInvokeInstruction)
           && !cfg.getNormalSuccessors(src).contains(dst)) {
         // if the edge only happens due to exceptional control flow, then no
         // heap locations
         // are def'ed or used
+        if (DEBUG) {
+          System.err.println("Identity");
+        }
         return BitVectorIdentity.instance();
       } else {
         BitVector kill = kill(src);
-        IntSet gen = gen(src);
+        IntSet gen2 = gen(src);
+        gen = gen2 == null ? gen : gen.union(gen2);
+        if (DEBUG) {
+          System.err.println("gen: " + gen + " kill: " + kill);
+        }
         if (kill == null) {
           if (gen == null) {
             return BitVectorIdentity.instance();
@@ -531,7 +556,6 @@ public class HeapReachingDefs {
     }
 
     public UnaryOperator<BitVectorVariable> getNodeTransferFunction(ExplodedBasicBlock node) {
-      Assertions.UNREACHABLE();
       return null;
     }
 
@@ -544,44 +568,45 @@ public class HeapReachingDefs {
     }
 
     /**
-     * @return int set representing the heap def statements that are gen'ed by
-     *         the basic block. null if none.
+     * @return int set representing the heap def statements that are gen'ed by the basic block. null if none.
      */
     IntSet gen(ExplodedBasicBlock b) {
-      if (b.isEntryBlock()) {
-        return heapEntryStatements();
+
+      SSAInstruction s = b.getInstruction();
+      if (DEBUG) {
+        System.err.println("gen " + b + " " + s);
+      }
+      if (s == null) {
+        return null;
       } else {
-        SSAInstruction s = b.getInstruction();
-        if (s == null) {
-          return null;
+        if (s instanceof SSAAbstractInvokeInstruction) {
+          // it's a normal statement ... we better be able to find it in the
+          // domain.
+          Statement st = ssaInstructionIndex2Statement.get(b.getLastInstructionIndex());
+          if (st == null) {
+            System.err.println(ssaInstructionIndex2Statement);
+            Assertions.UNREACHABLE("bang " + b + " " + b.getLastInstructionIndex() + " " + s);
+          }
+          int domainIndex = domain.getMappedIndex(st);
+          assert (domainIndex != -1);
+          if (DEBUG) {
+            System.err.println("GEN FOR " + s + " " + heapReturnCaller.getRelated(domainIndex));
+          }
+          return heapReturnCaller.getRelated(domainIndex);
         } else {
-          if (s instanceof SSAAbstractInvokeInstruction) {
-            // it's a normal statement ... we better be able to find it in the
-            // domain.
-            Statement st = ssaInstructionIndex2Statement.get(b.getLastInstructionIndex());
-            if (st == null) {
-              System.err.println(ssaInstructionIndex2Statement);
-              Assertions.UNREACHABLE("bang " + b + " " + b.getLastInstructionIndex() + " " + s);
-            }
-            int domainIndex = domain.getMappedIndex(st);
-            assert (domainIndex != -1);
-            return heapReturnCaller.getRelated(domainIndex);
+          Collection<PointerKey> gen = modRef.getMod(node, h, pa, s, exclusions);
+          if (gen.isEmpty()) {
+            return null;
           } else {
-            Collection<PointerKey> gen = modRef.getMod(node, h, pa, s, exclusions);
-            if (gen.isEmpty()) {
-              return null;
-            } else {
-              NormalStatement n = ssaInstructionIndex2Statement.get(b.getLastInstructionIndex());
-              return SparseIntSet.singleton(domain.getMappedIndex(n));
-            }
+            NormalStatement n = ssaInstructionIndex2Statement.get(b.getLastInstructionIndex());
+            return SparseIntSet.singleton(domain.getMappedIndex(n));
           }
         }
       }
     }
 
     /**
-     * @return int set representing all HEAP_PARAM_CALLEE statements in the
-     *         domain.
+     * @return int set representing all HEAP_PARAM_CALLEE statements in the domain.
      */
     private IntSet heapEntryStatements() {
       BitVectorIntSet result = new BitVectorIntSet();
@@ -594,8 +619,7 @@ public class HeapReachingDefs {
     }
 
     /**
-     * @return int set representing the heap def statements that are killed by
-     *         the basic block. null if none.
+     * @return int set representing the heap def statements that are killed by the basic block. null if none.
      */
     BitVector kill(ExplodedBasicBlock b) {
       SSAInstruction s = b.getInstruction();
