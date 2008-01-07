@@ -26,7 +26,7 @@ public class HttpServletRequest
   }
 
   public String getAuthType() {
-    return "none";
+    return getInputString();
   }
 
   public String getContextPath() {
@@ -73,11 +73,11 @@ public class HttpServletRequest
   }
 
   public String getQueryString() {
-    return "?stuff";
+    return getInputString();
   }
 
   public String getRemoteUser() {
-    return null;
+    return getInputString();
   }
 
   public String getRequestedSessionId() {
@@ -85,7 +85,7 @@ public class HttpServletRequest
   }
 
   public String getRequestURI() {
-    return "this/that/the/other";
+    return getInputString();
   }
 
   public StringBuffer getRequestURL() {

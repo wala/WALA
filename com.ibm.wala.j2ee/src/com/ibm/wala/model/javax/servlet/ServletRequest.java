@@ -107,7 +107,7 @@ public class ServletRequest implements javax.servlet.ServletRequest {
   }
 
   public java.lang.String getProtocol() {
-    return "HTTP/1.1";
+    return getInputString();
   }
 
   public java.io.BufferedReader getReader() {
@@ -131,7 +131,7 @@ public class ServletRequest implements javax.servlet.ServletRequest {
   }
 
   public String getScheme() {
-    return "http";
+    return getInputString();
   }
 
   public String getServerName() {
