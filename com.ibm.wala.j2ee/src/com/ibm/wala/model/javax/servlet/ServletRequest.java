@@ -91,7 +91,11 @@ public class ServletRequest implements javax.servlet.ServletRequest {
   }
 
   public String getParameter(String name) {
-    return parameters.get(name);
+    // Note, while the following is technically a more accurate model...
+//    return parameters.get(name);
+    // I'm using the following simpler model for now to avoid some unnecessary analysis
+    // of flow through the heap.  Revisit this decision if necessary.
+    return getInputString();
   }
 
   public java.util.Map<String, String> getParameterMap() {
