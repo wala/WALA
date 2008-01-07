@@ -349,6 +349,9 @@ public class SparseIntSet implements IntSet {
   }
 
   public IntSet intersection(IntSet that) {
+    if (that == null) {
+      throw new IllegalArgumentException("that == null");
+    }
     if (that instanceof SparseIntSet) {
       MutableSparseIntSet temp = MutableSparseIntSet.make(this);
       temp.intersectWith((SparseIntSet) that);
