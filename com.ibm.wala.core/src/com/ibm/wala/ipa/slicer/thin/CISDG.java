@@ -35,7 +35,7 @@ import com.ibm.wala.util.intset.IntSet;
  * loads, based on an underlying pointer analysis.
  *
  */
-class CISDG implements ISDG {
+public class CISDG implements ISDG {
   /**
    * the basic SDG, without interprocedural heap edges
    */
@@ -56,7 +56,7 @@ class CISDG implements ISDG {
    */
   final Map<PointerKey, Set<Statement>> invRef;
 
-  CISDG(SDG noHeap, Map<Statement, Set<PointerKey>> mod, Map<Statement, Set<PointerKey>> ref) {
+  protected CISDG(SDG noHeap, Map<Statement, Set<PointerKey>> mod, Map<Statement, Set<PointerKey>> ref) {
     this.noHeap = noHeap;
     this.ref = ref;
     invMod = MapUtil.inverseMap(mod);

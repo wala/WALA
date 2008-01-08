@@ -40,31 +40,29 @@ import com.ibm.wala.util.graph.traverse.DFS;
  * 
  * Currently supports backward slices only.
  * 
- * TODO: Introduce a slicer interface common between this and the CS slicer.
- * TODO: This hasn't been tested much.   Need regression tests.
+ * TODO: Introduce a slicer interface common between this and the CS slicer. TODO: This hasn't been tested much. Need
+ * regression tests.
  * 
  * @author sjfink
- *
+ * 
  */
 public class CISlicer {
-  
+
   /**
    * the dependence graph used for context-insensitive slicing
    */
   private final Graph<Statement> depGraph;
 
-  public CISlicer(CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+  public CISlicer(CallGraph cg, PointerAnalysis pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
     this(cg, pa, ModRef.make(), dOptions, cOptions);
   }
 
-  public CISlicer(CallGraph cg, PointerAnalysis pa, ModRef modRef,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException {
+  public CISlicer(CallGraph cg, PointerAnalysis pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions)
+      throws IllegalArgumentException {
     if (dOptions == null) {
-          throw new IllegalArgumentException("dOptions == null");
-        }
-    if (dOptions.equals(DataDependenceOptions.NO_BASE_PTRS) ||
-        dOptions.equals(DataDependenceOptions.FULL)) {
+      throw new IllegalArgumentException("dOptions == null");
+    }
+    if (dOptions.equals(DataDependenceOptions.NO_BASE_PTRS) || dOptions.equals(DataDependenceOptions.FULL)) {
       throw new IllegalArgumentException("Heap data dependences requested in CISlicer!");
     }
 
@@ -74,9 +72,9 @@ public class CISlicer {
     Map<Statement, Set<PointerKey>> ref = scanForRef(sdg, pa);
 
     depGraph = GraphInverter.invert(new CISDG(sdg, mod, ref));
-    
+
   }
-  
+
   public Collection<Statement> computeBackwardThinSlice(Statement seed) {
     Collection<Statement> slice = DFS.getReachableNodes(depGraph, Collections.singleton(seed));
     return slice;
@@ -90,15 +88,15 @@ public class CISlicer {
   /**
    * Compute the set of pointer keys each statement mods
    */
-  private static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa) {
+  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa) {
     ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
     Map<Statement, Set<PointerKey>> result = HashMapFactory.make();
     for (Iterator<? extends Statement> it = sdg.iterator(); it.hasNext();) {
       Statement st = it.next();
       switch (st.getKind()) {
       case NORMAL:
-	  Set<PointerKey> c = HashSetFactory.make((ModRef.make()).getMod(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
-            null));
+        Set<PointerKey> c = HashSetFactory.make((ModRef.make()).getMod(st.getNode(), h, pa,
+            ((NormalStatement) st).getInstruction(), null));
         result.put(st, c);
         break;
       }
@@ -110,15 +108,15 @@ public class CISlicer {
   /**
    * Compute the set of PointerKeys each statement refs.
    */
-  private static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis pa) {
+  public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis pa) {
     ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
     Map<Statement, Set<PointerKey>> result = HashMapFactory.make();
     for (Iterator<? extends Statement> it = sdg.iterator(); it.hasNext();) {
       Statement st = it.next();
       switch (st.getKind()) {
       case NORMAL:
-	  Set<PointerKey> c = HashSetFactory.make((ModRef.make()).getRef(st.getNode(), h, pa, ((NormalStatement) st).getInstruction(),
-            null));
+        Set<PointerKey> c = HashSetFactory.make((ModRef.make()).getRef(st.getNode(), h, pa,
+            ((NormalStatement) st).getInstruction(), null));
         result.put(st, c);
         break;
       }
