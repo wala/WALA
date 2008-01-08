@@ -41,7 +41,7 @@ public class ServletContext implements javax.servlet.ServletContext {
   }
 
   public String getInitParameter(String name) {
-    return null;
+    return ServletRequest.getInputString();
   }
 
   @SuppressWarnings("unchecked")
