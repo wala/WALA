@@ -345,4 +345,8 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   protected IClassHierarchy getClassHierarchy() {
     return cha;
   }
+
+  public ClassBasedInstanceKeys getClassBasedInstanceKeys() {
+    return classBased;
+  }
 }
