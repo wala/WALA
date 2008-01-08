@@ -25,7 +25,7 @@ if [[ ! -e $MY_DIR/xalan.jar ]]; then
 
   cd $TMP
 
-  wget -O xalan-j_2_7_0-bin.tar.gz http://mirror.candidhosting.com/pub/apache/xml/xalan-j/xalan-j_2_7_0-bin.tar.gz
+  wget -O xalan-j_2_7_0-bin.tar.gz http://archive.apache.org/dist/xml/xalan-j/xalan-j_2_7_0-bin.tar.gz
 
   tar xzf xalan-j_2_7_0-bin.tar.gz xalan-j_2_7_0/xalan.jar
 
