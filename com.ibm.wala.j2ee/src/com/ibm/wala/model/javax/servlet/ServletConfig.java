@@ -34,7 +34,7 @@ public class ServletConfig implements javax.servlet.ServletConfig {
 
   public Enumeration<String> getInitParameterNames() {
     Vector<String> v = new Vector<String>();
-    v.add("a String");
+    v.add(ServletRequest.getInputString());
     return v.elements();
   }
 
