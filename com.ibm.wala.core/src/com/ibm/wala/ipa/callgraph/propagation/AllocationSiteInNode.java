@@ -34,7 +34,7 @@ public abstract class AllocationSiteInNode extends AbstractTypeInNode {
 
   @Override
   public String toString() {
-    return "SITE{" + getNode().getMethod() + ":" + site + " in " + getNode().getContext() + "}";
+    return "SITE_IN_NODE{" + getNode().getMethod() + ":" + site + " in " + getNode().getContext() + "}";
   }
 
   /**
