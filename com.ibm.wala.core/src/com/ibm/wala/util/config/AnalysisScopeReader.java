@@ -104,6 +104,9 @@ public class AnalysisScopeReader {
     return read(BASIC_FILE, exclusionsFile, MY_CLASSLOADER);
   }
 
+  /**
+   * @param classPath class path to analyze, delimited by File.pathSeparator
+   */
   public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile) {
     AnalysisScope scope = makePrimordialScope(exclusionsFile);
     ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
