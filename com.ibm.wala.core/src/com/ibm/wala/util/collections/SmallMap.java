@@ -112,11 +112,14 @@ public class SmallMap<K,V> implements Map<K,V> {
    */
   @SuppressWarnings("unchecked")
   public V get(Object key) {
-    for (int i = 0; i < size(); i++) {
-      if (keysAndValues[i].equals(key)) {
-        return (V) keysAndValues[size() + i];
+    
+    if (key != null)
+      for (int i = 0; i < size(); i++) {
+        if (keysAndValues[i] != null && keysAndValues[i].equals(key)) {
+          return (V) keysAndValues[size() + i];
+        }
       }
-    }
+    
     return null;
   }
 
@@ -142,7 +145,7 @@ public class SmallMap<K,V> implements Map<K,V> {
       Assertions._assert(key != null);
     }
     for (int i = 0; i < size(); i++) {
-      if (keysAndValues[i].equals(key)) {
+      if (keysAndValues[i] != null && keysAndValues[i].equals(key)) {
         V result = (V) keysAndValues[size() + i];
         keysAndValues[size() + i] = value;
         return result;
