@@ -19,6 +19,9 @@ public class Stopwatch {
 
   private int count;
 
+  /**
+   * elapsed time in nanoseconds
+   */
   private long elapsedTime;
 
   private long startTime;
@@ -27,11 +30,11 @@ public class Stopwatch {
   }
 
   public void start() {
-    startTime = System.currentTimeMillis();
+    startTime = System.nanoTime();
   }
 
   public void stop() {
-    double endTime = System.currentTimeMillis();
+    long endTime = System.nanoTime();
     count++;
     elapsedTime += (endTime - startTime);
   }
@@ -40,7 +43,7 @@ public class Stopwatch {
    * @return elapsed time in ms
    */
   public long getElapsedMillis() {
-    return elapsedTime;
+    return elapsedTime / 1000000;
   }
   
   /**
