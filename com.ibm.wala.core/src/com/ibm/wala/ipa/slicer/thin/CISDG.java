@@ -31,17 +31,19 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * A context-insensitive SDG.   This class assumes that it is given a normal NO_HEAP SDG.
- * It adds context-insensitive heap information directly from heap stores to corresponding
- * loads, based on an underlying pointer analysis.
- *
+ * A context-insensitive SDG. This class assumes that it is given a normal NO_HEAP SDG. It adds context-insensitive heap
+ * information directly from heap stores to corresponding loads, based on an underlying pointer analysis.
+ * 
  */
 public class CISDG implements ISDG {
+
+  private final static boolean DEBUG = false;
+
   /**
    * the basic SDG, without interprocedural heap edges
    */
   final SDG noHeap;
-  
+
   /**
    * What pointer keys does each statement mod?
    */
@@ -127,6 +129,9 @@ public class CISDG implements ISDG {
   }
 
   public Iterator<? extends Statement> getPredNodes(Statement N) {
+    if (DEBUG) {
+      System.err.println("getPredNodes " + N);
+    }
     if (ref.get(N) == null) {
       return noHeap.getPredNodes(N);
     } else {
@@ -142,7 +147,7 @@ public class CISDG implements ISDG {
   }
 
   public int getSuccNodeCount(Statement N) {
-   return IteratorUtil.count(getSuccNodes(N));
+    return IteratorUtil.count(getSuccNodes(N));
   }
 
   public IntSet getSuccNodeNumbers(Statement node) {
@@ -151,6 +156,9 @@ public class CISDG implements ISDG {
   }
 
   public Iterator<? extends Statement> getSuccNodes(Statement N) {
+    if (DEBUG) {
+      System.err.println("getSuccNodes " + N);
+    }
     if (mod.get(N) == null) {
       return noHeap.getSuccNodes(N);
     } else {
