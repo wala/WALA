@@ -48,7 +48,7 @@ public class BitVectorRepository {
    *         as value, except it may exclude up to SUBSET_DELTA bits.
    * @throws IllegalArgumentException  if value is null
    */
-  public static BitVectorIntSet findOrCreateSharedSubset(BitVectorIntSet value) {
+  public static synchronized BitVectorIntSet findOrCreateSharedSubset(BitVectorIntSet value) {
     if (value == null) {
       throw new IllegalArgumentException("value is null");
     }
