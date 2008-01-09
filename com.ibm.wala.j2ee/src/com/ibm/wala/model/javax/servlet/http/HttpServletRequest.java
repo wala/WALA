@@ -18,11 +18,16 @@ import com.ibm.wala.annotations.Internal;
 public class HttpServletRequest
   extends com.ibm.wala.model.javax.servlet.ServletRequest
   implements javax.servlet.http.HttpServletRequest {
-  private final java.util.Hashtable<String, String> headers = new java.util.Hashtable<String, String>();
+  private  java.util.Hashtable<String, String> headers;
 
+  // lazily initialize bogus model of headers
+  private void initHeaders() {
+    headers = new java.util.Hashtable<String, String>();
+    headers.put(getInputString(), getInputString());
+  }
+  
   public HttpServletRequest() {
     super();
-    headers.put(getInputString(), getInputString());
   }
 
   public String getAuthType() {
@@ -45,14 +50,17 @@ public class HttpServletRequest
   }
 
   public String getHeader(String name) {
+    initHeaders();
     return headers.get(name);
   }
 
   public java.util.Enumeration<String> getHeaderNames() {
+    initHeaders();
     return headers.keys();
   }
 
   public java.util.Enumeration<String> getHeaders(String name) {
+    initHeaders();
     return headers.elements();
   }
 

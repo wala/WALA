@@ -17,9 +17,18 @@ import javax.servlet.ServletInputStream;
 import com.ibm.wala.model.SyntheticFactory;
 
 public class ServletRequest implements javax.servlet.ServletRequest {
+
   private final java.util.Hashtable<String, Object> values = new java.util.Hashtable<String, Object>();
-  private final java.util.Hashtable<String, String> parameters = new java.util.Hashtable<String, String>();
+
+  private java.util.Hashtable<String, String> parameters;
+
   private String encoding = "iso88591-1";
+
+  // lazily initialize bogus model of parameters
+  private void initParameters() {
+    parameters = new java.util.Hashtable<String, String>();
+    parameters.put(getInputString(), getInputString());
+  }
 
   /**
    * The semantics of this are bogus ... be careful to hijack this.
@@ -27,16 +36,15 @@ public class ServletRequest implements javax.servlet.ServletRequest {
   protected static String getInputString() {
     return "some input string";
   }
-  
+
   /**
    * The semantics of this are bogus ... be careful to hijack this.
    */
   public ServletRequest() {
-    parameters.put(getInputString(), getInputString());
   }
 
   public Object getAttribute(String name) {
-    if (name.length() > 5) {  // random condition.
+    if (name.length() > 5) { // random condition.
       return values.get(name);
     } else {
       return SyntheticFactory.getObject();
@@ -68,7 +76,7 @@ public class ServletRequest implements javax.servlet.ServletRequest {
         int n = s.charAt(0);
         return n;
       }
-      
+
     };
   }
 
@@ -80,9 +88,11 @@ public class ServletRequest implements javax.servlet.ServletRequest {
   public java.util.Enumeration getLocales() {
     return new java.util.Enumeration() {
       private boolean done = false;
+
       public boolean hasMoreElements() {
         return !done;
       }
+
       public Object nextElement() {
         done = true;
         return getLocale();
@@ -92,22 +102,25 @@ public class ServletRequest implements javax.servlet.ServletRequest {
 
   public String getParameter(String name) {
     // Note, while the following is technically a more accurate model...
-//    return parameters.get(name);
+    // return parameters.get(name);
     // I'm using the following simpler model for now to avoid some unnecessary analysis
-    // of flow through the heap.  Revisit this decision if necessary.
+    // of flow through the heap. Revisit this decision if necessary.
     return getInputString();
   }
 
   public java.util.Map<String, String> getParameterMap() {
+    initParameters();
     return parameters;
   }
 
   public java.util.Enumeration<String> getParameterNames() {
+    initParameters();
     return parameters.keys();
   }
 
   public String[] getParameterValues(String name) {
-    return new String[] {parameters.get(name)};
+    initParameters();
+    return new String[] { parameters.get(name) };
   }
 
   public java.lang.String getProtocol() {
