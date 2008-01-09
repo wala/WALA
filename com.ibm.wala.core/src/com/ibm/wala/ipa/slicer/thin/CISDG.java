@@ -25,6 +25,7 @@ import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
@@ -40,11 +41,16 @@ public class CISDG implements ISDG {
    * the basic SDG, without interprocedural heap edges
    */
   final SDG noHeap;
+  
+  /**
+   * What pointer keys does each statement mod?
+   */
+  private final Map<Statement, Set<PointerKey>> ref;
 
   /**
    * What pointer keys does each statement ref?
    */
-  private final Map<Statement, Set<PointerKey>> ref;
+  private final Map<Statement, Set<PointerKey>> mod;
 
   /**
    * What statements write each pointer key?
@@ -58,6 +64,7 @@ public class CISDG implements ISDG {
 
   protected CISDG(SDG noHeap, Map<Statement, Set<PointerKey>> mod, Map<Statement, Set<PointerKey>> ref) {
     this.noHeap = noHeap;
+    this.mod = mod;
     this.ref = ref;
     invMod = MapUtil.inverseMap(mod);
     invRef = MapUtil.inverseMap(ref);
@@ -74,7 +81,6 @@ public class CISDG implements ISDG {
   }
 
   public boolean containsNode(Statement N) {
-    Assertions.UNREACHABLE();
     return noHeap.containsNode(N);
   }
 
@@ -112,8 +118,7 @@ public class CISDG implements ISDG {
   }
 
   public int getPredNodeCount(Statement N) {
-    Assertions.UNREACHABLE();
-    return noHeap.getPredNodeCount(N);
+    return IteratorUtil.count(getPredNodes(N));
   }
 
   public IntSet getPredNodeNumbers(Statement node) {
@@ -128,7 +133,6 @@ public class CISDG implements ISDG {
       Collection<Statement> pred = HashSetFactory.make();
       for (PointerKey p : ref.get(N)) {
         if (invMod.get(p) != null) {
-          // TODO: WTF? HOW CAN IT BE NULL?
           pred.addAll(invMod.get(p));
         }
       }
@@ -138,8 +142,7 @@ public class CISDG implements ISDG {
   }
 
   public int getSuccNodeCount(Statement N) {
-    Assertions.UNREACHABLE();
-    return noHeap.getSuccNodeCount(N);
+   return IteratorUtil.count(getSuccNodes(N));
   }
 
   public IntSet getSuccNodeNumbers(Statement node) {
@@ -148,8 +151,18 @@ public class CISDG implements ISDG {
   }
 
   public Iterator<? extends Statement> getSuccNodes(Statement N) {
-    Assertions.UNREACHABLE();
-    return noHeap.getSuccNodes(N);
+    if (mod.get(N) == null) {
+      return noHeap.getSuccNodes(N);
+    } else {
+      Collection<Statement> succ = HashSetFactory.make();
+      for (PointerKey p : mod.get(N)) {
+        if (invRef.get(p) != null) {
+          succ.addAll(invRef.get(p));
+        }
+      }
+      succ.addAll(Iterator2Collection.toCollection(noHeap.getSuccNodes(N)));
+      return succ.iterator();
+    }
   }
 
   public boolean hasEdge(Statement src, Statement dst) {
