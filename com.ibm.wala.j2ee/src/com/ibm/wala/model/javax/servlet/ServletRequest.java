@@ -64,7 +64,7 @@ public class ServletRequest implements javax.servlet.ServletRequest {
   }
 
   public java.lang.String getContentType() {
-    return null;
+    return getInputString();
   }
 
   public javax.servlet.ServletInputStream getInputStream() {
