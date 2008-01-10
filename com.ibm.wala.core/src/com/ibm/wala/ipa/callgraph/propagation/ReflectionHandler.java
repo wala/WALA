@@ -37,7 +37,6 @@ import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * 
@@ -70,14 +69,12 @@ public class ReflectionHandler {
     for (Statement st : returnStatements) {
       if (VERBOSE) {
         System.err.println("Slice " + st);
-        Trace.println("Slice " + st);
       }
       Collection<Statement> slice = Slicer.computeForwardSlice(st, builder.callGraph, null, DataDependenceOptions.REFLECTION,
           ControlDependenceOptions.NONE);
       if (VERBOSE) {
         for (Statement x : slice) {
           System.err.println(" " + x);
-          Trace.println(" " + x);
         }
       }
       Filter f = new Filter() {
