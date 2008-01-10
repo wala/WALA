@@ -63,6 +63,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
 
   private final HashMap<TypeName, IClass> syntheticClasses = HashMapFactory.make();
 
+  
   /**
    * Don't change my signature!  ClassLoaderFactoryImpl calls me by reflection! yuck.
    * 
@@ -75,6 +76,11 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     this.me = me;
     this.cha = cha;
     this.parent = parent;
+  }
+  
+  @Override
+  public String toString() {
+    return me.getName().toString();
   }
 
   public IClass lookupClass(TypeName className) {
