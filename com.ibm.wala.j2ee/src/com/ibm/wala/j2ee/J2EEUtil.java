@@ -75,7 +75,6 @@ public class J2EEUtil {
       } else if (M instanceof ClassFileModule) {
         return null;
       } else {
-        Assertions.UNREACHABLE("Unprepared for module of type " + M.getClass());
         return null;
       }
 
