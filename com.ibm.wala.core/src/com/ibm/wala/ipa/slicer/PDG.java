@@ -61,8 +61,10 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVectorIntSet;
+import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
@@ -71,7 +73,9 @@ import com.ibm.wala.util.intset.OrdinalSet;
  * @author sjfink
  * 
  */
-public class PDG extends SlowSparseNumberedGraph<Statement> {
+public class PDG implements NumberedGraph<Statement> {
+
+  private final SlowSparseNumberedGraph<Statement> delegate = SlowSparseNumberedGraph.make();
 
   public final static boolean IGNORE_ALLOC_HEAP_DEFS = false;
 
@@ -79,7 +83,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
   private final CGNode node;
 
-  private final Map<SSAInstruction, Integer> instructionIndices;
+  private Map<SSAInstruction, Integer> instructionIndices;
 
   private Statement[] paramCalleeStatements;
 
@@ -104,17 +108,23 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
   private final DataDependenceOptions dOptions;
 
+  private final ControlDependenceOptions cOptions;
+
   private final CallGraph cg;
 
   private final ModRef modRef;
 
+  private final Map<CGNode, OrdinalSet<PointerKey>> ref;
+
+  private boolean isPopulated = false;
+
   /**
    * @param mod
-   *            the set of heap locations which may be written (transitively) by
-   *            this node. These are logically return values in the SDG.
+   *            the set of heap locations which may be written (transitively) by this node. These are logically return
+   *            values in the SDG.
    * @param ref
-   *            the set of heap locations which may be read (transitively) by
-   *            this node. These are logically parameters in the SDG.
+   *            the set of heap locations which may be read (transitively) by this node. These are logically parameters
+   *            in the SDG.
    * @throws IllegalArgumentException
    *             if node is null
    */
@@ -131,12 +141,20 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     this.heapModel = pa == null ? null : new DelegatingExtendedHeapModel(pa.getHeapModel());
     this.pa = pa;
     this.dOptions = dOptions;
+    this.cOptions = cOptions;
     this.mod = mod;
     this.exclusions = exclusions;
     this.modRef = modRef;
-    instructionIndices = computeInstructionIndices(node.getIR());
-    createNodes(ref, cOptions);
-    createScalarEdges(cOptions);
+    this.ref = ref;
+  }
+
+  private void populate() {
+    if (!isPopulated) {
+      isPopulated = true;
+      instructionIndices = computeInstructionIndices(node.getIR());
+      createNodes(ref, cOptions);
+      createScalarEdges(cOptions);
+    }
   }
 
   private void createScalarEdges(ControlDependenceOptions cOptions) {
@@ -151,6 +169,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     if (call == null) {
       throw new IllegalArgumentException("call == null");
     }
+    populate();
     return callerParamStatements.get(call.getCallSite());
   }
 
@@ -161,6 +180,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     if (call == null) {
       throw new IllegalArgumentException("call == null");
     }
+    populate();
     return callerReturnStatements.get(call.getCallSite());
   }
 
@@ -237,7 +257,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
             if (st != null) {
               Statement dest = ssaInstruction2Statement(st);
               assert src != null;
-              addEdge(src, dest);
+              delegate.addEdge(src, dest);
             }
           }
         }
@@ -254,7 +274,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         for (IInstruction s : bb) {
           SSAInstruction st = (SSAInstruction) s;
           Statement dest = ssaInstruction2Statement(st);
-          addEdge(methodEntry, dest);
+          delegate.addEdge(methodEntry, dest);
         }
       }
     }
@@ -308,9 +328,9 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
               if (pi instanceof SSAAbstractInvokeInstruction) {
                 SSAAbstractInvokeInstruction i = (SSAAbstractInvokeInstruction) pi;
-                addEdge(new ParamStatement.ExceptionalReturnCaller(node, i), c);
+                delegate.addEdge(new ParamStatement.ExceptionalReturnCaller(node, i), c);
               } else if (pi instanceof SSAAbstractThrowInstruction) {
-                addEdge(ssaInstruction2Statement(pi), c);
+                delegate.addEdge(ssaInstruction2Statement(pi), c);
               }
             }
           }
@@ -362,7 +382,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
                 }
               }
               Statement u = ssaInstruction2Statement(use);
-              addEdge(s, u);
+              delegate.addEdge(s, u);
             }
           }
         }
@@ -398,13 +418,13 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
             }
           }
           Statement u = ssaInstruction2Statement(use);
-          addEdge(s, u);
+          delegate.addEdge(s, u);
         }
         break;
       }
       case NORMAL_RET_CALLEE:
         for (NormalStatement ret : computeReturnStatements(ir)) {
-          addEdge(ret, s);
+          delegate.addEdge(ret, s);
         }
         break;
       case EXC_RET_CALLEE:
@@ -419,9 +439,9 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
           if (pei.getInstruction() instanceof SSAAbstractInvokeInstruction) {
             SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) pei.getInstruction();
             Statement st = new ParamStatement.ExceptionalReturnCaller(node, call);
-            addEdge(st, s);
+            delegate.addEdge(st, s);
           } else {
-            addEdge(pei, s);
+            delegate.addEdge(pei, s);
           }
         }
         break;
@@ -434,7 +454,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         if (vn > -1) {
           if (ir.getSymbolTable().isParameter(vn)) {
             Statement a = new ParamStatement.ParamCallee(node, vn);
-            addEdge(a, pac);
+            delegate.addEdge(a, pac);
           } else {
             SSAInstruction d = DU.getDef(vn);
             if (dOptions.isTerminateAtCast() && (d instanceof SSACheckCastInstruction)) {
@@ -445,14 +465,14 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
                 SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) d;
                 if (vn == call.getException()) {
                   Statement st = new ParamStatement.ExceptionalReturnCaller(node, call);
-                  addEdge(st, pac);
+                  delegate.addEdge(st, pac);
                 } else {
                   Statement st = new ParamStatement.NormalReturnCaller(node, call);
-                  addEdge(st, pac);
+                  delegate.addEdge(st, pac);
                 }
               } else {
                 Statement ds = ssaInstruction2Statement(d);
-                addEdge(ds, pac);
+                delegate.addEdge(ds, pac);
               }
             }
           }
@@ -528,8 +548,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   }
 
   /**
-   * Create heap data dependence edges in this PDG relevant to a particular
-   * {@link PointerKey}.
+   * Create heap data dependence edges in this PDG relevant to a particular {@link PointerKey}.
    */
   private void createHeapDataDependenceEdges(final PointerKey pk) {
 
@@ -583,7 +602,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         OrdinalSet<Statement> defs = heapReachingDefs.get(st);
         if (defs != null) {
           for (Statement def : defs) {
-            addEdge(def, st);
+            delegate.addEdge(def, st);
           }
         }
       }
@@ -601,7 +620,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
         OrdinalSet<Statement> defs = heapReachingDefs.get(st);
         if (defs != null) {
           for (Statement def : defs) {
-            addEdge(def, st);
+            delegate.addEdge(def, st);
           }
         }
         break;
@@ -686,10 +705,10 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * Wrap an SSAInstruction in a Statement
    */
   private Statement ssaInstruction2Statement(SSAInstruction s) {
-    return ssaInstruction2Statement(s, instructionIndices);
+    return ssaInstruction2Statement(node, s, instructionIndices);
   }
 
-  public Statement ssaInstruction2Statement(SSAInstruction s, Map<SSAInstruction, Integer> instructionIndices) {
+  public static Statement ssaInstruction2Statement(CGNode node, SSAInstruction s, Map<SSAInstruction, Integer> instructionIndices) {
     assert s != null;
     if (s instanceof SSAPhiInstruction) {
       SSAPhiInstruction phi = (SSAPhiInstruction) s;
@@ -709,8 +728,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   }
 
   /**
-   * @return for each SSAInstruction, its instruction index in the ir
-   *         instruction array
+   * @return for each SSAInstruction, its instruction index in the ir instruction array
    */
   public static Map<SSAInstruction, Integer> computeInstructionIndices(IR ir) {
     Map<SSAInstruction, Integer> result = HashMapFactory.make();
@@ -771,35 +789,34 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     createReturnStatements();
 
     if (!cOptions.equals(ControlDependenceOptions.NONE)) {
-      addNode(new MethodEntryStatement(node));
+      delegate.addNode(new MethodEntryStatement(node));
     }
-
   }
 
   /**
    * create nodes representing defs of the return values
    * 
    * @param mod
-   *            the set of heap locations which may be written (transitively) by
-   *            this node. These are logically parameters in the SDG.
+   *            the set of heap locations which may be written (transitively) by this node. These are logically
+   *            parameters in the SDG.
    * @param dOptions
    */
   private void createReturnStatements() {
     ArrayList<Statement> list = new ArrayList<Statement>();
     if (!node.getMethod().getReturnType().equals(TypeReference.Void)) {
       ParamStatement.NormalReturnCallee n = new ParamStatement.NormalReturnCallee(node);
-      addNode(n);
+      delegate.addNode(n);
       list.add(n);
     }
     if (!dOptions.isIgnoreExceptions()) {
       ParamStatement.ExceptionalReturnCallee e = new ParamStatement.ExceptionalReturnCallee(node);
-      addNode(e);
+      delegate.addNode(e);
       list.add(e);
     }
     if (!dOptions.isIgnoreHeap()) {
-      for (PointerKey p : mod.get(node)) {        
+      for (PointerKey p : mod.get(node)) {
         Statement h = new HeapStatement.ReturnCallee(node, p);
-        addNode(h);
+        delegate.addNode(h);
         list.add(h);
       }
     }
@@ -811,21 +828,20 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
    * create nodes representing defs of formal parameters
    * 
    * @param ref
-   *            the set of heap locations which may be read (transitively) by
-   *            this node. These are logically parameters in the SDG.
+   *            the set of heap locations which may be read (transitively) by this node. These are logically parameters
+   *            in the SDG.
    */
   private void createCalleeParams(Map<CGNode, OrdinalSet<PointerKey>> ref) {
-
     ArrayList<Statement> list = new ArrayList<Statement>();
     for (int i = 1; i <= node.getMethod().getNumberOfParameters(); i++) {
       ParamStatement s = new ParamStatement.ParamCallee(node, i);
-      addNode(s);
+      delegate.addNode(s);
       list.add(s);
     }
     if (!dOptions.isIgnoreHeap()) {
       for (PointerKey p : ref.get(node)) {
         Statement h = new HeapStatement.ParamCallee(node, p);
-        addNode(h);
+        delegate.addNode(h);
         list.add(h);
       }
     }
@@ -847,11 +863,11 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       if (s != null && !visited.contains(s)) {
         visited.add(s);
         if (s instanceof SSAPhiInstruction) {
-          addNode(new PhiStatement(node, (SSAPhiInstruction) s));
+          delegate.addNode(new PhiStatement(node, (SSAPhiInstruction) s));
         } else if (s instanceof SSAGetCaughtExceptionInstruction) {
-          addNode(new GetCaughtExceptionStatement(node, (SSAGetCaughtExceptionInstruction) s));
+          delegate.addNode(new GetCaughtExceptionStatement(node, (SSAGetCaughtExceptionInstruction) s));
         } else if (s instanceof SSAPiInstruction) {
-          addNode(new PiStatement(node, (SSAPiInstruction) s));
+          delegate.addNode(new PiStatement(node, (SSAPiInstruction) s));
         } else {
           Assertions.UNREACHABLE(s.toString());
         }
@@ -874,7 +890,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       }
 
       if (s != null) {
-        addNode(new NormalStatement(node, i));
+        delegate.addNode(new NormalStatement(node, i));
         visited.add(s);
       }
       if (s instanceof SSAAbstractInvokeInstruction) {
@@ -885,8 +901,7 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
   }
 
   /**
-   * Create nodes in the graph corresponding to in/out parameter passing for a
-   * call instruction
+   * Create nodes in the graph corresponding to in/out parameter passing for a call instruction
    */
   private void addParamPassingStatements(int callIndex, Map<CGNode, OrdinalSet<PointerKey>> ref) {
 
@@ -895,18 +910,18 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     Collection<Statement> rets = MapUtil.findOrCreateSet(callerReturnStatements, call.getCallSite());
     for (int j = 0; j < call.getNumberOfUses(); j++) {
       Statement st = new ParamStatement.ParamCaller(node, call, call.getUse(j));
-      addNode(st);
+      delegate.addNode(st);
       params.add(st);
     }
     if (!call.getDeclaredResultType().equals(TypeReference.Void)) {
       Statement st = new ParamStatement.NormalReturnCaller(node, call);
-      addNode(st);
+      delegate.addNode(st);
       rets.add(st);
     }
     {
       if (!dOptions.isIgnoreExceptions()) {
         Statement st = new ParamStatement.ExceptionalReturnCaller(node, call);
-        addNode(st);
+        delegate.addNode(st);
         rets.add(st);
       }
     }
@@ -915,13 +930,13 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
       OrdinalSet<PointerKey> uref = unionHeapLocations(cg, node, call, ref);
       for (PointerKey p : uref) {
         Statement st = new HeapStatement.ParamCaller(node, callIndex, p);
-        addNode(st);
+        delegate.addNode(st);
         params.add(st);
       }
       OrdinalSet<PointerKey> umod = unionHeapLocations(cg, node, call, mod);
       for (PointerKey p : umod) {
         Statement st = new HeapStatement.ReturnCaller(node, callIndex, p);
-        addNode(st);
+        delegate.addNode(st);
         rets.add(st);
       }
     }
@@ -941,16 +956,19 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
 
   @Override
   public String toString() {
+    populate();
     StringBuffer result = new StringBuffer("PDG for " + node + ":\n");
     result.append(super.toString());
     return result.toString();
   }
 
   public Statement[] getParamCalleeStatements() {
+    populate();
     return paramCalleeStatements.clone();
   }
 
   public Statement[] getReturnStatements() {
+    populate();
     return returnStatements.clone();
   }
 
@@ -975,18 +993,18 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     return 103 * node.hashCode();
   }
 
-  @Override
   public int getPredNodeCount(Statement N) throws UnimplementedError {
+    populate();
     Assertions.UNREACHABLE();
-    return super.getPredNodeCount(N);
+    return delegate.getPredNodeCount(N);
   }
 
-  @Override
   public Iterator<? extends Statement> getPredNodes(Statement N) {
+    populate();
     if (!dOptions.isIgnoreHeap()) {
       computeIncomingHeapDependencies(N);
     }
-    return super.getPredNodes(N);
+    return delegate.getPredNodes(N);
   }
 
   private void computeIncomingHeapDependencies(Statement N) {
@@ -1029,24 +1047,100 @@ public class PDG extends SlowSparseNumberedGraph<Statement> {
     }
   }
 
-  @Override
   public int getSuccNodeCount(Statement N) throws UnimplementedError {
+    populate();
     Assertions.UNREACHABLE();
-    return super.getSuccNodeCount(N);
+    return delegate.getSuccNodeCount(N);
   }
 
-  @Override
   public Iterator<? extends Statement> getSuccNodes(Statement N) {
+    populate();
     if (!dOptions.isIgnoreHeap()) {
       computeOutgoingHeapDependencies(N);
     }
-    return super.getSuccNodes(N);
+    return delegate.getSuccNodes(N);
   }
 
-  @Override
   public boolean hasEdge(Statement src, Statement dst) throws UnimplementedError {
+    populate();
     Assertions.UNREACHABLE();
-    return super.hasEdge(src, dst);
+    return delegate.hasEdge(src, dst);
   }
 
+  public void removeNodeAndEdges(Statement N) throws UnsupportedOperationException {
+    Assertions.UNREACHABLE();
+  }
+
+  public void addNode(Statement n) {
+    Assertions.UNREACHABLE();
+  }
+
+  public boolean containsNode(Statement N) {
+    populate();
+    return delegate.containsNode(N);
+  }
+
+  public int getNumberOfNodes() {
+    populate();
+    return delegate.getNumberOfNodes();
+  }
+
+  public Iterator<Statement> iterator() {
+    populate();
+    return delegate.iterator();
+  }
+
+  public void removeNode(Statement n) {
+    Assertions.UNREACHABLE();
+  }
+
+  public void addEdge(Statement src, Statement dst) {
+    Assertions.UNREACHABLE();
+  }
+
+  public void removeAllIncidentEdges(Statement node) throws UnsupportedOperationException {
+    Assertions.UNREACHABLE();
+  }
+
+  public void removeEdge(Statement src, Statement dst) throws UnsupportedOperationException {
+    Assertions.UNREACHABLE();
+  }
+
+  public void removeIncomingEdges(Statement node) throws UnsupportedOperationException {
+    Assertions.UNREACHABLE();
+  }
+
+  public void removeOutgoingEdges(Statement node) throws UnsupportedOperationException {
+    Assertions.UNREACHABLE();
+  }
+
+  public int getMaxNumber() {
+    populate();
+    return delegate.getMaxNumber();
+  }
+
+  public Statement getNode(int number) {
+    populate();
+    return delegate.getNode(number);
+  }
+
+  public int getNumber(Statement N) {
+    populate();
+    return delegate.getNumber(N);
+  }
+
+  public Iterator<Statement> iterateNodes(IntSet s) {
+    Assertions.UNREACHABLE();
+    return null;
+  }
+
+  public IntSet getPredNodeNumbers(Statement node) {
+    Assertions.UNREACHABLE();
+    return null;
+  }
+
+  public IntSet getSuccNodeNumbers(Statement node) {
+    Assertions.UNREACHABLE();
+    return null;
+  }
 }

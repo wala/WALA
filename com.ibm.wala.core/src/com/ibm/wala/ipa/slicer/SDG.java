@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.util.CompoundIterator;
+import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -91,17 +92,21 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   private final ControlDependenceOptions cOptions;
 
   /**
-   * the set of heap locations which may be written (transitively) by each node.
-   * These are logically return values in the SDG.
+   * the set of heap locations which may be written (transitively) by each node. These are logically return values in
+   * the SDG.
    */
   private final Map<CGNode, OrdinalSet<PointerKey>> mod;
 
   /**
-   * the set of heap locations which may be read (transitively) by each node.
-   * These are logically parameters in the SDG.
+   * the set of heap locations which may be read (transitively) by each node. These are logically parameters in the SDG.
    */
   private final Map<CGNode, OrdinalSet<PointerKey>> ref;
-  
+
+  /**
+   * CGNodes for which we have added all statements
+   */
+  private final Collection<CGNode> statementsAdded = HashSetFactory.make();
+
   /**
    * If non-null, represents the heap locations to exclude from data dependence
    */
@@ -113,11 +118,13 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     this(cg, pa, ModRef.make(), dOptions, cOptions, null);
   }
 
-  public SDG(final CallGraph cg, PointerAnalysis pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
+  public SDG(final CallGraph cg, PointerAnalysis pa, ModRef modRef, DataDependenceOptions dOptions,
+      ControlDependenceOptions cOptions) {
     this(cg, pa, modRef, dOptions, cOptions, null);
   }
 
-  public SDG(CallGraph cg, PointerAnalysis pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions, HeapExclusions heapExclude) throws IllegalArgumentException {
+  public SDG(CallGraph cg, PointerAnalysis pa, ModRef modRef, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
+      HeapExclusions heapExclude) throws IllegalArgumentException {
     super();
     if (dOptions == null) {
       throw new IllegalArgumentException("dOptions must not be null");
@@ -132,8 +139,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     this.heapExclude = heapExclude;
   }
 
-  /** 
-   * Use this with care.  This forces eager construction of the SDG, and SDGs can be big.
+  /**
+   * Use this with care. This forces eager construction of the SDG, and SDGs can be big.
    * 
    * @see com.ibm.wala.util.graph.AbstractGraph#toString()
    */
@@ -149,6 +156,19 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
    */
   private void eagerConstruction() {
     computeAllPDGs();
+    for (PDG pdg : pdgMap.values()) {
+      addPDGStatementNodes(pdg.getCallGraphNode());
+    }
+  }
+
+  private void addPDGStatementNodes(CGNode node) {
+    if (!statementsAdded.contains(node)) {
+      statementsAdded.add(node);
+      PDG pdg = getPDG(node);
+      for (Iterator<? extends Statement> it = pdg.iterator(); it.hasNext();) {
+        addNode(it.next());
+      }
+    }
   }
 
   /**
@@ -162,8 +182,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   }
 
   /**
-   * iterate over the nodes <bf>without</bf> constructing any new ones. Use
-   * with extreme care. May break graph traversals that lazily add more nodes.
+   * iterate over the nodes <bf>without</bf> constructing any new ones. Use with extreme care. May break graph
+   * traversals that lazily add more nodes.
    */
   public Iterator<? extends Statement> iterateLazyNodes() {
     return nodeMgr.iterateLazyNodes();
@@ -172,14 +192,46 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   private class Nodes extends SlowNumberedNodeManager<Statement> {
 
     @Override
+    public boolean containsNode(Statement N) {
+      Assertions.UNREACHABLE();
+      return super.containsNode(N);
+    }
+
+    @Override
+    public int getMaxNumber() {
+      // this may be bad.  TODO
+      eagerConstruction();
+      return super.getMaxNumber();
+    }
+
+    @Override
+    public Statement getNode(int number) {
+      Assertions.UNREACHABLE();
+      return super.getNode(number);
+    }
+
+    @Override
+    public int getNumber(Statement s) {
+      CGNode n = s.getNode();
+      addPDGStatementNodes(n);
+      return super.getNumber(s);
+    }
+
+    @Override
+    public Iterator<Statement> iterateNodes(IntSet s) {
+      Assertions.UNREACHABLE();
+      return super.iterateNodes(s);
+    }
+
+    @Override
     public Iterator<Statement> iterator() {
       eagerConstruction();
       return super.iterator();
     }
 
     /**
-     * iterate over the nodes <bf>without</bf> constructing any new ones. Use
-     * with extreme care. May break graph traversals that lazily add more nodes.
+     * iterate over the nodes <bf>without</bf> constructing any new ones. Use with extreme care. May break graph
+     * traversals that lazily add more nodes.
      */
     Iterator<? extends Statement> iterateLazyNodes() {
       return super.iterator();
@@ -207,6 +259,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         Assertions._assert(!N.getKind().equals(Kind.EXC_RET_CALLEE));
         Assertions._assert(!N.getKind().equals(Kind.EXC_RET_CALLER));
       }
+      addPDGStatementNodes(N.getNode());
       switch (N.getKind()) {
       case NORMAL:
       case PHI:
@@ -224,7 +277,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         Collection<Statement> result = Iterator2Collection.toCollection(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
-          for (CGNode t : cg.getPossibleTargets(N.getNode(),call.getCallSite())) {
+          for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
             Statement s = new ParamStatement.ExceptionalReturnCallee(t);
             addNode(s);
             result.add(s);
@@ -267,6 +320,12 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         int parameterIndex = pac.getValueNumber() - 1;
         Collection<Statement> result = HashSetFactory.make(5);
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
+          
+          if (dOptions.isTerminateAtCast() && !pac.getNode().getMethod().isStatic() && pac.getValueNumber() == 1) {
+            // a virtual dispatch is just like a cast.  No flow.
+            return EmptyIterator.instance();
+          }
+          
           // data dependence predecessors
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
             CGNode caller = it.next();
@@ -349,6 +408,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     }
 
     public Iterator<? extends Statement> getSuccNodes(Statement N) {
+      addPDGStatementNodes(N.getNode());
       switch (N.getKind()) {
       case NORMAL:
         if (cOptions.equals(ControlDependenceOptions.NONE)) {
@@ -451,6 +511,10 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           // data dependence successors
           for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
             for (int i = 0; i < t.getMethod().getNumberOfParameters(); i++) {
+              if (dOptions.isTerminateAtCast() && call.isDispatch() && pac.getValueNumber() == call.getReceiver()) {
+                // a virtual dispatch is just like a cast.
+                continue;
+              }
               if (call.getUse(i) == pac.getValueNumber()) {
                 Statement s = new ParamStatement.ParamCallee(t, i + 1);
                 addNode(s);
@@ -483,6 +547,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     }
 
     public boolean hasEdge(Statement src, Statement dst) {
+      addPDGStatementNodes(src.getNode());
+      addPDGStatementNodes(dst.getNode());
       switch (src.getKind()) {
       case NORMAL:
         if (cOptions.equals(ControlDependenceOptions.NONE)) {
@@ -630,11 +696,12 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   public PDG getPDG(CGNode node) {
     PDG result = pdgMap.get(node);
     if (result == null) {
-	result = new PDG(node, pa, mod, ref, dOptions, cOptions, heapExclude, cg, modRef);
+      result = new PDG(node, pa, mod, ref, dOptions, cOptions, heapExclude, cg, modRef);
       pdgMap.put(node, result);
-      for (Iterator<? extends Statement> it = result.iterator(); it.hasNext();) {
-        nodeMgr.addNode(it.next());
-      }
+      // Let's not eagerly add nodes, shall we?
+      // for (Iterator<? extends Statement> it = result.iterator(); it.hasNext();) {
+      // nodeMgr.addNode(it.next());
+      // }
     }
     return result;
   }
