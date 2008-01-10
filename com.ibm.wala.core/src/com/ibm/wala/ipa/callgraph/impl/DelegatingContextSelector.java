@@ -61,13 +61,6 @@ public class DelegatingContextSelector implements ContextSelector {
     return C;
   }
 
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
-    if (A.mayUnderstand(caller,site,targetMethod,null)) {
-      return A.getBoundOnNumberOfTargets(caller,site,targetMethod);
-    } else {
-      return B.getBoundOnNumberOfTargets(caller,site,targetMethod);
-    }
-  }
 
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
     if (A != null) {

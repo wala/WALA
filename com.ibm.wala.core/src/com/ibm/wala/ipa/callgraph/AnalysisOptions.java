@@ -21,17 +21,6 @@ import com.ibm.wala.ssa.SSAOptions;
 public class AnalysisOptions {
 
   /**
-   * Strategies for terminating a dispatch operator
-   */
-  public final static byte NO_DISPATCH_BOUND = 0;
-
-  public final static byte SIMPLE_DISPATCH_BOUND = 1;
-
-  public final static byte CHA_DISPATCH_BOUND = 2;
-
-  public final static byte UNSPECIFIED = 3;
-
-  /**
    * An object that represents the analysis scope
    */
   private AnalysisScope analysisScope;
@@ -74,11 +63,6 @@ public class AnalysisOptions {
    * of a bad ordering, even when few new equations are being added.
    */
   private int maxEvalBetweenTopo = 1000000000;
-
-  /**
-   * A choice affecting the dispatch bound heuristic for propagation builders
-   */
-  private byte dispatchBoundHeuristic = CHA_DISPATCH_BOUND;
 
   /**
    * Should pointer analysis retain information to support iterative refinement?
@@ -266,23 +250,6 @@ public class AnalysisOptions {
    */
   public void setTopologicalGrowthFactor(double d) {
     topologicalGrowthFactor = d;
-  }
-
-  /**
-   * @return one of NO_DISPATCH_BOUND, SIMPLE_DISPATCH_BOUND,
-   *         CHA_DISPATCH_BOUND, UNSPECIFIED
-   */
-  public byte getDispatchBoundHeuristic() {
-    return dispatchBoundHeuristic;
-  }
-
-  /**
-   * @param b
-   *          one of NO_DISPATCH_BOUND, SIMPLE_DISPATCH_BOUND,
-   *          CHA_DISPATCH_BOUND, UNSPECIFIED
-   */
-  public void setDispatchBoundHeuristic(byte b) {
-    dispatchBoundHeuristic = b;
   }
 
   /**

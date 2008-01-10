@@ -50,11 +50,7 @@ public class OneLevelSiteContextSelector implements ContextSelector {
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
     return baseSelector.mayUnderstand(caller, site, targetMethod, instance);
   }
-
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
-    return baseSelector.getBoundOnNumberOfTargets(caller, site, targetMethod);
-  }
-
+  
   /*
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.CallSiteReference)

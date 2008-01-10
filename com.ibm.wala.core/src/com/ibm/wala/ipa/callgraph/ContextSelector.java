@@ -33,12 +33,6 @@ public interface ContextSelector {
   Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver);
 
   /**
-   * @return a bound on the number of contexts that might be created for this
-   *         target. -1 if no bound is known.
-   */
-  int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod);
-
-  /**
    * @param instance
    *          the instance dispatched on. null means "any possible instance"
    * @return true iff this object may understand how to select a context for the

@@ -31,14 +31,10 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
 
-  private final int instancePolicy;
-
   public ZeroXCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ContextSelector appContextSelector,
       SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect, int instancePolicy) {
 
     super(cha, options, cache, new DefaultPointerKeyFactory());
-
-    this.instancePolicy = instancePolicy;
 
     ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
@@ -105,16 +101,4 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
     return new ZeroXCFABuilder(cha, options, cache, appContextSelector, appContextInterpreter, reflect, instancePolicy);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#getDefaultDispatchBoundHeuristic()
-   */
-  @Override
-  protected byte getDefaultDispatchBoundHeuristic() {
-    switch (instancePolicy) {
-    case ZeroXInstanceKeys.ALLOCATIONS:
-      return AnalysisOptions.CHA_DISPATCH_BOUND;
-    default:
-      return AnalysisOptions.NO_DISPATCH_BOUND;
-    }
-  }
 }

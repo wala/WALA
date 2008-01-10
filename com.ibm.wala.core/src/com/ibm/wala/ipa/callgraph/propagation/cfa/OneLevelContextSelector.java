@@ -51,9 +51,6 @@ public class OneLevelContextSelector implements ContextSelector {
     return baseSelector.mayUnderstand(caller, site, targetMethod, instance);
   }
 
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
-    return baseSelector.getBoundOnNumberOfTargets(caller, site, targetMethod);
-  }
 
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
     return baseSelector.contextIsIrrelevant(node, site);

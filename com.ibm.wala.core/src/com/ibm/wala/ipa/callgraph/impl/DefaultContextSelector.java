@@ -46,10 +46,6 @@ public class DefaultContextSelector implements ContextSelector {
     return delegate.getCalleeTarget(caller, site, callee, receiver);
   }
 
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
-    return delegate.getBoundOnNumberOfTargets(caller, site, targetMethod);
-  }
-
   /*
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.classLoader.CallSiteReference)
    */

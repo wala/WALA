@@ -243,11 +243,4 @@ public class BasicRTABuilder extends AbstractRTABuilder {
     return new DispatchOperator(site, (ExplicitNode)node);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#getDefaultDispatchBoundHeuristic()
-   */
-  @Override
-  protected byte getDefaultDispatchBoundHeuristic() {
-    return AnalysisOptions.NO_DISPATCH_BOUND;
-  }
 }

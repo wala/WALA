@@ -192,10 +192,6 @@ public abstract class CallStringContextSelector implements ContextSelector {
     return base.mayUnderstand(caller, site, targetMethod, instance);
   }
 
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod targetMethod) {
-    return base.getBoundOnNumberOfTargets(caller, site, targetMethod);
-  }
-
   public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
     return false;
   }

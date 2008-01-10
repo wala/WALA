@@ -32,10 +32,11 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 public class OneCFABuilder extends SSAPropagationCallGraphBuilder {
 
   public static OneCFABuilder make(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) throws IllegalArgumentException {
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect)
+      throws IllegalArgumentException {
     if (options == null) {
-          throw new IllegalArgumentException("options == null");
-        }
+      throw new IllegalArgumentException("options == null");
+    }
     return new OneCFABuilder(cha, options, cache, appContextSelector, appContextInterpreter, reflect);
   }
 
@@ -57,11 +58,4 @@ public class OneCFABuilder extends SSAPropagationCallGraphBuilder {
     setContextInterpreter(contextInterpreter);
   }
 
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#getDefaultDispatchBoundHeuristic()
-   */
-  @Override
-  protected byte getDefaultDispatchBoundHeuristic() {
-    return AnalysisOptions.CHA_DISPATCH_BOUND;
-  }
 }
