@@ -185,7 +185,14 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    return getTypesForContext(node.getContext()) != null;
+    if (node.getMethod().isSynthetic()) {
+      SyntheticMethod s = (SyntheticMethod) node.getMethod();
+      if (s.isFactoryMethod()) {
+        return getTypesForContext(node.getContext()) != null;
+      }
+    }
+    return false;
+    
   }
 
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
