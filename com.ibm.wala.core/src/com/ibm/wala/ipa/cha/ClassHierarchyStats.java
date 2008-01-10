@@ -24,7 +24,7 @@ public class ClassHierarchyStats {
    * Dump stats about the class hierarchy to stdout.
    * @param cha
    */
-  public static void printStats(ClassHierarchy cha) throws IllegalArgumentException {
+  public static void printStats(IClassHierarchy cha) throws IllegalArgumentException {
     if (cha == null) {
       throw new IllegalArgumentException("cha cannot be null");
     }
