@@ -37,7 +37,9 @@ public class PointsToMap {
   private final MutableMapping<PointerKey> pointerKeys = MutableMapping.make();
 
   /**
-   * pointsToSets[i] can be
+   * pointsToSets[i] says something about the representation of the points-to set
+   * for the ith {@link PointerKey}, as determined by the pointerKeys mapping.
+   * pointsToSets[i] can be one of the following:
    * <ul>
    * <li> a PointsToSetVariable
    * <li> IMPLICIT
@@ -71,7 +73,7 @@ public class PointsToMap {
   /**
    * Numbers of pointer keys (non locals) that are roots of transitive closure.
    * A "root" is a points-to-set whose contents do not result from flow from
-   * other points-to-sets; there points-to-sets are the primordial assignments
+   * other points-to-sets; these points-to-sets are the primordial assignments
    * from which the transitive closure flows.
    */
   private final BitVector transitiveRoots = new BitVector();
@@ -84,15 +86,12 @@ public class PointsToMap {
   }
 
   /**
-   * If key is unified, returns the representative for p.
-   * 
-   * @param p
-   * @return get(p)
+   * If p is unified, returns the representative for p.
    */
   public PointsToSetVariable getPointsToSet(PointerKey p) {
     if (Assertions.verifyAssertions) {
       if (isImplicit(p)) {
-        Assertions.UNREACHABLE("unexpected implicit " + p);
+        Assertions.UNREACHABLE("unexpected: shouldn't ask a PointsToMap for an implicit points-to-set: " + p);
       }
     }
     int i = pointerKeys.getMappedIndex(p);

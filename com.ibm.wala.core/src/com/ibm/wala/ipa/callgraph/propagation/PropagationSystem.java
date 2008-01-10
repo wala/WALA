@@ -246,12 +246,21 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   public void recordImplicitPointsToSet(PointerKey key) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(key != null);
+      if (key instanceof LocalPointerKey) {
+        LocalPointerKey lpk = (LocalPointerKey)key;
+        if (lpk.isParameter()) {
+          System.err.println(lpk);
+          System.err.println("Constant? " + lpk.getNode().getIR().getSymbolTable().isConstant(lpk.getValueNumber()));
+          System.err.println(lpk.getNode().getIR());
+          Assertions.UNREACHABLE("How can parameter be implicit?");
+        }
+      }
     }
     pointsToMap.recordImplicit(key);
   }
 
   /**
-   * If key is unifed, returns the representative
+   * If key is unified, returns the representative
    * 
    * @param key
    * @return the dataflow variable that tracks the points-to set for key
@@ -260,6 +269,11 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
     if (Assertions.verifyAssertions) {
       Assertions._assert(key != null);
+      if (pointsToMap.isImplicit(key)) {
+        System.err.println("Did not expect to findOrCreatePointsToSet for implicitly represented PointerKey");
+        System.err.println(key);
+        Assertions.UNREACHABLE();
+      }
     }
     PointsToSetVariable result = pointsToMap.getPointsToSet(key);
     if (result == null) {
