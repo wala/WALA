@@ -71,12 +71,4 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
     return new AstJavaZeroXCFABuilder(cha, options, cache, null, null, options.getReflectionSpec(), instancePolicy);
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.domo.ipa.callgraph.propagation.PropagationCallGraphBuilder#getDefaultDispatchBoundHeuristic()
-   */
-  protected byte getDefaultDispatchBoundHeuristic() {
-    return AnalysisOptions.NO_DISPATCH_BOUND;
-  }
 }

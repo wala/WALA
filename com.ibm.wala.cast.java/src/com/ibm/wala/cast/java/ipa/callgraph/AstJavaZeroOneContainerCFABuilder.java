@@ -87,12 +87,4 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
     return new ContainerContextSelector(cha,keys );
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder#getDefaultDispatchBoundHeuristic()
-   */
-  protected byte getDefaultDispatchBoundHeuristic() {
-    return AnalysisOptions.CHA_DISPATCH_BOUND;
-  }
 }
