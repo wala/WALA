@@ -272,9 +272,25 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     this.refinementPolicyFactory = new SinglePassRefinementPolicy.Factory(new NeverRefineFieldsPolicy(), new NeverRefineCGPolicy());
   }
 
+  /**
+   * Possible results of a query.
+   * 
+   * @see DemandRefinementPointsTo#getPointsTo(PointerKey, Predicate)
+   * @author manu
+   *
+   */
   public static enum PointsToResult {
+    /**
+     * The points-to set result satisfies the supplied {@link Predicate}
+     */
     SUCCESS,
+    /**
+     * The {@link RefinementPolicy} indicated that no more refinement was possible
+     */
     NOMOREREFINE,
+    /**
+     * The budget specified in the {@link RefinementPolicy} was exceeded
+     */
     BUDGETEXCEEDED
   };
 
