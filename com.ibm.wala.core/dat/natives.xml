@@ -454,14 +454,12 @@
 		</package>
 		<package name="java/lang/reflect">
 			<class name="Array">
-				<method name="get"
-					descriptor="(Ljava/lang/Object;I)Ljava/lang/Object;" static="true"
-					factory="true">
-					<new def="x" class="Lcom/ibm/wala/Malleable" />
+				<method name="get" descriptor="(Ljava/lang/Object;I)Ljava/lang/Object;" static="true">
+					<call type="static" name="get"
+						class="Lcom/ibm/wala/model/java/lang/reflect/Array"
+						descriptor="(Ljava/lang/Object;I)Ljava/lang/Object;" arg0="arg0"
+						arg1="arg1" def="x"/>
 					<return value="x" />
-					<poison
-						reason="bogus model of java/lang/reflect/Array/get"
-						level="severe" />
 				</method>
 				<method name="getByte"
 					descriptor="(Ljava/lang/Object;I)B" static="true">
