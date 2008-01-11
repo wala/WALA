@@ -473,6 +473,7 @@
 					<new def="x" class="Lcom/ibm/wala/Malleable" />
 					<return value="x" />
 				</method>
+				<!-- THIS KIND OF TREATMENT OF ARRAYS IS BOGUS and TOO IMPRECISE.  TODO: FIX THIS.
 				<method name="newArray"
 					descriptor="(Ljava/lang/Class;I)Ljava/lang/Object;" static="true"
 					factory="true">
@@ -485,6 +486,7 @@
 					<new def="x" class="Lcom/ibm/wala/Malleable" />
 					<return value="x" />
 				</method>
+				-->
 				<method name="set"
 					descriptor="(Ljava/lang/Object;ILjava/lang/Object;)V"
 					static="true">
