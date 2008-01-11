@@ -37,9 +37,8 @@ import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.GVUtil;
 
 /**
- * 
  * This simple example WALA application builds a call graph and fires off
- * ghostview to viz a DOT representation.
+ * ghostview to visualize a DOT representation.
  * 
  * @author sfink
  */
@@ -101,7 +100,6 @@ public class GVCallGraph {
       return GVUtil.launchGV(psFile, gvExe);
 
     } catch (WalaException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       return null;
     }
@@ -157,23 +155,16 @@ public class GVCallGraph {
   }
 
   /**
-   * @author sfink
+   * A filter that accepts WALA objects that "belong" to the application loader.
    * 
-   * A filter that accepts domo objects that "belong" to the application loader.
-   * 
-   * Currently supported DOMO types include
+   * Currently supported WALA types include
    * <ul>
-   * <li> CGNode
-   * <li> LocalPointerKey
+   * <li> {@link CGNode}
+   * <li> {@link LocalPointerKey}
    * </ul>
    */
   private static class ApplicationLoaderFilter implements Filter<CGNode> {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.ibm.capa.util.collections.Filter#accepts(java.lang.Object)
-     */
     public boolean accepts(CGNode o) {
       if (o instanceof CGNode) {
         CGNode n = (CGNode) o;
@@ -185,6 +176,5 @@ public class GVCallGraph {
         return false;
       }
     }
-
   }
 }

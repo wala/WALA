@@ -35,24 +35,13 @@ public class CallGraphTestUtil {
 
   private static final ClassLoader MY_CLASSLOADER = CallGraphTestUtil.class.getClassLoader();
 
-  // private static final String reflectionFile = Config.SPECJVM_REFLECTION;
 
   public static AnalysisOptions makeAnalysisOptions(AnalysisScope scope, Iterable<Entrypoint> entrypoints) {
     AnalysisOptions options = new AnalysisOptions(scope, entrypoints);
-
-    // InputStream rStream =
-    // CallGraphTestUtil.class.getClassLoader().getResourceAsStream(reflectionFile);
-    // ReflectionSpecification R = new XMLReflectionReader(rStream, scope);
-    // options.setReflectionSpec(R);
     return options;
   }
 
   public static String REGRESSION_EXCLUSIONS = "Java60RegressionExclusions.txt";
-
-  // public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile) {
-  // return AnalysisScopeReader.read(scopeFile,
-  // "J2SEClassHierarchyExclusions.txt", MY_CLASSLOADER);
-  // }
 
   public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile, String exclusionsFile) throws IOException {
     AnalysisScope scope = AnalysisScopeReader.read(scopeFile, FileProvider.getFile(exclusionsFile), MY_CLASSLOADER);
