@@ -15,20 +15,32 @@ import java.util.Iterator;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
+import com.ibm.wala.ipa.slicer.thin.CISDG;
 import com.ibm.wala.util.graph.NumberedGraph;
 
 /**
- * interface for an SDG
+ * Interface for an SDG (loosely defined here as a graph of {@link Statement}s. There can be funny dependence graph
+ * variants that we call {@link ISDG}s, such as the {@link CISDG} described in the Thin Slicing paper.
+ * 
+ * This interface implies that the underlying graph is computed lazily on demand.
  * 
  * @author sjfink
- *
  */
 public interface ISDG extends NumberedGraph<Statement>, IClassHierarchyDweller {
 
+  /**
+   * {@link ControlDependenceOptions} used to construct this graph.
+   */
   ControlDependenceOptions getCOptions();
 
+  /**
+   * Get the program dependence graph constructed for a particular node.
+   */
   PDG getPDG(CGNode node);
 
+  /**
+   * Iterate over the nodes which have been discovered so far, but do <em>NOT</em> eagerly construct the entire graph.
+   */
   Iterator<? extends Statement> iterateLazyNodes();
 
 }
