@@ -114,6 +114,11 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
 
   private final ModRef modRef;
 
+  /**
+   * Have we eagerly populated all nodes of this SDG?
+   */
+  private boolean eagerComputed = false;
+
   public SDG(final CallGraph cg, PointerAnalysis pa, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) {
     this(cg, pa, ModRef.make(), dOptions, cOptions, null);
   }
@@ -155,10 +160,13 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
    * force eager construction of the entire SDG
    */
   private void eagerConstruction() {
-//    Assertions.UNREACHABLE();
-    computeAllPDGs();
-    for (PDG pdg : pdgMap.values()) {
-      addPDGStatementNodes(pdg.getCallGraphNode());
+    // Assertions.UNREACHABLE();
+    if (!eagerComputed) {
+      eagerComputed = true;
+      computeAllPDGs();
+      for (PDG pdg : pdgMap.values()) {
+        addPDGStatementNodes(pdg.getCallGraphNode());
+      }
     }
   }
 
@@ -194,20 +202,22 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
 
     @Override
     public boolean containsNode(Statement N) {
-      Assertions.UNREACHABLE();
+      // this may be bad. Are you sure you want to call this?
+      eagerConstruction();
       return super.containsNode(N);
     }
 
     @Override
     public int getMaxNumber() {
-      // this may be bad.  Are you sure you want to call this?
+      // this may be bad. Are you sure you want to call this?
       eagerConstruction();
       return super.getMaxNumber();
     }
 
     @Override
     public Statement getNode(int number) {
-      Assertions.UNREACHABLE();
+      // this may be bad. Are you sure you want to call this?
+      eagerConstruction();
       return super.getNode(number);
     }
 
@@ -321,12 +331,12 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         int parameterIndex = pac.getValueNumber() - 1;
         Collection<Statement> result = HashSetFactory.make(5);
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
-          
+
           if (dOptions.isTerminateAtCast() && !pac.getNode().getMethod().isStatic() && pac.getValueNumber() == 1) {
-            // a virtual dispatch is just like a cast.  No flow.
+            // a virtual dispatch is just like a cast. No flow.
             return EmptyIterator.instance();
           }
-          
+
           // data dependence predecessors
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
             CGNode caller = it.next();
