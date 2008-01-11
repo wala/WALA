@@ -130,7 +130,7 @@ public class GVCallGraph {
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, new AnalysisCache(), cha, scope);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options);
     
     System.err.println(CallGraphStats.getStats(cg));
