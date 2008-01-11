@@ -28,19 +28,17 @@ public class AstJavaSlicer extends Slicer {
   /*
    * Use the passed-in SDG
    */
-  public static Collection<Statement> computeBackwardSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
-    return computeSlice(sdg, ss, cg, pa, dOptions, cOptions, true);
+  public static Collection<Statement> computeBackwardSlice(SDG sdg, Collection<Statement> ss) throws IllegalArgumentException,
+      CancelException {
+    return computeSlice(sdg, ss, true);
   }
 
   /**
-   * @param ss
-   *            a collection of statements of interest
+   * @param ss a collection of statements of interest
    * @throws CancelException
    */
-  public static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, CallGraph cg, PointerAnalysis pa,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions, boolean backward) throws CancelException {
-    return new AstJavaSlicer().computeSlice(sdg, ss, cg, pa, new AstJavaModRef(), dOptions, cOptions, backward);
+  public static Collection<Statement> computeSlice(SDG sdg, Collection<Statement> ss, boolean backward) throws CancelException {
+    return new AstJavaSlicer().slice(sdg, ss, backward);
   }
 
   public static Set<Statement> gatherAssertions(CallGraph CG, Collection<CGNode> partialRoots) {
@@ -59,12 +57,12 @@ public class AstJavaSlicer extends Slicer {
     return result;
   }
 
-  public static Pair<Collection<Statement>, SDG> computeAssertionSlice(CallGraph CG, PointerAnalysis pa, Collection<CGNode> partialRoots) throws IllegalArgumentException, CancelException {
+  public static Pair<Collection<Statement>, SDG> computeAssertionSlice(CallGraph CG, PointerAnalysis pa,
+      Collection<CGNode> partialRoots) throws IllegalArgumentException, CancelException {
     CallGraph pcg = PartialCallGraph.make(CG, new LinkedHashSet<CGNode>(partialRoots));
     SDG sdg = new SDG(pcg, pa, new AstJavaModRef(), DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
     Trace.println("SDG:\n" + sdg);
-    return Pair.make(AstJavaSlicer.computeBackwardSlice(sdg, gatherAssertions(CG, partialRoots), pcg, pa,
-        DataDependenceOptions.FULL, ControlDependenceOptions.FULL), sdg);
+    return Pair.make(AstJavaSlicer.computeBackwardSlice(sdg, gatherAssertions(CG, partialRoots)), sdg);
   }
 
 }
