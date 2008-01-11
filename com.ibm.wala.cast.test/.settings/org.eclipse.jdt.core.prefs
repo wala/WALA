@@ -1,4 +1,4 @@
-#Thu Jan 10 11:22:25 EST 2008
+#Fri Jan 11 11:47:22 EST 2008
 eclipse.preferences.version=1
 instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
@@ -112,10 +112,10 @@ org.eclipse.jdt.core.formatter.comment.format_html=true
 org.eclipse.jdt.core.formatter.comment.format_javadoc_comments=true
 org.eclipse.jdt.core.formatter.comment.format_line_comments=true
 org.eclipse.jdt.core.formatter.comment.format_source_code=true
-org.eclipse.jdt.core.formatter.comment.indent_parameter_description=true
+org.eclipse.jdt.core.formatter.comment.indent_parameter_description=false
 org.eclipse.jdt.core.formatter.comment.indent_root_tags=true
 org.eclipse.jdt.core.formatter.comment.insert_new_line_before_root_tags=do not insert
-org.eclipse.jdt.core.formatter.comment.insert_new_line_for_parameter=insert
+org.eclipse.jdt.core.formatter.comment.insert_new_line_for_parameter=do not insert
 org.eclipse.jdt.core.formatter.comment.line_length=120
 org.eclipse.jdt.core.formatter.compact_else_if=true
 org.eclipse.jdt.core.formatter.continuation_indentation=2
