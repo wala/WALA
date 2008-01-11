@@ -1032,8 +1032,8 @@ public class PDG implements NumberedGraph<Statement> {
     case NORMAL:
       NormalStatement st = (NormalStatement) N;
       if (!(IGNORE_ALLOC_HEAP_DEFS && st.getInstruction() instanceof SSANewInstruction)) {
-        Collection<PointerKey> ref = modRef.getMod(node, heapModel, pa, st.getInstruction(), exclusions);
-        for (PointerKey pk : ref) {
+        Collection<PointerKey> mod = modRef.getMod(node, heapModel, pa, st.getInstruction(), exclusions);
+        for (PointerKey pk : mod) {
           createHeapDataDependenceEdges(pk);
         }
       }
