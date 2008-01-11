@@ -155,6 +155,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
    * force eager construction of the entire SDG
    */
   private void eagerConstruction() {
+//    Assertions.UNREACHABLE();
     computeAllPDGs();
     for (PDG pdg : pdgMap.values()) {
       addPDGStatementNodes(pdg.getCallGraphNode());
@@ -199,7 +200,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
 
     @Override
     public int getMaxNumber() {
-      // this may be bad.  TODO
+      // this may be bad.  Are you sure you want to call this?
       eagerConstruction();
       return super.getMaxNumber();
     }
