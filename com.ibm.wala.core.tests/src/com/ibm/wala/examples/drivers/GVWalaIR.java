@@ -11,12 +11,14 @@
 package com.ibm.wala.examples.drivers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileProvider;
 
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
@@ -48,8 +50,9 @@ public class GVWalaIR {
    * signature should be something like "java_cup.lexer.advance()V"
    * 
    * @param args
+   * @throws IOException 
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     run(args);
   }
 
@@ -59,8 +62,9 @@ public class GVWalaIR {
    *            name" should be something like "c:/temp/testdata/java_cup.jar"
    *            The signature should be something like
    *            "java_cup.lexer.advance()V"
+   * @throws IOException 
    */
-  public static Process run(String[] args) {
+  public static Process run(String[] args) throws IOException {
     validateCommandLine(args);
     return run(args[1], args[3]);
   }
@@ -70,13 +74,14 @@ public class GVWalaIR {
    *            should be something like "c:/temp/testdata/java_cup.jar"
    * @param methodSig
    *            should be something like "java_cup.lexer.advance()V"
+   * @throws IOException 
    */
-  public static Process run(String appJar, String methodSig) {
+  public static Process run(String appJar, String methodSig) throws IOException {
     try {
       if (SWTCallGraph.isDirectory(appJar)) {
         appJar = SWTCallGraph.findJarFiles(new String[] { appJar });
       }
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       ClassHierarchy cha = ClassHierarchy.make(scope);
 

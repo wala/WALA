@@ -11,6 +11,7 @@
 package com.ibm.wala.examples.drivers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
@@ -21,6 +22,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
@@ -29,6 +31,7 @@ import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.io.CommandLine;
@@ -69,7 +72,7 @@ public class GVCallGraph {
   public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
-    return run(p.getProperty("appJar"), p.getProperty("exclusionFile"));
+    return run(p.getProperty("appJar"), p.getProperty("exclusionFile", CallGraphTestUtil.REGRESSION_EXCLUSIONS));
   }
 
   /**
@@ -80,8 +83,7 @@ public class GVCallGraph {
    */
   public static Process run(String appJar, String exclusionFile) throws IllegalArgumentException, CancelException {
     try {
-
-      Graph<CGNode> g = buildPrunedCallGraph(appJar, new File(exclusionFile));
+      Graph<CGNode> g = buildPrunedCallGraph(appJar, FileProvider.getFile(exclusionFile));
 
       Properties p = null;
       try {
@@ -100,6 +102,9 @@ public class GVCallGraph {
       return GVUtil.launchGV(psFile, gvExe);
 
     } catch (WalaException e) {
+      e.printStackTrace();
+      return null;
+    } catch (IOException e) {
       e.printStackTrace();
       return null;
     }
@@ -125,11 +130,13 @@ public class GVCallGraph {
     // //
     // build the call graph
     // //
-    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope, null,
-        null);
+    com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, new AnalysisCache(), cha, scope);
     CallGraph cg = builder.makeCallGraph(options);
+    
+    System.err.println(CallGraphStats.getStats(cg));
 
     Graph<CGNode> g = pruneForAppLoader(cg);
+    
     return g;
   }
 

@@ -11,6 +11,7 @@
 package com.ibm.wala.examples.drivers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
 
@@ -18,6 +19,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileProvider;
 
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -57,18 +59,15 @@ public class GVTypeHierarchy {
 
   }
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
     run(args);
   }
 
-  public static Process run(String[] args) {
+  public static Process run(String[] args) throws IOException {
     try {
       SWTTypeHierarchy.validateCommandLine(args);
       String classpath = args[SWTTypeHierarchy.CLASSPATH_INDEX];
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
-
-      // generate a WALA-consumable wrapper around the incoming scope object
-      
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // invoke WALA to build a class hierarchy
       ClassHierarchy cha = ClassHierarchy.make(scope);
