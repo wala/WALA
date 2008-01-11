@@ -340,6 +340,9 @@ public class ModRef {
     return new ModVisitor(n, result, h, pa);
   }
 
+  /**
+   * Compute the set of {@link PointerKey}s that represent pointers that instruction s may write to.
+   */
   public Collection<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
@@ -355,7 +358,7 @@ public class ModRef {
   }
 
   /**
-   * compute the set of pointerKeys that instruction s uses
+   * Compute the set of {@link PointerKey}s that represent pointers that instruction s may read.
    */
   public Collection<PointerKey> getRef(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl) {
     if (s == null) {
