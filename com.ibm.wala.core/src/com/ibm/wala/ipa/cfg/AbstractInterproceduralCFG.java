@@ -91,7 +91,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    */
   @SuppressWarnings("unchecked")
   public AbstractInterproceduralCFG(CallGraph CG) {
-    this(CG, IndiscriminateFilter.singleton());
+    this(CG, IndiscriminateFilter.<CGNode>singleton());
   }
 
   /**

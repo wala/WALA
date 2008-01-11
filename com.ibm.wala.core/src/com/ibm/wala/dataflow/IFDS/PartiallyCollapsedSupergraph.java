@@ -107,7 +107,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    */
   @SuppressWarnings("unchecked")
   public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse) {
-    this(cg, noCollapse, IndiscriminateFilter.singleton());
+    this(cg, noCollapse, IndiscriminateFilter.<CGNode>singleton());
   }
 
   /**

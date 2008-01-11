@@ -21,7 +21,7 @@ import com.ibm.wala.util.collections.Filter;
  */
 public class IndiscriminateFilter<T> implements Filter<T> {
 
-  public static <T> IndiscriminateFilter singleton() {
+  public static <T> IndiscriminateFilter<T> singleton() {
     return new IndiscriminateFilter<T>();
   }
 
