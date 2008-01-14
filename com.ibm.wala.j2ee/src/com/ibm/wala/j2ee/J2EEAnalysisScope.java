@@ -13,7 +13,6 @@ package com.ibm.wala.j2ee;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.jar.JarFile;
 
 import org.eclipse.emf.ecore.resource.Resource;
@@ -33,7 +32,6 @@ import com.ibm.wala.util.config.FileProvider;
  * 
  * @author sfink
  */
-@SuppressWarnings("unchecked")
 public class J2EEAnalysisScope extends AnalysisScope {
 
   private final static String BASIC_FILE = "SyntheticContainerModel.xml";
@@ -160,9 +158,8 @@ public class J2EEAnalysisScope extends AnalysisScope {
       throw new IllegalArgumentException("scope is null");
     }
     ClassLoaderReference app = scope.getApplicationLoader();
-    for (Iterator it = scope.getModules(app).iterator(); it.hasNext();) {
-      Module M = (Module) it.next();
-      addToScope(getApplicationLoader(), M);
+    for (Module m :scope.getModules(app)) {
+      addToScope(getApplicationLoader(), m);
     }
   }
 }
