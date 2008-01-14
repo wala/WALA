@@ -708,7 +708,7 @@ public class PDG implements NumberedGraph<Statement> {
     return ssaInstruction2Statement(node, s, instructionIndices);
   }
 
-  public static Statement ssaInstruction2Statement(CGNode node, SSAInstruction s, Map<SSAInstruction, Integer> instructionIndices) {
+  public static synchronized Statement ssaInstruction2Statement(CGNode node, SSAInstruction s, Map<SSAInstruction, Integer> instructionIndices) {
     assert s != null;
     if (s instanceof SSAPhiInstruction) {
       SSAPhiInstruction phi = (SSAPhiInstruction) s;
