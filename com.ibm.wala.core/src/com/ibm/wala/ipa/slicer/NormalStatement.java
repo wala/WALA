@@ -56,7 +56,7 @@ public class NormalStatement extends Statement {
 
   @Override
   public String toString() {
-    return "NORMAL " + getNode().getMethod().getSignature() + ":" +  getInstruction().toString();
+    return "NORMAL " + getNode().getMethod().getName() + ":" +  getInstruction().toString() + " " + getNode();
   }
   
   public SSAInstruction getInstruction() {
