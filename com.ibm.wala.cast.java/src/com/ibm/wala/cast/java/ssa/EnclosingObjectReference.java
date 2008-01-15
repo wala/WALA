@@ -5,7 +5,6 @@ import java.util.Collections;
 
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -55,8 +54,8 @@ public class EnclosingObjectReference extends SSAInstruction {
     return new EnclosingObjectReference(defs==null? lval: defs[0], type);
   }
 
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, lval) + " = enclosing " + type.getName(); 
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, lval) + " = enclosing " + type.getName(); 
   }
 
   public void visit(IVisitor v) {
