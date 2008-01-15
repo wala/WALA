@@ -17,14 +17,25 @@ import com.ibm.wala.util.Exceptions;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author sfink
+ * An instruction representing a monitorenter or monitorexit operation.
  * 
+ * @author sfink
  */
 public class SSAMonitorInstruction extends SSAInstruction {
+  /**
+   * The value number of the object being locked or unlocked
+   */
   private final int ref;
 
+  /**
+   * Does this instruction represent a monitorenter?
+   */
   private final boolean isEnter;
 
+  /**
+   * @param ref The value number of the object being locked or unlocked
+   * @param isEnter Does this instruction represent a monitorenter?
+   */
   SSAMonitorInstruction(int ref, boolean isEnter) {
     super();
     this.ref = ref;
@@ -74,7 +85,7 @@ public class SSAMonitorInstruction extends SSAInstruction {
 
   @Override
   public int hashCode() {
-    return ref * 6173 ^ 4423;
+    return ref * 6173 + 4423;
   }
 
   /*
@@ -102,12 +113,15 @@ public class SSAMonitorInstruction extends SSAInstruction {
   }
 
   /**
-   * @return Returns the ref.
+   * @return The value number of the object being locked or unlocked
    */
   public int getRef() {
     return ref;
   }
 
+  /**
+   * Does this instruction represent a monitorenter?
+   */
   public boolean isMonitorEnter() {
     return isEnter;
   }
