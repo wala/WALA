@@ -49,8 +49,8 @@ public class SSAMonitorInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return "monitor " + getValueString(symbolTable, d, ref);
+  public String toString(SymbolTable symbolTable) {
+    return "monitor " + getValueString(symbolTable, ref);
   }
 
   /**

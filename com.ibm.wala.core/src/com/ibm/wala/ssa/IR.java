@@ -13,6 +13,7 @@ package com.ibm.wala.ssa;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -82,23 +83,20 @@ public abstract class IR {
   private Map<SSAInstruction, ISSABasicBlock> instruction2Block;
 
   /**
-   * subclasses must provide a source name mapping, if they want one (or null
-   * otherwise)
+   * subclasses must provide a source name mapping, if they want one (or null otherwise)
    */
   protected abstract SSA2LocalMap getLocalMap();
 
   /**
    * Create an SSA form from a method created by the AstTranslator front end
    * 
-   * This entrypoint is used by the JavaScript -> WALA conversion. It performs
-   * traditional SSA conversion, introducing phi nodes, etc.
+   * This entrypoint is used by the JavaScript -> WALA conversion. It performs traditional SSA conversion, introducing
+   * phi nodes, etc.
    * 
    * keep this package private: all calls should be through SSACache
    * 
-   * @param method
-   *            the method to construct SSA form for
-   * @param options
-   *            governing ssa construction options
+   * @param method the method to construct SSA form for
+   * @param options governing ssa construction options
    */
   protected IR(IMethod method, SSAInstruction[] instructions, SymbolTable symbolTable, SSACFG cfg, SSAOptions options) {
     if (method == null) {
@@ -131,21 +129,10 @@ public abstract class IR {
     }
   }
 
-  @Override
-  public String toString() {
-    return toString(null);
-  }
-
   protected abstract String instructionPosition(int instructionIndex);
 
-  /**
-   * Create a string representation, with decoration for each variable
-   * 
-   * @param d
-   *            an object which provides string decorators for variables in the
-   *            IR
-   */
-  public String toString(ValueDecorator d) {
+  @Override
+  public String toString() {
     StringBuffer result = new StringBuffer(method.toString());
     result.append("\nCFG:\n");
     result.append(cfg.toString());
@@ -162,21 +149,21 @@ public abstract class IR {
       for (Iterator it = bb.iteratePhis(); it.hasNext();) {
         SSAPhiInstruction phi = (SSAPhiInstruction) it.next();
         if (phi != null) {
-          result.append("           " + phi.toString(symbolTable, d)).append("\n");
+          result.append("           " + phi.toString(symbolTable)).append("\n");
         }
       }
       if (bb instanceof ExceptionHandlerBasicBlock) {
         ExceptionHandlerBasicBlock ebb = (ExceptionHandlerBasicBlock) bb;
         SSAGetCaughtExceptionInstruction s = ebb.getCatchInstruction();
         if (s != null) {
-          result.append("           " + s.toString(symbolTable, d)).append("\n");
+          result.append("           " + s.toString(symbolTable)).append("\n");
         } else {
           result.append("           " + " No catch instruction. Unreachable?\n");
         }
       }
       for (int j = start; j <= end; j++) {
         if (instructions[j] != null) {
-          StringBuffer x = new StringBuffer(j + "   " + instructions[j].toString(symbolTable, d));
+          StringBuffer x = new StringBuffer(j + "   " + instructions[j].toString(symbolTable));
           StringStuff.padWithSpaces(x, 45);
           result.append(x);
           result.append(instructionPosition(j));
@@ -186,7 +173,7 @@ public abstract class IR {
       for (Iterator it = bb.iteratePis(); it.hasNext();) {
         SSAPiInstruction pi = (SSAPiInstruction) it.next();
         if (pi != null) {
-          result.append("           " + pi.toString(symbolTable, d)).append("\n");
+          result.append("           " + pi.toString(symbolTable)).append("\n");
         }
       }
     }
@@ -194,37 +181,35 @@ public abstract class IR {
   }
 
   /**
-   * Returns the instructions.
+   * Returns the normal instructions. Does not include {@link SSAPhiInstruction}, {@link SSAPiInstruction}, or
+   * {@link SSAGetCaughtExceptionInstruction}s, which are currently managed by {@link BasicBlock}. Entries in the
+   * returned array might be null.
    * 
-   * @return Instruction[]
+   * This may go away someday.
    */
   public SSAInstruction[] getInstructions() {
     return instructions;
   }
 
   /**
-   * Returns the symbolTable.
-   * 
-   * @return SymbolTable
+   * @return the {@link SymbolTable} managing attributes for values in this method
    */
   public SymbolTable getSymbolTable() {
     return symbolTable;
   }
 
   /**
-   * Return the CFG for the method.
-   * 
-   * @return the CFG for the method.
+   * @return the underlying {@link ControlFlowGraph} which defines this IR.
    */
   public SSACFG getControlFlowGraph() {
     return cfg;
   }
 
   /**
-   * Return an iterator of all phis for this IR.
+   * Return an iterator of all {@link SSAPhiInstruction}s for this IR.
    */
   public Iterator<? extends SSAInstruction> iteratePhis() {
-    return new DerivedNodeIterator() {
+    return new TwoLevelIterator() {
       @Override
       Iterator<? extends SSAInstruction> getBlockIterator(BasicBlock b) {
         return b.iteratePhis();
@@ -233,10 +218,10 @@ public abstract class IR {
   }
 
   /**
-   * Return an iterator of all pis for this IR.
+   * Return an iterator of all {@link SSAPiInstruction}s for this IR.
    */
   public Iterator<? extends SSAInstruction> iteratePis() {
-    return new DerivedNodeIterator() {
+    return new TwoLevelIterator() {
       @Override
       Iterator<? extends SSAInstruction> getBlockIterator(BasicBlock b) {
         return b.iteratePis();
@@ -244,7 +229,13 @@ public abstract class IR {
     };
   }
 
-  abstract private class DerivedNodeIterator implements Iterator<SSAInstruction> {
+  /**
+   * An {@link Iterator} over all {@link SSAInstruction}s of a certain type, retrieved by iterating over the
+   * {@link BasicBlock}s, one at a time.
+   * 
+   * TODO: this looks buggy to me .. looks like it's hardcoded for Phis. Does it work for Pis?
+   */
+  abstract private class TwoLevelIterator implements Iterator<SSAInstruction> {
     // invariant: if currentBlockIndex != -1, then
     // currentBlockIterator.hasNext()
     private Iterator<? extends SSAInstruction> currentBlockIterator;
@@ -254,7 +245,7 @@ public abstract class IR {
     abstract Iterator<? extends SSAInstruction> getBlockIterator(BasicBlock b);
 
     @SuppressWarnings("unchecked")
-    DerivedNodeIterator() {
+    TwoLevelIterator() {
       currentBlockIndex = 0;
       currentBlockIterator = cfg.getNode(0).iteratePhis();
       if (!currentBlockIterator.hasNext()) {
@@ -293,8 +284,6 @@ public abstract class IR {
   }
 
   /**
-   * Method getParameterValueNumbers.
-   * 
    * @return array of value numbers representing parameters to this method
    */
   public int[] getParameterValueNumbers() {
@@ -302,7 +291,6 @@ public abstract class IR {
   }
 
   /**
-   * @param i
    * @return the value number of the ith parameter
    */
   public int getParameter(int i) {
@@ -310,20 +298,15 @@ public abstract class IR {
   }
 
   /**
-   * Get the type reference that describes the ith parameter to this method. By
-   * convention, for a non-static method, the 0th parameter is "this".
-   * 
-   * @param i
-   * @return TypeReference
+   * Get the {@link TypeReference} that describes the ith parameter to this method. By convention, for a non-static
+   * method, the 0th parameter is "this".
    */
   public TypeReference getParameterType(int i) {
     return method.getParameterType(i);
   }
 
   /**
-   * Method getNumberOfParameters.
-   * 
-   * @return int
+   * @return number of parameters to this method, including "this"
    */
   public int getNumberOfParameters() {
     return method.getNumberOfParameters();
@@ -343,6 +326,9 @@ public abstract class IR {
     return new CatchIterator();
   }
 
+  /**
+   * TODO: looks like this should be merged into {@link TwoLevelIterator}, above?
+   */
   private class CatchIterator implements Iterator<SSAInstruction> {
     // invariant: if currentBlockIndex != -1, then
     // then block[currentBlockIndex] is a handler block
@@ -387,9 +373,6 @@ public abstract class IR {
 
   /**
    * visit each normal (non-phi, non-pi, non-catch) instruction in this IR
-   * 
-   * @param v
-   *            a visitor
    */
   public void visitNormalInstructions(SSAInstruction.Visitor v) {
     for (Iterator i = iterateNormalInstructions(); i.hasNext();) {
@@ -399,9 +382,6 @@ public abstract class IR {
 
   /**
    * visit each instruction in this IR
-   * 
-   * @param v
-   *            a visitor
    */
   public void visitAllInstructions(SSAInstruction.Visitor v) {
     for (Iterator i = iterateAllInstructions(); i.hasNext();) {
@@ -410,7 +390,7 @@ public abstract class IR {
   }
 
   /**
-   * @return an iterator of all "normal" instructions on this IR
+   * @return an {@link Iterator} of all "normal" instructions on this IR
    */
   public Iterator<SSAInstruction> iterateNormalInstructions() {
     return new NormalIterator();
@@ -451,7 +431,7 @@ public abstract class IR {
   }
 
   /**
-   * @return an Iterator of allinstructions (Normal, Phi, and Catch)
+   * @return an {@link Iterator} of all instructions (Normal, Phi, and Catch)
    */
   public Iterator<SSAInstruction> iterateAllInstructions() {
     return new CompoundIterator<SSAInstruction>(iterateNormalInstructions(), new CompoundIterator<SSAInstruction>(
@@ -466,10 +446,7 @@ public abstract class IR {
   }
 
   /**
-   * @param site
-   * @return the invoke instructions corresponding to this call site
-   * @throws IllegalArgumentException
-   *             if site is null
+   * Return the invoke instructions corresponding to a call site
    */
   public SSAAbstractInvokeInstruction[] getCalls(CallSiteReference site) {
     if (site == null) {
@@ -486,10 +463,7 @@ public abstract class IR {
   }
 
   /**
-   * @param site
-   * @return the instruction indices corresponding to this call site
-   * @throws IllegalArgumentException
-   *             if site is null
+   * Return the instruction indices corresponding to a call site
    */
   public IntSet getCallInstructionIndices(CallSiteReference site) {
     if (site == null) {
@@ -499,8 +473,7 @@ public abstract class IR {
   }
 
   /**
-   * @param site
-   * @return the new instruction corresponding to this site
+   * Return the new instruction corresponding to an allocation site
    */
   public SSANewInstruction getNew(NewSiteReference site) {
     Integer i = newSiteMapping.get(site);
@@ -508,8 +481,7 @@ public abstract class IR {
   }
 
   /**
-   * @param site
-   * @return the instruction index corresponding to this site.
+   * Return the instruction index corresponding to an allocation site
    */
   public int getNewInstructionIndex(NewSiteReference site) {
     Integer i = newSiteMapping.get(site);
@@ -517,8 +489,7 @@ public abstract class IR {
   }
 
   /**
-   * @param pc
-   *            a program counter
+   * @param pc a program counter
    * @return the instruction (a PEI) at this program counter
    */
   public SSAInstruction getPEI(ProgramCounter pc) {
@@ -562,11 +533,9 @@ public abstract class IR {
   }
 
   /**
-   * @param site
-   *            a call site in this method
+   * @param site a call site in this method
    * @return the basic block corresponding to this instruction
-   * @throws IllegalArgumentException
-   *             if site is null
+   * @throws IllegalArgumentException if site is null
    */
   public ISSABasicBlock[] getBasicBlocksForCall(final CallSiteReference site) {
     if (site == null) {
@@ -585,8 +554,8 @@ public abstract class IR {
   /**
    * This is space-inefficient. Use with care.
    * 
-   * Be very careful; note the strange identity semantics of SSAInstruction,
-   * using ==. You can't mix SSAInstructions and IRs freely.
+   * Be very careful; note the strange identity semantics of SSAInstruction, using ==. You can't mix SSAInstructions and
+   * IRs freely.
    */
   public ISSABasicBlock getBasicBlockForInstruction(SSAInstruction s) {
     if (instruction2Block == null) {
@@ -605,8 +574,7 @@ public abstract class IR {
   }
 
   /**
-   * TODO: why do we need this? We should enforce instructions == null if
-   * necessary, I think.
+   * TODO: why do we need this? We should enforce instructions == null if necessary, I think.
    * 
    * @return true iff every instruction is null
    */
@@ -622,14 +590,10 @@ public abstract class IR {
   }
 
   /**
-   * @param index
-   *            an index into the IR instruction array
-   * @param vn
-   *            a value number
-   * @return if we know that immediately after the given program counter, v_vn
-   *         corresponds to one or more locals and local variable names are
-   *         available, the name of the locals which v_vn represents. Otherwise,
-   *         null.
+   * @param index an index into the IR instruction array
+   * @param vn a value number
+   * @return if we know that immediately after the given program counter, v_vn corresponds to one or more locals and
+   *         local variable names are available, the name of the locals which v_vn represents. Otherwise, null.
    */
   public String[] getLocalNames(int index, int vn) {
     if (getLocalMap() == null) {
@@ -645,14 +609,10 @@ public abstract class IR {
    */
   public interface SSA2LocalMap {
     /**
-     * @param index
-     *            an index into the IR instruction array
-     * @param vn
-     *            a value number
-     * @return if we know that immediately after the given program counter, v_vn
-     *         corresponds to one or more locals and local variable names are
-     *         available, the name of the locals which v_vn represents.
-     *         Otherwise, null.
+     * @param index an index into the IR instruction array
+     * @param vn a value number
+     * @return if we know that immediately after the given program counter, v_vn corresponds to one or more locals and
+     *         local variable names are available, the name of the locals which v_vn represents. Otherwise, null.
      */
     String[] getLocalNames(int index, int vn);
 

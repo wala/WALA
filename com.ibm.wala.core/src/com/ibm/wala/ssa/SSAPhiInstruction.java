@@ -52,14 +52,14 @@ public class SSAPhiInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
+  public String toString(SymbolTable symbolTable) {
 
     StringBuffer s = new StringBuffer();
 
-    s.append(getValueString(symbolTable, d, result)).append(" = phi ");
-    s.append(" ").append(getValueString(symbolTable, d, params[0]));
+    s.append(getValueString(symbolTable, result)).append(" = phi ");
+    s.append(" ").append(getValueString(symbolTable, params[0]));
     for (int i = 1; i < params.length; i++) {
-      s.append(",").append(getValueString(symbolTable, d, params[i]));
+      s.append(",").append(getValueString(symbolTable, params[i]));
     }
     return s.toString();
   }
@@ -134,11 +134,11 @@ public class SSAPhiInstruction extends SSAInstruction {
    *      ValueDecorator, int)
    */
   @Override
-  protected String getValueString(SymbolTable symbolTable, ValueDecorator d, int valueNumber) {
+  protected String getValueString(SymbolTable symbolTable,int valueNumber) {
     if (valueNumber == AbstractIntStackMachine.TOP) {
       return "TOP";
     } else {
-      return super.getValueString(symbolTable, d, valueNumber);
+      return super.getValueString(symbolTable, valueNumber);
     }
   }
 

@@ -68,8 +68,8 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + " = pi " + getValueString(symbolTable, d, val) + " for BB" + successorBlock;
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, result) + " = pi " + getValueString(symbolTable, val) + " for BB" + successorBlock;
   }
 
   @Override

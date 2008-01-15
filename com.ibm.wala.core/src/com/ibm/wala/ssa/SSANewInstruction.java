@@ -87,8 +87,8 @@ public class SSANewInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + " = new " + site.getDeclaredType() + "@" + site.getProgramCounter()
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, result) + " = new " + site.getDeclaredType() + "@" + site.getProgramCounter()
         + (params == null ? "" : " dims: " + params.length);
   }
 

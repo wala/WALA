@@ -47,9 +47,9 @@ public class SSACheckCastInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + " = checkcast " + declaredResultType.getName() + " "
-        + getValueString(symbolTable, d, val);
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, result) + " = checkcast " + declaredResultType.getName() + " "
+        + getValueString(symbolTable, val);
   }
 
   /**

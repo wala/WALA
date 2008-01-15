@@ -31,84 +31,91 @@ public abstract class SSAInstruction implements IInstruction {
   }
 
   /**
-   * This method is meant to be used during SSA conversion for an IR
-   * that is not in SSA form. It creates a new SSAInstruction of the
-   * same type as the receiver, with a combination of the receiver's
-   * uses and defs and those from the method parameters. 
-   *
-   * In particular, if the 'defs' parameter is null, then the new
-   * instruction has the same defs as the receiver.  If 'defs' is not
-   * null, it must be an array with a size equal to the number of
-   * defs that the receiver instruction has.  In this case, the new
-   * instruction has defs taken from the array.  The uses of the new
-   * instruction work in the same way with the 'uses' parameter.
-   *
-   * Note that this only applies to CAst-based IR translation, since
-   * Java bytecode-based IR generation uses a different SSA
-   * construction mechanism.
+   * This method is meant to be used during SSA conversion for an IR that is not in SSA form. It creates a new
+   * SSAInstruction of the same type as the receiver, with a combination of the receiver's uses and defs and those from
+   * the method parameters.
    * 
-   * TODO: this is kind of arcane?   Move this out into CAst?
+   * In particular, if the 'defs' parameter is null, then the new instruction has the same defs as the receiver. If
+   * 'defs' is not null, it must be an array with a size equal to the number of defs that the receiver instruction has.
+   * In this case, the new instruction has defs taken from the array. The uses of the new instruction work in the same
+   * way with the 'uses' parameter.
+   * 
+   * Note that this only applies to CAst-based IR translation, since Java bytecode-based IR generation uses a different
+   * SSA construction mechanism.
+   * 
+   * TODO: this is kind of arcane? Move this out into CAst?
    */
   public abstract SSAInstruction copyForSSA(int[] defs, int[] uses);
 
-  /**
-   * Method toString.
-   * 
-   * @param symbolTable
-   * @return Object
-   */
-  public abstract String toString(SymbolTable symbolTable, ValueDecorator d);
+  public abstract String toString(SymbolTable symbolTable);
 
   @Override
   public String toString() {
-    return toString(null, null);
+    return toString(null);
   }
 
-  protected String getValueString(SymbolTable symbolTable, ValueDecorator d, int valueNumber) {
+  protected String getValueString(SymbolTable symbolTable, int valueNumber) {
     if (symbolTable == null) {
       return Integer.toString(valueNumber);
     } else {
-      if (d == null) {
-        return symbolTable.getValueString(valueNumber);
-      } else {
-        return d.getValueString(valueNumber);
-      }
+      return symbolTable.getValueString(valueNumber);
     }
   }
 
   /**
-   * Apply an IVisitor to this instruction. We invoke the appropriate IVisitor
-   * method according to the type of this instruction.
+   * Apply an IVisitor to this instruction. We invoke the appropriate IVisitor method according to the type of this
+   * instruction.
    */
   public abstract void visit(IVisitor v);
 
   /**
-   * This interface is used by Instruction.visit to dispatch based on the
-   * instruction type.
+   * This interface is used by Instruction.visit to dispatch based on the instruction type.
    */
   public static interface IVisitor {
     void visitGoto(SSAGotoInstruction instruction);
+
     void visitArrayLoad(SSAArrayLoadInstruction instruction);
+
     void visitArrayStore(SSAArrayStoreInstruction instruction);
+
     void visitBinaryOp(SSABinaryOpInstruction instruction);
+
     void visitUnaryOp(SSAUnaryOpInstruction instruction);
+
     void visitConversion(SSAConversionInstruction instruction);
+
     void visitComparison(SSAComparisonInstruction instruction);
+
     void visitConditionalBranch(SSAConditionalBranchInstruction instruction);
+
     void visitSwitch(SSASwitchInstruction instruction);
+
     void visitReturn(SSAReturnInstruction instruction);
+
     void visitGet(SSAGetInstruction instruction);
+
     void visitPut(SSAPutInstruction instruction);
+
     void visitInvoke(SSAInvokeInstruction instruction);
+
     void visitNew(SSANewInstruction instruction);
+
     void visitArrayLength(SSAArrayLengthInstruction instruction);
+
     void visitThrow(SSAThrowInstruction instruction);
+
     void visitMonitor(SSAMonitorInstruction instruction);
+
     void visitCheckCast(SSACheckCastInstruction instruction);
+
     void visitInstanceof(SSAInstanceofInstruction instruction);
+
     void visitPhi(SSAPhiInstruction instruction);
+
     void visitPi(SSAPiInstruction instruction);
+
     void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction);
+
     void visitLoadClass(SSALoadClassInstruction instruction);
   }
 
@@ -181,13 +188,14 @@ public abstract class SSAInstruction implements IInstruction {
 
     public void visitGetCaughtException(SSAGetCaughtExceptionInstruction instruction) {
     }
+
     public void visitLoadClass(SSALoadClassInstruction instruction) {
     }
   }
 
   /**
-   * Does this instruction define a normal value, as distinct from a
-   * set of exceptions possibly thrown by it (e.g. for invoke instructions).
+   * Does this instruction define a normal value, as distinct from a set of exceptions possibly thrown by it (e.g. for
+   * invoke instructions).
    * 
    * @return true if the instruction does define a proper value.
    */
@@ -224,8 +232,7 @@ public abstract class SSAInstruction implements IInstruction {
    * Method getUse.
    * 
    * @param j
-   * @return value number representing the jth use in this instruction. -1 means
-   *         TOP (i.e., the value doesn't matter)
+   * @return value number representing the jth use in this instruction. -1 means TOP (i.e., the value doesn't matter)
    */
   public int getUse(int j) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
@@ -244,9 +251,8 @@ public abstract class SSAInstruction implements IInstruction {
   /**
    * This method should never return null.
    * 
-   * @return the set of exception types that an instruction might throw ...
-   *         disregarding athrows and invokes.
-   *         
+   * @return the set of exception types that an instruction might throw ... disregarding athrows and invokes.
+   * 
    */
   abstract public Collection<TypeReference> getExceptionTypes();
 
@@ -256,8 +262,7 @@ public abstract class SSAInstruction implements IInstruction {
   public abstract boolean isFallThrough();
 
   /**
-   * We assume these instructions are canonical and managed by a governing IR
-   * object. Be careful.
+   * We assume these instructions are canonical and managed by a governing IR object. Be careful.
    * 
    * @see java.lang.Object#equals(java.lang.Object)
    */

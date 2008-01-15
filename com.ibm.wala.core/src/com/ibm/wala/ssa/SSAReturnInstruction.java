@@ -51,11 +51,11 @@ public class SSAReturnInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable table, ValueDecorator d) {
+  public String toString(SymbolTable table) {
     if (result == -1) {
       return "return";
     } else {
-      return "return " + getValueString(table, d, result);
+      return "return " + getValueString(table, result);
     }
   }
 

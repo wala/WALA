@@ -26,8 +26,8 @@ public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return "throw " + getValueString(symbolTable, d, exception);
+  public String toString(SymbolTable symbolTable) {
+    return "throw " + getValueString(symbolTable, exception);
   }
 
   /**

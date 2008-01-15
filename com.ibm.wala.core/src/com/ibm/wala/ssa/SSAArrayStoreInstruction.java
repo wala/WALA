@@ -38,9 +38,9 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return "arraystore " + getValueString(symbolTable, d, getArrayRef()) + "[" + getValueString(symbolTable, d, getIndex())
-        + "] = " + getValueString(symbolTable, d, value);
+  public String toString(SymbolTable symbolTable) {
+    return "arraystore " + getValueString(symbolTable, getArrayRef()) + "[" + getValueString(symbolTable, getIndex())
+        + "] = " + getValueString(symbolTable, value);
   }
 
   /**

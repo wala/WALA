@@ -41,12 +41,12 @@ public class SSAGetInstruction extends SSAFieldAccessInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
+  public String toString(SymbolTable symbolTable) {
     if (isStatic()) {
-      return getValueString(symbolTable, d, result) + " = getstatic " + getDeclaredField();
+      return getValueString(symbolTable, result) + " = getstatic " + getDeclaredField();
     } else {
-      return getValueString(symbolTable, d, result) + " = getfield " + getDeclaredField() + " "
-          + getValueString(symbolTable, d, getRef());
+      return getValueString(symbolTable, result) + " = getfield " + getDeclaredField() + " "
+          + getValueString(symbolTable, getRef());
     }
   }
 

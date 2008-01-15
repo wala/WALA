@@ -37,10 +37,9 @@ public class SSAGetCaughtExceptionInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-
+  public String toString(SymbolTable symbolTable) {
     StringBuffer s = new StringBuffer();
-    s.append(getValueString(symbolTable, d, exceptionValueNumber)).append(" = getCaughtException ");
+    s.append(getValueString(symbolTable, exceptionValueNumber)).append(" = getCaughtException ");
     return s.toString();
   }
 

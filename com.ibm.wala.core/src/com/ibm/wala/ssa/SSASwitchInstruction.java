@@ -22,7 +22,7 @@ import com.ibm.wala.util.intset.IntIterator;
  * SSA instruction representing a switch statement.
  * 
  * @author sjfink
- *
+ * 
  */
 public class SSASwitchInstruction extends SSAInstruction {
   private final int val;
@@ -32,8 +32,7 @@ public class SSASwitchInstruction extends SSAInstruction {
   private final int[] casesAndLabels;
 
   /**
-   * The labels in casesAndLabels represent <em>instruction indices</em> in the IR that each
-   * switch case branches to.
+   * The labels in casesAndLabels represent <em>instruction indices</em> in the IR that each switch case branches to.
    */
   SSASwitchInstruction(int val, int defaultLabel, int[] casesAndLabels) {
     super();
@@ -49,9 +48,9 @@ public class SSASwitchInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
+  public String toString(SymbolTable symbolTable) {
     StringBuffer result = new StringBuffer("switch ");
-    result.append(getValueString(symbolTable, d, val));
+    result.append(getValueString(symbolTable, val));
     result.append(" [");
     for (int i = 0; i < casesAndLabels.length - 1; i++) {
       result.append(casesAndLabels[i]);
@@ -61,14 +60,14 @@ public class SSASwitchInstruction extends SSAInstruction {
       if (i < casesAndLabels.length - 2) {
         result.append(",");
       }
-    } 
+    }
     result.append("]");
     return result.toString();
   }
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException  if v is null
+   * @throws IllegalArgumentException if v is null
    */
   @Override
   public void visit(IVisitor v) {

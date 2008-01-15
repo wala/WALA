@@ -47,9 +47,9 @@ public class SSAConversionInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + " = conversion(" + toType.getName() + ") "
-        + getValueString(symbolTable, d, val);
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, result) + " = conversion(" + toType.getName() + ") "
+        + getValueString(symbolTable, val);
   }
 
   /**

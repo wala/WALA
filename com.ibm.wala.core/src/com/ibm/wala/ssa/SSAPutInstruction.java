@@ -42,18 +42,18 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
+  public String toString(SymbolTable symbolTable) {
     if (isStatic()) {
-      return "putstatic " + getValueString(symbolTable, d, val) + " " + getDeclaredField();
+      return "putstatic " + getValueString(symbolTable, val) + " " + getDeclaredField();
     } else {
-      return "putfield " + getValueString(symbolTable, d, getRef()) + " = " + getValueString(symbolTable, d, val) + " "
+      return "putfield " + getValueString(symbolTable, getRef()) + " = " + getValueString(symbolTable, val) + " "
           + getDeclaredField();
     }
   }
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException  if v is null
+   * @throws IllegalArgumentException if v is null
    */
   @Override
   public void visit(IVisitor v) {
@@ -68,7 +68,7 @@ public class SSAPutInstruction extends SSAFieldAccessInstruction {
    */
   @Override
   public int getNumberOfUses() {
-    return isStatic()? 1 : 2;
+    return isStatic() ? 1 : 2;
   }
 
   /**

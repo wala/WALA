@@ -47,8 +47,8 @@ public class SSAInstanceofInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + " = instanceof " + getValueString(symbolTable, d, ref) + " " + checkedType;
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, result) + " = instanceof " + getValueString(symbolTable, ref) + " " + checkedType;
   }
 
   /**

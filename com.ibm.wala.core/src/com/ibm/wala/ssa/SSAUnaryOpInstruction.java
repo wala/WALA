@@ -38,8 +38,8 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + " = " + operator + " " + getValueString(symbolTable, d, val);
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, result) + " = " + operator + " " + getValueString(symbolTable, val);
   }
 
   /**

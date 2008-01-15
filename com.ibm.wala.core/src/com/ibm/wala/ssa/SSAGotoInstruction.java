@@ -31,7 +31,7 @@ public class SSAGotoInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
+  public String toString(SymbolTable symbolTable) {
     return "goto";
   }
 

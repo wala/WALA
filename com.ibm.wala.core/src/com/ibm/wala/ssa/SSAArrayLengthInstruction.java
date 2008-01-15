@@ -44,8 +44,8 @@ public class SSAArrayLengthInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + " = arraylength " + getValueString(symbolTable, d, arrayref);
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, result) + " = arraylength " + getValueString(symbolTable, arrayref);
   }
 
   /**

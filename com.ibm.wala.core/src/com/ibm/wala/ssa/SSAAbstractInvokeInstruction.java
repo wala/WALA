@@ -23,14 +23,12 @@ import com.ibm.wala.util.debug.Assertions;
 public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implements IInvokeInstruction {
 
   /**
-   * The value number which represents the exception object which the call may
-   * throw.
+   * The value number which represents the exception object which the call may throw.
    */
   protected final int exception;
 
   /**
-   * The call site, containing the program counter location and the method being
-   * called.
+   * The call site, containing the program counter location and the method being called.
    */
   protected final CallSiteReference site;
 
@@ -146,20 +144,20 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
+  public String toString(SymbolTable symbolTable) {
     String code = site.getInvocationString();
     StringBuffer s = new StringBuffer();
     if (hasDef()) {
-      s.append(getValueString(symbolTable, d, getDef())).append(" = ");
+      s.append(getValueString(symbolTable, getDef())).append(" = ");
     }
     s.append("invoke").append(code);
     s.append(" ");
     s.append(site.getDeclaredTarget().toString());
 
     if (getNumberOfParameters() > 0) {
-      s.append(" ").append(getValueString(symbolTable, d, getUse(0)));
+      s.append(" ").append(getValueString(symbolTable, getUse(0)));
       for (int i = 1; i < getNumberOfParameters(); i++) {
-        s.append(",").append(getValueString(symbolTable, d, getUse(i)));
+        s.append(",").append(getValueString(symbolTable, getUse(i)));
       }
     }
 
@@ -169,7 +167,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
     if (exception == -1) {
       s.append(" exception: NOT MODELED");
     } else {
-      s.append(" exception:").append(getValueString(symbolTable, d, exception));
+      s.append(" exception:").append(getValueString(symbolTable, exception));
     }
 
     return s.toString();

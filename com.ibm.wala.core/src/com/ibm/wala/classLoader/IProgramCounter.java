@@ -12,7 +12,6 @@
 package com.ibm.wala.classLoader;
 
 /**
- *
  * An interface for something that carries a location in bytecode
  * 
  * @author sfink

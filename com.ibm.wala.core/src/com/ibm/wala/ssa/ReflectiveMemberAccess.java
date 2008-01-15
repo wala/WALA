@@ -33,8 +33,8 @@ public abstract class ReflectiveMemberAccess extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return "fieldref " + getValueString(symbolTable, d, objectRef) + "." + getValueString(symbolTable, d, memberRef);
+  public String toString(SymbolTable symbolTable) {
+    return "fieldref " + getValueString(symbolTable, objectRef) + "." + getValueString(symbolTable, memberRef);
   }
 
   /*

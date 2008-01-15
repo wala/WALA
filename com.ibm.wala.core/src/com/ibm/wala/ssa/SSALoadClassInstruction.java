@@ -39,8 +39,8 @@ public class SSALoadClassInstruction extends SSAInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, lval) + " = load_class: " + typeRef;
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, lval) + " = load_class: " + typeRef;
   }
 
   @Override

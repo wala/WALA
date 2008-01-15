@@ -43,9 +43,9 @@ public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
   }
 
   @Override
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + " = arrayload " + getValueString(symbolTable, d, getArrayRef()) + "["
-        + getValueString(symbolTable, d, getIndex()) + "]";
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, result) + " = arrayload " + getValueString(symbolTable, getArrayRef()) + "["
+        + getValueString(symbolTable, getIndex()) + "]";
   }
 
   /**
