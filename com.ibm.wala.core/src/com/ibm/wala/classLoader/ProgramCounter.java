@@ -18,8 +18,13 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * @author sfink
  */
-public class ProgramCounter implements IProgramCounter {
+public class ProgramCounter  {
 
+  /**
+   * A constant indicating no source line number information is available.
+   */
+  public static final int NO_SOURCE_LINE_NUMBER = -1;
+  
   /**
    * Index into bytecode describing this instruction
    */
