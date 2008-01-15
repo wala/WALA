@@ -241,7 +241,7 @@ public class Slicer {
       if (VERBOSE) {
         System.err.println("Tabulated.");
       }
-      Collection<Statement> slice = result2Slice(tr);
+      Collection<Statement> slice = tr.getSupergraphNodesReached();
       result.addAll(slice);
 
       if (VERBOSE) {
@@ -274,7 +274,7 @@ public class Slicer {
     return new SliceProblem(root, sdgView, backward);
   }
 
-  private static Collection<Statement> computeNewRoots(Collection<Statement> slice, Statement root,
+  public static Collection<Statement> computeNewRoots(Collection<Statement> slice, Statement root,
       Collection<Statement> rootsConsidered, ISDG sdg, boolean backward) {
     if (backward) {
       return computeNewBackwardRoots(slice, root, rootsConsidered, sdg);
@@ -369,30 +369,6 @@ public class Slicer {
   public static Collection<Statement> computeBackwardSlice(Statement s, CallGraph cg, PointerAnalysis pointerAnalysis)
       throws IllegalArgumentException, CancelException {
     return computeBackwardSlice(s, cg, pointerAnalysis, DataDependenceOptions.FULL, ControlDependenceOptions.FULL);
-  }
-
-  /**
-   * Convert the results of the tabulation to a slice, represented as a Collection<Statement>
-   */
-  private static Collection<Statement> result2Slice(final TabulationResult<Statement, PDG> result) {
-    return result.getSupergraphNodesReached();
-    // final Collection<Statement> nodes = new
-    // Iterator2Collection<Statement>(sdg.iterateLazyNodes());
-    // Filter f = new Filter() {
-    // public boolean accepts(Object o) {
-    // Statement st = (Statement) o;
-    // if (!nodes.contains(st)) {
-    // return false;
-    // }
-    // SparseIntSet s = result.getResult(st);
-    // if ((s != null) && s.contains(0)) {
-    // result.getResult((Statement) o);
-    // }
-    // return s != null && s.contains(0);
-    // }
-    // };
-    // return new Iterator2Collection<Statement>(new
-    // FilterIterator<Statement>(nodes.iterator(), f));
   }
 
   /**

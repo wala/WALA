@@ -700,7 +700,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   }
 
   @Override
-  protected NodeManager<Statement> getNodeManager() {
+  public NodeManager<Statement> getNodeManager() {
     return nodeMgr;
   }
 
