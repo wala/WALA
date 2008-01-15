@@ -10,31 +10,26 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-
 import com.ibm.wala.ssa.ReflectiveMemberAccess;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.ValueDecorator;
 
 /**
- *  This abstract class represents field (a.k.a property) writes in
- * which the field name is not a constant, but rather a computed
- * value.  This is common in scripting languages, and so this base
- * class is shared across all languages that need such accesses.
- *
+ * This abstract class represents field (a.k.a property) writes in which the field name is not a constant, but rather a
+ * computed value. This is common in scripting languages, and so this base class is shared across all languages that
+ * need such accesses.
+ * 
  * @author Julian Dolby (dolby@us.ibm.com)
  */
 public abstract class AbstractReflectivePut extends ReflectiveMemberAccess {
   private final int value;
-  
+
   public AbstractReflectivePut(int objectRef, int memberRef, int value) {
     super(objectRef, memberRef);
     this.value = value;
   }
 
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return super.toString(symbolTable, d) +
-	" = " + 
-	getValueString(symbolTable, d, value);
+  public String toString(SymbolTable symbolTable) {
+    return super.toString(symbolTable) + " = " + getValueString(symbolTable, value);
   }
 
   /**

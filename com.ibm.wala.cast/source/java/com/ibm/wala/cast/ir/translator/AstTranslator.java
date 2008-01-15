@@ -939,7 +939,7 @@ public abstract class AstTranslator extends CAstVisitor
 
         for (int j = bb.getFirstInstructionIndex(); j <= bb.getLastInstructionIndex(); j++)
           if (insts[j] != null)
-            s.append("  " + insts[j].toString(symtab, null) + "\n");
+            s.append("  " + insts[j].toString(symtab) + "\n");
       }
 
       s.append("-- END --");

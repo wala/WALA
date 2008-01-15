@@ -15,7 +15,6 @@ import java.util.Collection;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 
@@ -34,8 +33,8 @@ public class AstGlobalRead extends SSAGetInstruction {
     return new AstGlobalRead((defs==null)? getDef(): defs[0], getDeclaredField());
   }
 
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, getDef()) + " = global:" + getGlobalName();
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, getDef()) + " = global:" + getGlobalName();
   }
 
   public void visit(IVisitor v) {

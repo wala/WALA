@@ -10,54 +10,37 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- *  This abstract class adds to invoke instructions the ability to
- * handle lexical uses and definitions during call graph construction.
- * The lexical uses and definitions of these objects are initially
- * empty, and get filled in by the AstSSAPropagationCallGraphBuilder,
- * particularly its LexicalOperator objects.  This class is still
- * abstract since the lexical scoping functionality is used by
- * multiple languages, each of which has further specializations of
- * invoke instructions.
- *
+ * This abstract class adds to invoke instructions the ability to handle lexical uses and definitions during call graph
+ * construction. The lexical uses and definitions of these objects are initially empty, and get filled in by the
+ * AstSSAPropagationCallGraphBuilder, particularly its LexicalOperator objects. This class is still abstract since the
+ * lexical scoping functionality is used by multiple languages, each of which has further specializations of invoke
+ * instructions.
+ * 
  * @author Julian Dolby (dolby@us.ibm.com)
- *
+ * 
  */
-public abstract class AbstractLexicalInvoke 
-  extends MultiReturnValueInvokeInstruction
-{
+public abstract class AbstractLexicalInvoke extends MultiReturnValueInvokeInstruction {
 
   protected Access[] lexicalReads = null;
 
   protected Access[] lexicalWrites = null;
 
-  protected AbstractLexicalInvoke(int results[], 
-				  int exception,
-				  CallSiteReference site) 
-  {
-      super(results, exception, site);
+  protected AbstractLexicalInvoke(int results[], int exception, CallSiteReference site) {
+    super(results, exception, site);
   }
 
-  protected AbstractLexicalInvoke(int result, 
-				  int exception,
-				  CallSiteReference site) 
-  {
-      this(new int[]{result}, exception, site);
+  protected AbstractLexicalInvoke(int result, int exception, CallSiteReference site) {
+    this(new int[] { result }, exception, site);
   }
 
-  protected AbstractLexicalInvoke(int results[],
-				  int exception,
-				  CallSiteReference site,
-				  Access[] lexicalReads,
-				  Access[] lexicalWrites)
-  {
+  protected AbstractLexicalInvoke(int results[], int exception, CallSiteReference site, Access[] lexicalReads,
+      Access[] lexicalWrites) {
     this(results, exception, site);
     this.lexicalReads = lexicalReads;
     this.lexicalWrites = lexicalWrites;
@@ -71,13 +54,13 @@ public abstract class AbstractLexicalInvoke
   }
 
   public final int getLastLexicalUse() {
-      if (lexicalReads == null) {
-	  return -1;
-      } else {
-	  return getNumberOfParameters() + lexicalReads.length - 1;
-      }
+    if (lexicalReads == null) {
+      return -1;
+    } else {
+      return getNumberOfParameters() + lexicalReads.length - 1;
+    }
   }
-  
+
   public int getUse(int j) {
     Assertions._assert(j >= getNumberOfParameters());
     Assertions._assert(lexicalReads != null);
@@ -91,21 +74,21 @@ public abstract class AbstractLexicalInvoke
     else
       return super.getNumberOfDefs() + lexicalWrites.length;
   }
-	
+
   public int getDef(int j) {
     if (j < super.getNumberOfDefs())
       return super.getDef(j);
     else
-      return lexicalWrites[j-super.getNumberOfDefs()].valueNumber;
+      return lexicalWrites[j - super.getNumberOfDefs()].valueNumber;
   }
 
   private Access[] addAccess(Access[] array, Access access) {
     if (array == null)
-      return new Access[]{ access };
+      return new Access[] { access };
     else {
-      Access[] result = new Access[ array.length + 1 ];
+      Access[] result = new Access[array.length + 1];
       System.arraycopy(array, 0, result, 0, array.length);
-      result[ array.length ] = access;
+      result[array.length] = access;
       return result;
     }
   }
@@ -119,7 +102,7 @@ public abstract class AbstractLexicalInvoke
   }
 
   public Access getLexicalUse(int i) {
-    return lexicalReads[i-getNumberOfParameters()];
+    return lexicalReads[i - getNumberOfParameters()];
   }
 
   public boolean isLexicalDef(int def) {
@@ -131,28 +114,30 @@ public abstract class AbstractLexicalInvoke
   }
 
   public Access getLexicalDef(int i) {
-    return lexicalWrites[i-super.getNumberOfDefs()];
+    return lexicalWrites[i - super.getNumberOfDefs()];
   }
 
   public int hashCode() {
     return site.hashCode() * 7529;
   }
 
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    StringBuffer s = new StringBuffer(super.toString(symbolTable, d));
+  public String toString(SymbolTable symbolTable) {
+    StringBuffer s = new StringBuffer(super.toString(symbolTable));
 
     if (lexicalReads != null) {
       s.append(" (reads:");
-      for(int i = 0; i < lexicalReads.length; i++) {
-	s.append(" ").append(lexicalReads[i].variableName).append(":").append( getValueString(symbolTable, d, lexicalReads[i].valueNumber) );
+      for (int i = 0; i < lexicalReads.length; i++) {
+        s.append(" ").append(lexicalReads[i].variableName).append(":").append(
+            getValueString(symbolTable, lexicalReads[i].valueNumber));
       }
       s.append(")");
     }
 
     if (lexicalWrites != null) {
       s.append(" (writes:");
-      for(int i = 0; i < lexicalWrites.length; i++) {
-	s.append(" ").append(lexicalWrites[i].variableName).append(":").append( getValueString(symbolTable, d, lexicalWrites[i].valueNumber) );
+      for (int i = 0; i < lexicalWrites.length; i++) {
+        s.append(" ").append(lexicalWrites[i].variableName).append(":").append(
+            getValueString(symbolTable, lexicalWrites[i].valueNumber));
       }
       s.append(")");
     }

@@ -14,7 +14,6 @@ package com.ibm.wala.cast.ir.ssa;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -41,21 +40,21 @@ public class AssignInstruction extends SSAUnaryOpInstruction {
     }
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#copyForSSA(int[], int[])
    */
   public SSAInstruction copyForSSA(int[] defs, int[] uses) {
     return new AssignInstruction(defs == null ? getDef(0) : defs[0], uses == null ? getUse(0) : uses[0]);
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#toString(com.ibm.wala.ssa.SymbolTable, com.ibm.wala.ssa.ValueDecorator)
    */
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) + " := " + getValueString(symbolTable, d, val);
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, result) + " := " + getValueString(symbolTable, val);
   }
 
-  /* (non-Javadoc)
+  /*
    * @see com.ibm.wala.ssa.SSAInstruction#visit(com.ibm.wala.ssa.SSAInstruction.Visitor)
    */
   public void visit(IVisitor v) {

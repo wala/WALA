@@ -5,7 +5,6 @@ import java.util.Collections;
 
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -46,10 +45,10 @@ public class AstEchoInstruction extends SSAInstruction {
     return v;
   }
 
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
+  public String toString(SymbolTable symbolTable) {
     StringBuffer result = new StringBuffer("echo/print ");
     for(int i = 0; i < rvals.length; i++) {
-      result.append(getValueString(symbolTable, d, rvals[i])).append(" ");
+      result.append(getValueString(symbolTable, rvals[i])).append(" ");
     }
 
     return result.toString();

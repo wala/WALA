@@ -14,7 +14,6 @@ import java.util.Collection;
 
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -51,8 +50,8 @@ public class AstAssertInstruction extends SSAInstruction {
     return new AstAssertInstruction(uses == null ? value : uses[0], fromSpecification);
   }
 
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return "assert " + getValueString(symbolTable, d, value) + " (fromSpec: " + fromSpecification + ")";
+  public String toString(SymbolTable symbolTable) {
+    return "assert " + getValueString(symbolTable, value) + " (fromSpec: " + fromSpecification + ")";
   }
 
   public void visit(IVisitor v) {

@@ -15,7 +15,6 @@ import java.util.Collection;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.ValueDecorator;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 
@@ -34,8 +33,8 @@ public class AstGlobalWrite extends SSAPutInstruction {
     return new AstGlobalWrite(getDeclaredField(), (uses==null)? getVal(): uses[0]);
   }
 
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return "global:" + getGlobalName() + " = " + getValueString(symbolTable, d, getVal());
+  public String toString(SymbolTable symbolTable) {
+    return "global:" + getGlobalName() + " = " + getValueString(symbolTable,getVal());
   }
 
   public void visit(IVisitor v) {

@@ -12,30 +12,26 @@ package com.ibm.wala.cast.ir.ssa;
 
 import com.ibm.wala.ssa.ReflectiveMemberAccess;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.ValueDecorator;
 
 /**
- *  This abstract class represents field (a.k.a property) reads in
- * which the field name is not a constant, but rather a computed
- * value.  This is common in scripting languages, and so this base
- * class is shared across all languages that need such accesses.
- *
+ * This abstract class represents field (a.k.a property) reads in which the field name is not a constant, but rather a
+ * computed value. This is common in scripting languages, and so this base class is shared across all languages that
+ * need such accesses.
+ * 
  * @author Julian Dolby (dolby@us.ibm.com)
  */
 public abstract class AbstractReflectiveGet extends ReflectiveMemberAccess {
   private final int result;
-  
+
   public AbstractReflectiveGet(int result, int objectRef, int memberRef) {
     super(objectRef, memberRef);
     this.result = result;
   }
 
-  public String toString(SymbolTable symbolTable, ValueDecorator d) {
-    return getValueString(symbolTable, d, result) +
-	" = " + 
-	super.toString(symbolTable, d);
+  public String toString(SymbolTable symbolTable) {
+    return getValueString(symbolTable, result) + " = " + super.toString(symbolTable);
   }
-    
+
   /**
    * @see com.ibm.wala.ssa.Instruction#getDef()
    */
