@@ -399,7 +399,7 @@ public class Slicer {
    * Tabulation problem representing slicing
    * 
    */
-  protected static class SliceProblem implements TabulationProblem<Statement, PDG> {
+  public static class SliceProblem implements TabulationProblem<Statement, PDG> {
 
     private final Statement src;
 
