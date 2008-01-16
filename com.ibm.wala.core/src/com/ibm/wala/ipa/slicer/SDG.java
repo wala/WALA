@@ -440,6 +440,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           }
         }
       case PHI:
+      case PI:
       case CATCH:
       case EXC_RET_CALLER:
       case NORMAL_RET_CALLER:

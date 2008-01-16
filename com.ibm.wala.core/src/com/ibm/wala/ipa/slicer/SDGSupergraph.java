@@ -270,6 +270,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     case HEAP_RET_CALLER:
     case METHOD_ENTRY:
     case CATCH:
+    case PI:
       return false;
     case HEAP_PARAM_CALLER:
     case PARAM_CALLER:
@@ -317,6 +318,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     case PARAM_CALLEE:
     case HEAP_PARAM_CALLEE:
     case PHI:
+    case PI:
     case NORMAL_RET_CALLER:
     case PARAM_CALLER:
     case HEAP_RET_CALLER:
