@@ -35,6 +35,10 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
     ScriptEntryPoint(IMethod scriptCodeBody) {
       super(scriptCodeBody);
     }
+      
+    public CallSiteReference makeSite(int programCounter) {
+      return makeScriptSite(getMethod(), programCounter);
+    }
 
     public TypeReference[] getParameterTypes(int i) {
       Assertions._assert(i == 0);
@@ -49,6 +53,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
       return getMethod().isStatic()? 0: 1;
     }
 
+      
     public SSAAbstractInvokeInstruction addCall(AbstractRootMethod m){
       CallSiteReference site = makeSite(0);
 
@@ -71,13 +76,17 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
     this.scriptType = scriptType;
   }
 
+  protected abstract CallSiteReference makeScriptSite(IMethod m, int pc);
+
   public Iterator<Entrypoint> iterator() {
     Set<Entrypoint> ES = HashSetFactory.make();
     Iterator<IClass> classes = scriptType.getClassLoader().iterateAllClasses();
     while (classes.hasNext()) {
       IClass cls = classes.next();
       if (cha.isSubclassOf(cls, scriptType)) {
-        for (Iterator<IMethod> methods = cls.getDeclaredMethods().iterator(); methods.hasNext();) {
+        for (Iterator<IMethod> methods = cls.getDeclaredMethods().iterator(); 
+	     methods.hasNext();) 
+	{
           ES.add(new ScriptEntryPoint(((IMethod) methods.next())));
         }
       }
