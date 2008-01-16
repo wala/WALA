@@ -39,7 +39,6 @@ public class SSAOptions {
    * use pi nodes when building IR
    */
   private boolean usePiNodes = false;
-  private boolean conversionPreservesNames = false;
   private DefaultValues defaultValues = null;
 
   private final static SSAOptions defaultOptions = new SSAOptions();
@@ -57,22 +56,6 @@ public class SSAOptions {
    */
   public void setUsePiNodes(boolean b) {
     this.usePiNodes = b;
-  }
-
-  /**
-   * @return whether to use Pi nodes to preserve distinct value numbers
-   *  for variables with different names at the source level.
-   */
-  public boolean getPreserveNames() {
-    return conversionPreservesNames;
-  }
-
-  /**
-   * @param b whether to use Pi nodes to preserve distinct value numbers
-   *  for variables with different names at the source level.
-   */
-  public void setPreserveNames(boolean b) {
-    conversionPreservesNames = b;
   }
 
   public void setDefaultValues(DefaultValues defaultValues) {
