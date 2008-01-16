@@ -173,8 +173,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param x
    * @param type
    * @return the instance key that represents the exception of type _type_ thrown by a particular PEI.
-   * @throws IllegalArgumentException
-   *             if ikFactory is null
+   * @throws IllegalArgumentException if ikFactory is null
    */
   public static InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter x, TypeReference type, InstanceKeyFactory ikFactory) {
     if (ikFactory == null) {
@@ -342,14 +341,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /**
    * Generate constraints which assign exception values into an exception pointer
    * 
-   * @param node
-   *            governing node
-   * @param peis
-   *            list of PEI instructions
-   * @param exceptionVar
-   *            PointerKey representing a pointer to an exception value
-   * @param catchClasses
-   *            the types "caught" by the exceptionVar
+   * @param node governing node
+   * @param peis list of PEI instructions
+   * @param exceptionVar PointerKey representing a pointer to an exception value
+   * @param catchClasses the types "caught" by the exceptionVar
    */
   private void addExceptionDefConstraints(IR ir, DefUse du, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
       Set catchClasses) {
@@ -438,10 +433,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * precondition: hasUniqueCatchBlock(call,node,cg)
    * 
    * @return the unique pointer key which catches the exceptions thrown by a call
-   * @throws IllegalArgumentException
-   *             if ir == null
-   * @throws IllegalArgumentException
-   *             if call == null
+   * @throws IllegalArgumentException if ir == null
+   * @throws IllegalArgumentException if call == null
    */
   public PointerKey getUniqueCatchKey(SSAAbstractInvokeInstruction call, IR ir, CGNode node) throws IllegalArgumentException,
       IllegalArgumentException {
@@ -467,8 +460,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
   /**
    * @return a List of Instructions that may transfer control to bb via an exceptional edge
-   * @throws IllegalArgumentException
-   *             if ir is null
+   * @throws IllegalArgumentException if ir is null
    */
   public static List<ProgramCounter> getIncomingPEIs(IR ir, ISSABasicBlock bb) {
     if (ir == null) {
@@ -1199,6 +1191,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       // }
     }
 
+    /**
+     * TODO: What is this doing? Document me!
+     */
     private int booleanConstantTest(SSAConditionalBranchInstruction c, int v) {
       int result = 0;
 
@@ -1260,49 +1255,71 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     @Override
     public void visitPi(SSAPiInstruction instruction) {
       int dir;
-      ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
-      PointerKey src = getPointerKeyForLocal(instruction.getVal());
+
       if (hasNoInterestingUses(instruction.getDef())) {
         PointerKey dst = getPointerKeyForLocal(instruction.getDef());
         system.recordImplicitPointsToSet(dst);
       } else {
+        ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
         if (com.ibm.wala.cfg.Util.endsWithConditionalBranch(cfg, getBasicBlock()) && cfg.getSuccNodeCount(getBasicBlock()) == 2) {
           SSAConditionalBranchInstruction cond = (SSAConditionalBranchInstruction) com.ibm.wala.cfg.Util.getLastInstruction(cfg,
               getBasicBlock());
           SSAInstruction cause = instruction.getCause();
           BasicBlock target = (BasicBlock) cfg.getNode(instruction.getSuccessor());
-          if ((cause instanceof SSAInstanceofInstruction) && ((dir = booleanConstantTest(cond, cause.getDef())) != 0)) {
-            TypeReference type = ((SSAInstanceofInstruction) cause).getCheckedType();
-            IClass cls = getClassHierarchy().lookupClass(type);
-            if (cls == null) {
-              Warnings.add(ResolutionFailure.create(node, type));
-              PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-              system.newConstraint(dst, assignOperator, src);
-            } else {
-              PointerKey dst = getFilteredPointerKeyForLocal(instruction.getDef(), new FilteredPointerKey.SingleClassFilter(cls));
-              if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(cfg, getBasicBlock()) && dir == 1)
-                  || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(cfg, getBasicBlock()) && dir == -1)) {
-                system.newConstraint(dst, getBuilder().filterOperator, src);
-                // System.err.println("PI " + dst + " " + src);
+
+          if ((cause instanceof SSAInstanceofInstruction)) {
+            int direction = booleanConstantTest(cond, cause.getDef());
+            if (direction != 0) {
+              TypeReference type = ((SSAInstanceofInstruction) cause).getCheckedType();
+              IClass cls = getClassHierarchy().lookupClass(type);
+              if (cls == null) {
+                Warnings.add(ResolutionFailure.create(node, type));
+                PointerKey dst = getPointerKeyForLocal(instruction.getDef());
+                addPiAssignment(dst, instruction.getVal());
               } else {
-                system.newConstraint(dst, getBuilder().inverseFilterOperator, src);
+                PointerKey dst = getFilteredPointerKeyForLocal(instruction.getDef(), new FilteredPointerKey.SingleClassFilter(cls));
+                PointerKey src = getPointerKeyForLocal(instruction.getVal());
+                if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(cfg, getBasicBlock()) && direction == 1)
+                    || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(cfg, getBasicBlock()) && direction == -1)) {
+                  system.newConstraint(dst, getBuilder().filterOperator, src);
+                } else {
+                  system.newConstraint(dst, getBuilder().inverseFilterOperator, src);
+                }
               }
             }
           } else if ((dir = nullConstantTest(cond, instruction.getVal())) != 0) {
             if ((target == com.ibm.wala.cfg.Util.getTakenSuccessor(cfg, getBasicBlock()) && dir == -1)
                 || (target == com.ibm.wala.cfg.Util.getNotTakenSuccessor(cfg, getBasicBlock()) && dir == 1)) {
               PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-              system.newConstraint(dst, assignOperator, src);
+              addPiAssignment(dst, instruction.getVal());
             }
           } else {
             PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-            system.newConstraint(dst, assignOperator, src);
+            addPiAssignment(dst, instruction.getVal());
           }
         } else {
           PointerKey dst = getPointerKeyForLocal(instruction.getDef());
-          system.newConstraint(dst, assignOperator, src);
+          addPiAssignment(dst, instruction.getVal());
         }
       }
+    }
+
+    /**
+     * Add a constraint to the system indicating that the contents of local src flows to dst, with no special type
+     * filter.
+     */
+    private void addPiAssignment(PointerKey dst, int src) {
+      PointerKey srcKey = getPointerKeyForLocal(src);
+      if (contentsAreInvariant(symbolTable, du, src)) {
+        system.recordImplicitPointsToSet(srcKey);
+        InstanceKey[] ik = getInvariantContents(src);
+        for (int j = 0; j < ik.length; j++) {
+          system.newConstraint(dst, ik[j]);
+        }
+      } else {
+        system.newConstraint(dst, assignOperator, srcKey);
+      }
+
     }
 
     public ISSABasicBlock getBasicBlock() {
@@ -1360,8 +1377,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      * TODO: lift most of this logic to PropagationCallGraphBuilder
      * 
      * Add a call to the class initializer from the root method.
-     * 
-     * @param klass
      */
     private void processClassInitializer(IClass klass) {
 
@@ -1411,11 +1426,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * Side effect: add edge to the call graph.
    * 
    * @param instruction
-   * @param constParams
-   *            if non-null, then constParams[i] holds the set of instance keys that are passed as param i, or null if
-   *            param i is not invariant
-   * @param uniqueCatchKey
-   *            if non-null, then this is the unique PointerKey that catches all exceptions from this call site.
+   * @param constParams if non-null, then constParams[i] holds the set of instance keys that are passed as param i, or
+   *        null if param i is not invariant
+   * @param uniqueCatchKey if non-null, then this is the unique PointerKey that catches all exceptions from this call
+   *        site.
    */
   @SuppressWarnings("deprecation")
   private void processResolvedCall(CGNode caller, SSAAbstractInvokeInstruction instruction, CGNode target,
@@ -1572,9 +1586,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     /**
      * @param call
      * @param node
-     * @param constParams
-     *            if non-null, then constParams[i] holds the String constant that is passed as param i, or null if param
-     *            i is not a String constant
+     * @param constParams if non-null, then constParams[i] holds the String constant that is passed as param i, or null
+     *        if param i is not a String constant
      */
     DispatchOperator(SSAAbstractInvokeInstruction call, ExplicitCallGraph.ExplicitNode node, InstanceKey[][] constParams,
         PointerKey uniqueCatch) {
