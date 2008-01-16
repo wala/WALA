@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 
 import com.ibm.wala.cast.ipa.callgraph.AstCallGraph;
 import com.ibm.wala.cast.js.cfg.JSInducedCFG;
+import com.ibm.wala.cast.js.loader.*;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.ssa.JavaScriptNewInstruction;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
@@ -61,7 +62,7 @@ public class JSCallGraph extends AstCallGraph {
     }
 
     public SSAAbstractInvokeInstruction addDirectCall(int function, int[] params, CallSiteReference site) {
-      CallSiteReference newSite = CallSiteReference.make(statements.size(), site.getDeclaredTarget(), site.getInvocationCode());
+      CallSiteReference newSite = new JSCallSiteReference(statements.size());
 
       JavaScriptInvoke s = new JavaScriptInvoke(function, nextLocal++, params, nextLocal++, newSite);
       statements.add(s);
