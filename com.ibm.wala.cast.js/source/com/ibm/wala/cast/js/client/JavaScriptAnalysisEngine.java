@@ -99,8 +99,6 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
 
     options.setUseStacksForLexicalScoping(true);
 
-    options.getSSAOptions().setPreserveNames(true);
-
     return options;
   }
 }

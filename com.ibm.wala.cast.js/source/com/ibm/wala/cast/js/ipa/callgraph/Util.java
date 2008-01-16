@@ -53,8 +53,6 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
 
     options.setUseStacksForLexicalScoping(true);
 
-    options.getSSAOptions().setPreserveNames(true);
-
     return options;
   }
 
