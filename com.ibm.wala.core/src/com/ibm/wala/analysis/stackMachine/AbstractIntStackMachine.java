@@ -937,11 +937,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       return currentSuccessorBlock;
     }
 
-    /**
-     * Method getInstructions.
-     * 
-     * @return Instruction[]
-     */
+
     public abstract Instruction[] getInstructions();
 
     /**

@@ -11,7 +11,7 @@
 package com.ibm.wala.ssa;
 
 /**
- *
+ * 
  * Options that govern SSA construction
  * 
  * @author sfink
@@ -19,44 +19,36 @@ package com.ibm.wala.ssa;
 public class SSAOptions {
 
   /**
-   *  While SSA form makes the not-unreasonable assumption that values
-   * must be defined before they are used, many languages permit using
-   * undefined variables and simply give them some default value.  Rather
-   * than requiring an IR used in SSA conversion to add bogus assignments
-   * of the default that will get copy propagated away, this interface
-   * is a way to specify what the default values are: this object will
-   * be invoked whenever SSA conversion needs to read a value with an
-   * no definition.
-   *
+   * While SSA form makes the not-unreasonable assumption that values must be defined before they are used, many
+   * languages permit using undefined variables and simply give them some default value. Rather than requiring an IR
+   * used in SSA conversion to add bogus assignments of the default that will get copy propagated away, this interface
+   * is a way to specify what the default values are: this object will be invoked whenever SSA conversion needs to read
+   * a value with an no definition.
+   * 
    * @author Julian Dolby (dolby@us.ibm.com)
-   *
+   * 
    */
   public interface DefaultValues {
     int getDefaultValue(SymbolTable symtab, int valueNumber);
   }
 
   /**
-   * use pi nodes when building IR
+   * policy for pi node insertion.
    */
-  private boolean usePiNodes = false;
+  private SSAPiNodePolicy piNodePolicy;
+
   private DefaultValues defaultValues = null;
 
   private final static SSAOptions defaultOptions = new SSAOptions();
-  
-  
-  /**
-   * @return true iff these options indicate pi nodes should be used
-   */
-  public boolean getUsePiNodes() {
-    return usePiNodes;
-  }
 
   /**
-   * @param b whether to use pi nodes when constructing ir
+   * return a policy that enables all built-in pi node policies
    */
-  public void setUsePiNodes(boolean b) {
-    this.usePiNodes = b;
+  public static SSAPiNodePolicy getAllBuiltInPiNodes() {
+    return CompoundPiPolicy.createCompoundPiPolicy(InstanceOfPiPolicy.createInstanceOfPiPolicy(), NullTestPiPolicy
+        .createNullTestPiPolicy());
   }
+
 
   public void setDefaultValues(DefaultValues defaultValues) {
     this.defaultValues = defaultValues;
@@ -73,21 +65,41 @@ public class SSAOptions {
     return defaultOptions;
   }
 
-  @Override
-  public boolean equals(Object arg0) {
-    if (arg0 == null) {
-      return false;
-    }
-    if (getClass().equals(arg0.getClass())) {
-      SSAOptions other = (SSAOptions)arg0;
-      return usePiNodes == other.usePiNodes;
-    } else {
-      return false;
-    }
+
+  public SSAPiNodePolicy getPiNodePolicy() {
+    return piNodePolicy;
   }
+
+
+  public void setPiNodePolicy(SSAPiNodePolicy piNodePolicy) {
+    this.piNodePolicy = piNodePolicy;
+  }
+
 
   @Override
   public int hashCode() {
-    return (usePiNodes) ? 9277 : 7207;
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((piNodePolicy == null) ? 0 : piNodePolicy.hashCode());
+    return result;
   }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    final SSAOptions other = (SSAOptions) obj;
+    if (piNodePolicy == null) {
+      if (other.piNodePolicy != null)
+        return false;
+    } else if (!piNodePolicy.equals(other.piNodePolicy))
+      return false;
+    return true;
+  }
+
 }

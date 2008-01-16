@@ -47,6 +47,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.ShrikeUtil;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntPair;
 
@@ -58,11 +59,11 @@ import com.ibm.wala.util.intset.IntPair;
 public class SSABuilder extends AbstractIntStackMachine {
 
   public static SSABuilder make(ShrikeCTMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions,
-      SymbolTable symbolTable, boolean buildLocalMap, boolean addPiNodes) throws IllegalArgumentException {
+      SymbolTable symbolTable, boolean buildLocalMap, SSAPiNodePolicy piNodePolicy) throws IllegalArgumentException {
     if (scfg == null) {
       throw new IllegalArgumentException("scfg == null");
     }
-    return new SSABuilder(method, cfg, scfg, instructions, symbolTable, buildLocalMap, addPiNodes);
+    return new SSABuilder(method, cfg, scfg, instructions, symbolTable, buildLocalMap, piNodePolicy);
   }
 
   /**
@@ -82,11 +83,11 @@ public class SSABuilder extends AbstractIntStackMachine {
   private final SSA2LocalMap localMap;
 
   private SSABuilder(ShrikeCTMethod method, SSACFG cfg, ShrikeCFG scfg, SSAInstruction[] instructions, SymbolTable symbolTable,
-      boolean buildLocalMap, boolean addPiNodes) {
+      boolean buildLocalMap, SSAPiNodePolicy piNodePolicy) {
     super(scfg);
     localMap = buildLocalMap ? new SSA2LocalMap(scfg, instructions.length, cfg.getNumberOfNodes(), maxLocals) : null;
     init(new SymbolTableMeeter(symbolTable, cfg, instructions, scfg), new SymbolicPropagator(scfg, instructions, symbolTable,
-        localMap, cfg, addPiNodes, addPiNodes, addPiNodes, addPiNodes));
+        localMap, cfg, piNodePolicy));
     this.method = method;
     this.symbolTable = symbolTable;
     if (Assertions.verifyAssertions) {
@@ -271,13 +272,6 @@ public class SSABuilder extends AbstractIntStackMachine {
    * function for each instruction in the ShrikeBT IR.
    */
   private static class SymbolicPropagator extends BasicStackFlowProvider {
-    private final boolean addPiForInstanceOf;
-
-    private final boolean addPiForNullCheck;
-
-    private final boolean addPiForFieldSelect;
-
-    private final boolean addPiForDispatchSelect;
 
     final SSAInstruction[] instructions;
 
@@ -289,18 +283,19 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     final ClassLoaderReference loader;
 
+    /**
+     * creators[i] holds the instruction that defs value number i
+     */
     private SSAInstruction[] creators;
 
     final SSA2LocalMap localMap;
+    
+    final SSAPiNodePolicy piNodePolicy;
 
     public SymbolicPropagator(ShrikeCFG shrikeCFG, SSAInstruction[] instructions, SymbolTable symbolTable, SSA2LocalMap localMap,
-        SSACFG cfg, boolean addPiForInstanceOf, boolean addPiForNullCheck, boolean addPiForFieldSelect,
-        boolean addPiForDispatchSelect) {
+        SSACFG cfg, SSAPiNodePolicy piNodePolicy) {
       super(shrikeCFG);
-      this.addPiForInstanceOf = addPiForInstanceOf;
-      this.addPiForNullCheck = addPiForNullCheck;
-      this.addPiForFieldSelect = addPiForFieldSelect;
-      this.addPiForDispatchSelect = addPiForDispatchSelect;
+      this.piNodePolicy = piNodePolicy;
       this.cfg = cfg;
       this.creators = new SSAInstruction[0];
       this.shrikeCFG = shrikeCFG;
@@ -313,7 +308,7 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     @Override
     public boolean needsEdgeFlow() {
-      return addPiForInstanceOf || addPiForNullCheck || addPiForFieldSelect || addPiForDispatchSelect;
+      return piNodePolicy != null;
     }
 
     private void emitInstruction(SSAInstruction s) {
@@ -720,27 +715,25 @@ public class SSABuilder extends AbstractIntStackMachine {
       workingState.replaceValue(ref, pi.getDef());
     }
 
-    private void maybeInsertPi(int val) {
-      if ((addPiForFieldSelect) && (creators.length > val) && (creators[val] instanceof SSAGetInstruction)
-          && !((SSAGetInstruction) creators[val]).isStatic()) {
-        reuseOrCreatePi(creators[val], val);
-      } else if ((addPiForDispatchSelect)
-          && (creators.length > val)
-          && (creators[val] instanceof SSAInvokeInstruction)
-          && (((SSAInvokeInstruction) creators[val]).getInvocationCode() == IInvokeInstruction.Dispatch.VIRTUAL || ((SSAInvokeInstruction) creators[val])
-              .getInvocationCode() == IInvokeInstruction.Dispatch.INTERFACE)) {
-        reuseOrCreatePi(creators[val], val);
-      }
-    }
+//    private void maybeInsertPi(int val) {
+//      if ((addPiForFieldSelect) && (creators.length > val) && (creators[val] instanceof SSAGetInstruction)
+//          && !((SSAGetInstruction) creators[val]).isStatic()) {
+//        reuseOrCreatePi(creators[val], val);
+//      } else if ((addPiForDispatchSelect)
+//          && (creators.length > val)
+//          && (creators[val] instanceof SSAInvokeInstruction)
+//          && (((SSAInvokeInstruction) creators[val]).getInvocationCode() == IInvokeInstruction.Dispatch.VIRTUAL || ((SSAInvokeInstruction) creators[val])
+//              .getInvocationCode() == IInvokeInstruction.Dispatch.INTERFACE)) {
+//        reuseOrCreatePi(creators[val], val);
+//      }
+//    }
 
-    private void maybeInsertPi(SSAInstruction cond, int val1, int val2) {
-      if ((addPiForInstanceOf) && (creators.length > val1) && (creators[val1] instanceof SSAInstanceofInstruction)
-          && (symbolTable.isBooleanOrZeroOneConstant(val2))) {
-        reuseOrCreatePi(creators[val1], creators[val1].getUse(0));
-      } else if ((addPiForNullCheck) && (symbolTable.isNullConstant(val2))) {
-        reuseOrCreatePi(cond, val1);
-      } else if (symbolTable.isIntegerConstant(val2)) {
-        maybeInsertPi(val1);
+    private void maybeInsertPi(SSAConditionalBranchInstruction cond) {
+      if (piNodePolicy != null) {
+        Pair<Integer, SSAInstruction> pi = piNodePolicy.getPi(cond, creators[cond.getUse(0)], creators[cond.getUse(1)], symbolTable);
+        if (pi != null) {
+          reuseOrCreatePi(pi.snd, pi.fst);
+        }
       }
     }
 
@@ -751,16 +744,14 @@ public class SSABuilder extends AbstractIntStackMachine {
        */
       @Override
       public void visitSwitch(com.ibm.wala.shrikeBT.SwitchInstruction instruction) {
-        int val = getCurrentInstruction().getUse(0);
-        maybeInsertPi(val);
+        // pi nodes not currently supported for switch.
+//        int val = getCurrentInstruction().getUse(0);
+//        maybeInsertPi(val);
       }
 
       @Override
       public void visitConditionalBranch(com.ibm.wala.shrikeBT.ConditionalBranchInstruction instruction) {
-        int val1 = getCurrentInstruction().getUse(0);
-        int val2 = getCurrentInstruction().getUse(1);
-        maybeInsertPi(getCurrentInstruction(), val1, val2);
-        maybeInsertPi(getCurrentInstruction(), val2, val1);
+        maybeInsertPi((SSAConditionalBranchInstruction) getCurrentInstruction());
       }
     }
 

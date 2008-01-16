@@ -11,7 +11,7 @@
 package com.ibm.wala.ssa;
 
 /**
- * A Pi instruction is a dummy assignment inserted at the head of a basic block, in order
+ * A Pi instruction is a dummy assignment inserted at the tail of a basic block, in order
  * to get a new variable name to associate with some flow-insensitive dataflow fact.
  * You can build an IR with or without Pi instructions, depending on SSAOptions selected.
  * 
@@ -50,6 +50,10 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
 
   private final int successorBlock;
 
+  /**
+   * @param s the successor block; this PI assignment happens on the transition between this basic block and
+   * the successor block.
+   */
   SSAPiInstruction(int result, int val, int s, SSAInstruction cause) {
     super(null, result, val);
     this.cause = cause;
@@ -69,7 +73,7 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
 
   @Override
   public String toString(SymbolTable symbolTable) {
-    return getValueString(symbolTable, result) + " = pi " + getValueString(symbolTable, val) + " for BB" + successorBlock;
+    return getValueString(symbolTable, result) + " = pi " + getValueString(symbolTable, val) + " for BB" + successorBlock + ", cause " + cause;
   }
 
   @Override

@@ -49,7 +49,7 @@ public class ReceiverTypeInferenceCache {
     try {
       if (result == null) {
         SSAOptions options = SSAOptions.defaultOptions();
-        options.setUsePiNodes(true);
+//        options.setUsePiNodes(true);
         IR ir = analysisCache.getSSACache().findOrCreateIR(n.getMethod(), n.getContext(),  options);
         TypeInference T = TypeInference.make(ir, false);
 

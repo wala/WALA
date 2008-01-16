@@ -87,7 +87,7 @@ public class ShrikeIRFactory implements IRFactory<ShrikeCTMethod> {
 
       {
         SSABuilder builder = SSABuilder.make(method, newCfg, shrikeCFG, newInstrs, symbolTable, buildLocalMap, options
-            .getUsePiNodes());
+            .getPiNodePolicy());
         builder.build();
         if (buildLocalMap)
           localMap = builder.getLocalMap();
