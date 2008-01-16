@@ -1386,7 +1386,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         IMethod targetMethod = getOptions().getMethodTargetSelector().getCalleeTarget(callGraph.getFakeRootNode(), site, null);
         if (targetMethod != null) {
           CGNode target = getTargetForCall(callGraph.getFakeRootNode(), site, (InstanceKey) null);
-          if (callGraph.getPredNodeCount(target) == 0) {
+          if (target != null && callGraph.getPredNodeCount(target) == 0) {
             SSAAbstractInvokeInstruction s = fakeWorldClinitMethod.addInvocation(new int[0], site);
             PointerKey uniqueCatch = getBuilder().getPointerKeyForExceptionalReturnValue(callGraph.getFakeRootNode());
             getBuilder().processResolvedCall(callGraph.getFakeWorldClinitNode(), s, target, null, uniqueCatch);
