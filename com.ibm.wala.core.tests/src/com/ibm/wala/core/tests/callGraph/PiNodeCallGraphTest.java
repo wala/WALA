@@ -26,6 +26,8 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.ssa.SSAPiNodePolicy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MemberReference;
@@ -76,20 +78,21 @@ public class PiNodeCallGraphTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
         TestConstants.PI_TEST_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    options.getSSAOptions().setUsePiNodes(usePiNodes);
+    SSAPiNodePolicy policy = usePiNodes ? SSAOptions.getAllBuiltInPiNodes() : null;
+    options.getSSAOptions().setPiNodePolicy(policy);
 
     return CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(), cha, scope, false);
   }
 
   private void checkCallAssertions(CallGraph cg, int desiredNumberOfTargets, int desiredNumberOfCalls) {
+  
     int numberOfCalls = 0;
     Set<CGNode> callerNodes = HashSetFactory.make();
     callerNodes.addAll(cg.getNodes(thisBinaryRef));
     callerNodes.addAll(cg.getNodes(thatBinaryRef));
     Assertions._assert(callerNodes.size() == 2);
 
-    for (Iterator<CGNode> nodes = callerNodes.iterator(); nodes.hasNext();) {
-      CGNode n = (CGNode) nodes.next();
+    for (CGNode n : callerNodes) {
       for (Iterator<CallSiteReference> sites = n.iterateCallSites(); sites.hasNext();) {
         CallSiteReference csRef = (CallSiteReference) sites.next();
         if (csRef.getDeclaredTarget().equals(unary2Ref)) {

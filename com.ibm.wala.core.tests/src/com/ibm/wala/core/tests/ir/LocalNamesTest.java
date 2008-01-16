@@ -24,6 +24,8 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.ssa.SSAPiNodePolicy;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.Selector;
@@ -100,7 +102,7 @@ public class LocalNamesTest extends WalaTestCase {
           .findOrCreateUTF8("([Ljava/lang/String;)V")));
 
       AnalysisOptions options = new AnalysisOptions();
-      options.getSSAOptions().setUsePiNodes(true);
+      options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
       IR ir = cache.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
 
       for (int offsetIndex = 0; offsetIndex < ir.getInstructions().length; offsetIndex++) {
@@ -121,15 +123,15 @@ public class LocalNamesTest extends WalaTestCase {
   }
 
   public void testLocalNamesWithoutPiNodes() {
-    boolean save = options.getSSAOptions().getUsePiNodes();
-    options.getSSAOptions().setUsePiNodes(false);
+    SSAPiNodePolicy save = options.getSSAOptions().getPiNodePolicy();
+    options.getSSAOptions().setPiNodePolicy(null);
     MethodReference mref = scope.findMethod(AnalysisScope.APPLICATION, "LcornerCases/Locals", Atom.findOrCreateUnicodeAtom("foo"),
         new ImmutableByteArray(UTF8Convert.toUTF8("([Ljava/lang/String;)V")));
     assertNotNull("method not found", mref);
     IMethod imethod = cha.resolveMethod(mref);
     assertNotNull("imethod not found", imethod);
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
-    options.getSSAOptions().setUsePiNodes(save);
+    options.getSSAOptions().setPiNodePolicy(save);
 
     // v1 should be the parameter "a" at pc 0
     String[] names = ir.getLocalNames(0, 1);
@@ -149,15 +151,15 @@ public class LocalNamesTest extends WalaTestCase {
   }
 
   public void testLocalNamesWithPiNodes() {
-    boolean save = options.getSSAOptions().getUsePiNodes();
-    options.getSSAOptions().setUsePiNodes(true);
+    SSAPiNodePolicy save = options.getSSAOptions().getPiNodePolicy();
+    options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
     MethodReference mref = scope.findMethod(AnalysisScope.APPLICATION, "LcornerCases/Locals", Atom.findOrCreateUnicodeAtom("foo"),
         new ImmutableByteArray(UTF8Convert.toUTF8("([Ljava/lang/String;)V")));
     assertNotNull("method not found", mref);
     IMethod imethod = cha.resolveMethod(mref);
     assertNotNull("imethod not found", imethod);
     IR ir = cache.getIRFactory().makeIR(imethod, Everywhere.EVERYWHERE, options.getSSAOptions());
-    options.getSSAOptions().setUsePiNodes(save);
+    options.getSSAOptions().setPiNodePolicy(save);
 
     // v1 should be the parameter "a" at pc 0
     String[] names = ir.getLocalNames(0, 1);

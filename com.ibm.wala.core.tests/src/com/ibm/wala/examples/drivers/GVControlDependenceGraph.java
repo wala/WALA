@@ -27,6 +27,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.StringStuff;
 import com.ibm.wala.util.debug.Assertions;
@@ -84,7 +85,6 @@ public class GVControlDependenceGraph {
       }
       AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
-      
       ClassHierarchy cha = ClassHierarchy.make(scope);
 
       MethodReference mr = StringStuff.makeMethodReference(methodSig);
@@ -94,7 +94,7 @@ public class GVControlDependenceGraph {
         Assertions.UNREACHABLE("could not resolve " + mr);
       }
       AnalysisOptions options = new AnalysisOptions();
-      options.getSSAOptions().setUsePiNodes(true);
+      options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
       AnalysisCache cache = new AnalysisCache();
       IR ir = cache.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions() );
 
