@@ -69,7 +69,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   private final AnalysisOptions options;
   
-  private final AnalysisCache cache;
+  protected final AnalysisCache cache;
 
   public AbstractRootMethod(MethodReference method, IClass declaringClass, final IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
     super(method, declaringClass, true, false);
@@ -95,6 +95,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     for (Iterator<SSAInstruction> it = statements.iterator(); it.hasNext();) {
       result[i++] = it.next();
     }
+
     return result;
   }
 

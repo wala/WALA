@@ -181,7 +181,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       for (int i = 0; i < r.length; i++) {
         if (r[i]) {
           int end = instructions.length - 1;
-          for (int j = i; j < instructions.length; j++) {
+          for (int j = i+1; j < instructions.length; j++) {
             if (r[j]) {
               end = j;
               break;
