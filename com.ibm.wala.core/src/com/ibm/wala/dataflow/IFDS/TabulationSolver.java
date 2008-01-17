@@ -361,8 +361,7 @@ public class TabulationSolver<T, P> {
     // succ:= successor nodes of edge.n (the return block in the callee)
     IntSet succ = supergraph.getSuccNodeNumbers(edge.n);
     if (succ == null) {
-      // This should only happen for return from the entry point of the
-      // supergraph
+      // This should only happen for return from the entry point of the supergraph
       // (fake root method for whole-program analysis).
       if (DEBUG_LEVEL > 0) {
         CGNode n = (CGNode) supergraph.getProcOf(edge.n);
@@ -388,7 +387,7 @@ public class TabulationSolver<T, P> {
         System.err.println("caller: " + c + " " + cNum);
       }
 
-      // [23] for each d4 s.t. <c,d4> -> <s_p,d1> occrurred earlier
+      // [23] for each d4 s.t. <c,d4> -> <s_p,d1> occurred earlier
       int globalC = supergraph.getNumber(c);
       final IntSet D4 = callFlow.getCallFlowSources(globalC, edge.d1);
 
@@ -417,9 +416,17 @@ public class TabulationSolver<T, P> {
    */
   private void propagateToReturnSites(final PathEdge edge, IntSet succ, final T c, final IntSet D4) {
 
+    if (DEBUG_LEVEL > 1) {
+      System.err.println("Successor nodes: " + succ);
+      for (IntIterator it = succ.intIterator(); it.hasNext(); ) {
+        int x = it.next();
+        System.err.println("  " + x + " " + supergraph.getNode(x));
+      }
+    }
+    
     P proc = supergraph.getProcOf(c);
     final T[] entries = supergraph.getEntriesForProcedure(proc);
-
+    
     // we iterate over each potential return site;
     // we might have multiple return sites due to exceptions
     // note that we might have different summary edges for each
@@ -427,6 +434,9 @@ public class TabulationSolver<T, P> {
     // exit block to each return site.
     for (Iterator<? extends T> retSites = supergraph.getReturnSites(c); retSites.hasNext();) {
       final T retSite = retSites.next();
+      if (DEBUG_LEVEL > 1) {
+        System.err.println("candidate return site: " + retSite + " " + supergraph.getNumber(retSite));
+      }
       // note: since we might have multiple exit nodes for the callee, (to
       // handle exceptional returns)
       // not every return site might be valid for this exit node (edge.n).
@@ -439,7 +449,7 @@ public class TabulationSolver<T, P> {
         continue;
       }
       if (DEBUG_LEVEL > 1) {
-        System.err.println("process return site: " + retSite);
+        System.err.println("feasible return site: " + retSite);
       }
       final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(c, edge.n, retSite);
       if (retf instanceof IBinaryReturnFlowFunction) {

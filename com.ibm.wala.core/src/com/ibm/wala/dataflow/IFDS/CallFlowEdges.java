@@ -116,7 +116,7 @@ public class CallFlowEdges {
       }
     }
     if (TabulationSolver.DEBUG_LEVEL > 0) {
-      Trace.println("getCallFlowSources " + c + " " + d2 + " " + result);
+      System.err.println("getCallFlowSources " + c + " " + d2 + " " + result);
     }
     return result;
   }
