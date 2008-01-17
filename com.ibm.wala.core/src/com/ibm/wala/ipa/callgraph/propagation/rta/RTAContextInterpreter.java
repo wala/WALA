@@ -16,6 +16,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.types.FieldReference;
 
 /**
  *
@@ -44,12 +45,12 @@ public interface RTAContextInterpreter {
   /**
    * @return iterator of FieldReference
    */
-  public Iterator iterateFieldsRead(CGNode node); 
+  public Iterator<FieldReference> iterateFieldsRead(CGNode node); 
 
   /**
    * @return iterator of FieldReference
    */
-  public Iterator iterateFieldsWritten(CGNode node); 
+  public Iterator<FieldReference> iterateFieldsWritten(CGNode node); 
 
   /**
    * record that the "factory" method of a node should be interpreted to allocate a 

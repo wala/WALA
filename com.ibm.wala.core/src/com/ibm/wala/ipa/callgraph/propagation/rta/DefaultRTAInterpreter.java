@@ -21,6 +21,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContextInsensitiveSSAInterpreter;
+import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.util.debug.Trace;
 
 /**
@@ -69,14 +70,14 @@ public class DefaultRTAInterpreter implements RTAContextInterpreter {
     return getNodeInterpreter(node).iterateCallSites(node);
   }
 
-  public Iterator iterateFieldsRead(CGNode node) {
+  public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     return getNodeInterpreter(node).iterateFieldsRead(node);
   }
 
-  public Iterator iterateFieldsWritten(CGNode node) {
+  public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }

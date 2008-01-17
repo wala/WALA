@@ -316,11 +316,11 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
         return false;
       }
 
-      public Iterator iterateFieldsRead(CGNode node) {
+      public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
         return EmptyIterator.instance();
       }
 
-      public Iterator iterateFieldsWritten(CGNode node) {
+      public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
         return EmptyIterator.instance();
       }
     };

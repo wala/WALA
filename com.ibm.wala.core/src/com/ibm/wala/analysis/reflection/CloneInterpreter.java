@@ -44,6 +44,7 @@ import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -239,12 +240,12 @@ public class CloneInterpreter implements SSAContextInterpreter {
   }
 
 
-  public Iterator iterateFieldsRead(CGNode node) {
+  public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     SSAInstruction[] statements = getIR(node).getInstructions();
     return CodeScanner.getFieldsRead(statements).iterator();
   }
 
-  public Iterator iterateFieldsWritten(CGNode node) {
+  public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     SSAInstruction[] statements = getIR(node).getInstructions();
     return CodeScanner.getFieldsWritten(statements).iterator();
   }

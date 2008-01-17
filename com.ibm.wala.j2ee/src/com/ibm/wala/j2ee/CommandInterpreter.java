@@ -26,7 +26,6 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.SyntheticMethod;
@@ -45,6 +44,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.Atom;
@@ -263,11 +263,11 @@ public class CommandInterpreter implements SSAContextInterpreter {
     }
   }
 
-  public Iterator<IField> iterateFieldsRead(CGNode node) {
+  public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     return EmptyIterator.instance();
   }
 
-  public Iterator<IField> iterateFieldsWritten(CGNode node) {
+  public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     return EmptyIterator.instance();
   }
 

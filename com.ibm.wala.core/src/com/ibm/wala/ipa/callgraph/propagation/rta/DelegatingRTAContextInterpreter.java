@@ -16,6 +16,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -70,7 +71,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     return B.iterateCallSites(node);
   }
 
-  public Iterator iterateFieldsRead(CGNode node) {
+  public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
         return A.iterateFieldsRead(node);
@@ -82,7 +83,7 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
     return B.iterateFieldsRead(node);
   }
 
-  public Iterator iterateFieldsWritten(CGNode node) {
+  public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     if (A != null) {
       if (A.understands(node)) {
         return A.iterateFieldsWritten(node);

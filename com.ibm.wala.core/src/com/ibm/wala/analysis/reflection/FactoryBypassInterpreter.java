@@ -56,6 +56,7 @@ import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
+import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MemberReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -622,7 +623,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
   }
 
  
-  public Iterator iterateFieldsRead(CGNode node) {
+  public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
@@ -636,7 +637,7 @@ public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAConte
     }
   }
 
-  public Iterator iterateFieldsWritten(CGNode node) {
+  public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }

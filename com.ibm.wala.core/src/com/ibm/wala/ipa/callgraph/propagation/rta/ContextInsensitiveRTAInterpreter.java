@@ -21,6 +21,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -71,7 +72,7 @@ public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInte
     }
   }
 
-  public Iterator iterateFieldsRead(CGNode node) {
+  public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
@@ -84,7 +85,7 @@ public abstract class ContextInsensitiveRTAInterpreter implements RTAContextInte
     }
   }
 
-  public Iterator iterateFieldsWritten(CGNode node) {
+  public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
