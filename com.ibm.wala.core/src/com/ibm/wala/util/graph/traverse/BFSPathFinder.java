@@ -13,6 +13,7 @@ package com.ibm.wala.util.graph.traverse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,7 +22,6 @@ import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.collections.Queue;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 
@@ -152,13 +152,15 @@ public class BFSPathFinder<T> {
    */
   public List<T> find() {
 
-    Queue<T> Q = new Queue<T>();
+    LinkedList<T> Q = new LinkedList<T>();
     HashMap<Object, T> history = HashMapFactory.make();
     while (roots.hasNext()) {
-      history.put(Q.enqueue(roots.next()), null);
+      T next = roots.next();
+      Q.addLast(next);
+      history.put(next, null);
     }
     while (!Q.isEmpty()) {
-      T N = Q.dequeue();
+      T N = Q.removeFirst();
       if (DEBUG) {
         Trace.println("visit " + N);
       }
@@ -169,7 +171,7 @@ public class BFSPathFinder<T> {
       while (children.hasNext()) {
         T c = children.next();
         if (!history.containsKey(c)) {
-          Q.enqueue(c);
+          Q.addLast(c);
           history.put(c, N);
         }
       }
