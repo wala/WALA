@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 IBM Corporation.
+ * Copyright (c) 2007 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,35 +13,40 @@ package com.ibm.wala.ipa.slicer;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * Identifier of a statement in an SDG.
+ * A {@link Statement} representing a formal parameter
  * 
  * @author sjfink
- * 
  */
-public abstract class Statement {
-  public static enum Kind {
-    NORMAL, PHI, PI, CATCH, PARAM_CALLER, PARAM_CALLEE, NORMAL_RET_CALLER, NORMAL_RET_CALLEE, EXC_RET_CALLER, EXC_RET_CALLEE,
-    HEAP_PARAM_CALLER, HEAP_PARAM_CALLEE, HEAP_RET_CALLER, HEAP_RET_CALLEE, METHOD_ENTRY
+public class ParamCallee extends Statement implements ValueNumberCarrier {
+  /**
+   * Value number of the parameter
+   */
+  protected final int valueNumber;
+
+  public ParamCallee(CGNode node, int valueNumber) {
+    super(node);
+    this.valueNumber = valueNumber;
   }
 
-  private final CGNode node;
-
-  public Statement(final CGNode node) {
-    super();
-    this.node = node;
+  @Override
+  public Kind getKind() {
+    return Kind.PARAM_CALLEE;
   }
 
-  public abstract Kind getKind();
+  public int getValueNumber() {
+    return valueNumber;
+  }
 
-  public CGNode getNode() {
-    return node;
+  @Override
+  public String toString() {
+    return super.toString() + " v" + valueNumber;
   }
 
   @Override
   public int hashCode() {
     final int prime = 31;
-    int result = 1;
-    result = prime * result + ((node == null) ? 0 : node.hashCode());
+    int result = super.hashCode();
+    result = prime * result + valueNumber;
     return result;
   }
 
@@ -49,23 +54,15 @@ public abstract class Statement {
   public boolean equals(Object obj) {
     if (this == obj)
       return true;
-    if (obj == null)
+    if (!super.equals(obj))
       return false;
     if (getClass() != obj.getClass())
       return false;
-    final Statement other = (Statement) obj;
-    if (node == null) {
-      if (other.node != null)
-        return false;
-    } else if (!node.equals(other.node))
+    final ParamCallee other = (ParamCallee) obj;
+    if (valueNumber != other.valueNumber)
       return false;
     return true;
   }
   
-
-  @Override
-  public String toString() {
-    return getKind().toString() + ":" + getNode();
-  }
   
 }

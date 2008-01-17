@@ -14,8 +14,6 @@ import java.util.Iterator;
 
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.slicer.ParamStatement.ExceptionalReturnCaller;
-import com.ibm.wala.ipa.slicer.ParamStatement.NormalReturnCaller;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.util.collections.EmptyIterator;
@@ -77,19 +75,19 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   public Iterator<? extends Statement> getCallSites(Statement r) {
     switch (r.getKind()) {
     case EXC_RET_CALLER: {
-      ParamStatement.ExceptionalReturnCaller n = (ExceptionalReturnCaller) r;
-      SSAAbstractInvokeInstruction call = n.getCall();
+      ExceptionalReturnCaller n = (ExceptionalReturnCaller) r;
+      SSAAbstractInvokeInstruction call = n.getInstruction();
       PDG pdg = getProcOf(r);
       return pdg.getCallerParamStatements(call).iterator();
     }
     case NORMAL_RET_CALLER: {
-      ParamStatement.NormalReturnCaller n = (NormalReturnCaller) r;
-      SSAAbstractInvokeInstruction call = n.getCall();
+      NormalReturnCaller n = (NormalReturnCaller) r;
+      SSAAbstractInvokeInstruction call = n.getInstruction();
       PDG pdg = getProcOf(r);
       return pdg.getCallerParamStatements(call).iterator();
     }
     case HEAP_RET_CALLER: {
-      HeapStatement.ReturnCaller n = (HeapStatement.ReturnCaller) r;
+      HeapStatement.HeapReturnCaller n = (HeapStatement.HeapReturnCaller) r;
       SSAAbstractInvokeInstruction call = n.getCall();
       PDG pdg = getProcOf(r);
       return pdg.getCallerParamStatements(call).iterator();
@@ -231,13 +229,13 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   public Iterator<? extends Statement> getReturnSites(Statement call) {
     switch (call.getKind()) {
     case PARAM_CALLER: {
-      ParamStatement.ParamCaller n = (ParamStatement.ParamCaller) call;
-      SSAAbstractInvokeInstruction st = n.getCall();
+      ParamCaller n = (ParamCaller) call;
+      SSAAbstractInvokeInstruction st = n.getInstruction();
       PDG pdg = getProcOf(call);
       return pdg.getCallerReturnStatements(st).iterator();
     }
     case HEAP_PARAM_CALLER: {
-      HeapStatement.ParamCaller n = (HeapStatement.ParamCaller) call;
+      HeapStatement.HeapParamCaller n = (HeapStatement.HeapParamCaller) call;
       SSAAbstractInvokeInstruction st = n.getCall();
       PDG pdg = getProcOf(call);
       return pdg.getCallerReturnStatements(st).iterator();

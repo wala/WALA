@@ -29,11 +29,11 @@ public abstract class HeapStatement extends Statement {
   }
 
 
-  public final static class ParamCaller extends HeapStatement {
+  public final static class HeapParamCaller extends HeapStatement {
     // index into the IR instruction array of the call statements
     private final int callIndex;
 
-    public ParamCaller(CGNode node,int callIndex, PointerKey loc) {
+    public HeapParamCaller(CGNode node,int callIndex, PointerKey loc) {
       super(node, loc);
       this.callIndex = callIndex;
     }
@@ -64,8 +64,8 @@ public abstract class HeapStatement extends Statement {
     @Override
     public boolean equals(Object obj) {
       // instanceof is OK because this class is final.  instanceof is more efficient than getClass
-      if (obj instanceof ParamCaller) {
-        ParamCaller other = (ParamCaller) obj;
+      if (obj instanceof HeapParamCaller) {
+        HeapParamCaller other = (HeapParamCaller) obj;
         return getNode().equals(other.getNode()) && getLocation().equals(other.getLocation()) && callIndex == other.callIndex;
       } else {
         return false;
@@ -73,8 +73,8 @@ public abstract class HeapStatement extends Statement {
     }
   }
 
-  public final static class ParamCallee extends HeapStatement {
-    public ParamCallee(CGNode node, PointerKey loc) {
+  public final static class HeapParamCallee extends HeapStatement {
+    public HeapParamCallee(CGNode node, PointerKey loc) {
       super(node, loc);
     }
 
@@ -91,8 +91,8 @@ public abstract class HeapStatement extends Statement {
     @Override
     public boolean equals(Object obj) {
       // instanceof is ok because this class is final.  instanceof is more efficient than getClass
-      if (obj instanceof ParamCallee) {
-        ParamCallee other = (ParamCallee) obj;
+      if (obj instanceof HeapParamCallee) {
+        HeapParamCallee other = (HeapParamCallee) obj;
         return getNode().equals(other.getNode()) && getLocation().equals(other.getLocation());
       } else {
         return false;
@@ -105,12 +105,12 @@ public abstract class HeapStatement extends Statement {
     }
   }
 
-  public final static class ReturnCaller extends HeapStatement {
+  public final static class HeapReturnCaller extends HeapStatement {
     // index into the instruction array of the relevant call instruction
     private final int callIndex;
 //    private final SSAAbstractInvokeInstruction call;
 
-    public ReturnCaller(CGNode node, int callIndex, PointerKey loc) {
+    public HeapReturnCaller(CGNode node, int callIndex, PointerKey loc) {
       super(node, loc);
       this.callIndex = callIndex;
     }
@@ -141,8 +141,8 @@ public abstract class HeapStatement extends Statement {
     @Override
     public boolean equals(Object obj) {    
       // instanceof is ok because this class is final.  instanceof is more efficient than getClass
-      if (obj instanceof ReturnCaller) {
-        ReturnCaller other = (ReturnCaller) obj;
+      if (obj instanceof HeapReturnCaller) {
+        HeapReturnCaller other = (HeapReturnCaller) obj;
         return getNode().equals(other.getNode()) && getLocation().equals(other.getLocation()) && callIndex == other.callIndex;
       } else {
         return false;
@@ -150,8 +150,8 @@ public abstract class HeapStatement extends Statement {
     }
   }
 
-  public final static class ReturnCallee extends HeapStatement {
-    public ReturnCallee(CGNode node, PointerKey loc) {
+  public final static class HeapReturnCallee extends HeapStatement {
+    public HeapReturnCallee(CGNode node, PointerKey loc) {
       super(node, loc);
     }
 
@@ -168,8 +168,8 @@ public abstract class HeapStatement extends Statement {
     @Override
     public boolean equals(Object obj) {
       // instanceof is ok because this class is final.  instanceof is more efficient than getClass
-      if (obj instanceof ReturnCallee) {
-        ReturnCallee other = (ReturnCallee) obj;
+      if (obj instanceof HeapReturnCallee) {
+        HeapReturnCallee other = (HeapReturnCallee) obj;
         return getNode().equals(other.getNode()) && getLocation().equals(other.getLocation());
       } else {
         return false;

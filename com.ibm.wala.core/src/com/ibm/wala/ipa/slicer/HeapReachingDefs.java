@@ -34,7 +34,7 @@ import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ipa.modref.DelegatingExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ModRef;
-import com.ibm.wala.ipa.slicer.HeapStatement.ReturnCaller;
+import com.ibm.wala.ipa.slicer.HeapStatement.HeapReturnCaller;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -314,7 +314,7 @@ public class HeapReachingDefs {
           return OrdinalSet.empty();
         }
       case HEAP_RET_CALLEE: {
-        HeapStatement.ReturnCallee r = (HeapStatement.ReturnCallee) s;
+        HeapStatement.HeapReturnCallee r = (HeapStatement.HeapReturnCallee) s;
         PointerKey p = r.getLocation();
         BitVectorVariable v = solver.getIn(cfg.exit());
         if (DEBUG) {
@@ -326,7 +326,7 @@ public class HeapReachingDefs {
         return new OrdinalSet<Statement>(pointerKeyMod.get(p).intersection(v.getValue()), domain);
       }
       case HEAP_RET_CALLER: {
-        HeapStatement.ReturnCaller r = (HeapStatement.ReturnCaller) s;
+        HeapStatement.HeapReturnCaller r = (HeapStatement.HeapReturnCaller) s;
         ISSABasicBlock bb = cfg.getBlockForInstruction(r.getCallIndex());
         BitVectorVariable v = solver.getIn(bb);
         if (allCalleesMod(cg, r, mod) || pointerKeyMod.get(r.getLocation()) == null || v.getValue() == null) {
@@ -339,11 +339,11 @@ public class HeapReachingDefs {
         }
       }
       case HEAP_PARAM_CALLER: {
-        HeapStatement.ParamCaller r = (HeapStatement.ParamCaller) s;
+        HeapStatement.HeapParamCaller r = (HeapStatement.HeapParamCaller) s;
         NormalStatement call = ssaInstructionIndex2Statement.get(r.getCallIndex());
         ISSABasicBlock callBlock = cfg.getBlockForInstruction(call.getInstructionIndex());
         if (callBlock.isEntryBlock()) {
-          int x = domain.getMappedIndex(new HeapStatement.ParamCallee(node, r.getLocation()));
+          int x = domain.getMappedIndex(new HeapStatement.HeapParamCallee(node, r.getLocation()));
           assert x >= 0;
           IntSet xset = SparseIntSet.singleton(x);
           return new OrdinalSet<Statement>(xset, domain);
@@ -392,7 +392,7 @@ public class HeapReachingDefs {
   /**
    * Do all callees corresponding to the given call site def the pointer key being tracked by r?
    */
-  private static boolean allCalleesMod(CallGraph cg, ReturnCaller r, Map<CGNode, OrdinalSet<PointerKey>> mod) {
+  private static boolean allCalleesMod(CallGraph cg, HeapReturnCaller r, Map<CGNode, OrdinalSet<PointerKey>> mod) {
     Collection<CGNode> targets = cg.getPossibleTargets(r.getNode(), r.getCall().getCallSite());
     if (targets.isEmpty()) {
       return false;
@@ -497,7 +497,7 @@ public class HeapReachingDefs {
           if (DEBUG) {
             System.err.println("initHeapReturnCaller " + s);
           }
-          HeapStatement.ReturnCaller r = (ReturnCaller) s;
+          HeapStatement.HeapReturnCaller r = (HeapReturnCaller) s;
           NormalStatement call = ssaInstructionIndex2Statement.get(r.getCallIndex());
           int i = domain.getMappedIndex(call);
           int j = domain.getMappedIndex(r);

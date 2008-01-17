@@ -283,13 +283,13 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       case CATCH:
         return getPDG(N.getNode()).getPredNodes(N);
       case EXC_RET_CALLER: {
-        ParamStatement.ExceptionalReturnCaller nrc = (ParamStatement.ExceptionalReturnCaller) N;
-        SSAAbstractInvokeInstruction call = nrc.getCall();
+        ExceptionalReturnCaller nrc = (ExceptionalReturnCaller) N;
+        SSAAbstractInvokeInstruction call = nrc.getInstruction();
         Collection<Statement> result = Iterator2Collection.toCollection(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
           for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
-            Statement s = new ParamStatement.ExceptionalReturnCallee(t);
+            Statement s = new ExceptionalReturnCallee(t);
             addNode(s);
             result.add(s);
           }
@@ -297,13 +297,13 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         return result.iterator();
       }
       case NORMAL_RET_CALLER: {
-        ParamStatement.NormalReturnCaller nrc = (ParamStatement.NormalReturnCaller) N;
-        SSAAbstractInvokeInstruction call = nrc.getCall();
+        NormalReturnCaller nrc = (NormalReturnCaller) N;
+        SSAAbstractInvokeInstruction call = nrc.getInstruction();
         Collection<Statement> result = Iterator2Collection.toCollection(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
           for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
-            Statement s = new ParamStatement.NormalReturnCallee(t);
+            Statement s = new NormalReturnCallee(t);
             addNode(s);
             result.add(s);
           }
@@ -311,14 +311,14 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         return result.iterator();
       }
       case HEAP_RET_CALLER: {
-        HeapStatement.ReturnCaller r = (HeapStatement.ReturnCaller) N;
+        HeapStatement.HeapReturnCaller r = (HeapStatement.HeapReturnCaller) N;
         SSAAbstractInvokeInstruction call = r.getCall();
         Collection<Statement> result = Iterator2Collection.toCollection(getPDG(N.getNode()).getPredNodes(N));
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
           for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
             if (mod.get(t).contains(r.getLocation())) {
-              Statement s = new HeapStatement.ReturnCallee(t, r.getLocation());
+              Statement s = new HeapStatement.HeapReturnCallee(t, r.getLocation());
               addNode(s);
               result.add(s);
             }
@@ -327,7 +327,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         return result.iterator();
       }
       case PARAM_CALLEE: {
-        ParamStatement.ParamCallee pac = (ParamStatement.ParamCallee) N;
+        ParamCallee pac = (ParamCallee) N;
         int parameterIndex = pac.getValueNumber() - 1;
         Collection<Statement> result = HashSetFactory.make(5);
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
@@ -348,7 +348,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
                 int i = ii.next();
                 SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
                 int p = call.getUse(parameterIndex);
-                Statement s = new ParamStatement.ParamCaller(caller, call, p);
+                Statement s = new ParamCaller(caller, i, p);
                 addNode(s);
                 result.add(s);
               }
@@ -363,7 +363,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         return result.iterator();
       }
       case HEAP_PARAM_CALLEE: {
-        HeapStatement.ParamCallee hpc = (HeapStatement.ParamCallee) N;
+        HeapStatement.HeapParamCallee hpc = (HeapStatement.HeapParamCallee) N;
         Collection<Statement> result = HashSetFactory.make(5);
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
@@ -375,7 +375,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                Statement s = new HeapStatement.ParamCaller(caller, i, hpc.getLocation());
+                Statement s = new HeapStatement.HeapParamCaller(caller, i, hpc.getLocation());
                 addNode(s);
                 result.add(s);
               }
@@ -461,8 +461,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
-                Statement s = new ParamStatement.ExceptionalReturnCaller(caller, call);
+//                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
+                Statement s = new ExceptionalReturnCaller(caller, i);
                 addNode(s);
                 result.add(s);
               }
@@ -483,8 +483,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
-                Statement s = new ParamStatement.NormalReturnCaller(caller, call);
+//                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
+                Statement s = new NormalReturnCaller(caller, i);
                 addNode(s);
                 result.add(s);
               }
@@ -494,7 +494,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         return result.iterator();
       }
       case HEAP_RET_CALLEE: {
-        HeapStatement.ReturnCallee r = (HeapStatement.ReturnCallee) N;
+        HeapStatement.HeapReturnCallee r = (HeapStatement.HeapReturnCallee) N;
         Collection<Statement> result = HashSetFactory.make(5);
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence predecessors
@@ -506,7 +506,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-                Statement s = new HeapStatement.ReturnCaller(caller, i, r.getLocation());
+                Statement s = new HeapStatement.HeapReturnCaller(caller, i, r.getLocation());
                 addNode(s);
                 result.add(s);
               }
@@ -516,8 +516,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         return result.iterator();
       }
       case PARAM_CALLER: {
-        ParamStatement.ParamCaller pac = (ParamStatement.ParamCaller) N;
-        SSAAbstractInvokeInstruction call = pac.getCall();
+        ParamCaller pac = (ParamCaller) N;
+        SSAAbstractInvokeInstruction call = pac.getInstruction();
         Collection<Statement> result = HashSetFactory.make(5);
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence successors
@@ -528,7 +528,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
                 continue;
               }
               if (call.getUse(i) == pac.getValueNumber()) {
-                Statement s = new ParamStatement.ParamCallee(t, i + 1);
+                Statement s = new ParamCallee(t, i + 1);
                 addNode(s);
                 result.add(s);
               }
@@ -538,14 +538,14 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         return result.iterator();
       }
       case HEAP_PARAM_CALLER:
-        HeapStatement.ParamCaller pc = (HeapStatement.ParamCaller) N;
+        HeapStatement.HeapParamCaller pc = (HeapStatement.HeapParamCaller) N;
         SSAAbstractInvokeInstruction call = pc.getCall();
         Collection<Statement> result = HashSetFactory.make(5);
         if (!dOptions.equals(DataDependenceOptions.NONE)) {
           // data dependence successors
           for (CGNode t : cg.getPossibleTargets(N.getNode(), call.getCallSite())) {
             if (ref.get(t).contains(pc.getLocation())) {
-              Statement s = new HeapStatement.ParamCallee(t, pc.getLocation());
+              Statement s = new HeapStatement.HeapParamCallee(t, pc.getLocation());
               addNode(s);
               result.add(s);
             }
@@ -591,8 +591,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           return false;
         }
         if (dst.getKind().equals(Kind.EXC_RET_CALLER)) {
-          ParamStatement.ExceptionalReturnCaller r = (ParamStatement.ExceptionalReturnCaller) dst;
-          return cg.getPossibleTargets(r.getNode(), r.getCall().getCallSite()).contains(src.getNode());
+          ExceptionalReturnCaller r = (ExceptionalReturnCaller) dst;
+          return cg.getPossibleTargets(r.getNode(), r.getInstruction().getCallSite()).contains(src.getNode());
         } else {
           return false;
         }
@@ -602,8 +602,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           return false;
         }
         if (dst.getKind().equals(Kind.NORMAL_RET_CALLER)) {
-          ParamStatement.NormalReturnCaller r = (ParamStatement.NormalReturnCaller) dst;
-          return cg.getPossibleTargets(r.getNode(), r.getCall().getCallSite()).contains(src.getNode());
+          NormalReturnCaller r = (NormalReturnCaller) dst;
+          return cg.getPossibleTargets(r.getNode(), r.getInstruction().getCallSite()).contains(src.getNode());
         } else {
           return false;
         }
@@ -613,7 +613,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           return false;
         }
         if (dst.getKind().equals(Kind.HEAP_RET_CALLER)) {
-          HeapStatement.ReturnCaller r = (HeapStatement.ReturnCaller) dst;
+          HeapStatement.HeapReturnCaller r = (HeapStatement.HeapReturnCaller) dst;
           HeapStatement h = (HeapStatement) src;
           return h.getLocation().equals(r.getLocation())
               && cg.getPossibleTargets(r.getNode(), r.getCall().getCallSite()).contains(src.getNode());
@@ -626,11 +626,11 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           return false;
         }
         if (dst.getKind().equals(Kind.PARAM_CALLEE)) {
-          ParamStatement.ParamCallee callee = (ParamStatement.ParamCallee) dst;
-          ParamStatement.ParamCaller caller = (ParamStatement.ParamCaller) src;
+          ParamCallee callee = (ParamCallee) dst;
+          ParamCaller caller = (ParamCaller) src;
 
           return caller.getValueNumber() == callee.getValueNumber()
-              && cg.getPossibleTargets(caller.getNode(), caller.getCall().getCallSite()).contains(callee.getNode());
+              && cg.getPossibleTargets(caller.getNode(), caller.getInstruction().getCallSite()).contains(callee.getNode());
         } else {
           return false;
         }
@@ -640,8 +640,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           return false;
         }
         if (dst.getKind().equals(Kind.HEAP_PARAM_CALLEE)) {
-          HeapStatement.ParamCallee callee = (HeapStatement.ParamCallee) dst;
-          HeapStatement.ParamCaller caller = (HeapStatement.ParamCaller) src;
+          HeapStatement.HeapParamCallee callee = (HeapStatement.HeapParamCallee) dst;
+          HeapStatement.HeapParamCaller caller = (HeapStatement.HeapParamCaller) src;
 
           return caller.getLocation().equals(callee.getLocation())
               && cg.getPossibleTargets(caller.getNode(), caller.getCall().getCallSite()).contains(callee.getNode());

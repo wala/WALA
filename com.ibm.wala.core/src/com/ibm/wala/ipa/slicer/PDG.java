@@ -30,7 +30,6 @@ import com.ibm.wala.ipa.cfg.ExceptionPrunedCFG;
 import com.ibm.wala.ipa.modref.DelegatingExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ExtendedHeapModel;
 import com.ibm.wala.ipa.modref.ModRef;
-import com.ibm.wala.ipa.slicer.ParamStatement.ValueNumberCarrier;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
@@ -64,6 +63,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVectorIntSet;
+import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.OrdinalSet;
 
@@ -327,8 +327,7 @@ public class PDG implements NumberedGraph<Statement> {
               assert pi != null;
 
               if (pi instanceof SSAAbstractInvokeInstruction) {
-                SSAAbstractInvokeInstruction i = (SSAAbstractInvokeInstruction) pi;
-                delegate.addEdge(new ParamStatement.ExceptionalReturnCaller(node, i), c);
+                delegate.addEdge(new ExceptionalReturnCaller(node, pb.getLastInstructionIndex()), c);
               } else if (pi instanceof SSAAbstractThrowInstruction) {
                 delegate.addEdge(ssaInstruction2Statement(pi), c);
               }
@@ -432,28 +431,29 @@ public class PDG implements NumberedGraph<Statement> {
           Assertions.UNREACHABLE();
         }
         // TODO: this is overly conservative. deal with catch blocks?
-        for (NormalStatement pei : getPEIs(ir)) {
-          if (dOptions.isTerminateAtCast() && (pei.getInstruction() instanceof SSACheckCastInstruction)) {
+        for (IntIterator ii = getPEIs(ir).intIterator(); ii.hasNext(); ) {
+          int index = ii.next();
+          SSAInstruction pei = ir.getInstructions()[index];
+          if (dOptions.isTerminateAtCast() && (pei instanceof SSACheckCastInstruction)) {
             continue;
           }
-          if (pei.getInstruction() instanceof SSAAbstractInvokeInstruction) {
-            SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) pei.getInstruction();
-            Statement st = new ParamStatement.ExceptionalReturnCaller(node, call);
+          if (pei instanceof SSAAbstractInvokeInstruction) {
+            Statement st = new ExceptionalReturnCaller(node, index);
             delegate.addEdge(st, s);
           } else {
-            delegate.addEdge(pei, s);
+            delegate.addEdge(new NormalStatement(node, index), s);
           }
         }
         break;
       case PARAM_CALLER: {
-        ParamStatement.ParamCaller pac = (ParamStatement.ParamCaller) s;
+        ParamCaller pac = (ParamCaller) s;
         int vn = pac.getValueNumber();
         // note that if the caller is the fake root method and the parameter
         // type is primitive,
         // it's possible to have a value number of -1. If so, just ignore it.
         if (vn > -1) {
           if (ir.getSymbolTable().isParameter(vn)) {
-            Statement a = new ParamStatement.ParamCallee(node, vn);
+            Statement a = new ParamCallee(node, vn);
             delegate.addEdge(a, pac);
           } else {
             SSAInstruction d = DU.getDef(vn);
@@ -464,10 +464,10 @@ public class PDG implements NumberedGraph<Statement> {
               if (d instanceof SSAAbstractInvokeInstruction) {
                 SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) d;
                 if (vn == call.getException()) {
-                  Statement st = new ParamStatement.ExceptionalReturnCaller(node, call);
+                  Statement st = new ExceptionalReturnCaller(node, instructionIndices.get(d));
                   delegate.addEdge(st, pac);
                 } else {
-                  Statement st = new ParamStatement.NormalReturnCaller(node, call);
+                  Statement st = new NormalReturnCaller(node, instructionIndices.get(d));
                   delegate.addEdge(st, pac);
                 }
               } else {
@@ -684,21 +684,16 @@ public class PDG implements NumberedGraph<Statement> {
   }
 
   /**
-   * @return Statements representing each PEI in the ir
+   * @return {@link IntSet} representing instruction indices of each PEI in the ir
    */
-  private Collection<NormalStatement> getPEIs(final IR ir) {
-    Filter filter = new Filter() {
-      public boolean accepts(Object o) {
-        if (o instanceof NormalStatement) {
-          NormalStatement s = (NormalStatement) o;
-          SSAInstruction st = ir.getInstructions()[s.getInstructionIndex()];
-          return st.isPEI();
-        } else {
-          return false;
-        }
+  private IntSet getPEIs(final IR ir) {
+    BitVectorIntSet result = new BitVectorIntSet();
+    for (int i = 0; i < ir.getInstructions().length; i++) {
+      if (ir.getInstructions()[i] != null && ir.getInstructions()[i].isPEI()) {
+        result.add(i);
       }
-    };
-    return Iterator2Collection.toCollection(new FilterIterator<NormalStatement>(iterator(), filter));
+    }
+    return result;
   }
 
   /**
@@ -804,18 +799,18 @@ public class PDG implements NumberedGraph<Statement> {
   private void createReturnStatements() {
     ArrayList<Statement> list = new ArrayList<Statement>();
     if (!node.getMethod().getReturnType().equals(TypeReference.Void)) {
-      ParamStatement.NormalReturnCallee n = new ParamStatement.NormalReturnCallee(node);
+      NormalReturnCallee n = new NormalReturnCallee(node);
       delegate.addNode(n);
       list.add(n);
     }
     if (!dOptions.isIgnoreExceptions()) {
-      ParamStatement.ExceptionalReturnCallee e = new ParamStatement.ExceptionalReturnCallee(node);
+      ExceptionalReturnCallee e = new ExceptionalReturnCallee(node);
       delegate.addNode(e);
       list.add(e);
     }
     if (!dOptions.isIgnoreHeap()) {
       for (PointerKey p : mod.get(node)) {
-        Statement h = new HeapStatement.ReturnCallee(node, p);
+        Statement h = new HeapStatement.HeapReturnCallee(node, p);
         delegate.addNode(h);
         list.add(h);
       }
@@ -834,13 +829,13 @@ public class PDG implements NumberedGraph<Statement> {
   private void createCalleeParams(Map<CGNode, OrdinalSet<PointerKey>> ref) {
     ArrayList<Statement> list = new ArrayList<Statement>();
     for (int i = 1; i <= node.getMethod().getNumberOfParameters(); i++) {
-      ParamStatement s = new ParamStatement.ParamCallee(node, i);
+      ParamCallee s = new ParamCallee(node, i);
       delegate.addNode(s);
       list.add(s);
     }
     if (!dOptions.isIgnoreHeap()) {
       for (PointerKey p : ref.get(node)) {
-        Statement h = new HeapStatement.ParamCallee(node, p);
+        Statement h = new HeapStatement.HeapParamCallee(node, p);
         delegate.addNode(h);
         list.add(h);
       }
@@ -909,18 +904,18 @@ public class PDG implements NumberedGraph<Statement> {
     Collection<Statement> params = MapUtil.findOrCreateSet(callerParamStatements, call.getCallSite());
     Collection<Statement> rets = MapUtil.findOrCreateSet(callerReturnStatements, call.getCallSite());
     for (int j = 0; j < call.getNumberOfUses(); j++) {
-      Statement st = new ParamStatement.ParamCaller(node, call, call.getUse(j));
+      Statement st = new ParamCaller(node, callIndex, call.getUse(j));
       delegate.addNode(st);
       params.add(st);
     }
     if (!call.getDeclaredResultType().equals(TypeReference.Void)) {
-      Statement st = new ParamStatement.NormalReturnCaller(node, call);
+      Statement st = new NormalReturnCaller(node, callIndex);
       delegate.addNode(st);
       rets.add(st);
     }
     {
       if (!dOptions.isIgnoreExceptions()) {
-        Statement st = new ParamStatement.ExceptionalReturnCaller(node, call);
+        Statement st = new ExceptionalReturnCaller(node, callIndex);
         delegate.addNode(st);
         rets.add(st);
       }
@@ -929,13 +924,13 @@ public class PDG implements NumberedGraph<Statement> {
     if (!dOptions.isIgnoreHeap()) {
       OrdinalSet<PointerKey> uref = unionHeapLocations(cg, node, call, ref);
       for (PointerKey p : uref) {
-        Statement st = new HeapStatement.ParamCaller(node, callIndex, p);
+        Statement st = new HeapStatement.HeapParamCaller(node, callIndex, p);
         delegate.addNode(st);
         params.add(st);
       }
       OrdinalSet<PointerKey> umod = unionHeapLocations(cg, node, call, mod);
       for (PointerKey p : umod) {
-        Statement st = new HeapStatement.ReturnCaller(node, callIndex, p);
+        Statement st = new HeapStatement.HeapReturnCaller(node, callIndex, p);
         delegate.addNode(st);
         rets.add(st);
       }

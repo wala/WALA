@@ -21,8 +21,8 @@ import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ipa.slicer.NormalReturnCallee;
 import com.ibm.wala.ipa.slicer.NormalStatement;
-import com.ibm.wala.ipa.slicer.ParamStatement;
 import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
@@ -105,7 +105,7 @@ public class ReflectionHandler {
       if (n.getMethod() instanceof SyntheticMethod) {
         SyntheticMethod m = (SyntheticMethod) n.getMethod();
         if (m.isFactoryMethod()) {
-          result.add(new ParamStatement.NormalReturnCallee(n));
+          result.add(new NormalReturnCallee(n));
         }
       }
     }
