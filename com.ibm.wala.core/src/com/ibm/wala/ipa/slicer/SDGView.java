@@ -63,7 +63,6 @@ public class SDGView implements ISDG {
   }
 
   public Statement getNode(int number) throws UnimplementedError {
-    Assertions.UNREACHABLE(); 
     return delegate.getNode(number);
   }
 
