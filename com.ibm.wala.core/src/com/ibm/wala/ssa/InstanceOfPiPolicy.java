@@ -65,4 +65,8 @@ public class InstanceOfPiPolicy implements SSAPiNodePolicy {
     return 12;
   }
 
+  public Pair<Integer, SSAInstruction> getPi(SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
+    return null;
+  }
+
 }

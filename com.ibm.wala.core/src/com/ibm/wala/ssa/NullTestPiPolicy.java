@@ -49,4 +49,8 @@ public class NullTestPiPolicy implements SSAPiNodePolicy {
     return null;
   }
 
+  public Pair<Integer, SSAInstruction> getPi(SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
+    return null;
+  }
+
 }

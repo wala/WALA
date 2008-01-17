@@ -39,7 +39,7 @@ public class PiStatement extends Statement {
     }
     if (getClass().equals(obj.getClass())) {
       PiStatement other = (PiStatement) obj;
-      return getNode().equals(other.getNode()) && pi.equals(other.pi);
+      return getNode().equals(other.getNode()) && pi.getDef() == other.getPi().getDef();
     } else {
       return false;
     }
@@ -47,7 +47,7 @@ public class PiStatement extends Statement {
 
   @Override
   public int hashCode() {
-    return 3691 * pi.hashCode() + getNode().hashCode();
+    return 3691 * pi.getDef() + getNode().hashCode();
   }
 
   @Override

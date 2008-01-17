@@ -869,7 +869,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
     /**
-     * Initialize the visitor used to perform the flow functions
+     * Initialize the visitors used to perform the flow functions
      */
     protected void init(BasicStackMachineVisitor v, com.ibm.wala.shrikeBT.Instruction.Visitor ev) {
       this.visitor = v;

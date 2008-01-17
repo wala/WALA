@@ -47,7 +47,7 @@ public class PhiStatement extends Statement {
 
   @Override
   public int hashCode() {
-    return 3691 * phi.hashCode() + getNode().hashCode();
+    return 3691 * phi.getDef() + getNode().hashCode();
   }
 
   @Override

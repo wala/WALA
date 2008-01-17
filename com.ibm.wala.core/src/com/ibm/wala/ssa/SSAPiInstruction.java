@@ -49,15 +49,18 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
   private final SSAInstruction cause;
 
   private final int successorBlock;
+  
+  private final int piBlock;
 
   /**
    * @param s the successor block; this PI assignment happens on the transition between this basic block and
    * the successor block.
    */
-  SSAPiInstruction(int result, int val, int s, SSAInstruction cause) {
+  SSAPiInstruction(int result, int val, int piBlock, int s, SSAInstruction cause) {
     super(null, result, val);
     this.cause = cause;
     this.successorBlock = s;
+    this.piBlock = piBlock;
   }
 
   @Override
@@ -68,7 +71,7 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
     if (uses != null && uses.length == 0) {
       throw new IllegalArgumentException("uses.length == 0");
     }
-    return new SSAPiInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], successorBlock, cause);
+    return new SSAPiInstruction(defs == null ? result : defs[0], uses == null ? val : uses[0], piBlock, successorBlock, cause);
   }
 
   @Override
@@ -88,6 +91,10 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
     return successorBlock;
   }
 
+  public int getPiBlock() {
+    return piBlock;
+  }
+  
   public SSAInstruction getCause() {
     return cause;
   }

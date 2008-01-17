@@ -19,11 +19,17 @@ import com.ibm.wala.util.collections.Pair;
  */
 public interface SSAPiNodePolicy {
 
-  // /**
-  // * Do we need an {@link SSAPiInstruction} to introduce a new name for the value def'ed by the given instruction,
-  // * to be inserted in the basic block containing the instruction?
-  // */
-  // boolean needPi(SSAInstruction def);
+  /**
+   * Do we need to introduce a new name for some value immediately after a call?
+   * 
+   * If so, returns a pair consisting of the value number needing renaming, and the instruction which should be recorded
+   * as the cause of the pi instruction
+   * 
+   * @param call the call instruction in question
+   * @param symbolTable current state of the symbol table for the IR under construction
+   * @return description of the necessary pi instruction, or null if no pi instruction is needed.
+   */
+  Pair<Integer, SSAInstruction> getPi(SSAAbstractInvokeInstruction call, SymbolTable symbolTable);
 
   /**
    * Do we need to introduce a new name for some value after deciding on an outcome for a conditional branch

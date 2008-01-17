@@ -42,6 +42,16 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
     }
     return p2.getPi(cond, def1, def2, symbolTable);
   }
+  
+
+  public Pair<Integer, SSAInstruction> getPi(SSAAbstractInvokeInstruction call, SymbolTable symbolTable) {
+    Pair<Integer, SSAInstruction> result = p1.getPi(call, symbolTable);
+    if (result != null) {
+      return result;
+    }
+    return p2.getPi(call, symbolTable);
+  }
+  
 
   @Override
   public int hashCode() {
@@ -73,6 +83,6 @@ public class CompoundPiPolicy implements SSAPiNodePolicy {
       return false;
     return true;
   }
-  
+
   
 }
