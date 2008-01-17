@@ -17,12 +17,10 @@ import java.util.Properties;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
@@ -30,13 +28,13 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.slicer.HeapStatement;
+import com.ibm.wala.ipa.slicer.NormalReturnCaller;
 import com.ibm.wala.ipa.slicer.NormalStatement;
-import com.ibm.wala.ipa.slicer.ParamStatement;
+import com.ibm.wala.ipa.slicer.ParamCallee;
+import com.ibm.wala.ipa.slicer.ParamCaller;
 import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Slicer;
 import com.ibm.wala.ipa.slicer.Statement;
-import com.ibm.wala.ipa.slicer.ParamStatement.CallStatementCarrier;
-import com.ibm.wala.ipa.slicer.ParamStatement.ValueNumberCarrier;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
@@ -46,6 +44,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
@@ -59,9 +58,8 @@ import com.ibm.wala.viz.GVUtil;
 
 /**
  * 
- * This simple example WALA application computes a slice (@see
- * com.ibm.wala.ipa.slicer.Slicer) and fires off ghostview to view a dot-ted
- * representation of the slice.
+ * This simple example WALA application computes a slice (@see com.ibm.wala.ipa.slicer.Slicer) and fires off ghostview
+ * to view a dot-ted representation of the slice.
  * 
  * This is an example program on how to use the slicer.
  * 
@@ -77,27 +75,23 @@ public class GVSlice {
   private final static String PS_FILE = "slice.ps";
 
   /**
-   * Usage: GVSlice -appJar [jar file name] -mainClass [main class] -srcCaller
-   * [method name] -srcCallee [method name] -dd [data dependence options] -cd
-   * [control dependence options] -dir [forward|backward]
+   * Usage: GVSlice -appJar [jar file name] -mainClass [main class] -srcCaller [method name] -srcCallee [method name]
+   * -dd [data dependence options] -cd [control dependence options] -dir [forward|backward]
    * 
    * <ul>
-   * <li> "jar file name" should be something like
-   * "c:/temp/testdata/java_cup.jar"
-   * <li> "main class" should beshould be something like
-   * "c:/temp/testdata/java_cup.jar"
-   * <li> "method name" should be the name of a method. This takes a slice from
-   * the statement that calls "srcCallee" from "srcCaller"
-   * <li> "data dependence options" can be one of "-full", "-no_base_ptrs",
-   * "-no_base_no_heap", "-no_heap", "-no_base_no_heap_no_cast", or "-none".
+   * <li> "jar file name" should be something like "c:/temp/testdata/java_cup.jar"
+   * <li> "main class" should beshould be something like "c:/temp/testdata/java_cup.jar"
+   * <li> "method name" should be the name of a method. This takes a slice from the statement that calls "srcCallee"
+   * from "srcCaller"
+   * <li> "data dependence options" can be one of "-full", "-no_base_ptrs", "-no_base_no_heap", "-no_heap",
+   * "-no_base_no_heap_no_cast", or "-none".
    * 
    * @throws CancelException
    * @throws IllegalArgumentException
    * 
    * @see com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions
    *      <li> "control dependence options" can be "-full" or "-none"
-   *      <li> the -dir argument tells whether to compute a forwards or
-   *      backwards slice.
+   *      <li> the -dir argument tells whether to compute a forwards or backwards slice.
    *      </ul>
    * 
    */
@@ -130,25 +124,16 @@ public class GVSlice {
   }
 
   /**
-   * Compute a slice from a call statements, dot it, and fire off ghostview to
-   * visualize the result
+   * Compute a slice from a call statements, dot it, and fire off ghostview to visualize the result
    * 
-   * @param appJar
-   *            should be something like "c:/temp/testdata/java_cup.jar"
-   * @param mainClass
-   *            should be something like "c:/temp/testdata/java_cup.jar"
-   * @param srcCaller
-   *            name of the method containing the statement of interest
-   * @param srcCallee
-   *            name of the method called by the statement of interest
-   * @param goBackward
-   *            do a backward slice?
-   * @param dOptions
-   *            options controlling data dependence
-   * @param cOptions
-   *            options controlling control dependence
-   * @return a Process running ghostview to visualize the dot'ted representation
-   *         of the slice
+   * @param appJar should be something like "c:/temp/testdata/java_cup.jar"
+   * @param mainClass should be something like "c:/temp/testdata/java_cup.jar"
+   * @param srcCaller name of the method containing the statement of interest
+   * @param srcCallee name of the method called by the statement of interest
+   * @param goBackward do a backward slice?
+   * @param dOptions options controlling data dependence
+   * @param cOptions options controlling control dependence
+   * @return a Process running ghostview to visualize the dot'ted representation of the slice
    * @throws CancelException
    * @throws IllegalArgumentException
    */
@@ -156,8 +141,8 @@ public class GVSlice {
       DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
     try {
       // create an analysis scope representing the appJar as a J2SE application
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
-      
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(
+          CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // build a class hierarchy, call graph, and system dependence graph
       ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -217,8 +202,7 @@ public class GVSlice {
   }
 
   /**
-   * check that g is a well-formed graph, and that it contains exactly the
-   * number of nodes in the slice
+   * check that g is a well-formed graph, and that it contains exactly the number of nodes in the slice
    */
   private static void sanityCheck(Collection<Statement> slice, Graph<Statement> g) {
     try {
@@ -231,19 +215,19 @@ public class GVSlice {
   }
 
   /**
-   * If s is a call statement, return the statement representing the normal
-   * return from s
+   * If s is a call statement, return the statement representing the normal return from s
    */
   public static Statement getReturnStatementForCall(Statement s) {
     if (s.getKind() == Kind.NORMAL) {
-      SSAInstruction st = ((NormalStatement) s).getInstruction();
+      NormalStatement n = (NormalStatement)s;
+      SSAInstruction st = n.getInstruction();
       if (st instanceof SSAInvokeInstruction) {
-        SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction)st;
+        SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) st;
         if (call.getCallSite().getDeclaredTarget().getReturnType().equals(TypeReference.Void)) {
-          throw new IllegalArgumentException("this driver computes forward slices from the return value of calls.\n" +   "" 
-              + "Method " +call.getCallSite().getDeclaredTarget().getSignature() + " returns void.");
+          throw new IllegalArgumentException("this driver computes forward slices from the return value of calls.\n" + ""
+              + "Method " + call.getCallSite().getDeclaredTarget().getSignature() + " returns void.");
         }
-        return new ParamStatement.NormalReturnCaller(s.getNode(), (SSAInvokeInstruction) st);
+        return new NormalReturnCaller(s.getNode(), n.getInstructionIndex());
       } else {
         return s;
       }
@@ -265,8 +249,7 @@ public class GVSlice {
   }
 
   /**
-   * @return a NodeDecorator that decorates statements in a slice for a dot-ted
-   *         representation
+   * @return a NodeDecorator that decorates statements in a slice for a dot-ted representation
    */
   public static NodeDecorator makeNodeDecorator() {
     return new NodeDecorator() {
@@ -283,26 +266,12 @@ public class GVSlice {
           NormalStatement n = (NormalStatement) s;
           return n.getInstruction() + "\\n" + n.getNode().getMethod().getSignature();
         case PARAM_CALLEE:
+          ParamCallee paramCallee = (ParamCallee) s;
+          return s.getKind() + " " + paramCallee.getValueNumber() + "\\n" + s.getNode().getMethod().getName();
         case PARAM_CALLER:
-          if (s instanceof ValueNumberCarrier) {
-            ValueNumberCarrier vc = (ValueNumberCarrier) s;
-            if (s instanceof CallStatementCarrier) {
-              CallStatementCarrier cc = (CallStatementCarrier) s;
-
-              return s.getKind() + " " + vc.getValueNumber() + "\\n" + s.getNode().getMethod().getName() + "\\n"
-                  + cc.getCall().getCallSite().getDeclaredTarget().getName();
-            } else {
-              return s.getKind() + " " + vc.getValueNumber() + "\\n" + s.getNode().getMethod().getName();
-            }
-          } else {
-            if (s instanceof CallStatementCarrier) {
-              CallStatementCarrier cc = (CallStatementCarrier) s;
-              return s.getKind() + "\\n" + s.getNode() + "\\n" + cc.getCall();
-            } else {
-              return s.toString();
-            }
-          }
-
+          ParamCaller paramCaller = (ParamCaller) s;
+          return s.getKind() + " " + paramCaller.getValueNumber() + "\\n" + s.getNode().getMethod().getName() + "\\n"
+              + paramCaller.getInstruction().getCallSite().getDeclaredTarget().getName();
         case EXC_RET_CALLEE:
         case EXC_RET_CALLER:
         case NORMAL_RET_CALLEE:
@@ -330,8 +299,7 @@ public class GVSlice {
    * <li> args[4] : "-srcCaller"
    * <li> args[5] : something like "main"
    * 
-   * @throws UnsupportedOperationException
-   *             if command-line is malformed.
+   * @throws UnsupportedOperationException if command-line is malformed.
    */
   static void validateCommandLine(Properties p) {
     if (p.get("appJar") == null) {
