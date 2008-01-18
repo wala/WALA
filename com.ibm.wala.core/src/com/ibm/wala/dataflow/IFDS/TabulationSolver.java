@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.eclipse.util.MonitorUtil;
-import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.util.ReferenceCleanser;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -364,7 +363,7 @@ public class TabulationSolver<T, P> {
       // This should only happen for return from the entry point of the supergraph
       // (fake root method for whole-program analysis).
       if (DEBUG_LEVEL > 0) {
-        CGNode n = (CGNode) supergraph.getProcOf(edge.n);
+        P n = supergraph.getProcOf(edge.n);
         Assertions._assert(supergraph.getMain().equals(n), "no successors for " + edge.n);
       }
       return;
