@@ -46,11 +46,13 @@ public class AstJavaSlicer extends Slicer {
     for (Iterator<CGNode> ns = DFS.getReachableNodes(CG, partialRoots).iterator(); ns.hasNext();) {
       CGNode n = ns.next();
       IR nir = n.getIR();
-      SSAInstruction insts[] = nir.getInstructions();
-      for (int i = 0; i < insts.length; i++) {
-        if (insts[i] instanceof AstAssertInstruction) {
-          result.add(new NormalStatement(n, i));
-        }
+      if (nir != null) {
+	SSAInstruction insts[] = nir.getInstructions();
+	for (int i = 0; i < insts.length; i++) {
+          if (insts[i] instanceof AstAssertInstruction) {
+            result.add(new NormalStatement(n, i));
+	  }
+	}
       }
     }
 
