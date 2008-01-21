@@ -579,6 +579,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           }
         }
       case PHI:
+      case PI:
       case EXC_RET_CALLER:
       case NORMAL_RET_CALLER:
       case PARAM_CALLEE:
@@ -649,7 +650,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
           return false;
         }
       default:
-        Assertions.UNREACHABLE();
+        Assertions.UNREACHABLE(src.getKind());
         return false;
       }
     }
