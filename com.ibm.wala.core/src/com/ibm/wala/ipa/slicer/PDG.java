@@ -1058,7 +1058,6 @@ public class PDG implements NumberedGraph<Statement> {
 
   public boolean hasEdge(Statement src, Statement dst) throws UnimplementedError {
     populate();
-    Assertions.UNREACHABLE();
     return delegate.hasEdge(src, dst);
   }
 
