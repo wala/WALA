@@ -30,9 +30,11 @@ public abstract class DirectoryTreeModule implements Module {
   /**
    * @param root a directory
    */
-  DirectoryTreeModule(File root) {
+  DirectoryTreeModule(File root) throws IllegalArgumentException {
     this.root = root;
-    assert root.isDirectory();
+    if (!root.isDirectory()) {
+      throw new IllegalArgumentException("root is not a directory " + root);
+    }
   }
 
   protected abstract FileModule makeFile(File file);
