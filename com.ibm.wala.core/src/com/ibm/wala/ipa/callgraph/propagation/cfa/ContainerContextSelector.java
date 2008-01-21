@@ -63,6 +63,8 @@ public class ContainerContextSelector implements ContextSelector {
   private final static MethodReference ArraysCopyOfRange = MethodReference.findOrCreate(Arrays, "copyOfRange", "([CII)[C");
   private final static MethodReference ArraysCopyOf = MethodReference.findOrCreate(Arrays, "copyOf", "([Ljava/lang/Object;I)[Ljava/lang/Object;");
   private final static MethodReference ArraysCopyOf2 = MethodReference.findOrCreate(Arrays, "copyOf", "([Ljava/lang/Object;ILjava/lang/Class;)[Ljava/lang/Object;");
+  private final static MethodReference StringValueOf = MethodReference.findOrCreate(TypeReference.JavaLangString, "valueOf", "(Ljava/lang/Object;)Ljava/lang/String;");
+  
   /**
    * The governing class hierarchy.
    */
@@ -134,6 +136,9 @@ public class ContainerContextSelector implements ContextSelector {
       return true;
     }
     if (m.equals(ArraysCopyOf2)) {
+      return true;
+    }
+    if (m.equals(StringValueOf)) {
       return true;
     }
     return false;
