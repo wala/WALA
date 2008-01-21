@@ -46,18 +46,17 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
  * <p>
  * See Reps, Horwitz, Sagiv POPL 95.
  * <p>
- * This version differs in some ways from the POPL algorithm.  In particular ...
+ * This version differs in some ways from the POPL algorithm. In particular ...
  * <ul>
- * <li>to support exceptional control flow ... there may be several return sites for each
- * call site.
+ * <li>to support exceptional control flow ... there may be several return sites for each call site.
  * <li>it supports an optional merge operator, useful for non-IFDS problems and widening
- * <li> it store summary edges at each callee instead of at each call site, to avoid unnecessary
- * propagation during demand-driven tabulation.
+ * <li> it store summary edges at each callee instead of at each call site, to avoid unnecessary propagation during
+ * demand-driven tabulation.
  * </ul>
  * <p>
  * 
- * Type parameter T represents type of nodes in the supergraph. Type parameter P
- * represents the type of procedure (or box in RSM parlance)
+ * Type parameter T represents type of nodes in the supergraph. Type parameter P represents the type of procedure (or
+ * box in RSM parlance)
  * 
  * @author sfink
  */
@@ -73,10 +72,8 @@ public class TabulationSolver<T, P> {
    */
   protected static final int DEBUG_LEVEL = 0;
 
-  static protected final boolean verbose = true && ("true".equals(System.getProperty("com.ibm.wala.util.fixedpoint.impl.verbose")) ? true
+  static protected final boolean verbose = true && ("true".equals(System.getProperty("com.ibm.wala.fixedpoint.impl.verbose")) ? true
       : false);
-
-  static final boolean MORE_VERBOSE = false;
 
   static final int VERBOSE_INTERVAL = 100000;
 
@@ -85,13 +82,7 @@ public class TabulationSolver<T, P> {
   private static int verboseCounter = 0;
 
   /**
-   * A debugging option: just push 0 flow through the supergraph, for fun.
-   */
-  protected static final boolean DEBUG_IDENTITY_FLOW = false;
-
-  /**
-   * Should we periodically clear out soft reference caches in an attempt to
-   * help the GC?
+   * Should we periodically clear out soft reference caches in an attempt to help the GC?
    */
   final protected static boolean PERIODIC_WIPE_SOFT_CACHES = true;
 
@@ -104,26 +95,6 @@ public class TabulationSolver<T, P> {
    * Counter for wiping soft caches
    */
   private static int wipeCount = WIPE_SOFT_CACHE_INTERVAL;
-
-  /**
-   * A dummy object which represents the "no dataflow facts reach here"
-   */
-  public final static Object DUMMY_ZERO = new Object() {
-    @Override
-    public int hashCode() {
-      return 211;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      return this == o;
-    }
-
-    @Override
-    public String toString() {
-      return "dummy universal dataflow fact";
-    }
-  };
 
   /**
    * The supergraph which induces this dataflow problem
@@ -143,18 +114,16 @@ public class TabulationSolver<T, P> {
   /**
    * A map from Object (entry node in supergraph) -> LocalPathEdges.
    * 
-   * Logically, this represents a set of edges (s_p,d_i) -> (n, d_j). The data
-   * structure is chosen to attempt to save space over representing each edge
-   * explicitly.
+   * Logically, this represents a set of edges (s_p,d_i) -> (n, d_j). The data structure is chosen to attempt to save
+   * space over representing each edge explicitly.
    */
   final private Map<T, LocalPathEdges> pathEdges = HashMapFactory.make();
 
   /**
    * A map from Object (entry node in supergraph) -> CallFlowEdges.
    * 
-   * Logically, this represents a set of edges (c,d_i) -> (s_p, d_j). The data
-   * structure is chosen to attempt to save space over representing each edge
-   * explicitly.
+   * Logically, this represents a set of edges (c,d_i) -> (s_p, d_j). The data structure is chosen to attempt to save
+   * space over representing each edge explicitly.
    */
   final private Map<T, CallFlowEdges> callFlowEdges = HashMapFactory.make();
 
@@ -175,30 +144,22 @@ public class TabulationSolver<T, P> {
   private final IProgressMonitor progressMonitor;
 
   /**
-   * @param p
-   *            a description of the dataflow problem to solve
-   * @throws IllegalArgumentException
-   *             if p is null
+   * @param p a description of the dataflow problem to solve
+   * @throws IllegalArgumentException if p is null
    */
   protected TabulationSolver(TabulationProblem<T, P> p, IProgressMonitor monitor) {
     if (p == null) {
       throw new IllegalArgumentException("p is null");
     }
     this.supergraph = p.getSupergraph();
-    if (!DEBUG_IDENTITY_FLOW) {
-      this.flowFunctionMap = p.getFunctionMap();
-    } else {
-      this.flowFunctionMap = IdentityFlowFunctions.singleton();
-    }
+    this.flowFunctionMap = p.getFunctionMap();
     this.problem = p;
     this.progressMonitor = monitor;
   }
 
   /**
-   * @param p
-   *            a description of the dataflow problem to solve
-   * @throws IllegalArgumentException
-   *             if p is null
+   * @param p a description of the dataflow problem to solve
+   * @throws IllegalArgumentException if p is null
    */
   public static <T, P> TabulationSolver<T, P> make(TabulationProblem<T, P> p) {
     return new TabulationSolver<T, P>(p, null);
@@ -228,11 +189,9 @@ public class TabulationSolver<T, P> {
   protected void initialize() {
     T mainEntry = supergraph.getMainEntry();
     propagate(mainEntry, 0, mainEntry, 0);
-    if (!DEBUG_IDENTITY_FLOW) {
-      for (IntIterator it = problem.getReachableOnEntry().intIterator(); it.hasNext();) {
-        int i = it.next();
-        propagate(mainEntry, 0, mainEntry, i);
-      }
+    for (IntIterator it = problem.getReachableOnEntry().intIterator(); it.hasNext();) {
+      int i = it.next();
+      propagate(mainEntry, 0, mainEntry, i);
     }
   }
 
@@ -282,9 +241,8 @@ public class TabulationSolver<T, P> {
   }
 
   /**
-   * For some reason (either a bug in our code that defeats soft references, or
-   * a bad policy in the GC), leaving soft reference caches to clear themselves
-   * out doesn't work. Help it out.
+   * For some reason (either a bug in our code that defeats soft references, or a bad policy in the GC), leaving soft
+   * reference caches to clear themselves out doesn't work. Help it out.
    * 
    * It's unfortunate that this method exits.
    */
@@ -303,9 +261,7 @@ public class TabulationSolver<T, P> {
     verboseCounter++;
     if (verboseCounter % VERBOSE_INTERVAL == 0) {
       System.err.println("Tabulation Solver " + verboseCounter);
-      if (MORE_VERBOSE) {
-        System.err.println("  " + peekFromWorkList());
-      }
+      System.err.println("  " + peekFromWorkList());
       if (VERBOSE_TRACE_MEMORY) {
         ReferenceCleanser.clearSoftCaches();
         System.err.println("Analyze leaks..");
@@ -345,12 +301,10 @@ public class TabulationSolver<T, P> {
   }
 
   /**
-   * Handle lines [21 - 32] of the algorithm, propagating information from an
-   * exit node.
+   * Handle lines [21 - 32] of the algorithm, propagating information from an exit node.
    * 
-   * Note that we've changed the way we record summary edges. Summary edges are
-   * now associated with a callee (s_p,exit), where the original algorithm used
-   * a call, return pair in the caller.
+   * Note that we've changed the way we record summary edges. Summary edges are now associated with a callee (s_p,exit),
+   * where the original algorithm used a call, return pair in the caller.
    */
   protected void processExit(final PathEdge edge) {
     if (DEBUG_LEVEL > 0) {
@@ -402,30 +356,24 @@ public class TabulationSolver<T, P> {
    * 
    * [23] for each d5 s.t. <s_p,d2> -> <returnSite(c),d5> ..
    * 
-   * @param edge
-   *            the edge being processed
-   * @param succ
-   *            numbers of the nodes that are successors of edge.n (the return
-   *            block in the callee) in the call graph.
-   * @param c
-   *            a call site of edge.s_p
-   * @param D4
-   *            set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as
-   *            call flow
+   * @param edge the edge being processed
+   * @param succ numbers of the nodes that are successors of edge.n (the return block in the callee) in the call graph.
+   * @param c a call site of edge.s_p
+   * @param D4 set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as call flow
    */
   private void propagateToReturnSites(final PathEdge edge, IntSet succ, final T c, final IntSet D4) {
 
     if (DEBUG_LEVEL > 1) {
       System.err.println("Successor nodes: " + succ);
-      for (IntIterator it = succ.intIterator(); it.hasNext(); ) {
+      for (IntIterator it = succ.intIterator(); it.hasNext();) {
         int x = it.next();
         System.err.println("  " + x + " " + supergraph.getNode(x));
       }
     }
-    
+
     P proc = supergraph.getProcOf(c);
     final T[] entries = supergraph.getEntriesForProcedure(proc);
-    
+
     // we iterate over each potential return site;
     // we might have multiple return sites due to exceptions
     // note that we might have different summary edges for each
@@ -504,20 +452,12 @@ public class TabulationSolver<T, P> {
    * 
    * [23] for each d5 s.t. <s_p,d2> -> <returnSite(c),d5> ..
    * 
-   * @param edge
-   *            the edge being processed
-   * @param c
-   *            a call site of edge.s_p
-   * @param D4
-   *            set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as
-   *            call flow
-   * @param entries
-   *            the blocks in the supergraph that are entries for the procedure
-   *            of c
-   * @param retSite
-   *            the return site being propagated to
-   * @param retf
-   *            the flow function
+   * @param edge the edge being processed
+   * @param c a call site of edge.s_p
+   * @param D4 set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as call flow
+   * @param entries the blocks in the supergraph that are entries for the procedure of c
+   * @param retSite the return site being propagated to
+   * @param retf the flow function
    */
   private void propagateToReturnSiteWithBinaryFlowFunction(final PathEdge edge, final T c, final IntSet D4, final T[] entries,
       final T retSite, final IFlowFunction retf) {
@@ -562,10 +502,8 @@ public class TabulationSolver<T, P> {
   /**
    * @param s_p
    * @param n
-   * @param d2
-   *            note that s_p must be an entry for procof(n)
-   * @return set of d1 s.t. <s_p, d1> -> <n, d2> is a path edge, or null if none
-   *         found
+   * @param d2 note that s_p must be an entry for procof(n)
+   * @return set of d1 s.t. <s_p, d1> -> <n, d2> is a path edge, or null if none found
    */
   protected IntSet getInversePathEdges(T s_p, T n, int d2) {
     int number = supergraph.getLocalBlockNumber(n);
@@ -577,8 +515,7 @@ public class TabulationSolver<T, P> {
   }
 
   /**
-   * Handle lines [14 - 19] of the algorithm, propagating information into and
-   * across a call site.
+   * Handle lines [14 - 19] of the algorithm, propagating information into and across a call site.
    */
   protected void processCall(final PathEdge edge) {
     if (DEBUG_LEVEL > 0) {
@@ -777,23 +714,18 @@ public class TabulationSolver<T, P> {
   }
 
   /**
-   * Propagate the fact <s_p,i> -> <n, j> has arisen as a path edge. Note: apply
-   * merging if necessary.
+   * Propagate the fact <s_p,i> -> <n, j> has arisen as a path edge. Note: apply merging if necessary.
    * 
-   * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have
-   * path edges <s_p,i> -> <n, x>, <s_p,i> -> <n,y>, and <s_p,i> -><n, z>.
+   * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have path edges <s_p,i> -> <n, x>, <s_p,i> ->
+   * <n,y>, and <s_p,i> -><n, z>.
    * 
-   * let \alpha be the merge function. then instead of <s_p,i> -> <n,j>, we
-   * propagate <s_p,i> -> <n, \alpha(j,x,y,z) > !!!
+   * let \alpha be the merge function. then instead of <s_p,i> -> <n,j>, we propagate <s_p,i> -> <n, \alpha(j,x,y,z) >
+   * !!!
    * 
-   * @param s_p
-   *            entry block
-   * @param i
-   *            dataflow fact on entry
-   * @param n
-   *            reached block
-   * @param j
-   *            dataflow fact reached
+   * @param s_p entry block
+   * @param i dataflow fact on entry
+   * @param n reached block
+   * @param j dataflow fact reached
    */
   protected void propagate(T s_p, int i, T n, int j) {
     int number = supergraph.getLocalBlockNumber(n);
@@ -821,11 +753,11 @@ public class TabulationSolver<T, P> {
   }
 
   /**
-   * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have
-   * path edges <s_p,i> -> <n, x>, <s_p,i> -> <n,y>, and <s_p,i> -><n, z>.
+   * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have path edges <s_p,i> -> <n, x>, <s_p,i> ->
+   * <n,y>, and <s_p,i> -><n, z>.
    * 
-   * let \alpha be the merge function. then instead of <s_p,i> -> <n,j>, we
-   * propagate <s_p,i> -> <n, \alpha(j,x,y,z) > !!!
+   * let \alpha be the merge function. then instead of <s_p,i> -> <n,j>, we propagate <s_p,i> -> <n, \alpha(j,x,y,z) >
+   * !!!
    * 
    * return -1 if no fact should be propagated
    */
@@ -907,10 +839,6 @@ public class TabulationSolver<T, P> {
       this.d1 = d1;
       this.n = n;
       this.d2 = d2;
-      if (DEBUG_IDENTITY_FLOW) {
-        Assertions._assert(d1 == 0);
-        Assertions._assert(d2 == 0);
-      }
       if (DEBUG_LEVEL > 0 && Assertions.verifyAssertions) {
         if (!supergraph.containsNode(s_p)) {
           Assertions._assert(false, s_p.toString());
@@ -1073,8 +1001,7 @@ public class TabulationSolver<T, P> {
      * @param n1
      * @param d1
      * @param n2
-     * @return set of d2 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge,
-     *         or null if none found
+     * @return set of d2 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or null if none found
      */
     public IntSet getSummaryTargets(T n1, int d1, T n2) {
       LocalSummaryEdges summaries = summaryEdges.get(supergraph.getProcOf(n1));
@@ -1114,10 +1041,8 @@ public class TabulationSolver<T, P> {
   }
 
   /**
-   * @return set of d1 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or
-   *         null if none found
-   * @throws UnsupportedOperationException
-   *             unconditionally
+   * @return set of d1 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or null if none found
+   * @throws UnsupportedOperationException unconditionally
    */
   public IntSet getSummarySources(T n2, int d2, T n1) throws UnsupportedOperationException {
     throw new UnsupportedOperationException("not currently supported.  be careful");
