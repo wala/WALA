@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.examples.drivers;
 
-import java.io.File;
 import java.util.Collection;
 
 import org.eclipse.jface.viewers.TreeViewer;
@@ -19,13 +18,13 @@ import org.eclipse.jface.window.ApplicationWindow;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.CollectionFilter;
 import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.config.AnalysisScopeReader;
+import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.graph.InferGraphRoots;
@@ -60,10 +59,7 @@ public class SWTTypeHierarchy {
   public static ApplicationWindow run(String classpath) {
 
     try {
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
-
-      // generate a WALA-consumable wrapper around the incoming scope object
-      
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(classpath, FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // invoke WALA to build a class hierarchy
       ClassHierarchy cha = ClassHierarchy.make(scope);
