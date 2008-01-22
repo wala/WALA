@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="ASCII"?>
-<com.ibm.wala.common:EContainer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.ibm.wala.common="http:///com/ibm/wala/wala.ecore.common" xmlns:com.ibm.wala.regex="http:///com/ibm/wala/wala.ecore.regex">
-<contents xsi:type="com.ibm.wala.regex:EPattern" pattern="java\/awt\/.*"/>
-<contents xsi:type="com.ibm.wala.regex:EPattern" pattern="javax\/swing\/.*"/>
-<contents xsi:type="com.ibm.wala.regex:EPattern" pattern="sun\/awt\/.*"/>
-<contents xsi:type="com.ibm.wala.regex:EPattern" pattern="sun\/swing\/.*"/>
-</com.ibm.wala.common:EContainer>
