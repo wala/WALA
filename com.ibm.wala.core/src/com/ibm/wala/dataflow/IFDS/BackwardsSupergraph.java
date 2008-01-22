@@ -57,12 +57,12 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     return new BackwardsSupergraph<T, P>(forwardGraph);
   }
 
-  /*
+  /**
    * TODO: for now, this is not inverted.
    * 
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getProcedureGraph()
    */
-  public Graph<P> getProcedureGraph() {
+  public Graph<? extends P> getProcedureGraph() {
     return delegate.getProcedureGraph();
   }
 

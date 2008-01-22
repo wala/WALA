@@ -73,7 +73,7 @@ public class IFDSExplorer {
     String dotFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + "ir.dt";
 
     final SWTTreeViewer v = new SWTTreeViewer();
-    Graph<P> g = r.getProblem().getSupergraph().getProcedureGraph();
+    Graph<? extends P> g = r.getProblem().getSupergraph().getProcedureGraph();
     v.setGraphInput(g);
     v.setBlockInput(true);
     Collection<P> roots =  Collections.singleton(r.getProblem().getSupergraph().getMain());
