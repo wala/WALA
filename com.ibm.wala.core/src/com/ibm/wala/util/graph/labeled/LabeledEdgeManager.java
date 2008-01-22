@@ -56,7 +56,7 @@ import org.w3c.dom.Node;
 import com.ibm.wala.util.graph.EdgeManager;
 
 /**
- * On object which tracks labeled edges in a graph.
+ * An object which tracks labeled edges in a graph.
  * 
  * @author Manu Sridharan
  * 

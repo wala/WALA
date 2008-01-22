@@ -171,6 +171,11 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     return cgNodesVisited.contains(cg.getNumber(node));
   }
 
+  /**
+   * 
+   * @param pk
+   * @return <code>true</code> iff <code>pk</code> is a formal parameter
+   */
   public boolean isParam(LocalPointerKey pk) {
     return params.get(pk) != null;
   }
