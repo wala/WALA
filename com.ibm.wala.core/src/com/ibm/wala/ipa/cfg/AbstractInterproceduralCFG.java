@@ -44,8 +44,8 @@ import com.ibm.wala.util.intset.IntSet;
  * 
  * Interprocedural control-flow graph.
  * 
- * TODO: think about a better implementation; perhaps a lazy view of the
- * constituent CFGs Lots of ways this can be optimized?
+ * TODO: think about a better implementation; perhaps a lazy view of the constituent CFGs Lots of ways this can be
+ * optimized?
  * 
  * @author sfink
  * @author Julian Dolby
@@ -80,28 +80,24 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   private final BitVector hasCallVector = new BitVector();
 
   protected abstract ControlFlowGraph<T> getCFG(CGNode n);
-  
+
   /**
-   * Build an Interprocedural CFG from a call graph. This version defaults to
-   * using whatever CFGs the call graph provides by default, and includes all
-   * nodes in the call graph.
+   * Build an Interprocedural CFG from a call graph. This version defaults to using whatever CFGs the call graph
+   * provides by default, and includes all nodes in the call graph.
    * 
-   * @param CG
-   *            the call graph
+   * @param cg the call graph
    */
   @SuppressWarnings("unchecked")
-  public AbstractInterproceduralCFG(CallGraph CG) {
-    this(CG, IndiscriminateFilter.<CGNode>singleton());
+  public AbstractInterproceduralCFG(CallGraph cg) {
+    this(cg, IndiscriminateFilter.<CGNode> singleton());
   }
 
   /**
    * Build an Interprocedural CFG from a call graph.
    * 
-   * @param CG
-   *            the call graph
-   * @param relevant
-   *            a filter which accepts those call graph nodes which should be
-   *            included in the I-CFG. Other nodes are ignored.
+   * @param CG the call graph
+   * @param relevant a filter which accepts those call graph nodes which should be included in the I-CFG. Other nodes
+   *        are ignored.
    */
   public AbstractInterproceduralCFG(CallGraph CG, Filter<CGNode> relevant) {
 
@@ -179,14 +175,10 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /**
    * Add edges to the IPCFG for the incoming edges incident on a basic block bb
    * 
-   * @param n
-   *            a call graph node
-   * @param cfg
-   *            the CFG for n
-   * @param instrs
-   *            the instructions for node n
-   * @param bb
-   *            a basic block in the CFG
+   * @param n a call graph node
+   * @param cfg the CFG for n
+   * @param instrs the instructions for node n
+   * @param bb a basic block in the CFG
    */
   private void addEdgesToNonEntryBlock(CGNode n, ControlFlowGraph<T> cfg, IInstruction[] instrs, T bb) {
 
@@ -274,7 +266,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     if (call == null) {
       throw new IllegalArgumentException("call == null");
     }
-    if (!(call instanceof com.ibm.wala.ssa.SSAAbstractInvokeInstruction) && !(call instanceof com.ibm.wala.shrikeBT.InvokeInstruction)) {
+    if (!(call instanceof com.ibm.wala.ssa.SSAAbstractInvokeInstruction)
+        && !(call instanceof com.ibm.wala.shrikeBT.InvokeInstruction)) {
       throw new IllegalArgumentException(
           "(not ( call instanceof com.ibm.wala.ssa.SSAAbstractInvokeInstruction ) ) and (not ( call instanceof com.ibm.wala.shrikeBT.InvokeInstruction ) )");
     }
@@ -290,18 +283,13 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     return site;
   }
 
-
   /**
-   * Add an edge from the exit() block of a callee to a return site in the
-   * caller
+   * Add an edge from the exit() block of a callee to a return site in the caller
    * 
-   * @param returnBlock
-   *            the return site for a call
-   * @param targetCFG
-   *            the called method
+   * @param returnBlock the return site for a call
+   * @param targetCFG the called method
    */
-  private void addEdgesFromExitToReturn(CGNode caller, T returnBlock, CGNode target,
-      ControlFlowGraph<? extends T> targetCFG) {
+  private void addEdgesFromExitToReturn(CGNode caller, T returnBlock, CGNode target, ControlFlowGraph<? extends T> targetCFG) {
     T texit = targetCFG.exit();
     BasicBlockInContext<T> exit = new BasicBlockInContext<T>(target, texit);
     BasicBlockInContext<T> ret = new BasicBlockInContext<T>(caller, returnBlock);
@@ -320,10 +308,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /**
    * Add the incoming edges to the entry() block for a call graph node.
    * 
-   * @param n
-   *            a node in the call graph
-   * @param bb
-   *            the entry() block for n
+   * @param n a node in the call graph
+   * @param bb the entry() block for n
    */
   private void addEdgesToEntryBlock(CGNode n, T bb) {
 
@@ -370,11 +356,9 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   }
 
   /**
-   * Add a node to the IPCFG for each node in a CFG. side effect: populates the
-   * hasCallVector
+   * Add a node to the IPCFG for each node in a CFG. side effect: populates the hasCallVector
    * 
-   * @param cfg
-   *            a control-flow graph
+   * @param cfg a control-flow graph
    */
   private void addNodeForEachBasicBlock(ControlFlowGraph<? extends T> cfg, CGNode N) {
     for (Iterator<? extends T> bbs = cfg.iterator(); bbs.hasNext();) {
@@ -392,8 +376,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
   /**
    * @return the original CFG from whence B came
-   * @throws IllegalArgumentException
-   *             if B == null
+   * @throws IllegalArgumentException if B == null
    */
   public ControlFlowGraph<T> getCFG(BasicBlockInContext B) throws IllegalArgumentException {
     if (B == null) {
@@ -404,8 +387,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
   /**
    * @return the original CGNode from whence B came
-   * @throws IllegalArgumentException
-   *             if B == null
+   * @throws IllegalArgumentException if B == null
    */
   public CGNode getCGNode(BasicBlockInContext B) throws IllegalArgumentException {
     if (B == null) {
@@ -478,8 +460,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   }
 
   /*
-   * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node,
-   *      com.ibm.wala.util.graph.Node)
+   * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node, com.ibm.wala.util.graph.Node)
    */
   public void addEdge(BasicBlockInContext src, BasicBlockInContext dst) throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
@@ -546,10 +527,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
   /**
    * @param B
-   * @return the set of CGNodes that B may call, according to the governing call
-   *         graph.
-   * @throws IllegalArgumentException
-   *             if B is null
+   * @return the set of CGNodes that B may call, according to the governing call graph.
+   * @throws IllegalArgumentException if B is null
    */
   public Set<CGNode> getCallTargets(BasicBlockInContext B) {
     if (B == null) {
@@ -560,8 +539,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   }
 
   /**
-   * @return the set of CGNodes that B may call, according to the governing call
-   *         graph.
+   * @return the set of CGNodes that B may call, according to the governing call graph.
    */
   private Set<CGNode> getCallTargets(IBasicBlock B, ControlFlowGraph cfg, CGNode Bnode) {
     IInstruction[] statements = cfg.getInstructions();
@@ -619,7 +597,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     T entry = cfg.entry();
     return new BasicBlockInContext<T>(n, entry);
   }
-  
+
   public BasicBlockInContext<T> getExit(CGNode n) {
     ControlFlowGraph<? extends T> cfg = getCFG(n);
     T entry = cfg.exit();
@@ -627,11 +605,9 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   }
 
   /**
-   * @param bb
-   *            node in the IPCFG that ends in a call
+   * @param bb node in the IPCFG that ends in a call
    * @return the nodes that are return sites for this call.
-   * @throws IllegalArgumentException
-   *             if bb is null
+   * @throws IllegalArgumentException if bb is null
    */
   public Iterator<BasicBlockInContext> getReturnSites(BasicBlockInContext<T> bb) {
     if (bb == null) {
@@ -688,5 +664,12 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       }
     }
     return false;
+  }
+
+  /**
+   * @return the governing {@link CallGraph} used to build this ICFG
+   */
+  public CallGraph getCallGraph() {
+    return cg;
   }
 }
