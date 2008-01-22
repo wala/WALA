@@ -54,23 +54,16 @@ import com.ibm.wala.util.intset.SparseIntSet;
 import com.ibm.wala.util.intset.SparseLongSet;
 
 /**
- * 
  * JUnit tests for some primitive operations.
  * 
  * @author sfink
  */
 public class PrimitivesTest extends WalaTestCase {
 
-  /**
-   * 
-   */
   public PrimitivesTest() {
     super("PrimitivesTest");
   }
 
-  /**
-   * @param arg0
-   */
   public PrimitivesTest(String arg0) {
     super(arg0);
   }
@@ -288,32 +281,31 @@ public class PrimitivesTest extends WalaTestCase {
     temp2 = factory.make();
     assertTrue(temp2.sameValue(a));
 
-    for(int idx = 500; idx < 550; ) {
-      for(int xx = 0; xx < 50; xx++,idx++) {
-	temp2.add(idx);
+    for (int idx = 500; idx < 550;) {
+      for (int xx = 0; xx < 50; xx++, idx++) {
+        temp2.add(idx);
       }
       Trace.println(temp2);
     }
 
-    for(int idx = 3000; idx < 3200; ) {
-      for(int xx = 0; xx < 50; xx++,idx++) {
-	temp2.add(idx);
+    for (int idx = 3000; idx < 3200;) {
+      for (int xx = 0; xx < 50; xx++, idx++) {
+        temp2.add(idx);
       }
       Trace.println(temp2);
     }
-
 
     temp2 = factory.make();
     assertTrue(temp2.sameValue(a));
 
-    for(int idx = 500; idx < 550; ) {
-      for(int xx = 0; xx < 50; xx++,idx++) {
-	temp2.add(idx);
+    for (int idx = 500; idx < 550;) {
+      for (int xx = 0; xx < 50; xx++, idx++) {
+        temp2.add(idx);
       }
       Trace.println(temp2);
     }
 
-    for(int idx = 0; idx < 25; idx++) {
+    for (int idx = 0; idx < 25; idx++) {
       temp2.add(idx);
       Trace.println(temp2);
     }
@@ -568,32 +560,31 @@ public class PrimitivesTest extends WalaTestCase {
     temp2 = factory.make();
     assertTrue(temp2.sameValue(a));
 
-    for(int idx = 500; idx < 550; ) {
-      for(int xx = 0; xx < 50; xx++,idx++) {
-	temp2.add(idx);
+    for (int idx = 500; idx < 550;) {
+      for (int xx = 0; xx < 50; xx++, idx++) {
+        temp2.add(idx);
       }
       Trace.println(temp2);
     }
 
-    for(int idx = 3000; idx < 3200; ) {
-      for(int xx = 0; xx < 50; xx++,idx++) {
-	temp2.add(idx);
+    for (int idx = 3000; idx < 3200;) {
+      for (int xx = 0; xx < 50; xx++, idx++) {
+        temp2.add(idx);
       }
       Trace.println(temp2);
     }
-
 
     temp2 = factory.make();
     assertTrue(temp2.sameValue(a));
 
-    for(int idx = 500; idx < 550; ) {
-      for(int xx = 0; xx < 50; xx++,idx++) {
-	temp2.add(idx);
+    for (int idx = 500; idx < 550;) {
+      for (int xx = 0; xx < 50; xx++, idx++) {
+        temp2.add(idx);
       }
       Trace.println(temp2);
     }
 
-    for(int idx = 0; idx < 25; idx++) {
+    for (int idx = 0; idx < 25; idx++) {
       temp2.add(idx);
       Trace.println(temp2);
     }
@@ -774,15 +765,23 @@ public class PrimitivesTest extends WalaTestCase {
 
     int j = 0;
     Object[] desired5 = new Object[] { nodes[8] };
-    for (Iterator<? extends Object> t4 = D.dominatorTree().getSuccNodes(nodes[5]); t4.hasNext();)
-      assertTrue(t4.next() == desired5[j++]);
+    for (Iterator<? extends Object> t4 = D.dominatorTree().getSuccNodes(nodes[5]); t4.hasNext();) {
+      Object o4 = t4.next();
+      Object d = desired5[j++];
+      boolean ok = (o4.equals(d));
+      if (!ok) {
+        System.err.println("O4: " + o4);
+        System.err.println("desired " + d);
+        assertTrue(o4.equals(d));
+      }
+      
+    }
 
     assertTrue(D.dominatorTree().getSuccNodeCount(nodes[10]) == 5);
   }
 
   public void testBinaryIntegerRelation() {
-    byte[] impl = new byte[] { BasicNaturalRelation.SIMPLE, BasicNaturalRelation.TWO_LEVEL,
-        BasicNaturalRelation.SIMPLE };
+    byte[] impl = new byte[] { BasicNaturalRelation.SIMPLE, BasicNaturalRelation.TWO_LEVEL, BasicNaturalRelation.SIMPLE };
     IBinaryNaturalRelation R = new BasicNaturalRelation(impl, BasicNaturalRelation.TWO_LEVEL);
     R.add(3, 5);
     R.add(3, 7);
@@ -1287,7 +1286,7 @@ public class PrimitivesTest extends WalaTestCase {
   public void testSpecificBugsInOffsetBitVectors() {
     OffsetBitVector v1 = makeBigTestOffsetVector();
     Trace.println(v1);
-    
+
     OffsetBitVector v2 = new OffsetBitVector(50000128, 512);
     v2.set(50000137);
     v2.set(50000204);
@@ -1298,7 +1297,7 @@ public class PrimitivesTest extends WalaTestCase {
     v2.set(50000455);
     v2.set(50000471);
     Trace.println(v2);
-       
+
     v1.andNot(v2);
     Trace.println(v1);
     assertTrue(v1.intersectionEmpty(v2));
@@ -1334,7 +1333,7 @@ public class PrimitivesTest extends WalaTestCase {
     v1.add(191);
     v1.add(265);
     v1.add(294);
-    v1.add(324); 
+    v1.add(324);
     v1.add(344);
     v1.add(397);
   }
