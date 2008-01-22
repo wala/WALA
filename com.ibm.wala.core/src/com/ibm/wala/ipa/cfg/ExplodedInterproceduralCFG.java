@@ -19,7 +19,6 @@ import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
 import com.ibm.wala.util.collections.Filtersection;
 
 /**
- * 
  * Interprocedural control-flow graph.
  * 
  * TODO: think about a better implementation; perhaps a lazy view of the
