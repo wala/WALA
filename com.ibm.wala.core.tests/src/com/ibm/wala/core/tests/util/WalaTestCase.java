@@ -18,7 +18,6 @@ import com.ibm.wala.util.heapTrace.HeapTracer;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
  * Simple extension to JUnit test case.
  * 
  * @author sfink
@@ -39,8 +38,6 @@ public abstract class WalaTestCase extends TestCase {
   private String baseTraceFile;
 
   /*
-   * (non-Javadoc)
-   * 
    * @see junit.framework.TestCase#setUp()
    */
   protected void setUp() throws Exception {
