@@ -40,6 +40,7 @@ import com.ibm.wala.core.tests.demandpa.TestInfo;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.IDemandPointerAnalysis;
 import com.ibm.wala.demandpa.alg.SimpleDemandPointsTo;
+import com.ibm.wala.demandpa.alg.ThisFilteringHeapModel;
 import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineCGPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.AlwaysRefineFieldsPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.SinglePassRefinementPolicy;
@@ -154,7 +155,7 @@ public class TestAgainstSimpleDriver {
       CallGraph cg, MemoryAccessMap fam) {
     SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
     // return new TestNewGraphPointsTo(cg, builder, fam, cha, warnings);
-    DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, builder, fam, cha, options,
+    DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(builder,cha), fam, cha, options,
         new DummyStateMachine.Factory<IFlowLabel>());
     // fullDemandPointsTo.setCGRefinePolicy(new AlwaysRefineCGPolicy());
     // fullDemandPointsTo.setFieldRefinePolicy(new AlwaysRefineFieldsPolicy());

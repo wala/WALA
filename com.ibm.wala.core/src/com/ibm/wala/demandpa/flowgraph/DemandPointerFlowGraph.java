@@ -37,28 +37,39 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.ArrayClass;
+import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.demandpa.util.ArrayContents;
+import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
+import com.ibm.wala.demandpa.util.PointerParamValueNumIterator;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSACheckCastInstruction;
@@ -75,6 +86,7 @@ import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.ResolutionFailure;
@@ -88,7 +100,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * @author Manu Sridharan
  * 
  */
-public class DemandPointerFlowGraph extends DemandFlowGraph {
+public class DemandPointerFlowGraph extends DemandFlowGraph implements IPointerFlowGraph {
 
   public DemandPointerFlowGraph(CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, ClassHierarchy cha) {
     super(cg, heapModel, mam, cha);
@@ -101,7 +113,7 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
    */
   @Override
   protected void addNodesForParameters(CGNode node) {
-    for (Iterator<Integer> iter = pointerParamValueNums(node); iter.hasNext();) {
+    for (Iterator<Integer> iter = new PointerParamValueNumIterator(node); iter.hasNext();) {
       int parameter = iter.next();
       PointerKey paramPk = heapModel.getPointerKeyForLocal(node, parameter);
       addNode(paramPk);
@@ -117,7 +129,7 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
 
   @Override
   protected FlowStatementVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node, IR ir, DefUse du) {
-    return new StatementVisitor(node, ir, du);
+    return new StatementVisitor(heapModel, this, callParams, callDefs, cha, cg, node, ir, du);
   }
 
   /**
@@ -128,8 +140,24 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
    * 
    * TODO: special treatment for parameter passing, etc.
    */
-  protected class StatementVisitor extends SSAInstruction.Visitor implements FlowStatementVisitor {
+  public static class StatementVisitor extends SSAInstruction.Visitor implements FlowStatementVisitor {
 
+    private final HeapModel heapModel;
+    
+    private final FlowLabelGraph g;
+    
+    private final Map<PointerKey, Set<SSAInvokeInstruction>> callParams;
+
+    /**
+     * Map: LocalPointerKey -> SSAInvokeInstruction. If we have (x, foo()), that
+     * means that x was def'fed by the return value from the call to foo()
+     */
+    private final Map<PointerKey, SSAInvokeInstruction> callDefs;
+    
+    private final ClassHierarchy cha;
+    
+    private final CallGraph cg;
+    
     /**
      * The node whose statements we are currently traversing
      */
@@ -155,15 +183,24 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
      */
     protected final DefUse du;
 
-    public StatementVisitor(CGNode node, IR ir, DefUse du) {
+    public StatementVisitor(HeapModel heapModel, FlowLabelGraph g, Map<PointerKey, Set<SSAInvokeInstruction>> callParams,
+        Map<PointerKey, SSAInvokeInstruction> callDefs, ClassHierarchy cha, CallGraph cg, CGNode node, IR ir, DefUse du) {
+      super();
+      this.heapModel = heapModel;
+      this.g = g;
+      this.callParams = callParams;
+      this.callDefs = callDefs;
+      this.cha = cha;
+      this.cg = cg;
       this.node = node;
       this.ir = ir;
+      this.du = du;
       this.symbolTable = ir.getSymbolTable();
       if (Assertions.verifyAssertions) {
         Assertions._assert(symbolTable != null);
       }
-      this.du = du;
     }
+
 
     /*
      * (non-Javadoc)
@@ -179,9 +216,9 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
       PointerKey result = heapModel.getPointerKeyForLocal(node, instruction.getDef());
       PointerKey arrayRef = heapModel.getPointerKeyForLocal(node, instruction.getArrayRef());
       // TODO optimizations for purely local stuff
-      addNode(result);
-      addNode(arrayRef);
-      addEdge(result, arrayRef, GetFieldLabel.make(ArrayContents.v()));
+      g.addNode(result);
+      g.addNode(arrayRef);
+      g.addEdge(result, arrayRef, GetFieldLabel.make(ArrayContents.v()));
     }
 
     /*
@@ -200,9 +237,9 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
       PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getValue());
       PointerKey arrayRef = heapModel.getPointerKeyForLocal(node, instruction.getArrayRef());
       // TODO purely local optimizations
-      addNode(value);
-      addNode(arrayRef);
-      addEdge(arrayRef, value, PutFieldLabel.make(ArrayContents.v()));
+      g.addNode(value);
+      g.addNode(arrayRef);
+      g.addEdge(arrayRef, value, PutFieldLabel.make(ArrayContents.v()));
     }
 
     /*
@@ -237,10 +274,9 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
             cls));
       }
       PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getVal());
-      // TODO actually use the cast type
-      addNode(result);
-      addNode(value);
-      addEdge(result, value, AssignLabel.v());
+      g.addNode(result);
+      g.addNode(value);
+      g.addEdge(result, value, AssignLabel.v());
     }
 
     /*
@@ -256,10 +292,10 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
       } else {
         // just make a node for the def'd value
         PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getResult());
-        addNode(def);
+        g.addNode(def);
         PointerKey returnValue = heapModel.getPointerKeyForReturnValue(node);
-        addNode(returnValue);
-        addEdge(returnValue, def, AssignLabel.v());
+        g.addNode(returnValue);
+        g.addEdge(returnValue, def, AssignLabel.v());
       }
     }
 
@@ -291,16 +327,15 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
 
       if (isStatic) {
         PointerKey fKey = heapModel.getPointerKeyForStaticField(f);
-        addNode(def);
-        addNode(fKey);
-        // TODO assign global edge for context-sensitive
-        addEdge(def, fKey, AssignGlobalLabel.v());
+        g.addNode(def);
+        g.addNode(fKey);
+        g.addEdge(def, fKey, AssignGlobalLabel.v());
       } else {
         PointerKey refKey = heapModel.getPointerKeyForLocal(node, ref);
-        addNode(def);
-        addNode(refKey);
+        g.addNode(def);
+        g.addNode(refKey);
         // TODO purely local optimizations
-        addEdge(def, refKey, GetFieldLabel.make(f));
+        g.addEdge(def, refKey, GetFieldLabel.make(f));
       }
     }
 
@@ -331,15 +366,14 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
 
       if (isStatic) {
         PointerKey fKey = heapModel.getPointerKeyForStaticField(f);
-        addNode(use);
-        addNode(fKey);
-        // TODO assign global edge
-        addEdge(fKey, use, AssignGlobalLabel.v());
+        g.addNode(use);
+        g.addNode(fKey);
+        g.addEdge(fKey, use, AssignGlobalLabel.v());
       } else {
         PointerKey refKey = heapModel.getPointerKeyForLocal(node, ref);
-        addNode(use);
-        addNode(refKey);
-        addEdge(refKey, use, PutFieldLabel.make(f));
+        g.addNode(use);
+        g.addNode(refKey);
+        g.addEdge(refKey, use, PutFieldLabel.make(f));
       }
 
     }
@@ -357,7 +391,7 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
         // traversing
         // from the callee
         PointerKey use = heapModel.getPointerKeyForLocal(node, instruction.getUse(i));
-        addNode(use);
+        g.addNode(use);
         Set<SSAInvokeInstruction> s = MapUtil.findOrCreateSet(callParams, use);
         s.add(instruction);
       }
@@ -366,11 +400,11 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
       // by a call
       if (instruction.hasDef()) {
         PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
-        addNode(def);
+        g.addNode(def);
         callDefs.put(def, instruction);
       }
       PointerKey exc = heapModel.getPointerKeyForLocal(node, instruction.getException());
-      addNode(exc);
+      g.addNode(exc);
       callDefs.put(exc, instruction);
     }
 
@@ -388,9 +422,9 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
         return;
       }
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
-      addNode(iKey);
-      addNode(def);
-      addEdge(def, iKey, NewLabel.v());
+      g.addNode(iKey);
+      g.addNode(def);
+      g.addEdge(def, iKey, NewLabel.v());
 
       IClass klass = iKey.getConcreteType();
       int dim = 0;
@@ -410,10 +444,10 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
           // + " is " + ik);
           // Trace.println(" klass:" + klass);
           // }
-          addNode(ik);
-          addNode(pk);
-          addEdge(pk, ik, NewLabel.v());
-          addEdge(lastVar, pk, PutFieldLabel.make(ArrayContents.v()));
+          g.addNode(ik);
+          g.addNode(pk);
+          g.addEdge(pk, ik, NewLabel.v());
+          g.addEdge(lastVar, pk, PutFieldLabel.make(ArrayContents.v()));
           lastInstance = ik;
           lastVar = pk;
           dim++;
@@ -448,6 +482,67 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
       addExceptionDefConstraints(ir, node, peis, def, types);
     }
 
+    /**
+     * Generate constraints which assign exception values into an exception
+     * pointer
+     * 
+     * @param node
+     *            governing node
+     * @param peis
+     *            list of PEI instructions
+     * @param exceptionVar
+     *            PointerKey representing a pointer to an exception value
+     * @param catchClasses
+     *            the types "caught" by the exceptionVar
+     */
+    protected void addExceptionDefConstraints(IR ir, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
+        Set<TypeReference> catchClasses) {
+      for (Iterator<ProgramCounter> it = peis.iterator(); it.hasNext();) {
+        ProgramCounter peiLoc = it.next();
+        SSAInstruction pei = ir.getPEI(peiLoc);
+
+        if (pei instanceof SSAAbstractInvokeInstruction) {
+          SSAAbstractInvokeInstruction s = (SSAAbstractInvokeInstruction) pei;
+          PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
+          g.addNode(exceptionVar);
+          g.addNode(e);
+          g.addEdge(exceptionVar, e, AssignLabel.v());
+
+        } else if (pei instanceof SSAAbstractThrowInstruction) {
+          SSAAbstractThrowInstruction s = (SSAAbstractThrowInstruction) pei;
+          PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
+          g.addNode(exceptionVar);
+          g.addNode(e);
+          g.addEdge(exceptionVar, e, AssignLabel.v());
+        }
+
+        // Account for those exceptions for which we do not actually have a
+        // points-to set for
+        // the pei, but just instance keys
+        Collection<TypeReference> types = pei.getExceptionTypes();
+        if (types != null) {
+          for (Iterator<TypeReference> it2 = types.iterator(); it2.hasNext();) {
+            TypeReference type = it2.next();
+            if (type != null) {
+              InstanceKey ik = heapModel.getInstanceKeyForPEI(node, peiLoc, type);
+              if (Assertions.verifyAssertions) {
+                if (!(ik instanceof ConcreteTypeKey)) {
+                  Assertions._assert(ik instanceof ConcreteTypeKey,
+                      "uh oh: need to implement getCaughtException constraints for instance " + ik);
+                }
+              }
+              ConcreteTypeKey ck = (ConcreteTypeKey) ik;
+              IClass klass = ck.getType();
+              if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
+                g.addNode(exceptionVar);
+                g.addNode(ik);
+                g.addEdge(exceptionVar, ik, NewLabel.v());
+              }
+            }
+          }
+        }
+      }
+    }
     /*
      * (non-Javadoc)
      * 
@@ -474,10 +569,35 @@ public class DemandPointerFlowGraph extends DemandFlowGraph {
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
       InstanceKey iKey = heapModel.getInstanceKeyForClassObject(instruction.getLoadedClass());
 
-      addNode(iKey);
-      addNode(def);
-      addEdge(def, iKey, NewLabel.v());
+      g.addNode(iKey);
+      g.addNode(def);
+      g.addEdge(def, iKey, NewLabel.v());
     }
   }
+
+  public Set<CallSiteAndCGNode> getPotentialCallers(PointerKey formalPk) {
+    CGNode callee = null;
+    if (formalPk instanceof LocalPointerKey) {
+      callee = ((LocalPointerKey)formalPk).getNode();
+    } else if (formalPk instanceof ReturnValueKey) {
+      callee = ((ReturnValueKey)formalPk).getNode();
+    } else {
+      throw new IllegalArgumentException("formalPk must represent a local");
+    }
+    Set<CallSiteAndCGNode> ret = HashSetFactory.make();
+    for (Iterator<? extends CGNode> predNodes = cg.getPredNodes(callee); predNodes.hasNext(); ) {
+      CGNode caller = predNodes.next();
+      for (Iterator<CallSiteReference> iterator = cg.getPossibleSites(caller, callee); iterator.hasNext(); ) {
+        CallSiteReference call = iterator.next();
+        ret.add(new CallSiteAndCGNode(call,caller));
+      }      
+    }
+    return ret;
+  }
+
+  public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
+    return cg.getPossibleTargets(node, site);
+  }
+
 
 }

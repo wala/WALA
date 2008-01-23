@@ -48,7 +48,7 @@ import com.ibm.wala.util.graph.labeled.SlowSparseNumberedLabeledGraph;
  * @author Manu Sridharan
  *
  */
-public class FlowLabelGraph extends SlowSparseNumberedLabeledGraph<Object, IFlowLabel> {
+public class FlowLabelGraph extends SlowSparseNumberedLabeledGraph<Object, IFlowLabel> implements IFlowLabelGraph {
   
   
   private final static IFlowLabel defaultLabel = new IFlowLabel() {
@@ -67,10 +67,8 @@ public class FlowLabelGraph extends SlowSparseNumberedLabeledGraph<Object, IFlow
     super(defaultLabel);
   }
 
-  /**
-   * Apply a visitor to the successors of some node.
-   * @param node
-   * @param v
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowLabelGraph#visitSuccs(java.lang.Object, com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor)
    */
   public void visitSuccs(Object node, IFlowLabelVisitor v) {
     for (Iterator<? extends IFlowLabel> succLabelIter = getSuccLabels(node); succLabelIter.hasNext(); ) {
@@ -81,10 +79,8 @@ public class FlowLabelGraph extends SlowSparseNumberedLabeledGraph<Object, IFlow
     }
   }
 
-  /**
-   * Apply a visitor to the predecessors of some node.
-   * @param node
-   * @param v
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowLabelGraph#visitPreds(java.lang.Object, com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor)
    */
   public void visitPreds(Object node, IFlowLabelVisitor v) {
     for (Iterator<? extends IFlowLabel> predLabelIter = getPredLabels(node); predLabelIter.hasNext(); ) {

@@ -54,7 +54,6 @@ import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.demandpa.util.MemoryAccess;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
-import com.ibm.wala.demandpa.util.PointerParamValueNumIterator;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
@@ -97,7 +96,7 @@ import com.ibm.wala.util.intset.BitVectorIntSet;
  * 
  */
 public abstract class DemandFlowGraph extends FlowLabelGraph {
-  private final static boolean DEBUG = false;
+  private final static boolean DEBUG = true;
 
   /**
    * Counter for wiping soft caches
@@ -145,12 +144,8 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
    */
   final BitVectorIntSet cgNodesVisited = new BitVectorIntSet();
 
-  /**
-   * add representation of flow for a node, if not already present
-   * 
-   * @param node
-   * @throws IllegalArgumentException
-   *             if node == null
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#addSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
    */
   public void addSubgraphForNode(CGNode node) throws IllegalArgumentException {
     if (node == null) {
@@ -167,23 +162,22 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     }
   }
 
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#hasSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
+   */
   public boolean hasSubgraphForNode(CGNode node) {
     return cgNodesVisited.contains(cg.getNumber(node));
   }
 
-  /**
-   * 
-   * @param pk
-   * @return <code>true</code> iff <code>pk</code> is a formal parameter
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#isParam(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public boolean isParam(LocalPointerKey pk) {
     return params.get(pk) != null;
   }
 
-  /**
-   * get actuals passed into some formal parameter
-   * 
-   * @return an Iterator<PointerKeyAndCallSite>
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getParamSuccs(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public Iterator<PointerKeyAndCallSite> getParamSuccs(LocalPointerKey pk) {
     // TODO cache this result
@@ -219,12 +213,8 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     return paramSuccs.iterator();
   }
 
-  /**
-   * 
-   * 
-   * @param pk
-   * @return the {@link SSAInvokeInstruction}s passing some pointer as a
-   *         parameter
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getInstrsPassingParam(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public Iterator<SSAInvokeInstruction> getInstrsPassingParam(LocalPointerKey pk) {
     Set<SSAInvokeInstruction> instrs = callParams.get(pk);
@@ -235,10 +225,8 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     }
   }
 
-  /**
-   * 
-   * 
-   * @return formals to which some actual parameter is passed
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getParamPreds(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public Iterator<PointerKeyAndCallSite> getParamPreds(LocalPointerKey pk) {
     // TODO
@@ -271,22 +259,15 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
 
   }
 
-  /**
-   * get the {@link SSAInvokeInstruction} whose return value is assigned to a
-   * pointer key.
-   * 
-   * @param pk
-   * @return the instruction, or <code>null</code> if no return value is
-   *         assigned to pk
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getInstrReturningTo(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public SSAInvokeInstruction getInstrReturningTo(LocalPointerKey pk) {
     return callDefs.get(pk);
   }
 
-  /**
-   * 
-   * 
-   * @return return values assigned to some node
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReturnSuccs(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public Iterator<PointerKeyAndCallSite> getReturnSuccs(LocalPointerKey pk) {
     SSAInvokeInstruction callInstr = callDefs.get(pk);
@@ -312,14 +293,15 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     return returnSuccs.iterator();
   }
 
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#isReturnVal(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
+   */
   public boolean isReturnVal(LocalPointerKey pk) {
     return returns.get(pk) != null;
   }
 
-  /**
-   * 
-   * 
-   * @return nodes to which some return value is assigned
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReturnPreds(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public Iterator<PointerKeyAndCallSite> getReturnPreds(LocalPointerKey pk) {
     CGNode cgNode = returns.get(pk);
@@ -354,12 +336,8 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     return returnPreds.iterator();
   }
 
-  /**
-   * @param sfk
-   *            the static field
-   * @return all the variables whose values are written to sfk
-   * @throws IllegalArgumentException
-   *             if sfk == null
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getWritesToStaticField(com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey)
    */
   public Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
     if (sfk == null) {
@@ -372,12 +350,8 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     return getSuccNodes(sfk, AssignGlobalLabel.v());
   }
 
-  /**
-   * @param sfk
-   *            the static field
-   * @return all the variables that get the value of sfk
-   * @throws IllegalArgumentException
-   *             if sfk == null
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReadsOfStaticField(com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey)
    */
   public Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
     if (sfk == null) {
@@ -390,6 +364,9 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     return getPredNodes(sfk, AssignGlobalLabel.v());
   }
 
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getWritesToInstanceField(com.ibm.wala.classLoader.IField)
+   */
   public Iterator<PointerKey> getWritesToInstanceField(IField f) {
     // TODO: cache this!!
     if (f == ArrayContents.v()) {
@@ -412,6 +389,9 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     return written.iterator();
   }
 
+  /* 
+   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReadsOfInstanceField(com.ibm.wala.classLoader.IField)
+   */
   public Iterator<PointerKey> getReadsOfInstanceField(IField f) {
     // TODO: cache this!!
     if (f == ArrayContents.v()) {
@@ -513,10 +493,6 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
   }
 
   protected abstract void addNodesForParameters(CGNode node);
-
-  public Iterator<Integer> pointerParamValueNums(CGNode node) {
-    return new PointerParamValueNumIterator(node);
-  }
 
   protected void unconditionallyAddConstraintsFromNode(CGNode node) {
 
