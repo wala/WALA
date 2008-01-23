@@ -40,16 +40,13 @@ package com.ibm.wala.demandpa.flowgraph;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.ArrayClass;
-import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.demandpa.util.ArrayContents;
-import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.PointerParamValueNumIterator;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -59,10 +56,8 @@ import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
@@ -86,8 +81,6 @@ import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.ResolutionFailure;
 import com.ibm.wala.util.warnings.Warnings;
@@ -100,7 +93,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * @author Manu Sridharan
  * 
  */
-public class DemandPointerFlowGraph extends DemandFlowGraph implements IPointerFlowGraph {
+public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements IFlowGraph {
 
   public DemandPointerFlowGraph(CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, ClassHierarchy cha) {
     super(cg, heapModel, mam, cha);
@@ -128,8 +121,8 @@ public class DemandPointerFlowGraph extends DemandFlowGraph implements IPointerF
   }
 
   @Override
-  protected FlowStatementVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node, IR ir, DefUse du) {
-    return new StatementVisitor(heapModel, this, callParams, callDefs, cha, cg, node, ir, du);
+  protected FlowStatementVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node) {
+    return new StatementVisitor(heapModel, this, cha, cg, node);
   }
 
   /**
@@ -144,15 +137,7 @@ public class DemandPointerFlowGraph extends DemandFlowGraph implements IPointerF
 
     private final HeapModel heapModel;
     
-    private final FlowLabelGraph g;
-    
-    private final Map<PointerKey, Set<SSAInvokeInstruction>> callParams;
-
-    /**
-     * Map: LocalPointerKey -> SSAInvokeInstruction. If we have (x, foo()), that
-     * means that x was def'fed by the return value from the call to foo()
-     */
-    private final Map<PointerKey, SSAInvokeInstruction> callDefs;
+    private final IFlowGraph g;
     
     private final ClassHierarchy cha;
     
@@ -183,18 +168,16 @@ public class DemandPointerFlowGraph extends DemandFlowGraph implements IPointerF
      */
     protected final DefUse du;
 
-    public StatementVisitor(HeapModel heapModel, FlowLabelGraph g, Map<PointerKey, Set<SSAInvokeInstruction>> callParams,
-        Map<PointerKey, SSAInvokeInstruction> callDefs, ClassHierarchy cha, CallGraph cg, CGNode node, IR ir, DefUse du) {
+    public StatementVisitor(HeapModel heapModel, IFlowGraph g, ClassHierarchy cha,
+        CallGraph cg, CGNode node) {
       super();
       this.heapModel = heapModel;
       this.g = g;
-      this.callParams = callParams;
-      this.callDefs = callDefs;
       this.cha = cha;
       this.cg = cg;
       this.node = node;
-      this.ir = ir;
-      this.du = du;
+      this.ir = node.getIR();
+      this.du = node.getDU();
       this.symbolTable = ir.getSymbolTable();
       if (Assertions.verifyAssertions) {
         Assertions._assert(symbolTable != null);
@@ -386,26 +369,26 @@ public class DemandPointerFlowGraph extends DemandFlowGraph implements IPointerF
     @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
 
-      for (int i = 0; i < instruction.getNumberOfUses(); i++) {
-        // just make nodes for parameters; we'll get to them when
-        // traversing
-        // from the callee
-        PointerKey use = heapModel.getPointerKeyForLocal(node, instruction.getUse(i));
-        g.addNode(use);
-        Set<SSAInvokeInstruction> s = MapUtil.findOrCreateSet(callParams, use);
-        s.add(instruction);
-      }
-
-      // for any def'd values, keep track of the fact that they are def'd
-      // by a call
-      if (instruction.hasDef()) {
-        PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
-        g.addNode(def);
-        callDefs.put(def, instruction);
-      }
-      PointerKey exc = heapModel.getPointerKeyForLocal(node, instruction.getException());
-      g.addNode(exc);
-      callDefs.put(exc, instruction);
+//      for (int i = 0; i < instruction.getNumberOfUses(); i++) {
+//        // just make nodes for parameters; we'll get to them when
+//        // traversing
+//        // from the callee
+//        PointerKey use = heapModel.getPointerKeyForLocal(node, instruction.getUse(i));
+//        g.addNode(use);
+//        Set<SSAInvokeInstruction> s = MapUtil.findOrCreateSet(callParams, use);
+//        s.add(instruction);
+//      }
+//
+//      // for any def'd values, keep track of the fact that they are def'd
+//      // by a call
+//      if (instruction.hasDef()) {
+//        PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
+//        g.addNode(def);
+//        callDefs.put(def, instruction);
+//      }
+//      PointerKey exc = heapModel.getPointerKeyForLocal(node, instruction.getException());
+//      g.addNode(exc);
+//      callDefs.put(exc, instruction);
     }
 
     /*
@@ -573,30 +556,6 @@ public class DemandPointerFlowGraph extends DemandFlowGraph implements IPointerF
       g.addNode(def);
       g.addEdge(def, iKey, NewLabel.v());
     }
-  }
-
-  public Set<CallSiteAndCGNode> getPotentialCallers(PointerKey formalPk) {
-    CGNode callee = null;
-    if (formalPk instanceof LocalPointerKey) {
-      callee = ((LocalPointerKey)formalPk).getNode();
-    } else if (formalPk instanceof ReturnValueKey) {
-      callee = ((ReturnValueKey)formalPk).getNode();
-    } else {
-      throw new IllegalArgumentException("formalPk must represent a local");
-    }
-    Set<CallSiteAndCGNode> ret = HashSetFactory.make();
-    for (Iterator<? extends CGNode> predNodes = cg.getPredNodes(callee); predNodes.hasNext(); ) {
-      CGNode caller = predNodes.next();
-      for (Iterator<CallSiteReference> iterator = cg.getPossibleSites(caller, callee); iterator.hasNext(); ) {
-        CallSiteReference call = iterator.next();
-        ret.add(new CallSiteAndCGNode(call,caller));
-      }      
-    }
-    return ret;
-  }
-
-  public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
-    return cg.getPossibleTargets(node, site);
   }
 
 

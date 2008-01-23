@@ -94,7 +94,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * @author Manu Sridharan
  * 
  */
-public class DemandValueFlowGraph extends DemandFlowGraph {
+public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
 
   public DemandValueFlowGraph(CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, ClassHierarchy cha) {
     super(cg, heapModel, mam, cha);
@@ -120,8 +120,8 @@ public class DemandValueFlowGraph extends DemandFlowGraph {
   }
 
   @Override
-  protected FlowStatementVisitor makeVisitor(ExplicitNode node, IR ir, DefUse du) {
-    return new AllValsStatementVisitor(node, ir, du);
+  protected FlowStatementVisitor makeVisitor(ExplicitNode node) {
+    return new AllValsStatementVisitor(node);
   }
 
   private class AllValsStatementVisitor extends Visitor implements FlowStatementVisitor {
@@ -151,14 +151,14 @@ public class DemandValueFlowGraph extends DemandFlowGraph {
      */
     protected final DefUse du;
 
-    public AllValsStatementVisitor(CGNode node, IR ir, DefUse du) {
+    public AllValsStatementVisitor(CGNode node) {
       this.node = node;
-      this.ir = ir;
+      this.ir = node.getIR();
       this.symbolTable = ir.getSymbolTable();
       if (Assertions.verifyAssertions) {
         Assertions._assert(symbolTable != null);
       }
-      this.du = du;
+      this.du = node.getDU();
     }
 
     /*

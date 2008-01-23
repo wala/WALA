@@ -15,14 +15,30 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor;
 import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.util.graph.labeled.LabeledGraph;
 
-public interface IPointerFlowGraph extends IFlowLabelGraph {
+public interface IFlowGraph extends LabeledGraph<Object, IFlowLabel> {
+
+  /**
+   * Apply a visitor to the successors of some node.
+   * @param node
+   * @param v
+   */
+  public abstract void visitSuccs(Object node, IFlowLabelVisitor v);
+
+  /**
+   * Apply a visitor to the predecessors of some node.
+   * @param node
+   * @param v
+   */
+  public abstract void visitPreds(Object node, IFlowLabelVisitor v);
 
   /**
    * add representation of flow for a node, if not already present

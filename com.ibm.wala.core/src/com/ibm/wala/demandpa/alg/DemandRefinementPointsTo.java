@@ -65,7 +65,7 @@ import com.ibm.wala.demandpa.flowgraph.AssignLabel;
 import com.ibm.wala.demandpa.flowgraph.DemandPointerFlowGraph;
 import com.ibm.wala.demandpa.flowgraph.GetFieldLabel;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
-import com.ibm.wala.demandpa.flowgraph.IPointerFlowGraph;
+import com.ibm.wala.demandpa.flowgraph.IFlowGraph;
 import com.ibm.wala.demandpa.flowgraph.MatchBarLabel;
 import com.ibm.wala.demandpa.flowgraph.MatchLabel;
 import com.ibm.wala.demandpa.flowgraph.NewLabel;
@@ -130,7 +130,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
   // private static final boolean DEBUG_FULL = DEBUG && false;
 
-  private final IPointerFlowGraph g;
+  private final IFlowGraph g;
 
   private StateMachineFactory<IFlowLabel> stateMachineFactory;
 
@@ -153,7 +153,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   }
 
   public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap fam, ClassHierarchy cha, AnalysisOptions options,
-      StateMachineFactory<IFlowLabel> stateMachineFactory, IPointerFlowGraph flowGraph) {
+      StateMachineFactory<IFlowLabel> stateMachineFactory, IFlowGraph flowGraph) {
     super(cg, model, fam, cha, options);
     this.stateMachineFactory = stateMachineFactory;
     g = flowGraph;

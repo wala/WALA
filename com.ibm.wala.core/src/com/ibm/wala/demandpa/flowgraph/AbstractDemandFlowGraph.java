@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
@@ -52,6 +51,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.demandpa.util.ArrayContents;
+import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
 import com.ibm.wala.demandpa.util.MemoryAccess;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -63,6 +63,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -84,7 +85,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.ReferenceCleanser;
 import com.ibm.wala.util.collections.EmptyIterator;
-import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.BitVectorIntSet;
@@ -95,7 +96,7 @@ import com.ibm.wala.util.intset.BitVectorIntSet;
  * @author Manu Sridharan
  * 
  */
-public abstract class DemandFlowGraph extends FlowLabelGraph {
+public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   private final static boolean DEBUG = true;
 
   /**
@@ -110,34 +111,6 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
   protected final MemoryAccessMap mam;
 
   protected final ClassHierarchy cha;
-
-  /**
-   * Map: LocalPointerKey -> SSAInvokeInstruction. If we have (x, foo()), that
-   * means that x was def'fed by the return value from the call to foo()
-   */
-  final Map<PointerKey, SSAInvokeInstruction> callDefs = HashMapFactory.make();
-
-  /**
-   * Map: {@link LocalPointerKey} -> Set<{@link SSAInvokeInstruction}>. If we
-   * have (x, foo()), that means x was passed as a parameter to the call to
-   * foo(). The parameter position is not represented and must be recovered.
-   */
-  final Map<PointerKey, Set<SSAInvokeInstruction>> callParams = HashMapFactory.make();
-
-  /**
-   * Map: LocalPointerKey -> CGNode. If we have (x, foo), then x is a parameter
-   * of method foo. For now, we have to re-discover the parameter position. TODO
-   * this should just be a set; we can get the CGNode from the
-   * {@link LocalPointerKey}
-   */
-  final Map<PointerKey, CGNode> params = HashMapFactory.make();
-
-  /**
-   * Map: {@link LocalPointerKey} -> {@link CGNode}. If we have (x, foo), then
-   * x is a return value of method foo. Must re-discover if x is normal or
-   * exceptional return value.
-   */
-  final Map<PointerKey, CGNode> returns = HashMapFactory.make();
 
   /**
    * node numbers of CGNodes we have already visited
@@ -158,6 +131,7 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     if (!cgNodesVisited.contains(n)) {
       cgNodesVisited.add(n);
       unconditionallyAddConstraintsFromNode(node);
+      addNodesForInvocations(node, heapModel);
       addNodesForParameters(node);
     }
   }
@@ -167,13 +141,6 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
    */
   public boolean hasSubgraphForNode(CGNode node) {
     return cgNodesVisited.contains(cg.getNumber(node));
-  }
-
-  /* 
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#isParam(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
-   */
-  public boolean isParam(LocalPointerKey pk) {
-    return params.get(pk) != null;
   }
 
   /* 
@@ -214,18 +181,6 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
   }
 
   /* 
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getInstrsPassingParam(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
-   */
-  public Iterator<SSAInvokeInstruction> getInstrsPassingParam(LocalPointerKey pk) {
-    Set<SSAInvokeInstruction> instrs = callParams.get(pk);
-    if (instrs == null) {
-      return EmptyIterator.instance();
-    } else {
-      return instrs.iterator();
-    }
-  }
-
-  /* 
    * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getParamPreds(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public Iterator<PointerKeyAndCallSite> getParamPreds(LocalPointerKey pk) {
@@ -260,13 +215,6 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
   }
 
   /* 
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getInstrReturningTo(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
-   */
-  public SSAInvokeInstruction getInstrReturningTo(LocalPointerKey pk) {
-    return callDefs.get(pk);
-  }
-
-  /* 
    * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReturnSuccs(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public Iterator<PointerKeyAndCallSite> getReturnSuccs(LocalPointerKey pk) {
@@ -291,13 +239,6 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     }
 
     return returnSuccs.iterator();
-  }
-
-  /* 
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#isReturnVal(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
-   */
-  public boolean isReturnVal(LocalPointerKey pk) {
-    return returns.get(pk) != null;
   }
 
   /* 
@@ -625,7 +566,7 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
    * Add pointer flow constraints based on instructions in a given node
    */
   protected void addNodeInstructionConstraints(CGNode node, IR ir, DefUse du) {
-    FlowStatementVisitor v = makeVisitor((ExplicitCallGraph.ExplicitNode) node, ir, du);
+    FlowStatementVisitor v = makeVisitor((ExplicitCallGraph.ExplicitNode) node);
     ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
     for (ISSABasicBlock b : cfg) {
       addBlockInstructionConstraints(node, cfg, b, v);
@@ -690,7 +631,7 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     }
   }
 
-  protected abstract FlowStatementVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node, IR ir, DefUse du);
+  protected abstract FlowStatementVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node);
 
   private void debugPrintIR(IR ir) {
     if (DEBUG) {
@@ -707,11 +648,35 @@ public abstract class DemandFlowGraph extends FlowLabelGraph {
     }
   }
 
+  public Set<CallSiteAndCGNode> getPotentialCallers(PointerKey formalPk) {
+    CGNode callee = null;
+    if (formalPk instanceof LocalPointerKey) {
+      callee = ((LocalPointerKey)formalPk).getNode();
+    } else if (formalPk instanceof ReturnValueKey) {
+      callee = ((ReturnValueKey)formalPk).getNode();
+    } else {
+      throw new IllegalArgumentException("formalPk must represent a local");
+    }
+    Set<CallSiteAndCGNode> ret = HashSetFactory.make();
+    for (Iterator<? extends CGNode> predNodes = cg.getPredNodes(callee); predNodes.hasNext(); ) {
+      CGNode caller = predNodes.next();
+      for (Iterator<CallSiteReference> iterator = cg.getPossibleSites(caller, callee); iterator.hasNext(); ) {
+        CallSiteReference call = iterator.next();
+        ret.add(new CallSiteAndCGNode(call,caller));
+      }      
+    }
+    return ret;
+  }
+
+  public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
+    return cg.getPossibleTargets(node, site);
+  }
+
   protected interface FlowStatementVisitor extends SSAInstruction.IVisitor {
     void setBasicBlock(ISSABasicBlock b);
   }
 
-  public DemandFlowGraph(final CallGraph cg, final HeapModel heapModel, final MemoryAccessMap mam, final ClassHierarchy cha) {
+  public AbstractDemandFlowGraph(final CallGraph cg, final HeapModel heapModel, final MemoryAccessMap mam, final ClassHierarchy cha) {
     this.cg = cg;
     this.heapModel = heapModel;
     this.mam = mam;

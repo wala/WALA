@@ -44,6 +44,7 @@ import java.util.Set;
 import java.util.Stack;
 
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.demandpa.flowgraph.AbstractFlowGraph;
 import com.ibm.wala.demandpa.flowgraph.AbstractFlowLabelVisitor;
 import com.ibm.wala.demandpa.flowgraph.AssignGlobalLabel;
 import com.ibm.wala.demandpa.flowgraph.AssignLabel;
@@ -85,7 +86,7 @@ public class TestNewGraphPointsTo extends AbstractDemandPointsTo {
     Assertions._assert(pk instanceof LocalPointerKey, "we only handle locals");
     LocalPointerKey queriedPk = (LocalPointerKey) pk;
     // Create an (initially empty) dependence graph
-    final DemandPointerFlowGraph g = new DemandPointerFlowGraph(cg, heapModel, fam, cha);
+    final AbstractFlowGraph g = new DemandPointerFlowGraph(cg, heapModel, fam, cha);
 
     // initialize the graph with the subgraph of x's method
     g.addSubgraphForNode(queriedPk.getNode());
