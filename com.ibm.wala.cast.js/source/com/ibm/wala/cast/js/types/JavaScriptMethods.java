@@ -14,7 +14,7 @@ import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.strings.Atom;
 
 public class JavaScriptMethods extends AstMethodReference {
 
