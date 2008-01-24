@@ -32,8 +32,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Function;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.functions.Function;
 
 public class AstCallGraph extends ExplicitCallGraph {
   public AstCallGraph(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
