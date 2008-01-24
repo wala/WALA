@@ -15,8 +15,6 @@ import java.util.Map;
 
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.PointType;
-import com.ibm.wala.analysis.typeInference.ReceiverTypeInference;
-import com.ibm.wala.analysis.typeInference.ReceiverTypeInferenceCache;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -31,6 +29,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.BypassSyntheticClass;
 import com.ibm.wala.ipa.summaries.MethodSummary;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
+import com.ibm.wala.j2ee.util.ReceiverTypeInference;
+import com.ibm.wala.j2ee.util.ReceiverTypeInferenceCache;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAFieldAccessInstruction;

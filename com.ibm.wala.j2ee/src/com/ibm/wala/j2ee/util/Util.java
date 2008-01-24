@@ -12,7 +12,6 @@ package com.ibm.wala.j2ee.util;
 
 import java.util.Set;
 
-import com.ibm.wala.analysis.typeInference.ReceiverTypeInferenceCache;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;

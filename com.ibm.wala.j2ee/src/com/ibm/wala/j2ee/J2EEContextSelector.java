@@ -11,8 +11,6 @@
 package com.ibm.wala.j2ee;
 
 import com.ibm.wala.analysis.reflection.JavaTypeContext;
-import com.ibm.wala.analysis.typeInference.ReceiverTypeInference;
-import com.ibm.wala.analysis.typeInference.ReceiverTypeInferenceCache;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
@@ -20,6 +18,8 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.j2ee.util.ReceiverTypeInference;
+import com.ibm.wala.j2ee.util.ReceiverTypeInferenceCache;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MemberReference;
