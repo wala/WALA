@@ -25,8 +25,8 @@ import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSAOptions.DefaultValues;
 import com.ibm.wala.util.collections.IntStack;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.graph.DominanceFrontiers;
 import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.util.graph.dominators.DominanceFrontiers;
 
 /**
  * Abstract core of traditional SSA conversion (Cytron et al.).
