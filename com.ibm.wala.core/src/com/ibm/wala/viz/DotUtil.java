@@ -20,7 +20,6 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.NodeDecorator;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**

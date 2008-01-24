@@ -30,7 +30,6 @@ import org.eclipse.ui.PlatformUI;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
-import com.ibm.wala.util.graph.NodeDecorator;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
