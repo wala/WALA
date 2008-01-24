@@ -50,7 +50,6 @@ import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.genericutil.Predicate;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
-import com.ibm.wala.demandpa.util.WalaUtil;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
