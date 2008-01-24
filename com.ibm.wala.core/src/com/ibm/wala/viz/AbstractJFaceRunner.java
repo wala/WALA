@@ -17,65 +17,33 @@ import org.eclipse.jface.window.ApplicationWindow;
  * 
  * TODO: unify with other launchers?
  */
-public abstract class EJfaceApplicationRunner  {
+public abstract class AbstractJFaceRunner  {
 
-  /**
-   * The cached value of the '{@link #getApplicationWindow() <em>Application Window</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getApplicationWindow()
-   * @generated
-   * @ordered
-   */
   protected ApplicationWindow applicationWindow = null;
 
   protected boolean blockInput = false;
 
-  protected EJfaceApplicationRunner() {
+  protected AbstractJFaceRunner() {
     super();
   }
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public ApplicationWindow getApplicationWindow() {
     return applicationWindow;
   }
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public void setApplicationWindow(ApplicationWindow newApplicationWindow) {
     applicationWindow = newApplicationWindow;
   }
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public boolean isBlockInput() {
     return blockInput;
   }
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   public void setBlockInput(boolean newBlockInput) {
     blockInput = newBlockInput;
   }
 
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
+
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer(super.toString());
@@ -86,5 +54,4 @@ public abstract class EJfaceApplicationRunner  {
     result.append(')');
     return result.toString();
   }
-
-} //EJfaceApplicationRunner
+} 

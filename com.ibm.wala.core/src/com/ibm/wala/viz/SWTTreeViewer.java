@@ -35,7 +35,7 @@ import com.ibm.wala.util.warnings.WalaException;
 
 /**
  */
-public class SWTTreeViewer extends EJfaceApplicationRunner {
+public class SWTTreeViewer extends AbstractJFaceRunner {
 
   protected Graph graphInput;
 
