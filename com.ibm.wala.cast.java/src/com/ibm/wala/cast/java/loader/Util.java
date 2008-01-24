@@ -18,7 +18,7 @@ import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.strings.Atom;
 
 public class Util {
 
