@@ -23,12 +23,13 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.JarFileModule;
-import com.ibm.wala.client.impl.AbstractAnalysisEngine;
-import com.ibm.wala.client.impl.ZeroCFABuilderFactory;
+import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
@@ -76,6 +77,8 @@ import com.ibm.wala.util.warnings.WalaException;
  * @author Julian Dolby
  */
 public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
+
+
   private final Set<JarFile> applicationJarFiles;
 
   private final String applicationMainClass;
@@ -87,6 +90,11 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
   public SimpleThreadEscapeAnalysis(Set<JarFile> applicationJarFiles, String applicationMainClass) {
     this.applicationJarFiles = applicationJarFiles;
     this.applicationMainClass = applicationMainClass;
+  }
+  
+  @Override
+  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    return Util.makeZeroCFABuilder(options, cache, cha, scope);
   }
 
   /**
@@ -180,13 +188,6 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     IClassHierarchy cha = buildClassHierarchy();
     assert cha != null : "failed to create class hierarchy";
     setClassHierarchy(cha);
-
-    //
-    // select the call graph construction algorithm
-    // change this if greater precision is desired
-    // (see com.ibm.wala.client.impl.*BuilderFactory)
-    //
-    setCallGraphBuilderFactory(new ZeroCFABuilderFactory());
 
     //
     // entrypoints are where analysis starts
