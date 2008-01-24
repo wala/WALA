@@ -39,8 +39,8 @@ import com.ibm.wala.ssa.Value;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.config.FileOfClasses;
-import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileProvider;
 
 /**
  * 
