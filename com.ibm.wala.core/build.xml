@@ -180,7 +180,6 @@
 			<fileset dir="${basedir}">
 				<include name="lib/primordial.jar.model"/>
 				<include name="plugin.properties"/>
-				<include name="dat/J2SEClassHierarchyExclusions.xml"/>
 				<include name="dat/SyntheticJ2SEModel.xml"/>
 				<include name="dat/benign.xml"/>
 				<include name="dat/natives.xml"/>
