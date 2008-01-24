@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util;
+package com.ibm.wala.types.annotations;
 
 import java.util.Collection;
 
@@ -21,7 +21,6 @@ import com.ibm.wala.classLoader.ShrikeClass;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader.UnimplementedException;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.debug.Assertions;
 
 public class Annotations {

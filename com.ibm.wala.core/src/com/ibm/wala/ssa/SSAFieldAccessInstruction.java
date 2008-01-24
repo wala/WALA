@@ -16,7 +16,7 @@ import java.util.Collections;
 
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Exceptions;
+import com.ibm.wala.util.shrike.Exceptions;
 
 /**
  * 

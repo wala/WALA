@@ -25,10 +25,10 @@ import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Exceptions;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
+import com.ibm.wala.util.shrike.Exceptions;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**

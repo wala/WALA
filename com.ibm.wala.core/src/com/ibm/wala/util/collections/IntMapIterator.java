@@ -12,7 +12,7 @@ package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 
-import com.ibm.wala.util.IntFunction;
+import com.ibm.wala.util.functions.IntFunction;
 import com.ibm.wala.util.intset.IntIterator;
 
 /**

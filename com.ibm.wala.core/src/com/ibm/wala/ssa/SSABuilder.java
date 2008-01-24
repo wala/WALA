@@ -46,10 +46,10 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntPair;
+import com.ibm.wala.util.shrike.ShrikeUtil;
 
 /**
  * This class constructs an SSA IR from a backing ShrikeBT instruction stream.

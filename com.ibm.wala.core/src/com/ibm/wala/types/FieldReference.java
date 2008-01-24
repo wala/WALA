@@ -12,10 +12,10 @@ package com.ibm.wala.types;
 
 import java.util.HashMap;
 
-import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import com.ibm.wala.util.shrike.ShrikeUtil;
 import com.ibm.wala.util.strings.Atom;
 
 /**

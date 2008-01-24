@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util;
+package com.ibm.wala.util.shrike;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

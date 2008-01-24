@@ -52,9 +52,9 @@ import com.ibm.wala.shrikeBT.UnaryOpInstruction;
 import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.shrike.ShrikeUtil;
 
 /**
  * 

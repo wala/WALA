@@ -12,7 +12,7 @@ package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 
-import com.ibm.wala.util.Function;
+import com.ibm.wala.util.functions.Function;
 
 /**
  * An <code>MapIterator</code> maps an

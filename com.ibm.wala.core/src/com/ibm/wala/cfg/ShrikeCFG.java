@@ -26,12 +26,12 @@ import com.ibm.wala.shrikeBT.ReturnInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Exceptions;
-import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
+import com.ibm.wala.util.shrike.Exceptions;
+import com.ibm.wala.util.shrike.ShrikeUtil;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 

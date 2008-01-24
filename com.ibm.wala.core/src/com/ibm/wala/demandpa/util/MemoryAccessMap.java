@@ -39,11 +39,11 @@ import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.shrike.ShrikeUtil;
 
 /**
  * @author sfink
