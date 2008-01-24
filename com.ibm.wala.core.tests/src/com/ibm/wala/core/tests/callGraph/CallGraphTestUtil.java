@@ -22,8 +22,8 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.perf.StopwatchGC;
 
 /**

@@ -19,7 +19,7 @@ import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.config.FileProvider;
+import com.ibm.wala.util.io.FileProvider;
 
 /**
  * Test code that attempts to find the library version from

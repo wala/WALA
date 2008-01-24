@@ -22,7 +22,7 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.config.FileProvider;
+import com.ibm.wala.util.io.FileProvider;
 
 /**
  * Test interface subtype stuff

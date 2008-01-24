@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.Properties;
 
 import com.ibm.wala.properties.WalaProperties;
-import com.ibm.wala.util.config.FileProvider;
+import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.warnings.WalaException;
 
 public final class WalaExamplesProperties {
