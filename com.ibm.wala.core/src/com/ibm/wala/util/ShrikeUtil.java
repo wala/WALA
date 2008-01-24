@@ -21,6 +21,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.strings.ImmutableByteArray;
 
 /**
  * Utilties to interface with the Shrike CT library.
@@ -46,8 +47,6 @@ public class ShrikeUtil implements BytecodeConstants {
   }
 
   /**
-   * Method getInvocationCode.
-   * 
    * @param instruction
    * @return byte
    * @throws IllegalArgumentException  if instruction is null

@@ -12,10 +12,10 @@ package com.ibm.wala.types;
 
 import java.util.HashMap;
 
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.ShrikeUtil;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * A class to represent the reference in a class file to a method.

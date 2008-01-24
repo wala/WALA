@@ -9,9 +9,8 @@
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
 
-package com.ibm.wala.util;
+package com.ibm.wala.util.collections;
 
-import com.ibm.wala.util.collections.Filter;
 
 /**
  * 

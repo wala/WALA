@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.types;
 
-import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * Abstract superclass of MethodReference and FieldReference

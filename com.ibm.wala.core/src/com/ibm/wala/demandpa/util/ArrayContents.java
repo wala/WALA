@@ -42,9 +42,9 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * Pseudo-field modelling the contents of an array of reference type. Only for

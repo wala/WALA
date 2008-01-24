@@ -13,11 +13,11 @@ package com.ibm.wala.types;
 import java.io.UTFDataFormatException;
 import java.util.Map;
 
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.ImmutableByteArray;
-import com.ibm.wala.util.StringStuff;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.util.strings.ImmutableByteArray;
+import com.ibm.wala.util.strings.StringStuff;
 
 /**
  *

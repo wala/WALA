@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util;
+package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

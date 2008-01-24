@@ -12,11 +12,11 @@ package com.ibm.wala.types;
 
 import java.util.Map;
 
-import com.ibm.wala.util.ImmutableByteArray;
-import com.ibm.wala.util.StringStuff;
-import com.ibm.wala.util.UTF8Convert;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.strings.ImmutableByteArray;
+import com.ibm.wala.util.strings.StringStuff;
+import com.ibm.wala.util.strings.UTF8Convert;
 
 /**
  * A method descriptor; something like:

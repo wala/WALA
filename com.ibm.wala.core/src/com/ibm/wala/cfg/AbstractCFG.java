@@ -18,14 +18,14 @@ import java.util.List;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.util.CompoundIterator;
-import com.ibm.wala.util.IteratorPlusOne;
-import com.ibm.wala.util.IteratorPlusTwo;
+import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.IteratorPlusOne;
+import com.ibm.wala.util.collections.IteratorPlusTwo;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;

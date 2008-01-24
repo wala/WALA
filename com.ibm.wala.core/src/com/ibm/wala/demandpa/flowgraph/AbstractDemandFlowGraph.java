@@ -64,12 +64,12 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
-import com.ibm.wala.util.ReferenceCleanser;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.BitVectorIntSet;
+import com.ibm.wala.util.ref.ReferenceCleanser;
 
 /**
  * A graph representing program flow, constructed method-by-method on demand

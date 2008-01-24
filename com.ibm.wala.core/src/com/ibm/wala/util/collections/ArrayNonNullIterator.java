@@ -8,9 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util;
+package com.ibm.wala.util.collections;
 
-import com.ibm.wala.util.collections.ArrayIterator;
 
 /**
  * Iterator that only returns non-null elements of the array 

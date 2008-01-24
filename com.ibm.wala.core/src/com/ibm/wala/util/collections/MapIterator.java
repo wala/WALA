@@ -8,29 +8,29 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util;
+package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 
-import com.ibm.wala.util.intset.IntIterator;
+import com.ibm.wala.util.Function;
 
 /**
- * An <code>IntMapIterator</code> maps an
+ * An <code>MapIterator</code> maps an
  * <code>Iterator</code> contents to produce a new Iterator
  * 
  * @author sfink
  */
-public class IntMapIterator<T> implements Iterator<T> {
-  final IntIterator i;
-  final IntFunction<T> f;
+public class MapIterator<X,Y> implements Iterator<Y> {
+  final Iterator<? extends X> i;
+  final Function<X,Y> f;
 
-  public IntMapIterator(IntIterator i, IntFunction<T> f) {
+  public MapIterator(Iterator<? extends X> i, Function<X,Y> f) {
     this.i = i;
     this.f = f;
   }
 
 
-  public T next() {
+  public Y next() {
     return f.apply(i.next());
   }
 

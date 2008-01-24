@@ -18,7 +18,7 @@ import java.util.Set;
 
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * Base class for an object that represents a single

@@ -25,7 +25,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.eclipse.util.MonitorUtil;
-import com.ibm.wala.util.ReferenceCleanser;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Heap;
@@ -39,6 +38,7 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
+import com.ibm.wala.util.ref.ReferenceCleanser;
 
 /**
  * 

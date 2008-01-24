@@ -11,7 +11,7 @@
 package com.ibm.wala.classLoader;
 
 import com.ibm.wala.ipa.cha.IClassHierarchyDweller;
-import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  *

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.types;
 
-import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * A method selector; something like: foo(Ljava/lang/String;)Ljava/lang/Class;

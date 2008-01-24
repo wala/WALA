@@ -16,8 +16,8 @@ import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAOptions;
-import com.ibm.wala.util.CacheReference;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.ref.CacheReference;
 
 /**
  * A soft cache of results of type inference

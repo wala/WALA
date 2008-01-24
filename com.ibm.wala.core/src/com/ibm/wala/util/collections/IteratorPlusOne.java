@@ -8,45 +8,45 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util;
+package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 
-import com.ibm.wala.util.debug.UnimplementedError;
-
-public class IteratorPlusTwo<T> implements Iterator<T> {
-  private final Iterator<T> it;
-  
-  // the following fields will be nulled out after visiting xtra.
-  private T xtra1;
-  private T xtra2;
-  
-  public IteratorPlusTwo(Iterator<T> it, T xtra1, T xtra2) {
-    this.it = it;
-    this.xtra1 = xtra1;
-    this.xtra2 = xtra2;
+/**
+ * A utility to efficiently compose an iterator and a singleton
+ * 
+ * @author sfink
+ */
+public class IteratorPlusOne<T> implements Iterator<T> {
+  public static <T> IteratorPlusOne<T> make(Iterator<? extends T> it, T xtra) {
+    return new IteratorPlusOne<T>(it, xtra);
   }
-  
+
+  private final Iterator<? extends T> it;
+
+  // the following field will be nulled out after visiting xtra.
+  private T xtra;
+
+  private IteratorPlusOne(Iterator<? extends T> it, T xtra) {
+    this.it = it;
+    this.xtra = xtra;
+  }
+    
   public boolean hasNext() {
-    return it.hasNext() || (xtra1 != null) || (xtra2 != null);
+    return it.hasNext() || (xtra != null);
   }
 
   public T next() {
     if (it.hasNext()) {
       return it.next();
-    } else if (xtra1 != null) {
-      T result = xtra1;
-      xtra1 = null;
-      return result;
     } else {
-      T result = xtra2;
-      xtra2 = null;
+      T result = xtra;
+      xtra = null;
       return result;
     }
   }
-   
-  public void remove() throws UnimplementedError {
-    throw new UnimplementedError();
+  
+  public void remove() throws UnsupportedOperationException {
+    throw new UnsupportedOperationException();
   }
-
 }

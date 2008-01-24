@@ -15,7 +15,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ssa.DefaultIRFactory;
 import com.ibm.wala.ssa.IRFactory;
 import com.ibm.wala.ssa.SSACache;
-import com.ibm.wala.util.ReferenceCleanser;
+import com.ibm.wala.util.ref.ReferenceCleanser;
 
 /**
  * A place to hold onto caches of various analysis artifacts.
