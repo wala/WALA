@@ -15,7 +15,7 @@ import java.util.Iterator;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.ComposedEntrypoints;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * Entrypoints for an EAR file.

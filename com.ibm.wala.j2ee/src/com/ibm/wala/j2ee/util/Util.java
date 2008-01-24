@@ -26,9 +26,9 @@ import com.ibm.wala.j2ee.DeploymentMetaData;
 import com.ibm.wala.j2ee.J2EEClassTargetSelector;
 import com.ibm.wala.j2ee.J2EEMethodTargetSelector;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * @author sfink
