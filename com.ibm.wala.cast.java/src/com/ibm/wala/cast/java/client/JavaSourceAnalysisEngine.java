@@ -21,11 +21,12 @@ import com.ibm.wala.cast.java.translator.polyglot.JavaIRTranslatorExtension;
 import com.ibm.wala.cast.java.translator.polyglot.PolyglotClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.client.impl.AbstractAnalysisEngine;
+import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.callgraph.impl.Util;
@@ -66,7 +67,6 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
 
   public JavaSourceAnalysisEngine() {
     super();
-    setCallGraphBuilderFactory(new ZeroCFABuilderFactory());
   }
 
   /**
@@ -176,5 +176,10 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     options.setSSAOptions(ssaOptions);
 
     return options;
+  }
+
+  @Override
+  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    return new ZeroCFABuilderFactory().make(options, cache, cha, scope, false);
   }
 }
