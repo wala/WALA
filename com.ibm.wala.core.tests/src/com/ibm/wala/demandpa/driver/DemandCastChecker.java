@@ -92,7 +92,7 @@ public class DemandCastChecker {
 
   private static final boolean DUMP_ALL_IR = false;
 
-  private final static String CHA_EXCLUSIONS = false ? null : "PLDIChaExclusions.xml";
+  private final static String CHA_EXCLUSIONS = false ? null : "PLDIChaExclusions.txt";
 
   /**
    * @param args
@@ -175,7 +175,7 @@ public class DemandCastChecker {
       return CHA_EXCLUSIONS;
     } else {
       // TODO can we just return null here?
-      return "J2SEClassHierarchyExclusions.xml";
+      return "J2SEClassHierarchyExclusions.txt";
     }
   }
 

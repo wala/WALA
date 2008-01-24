@@ -56,7 +56,7 @@ public class TypeInferenceTest extends WalaTestCase {
 
   protected void setUp() throws Exception {
 
-    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.xml"), MY_CLASSLOADER);
+    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
     cache = new AnalysisCache();
