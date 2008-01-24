@@ -29,8 +29,8 @@ import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.util.StringStuff;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.strings.StringStuff;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.GhostviewUtil;
 

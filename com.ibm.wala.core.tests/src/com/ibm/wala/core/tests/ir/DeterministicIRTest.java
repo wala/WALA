@@ -26,13 +26,13 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.util.Atom;
-import com.ibm.wala.util.ImmutableByteArray;
-import com.ibm.wala.util.UTF8Convert;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
+import com.ibm.wala.util.strings.Atom;
+import com.ibm.wala.util.strings.ImmutableByteArray;
+import com.ibm.wala.util.strings.UTF8Convert;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**

@@ -71,9 +71,9 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.types.Descriptor;
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.strings.Atom;
 
 public abstract class AbstractPtrTest extends TestCase {
 

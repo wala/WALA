@@ -28,9 +28,9 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.config.FileProvider;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * tests for weird corner cases, such as when the input program doesn't verify

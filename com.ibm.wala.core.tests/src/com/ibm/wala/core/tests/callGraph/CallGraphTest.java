@@ -35,13 +35,13 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
+import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
