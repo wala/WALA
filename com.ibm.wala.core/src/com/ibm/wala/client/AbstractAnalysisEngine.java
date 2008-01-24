@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.client.impl;
+package com.ibm.wala.client;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,8 +22,6 @@ import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactoryImpl;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
-import com.ibm.wala.client.AnalysisEngine;
-import com.ibm.wala.client.CallGraphBuilderFactory;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -108,11 +106,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   private boolean closedWorld = false;
 
   /**
-   * An object which produces call graph builders specialized for J2EE
-   */
-  private CallGraphBuilderFactory callGraphBuilderFactory;
-
-  /**
    * Governing class hierarchy
    */
   private IClassHierarchy cha;
@@ -148,13 +141,9 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     }
   };
 
-  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
-    return getCallGraphBuilderFactory().make(options, cache, cha, getScope(),  false);
-  }
+  protected abstract CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache);
 
   protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis) throws IllegalArgumentException, CancelException {
-    Assertions.productionAssertion(getCallGraphBuilderFactory() != null, "must initialize callGraphBuilderFactory!");
-
     CallGraphBuilder builder = getCallGraphBuilder(cha, options, cache);
 
     cg = builder.makeCallGraph(options);
@@ -269,14 +258,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
 
   protected AnalysisScope getScope() {
     return scope;
-  }
-
-  protected CallGraphBuilderFactory getCallGraphBuilderFactory() {
-    return callGraphBuilderFactory;
-  }
-
-  protected void setCallGraphBuilderFactory(CallGraphBuilderFactory callGraphBuilderFactory) {
-    this.callGraphBuilderFactory = callGraphBuilderFactory;
   }
 
   public PointerAnalysis getPointerAnalysis() {

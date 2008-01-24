@@ -14,7 +14,6 @@ import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
 
-
 /**
  *
  * Basic interface for an object that can build a call graph.
