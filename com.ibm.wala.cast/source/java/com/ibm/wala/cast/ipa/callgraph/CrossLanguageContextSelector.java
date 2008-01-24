@@ -18,7 +18,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * A ContextSelector implementation adapted to work for analysi across

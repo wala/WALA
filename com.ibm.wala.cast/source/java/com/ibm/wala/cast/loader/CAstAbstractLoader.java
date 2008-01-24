@@ -9,10 +9,10 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.strings.Atom;
 
 public abstract class CAstAbstractLoader implements IClassLoader {
 

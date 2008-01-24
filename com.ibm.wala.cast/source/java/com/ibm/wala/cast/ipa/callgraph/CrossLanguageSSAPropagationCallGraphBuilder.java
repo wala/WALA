@@ -24,9 +24,9 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationSystem;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.MutableMapping;
+import com.ibm.wala.util.strings.Atom;
 
 public abstract class CrossLanguageSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
 

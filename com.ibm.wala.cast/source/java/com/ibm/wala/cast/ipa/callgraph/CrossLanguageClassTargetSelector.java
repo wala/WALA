@@ -16,7 +16,7 @@ import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.ClassTargetSelector;
-import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  *  A ClassTargetSelector implementation that delegates to one of several

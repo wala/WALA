@@ -58,15 +58,15 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.Function;
-import com.ibm.wala.util.MapIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * @author Julian Dolby TODO: document me.

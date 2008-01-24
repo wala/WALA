@@ -18,7 +18,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  *  A MethodTargetSelector implementation that supports multiple languages.

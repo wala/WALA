@@ -22,8 +22,8 @@ import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.strings.Atom;
 
 public class CAstAnalysisScope extends AnalysisScope {
   private final ClassLoaderReference theLoader;

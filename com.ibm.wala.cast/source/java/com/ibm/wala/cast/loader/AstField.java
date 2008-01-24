@@ -19,7 +19,7 @@ import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.strings.Atom;
 
 public class AstField implements IField {
   private final Collection qualifiers;

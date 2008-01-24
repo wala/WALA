@@ -32,9 +32,9 @@ import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * A CallGraph implementation adapted to work for graphs that contain code

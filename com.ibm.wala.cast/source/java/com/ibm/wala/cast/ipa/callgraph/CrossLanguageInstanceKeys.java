@@ -18,7 +18,7 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.Atom;
+import com.ibm.wala.util.strings.Atom;
 
 /**
  * An InstanceKeyFactory implementation that is designed to support

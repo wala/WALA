@@ -25,10 +25,10 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
-import com.ibm.wala.util.Atom;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
+import com.ibm.wala.util.strings.Atom;
 
 public class DelegatingAstPointerKeys implements AstPointerKeyFactory {
   private final PointerKeyFactory base;
