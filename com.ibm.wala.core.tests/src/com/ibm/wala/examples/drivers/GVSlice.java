@@ -49,12 +49,12 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphSlicer;
-import com.ibm.wala.util.graph.NodeDecorator;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.io.CommandLine;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.GVUtil;
+import com.ibm.wala.viz.NodeDecorator;
 
 /**
  * 
