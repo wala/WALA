@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.analysis.reflection.FactoryBypassInterpreter;
-import com.ibm.wala.analysis.reflection.Malleable;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -353,9 +352,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
     if (newSite == null) {
       throw new IllegalArgumentException("newSite is null");
-    }
-    if (Malleable.isMalleable(newSite.getDeclaredType())) {
-      return;
     }
     if (DEBUG) {
       Trace.println("visitNew: " + newSite);

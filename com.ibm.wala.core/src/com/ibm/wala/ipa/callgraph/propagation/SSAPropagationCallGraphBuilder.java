@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.ibm.wala.analysis.reflection.CloneInterpreter;
-import com.ibm.wala.analysis.reflection.Malleable;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.ArrayClass;
@@ -1635,11 +1634,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             System.err.println("    dispatch to ptr " + ptr);
           }
           InstanceKey iKey = system.getInstanceKey(ptr);
-          TypeReference concreteType = iKey.getConcreteType().getReference();
-          // skip malleable
-          if (Malleable.isMalleable(concreteType)) {
-            return;
-          }
           CGNode target;
 
           if (clone2Assign) {

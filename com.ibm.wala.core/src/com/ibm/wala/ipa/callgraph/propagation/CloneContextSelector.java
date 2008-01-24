@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.analysis.reflection.CloneInterpreter;
-import com.ibm.wala.analysis.reflection.Malleable;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -35,10 +34,6 @@ public class CloneContextSelector implements ContextSelector {
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     if (receiver == null) {
-      return null;
-    }
-    if (Malleable.isMalleable(receiver.getConcreteType().getReference())) {
-      // don't try to clone Malleable
       return null;
     }
     if (callee.getReference().equals(CloneInterpreter.CLONE)) {

@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.summaries;
 
 import java.util.Set;
 
-import com.ibm.wala.analysis.reflection.Malleable;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -84,9 +83,6 @@ public class BypassClassTargetSelector implements ClassTargetSelector {
       Trace.println("BypassClassTargetSelector getAllocatedTarget: " + nominalRef);
     }
 
-    if (Malleable.isMalleable(nominalRef)) {
-      return null;
-    }
     IClass realType = cha.lookupClass(nominalRef);
     if (realType == null) {
       if (DEBUG) {

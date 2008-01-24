@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import com.ibm.wala.analysis.reflection.Malleable;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -248,7 +247,7 @@ public class BasicHeapGraph extends HeapGraph {
         } else {
           return new int[] { nodeManager.getNumber(p) };
         }
-      } else if (!Malleable.isMalleable(T)) {
+      } else {
         IClass klass = getHeapModel().getClassHierarchy().lookupClass(T);
         if (Assertions.verifyAssertions) {
           if (klass == null) {
@@ -270,10 +269,7 @@ public class BasicHeapGraph extends HeapGraph {
           // uh oh. skip it for now.
         }
         return result.toIntArray();
-      } else {
-        Assertions._assert(Malleable.isMalleable(T));
-        return null;
-      }
+      } 
     } else {
       Assertions.UNREACHABLE("Unexpected type: " + N.getClass());
       return null;

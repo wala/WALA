@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import com.ibm.wala.analysis.reflection.Malleable;
 import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -47,9 +46,7 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     if (allocation == null) {
       throw new IllegalArgumentException("allocation is null");
     }
-    if (Malleable.isMalleable(allocation.getDeclaredType())) {
-      return null;
-    }
+
     if (options.getClassTargetSelector() == null) {
       throw new IllegalStateException("options did not specify class target selector");
     }
