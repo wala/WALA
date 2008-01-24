@@ -38,7 +38,7 @@ public class J2EEAnalysisScope extends AnalysisScope {
 
   private final static String DEFAULT_FILE = "DefaultWebsphereModules.xml";
 
-  private final static String EXCLUSIONS_FILE = "J2EEClassHierarchyExclusions.xml";
+  private final static String EXCLUSIONS_FILE = "J2EEClassHierarchyExclusions.txt";
 
   private final boolean lifecycleEntrypoints;
 
