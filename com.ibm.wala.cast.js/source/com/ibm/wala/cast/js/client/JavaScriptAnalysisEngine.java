@@ -16,6 +16,7 @@ import java.util.jar.JarFile;
 
 import com.ibm.wala.cast.ipa.callgraph.CAstAnalysisScope;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
+import com.ibm.wala.cast.js.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptEntryPoints;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.loader.JavaScriptLoaderFactory;
@@ -23,10 +24,11 @@ import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceFileModule;
-import com.ibm.wala.client.impl.AbstractAnalysisEngine;
+import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -42,7 +44,6 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
   protected boolean keepIRs = true;
 
   public JavaScriptAnalysisEngine() {
-    setCallGraphBuilderFactory(new com.ibm.wala.cast.js.client.impl.ZeroCFABuilderFactory());
   }
 
   @SuppressWarnings("unchecked")
@@ -100,5 +101,10 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
     options.setUseStacksForLexicalScoping(true);
 
     return options;
+  }
+
+  @Override
+  protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+    return new ZeroCFABuilderFactory().make(options, cache, cha, scope, false);
   }
 }
