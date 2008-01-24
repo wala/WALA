@@ -19,9 +19,9 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.StringTokenizer;
 
-import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.SimpleVector;
+import com.ibm.wala.util.io.FileProvider;
 
 /**
  * @author sfink

@@ -21,8 +21,8 @@ import org.eclipse.core.runtime.Platform;
 import org.osgi.framework.Bundle;
 
 import com.ibm.wala.core.plugin.CorePlugin;
-import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.util.warnings.WalaException;
 

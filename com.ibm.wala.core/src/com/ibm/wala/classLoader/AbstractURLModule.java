@@ -18,9 +18,9 @@ import java.net.URLConnection;
 import java.util.Iterator;
 
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
-import com.ibm.wala.util.config.FileProvider;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
+import com.ibm.wala.util.io.FileProvider;
 
 public abstract class AbstractURLModule implements Module, ModuleEntry {
 

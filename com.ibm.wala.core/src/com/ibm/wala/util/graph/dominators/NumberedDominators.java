@@ -8,7 +8,9 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.graph;
+package com.ibm.wala.util.graph.dominators;
+
+import com.ibm.wala.util.graph.NumberedGraph;
 
 /**
  * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS

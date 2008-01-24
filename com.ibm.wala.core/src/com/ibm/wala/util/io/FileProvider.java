@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.config;// 5724-D15
+package com.ibm.wala.util.io;// 5724-D15
 
 import java.io.File;
 import java.io.FileNotFoundException;

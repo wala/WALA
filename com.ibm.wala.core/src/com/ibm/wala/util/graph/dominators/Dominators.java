@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.graph;
+package com.ibm.wala.util.graph.dominators;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -20,6 +20,11 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.graph.AbstractGraph;
+import com.ibm.wala.util.graph.EdgeManager;
+import com.ibm.wala.util.graph.Graph;
+import com.ibm.wala.util.graph.NodeManager;
+import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;
 import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
 

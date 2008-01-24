@@ -12,8 +12,6 @@ package com.ibm.wala.util.graph;
 
 
 /**
- *
- *
  * @author Stephen Fink
  */
 public interface OrderedMultiGraph<T> extends Graph<T> {

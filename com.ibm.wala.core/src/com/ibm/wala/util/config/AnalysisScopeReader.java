@@ -26,6 +26,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.Atom;
 
 /**

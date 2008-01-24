@@ -22,9 +22,9 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
-import com.ibm.wala.util.graph.DominanceFrontiers;
 import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.NodeManager;
+import com.ibm.wala.util.graph.dominators.DominanceFrontiers;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 
 /**
