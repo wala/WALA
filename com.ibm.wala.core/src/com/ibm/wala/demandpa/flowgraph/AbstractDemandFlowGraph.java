@@ -40,25 +40,19 @@ package com.ibm.wala.demandpa.flowgraph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
-import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
-import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -67,12 +61,9 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
-import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.ReferenceCleanser;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -94,10 +85,6 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
    */
   private static int wipeCount = 0;
 
-  protected final CallGraph cg;
-
-  protected final ClassHierarchy cha;
-
   /**
    * node numbers of CGNodes we have already visited
    */
@@ -117,7 +104,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     if (!cgNodesVisited.contains(n)) {
       cgNodesVisited.add(n);
       unconditionallyAddConstraintsFromNode(node);
-      addNodesForInvocations(node, heapModel);
+      addNodesForInvocations(node);
       addNodesForParameters(node);
     }
   }
@@ -288,108 +275,8 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
 
     DefUse du = node.getDU();
     addNodeInstructionConstraints(node, ir, du);
-    addNodePassthruExceptionConstraints(node, ir);
-    addNodeConstantConstraints(node, ir);
-  }
-
-  /**
-   * add constraints for reference constants assigned to vars
-   */
-  private void addNodeConstantConstraints(CGNode node, IR ir) {
-    SymbolTable symbolTable = ir.getSymbolTable();
-    for (int i = 1; i <= symbolTable.getMaxValueNumber(); i++) {
-      if (symbolTable.isConstant(i)) {
-        Object v = symbolTable.getConstantValue(i);
-        if (!(v instanceof Number)) {
-          Object S = symbolTable.getConstantValue(i);
-          TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(S);
-          if (type != null) {
-            InstanceKey ik = heapModel.getInstanceKeyForConstant(type, S);
-            if (ik != null) {
-              PointerKey pk = heapModel.getPointerKeyForLocal(node, i);
-              addNode(pk);
-              addNode(ik);
-              addEdge(pk, ik, NewLabel.v());
-            }
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * Add constraints to represent the flow of exceptions to the exceptional
-   * return value for this node
-   */
-  protected void addNodePassthruExceptionConstraints(CGNode node, IR ir) {
-    // add constraints relating to thrown exceptions that reach the exit
-    // block.
-    List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getExitBlock());
-    PointerKey exception = heapModel.getPointerKeyForExceptionalReturnValue(node);
-
-    addExceptionDefConstraints(ir, node, peis, exception, PropagationCallGraphBuilder.THROWABLE_SET);
-  }
-
-  /**
-   * Generate constraints which assign exception values into an exception
-   * pointer
-   * 
-   * @param node
-   *            governing node
-   * @param peis
-   *            list of PEI instructions
-   * @param exceptionVar
-   *            PointerKey representing a pointer to an exception value
-   * @param catchClasses
-   *            the types "caught" by the exceptionVar
-   */
-  protected void addExceptionDefConstraints(IR ir, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
-      Set<TypeReference> catchClasses) {
-    for (Iterator<ProgramCounter> it = peis.iterator(); it.hasNext();) {
-      ProgramCounter peiLoc = it.next();
-      SSAInstruction pei = ir.getPEI(peiLoc);
-
-      if (pei instanceof SSAAbstractInvokeInstruction) {
-        SSAAbstractInvokeInstruction s = (SSAAbstractInvokeInstruction) pei;
-        PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
-        addNode(exceptionVar);
-        addNode(e);
-        addEdge(exceptionVar, e, AssignLabel.noFilter());
-
-      } else if (pei instanceof SSAAbstractThrowInstruction) {
-        SSAAbstractThrowInstruction s = (SSAAbstractThrowInstruction) pei;
-        PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
-        addNode(exceptionVar);
-        addNode(e);
-        addEdge(exceptionVar, e, AssignLabel.noFilter());
-      }
-
-      // Account for those exceptions for which we do not actually have a
-      // points-to set for
-      // the pei, but just instance keys
-      Collection<TypeReference> types = pei.getExceptionTypes();
-      if (types != null) {
-        for (Iterator<TypeReference> it2 = types.iterator(); it2.hasNext();) {
-          TypeReference type = it2.next();
-          if (type != null) {
-            InstanceKey ik = heapModel.getInstanceKeyForPEI(node, peiLoc, type);
-            if (Assertions.verifyAssertions) {
-              if (!(ik instanceof ConcreteTypeKey)) {
-                Assertions._assert(ik instanceof ConcreteTypeKey,
-                    "uh oh: need to implement getCaughtException constraints for instance " + ik);
-              }
-            }
-            ConcreteTypeKey ck = (ConcreteTypeKey) ik;
-            IClass klass = ck.getType();
-            if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
-              addNode(exceptionVar);
-              addNode(ik);
-              addEdge(exceptionVar, ik, NewLabel.v());
-            }
-          }
-        }
-      }
-    }
+    addNodePassthruExceptionConstraints(node);
+    addNodeConstantConstraints(node);
   }
 
   /**
@@ -507,9 +394,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   }
 
   public AbstractDemandFlowGraph(final CallGraph cg, final HeapModel heapModel, final MemoryAccessMap mam, final ClassHierarchy cha) {
-    super(mam,heapModel);
-    this.cg = cg;
-    this.cha = cha;
+    super(mam,heapModel,cha,cg);
   }
 
 }

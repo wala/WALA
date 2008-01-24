@@ -40,6 +40,7 @@ package com.ibm.wala.demandpa.flowgraph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,18 +48,25 @@ import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor;
 import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.demandpa.util.MemoryAccess;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
+import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
@@ -66,6 +74,8 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
+import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.MapUtil;
@@ -118,11 +128,15 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   protected final Map<PointerKey, CGNode> returns = HashMapFactory.make();
   protected final MemoryAccessMap mam;
   protected final HeapModel heapModel;
+  protected final ClassHierarchy cha;
+  protected final CallGraph cg;
 
-  public AbstractFlowGraph(MemoryAccessMap mam, HeapModel heapModel) {
+  public AbstractFlowGraph(MemoryAccessMap mam, HeapModel heapModel, ClassHierarchy cha, CallGraph cg) {
     super(defaultLabel);
     this.mam = mam;
     this.heapModel = heapModel;
+    this.cha = cha;
+    this.cg = cg;
   }
 
   /*
@@ -155,7 +169,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    * For each invocation in the method, add nodes for actual parameters and return values
    * @param node
    */
-  protected void addNodesForInvocations(CGNode node, HeapModel heapModel) {
+  protected void addNodesForInvocations(CGNode node) {
     final IR ir = node.getIR();
     for (Iterator<CallSiteReference> iter = ir.iterateCallSites(); iter.hasNext(); ) { 
       CallSiteReference site = iter.next();
@@ -239,9 +253,9 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
       IR ir = a.getNode().getIR();
       SSAPutInstruction s = (SSAPutInstruction) ir.getInstructions()[a.getInstructionIndex()];
       PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getVal());
-      if (Assertions.verifyAssertions) {
-        Assertions._assert(containsNode(r));
-      }
+//      if (Assertions.verifyAssertions) {
+//        Assertions._assert(containsNode(r));
+//      }
       written.add(r);
     }
     return written.iterator();
@@ -339,12 +353,113 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
       IR ir = a.getNode().getIR();
       SSAArrayLoadInstruction s = (SSAArrayLoadInstruction) ir.getInstructions()[a.getInstructionIndex()];
       PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getDef());
-      if (Assertions.verifyAssertions) {
-        Assertions._assert(containsNode(r));
-      }
+//      if (Assertions.verifyAssertions) {
+//        Assertions._assert(containsNode(r));
+//      }
       read.add(r);
     }
     return read.iterator();
+  }
+
+  /**
+   * Add constraints to represent the flow of exceptions to the exceptional
+   * return value for this node
+   */
+  protected void addNodePassthruExceptionConstraints(CGNode node) {
+    // add constraints relating to thrown exceptions that reach the exit
+    // block.
+    IR ir = node.getIR();
+    List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getExitBlock());
+    PointerKey exception = heapModel.getPointerKeyForExceptionalReturnValue(node);
+  
+    addExceptionDefConstraints(ir, node, peis, exception, PropagationCallGraphBuilder.THROWABLE_SET);
+  }
+
+  /**
+   * Generate constraints which assign exception values into an exception
+   * pointer
+   * 
+   * @param node
+   *            governing node
+   * @param peis
+   *            list of PEI instructions
+   * @param exceptionVar
+   *            PointerKey representing a pointer to an exception value
+   * @param catchClasses
+   *            the types "caught" by the exceptionVar
+   */
+  protected void addExceptionDefConstraints(IR ir, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar, Set<TypeReference> catchClasses) {
+    for (Iterator<ProgramCounter> it = peis.iterator(); it.hasNext();) {
+      ProgramCounter peiLoc = it.next();
+      SSAInstruction pei = ir.getPEI(peiLoc);
+  
+      if (pei instanceof SSAAbstractInvokeInstruction) {
+        SSAAbstractInvokeInstruction s = (SSAAbstractInvokeInstruction) pei;
+        PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
+        addNode(exceptionVar);
+        addNode(e);
+        addEdge(exceptionVar, e, AssignLabel.noFilter());
+  
+      } else if (pei instanceof SSAAbstractThrowInstruction) {
+        SSAAbstractThrowInstruction s = (SSAAbstractThrowInstruction) pei;
+        PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
+        addNode(exceptionVar);
+        addNode(e);
+        addEdge(exceptionVar, e, AssignLabel.noFilter());
+      }
+  
+      // Account for those exceptions for which we do not actually have a
+      // points-to set for
+      // the pei, but just instance keys
+      Collection<TypeReference> types = pei.getExceptionTypes();
+      if (types != null) {
+        for (Iterator<TypeReference> it2 = types.iterator(); it2.hasNext();) {
+          TypeReference type = it2.next();
+          if (type != null) {
+            InstanceKey ik = heapModel.getInstanceKeyForPEI(node, peiLoc, type);
+            if (Assertions.verifyAssertions) {
+              if (!(ik instanceof ConcreteTypeKey)) {
+                Assertions._assert(ik instanceof ConcreteTypeKey,
+                    "uh oh: need to implement getCaughtException constraints for instance " + ik);
+              }
+            }
+            ConcreteTypeKey ck = (ConcreteTypeKey) ik;
+            IClass klass = ck.getType();
+            if (PropagationCallGraphBuilder.catches(catchClasses, klass, cha)) {
+              addNode(exceptionVar);
+              addNode(ik);
+              addEdge(exceptionVar, ik, NewLabel.v());
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * add constraints for reference constants assigned to vars
+   */
+  protected void addNodeConstantConstraints(CGNode node) {
+    IR ir = node.getIR();
+    SymbolTable symbolTable = ir.getSymbolTable();
+    for (int i = 1; i <= symbolTable.getMaxValueNumber(); i++) {
+      if (symbolTable.isConstant(i)) {
+        Object v = symbolTable.getConstantValue(i);
+        if (!(v instanceof Number)) {
+          Object S = symbolTable.getConstantValue(i);
+          TypeReference type = node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getConstantType(S);
+          if (type != null) {
+            InstanceKey ik = heapModel.getInstanceKeyForConstant(type, S);
+            if (ik != null) {
+              PointerKey pk = heapModel.getPointerKeyForLocal(node, i);
+              addNode(pk);
+              addNode(ik);
+              addEdge(pk, ik, NewLabel.v());
+            }
+          }
+        }
+      }
+    }
   }
 
 }
