@@ -24,10 +24,9 @@ import com.ibm.wala.util.graph.traverse.DFSDiscoverTimeIterator;
 import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
 
 /**
- * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS
- * 1(1), July 1979. This implementation uses path compression and results in a
- * O(e * alpha(e,n)) complexity, where e is the number of edges in the CFG and n
- * is the number of nodes.
+ * Calculate dominators using Langauer and Tarjan's fastest algorithm. TOPLAS 1(1), July 1979. This implementation uses
+ * path compression and results in a O(e * alpha(e,n)) complexity, where e is the number of edges in the CFG and n is
+ * the number of nodes.
  * 
  * Sources: TOPLAS article, Muchnick book
  * 
@@ -59,12 +58,9 @@ public abstract class Dominators<T> {
   protected int reachableNodeCount = 0;
 
   /**
-   * @param G
-   *            The graph
-   * @param root
-   *            The root from which to compute dominators
-   * @throws IllegalArgumentException
-   *             if G is null
+   * @param G The graph
+   * @param root The root from which to compute dominators
+   * @throws IllegalArgumentException if G is null
    */
   @SuppressWarnings("unchecked")
   public Dominators(Graph<T> G, T root) throws IllegalArgumentException {
@@ -238,8 +234,8 @@ public abstract class Dominators<T> {
   }
 
   /**
-   * The goal of this step is to perform a DFS numbering on the CFG, starting at
-   * the root. The exit node is not included.
+   * The goal of this step is to perform a DFS numbering on the CFG, starting at the root. The exit node is not
+   * included.
    */
   private void step1() {
     reachableNodeCount = 0;
@@ -331,16 +327,14 @@ public abstract class Dominators<T> {
   } // method
 
   /**
-   * This method inspects the passed node and returns the following: node, if
-   * node is a root of a tree in the forest
+   * This method inspects the passed node and returns the following: node, if node is a root of a tree in the forest
    * 
-   * any vertex, u != r such that otherwise r is the root of the tree containing
-   * node and * semi(u) is minimum on the path r -> v
+   * any vertex, u != r such that otherwise r is the root of the tree containing node and * semi(u) is minimum on the
+   * path r -> v
    * 
    * See TOPLAS 1(1), July 1979, p 128 for details.
    * 
-   * @param node
-   *            the node to evaluate
+   * @param node the node to evaluate
    * @return the node as described above
    */
   private T EVAL(T node) {
@@ -362,8 +356,7 @@ public abstract class Dominators<T> {
   /**
    * This recursive method performs the path compression
    * 
-   * @param node
-   *            node of interest
+   * @param node node of interest
    */
   private void compress(T node) {
     if (getAncestor(getAncestor(node)) != null) {
@@ -376,15 +369,12 @@ public abstract class Dominators<T> {
   }
 
   /**
-   * Adds edge (node1, node2) to the forest maintained as an auxiliary data
-   * structure. This implementation uses path compression and results in a O(e *
-   * alpha(e,n)) complexity, where e is the number of edges in the CFG and n is
-   * the number of nodes.
+   * Adds edge (node1, node2) to the forest maintained as an auxiliary data structure. This implementation uses path
+   * compression and results in a O(e * alpha(e,n)) complexity, where e is the number of edges in the CFG and n is the
+   * number of nodes.
    * 
-   * @param node1
-   *            a basic node corresponding to the source of the new edge
-   * @param node2
-   *            a basic node corresponding to the source of the new edge
+   * @param node1 a basic node corresponding to the source of the new edge
+   * @param node2 a basic node corresponding to the source of the new edge
    */
   private void LINK(T node1, T node2) {
     if (DEBUG) {
