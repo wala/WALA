@@ -106,6 +106,14 @@ public interface IFlowGraph extends LabeledGraph<Object, IFlowLabel> {
    */
   public abstract Set<CallSiteAndCGNode> getPotentialCallers(PointerKey formalPk);
   
-  public abstract Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site);
+  /**
+   * get the callees that should be considered at a particular call site
+   * @param caller the caller  
+   * @param site the call site
+   * @param actualPk a {@link LocalPointerKey} corresponding to the actual parameter or
+   * return value of interest.  This may be used to filter out certain callees.
+   * @return the callees of interest
+   */
+  public abstract Set<CGNode> getPossibleTargets(CGNode caller, CallSiteReference site, LocalPointerKey actualPk);
   
 }

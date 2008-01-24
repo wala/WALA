@@ -227,7 +227,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       // TODO actually use the cast type
       addNode(result);
       addNode(value);
-      addEdge(result, value, AssignLabel.v());
+      addEdge(result, value, AssignLabel.noFilter());
     }
 
     /*
@@ -246,7 +246,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
         addNode(def);
         PointerKey returnValue = heapModel.getPointerKeyForReturnValue(node);
         addNode(returnValue);
-        addEdge(returnValue, def, AssignLabel.v());
+        addEdge(returnValue, def, AssignLabel.noFilter());
       }
     }
 
@@ -438,7 +438,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       PointerKey dst = heapModel.getPointerKeyForLocal(node, instruction.getVal());
       addNode(src);
       addNode(dst);
-      addEdge(src, dst, AssignLabel.v());
+      addEdge(src, dst, AssignLabel.noFilter());
     }
 
     private void handleNonHeapInstruction(SSAInstruction instruction) {
@@ -450,7 +450,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
           int use = instruction.getUse(j);
           PointerKey usePk = heapModel.getPointerKeyForLocal(node, use);
           addNode(usePk);
-          addEdge(defPk, usePk, AssignLabel.v());
+          addEdge(defPk, usePk, AssignLabel.noFilter());
         }
       }
     }

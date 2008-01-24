@@ -37,22 +37,39 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IClass;
+import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor;
+import com.ibm.wala.demandpa.util.ArrayContents;
+import com.ibm.wala.demandpa.util.MemoryAccess;
+import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAArrayLoadInstruction;
+import com.ibm.wala.ssa.SSAArrayStoreInstruction;
+import com.ibm.wala.ssa.SSAGetInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.MapUtil;
+import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.labeled.SlowSparseNumberedLabeledGraph;
 
 /**
@@ -99,9 +116,13 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    * exceptional return value.
    */
   protected final Map<PointerKey, CGNode> returns = HashMapFactory.make();
+  protected final MemoryAccessMap mam;
+  protected final HeapModel heapModel;
 
-  public AbstractFlowGraph() {
+  public AbstractFlowGraph(MemoryAccessMap mam, HeapModel heapModel) {
     super(defaultLabel);
+    this.mam = mam;
+    this.heapModel = heapModel;
   }
 
   /*
@@ -180,6 +201,150 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
 
   public SSAInvokeInstruction getInstrReturningTo(LocalPointerKey pk) {
     return callDefs.get(pk);
+  }
+
+  public Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
+    if (sfk == null) {
+      throw new IllegalArgumentException("sfk == null");
+    }
+    Collection<MemoryAccess> fieldWrites = mam.getFieldWrites(sfk.getField());
+    for (MemoryAccess a : fieldWrites) {
+      addSubgraphForNode(a.getNode());
+    }
+    return getSuccNodes(sfk, AssignGlobalLabel.v());
+  }
+
+  public Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
+    if (sfk == null) {
+      throw new IllegalArgumentException("sfk == null");
+    }
+    Collection<MemoryAccess> fieldReads = mam.getFieldReads(sfk.getField());
+    for (MemoryAccess a : fieldReads) {
+      addSubgraphForNode(a.getNode());
+    }
+    return getPredNodes(sfk, AssignGlobalLabel.v());
+  }
+
+  public Iterator<PointerKey> getWritesToInstanceField(IField f) {
+    // TODO: cache this!!
+    if (f == ArrayContents.v()) {
+      return getArrayWrites();
+    }
+    Collection<MemoryAccess> writes = mam.getFieldWrites(f);
+    for (MemoryAccess a : writes) {
+      addSubgraphForNode(a.getNode());
+    }
+    ArrayList<PointerKey> written = new ArrayList<PointerKey>();
+    for (MemoryAccess a : writes) {
+      IR ir = a.getNode().getIR();
+      SSAPutInstruction s = (SSAPutInstruction) ir.getInstructions()[a.getInstructionIndex()];
+      PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getVal());
+      if (Assertions.verifyAssertions) {
+        Assertions._assert(containsNode(r));
+      }
+      written.add(r);
+    }
+    return written.iterator();
+  }
+
+  public Iterator<PointerKey> getReadsOfInstanceField(IField f) {
+    // TODO: cache this!!
+    if (f == ArrayContents.v()) {
+      return getArrayReads();
+    }
+    Collection<MemoryAccess> reads = mam.getFieldReads(f);
+    for (MemoryAccess a : reads) {
+      addSubgraphForNode(a.getNode());
+    }
+    ArrayList<PointerKey> readInto = new ArrayList<PointerKey>();
+    for (MemoryAccess a : reads) {
+      IR ir = a.getNode().getIR();
+      SSAGetInstruction s = (SSAGetInstruction) ir.getInstructions()[a.getInstructionIndex()];
+      PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getDef());
+//      if (Assertions.verifyAssertions) {
+//        Assertions._assert(containsNode(r));
+//      }
+      readInto.add(r);
+    }
+    return readInto.iterator();
+  }
+
+  Iterator<PointerKey> getArrayWrites() {
+    Collection<MemoryAccess> arrayWrites = mam.getArrayWrites();
+    for (MemoryAccess a : arrayWrites) {
+      addSubgraphForNode(a.getNode());
+    }
+    ArrayList<PointerKey> written = new ArrayList<PointerKey>();
+    for (MemoryAccess a : arrayWrites) {
+      final CGNode node = a.getNode();
+      IR ir = node.getIR();
+      SSAInstruction instruction = ir.getInstructions()[a.getInstructionIndex()];
+      if (instruction instanceof SSAArrayStoreInstruction) {
+        SSAArrayStoreInstruction s = (SSAArrayStoreInstruction) instruction;
+        PointerKey r = heapModel.getPointerKeyForLocal(node, s.getValue());
+//        if (Assertions.verifyAssertions) {
+//          Assertions._assert(containsNode(r), "missing node for " + r);
+//        }
+        written.add(r);
+      } else if (instruction instanceof SSANewInstruction) {
+        SSANewInstruction n = (SSANewInstruction) instruction;
+        // should be allocated multi-dimentional array
+        InstanceKey iKey = heapModel.getInstanceKeyForAllocation(node, n.getNewSite());
+        IClass klass = iKey.getConcreteType();
+        if (Assertions.verifyAssertions) {
+          Assertions._assert(klass.isArrayClass() && ((ArrayClass) klass).getElementClass().isArrayClass());
+        }
+        int dim = 0;
+        InstanceKey lastInstance = iKey;
+        while (klass != null && klass.isArrayClass()) {
+          klass = ((ArrayClass) klass).getElementClass();
+          // klass == null means it's a primitive
+          if (klass != null && klass.isArrayClass()) {
+            InstanceKey ik = heapModel.getInstanceKeyForMultiNewArray(node, n.getNewSite(), dim);
+            PointerKey pk = heapModel.getPointerKeyForArrayContents(lastInstance);
+            written.add(pk);
+            // if (DEBUG_MULTINEWARRAY) {
+            // Trace.println("multinewarray constraint: ");
+            // Trace.println(" pk: " + pk);
+            // Trace.println(" ik: " +
+            // system.findOrCreateIndexForInstanceKey(ik)
+            // + " concrete type " + ik.getConcreteType()
+            // + " is " + ik);
+            // Trace.println(" klass:" + klass);
+            // }
+            // addNode(ik);
+            // addNode(pk);
+            // addEdge(pk, ik, NewLabel.v());
+            lastInstance = ik;
+            dim++;
+          }
+        }
+  
+      } else {
+        Assertions.UNREACHABLE();
+      }
+    }
+    return written.iterator();
+  }
+
+  Iterator<PointerKey> getArrayReads() {
+    Collection<MemoryAccess> arrayReads = mam.getArrayReads();
+    for (Iterator<MemoryAccess> it = arrayReads.iterator(); it.hasNext();) {
+      MemoryAccess a = it.next();
+      addSubgraphForNode(a.getNode());
+    }
+    ArrayList<PointerKey> read = new ArrayList<PointerKey>();
+    for (Iterator<MemoryAccess> it = arrayReads.iterator(); it.hasNext();) {
+      MemoryAccess a = it.next();
+      IR ir = a.getNode().getIR();
+      SSAArrayLoadInstruction s = (SSAArrayLoadInstruction) ir.getInstructions()[a.getInstructionIndex()];
+      PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getDef());
+      if (Assertions.verifyAssertions) {
+        Assertions._assert(containsNode(r));
+      }
+      read.add(r);
+    }
+    return read.iterator();
   }
 
 }

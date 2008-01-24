@@ -66,6 +66,7 @@ import com.ibm.wala.demandpa.flowgraph.DemandPointerFlowGraph;
 import com.ibm.wala.demandpa.flowgraph.GetFieldLabel;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.flowgraph.IFlowGraph;
+import com.ibm.wala.demandpa.flowgraph.IFlowLabelWithFilter;
 import com.ibm.wala.demandpa.flowgraph.MatchBarLabel;
 import com.ibm.wala.demandpa.flowgraph.MatchLabel;
 import com.ibm.wala.demandpa.flowgraph.NewLabel;
@@ -147,13 +148,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return refinementPolicy;
   }
 
-  public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap fam, ClassHierarchy cha, AnalysisOptions options,
-      StateMachineFactory<IFlowLabel> stateMachineFactory) {
+  public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap fam, ClassHierarchy cha,
+      AnalysisOptions options, StateMachineFactory<IFlowLabel> stateMachineFactory) {
     this(cg, model, fam, cha, options, stateMachineFactory, new DemandPointerFlowGraph(cg, model, fam, cha));
   }
 
-  public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap fam, ClassHierarchy cha, AnalysisOptions options,
-      StateMachineFactory<IFlowLabel> stateMachineFactory, IFlowGraph flowGraph) {
+  public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap fam, ClassHierarchy cha,
+      AnalysisOptions options, StateMachineFactory<IFlowLabel> stateMachineFactory, IFlowGraph flowGraph) {
     super(cg, model, fam, cha, options);
     this.stateMachineFactory = stateMachineFactory;
     g = flowGraph;
@@ -165,7 +166,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * 
    * @see DemandRefinementPointsTo#getPointsTo(PointerKey, Predicate)
    * @author manu
-   *
+   * 
    */
   public static enum PointsToResult {
     /**
@@ -195,19 +196,12 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   /**
    * compute a points-to set for a pointer key, aiming to satisfy some predicate
    * 
-   * @param pk
-   *            the pointer key
-   * @param p2setPred
-   *            the desired predicate that the points-to set should ideally
-   *            satisfy
-   * @return a pair consisting of (1) a {@link PointsToResult} indicating
-   *         whether a points-to set satisfying the predicate was computed, and
-   *         (2) the last computed points-to set for the variable (possibly
-   *         <code>null</code> if no points-to set could be computed in the
-   *         budget)
-   * @throws IllegalArgumentException
-   *             if <code>pk</code> is not a {@link LocalPointerKey}; to
-   *             eventually be fixed
+   * @param pk the pointer key
+   * @param p2setPred the desired predicate that the points-to set should ideally satisfy
+   * @return a pair consisting of (1) a {@link PointsToResult} indicating whether a points-to set satisfying the
+   *         predicate was computed, and (2) the last computed points-to set for the variable (possibly
+   *         <code>null</code> if no points-to set could be computed in the budget)
+   * @throws IllegalArgumentException if <code>pk</code> is not a {@link LocalPointerKey}; to eventually be fixed
    */
   public Pair<PointsToResult, Collection<InstanceKey>> getPointsTo(PointerKey pk, Predicate<Collection<InstanceKey>> p2setPred)
       throws IllegalArgumentException {
@@ -276,8 +270,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   }
 
   /**
-   * @return the points-to set of <code>pk</code>, or <code>null</code> if
-   *         the points-to set can't be computed in the allocated budget
+   * @return the points-to set of <code>pk</code>, or <code>null</code> if the points-to set can't be computed in
+   *         the allocated budget
    */
   public Collection<InstanceKey> getPointsTo(PointerKey pk) {
     return getPointsTo(pk, Predicate.<Collection<InstanceKey>> falsePred()).snd;
@@ -434,14 +428,12 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     private final Collection<PointerKeyAndState> trackedPointsToWorklist = new LinkedHashSet<PointerKeyAndState>();
 
     /**
-     * maps a pointer key to those on-the-fly virtual calls for which it is the
-     * receiver
+     * maps a pointer key to those on-the-fly virtual calls for which it is the receiver
      */
     private final MultiMap<PointerKeyAndState, CallSiteAndCGNode> pkToOTFCalls = HashSetMultiMap.make();
 
     /**
-     * cache of the targets discovered for a call site during on-the-fly call
-     * graph construction
+     * cache of the targets discovered for a call site during on-the-fly call graph construction
      */
     private final MultiMap<CallSiteAndCGNode, IMethod> callToOTFTargets = ArraySetMultiMap.make();
 
@@ -502,43 +494,20 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           }));
     }
 
-    private boolean addAllToP2Set(Map<PointerKeyAndState, MutableIntSet> p2setMap, PointerKeyAndState pkAndState, IntSet vals) {
+    private boolean addAllToP2Set(Map<PointerKeyAndState, MutableIntSet> p2setMap, PointerKeyAndState pkAndState, IntSet vals,
+        IFlowLabel label) {
       final PointerKey pk = pkAndState.getPointerKey();
       if (pk instanceof FilteredPointerKey) {
         if (DEBUG) {
           Trace.println("handling filtered pointer key " + pk);
         }
         final TypeFilter typeFilter = ((FilteredPointerKey) pk).getTypeFilter();
-        if (typeFilter instanceof SingleClassFilter) {
-          final IClass concreteType = ((SingleClassFilter) typeFilter).getConcreteType();
-          final MutableIntSet tmp = intSetFactory.make();
-          vals.foreach(new IntSetAction() {
-
-            public void act(int x) {
-              InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
-              if (cha.isAssignableFrom(concreteType, ikAndState.getInstanceKey().getConcreteType())) {
-                tmp.add(x);
-              }
-            }
-
-          });
-          vals = tmp;
-        } else if (typeFilter instanceof SingleInstanceFilter) {
-          final InstanceKey theOnlyInstanceKey = ((SingleInstanceFilter) typeFilter).getInstance();
-          final MutableIntSet tmp = intSetFactory.make();
-          vals.foreach(new IntSetAction() {
-
-            public void act(int x) {
-              InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
-              if (ikAndState.getInstanceKey().equals(theOnlyInstanceKey)) {
-                tmp.add(x);
-              }
-            }
-
-          });
-          vals = tmp;
-        } else {
-          Assertions.UNREACHABLE();
+        vals = updateValsForFilter(vals, typeFilter);
+      }
+      if (label instanceof IFlowLabelWithFilter) {
+        TypeFilter typeFilter = ((IFlowLabelWithFilter) label).getFilter();
+        if (typeFilter != null) {
+          vals = updateValsForFilter(vals, typeFilter);
         }
       }
       boolean added = findOrCreate(p2setMap, pkAndState).addAll(vals);
@@ -552,6 +521,41 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       }
       return added;
 
+    }
+
+    private IntSet updateValsForFilter(IntSet vals, final TypeFilter typeFilter) {
+      if (typeFilter instanceof SingleClassFilter) {
+        final IClass concreteType = ((SingleClassFilter) typeFilter).getConcreteType();
+        final MutableIntSet tmp = intSetFactory.make();
+        vals.foreach(new IntSetAction() {
+
+          public void act(int x) {
+            InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
+            if (cha.isAssignableFrom(concreteType, ikAndState.getInstanceKey().getConcreteType())) {
+              tmp.add(x);
+            }
+          }
+
+        });
+        vals = tmp;
+      } else if (typeFilter instanceof SingleInstanceFilter) {
+        final InstanceKey theOnlyInstanceKey = ((SingleInstanceFilter) typeFilter).getInstance();
+        final MutableIntSet tmp = intSetFactory.make();
+        vals.foreach(new IntSetAction() {
+
+          public void act(int x) {
+            InstanceKeyAndState ikAndState = ikAndStates.getMappedObject(x);
+            if (ikAndState.getInstanceKey().equals(theOnlyInstanceKey)) {
+              tmp.add(x);
+            }
+          }
+
+        });
+        vals = tmp;
+      } else {
+        Assertions.UNREACHABLE();
+      }
+      return vals;
     }
 
     void compute() {
@@ -571,7 +575,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       } while (!initWorklist.isEmpty() || !pointsToWorklist.isEmpty() || !trackedPointsToWorklist.isEmpty());
     }
 
-    void handleCopy(final PointerKeyAndState curPkAndState, final PointerKey succPk, IFlowLabel label) {
+    void handleCopy(final PointerKeyAndState curPkAndState, final PointerKey succPk, final IFlowLabel label) {
       if (Assertions.verifyAssertions) {
         Assertions._assert(!label.isBarred());
       }
@@ -580,17 +584,17 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
         public Object apply(State nextState) {
           PointerKeyAndState succPkAndState = new PointerKeyAndState(succPk, nextState);
-          handleCopy(curPkAndState, succPkAndState);
+          handleCopy(curPkAndState, succPkAndState, label);
           return null;
         }
 
       });
     }
 
-    void handleCopy(PointerKeyAndState curPkAndState, PointerKeyAndState succPkAndState) {
+    void handleCopy(PointerKeyAndState curPkAndState, PointerKeyAndState succPkAndState, IFlowLabel label) {
       if (!addToInitWorklist(succPkAndState)) {
         // handle like x = y with Y updated
-        if (addAllToP2Set(pkToP2Set, curPkAndState, find(pkToP2Set, succPkAndState))) {
+        if (addAllToP2Set(pkToP2Set, curPkAndState, find(pkToP2Set, succPkAndState), label)) {
           addToPToWorklist(curPkAndState);
         }
       }
@@ -607,12 +611,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * 
      * @param curPkAndState
      * @param predPk
-     * @param label
-     *            the label of the edge from curPk to predPk (must be barred)
-     * @return those {@link PointerKeyAndState}s whose points-to sets have been
-     *         queried, such that the {@link PointerKey} is predPk, and
-     *         transitioning from its state on <code>label.bar()</code> yields
-     *         the state of <code>curPkAndState</code>
+     * @param label the label of the edge from curPk to predPk (must be barred)
+     * @return those {@link PointerKeyAndState}s whose points-to sets have been queried, such that the
+     *         {@link PointerKey} is predPk, and transitioning from its state on <code>label.bar()</code> yields the
+     *         state of <code>curPkAndState</code>
      */
     Collection<PointerKeyAndState> matchingPToQueried(PointerKeyAndState curPkAndState, PointerKey predPk, IFlowLabel label) {
       Collection<PointerKeyAndState> ret = ArraySet.make();
@@ -634,7 +636,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
     void handleBackCopy(PointerKeyAndState curPkAndState, PointerKey predPk, IFlowLabel label) {
       for (PointerKeyAndState predPkAndState : matchingPToQueried(curPkAndState, predPk, label)) {
-        if (addAllToP2Set(pkToP2Set, predPkAndState, find(pkToP2Set, curPkAndState))) {
+        if (addAllToP2Set(pkToP2Set, predPkAndState, find(pkToP2Set, curPkAndState), label)) {
           addToPToWorklist(predPkAndState);
         }
       }
@@ -647,9 +649,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     /**
-     * should only be called when pk's points-to set has just been updated. add
-     * pk to the points-to worklist, and re-propagate and calls that had pk as
-     * the receiver.
+     * should only be called when pk's points-to set has just been updated. add pk to the points-to worklist, and
+     * re-propagate and calls that had pk as the receiver.
      * 
      * @param pkAndState
      */
@@ -691,15 +692,12 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     /**
-     * Adds new targets for a virtual call, based on the points-to set of the
-     * receiver, and propagates values for the parameters / return value of the
-     * new targets. NOTE: this method will <em>not</em> do any propagation for
+     * Adds new targets for a virtual call, based on the points-to set of the receiver, and propagates values for the
+     * parameters / return value of the new targets. NOTE: this method will <em>not</em> do any propagation for
      * virtual call targets that have already been discovered.
      * 
-     * @param receiverAndState
-     *            the receiver
-     * @param callSiteAndCGNode
-     *            the call
+     * @param receiverAndState the receiver
+     * @param callSiteAndCGNode the call
      */
     void propTargets(PointerKeyAndState receiverAndState, CallSiteAndCGNode callSiteAndCGNode) {
       final CGNode caller = callSiteAndCGNode.getCGNode();
@@ -789,7 +787,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      */
     private void repropCallArg(PointerKeyAndState src, PointerKeyAndState dst, IFlowLabel dstToSrcLabel) {
       for (PointerKeyAndState srcToHandle : matchingPToQueried(dst, src.getPointerKey(), dstToSrcLabel)) {
-        handleCopy(srcToHandle, dst);
+        // TODO is barring the label correct?
+        handleCopy(srcToHandle, dst, dstToSrcLabel.bar());
       }
       IntSet trackedSet = find(pkToTrackedSet, dst);
       if (!trackedSet.isEmpty()) {
@@ -871,7 +870,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
           @Override
           public void visitAssign(AssignLabel label, Object dst) {
-            handleCopy(curPkAndState, (PointerKey) dst, AssignLabel.v());
+            handleCopy(curPkAndState, (PointerKey) dst, AssignLabel.noFilter());
           }
 
         };
@@ -890,8 +889,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     /**
-     * handle flow from actuals to formals, and from returned values to
-     * variables at the caller
+     * handle flow from actuals to formals, and from returned values to variables at the caller
      * 
      * @param curPk
      * @param handler
@@ -908,13 +906,15 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             final CGNode caller = callSiteAndCGNode.getCGNode();
             final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
             final IR ir = getIR(caller);
+            if (ir == null)
+              continue;
             final ParamLabel paramLabel = ParamLabel.make(callSiteAndCGNode);
             doTransition(curPkAndState.getState(), paramLabel, new Function<State, Object>() {
 
               private void propagateToCallee() {
-                if (caller.getIR() == null) {
-                  return;
-                }
+                // if (caller.getIR() == null) {
+                // return;
+                // }
                 g.addSubgraphForNode(caller);
                 SSAAbstractInvokeInstruction[] callInstrs = ir.getCalls(call);
                 for (int i = 0; i < callInstrs.length; i++) {
@@ -929,7 +929,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               }
 
               public Object apply(State callerState) {
-                Set<CGNode> possibleTargets = g.getPossibleTargets(caller, call);
+                // hack to get some actual parameter from call site
+                // TODO do this better
+                SSAAbstractInvokeInstruction callInstr = ir.getCalls(call)[0];
+                PointerKey actualPk = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
+                Set<CGNode> possibleTargets = g.getPossibleTargets(caller, call, (LocalPointerKey) actualPk);
                 if (noOnTheFlyNeeded(callSiteAndCGNode, possibleTargets)) {
                   propagateToCallee();
                 } else {
@@ -945,7 +949,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               }
 
             });
-            
+
           }
         }
         SSAInvokeInstruction callInstr = g.getInstrReturningTo(localPk);
@@ -956,9 +960,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           CallSiteReference callSiteRef = callInstr.getCallSite();
           CallSiteAndCGNode callSiteAndCGNode = new CallSiteAndCGNode(callSiteRef, caller);
           // get call targets
-          Set<CGNode> possibleCallees = g.getPossibleTargets(caller, callSiteRef); 
-            
-//            cg.getPossibleTargets(caller, callSiteRef);
+          Set<CGNode> possibleCallees = g.getPossibleTargets(caller, callSiteRef, localPk);
+
+          // cg.getPossibleTargets(caller, callSiteRef);
           // if (DEBUG &&
           // callSiteRef.getDeclaredTarget().toString().indexOf("clone()") !=
           // -1) {
@@ -1009,14 +1013,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     /**
-     * track a field of some instance key, as we are interested in statements
-     * that read or write to the field
+     * track a field of some instance key, as we are interested in statements that read or write to the field
      * 
      * @param ikAndState
      * @param field
-     * @param ikToFields
-     *            either {@link #forwInstKeyToFields} or
-     *            {@link #backInstKeyToFields}
+     * @param ikToFields either {@link #forwInstKeyToFields} or {@link #backInstKeyToFields}
      */
     private void trackInstanceField(InstanceKeyAndState ikAndState, IField field, MultiMap<InstanceKeyAndState, IField> ikToFields) {
       State state = ikAndState.getState();
@@ -1042,10 +1043,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     /**
-     * Initiates a query for the targets of some virtual call, by asking for
-     * points-to set of receiver. NOTE: if receiver has already been queried,
-     * will not do any additional propagation for already-discovered virtual
-     * call targets
+     * Initiates a query for the targets of some virtual call, by asking for points-to set of receiver. NOTE: if
+     * receiver has already been queried, will not do any additional propagation for already-discovered virtual call
+     * targets
      * 
      * @param caller
      * @param ir
@@ -1211,7 +1211,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         for (final CallSiteAndCGNode callSiteAndCGNode : g.getPotentialCallers(returnKey)) {
           final CGNode caller = callSiteAndCGNode.getCGNode();
           final IR ir = getIR(caller);
-          if (ir == null) continue;
+          if (ir == null)
+            continue;
           final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
           if (!addGraphs) {
             // shouldn't need to add the graph, so check if it is present;
@@ -1224,9 +1225,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           doTransition(curState, returnBarLabel, new Function<State, Object>() {
 
             private void propagateToCaller() {
-//              if (caller.getIR() == null) {
-//                return;
-//              }
+              // if (caller.getIR() == null) {
+              // return;
+              // }
               g.addSubgraphForNode(caller);
               SSAAbstractInvokeInstruction[] callInstrs = ir.getCalls(call);
               for (int i = 0; i < callInstrs.length; i++) {
@@ -1245,7 +1246,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               // if (DEBUG) {
               // Trace.println("caller " + caller);
               // }
-              Set<CGNode> possibleTargets = g.getPossibleTargets(caller, call);
+              SSAAbstractInvokeInstruction callInstr = ir.getCalls(call)[0];
+              PointerKey returnAtCallerKey = heapModel.getPointerKeyForLocal(caller, isExceptional ? callInstr.getException()
+                  : callInstr.getDef());
+              Set<CGNode> possibleTargets = g.getPossibleTargets(caller, call, (LocalPointerKey) returnAtCallerKey);
               if (noOnTheFlyNeeded(callSiteAndCGNode, possibleTargets)) {
                 propagateToCaller();
               } else {
@@ -1275,7 +1279,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             CallSiteReference callSiteRef = callInstr.getCallSite();
             CallSiteAndCGNode callSiteAndCGNode = new CallSiteAndCGNode(callSiteRef, caller);
             // get call targets
-            Set<CGNode> possibleCallees = g.getPossibleTargets(caller, callSiteRef);
+            Set<CGNode> possibleCallees = g.getPossibleTargets(caller, callSiteRef, localPk);
             // construct graph for each target
             if (noOnTheFlyNeeded(callSiteAndCGNode, possibleCallees)) {
               for (CGNode callee : possibleCallees) {
@@ -1437,7 +1441,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           @Override
           public void visitAssign(AssignLabel label, Object dst) {
             final PointerKey predPk = (PointerKey) dst;
-            doTransition(curState, AssignBarLabel.v(), new Function<State, Object>() {
+            doTransition(curState, AssignBarLabel.noFilter(), new Function<State, Object>() {
 
               public Object apply(State predPkState) {
                 PointerKeyAndState predPkAndState = new PointerKeyAndState(predPk, predPkState);
@@ -1527,7 +1531,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           // Assertions._assert(startSize == curSize);
           // }
           InstanceFieldKeyAndState ifk = getInstFieldKey(ikAndState, field);
-          if (addAllToP2Set(pkToP2Set, loadedValAndState, find(instFieldKeyToP2Set, ifk))) {
+          // just pass no label assign filter since no type-based filtering can be
+          // done here
+          if (addAllToP2Set(pkToP2Set, loadedValAndState, find(instFieldKeyToP2Set, ifk), AssignLabel.noFilter())) {
             if (DEBUG) {
               Trace.println("from load edge " + loadEdge);
             }

@@ -45,14 +45,10 @@ import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
-import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.ProgramCounter;
-import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
-import com.ibm.wala.demandpa.util.MemoryAccess;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -65,7 +61,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.DefUse;
@@ -73,14 +68,9 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
-import com.ibm.wala.ssa.SSAArrayLoadInstruction;
-import com.ibm.wala.ssa.SSAArrayStoreInstruction;
-import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
-import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
-import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.ReferenceCleanser;
@@ -105,10 +95,6 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   private static int wipeCount = 0;
 
   protected final CallGraph cg;
-
-  protected final HeapModel heapModel;
-
-  protected final MemoryAccessMap mam;
 
   protected final ClassHierarchy cha;
 
@@ -277,162 +263,6 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     return returnPreds.iterator();
   }
 
-  /* 
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getWritesToStaticField(com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey)
-   */
-  public Iterator<? extends Object> getWritesToStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
-    if (sfk == null) {
-      throw new IllegalArgumentException("sfk == null");
-    }
-    Collection<MemoryAccess> fieldWrites = mam.getFieldWrites(sfk.getField());
-    for (MemoryAccess a : fieldWrites) {
-      addSubgraphForNode(a.getNode());
-    }
-    return getSuccNodes(sfk, AssignGlobalLabel.v());
-  }
-
-  /* 
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReadsOfStaticField(com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey)
-   */
-  public Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk) throws IllegalArgumentException {
-    if (sfk == null) {
-      throw new IllegalArgumentException("sfk == null");
-    }
-    Collection<MemoryAccess> fieldReads = mam.getFieldReads(sfk.getField());
-    for (MemoryAccess a : fieldReads) {
-      addSubgraphForNode(a.getNode());
-    }
-    return getPredNodes(sfk, AssignGlobalLabel.v());
-  }
-
-  /* 
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getWritesToInstanceField(com.ibm.wala.classLoader.IField)
-   */
-  public Iterator<PointerKey> getWritesToInstanceField(IField f) {
-    // TODO: cache this!!
-    if (f == ArrayContents.v()) {
-      return getArrayWrites();
-    }
-    Collection<MemoryAccess> writes = mam.getFieldWrites(f);
-    for (MemoryAccess a : writes) {
-      addSubgraphForNode(a.getNode());
-    }
-    ArrayList<PointerKey> written = new ArrayList<PointerKey>();
-    for (MemoryAccess a : writes) {
-      IR ir = a.getNode().getIR();
-      SSAPutInstruction s = (SSAPutInstruction) ir.getInstructions()[a.getInstructionIndex()];
-      PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getVal());
-      if (Assertions.verifyAssertions) {
-        Assertions._assert(containsNode(r));
-      }
-      written.add(r);
-    }
-    return written.iterator();
-  }
-
-  /* 
-   * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReadsOfInstanceField(com.ibm.wala.classLoader.IField)
-   */
-  public Iterator<PointerKey> getReadsOfInstanceField(IField f) {
-    // TODO: cache this!!
-    if (f == ArrayContents.v()) {
-      return getArrayReads();
-    }
-    Collection<MemoryAccess> reads = mam.getFieldReads(f);
-    for (MemoryAccess a : reads) {
-      addSubgraphForNode(a.getNode());
-    }
-    ArrayList<PointerKey> readInto = new ArrayList<PointerKey>();
-    for (MemoryAccess a : reads) {
-      IR ir = a.getNode().getIR();
-      SSAGetInstruction s = (SSAGetInstruction) ir.getInstructions()[a.getInstructionIndex()];
-      PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getDef());
-      if (Assertions.verifyAssertions) {
-        Assertions._assert(containsNode(r));
-      }
-      readInto.add(r);
-    }
-    return readInto.iterator();
-  }
-
-  private Iterator<PointerKey> getArrayWrites() {
-    Collection<MemoryAccess> arrayWrites = mam.getArrayWrites();
-    for (MemoryAccess a : arrayWrites) {
-      addSubgraphForNode(a.getNode());
-    }
-    ArrayList<PointerKey> written = new ArrayList<PointerKey>();
-    for (MemoryAccess a : arrayWrites) {
-      final CGNode node = a.getNode();
-      IR ir = node.getIR();
-      SSAInstruction instruction = ir.getInstructions()[a.getInstructionIndex()];
-      if (instruction instanceof SSAArrayStoreInstruction) {
-        SSAArrayStoreInstruction s = (SSAArrayStoreInstruction) instruction;
-        PointerKey r = heapModel.getPointerKeyForLocal(node, s.getValue());
-        if (Assertions.verifyAssertions) {
-          Assertions._assert(containsNode(r), "missing node for " + r);
-        }
-        written.add(r);
-      } else if (instruction instanceof SSANewInstruction) {
-        SSANewInstruction n = (SSANewInstruction) instruction;
-        // should be allocated multi-dimentional array
-        InstanceKey iKey = heapModel.getInstanceKeyForAllocation(node, n.getNewSite());
-        IClass klass = iKey.getConcreteType();
-        if (Assertions.verifyAssertions) {
-          Assertions._assert(klass.isArrayClass() && ((ArrayClass) klass).getElementClass().isArrayClass());
-        }
-        int dim = 0;
-        InstanceKey lastInstance = iKey;
-        while (klass != null && klass.isArrayClass()) {
-          klass = ((ArrayClass) klass).getElementClass();
-          // klass == null means it's a primitive
-          if (klass != null && klass.isArrayClass()) {
-            InstanceKey ik = heapModel.getInstanceKeyForMultiNewArray(node, n.getNewSite(), dim);
-            PointerKey pk = heapModel.getPointerKeyForArrayContents(lastInstance);
-            written.add(pk);
-            // if (DEBUG_MULTINEWARRAY) {
-            // Trace.println("multinewarray constraint: ");
-            // Trace.println(" pk: " + pk);
-            // Trace.println(" ik: " +
-            // system.findOrCreateIndexForInstanceKey(ik)
-            // + " concrete type " + ik.getConcreteType()
-            // + " is " + ik);
-            // Trace.println(" klass:" + klass);
-            // }
-            // addNode(ik);
-            // addNode(pk);
-            // addEdge(pk, ik, NewLabel.v());
-            lastInstance = ik;
-            dim++;
-          }
-        }
-
-      } else {
-        Assertions.UNREACHABLE();
-      }
-    }
-    return written.iterator();
-  }
-
-  private Iterator<PointerKey> getArrayReads() {
-    Collection<MemoryAccess> arrayReads = mam.getArrayReads();
-    for (Iterator<MemoryAccess> it = arrayReads.iterator(); it.hasNext();) {
-      MemoryAccess a = it.next();
-      addSubgraphForNode(a.getNode());
-    }
-    ArrayList<PointerKey> read = new ArrayList<PointerKey>();
-    for (Iterator<MemoryAccess> it = arrayReads.iterator(); it.hasNext();) {
-      MemoryAccess a = it.next();
-      IR ir = a.getNode().getIR();
-      SSAArrayLoadInstruction s = (SSAArrayLoadInstruction) ir.getInstructions()[a.getInstructionIndex()];
-      PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getDef());
-      if (Assertions.verifyAssertions) {
-        Assertions._assert(containsNode(r));
-      }
-      read.add(r);
-    }
-    return read.iterator();
-  }
-
   protected abstract void addNodesForParameters(CGNode node);
 
   protected void unconditionallyAddConstraintsFromNode(CGNode node) {
@@ -524,14 +354,14 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
         PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
         addNode(exceptionVar);
         addNode(e);
-        addEdge(exceptionVar, e, AssignLabel.v());
+        addEdge(exceptionVar, e, AssignLabel.noFilter());
 
       } else if (pei instanceof SSAAbstractThrowInstruction) {
         SSAAbstractThrowInstruction s = (SSAAbstractThrowInstruction) pei;
         PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
         addNode(exceptionVar);
         addNode(e);
-        addEdge(exceptionVar, e, AssignLabel.v());
+        addEdge(exceptionVar, e, AssignLabel.noFilter());
       }
 
       // Account for those exceptions for which we do not actually have a
@@ -623,7 +453,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
           PointerKey use = heapModel.getPointerKeyForLocal(node, phi.getUse(n));
           addNode(def);
           addNode(use);
-          addEdge(def, use, AssignLabel.v());
+          addEdge(def, use, AssignLabel.noFilter());
         }
         // }
         // }
@@ -668,7 +498,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     return ret;
   }
 
-  public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site) {
+  public Set<CGNode> getPossibleTargets(CGNode node, CallSiteReference site, LocalPointerKey actualPk) {
     return cg.getPossibleTargets(node, site);
   }
 
@@ -677,9 +507,8 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   }
 
   public AbstractDemandFlowGraph(final CallGraph cg, final HeapModel heapModel, final MemoryAccessMap mam, final ClassHierarchy cha) {
+    super(mam,heapModel);
     this.cg = cg;
-    this.heapModel = heapModel;
-    this.mam = mam;
     this.cha = cha;
   }
 

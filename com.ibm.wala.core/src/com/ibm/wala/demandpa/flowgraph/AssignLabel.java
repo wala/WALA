@@ -37,17 +37,51 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
-public class AssignLabel implements IFlowLabel {
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
 
-  private static final AssignLabel theInstance = new AssignLabel();
+public class AssignLabel implements IFlowLabelWithFilter {
 
-  private AssignLabel() {
+  private static final AssignLabel noFilter = new AssignLabel(null);
+
+  private final TypeFilter filter;
+  
+  private AssignLabel(TypeFilter filter) {
+    this.filter = filter;
   }
 
-  public static AssignLabel v() {
-    return theInstance;
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((filter == null) ? 0 : filter.hashCode());
+    return result;
   }
 
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    final AssignLabel other = (AssignLabel) obj;
+    if (filter == null) {
+      if (other.filter != null)
+        return false;
+    } else if (!filter.equals(other.filter))
+      return false;
+    return true;
+  }
+
+  public static AssignLabel noFilter() {
+    return noFilter;
+  }
+
+  public static AssignLabel make(TypeFilter filter) {
+    return new AssignLabel(filter);
+  }
+  
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException("v == null");
@@ -56,7 +90,7 @@ public class AssignLabel implements IFlowLabel {
   }
 
   public AssignBarLabel bar() {
-    return AssignBarLabel.v();
+    return this == noFilter ? AssignBarLabel.noFilter() : AssignBarLabel.make(filter);
   }
 
   @Override
@@ -66,5 +100,9 @@ public class AssignLabel implements IFlowLabel {
 
   public boolean isBarred() {
     return false;
+  }
+  
+  public TypeFilter getFilter() {
+    return filter;
   }
 }

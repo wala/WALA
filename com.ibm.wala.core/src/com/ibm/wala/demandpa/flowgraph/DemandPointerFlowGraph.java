@@ -88,7 +88,7 @@ import com.ibm.wala.util.warnings.Warnings;
 /**
  * A graph representation of statements flowing pointer values, but <em>not</em>
  * primitive values. Nodes are variables, and edges are <em>against</em> value
- * flow; assignment x = y yields edge from x to y with label {@link AssignLabel#v()}
+ * flow; assignment x = y yields edge from x to y with label {@link AssignLabel#noFilter()}
  * 
  * @author Manu Sridharan
  * 
@@ -253,13 +253,14 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         // instruction.getResult());
         return;
       } else {
-        result = heapModel.getFilteredPointerKeyForLocal(node, instruction.getResult(), new FilteredPointerKey.SingleClassFilter(
-            cls));
+        FilteredPointerKey.SingleClassFilter singleClassFilter = new FilteredPointerKey.SingleClassFilter(
+            cls);
+        result = heapModel.getPointerKeyForLocal(node, instruction.getResult());
+        PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getVal());
+        g.addNode(result);
+        g.addNode(value);
+        g.addEdge(result, value, AssignLabel.make(singleClassFilter));
       }
-      PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getVal());
-      g.addNode(result);
-      g.addNode(value);
-      g.addEdge(result, value, AssignLabel.v());
     }
 
     /*
@@ -278,7 +279,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         g.addNode(def);
         PointerKey returnValue = heapModel.getPointerKeyForReturnValue(node);
         g.addNode(returnValue);
-        g.addEdge(returnValue, def, AssignLabel.v());
+        g.addEdge(returnValue, def, AssignLabel.noFilter());
       }
     }
 
@@ -489,14 +490,14 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
           PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
           g.addNode(exceptionVar);
           g.addNode(e);
-          g.addEdge(exceptionVar, e, AssignLabel.v());
+          g.addEdge(exceptionVar, e, AssignLabel.noFilter());
 
         } else if (pei instanceof SSAAbstractThrowInstruction) {
           SSAAbstractThrowInstruction s = (SSAAbstractThrowInstruction) pei;
           PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
           g.addNode(exceptionVar);
           g.addNode(e);
-          g.addEdge(exceptionVar, e, AssignLabel.v());
+          g.addEdge(exceptionVar, e, AssignLabel.noFilter());
         }
 
         // Account for those exceptions for which we do not actually have a

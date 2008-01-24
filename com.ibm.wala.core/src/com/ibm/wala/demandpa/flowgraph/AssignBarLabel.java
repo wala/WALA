@@ -37,28 +37,40 @@
  */
 package com.ibm.wala.demandpa.flowgraph;
 
+import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
+
 /**
  * @author Manu Sridharan
- *
+ * 
  */
-public class AssignBarLabel implements IFlowLabel {
+public class AssignBarLabel implements IFlowLabelWithFilter {
 
-  private static final AssignBarLabel theInstance = new AssignBarLabel();
-  
-  private AssignBarLabel() {}
-  
-  public static AssignBarLabel v() {
-      return theInstance;
+  private static final AssignBarLabel noFilter = new AssignBarLabel(null);
+
+  private final TypeFilter filter;
+
+  private AssignBarLabel(TypeFilter filter) {
+    this.filter = filter;
   }
 
-  /* (non-Javadoc)
+  public static AssignBarLabel noFilter() {
+    return noFilter;
+  }
+
+  public static AssignBarLabel make(TypeFilter filter) {
+    return new AssignBarLabel(filter);
+  }
+
+  /*
+   * (non-Javadoc)
    * @see demandGraph.IFlowLabel#bar()
    */
   public AssignLabel bar() {
-    return AssignLabel.v();
+    return (this == noFilter) ? AssignLabel.noFilter() : AssignLabel.make(filter);
   }
 
-  /* (non-Javadoc)
+  /*
+   * (non-Javadoc)
    * @see demandGraph.IFlowLabel#visit(demandGraph.IFlowLabel.IFlowLabelVisitor, java.lang.Object)
    */
   public void visit(IFlowLabelVisitor v, Object dst) throws IllegalArgumentException {
@@ -72,4 +84,32 @@ public class AssignBarLabel implements IFlowLabel {
     return true;
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((filter == null) ? 0 : filter.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    final AssignBarLabel other = (AssignBarLabel) obj;
+    if (filter == null) {
+      if (other.filter != null)
+        return false;
+    } else if (!filter.equals(other.filter))
+      return false;
+    return true;
+  }
+
+  public TypeFilter getFilter() {
+    return filter;
+  }
 }
