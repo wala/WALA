@@ -8,12 +8,15 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.intset;
+package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
+import com.ibm.wala.util.intset.IntIterator;
+import com.ibm.wala.util.intset.MutableSparseIntSet;
+import com.ibm.wala.util.intset.TunedMutableSparseIntSet;
 
 /**
  * a vector implementation designed for low occupancy. Note that get() from this

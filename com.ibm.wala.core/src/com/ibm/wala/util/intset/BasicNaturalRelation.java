@@ -12,6 +12,9 @@ package com.ibm.wala.util.intset;
 
 import java.util.Iterator;
 
+import com.ibm.wala.util.collections.IVector;
+import com.ibm.wala.util.collections.SimpleVector;
+import com.ibm.wala.util.collections.TwoLevelVector;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 

@@ -12,6 +12,7 @@ package com.ibm.wala.dataflow.IFDS;
 
 import java.util.Iterator;
 
+import com.ibm.wala.util.collections.SparseVector;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
@@ -19,7 +20,6 @@ import com.ibm.wala.util.intset.IntPair;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SparseLongIntVector;
-import com.ibm.wala.util.intset.SparseVector;
 import com.ibm.wala.util.math.LongUtil;
 
 /**

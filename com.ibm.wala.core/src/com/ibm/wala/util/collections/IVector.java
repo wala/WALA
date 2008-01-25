@@ -8,10 +8,10 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.intset;
+package com.ibm.wala.util.collections;
+
 
 /**
- * 
  * simple interface for a vector.
  * 
  * TODO: get rid of this and use java.util.collection.RandomAccess

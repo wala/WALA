@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.intset.BitVector;
-import com.ibm.wala.util.intset.SimpleVector;
 import com.ibm.wala.util.strings.StringStuff;
 
 /**

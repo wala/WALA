@@ -14,11 +14,11 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.OrderedMultiGraph;
-import com.ibm.wala.util.intset.SimpleVector;
 
 /**
  * Inefficient implementation of OrderedMultiGraph.

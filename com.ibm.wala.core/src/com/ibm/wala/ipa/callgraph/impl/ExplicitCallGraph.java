@@ -33,6 +33,7 @@ import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IntMapIterator;
+import com.ibm.wala.util.collections.SparseVector;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.functions.IntFunction;
@@ -45,7 +46,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
-import com.ibm.wala.util.intset.SparseVector;
 
 /**
  * 

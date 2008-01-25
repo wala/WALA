@@ -14,14 +14,14 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
+import com.ibm.wala.util.collections.IVector;
+import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.BitVector;
-import com.ibm.wala.util.intset.IVector;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntegerUnionFind;
 import com.ibm.wala.util.intset.MutableMapping;
-import com.ibm.wala.util.intset.SimpleVector;
 
 /**
  * An object that tracks the mapping between pointer keys and points-to set

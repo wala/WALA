@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package com.ibm.wala.util.intset;
+package com.ibm.wala.util.collections;
 
 import java.util.ArrayList;
 import java.util.Iterator;

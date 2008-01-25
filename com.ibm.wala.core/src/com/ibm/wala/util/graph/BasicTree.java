@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.graph;
 
-import com.ibm.wala.util.intset.SimpleVector;
+import com.ibm.wala.util.collections.SimpleVector;
 
 /**
  * A simple, extremely inefficient tree implementation

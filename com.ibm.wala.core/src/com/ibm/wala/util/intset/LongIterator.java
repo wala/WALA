@@ -12,8 +12,7 @@ package com.ibm.wala.util.intset;
 
 
 /**
- *
- * a more efficient iterator for sets of integers
+ * a more efficient iterator for sets of longs
  * 
  * @author sfink
  */

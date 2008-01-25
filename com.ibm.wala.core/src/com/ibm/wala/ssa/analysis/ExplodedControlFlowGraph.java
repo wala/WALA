@@ -31,12 +31,12 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
+import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
-import com.ibm.wala.util.intset.SimpleVector;
 
 /**
  * A view of a control flow graph where each basic block corresponds to exactly

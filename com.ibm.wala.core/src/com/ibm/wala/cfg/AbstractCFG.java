@@ -27,6 +27,7 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.IteratorPlusOne;
 import com.ibm.wala.util.collections.IteratorPlusTwo;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
+import com.ibm.wala.util.collections.SimpleVector;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.impl.DelegatingNumberedNodeManager;
@@ -38,7 +39,6 @@ import com.ibm.wala.util.intset.FixedSizeBitVector;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SimpleIntVector;
-import com.ibm.wala.util.intset.SimpleVector;
 
 /**
  * 

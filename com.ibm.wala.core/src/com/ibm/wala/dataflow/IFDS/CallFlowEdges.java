@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.IFDS;
 
+import com.ibm.wala.util.collections.SparseVector;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVectorIntSet;
@@ -17,7 +18,6 @@ import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
-import com.ibm.wala.util.intset.SparseVector;
 
 /**
  * 
