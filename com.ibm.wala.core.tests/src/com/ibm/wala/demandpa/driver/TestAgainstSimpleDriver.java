@@ -47,6 +47,7 @@ import com.ibm.wala.demandpa.alg.refinepolicy.SinglePassRefinementPolicy;
 import com.ibm.wala.demandpa.alg.statemachine.DummyStateMachine;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
+import com.ibm.wala.demandpa.util.SimpleMemoryAccessMap;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -109,7 +110,7 @@ public class TestAgainstSimpleDriver {
     CallGraph cg = CallGraphTestUtil.buildRTA(options, new AnalysisCache(), cha, scope);
     // System.err.println(cg.toString());
 
-    MemoryAccessMap fam = new MemoryAccessMap(cg, false);
+    MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, false);
     // System.err.println(fam.toString());
 
     IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(options, cha, scope, cg, fam);

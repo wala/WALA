@@ -50,6 +50,7 @@ import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.genericutil.Predicate;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
+import com.ibm.wala.demandpa.util.SimpleMemoryAccessMap;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -157,7 +158,7 @@ public class DemandCastChecker {
     System.err.println("done");
     // System.err.println(cg.toString());
 
-    MemoryAccessMap fam = new MemoryAccessMap(cg, false);
+    MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, false);
     DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(heapModel,cha), fam, cha, options,
         makeStateMachineFactory());
     fullDemandPointsTo.setRefinementPolicyFactory(chooseRefinePolicyFactory(cha));

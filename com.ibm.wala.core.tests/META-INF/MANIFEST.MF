@@ -16,4 +16,5 @@ Export-Package: com.ibm.wala.core.tests.basic,
  com.ibm.wala.core.tests.util,
  com.ibm.wala.eclipse.headless,
  com.ibm.wala.examples.drivers,
- com.ibm.wala.examples.properties
+ com.ibm.wala.examples.properties,
+ com.ibm.wala.demandpa.driver
