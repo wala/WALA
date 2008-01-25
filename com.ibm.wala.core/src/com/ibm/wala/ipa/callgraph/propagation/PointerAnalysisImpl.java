@@ -484,13 +484,11 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     }
 
     public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter peiLoc, TypeReference type) {
-      Assertions.UNREACHABLE();
-      return null;
+      return iKeyFactory.getInstanceKeyForPEI(node, peiLoc, type);
     }
 
     public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
-      Assertions.UNREACHABLE();
-      return null;
+      return iKeyFactory.getInstanceKeyForClassObject(type);
     }
 
     /*
