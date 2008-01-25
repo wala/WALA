@@ -71,7 +71,7 @@ public class AstModRef extends ModRef {
   {
       
     protected AstModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis pa) {
-      super(n, result, h, pa);
+      super(n, result, h, pa, true);
     }
 
     public void visitAstLexicalRead(AstLexicalRead instruction) {
