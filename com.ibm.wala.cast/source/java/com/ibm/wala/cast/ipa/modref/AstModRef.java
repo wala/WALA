@@ -115,7 +115,8 @@ public class AstModRef extends ModRef {
     }
   }
 
-  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
+  @Override
+  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
     return new AstModVisitor(n, result, h, pa);
   }
 
