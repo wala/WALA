@@ -15,14 +15,13 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.warnings.WalaException;
 
 /**
  *  TODO: Move this somewhere.
  */
 public class InferGraphRoots {
 
-  public static <T> Collection<T> inferRoots(Graph<T> g) throws WalaException {
+  public static <T> Collection<T> inferRoots(Graph<T> g){
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
