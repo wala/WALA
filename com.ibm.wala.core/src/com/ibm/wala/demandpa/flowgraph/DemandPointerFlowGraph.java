@@ -534,7 +534,12 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
      */
     @Override
     public void visitPi(SSAPiInstruction instruction) {
-      Assertions.UNREACHABLE();
+      // for now, ignore condition and just treat it as a copy
+      PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
+      PointerKey use = heapModel.getPointerKeyForLocal(node, instruction.getVal());
+      g.addNode(def);
+      g.addNode(use);
+      g.addEdge(def, use, AssignLabel.noFilter());
     }
 
     public ISSABasicBlock getBasicBlock() {
