@@ -43,8 +43,8 @@ import com.ibm.wala.util.intset.OrdinalSet;
 /**
  * Mod-ref analysis for heap locations.
  * 
- * For each call graph node, what heap locations (as determined by a heap model)
- * may it read or write, including it's callees transitively
+ * For each call graph node, what heap locations (as determined by a heap model) may it read or write, including it's
+ * callees transitively
  * 
  * @author sjfink
  * 
@@ -59,11 +59,10 @@ public class ModRef {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap
-   * model) may it write, including its callees transitively
+   * For each call graph node, what heap locations (as determined by a heap model) may it write, including its callees
+   * transitively
    * 
-   * @throws IllegalArgumentException
-   *             if cg is null
+   * @throws IllegalArgumentException if cg is null
    * 
    */
   public Map<CGNode, OrdinalSet<PointerKey>> computeMod(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
@@ -75,11 +74,10 @@ public class ModRef {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap
-   * model) may it read, including its callees transitively
+   * For each call graph node, what heap locations (as determined by a heap model) may it read, including its callees
+   * transitively
    * 
-   * @throws IllegalArgumentException
-   *             if cg is null
+   * @throws IllegalArgumentException if cg is null
    * 
    */
   public Map<CGNode, OrdinalSet<PointerKey>> computeRef(CallGraph cg, PointerAnalysis pa, HeapExclusions heapExclude) {
@@ -91,8 +89,8 @@ public class ModRef {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap
-   * model) may it write, including its callees transitively
+   * For each call graph node, what heap locations (as determined by a heap model) may it write, including its callees
+   * transitively
    * 
    */
   public Map<CGNode, OrdinalSet<PointerKey>> computeMod(CallGraph cg, PointerAnalysis pa) {
@@ -100,8 +98,8 @@ public class ModRef {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap
-   * model) may it read, including its callees transitively
+   * For each call graph node, what heap locations (as determined by a heap model) may it read, including its callees
+   * transitively
    * 
    */
   public Map<CGNode, OrdinalSet<PointerKey>> computeRef(CallGraph cg, PointerAnalysis pa) {
@@ -122,8 +120,8 @@ public class ModRef {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap
-   * model) may it write, <bf> NOT </bf> including its callees transitively
+   * For each call graph node, what heap locations (as determined by a heap model) may it write, <bf> NOT </bf>
+   * including its callees transitively
    * 
    * @param heapExclude
    */
@@ -137,8 +135,8 @@ public class ModRef {
   }
 
   /**
-   * For each call graph node, what heap locations (as determined by a heap
-   * model) may it read, <bf> NOT </bf> including its callees transitively
+   * For each call graph node, what heap locations (as determined by a heap model) may it read, <bf> NOT </bf> including
+   * its callees transitively
    * 
    * @param heapExclude
    */
@@ -152,8 +150,8 @@ public class ModRef {
   }
 
   /**
-   * For a call graph node, what heap locations (as determined by a heap model)
-   * may it write, <bf> NOT </bf> including it's callees transitively
+   * For a call graph node, what heap locations (as determined by a heap model) may it write, <bf> NOT </bf> including
+   * it's callees transitively
    * 
    * @param heapExclude
    */
@@ -174,8 +172,8 @@ public class ModRef {
   }
 
   /**
-   * For a call graph node, what heap locations (as determined by a heap model)
-   * may it read, <bf> NOT </bf> including it's callees transitively
+   * For a call graph node, what heap locations (as determined by a heap model) may it read, <bf> NOT </bf> including
+   * it's callees transitively
    */
   private Collection<PointerKey> scanNodeForRef(final CGNode n, final PointerAnalysis pa, HeapExclusions heapExclude) {
     Collection<PointerKey> result = HashSetFactory.make();
@@ -262,6 +260,19 @@ public class ModRef {
       if (instruction.getConcreteType().isArrayType()) {
         int dim = instruction.getConcreteType().getDimensionality();
         if (dim > 1) {
+          // we need to handle the top-level allocation, just like the 1D case
+          InstanceKey ik = h.getInstanceKeyForAllocation(n, instruction.getNewSite());
+          // note that ik can be null depending on class hierarchy exclusions or
+          // for incomplete programs. If so, just ignore it and keep going.
+          if (ik != null) {
+            PointerKey pk = h.getPointerKeyForArrayContents(ik);
+            assert pk != null;
+            result.add(pk);
+            pk = h.getPointerKeyForArrayLength(ik);
+            assert pk != null;
+            result.add(pk);
+          }
+          // now, the inner dimensions
           for (int d = 0; d < dim - 1; d++) {
             InstanceKey i = h.getInstanceKeyForMultiNewArray(n, instruction.getNewSite(), d);
             // note that i can be null depending on class hierarchy exclusions
@@ -282,10 +293,12 @@ public class ModRef {
           // note that i can be null depending on class hierarchy exclusions or
           // for incomplete programs. If so, just ignore it and keep going.
           if (i != null) {
-            PointerKey pk = h.getPointerKeyForArrayContents(i);
-            assert pk != null;
-            result.add(pk);
-            pk = h.getPointerKeyForArrayLength(i);
+            if (!PDG.IGNORE_ALLOC_HEAP_DEFS) {
+              PointerKey pk = h.getPointerKeyForArrayContents(i);
+              assert pk != null;
+              result.add(pk);
+            }
+            PointerKey pk = h.getPointerKeyForArrayLength(i);
             assert pk != null;
             result.add(pk);
           }
