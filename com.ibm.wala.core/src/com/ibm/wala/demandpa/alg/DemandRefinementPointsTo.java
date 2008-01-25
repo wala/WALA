@@ -64,8 +64,8 @@ import com.ibm.wala.demandpa.flowgraph.AssignGlobalLabel;
 import com.ibm.wala.demandpa.flowgraph.AssignLabel;
 import com.ibm.wala.demandpa.flowgraph.DemandPointerFlowGraph;
 import com.ibm.wala.demandpa.flowgraph.GetFieldLabel;
-import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.flowgraph.IFlowGraph;
+import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabelWithFilter;
 import com.ibm.wala.demandpa.flowgraph.MatchBarLabel;
 import com.ibm.wala.demandpa.flowgraph.MatchLabel;
@@ -108,7 +108,6 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
@@ -127,11 +126,11 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  */
 public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   // private static final boolean DEBUG_FULL = DEBUG && false;
 
-  private final IFlowGraph g;
+  protected final IFlowGraph g;
 
   private StateMachineFactory<IFlowLabel> stateMachineFactory;
 
@@ -186,7 +185,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   /**
    * re-initialize state for a new query
    */
-  private void startNewQuery() {
+  protected void startNewQuery() {
     // re-init the refinement policy
     refinementPolicy = refinementPolicyFactory.make();
     // re-init the state machine
@@ -210,7 +209,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
     LocalPointerKey queriedPk = (LocalPointerKey) pk;
     if (DEBUG) {
-      Trace.println("answering query for " + pk);
+      System.err.println("answering query for " + pk);
     }
     Collection<InstanceKey> lastP2Set = null;
     boolean succeeded = false;
@@ -228,13 +227,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             computer.compute();
             curP2Set = computer.getP2Set(queriedPk);
             if (DEBUG) {
-              Trace.println("traversed " + getNumNodesTraversed() + " nodes");
-              Trace.println("POINTS-TO SET " + lastP2Set);
+              System.err.println("traversed " + getNumNodesTraversed() + " nodes");
+              System.err.println("POINTS-TO SET " + lastP2Set);
             }
             break;
           } catch (StatesMergedException e) {
             if (DEBUG) {
-              Trace.println("restarting...");
+              System.err.println("restarting...");
             }
           }
         }
@@ -403,9 +402,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * @author Manu Sridharan
    * 
    */
-  private final class PointsToComputer {
+  protected class PointsToComputer {
 
-    private final PointerKeyAndState queriedPkAndState;
+    protected final PointerKeyAndState queriedPkAndState;
 
     /**
      * set of variables whose points-to sets were queried
@@ -447,7 +446,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     // points-to sets and tracked points-to sets
     private final Map<PointerKeyAndState, MutableIntSet> pkToP2Set = HashMapFactory.make();
 
-    private final Map<PointerKeyAndState, MutableIntSet> pkToTrackedSet = HashMapFactory.make();
+    protected final Map<PointerKeyAndState, MutableIntSet> pkToTrackedSet = HashMapFactory.make();
 
     private final Map<InstanceFieldKeyAndState, MutableIntSet> instFieldKeyToP2Set = HashMapFactory.make();
 
@@ -456,7 +455,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     /**
      * for numbering {@link InstanceKey}, {@link State} pairs
      */
-    private final OrdinalSetMapping<InstanceKeyAndState> ikAndStates = MutableMapping.make();
+    protected final OrdinalSetMapping<InstanceKeyAndState> ikAndStates = MutableMapping.make();
 
     private final MutableIntSetFactory intSetFactory = new MutableSparseIntSetFactory(); // new
 
@@ -472,7 +471,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      */
     private final HashSet<LoadEdge> encounteredLoads = HashSetFactory.make();
 
-    PointsToComputer(LocalPointerKey pk) {
+    protected PointsToComputer(LocalPointerKey pk) {
       queriedPkAndState = new PointerKeyAndState(pk, stateMachine.getStartState());
     }
 
@@ -499,7 +498,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       final PointerKey pk = pkAndState.getPointerKey();
       if (pk instanceof FilteredPointerKey) {
         if (DEBUG) {
-          Trace.println("handling filtered pointer key " + pk);
+          System.err.println("handling filtered pointer key " + pk);
         }
         final TypeFilter typeFilter = ((FilteredPointerKey) pk).getTypeFilter();
         vals = updateValsForFilter(vals, typeFilter);
@@ -513,11 +512,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       boolean added = findOrCreate(p2setMap, pkAndState).addAll(vals);
       // final boolean added = p2setMap.putAll(pkAndState, vals);
       if (DEBUG && added) {
-        Trace.println("POINTS-TO ADDITION TO PK " + pkAndState + ":");
+        System.err.println("POINTS-TO ADDITION TO PK " + pkAndState + ":");
         for (InstanceKeyAndState ikAndState : makeOrdinalSet(vals)) {
-          Trace.println(ikAndState);
+          System.err.println(ikAndState);
         }
-        Trace.println("*************");
+        System.err.println("*************");
       }
       return added;
 
@@ -558,13 +557,17 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       return vals;
     }
 
-    void compute() {
+    protected void compute() {
       final CGNode node = ((LocalPointerKey) queriedPkAndState.getPointerKey()).getNode();
       if (node.getIR() == null) {
         return;
       }
       g.addSubgraphForNode(node);
       addToInitWorklist(queriedPkAndState);
+      worklistLoop();
+    }
+
+    protected void worklistLoop() {
       do {
         while (!initWorklist.isEmpty() || !pointsToWorklist.isEmpty() || !trackedPointsToWorklist.isEmpty()) {
           handleInitWorklist();
@@ -669,7 +672,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           Assertions._assert(g.hasSubgraphForNode(node), "missing constraints for node of var " + pkAndState);
         }
         if (DEBUG) {
-          // Trace.println("adding to init_ " + pkAndState);
+          // System.err.println("adding to init_ " + pkAndState);
         }
         initWorklist.add(pkAndState);
         // if (pkAndStates.getMappedIndex(pkAndState) == -1) {
@@ -680,13 +683,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       return false;
     }
 
-    void addToTrackedPToWorklist(PointerKeyAndState pkAndState) {
+    protected void addToTrackedPToWorklist(PointerKeyAndState pkAndState) {
       if (Assertions.verifyAssertions && pkAndState.getPointerKey() instanceof LocalPointerKey) {
         CGNode node = ((LocalPointerKey) pkAndState.getPointerKey()).getNode();
         Assertions._assert(g.hasSubgraphForNode(node), "missing constraints for " + node);
       }
       if (DEBUG) {
-        // Trace.println("adding to tracked points-to_ " + pkAndState);
+        // System.err.println("adding to tracked points-to_ " + pkAndState);
       }
       trackedPointsToWorklist.add(pkAndState);
     }
@@ -722,7 +725,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         Set<CGNode> targetCGNodes = cg.getNodes(targetMethod.getReference());
         for (final CGNode targetForCall : targetCGNodes) {
           if (DEBUG) {
-            // Trace.println("adding target " + targetForCall + " for call " +
+            // System.err.println("adding target " + targetForCall + " for call " +
             // call);
           }
           if (targetForCall.getIR() == null) {
@@ -806,7 +809,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         final PointerKey curPk = curPkAndState.getPointerKey();
         final State curState = curPkAndState.getState();
         if (DEBUG)
-          Trace.println("init " + curPkAndState);
+          System.err.println("init " + curPkAndState);
         if (Assertions.verifyAssertions && curPk instanceof LocalPointerKey) {
           Assertions._assert(g.hasSubgraphForNode(((LocalPointerKey) curPk).getNode()));
         }
@@ -826,7 +829,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           public void visitNew(NewLabel label, Object dst) {
             final InstanceKey ik = (InstanceKey) dst;
             if (DEBUG) {
-              Trace.println("alloc " + ik + " assigned to " + curPk);
+              System.err.println("alloc " + ik + " assigned to " + curPk);
             }
             doTransition(curState, label, new Function<State, Object>() {
 
@@ -1070,7 +1073,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             propTargets(thisArgAndState, callSiteAndCGNode);
           } else {
             if (DEBUG) {
-              Trace.println("querying for targets of call " + call + " in " + caller);
+              System.err.println("querying for targets of call " + call + " in " + caller);
             }
           }
         } else {
@@ -1095,8 +1098,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         final PointerKey curPk = curPkAndState.getPointerKey();
         final State curState = curPkAndState.getState();
         if (DEBUG) {
-          Trace.println("points-to " + curPkAndState);
-          Trace.println("***pto-set " + find(pkToP2Set, curPkAndState) + "***");
+          System.err.println("points-to " + curPkAndState);
+          System.err.println("***pto-set " + find(pkToP2Set, curPkAndState) + "***");
         }
         IFlowLabelVisitor predVisitor = new AbstractFlowLabelVisitor() {
 
@@ -1198,13 +1201,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (curPk instanceof ReturnValueKey) {
         final ReturnValueKey returnKey = (ReturnValueKey) curPk;
         if (DEBUG) {
-          Trace.println("return value");
+          System.err.println("return value");
         }
         final CGNode callee = returnKey.getNode();
         if (DEBUG) {
-          Trace.println("returning from " + callee);
-          // Trace.println("CALL GRAPH:\n" + cg);
-          // Trace.println(new
+          System.err.println("returning from " + callee);
+          // System.err.println("CALL GRAPH:\n" + cg);
+          // System.err.println(new
           // Iterator2Collection(cg.getPredNodes(cgNode)));
         }
         final boolean isExceptional = returnKey instanceof ExceptionReturnValueKey;
@@ -1245,7 +1248,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
             public Object apply(State callerState) {
               // if (DEBUG) {
-              // Trace.println("caller " + caller);
+              // System.err.println("caller " + caller);
               // }
               SSAAbstractInvokeInstruction callInstr = ir.getCalls(call)[0];
               PointerKey returnAtCallerKey = heapModel.getPointerKeyForLocal(caller, isExceptional ? callInstr.getException()
@@ -1340,7 +1343,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         final PointerKey curPk = curPkAndState.getPointerKey();
         final State curState = curPkAndState.getState();
         if (DEBUG)
-          Trace.println("tracked points-to " + curPkAndState);
+          System.err.println("tracked points-to " + curPkAndState);
         final MutableIntSet trackedSet = find(pkToTrackedSet, curPkAndState);
         IFlowLabelVisitor succVisitor = new AbstractFlowLabelVisitor() {
 
@@ -1485,7 +1488,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     private void addEncounteredLoad(LoadEdge loadEdge) {
       if (encounteredLoads.add(loadEdge)) {
         // if (DEBUG) {
-        // Trace.println("encountered load edge " + loadEdge);
+        // System.err.println("encountered load edge " + loadEdge);
         // }
       }
     }
@@ -1519,8 +1522,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               || !pointsToQueried.get(loadedValAndState.getPointerKey()).contains(loadDstState)
               || initWorklist.contains(loadedValAndState);
           // if (!basePointerOkay) {
-          // Trace.println("ASSERTION WILL FAIL");
-          // Trace.println("QUERIED: " + queriedPkAndStates);
+          // System.err.println("ASSERTION WILL FAIL");
+          // System.err.println("QUERIED: " + queriedPkAndStates);
           // }
           Assertions._assert(basePointerOkay, "queried " + loadedValAndState + " but not " + baseAndStateToHandle);
         }
@@ -1537,7 +1540,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           // done here
           if (addAllToP2Set(pkToP2Set, loadedValAndState, find(instFieldKeyToP2Set, ifk), AssignLabel.noFilter())) {
             if (DEBUG) {
-              Trace.println("from load edge " + loadEdge);
+              System.err.println("from load edge " + loadEdge);
             }
             addToPToWorklist(loadedValAndState);
           }
@@ -1551,7 +1554,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             InstanceFieldKeyAndState ifk = getInstFieldKey(ikAndState, field);
             if (findOrCreate(pkToTrackedSet, loadedValAndState).addAll(find(instFieldKeyToTrackedSet, ifk))) {
               if (DEBUG) {
-                Trace.println("from load edge " + loadEdge);
+                System.err.println("from load edge " + loadEdge);
               }
               addToTrackedPToWorklist(loadedValAndState);
             }
@@ -1564,7 +1567,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       return new InstanceFieldKeyAndState(new InstanceFieldKey(ikAndState.getInstanceKey(), field), ikAndState.getState());
     }
 
-    private <K> MutableIntSet findOrCreate(Map<K, MutableIntSet> M, K key) {
+    protected <K> MutableIntSet findOrCreate(Map<K, MutableIntSet> M, K key) {
       MutableIntSet result = M.get(key);
       if (result == null) {
         result = intSetFactory.make();
