@@ -221,7 +221,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     if (sfk == null) {
       throw new IllegalArgumentException("sfk == null");
     }
-    Collection<MemoryAccess> fieldWrites = mam.getFieldWrites(sfk.getField());
+    Collection<MemoryAccess> fieldWrites = mam.getStaticFieldWrites(sfk.getField());
     for (MemoryAccess a : fieldWrites) {
       addSubgraphForNode(a.getNode());
     }
@@ -232,19 +232,19 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     if (sfk == null) {
       throw new IllegalArgumentException("sfk == null");
     }
-    Collection<MemoryAccess> fieldReads = mam.getFieldReads(sfk.getField());
+    Collection<MemoryAccess> fieldReads = mam.getStaticFieldReads(sfk.getField());
     for (MemoryAccess a : fieldReads) {
       addSubgraphForNode(a.getNode());
     }
     return getPredNodes(sfk, AssignGlobalLabel.v());
   }
 
-  public Iterator<PointerKey> getWritesToInstanceField(IField f) {
+  public Iterator<PointerKey> getWritesToInstanceField(PointerKey pk, IField f) {
     // TODO: cache this!!
     if (f == ArrayContents.v()) {
-      return getArrayWrites();
+      return getArrayWrites(pk);
     }
-    Collection<MemoryAccess> writes = mam.getFieldWrites(f);
+    Collection<MemoryAccess> writes = mam.getFieldWrites(pk, f);
     for (MemoryAccess a : writes) {
       addSubgraphForNode(a.getNode());
     }
@@ -261,12 +261,12 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     return written.iterator();
   }
 
-  public Iterator<PointerKey> getReadsOfInstanceField(IField f) {
+  public Iterator<PointerKey> getReadsOfInstanceField(PointerKey pk, IField f) {
     // TODO: cache this!!
     if (f == ArrayContents.v()) {
-      return getArrayReads();
+      return getArrayReads(pk);
     }
-    Collection<MemoryAccess> reads = mam.getFieldReads(f);
+    Collection<MemoryAccess> reads = mam.getFieldReads(pk, f);
     for (MemoryAccess a : reads) {
       addSubgraphForNode(a.getNode());
     }
@@ -283,8 +283,8 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     return readInto.iterator();
   }
 
-  Iterator<PointerKey> getArrayWrites() {
-    Collection<MemoryAccess> arrayWrites = mam.getArrayWrites();
+  Iterator<PointerKey> getArrayWrites(PointerKey arrayRef) {
+    Collection<MemoryAccess> arrayWrites = mam.getArrayWrites(arrayRef);
     for (MemoryAccess a : arrayWrites) {
       addSubgraphForNode(a.getNode());
     }
@@ -341,8 +341,8 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     return written.iterator();
   }
 
-  Iterator<PointerKey> getArrayReads() {
-    Collection<MemoryAccess> arrayReads = mam.getArrayReads();
+  Iterator<PointerKey> getArrayReads(PointerKey arrayRef) {
+    Collection<MemoryAccess> arrayReads = mam.getArrayReads(arrayRef);
     for (Iterator<MemoryAccess> it = arrayReads.iterator(); it.hasNext();) {
       MemoryAccess a = it.next();
       addSubgraphForNode(a.getNode());

@@ -128,7 +128,7 @@ public class TestNewGraphPointsTo extends AbstractDemandPointsTo {
 
       @Override
       public void visitGetField(GetFieldLabel label, Object dst) {
-        h.propAll(g.getWritesToInstanceField((label).getField()));
+        h.propAll(g.getWritesToInstanceField(null, label.getField()));
       }
 
       @Override

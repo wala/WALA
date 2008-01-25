@@ -280,7 +280,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   }
 
   private void addArrayMatchEdges(LocalPointerKey pk) {
-    Collection<MemoryAccess> arrayWrites = fam.getArrayWrites();
+    Collection<MemoryAccess> arrayWrites = fam.getArrayWrites(null);
     for (MemoryAccess a : arrayWrites) {
       addSubgraphForNode(a.getNode());
     }
@@ -347,7 +347,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   }
 
   private void addMatchEdges(LocalPointerKey pk, IField f) {
-    Collection<MemoryAccess> fieldWrites = fam.getFieldWrites(f);
+    Collection<MemoryAccess> fieldWrites = fam.getFieldWrites(null, f);
     addMatchHelper(pk, fieldWrites);
   }
 
@@ -372,7 +372,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   }
 
   private void addNodesThatWriteToStaticField(IField field) {
-    Collection<MemoryAccess> fieldWrites = fam.getFieldWrites(field);
+    Collection<MemoryAccess> fieldWrites = fam.getStaticFieldWrites(field);
     for (MemoryAccess a : fieldWrites) {
       addSubgraphForNode(a.getNode());
     }

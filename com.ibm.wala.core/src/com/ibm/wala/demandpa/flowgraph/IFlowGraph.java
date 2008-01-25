@@ -95,9 +95,9 @@ public interface IFlowGraph extends LabeledGraph<Object, IFlowLabel> {
    */
   public abstract Iterator<? extends Object> getReadsOfStaticField(StaticFieldKey sfk) throws IllegalArgumentException;
 
-  public abstract Iterator<PointerKey> getWritesToInstanceField(IField f);
+  public abstract Iterator<PointerKey> getWritesToInstanceField(PointerKey pk, IField f);
 
-  public abstract Iterator<PointerKey> getReadsOfInstanceField(IField f);
+  public abstract Iterator<PointerKey> getReadsOfInstanceField(PointerKey pk, IField f);
 
   /**
    * 

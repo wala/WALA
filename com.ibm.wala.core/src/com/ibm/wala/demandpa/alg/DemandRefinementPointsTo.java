@@ -844,8 +844,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           @Override
           public void visitGetField(GetFieldLabel label, Object dst) {
             IField field = (label).getField();
+            PointerKey loadBase = (PointerKey) dst;
             if (refineFieldAccesses(field)) {
-              PointerKey loadBase = (PointerKey) dst;
               // if (Assertions.verifyAssertions) {
               // Assertions._assert(stateMachine.transition(curState, label) ==
               // curState);
@@ -859,7 +859,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 }
               }
             } else {
-              handleAllCopies(curPkAndState, g.getWritesToInstanceField(field), MatchLabel.v());
+              handleAllCopies(curPkAndState, g.getWritesToInstanceField(loadBase, field), MatchLabel.v());
             }
           }
 
@@ -1103,10 +1103,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           @Override
           public void visitPutField(PutFieldLabel label, Object dst) {
             IField field = label.getField();
+            PointerKey storeBase = (PointerKey)dst;
             if (refineFieldAccesses(field)) {
               // statements x.f = y, Y updated (X' not empty required)
               // update Z.f for all z in X'
-              PointerKeyAndState storeBaseAndState = new PointerKeyAndState(((PointerKey) dst), curState);
+              PointerKeyAndState storeBaseAndState = new PointerKeyAndState(storeBase, curState);
               encounteredStores.add(new StoreEdge(storeBaseAndState, field, curPkAndState));
               for (InstanceKeyAndState ikAndState : makeOrdinalSet(find(pkToTrackedSet, storeBaseAndState))) {
                 if (forwInstKeyToFields.get(ikAndState).contains(field)) {
@@ -1116,7 +1117,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 }
               }
             } else {
-              handleAllBackCopies(curPkAndState, g.getReadsOfInstanceField(field), MatchBarLabel.v());
+              handleAllBackCopies(curPkAndState, g.getReadsOfInstanceField(storeBase, field), MatchBarLabel.v());
             }
           }
 
@@ -1388,11 +1389,12 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           @Override
           public void visitPutField(PutFieldLabel label, Object dst) {
             IField field = label.getField();
+            PointerKey storeBase = (PointerKey) dst;
             if (refineFieldAccesses(field)) {
-              PointerKeyAndState storeBase = new PointerKeyAndState((PointerKey) dst, curState);
-              encounteredStores.add(new StoreEdge(storeBase, field, curPkAndState));
-              if (!addToInitWorklist(storeBase)) {
-                for (InstanceKeyAndState ikAndState : makeOrdinalSet(find(pkToP2Set, storeBase))) {
+              PointerKeyAndState storeBaseAndState = new PointerKeyAndState(storeBase, curState);
+              encounteredStores.add(new StoreEdge(storeBaseAndState, field, curPkAndState));
+              if (!addToInitWorklist(storeBaseAndState)) {
+                for (InstanceKeyAndState ikAndState : makeOrdinalSet(find(pkToP2Set, storeBaseAndState))) {
                   InstanceFieldKeyAndState ifk = getInstFieldKey(ikAndState, field);
                   findOrCreate(instFieldKeyToTrackedSet, ifk).addAll(trackedSet);
                   trackInstanceField(ikAndState, field, backInstKeyToFields);
@@ -1400,7 +1402,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               }
             } else {
               // send to all getfield sources
-              for (Iterator<PointerKey> readIter = g.getReadsOfInstanceField(field); readIter.hasNext();) {
+              for (Iterator<PointerKey> readIter = g.getReadsOfInstanceField(storeBase, field); readIter.hasNext();) {
                 final PointerKey predPk = readIter.next();
                 doTransition(curState, MatchBarLabel.v(), new Function<State, Object>() {
 
