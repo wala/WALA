@@ -25,7 +25,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.slicer.HeapExclusions;
-import com.ibm.wala.ipa.slicer.PDG;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
@@ -248,11 +247,14 @@ public class ModRef {
 
     private final PointerAnalysis pa;
 
-    protected ModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis pa) {
+    private final boolean ignoreAllocHeapDefs;
+    
+    protected ModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis pa, boolean ignoreAllocHeapDefs) {
       this.n = n;
       this.result = result;
       this.h = h;
       this.pa = pa;
+      this.ignoreAllocHeapDefs = ignoreAllocHeapDefs;
     }
 
     @Override
@@ -293,7 +295,7 @@ public class ModRef {
           // note that i can be null depending on class hierarchy exclusions or
           // for incomplete programs. If so, just ignore it and keep going.
           if (i != null) {
-            if (!PDG.IGNORE_ALLOC_HEAP_DEFS) {
+            if (!ignoreAllocHeapDefs) {
               PointerKey pk = h.getPointerKeyForArrayContents(i);
               assert pk != null;
               result.add(pk);
@@ -305,7 +307,7 @@ public class ModRef {
         }
 
       } else {
-        if (!PDG.IGNORE_ALLOC_HEAP_DEFS) {
+        if (!ignoreAllocHeapDefs) {
           // allocation of a scalar "writes" all fields in the scalar
           InstanceKey i = h.getInstanceKeyForAllocation(n, instruction.getNewSite());
           if (i != null) {
@@ -350,18 +352,29 @@ public class ModRef {
   }
 
   protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h) {
-    return new ModVisitor(n, result, h, pa);
+    return makeModVisitor(n, result, pa, h, false);
+  }
+
+
+  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
+    return new ModVisitor(n, result, h, pa, ignoreAllocHeapDefs);
   }
 
   /**
    * Compute the set of {@link PointerKey}s that represent pointers that instruction s may write to.
    */
   public Collection<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl) {
+    return getMod(n, h, pa, s, hexcl, false);
+  }
+  /**
+   * Compute the set of {@link PointerKey}s that represent pointers that instruction s may write to.
+   */
+  public Collection<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl, boolean ignoreAllocHeapDefs) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
     Collection<PointerKey> result = HashSetFactory.make(2);
-    ModVisitor v = makeModVisitor(n, result, pa, h);
+    ModVisitor v = makeModVisitor(n, result, pa, h, ignoreAllocHeapDefs);
     s.visit(v);
     return hexcl == null ? result : hexcl.filter(result);
   }

@@ -89,6 +89,13 @@ public class CISlicer {
    * Compute the set of pointer keys each statement mods
    */
   public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa) {
+    return scanForMod(sdg, pa, false);
+  }
+  
+  /**
+   * Compute the set of pointer keys each statement mods
+   */
+  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa, boolean ignoreAllocHeapDefs) {
     ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
     Map<Statement, Set<PointerKey>> result = HashMapFactory.make();
     for (Iterator<? extends Statement> it = sdg.iterator(); it.hasNext();) {
@@ -96,7 +103,7 @@ public class CISlicer {
       switch (st.getKind()) {
       case NORMAL:
         Set<PointerKey> c = HashSetFactory.make((ModRef.make()).getMod(st.getNode(), h, pa,
-            ((NormalStatement) st).getInstruction(), null));
+            ((NormalStatement) st).getInstruction(), null, ignoreAllocHeapDefs));
         result.put(st, c);
         break;
       }

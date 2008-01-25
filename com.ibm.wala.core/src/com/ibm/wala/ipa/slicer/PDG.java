@@ -77,8 +77,6 @@ public class PDG implements NumberedGraph<Statement> {
 
   private final SlowSparseNumberedGraph<Statement> delegate = SlowSparseNumberedGraph.make();
 
-  public final static boolean IGNORE_ALLOC_HEAP_DEFS = false;
-
   private final static boolean VERBOSE = false;
 
   private final CGNode node;
@@ -116,6 +114,8 @@ public class PDG implements NumberedGraph<Statement> {
 
   private final Map<CGNode, OrdinalSet<PointerKey>> ref;
 
+  private final boolean ignoreAllocHeapDefs;
+
   private boolean isPopulated = false;
 
   /**
@@ -131,6 +131,22 @@ public class PDG implements NumberedGraph<Statement> {
   public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
       HeapExclusions exclusions, CallGraph cg, ModRef modRef) {
+    this(node, pa, mod, ref, dOptions, cOptions, exclusions, cg, modRef, false);
+  }
+
+  /**
+   * @param mod
+   *            the set of heap locations which may be written (transitively) by this node. These are logically return
+   *            values in the SDG.
+   * @param ref
+   *            the set of heap locations which may be read (transitively) by this node. These are logically parameters
+   *            in the SDG.
+   * @throws IllegalArgumentException
+   *             if node is null
+   */
+  public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
+      Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
+      HeapExclusions exclusions, CallGraph cg, ModRef modRef, boolean ignoreAllocHeapDefs) {
 
     super();
     if (node == null) {
@@ -146,6 +162,7 @@ public class PDG implements NumberedGraph<Statement> {
     this.exclusions = exclusions;
     this.modRef = modRef;
     this.ref = ref;
+    this.ignoreAllocHeapDefs = ignoreAllocHeapDefs;
   }
 
   private void populate() {
@@ -1006,7 +1023,7 @@ public class PDG implements NumberedGraph<Statement> {
     switch (N.getKind()) {
     case NORMAL:
       NormalStatement st = (NormalStatement) N;
-      if (!(IGNORE_ALLOC_HEAP_DEFS && st.getInstruction() instanceof SSANewInstruction)) {
+      if (!(ignoreAllocHeapDefs && st.getInstruction() instanceof SSANewInstruction)) {
         Collection<PointerKey> ref = modRef.getRef(node, heapModel, pa, st.getInstruction(), exclusions);
         for (PointerKey pk : ref) {
           createHeapDataDependenceEdges(pk);
@@ -1026,7 +1043,7 @@ public class PDG implements NumberedGraph<Statement> {
     switch (N.getKind()) {
     case NORMAL:
       NormalStatement st = (NormalStatement) N;
-      if (!(IGNORE_ALLOC_HEAP_DEFS && st.getInstruction() instanceof SSANewInstruction)) {
+      if (!(ignoreAllocHeapDefs && st.getInstruction() instanceof SSANewInstruction)) {
         Collection<PointerKey> mod = modRef.getMod(node, heapModel, pa, st.getInstruction(), exclusions);
         for (PointerKey pk : mod) {
           createHeapDataDependenceEdges(pk);
