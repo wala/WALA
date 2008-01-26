@@ -341,7 +341,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     return written.iterator();
   }
 
-  Iterator<PointerKey> getArrayReads(PointerKey arrayRef) {
+  protected Iterator<PointerKey> getArrayReads(PointerKey arrayRef) {
     Collection<MemoryAccess> arrayReads = mam.getArrayReads(arrayRef);
     for (Iterator<MemoryAccess> it = arrayReads.iterator(); it.hasNext();) {
       MemoryAccess a = it.next();

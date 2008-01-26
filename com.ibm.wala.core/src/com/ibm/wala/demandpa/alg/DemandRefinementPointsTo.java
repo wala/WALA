@@ -471,7 +471,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      */
     private final HashSet<LoadEdge> encounteredLoads = HashSetFactory.make();
 
-    protected PointsToComputer(LocalPointerKey pk) {
+    protected PointsToComputer(PointerKey pk) {
       queriedPkAndState = new PointerKeyAndState(pk, stateMachine.getStartState());
     }
 
