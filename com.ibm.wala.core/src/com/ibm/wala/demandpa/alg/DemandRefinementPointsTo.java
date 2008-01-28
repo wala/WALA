@@ -139,7 +139,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    */
   private StateMachine<IFlowLabel> stateMachine;
 
-  private RefinementPolicy refinementPolicy;
+  protected RefinementPolicy refinementPolicy;
 
   private RefinementPolicyFactory refinementPolicyFactory;
 
@@ -689,7 +689,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         Assertions._assert(g.hasSubgraphForNode(node), "missing constraints for " + node);
       }
       if (DEBUG) {
-        // System.err.println("adding to tracked points-to_ " + pkAndState);
+        System.err.println("adding to tracked points-to " + pkAndState);
       }
       trackedPointsToWorklist.add(pkAndState);
     }
