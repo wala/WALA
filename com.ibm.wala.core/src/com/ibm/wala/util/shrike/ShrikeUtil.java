@@ -24,7 +24,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 
 /**
- * Utilties to interface with the Shrike CT library.
+ * Utilities to interface with the Shrike CT library.
  * 
  * @author sfink
  */
