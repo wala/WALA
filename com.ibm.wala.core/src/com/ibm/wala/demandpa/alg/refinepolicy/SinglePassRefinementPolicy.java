@@ -49,17 +49,20 @@ public class SinglePassRefinementPolicy implements RefinementPolicy {
 
   private final CallGraphRefinePolicy cgRefinePolicy;
 
-  private SinglePassRefinementPolicy(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy) {
+  private final int budget;
+  
+  private SinglePassRefinementPolicy(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy, int budget) {
     this.fieldRefinePolicy = fieldRefinePolicy;
     this.cgRefinePolicy = cgRefinePolicy;
+    this.budget = budget;
   }
 
 
   /**
-   * @return {@link Integer#MAX_VALUE}, setting no traversal budget
+   * @return traversal budget
    */
   public int getBudgetForPass(int passNum) {
-    return Integer.MAX_VALUE;
+    return budget;
   }
 
   public CallGraphRefinePolicy getCallGraphRefinePolicy() {
@@ -87,13 +90,21 @@ public class SinglePassRefinementPolicy implements RefinementPolicy {
 
     private final CallGraphRefinePolicy cgRefinePolicy;
 
+    private final int budget;
+    
     public Factory(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy) {
-      this.fieldRefinePolicy = fieldRefinePolicy;
-      this.cgRefinePolicy = cgRefinePolicy;
+      this(fieldRefinePolicy, cgRefinePolicy, Integer.MAX_VALUE);
     }
 
+    public Factory(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy, int budget) {
+      this.fieldRefinePolicy = fieldRefinePolicy;
+      this.cgRefinePolicy = cgRefinePolicy;
+      this.budget = budget;
+    }
+
+
     public RefinementPolicy make() {
-      return new SinglePassRefinementPolicy(fieldRefinePolicy, cgRefinePolicy);
+      return new SinglePassRefinementPolicy(fieldRefinePolicy, cgRefinePolicy, budget);
     }
 
   }
