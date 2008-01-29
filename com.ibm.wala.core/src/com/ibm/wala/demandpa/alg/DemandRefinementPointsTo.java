@@ -637,6 +637,25 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       return ret;
     }
 
+    Collection<PointerKeyAndState> matchingTrackedQueried(PointerKeyAndState curPkAndState, PointerKey succPk, IFlowLabel label) {
+      Collection<PointerKeyAndState> ret = ArraySet.make();
+      if (Assertions.verifyAssertions) {
+        Assertions._assert(label.isBarred());
+      }
+      final State curState = curPkAndState.getState();
+      // TODO may need to speed this up with another data structure
+      for (PointerKeyAndState pkAndState : pkToTrackedSet.keySet()) {
+        if (succPk.equals(pkAndState.getPointerKey())) {
+          State transState = stateMachine.transition(pkAndState.getState(), label);
+          if (transState.equals(curState)) {
+            ret.add(pkAndState);
+          }
+        }
+      }
+      return ret;
+
+    }
+
     void handleBackCopy(PointerKeyAndState curPkAndState, PointerKey predPk, IFlowLabel label) {
       for (PointerKeyAndState predPkAndState : matchingPToQueried(curPkAndState, predPk, label)) {
         if (addAllToP2Set(pkToP2Set, predPkAndState, find(pkToP2Set, curPkAndState), label)) {
@@ -725,8 +744,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         Set<CGNode> targetCGNodes = cg.getNodes(targetMethod.getReference());
         for (final CGNode targetForCall : targetCGNodes) {
           if (DEBUG) {
-            // System.err.println("adding target " + targetForCall + " for call " +
-            // call);
+            System.err.println("adding target " + targetForCall + " for call " + call);
           }
           if (targetForCall.getIR() == null) {
             continue;
@@ -789,14 +807,18 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * @param dst
      */
     private void repropCallArg(PointerKeyAndState src, PointerKeyAndState dst, IFlowLabel dstToSrcLabel) {
+      if (DEBUG) {
+//        System.err.println("re-propping from src " + src + " to dst " + dst);
+      }
       for (PointerKeyAndState srcToHandle : matchingPToQueried(dst, src.getPointerKey(), dstToSrcLabel)) {
-        // TODO is barring the label correct?
         handleCopy(srcToHandle, dst, dstToSrcLabel.bar());
       }
-      IntSet trackedSet = find(pkToTrackedSet, dst);
-      if (!trackedSet.isEmpty()) {
-        if (findOrCreate(pkToTrackedSet, src).addAll(trackedSet)) {
-          addToTrackedPToWorklist(src);
+      for (PointerKeyAndState dstToHandle : matchingTrackedQueried(src, dst.getPointerKey(), dstToSrcLabel)) {
+        IntSet trackedSet = find(pkToTrackedSet, dstToHandle);
+        if (!trackedSet.isEmpty()) {
+          if (findOrCreate(pkToTrackedSet, src).addAll(trackedSet)) {
+            addToTrackedPToWorklist(src);
+          }
         }
       }
     }
@@ -1106,7 +1128,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           @Override
           public void visitPutField(PutFieldLabel label, Object dst) {
             IField field = label.getField();
-            PointerKey storeBase = (PointerKey)dst;
+            PointerKey storeBase = (PointerKey) dst;
             if (refineFieldAccesses(field)) {
               // statements x.f = y, Y updated (X' not empty required)
               // update Z.f for all z in X'
