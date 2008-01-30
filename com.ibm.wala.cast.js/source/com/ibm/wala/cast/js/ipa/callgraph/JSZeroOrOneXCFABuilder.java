@@ -18,13 +18,11 @@ import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.impl.DefaultContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.DelegatingContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.OneLevelContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.nCFAContextSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * @author sfink
- * 
  * 0-x-CFA Call graph builder, optimized to not disambiguate instances of "uninteresting" types
  */
 public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
@@ -42,7 +40,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
     ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     if (doOneCFA) {
-      contextSelector = new OneLevelContextSelector(contextSelector);
+      contextSelector = new nCFAContextSelector(1, contextSelector);
     }
     setContextSelector(contextSelector);
 
