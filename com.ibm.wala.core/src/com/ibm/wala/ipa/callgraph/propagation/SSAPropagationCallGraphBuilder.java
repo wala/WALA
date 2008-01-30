@@ -1553,7 +1553,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       PointerKey ret = getPointerKeyForReturnValue(target);
       system.newConstraint(result, assignOperator, ret);
     }
-    // generate contraints from exception return value.
+    // generate constraints from exception return value.
     PointerKey e = getPointerKeyForLocal(caller, instruction.getException());
     PointerKey er = getPointerKeyForExceptionalReturnValue(target);
     if (SHORT_CIRCUIT_SINGLE_USES && uniqueCatchKey != null) {
