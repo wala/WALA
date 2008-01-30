@@ -44,42 +44,26 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
  * @author Manu Sridharan
  *
  */
-public class ManualRefinementPolicy implements RefinementPolicy {
+public class ManualRefinementPolicy extends AbstractRefinementPolicy {
 
   private static final int PASS_BUDGET = 12000;
 
   private static final int NUM_PASSES = 1;
 
-  private final FieldRefinePolicy fieldRefinePolicy;
-  
-  private final CallGraphRefinePolicy callGraphRefinePolicy;
-  
   private ManualRefinementPolicy(ClassHierarchy cha) {
-    fieldRefinePolicy = new ManualFieldPolicy(cha);
-    callGraphRefinePolicy = new AlwaysRefineCGPolicy();
+    super(new ManualFieldPolicy(cha), new AlwaysRefineCGPolicy());
   }
+
+  @Override
   public int getBudgetForPass(int passNum) {
     return PASS_BUDGET;
   }
 
-  public CallGraphRefinePolicy getCallGraphRefinePolicy() {
-    return callGraphRefinePolicy;
-  }
-
-  public FieldRefinePolicy getFieldRefinePolicy() {
-    return fieldRefinePolicy;
-  }
-
+  @Override
   public int getNumPasses() {
     return NUM_PASSES;
   }
 
-  public boolean nextPass() {
-    boolean moreFieldRefine = fieldRefinePolicy.nextPass();
-    boolean moreCallRefine = callGraphRefinePolicy.startNewPass();
-    return moreFieldRefine || moreCallRefine;
-  }
-  
   public static class Factory implements RefinementPolicyFactory {
     private final ClassHierarchy cha;
 

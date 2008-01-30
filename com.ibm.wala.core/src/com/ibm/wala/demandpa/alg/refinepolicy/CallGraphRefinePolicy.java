@@ -61,6 +61,6 @@ public interface CallGraphRefinePolicy {
    * @return <code>true</code> if more refinement can be done, and hence
    *         another pass can be attempted; <code>false</code> otherwise
    */
-  public boolean startNewPass();
+  public boolean nextPass();
 
 }

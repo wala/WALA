@@ -45,7 +45,7 @@ public class NeverRefineCGPolicy implements CallGraphRefinePolicy {
     return false;
   }
 
-  public boolean startNewPass() {
+  public boolean nextPass() {
     return false;
   }
 

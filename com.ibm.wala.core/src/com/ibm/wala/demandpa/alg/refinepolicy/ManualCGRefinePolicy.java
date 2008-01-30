@@ -60,7 +60,7 @@ public class ManualCGRefinePolicy implements CallGraphRefinePolicy {
     return true;
   }
 
-  public boolean startNewPass() {
+  public boolean nextPass() {
     return false;
   }
 

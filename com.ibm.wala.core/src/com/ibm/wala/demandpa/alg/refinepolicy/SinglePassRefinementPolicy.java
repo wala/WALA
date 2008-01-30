@@ -43,43 +43,32 @@ package com.ibm.wala.demandpa.alg.refinepolicy;
  * @author Manu Sridharan
  * 
  */
-public class SinglePassRefinementPolicy implements RefinementPolicy {
-
-  private final FieldRefinePolicy fieldRefinePolicy;
-
-  private final CallGraphRefinePolicy cgRefinePolicy;
+public class SinglePassRefinementPolicy extends AbstractRefinementPolicy {
 
   private final int budget;
   
   private SinglePassRefinementPolicy(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy, int budget) {
-    this.fieldRefinePolicy = fieldRefinePolicy;
-    this.cgRefinePolicy = cgRefinePolicy;
+    super(fieldRefinePolicy, cgRefinePolicy);
     this.budget = budget;
   }
-
 
   /**
    * @return traversal budget
    */
+  @Override
   public int getBudgetForPass(int passNum) {
     return budget;
-  }
-
-  public CallGraphRefinePolicy getCallGraphRefinePolicy() {
-    return cgRefinePolicy;
-  }
-
-  public FieldRefinePolicy getFieldRefinePolicy() {
-    return fieldRefinePolicy;
   }
 
   /**
    * @return <code>1</code>, since we only want a single pass 
    */
+  @Override
   public int getNumPasses() {
     return 1;
   }
 
+  @Override
   public boolean nextPass() {
     return false;
   }
