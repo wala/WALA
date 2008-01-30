@@ -132,16 +132,4 @@ public class CallGraphTestUtil {
     return cg;
   }
 
-  public static CallGraph buildOneCFA(AnalysisOptions options, AnalysisCache cache, ClassHierarchy cha, AnalysisScope scope)
-      throws IllegalArgumentException, CancelException {
-    StopwatchGC S = new StopwatchGC("build 1-CFA graph");
-    S.start();
-
-    CallGraphBuilder builder = Util.makeOneCFABuilder(options, cache, cha, MY_CLASSLOADER, scope);
-    CallGraph cg = builder.makeCallGraph(options);
-
-    S.stop();
-    Trace.println(S.report());
-    return cg;
-  }
 }
