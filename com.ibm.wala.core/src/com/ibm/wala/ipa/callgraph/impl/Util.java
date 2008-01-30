@@ -31,7 +31,6 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.OneCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXContainerCFABuilder;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
@@ -617,34 +616,6 @@ public class Util {
 
     return ZeroXCFABuilder.make(cha, options, cache, customSelector, customInterpreter, options.getReflectionSpec(),
         ZeroXInstanceKeys.NONE);
-  }
-
-  /**
-   * @param options
-   *            options that govern call graph construction
-   * @param cha
-   *            governing class hierarchy
-   * @param cl
-   *            classloader that can find WALA resources
-   * @param scope
-   *            representation of the analysis scope
-   * @return a 1-CFA Call Graph Builder.
-   * @throws IllegalArgumentException
-   *             if options is null
-   */
-  public static CallGraphBuilder makeOneCFABuilder(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha,
-      ClassLoader cl, AnalysisScope scope) {
-
-    if (options == null) {
-      throw new IllegalArgumentException("options is null");
-    }
-    addDefaultSelectors(options, cha);
-    addDefaultBypassLogic(options, scope, cl, cha);
-    ContextSelector appSelector = null;
-    SSAContextInterpreter appInterpreter = null;
-
-    CallGraphBuilder builder = OneCFABuilder.make(cha, options, cache, appSelector, appInterpreter, options.getReflectionSpec());
-    return builder;
   }
 
   /**
