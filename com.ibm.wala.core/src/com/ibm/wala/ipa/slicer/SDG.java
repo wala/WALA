@@ -723,6 +723,10 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     return cOptions;
   }
 
+  public DataDependenceOptions getDOptions() {
+    return dOptions;
+  }
+  
   public CallGraph getCallGraph() {
     return cg;
   }
