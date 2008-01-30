@@ -63,6 +63,7 @@ public class Slicer {
     NO_BASE_NO_EXCEPTIONS("no_base_no_exceptions", true, false, false, true),
     NO_BASE_NO_HEAP_NO_EXCEPTIONS("no_base_no_heap_no_exceptions", true, true, false, true),
     NO_HEAP("no_heap", false, true, false, false),
+    NO_HEAP_NO_EXCEPTIONS("no_heap_no_exceptions", false, true, false, true),
     NONE("none", true, true, true, true),
     REFLECTION("no_base_no_heap_no_cast", true, true, true, true);
 
