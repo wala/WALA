@@ -18,6 +18,9 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
+ * Note: if getUse(i) returns {@link AbstractIntStackMachine}.TOP (that is, -1), then that use represents
+ * an edge in the CFG which is infeasible in verifiable bytecode.
+ * 
  * @author sfink
  * 
  */
