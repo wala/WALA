@@ -58,7 +58,7 @@ public abstract class HeapStatement extends Statement {
 
     @Override
     public int hashCode() {
-      return getLocation().hashCode() + 4289 * getCall().hashCode() + 4133 * getNode().hashCode() + 8831;
+      return getLocation().hashCode() + 4289 * callIndex + 4133 * getNode().hashCode() + 8831;
     }
 
     @Override
@@ -135,7 +135,7 @@ public abstract class HeapStatement extends Statement {
 
     @Override
     public int hashCode() {
-      return getLocation().hashCode() + 8887 * getCall().hashCode() + 8731 * getNode().hashCode() + 7919;
+      return getLocation().hashCode() + 8887 * callIndex + 8731 * getNode().hashCode() + 7919;
     }
 
     @Override
