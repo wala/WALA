@@ -62,7 +62,6 @@ import com.ibm.wala.demandpa.flowgraph.ReturnLabel;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor;
 import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * A state machine for tracking calling context during a points-to query.
@@ -74,6 +73,8 @@ import com.ibm.wala.util.debug.Trace;
 public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
 
   private static final boolean DEBUG = false;
+  
+  private static final boolean DEBUG_RECURSION = true;
 
   /**
    * The empty call stack. Note that the empty stack essentially represents all
@@ -163,9 +164,9 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
         // just ignore it; we don't track recursive calls
         nextState = prevStack;
       } else if (prevStack.contains(callSite)) {
-        if (DEBUG) {
-          Trace.println("FOUND RECURSION");
-          Trace.println("stack " + prevStack + " contains " + callSite);
+        if (DEBUG_RECURSION) {
+          System.err.println("FOUND RECURSION");
+          System.err.println("stack " + prevStack + " contains " + callSite);
         }
         CallSiteAndCGNode topCallSite = null;
         CallStack tmpStack = prevStack;
@@ -223,10 +224,10 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
     label.visit(v, null);
     if (DEBUG) {
       if (prevStack != v.nextState && v.nextState != ERROR) {
-        Trace.println("prev stack " + prevStack);
-        Trace.println("label " + label);
-        Trace.println("recursive call sites " + recursiveCallSites);
-        Trace.println("next stack " + v.nextState);
+        System.err.println("prev stack " + prevStack);
+        System.err.println("label " + label);
+        System.err.println("recursive call sites " + recursiveCallSites);
+        System.err.println("next stack " + v.nextState);
       }
     }
     return v.nextState;
