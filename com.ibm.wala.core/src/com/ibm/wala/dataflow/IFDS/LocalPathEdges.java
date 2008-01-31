@@ -25,7 +25,6 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- * 
  * A set of path edges for a particular procedure entry s_p.
  * 
  * @author sfink
@@ -412,7 +411,7 @@ public class LocalPathEdges {
   /**
    * TODO: optimize this based on altPaths
    * 
-   * @param n
+   * @param n the local block number of a node 
    * @return set of d2 s.t \exists d1 s.t. d1->d2 is a path edge for node n
    */
   public IntSet getReachable(int n) {

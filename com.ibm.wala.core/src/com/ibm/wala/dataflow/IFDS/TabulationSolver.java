@@ -131,7 +131,7 @@ public class TabulationSolver<T, P> {
    * A map from Object (procedure) -> LocalSummaryEdges.
    * 
    */
-  final protected Map<Object, LocalSummaryEdges> summaryEdges = HashMapFactory.make();
+  final protected Map<P, LocalSummaryEdges> summaryEdges = HashMapFactory.make();
 
   /**
    * The worklist
@@ -789,7 +789,7 @@ public class TabulationSolver<T, P> {
     worklist.insert(new PathEdge(s_p, i, n, j));
   }
 
-  private LocalPathEdges findOrCreateLocalPathEdges(T s_p) {
+  protected LocalPathEdges findOrCreateLocalPathEdges(T s_p) {
     LocalPathEdges result = pathEdges.get(s_p);
     if (result == null) {
       result = makeLocalPathEdges();
@@ -802,7 +802,7 @@ public class TabulationSolver<T, P> {
     return problem.getMergeFunction() == null ? new LocalPathEdges(false) : new LocalPathEdges(true);
   }
 
-  protected LocalSummaryEdges findOrCreateLocalSummaryEdges(Object proc) {
+  protected LocalSummaryEdges findOrCreateLocalSummaryEdges(P proc) {
     LocalSummaryEdges result = summaryEdges.get(proc);
     if (result == null) {
       result = new LocalSummaryEdges();
@@ -921,10 +921,6 @@ public class TabulationSolver<T, P> {
         Object s_p = entries[i];
         LocalPathEdges lp = pathEdges.get(s_p);
         if (lp != null) {
-          // i'm not happy that lp might be null, since in theory the universal
-          // fact should propagate everywhere.
-          // oh well ... assume the solver knows what it's doing and continue
-          // along
           result.addAll(lp.getReachable(n));
         }
       }
