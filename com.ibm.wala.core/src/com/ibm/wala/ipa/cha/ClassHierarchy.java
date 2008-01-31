@@ -1108,10 +1108,9 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * @return a ClassHierarchy object representing the analysis scope
    * @throws ClassHierarchyException
-   * @throws NullPointerException
-   *             if scope is null (TODO: clean this up .. don't throw NPE)
+
    */
-  public static ClassHierarchy make(AnalysisScope scope) throws NullPointerException, ClassHierarchyException {
+  public static ClassHierarchy make(AnalysisScope scope) throws ClassHierarchyException {
     return make(scope, new ClassLoaderFactoryImpl(scope.getExclusions()));
   }
 
