@@ -18,16 +18,32 @@ package com.ibm.wala.demandpa.alg.refinepolicy;
  */
 public abstract class AbstractRefinementPolicy implements RefinementPolicy {
 
-  protected final CallGraphRefinePolicy cgRefinePolicy;
-
-  protected final FieldRefinePolicy fieldRefinePolicy;
-
   private static final int DEFAULT_NUM_PASSES = 3;
 
   private static final int[] DEFAULT_BUDGET_PER_PASS = { 1000, 12000, 12000 };
 
+  protected final FieldRefinePolicy fieldRefinePolicy;
+
+  protected final CallGraphRefinePolicy cgRefinePolicy;
+
+  protected final int numPasses;
+  
+  protected final int[] budgetPerPass;
+  
+  public AbstractRefinementPolicy(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy, int numPasses,
+      int[] budgetPerPass) {
+    this.fieldRefinePolicy = fieldRefinePolicy;
+    this.cgRefinePolicy = cgRefinePolicy;
+    this.numPasses = numPasses;
+    this.budgetPerPass = budgetPerPass;
+  }
+
+  public AbstractRefinementPolicy(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy) {
+    this(fieldRefinePolicy, cgRefinePolicy, DEFAULT_NUM_PASSES, DEFAULT_BUDGET_PER_PASS);
+  }
+
   public int getBudgetForPass(int passNum) {
-    return DEFAULT_BUDGET_PER_PASS[passNum];
+    return budgetPerPass[passNum];
   }
 
   public CallGraphRefinePolicy getCallGraphRefinePolicy() {
@@ -39,7 +55,7 @@ public abstract class AbstractRefinementPolicy implements RefinementPolicy {
   }
 
   public int getNumPasses() {
-    return DEFAULT_NUM_PASSES;
+    return numPasses;
   }
 
   public boolean nextPass() {    
@@ -49,9 +65,5 @@ public abstract class AbstractRefinementPolicy implements RefinementPolicy {
     return fieldNextPass || callNextPass;
   }
 
-  public AbstractRefinementPolicy(FieldRefinePolicy fieldRefinePolicy, CallGraphRefinePolicy cgRefinePolicy) {
-    this.cgRefinePolicy = cgRefinePolicy;
-    this.fieldRefinePolicy = fieldRefinePolicy;
-  }
 
 }
