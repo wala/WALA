@@ -30,6 +30,7 @@ import polyglot.util.Position;
 
 import com.ibm.wala.cast.java.translator.SourceModuleTranslator;
 import com.ibm.wala.classLoader.DirectoryTreeModule;
+import com.ibm.wala.classLoader.FileModule;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceFileModule;
@@ -56,12 +57,12 @@ public class PolyglotSourceModuleTranslator implements SourceModuleTranslator {
     private void computeClassPath(AnalysisScope scope) {
 	StringBuffer buf= new StringBuffer();
 
-	ClassLoaderReference cl= scope.getApplicationLoader();
+	ClassLoaderReference cl= findInnermostClassLoader(scope);
 
 	while (cl != null) {
-	    Set/* <Module> */modules= scope.getModules(cl);
+	    Set<Module> modules= scope.getModules(cl);
 
-	    for(Iterator iter= modules.iterator(); iter.hasNext();) {
+	    for(Iterator<Module> iter= modules.iterator(); iter.hasNext(); ) {
 		Module m= (Module) iter.next();
 
 		if (buf.length() > 0)
@@ -74,12 +75,28 @@ public class PolyglotSourceModuleTranslator implements SourceModuleTranslator {
 		    DirectoryTreeModule directoryTreeModule= (DirectoryTreeModule) m;
 
 		    buf.append(directoryTreeModule.getPath());
+        } else if (m instanceof FileModule) {
+          // do nothing
 		} else
 		    Assertions.UNREACHABLE("Module entry is neither jar file nor directory");
 	    }
 	    cl= cl.getParent();
 	}
 	fClassPath= buf.toString();
+    }
+
+    private ClassLoaderReference findInnermostClassLoader(AnalysisScope scope) {
+      Set<ClassLoaderReference> parentLoaders= new HashSet<ClassLoaderReference>();
+
+      for(ClassLoaderReference loader: scope.getLoaders()) {
+        parentLoaders.add(loader.getParent());
+      }
+      for (ClassLoaderReference child : scope.getLoaders()) {
+        if (!parentLoaders.contains(child)) {
+          return child;
+        }
+      }
+      throw new IllegalStateException("No innermost class loader???");
     }
 
     public void loadAllSources(Set modules) {
@@ -101,7 +118,11 @@ public class PolyglotSourceModuleTranslator implements SourceModuleTranslator {
 
 	    Assertions._assert(entry.isSourceFile());
 
-	    String filePath= entry.getAbsolutePath();
+        if (skipSourceFile(entry)) {
+          continue;
+        }
+
+        String filePath= entry.getAbsolutePath();
 
 	    try {
 		StreamSource srcStream= new StreamSource(entry.getInputStream(), filePath);
@@ -113,5 +134,13 @@ public class PolyglotSourceModuleTranslator implements SourceModuleTranslator {
 	}
 	compiler.compile(streams);
 	// At this point, DOMO now "knows" about all the source-originated stuff
+    }
+
+    /**
+     * @return true if the given source file module should not be processed,
+     * e.g. because it is generated on behalf of some upstream source.
+     */
+    protected boolean skipSourceFile(SourceFileModule entry) {
+      return false;
     }
 }
