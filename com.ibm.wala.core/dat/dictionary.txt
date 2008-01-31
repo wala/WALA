@@ -141,3 +141,5 @@ monitorexit
 dominators
 yahave
 factoid
+offline
+spec
