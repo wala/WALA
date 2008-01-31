@@ -1333,7 +1333,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 Set<IMethod> targetMethods = callToOTFTargets.get(callSiteAndCGNode);
                 for (CGNode callee : possibleCallees) {
                   if (targetMethods.contains(callee.getMethod())) {
-                    if (caller.getIR() == null) {
+                    if (callee.getIR() == null) {
                       continue;
                     }
                     g.addSubgraphForNode(callee);
