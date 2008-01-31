@@ -100,7 +100,7 @@ public class EclipseProjectPath {
 
   private final Collection<IClasspathEntry> alreadyResolved = HashSetFactory.make();
 
-  private EclipseProjectPath(IPath workspaceRootPath, IJavaProject project) throws JavaModelException, IOException {
+  protected EclipseProjectPath(IPath workspaceRootPath, IJavaProject project) throws JavaModelException, IOException {
     this.workspaceRootPath = workspaceRootPath;
     this.project = project;
     assert workspaceRootPath != null;
@@ -145,8 +145,10 @@ public class EclipseProjectPath {
         // a corrupted file. ignore it.
         return;
       }
-      Set<Module> s = MapUtil.findOrCreateSet(binaryModules, loader);
-      s.add(file.isDirectory() ? (Module) new BinaryDirectoryTreeModule(file) : (Module) new JarFileModule(j));
+      if (isPrimordialJarFile(j)) {
+        Set<Module> s = MapUtil.findOrCreateSet(binaryModules, loader);
+        s.add(file.isDirectory() ? (Module) new BinaryDirectoryTreeModule(file) : (Module) new JarFileModule(j));
+      }
     } else if (e.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
       File file = makeAbsolute(e.getPath()).toFile();
       Set<Module> s = MapUtil.findOrCreateSet(sourceModules, Loader.SOURCE);
@@ -176,6 +178,16 @@ public class EclipseProjectPath {
     } else {
       throw new RuntimeException("unexpected entry " + e);
     }
+  }
+
+  /**
+   * @return true if the given jar file should be handled by the Primordial
+   * loader. If false, other provisions should be made to add the jar file
+   * to the appropriate component of the AnalysisScope. Subclasses can
+   * override this method.
+   */
+  protected boolean isPrimordialJarFile(JarFile j) {
+    return true;
   }
 
   protected void resolveClasspathEntries(IClasspathEntry[] entries, Loader loader, String fileExtension) throws JavaModelException, IOException {
