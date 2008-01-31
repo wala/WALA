@@ -37,6 +37,7 @@
  */
 package com.ibm.wala.demandpa.alg;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
@@ -86,8 +87,8 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
     return emptyStack;
   }
 
-  private final HashSet<CallSiteAndCGNode> recursiveCallSites = HashSetFactory.make();
-
+  private final RecursionHandler recursionHandler;
+  
   private class CSLabelVisitor implements IFlowLabelVisitor {
 
     final CallStack prevStack;
@@ -143,7 +144,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
     }
 
     private void handleMethodExit(CallSiteAndCGNode callSite) {
-      if (recursiveCallSites.contains(callSite)) {
+      if (recursionHandler.isRecursive(callSite)) {
         nextState = prevStack;
       } else if (prevStack.isEmpty()) {
         nextState = prevStack;
@@ -160,7 +161,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
     }
 
     private void handleMethodEntry(CallSiteAndCGNode callSite) {
-      if (recursiveCallSites.contains(callSite)) {
+      if (recursionHandler.isRecursive(callSite)) {
         // just ignore it; we don't track recursive calls
         nextState = prevStack;
       } else if (prevStack.contains(callSite)) {
@@ -172,11 +173,13 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
         CallStack tmpStack = prevStack;
         // mark the appropriate call sites as recursive
         // and pop them
+        Collection<CallSiteAndCGNode> newRecursiveSites = HashSetFactory.make();
         do {
           topCallSite = tmpStack.peek();
-          recursiveCallSites.add(topCallSite);
+          newRecursiveSites.add(topCallSite);
           tmpStack = tmpStack.pop();
         } while (!topCallSite.equals(callSite) && !tmpStack.isEmpty());
+        recursionHandler.makeRecursive(newRecursiveSites);
         // here we throw the states merged exception to indicate
         // that recursion was detected
         // ideally, we would update all relevant data structures and continue,
@@ -216,7 +219,9 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
       throw new IllegalArgumentException("not ( prevState instanceof com.ibm.wala.demandpa.alg.CallStack ) ");
     }
     CallStack prevStack = (CallStack) prevState;
-    if (!prevStack.isEmpty() && recursiveCallSites.contains(prevStack.peek())) {
+    if (!prevStack.isEmpty() && recursionHandler.isRecursive(prevStack.peek())) {
+      // I don't think this is possible anymore
+      assert false;
       // just pop off the call site
       return transition(prevStack.pop(), label);
     }
@@ -226,21 +231,67 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
       if (prevStack != v.nextState && v.nextState != ERROR) {
         System.err.println("prev stack " + prevStack);
         System.err.println("label " + label);
-        System.err.println("recursive call sites " + recursiveCallSites);
+        System.err.println("recursive call sites " + recursionHandler);
         System.err.println("next stack " + v.nextState);
       }
     }
     return v.nextState;
   }
 
-  private ContextSensitiveStateMachine() {
+  private ContextSensitiveStateMachine(RecursionHandler recursionHandler) {
+    this.recursionHandler = recursionHandler;
   }
 
   public static class Factory implements StateMachineFactory<IFlowLabel> {
 
+    private final RecursionHandler prototype;
+    
+    public Factory(RecursionHandler prototype) {
+      this.prototype = prototype;
+    }
+    
+    public Factory() { 
+      this(new BasicRecursionHandler());
+    }
+    
     public StateMachine<IFlowLabel> make() {
-      return new ContextSensitiveStateMachine();
+      return new ContextSensitiveStateMachine(prototype.makeNew());
     }
 
+  }
+  
+  public static interface RecursionHandler {
+ 
+    public boolean isRecursive(CallSiteAndCGNode callSite);
+    
+    public void makeRecursive(Collection<CallSiteAndCGNode> callSites);
+    
+    /**
+     * in lieu of creating factories
+     */
+    public RecursionHandler makeNew();
+  }
+  
+  /**
+   * handles method recursion by only collapsing cycles of recursive
+   * calls observed during analysis
+   * @author manu
+   *
+   */
+  public static class BasicRecursionHandler implements RecursionHandler {
+
+    private final HashSet<CallSiteAndCGNode> recursiveCallSites = HashSetFactory.make();
+
+    public boolean isRecursive(CallSiteAndCGNode callSite) {
+      return recursiveCallSites.contains(callSite);
+    }
+
+    public void makeRecursive(Collection<CallSiteAndCGNode> callSites) {
+      recursiveCallSites.addAll(callSites);
+    }
+    
+    public RecursionHandler makeNew() {
+      return new BasicRecursionHandler();
+    }
   }
 }
