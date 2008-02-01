@@ -38,6 +38,8 @@
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 /**
  * Interface for specifying a policy for refinement of field access handling.
@@ -49,17 +51,19 @@ public interface FieldRefinePolicy {
 
   /**
    * 
-   * @param field
-   * @return <code>true</code> if accesses to <code>field</code> should be
-   *         refined. Otherwise, <code>false</code> is returned, indicating
-   *         that the field can be handled with match edges.
+   * @param field the accessed field
+   * @param basePtr the base pointer of the access
+   * @param val
+   * @param state
+   * @return <code>true</code> if match edges for the field access should be refined. Otherwise, <code>false</code>
+   *         is returned, indicating that the field can be handled with match edges.
    */
-  public boolean shouldRefine(IField field);
+  public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, StateMachine.State state);
 
   /**
    * 
-   * @return <code>true</code> if more refinement can be done, and hence
-   *         another pass can be attempted; <code>false</code> otherwise
+   * @return <code>true</code> if more refinement can be done, and hence another pass can be attempted;
+   *         <code>false</code> otherwise
    */
   public boolean nextPass();
 

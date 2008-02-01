@@ -51,7 +51,7 @@ public class ManualRefinementPolicy extends AbstractRefinementPolicy {
   private static final int NUM_PASSES = 1;
 
   private ManualRefinementPolicy(ClassHierarchy cha) {
-    super(new ManualFieldPolicy(cha), new AlwaysRefineCGPolicy(), NUM_PASSES, new int[] { PASS_BUDGET });
+    super(new ContainersFieldPolicy(cha), new AlwaysRefineCGPolicy(), NUM_PASSES, new int[] { PASS_BUDGET });
   }
 
   public static class Factory implements RefinementPolicyFactory {

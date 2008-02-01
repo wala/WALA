@@ -512,11 +512,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       boolean added = findOrCreate(p2setMap, pkAndState).addAll(vals);
       // final boolean added = p2setMap.putAll(pkAndState, vals);
       if (DEBUG && added) {
-        System.err.println("POINTS-TO ADDITION TO PK " + pkAndState + ":");
-        for (InstanceKeyAndState ikAndState : makeOrdinalSet(vals)) {
-          System.err.println(ikAndState);
-        }
-        System.err.println("*************");
+//        System.err.println("POINTS-TO ADDITION TO PK " + pkAndState + ":");
+//        for (InstanceKeyAndState ikAndState : makeOrdinalSet(vals)) {
+//          System.err.println(ikAndState);
+//        }
+//        System.err.println("*************");
       }
       return added;
 
@@ -708,7 +708,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         Assertions._assert(g.hasSubgraphForNode(node), "missing constraints for " + node);
       }
       if (DEBUG) {
-        System.err.println("adding to tracked points-to " + pkAndState);
+//        System.err.println("adding to tracked points-to " + pkAndState);
       }
       trackedPointsToWorklist.add(pkAndState);
     }
@@ -870,7 +870,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           public void visitGetField(GetFieldLabel label, Object dst) {
             IField field = (label).getField();
             PointerKey loadBase = (PointerKey) dst;
-            if (refineFieldAccesses(field)) {
+            if (refineFieldAccesses(field, loadBase, curPk, curState)) {
               // if (Assertions.verifyAssertions) {
               // Assertions._assert(stateMachine.transition(curState, label) ==
               // curState);
@@ -1047,7 +1047,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     private void trackInstanceField(InstanceKeyAndState ikAndState, IField field, MultiMap<InstanceKeyAndState, IField> ikToFields) {
       State state = ikAndState.getState();
       if (Assertions.verifyAssertions) {
-        Assertions._assert(refineFieldAccesses(field));
+        //Assertions._assert(refineFieldAccesses(field));
       }
       ikToFields.put(ikAndState, field);
       for (Iterator<? extends Object> iter = g.getPredNodes(ikAndState.getInstanceKey(), NewLabel.v()); iter.hasNext();) {
@@ -1063,8 +1063,16 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       }
     }
 
-    private boolean refineFieldAccesses(IField field) {
-      return refinementPolicy.getFieldRefinePolicy().shouldRefine(field);
+    private boolean refineFieldAccesses(IField field, PointerKey basePtr, PointerKey val, State state) {
+      boolean shouldRefine = refinementPolicy.getFieldRefinePolicy().shouldRefine(field, basePtr, val, state);
+      if (DEBUG) {
+        if (shouldRefine) {
+          System.err.println("refining access to " + field);
+        } else {
+          System.err.println("using match for access to " + field);
+        }
+      }
+      return shouldRefine;
     }
 
     /**
@@ -1129,7 +1137,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           public void visitPutField(PutFieldLabel label, Object dst) {
             IField field = label.getField();
             PointerKey storeBase = (PointerKey) dst;
-            if (refineFieldAccesses(field)) {
+            if (refineFieldAccesses(field, storeBase, curPk, curState)) {
               // statements x.f = y, Y updated (X' not empty required)
               // update Z.f for all z in X'
               PointerKeyAndState storeBaseAndState = new PointerKeyAndState(storeBase, curState);
@@ -1149,10 +1157,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           @Override
           public void visitGetField(GetFieldLabel label, Object dst) {
             IField field = (label).getField();
-            if (refineFieldAccesses(field)) {
+            PointerKey dstPtrKey = (PointerKey) dst;
+            if (refineFieldAccesses(field, curPk, dstPtrKey, curState)) {
               // statements x = y.f, Y updated
               // if X queried, start tracking Y.f
-              PointerKey dstPtrKey = (PointerKey) dst;
               PointerKeyAndState loadDefAndState = new PointerKeyAndState(dstPtrKey, curState);
               addEncounteredLoad(new LoadEdge(curPkAndState, field, loadDefAndState));
               if (pointsToQueried.get(dstPtrKey).contains(curState)) {
@@ -1180,12 +1188,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           @Override
           public void visitPutField(PutFieldLabel label, Object dst) {
             IField field = (label).getField();
-            if (refineFieldAccesses(field)) {
+            PointerKey dstPtrKey = (PointerKey) dst;
+            if (refineFieldAccesses(field, curPk, dstPtrKey, curState)) {
               // x.f = y, X updated
               // if Y' non-empty, then update
               // tracked set of X.f, to trace flow
               // to reads
-              PointerKeyAndState storeDst = new PointerKeyAndState((PointerKey) dst, curState);
+              PointerKeyAndState storeDst = new PointerKeyAndState(dstPtrKey, curState);
               encounteredStores.add(new StoreEdge(curPkAndState, field, storeDst));
               IntSet trackedSet = find(pkToTrackedSet, storeDst);
               if (!trackedSet.isEmpty()) {
@@ -1375,10 +1384,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             // query y; if already queried, add Y to Z.f for all
             // z in X'
             IField field = label.getField();
-            if (refineFieldAccesses(field)) {
+            PointerKey dstPtrKey = (PointerKey) dst;
+            if (refineFieldAccesses(field, curPk, dstPtrKey, curState)) {
               for (InstanceKeyAndState ikAndState : makeOrdinalSet(trackedSet)) {
                 boolean needField = forwInstKeyToFields.get(ikAndState).contains(field);
-                PointerKeyAndState storeDst = new PointerKeyAndState((PointerKey) dst, curState);
+                PointerKeyAndState storeDst = new PointerKeyAndState(dstPtrKey, curState);
                 encounteredStores.add(new StoreEdge(curPkAndState, field, storeDst));
                 if (needField) {
                   if (!addToInitWorklist(storeDst)) {
@@ -1415,7 +1425,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           public void visitPutField(PutFieldLabel label, Object dst) {
             IField field = label.getField();
             PointerKey storeBase = (PointerKey) dst;
-            if (refineFieldAccesses(field)) {
+            if (refineFieldAccesses(field, storeBase, curPk, curState)) {
               PointerKeyAndState storeBaseAndState = new PointerKeyAndState(storeBase, curState);
               encounteredStores.add(new StoreEdge(storeBaseAndState, field, curPkAndState));
               if (!addToInitWorklist(storeBaseAndState)) {
@@ -1448,12 +1458,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           @Override
           public void visitGetField(GetFieldLabel label, Object dst) {
             IField field = label.getField();
+            PointerKey dstPtrKey = (PointerKey) dst;
             // x = y.f, Y' updated
-            if (refineFieldAccesses(field)) {
+            if (refineFieldAccesses(field, curPk, dstPtrKey, curState)) {
               for (InstanceKeyAndState ikAndState : makeOrdinalSet(trackedSet)) {
                 // tracking value written into ik.field
                 boolean needField = backInstKeyToFields.get(ikAndState).contains(field);
-                PointerKeyAndState loadedVal = new PointerKeyAndState((PointerKey) dst, curState);
+                PointerKeyAndState loadedVal = new PointerKeyAndState(dstPtrKey, curState);
                 addEncounteredLoad(new LoadEdge(curPkAndState, field, loadedVal));
                 if (needField) {
                   InstanceFieldKeyAndState ifk = getInstFieldKey(ikAndState, field);

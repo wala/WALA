@@ -14,7 +14,9 @@ import java.util.Collection;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
 import com.ibm.wala.demandpa.util.ArrayContents;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
@@ -38,7 +40,7 @@ public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
     }
   }
 
-  public boolean shouldRefine(IField field) {
+  public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, StateMachine.State state) {
     if (field == ArrayContents.v()) {
       return true;
     }

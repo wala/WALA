@@ -39,6 +39,8 @@
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 /**
  * A policy that always refines handling of field accesses by checking for an
@@ -49,7 +51,7 @@ import com.ibm.wala.classLoader.IField;
  */
 public class AlwaysRefineFieldsPolicy implements FieldRefinePolicy {
 
-  public boolean shouldRefine(IField field) {
+  public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, StateMachine.State state) {
     return true;
   }
 

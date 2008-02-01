@@ -40,28 +40,27 @@ package com.ibm.wala.demandpa.alg.refinepolicy;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
 import com.ibm.wala.demandpa.util.ArrayContents;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
-
 /**
- * Manually annotated policy for refining field accesses.  Refines java.util
- * fields and some other benchmark-specific hacks (for testing purposes).
- * 
- * TODO: factor out java.util policy as a useful ContainersFieldPolicy
+ * Manually annotated policy for refining field accesses.
  * 
  * @author Manu Sridharan
  * 
  */
 public class ManualFieldPolicy implements FieldRefinePolicy {
 
-  private static final Pattern refinePattern = Pattern.compile("Lca/mcgill/sable/util|Ljava/util|Lpolyglot/util/TypedList");
+  protected final Pattern refinePattern;// =
+
+  // Pattern.compile("Lca/mcgill/sable/util|Ljava/util|Lpolyglot/util/TypedList");
 
   private static final int NUM_DECISIONS_TO_TRACK = 10;
 
@@ -71,10 +70,9 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
 
   final private IClass[] encounteredClasses = new IClass[NUM_DECISIONS_TO_TRACK];
 
-  public boolean shouldRefine(IField field) {
+  public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, StateMachine.State state) {
     if (field == ArrayContents.v())
       return true;
-    // HACK
     final IClass declaringClass = field.getDeclaringClass();
     final Matcher m = refinePattern.matcher(declaringClass.toString());
     final boolean foundPattern = m.find();
@@ -95,9 +93,9 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
 
   private boolean notSuperOfAnyEncountered(IClass klass) {
     for (int i = 0; i < curDecision; i++) {
-      if (cha.isAssignableFrom(klass, encounteredClasses[i])) { 
+      if (cha.isAssignableFrom(klass, encounteredClasses[i])) {
         return false;
-      }    
+      }
     }
     return true;
   }
@@ -107,8 +105,7 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
   /**
    * 
    * @param klass
-   * @return the top-level {@link IClass} where klass is declared, or klass
-   *         itself if klass is top-level
+   * @return the top-level {@link IClass} where klass is declared, or klass itself if klass is top-level
    */
   private IClass removeInner(IClass klass) {
     ClassLoaderReference cl = klass.getClassLoader().getReference();
@@ -126,8 +123,17 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
     }
   }
 
-  public ManualFieldPolicy(ClassHierarchy cha) {
+  /**
+   * 
+   * @param cha
+   * @param refinePattern a pattern for detecting which match edges to refine. If the <em>declaring class</em> of the
+   *        field related to the match edge matches the pattern, the match edge will be refined. For example, the
+   *        pattern <code>Pattern.compile("Ljava/util")</code> will cause all fields of classes in the
+   *        <code>java.util</code> package to be refined.
+   */
+  public ManualFieldPolicy(ClassHierarchy cha, Pattern refinePattern) {
     this.cha = cha;
+    this.refinePattern = refinePattern;
   }
 
   public boolean nextPass() {
@@ -154,6 +160,5 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
     }
     return ret.toString();
   }
-
 
 }

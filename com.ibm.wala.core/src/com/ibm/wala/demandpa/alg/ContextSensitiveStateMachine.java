@@ -75,7 +75,7 @@ public class ContextSensitiveStateMachine implements StateMachine<IFlowLabel> {
 
   private static final boolean DEBUG = false;
   
-  private static final boolean DEBUG_RECURSION = true;
+  private static final boolean DEBUG_RECURSION = false;
 
   /**
    * The empty call stack. Note that the empty stack essentially represents all
