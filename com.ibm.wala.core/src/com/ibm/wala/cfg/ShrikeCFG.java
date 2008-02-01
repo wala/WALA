@@ -314,14 +314,15 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
                   Warnings.add(FailedExceptionResolutionWarning.create(caughtException));
                   // null out caughtException, to avoid attempting to process it
                   caughtException = null;
+                } else {
+                  // hs[j].getCatchClass() == null.
+                  // this means that the handler catches all exceptions.
+                  // add the edge and null out all types
+                  addExceptionalEdgeTo(b);
+                  exceptionTypes.clear();
                 }
               }
-              if (caughtException == null) {
-                // this means that the handler catches all exceptions.
-                // add the edge and null out all types
-                addExceptionalEdgeTo(b);
-                exceptionTypes.clear();
-              } else {
+              if (caughtException != null) {
                 // the set "caught" should be the set of exceptions that MUST
                 // have been caught
                 // by the handlers in scope
