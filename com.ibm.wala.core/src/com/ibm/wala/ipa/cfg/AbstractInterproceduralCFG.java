@@ -571,8 +571,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   }
 
   public BasicBlockInContext<T> getNode(int number) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return null;
+    return g.getNode(number);
   }
 
   public int getMaxNumber() {
