@@ -39,6 +39,9 @@
 package com.ibm.wala.demandpa.genericutil;
 
 import java.util.Arrays;
+import java.util.Iterator;
+
+import com.ibm.wala.util.collections.ArrayIterator;
 
 /**
  * An immutable stack of objects. The {@link #push(Object)} and {@link #pop()}
@@ -48,7 +51,7 @@ import java.util.Arrays;
  * 
  * @param <T>
  */
-public class ImmutableStack<T> {
+public class ImmutableStack<T> implements Iterable<T> {
 
   private static final ImmutableStack<Object> EMPTY = new ImmutableStack<Object>(new Object[0]);
 
@@ -213,5 +216,9 @@ public class ImmutableStack<T> {
       System.arraycopy(other.entries, 0, tmpEntries, numFromThis, other.entries.length);
     }
     return new ImmutableStack<T>(tmpEntries);
+  }
+
+  public Iterator<T> iterator() {
+    return new ArrayIterator<T>(entries);
   }
 }
