@@ -59,6 +59,6 @@ public class CallSiteAndCGNode extends Pair<CallSiteReference, CGNode> {
   @Override
   public String toString() {
     MethodReference declaredTarget = fst.getDeclaredTarget();
-    return declaredTarget.getSignature() + "@" + fst.getProgramCounter();
+    return declaredTarget.getSignature() + "@" + fst.getProgramCounter() + " in " + snd;
   }
 }
