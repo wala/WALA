@@ -28,8 +28,8 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
  * A demand-driven context-sensitive slicer.
@@ -413,18 +413,17 @@ public class Slicer {
       return null;
     }
 
-    /*
-     * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getReachableOnEntry()
-     */
-    public SparseIntSet getReachableOnEntry() {
-      return SparseIntSet.singleton(0);
-    }
 
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getSupergraph()
      */
     public ISupergraph<Statement, PDG> getSupergraph() {
       return supergraph;
+    }
+
+    public Collection<Pair<Statement, Integer>> initialSeeds() {
+      Pair<Statement,Integer> seed = Pair.make(src, 0);
+      return Collections.singleton(seed);
     }
   }
 

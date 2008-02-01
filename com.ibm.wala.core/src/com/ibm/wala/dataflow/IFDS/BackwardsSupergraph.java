@@ -66,12 +66,6 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     return delegate.getProcedureGraph();
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMain()
-   */
-  public P getMain() throws UnsupportedOperationException {
-    return delegate.getMain();
-  }
 
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isCall(java.lang.Object)
@@ -258,19 +252,19 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     return delegate.getEntriesForProcedure(object);
   }
 
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainEntry()
-   */
-  public T getMainEntry() {
-    return delegate.getMainExit();
-  }
-
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainExit()
-   */
-  public T getMainExit() {
-    return delegate.getMainEntry();
-  }
+//  /*
+//   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainEntry()
+//   */
+//  public T getMainEntry() {
+//    return delegate.getMainExit();
+//  }
+//
+//  /*
+//   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainExit()
+//   */
+//  public T getMainExit() {
+//    return delegate.getMainEntry();
+//  }
 
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isReturn(java.lang.Object)

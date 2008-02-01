@@ -42,10 +42,6 @@ public interface ISupergraph<T,P> extends NumberedGraph<T> {
 
   public static final byte OTHER = 3;
 
-  /**
-   * @return an identifier for the main procedure for this supergraph
-   */
-  P getMain();
   
   /**
    * @return the graph of procedures (e.g. a call graph) over which this supergraph is induced.
@@ -139,16 +135,16 @@ public interface ISupergraph<T,P> extends NumberedGraph<T> {
    */
   T getLocalBlock(P procedure, int i);
 
-  /**
-   * @return the unique entry node s_main for the main procedure
-   */
-  T getMainEntry();
-
-
-  /**
-   * @return the unique exit node e_main for the main procedure
-   */
-  T getMainExit();
+//  /**
+//   * @return the unique entry node s_main for the main procedure
+//   */
+//  T getMainEntry();
+//
+//
+//  /**
+//   * @return the unique exit node e_main for the main procedure
+//   */
+//  T getMainExit();
 
   /**
    * @param n

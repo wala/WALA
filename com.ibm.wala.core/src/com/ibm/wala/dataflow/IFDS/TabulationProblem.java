@@ -10,7 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.dataflow.IFDS;
 
-import com.ibm.wala.util.intset.IntSet;
+import java.util.Collection;
+
+import com.ibm.wala.util.collections.Pair;
 
 /**
  * 
@@ -39,10 +41,10 @@ public interface TabulationProblem<T,P> {
   public IFlowFunctionMap<T> getFunctionMap();
 
   /**
-   * @return the set of facts that are live on entry to the analysis. This set
-   *         MUST include the universal truth, 0.
+   * Define the set of facts that are live on entry to the analysis.  Each fact represents a dataflow
+   * factoid number (Integer) at a particular supergraph node (T).
    */
-  public IntSet getReachableOnEntry();
+  public Collection<Pair<T,Integer>> initialSeeds();
 
   /**
    * Special case: if supportsMerge(), then the problem is not really IFDS

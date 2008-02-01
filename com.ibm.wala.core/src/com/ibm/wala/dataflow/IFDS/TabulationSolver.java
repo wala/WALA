@@ -29,9 +29,9 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Heap;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.collections.ToStringComparator;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.graph.traverse.DFS;
 import com.ibm.wala.util.heapTrace.HeapTracer;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
@@ -185,13 +185,11 @@ public class TabulationSolver<T, P> {
   }
 
   /**
+   * Start tabulation with the initial seeds.
    */
   protected void initialize() {
-    T mainEntry = supergraph.getMainEntry();
-    propagate(mainEntry, 0, mainEntry, 0);
-    for (IntIterator it = problem.getReachableOnEntry().intIterator(); it.hasNext();) {
-      int i = it.next();
-      propagate(mainEntry, 0, mainEntry, i);
+    for (Pair<T, Integer> seed : problem.initialSeeds()) {
+      propagate(seed.fst, seed.snd, seed.fst, seed.snd);
     }
   }
 
@@ -316,10 +314,10 @@ public class TabulationSolver<T, P> {
     if (succ == null) {
       // This should only happen for return from the entry point of the supergraph
       // (fake root method for whole-program analysis).
-      if (DEBUG_LEVEL > 0) {
-        P n = supergraph.getProcOf(edge.n);
-        Assertions._assert(supergraph.getMain().equals(n), "no successors for " + edge.n);
-      }
+      // if (DEBUG_LEVEL > 0) {
+      // P n = supergraph.getProcOf(edge.n);
+      // Assertions._assert(supergraph.getMain().equals(n), "no successors for " + edge.n);
+      // }
       return;
     }
 
@@ -930,8 +928,6 @@ public class TabulationSolver<T, P> {
     @Override
     public String toString() {
 
-      Collection reachableNodes = DFS.getReachableNodes(supergraph, Collections.singleton(supergraph.getMainEntry()));
-
       StringBuffer result = new StringBuffer();
       TreeMap<Object, TreeSet<T>> map = new TreeMap<Object, TreeSet<T>>(ToStringComparator.instance());
 
@@ -947,15 +943,13 @@ public class TabulationSolver<T, P> {
       };
       for (Iterator<? extends T> it = supergraph.iterator(); it.hasNext();) {
         T n = it.next();
-        if (reachableNodes.contains(n)) {
-          P proc = supergraph.getProcOf(n);
-          TreeSet<T> s = map.get(proc);
-          if (s == null) {
-            s = new TreeSet<T>(c);
-            map.put(proc, s);
-          }
-          s.add(n);
+        P proc = supergraph.getProcOf(n);
+        TreeSet<T> s = map.get(proc);
+        if (s == null) {
+          s = new TreeSet<T>(c);
+          map.put(proc, s);
         }
+        s.add(n);
       }
 
       for (Iterator<Map.Entry<Object, TreeSet<T>>> it = map.entrySet().iterator(); it.hasNext();) {
