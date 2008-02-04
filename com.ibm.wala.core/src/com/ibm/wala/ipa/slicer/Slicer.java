@@ -222,9 +222,7 @@ public class Slicer {
     while (!workList.isEmpty()) {
       Statement root = workList.pop();
       rootsConsidered.add(root);
-      Collection<Statement> empty = Collections.emptySet();
-      ISDG sdgView = new SDGView(sdg, empty);
-      SliceProblem p = makeSliceProblem(root, sdgView, backward);
+      SliceProblem p = makeSliceProblem(root, sdg, backward);
 
       if (VERBOSE) {
         System.err.println("worklist now: " + workList.size());
