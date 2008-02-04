@@ -18,6 +18,7 @@ import com.ibm.wala.dataflow.IFDS.BackwardsSupergraph;
 import com.ibm.wala.dataflow.IFDS.IFlowFunctionMap;
 import com.ibm.wala.dataflow.IFDS.IMergeFunction;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
+import com.ibm.wala.dataflow.IFDS.PathEdge;
 import com.ibm.wala.dataflow.IFDS.TabulationDomain;
 import com.ibm.wala.dataflow.IFDS.TabulationProblem;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
@@ -28,7 +29,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
-import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -419,8 +419,8 @@ public class Slicer {
       return supergraph;
     }
 
-    public Collection<Pair<Statement, Integer>> initialSeeds() {
-      Pair<Statement,Integer> seed = Pair.make(src, 0);
+    public Collection<PathEdge<Statement>> initialSeeds() {
+      PathEdge<Statement> seed = PathEdge.createPathEdge(new MethodEntryStatement(src.getNode()), 0, src, 0);
       return Collections.singleton(seed);
     }
   }

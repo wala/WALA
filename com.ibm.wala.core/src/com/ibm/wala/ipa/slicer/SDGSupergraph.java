@@ -178,7 +178,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    */
   public Statement getMainEntry() {
     Assertions.productionAssertion(!backward, "todo: support backward");
-    return srcStatement;
+    return new MethodEntryStatement(srcStatement.getNode());
   }
 
   /*
@@ -188,7 +188,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     // We pretend that sink is the "main exit" .. we don't care about
     // flow past the sink.
     Assertions.productionAssertion(backward, "todo: support forward");
-    return srcStatement;
+    return new MethodEntryStatement(srcStatement.getNode());
   }
 
   /*

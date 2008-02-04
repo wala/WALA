@@ -119,14 +119,11 @@ public class PDG implements NumberedGraph<Statement> {
   private boolean isPopulated = false;
 
   /**
-   * @param mod
-   *            the set of heap locations which may be written (transitively) by this node. These are logically return
-   *            values in the SDG.
-   * @param ref
-   *            the set of heap locations which may be read (transitively) by this node. These are logically parameters
-   *            in the SDG.
-   * @throws IllegalArgumentException
-   *             if node is null
+   * @param mod the set of heap locations which may be written (transitively) by this node. These are logically return
+   *        values in the SDG.
+   * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters
+   *        in the SDG.
+   * @throws IllegalArgumentException if node is null
    */
   public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
@@ -135,14 +132,11 @@ public class PDG implements NumberedGraph<Statement> {
   }
 
   /**
-   * @param mod
-   *            the set of heap locations which may be written (transitively) by this node. These are logically return
-   *            values in the SDG.
-   * @param ref
-   *            the set of heap locations which may be read (transitively) by this node. These are logically parameters
-   *            in the SDG.
-   * @throws IllegalArgumentException
-   *             if node is null
+   * @param mod the set of heap locations which may be written (transitively) by this node. These are logically return
+   *        values in the SDG.
+   * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters
+   *        in the SDG.
+   * @throws IllegalArgumentException if node is null
    */
   public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
       Map<CGNode, OrdinalSet<PointerKey>> ref, DataDependenceOptions dOptions, ControlDependenceOptions cOptions,
@@ -448,7 +442,7 @@ public class PDG implements NumberedGraph<Statement> {
           Assertions.UNREACHABLE();
         }
         // TODO: this is overly conservative. deal with catch blocks?
-        for (IntIterator ii = getPEIs(ir).intIterator(); ii.hasNext(); ) {
+        for (IntIterator ii = getPEIs(ir).intIterator(); ii.hasNext();) {
           int index = ii.next();
           SSAInstruction pei = ir.getInstructions()[index];
           if (dOptions.isTerminateAtCast() && (pei instanceof SSACheckCastInstruction)) {
@@ -720,7 +714,8 @@ public class PDG implements NumberedGraph<Statement> {
     return ssaInstruction2Statement(node, s, instructionIndices);
   }
 
-  public static synchronized Statement ssaInstruction2Statement(CGNode node, SSAInstruction s, Map<SSAInstruction, Integer> instructionIndices) {
+  public static synchronized Statement ssaInstruction2Statement(CGNode node, SSAInstruction s,
+      Map<SSAInstruction, Integer> instructionIndices) {
     assert s != null;
     if (s instanceof SSAPhiInstruction) {
       SSAPhiInstruction phi = (SSAPhiInstruction) s;
@@ -800,17 +795,14 @@ public class PDG implements NumberedGraph<Statement> {
     createCalleeParams(ref);
     createReturnStatements();
 
-    if (!cOptions.equals(ControlDependenceOptions.NONE)) {
-      delegate.addNode(new MethodEntryStatement(node));
-    }
+    delegate.addNode(new MethodEntryStatement(node));
   }
 
   /**
    * create nodes representing defs of the return values
    * 
-   * @param mod
-   *            the set of heap locations which may be written (transitively) by this node. These are logically
-   *            parameters in the SDG.
+   * @param mod the set of heap locations which may be written (transitively) by this node. These are logically
+   *        parameters in the SDG.
    * @param dOptions
    */
   private void createReturnStatements() {
@@ -839,9 +831,8 @@ public class PDG implements NumberedGraph<Statement> {
   /**
    * create nodes representing defs of formal parameters
    * 
-   * @param ref
-   *            the set of heap locations which may be read (transitively) by this node. These are logically parameters
-   *            in the SDG.
+   * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters
+   *        in the SDG.
    */
   private void createCalleeParams(Map<CGNode, OrdinalSet<PointerKey>> ref) {
     ArrayList<Statement> list = new ArrayList<Statement>();

@@ -12,8 +12,6 @@ package com.ibm.wala.dataflow.IFDS;
 
 import java.util.Collection;
 
-import com.ibm.wala.util.collections.Pair;
-
 /**
  * 
  * Representation of a Dyck-language graph reachability problem for the 
@@ -41,10 +39,9 @@ public interface TabulationProblem<T,P> {
   public IFlowFunctionMap<T> getFunctionMap();
 
   /**
-   * Define the set of facts that are live on entry to the analysis.  Each fact represents a dataflow
-   * factoid number (Integer) at a particular supergraph node (T).
+   * Define the set of path edges to start propagation with.
    */
-  public Collection<Pair<T,Integer>> initialSeeds();
+  public Collection<PathEdge<T>> initialSeeds();
 
   /**
    * Special case: if supportsMerge(), then the problem is not really IFDS

@@ -13,11 +13,12 @@ package com.ibm.wala.ipa.slicer;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * A statement representing method entry, used for managing
- * control dependence
+ * A statement representing method entry, used for managing control dependence.
+ * 
+ * This is also used as a dummy entry for starting propagation to a seed statement.
  * 
  * @author sjfink
- *
+ * 
  */
 public class MethodEntryStatement extends Statement {
 
@@ -31,7 +32,7 @@ public class MethodEntryStatement extends Statement {
       return false;
     }
     if (getClass().equals(obj.getClass())) {
-      MethodEntryStatement other = (MethodEntryStatement)obj;
+      MethodEntryStatement other = (MethodEntryStatement) obj;
       return getNode().equals(other.getNode());
     } else {
       return false;
@@ -40,12 +41,12 @@ public class MethodEntryStatement extends Statement {
 
   @Override
   public Kind getKind() {
-   return Kind.METHOD_ENTRY;
+    return Kind.METHOD_ENTRY;
   }
 
   @Override
   public int hashCode() {
-    return getKind().hashCode() + 9901*getNode().hashCode();
+    return getKind().hashCode() + 9901 * getNode().hashCode();
   }
 
   @Override

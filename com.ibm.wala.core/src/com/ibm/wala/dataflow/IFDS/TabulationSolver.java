@@ -29,7 +29,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Heap;
 import com.ibm.wala.util.collections.Iterator2Collection;
-import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.collections.ToStringComparator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.heapTrace.HeapTracer;
@@ -188,8 +187,8 @@ public class TabulationSolver<T, P> {
    * Start tabulation with the initial seeds.
    */
   protected void initialize() {
-    for (Pair<T, Integer> seed : problem.initialSeeds()) {
-      propagate(seed.fst, seed.snd, seed.fst, seed.snd);
+    for (PathEdge<T> seed : problem.initialSeeds()) {
+      propagate(seed.entry, seed.d1, seed.target, seed.d2);
     }
   }
 
