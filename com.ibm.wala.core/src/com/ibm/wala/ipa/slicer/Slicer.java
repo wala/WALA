@@ -48,11 +48,6 @@ public class Slicer {
 
   public final static boolean VERBOSE = false;
 
-  /*
-   * Experimental option: If BAIL_OUT > 0, then the slicer will stop tabulating when the slice gets bigger than this.
-   */
-  public final static int BAIL_OUT = -1;
-
   /**
    * options to control data dependence edges in the SDG
    */
@@ -224,6 +219,8 @@ public class Slicer {
       workList.push(s);
     }
     SliceProblem p = makeSliceProblem(roots, sdg, backward);
+    TabulationSolver<Statement, PDG> solver = TabulationSolver.make(p);
+    TabulationResult<Statement, PDG> tr = null;
 
     while (!workList.isEmpty()) {
       Statement root = workList.pop();
@@ -235,42 +232,31 @@ public class Slicer {
         System.err.println("Tabulate for " + root);
       }
 
-      TabulationSolver<Statement, PDG> solver = TabulationSolver.make(p);
       if (!roots.contains(root)) {
         solver.propagate(PathEdge.createPathEdge(new MethodEntryStatement(root.getNode()), 0, root, 0));
       }
-      TabulationResult<Statement, PDG> tr = solver.solve();
+      tr = solver.solve();
 
       if (DEBUG) {
         System.err.println("RESULT");
         System.err.println(tr);
       }
       if (VERBOSE) {
-        System.err.println("Tabulated.");
-      }
-      Collection<Statement> slice = tr.getSupergraphNodesReached();
-      result.addAll(slice);
-
-      if (VERBOSE) {
         System.err.println("Compute new roots...");
       }
 
-      Collection<Statement> newRoots = computeNewRoots(slice, root, rootsConsidered, sdg, backward);
+      Collection<Statement> newRoots = computeNewRoots(tr.getSupergraphNodesReached(), root, rootsConsidered, sdg, backward);
       for (Statement st : newRoots) {
         workList.push(st);
       }
-
-      if (BAIL_OUT > 0 && result.size() > BAIL_OUT) {
-        workList.clear();
-        System.err.println("Bailed out at " + result.size());
-      }
     }
+    Collection<Statement> slice = tr.getSupergraphNodesReached();
 
     if (VERBOSE) {
       System.err.println("Slicer done.");
     }
 
-    return result;
+    return slice;
   }
 
   /**
