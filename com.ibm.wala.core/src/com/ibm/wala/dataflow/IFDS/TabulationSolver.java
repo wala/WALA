@@ -75,7 +75,7 @@ public class TabulationSolver<T, P> {
   static protected final boolean verbose = true && ("true".equals(System.getProperty("com.ibm.wala.fixedpoint.impl.verbose")) ? true
       : false);
 
-  static final int VERBOSE_INTERVAL = 100000;
+  static final int VERBOSE_INTERVAL = 1000;
 
   static final boolean VERBOSE_TRACE_MEMORY = false;
 
