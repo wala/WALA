@@ -19,7 +19,7 @@ import com.ibm.wala.util.collections.Heap;
 /**
  * Worklist for fixed-point solver implementation
  */
-public class Worklist extends Heap {
+public class Worklist extends Heap<AbstractStatement> {
 
   private final HashSet<AbstractStatement> contents = HashSetFactory.make();
 
@@ -28,14 +28,12 @@ public class Worklist extends Heap {
   }
 
   @Override
-  protected final boolean compareElements(Object o1, Object o2) {
-    AbstractStatement eq1 = (AbstractStatement) o1;
-    AbstractStatement eq2 = (AbstractStatement) o2;
+  protected final boolean compareElements(AbstractStatement eq1, AbstractStatement eq2) {
     return (eq1.getOrderNumber() < eq2.getOrderNumber());
   }
 
   public AbstractStatement takeStatement() throws NoSuchElementException {
-    AbstractStatement result = (AbstractStatement)super.take();
+    AbstractStatement result = super.take();
     contents.remove(result);
     return result;
   }

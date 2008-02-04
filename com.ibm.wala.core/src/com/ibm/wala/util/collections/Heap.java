@@ -18,16 +18,16 @@ import java.util.NoSuchElementException;
  * @author Julian Dolby
  */
 
-public abstract class Heap {
+public abstract class Heap<T> {
 
   /**
    * @return true iff elt1 is considered < elt2
    */
-  abstract protected boolean compareElements(Object elt1, Object elt2);
+  abstract protected boolean compareElements(T elt1, T elt2);
 
   private int numberOfElements;
 
-  private Object[] backingStore;
+  private T[] backingStore;
 
   /**
    * @return number of elements in this heap
@@ -36,9 +36,10 @@ public abstract class Heap {
     return numberOfElements;
   }
 
+  @SuppressWarnings("unchecked")
   public Heap(int initialCapacity) {
     numberOfElements = 0;
-    backingStore = new Object[initialCapacity];
+    backingStore = (T[])new Object[initialCapacity];
   }
 
   /**
@@ -48,10 +49,8 @@ public abstract class Heap {
     return numberOfElements == 0;
   }
 
-  /**
-   * @param elt
-   */
-  public void insert(Object elt) {
+
+  public void insert(T elt) {
     ensureCapacity(numberOfElements + 1);
     bubbleUp(elt, numberOfElements);
     numberOfElements++;
@@ -60,11 +59,11 @@ public abstract class Heap {
   /**
    * @return the first object in the priority queue
    */
-  public Object take() throws NoSuchElementException {
+  public T take() throws NoSuchElementException {
     if (numberOfElements == 0) {
       throw new NoSuchElementException();
     }
-    Object result = backingStore[0];
+    T result = backingStore[0];
     removeElement(0);
     return result;
   }
@@ -81,12 +80,11 @@ public abstract class Heap {
     return index * 2 + 2;
   }
 
-  /**
-   * @param min
-   */
+
+  @SuppressWarnings("unchecked")
   final private void ensureCapacity(int min) {
     if (backingStore.length < min) {
-      Object newStore[] = new Object[2 * min];
+      T newStore[] = (T[])new Object[2 * min];
       System.arraycopy(backingStore, 0, newStore, 0, backingStore.length);
       backingStore = newStore;
     }
@@ -100,14 +98,14 @@ public abstract class Heap {
    */
   final private void removeElement(int index) {
     int ne = numberOfElements;
-    Object[] bs = backingStore;
+    T[] bs = backingStore;
     while (true) {
       int leftIndex = heapLeftChild(index);
       if (leftIndex < ne) {
         int rightIndex = heapRightChild(index);
         if (rightIndex < ne) {
-          Object leftObject = bs[leftIndex];
-          Object rightObject = bs[rightIndex];
+          T leftObject = bs[leftIndex];
+          T rightObject = bs[rightIndex];
           if (compareElements(leftObject, rightObject)) {
             bs[index] = leftObject;
             index = leftIndex;
@@ -138,15 +136,15 @@ public abstract class Heap {
    * @param elt
    * @param index
    */
-  final private void bubbleUp(Object elt, int index) {
-    Object[] bs = backingStore;
+  final private void bubbleUp(T elt, int index) {
+    T[] bs = backingStore;
     while (true) {
       if (index == 0) {
         bs[index] = elt;
         return;
       }
       int hpIndex = heapParent(index);
-      Object parent = bs[hpIndex];
+      T parent = bs[hpIndex];
       if (compareElements(parent, elt)) {
         bs[index] = elt;
         return;

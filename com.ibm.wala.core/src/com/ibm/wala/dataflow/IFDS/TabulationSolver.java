@@ -208,11 +208,11 @@ public class TabulationSolver<T, P> {
         tendToSoftCaches();
       }
 
-      final PathEdge edge = popFromWorkList();
+      final PathEdge<T> edge = popFromWorkList();
       if (DEBUG_LEVEL > 0) {
         System.err.println("TABULATE " + edge);
       }
-      int j = merge(edge.s_p, edge.d1, edge.n, edge.d2);
+      int j = merge(edge.entry, edge.d1, edge.target, edge.d2);
       if (j == -1 && DEBUG_LEVEL > 0) {
         System.err.println("merge -1: DROPPING");
       }
@@ -221,12 +221,12 @@ public class TabulationSolver<T, P> {
           // this means that we don't want to push the edge. instead,
           // we'll push the merged fact. a little tricky, but i think should
           // work.
-          propagate(edge.s_p, edge.d1, edge.n, j);
+          propagate(edge.entry, edge.d1, edge.target, j);
         } else {
-          if (supergraph.isCall(edge.n)) {
+          if (supergraph.isCall(edge.target)) {
             // [13]
             processCall(edge);
-          } else if (supergraph.isExit(edge.n)) {
+          } else if (supergraph.isExit(edge.target)) {
             // [21]
             processExit(edge);
           } else {
@@ -274,16 +274,16 @@ public class TabulationSolver<T, P> {
    * 
    * @param edge
    */
-  private void processNormal(final PathEdge edge) {
+  private void processNormal(final PathEdge<T> edge) {
     if (DEBUG_LEVEL > 0) {
       System.err.println("process normal: " + edge);
     }
-    for (Iterator<? extends T> it = supergraph.getSuccNodes(edge.n); it.hasNext();) {
+    for (Iterator<? extends T> it = supergraph.getSuccNodes(edge.target); it.hasNext();) {
       final T m = it.next();
       if (DEBUG_LEVEL > 0) {
         System.err.println("normal successor: " + m);
       }
-      IUnaryFlowFunction f = flowFunctionMap.getNormalFlowFunction(edge.n, m);
+      IUnaryFlowFunction f = flowFunctionMap.getNormalFlowFunction(edge.target, m);
       IntSet D3 = computeFlow(edge.d2, f);
       if (DEBUG_LEVEL > 0) {
         System.err.println(" reached: " + D3);
@@ -291,7 +291,7 @@ public class TabulationSolver<T, P> {
       if (D3 != null) {
         D3.foreach(new IntSetAction() {
           public void act(int d3) {
-            propagate(edge.s_p, edge.d1, m, d3);
+            propagate(edge.entry, edge.d1, m, d3);
           }
         });
       }
@@ -304,13 +304,13 @@ public class TabulationSolver<T, P> {
    * Note that we've changed the way we record summary edges. Summary edges are now associated with a callee (s_p,exit),
    * where the original algorithm used a call, return pair in the caller.
    */
-  protected void processExit(final PathEdge edge) {
+  protected void processExit(final PathEdge<T> edge) {
     if (DEBUG_LEVEL > 0) {
       System.err.println("process exit: " + edge);
     }
 
     // succ:= successor nodes of edge.n (the return block in the callee)
-    IntSet succ = supergraph.getSuccNodeNumbers(edge.n);
+    IntSet succ = supergraph.getSuccNodeNumbers(edge.target);
     if (succ == null) {
       // This should only happen for return from the entry point of the supergraph
       // (fake root method for whole-program analysis).
@@ -321,17 +321,17 @@ public class TabulationSolver<T, P> {
       return;
     }
 
-    final LocalSummaryEdges summaries = findOrCreateLocalSummaryEdges(supergraph.getProcOf(edge.n));
-    int s_p_n = supergraph.getLocalBlockNumber(edge.s_p);
-    int x = supergraph.getLocalBlockNumber(edge.n);
+    final LocalSummaryEdges summaries = findOrCreateLocalSummaryEdges(supergraph.getProcOf(edge.target));
+    int s_p_n = supergraph.getLocalBlockNumber(edge.entry);
+    int x = supergraph.getLocalBlockNumber(edge.target);
     if (!summaries.contains(s_p_n, x, edge.d1, edge.d2)) {
       summaries.insertSummaryEdge(s_p_n, x, edge.d1, edge.d2);
     }
 
-    final CallFlowEdges callFlow = findOrCreateCallFlowEdges(edge.s_p);
+    final CallFlowEdges callFlow = findOrCreateCallFlowEdges(edge.entry);
 
     // [22] for each c /in callers(p)
-    for (Iterator<? extends T> it = supergraph.getPredNodes(edge.s_p); it.hasNext();) {
+    for (Iterator<? extends T> it = supergraph.getPredNodes(edge.entry); it.hasNext();) {
       final T c = it.next();
       final int cNum = supergraph.getLocalBlockNumber(c);
       if (DEBUG_LEVEL > 0) {
@@ -359,7 +359,7 @@ public class TabulationSolver<T, P> {
    * @param c a call site of edge.s_p
    * @param D4 set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as call flow
    */
-  private void propagateToReturnSites(final PathEdge edge, IntSet succ, final T c, final IntSet D4) {
+  private void propagateToReturnSites(final PathEdge<T> edge, IntSet succ, final T c, final IntSet D4) {
 
     if (DEBUG_LEVEL > 1) {
       System.err.println("Successor nodes: " + succ);
@@ -396,7 +396,7 @@ public class TabulationSolver<T, P> {
       if (DEBUG_LEVEL > 1) {
         System.err.println("feasible return site: " + retSite);
       }
-      final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(c, edge.n, retSite);
+      final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(c, edge.target, retSite);
       if (retf instanceof IBinaryReturnFlowFunction) {
         propagateToReturnSiteWithBinaryFlowFunction(edge, c, D4, entries, retSite, retf);
       } else {
@@ -515,23 +515,23 @@ public class TabulationSolver<T, P> {
   /**
    * Handle lines [14 - 19] of the algorithm, propagating information into and across a call site.
    */
-  protected void processCall(final PathEdge edge) {
+  protected void processCall(final PathEdge<T> edge) {
     if (DEBUG_LEVEL > 0) {
       System.err.println("process call: " + edge);
     }
 
     // c:= number of the call node
-    final int c = supergraph.getNumber(edge.n);
+    final int c = supergraph.getNumber(edge.target);
 
-    final Collection<T> returnSites = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.n));
+    final Collection<T> returnSites = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.target));
 
     // [14 - 16]
-    for (Iterator<? extends T> it = supergraph.getCalledNodes(edge.n); it.hasNext();) {
+    for (Iterator<? extends T> it = supergraph.getCalledNodes(edge.target); it.hasNext();) {
       final T callee = it.next();
       if (DEBUG_LEVEL > 0) {
         System.err.println(" process callee: " + callee);
       }
-      IUnaryFlowFunction f = flowFunctionMap.getCallFlowFunction(edge.n, callee);
+      IUnaryFlowFunction f = flowFunctionMap.getCallFlowFunction(edge.target, callee);
       // reached := {d1} that reach the callee
       IntSet reached = computeFlow(edge.d2, f);
       if (DEBUG_LEVEL > 0) {
@@ -569,7 +569,7 @@ public class TabulationSolver<T, P> {
                     // was recorded as a summary edge
                     IntSet reachedBySummary = summaries.getSummaryEdges(s_p_num, x_num, d1);
                     if (reachedBySummary != null) {
-                      final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(edge.n, exit, returnSite);
+                      final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(edge.target, exit, returnSite);
                       reachedBySummary.foreach(new IntSetAction() {
                         public void act(int d2) {
                           if (retf instanceof IBinaryReturnFlowFunction) {
@@ -577,7 +577,7 @@ public class TabulationSolver<T, P> {
                             if (D5 != null) {
                               D5.foreach(new IntSetAction() {
                                 public void act(int d5) {
-                                  propagate(edge.s_p, edge.d1, returnSite, d5);
+                                  propagate(edge.entry, edge.d1, returnSite, d5);
                                 }
                               });
                             }
@@ -586,7 +586,7 @@ public class TabulationSolver<T, P> {
                             if (D5 != null) {
                               D5.foreach(new IntSetAction() {
                                 public void act(int d5) {
-                                  propagate(edge.s_p, edge.d1, returnSite, d5);
+                                  propagate(edge.entry, edge.d1, returnSite, d5);
                                 }
                               });
                             }
@@ -604,17 +604,17 @@ public class TabulationSolver<T, P> {
     }
     // special logic: in backwards problems, a "call" node can have
     // "normal" successors as well. deal with these.
-    for (Iterator<? extends T> it = supergraph.getNormalSuccessors(edge.n); it.hasNext();) {
+    for (Iterator<? extends T> it = supergraph.getNormalSuccessors(edge.target); it.hasNext();) {
       final T m = it.next();
       if (DEBUG_LEVEL > 0) {
         System.err.println("normal successor: " + m);
       }
-      IUnaryFlowFunction f = flowFunctionMap.getNormalFlowFunction(edge.n, m);
+      IUnaryFlowFunction f = flowFunctionMap.getNormalFlowFunction(edge.target, m);
       IntSet D3 = computeFlow(edge.d2, f);
       if (D3 != null) {
         D3.foreach(new IntSetAction() {
           public void act(int d3) {
-            propagate(edge.s_p, edge.d1, m, d3);
+            propagate(edge.entry, edge.d1, m, d3);
           }
         });
       }
@@ -628,9 +628,9 @@ public class TabulationSolver<T, P> {
       }
       IUnaryFlowFunction f = null;
       if (hasCallee(returnSite)) {
-        f = flowFunctionMap.getCallToReturnFlowFunction(edge.n, returnSite);
+        f = flowFunctionMap.getCallToReturnFlowFunction(edge.target, returnSite);
       } else {
-        f = flowFunctionMap.getCallNoneToReturnFlowFunction(edge.n, returnSite);
+        f = flowFunctionMap.getCallNoneToReturnFlowFunction(edge.target, returnSite);
       }
       IntSet reached = computeFlow(edge.d2, f);
       if (DEBUG_LEVEL > 0) {
@@ -643,7 +643,7 @@ public class TabulationSolver<T, P> {
               Assertions._assert(x >= 0);
               Assertions._assert(edge.d1 >= 0);
             }
-            propagate(edge.s_p, edge.d1, returnSite, x);
+            propagate(edge.entry, edge.d1, returnSite, x);
           }
         });
       }
@@ -700,13 +700,13 @@ public class TabulationSolver<T, P> {
     return f.getSources(d2);
   }
 
-  protected PathEdge popFromWorkList() {
-    return (PathEdge) worklist.take();
+  protected PathEdge<T> popFromWorkList() {
+    return worklist.take() ;
   }
 
   private PathEdge peekFromWorkList() {
     // horrible. don't use in performance-critical
-    PathEdge result = (PathEdge) worklist.take();
+    PathEdge<T> result = worklist.take();
     worklist.insert(result);
     return result;
   }
@@ -784,7 +784,7 @@ public class TabulationSolver<T, P> {
   }
 
   protected void addToWorkList(T s_p, int i, T n, int j) {
-    worklist.insert(new PathEdge(s_p, i, n, j));
+    worklist.insert(PathEdge.createPathEdge(s_p, i, n, j));
   }
 
   protected LocalPathEdges findOrCreateLocalPathEdges(T s_p) {
@@ -816,82 +816,6 @@ public class TabulationSolver<T, P> {
       callFlowEdges.put(s_p, result);
     }
     return result;
-  }
-
-  /**
-   * @author sfink
-   * 
-   * an individual edge <s_p, d1> -> <n, d2>
-   */
-  public final class PathEdge {
-    final T s_p;
-
-    final int d1;
-
-    final T n;
-
-    final int d2;
-
-    PathEdge(T s_p, int d1, T n, int d2) {
-      this.s_p = s_p;
-      this.d1 = d1;
-      this.n = n;
-      this.d2 = d2;
-      if (DEBUG_LEVEL > 0 && Assertions.verifyAssertions) {
-        if (!supergraph.containsNode(s_p)) {
-          Assertions._assert(false, s_p.toString());
-        }
-        if (!supergraph.containsNode(n)) {
-          Assertions._assert(false, n.toString());
-        }
-      }
-    }
-
-    @Override
-    public String toString() {
-      StringBuffer result = new StringBuffer();
-      result.append("<");
-      result.append(s_p.toString());
-      result.append(",");
-      result.append(d1);
-      result.append("> -> <");
-      result.append(n.toString());
-      result.append(",");
-      result.append(d2);
-      result.append(">");
-      return result.toString();
-    }
-
-    @Override
-    public int hashCode() {
-      return s_p.hashCode() + d1 * 401 + n.hashCode() * 409 + d2 * 419;
-    }
-
-    @Override
-    public boolean equals(Object arg0) {
-      if (getClass().equals(arg0.getClass())) {
-        PathEdge that = (PathEdge) arg0;
-        return d1 == that.d1 && d2 == that.d2 && s_p.equals(that.s_p) && (n.equals(that.n));
-      } else {
-        return false;
-      }
-    }
-
-    public int getD1() {
-      return d1;
-    }
-
-    public int getD2() {
-      return d2;
-    }
-
-    public Object getSp() {
-      return s_p;
-    }
-
-    public Object getN() {
-      return n;
-    }
   }
 
   public class Result implements TabulationResult<T, P> {
@@ -1011,16 +935,14 @@ public class TabulationSolver<T, P> {
     return supergraph;
   }
 
-  protected class Worklist extends Heap {
+  protected class Worklist extends Heap<PathEdge<T>> {
 
     Worklist() {
       super(100);
     }
 
     @Override
-    protected boolean compareElements(Object elt1, Object elt2) {
-      PathEdge p1 = (PathEdge) elt1;
-      PathEdge p2 = (PathEdge) elt2;
+    protected boolean compareElements(PathEdge<T> p1, PathEdge<T> p2) {
       if (p1.d2 != p2.d2) {
         if (problem.getDomain().isWeakerThan(p1.d2, p2.d2)) {
           return true;
