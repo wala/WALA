@@ -384,7 +384,7 @@ public class Slicer {
 
     public SliceProblem(Statement s, ISDG sdg, boolean backward) {
       this.src = s;
-      SDGSupergraph forwards = new SDGSupergraph(sdg, src, backward);
+      SDGSupergraph forwards = new SDGSupergraph(sdg, backward);
       this.supergraph = backward ? BackwardsSupergraph.make(forwards) : forwards;
       f = new SliceFunctions();
     }

@@ -19,11 +19,9 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
-import com.ibm.wala.util.collections.IteratorUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
  * A wrapper around an SDG to make it look like a supergraph for tabulation.
@@ -35,18 +33,12 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   private final ISDG sdg;
 
   /**
-   * We are interested in flow to or from the following statement.
-   */
-  private final Statement srcStatement;
-
-  /**
    * Do a backward slice?
    */
   private final boolean backward;
 
-  public SDGSupergraph(ISDG sdg, Statement src, boolean backward) {
+  public SDGSupergraph(ISDG sdg, boolean backward) {
     this.sdg = sdg;
-    this.srcStatement = src;
     this.backward = backward;
   }
 
@@ -61,8 +53,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object,
-   *      java.lang.Object)
+   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#classifyEdge(java.lang.Object, java.lang.Object)
    */
   public byte classifyEdge(Statement src, Statement dest) {
     Assertions.UNREACHABLE();
@@ -124,35 +115,29 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getEntriesForProcedure(java.lang.Object)
    */
   public Statement[] getEntriesForProcedure(PDG procedure) {
-    if (procedure.equals(getMain()) && !backward) {
-      Statement[] normal = procedure.getParamCalleeStatements();
-      Statement[] result = new Statement[normal.length + 1];
-      result[0] = getMainEntry();
-      System.arraycopy(normal, 0, result, 1, normal.length);
-      return result;
-    } else {
-      return procedure.getParamCalleeStatements();
-    }
+    Statement[] normal = procedure.getParamCalleeStatements();
+    Statement[] result = new Statement[normal.length + 1];
+    result[0] = new MethodEntryStatement(procedure.getCallGraphNode());
+    System.arraycopy(normal, 0, result, 1, normal.length);
+    return result;
   }
 
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getExitsForProcedure(java.lang.Object)
    */
   public Statement[] getExitsForProcedure(PDG procedure) {
-    if (procedure.equals(getMain()) && backward) {
-      Statement[] normal = procedure.getReturnStatements();
-      Statement[] result = new Statement[normal.length + 1];
-      result[0] = getMainExit();
-      System.arraycopy(normal, 0, result, 1, normal.length);
-      return result;
-    } else {
-      return procedure.getReturnStatements();
-    }
+    Statement[] normal = procedure.getReturnStatements();
+    Statement[] result = new Statement[normal.length + 1];
+    // this is a little tricky .. for backwards problems, we may use the MethodEntryStatement as a
+    // synthetic entry for tabulation. So, we pretend that the methodEntryStatement is both a procedure
+    // entry and exit.
+    result[0] = new MethodEntryStatement(procedure.getCallGraphNode());
+    System.arraycopy(normal, 0, result, 1, normal.length);
+    return result;
   }
 
   /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlock(java.lang.Object,
-   *      int)
+   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getLocalBlock(java.lang.Object, int)
    */
   public Statement getLocalBlock(PDG procedure, int i) {
     return procedure.getNode(i);
@@ -164,31 +149,6 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   public int getLocalBlockNumber(Statement n) {
     PDG pdg = getProcOf(n);
     return pdg.getNumber(n);
-  }
-
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMain()
-   */
-  public PDG getMain() {
-    return getProcOf(srcStatement);
-  }
-
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainEntry()
-   */
-  public Statement getMainEntry() {
-    Assertions.productionAssertion(!backward, "todo: support backward");
-    return new MethodEntryStatement(srcStatement.getNode());
-  }
-
-  /*
-   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainExit()
-   */
-  public Statement getMainExit() {
-    // We pretend that sink is the "main exit" .. we don't care about
-    // flow past the sink.
-    Assertions.productionAssertion(backward, "todo: support forward");
-    return new MethodEntryStatement(srcStatement.getNode());
   }
 
   /*
@@ -408,31 +368,11 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   }
 
   public Iterator<? extends Statement> getSuccNodes(Statement N) {
-    if (backward) {
-      if (N.equals(srcStatement)) {
-        return EmptyIterator.instance();
-      } else {
-        return sdg.getSuccNodes(N);
-      }
-    } else {
-      return sdg.getSuccNodes(N);
-    }
+    return sdg.getSuccNodes(N);
   }
 
   public boolean hasEdge(Statement src, Statement dst) {
-    if (backward) {
-      if (src.equals(this.srcStatement)) {
-        return IteratorUtil.contains(getSuccNodes(src), dst);
-      } else {
-        return sdg.hasEdge(src, dst);
-      }
-    } else {
-      if (dst.equals(this.srcStatement)) {
-        return IteratorUtil.contains(getPredNodes(dst), src);
-      } else {
-        return sdg.hasEdge(src, dst);
-      }
-    }
+    return sdg.hasEdge(src, dst);
   }
 
   public void removeAllIncidentEdges(Statement node) {
@@ -480,15 +420,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
    * @see com.ibm.wala.util.graph.NumberedEdgeManager#getSuccNodeNumbers(java.lang.Object)
    */
   public IntSet getSuccNodeNumbers(Statement node) {
-    if (backward) {
-      if (node.equals(srcStatement)) {
-        return new SparseIntSet();
-      } else {
-        return sdg.getSuccNodeNumbers(node);
-      }
-    } else {
-      return sdg.getSuccNodeNumbers(node);
-    }
+    return sdg.getSuccNodeNumbers(node);
   }
 
 }
