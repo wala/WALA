@@ -193,6 +193,13 @@ public class TabulationSolver<T, P> {
   }
 
   /**
+   * Restart tabulation from a particular path edge.  Use with care.
+   */
+  public void propagate(PathEdge<T> seed) {
+    propagate(seed.entry, seed.d1, seed.target, seed.d2);
+  }
+
+  /**
    * See POPL 95 paper for this algorithm, Figure 3
    * 
    * @throws CancelException
@@ -700,7 +707,7 @@ public class TabulationSolver<T, P> {
   }
 
   protected PathEdge<T> popFromWorkList() {
-    return worklist.take() ;
+    return worklist.take();
   }
 
   private PathEdge peekFromWorkList() {

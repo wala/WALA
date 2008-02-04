@@ -168,8 +168,7 @@ public class Slicer {
    * 
    * @throws CancelException
    */
-  public static Collection<Statement> computeBackwardSlice(SDG sdg, Statement s)
-      throws IllegalArgumentException, CancelException {
+  public static Collection<Statement> computeBackwardSlice(SDG sdg, Statement s) throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, Collections.singleton(s), true);
   }
 
@@ -178,8 +177,7 @@ public class Slicer {
    * 
    * @throws CancelException
    */
-  public static Collection<Statement> computeForwardSlice(SDG sdg, Statement s)
-      throws IllegalArgumentException, CancelException {
+  public static Collection<Statement> computeForwardSlice(SDG sdg, Statement s) throws IllegalArgumentException, CancelException {
     return computeSlice(sdg, Collections.singleton(s), false);
   }
 
@@ -188,8 +186,8 @@ public class Slicer {
    * 
    * @throws CancelException
    */
-  public static Collection<Statement> computeBackwardSlice(SDG sdg, Collection<Statement> ss)
-      throws IllegalArgumentException, CancelException {
+  public static Collection<Statement> computeBackwardSlice(SDG sdg, Collection<Statement> ss) throws IllegalArgumentException,
+      CancelException {
     return computeSlice(sdg, ss, true);
   }
 
@@ -206,8 +204,14 @@ public class Slicer {
 
   /**
    * Main driver logic.
+   * 
+   * @param sdg governing system dependence graph
+   * @param roots set of roots to slice from
+   * @param backward do a backwards slice?
+   * @return the {@link Statement}s found by the slicer
+   * @throws CancelException
    */
-  public Collection<Statement> slice(SDG sdg, Collection<Statement> ss, boolean backward) throws CancelException {
+  public Collection<Statement> slice(SDG sdg, Collection<Statement> roots, boolean backward) throws CancelException {
 
     if (sdg == null) {
       throw new IllegalArgumentException("sdg cannot be null");
@@ -216,13 +220,14 @@ public class Slicer {
     Collection<Statement> rootsConsidered = HashSetFactory.make();
     Stack<Statement> workList = new Stack<Statement>();
     Collection<Statement> result = HashSetFactory.make();
-    for (Statement s : ss) {
+    for (Statement s : roots) {
       workList.push(s);
     }
+    SliceProblem p = makeSliceProblem(roots, sdg, backward);
+
     while (!workList.isEmpty()) {
       Statement root = workList.pop();
       rootsConsidered.add(root);
-      SliceProblem p = makeSliceProblem(root, sdg, backward);
 
       if (VERBOSE) {
         System.err.println("worklist now: " + workList.size());
@@ -231,6 +236,9 @@ public class Slicer {
       }
 
       TabulationSolver<Statement, PDG> solver = TabulationSolver.make(p);
+      if (!roots.contains(root)) {
+        solver.propagate(PathEdge.createPathEdge(new MethodEntryStatement(root.getNode()), 0, root, 0));
+      }
       TabulationResult<Statement, PDG> tr = solver.solve();
 
       if (DEBUG) {
@@ -269,8 +277,8 @@ public class Slicer {
    * Return an object which encapsulates the tabulation logic for the slice problem. Subclasses can override this method
    * to implement special semantics.
    */
-  protected SliceProblem makeSliceProblem(Statement root, ISDG sdgView, boolean backward) {
-    return new SliceProblem(root, sdgView, backward);
+  protected SliceProblem makeSliceProblem(Collection<Statement> roots, ISDG sdgView, boolean backward) {
+    return new SliceProblem(roots, sdgView, backward);
   }
 
   public static Collection<Statement> computeNewRoots(Collection<Statement> slice, Statement root,
@@ -376,14 +384,14 @@ public class Slicer {
    */
   public static class SliceProblem implements TabulationProblem<Statement, PDG> {
 
-    private final Statement src;
+    private final Collection<Statement> roots;
 
     private final ISupergraph<Statement, PDG> supergraph;
 
     private final IFlowFunctionMap<Statement> f;
 
-    public SliceProblem(Statement s, ISDG sdg, boolean backward) {
-      this.src = s;
+    public SliceProblem(Collection<Statement> roots, ISDG sdg, boolean backward) {
+      this.roots = roots;
       SDGSupergraph forwards = new SDGSupergraph(sdg, backward);
       this.supergraph = backward ? BackwardsSupergraph.make(forwards) : forwards;
       f = new SliceFunctions();
@@ -411,7 +419,6 @@ public class Slicer {
       return null;
     }
 
-
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getSupergraph()
      */
@@ -420,8 +427,12 @@ public class Slicer {
     }
 
     public Collection<PathEdge<Statement>> initialSeeds() {
-      PathEdge<Statement> seed = PathEdge.createPathEdge(new MethodEntryStatement(src.getNode()), 0, src, 0);
-      return Collections.singleton(seed);
+      Collection<PathEdge<Statement>> result = HashSetFactory.make();
+      for (Statement st : roots) {
+        PathEdge<Statement> seed = PathEdge.createPathEdge(new MethodEntryStatement(st.getNode()), 0, st, 0);
+        return Collections.singleton(seed);
+      }
+      return result;
     }
   }
 
