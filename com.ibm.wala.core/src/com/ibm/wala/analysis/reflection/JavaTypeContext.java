@@ -76,4 +76,8 @@ public class JavaTypeContext implements Context {
     }
   }
 
+  public TypeAbstraction getType() {
+    return type;
+  }
+
 }

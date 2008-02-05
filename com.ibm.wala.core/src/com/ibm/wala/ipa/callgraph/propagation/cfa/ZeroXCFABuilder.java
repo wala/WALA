@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
-import com.ibm.wala.analysis.reflection.FactoryBypassInterpreter;
+import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -41,7 +41,7 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
     setContextSelector(contextSelector);
 
     SSAContextInterpreter c = new DefaultSSAInterpreter(options, cache);
-    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, getAnalysisCache(), reflect), c);
+    c = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(options, getAnalysisCache(), reflect), c);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, c);
     setContextInterpreter(contextInterpreter);
 

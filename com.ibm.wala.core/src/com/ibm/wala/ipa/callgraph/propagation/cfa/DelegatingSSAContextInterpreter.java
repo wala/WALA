@@ -69,10 +69,7 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
 
   @Override
   public boolean understands(CGNode node) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(B.understands(node));
-    }
-    return true;
+    return A.understands(node) || B.understands(node);
   }
 
   @Override

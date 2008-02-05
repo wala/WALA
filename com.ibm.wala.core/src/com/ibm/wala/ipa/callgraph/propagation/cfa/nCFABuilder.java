@@ -11,7 +11,7 @@
 
 package com.ibm.wala.ipa.callgraph.propagation.cfa;
 
-import com.ibm.wala.analysis.reflection.FactoryBypassInterpreter;
+import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
@@ -24,7 +24,6 @@ import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 
  * nCFA Call graph builder
  * 
  * @author Julian Dolby (dolby@us.ibm.com)
@@ -47,7 +46,7 @@ public class nCFABuilder extends SSAPropagationCallGraphBuilder {
     setContextSelector(contextSelector);
 
     SSAContextInterpreter defI = new DefaultSSAInterpreter(options, cache);
-    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, getAnalysisCache(), reflect), defI);
+    defI = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(options, getAnalysisCache(), reflect), defI);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     setContextInterpreter(contextInterpreter);
   }

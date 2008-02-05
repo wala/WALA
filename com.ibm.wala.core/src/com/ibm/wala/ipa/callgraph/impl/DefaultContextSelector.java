@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.impl;
 
-import com.ibm.wala.analysis.reflection.FactoryContextSelector;
+import com.ibm.wala.analysis.reflection.ReflectionContextSelector;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -22,8 +22,8 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 
- * Default object to control context-insensitive context selection
+ * Default object to control context-insensitive context selection,
+ * This includes reflection logic.
  * 
  * @author sfink
  */
@@ -31,14 +31,10 @@ public class DefaultContextSelector implements ContextSelector {
 
   private final ContextSelector delegate;
 
-  /**
-   * @param cha
-   * @param methodTargetSelector
-   */
   public DefaultContextSelector(IClassHierarchy cha, MethodTargetSelector methodTargetSelector) {
-    FactoryContextSelector R = new FactoryContextSelector(cha, methodTargetSelector);
-    ContextInsensitiveSelector S = new ContextInsensitiveSelector();
-    ContextSelector s = new DelegatingContextSelector(R, S);
+    ReflectionContextSelector r = ReflectionContextSelector.createReflectionContextSelector(cha, methodTargetSelector);
+    ContextInsensitiveSelector ci = new ContextInsensitiveSelector();
+    ContextSelector s = new DelegatingContextSelector(r, ci);
     delegate = new DelegatingContextSelector(new CloneContextSelector(),s);
   }
 

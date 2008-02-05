@@ -27,8 +27,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  *
  * @author sfink
  */
-public class FactoryContextSelector implements ContextSelector {
-
+class FactoryContextSelector implements ContextSelector {
 
   private final MethodTargetSelector methodTargetSelector;
   

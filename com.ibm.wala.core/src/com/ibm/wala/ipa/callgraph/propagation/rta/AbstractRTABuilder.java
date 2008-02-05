@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.analysis.reflection.FactoryBypassInterpreter;
+import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -430,7 +430,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       ReflectionSpecification reflect) {
 
     SSAContextInterpreter defI = new DefaultSSAInterpreter(getOptions(), getAnalysisCache());
-    defI = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(getOptions(),  getAnalysisCache(), reflect),
+    defI = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(getOptions(),  getAnalysisCache(), reflect),
         defI);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     return contextInterpreter;

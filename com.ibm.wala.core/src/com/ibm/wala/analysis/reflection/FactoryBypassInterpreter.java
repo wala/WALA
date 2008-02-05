@@ -72,7 +72,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * 
  * @author sfink
  */
-public class FactoryBypassInterpreter implements RTAContextInterpreter, SSAContextInterpreter {
+class FactoryBypassInterpreter implements RTAContextInterpreter, SSAContextInterpreter {
 
   private static final boolean DEBUG = false;
 
