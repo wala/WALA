@@ -496,6 +496,7 @@ public class PDG implements NumberedGraph<Statement> {
       case HEAP_PARAM_CALLER:
       case HEAP_PARAM_CALLEE:
       case METHOD_ENTRY:
+      case METHOD_EXIT:
         // do nothing
         break;
       default:
@@ -638,6 +639,7 @@ public class PDG implements NumberedGraph<Statement> {
       }
       case HEAP_PARAM_CALLEE:
       case METHOD_ENTRY:
+      case METHOD_EXIT:
         // do nothing .. there are no incoming edges
         break;
       default:
@@ -796,6 +798,7 @@ public class PDG implements NumberedGraph<Statement> {
     createReturnStatements();
 
     delegate.addNode(new MethodEntryStatement(node));
+    delegate.addNode(new MethodExitStatement(node));
   }
 
   /**

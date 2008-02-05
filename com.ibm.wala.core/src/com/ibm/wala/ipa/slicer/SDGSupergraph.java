@@ -128,10 +128,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   public Statement[] getExitsForProcedure(PDG procedure) {
     Statement[] normal = procedure.getReturnStatements();
     Statement[] result = new Statement[normal.length + 1];
-    // this is a little tricky .. for backwards problems, we may use the MethodEntryStatement as a
-    // synthetic entry for tabulation. So, we pretend that the methodEntryStatement is both a procedure
-    // entry and exit.
-    result[0] = new MethodEntryStatement(procedure.getCallGraphNode());
+    result[0] = new MethodExitStatement(procedure.getCallGraphNode());
     System.arraycopy(normal, 0, result, 1, normal.length);
     return result;
   }

@@ -12,23 +12,22 @@ package com.ibm.wala.ipa.slicer;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Stack;
 
 import com.ibm.wala.dataflow.IFDS.BackwardsSupergraph;
+import com.ibm.wala.dataflow.IFDS.IFlowFunction;
 import com.ibm.wala.dataflow.IFDS.IFlowFunctionMap;
 import com.ibm.wala.dataflow.IFDS.IMergeFunction;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
+import com.ibm.wala.dataflow.IFDS.PartiallyBalancedTabulation;
+import com.ibm.wala.dataflow.IFDS.PartiallyBalancedTabulationProblem;
 import com.ibm.wala.dataflow.IFDS.PathEdge;
 import com.ibm.wala.dataflow.IFDS.TabulationDomain;
-import com.ibm.wala.dataflow.IFDS.TabulationProblem;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
-import com.ibm.wala.dataflow.IFDS.TabulationSolver;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
@@ -207,49 +206,13 @@ public class Slicer {
    * @throws CancelException
    */
   public Collection<Statement> slice(SDG sdg, Collection<Statement> roots, boolean backward) throws CancelException {
-
     if (sdg == null) {
       throw new IllegalArgumentException("sdg cannot be null");
     }
 
-    Collection<Statement> rootsConsidered = HashSetFactory.make();
-    Stack<Statement> workList = new Stack<Statement>();
-    Collection<Statement> result = HashSetFactory.make();
-    for (Statement s : roots) {
-      workList.push(s);
-    }
     SliceProblem p = makeSliceProblem(roots, sdg, backward);
-    TabulationSolver<Statement, PDG> solver = TabulationSolver.make(p);
-    TabulationResult<Statement, PDG> tr = null;
+    TabulationResult<Statement, PDG> tr = PartiallyBalancedTabulation.tabulate(p);
 
-    while (!workList.isEmpty()) {
-      Statement root = workList.pop();
-      rootsConsidered.add(root);
-
-      if (VERBOSE) {
-        System.err.println("worklist now: " + workList.size());
-        System.err.println("slice size: " + result.size());
-        System.err.println("Tabulate for " + root);
-      }
-
-      if (!roots.contains(root)) {
-        solver.propagate(PathEdge.createPathEdge(new MethodEntryStatement(root.getNode()), 0, root, 0));
-      }
-      tr = solver.solve();
-
-      if (DEBUG) {
-        System.err.println("RESULT");
-        System.err.println(tr);
-      }
-      if (VERBOSE) {
-        System.err.println("Compute new roots...");
-      }
-
-      Collection<Statement> newRoots = computeNewRoots(tr.getSupergraphNodesReached(), root, rootsConsidered, sdg, backward);
-      for (Statement st : newRoots) {
-        workList.push(st);
-      }
-    }
     Collection<Statement> slice = tr.getSupergraphNodesReached();
 
     if (VERBOSE) {
@@ -267,93 +230,6 @@ public class Slicer {
     return new SliceProblem(roots, sdgView, backward);
   }
 
-  public static Collection<Statement> computeNewRoots(Collection<Statement> slice, Statement root,
-      Collection<Statement> rootsConsidered, ISDG sdg, boolean backward) {
-    if (backward) {
-      return computeNewBackwardRoots(slice, root, rootsConsidered, sdg);
-    } else {
-      return computeNewForwardRoots(slice, root, rootsConsidered, sdg);
-    }
-  }
-
-  /**
-   * TODO: generalize this for any unbalanced parentheses problems
-   */
-  private static Collection<Statement> computeNewForwardRoots(Collection<Statement> slice, Statement root,
-      Collection<Statement> rootsConsidered, ISDG sdg) {
-    Collection<Statement> result = HashSetFactory.make();
-
-    for (Statement st : slice) {
-      if (st.getNode().equals(root.getNode())) {
-        switch (st.getKind()) {
-        case HEAP_RET_CALLEE:
-        case NORMAL_RET_CALLEE:
-        case EXC_RET_CALLEE:
-          Collection<Statement> succs = Iterator2Collection.toCollection(sdg.getSuccNodes(st));
-          succs.removeAll(slice);
-          for (Statement s : succs) {
-            // s is a statement that is a successor of a return statement to the
-            // root
-            // method of the slice.
-            // normally we expect s to be in the slice ... since it wasn't, it
-            // must have been ruled out by balanced parens since we "magically"
-            // entered the root method. So, consider s a new "magic root"
-            if (!rootsConsidered.contains(s)) {
-              if (VERBOSE) {
-                System.err.println("Adding root " + s);
-              }
-              result.add(s);
-            }
-          }
-          break;
-        default:
-          // do nothing
-          break;
-        }
-      }
-    }
-    return result;
-  }
-
-  /**
-   * TODO: generalize this for any unbalanced parentheses problems
-   */
-  private static Collection<Statement> computeNewBackwardRoots(Collection<Statement> slice, Statement root,
-      Collection<Statement> rootsConsidered, ISDG sdg) {
-    Collection<Statement> result = HashSetFactory.make();
-
-    for (Statement st : slice) {
-      if (st.getNode().equals(root.getNode())) {
-        switch (st.getKind()) {
-        case HEAP_PARAM_CALLEE:
-        case PARAM_CALLEE:
-        case METHOD_ENTRY:
-          Collection<Statement> preds = Iterator2Collection.toCollection(sdg.getPredNodes(st));
-          preds.removeAll(slice);
-          for (Statement p : preds) {
-            // p is a statement that is a predecessor of an incoming parameter
-            // to the root
-            // method of the slice.
-            // normally we expect p to be in the slice ... since it wasn't, it
-            // must have been ruled out by balanced parens since we "magically"
-            // entered the root method. So, consider p a new "magic root"
-            if (!rootsConsidered.contains(p)) {
-              if (VERBOSE) {
-                System.err.println("Adding root " + p);
-              }
-              result.add(p);
-            }
-          }
-          break;
-        default:
-          // do nothing
-          break;
-        }
-      }
-    }
-    return result;
-  }
-
   /**
    * @param s a statement of interest
    * @return the backward slice of s.
@@ -368,16 +244,19 @@ public class Slicer {
    * Tabulation problem representing slicing
    * 
    */
-  public static class SliceProblem implements TabulationProblem<Statement, PDG> {
+  public static class SliceProblem implements PartiallyBalancedTabulationProblem<Statement, PDG> {
 
     private final Collection<Statement> roots;
 
     private final ISupergraph<Statement, PDG> supergraph;
 
-    private final IFlowFunctionMap<Statement> f;
+    private final SliceFunctions f;
+
+    private final boolean backward;
 
     public SliceProblem(Collection<Statement> roots, ISDG sdg, boolean backward) {
       this.roots = roots;
+      this.backward = backward;
       SDGSupergraph forwards = new SDGSupergraph(sdg, backward);
       this.supergraph = backward ? BackwardsSupergraph.make(forwards) : forwards;
       f = new SliceFunctions();
@@ -413,12 +292,29 @@ public class Slicer {
     }
 
     public Collection<PathEdge<Statement>> initialSeeds() {
-      Collection<PathEdge<Statement>> result = HashSetFactory.make();
-      for (Statement st : roots) {
-        PathEdge<Statement> seed = PathEdge.createPathEdge(new MethodEntryStatement(st.getNode()), 0, st, 0);
-        return Collections.singleton(seed);
+      if (backward) {
+        Collection<PathEdge<Statement>> result = HashSetFactory.make();
+        for (Statement st : roots) {
+          PathEdge<Statement> seed = PathEdge.createPathEdge(new MethodExitStatement(st.getNode()), 0, st, 0);
+          result.add(seed);
+        }
+        return result;
+      } else {
+        Collection<PathEdge<Statement>> result = HashSetFactory.make();
+        for (Statement st : roots) {
+          PathEdge<Statement> seed = PathEdge.createPathEdge(new MethodEntryStatement(st.getNode()), 0, st, 0);
+          result.add(seed);
+        }
+        return result;
       }
-      return result;
+    }
+
+    public Statement getFakeEntry(Statement node) {
+      return backward ? new MethodExitStatement(node.getNode()) : new MethodEntryStatement(node.getNode());
+    }
+
+    public IFlowFunction getReturnFlowFunction(Statement src, Statement dest) {
+      return f.getReturnFlowFunction(src, dest);
     }
   }
 

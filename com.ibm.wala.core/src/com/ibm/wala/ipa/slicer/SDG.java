@@ -355,11 +355,11 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
             }
           }
         }
-        if (!cOptions.equals(ControlDependenceOptions.NONE)) {
-          Statement s = new MethodEntryStatement(N.getNode());
-          addNode(s);
-          result.add(s);
-        }
+//        if (!cOptions.equals(ControlDependenceOptions.NONE)) {
+//          Statement s = new MethodEntryStatement(N.getNode());
+//          addNode(s);
+//          result.add(s);
+//        }
         return result.iterator();
       }
       case HEAP_PARAM_CALLEE: {
@@ -382,11 +382,11 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
             }
           }
         }
-        if (!cOptions.equals(ControlDependenceOptions.NONE)) {
-          Statement s = new MethodEntryStatement(N.getNode());
-          addNode(s);
-          result.add(s);
-        }
+//        if (!cOptions.equals(ControlDependenceOptions.NONE)) {
+//          Statement s = new MethodEntryStatement(N.getNode());
+//          addNode(s);
+//          result.add(s);
+//        }
         return result.iterator();
       }
       case METHOD_ENTRY:
@@ -448,6 +448,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       case HEAP_PARAM_CALLEE:
       case HEAP_RET_CALLER:
       case METHOD_ENTRY:
+      case METHOD_EXIT:
         return getPDG(N.getNode()).getSuccNodes(N);
       case EXC_RET_CALLEE: {
         Collection<Statement> result = HashSetFactory.make(5);

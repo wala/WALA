@@ -49,4 +49,9 @@ public interface TabulationResult<T, P> {
    */
   public IntSet getSummaryTargets(T n1, int d1, T n2);
 
+  /**
+   * @return the set of all {@link PathEdge}s that were used as seeds during the tabulation.
+   */
+  public Collection<PathEdge<T>> getSeeds();
+
 }

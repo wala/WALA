@@ -366,6 +366,7 @@ public class HeapReachingDefs {
       case PI:
       case CATCH:
       case METHOD_ENTRY:
+      case METHOD_EXIT:
         return OrdinalSet.empty();
       case HEAP_PARAM_CALLEE:
         // no statements in this method will def the heap being passed in
@@ -425,6 +426,7 @@ public class HeapReachingDefs {
     case PHI:
     case PI:
     case METHOD_ENTRY:
+    case METHOD_EXIT:
     case CATCH:
       // doesn't mod anything in the heap.
       return Collections.emptySet();

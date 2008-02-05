@@ -31,35 +31,42 @@ public class IdentityFlowFunctions<T> implements IFlowFunctionMap<T> {
   /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getNormalFlowFunction(java.lang.Object, java.lang.Object)
    */
-  public IUnaryFlowFunction getNormalFlowFunction(Object src, Object dest) {
+  public IUnaryFlowFunction getNormalFlowFunction(T src, T dest) {
     return IdentityFlowFunction.identity();
   }
 
   /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallFlowFunction(java.lang.Object, java.lang.Object)
    */
-  public IUnaryFlowFunction getCallFlowFunction(Object src, Object dest) {
+  public IUnaryFlowFunction getCallFlowFunction(T src, T dest) {
     return IdentityFlowFunction.identity();
   }
 
   /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getReturnFlowFunction(java.lang.Object, java.lang.Object, java.lang.Object)
    */
-  public IFlowFunction getReturnFlowFunction(Object call, Object src, Object dest) {
+  public IFlowFunction getReturnFlowFunction(T call, T src, T dest) {
+    return IdentityFlowFunction.identity();
+  }
+  
+  /* 
+   * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getReturnFlowFunction(java.lang.Object, java.lang.Object, java.lang.Object)
+   */
+  public IFlowFunction getReturnFlowFunction(T src, T dest) {
     return IdentityFlowFunction.identity();
   }
 
   /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallToReturnFlowFunction(java.lang.Object, java.lang.Object)
    */
-  public IUnaryFlowFunction getCallToReturnFlowFunction(Object src, Object dest) {
+  public IUnaryFlowFunction getCallToReturnFlowFunction(T src, T dest) {
     return IdentityFlowFunction.identity();
   }
 
   /* 
    * @see com.ibm.wala.dataflow.IFDS.IFlowFunctionMap#getCallNoneToReturnFlowFunction(java.lang.Object, java.lang.Object)
    */
-  public IUnaryFlowFunction getCallNoneToReturnFlowFunction(Object src, Object dest) {
+  public IUnaryFlowFunction getCallNoneToReturnFlowFunction(T src, T dest) {
     return IdentityFlowFunction.identity();
   }
 

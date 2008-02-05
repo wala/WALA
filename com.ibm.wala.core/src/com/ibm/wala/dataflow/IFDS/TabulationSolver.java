@@ -131,6 +131,11 @@ public class TabulationSolver<T, P> {
    * 
    */
   final protected Map<P, LocalSummaryEdges> summaryEdges = HashMapFactory.make();
+  
+  /**
+   * the set of all {@link PathEdge}s that were used as seeds during the tabulation.
+   */
+  private final Collection<PathEdge<T>> seeds = HashSetFactory.make();
 
   /**
    * The worklist
@@ -188,6 +193,7 @@ public class TabulationSolver<T, P> {
    */
   protected void initialize() {
     for (PathEdge<T> seed : problem.initialSeeds()) {
+      seeds.add(seed);
       propagate(seed.entry, seed.d1, seed.target, seed.d2);
     }
   }
@@ -195,7 +201,8 @@ public class TabulationSolver<T, P> {
   /**
    * Restart tabulation from a particular path edge.  Use with care.
    */
-  public void propagate(PathEdge<T> seed) {
+  public void addSeed(PathEdge<T> seed) {
+    seeds.add(seed);
     propagate(seed.entry, seed.d1, seed.target, seed.d2);
   }
 
@@ -932,6 +939,10 @@ public class TabulationSolver<T, P> {
       int num2 = supergraph.getLocalBlockNumber(n2);
       return summaries.getSummaryEdges(num1, num2, d1);
     }
+
+    public Collection<PathEdge<T>> getSeeds() {
+      return TabulationSolver.this.getSeeds();
+    }
   }
 
   /**
@@ -975,5 +986,9 @@ public class TabulationSolver<T, P> {
 
   public TabulationProblem<T, P> getProblem() {
     return problem;
+  }
+
+  public Collection<PathEdge<T>> getSeeds() {
+    return Collections.unmodifiableCollection(seeds);
   }
 }

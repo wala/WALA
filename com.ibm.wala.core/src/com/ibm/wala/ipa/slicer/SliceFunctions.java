@@ -25,7 +25,7 @@ import com.ibm.wala.util.debug.Assertions;
 public class SliceFunctions implements IFlowFunctionMap<Statement> {
 
   public IUnaryFlowFunction getCallFlowFunction(Statement src, Statement dest) {
-    return ReachabilityFunctions.singleton().getCallFlowFunction(src, dest);
+    return ReachabilityFunctions.createReachabilityFunctions().getCallFlowFunction(src, dest);
   }
 
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(Statement src, Statement dest) {
@@ -65,15 +65,19 @@ public class SliceFunctions implements IFlowFunctionMap<Statement> {
   }
 
   public IUnaryFlowFunction getCallToReturnFlowFunction(Statement src, Statement dest) {
-    return ReachabilityFunctions.singleton().getCallToReturnFlowFunction(src, dest);
+    return ReachabilityFunctions.createReachabilityFunctions().getCallToReturnFlowFunction(src, dest);
   }
 
   public IUnaryFlowFunction getNormalFlowFunction(Statement src, Statement dest) {
-    return ReachabilityFunctions.singleton().getNormalFlowFunction(src, dest);
+    return ReachabilityFunctions.createReachabilityFunctions().getNormalFlowFunction(src, dest);
   }
 
   public IFlowFunction getReturnFlowFunction(Statement call, Statement src, Statement dest) {
-    return ReachabilityFunctions.singleton().getReturnFlowFunction(call, src, dest);
+    return ReachabilityFunctions.createReachabilityFunctions().getReturnFlowFunction(call, src, dest);
+  }
+  
+  public IFlowFunction getReturnFlowFunction(Statement src, Statement dest) {
+    return ReachabilityFunctions.createReachabilityFunctions().getReturnFlowFunction(src, dest);
   }
 
 }
