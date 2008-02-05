@@ -12,6 +12,7 @@ package com.ibm.wala.core.tests.callGraph;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.core.tests.util.WalaTestCase;
@@ -19,8 +20,13 @@ import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
@@ -38,6 +44,9 @@ public class ReflectionTest extends WalaTestCase {
     justThisTest(ReflectionTest.class);
   }
 
+  /**
+   * test that when analyzing Reflect1.main(), there is no warning about "Integer".
+   */
   public void testReflect1() throws WalaException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -55,6 +64,23 @@ public class ReflectionTest extends WalaTestCase {
         assertTrue(w.toString(), false);
       }
     }
-   
   }
+  
+  /**
+   * Test that when analyzing reflect2, the call graph includes a node for java.lang.Integer.<clinit>.
+   * This should be forced by the call for Class.forName("java.lang.Integer").
+   */
+  public void testReflect2() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.REFLECT2_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(),cha, scope, false);
+    
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Integer");
+    MethodReference mr = MethodReference.findOrCreate(tr, "<clinit>", "()V");
+    Set<CGNode> nodes = cg.getNodes(mr);
+    assertFalse(nodes.isEmpty());
+  }
+
 }
