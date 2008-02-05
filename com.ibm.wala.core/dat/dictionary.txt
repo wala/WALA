@@ -143,3 +143,4 @@ yahave
 factoid
 offline
 spec
+factoids
