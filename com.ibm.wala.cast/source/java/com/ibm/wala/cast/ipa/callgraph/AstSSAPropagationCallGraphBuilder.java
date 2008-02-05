@@ -14,10 +14,22 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
-import com.ibm.wala.analysis.reflection.FactoryBypassInterpreter;
+import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
 import com.ibm.wala.cast.ipa.callgraph.AstCallGraph.AstCGNode;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys.ScopeMappingInstanceKey;
-import com.ibm.wala.cast.ir.ssa.*;
+import com.ibm.wala.cast.ir.ssa.AbstractLexicalInvoke;
+import com.ibm.wala.cast.ir.ssa.AstAssertInstruction;
+import com.ibm.wala.cast.ir.ssa.AstEchoInstruction;
+import com.ibm.wala.cast.ir.ssa.AstGlobalRead;
+import com.ibm.wala.cast.ir.ssa.AstGlobalWrite;
+import com.ibm.wala.cast.ir.ssa.AstInstructionVisitor;
+import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
+import com.ibm.wala.cast.ir.ssa.AstLexicalRead;
+import com.ibm.wala.cast.ir.ssa.AstLexicalWrite;
+import com.ibm.wala.cast.ir.ssa.EachElementGetInstruction;
+import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
+import com.ibm.wala.cast.ir.ssa.NonExceptingThrowInstruction;
+import com.ibm.wala.cast.ir.ssa.SSAConversion;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory.AstIR;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
@@ -100,7 +112,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     SSAContextInterpreter c = new DefaultSSAInterpreter(options, getAnalysisCache());
     c = new DelegatingSSAContextInterpreter(new AstContextInsensitiveSSAContextInterpreter(options, getAnalysisCache()), c);
 
-    c = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, getAnalysisCache(), reflect), c);
+    c = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(options, getAnalysisCache(), reflect), c);
 
     if (appContextInterpreter == null)
       return c;
