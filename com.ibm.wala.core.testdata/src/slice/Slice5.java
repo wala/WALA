@@ -11,9 +11,7 @@
 package slice;
 
 public class Slice5 {
-  /**
-   * @param args
-   */
+
   public static void main(String[] args) {
     int x = baz();
     bar(x);
