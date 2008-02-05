@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.slicer;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -80,8 +81,6 @@ public class PDG implements NumberedGraph<Statement> {
   private final static boolean VERBOSE = false;
 
   private final CGNode node;
-
-  private Map<SSAInstruction, Integer> instructionIndices;
 
   private Statement[] paramCalleeStatements;
 
@@ -159,18 +158,26 @@ public class PDG implements NumberedGraph<Statement> {
     this.ignoreAllocHeapDefs = ignoreAllocHeapDefs;
   }
 
+  /**
+   * WARNING: Since we're using a {@link HashMap} of {@link SSAInstruction}s, and equals() of {@link SSAInstruction}
+   * assumes a canonical representative for each instruction, we <bf>must</bf> ensure that we use the same IR object
+   * throughout initialization!!
+   */
   private void populate() {
     if (!isPopulated) {
+      // ensure that we keep the single, canonical IR live throughout initialization, while the instructionIndices map is live.
+      IR ir = node.getIR();
       isPopulated = true;
-      instructionIndices = computeInstructionIndices(node.getIR());
-      createNodes(ref, cOptions);
-      createScalarEdges(cOptions);
+      
+      Map<SSAInstruction, Integer> instructionIndices = computeInstructionIndices(ir);
+      createNodes(ref, cOptions, ir);
+      createScalarEdges(cOptions, ir, instructionIndices);
     }
   }
 
-  private void createScalarEdges(ControlDependenceOptions cOptions) {
-    createScalarDataDependenceEdges();
-    createControlDependenceEdges(cOptions);
+  private void createScalarEdges(ControlDependenceOptions cOptions, IR ir, Map<SSAInstruction, Integer> instructionIndices) {
+    createScalarDataDependenceEdges(ir, instructionIndices);
+    createControlDependenceEdges(cOptions, ir, instructionIndices);
   }
 
   /**
@@ -198,12 +205,10 @@ public class PDG implements NumberedGraph<Statement> {
   /**
    * Create all control dependence edges in this PDG.
    */
-  private void createControlDependenceEdges(ControlDependenceOptions cOptions) {
+  private void createControlDependenceEdges(ControlDependenceOptions cOptions, IR ir,Map<SSAInstruction, Integer> instructionIndices) {
     if (cOptions.equals(ControlDependenceOptions.NONE)) {
       return;
     }
-    IR ir;
-    ir = node.getIR();
     if (ir == null) {
       return;
     }
@@ -237,7 +242,7 @@ public class PDG implements NumberedGraph<Statement> {
           // should have no control dependent successors.
           // leave src null.
         } else {
-          src = ssaInstruction2Statement(s);
+          src = ssaInstruction2Statement(s, ir, instructionIndices);
           // add edges from call statements to parameter passing and return
           // SJF: Alexey and I think that we should just define ParamStatements
           // as
@@ -266,7 +271,7 @@ public class PDG implements NumberedGraph<Statement> {
           for (Iterator<? extends IInstruction> it2 = bb2.iterator(); it2.hasNext();) {
             SSAInstruction st = (SSAInstruction) it2.next();
             if (st != null) {
-              Statement dest = ssaInstruction2Statement(st);
+              Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
               assert src != null;
               delegate.addEdge(src, dest);
             }
@@ -284,7 +289,7 @@ public class PDG implements NumberedGraph<Statement> {
         // this is control dependent on the method entry.
         for (IInstruction s : bb) {
           SSAInstruction st = (SSAInstruction) s;
-          Statement dest = ssaInstruction2Statement(st);
+          Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
           delegate.addEdge(methodEntry, dest);
         }
       }
@@ -308,17 +313,18 @@ public class PDG implements NumberedGraph<Statement> {
    * @param pa
    * @param mod
    */
-  private void createScalarDataDependenceEdges() {
+  private void createScalarDataDependenceEdges(IR ir, Map<SSAInstruction, Integer> instructionIndices) {
     if (dOptions.equals(DataDependenceOptions.NONE)) {
       return;
     }
 
-    IR ir = node.getIR();
     if (ir == null) {
       return;
     }
 
-    DefUse DU = node.getDU();
+    // this is tricky .. I'm explicitly creating a new DefUse to make sure it refers to the instructions we need from 
+    // the "one true" ir of the moment.
+    DefUse DU = new DefUse(ir);
     SSAInstruction[] instructions = ir.getInstructions();
 
     //
@@ -331,7 +337,7 @@ public class PDG implements NumberedGraph<Statement> {
           SSACFG.ExceptionHandlerBasicBlock ehbb = (SSACFG.ExceptionHandlerBasicBlock) bb;
 
           if (ehbb.getCatchInstruction() != null) {
-            Statement c = ssaInstruction2Statement(ehbb.getCatchInstruction());
+            Statement c = ssaInstruction2Statement(ehbb.getCatchInstruction(), ir, instructionIndices);
 
             for (ISSABasicBlock pb : ir.getControlFlowGraph().getExceptionalPredecessors(ehbb)) {
               SSAInstruction pi = instructions[pb.getLastInstructionIndex()];
@@ -340,7 +346,7 @@ public class PDG implements NumberedGraph<Statement> {
               if (pi instanceof SSAAbstractInvokeInstruction) {
                 delegate.addEdge(new ExceptionalReturnCaller(node, pb.getLastInstructionIndex()), c);
               } else if (pi instanceof SSAAbstractThrowInstruction) {
-                delegate.addEdge(ssaInstruction2Statement(pi), c);
+                delegate.addEdge(ssaInstruction2Statement(pi, ir, instructionIndices), c);
               }
             }
           }
@@ -391,7 +397,7 @@ public class PDG implements NumberedGraph<Statement> {
                   }
                 }
               }
-              Statement u = ssaInstruction2Statement(use);
+              Statement u = ssaInstruction2Statement(use, ir, instructionIndices);
               delegate.addEdge(s, u);
             }
           }
@@ -427,7 +433,7 @@ public class PDG implements NumberedGraph<Statement> {
               }
             }
           }
-          Statement u = ssaInstruction2Statement(use);
+          Statement u = ssaInstruction2Statement(use, ir, instructionIndices);
           delegate.addEdge(s, u);
         }
         break;
@@ -482,7 +488,7 @@ public class PDG implements NumberedGraph<Statement> {
                   delegate.addEdge(st, pac);
                 }
               } else {
-                Statement ds = ssaInstruction2Statement(d);
+                Statement ds = ssaInstruction2Statement(d, ir, instructionIndices);
                 delegate.addEdge(ds, pac);
               }
             }
@@ -578,6 +584,7 @@ public class PDG implements NumberedGraph<Statement> {
       return;
     }
 
+    // It's OK to create a new IR here; we're not keeping any hashing live up to this point
     IR ir = node.getIR();
     if (ir == null) {
       return;
@@ -710,14 +717,16 @@ public class PDG implements NumberedGraph<Statement> {
   }
 
   /**
-   * Wrap an SSAInstruction in a Statement
+   * Wrap an {@link SSAInstruction} in a {@link Statement}. WARNING: Since we're using a {@link HashMap} of
+   * {@link SSAInstruction}s, and equals() of {@link SSAInstruction} assumes a canonical representative for each
+   * instruction, we <bf>must</bf> ensure that we use the same IR object throughout initialization!!
    */
-  private Statement ssaInstruction2Statement(SSAInstruction s) {
-    return ssaInstruction2Statement(node, s, instructionIndices);
+  private Statement ssaInstruction2Statement(SSAInstruction s, IR ir, Map<SSAInstruction, Integer> instructionIndices) {
+    return ssaInstruction2Statement(node, s, instructionIndices, ir);
   }
 
   public static synchronized Statement ssaInstruction2Statement(CGNode node, SSAInstruction s,
-      Map<SSAInstruction, Integer> instructionIndices) {
+      Map<SSAInstruction, Integer> instructionIndices, IR ir) {
     assert s != null;
     if (s instanceof SSAPhiInstruction) {
       SSAPhiInstruction phi = (SSAPhiInstruction) s;
@@ -730,7 +739,7 @@ public class PDG implements NumberedGraph<Statement> {
     } else {
       Integer x = instructionIndices.get(s);
       if (x == null) {
-        Assertions.UNREACHABLE(s.toString() + "\nnot found in map of\n" + node.getIR());
+        Assertions.UNREACHABLE(s.toString() + "\nnot found in map of\n" + ir);
       }
       return new NormalStatement(node, x.intValue());
     }
@@ -783,11 +792,8 @@ public class PDG implements NumberedGraph<Statement> {
 
   /**
    * Create all nodes in this PDG. Each node is a Statement.
-   * 
-   * @param dOptions
    */
-  private void createNodes(Map<CGNode, OrdinalSet<PointerKey>> ref, ControlDependenceOptions cOptions) {
-    IR ir = node.getIR();
+  private void createNodes(Map<CGNode, OrdinalSet<PointerKey>> ref, ControlDependenceOptions cOptions, IR ir) {
 
     if (ir != null) {
       Collection<SSAInstruction> visited = createNormalStatements(ir, ref);
@@ -900,7 +906,7 @@ public class PDG implements NumberedGraph<Statement> {
         visited.add(s);
       }
       if (s instanceof SSAAbstractInvokeInstruction) {
-        addParamPassingStatements(i, ref);
+        addParamPassingStatements(i, ref, ir);
       }
     }
     return visited;
@@ -909,9 +915,8 @@ public class PDG implements NumberedGraph<Statement> {
   /**
    * Create nodes in the graph corresponding to in/out parameter passing for a call instruction
    */
-  private void addParamPassingStatements(int callIndex, Map<CGNode, OrdinalSet<PointerKey>> ref) {
-
-    SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) node.getIR().getInstructions()[callIndex];
+  private void addParamPassingStatements(int callIndex, Map<CGNode, OrdinalSet<PointerKey>> ref, IR ir) {
+    SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[callIndex];
     Collection<Statement> params = MapUtil.findOrCreateSet(callerParamStatements, call.getCallSite());
     Collection<Statement> rets = MapUtil.findOrCreateSet(callerReturnStatements, call.getCallSite());
     for (int j = 0; j < call.getNumberOfUses(); j++) {

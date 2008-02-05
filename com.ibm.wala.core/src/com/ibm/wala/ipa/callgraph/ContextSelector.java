@@ -15,7 +15,6 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 /**
- * 
  * An interface to an object which helps control context-sensitivity
  * 
  * @author sfink

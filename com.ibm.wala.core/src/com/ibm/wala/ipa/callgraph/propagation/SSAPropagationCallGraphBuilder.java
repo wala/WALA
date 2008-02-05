@@ -853,7 +853,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
 
     protected void visitGetInternal(int lval, int ref, boolean isStatic, FieldReference field) {
-
       if (DEBUG) {
         System.err.println("visitGet " + field);
       }
@@ -1363,6 +1362,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     public void visitLoadClass(SSALoadClassInstruction instruction) {
       PointerKey def = getPointerKeyForLocal(instruction.getDef());
       InstanceKey iKey = getInstanceKeyForClassObject(instruction.getLoadedClass());
+      IClass klass = getClassHierarchy().lookupClass(instruction.getLoadedClass());
+      if (klass != null) {
+        processClassInitializer(klass);
+      }
 
       if (!contentsAreInvariant(symbolTable, du, instruction.getDef())) {
         system.newConstraint(def, iKey);

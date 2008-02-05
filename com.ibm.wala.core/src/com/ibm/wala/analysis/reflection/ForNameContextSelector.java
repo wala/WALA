@@ -32,11 +32,7 @@ import com.ibm.wala.util.strings.StringStuff;
  */
 class ForNameContextSelector implements ContextSelector {
 
-  private final IMethod forNameMethod;
-
-  public ForNameContextSelector(final IClassHierarchy cha) {
-    this.forNameMethod = cha.resolveMethod(ForNameContextInterpreter.FOR_NAME_REF);
-    assert forNameMethod != null;
+  public ForNameContextSelector() {
   }
 
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
@@ -56,7 +52,7 @@ class ForNameContextSelector implements ContextSelector {
    *      com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
-    if (callee.equals(forNameMethod)) {
+    if (callee.getReference().equals(ForNameContextInterpreter.FOR_NAME_REF)) {
       IR ir = caller.getIR();
       SymbolTable symbolTable = ir.getSymbolTable();
       SSAAbstractInvokeInstruction[] invokeInstructions = caller.getIR().getCalls(site);
@@ -81,7 +77,7 @@ class ForNameContextSelector implements ContextSelector {
    * This object may understand a dispatch to Class.forName(s) when s is a string constant.
    */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (targetMethod.equals(forNameMethod)) {
+    if (targetMethod.getReference().equals(ForNameContextInterpreter.FOR_NAME_REF)) {
       IR ir = caller.getIR();
       SymbolTable symbolTable = ir.getSymbolTable();
       SSAAbstractInvokeInstruction[] invokeInstructions = caller.getIR().getCalls(site);

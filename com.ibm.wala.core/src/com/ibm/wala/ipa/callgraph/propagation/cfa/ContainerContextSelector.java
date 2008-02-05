@@ -51,6 +51,7 @@ public class ContainerContextSelector implements ContextSelector {
 
   public final static TypeReference SyntheticSystem = TypeReference.findOrCreate(ClassLoaderReference.Primordial,
       SyntheticSystemName);
+  public final static TypeReference JavaUtilHashtable = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/util/Hashtable");
 
   public final static Atom arraycopyAtom = Atom.findOrCreateUnicodeAtom("arraycopy");
 
@@ -64,6 +65,7 @@ public class ContainerContextSelector implements ContextSelector {
   private final static MethodReference ArraysCopyOf = MethodReference.findOrCreate(Arrays, "copyOf", "([Ljava/lang/Object;I)[Ljava/lang/Object;");
   private final static MethodReference ArraysCopyOf2 = MethodReference.findOrCreate(Arrays, "copyOf", "([Ljava/lang/Object;ILjava/lang/Class;)[Ljava/lang/Object;");
   private final static MethodReference StringValueOf = MethodReference.findOrCreate(TypeReference.JavaLangString, "valueOf", "(Ljava/lang/Object;)Ljava/lang/String;");
+  private final static MethodReference HashtableNewEntry = MethodReference.findOrCreate(JavaUtilHashtable, "newEntry", "(Ljava/lang/Object;Ljava/lang/Object;I)Ljava/util/Hashtable$Entry;");
   
   /**
    * The governing class hierarchy.
@@ -139,6 +141,9 @@ public class ContainerContextSelector implements ContextSelector {
       return true;
     }
     if (m.equals(StringValueOf)) {
+      return true;
+    }
+    if (m.equals(HashtableNewEntry)) {
       return true;
     }
     return false;

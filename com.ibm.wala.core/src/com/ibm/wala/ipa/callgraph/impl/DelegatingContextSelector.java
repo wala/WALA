@@ -41,7 +41,6 @@ public class DelegatingContextSelector implements ContextSelector {
   }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
-
     if (DEBUG) {
       Trace.println("getCalleeTarget " + caller + " " + site + " " + callee);
     }
