@@ -18,6 +18,7 @@ import java.util.Set;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.DefaultEntrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -34,9 +35,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * 
- * This class provides an iterator of entrypoints that are implementations of
- * org.apache.struts.action.Action
+ * This class provides an iterator of entrypoints that are implementations of org.apache.struts.action.Action
  * 
  * @author sfink
  */
@@ -45,22 +44,20 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   public final static Atom executeName = Atom.findOrCreateUnicodeAtom("execute");
 
   /**
-   * Should we attempt to speculate that methods are dispatched to based on the
-   * method descriptor?
+   * Should we attempt to speculate that methods are dispatched to based on the method descriptor?
    */
   public final static boolean SPECULATE_DISPATCH_ACTIONS = true;
 
   private final static String executeDescString = "(Lorg/apache/struts/action/ActionMapping;Lorg/apache/struts/action/ActionForm;Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;)Lorg/apache/struts/action/ActionForward;";
+
   private final static String httpExecuteDescString = "(Lorg/apache/struts/action/ActionMapping;Lorg/apache/struts/action/ActionForm;Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)Lorg/apache/struts/action/ActionForward;";
 
   private final static Descriptor executeDesc = Descriptor.findOrCreateUTF8(executeDescString);
+
   private final static Descriptor httpExecuteDesc = Descriptor.findOrCreateUTF8(httpExecuteDescString);
 
   private final static TypeName actionName = TypeName.string2TypeName("Lorg/apache/struts/action/Action");
 
-  /**
-   * Map: MethodReference -> Entrypoint
-   */
   private Map<MethodReference, Entrypoint> entrypoints = HashMapFactory.make();
 
   /**
@@ -69,8 +66,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   private Set<IClass> actions = HashSetFactory.make();
 
   /**
-   * Mapping of TypeName -> TypeReference; this map controls selection of
-   * concrete types for parameters to some servlet methods.
+   * Mthis map controls selection of concrete types for parameters to some servlet methods.
    */
   private final static HashMap<TypeName, TypeReference> concreteParameterMap = HashMapFactory.make(2);
   static {
@@ -81,16 +77,14 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   }
 
   /**
-   * @param scope
-   *          scope of analysis
-   * @param cha
-   *          loaded class hierarchy
+   * @param scope scope of analysis
+   * @param cha loaded class hierarchy
    */
-  public StrutsEntrypoints(J2EEAnalysisScope scope, IClassHierarchy cha) {
+  public StrutsEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
 
     TypeReference actionType = TypeReference.findOrCreate(scope.getApplicationLoader(), actionName);
     IClass actionClass = cha.lookupClass(actionType);
-    
+
     if (actionClass == null) {
       return;
     }
@@ -100,16 +94,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
 
     for (Iterator<IClass> it = appLoader.iterateAllClasses(); it.hasNext();) {
       IClass klass = (IClass) it.next();
-      if (cha.lookupClass(klass.getReference()) == null) {
-        continue;
-      }
-      if (klass.isAbstract()) {
-        continue;
-      }
-      if (klass.getReference().equals(actionType)) {
-        continue;
-      }
-      if (cha.isSubclassOf(klass, actionClass)) {
+      if (isConcreteStrutsAction(klass)) {
         actions.add(klass);
         TypeReference type = klass.getReference();
         MethodReference M = MethodReference.findOrCreate(type, executeName, httpExecuteDesc);
@@ -125,14 +110,31 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       }
     }
   }
+  
+  
+  public static boolean isConcreteStrutsAction(IClass klass) {
+    TypeReference actionType = TypeReference.findOrCreate(ClassLoaderReference.Application, actionName);
+    IClass actionClass = klass.getClassHierarchy().lookupClass(actionType);
+    if (actionClass == null) {
+      return false;
+    }
+    if (klass.isAbstract()) {
+      return false;
+    }
+    if (klass.getReference().equals(actionType)) {
+      return false;
+    }
+    if (klass.getClassHierarchy().isSubclassOf(klass, actionClass)) {
+      return true;
+    }
+    return false;
+  }
 
   /**
-   * Add any methods that look like they might be DispatchAction targets, based
-   * on the method signature.
+   * Add any methods that look like they might be DispatchAction targets, based on the method signature.
    * 
    * TODO: instead, parse the struts xml directly.
-   * @param klass
-   *          an Action
+   * @param klass an Action
    */
   private void addSpeculativeDispatchMethods(IClass klass, IClassHierarchy cha) {
     IClass C = klass;
@@ -154,20 +156,12 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     }
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see com.ibm.detox.ipa.callgraph.Entrypoints#iterator()
-   */
+
   public Iterator<Entrypoint> iterator() {
     return entrypoints.values().iterator();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
+
   public String toString() {
     StringBuffer result = new StringBuffer();
     result.append("Actions:");
@@ -184,7 +178,6 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   }
 
   /**
-   * @param m
    * @return true iff m is an entrypoint recorded by this class
    */
   public boolean contains(MemberReference m) {
@@ -192,11 +185,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   }
 
   /**
-   * 
-   * @author sfink
-   * 
-   * An entrypoint which assumes all ServletRequest and ServletResponses are of
-   * the HTTP flavor.
+   * An entrypoint which assumes all ServletRequest and ServletResponses are of the HTTP flavor.
    */
   private static class StrutsActionEntrypoint extends DefaultEntrypoint {
     private final TypeReference receiver;
