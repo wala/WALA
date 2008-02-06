@@ -135,17 +135,6 @@ public interface ISupergraph<T,P> extends NumberedGraph<T> {
    */
   T getLocalBlock(P procedure, int i);
 
-//  /**
-//   * @return the unique entry node s_main for the main procedure
-//   */
-//  T getMainEntry();
-//
-//
-//  /**
-//   * @return the unique exit node e_main for the main procedure
-//   */
-//  T getMainExit();
-
   /**
    * @param n
    *          a node in this supergraph
