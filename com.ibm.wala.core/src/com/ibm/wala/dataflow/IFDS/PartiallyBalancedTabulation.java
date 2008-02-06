@@ -73,7 +73,7 @@ public class PartiallyBalancedTabulation {
     }
     return result;
   }
-
+  
   /**
    * Solve a partially balanced tabulation problem.
    * 
@@ -83,6 +83,17 @@ public class PartiallyBalancedTabulation {
    */
   public static <T, P> TabulationResult<T, P> tabulate(PartiallyBalancedTabulationProblem<T, P> problem) throws CancelException {
     TabulationSolver<T, P> solver = TabulationSolver.make(problem);
+    return tabulate(problem, solver);
+  }
+
+  /**
+   * Solve a partially balanced tabulation problem using a pre-constructed solver.
+   * 
+   * @param <T> type of node in the supergraph
+   * @param <P> type of "procedure" ("box") in the supergraph
+   * @param problem representation of the dataflow problem
+   */
+  public static <T, P> TabulationResult<T, P> tabulate(PartiallyBalancedTabulationProblem<T, P> problem, TabulationSolver<T, P> solver) throws CancelException {
     TabulationResult<T, P> tr = null;
 
     boolean again = true;
