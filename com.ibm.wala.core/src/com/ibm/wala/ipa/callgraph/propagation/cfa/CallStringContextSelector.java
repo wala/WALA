@@ -22,98 +22,10 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 public abstract class CallStringContextSelector implements ContextSelector {
 
-  private static final ContextKey CALL_STRING = new ContextKey() {
+  static final ContextKey CALL_STRING = new ContextKey() {
     @Override
     public String toString() {
       return "CALL_STRING_KEY";
-    }
-  };
-
-  private class CallString implements ContextItem {
-    private final CallSiteReference sites[];
-
-    private final IMethod methods[];
-
-    private CallString(CallSiteReference site, IMethod method) {
-      this.sites = new CallSiteReference[] { site };
-      this.methods = new IMethod[] { method };
-    }
-
-    private CallString(CallSiteReference site, IMethod method, int length, CallString base) {
-      sites = new CallSiteReference[length];
-      sites[0] = site;
-      System.arraycopy(base.sites, 0, sites, 1, Math.min(length - 1, base.sites.length));
-      methods = new IMethod[length];
-      methods[0] = method;
-      System.arraycopy(base.methods, 0, methods, 1, Math.min(length - 1, base.methods.length));
-    }
-
-    @Override
-    public String toString() {
-      StringBuffer str = new StringBuffer("[");
-      for (int i = 0; i < sites.length; i++)
-        str.append(" ").append(methods[i].getName()).append("@").append(sites[i].getProgramCounter());
-      str.append(" ]");
-      return str.toString();
-    }
-
-    @Override
-    public int hashCode() {
-      int code = 1;
-      for (int i = 0; i < sites.length; i++) {
-        code *= sites[i].hashCode() * methods[i].hashCode();
-      }
-
-      return code;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (o instanceof CallString) {
-        CallString oc = (CallString) o;
-        if (oc.sites.length == sites.length) {
-          for (int i = 0; i < sites.length; i++) {
-            if (!(sites[i].equals(oc.sites[i]) && methods[i].equals(oc.methods[i]))) {
-              return false;
-            }
-          }
-
-          return true;
-        }
-      }
-
-      return false;
-    }
-  }
-
-  private class CallStringContext implements Context {
-    private final CallString cs;
-
-    private CallStringContext(CallString cs) {
-      this.cs = cs;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      return (o instanceof CallStringContext) && ((CallStringContext) o).cs.equals(cs);
-    }
-
-    @Override
-    public int hashCode() {
-      return cs.hashCode();
-    }
-
-    @Override
-    public String toString() {
-      return "CallStringContext: " + cs.toString();
-    }
-
-    public ContextItem get(ContextKey name) {
-      if (CALL_STRING.equals(name)) {
-        return cs;
-      } else {
-        return null;
-      }
     }
   };
 

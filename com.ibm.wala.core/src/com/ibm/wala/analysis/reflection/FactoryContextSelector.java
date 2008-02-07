@@ -19,7 +19,8 @@ import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallString;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallStringContext;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
@@ -51,7 +52,7 @@ class FactoryContextSelector implements ContextSelector {
     if (callee.isSynthetic()) {
       SyntheticMethod s = (SyntheticMethod) callee;
       if (s.isFactoryMethod()) {
-        return new CallerSiteContext(caller, site);
+        return new CallStringContext(new CallString(site, caller.getMethod()));
       }
     }
     return null;
@@ -137,4 +138,5 @@ class FactoryContextSelector implements ContextSelector {
       return true;
     }
   }
+
 }
