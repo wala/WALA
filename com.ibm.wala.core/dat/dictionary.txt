@@ -144,3 +144,4 @@ factoid
 offline
 spec
 factoids
+xml
