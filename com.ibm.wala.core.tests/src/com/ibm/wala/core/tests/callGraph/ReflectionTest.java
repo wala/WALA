@@ -54,7 +54,7 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     Warnings.clear();
-    CallGraphTest.doCallGraphs(options, new AnalysisCache(),cha, scope, useShortProfile(), false);
+    CallGraphTest.doCallGraphs(options, new AnalysisCache(),cha, scope);
     for (Iterator<Warning> it = Warnings.iterator(); it.hasNext(); ) {
       Warning w = (Warning)it.next();
       if (w.toString().indexOf("com/ibm/jvm") > 0) {
