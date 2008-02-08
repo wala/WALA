@@ -495,6 +495,13 @@
 					descriptor="(Ljava/lang/Object;IB)V" static="true">
 				</method>
 			</class>
+			<class name="Constructor">
+			    <method name="newInstance"
+					descriptor="([Ljava/lang/Object;)Ljava/lang/Object;" factory="true">
+					<new def="x" class="Lcom/ibm/wala/Malleable" />
+					<return value="x" />
+				</method>
+		    </class>
 			<class name="Field">
 				<method name="get"
 					descriptor="(Ljava/lang/Object;)Ljava/lang/Object;"
