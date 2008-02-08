@@ -340,13 +340,12 @@ public class PDG implements NumberedGraph<Statement> {
             Statement c = ssaInstruction2Statement(ehbb.getCatchInstruction(), ir, instructionIndices);
 
             for (ISSABasicBlock pb : ir.getControlFlowGraph().getExceptionalPredecessors(ehbb)) {
-              SSAInstruction pi = instructions[pb.getLastInstructionIndex()];
-              assert pi != null;
+              SSAInstruction st = instructions[pb.getLastInstructionIndex()];
 
-              if (pi instanceof SSAAbstractInvokeInstruction) {
+              if (st instanceof SSAAbstractInvokeInstruction) {
                 delegate.addEdge(new ExceptionalReturnCaller(node, pb.getLastInstructionIndex()), c);
-              } else if (pi instanceof SSAAbstractThrowInstruction) {
-                delegate.addEdge(ssaInstruction2Statement(pi, ir, instructionIndices), c);
+              } else if (st instanceof SSAAbstractThrowInstruction) {
+                delegate.addEdge(ssaInstruction2Statement(st, ir, instructionIndices), c);
               }
             }
           }
