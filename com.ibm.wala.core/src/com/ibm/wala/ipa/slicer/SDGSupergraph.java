@@ -224,6 +224,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     case HEAP_RET_CALLEE:
     case HEAP_RET_CALLER:
     case METHOD_ENTRY:
+    case METHOD_EXIT:
     case CATCH:
     case PI:
       return false;
@@ -285,6 +286,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
     case HEAP_RET_CALLEE:
     case EXC_RET_CALLEE:
     case NORMAL_RET_CALLEE:
+    case METHOD_EXIT:
       return true;
     default:
       Assertions.UNREACHABLE(n.toString());
