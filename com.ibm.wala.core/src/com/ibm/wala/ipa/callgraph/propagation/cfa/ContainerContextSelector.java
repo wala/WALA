@@ -60,10 +60,9 @@ public class ContainerContextSelector implements ContextSelector {
   public final static MethodReference synthArraycopy = MethodReference.findOrCreate(SyntheticSystem, arraycopyAtom, arraycopyDesc);
   
   private final static TypeReference Arrays = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/util/Arrays");
-  private final static MethodReference ArraysAsList = MethodReference.findOrCreate(Arrays, "asList", "([Ljava/lang/Object;)Ljava/util/List;");
-  private final static MethodReference ArraysCopyOfRange = MethodReference.findOrCreate(Arrays, "copyOfRange", "([CII)[C");
-  private final static MethodReference ArraysCopyOf = MethodReference.findOrCreate(Arrays, "copyOf", "([Ljava/lang/Object;I)[Ljava/lang/Object;");
-  private final static MethodReference ArraysCopyOf2 = MethodReference.findOrCreate(Arrays, "copyOf", "([Ljava/lang/Object;ILjava/lang/Class;)[Ljava/lang/Object;");
+  private final static Atom asList = Atom.findOrCreateUnicodeAtom("asList");
+  private final static Atom copyOf = Atom.findOrCreateUnicodeAtom("copyOf");
+  private final static Atom copyOfRange = Atom.findOrCreateUnicodeAtom("copyOfRange");
   private final static MethodReference StringValueOf = MethodReference.findOrCreate(TypeReference.JavaLangString, "valueOf", "(Ljava/lang/Object;)Ljava/lang/String;");
   private final static MethodReference HashtableNewEntry = MethodReference.findOrCreate(JavaUtilHashtable, "newEntry", "(Ljava/lang/Object;Ljava/lang/Object;I)Ljava/util/Hashtable$Entry;");
   
@@ -128,16 +127,7 @@ public class ContainerContextSelector implements ContextSelector {
     if (m.equals(synthArraycopy)) {
       return true;
     }
-    if (m.equals(ArraysAsList)) {
-      return true;
-    }
-    if (m.equals(ArraysCopyOfRange)) {
-      return true;
-    }
-    if (m.equals(ArraysCopyOf)) {
-      return true;
-    }
-    if (m.equals(ArraysCopyOf2)) {
+    if (isArrayCopyMethod(m)) {
       return true;
     }
     if (m.equals(StringValueOf)) {
@@ -145,6 +135,19 @@ public class ContainerContextSelector implements ContextSelector {
     }
     if (m.equals(HashtableNewEntry)) {
       return true;
+    }
+    return false;
+  }
+
+  /**
+   * return true iff m represents one of the well-known methods in java.lang.reflect.Arrays that 
+   * do some sort of arraycopyd
+   */
+  private static boolean isArrayCopyMethod(MethodReference m) {
+    if (m.getDeclaringClass().equals(Arrays)) {
+      if (m.getName().equals(asList) || m.getName().equals(copyOf) || m.getName().equals(copyOfRange)) {
+        return true;
+      }
     }
     return false;
   }
