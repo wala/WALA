@@ -20,9 +20,9 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  * @author sfink
  */
-public final class ReceiverInstanceContext implements Context {
+public class ReceiverInstanceContext implements Context {
 
-  private final InstanceKey I;
+  private final InstanceKey ik;
 
   /**
    * @param I
@@ -32,14 +32,14 @@ public final class ReceiverInstanceContext implements Context {
     if (Assertions.verifyAssertions) {
       Assertions._assert(I != null);
     }
-    this.I = I;
+    this.ik = I;
   }
 
   public ContextItem get(ContextKey name) {
     if (name == ContextKey.RECEIVER)
-      return I;
+      return ik;
     else if (name == ContextKey.FILTER)
-      return new FilteredPointerKey.SingleInstanceFilter(I);
+      return new FilteredPointerKey.SingleInstanceFilter(ik);
     else {
       Assertions.UNREACHABLE();
       return null;
@@ -48,26 +48,37 @@ public final class ReceiverInstanceContext implements Context {
 
   @Override
   public String toString() {
-    return "ReceiverInstanceContext<" + I + ">";
+    return "ReceiverInstanceContext<" + ik + ">";
   }
+
+
 
   @Override
   public int hashCode() {
-    return I.hashCode() * 8747;
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((ik == null) ? 0 : ik.hashCode());
+    return result;
   }
 
   @Override
   public boolean equals(Object obj) {
-    // instanceof is OK because this class is final.
-    if (obj instanceof ReceiverInstanceContext) {
-      ReceiverInstanceContext other = (ReceiverInstanceContext) obj;
-      return I.equals(other.I);
-    } else {
+    if (this == obj)
+      return true;
+    if (obj == null)
       return false;
-    }
+    if (getClass() != obj.getClass())
+      return false;
+    final ReceiverInstanceContext other = (ReceiverInstanceContext) obj;
+    if (ik == null) {
+      if (other.ik != null)
+        return false;
+    } else if (!ik.equals(other.ik))
+      return false;
+    return true;
   }
 
   public InstanceKey getReceiver() {
-    return I;
+    return ik;
   }
 }
