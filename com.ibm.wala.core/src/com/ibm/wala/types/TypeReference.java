@@ -16,14 +16,14 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * A class to represent the reference in a class file to some type (class,
- * primitive or array). A type reference is uniquely defined by
+ * A class to represent the reference in a class file to some type (class, primitive or array). A type reference is
+ * uniquely defined by
  * <ul>
  * <li> an initiating class loader
  * <li> a type name
  * </ul>
- * Resolving a TypeReference to a Type can be an expensive operation. Therefore
- * we canonicalize TypeReference instances and cache the result of resolution.
+ * Resolving a TypeReference to a Type can be an expensive operation. Therefore we canonicalize TypeReference instances
+ * and cache the result of resolution.
  * 
  * @author Bowen Alpern
  * @author Dave Grove
@@ -39,8 +39,7 @@ public final class TypeReference {
    */
 
   /**
-   * Used for fast access to primitives. Primitives appear in the main
-   * dictionary also.
+   * Used for fast access to primitives. Primitives appear in the main dictionary also.
    */
   private final static Map<TypeName, TypeReference> primitiveMap = HashMapFactory.make();
 
@@ -49,9 +48,9 @@ public final class TypeReference {
    */
   private final static Map<Key, TypeReference> dictionary = HashMapFactory.make();
 
-  /*****************************************************************************
+  /*********************************************************************************************************************
    * Primitive Dispatch *
-   ****************************************************************************/
+   ********************************************************************************************************************/
 
   public final static TypeName BooleanName = TypeName.string2TypeName("Z");
 
@@ -107,9 +106,9 @@ public final class TypeReference {
 
   public final static TypeReference Void = makePrimitive(VoidName);
 
-  /*****************************************************************************
+  /*********************************************************************************************************************
    * Primitive Array Dispatch *
-   ****************************************************************************/
+   ********************************************************************************************************************/
 
   public final static TypeReference BooleanArray = findOrCreateArrayOf(Boolean);
 
@@ -127,9 +126,9 @@ public final class TypeReference {
 
   public final static TypeReference ShortArray = findOrCreateArrayOf(Short);
 
-  /*****************************************************************************
+  /*********************************************************************************************************************
    * Special object types *
-   ****************************************************************************/
+   ********************************************************************************************************************/
 
   private final static TypeName JavaLangArithmeticExceptionName = TypeName.string2TypeName("Ljava/lang/ArithmeticException");
 
@@ -264,15 +263,15 @@ public final class TypeReference {
 
   private final static TypeName JavaUtilIteratorName = TypeName.string2TypeName("Ljava/util/Iterator");
 
- public final static TypeReference JavaUtilIterator = findOrCreate(ClassLoaderReference.Primordial, JavaUtilIteratorName);
+  public final static TypeReference JavaUtilIterator = findOrCreate(ClassLoaderReference.Primordial, JavaUtilIteratorName);
 
   private final static TypeName JavaUtilVectorName = TypeName.string2TypeName("Ljava/util/Vector");
 
   public final static TypeReference JavaUtilVector = findOrCreate(ClassLoaderReference.Primordial, JavaUtilVectorName);
 
-  /*****************************************************************************
+  /*********************************************************************************************************************
    * Misc special types *
-   ****************************************************************************/
+   ********************************************************************************************************************/
 
   // TODO: Is this necessary?
   public static final TypeName[] array_interfaces = new TypeName[] { JavaIoSerializableName, JavaLangCloneableName };
@@ -317,8 +316,7 @@ public final class TypeReference {
   /**
    * Find or create the canonical TypeReference instance for the given pair.
    * 
-   * @param cl
-   *          the classloader (defining/initiating depending on usage)
+   * @param cl the classloader (defining/initiating depending on usage)
    */
   public static synchronized TypeReference findOrCreate(ClassLoaderReference cl, TypeName typeName) {
 
@@ -338,7 +336,7 @@ public final class TypeReference {
         cl = ClassLoaderReference.Primordial;
       }
     }
-    
+
     Key key = new Key(cl, typeName);
     TypeReference val = dictionary.get(key);
     if (val != null) {
@@ -351,10 +349,10 @@ public final class TypeReference {
   }
 
   /**
-   * Find or create the canonical TypeReference instance for the given pair.
+   * Find or create the canonical {@link TypeReference} instance for the given pair.
    * 
-   * @param cl
-   *          the classloader (defining/initiating depending on usage)
+   * @param cl the classloader (defining/initiating depending on usage)
+   * @param typeName something like "Ljava/util/Arrays"
    */
   public static synchronized TypeReference findOrCreate(ClassLoaderReference cl, String typeName) {
     return findOrCreate(cl, TypeName.string2TypeName(typeName));
@@ -373,13 +371,10 @@ public final class TypeReference {
   }
 
   /**
-   * NB: All type names should use '/' and not '.' as a separator. eg.
-   * Ljava/lang/Class
+   * NB: All type names should use '/' and not '.' as a separator. eg. Ljava/lang/Class
    * 
-   * @param cl
-   *          the classloader
-   * @param tn
-   *          the type name
+   * @param cl the classloader
+   * @param tn the type name
    */
   protected TypeReference(ClassLoaderReference cl, TypeName tn) {
     classloader = cl;
@@ -401,8 +396,7 @@ public final class TypeReference {
   }
 
   /**
-   * TODO: specialized form of TypeReference for arrays, please. Get the element
-   * type of for this array type.
+   * TODO: specialized form of TypeReference for arrays, please. Get the element type of for this array type.
    */
   public final TypeReference getArrayElementType() {
     TypeName element = name.parseForArrayElementName();
@@ -417,9 +411,8 @@ public final class TypeReference {
   }
 
   /**
-   * Return the dimensionality of the type. By convention, class types have
-   * dimensionality 0, primitives -1, and arrays the number of [ in their
-   * descriptor.
+   * Return the dimensionality of the type. By convention, class types have dimensionality 0, primitives -1, and arrays
+   * the number of [ in their descriptor.
    */
   public final int getDimensionality() {
     return name.getDimensionality();
@@ -466,13 +459,12 @@ public final class TypeReference {
   }
 
   /**
-   * TypeReferences are canonical. However, note that two TypeReferences can be
-   * non-equal, yet still represent the same IClass.
+   * TypeReferences are canonical. However, note that two TypeReferences can be non-equal, yet still represent the same
+   * IClass.
    * 
-   * For example, the there can be two TypeReferences
-   * <Application,java.lang.Object> and <Primordial,java.lang.Object>. These two
-   * TypeReference are <bf>NOT</bf> equal(), but they both represent the IClass
-   * which is named <Primordial,java.lang.Object>
+   * For example, the there can be two TypeReferences <Application,java.lang.Object> and <Primordial,java.lang.Object>.
+   * These two TypeReference are <bf>NOT</bf> equal(), but they both represent the IClass which is named
+   * <Primordial,java.lang.Object>
    */
   @Override
   public final boolean equals(Object other) {
