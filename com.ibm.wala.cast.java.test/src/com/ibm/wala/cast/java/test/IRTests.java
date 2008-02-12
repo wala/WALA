@@ -80,8 +80,8 @@ public abstract class IRTests extends WalaTestCase {
           /**
            * todo: {@link WalaProperties#getJ2SEJarFiles()}
            */
-          rtJar.add(javaHomePath + "/Classes/classes.jar");
-          rtJar.add(javaHomePath + "/Classes/ui.jar");
+          rtJar.add(javaHomePath + "/classes.jar");
+          rtJar.add(javaHomePath + "/ui.jar");
         } else {
           rtJar.add(javaHomePath + File.separator + "classes.jar");
           rtJar.add(javaHomePath + File.separator + "rt.jar");
@@ -382,7 +382,7 @@ public abstract class IRTests extends WalaTestCase {
         engine.addSystemModule(new JarFileModule(new JarFile(libFile)));
       }
     }
-    Assertions._assert(foundLib);
+    Assertions._assert(foundLib, "couldn't find library file from " + libs);
 
     for (String srcFilePath : sources) {
       String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
