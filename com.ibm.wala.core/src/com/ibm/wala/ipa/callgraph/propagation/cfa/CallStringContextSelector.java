@@ -22,7 +22,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 public abstract class CallStringContextSelector implements ContextSelector {
 
-  static final ContextKey CALL_STRING = new ContextKey() {
+  public static final ContextKey CALL_STRING = new ContextKey() {
     @Override
     public String toString() {
       return "CALL_STRING_KEY";
