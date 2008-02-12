@@ -185,12 +185,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   final private boolean rememberGetPutHistory = true;
 
   /**
-   * @param cha
-   *            governing class hierarchy
-   * @param options
-   *            governing call graph construction options
-   * @param pointerKeyFactory
-   *            factory which embodies pointer abstraction policy
+   * @param cha governing class hierarchy
+   * @param options governing call graph construction options
+   * @param pointerKeyFactory factory which embodies pointer abstraction policy
    */
   protected PropagationCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       PointerKeyFactory pointerKeyFactory) {
@@ -396,10 +393,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * @return the PointerKey that acts as a representation for the class of pointers that includes the given instance
    *         field. null if there's some problem.
-   * @throws IllegalArgumentException
-   *             if I is null
-   * @throws IllegalArgumentException
-   *             if field is null
+   * @throws IllegalArgumentException if I is null
+   * @throws IllegalArgumentException if field is null
    */
   public PointerKey getPointerKeyForInstanceField(InstanceKey I, IField field) {
     if (field == null) {
@@ -422,12 +417,10 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * TODO: expand this API to differentiate between different array indices
    * 
-   * @param I
-   *            an InstanceKey representing an abstract array
+   * @param I an InstanceKey representing an abstract array
    * @return the PointerKey that acts as a representation for the class of pointers that includes the given array
    *         contents, or null if none found.
-   * @throws IllegalArgumentException
-   *             if I is null
+   * @throws IllegalArgumentException if I is null
    */
   public PointerKey getPointerKeyForArrayContents(InstanceKey I) {
     if (I == null) {
@@ -445,12 +438,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * Handle assign of a particular exception instance into an exception variable
    * 
-   * @param exceptionVar
-   *            points-to set for a variable representing a caught exception
-   * @param catchClasses
-   *            set of TypeReferences that the exceptionVar may catch
-   * @param e
-   *            a particular exception instance
+   * @param exceptionVar points-to set for a variable representing a caught exception
+   * @param catchClasses set of TypeReferences that the exceptionVar may catch
+   * @param e a particular exception instance
    */
   protected void assignInstanceToCatch(PointerKey exceptionVar, Set catchClasses, InstanceKey e) {
 
@@ -463,12 +453,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * Generate a set of constraints to represent assignment to an exception variable in a catch clause. Note that we use
    * FilterOperator to filter out types that the exception handler doesn't catch.
    * 
-   * @param exceptionVar
-   *            points-to set for a variable representing a caught exception
-   * @param catchClasses
-   *            set of TypeReferences that the exceptionVar may catch
-   * @param e
-   *            points-to-set representing a thrown exception that might be caught.
+   * @param exceptionVar points-to set for a variable representing a caught exception
+   * @param catchClasses set of TypeReferences that the exceptionVar may catch
+   * @param e points-to-set representing a thrown exception that might be caught.
    */
   protected void addAssignmentsForCatchPointerKey(PointerKey exceptionVar, Set catchClasses, PointerKey e) {
     if (DEBUG_GENERAL) {
@@ -579,13 +566,10 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * @param catchClasses
-   *            Set of TypeReference
-   * @param klass
-   *            an Exception Class
+   * @param catchClasses Set of TypeReference
+   * @param klass an Exception Class
    * @return true iff klass is a subclass of some element of the Set
-   * @throws IllegalArgumentException
-   *             if catchClasses is null
+   * @throws IllegalArgumentException if catchClasses is null
    */
   public static boolean catches(Set catchClasses, IClass klass, IClassHierarchy cha) {
     if (catchClasses == null) {
@@ -772,10 +756,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * @param caller
-   *            the caller node
-   * @param iKey
-   *            an abstraction of the receiver of the call (or null if not applicable)
+   * @param caller the caller node
+   * @param iKey an abstraction of the receiver of the call (or null if not applicable)
    * @return the CGNode to which this particular call should dispatch.
    */
   public CGNode getTargetForCall(CGNode caller, CallSiteReference site, InstanceKey iKey) {
@@ -822,10 +804,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * @param dim
-   *            the dimension of the array whose instance we would like to model. dim == 0 represents the first
-   *            dimension, e.g., the [Object; instances in [[Object; e.g., the [[Object; instances in [[[Object; dim ==
-   *            1 represents the second dimension, e.g., the [Object instances in [[[Object;
+   * @param dim the dimension of the array whose instance we would like to model. dim == 0 represents the first
+   *        dimension, e.g., the [Object; instances in [[Object; e.g., the [[Object; instances in [[[Object; dim == 1
+   *        represents the second dimension, e.g., the [Object instances in [[[Object;
    * @return the InstanceKey that acts as a representative for the class of array contents objects that includes objects
    *         allocated at the given new instruction in the given node
    */
@@ -1224,11 +1205,13 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
               System.err.println(S);
             }
             PointerKey p = getPointerKeyForInstanceField(I, getField());
-            if (DEBUG_PUT) {
-              String S = "Putfield add constraint " + p + " " + pVal;
-              System.err.println(S);
+            if (p != null) {
+              if (DEBUG_PUT) {
+                String S = "Putfield add constraint " + p + " " + pVal;
+                System.err.println(S);
+              }
+              sideEffect.b |= system.newFieldWrite(p, assign, pVal, object);
             }
-            sideEffect.b |= system.newFieldWrite(p, assign, pVal, object);
           }
         }
       };
@@ -1458,8 +1441,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * @param klass
-   *            a class
+   * @param klass a class
    * @return an int set which represents the subset of S that correspond to subtypes of klass
    */
   protected IntSet filterForClass(IntSet S, IClass klass) {
