@@ -301,8 +301,7 @@ public class ArrayClass implements IClass, Constants {
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
   public Collection<IMethod> getAllMethods() throws UnimplementedError, ClassHierarchyException {
-    Assertions.UNREACHABLE();
-    return null;
+    return loader.lookupClass(TypeReference.JavaLangObject.getName()).getAllMethods();
   }
 
   /*
