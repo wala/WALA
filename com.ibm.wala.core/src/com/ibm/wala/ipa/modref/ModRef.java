@@ -248,8 +248,9 @@ public class ModRef {
     private final PointerAnalysis pa;
 
     private final boolean ignoreAllocHeapDefs;
-    
-    protected ModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis pa, boolean ignoreAllocHeapDefs) {
+
+    protected ModVisitor(CGNode n, Collection<PointerKey> result, ExtendedHeapModel h, PointerAnalysis pa,
+        boolean ignoreAllocHeapDefs) {
       this.n = n;
       this.result = result;
       this.h = h;
@@ -343,8 +344,10 @@ public class ModRef {
           result.add(h.getPointerKeyForStaticField(f));
         } else {
           PointerKey ref = h.getPointerKeyForLocal(n, instruction.getRef());
-          for (InstanceKey i : pa.getPointsToSet(ref)) {
-            result.add(h.getPointerKeyForInstanceField(i, f));
+          if (ref != null) {
+            for (InstanceKey i : pa.getPointsToSet(ref)) {
+              result.add(h.getPointerKeyForInstanceField(i, f));
+            }
           }
         }
       }
@@ -355,8 +358,8 @@ public class ModRef {
     return makeModVisitor(n, result, pa, h, false);
   }
 
-
-  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h, boolean ignoreAllocHeapDefs) {
+  protected ModVisitor makeModVisitor(CGNode n, Collection<PointerKey> result, PointerAnalysis pa, ExtendedHeapModel h,
+      boolean ignoreAllocHeapDefs) {
     return new ModVisitor(n, result, h, pa, ignoreAllocHeapDefs);
   }
 
@@ -366,10 +369,12 @@ public class ModRef {
   public Collection<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl) {
     return getMod(n, h, pa, s, hexcl, false);
   }
+
   /**
    * Compute the set of {@link PointerKey}s that represent pointers that instruction s may write to.
    */
-  public Collection<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl, boolean ignoreAllocHeapDefs) {
+  public Collection<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl,
+      boolean ignoreAllocHeapDefs) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
