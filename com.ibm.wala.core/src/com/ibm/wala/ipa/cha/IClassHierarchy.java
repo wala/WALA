@@ -58,6 +58,14 @@ public interface IClassHierarchy extends Iterable<IClass> {
    */
   public Collection<IMethod> getPossibleTargets(MethodReference ref);
 
+  
+  /**
+   * Find the possible receivers of a call to a method reference where the receiver is of a certain type
+   * @param receiverClass the class of the receiver
+   * @param ref method reference
+   * @return the set of IMethods that this call can resolve to.
+   */
+  public Set<IMethod> getPossibleTargets(IClass receiverClass, MethodReference ref);
   /**
    * Return the unique receiver of an invocation of method on an object of type
    * m.getDeclaredClass

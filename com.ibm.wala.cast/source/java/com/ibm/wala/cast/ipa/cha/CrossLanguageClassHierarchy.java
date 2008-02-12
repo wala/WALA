@@ -136,6 +136,10 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     return getHierarchy(ref).getPossibleTargets(ref);
   }
 
+  public Set<IMethod> getPossibleTargets(IClass receiverClass, MethodReference ref) {
+    return getHierarchy(ref).getPossibleTargets(receiverClass, ref);
+  }
+
   public IMethod resolveMethod(MethodReference m) {
     return getHierarchy(m).resolveMethod(m);
   }
@@ -232,5 +236,6 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
 
     return new CrossLanguageClassHierarchy(scope, factory, hierarchies);
   }
+
 
 }

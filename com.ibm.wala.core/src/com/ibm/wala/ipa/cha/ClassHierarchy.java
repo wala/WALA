@@ -400,7 +400,7 @@ public class ClassHierarchy implements IClassHierarchy {
     }
     Set<IMethod> result = classCache.get(ref);
     if (result == null) {
-      result = computePossibleTargets(declaredClass, ref);
+      result = getPossibleTargets(declaredClass, ref);
       classCache.put(ref, result);
     }
     return result;
@@ -413,7 +413,7 @@ public class ClassHierarchy implements IClassHierarchy {
    *            method reference
    * @return the set of IMethods that this call can resolve to.
    */
-  private Set<IMethod> computePossibleTargets(IClass declaredClass, MethodReference ref) {
+  public Set<IMethod> getPossibleTargets(IClass declaredClass, MethodReference ref) {
 
     if (declaredClass.isInterface()) {
       HashSet<IMethod> result = HashSetFactory.make(3);
