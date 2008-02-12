@@ -49,6 +49,14 @@ public class CombinedTheory extends AbstractTheory {
     return union;
   }
 
+  @Override
+  public Collection<? extends IFormula> getSentencesRelevantToConstraints(Collection<? extends IFormula> constraints) {
+    Set<IFormula> union = HashSetFactory.make();
+    union.addAll(a.getSentencesRelevantToConstraints(constraints));
+    union.addAll(b.getSentencesRelevantToConstraints(constraints));
+    return union;
+  }
+
   public IVocabulary getVocabulary() {
     return CombinedVocabulary.make(a.getVocabulary(), b.getVocabulary());
   }

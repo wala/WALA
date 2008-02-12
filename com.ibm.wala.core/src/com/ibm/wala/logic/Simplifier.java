@@ -35,12 +35,12 @@ public class Simplifier {
    * Eliminate quantifiers, by substituting every possible constant value for a
    * quantified variable
    */
-  public static ITheory eliminateQuantifiers(ITheory t) {
+  public static ITheory eliminateQuantifiers(ITheory t, Collection<? extends IFormula> constraints) {
     if (t == null) {
       throw new IllegalArgumentException("t is null");
     }
     Collection<IFormula> sentences = HashSetFactory.make();
-    for (IFormula s : t.getSentences()) {
+    for (IFormula s : t.getSentencesRelevantToConstraints(constraints)) {
       sentences.addAll(eliminateQuantifiers(s));
     }
     return BasicTheory.make(t.getVocabulary(), sentences);

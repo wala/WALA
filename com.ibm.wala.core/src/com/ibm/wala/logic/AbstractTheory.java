@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
+import java.util.Collection;
 import java.util.TreeSet;
 
 public abstract class AbstractTheory extends DefaultDecorator implements ITheory {
@@ -31,4 +32,12 @@ public abstract class AbstractTheory extends DefaultDecorator implements ITheory
     return result.toString();
   }
 
+  /**
+   * by default, just return all sentences
+   */
+  public Collection<? extends IFormula> getSentencesRelevantToConstraints(Collection<? extends IFormula> constraints) {
+    return getSentences();
+  }
+
+  
 }

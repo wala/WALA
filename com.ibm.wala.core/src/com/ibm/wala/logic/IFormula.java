@@ -41,7 +41,7 @@ public interface IFormula {
   public Collection<? extends IConstant> getConstants();
   
   /**
-   * @return all terms that appear in this formula, including recursive descent on on-atomic terms
+   * @return all terms that appear in this formula, including recursive descent non on-atomic terms
    */
   public Collection<? extends ITerm> getAllTerms();
   

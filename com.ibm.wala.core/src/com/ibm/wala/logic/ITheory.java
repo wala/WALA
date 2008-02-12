@@ -22,6 +22,18 @@ public interface ITheory {
   
   public IVocabulary getVocabulary();
 
+  /**
+   * get all sentences in theory
+   * TODO: remove this, replace with getSentencesRelevantToConstraints(empty)? MS
+   * @return the sentences
+   */
   public Collection<? extends IFormula> getSentences();
+  
+  /**
+   * 
+   * @param constraints
+   * @return those sentences in this theory relevant to constraints
+   */
+  public Collection<? extends IFormula> getSentencesRelevantToConstraints(Collection<? extends IFormula> constraints);
   
 }
