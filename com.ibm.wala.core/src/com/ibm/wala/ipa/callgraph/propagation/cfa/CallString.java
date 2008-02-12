@@ -69,4 +69,13 @@ public class CallString implements ContextItem {
 
     return false;
   }
+  
+  public CallSiteReference[] getCallSiteRefs() {
+    return this.sites;
+  }
+  
+  public IMethod[] getMethods() {
+    return this.methods;
+  }
+  
 }
