@@ -499,6 +499,9 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
    * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
    */
   public int getProgramCounter(int index) {
+    if (getInstructions().length <= index) {
+      throw new IllegalArgumentException("invalid index " + index + " " + getInstructions().length);
+    }
     if (getInstructions()[index] instanceof SSAInvokeInstruction) {
       return ((SSAInvokeInstruction) getInstructions()[index]).getCallSite().getProgramCounter();
     } else {
