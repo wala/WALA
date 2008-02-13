@@ -120,7 +120,7 @@ public class GVSDG {
       AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
       CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
-      CallGraph cg = builder.makeCallGraph(options);
+      CallGraph cg = builder.makeCallGraph(options,null);
       SDG sdg = new SDG(cg, builder.getPointerAnalysis(), dOptions, cOptions);
       try {
         GraphIntegrity.check(sdg);

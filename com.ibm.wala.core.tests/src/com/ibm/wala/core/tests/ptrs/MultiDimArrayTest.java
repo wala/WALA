@@ -62,7 +62,7 @@ public class MultiDimArrayTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(),cha, scope);
-    CallGraph cg = builder.makeCallGraph(options);
+    CallGraph cg = builder.makeCallGraph(options, null);
     PointerAnalysis pa = builder.getPointerAnalysis();
     System.err.println(pa);
     

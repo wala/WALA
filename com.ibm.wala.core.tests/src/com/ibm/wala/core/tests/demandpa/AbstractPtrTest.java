@@ -202,7 +202,7 @@ public abstract class AbstractPtrTest extends TestCase {
     // of clone() for pointer analysis, but some tests rely on RTA CG precision
     // so we use it here
     CallGraphBuilder cgBuilder = Util.makeRTABuilder(options, analysisCache, cha, scope);
-    final CallGraph cg = cgBuilder.makeCallGraph(options);
+    final CallGraph cg = cgBuilder.makeCallGraph(options, null);
     // System.err.println(cg.toString());
 
     MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, false);

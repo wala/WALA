@@ -210,13 +210,13 @@ public class DemandCastChecker {
     if (CHEAP_CG) {
       // ret = CallGraphTestUtil.buildRTA(options, cha, scope, warnings);
       SSAPropagationCallGraphBuilder builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
-      ret = builder.makeCallGraph(options);
+      ret = builder.makeCallGraph(options,null);
       // we want vanilla 0-1 CFA, which has one abstract loc per allocation
       heapModel = Util.makeVanillaZeroOneCFABuilder(options, cache, cha, scope);
     } else {
       final SSAPropagationCallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
       heapModel = builder;
-      ret = builder.makeCallGraph(options);
+      ret = builder.makeCallGraph(options,null);
 
     }
     return ret;

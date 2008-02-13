@@ -54,7 +54,7 @@ public class CallGraphTestUtil {
     S.start();
 
     CallGraphBuilder builder = Util.makeRTABuilder(options, cache, cha, scope);
-    CallGraph cg = builder.makeCallGraph(options);
+    CallGraph cg = builder.makeCallGraph(options, null);
 
     S.stop();
     Trace.println(S.report());
@@ -67,7 +67,7 @@ public class CallGraphTestUtil {
     S.start();
 
     CallGraphBuilder builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
-    CallGraph cg = builder.makeCallGraph(options);
+    CallGraph cg = builder.makeCallGraph(options, null);
     if (testPAtoString) {
       builder.getPointerAnalysis().toString();
     }
@@ -83,7 +83,7 @@ public class CallGraphTestUtil {
     S.start();
 
     CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, cache, cha, scope);
-    CallGraph cg = builder.makeCallGraph(options);
+    CallGraph cg = builder.makeCallGraph(options, null);
 
     S.stop();
     Trace.println(S.report());
@@ -96,7 +96,7 @@ public class CallGraphTestUtil {
     S.start();
 
     CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
-    CallGraph cg = builder.makeCallGraph(options);
+    CallGraph cg = builder.makeCallGraph(options, null);
     if (testPAtoString) {
       builder.getPointerAnalysis().toString();
     }
@@ -112,7 +112,7 @@ public class CallGraphTestUtil {
     S.start();
 
     CallGraphBuilder builder = Util.makeZeroContainerCFABuilder(options, cache, cha, scope);
-    CallGraph cg = builder.makeCallGraph(options);
+    CallGraph cg = builder.makeCallGraph(options, null);
 
     S.stop();
     Trace.println(S.report());
@@ -125,7 +125,7 @@ public class CallGraphTestUtil {
     S.start();
 
     CallGraphBuilder builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
-    CallGraph cg = builder.makeCallGraph(options);
+    CallGraph cg = builder.makeCallGraph(options, null);
 
     S.stop();
     Trace.println(S.report());

@@ -107,7 +107,7 @@ public class SWTCallGraph {
       // //
       com.ibm.wala.ipa.callgraph.CallGraphBuilder builder = Util.makeZeroCFABuilder(options, new AnalysisCache(), cha, scope, null,
           null);
-      CallGraph cg = builder.makeCallGraph(options);
+      CallGraph cg = builder.makeCallGraph(options,null);
 
       System.out.println(CallGraphStats.getStats(cg));
 

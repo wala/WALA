@@ -46,14 +46,13 @@ import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * <P>
- * A simple thread-level escape analysis: this code computes the set of classes
- * of which some instance may be accessed by some thread other than the one that
- * created it.
+ * A simple thread-level escape analysis: this code computes the set of classes of which some instance may be accessed
+ * by some thread other than the one that created it.
  * </P>
  * 
  * <P>
- * The algorithm is not very bright; it is based on the observation that there
- * are only three ways for an object to pass from one thread to another.
+ * The algorithm is not very bright; it is based on the observation that there are only three ways for an object to pass
+ * from one thread to another.
  * <UL>
  * <LI> The object is stored into a static variable.
  * <LI> The object is stored into an instance field of a Thread
@@ -78,28 +77,25 @@ import com.ibm.wala.util.warnings.WalaException;
  */
 public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
 
-
   private final Set<JarFile> applicationJarFiles;
 
   private final String applicationMainClass;
 
   /**
-   * The two input parameters define the program to analyze: the jars of .class
-   * files and the main class to start from.
+   * The two input parameters define the program to analyze: the jars of .class files and the main class to start from.
    */
   public SimpleThreadEscapeAnalysis(Set<JarFile> applicationJarFiles, String applicationMainClass) {
     this.applicationJarFiles = applicationJarFiles;
     this.applicationMainClass = applicationMainClass;
   }
-  
+
   @Override
   protected CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
     return Util.makeZeroCFABuilder(options, cache, cha, scope);
   }
 
   /**
-   * Given a root path, add it to the set if it is a jar, or traverse it
-   * recursively if it is a directory.
+   * Given a root path, add it to the set if it is a jar, or traverse it recursively if it is a directory.
    */
   private void collectJars(File f, Set<JarFile> result) throws IOException {
     if (f.isDirectory()) {
@@ -113,8 +109,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
   }
 
   /**
-   * Collect the set of JarFiles that constitute the system libraries of the
-   * running JRE.
+   * Collect the set of JarFiles that constitute the system libraries of the running JRE.
    */
   private JarFile[] getSystemJars() throws IOException {
     String javaHomePath = "garbage";
@@ -147,8 +142,8 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
   }
 
   /**
-   * Take the given set of JarFiles that constitute the program, and return a
-   * set of Module files as expected by the WALA machinery.
+   * Take the given set of JarFiles that constitute the program, and return a set of Module files as expected by the
+   * WALA machinery.
    */
   private Set<JarFileModule> getModuleFiles() {
     Set<JarFileModule> result = HashSetFactory.make();
@@ -161,10 +156,11 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
 
   /**
    * The heart of the analysis.
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
+   * @throws CancelException
+   * @throws IllegalArgumentException
    */
-  public Set<IClass> gatherThreadEscapingClasses() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+  public Set<IClass> gatherThreadEscapingClasses() throws IOException, ClassHierarchyException, IllegalArgumentException,
+      CancelException {
 
     //
     // set the application to analyze
@@ -202,7 +198,7 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
     //
     // build the call graph
     //
-    buildCallGraph(cha, options, true);
+    buildCallGraph(cha, options, true, null);
 
     //
     // extract data for analysis
@@ -322,14 +318,12 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
   }
 
   /**
-   * This main program shows one example use of thread escape analysis:
-   * producing a set of fields to be monitored for a dynamic race detector. The
-   * idea is that any field might have a race with two excpetions: final fields
-   * do not have races since there are no writes to them, and volatile fields
-   * have atomic read and write semantics provided by trhe VM. Hence, this piece
-   * of code produces a list of all other fields.
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
+   * This main program shows one example use of thread escape analysis: producing a set of fields to be monitored for a
+   * dynamic race detector. The idea is that any field might have a race with two excpetions: final fields do not have
+   * races since there are no writes to them, and volatile fields have atomic read and write semantics provided by trhe
+   * VM. Hence, this piece of code produces a list of all other fields.
+   * @throws CancelException
+   * @throws IllegalArgumentException
    */
   public static void main(String[] args) throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
     String mainClassName = args[0];

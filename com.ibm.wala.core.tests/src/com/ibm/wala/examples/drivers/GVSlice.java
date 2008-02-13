@@ -151,7 +151,7 @@ public class GVSlice {
       CallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, new AnalysisCache(), cha, scope);
       // CallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, new
       // AnalysisCache(), cha, scope);
-      CallGraph cg = builder.makeCallGraph(options);
+      CallGraph cg = builder.makeCallGraph(options,null);
       SDG sdg = new SDG(cg, builder.getPointerAnalysis(), dOptions, cOptions);
 
       // find the call statement of interest
