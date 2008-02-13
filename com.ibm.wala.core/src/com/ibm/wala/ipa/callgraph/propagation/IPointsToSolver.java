@@ -10,13 +10,17 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import com.ibm.wala.eclipse.util.CancelException;
 
 /**
+ * Basic interface for a pointer analysis solver.
+ * 
  * @author sfink
  *
  */
 public interface IPointsToSolver {
 
-  public void solve() throws IllegalArgumentException, CancelException;
+  public void solve(IProgressMonitor monitor) throws IllegalArgumentException, CancelException;
 }

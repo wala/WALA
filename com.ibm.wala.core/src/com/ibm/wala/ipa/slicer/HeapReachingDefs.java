@@ -24,6 +24,8 @@ import com.ibm.wala.dataflow.graph.BitVectorSolver;
 import com.ibm.wala.dataflow.graph.BitVectorUnion;
 import com.ibm.wala.dataflow.graph.BitVectorUnionVector;
 import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
+import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.eclipse.util.CancelRuntimeException;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -133,7 +135,11 @@ public class HeapReachingDefs {
       System.err.println("Solve ");
     }
     BitVectorSolver<? extends ISSABasicBlock> solver = new BitVectorSolver<ExplodedBasicBlock>(rd);
-    solver.solve();
+    try {
+      solver.solve(null);
+    } catch (CancelException e) {
+      throw new CancelRuntimeException(e);
+    }
     if (VERBOSE) {
       System.err.println("Solved. ");
     }

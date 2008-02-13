@@ -10,6 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.fixpoint;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
+import com.ibm.wala.eclipse.util.CancelException;
+
 /**
  * Solves a set of constraints
  */
@@ -28,5 +32,5 @@ public interface IFixedPointSolver<T extends IVariable>  {
    * @return true iff the evaluation of some constraint caused a change in the
    *         value of some variable.
    */
-  public boolean solve();
+  public boolean solve(IProgressMonitor monitor) throws CancelException;
 }

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.util.debug.Trace;
 
@@ -33,8 +35,7 @@ public class StandardSolver extends AbstractPointsToSolver {
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
    */
   @Override
-  public void solve() throws IllegalArgumentException, CancelException {
-    
+  public void solve(IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
     int i = 0;
     do {
       i++;
@@ -42,7 +43,7 @@ public class StandardSolver extends AbstractPointsToSolver {
       if (DEBUG) {
         Trace.println("Iteration " + i);
       }
-      getSystem().solve();
+      getSystem().solve(monitor);
       if (DEBUG) {
         Trace.println("Solved " + i);
       }

@@ -16,6 +16,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.jar.JarFile;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import com.ibm.wala.analysis.pointers.BasicHeapGraph;
 import com.ibm.wala.analysis.pointers.HeapGraph;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
@@ -143,10 +145,10 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
 
   protected abstract CallGraphBuilder getCallGraphBuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache);
 
-  protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis) throws IllegalArgumentException, CancelException {
+  protected CallGraphBuilder buildCallGraph(IClassHierarchy cha, AnalysisOptions options, boolean savePointerAnalysis, IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
     CallGraphBuilder builder = getCallGraphBuilder(cha, options, cache);
 
-    cg = builder.makeCallGraph(options);
+    cg = builder.makeCallGraph(options, monitor);
 
     if (savePointerAnalysis) {
       pointerFlowGraphFactory = builder.getPointerFlowGraphFactory();
@@ -316,11 +318,11 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     Iterable<Entrypoint> eps = entrypointBuilder.createEntrypoints(scope, cha);
     options = getDefaultOptions(eps);
     cache = makeDefaultCache();
-    return buildCallGraph(cha, options, true);
+    return buildCallGraph(cha, options, true, null);
   }
 
   public CallGraph buildDefaultCallGraph() throws IllegalArgumentException, CancelException, IOException {
-    return defaultCallGraphBuilder().makeCallGraph(options);
+    return defaultCallGraphBuilder().makeCallGraph(options, null);
   }
 
   public AnalysisCache getCache() {

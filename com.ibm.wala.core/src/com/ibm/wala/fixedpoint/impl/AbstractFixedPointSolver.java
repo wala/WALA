@@ -13,6 +13,10 @@ package com.ibm.wala.fixedpoint.impl;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
+import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.eclipse.util.MonitorUtil;
 import com.ibm.wala.fixpoint.FixedPointConstants;
 import com.ibm.wala.fixpoint.IFixedPointSolver;
 import com.ibm.wala.fixpoint.IFixedPointStatement;
@@ -130,7 +134,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable> implements I
    *         value of some variable.
    */
   @SuppressWarnings("unchecked")
-  public boolean solve() {
+  public boolean solve(IProgressMonitor monitor) throws CancelException {
 
     boolean globalChange = false;
 
@@ -139,7 +143,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable> implements I
     }
 
     while (!workList.isEmpty()) {
-
+      MonitorUtil.worked(monitor, 1);
       orderStatements();
 
       // duplicate insertion detection

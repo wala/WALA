@@ -17,6 +17,8 @@ import java.util.Map;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.dataflow.graph.BitVectorSolver;
+import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.eclipse.util.CancelRuntimeException;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -106,16 +108,20 @@ public class ModRef {
   }
 
   private Map<CGNode, OrdinalSet<PointerKey>> transitiveClosure(CallGraph cg, Map<CGNode, Collection<PointerKey>> scan) {
-    GenReach<CGNode, PointerKey> gr = new GenReach<CGNode, PointerKey>(GraphInverter.invert(cg), scan);
-    BitVectorSolver<CGNode> solver = new BitVectorSolver<CGNode>(gr);
-    solver.solve();
-    Map<CGNode, OrdinalSet<PointerKey>> result = HashMapFactory.make();
-    for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
-      CGNode n = it.next();
-      BitVectorVariable bv = solver.getOut(n);
-      result.put(n, new OrdinalSet<PointerKey>(bv.getValue(), gr.getLatticeValues()));
+    try {
+      GenReach<CGNode, PointerKey> gr = new GenReach<CGNode, PointerKey>(GraphInverter.invert(cg), scan);
+      BitVectorSolver<CGNode> solver = new BitVectorSolver<CGNode>(gr);
+      solver.solve(null);
+      Map<CGNode, OrdinalSet<PointerKey>> result = HashMapFactory.make();
+      for (Iterator<? extends CGNode> it = cg.iterator(); it.hasNext();) {
+        CGNode n = it.next();
+        BitVectorVariable bv = solver.getOut(n);
+        result.put(n, new OrdinalSet<PointerKey>(bv.getValue(), gr.getLatticeValues()));
+      }
+      return result;
+    } catch (CancelException e) {
+      throw new CancelRuntimeException(e);
     }
-    return result;
   }
 
   /**

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
@@ -30,7 +32,7 @@ public interface CallGraphBuilder {
    * @throws CancelException 
    * @throws IllegalArgumentException 
    */
-  public CallGraph makeCallGraph(AnalysisOptions options) throws IllegalArgumentException, CancelException;
+  public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor) throws IllegalArgumentException, CancelException;
 
   /**
    * @return the Pointer Analysis information computed as a side-effect of

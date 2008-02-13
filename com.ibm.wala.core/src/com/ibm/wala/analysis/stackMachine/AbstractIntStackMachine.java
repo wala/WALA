@@ -19,6 +19,8 @@ import com.ibm.wala.dataflow.graph.BasicFramework;
 import com.ibm.wala.dataflow.graph.DataflowSolver;
 import com.ibm.wala.dataflow.graph.IKilldallFramework;
 import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
+import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.eclipse.util.CancelRuntimeException;
 import com.ibm.wala.fixedpoint.impl.AbstractStatement;
 import com.ibm.wala.fixedpoint.impl.AbstractVariable;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
@@ -250,7 +252,11 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
   }
 
   public boolean solve() {
-    return solver.solve();
+    try {
+      return solver.solve(null);
+    } catch (CancelException e) {
+      throw new CancelRuntimeException(e);
+    }
   }
 
   /**

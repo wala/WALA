@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
+import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.eclipse.util.CancelRuntimeException;
 import com.ibm.wala.fixedpoint.impl.DefaultFixedPointSolver;
 import com.ibm.wala.fixpoint.BooleanVariable;
 import com.ibm.wala.fixpoint.UnaryOr;
@@ -45,7 +47,11 @@ public class DeadAssignmentElimination {
     }
     DefUse DU = new DefUse(ir);
     DeadValueSystem system = new DeadValueSystem(ir, DU);
-    system.solve();
+    try {
+      system.solve(null);
+    } catch (CancelException e) {
+      throw new CancelRuntimeException(e);
+    }
     doTransformation(ir,system);
   }
 

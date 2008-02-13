@@ -12,6 +12,8 @@ package com.ibm.wala.util.graph;
 
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import com.ibm.wala.dataflow.graph.AbstractMeetOperator;
 import com.ibm.wala.dataflow.graph.BitVectorFramework;
 import com.ibm.wala.dataflow.graph.BitVectorIdentity;
@@ -20,6 +22,7 @@ import com.ibm.wala.dataflow.graph.BitVectorUnion;
 import com.ibm.wala.dataflow.graph.BitVectorUnionConstant;
 import com.ibm.wala.dataflow.graph.DataflowSolver;
 import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.util.collections.Filter;
@@ -97,7 +100,7 @@ public class GraphReachability<T> {
    * @return true iff the evaluation of some equation caused a change in the
    *         value of some variable.
    */
-  public boolean solve() {
+  public boolean solve(IProgressMonitor monitor) throws CancelException{
 
     ITransferFunctionProvider<T, BitVectorVariable> functions = new ITransferFunctionProvider<T, BitVectorVariable>() {
 
@@ -146,7 +149,7 @@ public class GraphReachability<T> {
 
     BitVectorFramework<T, T> f = new BitVectorFramework<T, T>(GraphInverter.invert(g), functions, domain);
     solver = new BitVectorSolver<T>(f);
-    return solver.solve();
+    return solver.solve(monitor);
   }
 
 }

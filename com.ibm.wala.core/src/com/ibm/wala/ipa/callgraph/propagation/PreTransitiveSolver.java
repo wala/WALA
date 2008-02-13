@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.fixedpoint.impl.AbstractFixedPointSolver;
 import com.ibm.wala.fixedpoint.impl.AbstractStatement;
@@ -61,7 +63,7 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
    * @see com.ibm.wala.ipa.callgraph.propagation.IPointsToSolver#solve()
    */
   @Override
-  public void solve() throws IllegalArgumentException, CancelException {
+  public void solve(IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
 
     getBuilder().addConstraintsFromNewNodes();
 

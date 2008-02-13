@@ -15,6 +15,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -223,11 +225,15 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   protected boolean isJavaLangObject(IClass klass) {
     return (klass.getReference().equals(TypeReference.JavaLangObject));
   }
+  
+  public CallGraph makeCallGraph(AnalysisOptions options) throws IllegalArgumentException, CancelException {
+    return makeCallGraph(options, null);
+  }
 
   /*
    * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#makeCallGraph(com.ibm.wala.ipa.callgraph.AnalysisOptions)
    */
-  public CallGraph makeCallGraph(AnalysisOptions options) throws IllegalArgumentException, CancelException {
+  public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
@@ -266,7 +272,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     customInit();
 
     solver = makeSolver();
-    solver.solve();
+    solver.solve(monitor);
 
     return callGraph;
   }

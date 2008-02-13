@@ -13,9 +13,13 @@ package com.ibm.wala.analysis.typeInference;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.dataflow.ssa.SSAInference;
+import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.eclipse.util.CancelRuntimeException;
 import com.ibm.wala.fixedpoint.impl.AbstractOperator;
 import com.ibm.wala.fixedpoint.impl.NullaryOperator;
 import com.ibm.wala.fixpoint.FixedPointConstants;
@@ -103,14 +107,22 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     solve();
   }
 
-  @Override
   public boolean solve() {
-    if (solved) {
-      return false;
-    } else {
-      boolean result = super.solve();
-      solved = true;
-      return result;
+    return solve(null);
+  }
+  
+  @Override
+  public boolean solve(IProgressMonitor monitor) {
+    try {
+      if (solved) {
+        return false;
+      } else {
+        boolean result = super.solve(null);
+        solved = true;
+        return result;
+      }
+    } catch (CancelException e) {
+      throw new CancelRuntimeException(e);
     }
   }
 
