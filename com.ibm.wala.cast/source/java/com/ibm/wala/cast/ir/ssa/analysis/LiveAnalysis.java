@@ -18,6 +18,8 @@ import com.ibm.wala.dataflow.graph.BitVectorSolver;
 import com.ibm.wala.dataflow.graph.BitVectorUnion;
 import com.ibm.wala.dataflow.graph.IKilldallFramework;
 import com.ibm.wala.dataflow.graph.ITransferFunctionProvider;
+import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.eclipse.util.CancelRuntimeException;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.ssa.IR;
@@ -190,7 +192,11 @@ public class LiveAnalysis {
       }
     });
 
-    S.solve();
+    try {
+      S.solve(null);
+    } catch (CancelException e) {
+      throw new CancelRuntimeException(e);
+    }
 
     return new Result() {
 
