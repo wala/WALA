@@ -384,6 +384,10 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
       assert original != null;
     }
     
+    public ExplodedControlFlowGraph getExplodedCFG() {
+      return ExplodedControlFlowGraph.this;
+    }
+    
     public Iterator<TypeReference> getCaughtExceptionTypes() {
       if (original instanceof ExceptionHandlerBasicBlock) {
         ExceptionHandlerBasicBlock eb = (ExceptionHandlerBasicBlock)original;
@@ -530,6 +534,10 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
       }
     }
     return s.toString();
+  }
+
+  public IR getIR() {
+    return ir;
   }
 
 }
