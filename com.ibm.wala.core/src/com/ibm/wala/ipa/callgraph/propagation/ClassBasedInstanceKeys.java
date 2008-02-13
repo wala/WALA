@@ -24,8 +24,8 @@ import com.ibm.wala.util.warnings.ResolutionFailure;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * This class provides Instance Key call backs where each instance is in the
- * same equivalence class as all other instances of the same concrete type.
+ * This class provides Instance Key call backs where each instance is in the same equivalence class as all other
+ * instances of the same concrete type.
  * 
  * @author sfink
  */
@@ -65,9 +65,8 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
    * @see com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory#getInstanceKeyForMultiNewArray(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.NewSiteReference, int)
    * 
-   * dim == 0 represents the first dimension, e.g., the [Object; instances in
-   * [[Object; e.g., the [[Object; instances in [[[Object; dim == 1 represents
-   * the second dimension, e.g., the [Object instances in [[[Object;
+   * dim == 0 represents the first dimension, e.g., the [Object; instances in [[Object; e.g., the [[Object; instances in
+   * [[[Object; dim == 1 represents the second dimension, e.g., the [Object instances in [[[Object;
    */
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     if (DEBUG) {
@@ -118,15 +117,21 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
   }
 
   /**
-   * @return a set of ConcreteTypeKeys that represent the exceptions the PEI may
-   *         throw.
+   * @return a set of ConcreteTypeKeys that represent the exceptions the PEI may throw.
    */
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter peiLoc, TypeReference type) {
     return new ConcreteTypeKey(cha.lookupClass(type));
   }
 
   public InstanceKey getInstanceKeyForClassObject(TypeReference type) {
-    return new ConcreteTypeKey(cha.lookupClass(TypeReference.JavaLangClass));
+    IClass klass = cha.lookupClass(type);
+    if (klass == null) {
+      return new ConcreteTypeKey(cha.lookupClass(TypeReference.JavaLangClass));
+    } else {
+      // return the IClass itself, wrapped as a constant!
+      return new ConstantKey<IClass>(klass, cha.lookupClass(TypeReference.JavaLangClass));
+    }
+
   }
 
   /**

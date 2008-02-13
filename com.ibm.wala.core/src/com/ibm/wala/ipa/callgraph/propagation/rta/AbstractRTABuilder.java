@@ -430,7 +430,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       ReflectionSpecification reflect) {
 
     SSAContextInterpreter defI = new DefaultSSAInterpreter(getOptions(), getAnalysisCache());
-    defI = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(getOptions(),  getAnalysisCache(), reflect),
+    defI = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, getOptions(), getAnalysisCache(), reflect),
         defI);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     return contextInterpreter;

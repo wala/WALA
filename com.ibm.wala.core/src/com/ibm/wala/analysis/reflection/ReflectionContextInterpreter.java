@@ -15,6 +15,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * {@link SSAContextInterpreter} to handle all reflection procession.
@@ -24,13 +25,14 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterprete
  */
 public class ReflectionContextInterpreter extends DelegatingSSAContextInterpreter {
 
-  public static ReflectionContextInterpreter createReflectionContextInterpreter(AnalysisOptions options, AnalysisCache cache,
+  public static ReflectionContextInterpreter createReflectionContextInterpreter(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
       ReflectionSpecification userSpec) {
-    return new ReflectionContextInterpreter(options, cache, userSpec);
+    return new ReflectionContextInterpreter(cha, options, cache, userSpec);
   }
 
-  private ReflectionContextInterpreter(AnalysisOptions options, AnalysisCache cache, ReflectionSpecification userSpec) {
-    super(new ForNameContextInterpreter(), new FactoryBypassInterpreter(options, cache, userSpec));
+  private ReflectionContextInterpreter(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ReflectionSpecification userSpec) {
+    super(new DelegatingSSAContextInterpreter(new ForNameContextInterpreter(), new NewInstanceContextInterpreter(cha)),
+        new FactoryBypassInterpreter(options, cache, userSpec));
   }
 
 }

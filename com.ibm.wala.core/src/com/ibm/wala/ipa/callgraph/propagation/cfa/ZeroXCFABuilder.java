@@ -41,7 +41,7 @@ public class ZeroXCFABuilder extends SSAPropagationCallGraphBuilder {
     setContextSelector(contextSelector);
 
     SSAContextInterpreter c = new DefaultSSAInterpreter(options, cache);
-    c = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(options, getAnalysisCache(), reflect), c);
+    c = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, options, getAnalysisCache(), reflect), c);
     SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, c);
     setContextInterpreter(contextInterpreter);
 

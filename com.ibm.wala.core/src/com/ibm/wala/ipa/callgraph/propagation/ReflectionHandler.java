@@ -28,10 +28,7 @@ import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
-import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACheckCastInstruction;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
@@ -120,25 +117,14 @@ public class ReflectionHandler {
   private Set<CGNode> modifyFactoryInterpreter(Statement returnStatement, Collection<Statement> casts,
       RTAContextInterpreter contextInterpreter, IClassHierarchy cha) {
     HashSet<CGNode> result = HashSetFactory.make();
-    IR ir = returnStatement.getNode().getIR();
-    LocalPointerKey pk = null;
 
-    // pick some return statement. any will do.
-    for (Iterator it2 = ir.iterateNormalInstructions(); it2.hasNext();) {
-      SSAInstruction s = (SSAInstruction) it2.next();
-      if (s instanceof SSAReturnInstruction) {
-        SSAReturnInstruction r = (SSAReturnInstruction) s;
-        pk = (LocalPointerKey) builder.getPointerKeyForLocal(returnStatement.getNode(), r.getResult());
-        break;
-      }
-    }
     for (Statement st : casts) {
       SSACheckCastInstruction c = (SSACheckCastInstruction) ((NormalStatement) st).getInstruction();
       TypeReference type = c.getDeclaredResultType();
       IClass klass = cha.lookupClass(type);
       if (klass != null) {
-        if (contextInterpreter.recordFactoryType(pk.getNode(), klass)) {
-          result.add(pk.getNode());
+        if (contextInterpreter.recordFactoryType(returnStatement.getNode(), klass)) {
+          result.add(returnStatement.getNode());
         }
       }
     }

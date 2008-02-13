@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.reflection;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -37,9 +36,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
-import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerSiteContext;
-import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.ReflectionSummary;
 import com.ibm.wala.ipa.summaries.SummarizedMethod;
@@ -64,7 +61,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
@@ -72,15 +68,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * 
  * @author sfink
  */
-class FactoryBypassInterpreter implements RTAContextInterpreter, SSAContextInterpreter {
-
-  private static final boolean DEBUG = false;
-
-  private final static int CONE_BOUND = 10;
-
-  private int indexLocal = 100;
-
-  private final Map<TypeReference, Integer> typeIndexMap = HashMapFactory.make();
+class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   /**
    * A Map from CallerSiteContext -> Set <TypeReference>represents the types a
@@ -94,21 +82,6 @@ class FactoryBypassInterpreter implements RTAContextInterpreter, SSAContextInter
   private final Map<Context, SpecializedFactoryMethod> syntheticMethodCache = HashMapFactory.make();
 
   /**
-   * Governing analysis options
-   */
-  private final AnalysisOptions options;
-  
-  /**
-   * cache of analysis information
-   */
-  private final AnalysisCache cache;
-
-  /**
-   * User-defined reflection specification
-   */
-  private final ReflectionSpecification userSpec;
-
-  /**
    * @param options
    *          governing analysis options
    */
@@ -117,27 +90,6 @@ class FactoryBypassInterpreter implements RTAContextInterpreter, SSAContextInter
     this.userSpec = userSpec;
     this.cache = cache;
   }
-
-  private int getLocalForType(TypeReference T) {
-    Integer I = typeIndexMap.get(T);
-    if (I == null) {
-      typeIndexMap.put(T, I = new Integer(indexLocal += 2));
-    }
-    return I.intValue();
-  }
-
-  private int getExceptionsForType(TypeReference T) {
-    return getLocalForType(T) + 1;
-  }
-
-  private int getCallSiteForType(TypeReference T) {
-    return getLocalForType(T);
-  }
-
-  private int getNewSiteForType(TypeReference T) {
-    return getLocalForType(T) + 1;
-  }
-
 
   public IR getIR(CGNode node) {
     if (node == null) {
@@ -235,28 +187,162 @@ class FactoryBypassInterpreter implements RTAContextInterpreter, SSAContextInter
     };
   }
 
+  public boolean recordType(IClassHierarchy cha, Context context, TypeReference type) {
+    Set<TypeReference> types = map.get(context);
+    if (types == null) {
+      types = HashSetFactory.make(2);
+      map.put(context, types);
+    }
+    if (types.contains(type)) {
+      return false;
+    } else {
+      types.add(type);
+      // update any extant synthetic method
+      SpecializedFactoryMethod m = syntheticMethodCache.get(context);
+      if (m != null) {
+        TypeAbstraction T = typeRef2TypeAbstraction(cha, type);
+        m.addStatementsForTypeAbstraction(T);
+        cache.getSSACache().invalidate(m, context);
+      }
+      return true;
+    }
+  }
+
+  /*
+   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
+   *      com.ibm.wala.classLoader.IClass)
+   */
+  public boolean recordFactoryType(CGNode node, IClass klass) {
+    if (klass == null) {
+      throw new IllegalArgumentException("klass is null");
+    }
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
+    return recordType(node.getMethod().getClassHierarchy(), node.getContext(), klass.getReference());
+  }
+
+ 
+  public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
+    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
+    try {
+      return CodeScanner.getFieldsRead(m).iterator();
+    } catch (InvalidClassFileException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
+      return null;
+    }
+  }
+
+  public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
+    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
+    try {
+      return CodeScanner.getFieldsWritten(m).iterator();
+    } catch (InvalidClassFileException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
+      return null;
+    }
+  }
+
+  private SpecializedFactoryMethod findOrCreateSpecializedFactoryMethod(CGNode node) {
+    SpecializedFactoryMethod m = syntheticMethodCache.get(node.getContext());
+    if (m == null) {
+      Set types = getTypesForContext(node.getContext());
+      m = new SpecializedFactoryMethod((SummarizedMethod) node.getMethod(), node.getContext(), types);
+      syntheticMethodCache.put(node.getContext(), m);
+    }
+    return m;
+  }
+
+  public Set getCaughtExceptions(CGNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
+    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
+    try {
+      return CodeScanner.getCaughtExceptions(m);
+    } catch (InvalidClassFileException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
+      return null;
+    }
+  }
+
+  public boolean hasObjectArrayLoad(CGNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
+    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
+    try {
+      return CodeScanner.hasObjectArrayLoad(m);
+    } catch (InvalidClassFileException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
+      return false;
+    }
+  }
+
+  public boolean hasObjectArrayStore(CGNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
+    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
+    try {
+      return CodeScanner.hasObjectArrayStore(m);
+    } catch (InvalidClassFileException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
+      return false;
+    }
+  }
+
+  public Iterator iterateCastTypes(CGNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
+    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
+    try {
+      return CodeScanner.iterateCastTypes(m);
+    } catch (InvalidClassFileException e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
+      return null;
+    }
+  }
+
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
+   */
+  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode N) {
+    return getIR(N).getControlFlowGraph();
+  }
+
+  public DefUse getDU(CGNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("node is null");
+    }
+    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
+    return cache.getSSACache().findOrCreateDU(m, node.getContext(), options.getSSAOptions());
+  }
+  
   /**
    * @author sfink
    * 
    */
-  protected class SpecializedFactoryMethod extends SyntheticMethod {
-
-    /**
-     * List of synthetic allocation statements we model for this specialized
-     * instance
-     */
-    final private ArrayList<SSAInstruction> allocations = new ArrayList<SSAInstruction>();
+  protected class SpecializedFactoryMethod extends SpecializedMethod {
 
     /**
      * List of synthetic invoke instructions we model for this specialized
      * instance.
      */
     final private ArrayList<SSAInstruction> calls = new ArrayList<SSAInstruction>();
-
-    /**
-     * List of all instructions
-     */
-    private final ArrayList<SSAInstruction> allInstructions = new ArrayList<SSAInstruction>();
 
     /**
      * The method being modelled
@@ -284,9 +370,7 @@ class FactoryBypassInterpreter implements RTAContextInterpreter, SSAContextInter
       }
     }
 
-    private final HashSet<TypeReference> types = HashSetFactory.make(5);
-
-    private SpecializedFactoryMethod(final SummarizedMethod m, Context context, final Set S) {
+    protected SpecializedFactoryMethod(final SummarizedMethod m, Context context, final Set S) {
       super(m, m.getDeclaringClass(), m.isStatic(), true);
 
       this.context = context;
@@ -310,7 +394,7 @@ class FactoryBypassInterpreter implements RTAContextInterpreter, SSAContextInter
       }
     }
 
-    private void addStatementsForTypeAbstraction(TypeAbstraction T) {
+    protected void addStatementsForTypeAbstraction(TypeAbstraction T) {
 
       if (DEBUG) {
         Trace.println("adding " + T + " to " + method);
@@ -392,23 +476,10 @@ class FactoryBypassInterpreter implements RTAContextInterpreter, SSAContextInter
      * @param T
      */
     private void addStatementsForConcreteType(final TypeReference T) {
-      if (types.contains(T))
+      int alloc = addStatementsForConcreteSimpleType(T);
+      if (alloc == -1) {
         return;
-      types.add(T);
-      if (DEBUG) {
-        Trace.println("addStatementsForConcreteType: " + T);
       }
-      NewSiteReference ref = NewSiteReference.make(getNewSiteForType(T), T);
-      int alloc = getLocalForType(T);
-      SSANewInstruction a = new SSANewInstruction(alloc, ref);
-      if (DEBUG) {
-        Trace.println("Added allocation: " + a);
-      }
-
-      allocations.add(a);
-      allInstructions.add(a);
-      SSAReturnInstruction r = new SSAReturnInstruction(alloc, false);
-      allInstructions.add(r);
       if (T.isArrayType()) {
         MethodReference init = MethodReference.findOrCreate(T, MethodReference.initAtom, MethodReference.defaultInitDesc);
         CallSiteReference site = CallSiteReference.make(getCallSiteForType(T), init, IInvokeInstruction.Dispatch.SPECIAL);
@@ -420,7 +491,7 @@ class FactoryBypassInterpreter implements RTAContextInterpreter, SSAContextInter
         allInstructions.add(s);
       }
     }
-
+    
     private int addOriginalStatements(SummarizedMethod m) {
       SSAInstruction[] original = m.getStatements(options.getSSAOptions());
       // local value number 1 is "this", so the next free value number is 2
@@ -565,239 +636,5 @@ class FactoryBypassInterpreter implements RTAContextInterpreter, SSAContextInter
 
       return new SyntheticIR(this, context, new InducedCFG(instrs, this, context), instrs, options, constants);
     }
-  }
-
-  public boolean recordType(IClassHierarchy cha, Context context, TypeReference type) {
-    Set<TypeReference> types = map.get(context);
-    if (types == null) {
-      types = HashSetFactory.make(2);
-      map.put(context, types);
-    }
-    if (types.contains(type)) {
-      return false;
-    } else {
-      types.add(type);
-      // update any extant synthetic method
-      SpecializedFactoryMethod m = syntheticMethodCache.get(context);
-      if (m != null) {
-        TypeAbstraction T = typeRef2TypeAbstraction(cha, type);
-        m.addStatementsForTypeAbstraction(T);
-        cache.getSSACache().invalidate(m, context);
-      }
-      return true;
-    }
-  }
-
-  /**
-   * @param type
-   * @return a TypeAbstraction object representing this type. We just use
-   *         ConeTypes by default, since we don't propagate information allowing
-   *         us to distinguish between points and cones yet.
-   */
-  private TypeAbstraction typeRef2TypeAbstraction(IClassHierarchy cha, TypeReference type) {
-    IClass klass = cha.lookupClass(type);
-    if (klass != null) {
-      return new ConeType(klass);
-      // if (klass.isAbstract() || klass.isInterface()) {
-      // return new ConeType(klass, cha);
-      // } else {
-      // return new PointType(klass, cha);
-      // }
-    }
-    Assertions.UNREACHABLE(type.toString());
-    return null;
-  }
-
-  /*
-   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#recordFactoryType(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.IClass)
-   */
-  public boolean recordFactoryType(CGNode node, IClass klass) {
-    if (klass == null) {
-      throw new IllegalArgumentException("klass is null");
-    }
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
-    return recordType(node.getMethod().getClassHierarchy(), node.getContext(), klass.getReference());
-  }
-
- 
-  public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
-    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    try {
-      return CodeScanner.getFieldsRead(m).iterator();
-    } catch (InvalidClassFileException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
-    }
-  }
-
-  public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
-    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    try {
-      return CodeScanner.getFieldsWritten(m).iterator();
-    } catch (InvalidClassFileException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
-    }
-  }
-
-  private SpecializedFactoryMethod findOrCreateSpecializedFactoryMethod(CGNode node) {
-    SpecializedFactoryMethod m = syntheticMethodCache.get(node.getContext());
-    if (m == null) {
-      Set types = getTypesForContext(node.getContext());
-      m = new SpecializedFactoryMethod((SummarizedMethod) node.getMethod(), node.getContext(), types);
-      syntheticMethodCache.put(node.getContext(), m);
-    }
-    return m;
-  }
-
-  public Set getCaughtExceptions(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
-    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    try {
-      return CodeScanner.getCaughtExceptions(m);
-    } catch (InvalidClassFileException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
-    }
-  }
-
-  public boolean hasObjectArrayLoad(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
-    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    try {
-      return CodeScanner.hasObjectArrayLoad(m);
-    } catch (InvalidClassFileException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return false;
-    }
-  }
-
-  public boolean hasObjectArrayStore(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
-    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    try {
-      return CodeScanner.hasObjectArrayStore(m);
-    } catch (InvalidClassFileException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return false;
-    }
-  }
-
-  public Iterator iterateCastTypes(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
-    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    try {
-      return CodeScanner.iterateCastTypes(m);
-    } catch (InvalidClassFileException e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-      return null;
-    }
-  }
-
-  /* 
-   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
-   */
-  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode N) {
-    return getIR(N).getControlFlowGraph();
-  }
-
-  /**
-   * @author sfink
-   * 
-   * A waring when we expect excessive pollution from a factory method
-   */
-  private static class ManySubtypesWarning extends Warning {
-
-    final int nImplementors;
-
-    final TypeAbstraction T;
-
-    ManySubtypesWarning(TypeAbstraction T, int nImplementors) {
-      super(Warning.MODERATE);
-      this.T = T;
-      this.nImplementors = nImplementors;
-    }
-
-    @Override
-    public String getMsg() {
-      return getClass().toString() + " : " + T + " " + nImplementors;
-    }
-
-    public static ManySubtypesWarning create(TypeAbstraction T, int n) {
-      return new ManySubtypesWarning(T, n);
-    }
-  }
-
-  /**
-   * @author sfink
-   * 
-   * A warning when we fail to find subtypes for a factory method
-   */
-  private static class NoSubtypesWarning extends Warning {
-
-    final TypeAbstraction T;
-
-    NoSubtypesWarning(TypeAbstraction T) {
-      super(Warning.SEVERE);
-      this.T = T;
-    }
-
-    @Override
-    public String getMsg() {
-      return getClass().toString() + " : " + T;
-    }
-
-    public static NoSubtypesWarning create(TypeAbstraction T) {
-      return new NoSubtypesWarning(T);
-    }
-  }
-
-  /**
-   * A warning when we find flow of a factory allocation to a cast to
-   * {@link Serializable}
-   */
-  private static class IgnoreSerializableWarning extends Warning {
-
-    final private static IgnoreSerializableWarning instance = new IgnoreSerializableWarning();
-
-    @Override
-    public String getMsg() {
-      return getClass().toString();
-    }
-
-    public static IgnoreSerializableWarning create() {
-      return instance;
-    }
-  }
-
-  public DefUse getDU(CGNode node) {
-    if (node == null) {
-      throw new IllegalArgumentException("node is null");
-    }
-    SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    return cache.getSSACache().findOrCreateDU(m, node.getContext(), options.getSSAOptions());
   }
 }
