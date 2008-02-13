@@ -41,6 +41,14 @@ public interface TestConstants {
   public final static String REFLECT1_MAIN = "Lreflection/Reflect1";
 
   public final static String REFLECT2_MAIN = "Lreflection/Reflect2";
+  
+  public final static String REFLECT3_MAIN = "Lreflection/Reflect3";
+
+  public final static String REFLECT4_MAIN = "Lreflection/Reflect4";
+
+  public final static String REFLECT5_MAIN = "Lreflection/Reflect5";
+
+  public final static String REFLECT6_MAIN = "Lreflection/Reflect6";
 
   public final static String SLICE1_MAIN = "Lslice/Slice1";
 
@@ -79,5 +87,7 @@ public interface TestConstants {
   public final static String SLICE_TESTTHROWCATCH = "Lslice/TestThrowCatch";
 
   public final static String SLICE_TESTMESSAGEFORMAT = "Lslice/TestMessageFormat";
+
+
 
 }

@@ -24,9 +24,11 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
@@ -50,13 +52,14 @@ public class ReflectionTest extends WalaTestCase {
   public void testReflect1() throws WalaException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
     ClassHierarchy cha = ClassHierarchy.make(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.REFLECT1_MAIN);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECT1_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     Warnings.clear();
-    CallGraphTest.doCallGraphs(options, new AnalysisCache(),cha, scope);
-    for (Iterator<Warning> it = Warnings.iterator(); it.hasNext(); ) {
-      Warning w = (Warning)it.next();
+    CallGraphTest.doCallGraphs(options, new AnalysisCache(), cha, scope);
+    for (Iterator<Warning> it = Warnings.iterator(); it.hasNext();) {
+      Warning w = (Warning) it.next();
       if (w.toString().indexOf("com/ibm/jvm") > 0) {
         continue;
       }
@@ -65,22 +68,133 @@ public class ReflectionTest extends WalaTestCase {
       }
     }
   }
-  
+
   /**
-   * Test that when analyzing reflect2, the call graph includes a node for java.lang.Integer.<clinit>.
-   * This should be forced by the call for Class.forName("java.lang.Integer").
+   * Test that when analyzing reflect2, the call graph includes a node for java.lang.Integer.<clinit>. This should be
+   * forced by the call for Class.forName("java.lang.Integer").
    */
   public void testReflect2() throws WalaException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
     ClassHierarchy cha = ClassHierarchy.make(scope);
-    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.REFLECT2_MAIN);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECT2_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(),cha, scope, false);
-    
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+
     TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "<clinit>", "()V");
     Set<CGNode> nodes = cg.getNodes(mr);
     assertFalse(nodes.isEmpty());
+  }
+
+  /**
+   * Check that when analyzing Reflect3, the successors of newInstance do not include javax.swing.UIDefaults
+   */
+  public void testReflect3() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "J2SEClassHierarchyExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.REFLECT3_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Class");
+    MethodReference mr = MethodReference.findOrCreate(tr, "newInstance", "()Ljava/lang/Object;");
+    Set<CGNode> newInstanceNodes = cg.getNodes(mr);
+    Set<CGNode> succNodes = HashSetFactory.make();
+    for (CGNode newInstanceNode : newInstanceNodes) {
+      Iterator<? extends CGNode> succNodesIter = cg.getSuccNodes(newInstanceNode);
+      while (succNodesIter.hasNext()) {
+        succNodes.add(succNodesIter.next());
+      }
+    }
+    TypeReference extraneousTR = TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljavax/swing/UIDefaults");
+    MethodReference extraneousMR = MethodReference.findOrCreate(extraneousTR, "<init>", "()V");
+    Set<CGNode> extraneousNodes = cg.getNodes(extraneousMR);
+    succNodes.retainAll(extraneousNodes);
+    assertTrue(succNodes.isEmpty());
+  }
+  
+  
+  /**
+   * Check that when analyzing Reflect4, successors of newInstance() do not include FilePermission ctor.
+   */
+  public void testReflect4() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.REFLECT4_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Class");
+    MethodReference mr = MethodReference.findOrCreate(tr, "newInstance", "()Ljava/lang/Object;");
+    Set<CGNode> newInstanceNodes = cg.getNodes(mr);
+    Set<CGNode> succNodes = HashSetFactory.make();
+    for (CGNode newInstanceNode : newInstanceNodes) {
+        Iterator<? extends CGNode> succNodesIter = cg.getSuccNodes(newInstanceNode);
+        while (succNodesIter.hasNext()) {
+            succNodes.add(succNodesIter.next());
+        }
+    }
+    TypeReference extraneousTR = TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/io/FilePermission");
+    MethodReference extraneousMR = MethodReference.findOrCreate(extraneousTR, "<init>", "(Ljava/lang/String;Ljava/lang/String;)V");
+    Set<CGNode> extraneousNodes = cg.getNodes(extraneousMR);
+    succNodes.retainAll(extraneousNodes);
+    assertTrue(succNodes.isEmpty());
+  }
+  
+  /**
+   * Check that when analyzing Reflect5, successors of newInstance do not include a Reflect5$A ctor
+   */
+  public void testReflect5() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.REFLECT5_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+
+    
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Class");
+    MethodReference mr = MethodReference.findOrCreate(tr, "newInstance", "()Ljava/lang/Object;");
+    Set<CGNode> newInstanceNodes = cg.getNodes(mr);
+    Set<CGNode> succNodes = HashSetFactory.make();
+    for (CGNode newInstanceNode : newInstanceNodes) {
+        Iterator<? extends CGNode> succNodesIter = cg.getSuccNodes(newInstanceNode);
+        while (succNodesIter.hasNext()) {
+            succNodes.add(succNodesIter.next());
+        }
+    }
+    TypeReference extraneousTR = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Reflect5$A");
+    MethodReference extraneousMR = MethodReference.findOrCreate(extraneousTR, "<init>", "()V");
+    Set<CGNode> extraneousNodes = cg.getNodes(extraneousMR);
+    succNodes.retainAll(extraneousNodes);
+    assertTrue(succNodes.isEmpty());
+  }
+  
+  /**
+   * Check that when analyzing Reflect6, successors of newInstance do not include a Reflect6$A ctor
+   */
+  public void testReflect6() throws IOException, ClassHierarchyException, IllegalArgumentException, CancelException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha, TestConstants.REFLECT6_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Ljava/lang/Class");
+    MethodReference mr = MethodReference.findOrCreate(tr, "newInstance", "()Ljava/lang/Object;");
+    Set<CGNode> newInstanceNodes = cg.getNodes(mr);
+    Set<CGNode> succNodes = HashSetFactory.make();
+    for (CGNode newInstanceNode : newInstanceNodes) {
+        Iterator<? extends CGNode> succNodesIter = cg.getSuccNodes(newInstanceNode);
+        while (succNodesIter.hasNext()) {
+            succNodes.add(succNodesIter.next());
+        }
+    }
+    TypeReference extraneousTR = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Reflect6$A");
+    MethodReference extraneousMR = MethodReference.findOrCreate(extraneousTR, "<init>", "(I)V");
+    Set<CGNode> extraneousNodes = cg.getNodes(extraneousMR);
+    succNodes.retainAll(extraneousNodes);
+    assertTrue(succNodes.isEmpty());
   }
 
 }
