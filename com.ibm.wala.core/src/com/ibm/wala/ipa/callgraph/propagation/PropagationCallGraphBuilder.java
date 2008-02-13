@@ -1306,7 +1306,9 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
           InstanceKey I = system.getInstanceKey(i);
           if (!representsNullType(I)) {
             PointerKey p = getPointerKeyForInstanceField(I, field);
-            sideEffect.b |= system.newConstraint(p, instance);
+            if (p != null) {
+              sideEffect.b |= system.newConstraint(p, instance);
+            }
           }
         }
       };
