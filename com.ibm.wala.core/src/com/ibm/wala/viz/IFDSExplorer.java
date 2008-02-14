@@ -21,6 +21,7 @@ import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.warnings.WalaException;
+import com.ibm.wala.viz.DotUtil.DotOutputType;
 
 /**
  * Explore the result of an IFDS problem with an SWT viewer and ghostview.
@@ -69,7 +70,7 @@ public class IFDSExplorer {
       e.printStackTrace();
       Assertions.UNREACHABLE();
     }
-    String psFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + "ir.ps";
+    String outputFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + (DotUtil.getOutputType() == DotOutputType.PS ? "ir.ps" : "ir.svg");
     String dotFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + "ir.dt";
 
     final SWTTreeViewer v = new SWTTreeViewer();
@@ -78,7 +79,7 @@ public class IFDSExplorer {
     v.setBlockInput(true);
     Collection<? extends P> roots =  InferGraphRoots.inferRoots(r.getProblem().getSupergraph().getProcedureGraph());
     v.setRootsInput(roots);
-    v.getPopUpActions().add(new ViewIFDSLocalAction<T, P>(v, r, psFile, dotFile, dotExe, gvExe));
+    v.getPopUpActions().add(new ViewIFDSLocalAction<T, P>(v, r, outputFile, dotFile, dotExe, gvExe));
     v.run();
   }
 

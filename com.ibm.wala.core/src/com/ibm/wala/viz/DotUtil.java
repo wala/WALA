@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.warnings.WalaException;
 
@@ -31,25 +32,54 @@ import com.ibm.wala.util.warnings.WalaException;
 public class DotUtil {
   
   /**
+   * possible output formats for dot
+   * @author manu
+   *
+   */
+  public static enum DotOutputType { PS,SVG }
+  
+  private static DotOutputType outputType = DotOutputType.PS;
+  
+  public static void setOutputType(DotOutputType outType) {
+    outputType = outType;
+  }
+  
+  public static DotOutputType getOutputType() {
+    return outputType;
+  }
+  
+  private static String outputTypeCmdLineParam() {
+    switch (outputType) {
+    case PS: 
+      return "-Tps";
+    case SVG: 
+      return "-Tsvg"; 
+    default:
+      Assertions.UNREACHABLE();
+      return null;
+    }
+  }
+  
+  /**
    * Recent versions of dot appear to croak on long labels.  Sigh.
    */
   private final static int MAX_LABEL_LENGTH = 75;
 
   /**
    */
-  public static <T> void dotify(Graph<T> g, NodeDecorator labels, String dotFile, String psFile, String dotExe) throws WalaException {
+  public static <T> void dotify(Graph<T> g, NodeDecorator labels, String dotFile, String outputFile, String dotExe) throws WalaException {
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
     File f = DotUtil.writeDotFile(g, labels, dotFile);
-    spawnDot(dotExe, psFile, f);
+    spawnDot(dotExe, outputFile, f);
   }
   
-  public static void spawnDot(String dotExe, String psFile, File dotFile) throws WalaException {
+  public static void spawnDot(String dotExe, String outputFile, File dotFile) throws WalaException {
     if (dotFile == null) {
       throw new IllegalArgumentException("dotFile is null");
     }
-    String[] cmdarray = { dotExe, "-Tps", "-o", psFile, "-v", dotFile.getAbsolutePath() };
+    String[] cmdarray = { dotExe, outputTypeCmdLineParam(), "-o", outputFile, "-v", dotFile.getAbsolutePath() };
     System.out.println("spawning process " + Arrays.toString(cmdarray));
     try {
       Process p = Runtime.getRuntime().exec(cmdarray);
