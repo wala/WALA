@@ -42,7 +42,7 @@ public class ProgressMaster implements IProgressMonitor {
     return new ProgressMaster(monitor);
   }
 
-  public void beginTask(String name, int totalWork) {
+  public synchronized void beginTask(String name, int totalWork) {
     delegate.beginTask(name, totalWork);
     startNanny();
   }
@@ -55,7 +55,7 @@ public class ProgressMaster implements IProgressMonitor {
     }
   }
 
-  public void reset() {
+  public synchronized void reset() {
     killNanny();
     setCanceled(false);
     timedOut = false;
@@ -68,7 +68,7 @@ public class ProgressMaster implements IProgressMonitor {
     return timedOut;
   }
 
-  public void done() {
+  public synchronized void done() {
     killNanny();
     delegate.done();
   }
@@ -104,7 +104,7 @@ public class ProgressMaster implements IProgressMonitor {
     delegate.subTask(name);
   }
 
-  public void worked(int work) {
+  public synchronized void worked(int work) {
     killNanny();
     delegate.worked(work);
     startNanny();
