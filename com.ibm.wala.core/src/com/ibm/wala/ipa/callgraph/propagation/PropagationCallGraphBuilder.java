@@ -31,6 +31,7 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -233,7 +234,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /*
    * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#makeCallGraph(com.ibm.wala.ipa.callgraph.AnalysisOptions)
    */
-  public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor) throws IllegalArgumentException, CancelException {
+  public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor) throws IllegalArgumentException, CallGraphBuilderCancelException {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
@@ -272,7 +273,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     customInit();
 
     solver = makeSolver();
-    solver.solve(monitor);
+    try {
+      solver.solve(monitor);
+    } catch (CancelException e) {
+      CallGraphBuilderCancelException c = CallGraphBuilderCancelException.createCallGraphBuilderCancelException(e, callGraph, system.extractPointerAnalysis(this));
+      throw c;
+    }
 
     return callGraph;
   }
