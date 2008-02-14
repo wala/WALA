@@ -13,10 +13,11 @@ package com.ibm.wala.demandpa.util;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * @author sfink
- * 
- * represents a single static occurence of a memory access (i.e., an access to a field 
+ *  * 
+ * represents a single static occurrence of a memory access (i.e., an access to a field 
  * or to the contents of an array) in the code
+ * 
+ * @author sfink
  */
 public class MemoryAccess {
 
@@ -41,9 +42,6 @@ public class MemoryAccess {
     return instructionIndex;
   }
 
-  /* (non-Javadoc)
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return "MemAccess: " + getNode() + ":" + getInstructionIndex();
