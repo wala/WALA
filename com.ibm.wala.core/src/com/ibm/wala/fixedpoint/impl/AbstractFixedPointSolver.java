@@ -143,7 +143,7 @@ public abstract class AbstractFixedPointSolver<T extends IVariable> implements I
     }
 
     while (!workList.isEmpty()) {
-      MonitorUtil.worked(monitor, 1);
+      MonitorUtil.throwExceptionIfCanceled(monitor);
       orderStatements();
 
       // duplicate insertion detection
