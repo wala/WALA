@@ -55,11 +55,6 @@ public class BasicHeapGraph extends HeapGraph {
   private final static int VERBOSE_INTERVAL = 10000;
 
   /**
-   * Pointer analysis solution
-   */
-  private final PointerAnalysis pointerAnalysis;
-
-  /**
    * The backing graph
    */
   private final NumberedGraph<Object> G;
@@ -76,8 +71,7 @@ public class BasicHeapGraph extends HeapGraph {
    *             if P is null
    */
   public BasicHeapGraph(final PointerAnalysis P, final CallGraph callGraph) throws NullPointerException {
-    super(P.getHeapModel());
-    this.pointerAnalysis = P;
+    super(P);
     this.callGraph = callGraph;
 
     final OrdinalSetMapping<PointerKey> pointerKeys = getPointerKeys();
@@ -212,7 +206,7 @@ public class BasicHeapGraph extends HeapGraph {
   private OrdinalSetMapping<PointerKey> getPointerKeys() {
     MutableMapping<PointerKey> result = MutableMapping.make();
 
-    for (Iterator<PointerKey> it = pointerAnalysis.getPointerKeys().iterator(); it.hasNext();) {
+    for (Iterator<PointerKey> it = getPointerAnalysis().getPointerKeys().iterator(); it.hasNext();) {
       PointerKey p = it.next();
       result.add(p);
     }
@@ -223,7 +217,7 @@ public class BasicHeapGraph extends HeapGraph {
   private int[] computeSuccNodeNumbers(Object N, NumberedNodeManager<Object> nodeManager) {
     if (N instanceof PointerKey) {
       PointerKey P = (PointerKey) N;
-      OrdinalSet<InstanceKey> S = pointerAnalysis.getPointsToSet(P);
+      OrdinalSet<InstanceKey> S = getPointerAnalysis().getPointsToSet(P);
       int[] result = new int[S.size()];
       int i = 0;
       for (Iterator<InstanceKey> it = S.iterator(); it.hasNext();) {

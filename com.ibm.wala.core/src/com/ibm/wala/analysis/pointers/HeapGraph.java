@@ -16,6 +16,7 @@ import java.util.Set;
 
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.impl.NumberedNodeIterator;
@@ -39,10 +40,10 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public abstract class HeapGraph implements NumberedGraph<Object> {
 
-  private final HeapModel hm;
+  private final PointerAnalysis pa;
 
-  protected HeapGraph(HeapModel hm) {
-    this.hm = hm;
+  protected HeapGraph(PointerAnalysis pa) {
+    this.pa = pa;
   }
 
   /*
@@ -72,7 +73,11 @@ public abstract class HeapGraph implements NumberedGraph<Object> {
    * @return Returns the heap model used in this pointer analysis.
    */
   public HeapModel getHeapModel() {
-    return hm;
+    return pa.getHeapModel();
+  }
+
+  public PointerAnalysis getPointerAnalysis() {
+    return pa;
   }
 
 }
