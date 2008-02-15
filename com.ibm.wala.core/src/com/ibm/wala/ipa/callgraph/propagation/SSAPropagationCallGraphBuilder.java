@@ -395,6 +395,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           TypeReference type = it2.next();
           if (type != null) {
             InstanceKey ik = getInstanceKeyForPEI(node, peiLoc, type, instanceKeyFactory);
+            if (ik == null) {
+              continue;
+            }
             if (Assertions.verifyAssertions) {
               if (!(ik instanceof ConcreteTypeKey)) {
                 Assertions._assert(ik instanceof ConcreteTypeKey,

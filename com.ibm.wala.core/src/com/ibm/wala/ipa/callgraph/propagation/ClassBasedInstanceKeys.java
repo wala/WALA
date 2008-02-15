@@ -120,6 +120,10 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
    * @return a set of ConcreteTypeKeys that represent the exceptions the PEI may throw.
    */
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter peiLoc, TypeReference type) {
+    IClass klass = cha.lookupClass(type);
+    if (klass == null) {
+      return null;
+    }
     return new ConcreteTypeKey(cha.lookupClass(type));
   }
 
