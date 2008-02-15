@@ -48,16 +48,16 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
   protected static final boolean DEBUG = false;
 
   protected final static int CONE_BOUND = 10;
-  
+
   protected int indexLocal = 100;
 
   protected final Map<TypeReference, Integer> typeIndexMap = HashMapFactory.make();
-  
+
   /**
    * Governing analysis options
    */
   protected AnalysisOptions options;
-  
+
   /**
    * cache of analysis information
    */
@@ -67,7 +67,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
    * User-defined reflection specification
    */
   protected ReflectionSpecification userSpec;
-  
+
   protected int getLocalForType(TypeReference T) {
     Integer I = typeIndexMap.get(T);
     if (I == null) {
@@ -87,12 +87,11 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
   protected int getNewSiteForType(TypeReference T) {
     return getLocalForType(T) + 1;
   }
-  
+
   /**
    * @param type
-   * @return a TypeAbstraction object representing this type. We just use
-   *         ConeTypes by default, since we don't propagate information allowing
-   *         us to distinguish between points and cones yet.
+   * @return a TypeAbstraction object representing this type. We just use ConeTypes by default, since we don't propagate
+   *         information allowing us to distinguish between points and cones yet.
    */
   protected TypeAbstraction typeRef2TypeAbstraction(IClassHierarchy cha, TypeReference type) {
     IClass klass = cha.lookupClass(type);
@@ -107,8 +106,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     Assertions.UNREACHABLE(type.toString());
     return null;
   }
-  
- 
+
   /**
    * @author sfink
    * 
@@ -161,8 +159,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
   }
 
   /**
-   * A warning when we find flow of a factory allocation to a cast to
-   * {@link Serializable}
+   * A warning when we find flow of a factory allocation to a cast to {@link Serializable}
    */
   protected static class IgnoreSerializableWarning extends Warning {
 
@@ -177,20 +174,21 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
       return instance;
     }
   }
-  
+
   protected class SpecializedMethod extends SyntheticMethod {
 
-    protected final HashSet<TypeReference> types = HashSetFactory.make(5);
-    
     /**
-     * List of synthetic allocation statements we model for this specialized
-     * instance
+     * Set of types that we have already inserted an allocation for.
+     */
+    protected final HashSet<TypeReference> typesAllocated = HashSetFactory.make(5);
+
+    /**
+     * List of synthetic allocation statements we model for this specialized instance
      */
     final protected ArrayList<SSAInstruction> allocations = new ArrayList<SSAInstruction>();
 
     /**
-     * List of synthetic invoke instructions we model for this specialized
-     * instance.
+     * List of synthetic invoke instructions we model for this specialized instance.
      */
     final protected ArrayList<SSAInstruction> calls = new ArrayList<SSAInstruction>();
 
@@ -198,7 +196,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
      * List of all instructions
      */
     protected final ArrayList<SSAInstruction> allInstructions = new ArrayList<SSAInstruction>();
-    
+
     public SpecializedMethod(MethodReference method, IClass declaringClass, boolean isStatic, boolean isFactory) {
       super(method, declaringClass, isStatic, isFactory);
     }
@@ -206,31 +204,36 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     public SpecializedMethod(IMethod method, IClass declaringClass, boolean isStatic, boolean isFactory) {
       super(method, declaringClass, isStatic, isFactory);
     }
-    
+
     protected void addInstruction(final TypeReference T, SSAInstruction instr, boolean isAllocation) {
-      
+
       if (isAllocation) {
-        if (types.contains(T))
-          return;  
+        if (typesAllocated.contains(T)) {
+          return;
+        } else {
+          typesAllocated.add(T);
+        }
       }
-      
-      types.add(T);
-      
+
       allInstructions.add(instr);
-      if (isAllocation)
+      if (isAllocation) {
         allocations.add(instr);
+      }
     }
-    
+
+    /**
+     * @param T
+     * @return value number of the newly allocated object
+     */
     protected int addStatementsForConcreteSimpleType(final TypeReference T) {
-      if (types.contains(T))
-        return -1;
-      types.add(T);
+      // assert we haven't allocated this type already.
+      assert !typesAllocated.contains(T);
       if (DEBUG) {
         Trace.println("addStatementsForConcreteType: " + T);
       }
       NewSiteReference ref = NewSiteReference.make(getNewSiteForType(T), T);
       int alloc = getLocalForType(T);
-      
+
       SSANewInstruction a = new SSANewInstruction(alloc, ref);
       if (DEBUG) {
         Trace.println("Added allocation: " + a);

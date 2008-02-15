@@ -71,8 +71,8 @@ import com.ibm.wala.util.warnings.Warnings;
 class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
   /**
-   * A Map from CallerSiteContext -> Set <TypeReference>represents the types a
-   * factory method might create in a particular context
+   * A Map from CallerSiteContext -> Set <TypeReference>represents the types a factory method might create in a
+   * particular context
    */
   private final Map<Context, Set<TypeReference>> map = HashMapFactory.make();
 
@@ -82,8 +82,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   private final Map<Context, SpecializedFactoryMethod> syntheticMethodCache = HashMapFactory.make();
 
   /**
-   * @param options
-   *          governing analysis options
+   * @param options governing analysis options
    */
   public FactoryBypassInterpreter(AnalysisOptions options, AnalysisCache cache, ReflectionSpecification userSpec) {
     this.options = options;
@@ -96,7 +95,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       throw new IllegalArgumentException("node is null");
     }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
-    return cache.getSSACache().findOrCreateIR(m, node.getContext(),options.getSSAOptions());
+    return cache.getSSACache().findOrCreateIR(m, node.getContext(), options.getSSAOptions());
   }
 
   private Set getTypesForContext(Context context) {
@@ -118,8 +117,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     return types;
   }
 
-
-  /* 
+  /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
    */
   public int getNumberOfStatements(CGNode node) {
@@ -145,7 +143,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       }
     }
     return false;
-    
+
   }
 
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
@@ -222,7 +220,6 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     return recordType(node.getMethod().getClassHierarchy(), node.getContext(), klass.getReference());
   }
 
- 
   public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -317,7 +314,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
    */
   public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode N) {
@@ -331,7 +328,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     return cache.getSSACache().findOrCreateDU(m, node.getContext(), options.getSSAOptions());
   }
-  
+
   /**
    * @author sfink
    * 
@@ -339,8 +336,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   protected class SpecializedFactoryMethod extends SpecializedMethod {
 
     /**
-     * List of synthetic invoke instructions we model for this specialized
-     * instance.
+     * List of synthetic invoke instructions we model for this specialized instance.
      */
     final private ArrayList<SSAInstruction> calls = new ArrayList<SSAInstruction>();
 
@@ -412,7 +408,9 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
           Trace.println("Selected allocated target: " + klass + " for " + T);
         }
         if (T instanceof PointType) {
-          addStatementsForConcreteType(ref);
+          if (!typesAllocated.contains(ref)) {
+            addStatementsForConcreteType(ref);
+          }
         } else if (T instanceof ConeType) {
           if (DEBUG) {
             Trace.println("Cone clause for " + T);
@@ -470,8 +468,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
 
     /**
-     * Set up a method summary which allocates and returns an instance of
-     * concrete type T.
+     * Set up a method summary which allocates and returns an instance of concrete type T.
      * 
      * @param T
      */
@@ -491,7 +488,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         allInstructions.add(s);
       }
     }
-    
+
     private int addOriginalStatements(SummarizedMethod m) {
       SSAInstruction[] original = m.getStatements(options.getSSAOptions());
       // local value number 1 is "this", so the next free value number is 2
@@ -531,10 +528,10 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       for (; it.hasNext();) {
         IClass klass = (IClass) it.next();
         TypeReference T = klass.getReference();
-        if (klass.isAbstract() || types.contains(T)) {
+        if (klass.isAbstract() || typesAllocated.contains(T)) {
           continue;
         }
-        types.add(T);
+        typesAllocated.add(T);
         int i = getLocalForType(T);
         NewSiteReference ref = NewSiteReference.make(getNewSiteForType(T), T);
         SSANewInstruction a = null;
@@ -570,10 +567,9 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
 
     /**
-     * Two specialized methods can be different, even if they represent the same
-     * source method. So, revert to object identity for testing equality. TODO:
-     * this is non-optimal; could try to re-use specialized methods that have
-     * the same context.
+     * Two specialized methods can be different, even if they represent the same source method. So, revert to object
+     * identity for testing equality. TODO: this is non-optimal; could try to re-use specialized methods that have the
+     * same context.
      * 
      * @see java.lang.Object#equals(java.lang.Object)
      */
