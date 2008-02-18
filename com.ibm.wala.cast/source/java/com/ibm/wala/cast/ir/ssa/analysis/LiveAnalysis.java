@@ -24,7 +24,6 @@ import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
-import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
@@ -37,27 +36,55 @@ import com.ibm.wala.util.intset.IntSet;
 
 /**
  * @author Julian Dolby
- * 
- * live-value analysis TODO: document me!
+ *
+ * Live-value analysis for a method's IR (or {@link ControlFlowGraph} and {@link SymbolTable}) using a {@link IKilldallFramework}
+ * based implementation.
+ *
+ * Pre-requisites
+ * - Knowledge of SSA form: control flow graphs, basic blocks, Phi instructions
+ * - Knowledge of data flow analysis theory: see http://en.wikipedia.org/wiki/Data_flow_analysis
+ *
+ * Implementation notes:
+ *
+ * - The solver uses node transfer functions only.
+ * - Performance: inverts the CFG to traverse backwards (backward analysis).
  */
 public class LiveAnalysis {
 
   public interface Result {
-    boolean isLiveEntry(SSACFG.BasicBlock bb, int valueNumber);
+    boolean isLiveEntry(ISSABasicBlock bb, int valueNumber);
 
-    boolean isLiveExit(SSACFG.BasicBlock bb, int valueNumber);
+    boolean isLiveExit(ISSABasicBlock bb, int valueNumber);
 
     BitVector getLiveBefore(int instr);
   }
 
-  public static LiveAnalysis.Result perform(final ControlFlowGraph<ISSABasicBlock> cfg, final SymbolTable symtab) {
+  /**
+   *
+   */
+  public static Result perform(IR ir) {
+    return perform(ir.getControlFlowGraph(), ir.getSymbolTable());
+  }
+
+  /**
+   *
+   */
+  public static Result perform(final ControlFlowGraph<ISSABasicBlock> cfg, final SymbolTable symtab) {
     return perform(cfg, symtab, new BitVector());
   }
 
-  public static LiveAnalysis.Result perform(final ControlFlowGraph<ISSABasicBlock> cfg, final SymbolTable symtab, final BitVector considerLiveAtExit) {
+  /**
+   * @param considerLiveAtExit given set (of variables) to consider to be live after the exit.
+   *
+   * todo: used once in {@link com.ibm.wala.cast.ir.ssa.SSAConversion}; Explain better the purpose.
+   */
+  public static Result perform(final ControlFlowGraph<ISSABasicBlock> cfg, final SymbolTable symtab, final BitVector considerLiveAtExit) {
     final BitVectorIntSet liveAtExit = new BitVectorIntSet(considerLiveAtExit);
     final SSAInstruction[] instructions = (SSAInstruction[]) cfg.getInstructions();
 
+    /**
+     * Gen/kill operator specific to exit basic blocks
+     */
     final class ExitBlockGenKillOperator extends UnaryOperator<BitVectorVariable> {
       public String toString() {
         return "ExitGenKill";
@@ -71,20 +98,25 @@ public class LiveAnalysis {
         return 37721;
       }
 
+      /**
+       * Evaluate the transfer between two nodes in the flow graph within an exit block.
+       */
       public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
-        BitVectorVariable L = (BitVectorVariable) lhs;
-        boolean changed = L.getValue() == null ? !considerLiveAtExit.isZero() : !L.getValue().sameValue(liveAtExit);
+        boolean changed = lhs.getValue() == null ? !considerLiveAtExit.isZero() : !lhs.getValue().sameValue(liveAtExit);
 
-        L.addAll(considerLiveAtExit);
+        lhs.addAll(considerLiveAtExit);
 
         return changed ? CHANGED : NOT_CHANGED;
       }
     }
 
+    /**
+     * Gen/kill operator for a regular basic block.
+     */
     final class BlockValueGenKillOperator extends UnaryOperator<BitVectorVariable> {
-      private final SSACFG.BasicBlock block;
+      private final ISSABasicBlock block;
 
-      BlockValueGenKillOperator(SSACFG.BasicBlock block) {
+      BlockValueGenKillOperator(ISSABasicBlock block) {
         this.block = block;
       }
 
@@ -100,12 +132,18 @@ public class LiveAnalysis {
         return block.hashCode() * 17;
       }
 
+      /**
+       * Kills the definitions (variables written to).
+       */
       private void processDefs(SSAInstruction inst, BitVector bits) {
         for (int j = 0; j < inst.getNumberOfDefs(); j++) {
           bits.clear(inst.getDef(j));
         }
       }
 
+      /**
+       * Generates variables that are read (skips constants).
+       */
       private void processUses(SSAInstruction inst, BitVector bits) {
         for (int j = 0; j < inst.getNumberOfUses(); j++) {
           Assertions._assert(inst.getUse(j) != -1, inst.toString());
@@ -115,22 +153,27 @@ public class LiveAnalysis {
         }
       }
 
+      /**
+       * Evaluate the transfer between two nodes in the flow graph within one basic block.
+       */
       public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) {
-        BitVectorVariable L = (BitVectorVariable) lhs;
-        IntSet s = ((BitVectorVariable) rhs).getValue();
+        // Calculate here the result of the transfer
         BitVectorIntSet bits = new BitVectorIntSet();
+
+        IntSet s = rhs.getValue();
         if (s != null) {
           bits.addAll(s);
         }
+        // Include all uses generated by the current basic block into the successor's Phi instructions todo: rephrase
+        for (Iterator<? extends ISSABasicBlock> succBBs = cfg.getSuccNodes(block); succBBs.hasNext();) {
+          ISSABasicBlock succBB = succBBs.next();
 
-        for (Iterator sBBs = cfg.getSuccNodes(block); sBBs.hasNext();) {
-          SSACFG.BasicBlock sBB = (SSACFG.BasicBlock) sBBs.next();
-          int rval = com.ibm.wala.cast.ir.cfg.Util.whichPred(cfg, sBB, block);
-          for (Iterator sphis = sBB.iteratePhis(); sphis.hasNext();) {
-            SSAPhiInstruction sphi = (SSAPhiInstruction) sphis.next();
-            bits.add(sphi.getUse(rval));
+          int rval = com.ibm.wala.cast.ir.cfg.Util.whichPred(cfg, succBB, block);
+          for (Iterator<SSAPhiInstruction> sphis = succBB.iteratePhis(); sphis.hasNext();) {
+            bits.add(sphis.next().getUse(rval));
           }
         }
+        // For all instructions, in reverse order, 'kill' variables written to and 'gen' variables read.
         for (int i = block.getLastInstructionIndex(); i >= block.getFirstInstructionIndex(); i--) {
           SSAInstruction inst = instructions[i];
           if (inst != null) {
@@ -138,15 +181,16 @@ public class LiveAnalysis {
             processUses(inst, bits.getBitVector());
           }
         }
-        for (Iterator SS = block.iteratePhis(); SS.hasNext();) {
-          processDefs((SSAInstruction) SS.next(), bits.getBitVector());
+        // 'kill' the variables defined by the Phi instructions in the current block.
+        for (Iterator<? extends SSAInstruction> SS = block.iteratePhis(); SS.hasNext();) {
+          processDefs(SS.next(), bits.getBitVector());
         }
 
         BitVectorVariable U = new BitVectorVariable();
         U.addAll(bits.getBitVector());
 
-        if (!L.sameValue(U)) {
-          L.copyState(U);
+        if (!lhs.sameValue(U)) {
+          lhs.copyState(U);
           return CHANGED;
         } else {
           return NOT_CHANGED;
@@ -154,6 +198,9 @@ public class LiveAnalysis {
       }
     }
 
+    /**
+     * Create the solver
+     */
     final BitVectorSolver<ISSABasicBlock> S = new BitVectorSolver<ISSABasicBlock>(new IKilldallFramework<ISSABasicBlock, BitVectorVariable>() {
       private final Graph<ISSABasicBlock> G = GraphInverter.invert(cfg);
 
@@ -172,11 +219,14 @@ public class LiveAnalysis {
             return false;
           }
 
+          /**
+           * Create the specialized operator for regular and exit basic blocks.
+           */
           public UnaryOperator<BitVectorVariable> getNodeTransferFunction(ISSABasicBlock node) {
-            if (((SSACFG.BasicBlock) node).isExitBlock()) {
+            if (node.isExitBlock()) {
               return new ExitBlockGenKillOperator();
             } else {
-              return new BlockValueGenKillOperator((SSACFG.BasicBlock) node);
+              return new BlockValueGenKillOperator(node);
             }
           }
 
@@ -185,6 +235,9 @@ public class LiveAnalysis {
             return null;
           }
 
+          /**
+           * Live analysis uses 'union' as 'meet operator'
+           */
           public AbstractMeetOperator<BitVectorVariable> getMeetOperator() {
             return BitVectorUnion.instance();
           }
@@ -192,41 +245,57 @@ public class LiveAnalysis {
       }
     });
 
+    /**
+     * Solve the analysis problem
+     */
     try {
       S.solve(null);
     } catch (CancelException e) {
       throw new CancelRuntimeException(e);
     }
 
+    /**
+     * Prepare the lazy result with a closure.
+     */
     return new Result() {
 
       public String toString() {
         StringBuffer s = new StringBuffer();
         for (int i = 0; i < cfg.getNumberOfNodes(); i++) {
-          SSACFG.BasicBlock bb = (SSACFG.BasicBlock) cfg.getNode(i);
-          s.append("live entering " + bb + ":" + S.getOut(bb) + "\n");
-          s.append("live exiting " + bb + ":" + S.getIn(bb) + "\n");
+          ISSABasicBlock bb = cfg.getNode(i);
+          s.append("live entering ").append(bb).append(":").append(S.getOut(bb)).append("\n");
+          s.append("live exiting ").append(bb).append(":").append(S.getIn(bb)).append("\n");
         }
 
         return s.toString();
       }
 
-      public boolean isLiveEntry(SSACFG.BasicBlock bb, int valueNumber) {
-        return ((BitVectorVariable) S.getOut(bb)).get(valueNumber);
+      public boolean isLiveEntry(ISSABasicBlock bb, int valueNumber) {
+        return S.getOut(bb).get(valueNumber);
       }
 
-      public boolean isLiveExit(SSACFG.BasicBlock bb, int valueNumber) {
-        return ((BitVectorVariable) S.getIn(bb)).get(valueNumber);
+      public boolean isLiveExit(ISSABasicBlock bb, int valueNumber) {
+        return S.getIn(bb).get(valueNumber);
       }
 
+      /**
+       * Calculate set of variables live before instruction
+       * @param instr
+       *
+       * @see <a href="http://en.wikipedia.org/wiki/Data_flow_analysis#Backward_Analysis">
+       * how the 'in' and 'out' variable sets work</a>
+       */
       public BitVector getLiveBefore(int instr) {
-        SSACFG.BasicBlock bb = (SSACFG.BasicBlock) cfg.getBlockForInstruction(instr);
-        IntSet s = ((BitVectorVariable) S.getIn(bb)).getValue();
+        ISSABasicBlock bb = cfg.getBlockForInstruction(instr);
+
+        // Start with the variables live at the 'in' of the basic block of the instruction. todo???
         BitVectorIntSet bits = new BitVectorIntSet();
+        IntSet s = S.getIn(bb).getValue();
         if (s != null) {
           bits.addAll(s);
         }
-
+        // For all instructions in the basic block, going backwards, from the last,
+        // up to the desired instruction, 'kill' written variables and 'gen' read variables.
         for (int i = bb.getLastInstructionIndex(); i >= instr; i--) {
           SSAInstruction inst = instructions[i];
           if (inst != null) {
@@ -245,9 +314,4 @@ public class LiveAnalysis {
       }
     };
   }
-
-  public static LiveAnalysis.Result perform(IR ir) {
-    return perform(ir.getControlFlowGraph(), ir.getSymbolTable());
-  }
-
 }

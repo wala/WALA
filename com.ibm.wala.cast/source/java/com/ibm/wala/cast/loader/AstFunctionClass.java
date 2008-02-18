@@ -54,7 +54,11 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
   }
 
   public String toString() {
-    return "function " + functionBody.getReference().getDeclaringClass().getName();
+    try {
+      return "function " + functionBody.getReference().getDeclaringClass().getName();
+    } catch (NullPointerException e) {
+      return "<need to set code body>";
+    }
   }
 
   public IClassLoader getClassLoader() {
