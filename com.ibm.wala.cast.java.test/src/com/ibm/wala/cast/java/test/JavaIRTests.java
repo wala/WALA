@@ -14,6 +14,7 @@
 package com.ibm.wala.cast.java.test;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
@@ -25,6 +26,7 @@ import junit.framework.Assert;
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
+import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
@@ -35,6 +37,8 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.SDG;
@@ -372,6 +376,94 @@ public class JavaIRTests extends IRTests {
             cg.getClassHierarchy().lookupClass(findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy())));
       }
     }), true);
+  }
+
+  public void testInnerClassA() {
+    Pair x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
+    
+    // can't do an IRAssertion() -- we need the pointer analysis
+    
+    CallGraph cg = (CallGraph) x.fst;
+    PointerAnalysis pa = (PointerAnalysis) x.snd;
+
+    Iterator<CGNode> iter = cg.iterator();
+    while ( iter.hasNext() ) {
+     CGNode n = iter.next();
+
+          // assume in the test we have one enclosing instruction for each of the methods here.
+          String methodSigs[] = { "InnerClassA$AB.getA_X_from_AB()I",
+                  "InnerClassA$AB.getA_X_thru_AB()I",
+                  "InnerClassA$AB$ABSubA.getA_X()I",
+                  "InnerClassA$AB$ABA$ABAA.getABA_X()I",
+                  "InnerClassA$AB$ABA$ABAA.getA_X()I",
+                  "InnerClassA$AB$ABA$ABAB.getABA_X()I",
+                  "InnerClassA$AB$ABSubA$ABSubAA.getABA_X()I",
+                  "InnerClassA$AB$ABSubA$ABSubAA.getA_X()I", };
+
+          // each type suffixed by ","
+          String ikConcreteTypeStrings[ ]= {
+                  "LInnerClassA,",
+                  "LInnerClassA,",
+                  "LInnerClassA,",
+                  "LInnerClassA$AB$ABSubA,LInnerClassA$AB$ABA,",
+                  "LInnerClassA,",
+                  "LInnerClassA$AB$ABA,",
+                  "LInnerClassA$AB$ABSubA,",
+                  "LInnerClassA,",
+          };
+
+          Assert.assertTrue ( "Buggy test", methodSigs.length == ikConcreteTypeStrings.length );
+          for ( int i = 0; i < methodSigs.length; i++ ) {
+              if ( n.getMethod().getSignature().equals(methodSigs[i]) ) {
+                  // find enclosing instruction
+                  for ( SSAInstruction instr: n.getIR().getInstructions() ) {
+                      if ( instr instanceof EnclosingObjectReference ) {
+                          String allIks = "";
+                          for (InstanceKey ik: pa.getPointsToSet(new LocalPointerKey(n,instr.getDef())))
+                              allIks += ik.getConcreteType().getName() +",";
+                          // System.out.printf("in method %s, got ik %s\n", methodSigs[i], allIks);
+                          
+                          Assert.assertTrue("assertion failed: expecting ik " + ikConcreteTypeStrings[i] + " in method " + methodSigs[i] +  ", got " + allIks + "\n",
+                              allIks.equals(ikConcreteTypeStrings[i]));
+                          
+                          break;
+                      }
+                  }
+              }
+          }
+      }
+
+
+  }
+
+  public void testInnerClassSuper() {
+    Pair x = runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
+    
+    // can't do an IRAssertion() -- we need the pointer analysis
+    
+    CallGraph cg = (CallGraph) x.fst;
+    PointerAnalysis pa = (PointerAnalysis) x.snd;
+
+    Iterator<CGNode> iter = cg.iterator();
+    while ( iter.hasNext() ) {
+      CGNode n = iter.next();
+      if ( n.getMethod().getSignature().equals("LInnerClassSuper$SuperOuter.test()V") ) {
+        // find enclosing instruction
+        for ( SSAInstruction instr: n.getIR().getInstructions() ) {
+          if ( instr instanceof EnclosingObjectReference ) {
+            String allIks = "";
+            for (InstanceKey ik: pa.getPointsToSet(new LocalPointerKey(n,instr.getDef())))
+              allIks += ik.getConcreteType().getName() +",";
+            Assert.assertTrue("assertion failed: expecting ik \"LSub,\" in method, got \"" + allIks + "\"\n",
+                allIks.equals("LSub,"));
+
+            break;
+          }
+        }
+      }
+    }
+
+
   }
 
   public void testLocalClass() {
