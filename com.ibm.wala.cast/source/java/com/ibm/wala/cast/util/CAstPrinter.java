@@ -71,6 +71,7 @@ public class CAstPrinter {
     case CAstNode.IF_EXPR: return "IF_EXPR";
     case CAstNode.ANDOR_EXPR: return "ANDOR_EXPR";
     case CAstNode.NEW: return "NEW";
+    case CAstNode.NEW_ENCLOSING: return "NEW_ENCLOSING";
     case CAstNode.OBJECT_LITERAL: return "LITERAL";
     case CAstNode.VAR: return "VAR";
     case CAstNode.OBJECT_REF: return "OBJECT_REF";

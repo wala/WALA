@@ -554,6 +554,7 @@ public abstract class CAstVisitor {
       break;
     }
 
+    case CAstNode.NEW_ENCLOSING:
     case CAstNode.NEW: {
       if (visitor.visitNew(n, context, visitor))
         break;
