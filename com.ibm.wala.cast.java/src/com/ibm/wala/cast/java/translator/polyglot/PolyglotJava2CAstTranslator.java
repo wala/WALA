@@ -746,7 +746,16 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       String tmpName = "ctor temp"; // this name is an illegal Java
       // identifier
 
-      CAstNode newNode = makeNode(wc, fFactory, n, CAstNode.NEW, fFactory.makeConstant(newTypeRef));
+      // new nodes with an explicit enclosing argument, e.g. "outer.new Inner()". They are mostly treated the same, except in JavaCAst2IRTranslator.doNewObject
+      CAstNode newNode;
+      Expr enclosing = n.qualifier();
+      if ( enclosing != null ) {
+        CAstNode encNode = walkNodes(enclosing, wc);
+        newNode = makeNode(wc, fFactory, n, CAstNode.NEW_ENCLOSING, fFactory.makeConstant(newTypeRef), encNode);
+      }
+      else 
+        newNode = makeNode(wc, fFactory, n, CAstNode.NEW, fFactory.makeConstant(newTypeRef));
+      // end enclosing new stuff
 
       if (n.body() != null)
         wc.addScopedEntity(newNode, anonClass);

@@ -19,6 +19,7 @@ import java.util.Iterator;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
+import com.ibm.wala.cast.java.ssa.AstJavaNewEnclosingInstruction;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
@@ -156,11 +157,14 @@ public class JavaCAst2IRTranslator extends AstTranslator {
       NewSiteReference site = 
 	NewSiteReference.make(context.cfg().getCurrentInstruction(), typeRef);
       
-      context.cfg().addInstruction(
-        (arguments == null)?
-	SSAInstructionFactory.NewInstruction(result, site):
-	new SSANewInstruction(result, site, arguments));
-      
+      if ( newNode.getKind() == CAstNode.NEW_ENCLOSING ) {
+        context.cfg().addInstruction ( new AstJavaNewEnclosingInstruction(result, site, arguments[0]));
+      } else {
+        context.cfg().addInstruction(
+            (arguments == null)?
+                SSAInstructionFactory.NewInstruction(result, site):
+                  new SSANewInstruction(result, site, arguments));
+      }
       processExceptions(newNode, context);
     }
 

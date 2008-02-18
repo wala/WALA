@@ -16,6 +16,7 @@ import com.ibm.wala.cast.java.analysis.typeInference.AstJavaTypeInference;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl.JavaClass;
 import com.ibm.wala.cast.java.ssa.AstJavaInstructionVisitor;
 import com.ibm.wala.cast.java.ssa.AstJavaInvokeInstruction;
+import com.ibm.wala.cast.java.ssa.AstJavaNewEnclosingInstruction;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
@@ -182,6 +183,14 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
       super(builder, node);
     }
 
+    /**
+     * For each of objKey's instance keys ik, adds the constraint lvalKey = EORK(ik,cls),
+     * where EORK(ik,cls) will be made equivalent to the actual enclosing class by
+     * the handleNew() function below.
+     * @param lvalKey
+     * @param cls
+     * @param objKey
+     */
     private void handleEnclosingObject(final PointerKey lvalKey, final IClass cls, final PointerKey objKey) {
       SymbolTable symtab = ir.getSymbolTable();
       int objVal;
@@ -246,12 +255,33 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
       if (iKey != null) {
         IClass klass = iKey.getConcreteType();
 
+        // in the case of a AstJavaNewEnclosingInstruction (a new instruction like outer.new Bla()),
+        // we may need to record the instance keys if the pointer key outer is invariant (and thus implicit) 
+        InstanceKey enclosingInvariantKeys[] = null;
+       
         if (klass instanceof JavaClass) {
-          IClass enclosingClass = ((JavaClass) klass).getEnclosingClass();
+          IClass enclosingClass = ((JavaClass) klass).getEnclosingClass(); // the immediate enclosing class.
           if (enclosingClass != null) {
             IClass currentCls = node.getMethod().getDeclaringClass();
-            PointerKey objKey = getPointerKeyForLocal(1);
-            boolean needIndirection = false;
+            PointerKey objKey;
+            
+            if ( instruction instanceof AstJavaNewEnclosingInstruction ) {
+              
+
+              int enclosingVal = ((AstJavaNewEnclosingInstruction) instruction).getEnclosing();
+              SymbolTable symtab = ir.getSymbolTable();
+
+              // pk 'outer' is invariant, which means it's implicit, so can't add a constraint with the pointer key.
+              // we should just add constraints directly to the instance keys (below) 
+              if ( contentsAreInvariant(symtab, du, enclosingVal) )
+                enclosingInvariantKeys = getInvariantContents(enclosingVal);
+              
+              // what happens if objKey is implicit but the contents aren't invariant?! (it this possible?) big trouble!
+              
+              objKey = getPointerKeyForLocal(enclosingVal);
+            }
+            else
+              objKey = getPointerKeyForLocal(1);
 
             Trace.println("class is " + klass + ", enclosing is " + enclosingClass + ", method is " + node.getMethod());
 
@@ -259,31 +289,30 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
               return;
             }
 
-            while (!getClassHierarchy().isSubclassOf(currentCls, enclosingClass)) {
-              Assertions._assert(currentCls instanceof JavaClass);
+            currentCls = enclosingClass;
+            
+            PointerKey x = new EnclosingObjectReferenceKey(iKey, currentCls);
+            if ( enclosingInvariantKeys != null )
+              for ( InstanceKey obj: enclosingInvariantKeys )
+                system.newConstraint(x, obj);
+            else
+              system.newConstraint(x, assignOperator, objKey);
+
+            // If the immediate inclosing class is not a top-level class, we must make EORKs for all enclosing classes up to the top level.
+            // for instance, if we have "D d = c.new D()", and c is of type A$B$C, methods in D may reference variables and functions from
+            // A, B, and C. Therefore we must also make the links from EORK(allocsite of d,enc class B) and EORK(allocsite of d,en class A).
+            // We do this by getting the enclosing class of C and making a link from EORK(d,B) -> EORK(c,B), etc.
+            currentCls = ((JavaClass) currentCls).getEnclosingClass();
+            while (currentCls != null) { 
+              x = new EnclosingObjectReferenceKey(iKey, currentCls); // make EORK(d,B), EORK(d,A), etc.
+              handleEnclosingObject(x, currentCls, objKey);
+              // objKey is the pointer key representing the immediate inner class.
+              // handleEnclosingObject finds x's instance keys and for each one "ik" links x to EORK(ik,currentCls)
+              // thus, for currentCls=B, it will find the allocation site of c and make a link from EORK(d,B) to EORK(c,B)
+              
               currentCls = ((JavaClass) currentCls).getEnclosingClass();
-              needIndirection = true;
             }
-
-            while (enclosingClass != null) {
-              PointerKey x = new EnclosingObjectReferenceKey(iKey, enclosingClass);
-              if (needIndirection) {
-                handleEnclosingObject(x, currentCls, objKey);
-                Trace.println("at " + instruction + ": adding " + iKey + ", " + enclosingClass + " <-- " + objKey + ", "
-                    + currentCls);
-              } else {
-                system.newConstraint(x, assignOperator, objKey);
-                Trace.println("at " + instruction + ": adding " + iKey + ", " + enclosingClass + " <-- " + objKey);
-              }
-
-              if (enclosingClass instanceof JavaClass) {
-                needIndirection = true;
-                enclosingClass = ((JavaClass) enclosingClass).getEnclosingClass();
-                currentCls = ((JavaClass) currentCls).getEnclosingClass();
-              } else {
-                break;
-              }
-            }
+            
           }
         }
       }
