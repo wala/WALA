@@ -11,6 +11,7 @@
 package com.ibm.wala.examples.drivers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Properties;
 
@@ -51,6 +52,7 @@ import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.io.CommandLine;
+import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.GVUtil;
@@ -88,6 +90,7 @@ public class GVSlice {
    * 
    * @throws CancelException
    * @throws IllegalArgumentException
+   * @throws IOException 
    * 
    * @see com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions
    *      <li> "control dependence options" can be "-full" or "-none"
@@ -95,7 +98,7 @@ public class GVSlice {
    *      </ul>
    * 
    */
-  public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException {
+  public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
     run(args);
   }
 
@@ -104,8 +107,9 @@ public class GVSlice {
    * 
    * @throws CancelException
    * @throws IllegalArgumentException
+   * @throws IOException 
    */
-  public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException {
+  public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
     // parse the command-line into a Properties object
     Properties p = CommandLine.parse(args);
     // validate that the command-line has the expected format
@@ -138,10 +142,10 @@ public class GVSlice {
    * @throws IllegalArgumentException
    */
   public static Process run(String appJar, String mainClass, String srcCaller, String srcCallee, boolean goBackward,
-      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
+      DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException, IOException {
     try {
       // create an analysis scope representing the appJar as a J2SE application
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, FileProvider.getFile(
           CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // build a class hierarchy, call graph, and system dependence graph
