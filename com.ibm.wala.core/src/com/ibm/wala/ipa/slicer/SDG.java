@@ -281,6 +281,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       case HEAP_PARAM_CALLER:
       case HEAP_RET_CALLEE:
       case CATCH:
+      case METHOD_EXIT:
         return getPDG(N.getNode()).getPredNodes(N);
       case EXC_RET_CALLER: {
         ExceptionalReturnCaller nrc = (ExceptionalReturnCaller) N;
