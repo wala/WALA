@@ -18,12 +18,10 @@ import java.util.Properties;
 import org.eclipse.jface.window.ApplicationWindow;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -31,10 +29,12 @@ import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.io.CommandLine;
+import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.io.FileUtil;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.SWTTreeViewer;
@@ -95,7 +95,7 @@ public class SWTCallGraph {
       String exclusionFile = p.getProperty("exclusions");
 
       AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, exclusionFile != null ? new File(exclusionFile)
-          : new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+          : FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       ClassHierarchy cha = ClassHierarchy.make(scope);
 

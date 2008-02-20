@@ -11,17 +11,16 @@
 package com.ibm.wala.examples.drivers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
@@ -29,7 +28,9 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.strings.StringStuff;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
@@ -55,8 +56,9 @@ public class GVControlDependenceGraph {
    * signature should be something like "java_cup.lexer.advance()V"
    * 
    * @param args
+   * @throws IOException 
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws IOException {
 
     run(args);
   }
@@ -66,8 +68,9 @@ public class GVControlDependenceGraph {
    *          -appJar [jar file name] -sig [method signature] The "jar file
    *          name" should be something like "c:/temp/testdata/java_cup.jar" The
    *          signature should be something like "java_cup.lexer.advance()V"
+   * @throws IOException 
    */
-  public static Process run(String[] args) {
+  public static Process run(String[] args) throws IOException {
     validateCommandLine(args);
     return run(args[1], args[3]);
   }
@@ -77,13 +80,14 @@ public class GVControlDependenceGraph {
    *          should be something like "c:/temp/testdata/java_cup.jar"
    * @param methodSig
    *          should be something like "java_cup.lexer.advance()V"
+   * @throws IOException 
    */
-  public static Process run(String appJar, String methodSig) {
+  public static Process run(String appJar, String methodSig) throws IOException {
     try {
       if (SWTCallGraph.isDirectory(appJar)) {
         appJar = SWTCallGraph.findJarFiles(new String[] { appJar });
       }
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       ClassHierarchy cha = ClassHierarchy.make(scope);
 

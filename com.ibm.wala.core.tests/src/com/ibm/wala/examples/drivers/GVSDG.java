@@ -11,16 +11,15 @@
 package com.ibm.wala.examples.drivers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Properties;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
-import com.ibm.wala.util.config.AnalysisScopeReader;
-
 import com.ibm.wala.examples.properties.WalaExamplesProperties;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
+import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
@@ -33,12 +32,14 @@ import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.collections.Filter;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.io.CommandLine;
+import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.warnings.WalaException;
 import com.ibm.wala.viz.DotUtil;
 import com.ibm.wala.viz.GVUtil;
@@ -65,8 +66,9 @@ public class GVSDG {
    * @throws WalaException
    * @throws CancelException 
    * @throws IllegalArgumentException 
+   * @throws IOException 
    */
-  public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException {
+  public static void main(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
     run(args);
   }
 
@@ -74,8 +76,9 @@ public class GVSDG {
    * @throws WalaException
    * @throws CancelException 
    * @throws IllegalArgumentException 
+   * @throws IOException 
    */
-  public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException {
+  public static Process run(String[] args) throws WalaException, IllegalArgumentException, CancelException, IOException {
     Properties p = CommandLine.parse(args);
     validateCommandLine(p);
     return run(p.getProperty("appJar"), p.getProperty("mainClass"), getDataDependenceOptions(p), getControlDependenceOptions(p));
@@ -108,10 +111,11 @@ public class GVSDG {
    *            something like "c:/temp/testdata/java_cup.jar"
    * @throws CancelException 
    * @throws IllegalArgumentException 
+   * @throws IOException 
    */
-  public static Process run(String appJar, String mainClass, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException {
+  public static Process run(String appJar, String mainClass, DataDependenceOptions dOptions, ControlDependenceOptions cOptions) throws IllegalArgumentException, CancelException, IOException {
     try {
-      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, new File(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
+      AnalysisScope scope = AnalysisScopeReader.makeJavaBinaryAnalysisScope(appJar, FileProvider.getFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS));
 
       // generate a WALA-consumable wrapper around the incoming scope object
       
