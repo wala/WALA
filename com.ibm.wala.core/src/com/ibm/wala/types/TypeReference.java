@@ -163,6 +163,11 @@ public final class TypeReference {
 
   public final static TypeReference JavaLangReflectConstructor = findOrCreate(ClassLoaderReference.Primordial,
       JavaLangReflectConstructorName);
+  
+  private final static TypeName JavaLangReflectMethodName = TypeName.string2TypeName("Ljava/lang/reflect/Method");
+
+  public final static TypeReference JavaLangReflectMethod = findOrCreate(ClassLoaderReference.Primordial,
+      JavaLangReflectMethodName);
 
   private final static TypeName JavaLangErrorName = TypeName.string2TypeName("Ljava/lang/Error");
 

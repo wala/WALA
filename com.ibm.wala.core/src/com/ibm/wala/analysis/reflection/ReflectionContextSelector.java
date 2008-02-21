@@ -31,7 +31,9 @@ public class ReflectionContextSelector extends DelegatingContextSelector {
    * First check "forName" logic, then factory logic.
    */
   private ReflectionContextSelector(IClassHierarchy cha, MethodTargetSelector methodTargetSelector) {
-    super(new DelegatingContextSelector(new ForNameContextSelector(), new NewInstanceContextSelector()),
-        new FactoryContextSelector(cha, methodTargetSelector));
+    super(new ConstructorNewInstanceContextSelector(),
+        new DelegatingContextSelector(new GetConstructorContextSelector(),
+            new DelegatingContextSelector(new DelegatingContextSelector(new ForNameContextSelector(), new ClassNewInstanceContextSelector()),
+        new FactoryContextSelector(cha, methodTargetSelector))));
   }
 }

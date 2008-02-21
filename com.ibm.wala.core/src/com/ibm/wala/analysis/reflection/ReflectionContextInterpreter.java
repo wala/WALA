@@ -21,18 +21,21 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  * {@link SSAContextInterpreter} to handle all reflection procession.
  * 
  * @author sjfink
- *
+ * 
  */
 public class ReflectionContextInterpreter extends DelegatingSSAContextInterpreter {
 
-  public static ReflectionContextInterpreter createReflectionContextInterpreter(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ReflectionSpecification userSpec) {
+  public static ReflectionContextInterpreter createReflectionContextInterpreter(IClassHierarchy cha, AnalysisOptions options,
+      AnalysisCache cache, ReflectionSpecification userSpec) {
     return new ReflectionContextInterpreter(cha, options, cache, userSpec);
   }
 
-  private ReflectionContextInterpreter(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache, ReflectionSpecification userSpec) {
-    super(new DelegatingSSAContextInterpreter(new ForNameContextInterpreter(), new NewInstanceContextInterpreter(cha)),
-        new FactoryBypassInterpreter(options, cache, userSpec));
+  private ReflectionContextInterpreter(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+      ReflectionSpecification userSpec) {
+    super(new ConstructorNewInstanceContextInterpreter(), new DelegatingSSAContextInterpreter(
+        new GetConstructorContextInterpreter(), new DelegatingSSAContextInterpreter(new DelegatingSSAContextInterpreter(
+            new ForNameContextInterpreter(), new ClassNewInstanceContextInterpreter(cha)), new FactoryBypassInterpreter(options,
+            cache, userSpec))));
   }
 
 }

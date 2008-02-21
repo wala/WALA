@@ -25,7 +25,7 @@ import com.ibm.wala.util.shrike.Exceptions;
 public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
   private final int result;
 
-  SSAArrayLoadInstruction(int result, int arrayref, int index, TypeReference elementType) {
+  public SSAArrayLoadInstruction(int result, int arrayref, int index, TypeReference elementType) {
     super(arrayref, index, elementType);
     this.result = result;
   }

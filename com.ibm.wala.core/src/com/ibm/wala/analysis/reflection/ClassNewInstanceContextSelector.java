@@ -25,9 +25,9 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
  * 
  * @author pistoia
  */
-class NewInstanceContextSelector implements ContextSelector {
+class ClassNewInstanceContextSelector implements ContextSelector {
 
-  public NewInstanceContextSelector() {
+  public ClassNewInstanceContextSelector() {
   }
 
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
@@ -39,8 +39,9 @@ class NewInstanceContextSelector implements ContextSelector {
   }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
-    if (mayUnderstand(caller, site, callee, receiver)) { 
-      return new JavaTypeContext(new PointType(receiver.getConcreteType()));
+    if (mayUnderstand(caller, site, callee, receiver)) {
+      IClass c = (IClass) ((ConstantKey) receiver).getValue();
+      return new JavaTypeContext(new PointType(c));
     }
     return null;
   }
@@ -49,7 +50,7 @@ class NewInstanceContextSelector implements ContextSelector {
    * This object may understand a dispatch to Class.newInstance() when the class is a class constant.
    */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (targetMethod.getReference().equals(NewInstanceContextInterpreter.NEW_INSTANCE_REF) && isTypeConstant(instance)) {
+    if (targetMethod.getReference().equals(ClassNewInstanceContextInterpreter.NEW_INSTANCE_REF) && isTypeConstant(instance)) {
 //      IClass klass = getTypeConstant(instance);
 //      if (hasPublicDefaultCtor(klass)) {
         return true;

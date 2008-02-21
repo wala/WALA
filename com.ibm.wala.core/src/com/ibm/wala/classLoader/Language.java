@@ -20,6 +20,9 @@ public interface Language {
     public TypeReference getConstantType(Object o) {
       if (o instanceof String) {
         return TypeReference.JavaLangString;
+      } else if (o instanceof IMethod) {
+        IMethod m = (IMethod) o;
+        return m.isInit() ? TypeReference.JavaLangReflectConstructor : TypeReference.JavaLangReflectMethod;
       } else {
         return null;
       }

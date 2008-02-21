@@ -10,7 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.reflection;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.InducedCFG;
@@ -20,22 +22,21 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
+import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
-import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
-import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
@@ -46,24 +47,14 @@ import com.ibm.wala.util.strings.Atom;
  * 
  * @author pistoia
  */
-public class NewInstanceContextInterpreter extends AbstractReflectionInterpreter {
+public class GetConstructorContextInterpreter implements SSAContextInterpreter {
 
-  public final static Atom newInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
+  public final static Atom getConstructorAtom = Atom.findOrCreateUnicodeAtom("getConstructor");
 
-  private final static Descriptor newInstanceDescriptor = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
+  private final static Descriptor getConstructorDescriptor = Descriptor.findOrCreateUTF8("([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;");
 
-  public final static MethodReference NEW_INSTANCE_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass, newInstanceAtom,
-      newInstanceDescriptor);
-  
-  private final static Atom defCtorAtom = Atom.findOrCreateUnicodeAtom("<init>");
-  private final static Descriptor defCtorDescriptor = Descriptor.findOrCreateUTF8("()V");
-  private final static Selector defCtorSelector = new Selector(defCtorAtom, defCtorDescriptor);
-  
-  private final IClassHierarchy cha;
-  
-  public NewInstanceContextInterpreter(IClassHierarchy cha) {
-    this.cha = cha;
-  }
+  public final static MethodReference GET_CONSTRUCTOR_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass, getConstructorAtom,
+      getConstructorDescriptor);
 
   public IR getIR(CGNode node) {
     if (node == null) {
@@ -89,7 +80,7 @@ public class NewInstanceContextInterpreter extends AbstractReflectionInterpreter
     }
     if (!(node.getContext() instanceof JavaTypeContext))
       return false;
-    return node.getMethod().getReference().equals(NEW_INSTANCE_REF);
+    return node.getMethod().getReference().equals(GET_CONSTRUCTOR_REF);
   }
 
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
@@ -114,45 +105,41 @@ public class NewInstanceContextInterpreter extends AbstractReflectionInterpreter
     return EmptyIterator.instance();
   }
 
-  private IR makeIR(IMethod method, JavaTypeContext context) {    
-    TypeReference tr = context.getType().getTypeReference();
-    if (tr != null) {
-      SpecializedMethod m = new SpecializedMethod(method, method.getDeclaringClass(), method.isStatic(), false);
-      IClass klass = cha.lookupClass(tr);
-      if (hasPublicDefaultCtor(klass)) {
-        m.addStatementsForConcreteSimpleType(tr);
-      } else if (klass.getMethod(defCtorSelector) == null) {
-        TypeReference instantiationExceptionRef = TypeReference.findOrCreateClass(ClassLoaderReference.Primordial, "java/lang", "InstantiationException");
-        int xobj = method.getNumberOfParameters() + 1;
-        SSAInstruction newStatement = new SSANewInstruction(xobj, NewSiteReference.make(2, instantiationExceptionRef));
-        m.addInstruction(tr, newStatement, true);
-        SSAInstruction throwStatement = new SSAThrowInstruction(xobj);
-        m.addInstruction(tr, throwStatement, false);
-      } else {
-        TypeReference illegalAccessExceptionRef = TypeReference.findOrCreateClass(ClassLoaderReference.Primordial, "java/lang", "IllegalAccessException");
-        int xobj = method.getNumberOfParameters() + 1;
-        SSAInstruction newStatement = new SSANewInstruction(xobj, NewSiteReference.make(2, illegalAccessExceptionRef));
-        m.addInstruction(tr, newStatement, true);
-        SSAInstruction throwStatement = new SSAThrowInstruction(xobj);
-        m.addInstruction(tr, throwStatement, false);        
+  private SSAInstruction[] makeStatements(JavaTypeContext context, Map<Integer, ConstantValue> constants) {
+    ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
+    int nextLocal = 2;
+    int retValue = nextLocal++;
+    IClass cls = context.getType().getType();
+    if (cls != null) {
+      for(Iterator methods = cls.getDeclaredMethods().iterator(); methods.hasNext(); ) {
+        IMethod m = (IMethod) methods.next();
+        if (m.isInit()) {
+          int c = nextLocal++;
+          constants.put(c, new ConstantValue(m));
+          SSAReturnInstruction R = new SSAReturnInstruction(c, false);
+          statements.add(R);
+          retValue++;
+        }
       }
-      
-      SSAInstruction[] instrs = new SSAInstruction[m.allInstructions.size()];
-      m.allInstructions.<SSAInstruction> toArray(instrs);
-      return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), null);
+    } else {
+      SSAThrowInstruction t = new SSAThrowInstruction(retValue);
+      statements.add(t);
     }
+    SSAInstruction[] result = new SSAInstruction[statements.size()];
+    Iterator<SSAInstruction> it = statements.iterator();
+    for (int i = 0; i < result.length; i++) {
+      result[i] = it.next();
+    }
+    return result;
+  }
+
+  private IR makeIR(IMethod method, JavaTypeContext context) {
+    Map<Integer,ConstantValue> constants = HashMapFactory.make();
     
-    return null;
+    SSAInstruction instrs[] = makeStatements(context, constants);
+    return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), constants);
   }
-  
-  private boolean hasPublicDefaultCtor(IClass klass) {
-    IMethod ctorMethod = klass.getMethod(defCtorSelector);
-    if (ctorMethod != null && ctorMethod.isPublic()) {
-      return true;
-    }
-    return false;
-  }
-  
+
   public boolean recordFactoryType(CGNode node, IClass klass) {
     return false;
   }

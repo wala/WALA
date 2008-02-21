@@ -261,11 +261,15 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
     if (type == null) {
       throw new IllegalArgumentException("null type");
     }
-    if (disambiguateConstants()) {
+    if (disambiguateConstants() || isReflectiveType(type)) {
       return new ConstantKey<T>(S, getClassHierarchy().lookupClass(type));
     } else {
       return classBased.getInstanceKeyForConstant(type, S);
     }
+  }
+
+  private boolean isReflectiveType(TypeReference type) {
+    return type.equals(TypeReference.JavaLangReflectConstructor);
   }
 
   /*

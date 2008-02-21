@@ -17,6 +17,7 @@ import java.util.Map;
 
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
+import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
@@ -26,7 +27,9 @@ import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.ReflectionSpecification;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.MethodReference;
@@ -108,9 +111,7 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
   }
 
   /**
-   * @author sfink
-   * 
-   * A waring when we expect excessive pollution from a factory method
+   * A warning when we expect excessive pollution from a factory method
    */
   protected static class ManySubtypesWarning extends Warning {
 
@@ -135,8 +136,6 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
   }
 
   /**
-   * @author sfink
-   * 
    * A warning when we fail to find subtypes for a factory method
    */
   protected static class NoSubtypesWarning extends Warning {
@@ -239,9 +238,25 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
         Trace.println("Added allocation: " + a);
       }
       addInstruction(T, a, true);
+
+      if (!T.isArrayType()) {
+        addCtorInvokeInstruction(T, alloc);
+      }
       SSAReturnInstruction r = new SSAReturnInstruction(alloc, false);
       addInstruction(T, r, false);
       return alloc;
+    }
+    
+
+    protected void addCtorInvokeInstruction(final TypeReference T, int alloc) {
+      MethodReference init = MethodReference.findOrCreate(T, MethodReference.initAtom, MethodReference.defaultInitDesc);
+      CallSiteReference site = CallSiteReference.make(getCallSiteForType(T), init, IInvokeInstruction.Dispatch.SPECIAL);
+      int[] params = new int[1];
+      params[0] = alloc;
+      int exc = getExceptionsForType(T);
+      SSAInvokeInstruction s = new SSAInvokeInstruction(params, exc, site);
+      calls.add(s);
+      allInstructions.add(s);
     }
   }
 }
