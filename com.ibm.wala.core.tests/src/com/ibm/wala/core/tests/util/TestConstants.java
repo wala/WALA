@@ -49,6 +49,8 @@ public interface TestConstants {
   public final static String REFLECT5_MAIN = "Lreflection/Reflect5";
 
   public final static String REFLECT6_MAIN = "Lreflection/Reflect6";
+  
+  public final static String REFLECT7_MAIN = "Lreflection/Reflect7";
 
   public final static String SLICE1_MAIN = "Lslice/Slice1";
 
