@@ -9,4 +9,9 @@ public class Reflect3 {
     Hashtable h = (Hashtable) c.newInstance();
     System.out.println(h.toString());
   }
+  
+  @SuppressWarnings("unused")
+  private static class Hash extends Hashtable {
+    
+  }
 }
