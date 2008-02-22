@@ -44,6 +44,9 @@ import com.ibm.wala.util.strings.UTF8Convert;
 public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
 
   static final boolean DEBUG = false;
+  
+  public final static Atom doFilterName = Atom.findOrCreateUnicodeAtom("doFilter");
+  private final static Descriptor doFilterDesc = Descriptor.findOrCreateUTF8("(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;Ljavax/servlet/FilterChain;)V");
 
   private final static Atom destroyName = Atom.findOrCreateUnicodeAtom("destroy");
   private final static Descriptor destroyDesc = Descriptor.findOrCreateUTF8("()V");
@@ -70,9 +73,16 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
 
   private final static Descriptor[] servletMethodDescs = { destroyDesc, getServletConfigDesc, getServletInfoDesc, initDesc,
       serviceDesc, finalizeDesc };
+  
+  private final static Atom[] servletFilterMethodNames = { doFilterName };
+
+private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
 
   private final static TypeName servletName = TypeName.string2TypeName("Ljavax/servlet/Servlet");
   public final static TypeReference Servlet = TypeReference.findOrCreate(ClassLoaderReference.Extension, servletName);
+  
+  private final static TypeName servletFilterName = TypeName.string2TypeName("Ljavax/servlet/Filter");
+  public final static TypeReference ServletFilter = TypeReference.findOrCreate(ClassLoaderReference.Extension, servletFilterName);
 
   private final static TypeName httpServletName = TypeName.string2TypeName("Ljavax/servlet/http/HttpServlet");
   public final static TypeReference HttpServlet = TypeReference.findOrCreate(ClassLoaderReference.Extension, httpServletName);
@@ -126,7 +136,7 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   private Set<Entrypoint> entrypoints = HashSetFactory.make();
 
   /**
-   * Set of servlet implementations found.
+   * Set of servlet (or ServletFilter) implementations found.
    */
   private Set<IClass> servlets = HashSetFactory.make();
 
@@ -166,12 +176,13 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       return;
     }
     isInitialized = true;
-    TypeReference servletType = TypeReference.findOrCreate(scope.getExtensionLoader(), servletName);
     TypeReference actionServletType = TypeReference.findOrCreate(scope.getApplicationLoader(), actionServlet);
     IClass actionServletClass = cha.lookupClass(actionServletType);
     
-    IClass servlet = cha.lookupClass(servletType);
+    IClass servlet = cha.lookupClass(Servlet);
+    IClass servletFilter = cha.lookupClass(ServletFilter);
     assert servlet != null;
+    assert servletFilter != null;
     for (Iterator<IClass> it = getCandidateEntryClasses(cha); it.hasNext();) {
       IClass klass = (IClass) it.next();
       if (DEBUG) {
@@ -186,13 +197,50 @@ public class ServletEntrypoints implements Iterable<Entrypoint>, EJBConstants {
           continue;
         }
       }
-      if (cha.implementsInterface(klass, servlet)) {
+      if (cha.implementsInterface(klass, servlet) ) {
         servlets.add(klass);
         final TypeReference type = klass.getReference();
         
         for (int i = 0; i < servletMethodNames.length; i++) {
           Atom name = servletMethodNames[i];
           Descriptor desc = servletMethodDescs[i];
+          MethodReference M = MethodReference.findOrCreate(type, name, desc);
+          IMethod m = cha.resolveMethod(M);
+          if (cha.resolveMethod(M) != null) {
+            entrypoints.add(new DefaultEntrypoint(m, cha) {
+
+              /**
+               * Assume all ServletRequest and ServletResponse are HTTP flavor.
+               */
+              public TypeReference[] getParameterTypes(int i) {
+                if (i == 0) {
+                  // "this" pointer
+                  return new TypeReference[] { type };
+                } else {
+                  TypeReference[] tArray = super.getParameterTypes(i);
+                  if (Assertions.verifyAssertions) {
+                    Assertions._assert(tArray.length == 1);
+                  }
+                  TypeReference T = tArray[0];
+                  TypeName n = T.getName();
+                  TypeReference Tp = concreteParameterMap.get(n);
+                  if (Tp != null) {
+                    T = Tp;
+                  }
+                  return new TypeReference[] { T };
+                }
+              }
+            });
+          }
+        }
+      }
+      if (cha.implementsInterface(klass, servletFilter) ) {
+        servlets.add(klass);
+        final TypeReference type = klass.getReference();
+        
+        for (int i = 0; i < servletFilterMethodNames.length; i++) {
+          Atom name = servletFilterMethodNames[i];
+          Descriptor desc = servletFilterMethodDescs[i];
           MethodReference M = MethodReference.findOrCreate(type, name, desc);
           IMethod m = cha.resolveMethod(M);
           if (cha.resolveMethod(M) != null) {
