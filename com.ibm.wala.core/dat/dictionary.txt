@@ -145,3 +145,4 @@ offline
 spec
 factoids
 xml
+pistoia
