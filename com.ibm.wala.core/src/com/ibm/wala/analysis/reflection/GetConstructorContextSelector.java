@@ -22,7 +22,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * A {@link ContextSelector} to intercept calls to Class.getConstructor() when the receiver is a type constant
+ * A {@link ContextSelector} to intercept calls to Class.getConstructor[s]() when the receiver is a type constant
  * 
  * @author pistoia
  */
@@ -53,23 +53,28 @@ class GetConstructorContextSelector implements ContextSelector {
     }
     return null;
   }
-  
+
   private IClass getTypeConstant(InstanceKey instance) {
-  if (instance instanceof ConstantKey) {
-    ConstantKey c = (ConstantKey)instance;
-    if (c.getValue() instanceof IClass) {
-      return (IClass)c.getValue();
+    if (instance instanceof ConstantKey) {
+      ConstantKey c = (ConstantKey) instance;
+      if (c.getValue() instanceof IClass) {
+        return (IClass) c.getValue();
+      }
     }
-  }
-  return null;
+    return null;
   }
 
   /**
    * This object may understand a dispatch to Class.getContructor when the receiver is a type constant.
    */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (targetMethod.getReference().equals(GetConstructorContextInterpreter.GET_CONSTRUCTOR_REF) && getTypeConstant(instance) != null) {
-        return true;
+    if (targetMethod.getReference().equals(GetConstructorContextInterpreter.GET_CONSTRUCTOR_REF)
+        && getTypeConstant(instance) != null) {
+      return true;
+    }
+    if (targetMethod.getReference().equals(GetConstructorContextInterpreter.GET_CONSTRUCTORS_REF)
+        && getTypeConstant(instance) != null) {
+      return true;
     }
     return false;
   }

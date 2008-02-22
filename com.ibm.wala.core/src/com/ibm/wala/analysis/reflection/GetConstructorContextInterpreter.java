@@ -11,6 +11,7 @@
 package com.ibm.wala.analysis.reflection;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -27,7 +28,9 @@ import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
@@ -37,24 +40,34 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * An {@link SSAContextInterpreter} specialized to interpret Class.forName in a {@link JavaTypeContext} which
- * represents the point-type of the class object created by the call.
+ * An {@link SSAContextInterpreter} specialized to interpret Class.getConstructor and getConstructors in a
+ * {@link JavaTypeContext} which represents the point-type of the class object created by the call.
  * 
  * @author pistoia
+ * @author sfink
  */
 public class GetConstructorContextInterpreter implements SSAContextInterpreter {
 
   public final static Atom getConstructorAtom = Atom.findOrCreateUnicodeAtom("getConstructor");
 
-  private final static Descriptor getConstructorDescriptor = Descriptor.findOrCreateUTF8("([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;");
+  public final static Atom getConstructorsAtom = Atom.findOrCreateUnicodeAtom("getConstructors");
 
-  public final static MethodReference GET_CONSTRUCTOR_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass, getConstructorAtom,
-      getConstructorDescriptor);
+  private final static Descriptor getConstructorDescriptor = Descriptor
+      .findOrCreateUTF8("([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;");
+
+  private final static Descriptor getConstructorsDescriptor = Descriptor.findOrCreateUTF8("()[Ljava/lang/reflect/Constructor;");
+
+  public final static MethodReference GET_CONSTRUCTOR_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass,
+      getConstructorAtom, getConstructorDescriptor);
+
+  public final static MethodReference GET_CONSTRUCTORS_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass,
+      getConstructorsAtom, getConstructorsDescriptor);
 
   public IR getIR(CGNode node) {
     if (node == null) {
@@ -63,7 +76,8 @@ public class GetConstructorContextInterpreter implements SSAContextInterpreter {
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
     }
-    IR result = makeIR(node.getMethod(), (JavaTypeContext) node.getContext());
+    IR result = node.getMethod().getReference().equals(GET_CONSTRUCTOR_REF) ? makeGetCtorIR(node.getMethod(),
+        (JavaTypeContext) node.getContext()) : makeGetCtorsIR(node.getMethod(), (JavaTypeContext) node.getContext());
     return result;
   }
 
@@ -78,9 +92,11 @@ public class GetConstructorContextInterpreter implements SSAContextInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (!(node.getContext() instanceof JavaTypeContext))
+    if (!(node.getContext() instanceof JavaTypeContext)) {
       return false;
-    return node.getMethod().getReference().equals(GET_CONSTRUCTOR_REF);
+    }
+    return node.getMethod().getReference().equals(GET_CONSTRUCTOR_REF)
+        || node.getMethod().getReference().equals(GET_CONSTRUCTORS_REF);
   }
 
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
@@ -105,21 +121,67 @@ public class GetConstructorContextInterpreter implements SSAContextInterpreter {
     return EmptyIterator.instance();
   }
 
-  private SSAInstruction[] makeStatements(JavaTypeContext context, Map<Integer, ConstantValue> constants) {
+  private SSAInstruction[] makeGetCtorsStatements(JavaTypeContext context, Map<Integer, ConstantValue> constants) {
     ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
     int nextLocal = 2;
     int retValue = nextLocal++;
     IClass cls = context.getType().getType();
     if (cls != null) {
-      for(Iterator methods = cls.getDeclaredMethods().iterator(); methods.hasNext(); ) {
-        IMethod m = (IMethod) methods.next();
-        if (m.isInit()) {
-          int c = nextLocal++;
-          constants.put(c, new ConstantValue(m));
-          SSAReturnInstruction R = new SSAReturnInstruction(c, false);
-          statements.add(R);
-          retValue++;
-        }
+      Collection<IMethod> ctors = getConstructors(cls);
+      int nCtors = ctors.size();
+      TypeReference arrType = TypeReference.findOrCreateArrayOf(TypeReference.JavaLangReflectConstructor);
+      NewSiteReference site = new NewSiteReference(retValue, arrType);
+      int sizeVn = nextLocal++;
+      constants.put(sizeVn, new ConstantValue(nCtors));
+      SSANewInstruction allocArr = new SSANewInstruction(retValue, site, new int[] { sizeVn });
+      statements.add(allocArr);
+
+      int i = 0;
+      for (IMethod m : ctors) {
+        int c = nextLocal++;
+        constants.put(c, new ConstantValue(m));
+        int index = i++;
+        int indexVn = nextLocal++;
+        constants.put(indexVn, new ConstantValue(index));
+        SSAArrayStoreInstruction store = new SSAArrayStoreInstruction(retValue, indexVn, c, TypeReference.JavaLangReflectConstructor);
+        statements.add(store);
+      }
+      SSAReturnInstruction R = new SSAReturnInstruction(retValue, false);
+      statements.add(R);
+    } else {
+      SSAThrowInstruction t = new SSAThrowInstruction(retValue);
+      statements.add(t);
+    }
+    SSAInstruction[] result = new SSAInstruction[statements.size()];
+    Iterator<SSAInstruction> it = statements.iterator();
+    for (int i = 0; i < result.length; i++) {
+      result[i] = it.next();
+    }
+    return result;
+  }
+
+  private Collection<IMethod> getConstructors(IClass cls) {
+    Collection<IMethod> result = HashSetFactory.make();
+    for (IMethod m : cls.getDeclaredMethods()) {
+      if (m.isInit()) {
+        result.add(m);
+      }
+    }
+    return result;
+  }
+
+  private SSAInstruction[] makeGetCtorStatements(JavaTypeContext context, Map<Integer, ConstantValue> constants) {
+    ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
+    int nextLocal = 2;
+    int retValue = nextLocal++;
+    IClass cls = context.getType().getType();
+    if (cls != null) {
+      for (IMethod m : getConstructors(cls)) {
+        int c = nextLocal++;
+        constants.put(c, new ConstantValue(m));
+        SSAReturnInstruction R = new SSAReturnInstruction(c, false);
+        statements.add(R);
+        retValue++;
       }
     } else {
       SSAThrowInstruction t = new SSAThrowInstruction(retValue);
@@ -133,10 +195,15 @@ public class GetConstructorContextInterpreter implements SSAContextInterpreter {
     return result;
   }
 
-  private IR makeIR(IMethod method, JavaTypeContext context) {
-    Map<Integer,ConstantValue> constants = HashMapFactory.make();
-    
-    SSAInstruction instrs[] = makeStatements(context, constants);
+  private IR makeGetCtorIR(IMethod method, JavaTypeContext context) {
+    Map<Integer, ConstantValue> constants = HashMapFactory.make();
+    SSAInstruction instrs[] = makeGetCtorStatements(context, constants);
+    return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), constants);
+  }
+
+  private IR makeGetCtorsIR(IMethod method, JavaTypeContext context) {
+    Map<Integer, ConstantValue> constants = HashMapFactory.make();
+    SSAInstruction instrs[] = makeGetCtorsStatements(context, constants);
     return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), constants);
   }
 

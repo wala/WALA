@@ -23,8 +23,8 @@ public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
 
   private final int value;
 
-  public SSAArrayStoreInstruction(int arrayref, int index, int value, TypeReference declaredType) {
-    super(arrayref, index, declaredType);
+  public SSAArrayStoreInstruction(int arrayref, int index, int value, TypeReference elementType) {
+    super(arrayref, index, elementType);
     this.value = value;
   }
 
