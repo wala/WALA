@@ -26,6 +26,8 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.slicer.HeapStatement;
+import com.ibm.wala.ipa.slicer.MethodEntryStatement;
+import com.ibm.wala.ipa.slicer.MethodExitStatement;
 import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
@@ -163,6 +165,8 @@ public class GVSDG {
       public boolean accepts(Statement o) {
         Statement s = (Statement) o;
         if (s.getNode().equals(sdg.getCallGraph().getFakeRootNode())) {
+          return false;
+        } else if (s instanceof MethodExitStatement || s instanceof MethodEntryStatement) {
           return false;
         } else {
           return true;
