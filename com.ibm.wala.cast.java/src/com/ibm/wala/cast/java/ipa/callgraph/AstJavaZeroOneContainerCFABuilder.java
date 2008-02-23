@@ -62,9 +62,9 @@ public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
     setContextInterpreter(contextInterpreter);
 
     ZeroXInstanceKeys zik = makeInstanceKeys(cha, options, contextInterpreter);
-    setInstanceKeys(zik);
+    setInstanceKeys(new JavaScopeMappingInstanceKeys(cha, this, zik));
 
-    ContextSelector CCS = makeContainerContextSelector(cha,(ZeroXInstanceKeys) getInstanceKeys());
+    ContextSelector CCS = makeContainerContextSelector(cha,zik);
     DelegatingContextSelector DCS = new DelegatingContextSelector(CCS, contextSelector);
     setContextSelector(DCS);
   }
