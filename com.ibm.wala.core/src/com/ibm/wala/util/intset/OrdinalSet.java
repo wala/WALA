@@ -127,10 +127,12 @@ public class OrdinalSet<T> implements Iterable<T> {
       }
     }
     
-    if (A.S != null && B.S == null) {
-      return new OrdinalSet<T>(A.S, A.mapping);
-    } else if (A.S == null && B.S != null) {
-      return new OrdinalSet<T>(B.S, B.mapping);
+    if (A.S == null) {
+      return (B.S == null) ? 
+          OrdinalSet.<T>empty() : new OrdinalSet<T>(B.S, B.mapping);
+    } else if (B.S == null) {
+      return (A.S == null) ? 
+          OrdinalSet.<T>empty() : new OrdinalSet<T>(A.S, A.mapping);
     }
 
     IntSet union = A.S.union(B.S);
