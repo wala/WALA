@@ -24,14 +24,10 @@ import com.ibm.wala.fixpoint.IntSetVariable;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraph;
-import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PointsToSetVariable;
@@ -39,10 +35,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntSetAction;
 
 public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraphBuilder {
@@ -132,45 +126,6 @@ public class AstJavaSSAPropagationCallGraphBuilder extends AstSSAPropagationCall
   // ///////////////////////////////////////////////////////////////////////////
   //
   // specialized pointer analysis
-  //
-  // ///////////////////////////////////////////////////////////////////////////
-
-  protected static class AstJavaPointerFlowGraph extends AstPointerFlowGraph {
-
-    protected static class AstJavaPointerFlowVisitor extends AstPointerFlowVisitor implements AstJavaInstructionVisitor {
-      protected AstJavaPointerFlowVisitor(PointerAnalysis pa, CallGraph cg, Graph<PointerKey> delegate, CGNode node, IR ir, BasicBlock bb) {
-        super(pa, cg, delegate, node, ir, bb);
-      }
-
-      public void visitEnclosingObjectReference(EnclosingObjectReference x) {
-
-      }
-
-      public void visitJavaInvoke(AstJavaInvokeInstruction instruction) {
-
-      }
-    }
-
-    protected AstJavaPointerFlowGraph(PointerAnalysis pa, CallGraph cg) {
-      super(pa, cg);
-    }
-
-    protected InstructionVisitor makeInstructionVisitor(CGNode node, IR ir, BasicBlock bb) {
-      return new AstJavaPointerFlowVisitor(pa, cg, delegate, node, ir, bb);
-    }
-  }
-
-  public PointerFlowGraphFactory getPointerFlowGraphFactory() {
-    return new PointerFlowGraphFactory() {
-      public PointerFlowGraph make(PointerAnalysis pa, CallGraph cg) {
-        return new AstJavaPointerFlowGraph(pa, cg);
-      }
-    };
-  }
-
-  // ///////////////////////////////////////////////////////////////////////////
-  //
-  // IR visitor specialization for AST-based Java
   //
   // ///////////////////////////////////////////////////////////////////////////
 
