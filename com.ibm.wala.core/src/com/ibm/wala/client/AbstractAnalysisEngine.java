@@ -33,8 +33,6 @@ import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraph;
-import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -122,15 +120,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
    */
   protected PointerAnalysis pointerAnalysis;
 
-  /**
-   * Factory to create graph view of flow of pointers in the heap.
-   */
-  private PointerFlowGraphFactory pointerFlowGraphFactory;
-
-  /**
-   * Graph view of flow of pointers between heap abstracts
-   */
-  private PointerFlowGraph pointerFlowGraph;
 
   /**
    * Graph view of flow of pointers between heap abstractions
@@ -151,7 +140,6 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
     cg = builder.makeCallGraph(options, monitor);
 
     if (savePointerAnalysis) {
-      pointerFlowGraphFactory = builder.getPointerFlowGraphFactory();
       pointerAnalysis = builder.getPointerAnalysis();
     }
 
@@ -265,14 +253,7 @@ public abstract class AbstractAnalysisEngine implements AnalysisEngine {
   public PointerAnalysis getPointerAnalysis() {
     return pointerAnalysis;
   }
-
-  public PointerFlowGraph getPointerFlowGraph() {
-    if (pointerFlowGraph == null) {
-      pointerFlowGraph = pointerFlowGraphFactory.make(pointerAnalysis, cg);
-    }
-    return pointerFlowGraph;
-  }
-
+  
   public HeapGraph getHeapGraph() {
     if (heapGraph == null) {
       heapGraph = new BasicHeapGraph(getPointerAnalysis(), cg);

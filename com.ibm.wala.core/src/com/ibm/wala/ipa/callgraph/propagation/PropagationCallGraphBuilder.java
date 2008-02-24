@@ -751,10 +751,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     return system.extractPointerAnalysis(this);
   }
 
-  public PointerFlowGraphFactory getPointerFlowGraphFactory() {
-    return new PointerFlowGraphFactory();
-  }
-
   public PropagationSystem getPropagationSystem() {
     return system;
   }

@@ -13,7 +13,6 @@ package com.ibm.wala.ipa.callgraph;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
 
 /**
  *
@@ -37,8 +36,6 @@ public interface CallGraphBuilder {
    */
   public PointerAnalysis getPointerAnalysis();
 
-  public PointerFlowGraphFactory getPointerFlowGraphFactory();
-  
   public AnalysisCache getAnalysisCache();
 
 }
