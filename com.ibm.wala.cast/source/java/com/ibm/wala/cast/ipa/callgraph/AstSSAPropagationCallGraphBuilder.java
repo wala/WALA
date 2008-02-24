@@ -51,10 +51,7 @@ import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysisImpl;
-import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraph;
-import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PointsToMap;
@@ -69,14 +66,12 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.functions.Function;
-import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.traverse.NumberedDFSDiscoverTimeIterator;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
@@ -125,71 +120,6 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
   // specialized pointer analysis
   //
   // /////////////////////////////////////////////////////////////////////////
-
-  public static class AstPointerFlowGraph extends PointerFlowGraph {
-
-    public static class AstPointerFlowVisitor extends InstructionVisitor implements AstInstructionVisitor {
-      public AstPointerFlowVisitor(PointerAnalysis pa, CallGraph cg, Graph<PointerKey> delegate, CGNode node, IR ir, BasicBlock bb) {
-        super(pa, cg, delegate, node, ir, bb);
-      }
-
-      public void visitAstLexicalRead(AstLexicalRead instruction) {
-
-      }
-
-      public void visitAstLexicalWrite(AstLexicalWrite instruction) {
-
-      }
-
-      public void visitAstGlobalRead(AstGlobalRead instruction) {
-
-      }
-
-      public void visitAstGlobalWrite(AstGlobalWrite instruction) {
-
-      }
-
-      public void visitNonExceptingThrow(NonExceptingThrowInstruction inst) {
-
-      }
-
-      public void visitAssert(AstAssertInstruction instruction) {
-
-      }
-
-      public void visitEachElementGet(EachElementGetInstruction inst) {
-
-      }
-
-      public void visitEachElementHasNext(EachElementHasNextInstruction inst) {
-
-      }
-
-      public void visitIsDefined(AstIsDefinedInstruction inst) {
-
-      }
-
-      public void visitEcho(AstEchoInstruction inst) {
-
-      }
-    }
-
-    protected AstPointerFlowGraph(PointerAnalysis pa, CallGraph cg) {
-      super(pa, cg);
-    }
-
-    protected InstructionVisitor makeInstructionVisitor(CGNode node, IR ir, BasicBlock bb) {
-      return new AstPointerFlowVisitor(pa, cg, delegate, node, ir, bb);
-    }
-  }
-
-  public PointerFlowGraphFactory getPointerFlowGraphFactory() {
-    return new PointerFlowGraphFactory() {
-      public PointerFlowGraph make(PointerAnalysis pa, CallGraph cg) {
-        return new AstPointerFlowGraph(pa, cg);
-      }
-    };
-  }
 
   public static class AstPointerAnalysisImpl extends PointerAnalysisImpl {
 
