@@ -40,8 +40,6 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraph;
-import com.ibm.wala.ipa.callgraph.propagation.PointerFlowGraphFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.PointsToMap;
@@ -56,10 +54,8 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
 import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
-import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
@@ -161,47 +157,6 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
   // specialized pointer analysis
   //
   // ///////////////////////////////////////////////////////////////////////////
-
-  public static class JSPointerFlowGraph extends AstPointerFlowGraph {
-
-    public static class JSPointerFlowVisitor extends AstPointerFlowVisitor implements com.ibm.wala.cast.js.ssa.InstructionVisitor {
-      public JSPointerFlowVisitor(PointerAnalysis pa, CallGraph cg, Graph<PointerKey> delegate, CGNode node, IR ir, BasicBlock bb) {
-        super(pa, cg, delegate, node, ir, bb);
-      }
-
-      public void visitJavaScriptInvoke(JavaScriptInvoke instruction) {
-
-      }
-
-      public void visitJavaScriptPropertyRead(JavaScriptPropertyRead instruction) {
-
-      }
-
-      public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction) {
-
-      }
-
-      public void visitTypeOf(JavaScriptTypeOfInstruction instruction) {
-
-      }
-    }
-
-    protected JSPointerFlowGraph(PointerAnalysis pa, CallGraph cg) {
-      super(pa, cg);
-    }
-
-    protected InstructionVisitor makeInstructionVisitor(CGNode node, IR ir, BasicBlock bb) {
-      return new JSPointerFlowVisitor(pa, cg, delegate, node, ir, bb);
-    }
-  }
-
-  public PointerFlowGraphFactory getPointerFlowGraphFactory() {
-    return new PointerFlowGraphFactory() {
-      public PointerFlowGraph make(PointerAnalysis pa, CallGraph cg) {
-        return new JSPointerFlowGraph(pa, cg);
-      }
-    };
-  }
 
   public static class JSPointerAnalysisImpl extends AstPointerAnalysisImpl {
 
