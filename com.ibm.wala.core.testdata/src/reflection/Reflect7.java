@@ -11,7 +11,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class Reflect7 {
   @SuppressWarnings("unchecked")
-  public static void main(String[] args) throws ClassNotFoundException, SecurityException, NoSuchMethodException,
+  public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException,
       IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
     Class c = Class.forName("java.io.FilePermission");
     Class[] paramTypes = new Class[] { "".getClass(), "".getClass() };
