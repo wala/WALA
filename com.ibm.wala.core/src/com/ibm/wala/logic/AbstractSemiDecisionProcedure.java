@@ -29,5 +29,7 @@ public abstract class AbstractSemiDecisionProcedure implements ISemiDecisionProc
     Collection<IMaxTerm> emptyTheory = Collections.emptySet();
     return isContradiction(f, emptyTheory);
   }
+  
+  
 
 }
