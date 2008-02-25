@@ -10,7 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.ibm.wala.annotations.Internal;
@@ -24,7 +24,7 @@ import com.ibm.wala.util.debug.Assertions;
  * @author sfink
  */
 @Internal
-public class ParanoidHashMap<K, V> extends HashMap<K, V> {
+public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
   public static final long serialVersionUID = 909018793791787198L;
 
   /**

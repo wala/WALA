@@ -37,26 +37,27 @@
  */
 package com.ibm.wala.demandpa.genericutil;
 
-import java.util.HashSet;
 import java.util.Set;
+
+import com.ibm.wala.util.collections.HashSetFactory;
 
 public class HashSetMultiMap<K, V> extends AbstractMultiMap<K, V> {
 
-   public HashSetMultiMap() {
-      super(false);
-   }
-   
-   public HashSetMultiMap(boolean create) {
-      super(create);
-   }
+  public HashSetMultiMap() {
+    super(false);
+  }
 
-   @Override
-   protected Set<V> createSet() {
-      return new HashSet<V>();
-   }
+  public HashSetMultiMap(boolean create) {
+    super(create);
+  }
 
-    public static <K,V> HashSetMultiMap<K,V> make() {
-      return new HashSetMultiMap<K,V>();
-    }
+  @Override
+  protected Set<V> createSet() {
+    return HashSetFactory.make();
+  }
+
+  public static <K, V> HashSetMultiMap<K, V> make() {
+    return new HashSetMultiMap<K, V>();
+  }
 
 }

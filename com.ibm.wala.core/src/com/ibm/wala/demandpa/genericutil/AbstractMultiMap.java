@@ -39,13 +39,14 @@ package com.ibm.wala.demandpa.genericutil;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.util.collections.HashMapFactory;
+
 abstract class AbstractMultiMap<K, V> implements MultiMap<K, V> {
 
-  protected final Map<K, Set<V>> map = new HashMap<K, Set<V>>();
+  protected final Map<K, Set<V>> map = HashMapFactory.make();
 
   protected final boolean create;
 
@@ -59,11 +60,7 @@ abstract class AbstractMultiMap<K, V> implements MultiMap<K, V> {
     return Collections.<V> emptySet();
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see AAA.util.MultiMap#get(K)
-   */
+
   public Set<V> get(K key) {
     Set<V> ret = map.get(key);
     if (ret == null) {

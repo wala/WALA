@@ -14,7 +14,6 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -36,6 +35,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -162,7 +162,7 @@ public class AnalysisScope {
    *         ClassHierarchy
    */
   public Set<Language> getBaseLanguages() {
-    Set<Language> result = new HashSet<Language>();
+    Set<Language> result = HashSetFactory.make();
     for (Language language : languages) {
       if (language.getBaseLanguage() == null) {
         result.add(language);

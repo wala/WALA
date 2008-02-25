@@ -68,7 +68,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * The languages may for example be related by inheritance (e.g. X10 derives
    * from Java, and shares a common type hierarchy rooted at java.lang.Object).
    */
-  private final Set<Language> languages = new HashSet<Language>();
+  private final Set<Language> languages = HashSetFactory.make();
 
   final private HashMap<IClass, Node> map = HashMapFactory.make();
 
@@ -171,7 +171,7 @@ public class ClassHierarchy implements IClassHierarchy {
     }
     this.scope = scope;
     this.factory = factory;
-    Set<Atom> langNames = new HashSet<Atom>();
+    Set<Atom> langNames = HashSetFactory.make();
     for (Language lang : languages) {
       this.languages.add(lang);
       this.languages.addAll(lang.getDerivedLanguages());

@@ -65,6 +65,7 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
@@ -93,8 +94,8 @@ public class TestNewGraphPointsTo extends AbstractDemandPointsTo {
 
     // do a DFS traversal of the assign and match edges
     // in the graph, adding instance keys to the points-to set
-    final HashSet<InstanceKey> p2set = new HashSet<InstanceKey>();
-    final HashSet<PointerKey> marked = new HashSet<PointerKey>();
+    final HashSet<InstanceKey> p2set = HashSetFactory.make();
+    final HashSet<PointerKey> marked = HashSetFactory.make();
     final Stack<PointerKey> worklist = new Stack<PointerKey>();
     class Helper {
       void prop(PointerKey thePk) {

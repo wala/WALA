@@ -51,6 +51,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.ibm.wala.util.collections.HashSetFactory;
+
 /**
  * Miscellaneous utility functions.
  */
@@ -278,7 +280,7 @@ public class Util {
     if (srcSet == null) {
       throw new IllegalArgumentException("srcSet == null");
     }
-    HashSet<U> result = new HashSet<U>();
+    HashSet<U> result = HashSetFactory.make();
     for (Iterator<T> srcIter = srcSet.iterator(); srcIter.hasNext();) {
       result.add(mapper.map(srcIter.next()));
     }
@@ -485,7 +487,7 @@ public class Util {
     if (vals.size() <= n) {
       return vals;
     }
-    HashSet<T> elems = new HashSet<T>();
+    HashSet<T> elems = HashSetFactory.make();
     Random rand = new Random(seed);
     for (int i = 0; i < n; i++) {
       boolean added = true;

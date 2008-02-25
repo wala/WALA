@@ -13,6 +13,7 @@ package com.ibm.wala.util.collections;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,7 +29,7 @@ import com.ibm.wala.util.debug.Assertions;
  * @author sfink
  */
 @Internal
-public class ParanoidHashSet<T> extends HashSet<T> {
+public class ParanoidHashSet<T> extends LinkedHashSet<T> {
   public static final long serialVersionUID = 30919839181133333L;
 
   /**
@@ -86,7 +87,7 @@ public class ParanoidHashSet<T> extends HashSet<T> {
       int hc = arg0.hashCode();
       Set<T> s = hcFreq.get(new Integer(hc));
       if (s == null) {
-        HashSet<T> h = new HashSet<T>(1);
+        HashSet<T> h = new LinkedHashSet<T>(1);
         h.add(arg0);
         hcFreq.put(new Integer(hc), h);
       } else {

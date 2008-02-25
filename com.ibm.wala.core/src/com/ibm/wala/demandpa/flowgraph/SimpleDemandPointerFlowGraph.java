@@ -12,7 +12,6 @@
 package com.ibm.wala.demandpa.flowgraph;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -65,6 +64,7 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
@@ -125,7 +125,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
    */
   final Map<PointerKey, IField> getFieldDefs = HashMapFactory.make();
 
-  final Collection<PointerKey> arrayDefs = new HashSet<PointerKey>();
+  final Collection<PointerKey> arrayDefs = HashSetFactory.make();
 
   /**
    * Map: LocalPointerKey -> SSAInvokeInstruction. If we have (x, foo()), that

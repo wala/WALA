@@ -94,19 +94,36 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
     return delegate.isExitBlock();
   }
 
-  @Override
-  public boolean equals(Object arg0) {
-    if (arg0 instanceof BasicBlockInContext) {
-      BasicBlockInContext other = (BasicBlockInContext) arg0;
-      return delegate.equals(other.delegate) && node.equals(other.node);
-    } else {
-      return false;
-    }
-  }
 
   @Override
   public int hashCode() {
-    return delegate.hashCode() + 229 * node.hashCode();
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((delegate == null) ? 0 : delegate.hashCode());
+    result = prime * result + ((node == null) ? 0 : node.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    final BasicBlockInContext other = (BasicBlockInContext) obj;
+    if (delegate == null) {
+      if (other.delegate != null)
+        return false;
+    } else if (!delegate.equals(other.delegate))
+      return false;
+    if (node == null) {
+      if (other.node != null)
+        return false;
+    } else if (!node.equals(other.node))
+      return false;
+    return true;
   }
 
   public T getDelegate() {

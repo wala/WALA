@@ -12,7 +12,6 @@ package com.ibm.wala.demandpa.util;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -340,16 +339,12 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     return arrayWrites;
   }
 
-  /*
-   * (non-Javadoc)
-   * 
-   * @see java.lang.Object#toString()
-   */
+
   @Override
   public String toString() {
     StringBuffer result = new StringBuffer();
 
-    Collection<IField> allFields = new HashSet<IField>();
+    Collection<IField> allFields = HashSetFactory.make();
     allFields.addAll(readMap.keySet());
     allFields.addAll(writeMap.keySet());
 

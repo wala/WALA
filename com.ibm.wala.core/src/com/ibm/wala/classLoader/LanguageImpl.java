@@ -10,14 +10,15 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
-import java.util.HashSet;
 import java.util.Set;
+
+import com.ibm.wala.util.collections.HashSetFactory;
 
 public abstract class LanguageImpl implements Language {
 
   private Language baseLang;
 
-  private Set<Language> derivedLangs= new HashSet<Language>();
+  private Set<Language> derivedLangs= HashSetFactory.make();
 
   public LanguageImpl() { }
 
