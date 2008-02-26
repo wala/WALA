@@ -319,4 +319,20 @@ public class ReflectionTest extends WalaTestCase {
     Set<CGNode> nodes = cg.getNodes(mr);
     assertFalse(nodes.isEmpty());
   }
+  
+  /**
+   * Test that when analyzing reflect9, the call graph includes a node for java.lang.Integer.toString()
+   */
+  public void testReflect10() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECT10_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
+    MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
+    Set<CGNode> nodes = cg.getNodes(mr);
+    assertFalse(nodes.isEmpty());
+  }
 }
