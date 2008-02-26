@@ -32,7 +32,7 @@ public class ReflectionContextSelector extends DelegatingContextSelector {
    */
   private ReflectionContextSelector(IClassHierarchy cha, MethodTargetSelector methodTargetSelector) {
     super(new ConstructorNewInstanceContextSelector(),
-        new DelegatingContextSelector(new GetConstructorContextSelector(),
+        new DelegatingContextSelector(new JavaLangClassContextSelector(),
             new DelegatingContextSelector(new DelegatingContextSelector(new ForNameContextSelector(), new ClassNewInstanceContextSelector()),
         new FactoryContextSelector(cha, methodTargetSelector))));
   }

@@ -22,13 +22,22 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * A {@link ContextSelector} to intercept calls to Class.getConstructor[s]() when the receiver is a type constant
+ * A {@link ContextSelector} to intercept calls to certain methods on java.lang.Class when the receiver is a type
+ * constant
+ * 
+ * Currently supported methods:
+ * <ul>
+ * <li> getConstructor
+ * <li> getConstructors
+ * <li> getDeclaredMethod
+ * </ul>
  * 
  * @author pistoia
+ * @author sjfink
  */
-class GetConstructorContextSelector implements ContextSelector {
+class JavaLangClassContextSelector implements ContextSelector {
 
-  public GetConstructorContextSelector() {
+  public JavaLangClassContextSelector() {
   }
 
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
@@ -40,12 +49,8 @@ class GetConstructorContextSelector implements ContextSelector {
   }
 
   /**
-   * If the {@link CallSiteReference} invokes c.getConstructor() and c is a type constant, return a
+   * If the {@link CallSiteReference} invokes a method we understand and c is a type constant, return a
    * {@link JavaTypeContext} representing the type named by s, if we can resolve it in the {@link IClassHierarchy}.
-   * 
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod,
-   *      com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     if (mayUnderstand(caller, site, callee, receiver)) {
@@ -68,14 +73,16 @@ class GetConstructorContextSelector implements ContextSelector {
    * This object may understand a dispatch to Class.getContructor when the receiver is a type constant.
    */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (targetMethod.getReference().equals(GetConstructorContextInterpreter.GET_CONSTRUCTOR_REF)
-        && getTypeConstant(instance) != null) {
+    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_CONSTRUCTOR) && getTypeConstant(instance) != null) {
       return true;
     }
-    if (targetMethod.getReference().equals(GetConstructorContextInterpreter.GET_CONSTRUCTORS_REF)
-        && getTypeConstant(instance) != null) {
+    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_CONSTRUCTORS) && getTypeConstant(instance) != null) {
       return true;
     }
+//    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_DECLARED_METHOD)
+//        && getTypeConstant(instance) != null) {
+//      return true;
+//    }
     return false;
   }
 }

@@ -34,7 +34,6 @@ import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
-import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -43,31 +42,31 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
 
 /**
- * An {@link SSAContextInterpreter} specialized to interpret Class.getConstructor and getConstructors in a
+ * An {@link SSAContextInterpreter} specialized to interpret methods on java.lang.Class in a
  * {@link JavaTypeContext} which represents the point-type of the class object created by the call.
+ * 
+ * Currently supported methods:
+ * <ul>
+ * <li> getConstructor
+ * <li> getConstructors
+ * <li> getDeclaredMethod
+ * </ul>
  * 
  * @author pistoia
  * @author sfink
  */
-public class GetConstructorContextInterpreter implements SSAContextInterpreter {
+public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
 
-  public final static Atom getConstructorAtom = Atom.findOrCreateUnicodeAtom("getConstructor");
+  public final static MethodReference GET_CONSTRUCTOR = MethodReference.findOrCreate(TypeReference.JavaLangClass,
+      "getConstructor","([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;" );
 
-  public final static Atom getConstructorsAtom = Atom.findOrCreateUnicodeAtom("getConstructors");
-
-  private final static Descriptor getConstructorDescriptor = Descriptor
-      .findOrCreateUTF8("([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;");
-
-  private final static Descriptor getConstructorsDescriptor = Descriptor.findOrCreateUTF8("()[Ljava/lang/reflect/Constructor;");
-
-  public final static MethodReference GET_CONSTRUCTOR_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass,
-      getConstructorAtom, getConstructorDescriptor);
-
-  public final static MethodReference GET_CONSTRUCTORS_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass,
-      getConstructorsAtom, getConstructorsDescriptor);
+  public final static MethodReference GET_CONSTRUCTORS = MethodReference.findOrCreate(TypeReference.JavaLangClass,
+     "getConstructors","()[Ljava/lang/reflect/Constructor;" );
+  
+  public final static MethodReference GET_DECLARED_METHOD = MethodReference.findOrCreate(TypeReference.JavaLangClass,
+      "getDeclaredMethod","(Ljava/lang/String;[Ljava/lang/Class;)[Ljava/lang/reflect/Method;" );
 
   public IR getIR(CGNode node) {
     if (node == null) {
@@ -76,9 +75,14 @@ public class GetConstructorContextInterpreter implements SSAContextInterpreter {
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
     }
-    IR result = node.getMethod().getReference().equals(GET_CONSTRUCTOR_REF) ? makeGetCtorIR(node.getMethod(),
-        (JavaTypeContext) node.getContext()) : makeGetCtorsIR(node.getMethod(), (JavaTypeContext) node.getContext());
-    return result;
+    if (node.getMethod().getReference().equals(GET_CONSTRUCTOR)){
+      return makeGetCtorIR(node.getMethod(), (JavaTypeContext)node.getContext());
+    }
+    if (node.getMethod().getReference().equals(GET_CONSTRUCTORS)) {
+      return makeGetCtorsIR(node.getMethod(), (JavaTypeContext)node.getContext());
+    }
+    Assertions.UNREACHABLE("Unexpected method " + node);
+    return null;
   }
 
   public int getNumberOfStatements(CGNode node) {
@@ -95,8 +99,8 @@ public class GetConstructorContextInterpreter implements SSAContextInterpreter {
     if (!(node.getContext() instanceof JavaTypeContext)) {
       return false;
     }
-    return node.getMethod().getReference().equals(GET_CONSTRUCTOR_REF)
-        || node.getMethod().getReference().equals(GET_CONSTRUCTORS_REF);
+    return node.getMethod().getReference().equals(GET_CONSTRUCTOR)
+        || node.getMethod().getReference().equals(GET_CONSTRUCTORS);
   }
 
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
