@@ -33,7 +33,6 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
-import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -66,8 +65,11 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
      "getConstructors","()[Ljava/lang/reflect/Constructor;" );
   
   public final static MethodReference GET_DECLARED_METHOD = MethodReference.findOrCreate(TypeReference.JavaLangClass,
-      "getDeclaredMethod","(Ljava/lang/String;[Ljava/lang/Class;)[Ljava/lang/reflect/Method;" );
+      "getDeclaredMethod","(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;" );
 
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
+   */
   public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -75,16 +77,28 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
     }
-    if (node.getMethod().getReference().equals(GET_CONSTRUCTOR)){
-      return makeGetCtorIR(node.getMethod(), (JavaTypeContext)node.getContext());
+    IMethod method = node.getMethod();
+    JavaTypeContext context = (JavaTypeContext)node.getContext();
+    Map<Integer, ConstantValue> constants = HashMapFactory.make();
+    if (method.getReference().equals(GET_CONSTRUCTOR)){
+      SSAInstruction instrs[] = makeGetCtorStatements(context, constants);
+      return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), constants);
     }
-    if (node.getMethod().getReference().equals(GET_CONSTRUCTORS)) {
-      return makeGetCtorsIR(node.getMethod(), (JavaTypeContext)node.getContext());
+    if (method.getReference().equals(GET_CONSTRUCTORS)) {
+      SSAInstruction instrs[] = makeGetCtorsStatements(context, constants);
+      return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), constants);
+    }
+    if (method.getReference().equals(GET_DECLARED_METHOD)) {
+      SSAInstruction instrs[] = makeGetDeclaredMethodStatements(context, constants);
+      return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), constants);
     }
     Assertions.UNREACHABLE("Unexpected method " + node);
     return null;
   }
 
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
+   */
   public int getNumberOfStatements(CGNode node) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
@@ -92,6 +106,9 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     return getIR(node).getInstructions().length;
   }
 
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
+   */
   public boolean understands(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -100,7 +117,8 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
       return false;
     }
     return node.getMethod().getReference().equals(GET_CONSTRUCTOR)
-        || node.getMethod().getReference().equals(GET_CONSTRUCTORS);
+        || node.getMethod().getReference().equals(GET_CONSTRUCTORS)
+        || node.getMethod().getReference().equals(GET_DECLARED_METHOD);
   }
 
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
@@ -153,8 +171,9 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
       SSAReturnInstruction R = new SSAReturnInstruction(retValue, false);
       statements.add(R);
     } else {
-      SSAThrowInstruction t = new SSAThrowInstruction(retValue);
-      statements.add(t);
+      // SJF: This is incorrect.  TODO: fix and enable.
+//      SSAThrowInstruction t = new SSAThrowInstruction(retValue);
+//      statements.add(t);
     }
     SSAInstruction[] result = new SSAInstruction[statements.size()];
     Iterator<SSAInstruction> it = statements.iterator();
@@ -163,7 +182,23 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     }
     return result;
   }
+  
+  /**
+   * Get all non-constructor, non-class-initializer methods for a class
+   */
+  private Collection<IMethod> getDeclaredNormalMethods(IClass cls) {
+    Collection<IMethod> result = HashSetFactory.make();
+    for (IMethod m : cls.getDeclaredMethods()) {
+      if (!m.isInit() && !m.isClinit()) {
+        result.add(m);
+      }
+    }
+    return result;
+  }
 
+  /**
+   * Get all the constructors of a class
+   */
   private Collection<IMethod> getConstructors(IClass cls) {
     Collection<IMethod> result = HashSetFactory.make();
     for (IMethod m : cls.getDeclaredMethods()) {
@@ -174,13 +209,20 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     return result;
   }
 
-  private SSAInstruction[] makeGetCtorStatements(JavaTypeContext context, Map<Integer, ConstantValue> constants) {
+  /**
+   * create statements for methods like getConstructor() and getDeclaredMethod(), which return a single method.
+   * This creates a return statement for each possible return value, each of which is a {@link ConstantValue} for an
+   * {@link IMethod}.
+   * 
+   * @param returnValues the possible return values for this method.   
+   */
+  private SSAInstruction[] getParticularMethodStatements(MethodReference ref, Collection<IMethod> returnValues, JavaTypeContext context, Map<Integer, ConstantValue> constants) {
     ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
-    int nextLocal = 2;
+    int nextLocal = ref.getNumberOfParameters()+1;
     int retValue = nextLocal++;
     IClass cls = context.getType().getType();
     if (cls != null) {
-      for (IMethod m : getConstructors(cls)) {
+      for (IMethod m : returnValues) {
         int c = nextLocal++;
         constants.put(c, new ConstantValue(m));
         SSAReturnInstruction R = new SSAReturnInstruction(c, false);
@@ -188,8 +230,9 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
         retValue++;
       }
     } else {
-      SSAThrowInstruction t = new SSAThrowInstruction(retValue);
-      statements.add(t);
+      // SJF: This is incorrect.  TODO: fix and enable.
+      // SSAThrowInstruction t = new SSAThrowInstruction(retValue);
+      // statements.add(t);
     }
     SSAInstruction[] result = new SSAInstruction[statements.size()];
     Iterator<SSAInstruction> it = statements.iterator();
@@ -198,18 +241,31 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     }
     return result;
   }
-
-  private IR makeGetCtorIR(IMethod method, JavaTypeContext context) {
-    Map<Integer, ConstantValue> constants = HashMapFactory.make();
-    SSAInstruction instrs[] = makeGetCtorStatements(context, constants);
-    return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), constants);
+  
+  /**
+   * create statements for getConstructor()
+   */
+  private SSAInstruction[] makeGetCtorStatements(JavaTypeContext context, Map<Integer, ConstantValue> constants) {
+   IClass cls = context.getType().getType();
+   if (cls == null) {
+     return getParticularMethodStatements(GET_CONSTRUCTOR, null, context, constants);
+   } else {
+     return getParticularMethodStatements(GET_CONSTRUCTOR, getConstructors(cls), context, constants);
+   }
   }
-
-  private IR makeGetCtorsIR(IMethod method, JavaTypeContext context) {
-    Map<Integer, ConstantValue> constants = HashMapFactory.make();
-    SSAInstruction instrs[] = makeGetCtorsStatements(context, constants);
-    return new SyntheticIR(method, context, new InducedCFG(instrs, method, context), instrs, SSAOptions.defaultOptions(), constants);
-  }
+  
+  /**
+   * create statements for getDeclaredMethod()
+   */
+  private SSAInstruction[] makeGetDeclaredMethodStatements(JavaTypeContext context, Map<Integer, ConstantValue> constants) {
+    IClass cls = context.getType().getType();
+    if (cls == null) {
+      return getParticularMethodStatements(GET_DECLARED_METHOD, null, context, constants);
+    } else {
+      return getParticularMethodStatements(GET_DECLARED_METHOD, getDeclaredNormalMethods(cls), context, constants);
+    }
+   }
+  
 
   public boolean recordFactoryType(CGNode node, IClass klass) {
     return false;

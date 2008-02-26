@@ -79,10 +79,10 @@ class JavaLangClassContextSelector implements ContextSelector {
     if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_CONSTRUCTORS) && getTypeConstant(instance) != null) {
       return true;
     }
-//    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_DECLARED_METHOD)
-//        && getTypeConstant(instance) != null) {
-//      return true;
-//    }
+    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_DECLARED_METHOD)
+        && getTypeConstant(instance) != null) {
+      return true;
+    }
     return false;
   }
 }
