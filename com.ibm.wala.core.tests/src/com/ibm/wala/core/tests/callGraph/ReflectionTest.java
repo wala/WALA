@@ -219,7 +219,6 @@ public class ReflectionTest extends WalaTestCase {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
 
-    System.err.println(cg);
     final String mainClass = "Lreflection/Reflect7";
     TypeReference mainTr = TypeReference.findOrCreate(ClassLoaderReference.Application, mainClass);
     MethodReference mainMr = MethodReference.findOrCreate(mainTr, "main", "([Ljava/lang/String;)V");
@@ -303,5 +302,21 @@ public class ReflectionTest extends WalaTestCase {
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
     Set<CGNode> nodes = cg.getNodes(mr);
     assertFalse(nodes.isEmpty());
+  }
+  
+  /**
+   * Test that when analyzing reflect9, the call graph includes a node for java.lang.Integer.toString()
+   */
+  public void testReflect9() throws WalaException, IllegalArgumentException, CancelException, IOException {
+//    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+//    ClassHierarchy cha = ClassHierarchy.make(scope);
+//    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+//        TestConstants.REFLECT9_MAIN);
+//    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+//    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+//    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
+//    MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
+//    Set<CGNode> nodes = cg.getNodes(mr);
+//    assertFalse(nodes.isEmpty());
   }
 }
