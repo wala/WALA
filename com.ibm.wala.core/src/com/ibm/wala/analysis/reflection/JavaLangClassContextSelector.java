@@ -30,6 +30,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  * <li> getConstructor
  * <li> getConstructors
  * <li> getDeclaredMethod
+ * <li> getMethods
  * </ul>
  * 
  * @author pistoia
@@ -80,6 +81,10 @@ class JavaLangClassContextSelector implements ContextSelector {
       return true;
     }
     if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_DECLARED_METHOD)
+        && getTypeConstant(instance) != null) {
+      return true;
+    }
+    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_METHODS)
         && getTypeConstant(instance) != null) {
       return true;
     }
