@@ -121,7 +121,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
   }
 
   @Override
-  protected FlowStatementVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node) {
+  protected FlowStatementVisitor makeVisitor(CGNode node) {
     return new StatementVisitor(heapModel, this, cha, cg, node);
   }
 

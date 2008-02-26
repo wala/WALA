@@ -49,7 +49,6 @@ import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
@@ -283,7 +282,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
    * Add pointer flow constraints based on instructions in a given node
    */
   protected void addNodeInstructionConstraints(CGNode node, IR ir, DefUse du) {
-    FlowStatementVisitor v = makeVisitor((ExplicitCallGraph.ExplicitNode) node);
+    FlowStatementVisitor v = makeVisitor(node);
     ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
     for (ISSABasicBlock b : cfg) {
       addBlockInstructionConstraints(node, cfg, b, v);
@@ -348,7 +347,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     }
   }
 
-  protected abstract FlowStatementVisitor makeVisitor(ExplicitCallGraph.ExplicitNode node);
+  protected abstract FlowStatementVisitor makeVisitor(CGNode node);
 
   private void debugPrintIR(IR ir) {
     if (DEBUG) {

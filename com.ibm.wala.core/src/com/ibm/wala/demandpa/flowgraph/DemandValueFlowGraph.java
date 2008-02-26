@@ -120,7 +120,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
   }
 
   @Override
-  protected FlowStatementVisitor makeVisitor(ExplicitNode node) {
+  protected FlowStatementVisitor makeVisitor(CGNode node) {
     return new AllValsStatementVisitor(node);
   }
 
