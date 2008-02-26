@@ -218,8 +218,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
    */
   private SSAInstruction[] getParticularMethodStatements(MethodReference ref, Collection<IMethod> returnValues, JavaTypeContext context, Map<Integer, ConstantValue> constants) {
     ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
-    int nextLocal = ref.getNumberOfParameters()+1;
-    int retValue = nextLocal++;
+    int nextLocal = ref.getNumberOfParameters()+2;
     IClass cls = context.getType().getType();
     if (cls != null) {
       for (IMethod m : returnValues) {
@@ -227,7 +226,6 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
         constants.put(c, new ConstantValue(m));
         SSAReturnInstruction R = new SSAReturnInstruction(c, false);
         statements.add(R);
-        retValue++;
       }
     } else {
       // SJF: This is incorrect.  TODO: fix and enable.

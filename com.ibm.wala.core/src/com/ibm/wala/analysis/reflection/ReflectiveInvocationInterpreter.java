@@ -25,6 +25,7 @@ import com.ibm.wala.ipa.callgraph.propagation.ReceiverInstanceContext;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrikeBT.IInvokeInstruction.Dispatch;
 import com.ibm.wala.ssa.ConstantValue;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -35,30 +36,31 @@ import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
-import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
 
 /**
- * An {@link SSAContextInterpreter} specialized to interpret Constructor.newInstance in a {@link JavaTypeContext} which
- * represents the point-type of the class object created by the call.
+ * An {@link SSAContextInterpreter} specialized to interpret reflective invocations such as Constructor.newInstance and
+ * Method.invoke on an {@link IMethod} constant.
  * 
  * @author pistoia
+ * @author sjfink
  */
-public class ConstructorNewInstanceContextInterpreter extends AbstractReflectionInterpreter {
+public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpreter {
 
-  public final static Atom newInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
+  public final static MethodReference CTOR_NEW_INSTANCE = MethodReference.findOrCreate(TypeReference.JavaLangReflectConstructor,
+      "newInstance", "([Ljava/lang/Object;)Ljava/lang/Object;");
 
-  private final static Descriptor newInstanceDescriptor = Descriptor.findOrCreateUTF8("([Ljava/lang/Object;)Ljava/lang/Object;");
+  public final static MethodReference METHOD_INVOKE = MethodReference.findOrCreate(TypeReference.JavaLangReflectMethod, "invoke",
+      "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;");
 
-  public final static MethodReference NEW_INSTANCE_REF = MethodReference.findOrCreate(TypeReference.JavaLangReflectConstructor,
-      newInstanceAtom, newInstanceDescriptor);
-
+  /*
+   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
+   */
   public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -66,13 +68,16 @@ public class ConstructorNewInstanceContextInterpreter extends AbstractReflection
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
     }
-    ReceiverInstanceContext recv = (ReceiverInstanceContext)node.getContext();
+    ReceiverInstanceContext recv = (ReceiverInstanceContext) node.getContext();
     ConstantKey c = (ConstantKey) recv.getReceiver();
     IMethod m = (IMethod) c.getValue();
     IR result = makeIR(node.getMethod(), m, recv);
     return result;
   }
 
+  /*
+   * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getNumberOfStatements(com.ibm.wala.ipa.callgraph.CGNode)
+   */
   public int getNumberOfStatements(CGNode node) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
@@ -80,6 +85,9 @@ public class ConstructorNewInstanceContextInterpreter extends AbstractReflection
     return getIR(node).getInstructions().length;
   }
 
+  /*
+   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
+   */
   public boolean understands(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -87,9 +95,12 @@ public class ConstructorNewInstanceContextInterpreter extends AbstractReflection
     if (!(node.getContext() instanceof ReceiverInstanceContext)) {
       return false;
     }
-    return node.getMethod().getReference().equals(NEW_INSTANCE_REF);
+    return node.getMethod().getReference().equals(METHOD_INVOKE) || node.getMethod().getReference().equals(CTOR_NEW_INSTANCE);
   }
 
+  /*
+   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateNewSites(com.ibm.wala.ipa.callgraph.CGNode)
+   */
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -100,6 +111,9 @@ public class ConstructorNewInstanceContextInterpreter extends AbstractReflection
     return getIR(node).iterateNewSites();
   }
 
+  /*
+   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateCallSites(com.ibm.wala.ipa.callgraph.CGNode)
+   */
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
@@ -107,36 +121,62 @@ public class ConstructorNewInstanceContextInterpreter extends AbstractReflection
     return getIR(node).iterateCallSites();
   }
 
-  private IR makeIR(IMethod method, IMethod ctor, ReceiverInstanceContext context) {
+  /**
+   * TODO: clean this up.
+   */
+  private IR makeIR(IMethod method, IMethod target, ReceiverInstanceContext context) {
     SpecializedMethod m = new SpecializedMethod(method, method.getDeclaringClass(), method.isStatic(), false);
-
     Map<Integer, ConstantValue> constants = HashMapFactory.make();
 
     int nextLocal = method.getNumberOfParameters() + 1;
 
-    int nargs = ctor.getNumberOfParameters();
+    int nargs = target.getNumberOfParameters();
     int args[] = new int[nargs];
     int i = 0;
     int pc = 0;
+    int parametersVn = -1;
 
-    TypeReference allocatedType = ctor.getDeclaringClass().getReference();
-    m.addInstruction(allocatedType, new SSANewInstruction(args[i++] = nextLocal++, NewSiteReference.make(pc++, allocatedType)),
-        true);
+    if (method.getReference().equals(CTOR_NEW_INSTANCE)) {
+      // allocate the new object constructed
+      TypeReference allocatedType = target.getDeclaringClass().getReference();
+      m.addInstruction(allocatedType, new SSANewInstruction(args[i++] = nextLocal++, NewSiteReference.make(pc++, allocatedType)),
+          true);
+      parametersVn = 2;
+    } else {
+      // set up args[0] == v2, the receiver for method.invoke.
+      args[i++] = 2;
+      parametersVn = 3;
+    }
 
+    // load each of the parameters into a local variable, args[something]
     for (int j = 1; j < nargs; j++) {
       int indexConst = nextLocal++;
-      m.addInstruction(null, new SSAArrayLoadInstruction(args[i++] = nextLocal++, 2, indexConst, TypeReference.JavaLangObject),
-          false);
+      m.addInstruction(null, new SSAArrayLoadInstruction(args[i++] = nextLocal++, parametersVn, indexConst,
+          TypeReference.JavaLangObject), false);
       constants.put(new Integer(indexConst), new ConstantValue(j - 1));
       pc++;
     }
 
     int exceptions = nextLocal++;
+    int result = -1;
 
-    m.addInstruction(null, new SSAInvokeInstruction(args, exceptions, CallSiteReference.make(pc++, ctor.getReference(),
-        IInvokeInstruction.Dispatch.SPECIAL)), false);
-
-    m.addInstruction(null, new SSAReturnInstruction(args[0], false), false);
+    // emit the dispatch and return instructions
+    if (method.getReference().equals(CTOR_NEW_INSTANCE)) {
+      m.addInstruction(null, new SSAInvokeInstruction(args, exceptions, CallSiteReference.make(pc++, target.getReference(),
+          IInvokeInstruction.Dispatch.SPECIAL)), false);
+      m.addInstruction(null, new SSAReturnInstruction(args[0], false), false);
+    } else {
+      Dispatch d = target.isStatic() ? Dispatch.STATIC : Dispatch.VIRTUAL;
+      if (target.getReturnType().equals(TypeReference.Void)) {
+        m.addInstruction(null, new SSAInvokeInstruction(args, exceptions, CallSiteReference.make(pc++, target.getReference(), d)),
+            false);
+      } else {
+        result = nextLocal++;
+        m.addInstruction(null, new SSAInvokeInstruction(result, args, exceptions, CallSiteReference.make(pc++, target
+            .getReference(), d)), false);
+        m.addInstruction(null, new SSAReturnInstruction(result, false), false);
+      }
+    }
 
     SSAInstruction[] instrs = new SSAInstruction[m.allInstructions.size()];
     m.allInstructions.<SSAInstruction> toArray(instrs);

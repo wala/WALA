@@ -21,13 +21,15 @@ import com.ibm.wala.ipa.callgraph.propagation.ReceiverInstanceContext;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * A {@link ContextSelector} to intercept calls to Constructor.newInstance()
+ * A {@link ContextSelector} to intercept calls to reflective method invocations such as
+ * Constructor.newInstance and Method.invoke
  * 
  * @author pistoia
+ * @author sjfink
  */
-class ConstructorNewInstanceContextSelector implements ContextSelector {
+class ReflectiveInvocationSelector implements ContextSelector {
 
-  public ConstructorNewInstanceContextSelector() {
+  public ReflectiveInvocationSelector() {
   }
 
   public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
@@ -38,7 +40,6 @@ class ConstructorNewInstanceContextSelector implements ContextSelector {
     return false;
   }
 
-  @SuppressWarnings("unchecked")
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     if (mayUnderstand(caller, site, callee, receiver)) { 
       return new ReceiverInstanceContext(receiver);
@@ -50,7 +51,7 @@ class ConstructorNewInstanceContextSelector implements ContextSelector {
    * This object may understand a dispatch to Constructor.newInstance().
    */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (targetMethod.getReference().equals(ConstructorNewInstanceContextInterpreter.NEW_INSTANCE_REF) && isConstructorConstant(instance)) {
+    if (targetMethod.getReference().equals(ReflectiveInvocationInterpreter.METHOD_INVOKE) || isConstructorConstant(instance)) {
         return true;
     }
     return false;
