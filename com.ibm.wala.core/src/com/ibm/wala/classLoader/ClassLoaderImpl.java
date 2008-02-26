@@ -262,9 +262,7 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   /**
-   * @author sfink
-   * 
-   * A waring when we find more than one implementation of a given class name
+   * A warning when we find more than one implementation of a given class name
    */
   private static class MultipleImplementationsWarning extends Warning {
 
@@ -286,9 +284,7 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   /**
-   * @author sfink
-   * 
-   * A waring when we encounter InvalidClassFileException
+   * A warning when we encounter InvalidClassFileException
    */
   private static class InvalidClassFile extends Warning {
 
