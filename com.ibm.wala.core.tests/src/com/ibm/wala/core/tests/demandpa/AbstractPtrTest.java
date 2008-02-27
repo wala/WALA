@@ -187,7 +187,7 @@ public abstract class AbstractPtrTest extends TestCase {
 
   protected DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass) throws ClassHierarchyException,
       IllegalArgumentException, CancelException, IOException {
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, "Java60RegressionExclusions.txt");
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(scopeFile, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     this.scope = scope;
     // build a type hierarchy
     ClassHierarchy cha = ClassHierarchy.make(scope);
