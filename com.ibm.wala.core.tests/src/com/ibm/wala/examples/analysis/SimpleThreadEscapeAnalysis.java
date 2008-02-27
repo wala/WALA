@@ -319,8 +319,8 @@ public class SimpleThreadEscapeAnalysis extends AbstractAnalysisEngine {
 
   /**
    * This main program shows one example use of thread escape analysis: producing a set of fields to be monitored for a
-   * dynamic race detector. The idea is that any field might have a race with two excpetions: final fields do not have
-   * races since there are no writes to them, and volatile fields have atomic read and write semantics provided by trhe
+   * dynamic race detector. The idea is that any field might have a race with two exceptions: final fields do not have
+   * races since there are no writes to them, and volatile fields have atomic read and write semantics provided by the
    * VM. Hence, this piece of code produces a list of all other fields.
    * @throws CancelException
    * @throws IllegalArgumentException
