@@ -20,12 +20,12 @@ import java.util.Collections;
  */
 public abstract class AbstractSemiDecisionProcedure implements ISemiDecisionProcedure {
  
-  public  boolean isTautology(IFormula f) {
+  public final boolean isTautology(IFormula f) {
     Collection<IMaxTerm> emptyTheory = Collections.emptySet();
     return isTautology(f, emptyTheory);
   }
 
-  public  boolean isContradiction(IFormula f) {
+  public final boolean isContradiction(IFormula f) {
     Collection<IMaxTerm> emptyTheory = Collections.emptySet();
     return isContradiction(f, emptyTheory);
   }
