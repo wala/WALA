@@ -86,7 +86,6 @@ public final class TypeName {
   }
 
   private static TypeName findOrCreate(Atom packageName, Atom className, short dim, boolean innermostPrimitive) {
-
     TypeNameKey T = new TypeNameKey(packageName, className, dim, innermostPrimitive);
     return findOrCreate(T);
   }
