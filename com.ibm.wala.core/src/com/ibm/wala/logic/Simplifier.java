@@ -13,6 +13,7 @@ package com.ibm.wala.logic;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -159,8 +160,17 @@ public class Simplifier {
   private static Collection<? extends IMaxTerm> simplifyCNF(ICNFFormula f, Collection<IMaxTerm> facts, ISemiDecisionProcedure dec) {
     Collection<IMaxTerm> result = HashSetFactory.make();
     Collection<IMaxTerm> removedClauses = HashSetFactory.make();
+    // sort clauses in f, to ensure determinism
+    List<IMaxTerm> sortedMaxTerms = new ArrayList<IMaxTerm>(f.getMaxTerms());
+    Collections.sort(sortedMaxTerms, new Comparator<IMaxTerm>() {
+    
+      public int compare(IMaxTerm o1, IMaxTerm o2) {
+        return o1.toString().compareTo(o2.toString());
+      }
+    
+    });
     // for each clause in f ....
-    for (IMaxTerm d : f.getMaxTerms()) {
+    for (IMaxTerm d : sortedMaxTerms) {
       // otherFacts := facts U live clauses of f - d
       Collection<IMaxTerm> otherFacts = HashSetFactory.make(facts);
       otherFacts.addAll(f.getMaxTerms());
