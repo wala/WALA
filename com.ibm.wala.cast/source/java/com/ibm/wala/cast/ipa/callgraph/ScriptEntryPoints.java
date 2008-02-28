@@ -83,7 +83,7 @@ public abstract class ScriptEntryPoints implements Iterable<Entrypoint> {
     Iterator<IClass> classes = scriptType.getClassLoader().iterateAllClasses();
     while (classes.hasNext()) {
       IClass cls = classes.next();
-      if (cha.isSubclassOf(cls, scriptType)) {
+      if (cha.isSubclassOf(cls, scriptType) && !cls.isAbstract()) {
         for (Iterator<IMethod> methods = cls.getDeclaredMethods().iterator(); 
 	     methods.hasNext();) 
 	{

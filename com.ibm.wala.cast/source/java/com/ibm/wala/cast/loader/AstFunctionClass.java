@@ -70,7 +70,7 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
   }
 
   public boolean isAbstract() {
-    return false;
+    return functionBody == null;
   }
 
   public boolean isPublic() {
