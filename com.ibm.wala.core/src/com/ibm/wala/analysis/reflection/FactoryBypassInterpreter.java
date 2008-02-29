@@ -486,6 +486,8 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         SSAInvokeInstruction s = new SSAInvokeInstruction(params, exc, site);
         calls.add(s);
         allInstructions.add(s);
+      } else {
+        
       }
     }
 

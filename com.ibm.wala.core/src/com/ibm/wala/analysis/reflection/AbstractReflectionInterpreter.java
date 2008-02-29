@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007 IBM Corporation.
+ * Copyright (c) 2008 IBM Corporation.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,6 +12,7 @@ package com.ibm.wala.analysis.reflection;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 
@@ -42,7 +43,6 @@ import com.ibm.wala.util.warnings.Warning;
 
 /**
  * An abstract superclass of various {@link SSAContextInterpreter}s that deal with reflection methods.
- * 
  * 
  * @author pistoia
  */
@@ -100,11 +100,6 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     IClass klass = cha.lookupClass(type);
     if (klass != null) {
       return new ConeType(klass);
-      // if (klass.isAbstract() || klass.isInterface()) {
-      // return new ConeType(klass, cha);
-      // } else {
-      // return new PointType(klass, cha);
-      // }
     }
     Assertions.UNREACHABLE(type.toString());
     return null;
@@ -205,7 +200,6 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     }
 
     protected void addInstruction(final TypeReference T, SSAInstruction instr, boolean isAllocation) {
-
       if (isAllocation) {
         if (typesAllocated.contains(T)) {
           return;
@@ -221,39 +215,45 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
     }
 
     /**
-     * @param T
+     * @param t type of object to allocate
      * @return value number of the newly allocated object
      */
-    protected int addStatementsForConcreteSimpleType(final TypeReference T) {
+    protected int addStatementsForConcreteSimpleType(final TypeReference t) {
       // assert we haven't allocated this type already.
-      assert !typesAllocated.contains(T);
+      assert !typesAllocated.contains(t);
       if (DEBUG) {
-        Trace.println("addStatementsForConcreteType: " + T);
+        Trace.println("addStatementsForConcreteType: " + t);
       }
-      NewSiteReference ref = NewSiteReference.make(getNewSiteForType(T), T);
-      int alloc = getLocalForType(T);
+      NewSiteReference ref = NewSiteReference.make(getNewSiteForType(t), t);
+      int alloc = getLocalForType(t);
 
-      SSANewInstruction a = new SSANewInstruction(alloc, ref);
-      if (DEBUG) {
-        Trace.println("Added allocation: " + a);
+      if (t.isArrayType()) {
+        // for now, just allocate an array of size 1 in each dimension.
+        int dim = t.getDimensionality();
+        int[] extents = new int[dim];
+        Arrays.fill(extents, 1);
+        SSANewInstruction a = new SSANewInstruction(alloc, ref, extents);
+        addInstruction(t, a, true);
+      } else {
+        SSANewInstruction a = new SSANewInstruction(alloc, ref);
+        addInstruction(t, a, true);
+        addCtorInvokeInstruction(t, alloc);
       }
-      addInstruction(T, a, true);
 
-      if (!T.isArrayType()) {
-        addCtorInvokeInstruction(T, alloc);
-      }
       SSAReturnInstruction r = new SSAReturnInstruction(alloc, false);
-      addInstruction(T, r, false);
+      addInstruction(t, r, false);
       return alloc;
     }
-    
 
-    protected void addCtorInvokeInstruction(final TypeReference T, int alloc) {
-      MethodReference init = MethodReference.findOrCreate(T, MethodReference.initAtom, MethodReference.defaultInitDesc);
-      CallSiteReference site = CallSiteReference.make(getCallSiteForType(T), init, IInvokeInstruction.Dispatch.SPECIAL);
+    /**
+     * Add an instruction to invoke the default constructor on the object of value number alloc of type t.
+     */
+    protected void addCtorInvokeInstruction(final TypeReference t, int alloc) {
+      MethodReference init = MethodReference.findOrCreate(t, MethodReference.initAtom, MethodReference.defaultInitDesc);
+      CallSiteReference site = CallSiteReference.make(getCallSiteForType(t), init, IInvokeInstruction.Dispatch.SPECIAL);
       int[] params = new int[1];
       params[0] = alloc;
-      int exc = getExceptionsForType(T);
+      int exc = getExceptionsForType(t);
       SSAInvokeInstruction s = new SSAInvokeInstruction(params, exc, site);
       calls.add(s);
       allInstructions.add(s);

@@ -59,7 +59,6 @@ public class SSANewInstruction extends SSAInstruction {
    *             if params is null
    */
   public SSANewInstruction(int result, NewSiteReference site, int[] params) {
-
     super();
     if (params == null) {
       throw new IllegalArgumentException("params is null");

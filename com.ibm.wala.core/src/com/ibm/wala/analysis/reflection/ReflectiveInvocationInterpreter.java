@@ -95,6 +95,10 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     if (!(node.getContext() instanceof ReceiverInstanceContext)) {
       return false;
     }
+    ReceiverInstanceContext r = (ReceiverInstanceContext)node.getContext();
+    if (!(r.getReceiver() instanceof ConstantKey)) {
+      return false;
+    }
     return node.getMethod().getReference().equals(METHOD_INVOKE) || node.getMethod().getReference().equals(CTOR_NEW_INSTANCE);
   }
 
@@ -122,7 +126,10 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
   }
 
   /**
-   * TODO: clean this up.
+   * TODO: clean this up. Create the IR for the synthetic method (e.g. Method.invoke)
+   * 
+   * @param method is something like Method.invoke or Construction.newInstance
+   * @param target is the method being called reflectively
    */
   private IR makeIR(IMethod method, IMethod target, ReceiverInstanceContext context) {
     SpecializedMethod m = new SpecializedMethod(method, method.getDeclaringClass(), method.isStatic(), false);
@@ -143,13 +150,19 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
           true);
       parametersVn = 2;
     } else {
-      // set up args[0] == v2, the receiver for method.invoke.
-      args[i++] = 2;
+      // for Method.invoke, v3 is the parameters to the method being called
       parametersVn = 3;
+      if (target.isStatic()) {
+        // do nothing
+      } else {
+        // set up args[0] == v2, the receiver for method.invoke.
+        args[i++] = 2;
+      }
+
     }
 
     // load each of the parameters into a local variable, args[something]
-    for (int j = 1; j < nargs; j++) {
+    for (int j = i; j < nargs; j++) {
       int indexConst = nextLocal++;
       m.addInstruction(null, new SSAArrayLoadInstruction(args[i++] = nextLocal++, parametersVn, indexConst,
           TypeReference.JavaLangObject), false);

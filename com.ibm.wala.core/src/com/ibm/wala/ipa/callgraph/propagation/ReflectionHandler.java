@@ -36,8 +36,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 
 /**
- * 
- * a helper class which can modify a PropagationCallGraphBuilder to deal with
+ * a helper class which can modify a {@link PropagationCallGraphBuilder} to deal with
  * reflective factory methods.
  * 
  * @author sfink
