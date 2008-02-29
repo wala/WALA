@@ -47,8 +47,7 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
- * A synthetic method from the FakeRootClass
+ * A synthetic method from the {@link FakeRootClass}
  * 
  * @author sfink
  */
@@ -84,8 +83,6 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see com.ibm.wala.classLoader.IMethod#getStatements(com.ibm.wala.util.warnings.WarningSet)
    */
   @Override
@@ -120,7 +117,6 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
    *             if site is null
    */
   public SSAInvokeInstruction addInvocation(int[] params, CallSiteReference site) {
-
     if (site == null) {
       throw new IllegalArgumentException("site is null");
     }

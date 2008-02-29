@@ -21,7 +21,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * 
  * A synthetic method that models the fake root node.
  * 
  * @author sfink
