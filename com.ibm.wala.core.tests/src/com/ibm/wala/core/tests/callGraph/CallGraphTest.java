@@ -108,28 +108,6 @@ public class CallGraphTest extends WalaTestCase {
     assertTrue("reported a warning about Abstract2", ws.indexOf("cornerCases/Abstract2") == -1);
   }
 
-  //
-  // public void testSPECjvm98() {
-  // AnalysisScope scope = CGTUtils.makeJ2SEAnalysisScope(Config.SPECJVM);
-  //
-  // // temporary hack because 1.5 libraries still cause grief
-  // if (scope.isJava15Libraries()) {
-  // scope = CGTUtils.makeJ2EEAnalysisScope(Config.SPECJVM);
-  // }
-  //
-  // WarningSet warnings = new WarningSet();
-  // ClassHierarchy cha = ClassHierarchy.buildClassHierarchy(scope, warnings);
-  // Entrypoints entrypoints =
-  // com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
-  // Config.SPECJVM_MAIN);
-  // AnalysisOptions options = CGTUtils.makeAnalysisOptions(scope, entrypoints);
-  //
-  // Trace.println("SPECjvm98 set up warnings:\n");
-  // Trace.print(warnings.toString());
-  //
-  // doCallGraphs(options, cha, scope, Config.SPECJVM_DCG, false, false);
-  // }
-  //
   public void testHello() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.HELLO, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -139,6 +117,7 @@ public class CallGraphTest extends WalaTestCase {
 
     doCallGraphs(options, new AnalysisCache(), cha, scope);
   }
+
 
   public void testRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
