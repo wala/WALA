@@ -121,7 +121,7 @@ public class SummarizedMethod extends SyntheticMethod {
   @Override
   public IR makeIR(SSAOptions options) {
     SSAInstruction instrs[] = getStatements(options);
-    return new SyntheticIR(this, Everywhere.EVERYWHERE, makeControlFlowGraph(), instrs, options, summary.getConstants());
+    return new SyntheticIR(this, Everywhere.EVERYWHERE, makeControlFlowGraph(instrs), instrs, options, summary.getConstants());
   }
 
   /*

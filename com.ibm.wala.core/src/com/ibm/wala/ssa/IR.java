@@ -88,15 +88,7 @@ public abstract class IR {
   protected abstract SSA2LocalMap getLocalMap();
 
   /**
-   * Create an SSA form from a method created by the AstTranslator front end
-   * 
-   * This entrypoint is used by the JavaScript -> WALA conversion. It performs traditional SSA conversion, introducing
-   * phi nodes, etc.
-   * 
-   * keep this package private: all calls should be through SSACache
-   * 
-   * @param method the method to construct SSA form for
-   * @param options governing ssa construction options
+   * Simple constructor when someone else has already computed the symbol table and cfg.
    */
   protected IR(IMethod method, SSAInstruction[] instructions, SymbolTable symbolTable, SSACFG cfg, SSAOptions options) {
     if (method == null) {

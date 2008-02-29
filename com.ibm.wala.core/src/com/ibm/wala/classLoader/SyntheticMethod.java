@@ -148,8 +148,13 @@ public class SyntheticMethod implements IMethod {
     return method;
   }
 
-  public InducedCFG makeControlFlowGraph() {
-    return new InducedCFG(getStatements(), this, Everywhere.EVERYWHERE);
+  /**
+   * Create an {@link InducedCFG} from an instruction array.
+   * 
+   * NOTE: SIDE EFFECT!!! ... nulls out phi instructions in the instruction array!
+   */
+  public InducedCFG makeControlFlowGraph(SSAInstruction[] instructions) {
+    return new InducedCFG(instructions, this, Everywhere.EVERYWHERE);
   }
 
   public BytecodeStream getBytecodeStream() throws UnsupportedOperationException  {

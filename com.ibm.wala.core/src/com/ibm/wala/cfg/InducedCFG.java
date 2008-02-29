@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.cfg;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
@@ -28,11 +30,13 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSAMonitorInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSASwitchInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.util.collections.ArrayIterator;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.GraphIntegrity;
@@ -42,12 +46,12 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
 /**
  * A ControlFlowGraph computed from a set of SSA instructions
  * 
- * This is a funny CFG ... we assume that there are always fallthru edges, even
- * from throws and returns.
+ * This is a funny CFG ... we assume that there are always fallthru edges, even from throws and returns.
  */
 public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
 
   private static final boolean DEBUG = false;
+
   /**
    * A partial map from Instruction -> BasicBlock
    */
@@ -60,8 +64,9 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
   /**
    * TODO: we do not yet support induced CFGS with exception handlers.
    * 
-   * @param instructions
-   * @throws IllegalArgumentException  if instructions is null
+   * NOTE: SIDE EFFECT!!! ... nulls out phi instructions in the instruction array!
+   * 
+   * @throws IllegalArgumentException if instructions is null
    */
   public InducedCFG(SSAInstruction[] instructions, IMethod method, Context context) {
     super(method);
@@ -99,9 +104,8 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
 
   @Override
   public boolean equals(Object o) {
-      return (o instanceof InducedCFG) &&
-	  getMethod().equals(((InducedCFG)o).getMethod()) &&
-	  context.equals(((InducedCFG)o).context);
+    return (o instanceof InducedCFG) && getMethod().equals(((InducedCFG) o).getMethod())
+        && context.equals(((InducedCFG) o).context);
   }
 
   public IInstruction[] getInstructions() {
@@ -163,6 +167,11 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       if (r[i]) {
         b = new BasicBlock(i);
         addNode(b);
+        int j = i;
+        while (instructions[j] instanceof SSAPhiInstruction) {
+          b.addPhi((SSAPhiInstruction)instructions[j]);
+          j++;
+        }
 
         if (DEBUG) {
           Trace.println("Add basic block " + b);
@@ -176,13 +185,24 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       Trace.println("Add exit block " + exit);
     }
     addNode(exit);
+    clearPhis(instructions);
+  }
+
+
+
+  /**
+   * set to null any slots in the array with phi instructions
+   */
+  private void clearPhis(SSAInstruction[] instructions) {
+    for (int i = 0; i < instructions.length; i++) {
+      if (instructions[i] instanceof SSAPhiInstruction) {
+        instructions[i] = null;
+      }
+    }
   }
 
   /**
-   * @author sfink
-   * 
-   * This visitor identifies basic block boundaries induced by branch
-   * instructions.
+   * This visitor identifies basic block boundaries induced by branch instructions.
    */
   public class BranchVisitor extends SSAInstruction.Visitor {
     final private boolean[] r;
@@ -190,6 +210,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     protected BranchVisitor(boolean[] r) {
       this.r = r;
     }
+
     int index = 0;
 
     void setIndex(int i) {
@@ -199,41 +220,54 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     @Override
     public void visitGoto(SSAGotoInstruction instruction) {
       Assertions.UNREACHABLE("haven't implemented logic for goto yet.");
-      breakBasicBlock();
+      breakBasicBlock(index);
     }
 
     @Override
     public void visitConditionalBranch(SSAConditionalBranchInstruction instruction) {
       Assertions.UNREACHABLE("haven't implemented logic for cbranch yet.");
-      breakBasicBlock();
+      breakBasicBlock(index);
     }
 
     @Override
     public void visitSwitch(SSASwitchInstruction instruction) {
       Assertions.UNREACHABLE("haven't implemented logic for switch yet.");
-//      breakBasicBlock();
-//      int[] targets = instruction.getTargets();
-//      for (int i = 0; i < targets.length; i++) {
-//        r[targets[i]] = true;
-//      }
+      // breakBasicBlock();
+      // int[] targets = instruction.getTargets();
+      // for (int i = 0; i < targets.length; i++) {
+      // r[targets[i]] = true;
+      // }
+    }
+
+    @Override
+    public void visitPhi(SSAPhiInstruction instruction) {
+      // we can have more than one phi instruction in a row. break the basic block
+      // only before the first one.
+      if (!(instructions[index - 1] instanceof SSAPhiInstruction)) {
+        breakBasicBlock(index - 1);
+      }
     }
 
     @Override
     public void visitReturn(SSAReturnInstruction instruction) {
-      breakBasicBlock();
+      breakBasicBlock(index);
     }
 
     @Override
     public void visitThrow(SSAThrowInstruction instruction) {
-      breakBasicBlock();
+      breakBasicBlock(index);
     }
 
-    protected void breakBasicBlock() {
+    /**
+     * introduce a basic block boundary immediately after instruction number 'index'
+     */
+    protected void breakBasicBlock(int index) {
       if (index + 1 < getInstructions().length && !r[index + 1]) {
         r[index + 1] = true;
       }
     }
   }
+
   // TODO: extend the following to deal with catch blocks. Right now
   // it simply breaks basic blocks at PEIs.
   public class PEIVisitor extends SSAInstruction.Visitor {
@@ -242,6 +276,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     protected PEIVisitor(boolean[] r) {
       this.r = r;
     }
+
     int index = 0;
 
     void setIndex(int i) {
@@ -321,6 +356,19 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
   // implementation! right now it's clone-and-owned :(
   public class BasicBlock extends NodeWithNumber implements IBasicBlock {
 
+    private Collection<SSAPhiInstruction> phis;
+    
+    public Collection<SSAPhiInstruction> getPhis() {
+      return phis == null ? Collections.<SSAPhiInstruction>emptyList() : Collections.unmodifiableCollection(phis);
+    }
+
+    public void addPhi(SSAPhiInstruction phiInstruction) {
+      if (phis == null) {
+        phis = new ArrayList<SSAPhiInstruction>(1);
+      }
+      phis.add(phiInstruction);
+    }
+
     @Override
     public boolean equals(Object arg0) {
       if (getClass().equals(arg0.getClass())) {
@@ -330,6 +378,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
         return false;
       }
     }
+
     private final int start;
 
     BasicBlock(int start) {
@@ -337,11 +386,9 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     }
 
     /**
-     * Add any exceptional edges generated by the last instruction in a basic
-     * block.
+     * Add any exceptional edges generated by the last instruction in a basic block.
      * 
-     * @param last
-     *          the last instruction in a basic block.
+     * @param last the last instruction in a basic block.
      */
     private void addExceptionalEdges(SSAInstruction last) {
       if (last.isPEI()) {
@@ -351,16 +398,13 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       }
     }
 
-
     private void addNormalEdgeTo(BasicBlock b) {
       addNormalEdge(this, b);
     }
 
-
     private void addExceptionalEdgeTo(BasicBlock b) {
       addExceptionalEdge(this, b);
     }
-
 
     private void computeOutgoingEdges() {
 
@@ -375,7 +419,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       // happen .. this is because I'm too lazy to code control
       // flow in all method summaries yet.
       if (true) {
-        //      if (last.isFallThrough()) {
+        // if (last.isFallThrough()) {
         if (DEBUG) {
           Trace.println("Add fallthru to " + getNode(getGraphNodeId() + 1));
         }
@@ -465,9 +509,9 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     public int getNumber() {
       return InducedCFG.this.getNumber(this);
     }
-    
+
     public Iterator<IInstruction> iterator() {
-      return new ArrayIterator<IInstruction>(getInstructions(),getFirstInstructionIndex(),getLastInstructionIndex());
+      return new ArrayIterator<IInstruction>(getInstructions(), getFirstInstructionIndex(), getLastInstructionIndex());
     }
   }
 
@@ -493,8 +537,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
   }
 
   /**
-   * Since this CFG is synthetic, for now we assume the instruction index is the
-   * same as the program counter
+   * Since this CFG is synthetic, for now we assume the instruction index is the same as the program counter
    * 
    * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
    */
@@ -508,6 +551,14 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       return index;
     }
   }
-  
-  
+
+  public Collection<SSAPhiInstruction> getAllPhiInstructions() {
+    Collection<SSAPhiInstruction> result = HashSetFactory.make();
+    for (Iterator<BasicBlock> it = iterator(); it.hasNext();) {
+      BasicBlock b = it.next();
+      result.addAll(b.getPhis());
+    }
+    return result;
+  }
+
 }

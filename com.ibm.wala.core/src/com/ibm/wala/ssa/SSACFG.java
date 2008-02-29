@@ -21,6 +21,7 @@ import java.util.Set;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
+import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.cfg.ShrikeCFG;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
@@ -74,8 +75,7 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
   }
 
   /**
-   * @throws IllegalArgumentException
-   *             if method is null
+   * @throws IllegalArgumentException if method is null
    */
   @SuppressWarnings("unchecked")
   public SSACFG(IMethod method, AbstractCFG cfg, SSAInstruction[] instructions) {
@@ -96,11 +96,35 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
       }
     }
     createBasicBlocks(cfg);
+    if (cfg instanceof InducedCFG) {
+      addPhisFromInducedCFG((InducedCFG) cfg);
+    }
     if (cfg instanceof ShrikeCFG) {
       recordExceptionTypes(((ShrikeCFG) cfg).getExceptionHandlers(), method.getDeclaringClass().getClassLoader());
     }
     this.instructions = instructions;
 
+  }
+
+  /**
+   * This is ugly.  Clean it up someday.
+   * {@link InducedCFG}s carry around phi instructions.  add these phi instructions to the SSABasicBlocks
+   */
+  private void addPhisFromInducedCFG(InducedCFG cfg) {
+    for (Iterator<? extends InducedCFG.BasicBlock> it = cfg.iterator(); it.hasNext(); ) {
+      InducedCFG.BasicBlock ib = it.next();
+      // we rely on the invariant that basic blocks in this cfg are numbered identically as in the source
+      // InducedCFG
+      BasicBlock b = getBasicBlock(ib.getNumber());
+      // this is really ugly.  we pretend that each successively phi in the basic block defs a
+      // particular 'local'.  TODO: fix the API in some way so that this is unnecessary.  
+      // {What does Julian do for, say, Javascript?}
+      int local = 0;
+      for (SSAPhiInstruction phi : ib.getPhis()) {
+        b.addPhiForLocal(local++, phi);
+      }
+    }
+    
   }
 
   @Override
@@ -156,9 +180,8 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
   }
 
   /**
-   * Get the basic block an instruction belongs to. Note: the instruction2Block
-   * array is filled in lazily. During initialization, the mapping is set up
-   * only for the first instruction of each basic block.
+   * Get the basic block an instruction belongs to. Note: the instruction2Block array is filled in lazily. During
+   * initialization, the mapping is set up only for the first instruction of each basic block.
    */
   public SSACFG.BasicBlock getBlockForInstruction(int instructionIndex) {
     IBasicBlock N = cfg.getBlockForInstruction(instructionIndex);
@@ -167,11 +190,10 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
   }
 
   /**
-   * NB: Use iterators such as IR.iterateAllInstructions() instead of this
-   * method. This will probably be deprecated someday.
+   * NB: Use iterators such as IR.iterateAllInstructions() instead of this method. This will probably be deprecated
+   * someday.
    * 
-   * Return the instructions. Note that the CFG is created from the Shrike CFG
-   * prior to creating the SSA instructions.
+   * Return the instructions. Note that the CFG is created from the Shrike CFG prior to creating the SSA instructions.
    * 
    * @return an array containing the SSA instructions.
    */
@@ -685,7 +707,7 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
         // strange corner case
         // involving dead code. oh well .. keep on chugging until we have hard
         // evidence that this is a bug
-	result.add(0, catchInstruction);
+        result.add(0, catchInstruction);
       }
       return result;
     }
@@ -943,15 +965,14 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
         return basicBlocks[cfg.getNumber(object)];
       }
     };
-    return Iterator2Collection.toCollection(new MapIterator<IBasicBlock, ISSABasicBlock>(cfg.getExceptionalPredecessors(n).iterator(),
-        f));
+    return Iterator2Collection.toCollection(new MapIterator<IBasicBlock, ISSABasicBlock>(cfg.getExceptionalPredecessors(n)
+        .iterator(), f));
   }
 
   /**
    * has exceptional edge src -> dest
    * 
-   * @throws IllegalArgumentException
-   *             if dest is null
+   * @throws IllegalArgumentException if dest is null
    */
   public boolean hasExceptionalEdge(BasicBlock src, BasicBlock dest) {
     if (dest == null) {
@@ -968,8 +989,7 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
   /**
    * has normal edge src -> dest
    * 
-   * @throws IllegalArgumentException
-   *             if dest is null
+   * @throws IllegalArgumentException if dest is null
    */
   public boolean hasNormalEdge(BasicBlock src, BasicBlock dest) {
     if (dest == null) {

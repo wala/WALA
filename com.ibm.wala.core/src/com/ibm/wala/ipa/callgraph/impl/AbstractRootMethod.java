@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
@@ -104,7 +105,8 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
       constants = HashMapFactory.make(1);
       constants.put(new Integer(valueNumberForConstantOne), new ConstantValue(new Integer(1)));
     }
-    return new SyntheticIR(this, Everywhere.EVERYWHERE, makeControlFlowGraph(), instrs, options, constants);
+    InducedCFG cfg = makeControlFlowGraph(instrs);
+    return new SyntheticIR(this, Everywhere.EVERYWHERE, cfg, instrs, options, constants);
   }
 
   public int addLocal() {

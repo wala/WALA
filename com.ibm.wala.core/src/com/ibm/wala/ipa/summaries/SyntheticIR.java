@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.summaries;
 import java.util.Map;
 
 import com.ibm.wala.cfg.AbstractCFG;
+import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.ConstantValue;
@@ -20,62 +21,92 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
+import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.util.debug.Assertions;
 
 public class SyntheticIR extends IR {
 
+  private final static boolean PARANOID = true;
+
   /**
-   * Create an SSA form, induced over a list of instructions provided
-   * externally. This entrypoint is often used for, e.g., native method models
+   * Create an SSA form, induced over a list of instructions provided externally. This entrypoint is often used for,
+   * e.g., native method models
    * 
-   * @param method
-   *          the method to construct SSA form for
-   * @param context
-   *          the governing context
-   * @param instructions
-   *          the SSA instructions which define the body of the method
-   * @param constants
-   *          a Map giving information on constant values for the symbol table
-   * @throws AssertionError  if method is null
+   * @param method the method to construct SSA form for
+   * @param context the governing context
+   * @param instructions the SSA instructions which define the body of the method
+   * @param constants a Map giving information on constant values for the symbol table
+   * @throws AssertionError if method is null
    */
   public SyntheticIR(IMethod method, Context context, AbstractCFG cfg, SSAInstruction[] instructions, SSAOptions options,
       Map<Integer, ConstantValue> constants) throws AssertionError {
-    super(method, instructions, makeSymbolTable(method, instructions, constants), new SSACFG(method, cfg, instructions),
+    super(method, instructions, makeSymbolTable(method, instructions, constants, cfg), new SSACFG(method, cfg, instructions),
         options);
+    if (PARANOID) {
+      repOK(instructions);
+    }
 
     setupLocationMap();
   }
 
   /**
+   * throw an assertion if the instruction array contains a phi instruction
+   */
+  private void repOK(SSAInstruction[] instructions) {
+    for (SSAInstruction s : instructions) {
+      if (s instanceof SSAPhiInstruction) {
+        Assertions.UNREACHABLE();
+      }
+    }
+  }
+
+  /**
    * Set up the symbol table according to statements in the IR
    * 
-   * @param constants
-   *          Map: valune number (Integer) -> ConstantValue
+   * @param constants Map: value number (Integer) -> ConstantValue
    */
-  private static SymbolTable makeSymbolTable(IMethod method, SSAInstruction[] instructions, Map<Integer, ConstantValue> constants) {
+  private static SymbolTable makeSymbolTable(IMethod method, SSAInstruction[] instructions, Map<Integer, ConstantValue> constants,
+      AbstractCFG cfg) {
     assert method != null;
     SymbolTable symbolTable = new SymbolTable(method.getNumberOfParameters());
 
     // simulate allocation of value numbers
     for (int i = 0; i < instructions.length; i++) {
       if (instructions[i] != null) {
-        for (int j = 0; j < instructions[i].getNumberOfDefs(); j++) {
-          symbolTable.ensureSymbol(instructions[i].getDef(j));
-        }
-        for (int j = 0; j < instructions[i].getNumberOfUses(); j++) {
-          int vn = instructions[i].getUse(j);
-          symbolTable.ensureSymbol(vn);
-          if (constants != null && constants.containsKey(new Integer(vn)))
-            symbolTable.setConstantValue(vn, constants.get(new Integer(vn)));
-        }
+        SSAInstruction s = instructions[i];
+        updateForInstruction(constants, symbolTable, s);
+      }
+    }
+    
+    /**
+     * In InducedCFGs, we have nulled out phi instructions from the instruction array ... so go back and
+     * retrieve them now.
+     */
+    if (cfg instanceof InducedCFG) {
+      InducedCFG icfg = (InducedCFG)cfg;
+      for (SSAPhiInstruction phi : icfg.getAllPhiInstructions()) {
+        updateForInstruction(constants, symbolTable, phi);
       }
     }
 
     return symbolTable;
   }
 
+  private static void updateForInstruction(Map<Integer, ConstantValue> constants, SymbolTable symbolTable, SSAInstruction s) {
+    for (int j = 0; j < s.getNumberOfDefs(); j++) {
+      symbolTable.ensureSymbol(s.getDef(j));
+    }
+    for (int j = 0; j < s.getNumberOfUses(); j++) {
+      int vn = s.getUse(j);
+      symbolTable.ensureSymbol(vn);
+      if (constants != null && constants.containsKey(new Integer(vn)))
+        symbolTable.setConstantValue(vn, constants.get(new Integer(vn)));
+    }
+  }
+
   /**
-   *  This returns "", as synthetic IRs have no line numbers right now.
+   * This returns "", as synthetic IRs have no line numbers right now.
    */
   @Override
   protected String instructionPosition(int instructionIndex) {
@@ -83,7 +114,7 @@ public class SyntheticIR extends IR {
   }
 
   /**
-   *  This returns null, as synthetic IRs have no local names right now.
+   * This returns null, as synthetic IRs have no local names right now.
    */
   @Override
   public SSA2LocalMap getLocalMap() {

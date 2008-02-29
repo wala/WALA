@@ -23,7 +23,7 @@ public class SyntheticIRFactory implements IRFactory<SyntheticMethod> {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
     }
-    return method.makeControlFlowGraph();
+    return method.makeControlFlowGraph(method.getStatements());
   }
 
   public IR makeIR(SyntheticMethod method, Context C, SSAOptions options) {
