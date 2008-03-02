@@ -321,7 +321,7 @@ public class ReflectionTest extends WalaTestCase {
   }
   
   /**
-   * Test that when analyzing reflect9, the call graph includes a node for java.lang.Integer.toString()
+   * Test that when analyzing Reflect10, the call graph includes a node for java.lang.Integer.toString()
    */
   public void testReflect10() throws WalaException, IllegalArgumentException, CancelException, IOException {
     AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
@@ -333,6 +333,109 @@ public class ReflectionTest extends WalaTestCase {
     TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
     MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
     Set<CGNode> nodes = cg.getNodes(mr);
+    assertFalse(nodes.isEmpty());
+  }
+  
+  /**
+   * Test that when analyzing Reflect11, the call graph includes a node for java.lang.Object.wait()
+   */
+  public void testReflect11() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECT11_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Object");
+    MethodReference mr = MethodReference.findOrCreate(tr, "wait", "()V");
+    Set<CGNode> nodes = cg.getNodes(mr);
+    assertFalse(nodes.isEmpty());
+  }
+  
+  /**
+   * Test that when analyzing Reflect12, the call graph does not include a node for reflection.Helper.n
+   * but does include a node for reflection.Helper.m
+   */
+  public void testReflect12() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECT12_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
+    MethodReference mr = MethodReference.findOrCreate(tr, "m", "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V");
+    Set<CGNode> nodes = cg.getNodes(mr);
+    assertFalse(nodes.isEmpty());
+    mr = MethodReference.findOrCreate(tr, "n", "(Ljava/lang/Object;Ljava/lang/Object;)V");
+    nodes = cg.getNodes(mr);
+    assertTrue(nodes.isEmpty());
+  }
+  
+  /**
+   * Test that when analyzing Reflect13, the call graph includes both a node for reflection.Helper.n
+   * and a node for reflection.Helper.m
+   */
+  public void testReflect13() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECT13_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
+    MethodReference mr = MethodReference.findOrCreate(tr, "m", "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)V");
+    Set<CGNode> nodes = cg.getNodes(mr);
+    assertFalse(nodes.isEmpty());
+    mr = MethodReference.findOrCreate(tr, "n", "(Ljava/lang/Object;Ljava/lang/Object;)V");
+    nodes = cg.getNodes(mr);
+    assertFalse(nodes.isEmpty());
+  }
+  
+  /**
+   * Test that when analyzing Reflect14, the call graph does not include a node for reflection.Helper.n
+   * but does include a node for reflection.Helper.s
+   */
+  public void testReflect14() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECT14_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
+    MethodReference mr = MethodReference.findOrCreate(tr, "s", "(Ljava/lang/Object;Ljava/lang/Object;)V");
+    Set<CGNode> nodes = cg.getNodes(mr);
+    assertFalse(nodes.isEmpty());
+    mr = MethodReference.findOrCreate(tr, "n", "(Ljava/lang/Object;Ljava/lang/Object;)V");
+    nodes = cg.getNodes(mr);
+    assertTrue(nodes.isEmpty());
+  }
+  
+  /**
+   * Test that when analyzing Reflect15, the call graph includes a node for the constructor
+   * of Helper that takes 2 parameters and for Helper.n, but no node for the constructors of
+   * Helper that takes 0 or 1 parameters.
+   */
+  public void testReflect15() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECT15_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Application, "Lreflection/Helper");
+    MethodReference mr = MethodReference.findOrCreate(tr, "<init>", "(Ljava/lang/Object;Ljava/lang/Object;)V");
+    Set<CGNode> nodes = cg.getNodes(mr);
+    assertFalse(nodes.isEmpty());
+    mr = MethodReference.findOrCreate(tr, "<init>", "(Ljava/lang/Object;)V");
+    nodes = cg.getNodes(mr);
+    assertTrue(nodes.isEmpty());
+    mr = MethodReference.findOrCreate(tr, "<init>", "()V");
+    nodes = cg.getNodes(mr);
+    assertTrue(nodes.isEmpty());
+    mr = MethodReference.findOrCreate(tr, "n", "(Ljava/lang/Object;Ljava/lang/Object;)V");
+    nodes = cg.getNodes(mr);
     assertFalse(nodes.isEmpty());
   }
 }
