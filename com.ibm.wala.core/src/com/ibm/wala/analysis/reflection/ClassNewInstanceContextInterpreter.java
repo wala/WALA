@@ -50,10 +50,10 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
 
   public final static Atom newInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
 
-  private final static Descriptor newInstanceDescriptor = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
+  private final static Descriptor classNewInstanceDescriptor = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
 
-  public final static MethodReference NEW_INSTANCE_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass, newInstanceAtom,
-      newInstanceDescriptor);
+  public final static MethodReference CLASS_NEW_INSTANCE_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass, newInstanceAtom,
+      classNewInstanceDescriptor);
   
   private final static Atom defCtorAtom = Atom.findOrCreateUnicodeAtom("<init>");
   private final static Descriptor defCtorDescriptor = Descriptor.findOrCreateUTF8("()V");
@@ -89,7 +89,7 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
     }
     if (!(node.getContext() instanceof JavaTypeContext))
       return false;
-    return node.getMethod().getReference().equals(NEW_INSTANCE_REF);
+    return node.getMethod().getReference().equals(CLASS_NEW_INSTANCE_REF);
   }
 
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {

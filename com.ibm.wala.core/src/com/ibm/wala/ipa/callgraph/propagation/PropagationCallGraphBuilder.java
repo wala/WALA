@@ -17,6 +17,7 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import com.ibm.wala.analysis.reflection.IllegalArgumentExceptionContext;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -778,9 +779,10 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     if (targetMethod == null || targetMethod.isAbstract()) {
       return null;
     }
-
     Context targetContext = contextSelector.getCalleeTarget(caller, site, targetMethod, iKey);
-
+    if (targetContext instanceof IllegalArgumentExceptionContext) {
+      return null;
+    }
     return getCallGraph().findOrCreateNode(targetMethod, targetContext);
   }
 

@@ -50,26 +50,12 @@ class ClassNewInstanceContextSelector implements ContextSelector {
    * This object may understand a dispatch to Class.newInstance() when the class is a class constant.
    */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (targetMethod.getReference().equals(ClassNewInstanceContextInterpreter.NEW_INSTANCE_REF) && isTypeConstant(instance)) {
-//      IClass klass = getTypeConstant(instance);
-//      if (hasPublicDefaultCtor(klass)) {
+    if (targetMethod.getReference().equals(ClassNewInstanceContextInterpreter.CLASS_NEW_INSTANCE_REF) && isTypeConstant(instance)) {
         return true;
-//      }
     }
     return false;
   }
   
-//  private IClass getTypeConstant(InstanceKey instance) {
-//    if (instance instanceof ConstantKey) {
-//      ConstantKey c = (ConstantKey)instance;
-//      if (c.getValue() instanceof IClass) {
-//        return (IClass)c.getValue();
-//      }
-//    }
-//    Assertions.UNREACHABLE();
-//    return null;
-//  }
-
   private boolean isTypeConstant(InstanceKey instance) {
     if (instance instanceof ConstantKey) {
       ConstantKey c = (ConstantKey) instance;
