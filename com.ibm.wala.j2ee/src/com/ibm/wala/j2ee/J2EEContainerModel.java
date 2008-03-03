@@ -403,7 +403,4 @@ class J2EEContainerModel extends SyntheticClass implements BytecodeConstants, EJ
     return false;
   }
 
-  public boolean isStatic() {
-    return false;
-  }
 }
