@@ -66,10 +66,6 @@ abstract public class AstClass implements IClass, ClassConstants {
     return (modifiers & ACC_PUBLIC) != 0;
   }
   
-  public boolean isStatic() {
-    return (modifiers & ACC_STATIC) != 0;
-  }
-
   public boolean isReferenceType() {
     return true;
   }
