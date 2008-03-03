@@ -30,6 +30,6 @@ public class SyntheticIRFactory implements IRFactory<SyntheticMethod> {
     if (method == null) {
       throw new IllegalArgumentException("method is null");
     }
-    return method.makeIR(options);
+    return method.makeIR(C, options);
   }
 }

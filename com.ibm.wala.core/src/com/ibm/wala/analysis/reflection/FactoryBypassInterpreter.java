@@ -624,7 +624,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
      * @see com.ibm.wala.classLoader.IMethod#getIR(com.ibm.wala.util.WarningSet)
      */
     @Override
-    public IR makeIR(SSAOptions options) {
+    public IR makeIR(Context C, SSAOptions options) {
       SSAInstruction[] instrs = getStatements();
       Map<Integer, ConstantValue> constants = null;
       if (valueNumberForConstantOne > -1) {

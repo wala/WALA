@@ -11,6 +11,7 @@
 package com.ibm.wala.classLoader;
 
 import com.ibm.wala.cfg.InducedCFG;
+import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -35,9 +36,9 @@ public class SyntheticMethod implements IMethod {
 
   private final MethodReference method;
   
-  private final IMethod resolvedMethod;
+  protected final IMethod resolvedMethod;
 
-  private final IClass declaringClass;
+  protected final IClass declaringClass;
 
   private final boolean isStatic;
 
@@ -250,10 +251,10 @@ public class SyntheticMethod implements IMethod {
 
   /**
    * Most subclasses should override this.
-   * 
+   * @param context TODO
    * @param options options governing IR conversion
    */
-  public IR makeIR(SSAOptions options) throws UnimplementedError {
+  public IR makeIR(Context context, SSAOptions options) throws UnimplementedError {
     throw new UnimplementedError("haven't implemented IR yet for class " + getClass());
   }
 

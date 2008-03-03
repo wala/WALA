@@ -24,6 +24,7 @@ import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.summaries.SyntheticIR;
@@ -98,7 +99,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   }
 
   @Override
-  public IR makeIR(SSAOptions options) {
+  public IR makeIR(Context context, SSAOptions options) {
     SSAInstruction instrs[] = getStatements(options);
     Map<Integer, ConstantValue> constants = null;
     if (valueNumberForConstantOne > -1) {

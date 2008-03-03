@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.summaries;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.SyntheticMethod;
+import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -119,7 +120,7 @@ public class SummarizedMethod extends SyntheticMethod {
   // return result;
   // }
   @Override
-  public IR makeIR(SSAOptions options) {
+  public IR makeIR(Context context, SSAOptions options) {
     SSAInstruction instrs[] = getStatements(options);
     return new SyntheticIR(this, Everywhere.EVERYWHERE, makeControlFlowGraph(instrs), instrs, options, summary.getConstants());
   }
