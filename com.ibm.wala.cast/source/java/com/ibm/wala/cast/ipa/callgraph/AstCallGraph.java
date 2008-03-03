@@ -30,6 +30,7 @@ import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -50,8 +51,8 @@ public class AstCallGraph extends ExplicitCallGraph {
       super(rootMethod, cha, options, cache);
     }
 
-    public InducedCFG makeControlFlowGraph() {
-      return new AstInducedCFG(getStatements(), this, Everywhere.EVERYWHERE);
+    public InducedCFG makeControlFlowGraph(SSAInstruction[] statements) {
+      return new AstInducedCFG(statements, this, Everywhere.EVERYWHERE);
     }
 
     public AstLexicalRead addGlobalRead(TypeReference type, String name) {

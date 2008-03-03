@@ -53,10 +53,6 @@ public class CrossLanguageMethodTargetSelector
     return getLanguage(site.getDeclaredTarget());
   }
 
-  private MethodTargetSelector getSelector(MethodReference site) {
-    return (MethodTargetSelector)languageSelectors.get(getLanguage(site));
-  }
-
   private MethodTargetSelector getSelector(CallSiteReference site) {
     return (MethodTargetSelector)languageSelectors.get(getLanguage(site));
   }
@@ -64,14 +60,6 @@ public class CrossLanguageMethodTargetSelector
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver) {
     assert getSelector(site) != null: "no selector for " + getLanguage(site) + " method " + site;
     return getSelector(site).getCalleeTarget(caller, site, receiver);
-  }
-
-  public boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site) {
-    return getSelector(site).mightReturnSyntheticMethod(caller, site);
-  }
-
-  public boolean mightReturnSyntheticMethod(MethodReference declaredTarget) {
-    return getSelector(declaredTarget).mightReturnSyntheticMethod(declaredTarget);
   }
 
 }

@@ -56,16 +56,9 @@ public class CrossLanguageContextSelector implements ContextSelector {
     return getSelector(site).getCalleeTarget(caller, site, callee, receiver);
   }
 
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return getSelector(site).contextIsIrrelevant(node, site);
-  }
 
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
     return getSelector(site).mayUnderstand(caller, site, targetMethod, instance);
   }
 
-
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    return getSelector(site).allSitesDispatchIdentically(node, site);
-  }
 }

@@ -112,10 +112,6 @@ public class MiscellaneousHacksContextSelector implements ContextSelector {
     }
   }
 
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return basePolicy.contextIsIrrelevant(node, site);
-  }
-
   public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference reference, IMethod targetMethod) {
     return -1;
   }
