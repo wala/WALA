@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.j2ee;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -58,6 +59,8 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
 
   private final static TypeName actionName = TypeName.string2TypeName("Lorg/apache/struts/action/Action");
 
+  private final static TypeName actionFormName = TypeName.string2TypeName("Lorg/apache/struts/action/ActionForm");
+  
   private Map<MethodReference, Entrypoint> entrypoints = HashMapFactory.make();
 
   /**
@@ -66,7 +69,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   private Set<IClass> actions = HashSetFactory.make();
 
   /**
-   * Mthis map controls selection of concrete types for parameters to some servlet methods.
+   * This map controls selection of concrete types for parameters to some servlet methods.
    */
   private final static HashMap<TypeName, TypeReference> concreteParameterMap = HashMapFactory.make(2);
   static {
@@ -208,6 +211,21 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
         TypeReference Tprime = concreteParameterMap.get(n);
         if (Tprime != null) {
           T = Tprime;
+        }
+        if (n.equals(actionFormName)) {
+          // return an array of all possible subtypes of ActionForm in the class hierarchy
+          Collection<IClass> subcs = getCha().computeSubClasses(T);
+          Set<TypeReference> subs = HashSetFactory.make();
+          for (IClass cs : subcs) {
+            if (!cs.isAbstract() && !cs.isInterface()) {
+              // filter out those ActionForms in struts itself              
+              TypeReference reference = cs.getReference();
+              if (!reference.getName().getPackage().toString().startsWith("org/apache/struts")) {
+                subs.add(reference);                
+              }
+            }
+          }
+          return subs.toArray(new TypeReference[subs.size()]);          
         }
         return new TypeReference[] { T };
       }
