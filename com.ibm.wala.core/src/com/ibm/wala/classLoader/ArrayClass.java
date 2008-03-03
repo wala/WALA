@@ -320,8 +320,4 @@ public class ArrayClass implements IClass, Constants {
     return true;
   }
 
-  public boolean isStatic() {
-    return false;
-  }
-  
 }

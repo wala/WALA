@@ -229,8 +229,4 @@ public class FakeRootClass extends SyntheticClass {
   public boolean isPublic() {
     return false;
   }
-
-  public boolean isStatic() {
-    return false;
-  }
 }

@@ -256,7 +256,4 @@ public class BypassSyntheticClass extends SyntheticClass {
     return realType.isPublic();
   }
   
-  public boolean isStatic() {
-    return realType.isStatic();
-  }
 }

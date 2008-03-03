@@ -805,11 +805,6 @@ public final class ShrikeClass implements IClass {
     return result;
   }
   
-  public boolean isStatic() {
-    boolean result = ((modifiers & Constants.ACC_STATIC) != 0);
-    return result;
-  }
-
   public Collection<Annotation> getRuntimeInvisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
     RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader();
     if (r != null) {
