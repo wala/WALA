@@ -162,7 +162,8 @@ public class SyntheticMethod implements IMethod {
     throw new UnsupportedOperationException();
   }
 
-  /**
+  /*
+   * TODO: why isn't this abstract?
    * @see com.ibm.wala.classLoader.IMethod#getMaxLocals()
    * @throws UnsupportedOperationException  unconditionally
    */
@@ -170,24 +171,21 @@ public class SyntheticMethod implements IMethod {
     throw new UnsupportedOperationException();
   }
 
-  /**
+
+  /* 
+   * TODO: why isn't this abstract?
    * @see com.ibm.wala.classLoader.IMethod#getMaxStackHeight()
-   * @throws UnsupportedOperationException  unconditionally
    */
   public int getMaxStackHeight() throws UnsupportedOperationException {
     throw new UnsupportedOperationException();
   }
 
-  /**
-   * @see com.ibm.wala.classLoader.IMember#getDeclaringClass()
-   */
+
   public IClass getDeclaringClass() {
     return declaringClass;
   }
 
-  /**
-   * @see java.lang.Object#equals(Object)
-   */
+
   @Override
   public boolean equals(Object obj) {
     if (obj == null) {
@@ -201,17 +199,13 @@ public class SyntheticMethod implements IMethod {
     }
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
+
   @Override
   public int hashCode() {
     return method.hashCode();
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
+
   @Override
   public String toString() {
     StringBuffer s = new StringBuffer("synthetic ");
@@ -222,9 +216,7 @@ public class SyntheticMethod implements IMethod {
     return s.toString();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IMethod#hasExceptionHandler()
-   */
+
   public boolean hasExceptionHandler() {
     return false;
   }
@@ -241,7 +233,8 @@ public class SyntheticMethod implements IMethod {
     return -1;
   }
 
-  /**
+  /*
+   * TODO: why isn't this abstract?
    * @param options options governing SSA construction
    */
   public SSAInstruction[] getStatements(SSAOptions options) {

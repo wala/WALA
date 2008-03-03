@@ -16,10 +16,8 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
-import com.ibm.wala.ipa.callgraph.MethodTargetSelector;
 import com.ibm.wala.ipa.callgraph.propagation.CloneContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * Default object to control context-insensitive context selection,
@@ -31,8 +29,8 @@ public class DefaultContextSelector implements ContextSelector {
 
   private final ContextSelector delegate;
 
-  public DefaultContextSelector(IClassHierarchy cha, MethodTargetSelector methodTargetSelector) {
-    ReflectionContextSelector r = ReflectionContextSelector.createReflectionContextSelector(cha, methodTargetSelector);
+  public DefaultContextSelector() {
+    ReflectionContextSelector r = ReflectionContextSelector.createReflectionContextSelector();
     ContextInsensitiveSelector ci = new ContextInsensitiveSelector();
     ContextSelector s = new DelegatingContextSelector(r, ci);
     delegate = new DelegatingContextSelector(new CloneContextSelector(),s);
@@ -40,20 +38,6 @@ public class DefaultContextSelector implements ContextSelector {
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     return delegate.getCalleeTarget(caller, site, callee, receiver);
-  }
-
-  /*
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.classLoader.CallSiteReference)
-   */
-  public boolean contextIsIrrelevant(CGNode caller, CallSiteReference site) {
-    return delegate.contextIsIrrelevant(caller, site);
-  }
-
-  /* 
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.types.MethodReference)
-   */
-  public boolean allSitesDispatchIdentically(CGNode caller, CallSiteReference site) {
-    return delegate.allSitesDispatchIdentically(caller,site);
   }
 
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {

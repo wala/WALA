@@ -316,37 +316,4 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   protected IClassHierarchy getClassHierarchy() {
     return cha;
   }
-
-  /*
-   * @see com.ibm.wala.ipa.callgraph.MethodTargetSelector#mightReturnSyntheticMethod(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference)
-   */
-  public boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site) {
-    if (parent.mightReturnSyntheticMethod(caller, site)) {
-      return true;
-    } else {
-      IMethod resolved = cha.resolveMethod(site.getDeclaredTarget());
-      if (resolved == null) {
-        return true;
-      } else {
-        return findOrCreateSyntheticMethod(resolved.getReference(), resolved.isStatic()) != null;
-      }
-    }
-  }
-
-  /*
-   * @see com.ibm.wala.ipa.callgraph.MethodTargetSelector#mightReturnSyntheticMethod(com.ibm.wala.types.MethodReference)
-   */
-  public boolean mightReturnSyntheticMethod(MethodReference declaredTarget) {
-    if (parent.mightReturnSyntheticMethod(declaredTarget)) {
-      return true;
-    } else {
-      IMethod resolved = cha.resolveMethod(declaredTarget);
-      if (resolved == null) {
-        return true;
-      } else {
-        return findOrCreateSyntheticMethod(resolved.getReference(), resolved.isStatic()) != null;
-      }
-    }
-  }
 }

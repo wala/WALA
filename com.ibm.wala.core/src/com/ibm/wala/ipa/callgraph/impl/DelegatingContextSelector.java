@@ -69,13 +69,4 @@ public class DelegatingContextSelector implements ContextSelector {
     }
     return B.mayUnderstand(caller,site,targetMethod, instance);
   }
-
-
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return A.contextIsIrrelevant(node,site) && B.contextIsIrrelevant(node,site);
-  }
-
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    return A.allSitesDispatchIdentically(node,site) && B.allSitesDispatchIdentically(node,site);
-  }
 }

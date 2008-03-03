@@ -39,18 +39,4 @@ public interface ContextSelector {
    */
   boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance);
 
-
-  /**
-   * @param site
-   * @return true iff this context selector will always return the same context
-   *         for a given call site, regardless of the receiver object
-   */
-  boolean contextIsIrrelevant(CGNode node, CallSiteReference site);
-
-  /**
-   * @return true iff \forAll n \in nodes, \forAll s \in sites with this
-   *         declaredTarget, the set of targets is the same
-   */
-  boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site);
-
 }

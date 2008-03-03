@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.callgraph.propagation.rta;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
@@ -45,7 +44,6 @@ import com.ibm.wala.ipa.callgraph.propagation.StandardSolver;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultPointerKeyFactory;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DefaultSSAInterpreter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.DelegatingSSAContextInterpreter;
-import com.ibm.wala.ipa.callgraph.propagation.rta.DelegatingExplicitCallGraph.DelegatingCGNode;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
@@ -55,7 +53,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -92,13 +89,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
    */
   protected final HashSet<IClass> allocatedClasses = HashSetFactory.make();
 
-  /**
-   * declared target MethodReference -> CallSite when context never matters for
-   * a dispatch to a declared target, we keep a single representative CallSite
-   * which holds the targets for all call sites which dispatch to that declared
-   * target.
-   */
-  private final Map<MethodReference, CallSite> delegateMap = HashMapFactory.make();
 
   /**
    * set of class names that are implicitly pre-allocated Note: for performance
@@ -257,8 +247,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     // if non-virtual, add callgraph edges directly
     IInvokeInstruction.IDispatch code = site.getInvocationCode();
 
-    boolean canResolveEagerly = (code == IInvokeInstruction.Dispatch.SPECIAL) && getContextSelector().contextIsIrrelevant(node, site);
-    if (code == IInvokeInstruction.Dispatch.STATIC || canResolveEagerly) {
+    if (code == IInvokeInstruction.Dispatch.STATIC) {
       CGNode n = getTargetForCall(node, site, (InstanceKey) null);
       if (n == null) {
         Warnings.add(ResolutionFailure.create(node, site));
@@ -269,30 +258,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
         processClassInitializer(cha.lookupClass(site.getDeclaredTarget().getDeclaringClass()));
       }
     } else {
-
-      // check if we can delegate to a single representative for this declared
-      // target
-      if (getContextSelector().allSitesDispatchIdentically(node, site)) {
-        CallSite delegate = delegateMap.get(site.getDeclaredTarget());
-        if (delegate == null) {
-          // we have not yet established a delegate. set up this site as
-          // the new delegate.
-          delegate = new CallSite(site, node);
-          if (DEBUG) {
-            Trace.println("create delegate " + site.getDeclaredTarget() + " -> " + delegate);
-          }
-          delegateMap.put(site.getDeclaredTarget(), delegate);
-        } else {
-          // we found a delegate. use it. don't create a new constraint.
-          if (node.equals(delegate.getNode()) && site.equals(delegate.getSite())) {
-            // processing the same site for a second time ..
-            return;
-          }
-          DelegatingCGNode dnode = (DelegatingCGNode) node;
-          dnode.delegate(site, delegate.getNode(), delegate.getSite());
-          return;
-        }
-      }
 
       // Add a side effect that will fire when we determine a value
       // for the receiver. This side effect will create a new node
@@ -421,7 +386,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   protected ContextSelector makeContextSelector(ContextSelector appContextSelector) {
-    ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
+    ContextSelector def = new DefaultContextSelector();
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     return contextSelector;
   }

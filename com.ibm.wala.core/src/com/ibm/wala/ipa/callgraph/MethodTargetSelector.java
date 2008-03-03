@@ -13,7 +13,6 @@ package com.ibm.wala.ipa.callgraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.types.MethodReference;
 
 /**
  * This interface represents policies for selecting a method to call
@@ -50,22 +49,4 @@ public interface MethodTargetSelector {
    * @return the method to be called.
    */
   IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass receiver);
-
-
-  /**
-   * TODO: make this go away?  an unnecessary optimization?
-   * @param caller
-   * @param site
-   * @return true if there's a possibility that getCalleeTarget here might return a 
-   * synthetic method.
-   */
-  boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site);
-
-  /**
-   *    * TODO: make this go away?  an unnecessary optimization?
-   * @return true if there's a possibility that getCalleeTarget here might return a 
-   * synthetic method.
-   */
-  boolean mightReturnSyntheticMethod(MethodReference declaredTarget);
-
 }
