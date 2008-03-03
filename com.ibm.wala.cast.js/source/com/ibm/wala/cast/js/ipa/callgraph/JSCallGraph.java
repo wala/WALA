@@ -26,6 +26,7 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -45,8 +46,8 @@ public class JSCallGraph extends AstCallGraph {
       super(fakeRoot, cha.lookupClass(JavaScriptTypes.FakeRoot), cha, options, cache);
     }
 
-    public InducedCFG makeControlFlowGraph() {
-      return new JSInducedCFG(getStatements(), this, Everywhere.EVERYWHERE);
+    public InducedCFG makeControlFlowGraph(SSAInstruction[] instructions) {
+      return new JSInducedCFG(instructions, this, Everywhere.EVERYWHERE);
     }
 
     public SSANewInstruction addAllocation(TypeReference T) {

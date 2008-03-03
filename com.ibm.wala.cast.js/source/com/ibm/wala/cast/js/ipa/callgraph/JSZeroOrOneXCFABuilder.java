@@ -37,7 +37,7 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
 
     options.setSelector(new JavaScriptConstructTargetSelector(cha, options.getMethodTargetSelector()));
 
-    ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
+    ContextSelector def = new DefaultContextSelector();
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     if (doOneCFA) {
       contextSelector = new nCFAContextSelector(1, contextSelector);
@@ -49,18 +49,12 @@ public class JSZeroOrOneXCFABuilder extends JSCFABuilder {
   }
 
   /**
-   * @param options
-   *            options that govern call graph construction
-   * @param cha
-   *            governing class hierarchy
-   * @param cl
-   *            classloader that can find DOMO resources
-   * @param scope
-   *            representation of the analysis scope
-   * @param xmlFiles
-   *            set of Strings that are names of XML files holding bypass logic specifications.
-   * @param dmd
-   *            deployment descriptor abstraction
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
+   * @param cl classloader that can find DOMO resources
+   * @param scope representation of the analysis scope
+   * @param xmlFiles set of Strings that are names of XML files holding bypass logic specifications.
+   * @param dmd deployment descriptor abstraction
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
   public static JSCFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,
