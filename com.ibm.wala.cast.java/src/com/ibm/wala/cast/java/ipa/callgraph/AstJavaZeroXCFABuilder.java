@@ -22,8 +22,7 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ZeroXInstanceKeys;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
- * 0-1-CFA Call graph builder, optimized to not disambiguate instances of
- * "uninteresting" types
+ * 0-1-CFA Call graph builder, optimized to not disambiguate instances of "uninteresting" types
  */
 public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
 
@@ -35,7 +34,7 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
     SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha, reflect);
     setContextInterpreter(contextInterpreter);
 
-    ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
+    ContextSelector def = new DefaultContextSelector();
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
 
     setContextSelector(contextSelector);
@@ -45,23 +44,16 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
   }
 
   /**
-   * @param options
-   *            options that govern call graph construction
-   * @param cha
-   *            governing class hierarchy
-   * @param cl
-   *            classloader that can find DOMO resources
-   * @param scope
-   *            representation of the analysis scope
-   * @param xmlFiles
-   *            set of Strings that are names of XML files holding bypass logic
-   *            specifications.
-   * @param dmd
-   *            deployment descriptor abstraction
+   * @param options options that govern call graph construction
+   * @param cha governing class hierarchy
+   * @param cl classloader that can find DOMO resources
+   * @param scope representation of the analysis scope
+   * @param xmlFiles set of Strings that are names of XML files holding bypass logic specifications.
+   * @param dmd deployment descriptor abstraction
    * @return a 0-1-Opt-CFA Call Graph Builder.
    */
-  public static AstJavaCFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl, AnalysisScope scope,
-      String[] xmlFiles, byte instancePolicy) {
+  public static AstJavaCFABuilder make(AnalysisOptions options, AnalysisCache cache, IClassHierarchy cha, ClassLoader cl,
+      AnalysisScope scope, String[] xmlFiles, byte instancePolicy) {
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);
     for (int i = 0; i < xmlFiles.length; i++) {

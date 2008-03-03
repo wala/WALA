@@ -23,68 +23,54 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * 
- * 0-1-CFA Call graph builder which analyzes calls to "container methods" in a
- * context which is defined by the receiver instance.
+ * 0-1-CFA Call graph builder which analyzes calls to "container methods" in a context which is defined by the receiver
+ * instance.
  * 
  * @author sfink
  */
 public class AstJavaZeroOneContainerCFABuilder extends AstJavaCFABuilder {
 
   /**
-   * @param cha
-   *          governing class hierarchy
-   * @param warnings
-   *          object to track analysis warnings
-   * @param options
-   *          call graph construction options
-   * @param appContextSelector
-   *          application-specific logic to choose contexts
-   * @param appContextInterpreter
-   *          application-specific logic to interpret a method in context
-   * @param reflect
-   *          reflection specification
+   * @param cha governing class hierarchy
+   * @param warnings object to track analysis warnings
+   * @param options call graph construction options
+   * @param appContextSelector application-specific logic to choose contexts
+   * @param appContextInterpreter application-specific logic to interpret a method in context
+   * @param reflect reflection specification
    */
-  public AstJavaZeroOneContainerCFABuilder(
-		  IClassHierarchy cha, 
-		  AnalysisOptions options,
-		  AnalysisCache cache, 
-		  ContextSelector appContextSelector,
-		  SSAContextInterpreter appContextInterpreter, 
-		  ReflectionSpecification reflect) 
-  {
+  public AstJavaZeroOneContainerCFABuilder(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
+      ContextSelector appContextSelector, SSAContextInterpreter appContextInterpreter, ReflectionSpecification reflect) {
     super(cha, options, cache);
 
-    ContextSelector def = new DefaultContextSelector(cha, options.getMethodTargetSelector());
+    ContextSelector def = new DefaultContextSelector();
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
 
-    SSAContextInterpreter contextInterpreter = 
-      makeDefaultContextInterpreters(appContextInterpreter, options, cha, reflect);
+    SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha, reflect);
     setContextInterpreter(contextInterpreter);
 
     ZeroXInstanceKeys zik = makeInstanceKeys(cha, options, contextInterpreter);
     setInstanceKeys(new JavaScopeMappingInstanceKeys(cha, this, zik));
 
-    ContextSelector CCS = makeContainerContextSelector(cha,zik);
+    ContextSelector CCS = makeContainerContextSelector(cha, zik);
     DelegatingContextSelector DCS = new DelegatingContextSelector(CCS, contextSelector);
     setContextSelector(DCS);
   }
 
-  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, AnalysisOptions options, SSAContextInterpreter contextInterpreter) {
+  protected ZeroXInstanceKeys makeInstanceKeys(IClassHierarchy cha, AnalysisOptions options,
+      SSAContextInterpreter contextInterpreter) {
     ZeroXInstanceKeys zik = new ZeroXInstanceKeys(options, cha, contextInterpreter, ZeroXInstanceKeys.ALLOCATIONS
-        | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS 
-	| ZeroXInstanceKeys.SMUSH_STRINGS
-	| ZeroXInstanceKeys.SMUSH_MANY
+        | ZeroXInstanceKeys.SMUSH_PRIMITIVE_HOLDERS | ZeroXInstanceKeys.SMUSH_STRINGS | ZeroXInstanceKeys.SMUSH_MANY
         | ZeroXInstanceKeys.SMUSH_THROWABLES);
     return zik;
   }
-  
+
   /**
    * @param cha
    * @param keys
    * @return an object which creates contexts for call graph nodes based on the container disambiguation policy
    */
   protected ContextSelector makeContainerContextSelector(IClassHierarchy cha, ZeroXInstanceKeys keys) {
-    return new ContainerContextSelector(cha,keys );
+    return new ContainerContextSelector(cha, keys);
   }
 
 }
