@@ -582,7 +582,6 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         return true;
       }
       if (t.getMethod().getSelector().equals(MethodReference.equalsSelector)) {
-        Assertions.UNREACHABLE();
         return true;
       }
       return false;
