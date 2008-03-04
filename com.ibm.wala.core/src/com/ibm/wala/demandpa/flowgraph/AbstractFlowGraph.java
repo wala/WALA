@@ -293,8 +293,10 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
       final CGNode node = a.getNode();
       IR ir = node.getIR();
       SSAInstruction instruction = ir.getInstructions()[a.getInstructionIndex()];
-      if (Assertions.verifyAssertions) {
-        Assertions._assert(instruction != null, "null array write at " + a.getInstructionIndex() + " in " + node);
+      if (instruction == null) {
+        // this means the array store found was in fact dead code
+        // TODO detect this earlier and don't keep it in the MemoryAccessMap
+        continue;
       }
       if (instruction instanceof SSAArrayStoreInstruction) {
         SSAArrayStoreInstruction s = (SSAArrayStoreInstruction) instruction;
