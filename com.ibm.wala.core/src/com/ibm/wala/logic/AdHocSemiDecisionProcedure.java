@@ -122,6 +122,9 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
     case CONSTANT:
       BooleanConstantFormula bc = (BooleanConstantFormula) f;
       return bc.equals(BooleanConstantFormula.FALSE);
+    case NEGATION:
+      NotFormula nf = (NotFormula)f;
+      return isTautology(nf.getFormula(), facts);
     case QUANTIFIED:
       return false;
     case RELATION:
@@ -202,7 +205,7 @@ public class AdHocSemiDecisionProcedure extends AbstractSemiDecisionProcedure {
       return f.equals(BooleanConstantFormula.TRUE);
     case NEGATION:
       NotFormula n = (NotFormula) f;
-      return AdHocSemiDecisionProcedure.singleton().isContradiction(n.getFormula());
+      return isContradiction(n.getFormula(), facts);
     case QUANTIFIED:
       return false;
     case RELATION:
