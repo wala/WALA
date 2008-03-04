@@ -29,17 +29,13 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * 
  * "Non-standard" bypass rules to use during call graph construction.
  * 
- * Normally, the method bypass rules replace the IMethod that is resolved by
- * other means, via the getBypass() method. However, the bypass rules can be
- * invoked even before resolving the target of a call, by checking the intercept
- * rules.
+ * Normally, the method bypass rules replace the IMethod that is resolved by other means, via the getBypass() method.
+ * However, the bypass rules can be invoked even before resolving the target of a call, by checking the intercept rules.
  * 
  * @author sfink
  */
@@ -48,8 +44,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   static final boolean DEBUG = false;
 
   /**
-   * Method summaries collected for methods. Mapping Object -> MethodSummary
-   * where Object is either a
+   * Method summaries collected for methods. Mapping Object -> MethodSummary where Object is either a
    * <ul>
    * <li>MethodReference
    * <li>TypeReference
@@ -59,8 +54,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   private final Map<MethodReference, MethodSummary> methodSummaries;
 
   /**
-   * Set of Atoms representing package names whose methods should be treated as
-   * no-ops
+   * Set of Atoms representing package names whose methods should be treated as no-ops
    */
   private final Set<Atom> ignoredPackages;
 
@@ -75,9 +69,8 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   private final MethodTargetSelector parent;
 
   /**
-   * Mapping from MethodReference -> SyntheticMethod We may call
-   * syntheticMethod.put(m,null) .. in which case we use containsKey() to check
-   * for having already considered m.
+   * Mapping from MethodReference -> SyntheticMethod We may call syntheticMethod.put(m,null) .. in which case we use
+   * containsKey() to check for having already considered m.
    */
   final private HashMap<MethodReference, SummarizedMethod> syntheticMethods = HashMapFactory.make();
 
@@ -96,11 +89,9 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   }
 
   /**
-   * Check to see if a particular call site should be bypassed, before checking
-   * normal resolution of the receiver.
+   * Check to see if a particular call site should be bypassed, before checking normal resolution of the receiver.
    * 
-   * @throws IllegalArgumentException
-   *             if site is null
+   * @throws IllegalArgumentException if site is null
    */
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference site, IClass dispatchType) {
 
@@ -126,27 +117,29 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     IMethod target = (resolved == null) ? findOrCreateSyntheticMethod(ref, site.isStatic()) : getBypassInternal(resolved, site
         .isStatic());
 
-    if (DEBUG)
-      Trace.println("target is initially " + target);
+    if (DEBUG) {
+      System.err.println("target is initially " + target);
+    }
 
     if (target != null) {
       return target;
     } else {
       if (canIgnore(site.getDeclaredTarget())) {
         if (DEBUG)
-          Trace.println("ignoring " + site);
+          System.err.println("ignoring " + site);
         return null;
       }
       target = parent.getCalleeTarget(caller, site, dispatchType);
 
-      if (DEBUG)
-        Trace.println("target becomes " + target);
+      if (DEBUG) {
+        System.err.println("target becomes " + target);
+      }
 
       if (target != null) {
         IMethod bypassTarget = getBypassInternal(target, site.isStatic());
 
         if (DEBUG)
-          Trace.println("bypassTarget is " + target);
+          System.err.println("bypassTarget is " + target);
 
         return (bypassTarget == null) ? target : bypassTarget;
       } else
@@ -164,14 +157,13 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
    */
   private SyntheticMethod getBypassInternal(IMethod m, boolean isStatic) {
     if (DEBUG) {
-      Trace.println("MethodBypass.getBypass? " + m);
+      System.err.println("MethodBypass.getBypass? " + m);
     }
     return findOrCreateSyntheticMethod(m, isStatic);
   }
 
   /**
-   * @param m
-   *            a method reference
+   * @param m a method reference
    * @return a SyntheticMethod corresponding to m; or null if none is available.
    */
   private SyntheticMethod findOrCreateSyntheticMethod(MethodReference m, boolean isStatic) {
@@ -209,8 +201,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   }
 
   /**
-   * @param m
-   *            a method reference
+   * @param m a method reference
    * @return a SyntheticMethod corresponding to m; or null if none is available.
    */
   private SyntheticMethod findOrCreateSyntheticMethod(IMethod m, boolean isStatic) {
@@ -278,7 +269,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     MethodSummary result = methodSummaries.get(m);
     if (result != null) {
       if (DEBUG) {
-        Trace.println("findSummary succeeded: " + m);
+        System.err.println("findSummary succeeded: " + m);
       }
       return result;
     }
@@ -288,7 +279,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     result = methodSummaries.get(t);
     if (result != null) {
       if (DEBUG) {
-        Trace.println("findSummary succeeded: " + t);
+        System.err.println("findSummary succeeded: " + t);
       }
       return result;
     }
@@ -302,12 +293,12 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     result = methodSummaries.get(p);
     if (result != null) {
       if (DEBUG) {
-        Trace.println("findSummary succeeded: " + p);
+        System.err.println("findSummary succeeded: " + p);
       }
       return result;
     } else {
       if (DEBUG) {
-        Trace.println("findSummary failed: " + m);
+        System.err.println("findSummary failed: " + m);
       }
       return result;
     }

@@ -828,18 +828,24 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      */
     @Override
     public void visitReturn(SSAReturnInstruction instruction) {
+
       // skip returns of primitive type
       if (instruction.returnsPrimitiveType() || instruction.returnsVoid()) {
         return;
       }
+      if (DEBUG) {
+        System.err.println("visitReturn: " + instruction);
+      }
+      
       PointerKey returnValue = getPointerKeyForReturnValue();
       PointerKey result = getPointerKeyForLocal(instruction.getResult());
-      // if (!supportFullPointerFlowGraph &&
-      // contentsAreInvariant(instruction.getResult())) {
       if (contentsAreInvariant(symbolTable, du, instruction.getResult())) {
         system.recordImplicitPointsToSet(result);
         InstanceKey[] ik = getInvariantContents(instruction.getResult());
         for (int i = 0; i < ik.length; i++) {
+          if (DEBUG) {
+            System.err.println("invariant contents: " + returnValue + " " + ik[i]);
+          }
           system.newConstraint(returnValue, ik[i]);
         }
       } else {
@@ -1113,6 +1119,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
 
       if (klass == null) {
+        if (DEBUG) {
+          System.err.println("Resolution failure: " + instruction);
+        }
         Warnings.add(ResolutionFailure.create(node, instruction.getConcreteType()));
         return;
       }
