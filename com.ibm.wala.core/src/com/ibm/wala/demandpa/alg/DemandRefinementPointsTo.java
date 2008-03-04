@@ -48,6 +48,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.classLoader.ShrikeBTMethod;
 import com.ibm.wala.demandpa.alg.refinepolicy.NeverRefineCGPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.NeverRefineFieldsPolicy;
 import com.ibm.wala.demandpa.alg.refinepolicy.RefinementPolicy;
@@ -99,6 +100,8 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceF
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.shrikeBT.Instruction;
+import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
@@ -127,6 +130,8 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
   private static final boolean DEBUG = false;
+
+  private static final boolean PARANOID = false;
 
   // private static final boolean DEBUG_FULL = DEBUG && false;
 
@@ -158,6 +163,39 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     this.stateMachineFactory = stateMachineFactory;
     g = flowGraph;
     this.refinementPolicyFactory = new SinglePassRefinementPolicy.Factory(new NeverRefineFieldsPolicy(), new NeverRefineCGPolicy());
+    sanityCheckCG();
+  }
+
+  private void sanityCheckCG() {
+    if (PARANOID) {
+      for (CGNode callee : cg) {
+        for (Iterator<? extends CGNode> predNodes = cg.getPredNodes(callee); predNodes.hasNext();) {
+          CGNode caller = predNodes.next();
+          for (Iterator<CallSiteReference> iterator = cg.getPossibleSites(caller, callee); iterator.hasNext(); ) {
+            CallSiteReference site = iterator.next();
+            try {
+              caller.getIR().getCalls(site);
+            } catch (IllegalArgumentException e) {
+              System.err.println(caller + " is pred of " + callee);
+              System.err.println("no calls at site " + site);
+              System.err.println(caller.getIR());
+              if (caller.getMethod() instanceof ShrikeBTMethod) {
+                try {
+                  Instruction[] instructions = ((ShrikeBTMethod)caller.getMethod()).getInstructions();
+                  for (int i = 0; i < instructions.length; i++) {
+                    System.err.println(i + ": " + instructions[i]);
+                  }
+                } catch (InvalidClassFileException e1) {
+                  // TODO Auto-generated catch block
+                  e1.printStackTrace();
+                }
+              }
+              Assertions.UNREACHABLE();
+            }
+          }                
+        }
+      }
+    }
   }
 
   /**
@@ -512,11 +550,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       boolean added = findOrCreate(p2setMap, pkAndState).addAll(vals);
       // final boolean added = p2setMap.putAll(pkAndState, vals);
       if (DEBUG && added) {
-//        System.err.println("POINTS-TO ADDITION TO PK " + pkAndState + ":");
-//        for (InstanceKeyAndState ikAndState : makeOrdinalSet(vals)) {
-//          System.err.println(ikAndState);
-//        }
-//        System.err.println("*************");
+        // System.err.println("POINTS-TO ADDITION TO PK " + pkAndState + ":");
+        // for (InstanceKeyAndState ikAndState : makeOrdinalSet(vals)) {
+        // System.err.println(ikAndState);
+        // }
+        // System.err.println("*************");
       }
       return added;
 
@@ -708,7 +746,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         Assertions._assert(g.hasSubgraphForNode(node), "missing constraints for " + node);
       }
       if (DEBUG) {
-//        System.err.println("adding to tracked points-to " + pkAndState);
+        // System.err.println("adding to tracked points-to " + pkAndState);
       }
       trackedPointsToWorklist.add(pkAndState);
     }
@@ -808,7 +846,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      */
     private void repropCallArg(PointerKeyAndState src, PointerKeyAndState dst, IFlowLabel dstToSrcLabel) {
       if (DEBUG) {
-//        System.err.println("re-propping from src " + src + " to dst " + dst);
+        // System.err.println("re-propping from src " + src + " to dst " + dst);
       }
       for (PointerKeyAndState srcToHandle : matchingPToQueried(dst, src.getPointerKey(), dstToSrcLabel)) {
         handleCopy(srcToHandle, dst, dstToSrcLabel.bar());
@@ -1047,7 +1085,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     private void trackInstanceField(InstanceKeyAndState ikAndState, IField field, MultiMap<InstanceKeyAndState, IField> ikToFields) {
       State state = ikAndState.getState();
       if (Assertions.verifyAssertions) {
-        //Assertions._assert(refineFieldAccesses(field));
+        // Assertions._assert(refineFieldAccesses(field));
       }
       ikToFields.put(ikAndState, field);
       for (Iterator<? extends Object> iter = g.getPredNodes(ikAndState.getInstanceKey(), NewLabel.v()); iter.hasNext();) {
