@@ -140,18 +140,18 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
    * @param klass an Action
    */
   private void addSpeculativeDispatchMethods(IClass klass, IClassHierarchy cha) {
-    IClass C = klass;
-    while (C != null) {
-      for (Iterator<IMethod> it = C.getDeclaredMethods().iterator(); it.hasNext();) {
+    IClass c = klass;
+    while (c != null) {
+      for (Iterator<IMethod> it = c.getDeclaredMethods().iterator(); it.hasNext();) {
         IMethod M = (IMethod) it.next();
         Descriptor D = M.getDescriptor();
         if (D.equals(executeDesc) || D.equals(httpExecuteDesc)) {
           MethodReference m = MethodReference.findOrCreate(klass.getReference(), M.getName(), M.getDescriptor());
-          entrypoints.put(m, new StrutsActionEntrypoint(C, M, cha));
+          entrypoints.put(m, new StrutsActionEntrypoint(klass, M, cha));
         }
       }
       try {
-        C = C.getSuperclass();
+        c = c.getSuperclass();
       } catch (ClassHierarchyException e) {
         e.printStackTrace();
         Assertions.UNREACHABLE();
