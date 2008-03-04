@@ -60,13 +60,4 @@ public class DelegatingContextSelector implements ContextSelector {
     return C;
   }
 
-
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (A != null) {
-      if (A.mayUnderstand(caller,site,targetMethod, instance)) {
-        return true;
-      }
-    }
-    return B.mayUnderstand(caller,site,targetMethod, instance);
-  }
 }

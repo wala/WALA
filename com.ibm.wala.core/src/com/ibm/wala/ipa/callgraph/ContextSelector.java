@@ -31,12 +31,4 @@ public interface ContextSelector {
    */
   Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver);
 
-  /**
-   * @param instance
-   *          the instance dispatched on. null means "any possible instance"
-   * @return true iff this object may understand how to select a context for the
-   *         given target
-   */
-  boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance);
-
 }

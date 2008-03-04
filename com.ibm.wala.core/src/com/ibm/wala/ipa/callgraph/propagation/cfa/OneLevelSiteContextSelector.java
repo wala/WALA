@@ -47,23 +47,4 @@ public class OneLevelSiteContextSelector implements ContextSelector {
     }
   }
 
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    return baseSelector.mayUnderstand(caller, site, targetMethod, instance);
-  }
-  
-  /*
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#contextIsIrrelevant(com.ibm.wala.ipa.callgraph.CGNode,
-   *      com.ibm.wala.classLoader.CallSiteReference)
-   */
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return false;
-  }
-
-  /*
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#allSitesDispatchIdentically(com.ibm.wala.types.MethodReference)
-   */
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    // TODO Auto-generated method stub
-    return false;
-  }
 }

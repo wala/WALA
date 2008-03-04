@@ -40,7 +40,4 @@ public class DefaultContextSelector implements ContextSelector {
     return delegate.getCalleeTarget(caller, site, callee, receiver);
   }
 
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    return delegate.mayUnderstand(caller, site, targetMethod, instance);
-  }
 }
