@@ -51,6 +51,7 @@ import com.ibm.wala.util.shrike.ShrikeUtil;
  */
 public class SimpleMemoryAccessMap implements MemoryAccessMap {
 
+  private static final boolean DEBUG = false;
   /**
    * Map: IField -> Set<MemoryAccess>
    */
@@ -85,7 +86,11 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   }
 
   private void populate(CGNode n) {
+//    DEBUG = n.toString().equals("Node: < Primordial, Lorg/apache/xalan/templates/OutputProperties, loadPropertiesFile(Ljava/lang/String;Ljava/util/Properties;)Ljava/util/Properties; > Context: Everywhere");
     if (n.getMethod().isSynthetic()) {
+      if (DEBUG) {
+        System.err.println("synthetic method");
+      }
       SyntheticMethod sm = (SyntheticMethod) n.getMethod();
       SSAInstruction[] statements = sm.getStatements();
       SSAMemoryAccessVisitor v = new SSAMemoryAccessVisitor(n);
@@ -98,6 +103,9 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
       }
 
     } else {
+      if (DEBUG) {
+        System.err.println("Shrike method");
+      }
       ShrikeCTMethod sm = (ShrikeCTMethod) n.getMethod();
       MemoryAccessVisitor v = new MemoryAccessVisitor(n.getMethod().getReference().getDeclaringClass().getClassLoader(), n);
       try {
@@ -105,6 +113,11 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
         if (statements == null) {
           // System.err.println("no statements for " + n.getMethod());
           return;
+        }
+        if (DEBUG) {
+          for (int i = 0; i < statements.length; i++) {
+            System.err.println(i + ": " + statements[i]);
+          }
         }
         for (int i = 0; i < statements.length; i++) {
           Instruction s = statements[i];
@@ -219,6 +232,9 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
       TypeReference tr = ShrikeUtil.makeTypeReference(loader, instruction.getType());
       // chekc for multi-dimensional array allocation
       if (tr.isArrayType() && tr.getArrayElementType().isArrayType()) {
+        if (DEBUG) {
+          System.err.println("found multi-dim array write at " + instructionIndex);
+        }
         arrayWrites.add(new MemoryAccess(instructionIndex, node));
       }
     }
@@ -254,6 +270,10 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
           return;
         }
       }
+      
+      if (DEBUG) {
+        System.err.println("found array write at " + instructionIndex);
+      }      
       arrayWrites.add(new MemoryAccess(instructionIndex, node));
     }
 
