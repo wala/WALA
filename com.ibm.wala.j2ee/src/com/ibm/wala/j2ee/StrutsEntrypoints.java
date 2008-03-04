@@ -52,14 +52,28 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   private final static String executeDescString = "(Lorg/apache/struts/action/ActionMapping;Lorg/apache/struts/action/ActionForm;Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;)Lorg/apache/struts/action/ActionForward;";
 
   private final static String httpExecuteDescString = "(Lorg/apache/struts/action/ActionMapping;Lorg/apache/struts/action/ActionForm;Ljavax/servlet/http/HttpServletRequest;Ljavax/servlet/http/HttpServletResponse;)Lorg/apache/struts/action/ActionForward;";
-
+  
   private final static Descriptor executeDesc = Descriptor.findOrCreateUTF8(executeDescString);
 
   private final static Descriptor httpExecuteDesc = Descriptor.findOrCreateUTF8(httpExecuteDescString);
 
+  private final static String plugInInitDescString = "(Lorg/apache/struts/action/ActionServlet;Lorg/apache/struts/config/ModuleConfig;)V";
+  
+  private final static String plugInDestroyDescString = "()V";
+
+  private final static Atom plugInInitName = Atom.findOrCreateUnicodeAtom("init");
+
+  private final static Atom plugInDestroyName = Atom.findOrCreateUnicodeAtom("destroy");
+  
+private final static Descriptor plugInInitDesc = Descriptor.findOrCreateUTF8(plugInInitDescString);
+  
+  private final static Descriptor plugInDestroyDesc = Descriptor.findOrCreateUTF8(plugInDestroyDescString);
+  
   private final static TypeName actionName = TypeName.string2TypeName("Lorg/apache/struts/action/Action");
 
   private final static TypeName actionFormName = TypeName.string2TypeName("Lorg/apache/struts/action/ActionForm");
+  
+  private final static TypeName plugInName = TypeName.string2TypeName("Lorg/apache/struts/action/PlugIn");
 
   private Map<MethodReference, Entrypoint> entrypoints = HashMapFactory.make();
 
@@ -68,6 +82,12 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
    */
   private Set<IClass> actions = HashSetFactory.make();
 
+  /**
+   * Set of plugin implementations found.
+   */
+  private Set<IClass> plugins = HashSetFactory.make();
+  
+  
   /**
    * This map controls selection of concrete types for parameters to some servlet methods.
    */
@@ -92,6 +112,12 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       return;
     }
 
+    TypeReference plugInType = TypeReference.findOrCreate(scope.getApplicationLoader(), plugInName);
+    IClass plugInClass = cha.lookupClass(plugInType);    
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(plugInClass != null);
+    }
+    
     ClassLoaderReference appLoaderRef = scope.getApplicationLoader();
     IClassLoader appLoader = cha.getLoader(appLoaderRef);
 
@@ -111,7 +137,40 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
           addSpeculativeDispatchMethods(klass, cha);
         }
       }
+      if (isConcreteStrutsPlugIn(klass)) {
+        plugins.add(klass);
+        TypeReference type = klass.getReference();
+        MethodReference M = MethodReference.findOrCreate(type, plugInInitName, plugInInitDesc);
+
+        IMethod im = cha.resolveMethod(M);
+        if (im != null) {
+          entrypoints.put(M, new StrutsPlugInEntrypoint(klass, im, cha));
+        }
+        
+        M = MethodReference.findOrCreate(type, plugInDestroyName, plugInDestroyDesc);
+        
+        im = cha.resolveMethod(M);
+        if (im != null) {
+          entrypoints.put(M, new StrutsPlugInEntrypoint(klass, im, cha));
+        }
+                
+      }
     }
+  }
+
+  private boolean isConcreteStrutsPlugIn(IClass klass) {
+    TypeReference plugInType = TypeReference.findOrCreate(ClassLoaderReference.Application, plugInName);
+    IClass plugInClass = klass.getClassHierarchy().lookupClass(plugInType);
+    if (klass.isAbstract()) {
+      return false;
+    }
+    if (klass.getReference().equals(plugInType)) {
+      return false;
+    }    
+    if (klass.getClassHierarchy().isAssignableFrom(plugInClass, klass)) {
+      return true;
+    }
+    return false;
   }
 
   public static boolean isConcreteStrutsAction(IClass klass) {
@@ -174,6 +233,17 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     } else {
       result.append("   none");
     }
+    result.append("\n");
+    result.append("PlugIns:");
+    Iterator<IClass> it1 = plugins.iterator();
+    if (it1.hasNext()) {
+      while (it1.hasNext()) {
+        result.append("\n   ");
+        result.append(it1.next());
+      }
+    } else {
+      result.append("   none");
+    }
     return result.toString();
   }
 
@@ -195,6 +265,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       receiver = concreteType.getReference();
     }
 
+    @Override
     public TypeReference[] getParameterTypes(int i) {
       if (i == 0) {
         return new TypeReference[] { receiver };
@@ -223,6 +294,18 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
         }
         return new TypeReference[] { T };
       }
+    }
+  }
+  
+  /**
+   * An entrypoint which assumes all ServletRequest and ServletResponses are of the HTTP flavor.
+   */
+  private static class StrutsPlugInEntrypoint extends DefaultEntrypoint {
+//    private final TypeReference receiver;
+//
+    public StrutsPlugInEntrypoint(IClass concreteType, IMethod method, IClassHierarchy cha) {
+      super(method, cha);
+//      receiver = concreteType.getReference();
     }
   }
 }
