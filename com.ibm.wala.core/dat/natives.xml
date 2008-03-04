@@ -345,6 +345,56 @@
 				</method>
 			</class>
 			<class name="System">
+				<method name="&lt;clinit&gt;" static="true"
+					descriptor="()V">
+					<new def="secure"
+						class="Ljava/lang/SecurityManager" />
+					<putstatic class="Ljava/lang/System"
+						field="security" fieldType="Ljava/lang/SecurityManager"
+						value="secure" />
+					<call type="static" name="initializeSystemClass"
+						class="Ljava/lang/System" descriptor="()V" />
+				</method>
+
+				<method name="initializeSystemClass" descriptor="()V"
+					static="true">
+					<new def="x" class="Ljava/util/Properties" />
+					<call type="special" name="&lt;init&gt;"
+						class="Ljava/util/Properties" descriptor="()V" arg0="x" />
+					<new def="key" class="Ljava/lang/String" />
+					<new def="value" class="Ljava/lang/String" />
+					<call type="virtual" name="put"
+						class="Ljava/util/Hashtable"
+						descriptor="(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+						arg0="x" arg1="key" arg2="value" def="ignore" />
+
+					<new def="in" class="Ljava/io/FileInputStream" />
+					<call type="special" name="&lt;init&gt;"
+						class="Ljava/io/FileInputStream" descriptor="()V" arg0="in" />
+
+					<new def="o" class="Ljava/io/FileOutputStream" />
+					<call type="special" name="&lt;init&gt;"
+						class="Ljava/io/FileOutputStream" descriptor="()V" arg0="o" />
+					<new def="e" class="Ljava/io/FileOutputStream" />
+					<call type="special" name="&lt;init&gt;"
+						class="Ljava/io/FileOutputStream" descriptor="()V" arg0="e" />
+
+					<new def="out" class="Ljava/io/PrintStream" />
+					<call type="special" name="&lt;init&gt;"
+						class="Ljava/io/PrintStream"
+						descriptor="(Ljava/io/OutputStream;)V" arg0="out" arg1="o" />
+					<new def="err" class="Ljava/io/PrintStream" />
+					<call type="special" name="&lt;init&gt;"
+						class="Ljava/io/PrintStream"
+						descriptor="(Ljava/io/OutputStream;)V" arg0="err" arg1="e" />
+
+					<putstatic class="Ljava/lang/System" field="in"
+						fieldType="Ljava/io/InputStream" value="in" />
+					<putstatic class="Ljava/lang/System" field="out"
+						fieldType="Ljava/io/PrintStream" value="out" />
+					<putstatic class="Ljava/lang/System" field="err"
+						fieldType="Ljava/io/PrintStream" value="err" />
+				</method>
 				<method name="arraycopy"
 					descriptor="(Ljava/lang/Object;ILjava/lang/Object;II)V"
 					static="true">
