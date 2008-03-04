@@ -445,6 +445,9 @@ public abstract class IR {
       throw new IllegalArgumentException("site is null");
     }
     IntSet s = callSiteMapping.getRelated(site.getProgramCounter());
+    if (s == null) {
+      throw new IllegalArgumentException("no calls at site's pc");
+    }
     SSAAbstractInvokeInstruction[] result = new SSAAbstractInvokeInstruction[s.size()];
     int index = 0;
     for (IntIterator it = s.intIterator(); it.hasNext();) {
