@@ -63,7 +63,7 @@ public class NoRefinePtrTest extends AbstractPtrTest {
   }
 
   public void testHashSet() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_HASH_SET, 3, 3, 5);
+    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_HASH_SET, 3, 3, 2);
   }
 
   public void testMethodRecursion() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
@@ -79,7 +79,7 @@ public class NoRefinePtrTest extends AbstractPtrTest {
   }
 
   public void testArrays() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ARRAYS, 3, 3, 4);
+    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_ARRAYS, 3, 3, 3);
   }
 
   public void testFields() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
@@ -99,7 +99,7 @@ public class NoRefinePtrTest extends AbstractPtrTest {
   }
 
   public void testMultiDim() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
-    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_MULTI_DIM, 5, 5, 6);
+    doPointsToSizeTest(TestInfo.SCOPE_FILE, TestInfo.TEST_MULTI_DIM, 5, 5, 5);
   }
 
   public void testGlobal() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
