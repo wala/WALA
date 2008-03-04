@@ -41,14 +41,6 @@ class JavaLangClassContextSelector implements ContextSelector {
   public JavaLangClassContextSelector() {
   }
 
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    return false;
-  }
-
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return false;
-  }
-
   /**
    * If the {@link CallSiteReference} invokes a method we understand and c is a type constant, return a
    * {@link JavaTypeContext} representing the type named by s, if we can resolve it in the {@link IClassHierarchy}.
@@ -73,7 +65,7 @@ class JavaLangClassContextSelector implements ContextSelector {
   /**
    * This object may understand a dispatch to Class.getContructor when the receiver is a type constant.
    */
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
+  private boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
     if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_CONSTRUCTOR) && getTypeConstant(instance) != null) {
       return true;
     }

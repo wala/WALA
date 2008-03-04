@@ -27,6 +27,8 @@ import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -337,6 +339,10 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
             // a virtual dispatch is just like a cast. No flow.
             return EmptyIterator.instance();
           }
+          if (dOptions.isTerminateAtCast() && isUninformativeForReflection(pac.getNode())) {
+            // don't track flow for reflection
+            return EmptyIterator.instance();
+          }
 
           // data dependence predecessors
           for (Iterator<? extends CGNode> it = cg.getPredNodes(N.getNode()); it.hasNext();) {
@@ -356,11 +362,11 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
             }
           }
         }
-//        if (!cOptions.equals(ControlDependenceOptions.NONE)) {
-//          Statement s = new MethodEntryStatement(N.getNode());
-//          addNode(s);
-//          result.add(s);
-//        }
+        // if (!cOptions.equals(ControlDependenceOptions.NONE)) {
+        // Statement s = new MethodEntryStatement(N.getNode());
+        // addNode(s);
+        // result.add(s);
+        // }
         return result.iterator();
       }
       case HEAP_PARAM_CALLEE: {
@@ -383,11 +389,11 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
             }
           }
         }
-//        if (!cOptions.equals(ControlDependenceOptions.NONE)) {
-//          Statement s = new MethodEntryStatement(N.getNode());
-//          addNode(s);
-//          result.add(s);
-//        }
+        // if (!cOptions.equals(ControlDependenceOptions.NONE)) {
+        // Statement s = new MethodEntryStatement(N.getNode());
+        // addNode(s);
+        // result.add(s);
+        // }
         return result.iterator();
       }
       case METHOD_ENTRY:
@@ -420,6 +426,9 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     }
 
     public Iterator<? extends Statement> getSuccNodes(Statement N) {
+      if (dOptions.isTerminateAtCast() && isUninformativeForReflection(N.getNode())) {
+        return EmptyIterator.instance();
+      }
       addPDGStatementNodes(N.getNode());
       switch (N.getKind()) {
       case NORMAL:
@@ -463,7 +472,6 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-//                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
                 Statement s = new ExceptionalReturnCaller(caller, i);
                 addNode(s);
                 result.add(s);
@@ -485,7 +493,6 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
               IntSet indices = ir.getCallInstructionIndices(site);
               for (IntIterator ii = indices.intIterator(); ii.hasNext();) {
                 int i = ii.next();
-//                SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) ir.getInstructions()[i];
                 Statement s = new NormalReturnCaller(caller, i);
                 addNode(s);
                 result.add(s);
@@ -529,6 +536,10 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
                 // a virtual dispatch is just like a cast.
                 continue;
               }
+              if (dOptions.isTerminateAtCast() && isUninformativeForReflection(t)) {
+                // don't track reflection into reflective invokes
+                continue;
+              }
               if (call.getUse(i) == pac.getValueNumber()) {
                 Statement s = new ParamCallee(t, i + 1);
                 addNode(s);
@@ -558,6 +569,23 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         Assertions.UNREACHABLE(N.getKind().toString());
         return null;
       }
+    }
+
+    /**
+     * Should we cut off flow into node t when processing reflection?
+     */
+    private boolean isUninformativeForReflection(CGNode t) {
+      if (t.getMethod().getDeclaringClass().getReference().equals(TypeReference.JavaLangReflectMethod)) {
+        return true;
+      }
+      if (t.getMethod().getDeclaringClass().getReference().equals(TypeReference.JavaLangReflectConstructor)) {
+        return true;
+      }
+      if (t.getMethod().getSelector().equals(MethodReference.equalsSelector)) {
+        Assertions.UNREACHABLE();
+        return true;
+      }
+      return false;
     }
 
     public boolean hasEdge(Statement src, Statement dst) {
@@ -728,7 +756,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   public DataDependenceOptions getDOptions() {
     return dOptions;
   }
-  
+
   public CallGraph getCallGraph() {
     return cg;
   }

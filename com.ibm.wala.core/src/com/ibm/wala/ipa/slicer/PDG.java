@@ -409,6 +409,7 @@ public class PDG implements NumberedGraph<Statement> {
         if (Assertions.verifyAssertions && dOptions.isIgnoreExceptions()) {
           Assertions._assert(!s.getKind().equals(Kind.EXC_RET_CALLER));
         }
+        
         ValueNumberCarrier a = (ValueNumberCarrier) s;
         for (Iterator<SSAInstruction> it2 = DU.getUses(a.getValueNumber()); it2.hasNext();) {
           SSAInstruction use = it2.next();

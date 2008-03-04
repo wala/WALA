@@ -37,14 +37,6 @@ class ReflectiveInvocationSelector implements ContextSelector {
   public ReflectiveInvocationSelector() {
   }
 
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    return false;
-  }
-
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return false;
-  }
-
   /**
    * Creates a callee target based on the following criteria:
    * <ol>
@@ -113,7 +105,7 @@ class ReflectiveInvocationSelector implements ContextSelector {
   /**
    * This object may understand a dispatch to Constructor.newInstance().
    */
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
+  private boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
     if (instance instanceof ConstantKey) {
       if (targetMethod.getReference().equals(ReflectiveInvocationInterpreter.METHOD_INVOKE) || isConstructorConstant(instance)
           && targetMethod.getReference().equals(ReflectiveInvocationInterpreter.CTOR_NEW_INSTANCE)) {

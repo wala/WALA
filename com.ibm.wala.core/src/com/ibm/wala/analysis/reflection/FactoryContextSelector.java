@@ -46,38 +46,5 @@ class FactoryContextSelector implements ContextSelector {
     }
     return null;
   }
-  
-  /* 
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#mayUnderstand(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod, com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
-   */
-  public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (targetMethod == null) {
-      throw new IllegalArgumentException("targetMethod is null");
-    }
-    if (targetMethod.isSynthetic()) {
-      SyntheticMethod s = (SyntheticMethod) targetMethod;
-      if (s.isFactoryMethod()) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-
-  /*
-   * @see com.ibm.wala.ipa.callgraph.ContextSelector#getBoundOnNumberOfTargets(com.ibm.wala.ipa.callgraph.CGNode, com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod)
-   */
-  public int getBoundOnNumberOfTargets(CGNode caller, CallSiteReference site, IMethod callee) {
-    if (callee == null) {
-      throw new IllegalArgumentException("callee is null");
-    }
-    if (callee.isSynthetic()) {
-      SyntheticMethod s = (SyntheticMethod) callee;
-      if (s.isFactoryMethod()) {
-        return 1;
-      }
-    }
-    return -1;
-  }
 
 }

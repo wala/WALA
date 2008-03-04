@@ -35,14 +35,6 @@ class ForNameContextSelector implements ContextSelector {
   public ForNameContextSelector() {
   }
 
-  public boolean allSitesDispatchIdentically(CGNode node, CallSiteReference site) {
-    return false;
-  }
-
-  public boolean contextIsIrrelevant(CGNode node, CallSiteReference site) {
-    return false;
-  }
-
   /**
    * If the {@link CallSiteReference} invokes Class.forName(s) and s is a string constant, return a
    * {@link JavaTypeContext} representing the type named by s, if we can resolve it in the {@link IClassHierarchy}.
