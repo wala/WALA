@@ -11,6 +11,7 @@
 package com.ibm.wala.eclipse.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
@@ -140,9 +141,12 @@ public class EclipseProjectPath {
       File file = makeAbsolute(e.getPath()).toFile();
       JarFile j;
       try {
-        j = new JarFile(file);
+         j = new JarFile(file);
       } catch (ZipException z) {
         // a corrupted file. ignore it.
+        return;
+      } catch (FileNotFoundException z) {
+        // should ignore directories as well..
         return;
       }
       if (isPrimordialJarFile(j)) {
