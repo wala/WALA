@@ -60,7 +60,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
   private final static TypeName actionName = TypeName.string2TypeName("Lorg/apache/struts/action/Action");
 
   private final static TypeName actionFormName = TypeName.string2TypeName("Lorg/apache/struts/action/ActionForm");
-  
+
   private Map<MethodReference, Entrypoint> entrypoints = HashMapFactory.make();
 
   /**
@@ -113,8 +113,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       }
     }
   }
-  
-  
+
   public static boolean isConcreteStrutsAction(IClass klass) {
     TypeReference actionType = TypeReference.findOrCreate(ClassLoaderReference.Application, actionName);
     IClass actionClass = klass.getClassHierarchy().lookupClass(actionType);
@@ -159,11 +158,9 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     }
   }
 
-
   public Iterator<Entrypoint> iterator() {
     return entrypoints.values().iterator();
   }
-
 
   public String toString() {
     StringBuffer result = new StringBuffer();
@@ -218,14 +215,11 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
           Set<TypeReference> subs = HashSetFactory.make();
           for (IClass cs : subcs) {
             if (!cs.isAbstract() && !cs.isInterface()) {
-              // filter out those ActionForms in struts itself              
               TypeReference reference = cs.getReference();
-              if (!reference.getName().getPackage().toString().startsWith("org/apache/struts")) {
-                subs.add(reference);                
-              }
+              subs.add(reference);
             }
           }
-          return subs.toArray(new TypeReference[subs.size()]);          
+          return subs.toArray(new TypeReference[subs.size()]);
         }
         return new TypeReference[] { T };
       }
