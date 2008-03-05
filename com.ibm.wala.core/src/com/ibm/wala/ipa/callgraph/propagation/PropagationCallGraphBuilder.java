@@ -297,8 +297,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   protected abstract IPointsToSolver makeSolver();
 
   /**
-   * @author sfink
-   * 
    * A warning for when we fail to resolve a call to an entrypoint
    */
   private static class EntrypointResolutionWarning extends Warning {

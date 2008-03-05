@@ -49,7 +49,6 @@ import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- * 
  * A call graph which explicitly holds the target for each call site in each
  * node.
  * 
