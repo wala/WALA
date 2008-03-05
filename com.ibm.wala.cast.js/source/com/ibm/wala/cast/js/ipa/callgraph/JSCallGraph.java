@@ -19,6 +19,7 @@ import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -72,7 +73,7 @@ public class JSCallGraph extends AstCallGraph {
     }
   }
 
-  protected CGNode makeFakeRootNode() {
+  protected CGNode makeFakeRootNode() throws CancelException {
     return findOrCreateNode(new JSFakeRoot(cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
 }
