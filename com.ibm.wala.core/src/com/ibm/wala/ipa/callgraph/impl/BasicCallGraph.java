@@ -18,6 +18,7 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.Context;
@@ -92,7 +93,7 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
   }
 
   @SuppressWarnings("deprecation")
-  public void init() {
+  public void init() throws CancelException {
     fakeRoot = makeFakeRootNode();
     Key k = new Key(fakeRoot.getMethod(), fakeRoot.getContext());
     registerNode(k, fakeRoot);
@@ -107,14 +108,15 @@ public abstract class BasicCallGraph extends AbstractNumberedGraph<CGNode> imple
     fakeRoot.addTarget(site, fakeWorldClinit);
   }
 
-  protected abstract CGNode makeFakeRootNode();
+  protected abstract CGNode makeFakeRootNode() throws CancelException;
   
-  protected abstract CGNode makeFakeWorldClinitNode();
+  protected abstract CGNode makeFakeWorldClinitNode() throws CancelException;
 
   /**
    * Use with extreme care.
+   * @throws CancelException TODO
    */
-  public abstract CGNode findOrCreateNode(IMethod method, Context C);
+  public abstract CGNode findOrCreateNode(IMethod method, Context C) throws CancelException;
 
   protected void registerNode(Key K, CGNode N) {
     nodes.put(K, N);

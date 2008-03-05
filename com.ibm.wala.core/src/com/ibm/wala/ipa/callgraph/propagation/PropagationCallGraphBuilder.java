@@ -211,7 +211,13 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
     this.pointerKeyFactory = pointerKeyFactory;
     callGraph = createEmptyCallGraph(cha, options);
-    callGraph.init();
+    try {
+      callGraph.init();
+    } catch (CancelException e) {
+      if (DEBUG_GENERAL) {
+        System.err.println("Could not initialize the call graph due to node number constraints: " + e.getMessage());
+      }
+    }
     callGraph.setInterpreter(contextInterpreter);
     JAVA_LANG_OBJECT = cha.lookupClass(TypeReference.JavaLangObject);
     JAVA_LANG_THROWABLE = cha.lookupClass(TypeReference.JavaLangThrowable);
@@ -783,7 +789,11 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     if (targetContext instanceof IllegalArgumentExceptionContext) {
       return null;
     }
-    return getCallGraph().findOrCreateNode(targetMethod, targetContext);
+    try {
+      return getCallGraph().findOrCreateNode(targetMethod, targetContext);
+    } catch (CancelException e) {
+      return null;
+    }
   }
 
   /**

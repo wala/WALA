@@ -19,6 +19,7 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -215,8 +216,16 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
         CGNode target = callGraph.getNode(targetMethod, Everywhere.EVERYWHERE);
         if (target == null) {
           SSAInvokeInstruction s = fakeWorldClinitMethod.addInvocation(null, site);
-          target = callGraph.findOrCreateNode(targetMethod, Everywhere.EVERYWHERE);
-          processResolvedCall(callGraph.getFakeWorldClinitNode(), s.getCallSite(), target);
+          try {
+            target = callGraph.findOrCreateNode(targetMethod, Everywhere.EVERYWHERE);
+            processResolvedCall(callGraph.getFakeWorldClinitNode(), s.getCallSite(), target);
+          } catch (CancelException e) {
+            if (DEBUG) {
+              System.err.println("Could not add node for class initializer: " + targetMethod.getSignature() +
+                  " due to constraints on the maximum number of nodes in the call graph.");
+              return;
+            }
+          }
         }
       }
     }
@@ -228,7 +237,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     } catch (ClassHierarchyException e) {
       Assertions.UNREACHABLE();
     }
-
   }
 
   /**

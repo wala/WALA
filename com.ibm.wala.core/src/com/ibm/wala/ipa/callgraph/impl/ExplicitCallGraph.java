@@ -19,6 +19,7 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -64,6 +65,8 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   protected final AnalysisOptions options;
   
   private final AnalysisCache cache;
+  
+  private final long maxNumberOfNodes;
 
   /**
    * special object to track call graph edges
@@ -75,6 +78,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     this.cha = cha;
     this.options = options;
     this.cache = cache;
+    this.maxNumberOfNodes = options.getMaxNumberOfNodes();
     assert cache != null;
   }
 
@@ -87,17 +91,19 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
 
   /**
    * subclasses may wish to override!
+   * @throws CancelException 
    */
   @Override
-  protected CGNode makeFakeRootNode() {
+  protected CGNode makeFakeRootNode() throws CancelException {
     return findOrCreateNode(new FakeRootMethod(cha, options, cache), Everywhere.EVERYWHERE);
   }
   
   /**
    * subclasses may wish to override!
+   * @throws CancelException 
    */
   @Override
-  protected CGNode makeFakeWorldClinitNode() {
+  protected CGNode makeFakeWorldClinitNode() throws CancelException {
     return findOrCreateNode(new FakeWorldClinitMethod(cha, options, cache), Everywhere.EVERYWHERE);
   }
 
@@ -108,7 +114,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
    * @return NodeImpl
    */
   @Override
-  public CGNode findOrCreateNode(IMethod method, Context C) {
+  public CGNode findOrCreateNode(IMethod method, Context C) throws CancelException {
     if (Assertions.verifyAssertions) {
       if (method == null || C == null) {
         Assertions._assert(method != null, "null method");
@@ -118,11 +124,15 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     Key k = new Key(method, C);
     NodeImpl result = getNode(k);
     if (result == null) {
-      result = makeNode(method, C);
-      if (DEBUG) {
-        Trace.println("Create node for " + method + "hash code " + method.hashCode());
+      if (maxNumberOfNodes == -1 || getNumberOfNodes() <= maxNumberOfNodes) {
+        result = makeNode(method, C);
+        if (DEBUG) {
+          Trace.println("Create node for " + method + "hash code " + method.hashCode());
+        }
+        registerNode(k, result);
+      } else {
+        throw CancelException.make("Too many nodes");
       }
-      registerNode(k, result);
     }
     return result;
   }

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
+import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ssa.SSAOptions;
 
 /**
@@ -121,6 +122,16 @@ public class AnalysisOptions {
    * for that.  It is used for the Java CAst front end.
    */
   private boolean traceStringConstants = false;
+  
+  /**
+   * This numerical value indicates the maximum number of nodes that any {@link CallGraph}
+   * build with this {@link AnalysisOptions} object is allowed to have.  During {@link CallGraph}
+   * construction, once <code>maxNumberOfNodes</code> {@link CGNode} objects have been added
+   * to the {@link CallGraph}, no more {@link CGNode} objects will be added.
+   * By default, <code>maxNumberOfNodes</code> is set to <code>-1</code>, which indicates
+   * that no restrictions are in place.  See also {@link ExplicitCallGraph}.
+   */
+  private long maxNumberOfNodes = -1;
 
   // SJF: I'm not sure these factories and caches belong here.
   // TODO: figure out how to clean this up.
@@ -148,6 +159,14 @@ public class AnalysisOptions {
 
   public void setEntrypoints(Iterable<Entrypoint> entrypoints) {
     this.entrypoints = entrypoints;
+  }
+  
+  public long getMaxNumberOfNodes() {
+    return maxNumberOfNodes;
+  }
+  
+  public void setMaxNumberOfNodes(long maxNumberOfNodes) {
+    this.maxNumberOfNodes = maxNumberOfNodes;
   }
 
   /**
