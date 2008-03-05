@@ -19,6 +19,7 @@ import com.ibm.wala.cast.util.TargetLanguageSelector;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -34,6 +35,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -60,11 +62,17 @@ public class CrossLanguageCallGraph extends AstCallGraph {
   private final Map<Atom,IMethod> languageRoots = HashMapFactory.make();
 
   @SuppressWarnings("deprecation")
-  public AbstractRootMethod getLanguageRoot(Atom language) {
+  public AbstractRootMethod getLanguageRoot(Atom language){
     if (!languageRoots.containsKey(language)) {
       AbstractRootMethod languageRoot = roots.get(language, this);
 
-      CGNode languageRootNode = findOrCreateNode(languageRoot, Everywhere.EVERYWHERE);
+      CGNode languageRootNode = null;
+      try {
+        languageRootNode = findOrCreateNode(languageRoot, Everywhere.EVERYWHERE);
+      } catch (CancelException e) {
+        e.printStackTrace();
+        Assertions.UNREACHABLE();
+      }
 
       languageRootNodes.add(languageRootNode);
 
@@ -154,7 +162,7 @@ public class CrossLanguageCallGraph extends AstCallGraph {
     return languageRootNodes.iterator();
   }
 
-  protected CGNode makeFakeRootNode() {
+  protected CGNode makeFakeRootNode() throws CancelException {
     return findOrCreateNode(new CrossLanguageFakeRoot(cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
 }

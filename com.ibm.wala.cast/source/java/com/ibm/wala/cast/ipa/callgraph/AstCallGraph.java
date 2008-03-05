@@ -20,6 +20,7 @@ import com.ibm.wala.cfg.InducedCFG;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
@@ -153,7 +154,7 @@ public class AstCallGraph extends ExplicitCallGraph {
     return new AstCGNode(method, context);
   }
 
-  protected CGNode makeFakeRootNode() {
+  protected CGNode makeFakeRootNode() throws CancelException {
     return findOrCreateNode(new AstFakeRoot(FakeRootMethod.rootMethod, cha, options, getAnalysisCache()), Everywhere.EVERYWHERE);
   }
 
