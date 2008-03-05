@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -33,8 +32,7 @@ public class Simplifier {
   private final static boolean DEBUG = false;
 
   /**
-   * Eliminate quantifiers, by substituting every possible constant value for a
-   * quantified variable
+   * Eliminate quantifiers, by substituting every possible constant value for a quantified variable
    */
   public static ITheory eliminateQuantifiers(ITheory t, Collection<? extends IFormula> constraints) {
     if (t == null) {
@@ -48,32 +46,30 @@ public class Simplifier {
   }
 
   /**
-   * Eliminate quantifiers, by substituting every possible constant value for a
-   * quantified variable
+   * Eliminate quantifiers, by substituting every possible constant value for a quantified variable
    */
   private static Collection<? extends IFormula> eliminateQuantifiers(IFormula s) {
     Assertions.UNREACHABLE("implement me");
     return null;
-//    if (s.getKind().equals(IFormula.Kind.QUANTIFIED)) {
-//      Collection<IFormula> result = HashSetFactory.make();
-//      QuantifiedFormula f = (QuantifiedFormula) s;
-//      assert f.getBoundVar() instanceof ConstrainedIntVariable;
-//      ConstrainedIntVariable v = (ConstrainedIntVariable) f.getBoundVar();
-//      IntPair range = v.getRange();
-//      assert range.getX() >= 0;
-//      assert range.getY() >= range.getX();
-//      for (int i = range.getX(); i <= range.getY(); i++) {
-//        result.add(substitute(f.getFormula(), v, IntConstant.make(i)));
-//      }
-//      return result;
-//    } else {
-//      return Collections.singleton(s);
-//    }
+    // if (s.getKind().equals(IFormula.Kind.QUANTIFIED)) {
+    // Collection<IFormula> result = HashSetFactory.make();
+    // QuantifiedFormula f = (QuantifiedFormula) s;
+    // assert f.getBoundVar() instanceof ConstrainedIntVariable;
+    // ConstrainedIntVariable v = (ConstrainedIntVariable) f.getBoundVar();
+    // IntPair range = v.getRange();
+    // assert range.getX() >= 0;
+    // assert range.getY() >= range.getX();
+    // for (int i = range.getX(); i <= range.getY(); i++) {
+    // result.add(substitute(f.getFormula(), v, IntConstant.make(i)));
+    // }
+    // return result;
+    // } else {
+    // return Collections.singleton(s);
+    // }
   }
 
   /**
-   * Eliminate quantifiers, by substituting every possible constant value for a
-   * quantified variable
+   * Eliminate quantifiers, by substituting every possible constant value for a quantified variable
    */
   public static Collection<? extends IFormula> eliminateQuantifiers(Collection<? extends IFormula> s) {
     if (s == null) {
@@ -87,36 +83,35 @@ public class Simplifier {
   }
 
   /**
-   * this is uglified a little to avoid tail recursion, which leads to stack
-   * overflow.
+   * this is uglified a little to avoid tail recursion, which leads to stack overflow.
    * 
    * This is inefficient.
    */
   public static Collection<IFormula> simplify(Collection<IFormula> s, Collection<? extends IFormula> theory,
       ISemiDecisionProcedure dec) {
     // the following is ad hoc and bogus.
-//    boolean changed = true;
-//    while (changed) {
-//      changed = false;
-//      Collection<IFormula> alreadyUsed = HashSetFactory.make();
-//      Pair<ITerm, ITerm> substitution = getNextEqualitySubstitution(s, theory, alreadyUsed);
-//      while (substitution != null) {
-//        Collection<IFormula> temp = HashSetFactory.make();
-//        for (IFormula f : s) {
-//          if (!defines(f, substitution.fst)) {
-//            IFormula f2 = substitute(f, substitution.fst, substitution.snd);
-//            temp.add(f2);
-//            if (!f.equals(f2)) {
-//              changed = true;
-//            }
-//          } else {
-//            temp.add(f);
-//          }
-//        }
-//        s = temp;
-//        substitution = getNextEqualitySubstitution(s, theory, alreadyUsed);
-//      }
-//    }
+    // boolean changed = true;
+    // while (changed) {
+    // changed = false;
+    // Collection<IFormula> alreadyUsed = HashSetFactory.make();
+    // Pair<ITerm, ITerm> substitution = getNextEqualitySubstitution(s, theory, alreadyUsed);
+    // while (substitution != null) {
+    // Collection<IFormula> temp = HashSetFactory.make();
+    // for (IFormula f : s) {
+    // if (!defines(f, substitution.fst)) {
+    // IFormula f2 = substitute(f, substitution.fst, substitution.snd);
+    // temp.add(f2);
+    // if (!f.equals(f2)) {
+    // changed = true;
+    // }
+    // } else {
+    // temp.add(f);
+    // }
+    // }
+    // s = temp;
+    // substitution = getNextEqualitySubstitution(s, theory, alreadyUsed);
+    // }
+    // }
     return propositionalSimplify(s, theory, dec);
   }
 
@@ -145,11 +140,11 @@ public class Simplifier {
     }
     return result;
   }
+
   /**
    * Simplify the set s based on simple propositional logic.
    */
-  public static IFormula propositionalSimplify(IFormula f, Collection<? extends IFormula> t,
-      ISemiDecisionProcedure dec) {
+  public static IFormula propositionalSimplify(IFormula f, Collection<? extends IFormula> t, ISemiDecisionProcedure dec) {
     Collection<IFormula> result = propositionalSimplify(Collections.singleton(f), t, dec);
     return result.iterator().next();
   }
@@ -163,11 +158,11 @@ public class Simplifier {
     // sort clauses in f, to ensure determinism
     List<IMaxTerm> sortedMaxTerms = new ArrayList<IMaxTerm>(f.getMaxTerms());
     Collections.sort(sortedMaxTerms, new Comparator<IMaxTerm>() {
-    
+
       public int compare(IMaxTerm o1, IMaxTerm o2) {
         return o1.toString().compareTo(o2.toString());
       }
-    
+
     });
     // for each clause in f ....
     for (IMaxTerm d : sortedMaxTerms) {
@@ -210,7 +205,7 @@ public class Simplifier {
     if (result.size() == 1) {
       IFormula f = result.iterator().next();
       assert f instanceof IMaxTerm;
-      return (IMaxTerm)f;
+      return (IMaxTerm) f;
     } else {
       return Disjunction.make(result);
     }
@@ -287,112 +282,112 @@ public class Simplifier {
     }
   }
 
-//  static AbstractNumberedVariable makeFreshIntVariable(IFormula f, IFormula g) {
-//    int max = 0;
-//    for (AbstractVariable v : f.getFreeVariables()) {
-//      max = Math.max(max, v.getNumber());
-//    }
-//    for (AbstractVariable v : g.getFreeVariables()) {
-//      max = Math.max(max, v.getNumber());
-//    }
-//    return IntVariable.make(max + 1);
-//  }
+  // static AbstractNumberedVariable makeFreshIntVariable(IFormula f, IFormula g) {
+  // int max = 0;
+  // for (AbstractVariable v : f.getFreeVariables()) {
+  // max = Math.max(max, v.getNumber());
+  // }
+  // for (AbstractVariable v : g.getFreeVariables()) {
+  // max = Math.max(max, v.getNumber());
+  // }
+  // return IntVariable.make(max + 1);
+  // }
 
-//  /**
-//   * Is f of the form t = rhs?
-//   */
-//  private static boolean defines(IFormula f, ITerm t) {
-//    if (f.getKind().equals(IFormula.Kind.RELATION)) {
-//      RelationFormula r = (RelationFormula) f;
-//      if (r.getRelation().equals(BinaryRelation.EQUALS)) {
-//        return r.getTerms().get(0).equals(t);
-//      }
-//    }
-//    return false;
-//  }
-//
-//  /**
-//   * does the structure of some formula f suggest an immediate substitution to
-//   * simplify the system, based on theory of equality?
-//   * 
-//   * @return a pair (p1, p2) meaning "substitute p2 for p1"
-//   */
-//  private static Pair<ITerm, ITerm> getNextEqualitySubstitution(Collection<IFormula> s, Collection<? extends IFormula> theory,
-//      Collection<IFormula> alreadyUsed) {
-//    Collection<IFormula> candidates = HashSetFactory.make();
-//    candidates.addAll(s);
-//    candidates.addAll(theory);
-//    for (IFormula f : candidates) {
-//      if (!alreadyUsed.contains(f)) {
-//        Pair<ITerm, ITerm> substitution = equalitySuggestsSubstitution(f);
-//        if (substitution != null) {
-//          alreadyUsed.add(f);
-//          return substitution;
-//        }
-//      }
-//    }
-//    return null;
-//  }
+  // /**
+  // * Is f of the form t = rhs?
+  // */
+  // private static boolean defines(IFormula f, ITerm t) {
+  // if (f.getKind().equals(IFormula.Kind.RELATION)) {
+  // RelationFormula r = (RelationFormula) f;
+  // if (r.getRelation().equals(BinaryRelation.EQUALS)) {
+  // return r.getTerms().get(0).equals(t);
+  // }
+  // }
+  // return false;
+  // }
+  //
+  // /**
+  // * does the structure of some formula f suggest an immediate substitution to
+  // * simplify the system, based on theory of equality?
+  // *
+  // * @return a pair (p1, p2) meaning "substitute p2 for p1"
+  // */
+  // private static Pair<ITerm, ITerm> getNextEqualitySubstitution(Collection<IFormula> s, Collection<? extends
+  // IFormula> theory,
+  // Collection<IFormula> alreadyUsed) {
+  // Collection<IFormula> candidates = HashSetFactory.make();
+  // candidates.addAll(s);
+  // candidates.addAll(theory);
+  // for (IFormula f : candidates) {
+  // if (!alreadyUsed.contains(f)) {
+  // Pair<ITerm, ITerm> substitution = equalitySuggestsSubstitution(f);
+  // if (substitution != null) {
+  // alreadyUsed.add(f);
+  // return substitution;
+  // }
+  // }
+  // }
+  // return null;
+  // }
 
-//  /**
-//   * does the structure of formula f suggest an immediate substitution to
-//   * simplify the system, based on theory of equality?
-//   * 
-//   * @return a pair (p1, p2) meaning "substitute p2 for p1"
-//   */
-//  private static Pair<ITerm, ITerm> equalitySuggestsSubstitution(IFormula f) {
-//    switch (f.getKind()) {
-//    case RELATION:
-//      // it's not clear at this level that a constant or variable is "simpler" than
-//      // e.g. a function term.  so, don't do anything.
-//      return null;
-////      RelationFormula r = (RelationFormula) f;
-////      if (r.getRelation().equals(BinaryRelation.EQUALS)) {
-////        ITerm lhs = r.getTerms().get(0);
-////        ITerm rhs = r.getTerms().get(1);
-////        if (rhs.getKind().equals(ITerm.Kind.CONSTANT) || rhs.getKind().equals(ITerm.Kind.VARIABLE)) {
-////          return Pair.make(lhs, rhs);
-////        } else {
-////          return null;
-////        }
-////      } else {
-////        return null;
-////      }
-//    case QUANTIFIED:
-//      QuantifiedFormula q = (QuantifiedFormula) f;
-//      if (q.getQuantifier().equals(Quantifier.FORALL)) {
-//        AbstractVariable bound = q.getBoundVar();
-//        Wildcard w = freshWildcard(q);
-//        IFormula g = substitute(q.getFormula(), bound, w);
-//        return equalitySuggestsSubstitution(g);
-//      } else {
-//        return null;
-//      }
-//    case BINARY:
-//    case CONSTANT:
-//    case NEGATION:
-//    default:
-//      // TODO
-//      return null;
-//    }
-//  }
+  // /**
+  // * does the structure of formula f suggest an immediate substitution to
+  // * simplify the system, based on theory of equality?
+  // *
+  // * @return a pair (p1, p2) meaning "substitute p2 for p1"
+  // */
+  // private static Pair<ITerm, ITerm> equalitySuggestsSubstitution(IFormula f) {
+  // switch (f.getKind()) {
+  // case RELATION:
+  // // it's not clear at this level that a constant or variable is "simpler" than
+  // // e.g. a function term. so, don't do anything.
+  // return null;
+  // // RelationFormula r = (RelationFormula) f;
+  // // if (r.getRelation().equals(BinaryRelation.EQUALS)) {
+  // // ITerm lhs = r.getTerms().get(0);
+  // // ITerm rhs = r.getTerms().get(1);
+  // // if (rhs.getKind().equals(ITerm.Kind.CONSTANT) || rhs.getKind().equals(ITerm.Kind.VARIABLE)) {
+  // // return Pair.make(lhs, rhs);
+  // // } else {
+  // // return null;
+  // // }
+  // // } else {
+  // // return null;
+  // // }
+  // case QUANTIFIED:
+  // QuantifiedFormula q = (QuantifiedFormula) f;
+  // if (q.getQuantifier().equals(Quantifier.FORALL)) {
+  // AbstractVariable bound = q.getBoundVar();
+  // Wildcard w = freshWildcard(q);
+  // IFormula g = substitute(q.getFormula(), bound, w);
+  // return equalitySuggestsSubstitution(g);
+  // } else {
+  // return null;
+  // }
+  // case BINARY:
+  // case CONSTANT:
+  // case NEGATION:
+  // default:
+  // // TODO
+  // return null;
+  // }
+  // }
 
-//  private static Wildcard freshWildcard(QuantifiedFormula q) {
-//    int max = 0;
-//    for (ITerm t : q.getAllTerms()) {
-//      if (t instanceof Wildcard) {
-//        Wildcard w = (Wildcard) t;
-//        max = Math.max(max, w.getNumber());
-//      }
-//    }
-//    return Wildcard.make(max + 1);
-//  }
+  // private static Wildcard freshWildcard(QuantifiedFormula q) {
+  // int max = 0;
+  // for (ITerm t : q.getAllTerms()) {
+  // if (t instanceof Wildcard) {
+  // Wildcard w = (Wildcard) t;
+  // max = Math.max(max, w.getNumber());
+  // }
+  // }
+  // return Wildcard.make(max + 1);
+  // }
 
   /**
    * in formula f, substitute the term t2 for all free occurrences of t1
    * 
-   * @throws IllegalArgumentException
-   *             if formula is null
+   * @throws IllegalArgumentException if formula is null
    */
   public static IFormula substitute(IFormula formula, ITerm t1, ITerm t2) {
     if (formula == null) {
@@ -401,25 +396,50 @@ public class Simplifier {
     switch (formula.getKind()) {
     case BINARY:
       AbstractBinaryFormula b = (AbstractBinaryFormula) formula;
-      return BinaryFormula.make(b.getConnective(), substitute(b.getF1(), t1, t2), substitute(b.getF2(), t1, t2));
+      // TODO separate out cases for CNFFormula and Disjunction?
+      IFormula F1 = b.getF1();
+      IFormula subF1 = substitute(F1, t1, t2);
+      IFormula F2 = b.getF2();
+      IFormula subF2 = substitute(F2, t1, t2);
+      if (F1 != subF1 || F2 != subF2) {
+        return BinaryFormula.make(b.getConnective(), subF1, subF2);
+      } else {
+        return formula;
+      }
     case NEGATION:
       NotFormula n = (NotFormula) formula;
-      return NotFormula.make(substitute(n.getFormula(), t1, t2));
+      IFormula F = n.getFormula();
+      IFormula subF = substitute(F, t1, t2);
+      return F != subF ? NotFormula.make(subF) : formula;
     case QUANTIFIED:
       QuantifiedFormula q = (QuantifiedFormula) formula;
       if (q.getBoundVar().equals(t1)) {
         return q;
       } else {
-        return QuantifiedFormula.make(q.getQuantifier(), q.getBoundVar(), substitute(q.getFormula(), t1, t2));
+        IFormula body = q.getFormula();
+        IFormula subBody = substitute(body, t1, t2);
+        if (body != subBody) {
+          return QuantifiedFormula.make(q.getQuantifier(), q.getBoundVar(), subBody);
+        } else {
+          return formula;
+        }
       }
     case RELATION:
       RelationFormula r = (RelationFormula) formula;
-      List<ITerm> terms = new LinkedList<ITerm>();
-      for (ITerm t : r.getTerms()) {
+      List<ITerm> rTerms = r.getTerms();
+      List<ITerm> terms = new ArrayList<ITerm>(rTerms.size());
+      boolean someChange = false;
+      for (ITerm t : rTerms) {
         Map<Wildcard, ITerm> binding = HashMapFactory.make();
-        terms.add(substitute(t, t1, t2, binding));
+        ITerm subTerm = substituteInTerm(t, t1, t2, binding);
+        terms.add(subTerm);
+        someChange = someChange || t != subTerm;
       }
-      return RelationFormula.make(r.getRelation(), terms);
+      if (someChange) {
+        return RelationFormula.make(r.getRelation(), terms);
+      } else {
+        return formula;
+      }
     case CONSTANT:
       return formula;
     default:
@@ -431,7 +451,7 @@ public class Simplifier {
   /**
    * in term t, substitute t2 for free occurrences of t1
    */
-  public static ITerm substitute(ITerm t, ITerm t1, ITerm t2, Map<Wildcard, ITerm> binding) {
+  public static ITerm substituteInTerm(ITerm t, ITerm t1, ITerm t2, Map<Wildcard, ITerm> binding) {
     assert t != null;
     assert t1 != null;
     assert t2 != null;
@@ -445,11 +465,19 @@ public class Simplifier {
       return t;
     case FUNCTION:
       FunctionTerm f = (FunctionTerm) t;
-      List<ITerm> terms = new LinkedList<ITerm>();
-      for (ITerm p : f.getParameters()) {
-        terms.add(substitute(p, t1, t2, binding));
+      List<ITerm> parameters = f.getParameters();
+      List<ITerm> terms = new ArrayList<ITerm>(parameters.size());
+      boolean someChange = false;
+      for (ITerm p : parameters) {
+        ITerm subTerm = substituteInTerm(p, t1, t2, binding);
+        terms.add(subTerm);
+        someChange = someChange || p != subTerm;
       }
-      return FunctionTerm.make(f.getFunction(), terms);
+      if (someChange) {
+        return FunctionTerm.make(f.getFunction(), terms);
+      } else {
+        return t;
+      }
     case VARIABLE:
       if (t1.equals(t)) {
         return t2;
@@ -481,10 +509,17 @@ public class Simplifier {
     case FUNCTION:
       FunctionTerm ft = (FunctionTerm) t;
       List<ITerm> terms = new ArrayList<ITerm>();
+      boolean someChange = false;
       for (ITerm p : ft.getParameters()) {
-        terms.add(bindingOf(p, binding));
+        ITerm bindingOfP = bindingOf(p, binding);
+        terms.add(bindingOfP);
+        someChange = someChange || p != bindingOfP;
       }
-      return FunctionTerm.make(ft.getFunction(), terms);
+      if (someChange) {
+        return FunctionTerm.make(ft.getFunction(), terms);
+      } else {
+        return t;
+      }
     default:
       Assertions.UNREACHABLE(t);
       return null;
@@ -492,9 +527,8 @@ public class Simplifier {
   }
 
   /**
-   * Does the term t1 match the pattern t2? Note that this deals with wildcards.
-   * Records bindings from Wildcards to Terms in the binding map ... modified as
-   * a side effect.
+   * Does the term t1 match the pattern t2? Note that this deals with wildcards. Records bindings from Wildcards to
+   * Terms in the binding map ... modified as a side effect.
    */
   private static boolean termsMatch(ITerm t1, ITerm t2, Map<Wildcard, ITerm> binding) {
     if (t1.equals(t2)) {
@@ -552,8 +586,7 @@ public class Simplifier {
    * Attempt to distribute the NOT from a NotFormula
    * 
    * @return the original formula if the distribution is unsuccessful
-   * @throws IllegalArgumentException
-   *             if f == null
+   * @throws IllegalArgumentException if f == null
    */
   public static IFormula distributeNot(NotFormula f) throws IllegalArgumentException {
     if (f == null) {
@@ -569,7 +602,7 @@ public class Simplifier {
         return RelationFormula.make(negate, r.getTerms());
       }
     } else if (f1 instanceof AbstractBinaryFormula) {
-      AbstractBinaryFormula bf = (AbstractBinaryFormula)f1;
+      AbstractBinaryFormula bf = (AbstractBinaryFormula) f1;
       if (bf.getConnective().equals(BinaryConnective.AND)) {
         // DeMorgan: not(a and b) = not(a) or not(b)
         IFormula notA = NotFormula.make(bf.getF1());
@@ -592,7 +625,7 @@ public class Simplifier {
           notB = distributeNot((NotFormula) notB);
         }
         return BinaryFormula.and(notA, notB);
-        
+
       }
     }
     return f;
