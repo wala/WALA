@@ -158,7 +158,7 @@ private final static Descriptor plugInInitDesc = Descriptor.findOrCreateUTF8(plu
     }
   }
 
-  private boolean isConcreteStrutsPlugIn(IClass klass) {
+  public static boolean isConcreteStrutsPlugIn(IClass klass) {
     TypeReference plugInType = TypeReference.findOrCreate(ClassLoaderReference.Application, plugInName);
     IClass plugInClass = klass.getClassHierarchy().lookupClass(plugInType);
     if (klass.isAbstract()) {
