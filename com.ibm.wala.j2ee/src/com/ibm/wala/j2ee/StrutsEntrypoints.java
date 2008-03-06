@@ -166,7 +166,7 @@ private final static Descriptor plugInInitDesc = Descriptor.findOrCreateUTF8("(L
     }
   }
 
-  private boolean isConcreteRequestProcessor(IClass klass) {
+  public static boolean isConcreteRequestProcessor(IClass klass) {
     TypeReference requestProcessorType = TypeReference.findOrCreate(ClassLoaderReference.Application, requestProcessorName);
     IClass requestProcessorClass = klass.getClassHierarchy().lookupClass(requestProcessorType);
     if (requestProcessorClass == null) {
