@@ -12,6 +12,8 @@ package com.ibm.wala.util.collections;
 
 import java.util.NoSuchElementException;
 
+import com.ibm.wala.demandpa.genericutil.Util;
+
 /**
  * Simple Heap data structure.
  * 
@@ -154,5 +156,10 @@ public abstract class Heap<T> {
         index = hpIndex;
       }
     }
+  }
+  
+  @Override
+  public String toString() {
+    return Util.objArrayToString(backingStore);
   }
 }

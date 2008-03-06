@@ -131,7 +131,7 @@ public class TabulationSolver<T, P> {
    * 
    */
   final protected Map<P, LocalSummaryEdges> summaryEdges = HashMapFactory.make();
-  
+
   /**
    * the set of all {@link PathEdge}s that were used as seeds during the tabulation.
    */
@@ -199,7 +199,7 @@ public class TabulationSolver<T, P> {
   }
 
   /**
-   * Restart tabulation from a particular path edge.  Use with care.
+   * Restart tabulation from a particular path edge. Use with care.
    */
   public void addSeed(PathEdge<T> seed) {
     seeds.add(seed);
@@ -798,6 +798,9 @@ public class TabulationSolver<T, P> {
 
   protected void addToWorkList(T s_p, int i, T n, int j) {
     worklist.insert(PathEdge.createPathEdge(s_p, i, n, j));
+    if (DEBUG_LEVEL >= 2) {
+      System.err.println("WORKLIST: " + worklist);
+    }
   }
 
   protected LocalPathEdges findOrCreateLocalPathEdges(T s_p) {
@@ -967,6 +970,7 @@ public class TabulationSolver<T, P> {
       }
       return false;
     }
+
   }
 
   /**
