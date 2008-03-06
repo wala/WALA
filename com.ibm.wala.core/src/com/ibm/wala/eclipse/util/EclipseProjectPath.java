@@ -65,12 +65,12 @@ import com.ibm.wala.util.strings.Atom;
 public class EclipseProjectPath {
 
   /**
-   * TODO: do we really need this? Why shouldn't source files come from a
-   * "normal" class loader like any other resource?
+   * TODO: do we really need this? Why shouldn't source files come from a "normal" class loader like any other resource?
    */
   public static final Atom SOURCE = Atom.findOrCreateUnicodeAtom("Source");
 
-  public static final ClassLoaderReference SOURCE_REF = new ClassLoaderReference(EclipseProjectPath.SOURCE, ClassLoaderReference.Java);
+  public static final ClassLoaderReference SOURCE_REF = new ClassLoaderReference(EclipseProjectPath.SOURCE,
+      ClassLoaderReference.Java);
 
   public enum Loader {
     APPLICATION(ClassLoaderReference.Application),
@@ -121,11 +121,11 @@ public class EclipseProjectPath {
   }
 
   /**
-   * Figure out what a classpath entry means and add it to the appropriate set
-   * of modules
+   * Figure out what a classpath entry means and add it to the appropriate set of modules
    */
   @SuppressWarnings("restriction")
-  private void resolveClasspathEntry(IClasspathEntry entry, Loader loader, String fileExtension) throws JavaModelException, IOException {
+  private void resolveClasspathEntry(IClasspathEntry entry, Loader loader, String fileExtension) throws JavaModelException,
+      IOException {
     IClasspathEntry e = JavaCore.getResolvedClasspathEntry(entry);
     if (alreadyResolved.contains(e)) {
       return;
@@ -136,12 +136,13 @@ public class EclipseProjectPath {
     if (e.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
       IClasspathContainer cont = JavaCore.getClasspathContainer(entry.getPath(), project);
       IClasspathEntry[] entries = cont.getClasspathEntries();
-      resolveClasspathEntries(entries, cont.getKind() == IClasspathContainer.K_APPLICATION ? loader : Loader.PRIMORDIAL, fileExtension);
+      resolveClasspathEntries(entries, cont.getKind() == IClasspathContainer.K_APPLICATION ? loader : Loader.PRIMORDIAL,
+          fileExtension);
     } else if (e.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
       File file = makeAbsolute(e.getPath()).toFile();
       JarFile j;
       try {
-         j = new JarFile(file);
+        j = new JarFile(file);
       } catch (ZipException z) {
         // a corrupted file. ignore it.
         return;
@@ -185,16 +186,16 @@ public class EclipseProjectPath {
   }
 
   /**
-   * @return true if the given jar file should be handled by the Primordial
-   * loader. If false, other provisions should be made to add the jar file
-   * to the appropriate component of the AnalysisScope. Subclasses can
-   * override this method.
+   * @return true if the given jar file should be handled by the Primordial loader. If false, other provisions should be
+   *         made to add the jar file to the appropriate component of the AnalysisScope. Subclasses can override this
+   *         method.
    */
   protected boolean isPrimordialJarFile(JarFile j) {
     return true;
   }
 
-  protected void resolveClasspathEntries(IClasspathEntry[] entries, Loader loader, String fileExtension) throws JavaModelException, IOException {
+  protected void resolveClasspathEntries(IClasspathEntry[] entries, Loader loader, String fileExtension) throws JavaModelException,
+      IOException {
     for (int i = 0; i < entries.length; i++) {
       resolveClasspathEntry(entries[i], loader, fileExtension);
     }
@@ -234,7 +235,12 @@ public class EclipseProjectPath {
   public AnalysisScope toAnalysisScope(ClassLoader classLoader, File exclusionsFile) {
     try {
       Set<Module> s = MapUtil.findOrCreateSet(binaryModules, Loader.APPLICATION);
-      s.add(new BinaryDirectoryTreeModule(makeAbsolute(project.getOutputLocation()).toFile()));
+      File dir = makeAbsolute(project.getOutputLocation()).toFile();
+      if (!dir.isDirectory()) {
+        System.err.println("PANIC: project output location is not a directory: " + dir);
+      } else {
+        s.add(new BinaryDirectoryTreeModule(dir));
+      }
 
       AnalysisScope scope = AnalysisScopeReader.read(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile, classLoader);
 
@@ -251,9 +257,9 @@ public class EclipseProjectPath {
       e.printStackTrace();
       Assertions.UNREACHABLE();
       return null;
-    } 
+    }
   }
-  
+
   public AnalysisScope toAnalysisScope(final File exclusionsFile) {
     return toAnalysisScope(getClass().getClassLoader(), exclusionsFile);
   }
