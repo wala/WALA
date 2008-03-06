@@ -57,23 +57,21 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
 
   private final static Descriptor httpExecuteDesc = Descriptor.findOrCreateUTF8(httpExecuteDescString);
 
-  private final static String plugInInitDescString = "(Lorg/apache/struts/action/ActionServlet;Lorg/apache/struts/config/ModuleConfig;)V";
-  
-  private final static String plugInDestroyDescString = "()V";
-
   private final static Atom plugInInitName = Atom.findOrCreateUnicodeAtom("init");
 
   private final static Atom plugInDestroyName = Atom.findOrCreateUnicodeAtom("destroy");
   
-private final static Descriptor plugInInitDesc = Descriptor.findOrCreateUTF8(plugInInitDescString);
+private final static Descriptor plugInInitDesc = Descriptor.findOrCreateUTF8("(Lorg/apache/struts/action/ActionServlet;Lorg/apache/struts/config/ModuleConfig;)V");
   
-  private final static Descriptor plugInDestroyDesc = Descriptor.findOrCreateUTF8(plugInDestroyDescString);
+  private final static Descriptor plugInDestroyDesc = Descriptor.findOrCreateUTF8("()V");
   
   private final static TypeName actionName = TypeName.string2TypeName("Lorg/apache/struts/action/Action");
 
   private final static TypeName actionFormName = TypeName.string2TypeName("Lorg/apache/struts/action/ActionForm");
   
   private final static TypeName plugInName = TypeName.string2TypeName("Lorg/apache/struts/action/PlugIn");
+  
+  private final static TypeName requestProcessorName = TypeName.string2TypeName("Lorg/apache/struts/action/RequestProcessor");
 
   private Map<MethodReference, Entrypoint> entrypoints = HashMapFactory.make();
 
@@ -87,7 +85,10 @@ private final static Descriptor plugInInitDesc = Descriptor.findOrCreateUTF8(plu
    */
   private Set<IClass> plugins = HashSetFactory.make();
   
-  
+  /**
+   * Set of request processor implementations found.
+   */
+  private Set<IClass> requestProcessors = HashSetFactory.make();
   /**
    * This map controls selection of concrete types for parameters to some servlet methods.
    */
@@ -112,12 +113,6 @@ private final static Descriptor plugInInitDesc = Descriptor.findOrCreateUTF8(plu
       return;
     }
 
-    TypeReference plugInType = TypeReference.findOrCreate(scope.getApplicationLoader(), plugInName);
-    IClass plugInClass = cha.lookupClass(plugInType);    
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(plugInClass != null);
-    }
-    
     ClassLoaderReference appLoaderRef = scope.getApplicationLoader();
     IClassLoader appLoader = cha.getLoader(appLoaderRef);
 
@@ -144,18 +139,49 @@ private final static Descriptor plugInInitDesc = Descriptor.findOrCreateUTF8(plu
 
         IMethod im = cha.resolveMethod(M);
         if (im != null) {
-          entrypoints.put(M, new StrutsPlugInEntrypoint(klass, im, cha));
+          entrypoints.put(M, new StrutsPlugInEntrypoint(im, cha));
         }
         
         M = MethodReference.findOrCreate(type, plugInDestroyName, plugInDestroyDesc);
         
         im = cha.resolveMethod(M);
         if (im != null) {
-          entrypoints.put(M, new StrutsPlugInEntrypoint(klass, im, cha));
+          entrypoints.put(M, new StrutsPlugInEntrypoint(im, cha));
+        }                
+      }
+      if (isConcreteRequestProcessor(klass)) {
+        requestProcessors.add(klass);
+        TypeReference requestProcessorType = TypeReference.findOrCreate(ClassLoaderReference.Application, requestProcessorName);
+        IClass requestProcessorClass = klass.getClassHierarchy().lookupClass(requestProcessorType);
+        for (IMethod m : klass.getDeclaredMethods()) {
+          // if the method overrides a method in RequestProcessor, make it an entrypoint
+          MethodReference mref = m.getReference();
+          if (cha.getPossibleTargets(requestProcessorClass, mref).contains(m)) {
+            // bingo
+            // TODO exclude <init>()?
+            entrypoints.put(mref, new StrutsRequestProcessorEntrypoint(klass, m, cha));
+          }
         }
-                
       }
     }
+  }
+
+  private boolean isConcreteRequestProcessor(IClass klass) {
+    TypeReference requestProcessorType = TypeReference.findOrCreate(ClassLoaderReference.Application, requestProcessorName);
+    IClass requestProcessorClass = klass.getClassHierarchy().lookupClass(requestProcessorType);
+    if (requestProcessorClass == null) {
+      return false;
+    }
+    if (klass.isAbstract()) {
+      return false;
+    }
+    if (klass.getReference().equals(requestProcessorType)) {
+      return false;
+    }    
+    if (klass.getClassHierarchy().isAssignableFrom(requestProcessorClass, klass)) {
+      return true;
+    }    
+    return false;
   }
 
   public static boolean isConcreteStrutsPlugIn(IClass klass) {
@@ -247,6 +273,17 @@ private final static Descriptor plugInInitDesc = Descriptor.findOrCreateUTF8(plu
     } else {
       result.append("   none");
     }
+    result.append("\n");
+    result.append("RequestProcessors:");
+    Iterator<IClass> it2 = requestProcessors.iterator();
+    if (it2.hasNext()) {
+      while (it2.hasNext()) {
+        result.append("\n   ");
+        result.append(it2.next());
+      }
+    } else {
+      result.append("   none");
+    }
     return result.toString();
   }
 
@@ -300,15 +337,43 @@ private final static Descriptor plugInInitDesc = Descriptor.findOrCreateUTF8(plu
     }
   }
   
+  private static class StrutsRequestProcessorEntrypoint extends DefaultEntrypoint {
+
+    private final TypeReference receiver;
+
+    public StrutsRequestProcessorEntrypoint(IClass concreteType, IMethod method, IClassHierarchy cha) {
+      super(method, cha);
+      receiver = concreteType.getReference();
+    }
+    
+    @Override
+    public TypeReference[] getParameterTypes(int i) {
+      if (i == 0) {
+        return new TypeReference[] { receiver };
+      } else {
+        TypeReference[] tarray = super.getParameterTypes(i);
+        if (Assertions.verifyAssertions) {
+          Assertions._assert(tarray.length == 1);
+        }
+        TypeReference T = tarray[0];
+        TypeName n = T.getName();
+        TypeReference Tprime = concreteParameterMap.get(n);
+        if (Tprime != null) {
+          T = Tprime;
+        }
+        return new TypeReference[] { T };
+      }
+    }
+    
+  }
   /**
    * An entrypoint which assumes all ServletRequest and ServletResponses are of the HTTP flavor.
+   * TODO: get rid of this and just use {@link DefaultEntrypoint}? --MS
    */
   private static class StrutsPlugInEntrypoint extends DefaultEntrypoint {
-//    private final TypeReference receiver;
-//
-    public StrutsPlugInEntrypoint(IClass concreteType, IMethod method, IClassHierarchy cha) {
+
+    public StrutsPlugInEntrypoint(IMethod method, IClassHierarchy cha) {
       super(method, cha);
-//      receiver = concreteType.getReference();
     }
   }
 }
