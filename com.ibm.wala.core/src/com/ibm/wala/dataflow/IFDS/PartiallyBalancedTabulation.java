@@ -53,7 +53,7 @@ public class PartiallyBalancedTabulation {
             // balanced parentheses, we can use these as new seeds.
             for (Iterator<? extends T> it2 = supergraph.getSuccNodes(exit); it2.hasNext();) {
               T retSite = it2.next();
-              IFlowFunction f = problem.getReturnFlowFunction(exit, retSite);
+              IFlowFunction f = problem.getFunctionMap().getUnbalancedReturnFlowFunction(exit, retSite);
               // for each fact that can be reached by the return flow ...
               if (f instanceof IUnaryFlowFunction) {
                 IUnaryFlowFunction uf = (IUnaryFlowFunction) f;

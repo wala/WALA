@@ -17,17 +17,9 @@ package com.ibm.wala.dataflow.IFDS;
  *
  */
 public interface PartiallyBalancedTabulationProblem<T,P> extends TabulationProblem<T,P> {
-  /**
-   * This version should work when the "call" instruction was never reached normally.
-   * This applies only when using partially balanced parentheses.  
-   * 
-   * @param src
-   * @param dest
-   * @return the flow function for a "return" edge in the supergraph from
-   *         src->dest
-   */
-  public IFlowFunction getReturnFlowFunction(T src, T dest);
-  
+
+  public IPartiallyBalancedFlowFunctions<T> getFunctionMap();
+
   /**
    * If "node" is reached by a partially balanced parenthesis, what is the entry node we should use as the root of
    * the {@link PathEdge} to node?

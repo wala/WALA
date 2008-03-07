@@ -14,9 +14,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.dataflow.IFDS.BackwardsSupergraph;
-import com.ibm.wala.dataflow.IFDS.IFlowFunction;
-import com.ibm.wala.dataflow.IFDS.IFlowFunctionMap;
 import com.ibm.wala.dataflow.IFDS.IMergeFunction;
+import com.ibm.wala.dataflow.IFDS.IPartiallyBalancedFlowFunctions;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.dataflow.IFDS.PartiallyBalancedTabulation;
 import com.ibm.wala.dataflow.IFDS.PartiallyBalancedTabulationProblem;
@@ -273,7 +272,7 @@ public class Slicer {
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getFunctionMap()
      */
-    public IFlowFunctionMap<Statement> getFunctionMap() {
+    public IPartiallyBalancedFlowFunctions<Statement> getFunctionMap() {
       return f;
     }
 
@@ -313,9 +312,6 @@ public class Slicer {
       return backward ? new MethodExitStatement(node.getNode()) : new MethodEntryStatement(node.getNode());
     }
 
-    public IFlowFunction getReturnFlowFunction(Statement src, Statement dest) {
-      return f.getReturnFlowFunction(src, dest);
-    }
   }
 
 }

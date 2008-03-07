@@ -16,7 +16,6 @@ import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.intset.IntSet;
@@ -95,8 +94,8 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
    */
   public Iterator<T> getCalledNodes(T ret) {
     if (DEBUG_LEVEL > 1) {
-      Trace.println(getClass() + " getCalledNodes " + ret);
-      Trace.printCollection("called nodes ", Iterator2Collection.toCollection(new FilterIterator<Object>(getSuccNodes(ret),
+      System.err.println(getClass() + " getCalledNodes " + ret);
+      System.err.println("called nodes: " + Iterator2Collection.toCollection(new FilterIterator<Object>(getSuccNodes(ret),
           exitFilter)));
     }
     return new FilterIterator<T>(getSuccNodes(ret), exitFilter);

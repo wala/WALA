@@ -11,7 +11,7 @@
 package com.ibm.wala.ipa.slicer;
 
 import com.ibm.wala.dataflow.IFDS.IFlowFunction;
-import com.ibm.wala.dataflow.IFDS.IFlowFunctionMap;
+import com.ibm.wala.dataflow.IFDS.IPartiallyBalancedFlowFunctions;
 import com.ibm.wala.dataflow.IFDS.IUnaryFlowFunction;
 import com.ibm.wala.dataflow.IFDS.IdentityFlowFunction;
 import com.ibm.wala.util.debug.Assertions;
@@ -22,7 +22,7 @@ import com.ibm.wala.util.debug.Assertions;
  * @author sjfink
  * 
  */
-public class SliceFunctions implements IFlowFunctionMap<Statement> {
+public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement> {
 
   public IUnaryFlowFunction getCallFlowFunction(Statement src, Statement dest) {
     return ReachabilityFunctions.createReachabilityFunctions().getCallFlowFunction(src, dest);
@@ -37,15 +37,15 @@ public class SliceFunctions implements IFlowFunctionMap<Statement> {
     case NORMAL_RET_CALLER:
     case PARAM_CALLER:
     case EXC_RET_CALLER:
-      // uh oh.  anything that flows into the missing function will be killed.
+      // uh oh. anything that flows into the missing function will be killed.
       return ReachabilityFunctions.KILL_FLOW;
     case HEAP_PARAM_CALLEE:
     case HEAP_PARAM_CALLER:
     case HEAP_RET_CALLEE:
     case HEAP_RET_CALLER:
       if (dest instanceof HeapStatement) {
-        HeapStatement hd = (HeapStatement)dest;
-        HeapStatement hs = (HeapStatement)src;
+        HeapStatement hd = (HeapStatement) dest;
+        HeapStatement hs = (HeapStatement) src;
         if (hs.getLocation().equals(hd.getLocation())) {
           return IdentityFlowFunction.identity();
         } else {
@@ -58,7 +58,7 @@ public class SliceFunctions implements IFlowFunctionMap<Statement> {
       // only control dependence flows into the missing function.
       // this control dependence does not flow back to the caller.
       return ReachabilityFunctions.KILL_FLOW;
-    default: 
+    default:
       Assertions.UNREACHABLE(s.getKind().toString());
       return null;
     }
@@ -75,9 +75,13 @@ public class SliceFunctions implements IFlowFunctionMap<Statement> {
   public IFlowFunction getReturnFlowFunction(Statement call, Statement src, Statement dest) {
     return ReachabilityFunctions.createReachabilityFunctions().getReturnFlowFunction(call, src, dest);
   }
-  
+
   public IFlowFunction getReturnFlowFunction(Statement src, Statement dest) {
     return ReachabilityFunctions.createReachabilityFunctions().getReturnFlowFunction(src, dest);
+  }
+
+  public IFlowFunction getUnbalancedReturnFlowFunction(Statement src, Statement dest) {
+    return getReturnFlowFunction(src, dest);
   }
 
 }
