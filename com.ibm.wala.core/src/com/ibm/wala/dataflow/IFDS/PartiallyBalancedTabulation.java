@@ -36,7 +36,8 @@ public class PartiallyBalancedTabulation {
    * any exit statements that were reached, and compute the corresponding return factoids that could be reached, if we
    * ignored parentheses. We return the set of such factoids, which represent roots to restart tabulation with.
    */
-  public static <T, P> Collection<Pair<T, Integer>> computeNewSeeds(TabulationResult<T, P> tabulation, PartiallyBalancedTabulationProblem<T, P> problem) {
+  public static <T, P> Collection<Pair<T, Integer>> computeNewSeeds(TabulationResult<T, P> tabulation,
+      PartiallyBalancedTabulationProblem<T, P> problem) {
     Collection<Pair<T, Integer>> result = HashSetFactory.make();
 
     ISupergraph<T, P> supergraph = tabulation.getProblem().getSupergraph();
@@ -58,10 +59,12 @@ public class PartiallyBalancedTabulation {
               if (f instanceof IUnaryFlowFunction) {
                 IUnaryFlowFunction uf = (IUnaryFlowFunction) f;
                 IntSet facts = uf.getTargets(d2);
-                for (IntIterator it4 = facts.intIterator(); it4.hasNext();) {
-                  int d3 = it4.next();
-                  // d3 would be reached of we ignored parentheses. use it as a new seed.
-                  result.add(Pair.make(retSite, d3));
+                if (facts != null) {
+                  for (IntIterator it4 = facts.intIterator(); it4.hasNext();) {
+                    int d3 = it4.next();
+                    // d3 would be reached of we ignored parentheses. use it as a new seed.
+                    result.add(Pair.make(retSite, d3));
+                  }
                 }
               } else {
                 Assertions.UNREACHABLE("Partially balanced logic not supported for binary return flow functions");
@@ -73,12 +76,14 @@ public class PartiallyBalancedTabulation {
     }
     return result;
   }
-  
+
   /**
    * Solve a partially balanced tabulation problem.
    * 
    * @param <T> type of node in the supergraph
-   * @param <P> type of "procedure" ("box") in the supergraph
+   * @param
+   *        <P>
+   *        type of "procedure" ("box") in the supergraph
    * @param problem representation of the dataflow problem
    */
   public static <T, P> TabulationResult<T, P> tabulate(PartiallyBalancedTabulationProblem<T, P> problem) throws CancelException {
@@ -90,10 +95,13 @@ public class PartiallyBalancedTabulation {
    * Solve a partially balanced tabulation problem using a pre-constructed solver.
    * 
    * @param <T> type of node in the supergraph
-   * @param <P> type of "procedure" ("box") in the supergraph
+   * @param
+   *        <P>
+   *        type of "procedure" ("box") in the supergraph
    * @param problem representation of the dataflow problem
    */
-  public static <T, P> TabulationResult<T, P> tabulate(PartiallyBalancedTabulationProblem<T, P> problem, TabulationSolver<T, P> solver) throws CancelException {
+  public static <T, P> TabulationResult<T, P> tabulate(PartiallyBalancedTabulationProblem<T, P> problem,
+      TabulationSolver<T, P> solver) throws CancelException {
     TabulationResult<T, P> tr = null;
 
     boolean again = true;
@@ -113,8 +121,8 @@ public class PartiallyBalancedTabulation {
   }
 
   /**
-   * Convert a set of reachable factoids to {@link PathEdge}s, using the appropriate fake entry nodes as
-   * determined by the {@link PartiallyBalancedTabulationProblem}.
+   * Convert a set of reachable factoids to {@link PathEdge}s, using the appropriate fake entry nodes as determined by
+   * the {@link PartiallyBalancedTabulationProblem}.
    */
   private static <T, P> Collection<PathEdge<T>> toPathEdges(Collection<Pair<T, Integer>> newRoots,
       PartiallyBalancedTabulationProblem<T, P> problem) {
