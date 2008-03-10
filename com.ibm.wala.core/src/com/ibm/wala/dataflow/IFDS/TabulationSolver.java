@@ -67,6 +67,7 @@ public class TabulationSolver<T, P> {
    * <li>0 No output
    * <li>1 Print some simple stats and warning information
    * <li>2 Detailed debugging
+   * <li>3 Also print worklists
    * </ul>
    */
   protected static final int DEBUG_LEVEL = 0;
@@ -798,7 +799,7 @@ public class TabulationSolver<T, P> {
 
   protected void addToWorkList(T s_p, int i, T n, int j) {
     worklist.insert(PathEdge.createPathEdge(s_p, i, n, j));
-    if (DEBUG_LEVEL >= 2) {
+    if (DEBUG_LEVEL >= 3) {
       System.err.println("WORKLIST: " + worklist);
     }
   }
