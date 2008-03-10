@@ -13,7 +13,6 @@ package com.ibm.wala.dataflow.IFDS;
 import java.util.Iterator;
 
 import com.ibm.wala.util.collections.SparseVector;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntPair;
@@ -94,7 +93,7 @@ public class LocalSummaryEdges {
     }
     R.add(d1, d2);
     if (TabulationSolver.DEBUG_LEVEL > 1) {
-      Trace.println("recording summary edge, now n=" + n + " summarized by " + R);
+//      System.err.println("recording summary edge, now n=" + n + " summarized by " + R);
     }
   }
 

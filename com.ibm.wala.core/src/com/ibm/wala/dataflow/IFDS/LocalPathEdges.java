@@ -14,7 +14,6 @@ import java.util.Iterator;
 
 import com.ibm.wala.util.collections.SparseVector;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
@@ -146,7 +145,7 @@ public class LocalPathEdges {
         }
 
         if (TabulationSolver.DEBUG_LEVEL > 1) {
-          Trace.println("recording path edge, now d2=" + j + " has been reached from " + R);
+//          System.err.println("recording path edge, now d2=" + j + " has been reached from " + R);
         }
       }
     }
@@ -179,7 +178,7 @@ public class LocalPathEdges {
     }
 
     if (TabulationSolver.DEBUG_LEVEL > 1) {
-      Trace.println("recording self-path edge, now d1= " + i + " reaches " + s);
+      System.err.println("recording self-path edge, now d1= " + i + " reaches " + s);
     }
   }
 
@@ -211,7 +210,7 @@ public class LocalPathEdges {
       R.add(n, j);
     }
     if (TabulationSolver.DEBUG_LEVEL > 1) {
-      Trace.println("recording 0-path edge, now d2= " + j + " reached at " + z);
+      System.err.println("recording 0-path edge, now d2= " + j + " reached at " + z);
     }
   }
 

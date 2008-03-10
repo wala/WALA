@@ -11,7 +11,6 @@
 package com.ibm.wala.dataflow.IFDS;
 
 import com.ibm.wala.util.collections.SparseVector;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
@@ -64,7 +63,7 @@ public class CallFlowEdges {
    */
   public void addCallEdge(int c, int d1, int d2) {
     if (TabulationSolver.DEBUG_LEVEL > 0) {
-      Trace.println("addCallEdge " + c + " " + d1 + " " + d2);
+      System.err.println("addCallEdge " + c + " " + d1 + " " + d2);
     }
     if (d1 == d2) {
       BitVectorIntSet s = (BitVectorIntSet) identityEdges.get(d1);
