@@ -28,6 +28,7 @@ import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKeyWithFilter;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -38,15 +39,14 @@ import com.ibm.wala.util.intset.OrdinalSet;
 
 /**
  * 
- * A trivial field-based pointer analysis solution, which only uses the
- * information of which types (classes) are live.
+ * A trivial field-based pointer analysis solution, which only uses the information of which types (classes) are live.
  * 
  * @author sfink
  */
 public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
 
   private final Collection<IClass> klasses;
-
+  
   private final TypeBasedHeapModel heapModel;
 
   /**
@@ -55,10 +55,8 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
   private final Map<IClass, OrdinalSet<InstanceKey>> pointsTo = HashMapFactory.make();
 
   /**
-   * @param klasses
-   *            Collection<IClass>
-   * @throws AssertionError
-   *             if klasses is null
+   * @param klasses Collection<IClass>
+   * @throws AssertionError if klasses is null
    */
   private TypeBasedPointerAnalysis(AnalysisOptions options, Collection<IClass> klasses, CallGraph cg) throws AssertionError {
     super(cg, makeInstanceKeys(klasses));
@@ -67,8 +65,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
   }
 
   /**
-   * @param c
-   *            Collection<IClass>
+   * @param c Collection<IClass>
    */
   private static MutableMapping<InstanceKey> makeInstanceKeys(Collection<IClass> c) {
     assert c != null;
@@ -105,8 +102,7 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
   }
 
   /**
-   * Compute the set of {@link InstanceKey}s which may represent a particular
-   * type.
+   * Compute the set of {@link InstanceKey}s which may represent a particular type.
    */
   private OrdinalSet<InstanceKey> computeOrdinalInstanceSet(IClass type) {
     Collection<IClass> klasses = null;
@@ -124,7 +120,14 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
     Collection<IClass> c = HashSetFactory.make();
     for (IClass klass : klasses) {
       if (klass.isArrayClass()) {
-        c.add(klass);
+        TypeReference elementType = klass.getReference().getArrayElementType();
+        if (elementType.isPrimitiveType()) {
+          c.add(klass);
+        } else {
+          // just add Object[], since with array typing rules we have no idea
+          // the exact type of array the reference is pointing to
+          c.add(klass.getClassHierarchy().lookupClass(TypeReference.JavaLangObject.getArrayTypeForElementType()));
+        }
       } else if (this.klasses.contains(klass)) {
         c.add(klass);
       }

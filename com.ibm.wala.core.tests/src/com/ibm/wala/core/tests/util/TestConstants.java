@@ -38,6 +38,8 @@ public interface TestConstants {
 
   public final static String MULTI_DIM_MAIN = "LmultiDim/TestMultiDim";
 
+  public final static String ARRAY_ALIAS_MAIN = "LarrayAlias/TestArrayAlias";
+  
   public final static String REFLECT1_MAIN = "Lreflection/Reflect1";
 
   public final static String REFLECT2_MAIN = "Lreflection/Reflect2";
