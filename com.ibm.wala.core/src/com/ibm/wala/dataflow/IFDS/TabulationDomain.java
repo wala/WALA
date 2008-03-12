@@ -19,12 +19,15 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 public interface TabulationDomain<T> extends OrdinalSetMapping<T> {
 
   /**
-   * if this domain supports a partial order on facts, return true
-   * if d1 is weaker than d2 (intuitively d1 meet d2 = d1)
+   * returns <code>true</code> if p1 should be processed before
+   * p2 by the {@link TabulationSolver}
+   * 
+   * For example, if this domain supports a partial order on facts, return true
+   * if p1.d2 is weaker than p2.d2 (intuitively p1.d2 meet p2.d2 = p1.d2)
    * 
    * return false otherwise
    */
-  boolean isWeakerThan(int d1, int d2);
+  boolean hasPriorityOver(PathEdge p1, PathEdge p2);
 
 
 

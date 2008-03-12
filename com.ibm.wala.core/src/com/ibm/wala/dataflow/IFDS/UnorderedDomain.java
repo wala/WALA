@@ -21,7 +21,7 @@ public class UnorderedDomain<T> extends MutableMapping<T> implements TabulationD
   /* 
    * @see com.ibm.wala.dataflow.IFDS.TabulationDomain#isWeakerThan(int, int)
    */
-  public boolean isWeakerThan(int d1, int d2) {
+  public boolean hasPriorityOver(PathEdge p1, PathEdge p2) {
     return false;
   }
 
