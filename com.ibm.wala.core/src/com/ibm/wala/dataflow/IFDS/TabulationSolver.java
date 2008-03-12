@@ -965,12 +965,7 @@ public class TabulationSolver<T, P> {
     @SuppressWarnings("unchecked")
     @Override
     protected boolean compareElements(PathEdge<T> p1, PathEdge<T> p2) {
-      if (p1.d2 != p2.d2) { // TODO should we remove this check?
-        if (problem.getDomain().hasPriorityOver(p1, p2)) {
-          return true;
-        }
-      }
-      return false;
+      return problem.getDomain().hasPriorityOver(p1, p2);
     }
 
   }
