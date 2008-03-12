@@ -965,7 +965,13 @@ public class TabulationSolver<T, P> {
     @SuppressWarnings("unchecked")
     @Override
     protected boolean compareElements(PathEdge<T> p1, PathEdge<T> p2) {
-      return problem.getDomain().hasPriorityOver(p1, p2);
+      // we still have this check to appease the slicer, which
+      // has no domain
+      // TODO fix the slicer
+      if (p1.d2 != p2.d2) {
+        return problem.getDomain().hasPriorityOver(p1, p2);
+      }
+      return false;
     }
 
   }
