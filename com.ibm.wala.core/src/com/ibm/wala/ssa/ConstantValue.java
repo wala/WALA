@@ -52,17 +52,17 @@ public class ConstantValue implements Value {
   }
 
   /**
-   * @return true iff this constant is "zero"
+   * @return true iff this constant is "false"
    */
   public boolean isFalseConstant() {
-    return constant.equals(Boolean.FALSE);
+    return (constant instanceof Boolean) && constant.equals(Boolean.FALSE);
   }
 
   /**
-   * @return true iff this constant is "zero"
+   * @return true iff this constant is "true"
    */
   public boolean isTrueConstant() {
-    return constant.equals(Boolean.TRUE);
+    return (constant instanceof Boolean) && constant.equals(Boolean.TRUE);
   }
 
   /**
