@@ -178,7 +178,7 @@ public final class MethodReference extends MemberReference {
   /**
    * Method getSignature.
    * something like: 
-   *   com.foo.bar.createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
+   *   com.foo.bar.createLargeOrder(IILjava/lang/String;Ljava/sql/Date;)Ljava/lang/Integer;
    * @return String
    */
   @Override
