@@ -16,7 +16,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  * @author sfink
  *
  */
-public interface TabulationDomain<T> extends OrdinalSetMapping<T> {
+public interface TabulationDomain<T,U> extends OrdinalSetMapping<T> {
 
   /**
    * returns <code>true</code> if p1 should be processed before
@@ -27,7 +27,7 @@ public interface TabulationDomain<T> extends OrdinalSetMapping<T> {
    * 
    * return false otherwise
    */
-  boolean hasPriorityOver(PathEdge p1, PathEdge p2);
+  boolean hasPriorityOver(PathEdge<U> p1, PathEdge<U> p2);
 
 
 

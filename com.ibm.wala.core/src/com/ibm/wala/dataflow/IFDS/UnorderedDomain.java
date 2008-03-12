@@ -16,12 +16,12 @@ import com.ibm.wala.util.intset.MutableMapping;
  * @author sfink
  *
  */
-public class UnorderedDomain<T> extends MutableMapping<T> implements TabulationDomain<T> {
+public class UnorderedDomain<T,U> extends MutableMapping<T> implements TabulationDomain<T,U> {
 
   /* 
    * @see com.ibm.wala.dataflow.IFDS.TabulationDomain#isWeakerThan(int, int)
    */
-  public boolean hasPriorityOver(PathEdge p1, PathEdge p2) {
+  public boolean hasPriorityOver(PathEdge<U> p1, PathEdge<U> p2) {
     return false;
   }
 
