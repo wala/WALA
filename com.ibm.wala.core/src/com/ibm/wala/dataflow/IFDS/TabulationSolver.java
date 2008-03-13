@@ -235,6 +235,9 @@ public class TabulationSolver<T, P> {
           // this means that we don't want to push the edge. instead,
           // we'll push the merged fact. a little tricky, but i think should
           // work.
+          if (DEBUG_LEVEL > 0) {
+            System.err.println("propagating merged fact " + j);
+          }
           propagate(edge.entry, edge.d1, edge.target, j);
         } else {
           if (supergraph.isCall(edge.target)) {
