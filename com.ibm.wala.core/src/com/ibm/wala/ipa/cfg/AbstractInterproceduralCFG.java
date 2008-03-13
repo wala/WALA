@@ -39,6 +39,7 @@ import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
 import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.viz.IFDSExplorer;
 
 /**
  * 
@@ -56,6 +57,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
 
   /**
    * Should the graph include call-to-return edges?
+   * When set to <code>false</code>, the graphs output by {@link IFDSExplorer} look incorrect
    */
   private final static boolean CALL_TO_RETURN_EDGES = true;
 
