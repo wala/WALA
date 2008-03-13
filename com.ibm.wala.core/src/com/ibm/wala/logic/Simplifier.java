@@ -87,7 +87,7 @@ public class Simplifier {
    * 
    * This is inefficient.
    */
-  public static Collection<IFormula> simplify(Collection<IFormula> s, Collection<? extends IFormula> theory,
+  public static Collection<IFormula> simplify(Collection<? extends IFormula> s, Collection<? extends IFormula> theory,
       ISemiDecisionProcedure dec) {
     // the following is ad hoc and bogus.
     // boolean changed = true;
@@ -118,7 +118,7 @@ public class Simplifier {
   /**
    * Simplify the set s based on simple propositional logic.
    */
-  public static Collection<IFormula> propositionalSimplify(Collection<IFormula> s, Collection<? extends IFormula> t,
+  public static Collection<IFormula> propositionalSimplify(Collection<? extends IFormula> s, Collection<? extends IFormula> t,
       ISemiDecisionProcedure dec) {
     debug1(s, t);
     Collection<ICNFFormula> cs = toCNF(s);
@@ -239,7 +239,7 @@ public class Simplifier {
     }
   }
 
-  private static void debug1(Collection<IFormula> s, Collection<? extends IFormula> t) {
+  private static void debug1(Collection<? extends IFormula> s, Collection<? extends IFormula> t) {
     if (DEBUG) {
       System.err.println("--s--");
       for (IFormula f : s) {
@@ -389,41 +389,39 @@ public class Simplifier {
    * 
    * @throws IllegalArgumentException if formula is null
    */
-  public static IFormula substitute(IFormula formula, ITerm t1, ITerm t2) {
+  public static IFormula substituteCNF(ICNFFormula formula, ITerm t1, ITerm t2) {
+    Collection<IMaxTerm> maxTerms = new ArrayList<IMaxTerm>();
+    for (IMaxTerm t : formula.getMaxTerms()) {
+      maxTerms.add(substituteMaxTerm(t, t1, t2));
+    }
+    return CNFFormula.make(maxTerms);
+  }
+
+  /**
+   * in formula f, substitute the term t2 for all free occurrences of t1
+   * 
+   * @throws IllegalArgumentException if formula is null
+   */
+  public static IMaxTerm substituteMaxTerm(IMaxTerm formula, ITerm t1, ITerm t2) {
     if (formula == null) {
       throw new IllegalArgumentException("formula is null");
     }
     switch (formula.getKind()) {
     case BINARY:
-      AbstractBinaryFormula b = (AbstractBinaryFormula) formula;
-      // TODO separate out cases for CNFFormula and Disjunction?
-      IFormula F1 = b.getF1();
-      IFormula subF1 = substitute(F1, t1, t2);
-      IFormula F2 = b.getF2();
-      IFormula subF2 = substitute(F2, t1, t2);
-      if (F1 != subF1 || F2 != subF2) {
-        return BinaryFormula.make(b.getConnective(), subF1, subF2);
-      } else {
-        return formula;
+      Disjunction d = (Disjunction)formula;
+      Collection<IFormula> c = HashSetFactory.make();
+      for (IFormula clause : d.getClauses()) {
+        c.add(substitute(clause, t1, t2));
       }
+      return Disjunction.make(c);
     case NEGATION:
-      NotFormula n = (NotFormula) formula;
-      IFormula F = n.getFormula();
-      IFormula subF = substitute(F, t1, t2);
-      return F != subF ? NotFormula.make(subF) : formula;
+      NotFormulaMaxTerm n = (NotFormulaMaxTerm) formula;
+      RelationFormula F = (RelationFormula) n.getFormula();
+      RelationFormula subF = (RelationFormula)substitute(F, t1, t2);
+      return (F != subF ? NotFormulaMaxTerm.make(subF) : formula);
     case QUANTIFIED:
-      QuantifiedFormula q = (QuantifiedFormula) formula;
-      if (q.getBoundVar().equals(t1)) {
-        return q;
-      } else {
-        IFormula body = q.getFormula();
-        IFormula subBody = substitute(body, t1, t2);
-        if (body != subBody) {
-          return QuantifiedFormula.make(q.getQuantifier(), q.getBoundVar(), subBody);
-        } else {
-          return formula;
-        }
-      }
+      Assertions.UNREACHABLE();
+      return null;
     case RELATION:
       RelationFormula r = (RelationFormula) formula;
       List<ITerm> rTerms = r.getTerms();
@@ -445,6 +443,74 @@ public class Simplifier {
     default:
       Assertions.UNREACHABLE();
       return null;
+    }
+  }
+
+  /**
+   * in formula f, substitute the term t2 for all free occurrences of t1
+   * 
+   * @throws IllegalArgumentException if formula is null
+   */
+  public static IFormula substitute(IFormula formula, ITerm t1, ITerm t2) {
+    if (formula == null) {
+      throw new IllegalArgumentException("formula is null");
+    }
+    if (formula instanceof ICNFFormula) {
+      return substituteCNF((ICNFFormula) formula, t1, t2);
+    } else {
+      switch (formula.getKind()) {
+      case BINARY:
+        AbstractBinaryFormula b = (AbstractBinaryFormula) formula;
+        // TODO separate out cases for CNFFormula and Disjunction?
+        IFormula F1 = b.getF1();
+        IFormula subF1 = substitute(F1, t1, t2);
+        IFormula F2 = b.getF2();
+        IFormula subF2 = substitute(F2, t1, t2);
+        if (F1 != subF1 || F2 != subF2) {
+          return BinaryFormula.make(b.getConnective(), subF1, subF2);
+        } else {
+          return formula;
+        }
+      case NEGATION:
+        NotFormula n = (NotFormula) formula;
+        IFormula F = n.getFormula();
+        IFormula subF = substitute(F, t1, t2);
+        return F != subF ? NotFormula.make(subF) : formula;
+      case QUANTIFIED:
+        QuantifiedFormula q = (QuantifiedFormula) formula;
+        if (q.getBoundVar().equals(t1)) {
+          return q;
+        } else {
+          IFormula body = q.getFormula();
+          IFormula subBody = substitute(body, t1, t2);
+          if (body != subBody) {
+            return QuantifiedFormula.make(q.getQuantifier(), q.getBoundVar(), subBody);
+          } else {
+            return formula;
+          }
+        }
+      case RELATION:
+        RelationFormula r = (RelationFormula) formula;
+        List<ITerm> rTerms = r.getTerms();
+        List<ITerm> terms = new ArrayList<ITerm>(rTerms.size());
+        boolean someChange = false;
+        for (ITerm t : rTerms) {
+          Map<Wildcard, ITerm> binding = HashMapFactory.make();
+          ITerm subTerm = substituteInTerm(t, t1, t2, binding);
+          terms.add(subTerm);
+          someChange = someChange || t != subTerm;
+        }
+        if (someChange) {
+          return RelationFormula.make(r.getRelation(), terms);
+        } else {
+          return formula;
+        }
+      case CONSTANT:
+        return formula;
+      default:
+        Assertions.UNREACHABLE();
+        return null;
+      }
     }
   }
 

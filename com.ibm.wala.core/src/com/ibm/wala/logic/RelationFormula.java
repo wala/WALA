@@ -93,7 +93,7 @@ public class RelationFormula implements IMaxTerm {
     return new RelationFormula(R, l);
   }
 
-  public static IFormula make(IRelation relation, List<ITerm> terms) {
+  public static RelationFormula make(IRelation relation, List<ITerm> terms) {
     return new RelationFormula(relation, terms);
   }
 
