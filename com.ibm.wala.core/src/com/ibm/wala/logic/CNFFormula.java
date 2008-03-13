@@ -143,7 +143,7 @@ public class CNFFormula extends AbstractBinaryFormula implements ICNFFormula {
     case NEGATION:
       NotFormula n = (NotFormula) f;
       if (n.getFormula() instanceof RelationFormula) {
-        IMaxTerm t = NotFormulaMaxTerm.make((RelationFormula)n.getFormula());
+        IMaxTerm t = NotFormulaMaxTerm.createNotFormulaMaxTerm((RelationFormula)n.getFormula());
         return Collections.singleton(t);
       } else {
         // should not get here if other logic is working.

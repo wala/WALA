@@ -54,7 +54,7 @@ public class NotFormula implements IFormula {
       if (r.getRelation().equals(BinaryRelation.LT)) {
         return RelationFormula.make(BinaryRelation.GE, r.getTerms());
       }
-      return new NotFormula(f);
+      return NotFormulaMaxTerm.createNotFormulaMaxTerm(r);
     case CONSTANT:
       if (f.equals(BooleanConstantFormula.TRUE)) {
         return BooleanConstantFormula.FALSE;

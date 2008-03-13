@@ -23,7 +23,7 @@ import java.util.Collections;
  */
 public class NotFormulaMaxTerm extends NotFormula implements IMaxTerm {
 
-  public static NotFormulaMaxTerm make(RelationFormula f) {
+  public static NotFormulaMaxTerm createNotFormulaMaxTerm(RelationFormula f) {
     return new NotFormulaMaxTerm(f);
   }
 

@@ -418,7 +418,7 @@ public class Simplifier {
       NotFormulaMaxTerm n = (NotFormulaMaxTerm) formula;
       RelationFormula F = (RelationFormula) n.getFormula();
       RelationFormula subF = (RelationFormula)substitute(F, t1, t2);
-      return (F != subF ? NotFormulaMaxTerm.make(subF) : formula);
+      return (F != subF ? NotFormulaMaxTerm.createNotFormulaMaxTerm(subF) : formula);
     case QUANTIFIED:
       Assertions.UNREACHABLE();
       return null;
