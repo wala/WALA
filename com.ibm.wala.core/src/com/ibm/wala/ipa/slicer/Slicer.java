@@ -22,12 +22,12 @@ import com.ibm.wala.dataflow.IFDS.PartiallyBalancedTabulationProblem;
 import com.ibm.wala.dataflow.IFDS.PathEdge;
 import com.ibm.wala.dataflow.IFDS.TabulationDomain;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
+import com.ibm.wala.dataflow.IFDS.UnorderedDomain;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A demand-driven context-sensitive slicer.
@@ -265,8 +265,8 @@ public class Slicer {
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getDomain()
      */
     public TabulationDomain getDomain() {
-      Assertions.UNREACHABLE();
-      return null;
+      // a dummy
+      return new UnorderedDomain<Object, Object>();
     }
 
     /*
