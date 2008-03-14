@@ -221,4 +221,16 @@ public class ImmutableStack<T> implements Iterable<T> {
   public Iterator<T> iterator() {
     return new ArrayIterator<T>(entries);
   }
+  
+  /**
+   * return a new stack with the top replaced with t
+   * 
+   */ 
+  public ImmutableStack<T> replaceTop(T t) {
+    int size = entries.length;
+    T[] tmpEntries = makeInternalArray(size);
+    System.arraycopy(entries, 0, tmpEntries, 0, entries.length - 1);
+    tmpEntries[size - 1] = t;
+    return makeStack(tmpEntries);
+  }
 }
