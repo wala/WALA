@@ -90,7 +90,9 @@ public abstract class Dominators<T> {
 
   public boolean isDominatedBy(T node, T master) {
     for (T ptr = node; ptr != null; ptr = getIdom(ptr))
-      if (ptr == master)
+      // use equals() since sometimes the CFGs get
+      // reconstructed --MS
+      if (ptr.equals(master))
         return true;
 
     return false;
