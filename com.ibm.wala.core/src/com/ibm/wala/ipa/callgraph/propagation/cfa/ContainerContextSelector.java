@@ -63,6 +63,7 @@ public class ContainerContextSelector implements ContextSelector {
   private final static Atom asList = Atom.findOrCreateUnicodeAtom("asList");
   private final static Atom copyOf = Atom.findOrCreateUnicodeAtom("copyOf");
   private final static Atom copyOfRange = Atom.findOrCreateUnicodeAtom("copyOfRange");
+  private final static Atom toString = Atom.findOrCreateUnicodeAtom("toString");
   private final static MethodReference StringValueOf = MethodReference.findOrCreate(TypeReference.JavaLangString, "valueOf", "(Ljava/lang/Object;)Ljava/lang/String;");
   private final static MethodReference HashtableNewEntry = MethodReference.findOrCreate(JavaUtilHashtable, "newEntry", "(Ljava/lang/Object;Ljava/lang/Object;I)Ljava/util/Hashtable$Entry;");
   
@@ -130,6 +131,9 @@ public class ContainerContextSelector implements ContextSelector {
     if (isArrayCopyMethod(m)) {
       return true;
     }
+    if (isArrayToStringMethod(m)) {
+      return true;
+    }
     if (m.equals(StringValueOf)) {
       return true;
     }
@@ -141,11 +145,24 @@ public class ContainerContextSelector implements ContextSelector {
 
   /**
    * return true iff m represents one of the well-known methods in java.lang.reflect.Arrays that 
-   * do some sort of arraycopyd
+   * do some sort of arraycopy
    */
   private static boolean isArrayCopyMethod(MethodReference m) {
     if (m.getDeclaringClass().equals(Arrays)) {
       if (m.getName().equals(asList) || m.getName().equals(copyOf) || m.getName().equals(copyOfRange)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  
+  /**
+   * return true iff m represents one of the well-known methods in java.lang.reflect.Arrays that 
+   * do toString() on an array
+   */
+  private static boolean isArrayToStringMethod(MethodReference m) {
+    if (m.getDeclaringClass().equals(Arrays)) {
+      if (m.getName().equals(toString)){
         return true;
       }
     }
