@@ -358,6 +358,10 @@ public class JavaIRTests extends IRTests {
     }), true);
   }
 
+  public void testCastFromNull() {
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
+  }
+  
   public void testInnerClass() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), Arrays.asList(
 
@@ -376,6 +380,10 @@ public class JavaIRTests extends IRTests {
             cg.getClassHierarchy().lookupClass(findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy())));
       }
     }), true);
+  }
+
+  public void testNullArrayInit() {
+    runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), new ArrayList<IRAssertion>(), true);
   }
 
   public void testInnerClassA() {
