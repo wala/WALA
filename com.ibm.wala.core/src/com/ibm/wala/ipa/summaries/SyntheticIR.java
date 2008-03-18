@@ -22,6 +22,7 @@ import com.ibm.wala.ssa.SSACFG;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -56,6 +57,9 @@ public class SyntheticIR extends IR {
   private void repOK(SSAInstruction[] instructions) {
     for (SSAInstruction s : instructions) {
       if (s instanceof SSAPhiInstruction) {
+        Assertions.UNREACHABLE();
+      }
+      if (s instanceof SSAPiInstruction) {
         Assertions.UNREACHABLE();
       }
     }

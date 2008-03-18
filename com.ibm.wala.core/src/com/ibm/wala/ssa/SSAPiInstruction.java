@@ -53,13 +53,13 @@ public class SSAPiInstruction extends SSAUnaryOpInstruction {
   private final int piBlock;
 
   /**
-   * @param s the successor block; this PI assignment happens on the transition between this basic block and
+   * @param successorBlock the successor block; this PI assignment happens on the transition between this basic block and
    * the successor block.
    */
-  SSAPiInstruction(int result, int val, int piBlock, int s, SSAInstruction cause) {
+  public SSAPiInstruction(int result, int val, int piBlock, int successorBlock, SSAInstruction cause) {
     super(null, result, val);
     this.cause = cause;
-    this.successorBlock = s;
+    this.successorBlock = successorBlock;
     this.piBlock = piBlock;
   }
 

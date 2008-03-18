@@ -98,12 +98,30 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
     createBasicBlocks(cfg);
     if (cfg instanceof InducedCFG) {
       addPhisFromInducedCFG((InducedCFG) cfg);
+      addPisFromInducedCFG((InducedCFG) cfg);
     }
     if (cfg instanceof ShrikeCFG) {
       recordExceptionTypes(((ShrikeCFG) cfg).getExceptionHandlers(), method.getDeclaringClass().getClassLoader());
     }
     this.instructions = instructions;
 
+  }
+
+  /**
+   * This is ugly.  Clean it up someday.
+   * {@link InducedCFG}s carry around pii instructions.  add these pii instructions to the SSABasicBlocks
+   */
+  private void addPisFromInducedCFG(InducedCFG cfg) {
+    for (Iterator<? extends InducedCFG.BasicBlock> it = cfg.iterator(); it.hasNext(); ) {
+      InducedCFG.BasicBlock ib = it.next();
+      // we rely on the invariant that basic blocks in this cfg are numbered identically as in the source
+      // InducedCFG
+      BasicBlock b = getBasicBlock(ib.getNumber());
+      for (SSAPiInstruction pi : ib.getPis()) {
+        BasicBlock path = getBasicBlock(pi.getSuccessor());
+        b.addPiForRefAndPath(pi.getVal(), path, pi);
+      }
+    }    
   }
 
   /**
@@ -427,6 +445,12 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
 
     private final LinkedList<SSAPiInstruction> blockPiInstructions = new LinkedList<SSAPiInstruction>();
 
+    /**
+     * 
+     * @param n can be the val in the pi instruction
+     * @param path can be the successor block in the pi instruction
+     * @param pi
+     */
     void addPiForRefAndPath(int n, Object path, SSAPiInstruction pi) {
       piInstructions.put(new RefPathKey(n, this, path), pi);
       blockPiInstructions.add(pi);

@@ -31,6 +31,7 @@ import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSAMonitorInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.SSAPiInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSASwitchInstruction;
@@ -64,7 +65,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
   /**
    * TODO: we do not yet support induced CFGS with exception handlers.
    * 
-   * NOTE: SIDE EFFECT!!! ... nulls out phi instructions in the instruction array!
+   * NOTE: SIDE EFFECT!!! ... nulls out phi instructions and pi instructions in the instruction array!
    * 
    * @throws IllegalArgumentException if instructions is null
    */
@@ -122,8 +123,17 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
         continue;
       b.computeOutgoingEdges();
     }
+    clearPis((SSAInstruction[]) getInstructions());
   }
 
+  private void clearPis(SSAInstruction[] instructions) {
+    for (int i = 0; i < instructions.length; i++) {
+      if (instructions[i] instanceof SSAPiInstruction) {
+        instructions[i] = null;
+      }
+    }
+  }
+  
   /**
    * Create basic blocks for an empty method
    */
@@ -169,13 +179,17 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
         addNode(b);
         int j = i;
         while (instructions[j] instanceof SSAPhiInstruction) {
-          b.addPhi((SSAPhiInstruction)instructions[j]);
+          b.addPhi((SSAPhiInstruction) instructions[j]);
           j++;
         }
 
         if (DEBUG) {
           Trace.println("Add basic block " + b);
         }
+      }
+      if (instructions[i] instanceof SSAPiInstruction) {
+        // add it to the current basic block
+        b.addPi((SSAPiInstruction) instructions[i]);
       }
       i2block[i] = b;
     }
@@ -187,8 +201,6 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     addNode(exit);
     clearPhis(instructions);
   }
-
-
 
   /**
    * set to null any slots in the array with phi instructions
@@ -259,11 +271,16 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     }
 
     /**
-     * introduce a basic block boundary immediately after instruction number 'index'
+     * introduce a basic block boundary immediately after instruction number 'index' if it is not followed by pi
+     * instructions, or after the pi instructions otherwise
      */
     protected void breakBasicBlock(int index) {
-      if (index + 1 < getInstructions().length && !r[index + 1]) {
-        r[index + 1] = true;
+      int j = index + 1;
+      while (j < instructions.length && instructions[j] instanceof SSAPiInstruction) {
+        j++;
+      }
+      if (j < instructions.length && !r[j]) {
+        r[j] = true;
       }
     }
   }
@@ -284,8 +301,12 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
     }
 
     protected void breakBasicBlock() {
-      if (index + 1 < getInstructions().length && !r[index + 1]) {
-        r[index + 1] = true;
+      int j = index + 1;
+      while (j < instructions.length && instructions[j] instanceof SSAPiInstruction) {
+        j++;
+      }
+      if (j < instructions.length && !r[j]) {
+        r[j] = true;
       }
     }
 
@@ -357,9 +378,9 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
   public class BasicBlock extends NodeWithNumber implements IBasicBlock {
 
     private Collection<SSAPhiInstruction> phis;
-    
+
     public Collection<SSAPhiInstruction> getPhis() {
-      return phis == null ? Collections.<SSAPhiInstruction>emptyList() : Collections.unmodifiableCollection(phis);
+      return phis == null ? Collections.<SSAPhiInstruction> emptyList() : Collections.unmodifiableCollection(phis);
     }
 
     public void addPhi(SSAPhiInstruction phiInstruction) {
@@ -367,6 +388,19 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
         phis = new ArrayList<SSAPhiInstruction>(1);
       }
       phis.add(phiInstruction);
+    }
+
+    private ArrayList<SSAPiInstruction> pis;
+
+    public Collection<SSAPiInstruction> getPis() {
+      return pis == null ? Collections.<SSAPiInstruction> emptyList() : Collections.unmodifiableCollection(pis);
+    }
+
+    public void addPi(SSAPiInstruction piInstruction) {
+      if (pis == null) {
+        pis = new ArrayList<SSAPiInstruction>(1);
+      }
+      pis.add(piInstruction);
     }
 
     @Override
@@ -418,17 +452,32 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       // this CFG is odd in that we assume fallthru might always
       // happen .. this is because I'm too lazy to code control
       // flow in all method summaries yet.
+      int normalSuccNodeNumber = getGraphNodeId() + 1;
       if (true) {
         // if (last.isFallThrough()) {
         if (DEBUG) {
           Trace.println("Add fallthru to " + getNode(getGraphNodeId() + 1));
         }
-        addNormalEdgeTo(getNode(getGraphNodeId() + 1));
+        addNormalEdgeTo(getNode(normalSuccNodeNumber));
+      }
+      if (pis != null) {
+        updatePiInstrs(normalSuccNodeNumber);
       }
       if (last instanceof SSAReturnInstruction) {
         // link each return instrution to the exit block.
         BasicBlock exit = exit();
         addNormalEdgeTo(exit);
+      }
+    }
+
+    /**
+     * correct pi instructions with appropriate basic block numbers. we assume for now that pi instructions are always
+     * associated with the normal "fall-thru" exit edge.
+     */
+    private void updatePiInstrs(int normalSuccNodeNumber) {
+      for (int i = 0; i < pis.size(); i++) {
+        SSAPiInstruction pi = pis.get(i);
+        pis.set(i, new SSAPiInstruction(pi.getDef(), pi.getVal(), getGraphNodeId(), normalSuccNodeNumber, pi.getCause()));
       }
     }
 
