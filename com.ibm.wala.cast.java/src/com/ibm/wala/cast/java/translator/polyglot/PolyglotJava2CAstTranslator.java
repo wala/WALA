@@ -1040,6 +1040,8 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
 
     public CAstNode visit(Labeled l, WalkContext wc) {
+      Node breakTarget = makeBreakTarget(l);
+
       Node stmt = l.statement();
       while (stmt instanceof Block) {
         stmt = (Node) ((Block) stmt).statements().iterator().next();
@@ -1047,8 +1049,18 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 
       wc.getLabelMap().put(stmt, l.label());
 
-      CAstNode result = makeNode(wc, fFactory, l, CAstNode.LABEL_STMT, fFactory.makeConstant(l.label()), walkNodes(l.statement(),
-          wc));
+      CAstNode result;
+      if (! (l.statement() instanceof Empty)) {
+	WalkContext child = new BreakContext(wc, l.label(), breakTarget);
+
+	result = 
+	  makeNode(wc, fFactory, l, CAstNode.BLOCK_STMT, 
+	    makeNode(wc, fFactory, l, CAstNode.LABEL_STMT, fFactory.makeConstant(l.label()), walkNodes(l.statement(), child)),
+	    walkNodes(breakTarget, wc));
+      } else {
+	result = 
+	  makeNode(wc, fFactory, l, CAstNode.LABEL_STMT, fFactory.makeConstant(l.label()), walkNodes(l.statement(), wc));
+      }
 
       wc.cfg().map(l, result);
 
@@ -1145,7 +1157,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
 					     + s.position().toString().replace('.', '_'), fNodeFactory.Empty(s.position()));
       CAstNode breakAst = walkNodes(breakLabel, wc);
       String loopLabel = (String) wc.getLabelMap().get(s);
-      WalkContext child = new SwitchContext(wc, loopLabel, breakLabel);
+      WalkContext child = new BreakContext(wc, loopLabel, breakLabel);
       Expr cond = s.expr();
       List cases = s.elements();
 
@@ -2198,12 +2210,12 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
   }
 
-  private class SwitchContext extends DelegatingContext {
+  private class BreakContext extends DelegatingContext {
     protected final String label;
 
     private final Node breakTo;
 
-    SwitchContext(WalkContext parent, String label, Node breakTo) {
+    BreakContext(WalkContext parent, String label, Node breakTo) {
       super(parent);
       this.label = label;
       this.breakTo = breakTo;
@@ -2222,7 +2234,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
   }
 
-  private class LoopContext extends SwitchContext {
+  private class LoopContext extends BreakContext {
     private final Node continueTo;
 
     protected LoopContext(WalkContext parent, String label, Node breakTo, Node continueTo) {
