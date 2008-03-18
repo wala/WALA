@@ -302,4 +302,25 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
     }
     return result.toString();
   }
+  
+  public static boolean isStandardServlet(IClass klass) {
+    IClassHierarchy cha = klass.getClassHierarchy();
+    TypeReference actionServletType = TypeReference.findOrCreate(ClassLoaderReference.Application, actionServlet);
+    IClass actionServletClass = cha.lookupClass(actionServletType);
+    
+    IClass servlet = cha.lookupClass(Servlet);
+    IClass servletFilter = cha.lookupClass(ServletFilter);
+    assert servlet != null;
+    assert servletFilter != null;
+    if (cha.implementsInterface(klass, servlet) || cha.implementsInterface(klass, servletFilter)) {
+      // ignore struts ActionServlets
+      if (actionServletClass != null) {
+        if (cha.isSubclassOf(klass, actionServletClass)) {
+          return false;
+        }
+      }
+      return true;
+    }
+    return false;
+  }
 }
