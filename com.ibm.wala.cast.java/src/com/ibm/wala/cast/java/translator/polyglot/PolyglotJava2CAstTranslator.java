@@ -358,7 +358,12 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       CAstNode lhsNode = makeNode(ctorContext, fFactory, f, CAstNode.OBJECT_REF, thisNode, fFactory.makeConstant(fieldRef));
 
       Expr init = f.init();
-      CAstNode rhsNode = walkNodes(init, ctorContext);
+      CAstNode rhsNode;
+      if ( init instanceof ArrayInit ) {
+        rhsNode = visit((ArrayInit)init,ctorContext,f.declType());
+      } else {
+        rhsNode = walkNodes(init, ctorContext);
+      }
       CAstNode assNode = makeNode(ctorContext, fFactory, f, CAstNode.ASSIGN, lhsNode, rhsNode);
 
       return assNode;
@@ -385,6 +390,10 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       return null;
     }
 
+    /*
+     * If we've handled all the parent cases, this should never be called --
+     * visit(ArrayInit,WalkContext,Type) should be instead.
+     */
     public CAstNode visit(ArrayInit ai, WalkContext wc) {
       if (((ArrayType) ai.type()).base().isNull()) {
         Assertions._assert(false, "bad type " + ai.type() + " for " + ai + " at " + ai.position());
@@ -398,7 +407,38 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
           .elements().size()));
       for (Iterator iter = ai.elements().iterator(); iter.hasNext(); idx++) {
         Expr element = (Expr) iter.next();
-        eltNodes[idx] = walkNodes(element, wc);
+        if ( element instanceof ArrayInit ) {
+          eltNodes[idx] = visit((ArrayInit)element, wc, ((ArrayType)ai.type()).base());
+        } else {
+          eltNodes[idx] = walkNodes(element, wc);
+        }
+        if (eltNodes[idx] == null) {
+          Assertions._assert(eltNodes[idx] != null, element.toString());
+        }
+      }
+
+      return makeNode(wc, fFactory, ai, CAstNode.ARRAY_LITERAL, eltNodes);
+    }
+
+    /*
+     * Workaround for the null array init bug: just in case ai.type().base() is null (e.g.
+     * "new Object[] {null}") we get the type from the parent (in this example, a
+     * NewArray of type Object[])
+     */
+    public CAstNode visit(ArrayInit ai, WalkContext wc, Type t) {
+      TypeReference newTypeRef = fIdentityMapper.getTypeRef(t);
+      CAstNode[] eltNodes = new CAstNode[ai.elements().size() + 1];
+      int idx = 0;
+
+      eltNodes[idx++] = makeNode(wc, fFactory, ai, CAstNode.NEW, fFactory.makeConstant(newTypeRef), fFactory.makeConstant(ai
+          .elements().size()));
+      for (Iterator iter = ai.elements().iterator(); iter.hasNext(); idx++) {
+        Expr element = (Expr) iter.next();
+        if ( element instanceof ArrayInit ) {
+          eltNodes[idx] = visit((ArrayInit)element, wc, ((ArrayType)t).base());
+        } else {
+          eltNodes[idx] = walkNodes(element, wc);
+        }
         if (eltNodes[idx] == null) {
           Assertions._assert(eltNodes[idx] != null, element.toString());
         }
@@ -660,6 +700,10 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       Type castedFrom = arg.type();
       Type castedTo = c.castType().type();
 
+      // null can go into anything (e.g. in "((Foobar) null)" null can be assumed to be of type Foobar already) 
+      if ( castedFrom.isNull() )
+        castedFrom = castedTo;
+      
       CAstNode ast = makeNode(wc, fFactory, c, CAstNode.CAST, fFactory.makeConstant(getTypeDict().getCAstTypeFor(castedTo)),
           walkNodes(arg, wc),
 	  fFactory.makeConstant(getTypeDict().getCAstTypeFor(castedFrom)));
@@ -790,7 +834,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       Assertions._assert(newType.isArray());
 
       if (ai != null) {
-        return visit(ai, wc);
+        return visit(ai, wc, newType);
       } else {
         ArrayType arrayType = (ArrayType) newType;
         TypeReference arrayTypeRef = fIdentityMapper.getTypeRef(arrayType);
@@ -1204,8 +1248,10 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
           initNode = fFactory.makeConstant(0.0);
         else
           initNode = fFactory.makeConstant(null);
-      } else
-        initNode = walkNodes(init, wc);
+      } else if (init instanceof ArrayInit)
+        initNode = visit((ArrayInit) init, wc, type); 
+      else
+          initNode = walkNodes(init, wc);
 
       Object defaultValue;
       if (type.isLongOrLess())
