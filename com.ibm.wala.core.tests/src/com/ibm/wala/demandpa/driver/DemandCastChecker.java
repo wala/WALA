@@ -75,8 +75,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.warnings.WalaException;
-import com.yourkit.api.Controller;
-import com.yourkit.api.ProfilingModes;
 
 /**
  * Uses a demand-driven points-to analysis to check the safety of downcasts.
@@ -162,10 +160,10 @@ public class DemandCastChecker {
     CallGraph cg = null;
     try {
       if (PROFILE) {
-        Controller c = new Controller();
-        c.startCPUProfiling(ProfilingModes.CPU_SAMPLING, Controller.DEFAULT_FILTERS);
-        cg = buildCallGraph(scope, cha, options);
-        c.captureCPUSnapshot(false);
+//        Controller c = new Controller();
+//        c.startCPUProfiling(ProfilingModes.CPU_SAMPLING, Controller.DEFAULT_FILTERS);
+//        cg = buildCallGraph(scope, cha, options);
+//        c.captureCPUSnapshot(false);
       } else {
         cg = buildCallGraph(scope, cha, options);
       }
