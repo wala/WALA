@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Properties;
 
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
+import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.demandpa.alg.ContextSensitiveStateMachine;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
 import com.ibm.wala.demandpa.alg.ThisFilteringHeapModel;
@@ -73,8 +74,9 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.warnings.WalaException;
+import com.yourkit.api.Controller;
+import com.yourkit.api.ProfilingModes;
 
 /**
  * Uses a demand-driven points-to analysis to check the safety of downcasts.
@@ -90,18 +92,19 @@ public class DemandCastChecker {
 
   private static final int MAX_CASTS = Integer.MAX_VALUE;
 
-  private static final boolean DUMP_ALL_IR = false;
+  private static final boolean DUMP_ALL_IR = true;
 
-  private final static String CHA_EXCLUSIONS = false ? null : "PLDIChaExclusions.txt";
+  private final static String CHA_EXCLUSIONS = true ? "J2SEClassHierarchyExclusions.txt" : CallGraphTestUtil.REGRESSION_EXCLUSIONS;
+
+  private final static boolean PROFILE = false;
 
   /**
    * @param args
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
-   * @throws IOException 
+   * @throws CancelException
+   * @throws IllegalArgumentException
+   * @throws IOException
    */
   public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {
-    WalaUtil.initializeTraceFile();
     try {
       p = new Properties();
       p.putAll(WalaProperties.loadProperties());
@@ -121,11 +124,13 @@ public class DemandCastChecker {
     // runTestCase("Lspec/benchmarks/_227_mtrt/Main", "mtrt.xml", "mtrt");
     // runTestCase("Lca/mcgill/sable/soot/jimple/Main", "soot-c.xml", "soot-c");
     // runTestCase("LSableCC", "sablecc-j.xml", "sablecc-j");
-    runTestCase("Lpolyglot/main/Main", "polyglot.xml", "polyglot");
+    // runTestCase("Lpolyglot/main/Main", "polyglot.xml", "polyglot");
+    runTestCase(TestConstants.JLEX_MAIN, TestConstants.JLEX, "JLex");
   }
 
-  private static void runTestCase(String mainClass, String scopeFile, String benchName) throws IllegalArgumentException, CancelException, IOException {
-    Trace.println("=====BENCHMARK " + benchName + "=====");
+  public static void runTestCase(String mainClass, String scopeFile, String benchName) throws IllegalArgumentException,
+      CancelException, IOException {
+    System.err.println("=====BENCHMARK " + benchName + "=====");
     System.err.println("analyzing " + benchName);
     DemandRefinementPointsTo dmp = null;
     try {
@@ -137,9 +142,9 @@ public class DemandCastChecker {
     } catch (ClassHierarchyException e) {
       e.printStackTrace();
     }
-    Trace.println("=*=*=*=*=*=*=*=*=*=*=*=*=*=*");
-    Trace.println("");
-    Trace.println("");
+    System.err.println("=*=*=*=*=*=*=*=*=*=*=*=*=*=*");
+    System.err.println("");
+    System.err.println("");
   }
 
   private static DemandRefinementPointsTo makeDemandPointerAnalysis(String scopeFile, String mainClass, String benchName)
@@ -154,13 +159,26 @@ public class DemandCastChecker {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     System.err.print("constructing call graph...");
-    final CallGraph cg = buildCallGraph(scope, cha, options);
+    CallGraph cg = null;
+    try {
+      if (PROFILE) {
+        Controller c = new Controller();
+        c.startCPUProfiling(ProfilingModes.CPU_SAMPLING, Controller.DEFAULT_FILTERS);
+        cg = buildCallGraph(scope, cha, options);
+        c.captureCPUSnapshot(false);
+      } else {
+        cg = buildCallGraph(scope, cha, options);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      Assertions.UNREACHABLE();
+    }
     System.err.println("done");
     // System.err.println(cg.toString());
 
     MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, false);
-    DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(heapModel,cha), fam, cha, options,
-        makeStateMachineFactory());
+    DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(heapModel, cha), fam,
+        cha, options, makeStateMachineFactory());
     fullDemandPointsTo.setRefinementPolicyFactory(chooseRefinePolicyFactory(cha));
     // fullDemandPointsTo.setFieldRefinePolicy(chooseFieldRefinePolicy(cha));
     // fullDemandPointsTo.setCGRefinePolicy(chooseCGRefinePolicy());
@@ -171,12 +189,12 @@ public class DemandCastChecker {
   // private static final boolean EXCLUDE_STUFF = false;
 
   private static String getExclusions(String benchName) {
-    if (benchName.equals("sablecc-j")) {
-      return CHA_EXCLUSIONS;
-    } else {
-      // TODO can we just return null here?
-      return "J2SEClassHierarchyExclusions.txt";
-    }
+    // if (benchName.equals("sablecc-j")) {
+    // return CHA_EXCLUSIONS;
+    // } else {
+    // return "J2SEClassHierarchyExclusions.txt";
+    // }
+    return CHA_EXCLUSIONS;
   }
 
   // private static CallGraphRefinePolicy chooseCGRefinePolicy() {
@@ -201,22 +219,22 @@ public class DemandCastChecker {
    * @param cha
    * @param options
    * @return
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
+   * @throws CancelException
+   * @throws IllegalArgumentException
    */
-  private static CallGraph buildCallGraph(AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options) throws IllegalArgumentException, CancelException {
+  private static CallGraph buildCallGraph(AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options)
+      throws IllegalArgumentException, CancelException {
     CallGraph ret = null;
     final AnalysisCache cache = new AnalysisCache();
     if (CHEAP_CG) {
-      // ret = CallGraphTestUtil.buildRTA(options, cha, scope, warnings);
       SSAPropagationCallGraphBuilder builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
-      ret = builder.makeCallGraph(options,null);
+      ret = builder.makeCallGraph(options, null);
       // we want vanilla 0-1 CFA, which has one abstract loc per allocation
       heapModel = Util.makeVanillaZeroOneCFABuilder(options, cache, cha, scope);
     } else {
       final SSAPropagationCallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
       heapModel = builder;
-      ret = builder.makeCallGraph(options,null);
+      ret = builder.makeCallGraph(options, null);
 
     }
     return ret;
@@ -265,7 +283,6 @@ public class DemandCastChecker {
       for (int i = 0; i < instrs.length; i++) {
         if (numSafe + numMightFail > MAX_CASTS)
           break outer;
-        Trace.flush();
         SSAInstruction instruction = instrs[i];
         if (instruction instanceof SSACheckCastInstruction) {
           SSACheckCastInstruction castInstr = (SSACheckCastInstruction) instruction;
@@ -283,7 +300,7 @@ public class DemandCastChecker {
           // warnings.add(new WeirdCastWarning(castInstr.toString()));
           // continue;
           // }
-          Trace.println("CHECKING " + castInstr + " in " + node.getMethod());
+          System.err.println("CHECKING " + castInstr + " in " + node.getMethod());
           PointerKey castedPk = heapModel.getPointerKeyForLocal(node, castInstr.getUse(0));
           Predicate<Collection<InstanceKey>> castPred = new Predicate<Collection<InstanceKey>>() {
 
@@ -302,29 +319,29 @@ public class DemandCastChecker {
           long startTime = System.currentTimeMillis();
           Pair<PointsToResult, Collection<InstanceKey>> queryResult = dmp.getPointsTo(castedPk, castPred);
           long runningTime = System.currentTimeMillis() - startTime;
-          Trace.println("running time: " + runningTime + "ms");
+          System.err.println("running time: " + runningTime + "ms");
           final FieldRefinePolicy fieldRefinePolicy = dmp.getRefinementPolicy().getFieldRefinePolicy();
           switch (queryResult.fst) {
           case SUCCESS:
-            Trace.println("SAFE: " + castInstr + " in " + node.getMethod());
+            System.err.println("SAFE: " + castInstr + " in " + node.getMethod());
             if (fieldRefinePolicy instanceof ManualFieldPolicy) {
               ManualFieldPolicy hackedFieldPolicy = (ManualFieldPolicy) fieldRefinePolicy;
-              Trace.println(hackedFieldPolicy.getHistory());
+              System.err.println(hackedFieldPolicy.getHistory());
             }
-            Trace.println("TRAVERSED " + dmp.getNumNodesTraversed() + " nodes");
+            System.err.println("TRAVERSED " + dmp.getNumNodesTraversed() + " nodes");
             numSafe++;
             break;
           case NOMOREREFINE:
             if (queryResult.snd != null) {
-              Trace.println("MIGHT FAIL: no more refinement possible for " + castInstr + " in " + node.getMethod());
+              System.err.println("MIGHT FAIL: no more refinement possible for " + castInstr + " in " + node.getMethod());
             } else {
-              Trace.println("MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
+              System.err.println("MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
             }
             failing.add(Pair.make(node, castInstr));
             numMightFail++;
             break;
           case BUDGETEXCEEDED:
-            Trace.println("MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
+            System.err.println("MIGHT FAIL: exceeded budget for " + castInstr + " in " + node.getMethod());
             failing.add(Pair.make(node, castInstr));
             numMightFail++;
             break;
@@ -335,8 +352,8 @@ public class DemandCastChecker {
       }
       // break outer;
     }
-    Trace.println("TOTAL SAFE: " + numSafe);
-    Trace.println("TOTAL MIGHT FAIL: " + numMightFail);
+    System.err.println("TOTAL SAFE: " + numSafe);
+    System.err.println("TOTAL MIGHT FAIL: " + numMightFail);
     return failing;
   }
 
