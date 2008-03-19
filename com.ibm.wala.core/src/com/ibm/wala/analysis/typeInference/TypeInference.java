@@ -38,6 +38,7 @@ import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstanceofInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSALoadClassInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SSAPiInstruction;
@@ -511,6 +512,15 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       } else {
         result = new DeclaredTypeOperator(PrimitiveType.INT);
       }
+    }
+
+    @Override
+    public void visitLoadClass(SSALoadClassInstruction instruction) {
+      IClass jlClassKlass = cha.lookupClass(TypeReference.JavaLangClass);
+      if (Assertions.verifyAssertions) {
+        Assertions._assert(jlClassKlass != null);
+      }
+      result = new DeclaredTypeOperator(new ConeType(jlClassKlass));
     }
 
     @Override

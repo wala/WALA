@@ -72,7 +72,7 @@ public class PointType extends TypeAbstraction {
         }
         // if we get here, we need to do cha-based superclass and return a cone.
         // TODO: avoid the allocation
-        return other.meet(new ConeType(other.getType()));
+        return other.meet(new ConeType(this.getType()));
       } else {
         Assertions.UNREACHABLE("Unexpected type: " + rhs.getClass());
         return null;
