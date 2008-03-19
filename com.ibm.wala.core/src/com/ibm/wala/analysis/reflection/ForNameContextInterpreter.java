@@ -105,8 +105,8 @@ public class ForNameContextInterpreter implements SSAContextInterpreter {
 
   private SSAInstruction[] makeStatements(JavaTypeContext context) {
     ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
-    int nextLocal = 1;
-    int retValue = nextLocal++;
+    // vn1 is the string parameter
+    int retValue = 2;
     TypeReference tr = context.getType().getTypeReference();
     if (tr != null) {
       SSALoadClassInstruction l = new SSALoadClassInstruction(retValue, tr);
@@ -118,10 +118,7 @@ public class ForNameContextInterpreter implements SSAContextInterpreter {
       statements.add(t);
     }
     SSAInstruction[] result = new SSAInstruction[statements.size()];
-    Iterator<SSAInstruction> it = statements.iterator();
-    for (int i = 0; i < result.length; i++) {
-      result[i] = it.next();
-    }
+    statements.toArray(result);
     return result;
   }
 
