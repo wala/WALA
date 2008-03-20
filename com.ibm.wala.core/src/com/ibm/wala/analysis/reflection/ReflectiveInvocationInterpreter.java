@@ -31,7 +31,9 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
+import com.ibm.wala.ssa.SSACheckCastInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
@@ -95,7 +97,7 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     if (!(node.getContext() instanceof ReceiverInstanceContext)) {
       return false;
     }
-    ReceiverInstanceContext r = (ReceiverInstanceContext)node.getContext();
+    ReceiverInstanceContext r = (ReceiverInstanceContext) node.getContext();
     if (!(r.getReceiver() instanceof ConstantKey)) {
       return false;
     }
@@ -135,38 +137,47 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     SpecializedMethod m = new SpecializedMethod(method, method.getDeclaringClass(), method.isStatic(), false);
     Map<Integer, ConstantValue> constants = HashMapFactory.make();
 
-    int nextLocal = method.getNumberOfParameters() + 1;
+    int nextLocal = method.getNumberOfParameters() + 1; // nextLocal = first free value number
 
-    int nargs = target.getNumberOfParameters();
+    int nargs = target.getNumberOfParameters(); // nargs := number of parameters to target, including "this" pointer
     int args[] = new int[nargs];
-    int i = 0;
     int pc = 0;
-    int parametersVn = -1;
+    int parametersVn = -1; // parametersVn will hold the value number of parameters array
 
     if (method.getReference().equals(CTOR_NEW_INSTANCE)) {
       // allocate the new object constructed
       TypeReference allocatedType = target.getDeclaringClass().getReference();
-      m.addInstruction(allocatedType, new SSANewInstruction(args[i++] = nextLocal++, NewSiteReference.make(pc++, allocatedType)),
+      m.addInstruction(allocatedType, new SSANewInstruction(args[0] = nextLocal++, NewSiteReference.make(pc++, allocatedType)),
           true);
       parametersVn = 2;
     } else {
-      // for Method.invoke, v3 is the parameters to the method being called
+      // for Method.invoke, v3 is the parameter to the method being called
       parametersVn = 3;
       if (target.isStatic()) {
         // do nothing
       } else {
         // set up args[0] == v2, the receiver for method.invoke.
-        args[i++] = 2;
+        args[0] = 2;
       }
-
     }
-
+    int nextArg = target.isStatic() ? 0 : 1; // nextArg := next index in args[] array that needs to be initialized
+    int nextParameter = 0; // nextParameter := next index in the parameters[] array that needs to be copied into the args[] array.
+    
     // load each of the parameters into a local variable, args[something]
-    for (int j = i; j < nargs; j++) {
+    for (int j = nextArg; j < nargs; j++) {
+      // load the next parameter into v_temp.  
       int indexConst = nextLocal++;
-      m.addInstruction(null, new SSAArrayLoadInstruction(args[i++] = nextLocal++, parametersVn, indexConst,
-          TypeReference.JavaLangObject), false);
-      constants.put(new Integer(indexConst), new ConstantValue(j - 1));
+      constants.put(new Integer(indexConst), new ConstantValue(nextParameter++)); 
+      int temp = nextLocal++;
+      m.addInstruction(null, new SSAArrayLoadInstruction(temp, parametersVn, indexConst, TypeReference.JavaLangObject), false);
+      pc++;
+      
+      // cast v_temp to the appropriate type and store it in args[j]
+      args[j] = nextLocal++;
+      TypeReference type = target.getParameterType(j);
+      // we insert a cast to filter out bogus types
+      SSACheckCastInstruction cast = SSAInstructionFactory.CheckCastInstruction(args[j], temp, type);
+      m.addInstruction(null, cast, false);
       pc++;
     }
 
