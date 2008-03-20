@@ -199,6 +199,9 @@ public abstract class AbstractReflectionInterpreter implements SSAContextInterpr
       super(method, declaringClass, isStatic, isFactory);
     }
 
+    /**
+     * @param T type allocated by the instruction.   
+     */
     protected void addInstruction(final TypeReference T, SSAInstruction instr, boolean isAllocation) {
       if (isAllocation) {
         if (typesAllocated.contains(T)) {
