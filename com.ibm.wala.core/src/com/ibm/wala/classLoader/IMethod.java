@@ -18,9 +18,8 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 
 /**
- *
- * Basic interface for an object that represents a single Java method for
- * analysis purposes.
+ * 
+ * Basic interface for an object that represents a single Java method for analysis purposes.
  * 
  * @author sfink
  */
@@ -55,8 +54,7 @@ public interface IMethod extends IMember, ContextItem {
   boolean isNative();
 
   /**
-   * Did someone synthesize this method? (As opposed to reading it from a class
-   * file)
+   * Did someone synthesize this method? (As opposed to reading it from a class file)
    * 
    * @return boolean
    */
@@ -118,71 +116,63 @@ public interface IMethod extends IMember, ContextItem {
   boolean hasExceptionHandler();
 
   /**
-   * Method getParameterType. By convention, for a non-static method,
-   * getParameterType(0) is the this pointer
+   * By convention, for a non-static method, getParameterType(0) is the this pointer
    */
   TypeReference getParameterType(int i);
-  
+
   /**
    * @return the name of the return type for this method
    */
   TypeReference getReturnType();
 
   /**
-   * Method getNumberOfParameters. This result includes the "this" pointer if
-   * applicable
+   * Method getNumberOfParameters. This result includes the "this" pointer if applicable
    */
   int getNumberOfParameters();
 
   /**
-   * @return an array of the exception types declared by the throws clause for
-   *         this method, or null if there are none
-   * @throws InvalidClassFileException 
+   * @return an array of the exception types declared by the throws clause for this method, or null if there are none
+   * @throws InvalidClassFileException
    */
   TypeReference[] getDeclaredExceptions() throws InvalidClassFileException;
 
   /**
-   * @return the source line number corresponding to a particular bytecode
-   *         index, or -1 if the information is not available.
-   * @throws InvalidClassFileException 
+   * @return the source line number corresponding to a particular bytecode index, or -1 if the information is not
+   *         available.
+   * @throws InvalidClassFileException
    */
   int getLineNumber(int bcIndex) throws InvalidClassFileException;
 
   /**
-   * @return the (source code) name of the local variable of a given number at
-   *         the specified program counter, or null if the information is not
-   *         available.
-   * @throws InvalidClassFileException 
+   * @return the (source code) name of the local variable of a given number at the specified program counter, or null if
+   *         the information is not available.
+   * @throws InvalidClassFileException
    */
   String getLocalVariableName(int bcIndex, int localNumber) throws InvalidClassFileException;
 
   /**
-   * something like:
-   * com.foo.bar.createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
+   * something like: com.foo.bar.createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
    * 
    * @return String
    */
   public String getSignature();
 
   /**
-   * something like:
-   * foo(Ljava/langString;)Ljava/lang/Class;
+   * something like: foo(Ljava/langString;)Ljava/lang/Class;
    * 
    * @return String
    */
   public Selector getSelector();
 
   /**
-   * Method getDescriptor. something like:
-   * (IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
+   * Method getDescriptor. something like: (IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
    * 
    * @return Descriptor
    */
   Descriptor getDescriptor();
 
   /**
-   * @return true iff the local variable table information for this method is
-   *         available
+   * @return true iff the local variable table information for this method is available
    */
   boolean hasLocalVariableTable();
 }
