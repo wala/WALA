@@ -64,9 +64,8 @@ public class ClassHierarchy implements IClassHierarchy {
   private static final boolean DEBUG = false;
 
   /**
-   * Languages that contribute classes to the set represented in this hierarchy.
-   * The languages may for example be related by inheritance (e.g. X10 derives
-   * from Java, and shares a common type hierarchy rooted at java.lang.Object).
+   * Languages that contribute classes to the set represented in this hierarchy. The languages may for example be
+   * related by inheritance (e.g. X10 derives from Java, and shares a common type hierarchy rooted at java.lang.Object).
    */
   private final Set<Language> languages = HashSetFactory.make();
 
@@ -105,8 +104,7 @@ public class ClassHierarchy implements IClassHierarchy {
   private final AnalysisScope scope;
 
   /**
-   * A mapping from IClass (representing an interface) -> Set of IClass that
-   * implement that interface
+   * A mapping from IClass (representing an interface) -> Set of IClass that implement that interface
    */
   private final Map<IClass, Set<IClass>> implementors = HashMapFactory.make();
 
@@ -123,8 +121,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * Return a set of IClasses that holds all superclasses of klass
    * 
-   * @param klass
-   *            class in question
+   * @param klass class in question
    * @return Set the result set
    */
   private Set<IClass> computeSuperclasses(IClass klass) throws ClassHierarchyException {
@@ -261,8 +258,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * @param klass
    * @return true if the add succeeded; false if it failed for some reason
-   * @throws IllegalArgumentException
-   *             if klass is null
+   * @throws IllegalArgumentException if klass is null
    */
   public boolean addClass(IClass klass) {
     if (klass == null) {
@@ -357,11 +353,9 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * Find the possible receivers of a call to a method reference
    * 
-   * @param ref
-   *            method reference
+   * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
-   * @throws IllegalArgumentException
-   *             if ref is null
+   * @throws IllegalArgumentException if ref is null
    */
   public Collection<IMethod> getPossibleTargets(MethodReference ref) {
     if (ref == null) {
@@ -386,8 +380,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * Find the possible receivers of a call to a method reference
    * 
-   * @param ref
-   *            method reference
+   * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
    */
   @SuppressWarnings("unchecked")
@@ -409,8 +402,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * Find the possible receivers of a call to a method reference
    * 
-   * @param ref
-   *            method reference
+   * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
    */
   public Set<IMethod> getPossibleTargets(IClass declaredClass, MethodReference ref) {
@@ -436,15 +428,11 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Get the targets for a method ref invoked on a class klass. The klass had
-   * better not be an interface.
+   * Get the targets for a method ref invoked on a class klass. The klass had better not be an interface.
    * 
-   * @param ref
-   *            method to invoke
-   * @param klass
-   *            declaringClass of receiver
-   * @return Set the set of method implementations that might receive the
-   *         message
+   * @param ref method to invoke
+   * @param klass declaringClass of receiver
+   * @return Set the set of method implementations that might receive the message
    */
   private Set<IMethod> computeTargetsNotInterface(MethodReference ref, IClass klass) {
 
@@ -471,13 +459,11 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Return the unique receiver of an invocation of method on an object of type
-   * m.getDeclaredClass
+   * Return the unique receiver of an invocation of method on an object of type m.getDeclaredClass
    * 
    * @param m
    * @return IMethod, or null if no appropriate receiver is found.
-   * @throws IllegalArgumentException
-   *             if m is null
+   * @throws IllegalArgumentException if m is null
    */
   public IMethod resolveMethod(MethodReference m) {
     if (m == null) {
@@ -492,10 +478,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @return the canonical IField that represents a given field , or null if
-   *         none found
-   * @throws IllegalArgumentException
-   *             if f is null
+   * @return the canonical IField that represents a given field , or null if none found
+   * @throws IllegalArgumentException if f is null
    */
   public IField resolveField(FieldReference f) {
     if (f == null) {
@@ -509,12 +493,9 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @return the canonical IField that represents a given field , or null if
-   *         none found
-   * @throws IllegalArgumentException
-   *             if f is null
-   * @throws IllegalArgumentException
-   *             if klass is null
+   * @return the canonical IField that represents a given field , or null if none found
+   * @throws IllegalArgumentException if f is null
+   * @throws IllegalArgumentException if klass is null
    */
   public IField resolveField(IClass klass, FieldReference f) {
     if (klass == null) {
@@ -527,16 +508,12 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Return the unique receiver of an invocation of method on an object of type
-   * declaringClass
+   * Return the unique receiver of an invocation of method on an object of type declaringClass
    * 
-   * @param receiverClass
-   *            type of receiver
-   * @param selector
-   *            method signature
+   * @param receiverClass type of receiver
+   * @param selector method signature
    * @return Method resolved method abstraction
-   * @throws IllegalArgumentException
-   *             if receiverClass is null
+   * @throws IllegalArgumentException if receiverClass is null
    */
   public IMethod resolveMethod(IClass receiverClass, Selector selector) {
     if (receiverClass == null) {
@@ -569,10 +546,8 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * Does a particular class contain (implement) a particular method?
    * 
-   * @param clazz
-   *            class in question
-   * @param selector
-   *            method selector
+   * @param clazz class in question
+   * @param selector method selector
    * @return the method if found, else null
    */
   private IMethod findMethod(IClass clazz, Selector selector) {
@@ -580,13 +555,10 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Get the set of subclasses of a class that provide implementations of a
-   * method
+   * Get the set of subclasses of a class that provide implementations of a method
    * 
-   * @param node
-   *            abstraction of class in question
-   * @param selector
-   *            method signature
+   * @param node abstraction of class in question
+   * @param selector method signature
    * @return Set set of IMethods that override the method
    */
   private Set<IMethod> computeOverriders(Node node, Selector selector) {
@@ -632,9 +604,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Number the class hierarchy tree to support efficient subclass tests. After
-   * numbering the tree, n1 is a child of n2 iff n2.left <= n1.left ^ n1.left <=
-   * n2.right. Described as "relative numbering" by Vitek, Horspool, and Krall,
+   * Number the class hierarchy tree to support efficient subclass tests. After numbering the tree, n1 is a child of n2
+   * iff n2.left <= n1.left ^ n1.left <= n2.right. Described as "relative numbering" by Vitek, Horspool, and Krall,
    * OOPSLA 97
    * 
    * TODO: this implementation is recursive; un-recursify if needed
@@ -660,8 +631,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * @author sfink
    * 
-   * internal representation of a node in the class hiearachy, representing one
-   * java class.
+   * internal representation of a node in the class hiearachy, representing one java class.
    */
   private final class Node {
 
@@ -728,8 +698,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @throws IllegalArgumentException
-   *             if A is null
+   * @throws IllegalArgumentException if A is null
    */
   public IClass getLeastCommonSuperclass(IClass A, IClass B) {
 
@@ -802,8 +771,7 @@ public class ClassHierarchy implements IClassHierarchy {
    * Load a class using one of the loaders specified for this class hierarchy
    * 
    * @return null if can't find the class.
-   * @throws IllegalArgumentException
-   *             if A is null
+   * @throws IllegalArgumentException if A is null
    */
   public IClass lookupClass(TypeReference A) {
     if (A == null) {
@@ -884,8 +852,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * Is c a subclass of T?
    * 
-   * @throws IllegalArgumentException
-   *             if c is null
+   * @throws IllegalArgumentException if c is null
    */
   public boolean isSubclassOf(IClass c, IClass T) {
     if (c == null) {
@@ -913,7 +880,11 @@ public class ClassHierarchy implements IClassHierarchy {
           if (ce == null) {
             return false;
           }
-          return isSubclassOf(ce, elementKlass);
+          if (elementKlass.isInterface()) {
+            return implementsInterface(ce, elementKlass);
+          } else {
+            return isSubclassOf(ce, elementKlass);
+          }
         }
       } else {
         return false;
@@ -948,13 +919,15 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * Does c implement i?
    * 
-   * @return true iff i is an interface and c is a class that implements i, r c
-   *         is an interface that extends i.
+   * @return true iff i is an interface and c is a class that implements i, r c is an interface that extends i.
    * 
    */
   public boolean implementsInterface(IClass c, IClass i) {
     if (!i.isInterface()) {
       return false;
+    }
+    if (c.equals(i)) {
+      return true;
     }
     Set impls = implementors.get(i);
     if (impls != null && impls.contains(c)) {
@@ -964,8 +937,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this
-   * implementation. Consider caching if necessary.
+   * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this implementation. Consider caching if
+   * necessary.
    */
   public Collection<IClass> computeSubClasses(TypeReference type) {
     IClass T = lookupClass(type);
@@ -986,8 +959,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Solely for optimization; return a Collection<TypeReference> representing
-   * the subclassesOfError
+   * Solely for optimization; return a Collection<TypeReference> representing the subclassesOfError
    * 
    * kind of ugly. a better scheme?
    */
@@ -1004,8 +976,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this
-   * implementation. Consider caching if necessary.
+   * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this implementation. Consider caching if
+   * necessary.
    * 
    * @return Set of IClasses
    */
@@ -1041,8 +1013,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * TODO: tune this if necessary
    * 
-   * @param type
-   *            an interface
+   * @param type an interface
    * @return Set of IClass that represent implementors of the interface
    */
   public Set<IClass> getImplementors(TypeReference type) {
@@ -1108,15 +1079,14 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * @return a ClassHierarchy object representing the analysis scope
    * @throws ClassHierarchyException
-
+   * 
    */
   public static ClassHierarchy make(AnalysisScope scope) throws ClassHierarchyException {
     return make(scope, new ClassLoaderFactoryImpl(scope.getExclusions()));
   }
 
   /**
-   * temporarily marking this internal to avoid infinite sleep with randomly
-   * chosen IProgressMonitor.
+   * temporarily marking this internal to avoid infinite sleep with randomly chosen IProgressMonitor.
    */
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, IProgressMonitor monitor) throws ClassHierarchyException {
@@ -1128,8 +1098,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * temporarily marking this internal to avoid infinite sleep with randomly
-   * chosen IProgressMonitor.
+   * temporarily marking this internal to avoid infinite sleep with randomly chosen IProgressMonitor.
    */
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, IProgressMonitor monitor)
@@ -1148,8 +1117,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * temporarily marking this internal to avoid infinite sleep with randomly
-   * chosen IProgressMonitor. TODO: nanny for testgen
+   * temporarily marking this internal to avoid infinite sleep with randomly chosen IProgressMonitor. TODO: nanny for
+   * testgen
    */
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Language language, IProgressMonitor monitor)
@@ -1202,10 +1171,8 @@ public class ClassHierarchy implements IClassHierarchy {
    * 
    * i.e. is c2 a subtype of c1?
    * 
-   * @throws IllegalArgumentException
-   *             if c1 is null
-   * @throws IllegalArgumentException
-   *             if c2 is null
+   * @throws IllegalArgumentException if c1 is null
+   * @throws IllegalArgumentException if c2 is null
    */
   public boolean isAssignableFrom(IClass c1, IClass c2) {
     if (c2 == null) {
