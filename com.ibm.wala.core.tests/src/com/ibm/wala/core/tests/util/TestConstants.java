@@ -39,7 +39,7 @@ public interface TestConstants {
   public final static String MULTI_DIM_MAIN = "LmultiDim/TestMultiDim";
 
   public final static String ARRAY_ALIAS_MAIN = "LarrayAlias/TestArrayAlias";
-  
+
   public final static String REFLECT1_MAIN = "Lreflection/Reflect1";
 
   public final static String REFLECT2_MAIN = "Lreflection/Reflect2";
@@ -59,16 +59,24 @@ public interface TestConstants {
   public final static String REFLECT9_MAIN = "Lreflection/Reflect9";
 
   public final static String REFLECT10_MAIN = "Lreflection/Reflect10";
-  
+
   public final static String REFLECT11_MAIN = "Lreflection/Reflect11";
-  
+
   public final static String REFLECT12_MAIN = "Lreflection/Reflect12";
-  
+
   public final static String REFLECT13_MAIN = "Lreflection/Reflect13";
-  
+
   public final static String REFLECT14_MAIN = "Lreflection/Reflect14";
-  
+
   public final static String REFLECT15_MAIN = "Lreflection/Reflect15";
+
+  public final static String REFLECT16_MAIN = "Lreflection/Reflect16";
+
+  public final static String REFLECT17_MAIN = "Lreflection/Reflect17";
+
+  public final static String REFLECT18_MAIN = "Lreflection/Reflect18";
+  
+  public final static String REFLECT19_MAIN = "Lreflection/Reflect19";
 
   public final static String SLICE1_MAIN = "Lslice/Slice1";
 

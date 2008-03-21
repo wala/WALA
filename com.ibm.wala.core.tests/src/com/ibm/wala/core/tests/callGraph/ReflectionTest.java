@@ -438,4 +438,69 @@ public class ReflectionTest extends WalaTestCase {
     nodes = cg.getNodes(mr);
     assertFalse(nodes.isEmpty());
   }
+  
+  /**
+   * Test that when analyzing Reflect16, the call graph includes a node for java.lang.Integer.toString()
+   */
+  public void testReflect16() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECT16_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
+    MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
+    Set<CGNode> nodes = cg.getNodes(mr);
+    assertFalse(nodes.isEmpty());
+  }
+  
+  /**
+   * Test that when analyzing Reflect17, the call graph does not include a node for java.lang.Integer.toString()
+   */
+  public void testReflect17() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECT17_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
+    MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
+    Set<CGNode> nodes = cg.getNodes(mr);
+    assertTrue(nodes.isEmpty());
+  }
+  
+  /**
+   * Test that when analyzing Reflect18, the call graph includes a node for java.lang.Integer.toString()
+   */
+  public void testReflect18() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECT18_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
+    MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
+    Set<CGNode> nodes = cg.getNodes(mr);
+    assertFalse(nodes.isEmpty());
+  }
+  
+  /**
+   * Test that when analyzing Reflect19, the call graph includes a node for java.lang.Integer.toString()
+   */
+  public void testReflect19() throws WalaException, IllegalArgumentException, CancelException, IOException {
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, "Java60RegressionExclusions.txt");
+    ClassHierarchy cha = ClassHierarchy.make(scope);
+    Iterable<Entrypoint> entrypoints = com.ibm.wala.ipa.callgraph.impl.Util.makeMainEntrypoints(scope, cha,
+        TestConstants.REFLECT19_MAIN);
+    AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
+    CallGraph cg = CallGraphTestUtil.buildZeroOneCFA(options, new AnalysisCache(), cha, scope, false);
+    System.err.println(cg);
+    TypeReference tr = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Integer");
+    MethodReference mr = MethodReference.findOrCreate(tr, "toString", "()Ljava/lang/String;");
+    Set<CGNode> nodes = cg.getNodes(mr);
+    assertFalse(nodes.isEmpty());
+  }
 }
