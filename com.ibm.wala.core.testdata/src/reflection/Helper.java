@@ -10,6 +10,11 @@ public class Helper {
     System.out.println("Helper constructor with no parameter invoked");
   }
   
+  public Helper(Integer x) {
+    a = b = null;
+    x.toString();
+  }
+  
   public Helper(Object a) {
     this.a = a;
     this.b = new Object();
@@ -31,4 +36,13 @@ public class Helper {
   public static void s(Object a, Object b) {
     System.out.println("s method invoked");
   }
+  
+  public static void t(Integer x) {
+    x.toString();
+  }
+  
+  public void u(Integer x) {
+    x.toString();
+  }
+  
 }
