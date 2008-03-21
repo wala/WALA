@@ -87,8 +87,9 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (!(node.getContext() instanceof JavaTypeContext))
+    if (!(node.getContext() instanceof JavaTypeContext)) {
       return false;
+    }
     return node.getMethod().getReference().equals(CLASS_NEW_INSTANCE_REF);
   }
 

@@ -33,11 +33,13 @@ class ClassNewInstanceContextSelector implements ContextSelector {
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     if (callee.getReference().equals(ClassNewInstanceContextInterpreter.CLASS_NEW_INSTANCE_REF) && isTypeConstant(receiver)) {
       IClass c = (IClass) ((ConstantKey) receiver).getValue();
-      return new JavaTypeContext(new PointType(c));
+      if (!c.isAbstract() && !c.isInterface()) {
+        return new JavaTypeContext(new PointType(c));
+      }
     }
     return null;
   }
-  
+
   private boolean isTypeConstant(InstanceKey instance) {
     if (instance instanceof ConstantKey) {
       ConstantKey c = (ConstantKey) instance;

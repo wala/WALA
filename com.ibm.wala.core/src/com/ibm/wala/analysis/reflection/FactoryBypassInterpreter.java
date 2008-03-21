@@ -329,10 +329,6 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     return cache.getSSACache().findOrCreateDU(m, node.getContext(), options.getSSAOptions());
   }
 
-  /**
-   * @author sfink
-   * 
-   */
   protected class SpecializedFactoryMethod extends SpecializedMethod {
 
     /**
@@ -486,9 +482,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
         SSAInvokeInstruction s = new SSAInvokeInstruction(params, exc, site);
         calls.add(s);
         allInstructions.add(s);
-      } else {
-        
-      }
+      } 
     }
 
     private int addOriginalStatements(SummarizedMethod m) {
@@ -521,7 +515,6 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     }
 
     private void addStatementsForSetOfTypes(Iterator it) {
-
       if (!it.hasNext()) { // Uh. No types. Hope the caller reported a warning.
         SSAReturnInstruction r = new SSAReturnInstruction(nextLocal, false);
         allInstructions.add(r);
@@ -530,7 +523,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       for (; it.hasNext();) {
         IClass klass = (IClass) it.next();
         TypeReference T = klass.getReference();
-        if (klass.isAbstract() || typesAllocated.contains(T)) {
+        if (klass.isAbstract() || klass.isInterface() || typesAllocated.contains(T)) {
           continue;
         }
         typesAllocated.add(T);
