@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.slicer;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
@@ -43,10 +44,10 @@ public class HeapExclusions {
   }
 
   /**
-   * @return the PointerKeys that are not exluded
-   * @throws IllegalArgumentException  if s is null
+   * @return the PointerKeys that are not excluded
+   * @throws IllegalArgumentException if s is null
    */
-  public Collection<PointerKey> filter(Collection<PointerKey> s) {
+  public Set<PointerKey> filter(Collection<PointerKey> s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
@@ -61,9 +62,7 @@ public class HeapExclusions {
               verboseAction(p);
             }
           } else {
-//            if (VERBOSE) {
-//              System.err.println("Excluded " + p);
-//            }
+            // do nothing
           }
         }
       } else if (p instanceof StaticFieldKey) {
@@ -74,14 +73,11 @@ public class HeapExclusions {
             verboseAction(p);
           }
         } else {
-//          if (VERBOSE) {
-//            System.err.println("Excluded " + p);
-//          }
+          // do nothing
         }
       } else {
         Assertions.UNREACHABLE(s.getClass().toString());
       }
-
 
     }
     return result;
@@ -111,7 +107,7 @@ public class HeapExclusions {
     TypeReference t = getType(pk);
     return (t == null) ? false : set.contains(t);
   }
-  
+
   public static TypeReference getType(PointerKey pk) {
     if (pk instanceof AbstractFieldPointerKey) {
       AbstractFieldPointerKey f = (AbstractFieldPointerKey) pk;

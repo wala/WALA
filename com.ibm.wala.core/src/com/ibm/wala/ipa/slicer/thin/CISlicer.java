@@ -12,10 +12,10 @@ package com.ibm.wala.ipa.slicer.thin;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
@@ -27,8 +27,9 @@ import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.impl.GraphInverter;
 import com.ibm.wala.util.graph.traverse.DFS;
@@ -91,43 +92,55 @@ public class CISlicer {
   public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa) {
     return scanForMod(sdg, pa, false);
   }
-  
+
   /**
-   * Compute the set of pointer keys each statement mods
+   * Compute the set of pointer keys each statement mods. Be careful to avoid eager PDG construction here! That means ..
+   * don't iterate over SDG statements!
    */
   public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa, boolean ignoreAllocHeapDefs) {
     ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
     Map<Statement, Set<PointerKey>> result = HashMapFactory.make();
-    for (Iterator<? extends Statement> it = sdg.iterator(); it.hasNext();) {
-      Statement st = it.next();
-      switch (st.getKind()) {
-      case NORMAL:
-        Set<PointerKey> c = HashSetFactory.make((ModRef.make()).getMod(st.getNode(), h, pa,
-            ((NormalStatement) st).getInstruction(), null, ignoreAllocHeapDefs));
-        result.put(st, c);
-        break;
+    ModRef modRef = ModRef.make();
+    for (CGNode n : sdg.getCallGraph()) {
+      IR ir = n.getIR();
+      if (ir != null) {
+        for (int i = 0; i < ir.getInstructions().length; i++) {
+          SSAInstruction st = ir.getInstructions()[i];
+          if (st != null) {
+            Set<PointerKey> mod = modRef.getMod(n, h, pa, st, null, ignoreAllocHeapDefs);
+            if (!mod.isEmpty()) {
+              NormalStatement normal = new NormalStatement(n, i);
+              result.put(normal, mod);
+            }
+          }
+        }
       }
-
     }
     return result;
   }
 
   /**
-   * Compute the set of PointerKeys each statement refs.
+   * Compute the set of PointerKeys each statement refs.Be careful to avoid eager PDG construction here! That means ..
+   * don't iterate over SDG statements!
    */
   public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis pa) {
     ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
     Map<Statement, Set<PointerKey>> result = HashMapFactory.make();
-    for (Iterator<? extends Statement> it = sdg.iterator(); it.hasNext();) {
-      Statement st = it.next();
-      switch (st.getKind()) {
-      case NORMAL:
-        Set<PointerKey> c = HashSetFactory.make((ModRef.make()).getRef(st.getNode(), h, pa,
-            ((NormalStatement) st).getInstruction(), null));
-        result.put(st, c);
-        break;
+    ModRef modRef = ModRef.make();
+    for (CGNode n : sdg.getCallGraph()) {
+      IR ir = n.getIR();
+      if (ir != null) {
+        for (int i = 0; i < ir.getInstructions().length; i++) {
+          SSAInstruction st = ir.getInstructions()[i];
+          if (st != null) {
+            Set<PointerKey> mod = modRef.getRef(n, h, pa, st, null);
+            if (!mod.isEmpty()) {
+              NormalStatement normal = new NormalStatement(n, i);
+              result.put(normal, mod);
+            }
+          }
+        }
       }
-
     }
     return result;
   }

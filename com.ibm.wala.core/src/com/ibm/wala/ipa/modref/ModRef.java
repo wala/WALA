@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.modref;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -372,19 +373,19 @@ public class ModRef {
   /**
    * Compute the set of {@link PointerKey}s that represent pointers that instruction s may write to.
    */
-  public Collection<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl) {
+  public Set<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl) {
     return getMod(n, h, pa, s, hexcl, false);
   }
 
   /**
    * Compute the set of {@link PointerKey}s that represent pointers that instruction s may write to.
    */
-  public Collection<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl,
+  public Set<PointerKey> getMod(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl,
       boolean ignoreAllocHeapDefs) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
-    Collection<PointerKey> result = HashSetFactory.make(2);
+    Set<PointerKey> result = HashSetFactory.make(2);
     ModVisitor v = makeModVisitor(n, result, pa, h, ignoreAllocHeapDefs);
     s.visit(v);
     return hexcl == null ? result : hexcl.filter(result);
@@ -397,11 +398,11 @@ public class ModRef {
   /**
    * Compute the set of {@link PointerKey}s that represent pointers that instruction s may read.
    */
-  public Collection<PointerKey> getRef(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl) {
+  public Set<PointerKey> getRef(CGNode n, ExtendedHeapModel h, PointerAnalysis pa, SSAInstruction s, HeapExclusions hexcl) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
-    Collection<PointerKey> result = HashSetFactory.make(2);
+    Set<PointerKey> result = HashSetFactory.make(2);
     RefVisitor v = makeRefVisitor(n, result, pa, h);
     s.visit(v);
     return hexcl == null ? result : hexcl.filter(result);
