@@ -59,6 +59,11 @@ import com.ibm.wala.util.intset.OrdinalSet;
 public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
 
   /**
+   * Turn this flag on if you don't want eagerConstruction() to be called.
+   */
+  private static final boolean DEBUG_LAZY = false;
+
+  /**
    * node manager for graph API
    */
   private final Nodes nodeMgr = new Nodes();
@@ -162,6 +167,9 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
    * force eager construction of the entire SDG
    */
   private void eagerConstruction() {
+    if (DEBUG_LAZY) {
+      Assertions.UNREACHABLE();
+    }
     // Assertions.UNREACHABLE();
     if (!eagerComputed) {
       eagerComputed = true;
@@ -204,6 +212,10 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
 
     @Override
     public boolean containsNode(Statement N) {
+      if (super.containsNode(N)) {
+        // first try it without eager construction.
+        return true;
+      }
       // this may be bad. Are you sure you want to call this?
       eagerConstruction();
       return super.containsNode(N);
@@ -218,9 +230,15 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
 
     @Override
     public Statement getNode(int number) {
-      // this may be bad. Are you sure you want to call this?
-      eagerConstruction();
-      return super.getNode(number);
+      Statement s = getNodeLazy(number);
+      if (s != null) {
+        // found it. don't do eager construction.
+        return s;
+      } else {
+        // this may be bad. Are you sure you want to do this?
+        eagerConstruction();
+        return super.getNode(number);
+      }
     }
 
     @Override
@@ -248,6 +266,13 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
      */
     Iterator<? extends Statement> iterateLazyNodes() {
       return super.iterator();
+    }
+
+    /**
+     * get the node with the given number if it already exists. Use with extreme care.
+     */
+    public Statement getNodeLazy(int number) {
+      return super.getNode(number);
     }
 
     @Override

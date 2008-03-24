@@ -91,9 +91,7 @@ public class BFSIterator<T> implements Iterator<T> {
 
   private void init(Graph<T> G, Iterator<? extends T> nodes) {
     this.G = G;
-    if (G.getNumberOfNodes() == 0) {
-      return;
-    }
+
     while (nodes.hasNext()) {
       T o = nodes.next();
       if (!visited.contains(o)) {
