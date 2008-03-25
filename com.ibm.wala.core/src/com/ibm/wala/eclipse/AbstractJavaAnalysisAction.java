@@ -66,8 +66,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
    * @throws IOException 
    * @throws JavaModelException 
    */
-  protected AnalysisScope computeScope() throws JavaModelException, IOException {
-    IStructuredSelection selection = (IStructuredSelection) currentSelection;
+  public static AnalysisScope computeScope(IStructuredSelection selection) throws JavaModelException, IOException {
     Collection<EclipseProjectPath> projectPaths = HashSetFactory.make();
     for (Iterator it = selection.iterator(); it.hasNext();) {
       Object object = it.next();
@@ -106,7 +105,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   /**
    * create an analysis scope as the union of a bunch of EclipseProjectPath
    */
-  private AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath> projectPaths) {
+  private static AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath> projectPaths) {
     AnalysisScope scope = AnalysisScope.createAnalysisScope(Collections.singleton(Language.JAVA));
     
     Collection<Module> seen = HashSetFactory.make();
@@ -118,7 +117,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
     return scope;
   }
 
-  private void buildScope(ClassLoaderReference loader, Collection<EclipseProjectPath> projectPaths, AnalysisScope scope,
+  private static void buildScope(ClassLoaderReference loader, Collection<EclipseProjectPath> projectPaths, AnalysisScope scope,
       Collection<Module> seen) {
     for (EclipseProjectPath path : projectPaths) {
       AnalysisScope pScope = path.toAnalysisScope(null);
