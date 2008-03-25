@@ -246,6 +246,10 @@ public abstract class NativeTranslatorToCAst extends NativeBridge {
       return SCRIPT_ENTITY;
     }
 
+    protected File getFile() {
+      return file;
+    }
+
     public String getName() {
       return "script " + file.getName();
     }

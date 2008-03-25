@@ -91,6 +91,7 @@ CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject xlator)
   this->codeSetGotoTarget = env->GetMethodID(NativeCodeEntity, "setGotoTarget", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstNode;)V");
   this->codeSetLabelledGotoTarget = env->GetMethodID(NativeCodeEntity, "setLabelledGotoTarget", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstNode;Ljava/lang/Object;)V");
   this->setNodePosition = env->GetMethodID(NativeCodeEntity, "setNodePosition", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstSourcePositionMap$Position;)V");
+  this->setNodeType = env->GetMethodID(NativeCodeEntity, "setNodeType", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstType;)V");
   this->setPosition = env->GetMethodID(NativeEntity, "setPosition", "(Lcom/ibm/wala/cast/tree/CAstSourcePositionMap$Position;)V");
 
   this->NativeFieldEntity = env->FindClass(FieldCls);
@@ -479,9 +480,9 @@ jobjectArray CAstWrapper::makeArray(jclass type, int count, jobject elts[]) {
 
   for(int i = 0; i < count; i++) {
     env->SetObjectArrayElement(result, i, elts[i]);
+    THROW_ANY_EXCEPTION(java_ex);
   }
   
-  THROW_ANY_EXCEPTION(java_ex);
   return result;
 }
 
@@ -616,6 +617,10 @@ void CAstWrapper::setLocation(jobject entity, jobject loc) {
 
 void CAstWrapper::setAstNodeLocation(jobject entity, jobject astNode, jobject loc) {
   env->CallVoidMethod(entity, setNodePosition, astNode, loc);
+}
+
+void CAstWrapper::setAstNodeType(jobject entity, jobject astNode, jobject loc) {
+  env->CallVoidMethod(entity, setNodeType, astNode, loc);
 }
 
 jobject CAstWrapper::makeLocation(int fl, int fc, int ll, int lc) {

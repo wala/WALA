@@ -24,8 +24,12 @@ import com.ibm.wala.util.debug.Assertions;
 
 public class CAstCloner extends CAstBasicRewriter {
 
+  public CAstCloner(CAst Ast, boolean recursive) {
+    super(Ast, recursive);
+  }
+
   public CAstCloner(CAst Ast) {
-    super(Ast, false);
+    this(Ast, false);
   }
 
   @SuppressWarnings("unchecked")

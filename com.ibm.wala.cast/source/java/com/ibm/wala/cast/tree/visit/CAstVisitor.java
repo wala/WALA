@@ -167,6 +167,19 @@ public abstract class CAstVisitor {
       visitor.leaveFunctionEntity(n, context, codeContext, visitor);
       break;
     }
+    case CAstEntity.MACRO_ENTITY: {
+      Context codeContext = visitor.makeCodeContext(context, n);
+      if (visitor.visitMacroEntity(n, context, codeContext, visitor))
+        break;
+      // visit the AST if any
+      if (n.getAST() != null)
+        visitor.visit(n.getAST(), codeContext, visitor);
+      // XXX: there may be code that needs to go in here
+      // process any remaining scoped children
+      visitor.visitScopedEntities(n, n.getScopedEntities(null), codeContext, visitor);
+      visitor.leaveMacroEntity(n, context, codeContext, visitor);
+      break;
+    }
     case CAstEntity.SCRIPT_ENTITY: {
       Context codeContext = visitor.makeCodeContext(context, n);
       if (visitor.visitScriptEntity(n, context, codeContext, visitor))
@@ -276,6 +289,21 @@ public abstract class CAstVisitor {
    * @param codeContext a visitor-specific context for this function
    */
   protected void leaveFunctionEntity(CAstEntity n, Context context, Context codeContext, CAstVisitor visitor) { visitor.leaveEntity(n, context, visitor); }
+  /**
+   * Visit a Macro entity.
+   * @param n the entity to process
+   * @param context a visitor-specific context
+   * @param codeContext a visitor-specific context for this macro
+   * @return true if no further processing is needed
+   */
+  protected boolean visitMacroEntity(CAstEntity n, Context context, Context codeContext, CAstVisitor visitor) { return visitor.visitEntity(n, context, visitor); }
+  /**
+   * Leave a Macro entity.
+   * @param n the entity to process
+   * @param context a visitor-specific context
+   * @param codeContext a visitor-specific context for this macro
+   */
+  protected void leaveMacroEntity(CAstEntity n, Context context, Context codeContext, CAstVisitor visitor) { visitor.leaveEntity(n, context, visitor); }
   /**
    * Visit a Script entity.
    * @param n the entity to process
@@ -739,6 +767,22 @@ public abstract class CAstVisitor {
 	visitor.visit(n.getChild(1), context, visitor);
       }
       visitor.leaveIsDefinedExpr(n, context, visitor);
+      break;
+    }
+
+    case CAstNode.INCLUDE: {
+      if (visitor.visitInclude(n, context, visitor)) {
+	break;
+      }
+      visitor.leaveInclude(n, context, visitor);
+      break;
+    }
+
+    case CAstNode.MACRO_VAR: {
+      if (visitor.visitMacroVar(n, context, visitor)) {
+	break;
+      }
+      visitor.leaveMacroVar(n, context, visitor);
       break;
     }
 
@@ -1645,4 +1689,21 @@ public abstract class CAstVisitor {
    * @param c a visitor-specific context
    */
   protected void leaveEcho(CAstNode n, Context c, CAstVisitor visitor) { visitor.leaveNode(n, c, visitor); }
+
+  protected boolean visitInclude(CAstNode n, Context c, CAstVisitor visitor) { return visitor.visitNode(n, c, visitor); }
+  /**
+   * Leave an INCLUDE node.
+   * @param n the node to process
+   * @param c a visitor-specific context
+   */
+  protected void leaveInclude(CAstNode n, Context c, CAstVisitor visitor) { visitor.leaveNode(n, c, visitor); }
+
+  protected boolean visitMacroVar(CAstNode n, Context c, CAstVisitor visitor) { return visitor.visitNode(n, c, visitor); }
+  /**
+   * Leave an MACRO_VAR node.
+   * @param n the node to process
+   * @param c a visitor-specific context
+   */
+  protected void leaveMacroVar(CAstNode n, Context c, CAstVisitor visitor) { visitor.leaveNode(n, c, visitor); }
+
 }

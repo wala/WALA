@@ -10,33 +10,15 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.translator;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 import com.ibm.wala.cast.ir.ssa.*;
 import com.ibm.wala.cast.ir.ssa.AstLexicalAccess.Access;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
-import com.ibm.wala.cast.tree.CAstControlFlowMap;
-import com.ibm.wala.cast.tree.CAstEntity;
-import com.ibm.wala.cast.tree.CAstNode;
-import com.ibm.wala.cast.tree.CAstSourcePositionMap;
-import com.ibm.wala.cast.tree.CAstSymbol;
-import com.ibm.wala.cast.tree.CAstType;
+import com.ibm.wala.cast.tree.*;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
-import com.ibm.wala.cast.tree.impl.CAstCloner;
-import com.ibm.wala.cast.tree.impl.CAstImpl;
-import com.ibm.wala.cast.tree.impl.CAstOperator;
-import com.ibm.wala.cast.tree.impl.CAstRewriter;
-import com.ibm.wala.cast.tree.impl.CAstSymbolImplBase;
+import com.ibm.wala.cast.tree.impl.*;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
 import com.ibm.wala.cast.types.AstTypeReference;
 import com.ibm.wala.cast.util.CAstPrinter;
@@ -49,12 +31,7 @@ import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.ShiftInstruction;
 import com.ibm.wala.shrikeBT.UnaryOpInstruction;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSAInstructionFactory;
-import com.ibm.wala.ssa.SSALoadClassInstruction;
-import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -291,9 +268,16 @@ public abstract class AstTranslator extends CAstVisitor
 
   protected final IClassLoader loader;
 
-  protected AstTranslator(IClassLoader loader) {
+  protected final Map namedEntityResolver;
+
+  protected AstTranslator(IClassLoader loader, Map namedEntityResolver) {
     this.loader = loader;
+    this.namedEntityResolver = namedEntityResolver;
     this.arrayOpHandler = this;
+  }
+
+  protected AstTranslator(IClassLoader loader) {
+    this(loader, null);
   }
 
   public void setArrayOpHandler(ArrayOpHandler arrayOpHandler) {
@@ -343,7 +327,7 @@ public abstract class AstTranslator extends CAstVisitor
 
   public static final boolean DEBUG_NAMES = DEBUG_ALL || false;
 
-  public static final boolean DEBUG_LEXICAL = DEBUG_ALL || false;
+  public static final boolean DEBUG_LEXICAL = DEBUG_ALL || true;
 
   protected final static class PreBasicBlock implements INodeWithNumber, IBasicBlock {
     private static final int NORMAL = 0;
@@ -2307,6 +2291,10 @@ public abstract class AstTranslator extends CAstVisitor
       closeFunctionEntity(n, (WalkContext) context, (WalkContext) codeContext);
   }
 
+  protected boolean visitMacroEntity(CAstEntity n, Context context, Context codeContext, CAstVisitor visitor) {
+    return true;
+  }
+
   protected boolean visitScriptEntity(CAstEntity n, Context context, Context codeContext, CAstVisitor visitor) {
     declareFunction(n, (WalkContext) codeContext);
     initFunctionEntity(n, (WalkContext) context, (WalkContext) codeContext);
@@ -2396,6 +2384,7 @@ public abstract class AstTranslator extends CAstVisitor
   protected void postProcessNode(CAstNode n, Context c, CAstVisitor visitor) {
     WalkContext context = (WalkContext) c;
     if (popPositionM.get(n) != null) {
+      popPositionM.remove(n);
       context.cfg().setCurrentPosition(positions.pop());
     }
   }
@@ -3420,6 +3409,79 @@ public abstract class AstTranslator extends CAstVisitor
     }
 
     wc.cfg().addInstruction(new AstEchoInstruction(rvals));
+  }
+
+  protected void leaveInclude(final CAstNode n, 
+			      Context c, 
+			      CAstVisitor visitor) 
+  {
+    WalkContext wc = (WalkContext) c;
+      
+    CAstEntity included;
+    if (n.getChild(0).getKind() == CAstNode.NAMED_ENTITY_REF) {
+      assert namedEntityResolver != null;
+      included = (CAstEntity) 
+	namedEntityResolver.get(n.getChild(0).getChild(0).getValue());
+    } else {
+      included = (CAstEntity) n.getChild(0).getValue();
+    }
+    
+    if (included == null) {
+	Trace.println("cannot find include for " + CAstPrinter.print(n));
+	Trace.println("from:\n" + namedEntityResolver);
+    } else {
+      final boolean isMacroExpansion = 
+        (included.getKind() == CAstEntity.MACRO_ENTITY);
+
+      System.err.println("found " + included.getName() + " for " + CAstPrinter.print(n));
+
+      final CAstEntity copy = (new CAstCloner(new CAstImpl(), true) {
+
+        private CAstNode copyIncludeExpr(CAstNode expr) {
+	  if (expr.getValue() != null) {
+	    return Ast.makeConstant(expr.getValue());
+	  } else if (expr instanceof CAstOperator) {
+	    return expr;
+	  } else {
+	    CAstNode nc[] = new CAstNode[ expr.getChildCount() ];
+
+	    for(int i = 0; i < expr.getChildCount(); i++) {
+	      nc[i] = copyIncludeExpr(expr.getChild(i));
+	    }
+
+	    return Ast.makeNode(expr.getKind(), nc);
+	  }
+	}
+
+	protected CAstNode copyNodes(CAstNode root, NonCopyingContext c, Map nodeMap) {
+	  if (isMacroExpansion && root.getKind() == CAstNode.MACRO_VAR) {
+	    int arg = ((Number)root.getChild(0).getValue()).intValue();
+	    CAstNode expr = copyIncludeExpr(n.getChild(arg));
+	    nodeMap.put(Pair.make(root, c.key()), expr);
+	    return expr;
+	  } else {
+	    return super.copyNodes(root, c, nodeMap);
+	  }
+	}
+      }).rewrite(included);
+
+      if (copy.getAST() == null) {
+	Trace.println(copy.getName() + " has no AST");
+
+      } else {
+	visit(copy.getAST(), new DelegatingContext(wc) {
+          public CAstSourcePositionMap getSourceMap() {
+	    return copy.getSourceMap();
+	  }
+
+	  public CAstControlFlowMap getControlFlow() {
+	    return copy.getControlFlow();
+	  }
+	}, visitor);
+
+	visitor.visitScopedEntities(copy, copy.getAllScopedEntities(), wc, visitor);
+      }
+    }
   }
 
   protected final void walkEntities(CAstEntity N, Context c) {

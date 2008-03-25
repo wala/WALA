@@ -83,6 +83,9 @@ _CAstNodeType(EACH_ELEMENT_HAS_NEXT)
 _CAstNodeType(LIST_EXPR);
 _CAstNodeType(EMPTY_LIST_EXPR);
 _CAstNodeType(IS_DEFINED_EXPR);
+_CAstNodeType(INCLUDE)
+_CAstNodeType(NAMED_ENTITY_REF);
+_CAstNodeType(MACRO_VAR);
 
 #undef _CODE_CONSTANTS
 #undef _CPP_CONSTANTS

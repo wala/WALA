@@ -4,8 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 import com.ibm.wala.cast.ir.translator.NativeTranslatorToCAst;
 import com.ibm.wala.cast.ir.translator.TranslatorToIR;
@@ -22,6 +21,7 @@ import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.classLoader.SourceURLModule;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeName;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
@@ -47,6 +47,8 @@ public abstract class CAstAbstractNativeLoader extends CAstAbstractLoader {
   public void init(final Set modules) {
     final CAst ast = new CAstImpl();
 
+    final Set topLevelEntities = new LinkedHashSet();
+
     final TranslatorToIR xlatorToIR = initTranslator();
 
     class TranslatorNestingHack {
@@ -67,7 +69,7 @@ public abstract class CAstAbstractNativeLoader extends CAstAbstractLoader {
 	    if (fileEntity != null) {
 	      Trace.println(CAstPrinter.print(fileEntity));
 
-	      xlatorToIR.translate(fileEntity, fn);
+	      topLevelEntities.add(Pair.make(fileEntity, fn));
 	    }
           } catch (MalformedURLException e) {
             Trace.println("unpected problems with " + f);
@@ -95,16 +97,16 @@ public abstract class CAstAbstractNativeLoader extends CAstAbstractLoader {
 	    if (fileEntity != null) {
 	      Trace.println(CAstPrinter.print(fileEntity));
 
-	      xlatorToIR.translate(fileEntity, fileName);
+	      topLevelEntities.add(Pair.make(fileEntity, fileName));
 	    }
 
             F.delete();
           } catch (IOException e) {
-            Trace.println("unpected problems with " + fileName);
+            Trace.println("unexpected problems with " + fileName);
 	    e.printStackTrace( Trace.getTraceStream() );
             Assertions.UNREACHABLE();
           } catch (RuntimeException e) {
-            Trace.println("unpected problems with " + fileName);
+            Trace.println("unexpected problems with " + fileName);
 	    e.printStackTrace( Trace.getTraceStream() );
 	  }
         }
@@ -120,6 +122,11 @@ public abstract class CAstAbstractNativeLoader extends CAstAbstractLoader {
         for (Iterator mes = modules.iterator(); mes.hasNext();) {
           init((Module) mes.next());
         }
+
+	for(Iterator tles = topLevelEntities.iterator(); tles.hasNext(); ) {
+	  Pair p = (Pair)tles.next();
+	  xlatorToIR.translate((CAstEntity)p.fst, (String)p.snd);
+	}
       }
     }
 

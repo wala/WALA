@@ -13,22 +13,26 @@
  */
 package com.ibm.wala.cast.tree.impl;
 
-import java.util.Map;
-
 import com.ibm.wala.cast.tree.CAstReference;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.CAstTypeDictionary;
 import com.ibm.wala.util.collections.HashMapFactory;
 
+import java.util.*;
+
 public class CAstTypeDictionaryImpl implements CAstTypeDictionary {
-  private final Map/*<ASTType,CAstType>*/<Object, CAstType> fMap= HashMapFactory.make();
+  protected final Map fMap = HashMapFactory.make();
 
   public CAstType getCAstTypeFor(Object/*ASTType*/ astType) {
-    return fMap.get(astType);
+      return (CAstType) fMap.get(astType);
   }
 
   public void map(Object/*ASTType*/ astType, CAstType castType) {
     fMap.put(astType, castType);
+  }
+
+  public Iterator iterator() {
+    return fMap.values().iterator();
   }
 
   public CAstReference resolveReference(CAstReference ref) {

@@ -60,6 +60,11 @@ public interface CAstEntity {
    */
   public static int RULE_ENTITY = 6;
 
+  /** This entity is a macro.  A macro is a code body that only makes
+   * sense when expanded in the context of another code body.
+   **/
+  public static int MACRO_ENTITY = 7;
+
   /**
    *  Languages that introduce new kinds of CAstEntity should use this
    * number as the base of integers chosen to denote the new entity

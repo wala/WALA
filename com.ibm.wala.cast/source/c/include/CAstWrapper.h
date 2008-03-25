@@ -92,6 +92,7 @@ private:
   jmethodID fieldEntityInit;
   jmethodID _makeLocation;
   jmethodID setNodePosition;
+  jmethodID setNodeType;
   jmethodID setPosition;
   jmethodID codeSetGotoTarget;
   jmethodID codeSetLabelledGotoTarget;
@@ -210,6 +211,8 @@ public:
   void setGotoTarget(jobject, jobject, jobject, jobject);
   
   void setAstNodeLocation(jobject, jobject, jobject);
+
+  void setAstNodeType(jobject, jobject, jobject);
 
   void setLocation(jobject, jobject);
 

@@ -271,6 +271,9 @@ public abstract class CAstRewriter<C extends CAstRewriter.RewriteContext<K>, K e
   }
 
   public CAstEntity rewrite(final CAstEntity root) {
+
+    Trace.println("Rewriting " + root.getName());
+
     if (root.getAST() != null) {
       final Rewrite rewrite = rewrite(root.getAST(), root.getControlFlow(), root.getSourceMap(), root.getNodeTypeMap(), root
           .getAllScopedEntities());
