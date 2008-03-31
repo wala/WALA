@@ -13,23 +13,24 @@ package com.ibm.wala.util.warnings;
 import com.ibm.wala.ipa.callgraph.CGNode;
 
 /**
- * A failure to resolve some entity while processing a particular
- * node
+ * A failure to resolve some entity while processing a particular node
  * 
  * @author sfink
  */
 public class ResolutionFailure<T> extends MethodWarning {
 
-  final T ref;
   final String message;
 
   /**
-   * @throws NullPointerException  if node is null
+   * @throws NullPointerException if node is null
    */
   public ResolutionFailure(CGNode node, T ref, String message) throws NullPointerException {
     super(Warning.SEVERE, node.getMethod().getReference());
-    this.message = message;
-    this.ref = ref;
+    if (message == null) {
+      this.message = getClass() + " " + getMethod() + " " + ref;
+    } else {
+      this.message = getClass() + " " + getMethod() + ": " + message + " for " + ref;
+    }
   }
 
   private ResolutionFailure(CGNode node, T ref) {
@@ -41,11 +42,7 @@ public class ResolutionFailure<T> extends MethodWarning {
    */
   @Override
   public String getMsg() {
-    if (message == null) {
-      return getClass() + " " + getMethod() + " " + ref;
-    } else {
-      return getClass() + " " + getMethod() + ": " + message + " for " + ref;
-    }
+    return message;
   }
 
   public static <T> ResolutionFailure<T> create(CGNode node, T ref, String msg) throws IllegalArgumentException {
@@ -61,39 +58,4 @@ public class ResolutionFailure<T> extends MethodWarning {
     }
     return new ResolutionFailure<T>(node, ref);
   }
-
-  @Override
-  public int hashCode() {
-    final int prime = 31;
-    int result = super.hashCode();
-    result = prime * result + ((message == null) ? 0 : message.hashCode());
-    result = prime * result + ((ref == null) ? 0 : ref.hashCode());
-    return result;
-  }
-
-  @Override
-  public boolean equals(Object obj) {
-    if (this == obj)
-      return true;
-    if (!super.equals(obj))
-      return false;
-    if (getClass() != obj.getClass())
-      return false;
-    final ResolutionFailure other = (ResolutionFailure) obj;
-    if (message == null) {
-      if (other.message != null)
-        return false;
-    } else if (!message.equals(other.message))
-      return false;
-    if (ref == null) {
-      if (other.ref != null)
-        return false;
-    } else if (!ref.equals(other.ref))
-      return false;
-    return true;
-  }
-
-
-  
-
 }
