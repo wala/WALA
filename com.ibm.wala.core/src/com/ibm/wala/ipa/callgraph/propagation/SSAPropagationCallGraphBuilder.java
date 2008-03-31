@@ -1055,7 +1055,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       if (instruction.getCallSite().isStatic()) {
         CGNode n = getTargetForCall(node, instruction.getCallSite(), (InstanceKey) null);
         if (n == null) {
-          Warnings.add(ResolutionFailure.create(node, instruction));
+          Warnings.add(ResolutionFailure.create(node, instruction.getCallSite()));
         } else {
           getBuilder().processResolvedCall(node, instruction, n, computeInvariantParameters(instruction), uniqueCatch);
           if (DEBUG) {

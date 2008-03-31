@@ -225,7 +225,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
           Assertions._assert(from != null);
           Assertions._assert(to != null);
         }
-        MachineState result = new MachineState(71167 * (from.hashCode() + to.hashCode()), from);
+        MachineState result = new MachineState(71167 * from.hashCode() + to.hashCode(), from);
 
         return result;
       }

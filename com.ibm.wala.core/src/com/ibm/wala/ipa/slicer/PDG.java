@@ -165,10 +165,11 @@ public class PDG implements NumberedGraph<Statement> {
    */
   private void populate() {
     if (!isPopulated) {
-      // ensure that we keep the single, canonical IR live throughout initialization, while the instructionIndices map is live.
+      // ensure that we keep the single, canonical IR live throughout initialization, while the instructionIndices map
+      // is live.
       IR ir = node.getIR();
       isPopulated = true;
-      
+
       Map<SSAInstruction, Integer> instructionIndices = computeInstructionIndices(ir);
       createNodes(ref, cOptions, ir);
       createScalarEdges(cOptions, ir, instructionIndices);
@@ -205,7 +206,8 @@ public class PDG implements NumberedGraph<Statement> {
   /**
    * Create all control dependence edges in this PDG.
    */
-  private void createControlDependenceEdges(ControlDependenceOptions cOptions, IR ir,Map<SSAInstruction, Integer> instructionIndices) {
+  private void createControlDependenceEdges(ControlDependenceOptions cOptions, IR ir,
+      Map<SSAInstruction, Integer> instructionIndices) {
     if (cOptions.equals(ControlDependenceOptions.NONE)) {
       return;
     }
@@ -322,7 +324,7 @@ public class PDG implements NumberedGraph<Statement> {
       return;
     }
 
-    // this is tricky .. I'm explicitly creating a new DefUse to make sure it refers to the instructions we need from 
+    // this is tricky .. I'm explicitly creating a new DefUse to make sure it refers to the instructions we need from
     // the "one true" ir of the moment.
     DefUse DU = new DefUse(ir);
     SSAInstruction[] instructions = ir.getInstructions();
@@ -409,7 +411,7 @@ public class PDG implements NumberedGraph<Statement> {
         if (Assertions.verifyAssertions && dOptions.isIgnoreExceptions()) {
           Assertions._assert(!s.getKind().equals(Kind.EXC_RET_CALLER));
         }
-        
+
         ValueNumberCarrier a = (ValueNumberCarrier) s;
         for (Iterator<SSAInstruction> it2 = DU.getUses(a.getValueNumber()); it2.hasNext();) {
           SSAInstruction use = it2.next();
@@ -796,8 +798,8 @@ public class PDG implements NumberedGraph<Statement> {
   private void createNodes(Map<CGNode, OrdinalSet<PointerKey>> ref, ControlDependenceOptions cOptions, IR ir) {
 
     if (ir != null) {
-      Collection<SSAInstruction> visited = createNormalStatements(ir, ref);
-      createSpecialStatements(ir, visited);
+      createNormalStatements(ir, ref);
+      createSpecialStatements(ir);
     }
 
     createCalleeParams(ref);
@@ -868,21 +870,16 @@ public class PDG implements NumberedGraph<Statement> {
    * <li> getCaughtExceptions
    * </ul>
    */
-  private void createSpecialStatements(IR ir, Collection<SSAInstruction> visited) {
+  private void createSpecialStatements(IR ir) {
     // create a node for instructions which do not correspond to bytecode
     for (Iterator<SSAInstruction> it = ir.iterateAllInstructions(); it.hasNext();) {
       SSAInstruction s = it.next();
-      if (s != null && !visited.contains(s)) {
-        visited.add(s);
-        if (s instanceof SSAPhiInstruction) {
-          delegate.addNode(new PhiStatement(node, (SSAPhiInstruction) s));
-        } else if (s instanceof SSAGetCaughtExceptionInstruction) {
-          delegate.addNode(new GetCaughtExceptionStatement(node, (SSAGetCaughtExceptionInstruction) s));
-        } else if (s instanceof SSAPiInstruction) {
-          delegate.addNode(new PiStatement(node, (SSAPiInstruction) s));
-        } else {
-          Assertions.UNREACHABLE(s.toString());
-        }
+      if (s instanceof SSAPhiInstruction) {
+        delegate.addNode(new PhiStatement(node, (SSAPhiInstruction) s));
+      } else if (s instanceof SSAGetCaughtExceptionInstruction) {
+        delegate.addNode(new GetCaughtExceptionStatement(node, (SSAGetCaughtExceptionInstruction) s));
+      } else if (s instanceof SSAPiInstruction) {
+        delegate.addNode(new PiStatement(node, (SSAPiInstruction) s));
       }
     }
   }
@@ -890,8 +887,7 @@ public class PDG implements NumberedGraph<Statement> {
   /**
    * Create nodes in the graph corresponding to "normal" (bytecode) instructions
    */
-  private Collection<SSAInstruction> createNormalStatements(IR ir, Map<CGNode, OrdinalSet<PointerKey>> ref) {
-    Collection<SSAInstruction> visited = HashSetFactory.make();
+  private void createNormalStatements(IR ir, Map<CGNode, OrdinalSet<PointerKey>> ref) {
     // create a node for every normal instruction in the IR
     SSAInstruction[] instructions = ir.getInstructions();
     for (int i = 0; i < instructions.length; i++) {
@@ -903,13 +899,11 @@ public class PDG implements NumberedGraph<Statement> {
 
       if (s != null) {
         delegate.addNode(new NormalStatement(node, i));
-        visited.add(s);
       }
       if (s instanceof SSAAbstractInvokeInstruction) {
         addParamPassingStatements(i, ref, ir);
       }
     }
-    return visited;
   }
 
   /**

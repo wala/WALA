@@ -11,6 +11,8 @@
 
 package com.ibm.wala.ipa.callgraph.impl;
 
+import java.util.Arrays;
+
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
@@ -19,7 +21,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * An entrypoint whose parameter types are the declared types.
  * 
  * @author sfink
@@ -92,5 +93,27 @@ public class DefaultEntrypoint extends Entrypoint {
 
   public IClassHierarchy getCha() {
     return cha;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result + Arrays.hashCode(paramTypes);
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (!super.equals(obj))
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    final DefaultEntrypoint other = (DefaultEntrypoint) obj;
+    if (!Arrays.equals(paramTypes, other.paramTypes))
+      return false;
+    return true;
   }
 }

@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
@@ -39,10 +40,9 @@ import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.client.AbstractAnalysisEngine;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
-import com.ibm.wala.util.config.*;
+import com.ibm.wala.util.config.AnalysisScopeReader;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
@@ -95,9 +95,11 @@ public class EclipseProjectPath {
    */
   private final IJavaProject project;
 
-  private final Map<Loader, Set<Module>> binaryModules = HashMapFactory.make();
+  // SJF: Intentionally do not use HashMapFactory, since the Loader keys in the following must use
+  // identityHashCode.  TODO: fix this source of non-determinism?
+  private final Map<Loader, Set<Module>> binaryModules = new HashMap<Loader, Set<Module>>();
 
-  private final Map<Loader, Set<Module>> sourceModules = HashMapFactory.make();
+  private final Map<Loader, Set<Module>> sourceModules = new HashMap<Loader, Set<Module>>();
 
   private final Collection<IClasspathEntry> alreadyResolved = HashSetFactory.make();
 
