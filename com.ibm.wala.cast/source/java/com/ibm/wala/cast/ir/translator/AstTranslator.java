@@ -48,9 +48,7 @@ import com.ibm.wala.util.strings.Atom;
 /**
  * @author Julian Dolby TODO: document me.
  */
-public abstract class AstTranslator extends CAstVisitor 
-    implements ArrayOpHandler, TranslatorToIR 
-{
+public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandler, TranslatorToIR {
 
   protected abstract boolean useDefaultInitValues();
 
@@ -105,18 +103,16 @@ public abstract class AstTranslator extends CAstVisitor
   }
 
   /**
-   * If this returns true, new global declarations get created for any attempt
-   * to access a non-existent variable (believe it or not, JavaScript actually
-   * does this!)
+   * If this returns true, new global declarations get created for any attempt to access a non-existent variable
+   * (believe it or not, JavaScript actually does this!)
    */
   protected boolean hasImplicitGlobals() {
     return false;
   }
 
   /**
-   * If this returns true, then attempts to lookup non-existent names return
-   * `null' rather than tripping an assertion. This can be used when special
-   * handling is needed for built-in names. (PHP does this)
+   * If this returns true, then attempts to lookup non-existent names return `null' rather than tripping an assertion.
+   * This can be used when special handling is needed for built-in names. (PHP does this)
    */
   protected boolean hasSpecialUndeclaredVariables() {
     return false;
@@ -2327,10 +2323,8 @@ public abstract class AstTranslator extends CAstVisitor
     String[] nms = makeNameMap(n, functionContext.entityScopes());
 
     /*
-     * Set reachableBlocks = DFS.getReachableNodes(cfg,
-     * Collections.singleton(cfg.entry()));
-     * Assertions._assert(reachableBlocks.size() == cfg.getNumberOfNodes(),
-     * cfg.toString());
+     * Set reachableBlocks = DFS.getReachableNodes(cfg, Collections.singleton(cfg.entry()));
+     * Assertions._assert(reachableBlocks.size() == cfg.getNumberOfNodes(), cfg.toString());
      */
 
     // (put here to allow subclasses to handle stuff in scoped entities)
@@ -2570,24 +2564,22 @@ public abstract class AstTranslator extends CAstVisitor
     return false;
   }
 
-  private boolean
-    handleBinaryOpThrow(CAstNode n, CAstNode op, WalkContext context)
-  {
+  private boolean handleBinaryOpThrow(CAstNode n, CAstNode op, WalkContext context) {
     // currently, only integer / and % throw exceptions
     boolean mayBeInteger = false;
     Collection labels = context.getControlFlow().getTargetLabels(n);
-    if (! labels.isEmpty()) {
+    if (!labels.isEmpty()) {
       context.cfg().addPreNode(n, context.getUnwindState());
 
       mayBeInteger = true;
-      assert op==CAstOperator.OP_DIV||op==CAstOperator.OP_MOD : CAstPrinter.print(n);
+      assert op == CAstOperator.OP_DIV || op == CAstOperator.OP_MOD : CAstPrinter.print(n);
       for (Iterator iter = labels.iterator(); iter.hasNext();) {
-	Object label = iter.next();
-	CAstNode target = context.getControlFlow().getTarget(n, label);
-	if (target == CAstControlFlowMap.EXCEPTION_TO_EXIT)
-	  context.cfg().addPreEdgeToExit(n, true);
-	else
-	  context.cfg().addPreEdge(n, target, true);
+        Object label = iter.next();
+        CAstNode target = context.getControlFlow().getTarget(n, label);
+        if (target == CAstControlFlowMap.EXCEPTION_TO_EXIT)
+          context.cfg().addPreEdgeToExit(n, true);
+        else
+          context.cfg().addPreEdge(n, target, true);
       }
     }
 
@@ -2601,11 +2593,12 @@ public abstract class AstTranslator extends CAstVisitor
     CAstNode r = n.getChild(2);
     Assertions._assert(getValue(r) != -1, CAstPrinter.print(n));
     Assertions._assert(getValue(l) != -1, CAstPrinter.print(n));
-    
+
     boolean mayBeInteger = handleBinaryOpThrow(n, n.getChild(0), context);
 
     context.cfg().addInstruction(
-      SSAInstructionFactory.BinaryOpInstruction(translateBinaryOpcode(n.getChild(0)), result, getValue(l), getValue(r), mayBeInteger));
+        SSAInstructionFactory.BinaryOpInstruction(translateBinaryOpcode(n.getChild(0)), result, getValue(l), getValue(r),
+            mayBeInteger));
 
     if (mayBeInteger) {
       context.cfg().newBlock(true);
@@ -2920,7 +2913,8 @@ public abstract class AstTranslator extends CAstVisitor
 
     boolean mayBeInteger = handleBinaryOpThrow(a, op, context);
 
-    context.cfg().addInstruction(SSAInstructionFactory.BinaryOpInstruction(translateBinaryOpcode(op), temp2, temp, rval, mayBeInteger));
+    context.cfg().addInstruction(
+        SSAInstructionFactory.BinaryOpInstruction(translateBinaryOpcode(op), temp2, temp, rval, mayBeInteger));
 
     if (mayBeInteger) {
       context.cfg().newBlock(true);
@@ -3403,83 +3397,79 @@ public abstract class AstTranslator extends CAstVisitor
   protected void leaveEcho(CAstNode n, Context c, CAstVisitor visitor) {
     WalkContext wc = (WalkContext) c;
 
-    int rvals[] = new int[ n.getChildCount() ];
-    for(int i = 0; i <n.getChildCount(); i++) {
+    int rvals[] = new int[n.getChildCount()];
+    for (int i = 0; i < n.getChildCount(); i++) {
       rvals[i] = getValue(n.getChild(i));
     }
 
     wc.cfg().addInstruction(new AstEchoInstruction(rvals));
   }
 
-  protected void leaveInclude(final CAstNode n, 
-			      Context c, 
-			      CAstVisitor visitor) 
-  {
+  protected void leaveInclude(final CAstNode n, Context c, CAstVisitor visitor) {
     WalkContext wc = (WalkContext) c;
-      
+
     CAstEntity included;
     if (n.getChild(0).getKind() == CAstNode.NAMED_ENTITY_REF) {
       assert namedEntityResolver != null;
-      included = (CAstEntity) 
-	namedEntityResolver.get(n.getChild(0).getChild(0).getValue());
+      included = (CAstEntity) namedEntityResolver.get(n.getChild(0).getChild(0).getValue());
     } else {
       included = (CAstEntity) n.getChild(0).getValue();
     }
-    
+
     if (included == null) {
-	Trace.println("cannot find include for " + CAstPrinter.print(n));
-	Trace.println("from:\n" + namedEntityResolver);
+      Trace.println("cannot find include for " + CAstPrinter.print(n));
+      Trace.println("from:\n" + namedEntityResolver);
     } else {
-      final boolean isMacroExpansion = 
-        (included.getKind() == CAstEntity.MACRO_ENTITY);
+      final boolean isMacroExpansion = (included.getKind() == CAstEntity.MACRO_ENTITY);
 
       System.err.println("found " + included.getName() + " for " + CAstPrinter.print(n));
 
       final CAstEntity copy = (new CAstCloner(new CAstImpl(), true) {
 
         private CAstNode copyIncludeExpr(CAstNode expr) {
-	  if (expr.getValue() != null) {
-	    return Ast.makeConstant(expr.getValue());
-	  } else if (expr instanceof CAstOperator) {
-	    return expr;
-	  } else {
-	    CAstNode nc[] = new CAstNode[ expr.getChildCount() ];
+          if (expr.getValue() != null) {
+            return Ast.makeConstant(expr.getValue());
+          } else if (expr instanceof CAstOperator) {
+            return expr;
+          } else {
+            CAstNode nc[] = new CAstNode[expr.getChildCount()];
 
-	    for(int i = 0; i < expr.getChildCount(); i++) {
-	      nc[i] = copyIncludeExpr(expr.getChild(i));
-	    }
+            for (int i = 0; i < expr.getChildCount(); i++) {
+              nc[i] = copyIncludeExpr(expr.getChild(i));
+            }
 
-	    return Ast.makeNode(expr.getKind(), nc);
-	  }
-	}
+            return Ast.makeNode(expr.getKind(), nc);
+          }
+        }
 
-	protected CAstNode copyNodes(CAstNode root, NonCopyingContext c, Map nodeMap) {
-	  if (isMacroExpansion && root.getKind() == CAstNode.MACRO_VAR) {
-	    int arg = ((Number)root.getChild(0).getValue()).intValue();
-	    CAstNode expr = copyIncludeExpr(n.getChild(arg));
-	    nodeMap.put(Pair.make(root, c.key()), expr);
-	    return expr;
-	  } else {
-	    return super.copyNodes(root, c, nodeMap);
-	  }
-	}
+        @SuppressWarnings("unchecked")
+        protected CAstNode copyNodes(CAstNode root, NonCopyingContext c, Map nodeMap) {
+          if (isMacroExpansion && root.getKind() == CAstNode.MACRO_VAR) {
+            int arg = ((Number) root.getChild(0).getValue()).intValue();
+            CAstNode expr = copyIncludeExpr(n.getChild(arg));
+            nodeMap.put(Pair.make(root, c.key()), expr);
+            return expr;
+          } else {
+            return super.copyNodes(root, c, nodeMap);
+          }
+        }
       }).rewrite(included);
 
       if (copy.getAST() == null) {
-	Trace.println(copy.getName() + " has no AST");
+        Trace.println(copy.getName() + " has no AST");
 
       } else {
-	visit(copy.getAST(), new DelegatingContext(wc) {
+        visit(copy.getAST(), new DelegatingContext(wc) {
           public CAstSourcePositionMap getSourceMap() {
-	    return copy.getSourceMap();
-	  }
+            return copy.getSourceMap();
+          }
 
-	  public CAstControlFlowMap getControlFlow() {
-	    return copy.getControlFlow();
-	  }
-	}, visitor);
+          public CAstControlFlowMap getControlFlow() {
+            return copy.getControlFlow();
+          }
+        }, visitor);
 
-	visitor.visitScopedEntities(copy, copy.getAllScopedEntities(), wc, visitor);
+        visitor.visitScopedEntities(copy, copy.getAllScopedEntities(), wc, visitor);
       }
     }
   }

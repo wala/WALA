@@ -27,6 +27,7 @@ public class CAstTypeDictionaryImpl implements CAstTypeDictionary {
       return (CAstType) fMap.get(astType);
   }
 
+  @SuppressWarnings("unchecked")
   public void map(Object/*ASTType*/ astType, CAstType castType) {
     fMap.put(astType, castType);
   }
