@@ -50,7 +50,6 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.warnings.ResolutionFailure;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
@@ -1100,7 +1099,6 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
     }
     if (type == null) {
       // Type inference failed; raise a severe warning
-      Warnings.add(ResolutionFailure.create(N, site));
       return null;
     } else {
       // Type inference succeeded; modify m to reflect the more specific

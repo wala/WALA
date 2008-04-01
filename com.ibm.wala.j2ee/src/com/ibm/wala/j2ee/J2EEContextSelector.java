@@ -27,8 +27,6 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * This class provides context selection logic for special J2EE methods.
@@ -71,7 +69,6 @@ public class J2EEContextSelector implements ContextSelector {
       TypeAbstraction type = R.getReceiverType(site);
       if (type == null) {
         // Type inference failed; raise a severe warning
-        Warnings.add(ResolutionFailure.create(caller, site));
         return null;
       }
       return new JavaTypeContext(type);
