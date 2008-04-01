@@ -185,27 +185,6 @@ public class SyntheticMethod implements IMethod {
     return declaringClass;
   }
 
-
-  @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass().equals(obj.getClass())) {
-      SyntheticMethod other = (SyntheticMethod) obj;
-      return (method.equals(other.method));
-    } else {
-      return false;
-    }
-  }
-
-
-  @Override
-  public int hashCode() {
-    return method.hashCode();
-  }
-
-
   @Override
   public String toString() {
     StringBuffer s = new StringBuffer("synthetic ");
@@ -214,6 +193,39 @@ public class SyntheticMethod implements IMethod {
     }
     s.append(method.toString());
     return s.toString();
+  }
+
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((declaringClass == null) ? 0 : declaringClass.hashCode());
+    result = prime * result + ((method == null) ? 0 : method.hashCode());
+    return result;
+  }
+
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    final SyntheticMethod other = (SyntheticMethod) obj;
+    if (declaringClass == null) {
+      if (other.declaringClass != null)
+        return false;
+    } else if (!declaringClass.equals(other.declaringClass))
+      return false;
+    if (method == null) {
+      if (other.method != null)
+        return false;
+    } else if (!method.equals(other.method))
+      return false;
+    return true;
   }
 
 
