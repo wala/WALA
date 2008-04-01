@@ -156,8 +156,12 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
       if (target.isStatic()) {
         // do nothing
       } else {
-        // set up args[0] == v2, the receiver for method.invoke.
-        args[0] = 2;
+        // set up args[0] == the receiver for method.invoke, held in v2.
+        // insert a cast for v2 to filter out bogus types
+        args[0] = nextLocal++;
+        TypeReference type = target.getParameterType(0);
+        SSACheckCastInstruction cast = SSAInstructionFactory.CheckCastInstruction(args[0], 2, type);
+        m.addInstruction(null, cast, false);
       }
     }
     int nextArg = target.isStatic() ? 0 : 1; // nextArg := next index in args[] array that needs to be initialized
