@@ -20,8 +20,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContainerContextSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * This class provides instance keys where for a given type T in a CGNode N,
@@ -57,7 +55,6 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
   public InstanceKey getInstanceKeyForAllocation(CGNode node, NewSiteReference allocation) {
     IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
-      Warnings.add(ResolutionFailure.create(node, allocation));
       return null;
     }
 
@@ -78,7 +75,6 @@ public class SmushedAllocationSiteInstanceKeys implements InstanceKeyFactory {
   public InstanceKey getInstanceKeyForMultiNewArray(CGNode node, NewSiteReference allocation, int dim) {
     ArrayClass type = (ArrayClass) options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
-      Warnings.add(ResolutionFailure.create(node, allocation));
       return null;
     }
     InstanceKey key = new MultiNewArrayInNode(node, allocation, type, dim);

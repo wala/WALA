@@ -19,8 +19,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * A MethodTargetSelector that simply looks up the declared type, name and
@@ -72,7 +70,6 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
     } else if (call.isFixed()) {
       klass = classHierarchy.lookupClass(targetType);
       if (klass == null) {
-        Warnings.add(ResolutionFailure.create(caller,targetType));
         return null;
       }
       // anything else
@@ -82,7 +79,6 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
 
     IMethod target = feasibleChaResolution(classHierarchy,call,klass) ? classHierarchy.resolveMethod(klass, call.getDeclaredTarget().getSelector()) : null;
     if (target == null) {
-      Warnings.add(ResolutionFailure.create(caller,call.getDeclaredTarget().getSelector()));
       return null;
     }
 

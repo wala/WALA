@@ -78,7 +78,6 @@ import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.ref.ReferenceCleanser;
-import com.ibm.wala.util.warnings.ResolutionFailure;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
@@ -673,7 +672,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               system.findOrCreateIndexForInstanceKey(ik[i]);
               PointerKey p = getPointerKeyForArrayContents(ik[i]);
               if (p == null) {
-                Warnings.add(ResolutionFailure.create(node, ik[i].getConcreteType()));
               } else {
                 system.newConstraint(result, assignOperator, p);
               }
@@ -709,7 +707,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             PointerKey p = getPointerKeyForArrayContents(ik[i]);
             IClass contents = ((ArrayClass) ik[i].getConcreteType()).getElementClass();
             if (p == null) {
-              Warnings.add(ResolutionFailure.create(node, ik[i].getConcreteType()));
             } else {
               if (DEBUG_TRACK_INSTANCE) {
                 if (system.findOrCreateIndexForInstanceKey(ik[i]) == DEBUG_INSTANCE_KEY) {
@@ -811,7 +808,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           }
         } else {
           if (cls == null) {
-            Warnings.add(ResolutionFailure.create(node, instruction.getDeclaredResultType()));
             cls = getBuilder().getJavaLangObject();
           }
           if (isRootType(cls)) {
@@ -881,7 +877,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       }
 
       if (f == null) {
-        Warnings.add(ResolutionFailure.create(node, field));
         return;
       }
 
@@ -893,7 +888,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
           system.newConstraint(def, assignOperator, fKey);
           IClass klass = getClassHierarchy().lookupClass(field.getDeclaringClass());
           if (klass == null) {
-            Warnings.add(ResolutionFailure.create(node, field.getDeclaringClass()));
           } else {
             // side effect of getstatic: may call class initializer
             if (DEBUG) {
@@ -1055,7 +1049,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       if (instruction.getCallSite().isStatic()) {
         CGNode n = getTargetForCall(node, instruction.getCallSite(), (InstanceKey) null);
         if (n == null) {
-          Warnings.add(ResolutionFailure.create(node, instruction.getCallSite()));
         } else {
           getBuilder().processResolvedCall(node, instruction, n, computeInvariantParameters(instruction), uniqueCatch);
           if (DEBUG) {
@@ -1082,7 +1075,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             system.findOrCreateIndexForInstanceKey(ik[i]);
             CGNode n = getTargetForCall(node, instruction.getCallSite(), ik[i]);
             if (n == null) {
-              Warnings.add(ResolutionFailure.create(node, instruction));
             } else {
               getBuilder().processResolvedCall(node, instruction, n, computeInvariantParameters(instruction), uniqueCatch);
               // side effect of invoke: may call class initializer
@@ -1122,7 +1114,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         if (DEBUG) {
           System.err.println("Resolution failure: " + instruction);
         }
-        Warnings.add(ResolutionFailure.create(node, instruction.getConcreteType()));
         return;
       }
 
@@ -1283,7 +1274,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
               TypeReference type = ((SSAInstanceofInstruction) cause).getCheckedType();
               IClass cls = getClassHierarchy().lookupClass(type);
               if (cls == null) {
-                Warnings.add(ResolutionFailure.create(node, type));
                 PointerKey dst = getPointerKeyForLocal(instruction.getDef());
                 addPiAssignment(dst, instruction.getVal());
               } else {
@@ -1499,7 +1489,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
 
     if (nUses != nExpected) {
       // some sort of unverifiable code mismatch. give up.
-      Warnings.add(ResolutionFailure.create(target, instruction, "found " + nUses + " uses but expected " + nExpected));
       return;
     }
 

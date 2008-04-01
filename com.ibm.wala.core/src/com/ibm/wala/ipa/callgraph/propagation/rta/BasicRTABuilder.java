@@ -38,8 +38,6 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
-import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * @author sfink
@@ -156,7 +154,6 @@ public class BasicRTABuilder extends AbstractRTABuilder {
       // TODO: cache this!!!
       IClass recvClass = getClassHierarchy().lookupClass(site.getDeclaredTarget().getDeclaringClass());
       if (recvClass == null) {
-        Warnings.add(ResolutionFailure.create(caller,site.getDeclaredTarget().getDeclaringClass()));
         return NOT_CHANGED;
       }
       value = filterForClass(value, recvClass);

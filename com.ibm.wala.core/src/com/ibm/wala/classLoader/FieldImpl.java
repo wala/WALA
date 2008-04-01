@@ -10,6 +10,9 @@
  *******************************************************************************/
 package com.ibm.wala.classLoader;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.types.FieldReference;
@@ -17,9 +20,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
-
-import java.util.Collection;
-import java.util.Collections;
 
 /**
  * 

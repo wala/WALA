@@ -81,8 +81,6 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * A graph representation of statements flowing pointer values, but <em>not</em>
@@ -300,7 +298,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
       IField f = cg.getClassHierarchy().resolveField(field);
       if (f == null) {
-        Warnings.add(ResolutionFailure.create(node, field));
         return;
       }
       PointerKey def = heapModel.getPointerKeyForLocal(node, lval);
@@ -339,7 +336,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       }
       IField f = cg.getClassHierarchy().resolveField(field);
       if (f == null) {
-        Warnings.add(ResolutionFailure.create(node, field));
         return;
       }
       PointerKey use = heapModel.getPointerKeyForLocal(node, rval);

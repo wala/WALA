@@ -57,8 +57,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * Abstract superclass of various RTA flavors
@@ -188,7 +186,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     TypeReference t = f.getDeclaringClass();
     IClass klass = getClassHierarchy().lookupClass(t);
     if (klass == null) {
-      Warnings.add(ResolutionFailure.create(node, t));
     } else {
       processClassInitializer(klass);
     }
@@ -257,9 +254,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
 
     if (code == IInvokeInstruction.Dispatch.STATIC) {
       CGNode n = getTargetForCall(node, site, (InstanceKey) null);
-      if (n == null) {
-        Warnings.add(ResolutionFailure.create(node, site));
-      } else {
+      if (n != null) {
         processResolvedCall(node, site, n);
 
         // side effect of invoke: may call class initializer
@@ -276,7 +271,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
       // do for invokestatic above.
       PointerKey selector = getKeyForSite(site);
       if (selector == null) {
-        Warnings.add(ResolutionFailure.create(node, site));
         return;
       }
 
@@ -341,7 +335,6 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     }
 
     if (klass == null) {
-      Warnings.add(ResolutionFailure.create(node, iKey.getConcreteType()));
       return;
     }
     if (allocatedClasses.contains(klass)) {

@@ -10,7 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.logic;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
 
 public class EmptyTheory extends AbstractTheory {
 

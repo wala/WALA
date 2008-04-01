@@ -82,8 +82,6 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * A flow graph including both pointer and primitive values.
@@ -263,7 +261,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
 
       IField f = cg.getClassHierarchy().resolveField(field);
       if (f == null) {
-        Warnings.add(ResolutionFailure.create(node, field));
         return;
       }
       PointerKey def = heapModel.getPointerKeyForLocal(node, lval);
@@ -299,7 +296,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     public void visitPutInternal(int rval, int ref, boolean isStatic, FieldReference field) {
       IField f = cg.getClassHierarchy().resolveField(field);
       if (f == null) {
-        Warnings.add(ResolutionFailure.create(node, field));
         return;
       }
       PointerKey use = heapModel.getPointerKeyForLocal(node, rval);

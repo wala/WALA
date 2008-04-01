@@ -20,8 +20,6 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * This class provides Instance Key call backs where each instance is in the same equivalence class as all other
@@ -52,7 +50,6 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
     }
     IClass type = options.getClassTargetSelector().getAllocatedTarget(node, allocation);
     if (type == null) {
-      Warnings.add(ResolutionFailure.create(node, allocation));
       return null;
     }
 

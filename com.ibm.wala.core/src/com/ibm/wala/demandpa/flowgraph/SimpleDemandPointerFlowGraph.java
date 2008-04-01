@@ -72,8 +72,6 @@ import com.ibm.wala.util.graph.impl.SlowSparseNumberedGraph;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.ref.ReferenceCleanser;
-import com.ibm.wala.util.warnings.ResolutionFailure;
-import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * The nodes in this graph are PointerKeys corresponding to local variables and
@@ -882,7 +880,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       }
       IField f = cg.getClassHierarchy().resolveField(field);
       if (f == null) {
-        Warnings.add(ResolutionFailure.create(node, field));
         return;
       }
       PointerKey def = heapModel.getPointerKeyForLocal(node, lval);
@@ -966,7 +963,6 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       }
       IField f = cg.getClassHierarchy().resolveField(field);
       if (f == null) {
-        Warnings.add(ResolutionFailure.create(node, field));
         return;
       }
       PointerKey use = heapModel.getPointerKeyForLocal(node, rval);

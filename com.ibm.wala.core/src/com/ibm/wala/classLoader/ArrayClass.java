@@ -14,8 +14,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Selector;
