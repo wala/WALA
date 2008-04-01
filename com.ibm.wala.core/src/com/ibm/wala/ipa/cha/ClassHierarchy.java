@@ -919,7 +919,7 @@ public class ClassHierarchy implements IClassHierarchy {
   /**
    * Does c implement i?
    * 
-   * @return true iff i is an interface and c is a class that implements i, r c is an interface that extends i.
+   * @return true iff i is an interface and c is a class that implements i, or c is an interface that extends i.
    * 
    */
   public boolean implementsInterface(IClass c, IClass i) {
@@ -928,6 +928,10 @@ public class ClassHierarchy implements IClassHierarchy {
     }
     if (c.equals(i)) {
       return true;
+    }
+    if (c.isArrayClass()) {
+      // arrays implement Cloneable and Serializable
+      return i.equals(lookupClass(TypeReference.JavaLangCloneable)) || i.equals(lookupClass(TypeReference.JavaIoSerializable)); 
     }
     Set impls = implementors.get(i);
     if (impls != null && impls.contains(c)) {

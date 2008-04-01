@@ -76,5 +76,20 @@ public class InterfaceTest extends WalaTestCase {
     assertTrue(cha.isAssignableFrom(stmt, prep_stmt));
     assertFalse(cha.isAssignableFrom(prep_stmt, stmt));
   }
+  
+  /**
+   * check that arrays implement Cloneable and Serializable
+   */
+  public void test2() {
+    IClass objArrayClass = cha.lookupClass(TypeReference.JavaLangObject.getArrayTypeForElementType());
+    IClass stringArrayClass = cha.lookupClass(TypeReference.JavaLangString.getArrayTypeForElementType());
+    IClass cloneableClass = cha.lookupClass(TypeReference.JavaLangCloneable);
+    IClass serializableClass = cha.lookupClass(TypeReference.JavaIoSerializable);
+    
+    assertTrue(cha.implementsInterface(objArrayClass, cloneableClass));
+    assertTrue(cha.implementsInterface(objArrayClass, serializableClass));
+    assertTrue(cha.implementsInterface(stringArrayClass, cloneableClass));
+    assertTrue(cha.implementsInterface(stringArrayClass, serializableClass));
+  }
 
 }
