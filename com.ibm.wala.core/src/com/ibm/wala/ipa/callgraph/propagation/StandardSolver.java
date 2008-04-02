@@ -13,7 +13,6 @@ package com.ibm.wala.ipa.callgraph.propagation;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.wala.eclipse.util.CancelException;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * 
@@ -41,19 +40,28 @@ public class StandardSolver extends AbstractPointsToSolver {
       i++;
 
       if (DEBUG) {
-        Trace.println("Iteration " + i);
+        System.err.println("Iteration " + i);
       }
       getSystem().solve(monitor);
       if (DEBUG) {
-        Trace.println("Solved " + i);
+        System.err.println("Solved " + i);
       }
 
       // Add constraints until there are no new discovered nodes
+      if (DEBUG) {
+        System.err.println("adding constraints");
+      }
       getBuilder().addConstraintsFromNewNodes();
 
+      if (DEBUG) {
+        System.err.println("handling reflection");
+      }
       getReflectionHandler().updateForReflection();
       
       // Handling reflection may have discovered new nodes!
+      if (DEBUG) {
+        System.err.println("adding constraints again");
+      }
       getBuilder().addConstraintsFromNewNodes();
       // Note that we may have added stuff to the
       // worklist; so,
