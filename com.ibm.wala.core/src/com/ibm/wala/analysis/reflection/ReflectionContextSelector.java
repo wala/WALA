@@ -25,11 +25,14 @@ public class ReflectionContextSelector extends DelegatingContextSelector {
   }
 
   /**
-   * First check "forName" logic, then factory logic.
+   * checks (1) logic for Constructor.newInstance and Method.invoke, (2) logic for other methods of Class, (3) logic for
+   * Class.forName, (4) logic for Object.getClass, (5) logic for Class.newInstance, and finally (6) logic for synthetic
+   * factories.
    */
   private ReflectionContextSelector() {
     super(new ReflectiveInvocationSelector(), new DelegatingContextSelector(new JavaLangClassContextSelector(),
         new DelegatingContextSelector(new DelegatingContextSelector(new DelegatingContextSelector(new ForNameContextSelector(),
             new GetClassContextSelector()), new ClassNewInstanceContextSelector()), new FactoryContextSelector())));
   }
+
 }

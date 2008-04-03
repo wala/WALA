@@ -72,6 +72,9 @@ public class ClassNewInstanceContextInterpreter extends AbstractReflectionInterp
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
     }
+    if (DEBUG) {
+      System.err.println("generating IR for " + node);
+    }
     IR result = makeIR(node.getMethod(), (JavaTypeContext) node.getContext());
     return result;
   }

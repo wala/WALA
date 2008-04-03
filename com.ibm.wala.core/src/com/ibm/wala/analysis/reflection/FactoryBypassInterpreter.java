@@ -94,6 +94,9 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
+    if (DEBUG) {
+      System.err.println("generating IR for " + node);
+    }
     SpecializedFactoryMethod m = findOrCreateSpecializedFactoryMethod(node);
     return cache.getSSACache().findOrCreateIR(m, node.getContext(), options.getSSAOptions());
   }

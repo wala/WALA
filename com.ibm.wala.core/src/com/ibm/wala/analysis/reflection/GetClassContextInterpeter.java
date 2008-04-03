@@ -41,12 +41,17 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class GetClassContextInterpeter implements SSAContextInterpreter {
 
+  private static final boolean DEBUG = false;
+
   public IR getIR(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
+    }
+    if (DEBUG) {
+      System.err.println("generating IR for " + node);
     }
     IR result = makeIR(node.getMethod(), (JavaTypeContext) node.getContext());
     return result;

@@ -70,6 +70,9 @@ public class ReflectiveInvocationInterpreter extends AbstractReflectionInterpret
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
     }
+    if (DEBUG) {
+      System.err.println("generating IR for " + node);
+    }
     ReceiverInstanceContext recv = (ReceiverInstanceContext) node.getContext();
     ConstantKey c = (ConstantKey) recv.getReceiver();
     IMethod m = (IMethod) c.getValue();

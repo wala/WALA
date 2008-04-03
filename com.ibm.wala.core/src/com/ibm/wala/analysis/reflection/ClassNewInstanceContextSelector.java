@@ -30,6 +30,11 @@ class ClassNewInstanceContextSelector implements ContextSelector {
   public ClassNewInstanceContextSelector() {
   }
 
+  /**
+   * If receiver is a {@link ConstantKey} whose value is an {@link IClass}, return a {@link JavaTypeContext}
+   * representing the type of the IClass. (This corresponds to the case where we know the exact type that will be
+   * allocated by the <code>Class.newInstance()</code> call.)  Otherwise, return <code>null</code>.    
+   */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     if (callee.getReference().equals(ClassNewInstanceContextInterpreter.CLASS_NEW_INSTANCE_REF) && isTypeConstant(receiver)) {
       IClass c = (IClass) ((ConstantKey) receiver).getValue();

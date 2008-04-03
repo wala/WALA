@@ -72,6 +72,8 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
   public final static MethodReference GET_METHODS = MethodReference.findOrCreate(TypeReference.JavaLangClass, "getMethods",
       "()[Ljava/lang/reflect/Method;");
 
+  private static final boolean DEBUG = false;
+
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getIR(com.ibm.wala.ipa.callgraph.CGNode)
    */
@@ -81,6 +83,9 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     }
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
+    }
+    if (DEBUG) {
+      System.err.println("generating IR for " + node);
     }
     IMethod method = node.getMethod();
     JavaTypeContext context = (JavaTypeContext) node.getContext();
