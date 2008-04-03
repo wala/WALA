@@ -458,7 +458,11 @@ public abstract class IR {
   }
 
   /**
-   * Return the instruction indices corresponding to a call site
+   * Return the instruction indices corresponding to a call site.
+   * 
+   * Note that Shrike may inline JSRS.  This can lead to multiple copies of a single bytecode
+   * instruction in a particular IR.  So we may have more than one instruction index for a 
+   * particular call site from bytecode.
    */
   public IntSet getCallInstructionIndices(CallSiteReference site) {
     if (site == null) {
