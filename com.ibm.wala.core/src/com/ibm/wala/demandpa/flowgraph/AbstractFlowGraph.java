@@ -252,6 +252,12 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     for (MemoryAccess a : writes) {
       IR ir = a.getNode().getIR();
       SSAPutInstruction s = (SSAPutInstruction) ir.getInstructions()[a.getInstructionIndex()];
+      if (s == null) {
+        // s can be null because the memory access map may be constructed from bytecode,
+        // and the write instruction may have been eliminated from SSA because it's dead
+        // TODO clean this up
+        continue;
+      }
       PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getVal());
 //      if (Assertions.verifyAssertions) {
 //        Assertions._assert(containsNode(r));
@@ -309,6 +315,10 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
         SSANewInstruction n = (SSANewInstruction) instruction;
         // should be allocated multi-dimentional array
         InstanceKey iKey = heapModel.getInstanceKeyForAllocation(node, n.getNewSite());
+        // iKey can be null, e.g. if allocated type was in exclusions
+        if (iKey == null) {
+          continue;
+        }
         IClass klass = iKey.getConcreteType();
         if (Assertions.verifyAssertions) {
           Assertions._assert(klass.isArrayClass() && ((ArrayClass) klass).getElementClass().isArrayClass());

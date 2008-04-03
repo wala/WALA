@@ -86,7 +86,6 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   }
 
   private void populate(CGNode n) {
-//    DEBUG = n.toString().equals("Node: < Primordial, Lorg/apache/xalan/templates/OutputProperties, loadPropertiesFile(Ljava/lang/String;Ljava/util/Properties;)Ljava/util/Properties; > Context: Everywhere");
     if (n.getMethod().isSynthetic()) {
       if (DEBUG) {
         System.err.println("synthetic method");
