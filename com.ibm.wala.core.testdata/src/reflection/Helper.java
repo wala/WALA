@@ -13,6 +13,7 @@ public class Helper {
   public Helper(Integer x) {
     a = b = null;
     x.toString();
+    System.out.println(x);
   }
   
   public Helper(Object a) {
@@ -33,6 +34,9 @@ public class Helper {
   public void n(Object a, Object b) {
     System.out.println("n method invoked");
   }
+  public void o(Object a, Object b) {
+    System.out.println("o method invoked");
+  }
   public static void s(Object a, Object b) {
     System.out.println("s method invoked");
   }
@@ -43,6 +47,7 @@ public class Helper {
   
   public void u(Integer x) {
     x.toString();
+    System.out.println("u method invoked");
   }
   
 }
