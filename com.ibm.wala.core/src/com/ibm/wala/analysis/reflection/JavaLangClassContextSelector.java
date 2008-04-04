@@ -66,17 +66,35 @@ class JavaLangClassContextSelector implements ContextSelector {
    * This object may understand a dispatch to Class.getContructor when the receiver is a type constant.
    */
   private boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_CONSTRUCTOR) && getTypeConstant(instance) != null) {
+    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_CONSTRUCTOR)
+        && getTypeConstant(instance) != null) {
       return true;
     }
-    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_CONSTRUCTORS) && getTypeConstant(instance) != null) {
+    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_CONSTRUCTORS)
+        && getTypeConstant(instance) != null) {
+      return true;
+    }
+    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_METHOD)
+        && getTypeConstant(instance) != null) {
+      return true;
+    }
+    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_METHODS)
+        && getTypeConstant(instance) != null) {
+      return true;
+    }
+    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_DECLARED_CONSTRUCTOR)
+        && getTypeConstant(instance) != null) {
+      return true;
+    }
+    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_DECLARED_CONSTRUCTORS)
+        && getTypeConstant(instance) != null) {
       return true;
     }
     if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_DECLARED_METHOD)
         && getTypeConstant(instance) != null) {
       return true;
     }
-    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_METHODS)
+    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_DECLARED_METHODS)
         && getTypeConstant(instance) != null) {
       return true;
     }
