@@ -351,7 +351,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Find the possible receivers of a call to a method reference
+   * Find the possible receivers of a call to a method reference. Note that if the reference is to an instance
+   * initialization method, we assume the method was called with invokespecial rather than invokevirtual.
    * 
    * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
@@ -407,6 +408,13 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   public Set<IMethod> getPossibleTargets(IClass declaredClass, MethodReference ref) {
 
+    if (ref.getName().equals(MethodReference.initAtom)) {
+      // for an object init method, use the method alone as a possible target,
+      // rather than inspecting subclasses
+      IMethod resolvedMethod = resolveMethod(ref);
+      assert resolvedMethod != null;
+      return Collections.singleton(resolvedMethod);
+    }
     if (declaredClass.isInterface()) {
       HashSet<IMethod> result = HashSetFactory.make(3);
       Set impls = implementors.get(declaredClass);
@@ -931,7 +939,7 @@ public class ClassHierarchy implements IClassHierarchy {
     }
     if (c.isArrayClass()) {
       // arrays implement Cloneable and Serializable
-      return i.equals(lookupClass(TypeReference.JavaLangCloneable)) || i.equals(lookupClass(TypeReference.JavaIoSerializable)); 
+      return i.equals(lookupClass(TypeReference.JavaLangCloneable)) || i.equals(lookupClass(TypeReference.JavaIoSerializable));
     }
     Set impls = implementors.get(i);
     if (impls != null && impls.contains(c)) {

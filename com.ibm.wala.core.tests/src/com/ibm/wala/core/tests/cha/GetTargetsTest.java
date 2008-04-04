@@ -78,4 +78,15 @@ public class GetTargetsTest extends WalaTestCase {
     assertEquals(1, c.size());
   }
 
+  /**
+   * test that calls to <init> methods are treated specially 
+   */
+  public void testObjInit() {
+    MethodReference m = MethodReference.findOrCreate(TypeReference.JavaLangObject, MethodReference.initSelector);
+    Collection<IMethod> c = cha.getPossibleTargets(m);
+    for (IMethod method : c) {
+      System.err.println(method);
+    }
+    assertEquals(1, c.size());
+  }
 }
