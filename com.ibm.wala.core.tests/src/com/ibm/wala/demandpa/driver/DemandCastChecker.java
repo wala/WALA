@@ -36,6 +36,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
+
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.util.TestConstants;
 import com.ibm.wala.demandpa.alg.ContextSensitiveStateMachine;
@@ -53,17 +55,20 @@ import com.ibm.wala.demandpa.genericutil.Predicate;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.SimpleMemoryAccessMap;
 import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.eclipse.util.ProgressMaster;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.CallGraphBuilderCancelException;
+import com.ibm.wala.ipa.callgraph.CallGraphStats;
 import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.properties.WalaProperties;
@@ -90,10 +95,10 @@ public class DemandCastChecker {
 
   private static final int MAX_CASTS = Integer.MAX_VALUE;
 
-  private static final boolean DUMP_ALL_IR = true;
+  private static final boolean DUMP_ALL_IR = false;
 
   private final static String CHA_EXCLUSIONS = true ? "J2SEClassHierarchyExclusions.txt" : CallGraphTestUtil.REGRESSION_EXCLUSIONS;
-
+//  private final static String CHA_EXCLUSIONS = "HackedExclusions.txt";
   private final static boolean PROFILE = false;
 
   /**
@@ -123,7 +128,8 @@ public class DemandCastChecker {
     // runTestCase("Lca/mcgill/sable/soot/jimple/Main", "soot-c.xml", "soot-c");
     // runTestCase("LSableCC", "sablecc-j.xml", "sablecc-j");
     // runTestCase("Lpolyglot/main/Main", "polyglot.xml", "polyglot");
-    runTestCase(TestConstants.JLEX_MAIN, TestConstants.JLEX, "JLex");
+    // runTestCase(TestConstants.JLEX_MAIN, TestConstants.JLEX, "JLex");
+    runTestCase(TestConstants.HELLO_MAIN, TestConstants.HELLO, "Hello");
   }
 
   public static void runTestCase(String mainClass, String scopeFile, String benchName) throws IllegalArgumentException,
@@ -160,10 +166,10 @@ public class DemandCastChecker {
     CallGraph cg = null;
     try {
       if (PROFILE) {
-//        Controller c = new Controller();
-//        c.startCPUProfiling(ProfilingModes.CPU_SAMPLING, Controller.DEFAULT_FILTERS);
-//        cg = buildCallGraph(scope, cha, options);
-//        c.captureCPUSnapshot(false);
+//         Controller c = new Controller();
+//         c.startCPUProfiling(ProfilingModes.CPU_SAMPLING, Controller.DEFAULT_FILTERS);
+//         cg = buildCallGraph(scope, cha, options);
+//         c.captureCPUSnapshot(false);
       } else {
         cg = buildCallGraph(scope, cha, options);
       }
@@ -172,7 +178,8 @@ public class DemandCastChecker {
       Assertions.UNREACHABLE();
     }
     System.err.println("done");
-    // System.err.println(cg.toString());
+    System.err.println(CallGraphStats.getStats(cg));
+//     System.err.println(cg.toString());
 
     MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, false);
     DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(heapModel, cha), fam,
@@ -204,7 +211,7 @@ public class DemandCastChecker {
   // }
   // }
 
-  private static final boolean CHEAP_CG = true;
+  private static final boolean CHEAP_CG = false;
 
   private static HeapModel heapModel;
 
@@ -224,16 +231,23 @@ public class DemandCastChecker {
       throws IllegalArgumentException, CancelException {
     CallGraph ret = null;
     final AnalysisCache cache = new AnalysisCache();
+    CallGraphBuilder builder;
     if (CHEAP_CG) {
-      SSAPropagationCallGraphBuilder builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
-      ret = builder.makeCallGraph(options, null);
+      builder = Util.makeRTABuilder(options, cache, cha, scope);
       // we want vanilla 0-1 CFA, which has one abstract loc per allocation
       heapModel = Util.makeVanillaZeroOneCFABuilder(options, cache, cha, scope);
     } else {
-      final SSAPropagationCallGraphBuilder builder = Util.makeZeroOneCFABuilder(options, cache, cha, scope);
-      heapModel = builder;
-      ret = builder.makeCallGraph(options, null);
-
+      builder = Util.makeZeroOneContainerCFABuilder(options, cache, cha, scope);
+      heapModel = (HeapModel) builder;
+    }
+    ProgressMaster master = ProgressMaster.make(new NullProgressMonitor());
+    master.setMillisPerWorkItem(30000);
+    master.beginTask("runSolver", 1);      
+    try {
+    ret = builder.makeCallGraph(options, master);
+    } catch (CallGraphBuilderCancelException e) {
+      System.err.println("TIMED OUT!!");
+      ret = e.getPartialCallGraph();
     }
     return ret;
   }
