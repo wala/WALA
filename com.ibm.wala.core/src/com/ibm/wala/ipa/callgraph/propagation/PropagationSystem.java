@@ -84,9 +84,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   protected final MutableMapping<InstanceKey> instanceKeys = MutableMapping.make();
 
   /**
-   * A mapping from IClass -> MutableSharedBitVectorIntSet The range represents
-   * the instance keys that correspond to a given class. This mapping is used to
-   * filter sets based on declared types; e.g., in cast constraints
+   * A mapping from IClass -> MutableSharedBitVectorIntSet The range represents the instance keys that correspond to a
+   * given class. This mapping is used to filter sets based on declared types; e.g., in cast constraints
    */
   final private Map<IClass, MutableIntSet> class2InstanceKey = HashMapFactory.make();
 
@@ -106,8 +105,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   private final InstanceKeyFactory instanceKeyFactory;
 
   /**
-   * When doing unification, we must also updated the fixed sets in unary side
-   * effects.
+   * When doing unification, we must also updated the fixed sets in unary side effects.
    * 
    * This maintains a map from PointsToSetVariable -> Set<UnarySideEffect>
    */
@@ -132,6 +130,11 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     this.cg = cg;
     this.pointerKeyFactory = pointerKeyFactory;
     this.instanceKeyFactory = instanceKeyFactory;
+    // when doing paranoid checking of points-to sets, code in PointsToSetVariable needs to know about the instance key
+    // mapping
+    if (PointsToSetVariable.PARANOID) {
+      PointsToSetVariable.instanceKeys = instanceKeys;
+    }
   }
 
   /**
@@ -160,8 +163,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * Keep this method private .. this returns the actual backing set for the
-   * class, which we do not want to expose to clients.
+   * Keep this method private .. this returns the actual backing set for the class, which we do not want to expose to
+   * clients.
    */
   private MutableIntSet findOrCreateSparseSetForClass(IClass klass) {
     if (Assertions.verifyAssertions) {
@@ -176,9 +179,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * @return a set of integers representing the instance keys that correspond to
-   *         a given class. This method creates a new set, which the caller may
-   *         bash at will.
+   * @return a set of integers representing the instance keys that correspond to a given class. This method creates a
+   *         new set, which the caller may bash at will.
    */
   MutableIntSet cloneInstanceKeysForClass(IClass klass) {
     if (Assertions.verifyAssertions) {
@@ -194,10 +196,9 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * @return a set of integers representing the instance keys that correspond to
-   *         a given class, or null if there are none.
-   * @throws IllegalArgumentException
-   *             if klass is null
+   * @return a set of integers representing the instance keys that correspond to a given class, or null if there are
+   *         none.
+   * @throws IllegalArgumentException if klass is null
    */
   public IntSet getInstanceKeysForClass(IClass klass) {
     if (klass == null) {
@@ -246,7 +247,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
     if (Assertions.verifyAssertions) {
       Assertions._assert(key != null);
       if (key instanceof LocalPointerKey) {
-        LocalPointerKey lpk = (LocalPointerKey)key;
+        LocalPointerKey lpk = (LocalPointerKey) key;
         if (lpk.isParameter()) {
           System.err.println(lpk);
           System.err.println("Constant? " + lpk.getNode().getIR().getSymbolTable().isConstant(lpk.getValueNumber()));
@@ -323,9 +324,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * NB: this is idempotent ... if the given constraint exists, it will not be
-   * added to the system; however, this will be more expensive since it must
-   * check if the constraint pre-exits.
+   * NB: this is idempotent ... if the given constraint exists, it will not be added to the system; however, this will
+   * be more expensive since it must check if the constraint pre-exits.
    * 
    * @return true iff the system changes
    */
@@ -742,8 +742,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * @param verboseInterval
-   *            The verboseInterval to set.
+   * @param verboseInterval The verboseInterval to set.
    */
   public void setVerboseInterval(int verboseInterval) {
     this.verboseInterval = verboseInterval;
@@ -764,10 +763,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * Unify the points-to-sets for the variables identified by the set s
    * 
-   * @param s
-   *            numbers of points-to-set variables
-   * @throws IllegalArgumentException
-   *             if s is null
+   * @param s numbers of points-to-set variables
+   * @throws IllegalArgumentException if s is null
    */
   public void unify(IntSet s) {
     if (s == null) {
@@ -794,10 +791,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * Update side effect after unification
    * 
-   * @param s
-   *            set of PointsToSetVariables that have been unified
-   * @param rep
-   *            number of the representative variable for the unified set.
+   * @param s set of PointsToSetVariables that have been unified
+   * @param rep number of the representative variable for the unified set.
    */
   private void updateSideEffectsForUnification(HashSet<PointsToSetVariable> s, int rep) {
     PointsToSetVariable pRef = pointsToMap.getPointsToSet(rep);
@@ -810,10 +805,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * Update equation def/uses after unification
    * 
-   * @param s
-   *            set of PointsToSetVariables that have been unified
-   * @param rep
-   *            number of the representative variable for the unified set.
+   * @param s set of PointsToSetVariables that have been unified
+   * @param rep number of the representative variable for the unified set.
    */
   @SuppressWarnings("unchecked")
   private void updateEquationsForUnification(HashSet<PointsToSetVariable> s, int rep) {
@@ -866,8 +859,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * replace all occurrences of p on the rhs of a statement with pRef
    * 
-   * @param as
-   *            a statement that uses p in it's right-hand side
+   * @param as a statement that uses p in it's right-hand side
    */
   private void replaceRHS(PointsToSetVariable pRef, PointsToSetVariable p,
       AbstractStatement<PointsToSetVariable, AbstractOperator<PointsToSetVariable>> as) {
@@ -894,8 +886,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   /**
    * replace all occurences of p on the lhs of a statement with pRef
    * 
-   * @param as
-   *            a statement that defs p
+   * @param as a statement that defs p
    */
   private void replaceLHS(PointsToSetVariable pRef, PointsToSetVariable p,
       AbstractStatement<PointsToSetVariable, AbstractOperator<PointsToSetVariable>> as) {
@@ -903,7 +894,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
       Assertions._assert(as.getLHS() == p);
     }
     if (as instanceof UnaryStatement) {
-      newStatement(pRef, (UnaryOperator<PointsToSetVariable>) as.getOperator(), (PointsToSetVariable) ((UnaryStatement) as).getRightHandSide(), false, false);
+      newStatement(pRef, (UnaryOperator<PointsToSetVariable>) as.getOperator(), (PointsToSetVariable) ((UnaryStatement) as)
+          .getRightHandSide(), false, false);
     } else {
       newStatement(pRef, as.getOperator(), as.getRHS(), false, false);
     }
