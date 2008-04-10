@@ -102,7 +102,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
    * @param node
    */
   @Override
-  protected void addNodesForParameters(CGNode node) {
+  protected void addNodesForParameters(CGNode node, IR ir) {
     for (Iterator<Integer> iter = new PointerParamValueNumIterator(node); iter.hasNext();) {
       int parameter = iter.next();
       PointerKey paramPk = heapModel.getPointerKeyForLocal(node, parameter);

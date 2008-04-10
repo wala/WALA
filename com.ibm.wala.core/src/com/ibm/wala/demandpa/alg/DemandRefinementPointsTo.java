@@ -171,7 +171,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       for (CGNode callee : cg) {
         for (Iterator<? extends CGNode> predNodes = cg.getPredNodes(callee); predNodes.hasNext();) {
           CGNode caller = predNodes.next();
-          for (Iterator<CallSiteReference> iterator = cg.getPossibleSites(caller, callee); iterator.hasNext(); ) {
+          for (Iterator<CallSiteReference> iterator = cg.getPossibleSites(caller, callee); iterator.hasNext();) {
             CallSiteReference site = iterator.next();
             try {
               caller.getIR().getCalls(site);
@@ -181,7 +181,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               System.err.println(caller.getIR());
               if (caller.getMethod() instanceof ShrikeBTMethod) {
                 try {
-                  Instruction[] instructions = ((ShrikeBTMethod)caller.getMethod()).getInstructions();
+                  Instruction[] instructions = ((ShrikeBTMethod) caller.getMethod()).getInstructions();
                   for (int i = 0; i < instructions.length; i++) {
                     System.err.println(i + ": " + instructions[i]);
                   }
@@ -192,7 +192,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               }
               Assertions.UNREACHABLE();
             }
-          }                
+          }
         }
       }
     }
@@ -726,7 +726,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (pointsToQueried.put(pkAndState.getPointerKey(), pkAndState.getState())) {
         if (Assertions.verifyAssertions && pkAndState.getPointerKey() instanceof LocalPointerKey) {
           CGNode node = ((LocalPointerKey) pkAndState.getPointerKey()).getNode();
-          Assertions._assert(g.hasSubgraphForNode(node), "missing constraints for node of var " + pkAndState);
+          if (!g.hasSubgraphForNode(node)) {
+            Assertions._assert(false, "missing constraints for node of var " + pkAndState);
+          }
         }
         if (DEBUG) {
           // System.err.println("adding to init_ " + pkAndState);
@@ -743,7 +745,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     protected void addToTrackedPToWorklist(PointerKeyAndState pkAndState) {
       if (Assertions.verifyAssertions && pkAndState.getPointerKey() instanceof LocalPointerKey) {
         CGNode node = ((LocalPointerKey) pkAndState.getPointerKey()).getNode();
-        Assertions._assert(g.hasSubgraphForNode(node), "missing constraints for " + node);
+        if (!g.hasSubgraphForNode(node)) {
+          Assertions._assert(false, "missing constraints for " + node);
+        }
       }
       if (DEBUG) {
         // System.err.println("adding to tracked points-to " + pkAndState);
@@ -1596,7 +1600,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           // System.err.println("ASSERTION WILL FAIL");
           // System.err.println("QUERIED: " + queriedPkAndStates);
           // }
-          Assertions._assert(basePointerOkay, "queried " + loadedValAndState + " but not " + baseAndStateToHandle);
+          if (!basePointerOkay) {
+            Assertions._assert(false, "queried " + loadedValAndState + " but not " + baseAndStateToHandle);
+          }
         }
         final IntSet curP2Set = find(pkToP2Set, baseAndStateToHandle);
         // int startSize = curP2Set.size();
@@ -1662,6 +1668,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return node.getIR();
   }
 
+  @SuppressWarnings("unused")
+  private SSAAbstractInvokeInstruction[] getCallInstrs(CGNode node, CallSiteReference site) {
+    return node.getIR().getCalls(site);
+  }
+  
   private Object doTransition(State curState, IFlowLabel label, Function<State, Object> func) {
     State nextState = stateMachine.transition(curState, label);
     Object ret = null;

@@ -40,6 +40,7 @@ package com.ibm.wala.demandpa.flowgraph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
@@ -64,6 +65,7 @@ import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.util.collections.EmptyIterator;
+import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -77,7 +79,7 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  * 
  */
 public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
-  private final static boolean DEBUG = true;
+  private final static boolean DEBUG = false;
 
   /**
    * Counter for wiping soft caches
@@ -89,33 +91,34 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
    */
   final BitVectorIntSet cgNodesVisited = new BitVectorIntSet();
 
-  /* 
+  /*
    * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#addSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
    */
   public void addSubgraphForNode(CGNode node) throws IllegalArgumentException {
     if (node == null) {
       throw new IllegalArgumentException("node == null");
     }
-    if (node.getIR() == null) {
+    IR ir = node.getIR();
+    if (ir == null) {
       throw new IllegalArgumentException("no ir for node " + node);
     }
     int n = cg.getNumber(node);
     if (!cgNodesVisited.contains(n)) {
       cgNodesVisited.add(n);
-      unconditionallyAddConstraintsFromNode(node);
-      addNodesForInvocations(node);
-      addNodesForParameters(node);
+      unconditionallyAddConstraintsFromNode(node, ir);
+      addNodesForInvocations(node, ir);
+      addNodesForParameters(node, ir);
     }
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#hasSubgraphForNode(com.ibm.wala.ipa.callgraph.CGNode)
    */
   public boolean hasSubgraphForNode(CGNode node) {
     return cgNodesVisited.contains(cg.getNumber(node));
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getParamSuccs(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public Iterator<PointerKeyAndCallSite> getParamSuccs(LocalPointerKey pk) {
@@ -152,7 +155,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     return paramSuccs.iterator();
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getParamPreds(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public Iterator<PointerKeyAndCallSite> getParamPreds(LocalPointerKey pk) {
@@ -186,7 +189,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
 
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReturnSuccs(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public Iterator<PointerKeyAndCallSite> getReturnSuccs(LocalPointerKey pk) {
@@ -213,7 +216,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     return returnSuccs.iterator();
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.demandpa.flowgraph.IFlowGraph#getReturnPreds(com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)
    */
   public Iterator<PointerKeyAndCallSite> getReturnPreds(LocalPointerKey pk) {
@@ -249,9 +252,9 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     return returnPreds.iterator();
   }
 
-  protected abstract void addNodesForParameters(CGNode node);
+  protected abstract void addNodesForParameters(CGNode node, IR ir);
 
-  protected void unconditionallyAddConstraintsFromNode(CGNode node) {
+  protected void unconditionallyAddConstraintsFromNode(CGNode node, IR ir) {
 
     if (DEBUG) {
       Trace.println("Adding constraints for CGNode " + node);
@@ -265,7 +268,6 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
       }
     }
 
-    IR ir = node.getIR();
     debugPrintIR(ir);
 
     if (ir == null) {
@@ -274,8 +276,8 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
 
     DefUse du = node.getDU();
     addNodeInstructionConstraints(node, ir, du);
-    addNodePassthruExceptionConstraints(node);
-    addNodeConstantConstraints(node);
+    addNodePassthruExceptionConstraints(node, ir);
+    addNodeConstantConstraints(node, ir);
   }
 
   /**
@@ -364,22 +366,28 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     }
   }
 
+  final Map<CGNode, Set<CallSiteAndCGNode>> callerCache = HashMapFactory.make();
+
   public Set<CallSiteAndCGNode> getPotentialCallers(PointerKey formalPk) {
     CGNode callee = null;
     if (formalPk instanceof LocalPointerKey) {
-      callee = ((LocalPointerKey)formalPk).getNode();
+      callee = ((LocalPointerKey) formalPk).getNode();
     } else if (formalPk instanceof ReturnValueKey) {
-      callee = ((ReturnValueKey)formalPk).getNode();
+      callee = ((ReturnValueKey) formalPk).getNode();
     } else {
       throw new IllegalArgumentException("formalPk must represent a local");
     }
-    Set<CallSiteAndCGNode> ret = HashSetFactory.make();
-    for (Iterator<? extends CGNode> predNodes = cg.getPredNodes(callee); predNodes.hasNext(); ) {
-      CGNode caller = predNodes.next();
-      for (Iterator<CallSiteReference> iterator = cg.getPossibleSites(caller, callee); iterator.hasNext(); ) {
-        CallSiteReference call = iterator.next();
-        ret.add(new CallSiteAndCGNode(call,caller));
-      }      
+    Set<CallSiteAndCGNode> ret = callerCache.get(callee);
+    if (ret == null) {
+      ret = HashSetFactory.make();
+      for (Iterator<? extends CGNode> predNodes = cg.getPredNodes(callee); predNodes.hasNext();) {
+        CGNode caller = predNodes.next();
+        for (Iterator<CallSiteReference> iterator = cg.getPossibleSites(caller, callee); iterator.hasNext();) {
+          CallSiteReference call = iterator.next();
+          ret.add(new CallSiteAndCGNode(call, caller));
+        }
+      }
+      callerCache.put(callee, ret);
     }
     return ret;
   }
@@ -393,7 +401,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   }
 
   public AbstractDemandFlowGraph(final CallGraph cg, final HeapModel heapModel, final MemoryAccessMap mam, final ClassHierarchy cha) {
-    super(mam,heapModel,cha,cg);
+    super(mam, heapModel, cha, cg);
   }
 
 }

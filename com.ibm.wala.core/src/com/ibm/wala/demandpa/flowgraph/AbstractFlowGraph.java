@@ -169,8 +169,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    * For each invocation in the method, add nodes for actual parameters and return values
    * @param node
    */
-  protected void addNodesForInvocations(CGNode node) {
-    final IR ir = node.getIR();
+  protected void addNodesForInvocations(CGNode node, IR ir) {
     for (Iterator<CallSiteReference> iter = ir.iterateCallSites(); iter.hasNext(); ) { 
       CallSiteReference site = iter.next();
       SSAAbstractInvokeInstruction[] calls = ir.getCalls(site);
@@ -380,10 +379,9 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    * Add constraints to represent the flow of exceptions to the exceptional
    * return value for this node
    */
-  protected void addNodePassthruExceptionConstraints(CGNode node) {
+  protected void addNodePassthruExceptionConstraints(CGNode node, IR ir) {
     // add constraints relating to thrown exceptions that reach the exit
     // block.
-    IR ir = node.getIR();
     List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getExitBlock());
     PointerKey exception = heapModel.getPointerKeyForExceptionalReturnValue(node);
   
@@ -454,8 +452,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   /**
    * add constraints for reference constants assigned to vars
    */
-  protected void addNodeConstantConstraints(CGNode node) {
-    IR ir = node.getIR();
+  protected void addNodeConstantConstraints(CGNode node, IR ir) {
     SymbolTable symbolTable = ir.getSymbolTable();
     for (int i = 1; i <= symbolTable.getMaxValueNumber(); i++) {
       if (symbolTable.isConstant(i)) {

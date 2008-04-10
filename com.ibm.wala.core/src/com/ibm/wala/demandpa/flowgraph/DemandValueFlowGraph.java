@@ -98,8 +98,7 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
   }
 
   @Override
-  protected void addNodesForParameters(CGNode node) {
-    IR ir = node.getIR();
+  protected void addNodesForParameters(CGNode node, IR ir) {
     SymbolTable symbolTable = ir.getSymbolTable();
     int numParams = symbolTable.getNumberOfParameters();
     for (int i = 0; i < numParams; i++) {
