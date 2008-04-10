@@ -102,7 +102,6 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
-import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -597,7 +596,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
     protected void compute() {
       final CGNode node = ((LocalPointerKey) queriedPkAndState.getPointerKey()).getNode();
-      if (node.getIR() == null) {
+      if (hasNullIR(node)) {
         return;
       }
       g.addSubgraphForNode(node);
@@ -788,13 +787,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           if (DEBUG) {
             System.err.println("adding target " + targetForCall + " for call " + call);
           }
-          if (targetForCall.getIR() == null) {
+          if (hasNullIR(targetForCall)) {
             continue;
           }
           g.addSubgraphForNode(targetForCall);
           // need to check flows through parameters and returns,
           // in direction of value flow and reverse
-          SSAAbstractInvokeInstruction[] calls = getIR(caller).getCalls(call);
+          SSAAbstractInvokeInstruction[] calls = getCallInstrs(caller, call);
           for (final SSAAbstractInvokeInstruction invokeInstr : calls) {
             final ReturnLabel returnLabel = ReturnLabel.make(new CallSiteAndCGNode(call, caller));
             if (invokeInstr.hasDef()) {
@@ -972,8 +971,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           for (final CallSiteAndCGNode callSiteAndCGNode : g.getPotentialCallers(localPk)) {
             final CGNode caller = callSiteAndCGNode.getCGNode();
             final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
-            final IR ir = getIR(caller);
-            if (ir == null)
+            // final IR ir = getIR(caller);
+            if (hasNullIR(caller))
               continue;
             final ParamLabel paramLabel = ParamLabel.make(callSiteAndCGNode);
             doTransition(curPkAndState.getState(), paramLabel, new Function<State, Object>() {
@@ -983,7 +982,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 // return;
                 // }
                 g.addSubgraphForNode(caller);
-                SSAAbstractInvokeInstruction[] callInstrs = ir.getCalls(call);
+                SSAAbstractInvokeInstruction[] callInstrs = getCallInstrs(caller, call);
                 for (int i = 0; i < callInstrs.length; i++) {
                   SSAAbstractInvokeInstruction callInstr = callInstrs[i];
                   PointerKey actualPk = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
@@ -998,7 +997,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               public Object apply(State callerState) {
                 // hack to get some actual parameter from call site
                 // TODO do this better
-                SSAAbstractInvokeInstruction callInstr = ir.getCalls(call)[0];
+                SSAAbstractInvokeInstruction[] callInstrs = getCallInstrs(caller, call);
+                SSAAbstractInvokeInstruction callInstr = callInstrs[0];
                 PointerKey actualPk = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(paramPos));
                 Set<CGNode> possibleTargets = g.getPossibleTargets(caller, call, (LocalPointerKey) actualPk);
                 if (noOnTheFlyNeeded(callSiteAndCGNode, possibleTargets)) {
@@ -1009,7 +1009,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                     propagateToCallee();
                   } else {
                     // if necessary, start a query for the call site
-                    queryCallTargets(callSiteAndCGNode, ir, callerState);
+                    queryCallTargets(callSiteAndCGNode, callInstrs, callerState);
                   }
                 }
                 return null;
@@ -1040,7 +1040,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           // construct graph for each target
           if (noOnTheFlyNeeded(callSiteAndCGNode, possibleCallees)) {
             for (CGNode callee : possibleCallees) {
-              if (callee.getIR() == null) {
+              if (hasNullIR(callee)) {
                 continue;
               }
               g.addSubgraphForNode(callee);
@@ -1058,7 +1058,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               Set<IMethod> targetMethods = callToOTFTargets.get(callSiteAndCGNode);
               for (CGNode callee : possibleCallees) {
                 if (targetMethods.contains(callee.getMethod())) {
-                  if (callee.getIR() == null) {
+                  if (hasNullIR(callee)) {
                     continue;
                   }
                   g.addSubgraphForNode(callee);
@@ -1072,7 +1072,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               }
             } else {
               // if necessary, raise a query for the call site
-              queryCallTargets(callSiteAndCGNode, getIR(caller), curPkAndState.getState());
+              queryCallTargets(callSiteAndCGNode, getCallInstrs(caller, callSiteAndCGNode.getCallSiteReference()), curPkAndState
+                  .getState());
             }
           }
         }
@@ -1127,16 +1128,16 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * @param call
      * @param callerState
      */
-    private void queryCallTargets(CallSiteAndCGNode callSiteAndCGNode, IR ir, State callerState) {
+    private void queryCallTargets(CallSiteAndCGNode callSiteAndCGNode, SSAAbstractInvokeInstruction[] callInstrs, State callerState) {
       final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
       final CGNode caller = callSiteAndCGNode.getCGNode();
-      for (SSAAbstractInvokeInstruction callInstr : ir.getCalls(call)) {
+      for (SSAAbstractInvokeInstruction callInstr : callInstrs) {
         PointerKey thisArg = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(0));
         PointerKeyAndState thisArgAndState = new PointerKeyAndState(thisArg, callerState);
         if (pkToOTFCalls.put(thisArgAndState, callSiteAndCGNode)) {
           // added the call target
           final CGNode node = ((LocalPointerKey) thisArg).getNode();
-          if (node.getIR() == null) {
+          if (hasNullIR(node)) {
             return;
           }
           g.addSubgraphForNode(node);
@@ -1287,8 +1288,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         // iterate over callers
         for (final CallSiteAndCGNode callSiteAndCGNode : g.getPotentialCallers(returnKey)) {
           final CGNode caller = callSiteAndCGNode.getCGNode();
-          final IR ir = getIR(caller);
-          if (ir == null)
+          if (hasNullIR(caller))
             continue;
           final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
           if (!addGraphs) {
@@ -1306,7 +1306,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               // return;
               // }
               g.addSubgraphForNode(caller);
-              SSAAbstractInvokeInstruction[] callInstrs = ir.getCalls(call);
+              SSAAbstractInvokeInstruction[] callInstrs = getCallInstrs(caller, call);
               for (int i = 0; i < callInstrs.length; i++) {
                 SSAAbstractInvokeInstruction callInstr = callInstrs[i];
                 PointerKey returnAtCallerKey = heapModel.getPointerKeyForLocal(caller, isExceptional ? callInstr.getException()
@@ -1323,7 +1323,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               // if (DEBUG) {
               // System.err.println("caller " + caller);
               // }
-              SSAAbstractInvokeInstruction callInstr = ir.getCalls(call)[0];
+              SSAAbstractInvokeInstruction[] callInstrs = getCallInstrs(caller, call);
+              SSAAbstractInvokeInstruction callInstr = callInstrs[0];
               PointerKey returnAtCallerKey = heapModel.getPointerKeyForLocal(caller, isExceptional ? callInstr.getException()
                   : callInstr.getDef());
               Set<CGNode> possibleTargets = g.getPossibleTargets(caller, call, (LocalPointerKey) returnAtCallerKey);
@@ -1335,7 +1336,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                   propagateToCaller();
                 } else {
                   // if necessary, start a query for the call site
-                  queryCallTargets(callSiteAndCGNode, ir, callerState);
+                  queryCallTargets(callSiteAndCGNode, callInstrs, callerState);
                 }
               }
               return null;
@@ -1367,7 +1368,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                     continue;
                   }
                 }
-                if (callee.getIR() == null) {
+                if (hasNullIR(callee)) {
                   continue;
                 }
                 g.addSubgraphForNode(callee);
@@ -1384,7 +1385,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 Set<IMethod> targetMethods = callToOTFTargets.get(callSiteAndCGNode);
                 for (CGNode callee : possibleCallees) {
                   if (targetMethods.contains(callee.getMethod())) {
-                    if (callee.getIR() == null) {
+                    if (hasNullIR(callee)) {
                       continue;
                     }
                     g.addSubgraphForNode(callee);
@@ -1397,7 +1398,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
                 }
               } else {
                 // if necessary, raise a query for the call site
-                queryCallTargets(callSiteAndCGNode, getIR(caller), curState);
+                queryCallTargets(callSiteAndCGNode, getCallInstrs(caller, callSiteAndCGNode.getCallSiteReference()), curState);
               }
             }
           }
@@ -1664,15 +1665,16 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
   }
 
-  private IR getIR(CGNode node) {
-    return node.getIR();
-  }
-
-  @SuppressWarnings("unused")
   private SSAAbstractInvokeInstruction[] getCallInstrs(CGNode node, CallSiteReference site) {
     return node.getIR().getCalls(site);
   }
-  
+
+  private boolean hasNullIR(CGNode node) {
+    boolean ret = node.getMethod().isNative();
+    assert node.getIR() != null || ret;
+    return ret;
+  }
+
   private Object doTransition(State curState, IFlowLabel label, Function<State, Object> func) {
     State nextState = stateMachine.transition(curState, label);
     Object ret = null;
