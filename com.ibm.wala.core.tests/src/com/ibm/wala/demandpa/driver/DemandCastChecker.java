@@ -89,17 +89,8 @@ import com.ibm.wala.util.warnings.WalaException;
  */
 public class DemandCastChecker {
 
-  private static final String CAST_TO_CHECK = null;
-
-  private static final String CAST_TO_CHECK_METHOD = null;
-
+  // maximum number of casts to check
   private static final int MAX_CASTS = Integer.MAX_VALUE;
-
-  private static final boolean DUMP_ALL_IR = false;
-
-  private final static String CHA_EXCLUSIONS = true ? "J2SEClassHierarchyExclusions.txt" : CallGraphTestUtil.REGRESSION_EXCLUSIONS;
-//  private final static String CHA_EXCLUSIONS = "HackedExclusions.txt";
-  private final static boolean PROFILE = false;
 
   /**
    * @param args
@@ -109,27 +100,16 @@ public class DemandCastChecker {
    */
   public static void main(String[] args) throws IllegalArgumentException, CancelException, IOException {
     try {
-      p = new Properties();
+      Properties p = new Properties();
       p.putAll(WalaProperties.loadProperties());
     } catch (WalaException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
     }
 
-    // runTestCase("Lspec/benchmarks/_201_compress/Main", "compress.xml",
-    // "compress");
-    // runTestCase("Lspec/benchmarks/_209_db/Main", "db.xml", "db");
-    // runTestCase("Lspec/benchmarks/_228_jack/Main", "jack.xml", "jack");
-    // runTestCase("Lspec/benchmarks/_213_javac/Main", "javac.xml", "javac");
-    // runTestCase("Lspec/benchmarks/_202_jess/Main", "jess.xml", "jess");
-    // runTestCase("Lspec/benchmarks/_222_mpegaudio/Main", "mpegaudio.xml",
-    // "mpegaudio");
-    // runTestCase("Lspec/benchmarks/_227_mtrt/Main", "mtrt.xml", "mtrt");
-    // runTestCase("Lca/mcgill/sable/soot/jimple/Main", "soot-c.xml", "soot-c");
-    // runTestCase("LSableCC", "sablecc-j.xml", "sablecc-j");
-    // runTestCase("Lpolyglot/main/Main", "polyglot.xml", "polyglot");
-    // runTestCase(TestConstants.JLEX_MAIN, TestConstants.JLEX, "JLex");
-    runTestCase(TestConstants.HELLO_MAIN, TestConstants.HELLO, "Hello");
+    runTestCase(TestConstants.JLEX_MAIN, TestConstants.JLEX, "JLex");
+    // runTestCase(TestConstants.HELLO_MAIN, TestConstants.HELLO, "Hello");
+
   }
 
   public static void runTestCase(String mainClass, String scopeFile, String benchName) throws IllegalArgumentException,
@@ -139,9 +119,6 @@ public class DemandCastChecker {
     DemandRefinementPointsTo dmp = null;
     try {
       dmp = makeDemandPointerAnalysis(scopeFile, mainClass, benchName);
-      if (DUMP_ALL_IR) {
-        WalaUtil.dumpAllIR(dmp.getBaseCallGraph(), benchName, p);
-      }
       findFailingCasts(dmp.getBaseCallGraph(), dmp);
     } catch (ClassHierarchyException e) {
       e.printStackTrace();
@@ -163,59 +140,24 @@ public class DemandCastChecker {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     System.err.print("constructing call graph...");
-    CallGraph cg = null;
-    try {
-      if (PROFILE) {
-//         Controller c = new Controller();
-//         c.startCPUProfiling(ProfilingModes.CPU_SAMPLING, Controller.DEFAULT_FILTERS);
-//         cg = buildCallGraph(scope, cha, options);
-//         c.captureCPUSnapshot(false);
-      } else {
-        cg = buildCallGraph(scope, cha, options);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-      Assertions.UNREACHABLE();
-    }
+    final CallGraph cg = buildCallGraph(scope, cha, options);
     System.err.println("done");
     System.err.println(CallGraphStats.getStats(cg));
-//     System.err.println(cg.toString());
-
     MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, false);
     DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(heapModel, cha), fam,
         cha, options, makeStateMachineFactory());
     fullDemandPointsTo.setRefinementPolicyFactory(chooseRefinePolicyFactory(cha));
-    // fullDemandPointsTo.setFieldRefinePolicy(chooseFieldRefinePolicy(cha));
-    // fullDemandPointsTo.setCGRefinePolicy(chooseCGRefinePolicy());
-    // fullDemandPointsTo.setTraversalBudget(BUDGET);
     return fullDemandPointsTo;
   }
 
-  // private static final boolean EXCLUDE_STUFF = false;
-
   private static String getExclusions(String benchName) {
-    // if (benchName.equals("sablecc-j")) {
-    // return CHA_EXCLUSIONS;
-    // } else {
-    // return "J2SEClassHierarchyExclusions.txt";
-    // }
-    return CHA_EXCLUSIONS;
+    return CallGraphTestUtil.REGRESSION_EXCLUSIONS;
   }
 
-  // private static CallGraphRefinePolicy chooseCGRefinePolicy() {
-  // if (true) {
-  // return new AlwaysRefineCGPolicy();
-  // // return new HackedCGRefinePolicy();
-  // } else {
-  // return new NeverRefineCGPolicy();
-  // }
-  // }
-
-  private static final boolean CHEAP_CG = false;
+  // if true, construct up-front call graph cheaply (0-CFA)
+  private static final boolean CHEAP_CG = true;
 
   private static HeapModel heapModel;
-
-  private static Properties p;
 
   /**
    * builds a call graph, and sets the corresponding heap model for analysis
@@ -233,7 +175,7 @@ public class DemandCastChecker {
     final AnalysisCache cache = new AnalysisCache();
     CallGraphBuilder builder;
     if (CHEAP_CG) {
-      builder = Util.makeRTABuilder(options, cache, cha, scope);
+      builder = Util.makeZeroCFABuilder(options, cache, cha, scope);
       // we want vanilla 0-1 CFA, which has one abstract loc per allocation
       heapModel = Util.makeVanillaZeroOneCFABuilder(options, cache, cha, scope);
     } else {
@@ -241,10 +183,10 @@ public class DemandCastChecker {
       heapModel = (HeapModel) builder;
     }
     ProgressMaster master = ProgressMaster.make(new NullProgressMonitor());
-    master.setMillisPerWorkItem(30000);
-    master.beginTask("runSolver", 1);      
+    master.setMillisPerWorkItem(360000);
+    master.beginTask("runSolver", 1);
     try {
-    ret = builder.makeCallGraph(options, master);
+      ret = builder.makeCallGraph(options, master);
     } catch (CallGraphBuilderCancelException e) {
       System.err.println("TIMED OUT!!");
       ret = e.getPartialCallGraph();
@@ -277,17 +219,6 @@ public class DemandCastChecker {
       if (declaringClass.getClassLoader().equals(ClassLoaderReference.Primordial)) {
         continue;
       }
-      // skip spec/io stuff
-      // if (declaringClass.toString().indexOf("Lspec/io") != -1) {
-      // continue;
-      // }
-      if (CAST_TO_CHECK_METHOD != null) {
-        if (!node.getMethod().toString().equals(CAST_TO_CHECK_METHOD)) {
-          continue;
-        } else {
-          System.err.println("found chosen method");
-        }
-      }
       IR ir = node.getIR();
       if (ir == null)
         continue;
@@ -298,20 +229,9 @@ public class DemandCastChecker {
         SSAInstruction instruction = instrs[i];
         if (instruction instanceof SSACheckCastInstruction) {
           SSACheckCastInstruction castInstr = (SSACheckCastInstruction) instruction;
-          if (CAST_TO_CHECK != null) {
-            if (!(castInstr.toString().equals(CAST_TO_CHECK))) {
-              continue;
-            } else {
-              System.err.println("found chosen cast");
-            }
-          }
           final TypeReference declaredResultType = castInstr.getDeclaredResultType();
           if (declaredResultType.isPrimitiveType())
             continue;
-          // if (declaredResultType.isArrayType()) {
-          // warnings.add(new WeirdCastWarning(castInstr.toString()));
-          // continue;
-          // }
           System.err.println("CHECKING " + castInstr + " in " + node.getMethod());
           PointerKey castedPk = heapModel.getPointerKeyForLocal(node, castInstr.getUse(0));
           Predicate<Collection<InstanceKey>> castPred = new Predicate<Collection<InstanceKey>>() {
