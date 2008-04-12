@@ -354,10 +354,10 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   private void debugPrintIR(IR ir) {
     if (DEBUG) {
       if (ir == null) {
-        Trace.println("\n   No statements\n");
+        System.err.println("\n   No statements\n");
       } else {
         try {
-          Trace.println(ir.toString());
+          System.err.println(ir.toString());
         } catch (Error e) {
           // TODO Auto-generated catch block
           e.printStackTrace();

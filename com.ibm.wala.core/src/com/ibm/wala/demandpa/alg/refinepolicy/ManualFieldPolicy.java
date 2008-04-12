@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
+import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -70,7 +71,7 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
 
   final private IClass[] encounteredClasses = new IClass[NUM_DECISIONS_TO_TRACK];
 
-  public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, StateMachine.State state) {
+  public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state) {
     if (field == ArrayContents.v())
       return true;
     final IClass declaringClass = field.getDeclaringClass();

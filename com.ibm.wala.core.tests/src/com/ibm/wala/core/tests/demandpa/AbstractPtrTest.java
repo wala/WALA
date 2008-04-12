@@ -46,7 +46,6 @@ import junit.framework.TestCase;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.demandpa.alg.DemandRefinementPointsTo;
-import com.ibm.wala.demandpa.alg.IDemandPointerAnalysis;
 import com.ibm.wala.demandpa.alg.ThisFilteringHeapModel;
 import com.ibm.wala.demandpa.alg.statemachine.DummyStateMachine;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachineFactory;
@@ -176,7 +175,7 @@ public abstract class AbstractPtrTest extends TestCase {
 
   protected Collection<InstanceKey> getPointsToSetToTest(String scopeFile, String mainClass) throws ClassHierarchyException,
       IllegalArgumentException, CancelException, IOException {
-    final IDemandPointerAnalysis dmp = makeDemandPointerAnalysis(scopeFile, mainClass);
+    final DemandRefinementPointsTo dmp = makeDemandPointerAnalysis(scopeFile, mainClass);
 
     // find the testThisVar call, and check the parameter's points-to set
     CGNode mainMethod = AbstractPtrTest.findMainMethod(dmp.getBaseCallGraph());

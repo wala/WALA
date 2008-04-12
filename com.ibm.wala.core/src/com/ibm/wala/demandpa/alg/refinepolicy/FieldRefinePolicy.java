@@ -39,6 +39,7 @@ package com.ibm.wala.demandpa.alg.refinepolicy;
 
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
+import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 /**
@@ -58,7 +59,7 @@ public interface FieldRefinePolicy {
    * @return <code>true</code> if match edges for the field access should be refined. Otherwise, <code>false</code>
    *         is returned, indicating that the field can be handled with match edges.
    */
-  public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, StateMachine.State state);
+  public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state);
 
   /**
    * 

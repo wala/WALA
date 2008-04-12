@@ -18,9 +18,9 @@ package com.ibm.wala.demandpa.alg.refinepolicy;
  */
 public abstract class AbstractRefinementPolicy implements RefinementPolicy {
 
-  private static final int DEFAULT_NUM_PASSES = 3;
+  private static final int DEFAULT_NUM_PASSES = 4;
 
-  private static final int[] DEFAULT_BUDGET_PER_PASS = { 1000, 12000, 12000 };
+  private static final int[] DEFAULT_BUDGET_PER_PASS = { 1000, 12000, 12000, 12000 };
 
   protected final FieldRefinePolicy fieldRefinePolicy;
 

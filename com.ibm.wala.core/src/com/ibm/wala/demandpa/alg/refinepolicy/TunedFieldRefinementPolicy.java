@@ -15,6 +15,7 @@ import java.util.Collection;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
+import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -24,7 +25,9 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
 
-  private final ClassHierarchy cha; 
+  private static final boolean DEBUG = true;
+
+  private final ClassHierarchy cha;
 
   private final Collection<IClass> typesToRefine = HashSetFactory.make();
 
@@ -33,6 +36,9 @@ public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
   public boolean nextPass() {
     if (firstSkippedClass != null) {
       typesToRefine.add(firstSkippedClass);
+      if (DEBUG) {
+        System.err.println("now refining " + firstSkippedClass);
+      }
       firstSkippedClass = null;
       return true;
     } else {
@@ -40,7 +46,7 @@ public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
     }
   }
 
-  public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, StateMachine.State state) {
+  public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state) {
     if (field == ArrayContents.v()) {
       return true;
     }
@@ -67,8 +73,8 @@ public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
   /**
    * 
    * @param klass
-   * @return the top-level {@link IClass} where klass is declared, or klass
-   *         itself if klass is top-level or if top-level class not loaded
+   * @return the top-level {@link IClass} where klass is declared, or klass itself if klass is top-level or if top-level
+   *         class not loaded
    */
   private IClass removeInner(IClass klass) {
     ClassLoaderReference cl = klass.getClassLoader().getReference();
