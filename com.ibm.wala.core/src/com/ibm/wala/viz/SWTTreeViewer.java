@@ -38,55 +38,43 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
 
   protected Graph graphInput;
 
-
   protected Collection<? extends Object> rootsInput = null;
-
 
   protected NodeDecorator nodeDecoratorInput = null;
 
-
   final protected List<IAction> popUpActions = new LinkedList<IAction>();
-
 
   public SWTTreeViewer() {
     super();
   }
 
-
   public Graph getGraphInput() {
     return graphInput;
   }
-
 
   public void setGraphInput(Graph newGraphInput) {
     graphInput = newGraphInput;
   }
 
-
   public Collection<? extends Object> getRootsInput() {
     return rootsInput;
   }
-
 
   public void setRootsInput(Collection<? extends Object> newRootsInput) {
     rootsInput = newRootsInput;
   }
 
-
   public NodeDecorator getNodeDecoratorInput() {
     return nodeDecoratorInput;
   }
-
 
   public void setNodeDecoratorInput(NodeDecorator newNodeDecoratorInput) {
     nodeDecoratorInput = newNodeDecoratorInput;
   }
 
-
   public List<IAction> getPopUpActions() {
     return popUpActions;
   }
-
 
   @Override
   public String toString() {
@@ -131,19 +119,26 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
         d.asyncExec(r);
       }
     } else {
-      Runnable r = new Runnable() {
-        public void run() {
-          w.open();
-          Display.getCurrent().dispose();
-        }
-      };
-      Thread t = new Thread(r);
-      t.start();
-      if (isBlockInput()) {
-        try {
-          t.join();
-        } catch (InterruptedException e) {
-          throw new WalaException("unexpected interruption", e);
+      if (System.getProperty("mrj.version") != null) {
+        // the Mac does not like running the Window code in another thread
+        // side-effect: we always block input on Mac
+        w.open();
+        Display.getCurrent().dispose();
+      } else {
+        Runnable r = new Runnable() {
+          public void run() {
+            w.open();
+            Display.getCurrent().dispose();
+          }
+        };
+        Thread t = new Thread(r);
+        t.start();
+        if (isBlockInput()) {
+          try {
+            t.join();
+          } catch (InterruptedException e) {
+            throw new WalaException("unexpected interruption", e);
+          }
         }
       }
     }
@@ -212,8 +207,7 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
     /**
      * @author sfink
      * 
-     * Simple wrapper around an EObjectGraph to provide content for a tree
-     * viewer.
+     * Simple wrapper around an EObjectGraph to provide content for a tree viewer.
      */
     private class GraphContentProvider implements ITreeContentProvider {
 
