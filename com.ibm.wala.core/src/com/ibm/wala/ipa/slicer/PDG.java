@@ -802,7 +802,7 @@ public class PDG implements NumberedGraph<Statement> {
       createSpecialStatements(ir);
     }
 
-    createCalleeParams(ref);
+    createCalleeParams();
     createReturnStatements();
 
     delegate.addNode(new MethodEntryStatement(node));
@@ -845,22 +845,24 @@ public class PDG implements NumberedGraph<Statement> {
    * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters
    *        in the SDG.
    */
-  private void createCalleeParams(Map<CGNode, OrdinalSet<PointerKey>> ref) {
-    ArrayList<Statement> list = new ArrayList<Statement>();
-    for (int i = 1; i <= node.getMethod().getNumberOfParameters(); i++) {
-      ParamCallee s = new ParamCallee(node, i);
-      delegate.addNode(s);
-      list.add(s);
-    }
-    if (!dOptions.isIgnoreHeap()) {
-      for (PointerKey p : ref.get(node)) {
-        Statement h = new HeapStatement.HeapParamCallee(node, p);
-        delegate.addNode(h);
-        list.add(h);
+  private void createCalleeParams() {
+    if (paramCalleeStatements == null) {
+      ArrayList<Statement> list = new ArrayList<Statement>();
+      for (int i = 1; i <= node.getMethod().getNumberOfParameters(); i++) {
+        ParamCallee s = new ParamCallee(node, i);
+        delegate.addNode(s);
+        list.add(s);
       }
+      if (!dOptions.isIgnoreHeap()) {
+        for (PointerKey p : ref.get(node)) {
+          Statement h = new HeapStatement.HeapParamCallee(node, p);
+          delegate.addNode(h);
+          list.add(h);
+        }
+      }
+      paramCalleeStatements = new Statement[list.size()];
+      list.toArray(paramCalleeStatements);
     }
-    paramCalleeStatements = new Statement[list.size()];
-    list.toArray(paramCalleeStatements);
   }
 
   /**
@@ -968,7 +970,9 @@ public class PDG implements NumberedGraph<Statement> {
   }
 
   public Statement[] getParamCalleeStatements() {
-    populate();
+    if (paramCalleeStatements == null) {
+      createCalleeParams();
+    }
     return paramCalleeStatements.clone();
   }
 
