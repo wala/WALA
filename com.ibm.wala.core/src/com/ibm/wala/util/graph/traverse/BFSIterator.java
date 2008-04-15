@@ -100,8 +100,10 @@ public class BFSIterator<T> implements Iterator<T> {
       }
     }
     index = 0;
-    T current = Q.get(0);
-    visitChildren(current);
+    if (Q.size() > 0) {
+      T current = Q.get(0);
+      visitChildren(current);
+    }
   }
 
   private void visitChildren(T N) {
