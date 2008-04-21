@@ -708,11 +708,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             IClass contents = ((ArrayClass) ik[i].getConcreteType()).getElementClass();
             if (p == null) {
             } else {
-              if (DEBUG_TRACK_INSTANCE) {
-                if (system.findOrCreateIndexForInstanceKey(ik[i]) == DEBUG_INSTANCE_KEY) {
-                  Assertions.UNREACHABLE();
-                }
-              }
               if (contentsAreInvariant(symbolTable, du, value)) {
                 system.recordImplicitPointsToSet(valuePtrKey);
                 InstanceKey[] vk = getInvariantContents(value);

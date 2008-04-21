@@ -80,13 +80,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
   private final static boolean DEBUG_ENTRYPOINTS = DEBUG_ALL | false;
 
-  // private final static boolean DEBUG = DEBUG_ENTRYPOINTS | DEBUG_GENERAL |
-  // DEBUG_ASSIGN | DEBUG_ARRAY_LOAD | DEBUG_ARRAY_STORE
-  // | DEBUG_GET | DEBUG_PUT | DEBUG_FILTER;
-
-  final static boolean DEBUG_TRACK_INSTANCE = false;
-
-  final static int DEBUG_INSTANCE_KEY = 7900;
 
   /**
    * Meta-data regarding how pointers are modeled
@@ -677,19 +670,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
       if (DEBUG_FILTER) {
         System.err.println("RESULT " + lhs + (changed ? " (changed)" : ""));
-      }
-
-      if (PropagationCallGraphBuilder.DEBUG_TRACK_INSTANCE) {
-        if (changed) {
-          if (lhs.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)
-              && rhs.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)) {
-            System.err.println("Filter: FLOW FROM " + rhs.getPointerKey() + " TO " + lhs.getPointerKey());
-            System.err.println("Filter: FLOW FROM " + rhs.getPointerKey() + " TO " + lhs.getPointerKey());
-            System.err.println("   filter: " + filter);
-            InstanceKey I = system.getInstanceKey(DEBUG_INSTANCE_KEY);
-            System.err.println("   I type: " + I.getConcreteType());
-          }
-        }
       }
 
       return changed ? CHANGED : NOT_CHANGED;

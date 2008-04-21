@@ -12,7 +12,6 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixedpoint.impl.UnaryStatement;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * Corresponds to: "is a superset of". Used for assignment.
@@ -36,20 +35,11 @@ class AssignOperator extends UnaryOperator<PointsToSetVariable> implements IPoin
     if (PropagationCallGraphBuilder.DEBUG_ASSIGN) {
       String S = "EVAL Assign " + lhs.getPointerKey() + " " + rhs.getPointerKey();
       S = S + "\nEVAL " + lhs + " " + rhs;
-      Trace.println(S);
+      System.err.println(S);
     }
     boolean changed = lhs.addAll(rhs);
     if (PropagationCallGraphBuilder.DEBUG_ASSIGN) {
-        Trace.println("RESULT " + lhs + (changed ? " (changed)" : ""));
-    }
-
-    if (PropagationCallGraphBuilder.DEBUG_TRACK_INSTANCE) {
-      if (changed) {
-        if (lhs.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)
-            && rhs.contains(PropagationCallGraphBuilder.DEBUG_INSTANCE_KEY)) {
-          Trace.println("Assign: FLOW FROM " + rhs.getPointerKey() + " TO " + lhs.getPointerKey());
-        }
-      }
+      System.err.println("RESULT " + lhs + (changed ? " (changed)" : ""));
     }
 
     return changed ? CHANGED : NOT_CHANGED;
