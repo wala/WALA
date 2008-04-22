@@ -32,6 +32,7 @@ import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
 import com.ibm.wala.ssa.SSACheckCastInstruction;
+import com.ibm.wala.ssa.SSAComparisonInstruction;
 import com.ibm.wala.ssa.SSAConversionInstruction;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
@@ -590,6 +591,13 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     public void visitConversion(SSAConversionInstruction instruction) {
       if (doPrimitives) {
         result = new DeclaredTypeOperator(PrimitiveType.getPrimitive(instruction.getToType()));
+      }
+    }
+    
+    @Override
+    public void visitComparison(SSAComparisonInstruction instruction) {
+      if (doPrimitives) {
+        result = new DeclaredTypeOperator(PrimitiveType.INT);
       }
     }
 
