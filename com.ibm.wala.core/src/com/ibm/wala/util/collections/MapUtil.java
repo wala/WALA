@@ -104,6 +104,27 @@ public class MapUtil {
     return result;
   }
 
+  /**
+   * invert an input map that is one-to-one (i.e., it does not map two different keys to the same value)
+   * @throws IllegalArgumentException if m is null
+   * @throws IllegalArgumentException if m is not one-to-one
+   */
+  public static <K, V> Map<V, K> invertOneToOneMap(Map<K,V> m) {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
+    Map<V,K> result = HashMapFactory.make(m.size());
+    for (Map.Entry<K,V> entry : m.entrySet()) {
+      K key = entry.getKey();
+      V val = entry.getValue();
+      if (result.containsKey(val)) {
+        throw new IllegalArgumentException("input map not one-to-one");
+      }
+      result.put(val, key);
+    }
+    return result;
+  }
+  
   public static <K, V> Map<Set<K>, V> groupKeysByValue(Map<K, V> m) {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
