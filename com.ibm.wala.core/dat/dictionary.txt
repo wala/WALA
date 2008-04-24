@@ -149,3 +149,6 @@ pistoia
 checkcasts
 synthetically
 unhandled
+decorator
+conjoin
+subsumption
