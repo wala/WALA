@@ -125,9 +125,8 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
       return target;
     } else {
       if (canIgnore(site.getDeclaredTarget())) {
-        if (DEBUG)
-          System.err.println("ignoring " + site);
-        return null;
+        // we want to generate a NoOpSummary for this method.
+        return findOrCreateSyntheticMethod(site.getDeclaredTarget(), site.isStatic());
       }
       target = parent.getCalleeTarget(caller, site, dispatchType);
 
