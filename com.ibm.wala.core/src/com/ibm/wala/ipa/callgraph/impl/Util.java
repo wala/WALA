@@ -488,8 +488,11 @@ public class Util {
       }
 
       public boolean hasEdge(MethodReference src, MethodReference dst) {
-        // TODO Auto-generated method stub
-        Assertions.UNREACHABLE();
+        for (Iterator<MethodReference> succNodes = getSuccNodes(src); succNodes.hasNext(); ) {
+          if (dst.equals(succNodes.next())) {
+            return true;
+          }
+        }
         return false;
       }
     };
