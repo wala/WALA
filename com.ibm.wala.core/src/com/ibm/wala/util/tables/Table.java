@@ -93,7 +93,7 @@ public class Table<T> implements Cloneable {
     return columnHeadings.get(i);
   }
 
-  private int[] computeColumnWidths() {
+  public int[] computeColumnWidths() {
     int[] result = new int[getNumberOfColumns()];
     for (int i = 0; i < getNumberOfColumns(); i++) {
       result[i] = columnHeadings.get(i).toString().length() + 1;
