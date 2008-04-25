@@ -25,6 +25,12 @@ public final class Selector {
 
   private final Descriptor descriptor;
 
+  public static Selector make(String selectorStr) {
+    String methodName = selectorStr.substring(0, selectorStr.indexOf('('));
+    String desc = selectorStr.substring(selectorStr.indexOf('('));
+    return new Selector(Atom.findOrCreateUnicodeAtom(methodName), Descriptor.findOrCreateUTF8(desc));
+    
+  }
   public Selector(Atom name, Descriptor descriptor) {
     this.name = name;
     this.descriptor = descriptor;
