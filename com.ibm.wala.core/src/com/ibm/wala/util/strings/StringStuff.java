@@ -649,7 +649,7 @@ public class StringStuff {
     return dotForm.toString();
   }
   /**
-   * Convert '$' to '.' in names.
+   * Convert '.' to '$' in names.
    * 
    * @param path
    *          String object in which dollar signs('$') must be converted to dots
