@@ -101,7 +101,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
     return cache.getSSACache().findOrCreateIR(m, node.getContext(), options.getSSAOptions());
   }
 
-  private Set getTypesForContext(Context context) {
+  private Set<TypeReference> getTypesForContext(Context context) {
     // first try user spec
     XMLReflectionReader spec = (XMLReflectionReader) userSpec;
     if (spec != null && context instanceof CallerSiteContext) {
@@ -109,14 +109,14 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       MemberReference m = site.getCaller().getMethod().getReference();
       ReflectionSummary summary = spec.getSummary(m);
       if (summary != null) {
-        Set types = summary.getTypesForProgramLocation(site.getCallSite().getProgramCounter());
+        Set<TypeReference> types = summary.getTypesForProgramLocation(site.getCallSite().getProgramCounter());
         if (types != null) {
           return types;
         }
       }
     }
 
-    Set types = map.get(context);
+    Set<TypeReference> types = map.get(context);
     return types;
   }
 
@@ -415,7 +415,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
             Trace.println("Cone clause for " + T);
           }
           if (((ConeType) T).isInterface()) {
-            Set implementors = T.getType().getClassHierarchy().getImplementors(ref);
+            Set<IClass> implementors = T.getType().getClassHierarchy().getImplementors(ref);
             if (DEBUG) {
               Trace.println("Implementors for " + T + " " + implementors);
             }
@@ -450,7 +450,10 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
           Assertions.UNREACHABLE("Unexpected type " + T.getClass());
         }
       } else if (T instanceof SetType) {
-        addStatementsForSetOfTypes(((SetType) T).iteratePoints());
+        // This code has clearly bitrotted, since iteratePoints() returns an Iterator<TypeReference>
+        // and we need an Iterator<IClass>.  Commenting out for now.  --MS
+        Assertions.UNREACHABLE();
+        //addStatementsForSetOfTypes(((SetType) T).iteratePoints());
       } else {
         Assertions.UNREACHABLE("Unexpected type " + T.getClass());
       }
@@ -517,14 +520,14 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       return nextLocal;
     }
 
-    private void addStatementsForSetOfTypes(Iterator it) {
+    private void addStatementsForSetOfTypes(Iterator<IClass> it) {
       if (!it.hasNext()) { // Uh. No types. Hope the caller reported a warning.
         SSAReturnInstruction r = new SSAReturnInstruction(nextLocal, false);
         allInstructions.add(r);
       }
 
       for (; it.hasNext();) {
-        IClass klass = (IClass) it.next();
+        IClass klass = it.next();
         TypeReference T = klass.getReference();
         if (klass.isAbstract() || klass.isInterface() || typesAllocated.contains(T)) {
           continue;

@@ -77,7 +77,7 @@ public class ReflectionSummary {
     }
   }
   
-  public Set getTypesForProgramLocation(int bcIndex) {
+  public Set<TypeReference> getTypesForProgramLocation(int bcIndex) {
     return map.get(new Integer(bcIndex));
   }
 }

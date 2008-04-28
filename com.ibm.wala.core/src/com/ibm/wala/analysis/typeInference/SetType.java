@@ -97,7 +97,7 @@ public class SetType extends TypeAbstraction {
   /**
    * @return Iterator of the TypeReferences which compose this Set.
    */
-  public Iterator iteratePoints() {
+  public Iterator<TypeReference> iteratePoints() {
     return types.iterator();
   }
 }
