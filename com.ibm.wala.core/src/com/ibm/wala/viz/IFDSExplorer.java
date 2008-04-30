@@ -17,7 +17,6 @@ import java.util.Properties;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.InferGraphRoots;
 import com.ibm.wala.util.warnings.WalaException;
@@ -61,7 +60,6 @@ public class IFDSExplorer {
 
     // dump the domain to stderr
     System.err.println("Domain:\n" + r.getProblem().getDomain().toString());
-    Trace.println("Domain:\n" + r.getProblem().getDomain().toString());
 
     Properties p = null;
     try {
