@@ -24,8 +24,8 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class SliceFunctions implements IPartiallyBalancedFlowFunctions<Statement> {
 
-  public IUnaryFlowFunction getCallFlowFunction(Statement src, Statement dest) {
-    return ReachabilityFunctions.createReachabilityFunctions().getCallFlowFunction(src, dest);
+  public IUnaryFlowFunction getCallFlowFunction(Statement src, Statement dest, Statement ret) {
+    return ReachabilityFunctions.createReachabilityFunctions().getCallFlowFunction(src, dest, ret);
   }
 
   public IUnaryFlowFunction getCallNoneToReturnFlowFunction(Statement src, Statement dest) {

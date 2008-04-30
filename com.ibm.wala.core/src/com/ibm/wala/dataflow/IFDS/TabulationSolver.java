@@ -541,16 +541,32 @@ public class TabulationSolver<T, P> {
     final int c = supergraph.getNumber(edge.target);
 
     final Collection<T> returnSites = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.target));
-
+    
     // [14 - 16]
     for (Iterator<? extends T> it = supergraph.getCalledNodes(edge.target); it.hasNext();) {
       final T callee = it.next();
       if (DEBUG_LEVEL > 0) {
         System.err.println(" process callee: " + callee);
       }
-      IUnaryFlowFunction f = flowFunctionMap.getCallFlowFunction(edge.target, callee);
+      MutableSparseIntSet reached = MutableSparseIntSet.makeEmpty();
+      // we modify this to handle each return site individually.  Some types of problems
+      // compute different flow functions for each return site.
+      for (final T returnSite : returnSites) {
+        IUnaryFlowFunction f = flowFunctionMap.getCallFlowFunction(edge.target, callee, returnSite);
+        // reached := {d1} that reach the callee
+        IntSet r = computeFlow(edge.d2, f);
+        if (r != null) {
+          reached.addAll(r);
+        }
+      }
+      // in some problems, we also want to consider flow into a callee that can never flow out
+      // via a return.  in this case, the return site is null.
+      IUnaryFlowFunction f = flowFunctionMap.getCallFlowFunction(edge.target, callee, null);
       // reached := {d1} that reach the callee
-      IntSet reached = computeFlow(edge.d2, f);
+      IntSet r = computeFlow(edge.d2, f);
+      if (r != null) {
+        reached.addAll(r);
+      }
       if (DEBUG_LEVEL > 0) {
         System.err.println(" reached: " + reached);
       }
@@ -968,7 +984,7 @@ public class TabulationSolver<T, P> {
     @SuppressWarnings("unchecked")
     @Override
     protected boolean compareElements(PathEdge<T> p1, PathEdge<T> p2) {
-        return problem.getDomain().hasPriorityOver(p1, p2);
+      return problem.getDomain().hasPriorityOver(p1, p2);
     }
 
   }

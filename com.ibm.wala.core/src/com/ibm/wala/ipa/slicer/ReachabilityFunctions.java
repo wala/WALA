@@ -46,6 +46,7 @@ public class ReachabilityFunctions<T> implements IFlowFunctionMap<T> {
   private ReachabilityFunctions() {
   }
 
+  @Deprecated
   public IUnaryFlowFunction getCallFlowFunction(T src, T dest) {
     return FLOW_REACHES;
   }
@@ -71,6 +72,10 @@ public class ReachabilityFunctions<T> implements IFlowFunctionMap<T> {
   }
   
   public IFlowFunction getReturnFlowFunction(T src, T dest) {
+    return FLOW_REACHES;
+  }
+
+  public IUnaryFlowFunction getCallFlowFunction(T src, T dest, T ret) {
     return FLOW_REACHES;
   }
 

@@ -18,8 +18,11 @@ import com.ibm.wala.util.intset.SparseIntSet;
  * 
  * TODO: optimize by building this edge as implicit in every flow function.
  * 
+ * This is deprecated ... it's confusing and non-general.
+ * 
  * @author sfink
  */
+@Deprecated
 public class UniversalKillFlowFunction implements IReversibleFlowFunction {
 
   private final static UniversalKillFlowFunction singleton = new UniversalKillFlowFunction();
