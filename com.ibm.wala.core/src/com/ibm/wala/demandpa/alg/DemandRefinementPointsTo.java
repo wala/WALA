@@ -82,7 +82,9 @@ import com.ibm.wala.demandpa.genericutil.ArraySetMultiMap;
 import com.ibm.wala.demandpa.genericutil.HashSetMultiMap;
 import com.ibm.wala.demandpa.genericutil.MultiMap;
 import com.ibm.wala.demandpa.genericutil.Predicate;
+import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
+import com.ibm.wala.demandpa.util.MemoryAccess;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.demandpa.util.PointerParamValueNumIterator;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
@@ -102,8 +104,12 @@ import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAArrayStoreInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -233,13 +239,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * compute a points-to set for a pointer key, aiming to satisfy some predicate
    * 
    * @param pk the pointer key
-   * @param p2setPred the desired predicate that the points-to set should ideally satisfy
+   * @param ikeyPred the desired predicate that each instance key in the points-to set should ideally satisfy
    * @return a pair consisting of (1) a {@link PointsToResult} indicating whether a points-to set satisfying the
    *         predicate was computed, and (2) the last computed points-to set for the variable (possibly
    *         <code>null</code> if no points-to set could be computed in the budget)
    * @throws IllegalArgumentException if <code>pk</code> is not a {@link LocalPointerKey}; to eventually be fixed
    */
-  public Pair<PointsToResult, Collection<InstanceKey>> getPointsTo(PointerKey pk, Predicate<Collection<InstanceKey>> p2setPred)
+  public Pair<PointsToResult, Collection<InstanceKey>> getPointsTo(PointerKey pk, Predicate<InstanceKey> ikeyPred)
       throws IllegalArgumentException {
     if (!(pk instanceof com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey)) {
       throw new IllegalArgumentException("only locals for now");
@@ -257,16 +263,20 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       setNumNodesTraversed(0);
       setTraversalBudget(refinementPolicy.getBudgetForPass(passNum));
       Collection<InstanceKey> curP2Set = null;
+      PointsToComputer computer = null;
+      boolean completedPassInBudget = false;
       try {
         while (true) {
           try {
-            PointsToComputer computer = new PointsToComputer(queriedPk);
+            computer = new PointsToComputer(queriedPk);
             computer.compute();
             curP2Set = computer.getP2Set(queriedPk);
+//            System.err.println("completed pass");
             if (DEBUG) {
               System.err.println("traversed " + getNumNodesTraversed() + " nodes");
               System.err.println("POINTS-TO SET " + curP2Set);
             }
+            completedPassInBudget = true;
             break;
           } catch (StatesMergedException e) {
             if (DEBUG) {
@@ -288,10 +298,17 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           // new set size is >= lastP2Set, so don't update
           assert curP2Set.containsAll(lastP2Set);
         }
-        if (curP2Set.isEmpty() || p2setPred.test(curP2Set)) {
+        if (curP2Set.isEmpty() || passesPred(curP2Set, ikeyPred)) {
           // we did it!
+//          if (curP2Set.isEmpty()) {
+//            System.err.println("EMPTY PTO SET");
+//          }
           succeeded = true;
           break;
+        } else if (completedPassInBudget) {
+//          if (computer.isHopeless(ikeyPred)) {
+//            break;
+//          }
         }
       }
       // if we get here, means either budget for pass was exceeded,
@@ -314,12 +331,21 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return Pair.make(result, lastP2Set);
   }
 
+  private boolean passesPred(Collection<InstanceKey> p2set, Predicate<InstanceKey> ikeyPred) {
+    for (InstanceKey ik : p2set) {
+      if (!ikeyPred.test(ik)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /**
    * @return the points-to set of <code>pk</code>, or <code>null</code> if the points-to set can't be computed in
    *         the allocated budget
    */
   public Collection<InstanceKey> getPointsTo(PointerKey pk) {
-    return getPointsTo(pk, Predicate.<Collection<InstanceKey>> falsePred()).snd;
+    return getPointsTo(pk, Predicate.<InstanceKey> falsePred()).snd;
   }
 
   /**
@@ -521,15 +547,178 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       queriedPkAndState = new PointerKeyAndState(pk, stateMachine.getStartState());
     }
 
+    /**
+     * Assumes PointsToComputer has been run and it computed a points-to set within budget (i.e., without early
+     * termination.) Further assuming that all variables are initialized, can further refinement possibly allow pred to
+     * be satisfied? NOTE: a heuristic.
+     */
+    public boolean isHopeless(Predicate<InstanceKey> pred) {
+      final Set<PointerKeyAndState> visited = HashSetFactory.make();
+      final Collection<PointerKeyAndState> worklist = new LinkedHashSet<PointerKeyAndState>();
+      visited.add(queriedPkAndState);
+      worklist.add(queriedPkAndState);
+      class CopyFunction implements Function<State, Object> {
+
+        private final PointerKey dstPk;
+
+        public Object apply(State succState) {
+          PointerKeyAndState dstPkAndState = new PointerKeyAndState(dstPk, succState);
+          if (visited.add(dstPkAndState)) {
+            worklist.add(dstPkAndState);
+          }
+          return null;
+        }
+
+        public CopyFunction(PointerKey dstPk) {
+          this.dstPk = dstPk;
+        }
+
+      }
+      while (!worklist.isEmpty()) {
+        PointerKeyAndState curPkAndState = worklist.iterator().next();
+        worklist.remove(curPkAndState);
+        OrdinalSet<InstanceKeyAndState> p2set = makeOrdinalSet(find(pkToP2Set, curPkAndState));
+//        System.err.println("checking " + curPkAndState);
+//        System.err.println("p2set " + p2set);
+        // want to check if *all* instance keys in points-to set fail the pred
+        boolean allFail = true;
+        for (InstanceKeyAndState ikAndState : p2set) {
+          if (pred.test(ikAndState.getInstanceKey())) {
+            allFail = false;
+            break;
+          }
+        }
+        // TODO think about this more!!! I think it's safe; want to say hopeless to much
+        if (allFail && !p2set.isEmpty()) {
+          System.err.println("HOPELESS due to " + curPkAndState);
+          return true;
+        }
+        // add successors to worklist
+        final PointerKey curPk = curPkAndState.getPointerKey();
+        final State curState = curPkAndState.getState();
+        IFlowLabelVisitor v = new AbstractFlowLabelVisitor() {
+
+          @Override
+          public void visitGetField(GetFieldLabel label, Object dst) {
+            IField field = (label).getField();
+            PointerKey loadBase = (PointerKey) dst;
+            if (refineFieldAccesses(field, loadBase, curPk, label, curState)) {
+              MutableIntSet loadBaseP2Set = find(pkToP2Set, new PointerKeyAndState(loadBase, curState));
+              // for each write to field
+              for (Pair<PointerKey, PointerKey> pair : getBaseAndStoredPointersOfWrites(loadBase, field)) {
+                PointerKey basePk = pair.fst;
+                PointerKey storedPk = pair.snd;
+                // if ikey and state is in tracked set of base pointer + some state of write,
+                // continue with written var and state
+                for (PointerKeyAndState pkAndState : pkToTrackedSet.keySet()) {
+                  if (basePk.equals(pkAndState.getPointerKey())) {
+                    if (pkToTrackedSet.get(pkAndState).containsAny(loadBaseP2Set)) {
+                      // bingo! continue from stored pk
+                      PointerKeyAndState storedPkAndState = new PointerKeyAndState(storedPk, pkAndState.getState());
+                      if (visited.add(storedPkAndState)) {
+                        worklist.add(storedPkAndState);
+                      }
+                    }
+                  }
+                }
+              }
+            } else {
+              // can't follow match edges, since they may get filtered out with more refinement
+            }
+
+          }
+
+          @Override
+          public void visitAssignGlobal(AssignGlobalLabel label, Object dst) {
+            for (Iterator<? extends Object> writeIter = g.getWritesToStaticField((StaticFieldKey) dst); writeIter.hasNext();) {
+              PointerKey dstPk = (PointerKey) writeIter.next();
+              doTransition(curState, label, new CopyFunction(dstPk));
+            }
+
+          }
+
+          @Override
+          public void visitAssign(AssignLabel label, Object dst) {
+            final PointerKey dstPk = (PointerKey) dst;
+            doTransition(curState, label, new CopyFunction(dstPk));
+          }
+
+        };
+        g.visitSuccs(curPk, v);
+        handleForwInterproc(curPkAndState, new CopyHandler() {
+
+          @Override
+          void handle(PointerKeyAndState src, PointerKey dst, IFlowLabel label) {
+            boolean caseToAvoid = stateMachine instanceof ContextSensitiveStateMachine && label instanceof ParamLabel
+                && src.getState().equals(stateMachine.getStartState());
+            if (!caseToAvoid) {
+              doTransition(src.getState(), label, new CopyFunction(dst));
+            }
+          }
+
+        });
+      }
+      return false;
+    }
+
+    /**
+     * return pairs (basePk,storedPk) where there exists a statement basePk.field = storedPk
+     */
+    private Collection<Pair<PointerKey, PointerKey>> getBaseAndStoredPointersOfWrites(PointerKey baseRef, IField field) {
+      Collection<Pair<PointerKey, PointerKey>> result = HashSetFactory.make();
+      if (field == ArrayContents.v()) {
+        for (MemoryAccess a : mam.getArrayWrites(baseRef)) {
+          final CGNode node = a.getNode();
+          IR ir = node.getIR();
+          SSAInstruction instruction = ir.getInstructions()[a.getInstructionIndex()];
+          if (instruction == null) {
+            // this means the array store found was in fact dead code
+            // TODO detect this earlier and don't keep it in the MemoryAccessMap
+            continue;
+          }
+          // TODO handle multi-dim arrays
+          if (instruction instanceof SSAArrayStoreInstruction) {
+            SSAArrayStoreInstruction s = (SSAArrayStoreInstruction) instruction;
+            PointerKey base = heapModel.getPointerKeyForLocal(node, s.getArrayRef());
+            PointerKey r = heapModel.getPointerKeyForLocal(node, s.getValue());
+            // if (Assertions.verifyAssertions) {
+            // Assertions._assert(containsNode(r), "missing node for " + r);
+            // }
+            result.add(Pair.make(base, r));
+          }
+        }
+      } else {
+        assert !field.isStatic();
+        for (MemoryAccess a : mam.getFieldWrites(baseRef, field)) {
+          IR ir = a.getNode().getIR();
+          SSAPutInstruction s = (SSAPutInstruction) ir.getInstructions()[a.getInstructionIndex()];
+          if (s == null) {
+            // s can be null because the memory access map may be constructed from bytecode,
+            // and the write instruction may have been eliminated from SSA because it's dead
+            // TODO clean this up
+            continue;
+          }
+          PointerKey base = heapModel.getPointerKeyForLocal(a.getNode(), s.getRef());
+          PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getVal());
+          // if (Assertions.verifyAssertions) {
+          // Assertions._assert(containsNode(r));
+          // }
+          result.add(Pair.make(base, r));
+
+        }
+      }
+      return result;
+    }
+
     private OrdinalSet<InstanceKeyAndState> makeOrdinalSet(IntSet intSet) {
       // make a copy here, to avoid comodification during iteration
       // TODO remove the copying, do it only at necessary call sites
       return new OrdinalSet<InstanceKeyAndState>(intSetFactory.makeCopy(intSet), ikAndStates);
     }
 
-    public Collection<InstanceKey> getP2Set(LocalPointerKey queriedPk) {
+    public Collection<InstanceKey> getP2Set(LocalPointerKey lpk) {
       return Iterator2Collection.toCollection(new MapIterator<InstanceKeyAndState, InstanceKey>(makeOrdinalSet(
-          find(pkToP2Set, new PointerKeyAndState(queriedPk, stateMachine.getStartState()))).iterator(),
+          find(pkToP2Set, new PointerKeyAndState(lpk, stateMachine.getStartState()))).iterator(),
           new Function<InstanceKeyAndState, InstanceKey>() {
 
             public InstanceKey apply(InstanceKeyAndState object) {
@@ -1615,7 +1804,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           // }
           if (!basePointerOkay) {
             // TEMPORARY --MS
-            //Assertions._assert(false, "queried " + loadedValAndState + " but not " + baseAndStateToHandle);
+            // Assertions._assert(false, "queried " + loadedValAndState + " but not " + baseAndStateToHandle);
           }
         }
         final IntSet curP2Set = find(pkToP2Set, baseAndStateToHandle);

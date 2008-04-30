@@ -234,15 +234,13 @@ public class DemandCastChecker {
             continue;
           System.err.println("CHECKING " + castInstr + " in " + node.getMethod());
           PointerKey castedPk = heapModel.getPointerKeyForLocal(node, castInstr.getUse(0));
-          Predicate<Collection<InstanceKey>> castPred = new Predicate<Collection<InstanceKey>>() {
+          Predicate<InstanceKey> castPred = new Predicate<InstanceKey>() {
 
             @Override
-            public boolean test(Collection<InstanceKey> p2set) {
-              for (InstanceKey ik : p2set) {
-                TypeReference ikTypeRef = ik.getConcreteType().getReference();
-                if (!cha.isAssignableFrom(cha.lookupClass(declaredResultType), cha.lookupClass(ikTypeRef))) {
-                  return false;
-                }
+            public boolean test(InstanceKey ik) {
+              TypeReference ikTypeRef = ik.getConcreteType().getReference();
+              if (!cha.isAssignableFrom(cha.lookupClass(declaredResultType), cha.lookupClass(ikTypeRef))) {
+                return false;
               }
               return true;
             }

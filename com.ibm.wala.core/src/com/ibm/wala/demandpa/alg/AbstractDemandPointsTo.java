@@ -58,7 +58,7 @@ public abstract class AbstractDemandPointsTo implements IDemandPointerAnalysis {
 
   protected final HeapModel heapModel;
 
-  protected final MemoryAccessMap fam;
+  protected final MemoryAccessMap mam;
 
   protected final ClassHierarchy cha;
 
@@ -76,11 +76,11 @@ public abstract class AbstractDemandPointsTo implements IDemandPointerAnalysis {
     this.traversalBudget = traversalBudget;
   }
 
-  public AbstractDemandPointsTo(CallGraph cg, HeapModel model, MemoryAccessMap fam, com.ibm.wala.ipa.cha.ClassHierarchy cha,
+  public AbstractDemandPointsTo(CallGraph cg, HeapModel model, MemoryAccessMap mam, com.ibm.wala.ipa.cha.ClassHierarchy cha,
       AnalysisOptions options) {
     this.cg = cg;
     this.heapModel = model;
-    this.fam = fam;
+    this.mam = mam;
     this.cha = cha;
     this.options = options;
   }

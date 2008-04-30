@@ -83,7 +83,7 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
     Assertions._assert(pk instanceof LocalPointerKey, "we only handle locals");
     LocalPointerKey lpk = (LocalPointerKey) pk;
     // Create an (initially empty) dependence graph
-    SimpleDemandPointerFlowGraph g = new SimpleDemandPointerFlowGraph(cg, heapModel, fam, cha);
+    SimpleDemandPointerFlowGraph g = new SimpleDemandPointerFlowGraph(cg, heapModel, mam, cha);
 
     // initialize the graph with the subgraph of x's method
     CGNode node = lpk.getNode();
