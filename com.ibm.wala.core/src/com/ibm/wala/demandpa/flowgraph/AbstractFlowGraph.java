@@ -279,6 +279,10 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     for (MemoryAccess a : reads) {
       IR ir = a.getNode().getIR();
       SSAGetInstruction s = (SSAGetInstruction) ir.getInstructions()[a.getInstructionIndex()];
+      if (s == null) {
+        // actually dead code
+        continue;
+      }
       PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getDef());
 //      if (Assertions.verifyAssertions) {
 //        Assertions._assert(containsNode(r));
@@ -366,6 +370,10 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
       MemoryAccess a = it.next();
       IR ir = a.getNode().getIR();
       SSAArrayLoadInstruction s = (SSAArrayLoadInstruction) ir.getInstructions()[a.getInstructionIndex()];
+      if (s == null) {
+        // actually dead code
+        continue;
+      }
       PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getDef());
 //      if (Assertions.verifyAssertions) {
 //        Assertions._assert(containsNode(r));

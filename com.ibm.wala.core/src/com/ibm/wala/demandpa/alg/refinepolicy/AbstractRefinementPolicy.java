@@ -20,7 +20,9 @@ public abstract class AbstractRefinementPolicy implements RefinementPolicy {
 
   private static final int DEFAULT_NUM_PASSES = 4;
 
-  private static final int[] DEFAULT_BUDGET_PER_PASS = { 1000, 12000, 12000, 12000 };
+  private static final int LONGER_PASS_BUDGET = 12000;
+  
+  private static final int[] DEFAULT_BUDGET_PER_PASS = { 1000, LONGER_PASS_BUDGET, LONGER_PASS_BUDGET, LONGER_PASS_BUDGET };
 
   protected final FieldRefinePolicy fieldRefinePolicy;
 
