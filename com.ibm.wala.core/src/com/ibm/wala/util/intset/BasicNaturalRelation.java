@@ -405,7 +405,6 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
       delegateStore.performVerboseAction();
       for (int i = 0; i < smallStore.length; i++) {
         Trace.println("smallStore[" + i + "]: " + smallStore[i].getClass());
-        smallStore[i].performVerboseAction();
       }
     }
   }

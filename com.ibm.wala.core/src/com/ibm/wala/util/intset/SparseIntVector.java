@@ -36,7 +36,7 @@ public class SparseIntVector implements IntVector {
 
   private final int defaultValue;
 
-  SparseIntVector(int defaultValue) {
+  public SparseIntVector(int defaultValue) {
     this.defaultValue = defaultValue;
   }
 

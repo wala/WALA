@@ -10,14 +10,13 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.util.debug.VerboseAction;
 
 /**
  * interface for array of integer
  * 
  * @author sfink
  */
-public interface IntVector extends VerboseAction {
+public interface IntVector{
 
   int get(int x);
 
