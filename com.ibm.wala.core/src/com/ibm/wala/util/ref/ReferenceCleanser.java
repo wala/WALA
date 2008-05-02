@@ -70,9 +70,10 @@ public class ReferenceCleanser {
     if (occupancy < OCCUPANCY_TRIGGER) {
       return;
     }
-    if (getAnalysisCache() != null) {
-      getAnalysisCache().getSSACache().wipe();
-      getAnalysisCache().getCFGCache().wipe();
+    AnalysisCache cache = getAnalysisCache();
+    if (cache != null) {
+      cache.getSSACache().wipe();
+      cache.getCFGCache().wipe();
     }
     IClassHierarchy cha = getClassHierarchy();
     if (cha != null) {
