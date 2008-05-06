@@ -59,6 +59,7 @@ public class BasicLauncher extends Launcher {
       try {
         input.write(getInput(), 0, getInput().length);
         input.flush();
+        input.close();
       } catch (IOException e) {
         e.printStackTrace();
         throw new WalaException("error priming stdin", e);
