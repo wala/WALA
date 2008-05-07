@@ -92,6 +92,20 @@ public class CISlicer {
     Collection<Statement> slice = DFS.getReachableNodes(depGraph, seeds);
     return slice;
   }
+  
+  /**
+   * Compute the set of pointer keys each statement mods
+   */
+  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa) {
+    return scanForMod(sdg, pa, false, ModRef.make());
+  }
+  
+  /**
+   * Compute the set of pointer keys each statement refs
+   */
+  public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis pa) {
+    return scanForRef(sdg, pa, ModRef.make());
+  }
 
   /**
    * Compute the set of pointer keys each statement mods
