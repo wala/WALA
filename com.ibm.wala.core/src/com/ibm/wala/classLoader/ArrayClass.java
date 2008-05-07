@@ -37,8 +37,7 @@ public class ArrayClass implements IClass, Constants {
   private final IClassHierarchy cha;
 
   /**
-   * Package-visible constructor; only for use by ArrayClassLoader class.
-   * 'loader' must be the Primordial IClassLoader.
+   * Package-visible constructor; only for use by ArrayClassLoader class. 'loader' must be the Primordial IClassLoader.
    * 
    * [WHY? -- array classes are loaded by the element classloader??]
    */
@@ -191,8 +190,7 @@ public class ArrayClass implements IClass, Constants {
   }
 
   /**
-   * @return the IClass that represents the array element type, or null if the
-   *         element type is a primitive
+   * @return the IClass that represents the array element type, or null if the element type is a primitive
    */
   public IClass getElementClass() {
     TypeReference elementType = getReference().getArrayElementType();
@@ -227,8 +225,15 @@ public class ArrayClass implements IClass, Constants {
    */
   public Collection<IClass> getAllImplementedInterfaces() {
     HashSet<IClass> result = HashSetFactory.make(2);
-    result.add(loader.lookupClass(TypeReference.array_interfaces[0]));
-    result.add(loader.lookupClass(TypeReference.array_interfaces[1]));
+    IClass klass = loader.lookupClass(TypeReference.array_interfaces[0]);
+    if (klass != null) {
+      result.add(klass);
+    }
+    klass = loader.lookupClass(TypeReference.array_interfaces[1]);
+    if (klass != null) {
+      result.add(klass);
+    }
+
     return result;
   }
 
@@ -251,8 +256,7 @@ public class ArrayClass implements IClass, Constants {
   }
 
   /**
-   * @return the IClass that represents the innermost array element type, or
-   *         null if the element type is a primitive
+   * @return the IClass that represents the innermost array element type, or null if the element type is a primitive
    */
   public IClass getInnermostElementClass() {
     TypeReference elementType = getReference().getInnermostElementType();
