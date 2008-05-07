@@ -110,4 +110,10 @@ public class FileOfClasses extends SetOfClasses {
     }
     needsCompile = true;
   }
+  
+  @Override
+  public String toString() {
+    return this.regex;
+  }
+  
 }
