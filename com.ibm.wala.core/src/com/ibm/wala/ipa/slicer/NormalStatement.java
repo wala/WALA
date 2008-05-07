@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.slicer;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.ssa.SSAInstruction;
 
 /**
  * A statement that has a corresponding index in the
@@ -19,16 +18,10 @@ import com.ibm.wala.ssa.SSAInstruction;
  * 
  * @author sjfink
  */
-public class NormalStatement extends Statement {
+public class NormalStatement extends StatementWithInstructionIndex {
 
-  /**
-   * Index of the instruction in the SSA IR
-   */
-  private final int instructionIndex;
-  
   public NormalStatement(CGNode node, int instructionIndex) {
-    super(node);
-    this.instructionIndex = instructionIndex;
+    super(node, instructionIndex);
   }
 
   @Override
@@ -37,34 +30,8 @@ public class NormalStatement extends Statement {
   }
 
   @Override
-  public boolean equals(Object obj) {
-    if (obj == null) {
-      return false;
-    }
-    if (getClass().equals(obj.getClass())) {
-      NormalStatement other = (NormalStatement) obj;
-      return getNode().equals(other.getNode()) && instructionIndex == other.instructionIndex;
-    } else {
-      return false;
-    }
-  }
-
-  @Override
-  public int hashCode() {
-    return 3691 * instructionIndex + getNode().hashCode();
-  }
-
-  @Override
   public String toString() {
     return "NORMAL " + getNode().getMethod().getName() + ":" +  getInstruction().toString() + " " + getNode();
-  }
-  
-  public SSAInstruction getInstruction() {
-    return getNode().getIR().getInstructions()[instructionIndex];
-  }
-
-  public int getInstructionIndex() {
-    return instructionIndex;
   }
 
 }
