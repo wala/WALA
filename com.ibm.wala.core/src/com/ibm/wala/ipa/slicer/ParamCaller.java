@@ -18,7 +18,7 @@ import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
  * 
  * @author sjfink
  */
-public class ParamCaller extends StatementWithInstructionIndex {
+public class ParamCaller extends StatementWithInstructionIndex implements ValueNumberCarrier {
   /**
    * Value number of the actual parameter
    */
