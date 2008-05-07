@@ -69,11 +69,18 @@ public class CISlicer {
 
     SDG sdg = new SDG(cg, pa, modRef, dOptions, cOptions, null);
 
-    Map<Statement, Set<PointerKey>> mod = scanForMod(sdg, pa);
-    Map<Statement, Set<PointerKey>> ref = scanForRef(sdg, pa);
+    Map<Statement, Set<PointerKey>> mod = scanForMod(sdg, pa, modRef);
+    Map<Statement, Set<PointerKey>> ref = scanForRef(sdg, pa, modRef);
 
     depGraph = GraphInverter.invert(new CISDG(sdg, mod, ref));
 
+  }
+  
+  public CISlicer(final SDG sdg, final PointerAnalysis pa, final ModRef modRef) {
+    Map<Statement, Set<PointerKey>> mod = scanForMod(sdg, pa, modRef);
+    Map<Statement, Set<PointerKey>> ref = scanForRef(sdg, pa, modRef);
+
+    depGraph = GraphInverter.invert(new CISDG(sdg, mod, ref));
   }
 
   public Collection<Statement> computeBackwardThinSlice(Statement seed) {
@@ -89,18 +96,17 @@ public class CISlicer {
   /**
    * Compute the set of pointer keys each statement mods
    */
-  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa) {
-    return scanForMod(sdg, pa, false);
+  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa, ModRef modRef) {
+    return scanForMod(sdg, pa, false, modRef);
   }
 
   /**
    * Compute the set of pointer keys each statement mods. Be careful to avoid eager PDG construction here! That means ..
    * don't iterate over SDG statements!
    */
-  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa, boolean ignoreAllocHeapDefs) {
+  public static Map<Statement, Set<PointerKey>> scanForMod(SDG sdg, PointerAnalysis pa, boolean ignoreAllocHeapDefs, ModRef modRef) {
     ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
     Map<Statement, Set<PointerKey>> result = HashMapFactory.make();
-    ModRef modRef = ModRef.make();
     for (CGNode n : sdg.getCallGraph()) {
       IR ir = n.getIR();
       if (ir != null) {
@@ -123,10 +129,9 @@ public class CISlicer {
    * Compute the set of PointerKeys each statement refs.Be careful to avoid eager PDG construction here! That means ..
    * don't iterate over SDG statements!
    */
-  public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis pa) {
+  public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis pa, ModRef modRef) {
     ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
     Map<Statement, Set<PointerKey>> result = HashMapFactory.make();
-    ModRef modRef = ModRef.make();
     for (CGNode n : sdg.getCallGraph()) {
       IR ir = n.getIR();
       if (ir != null) {
