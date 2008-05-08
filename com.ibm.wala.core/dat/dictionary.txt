@@ -152,3 +152,5 @@ unhandled
 decorator
 conjoin
 subsumption
+deprecated
+refactor
