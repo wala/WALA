@@ -39,8 +39,7 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 
 /**
- * A view of a control flow graph where each basic block corresponds to exactly
- * one SSA instruction index.
+ * A view of a control flow graph where each basic block corresponds to exactly one SSA instruction index.
  * 
  * Prototype: Not terribly efficient.
  */
@@ -49,8 +48,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
   private final IR ir;
 
   /**
-   * The ith element of this vector is the basic block holding instruction i.
-   * this basic block has number i+1.
+   * The ith element of this vector is the basic block holding instruction i. this basic block has number i+1.
    */
   private final SimpleVector<ExplodedBasicBlock> normalNodes = new SimpleVector<ExplodedBasicBlock>();
 
@@ -203,7 +201,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     }
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.cfg.ControlFlowGraph#getProgramCounter(int)
    */
   public int getProgramCounter(int index) throws UnimplementedError {
@@ -294,8 +292,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
         if (s.equals(ir.getControlFlowGraph().exit())) {
           result.add(exit());
         } else {
-          assert normalNodes.get(s.getFirstInstructionIndex()) != null;
-          result.add(normalNodes.get(s.getFirstInstructionIndex()));
+          // there can be a weird corner case where a void method without a return statement 
+          // can have trailing empty basic blocks with no instructions.  ignore these.
+          if (normalNodes.get(s.getFirstInstructionIndex()) != null) {
+            result.add(normalNodes.get(s.getFirstInstructionIndex()));
+          }
         }
       }
       return result.iterator();
@@ -367,8 +368,8 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
   }
 
   /**
-   * A basic block with exactly one normal instruction (which may be null),
-   * corresponding to a single instruction index in the SSA instruction array.
+   * A basic block with exactly one normal instruction (which may be null), corresponding to a single instruction index
+   * in the SSA instruction array.
    * 
    * The block may also have phis.
    */
@@ -383,14 +384,14 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
       this.original = original;
       assert original != null;
     }
-    
+
     public ExplodedControlFlowGraph getExplodedCFG() {
       return ExplodedControlFlowGraph.this;
     }
-    
+
     public Iterator<TypeReference> getCaughtExceptionTypes() {
       if (original instanceof ExceptionHandlerBasicBlock) {
-        ExceptionHandlerBasicBlock eb = (ExceptionHandlerBasicBlock)original;
+        ExceptionHandlerBasicBlock eb = (ExceptionHandlerBasicBlock) original;
         return eb.getCaughtExceptionTypes();
       } else {
         return EmptyIterator.instance();
@@ -404,7 +405,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     public int getLastInstructionIndex() {
       return instructionIndex;
     }
-    
+
     public IMethod getMethod() {
       return ExplodedControlFlowGraph.this.getMethod();
     }
@@ -520,7 +521,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
       return "ExplodedBlock[" + getNumber() + "](original:" + original.toString() + ")";
     }
   }
-  
+
   @Override
   public String toString() {
     StringBuffer s = new StringBuffer("");
