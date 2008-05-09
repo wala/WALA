@@ -154,3 +154,5 @@ conjoin
 subsumption
 deprecated
 refactor
+transverse
+rotting
