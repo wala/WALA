@@ -377,7 +377,6 @@ public class TabulationSolver<T, P> {
    * @param D4 set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as call flow
    */
   private void propagateToReturnSites(final PathEdge<T> edge, IntSet succ, final T c, final IntSet D4) {
-
     if (DEBUG_LEVEL > 1) {
       System.err.println("Successor nodes: " + succ);
       for (IntIterator it = succ.intIterator(); it.hasNext();) {
@@ -394,7 +393,7 @@ public class TabulationSolver<T, P> {
     // note that we might have different summary edges for each
     // potential return site, and different flow functions from this
     // exit block to each return site.
-    for (Iterator<? extends T> retSites = supergraph.getReturnSites(c); retSites.hasNext();) {
+    for (Iterator<? extends T> retSites = supergraph.getReturnSites(c, supergraph.getProcOf(edge.target)); retSites.hasNext();) {
       final T retSite = retSites.next();
       if (DEBUG_LEVEL > 1) {
         System.err.println("candidate return site: " + retSite + " " + supergraph.getNumber(retSite));
@@ -539,9 +538,10 @@ public class TabulationSolver<T, P> {
 
     // c:= number of the call node
     final int c = supergraph.getNumber(edge.target);
-
-    final Collection<T> returnSites = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.target));
     
+    Collection<T> allReturnSites = HashSetFactory.make();
+    // populate allReturnSites with return sites for missing calls.
+    allReturnSites.addAll(Iterator2Collection.toCollection(supergraph.getReturnSites(edge.target, null)));
     // [14 - 16]
     for (Iterator<? extends T> it = supergraph.getCalledNodes(edge.target); it.hasNext();) {
       final T callee = it.next();
@@ -549,6 +549,8 @@ public class TabulationSolver<T, P> {
         System.err.println(" process callee: " + callee);
       }
       MutableSparseIntSet reached = MutableSparseIntSet.makeEmpty();
+      final Collection<T> returnSites = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.target, supergraph.getProcOf(callee)));
+      allReturnSites.addAll(returnSites);
       // we modify this to handle each return site individually.  Some types of problems
       // compute different flow functions for each return site.
       for (final T returnSite : returnSites) {
@@ -644,6 +646,9 @@ public class TabulationSolver<T, P> {
       }
       IUnaryFlowFunction f = flowFunctionMap.getNormalFlowFunction(edge.target, m);
       IntSet D3 = computeFlow(edge.d2, f);
+      if (DEBUG_LEVEL > 0) {
+        System.err.println("normal successor reached: " + D3);
+      }
       if (D3 != null) {
         D3.foreach(new IntSetAction() {
           public void act(int d3) {
@@ -655,7 +660,7 @@ public class TabulationSolver<T, P> {
 
     // [17 - 19]
     // we modify this to handle each return site individually
-    for (final T returnSite : returnSites) {
+    for (final T returnSite : allReturnSites) {
       if (DEBUG_LEVEL > 0) {
         System.err.println(" process return site: " + returnSite);
       }

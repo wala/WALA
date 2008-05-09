@@ -56,8 +56,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   private static final int DEBUG_LEVEL = 0;
 
   /**
-   * Should the graph include call-to-return edges?
-   * When set to <code>false</code>, the graphs output by {@link IFDSExplorer} look incorrect
+   * Should the graph include call-to-return edges? When set to <code>false</code>, the graphs output by
+   * {@link IFDSExplorer} look incorrect
    */
   private final static boolean CALL_TO_RETURN_EDGES = true;
 
@@ -606,37 +606,54 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   }
 
   /**
-   * @param bb node in the IPCFG that ends in a call
+   * @param callBlock node in the IPCFG that ends in a call
    * @return the nodes that are return sites for this call.
    * @throws IllegalArgumentException if bb is null
    */
-  public Iterator<BasicBlockInContext> getReturnSites(BasicBlockInContext<T> bb) {
-    if (bb == null) {
+  public Iterator<BasicBlockInContext> getReturnSites(BasicBlockInContext<T> callBlock) {
+    if (callBlock == null) {
       throw new IllegalArgumentException("bb is null");
     }
-    final CGNode node = bb.getNode();
+    final CGNode node = callBlock.getNode();
 
     // a successor node is a return site if it is in the same
     // procedure, and is not the entry() node.
     Filter isReturn = new Filter() {
       public boolean accepts(Object o) {
-        if (Assertions.verifyAssertions) {
-          Assertions._assert(o instanceof BasicBlockInContext);
-        }
         BasicBlockInContext other = (BasicBlockInContext) o;
         return !other.isEntryBlock() && node.equals(other.getNode());
       }
     };
-    return new FilterIterator<BasicBlockInContext>(getSuccNodes(bb), isReturn);
+    return new FilterIterator<BasicBlockInContext>(getSuccNodes(callBlock), isReturn);
   }
 
-  public Iterator<BasicBlockInContext<T>> getCallSites(BasicBlockInContext<T> bb) {
-    if (bb == null) {
+  /**
+   * get the basic blocks which are call sites that may call callee and return to returnBlock if callee is null, answer
+   * return sites for which no callee was found.
+   */
+  public Iterator<BasicBlockInContext<T>> getCallSites(BasicBlockInContext<T> returnBlock, final CGNode callee) {
+    if (returnBlock == null) {
       throw new IllegalArgumentException("bb is null");
     }
-    ControlFlowGraph<T> cfg = getCFG(bb);
-    Iterator<? extends T> it = cfg.getPredNodes(bb.getDelegate());
-    final CGNode node = bb.getNode();
+    final ControlFlowGraph<T> cfg = getCFG(returnBlock);
+    Iterator<? extends T> it = cfg.getPredNodes(returnBlock.getDelegate());
+    final CGNode node = returnBlock.getNode();
+
+    Filter<? extends T> dispatchFilter = new Filter<T>() {
+      public boolean accepts(T callBlock) {
+        BasicBlockInContext<T> bb = new BasicBlockInContext<T>(node, callBlock);
+        if (!hasCall(bb, cfg)) {
+          return false;
+        }
+        if (callee != null) {
+          return getCallTargets(bb).contains(callee);
+        } else {
+          return getCallTargets(bb).isEmpty();
+        }
+      }
+    };
+    it = new FilterIterator<T>(it, dispatchFilter);
+
     Function<T, BasicBlockInContext<T>> toContext = new Function<T, BasicBlockInContext<T>>() {
       public BasicBlockInContext<T> apply(T object) {
         T b = object;

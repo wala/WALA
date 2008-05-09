@@ -56,8 +56,14 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
  * This graph is an InterproceduralCFG for uncollapsible nodes, hooked up to
  * collapsed nodes.
  * 
+ * This class is deprecated.  It's quite a kludge, and likely not worth the constant-time
+ * speedup for most applications.  I don't have any tests exercising this right now, so
+ * it may be rotting.   Clients that use this should probably migrate to a simpler
+ * supergraph.
+ * 
  * @author sfink
  */
+@Deprecated
 public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implements ISupergraph<Object, CGNode> {
 
   /**
@@ -235,8 +241,11 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     return new FilterIterator<Object>(edgeManager.getSuccNodes(n), isEntry);
   }
 
+  /* 
+   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getReturnSites(java.lang.Object, java.lang.Object)
+   */
   @SuppressWarnings("unchecked")
-  public Iterator<? extends Object> getReturnSites(Object object) {
+  public Iterator<? extends Object> getReturnSites(Object object, CGNode callee) {
     if (object instanceof BasicBlockInContext) {
       return partialIPFG.getReturnSites((BasicBlockInContext) object);
     } else {
@@ -245,10 +254,13 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
+  /* 
+   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCallSites(java.lang.Object, java.lang.Object)
+   */
   @SuppressWarnings("unchecked")
-  public Iterator<? extends Object> getCallSites(Object object) {
+  public Iterator<? extends Object> getCallSites(Object object, CGNode callee) {
     if (object instanceof BasicBlockInContext) {
-      return partialIPFG.getCallSites((BasicBlockInContext<ISSABasicBlock>) object);
+      return partialIPFG.getCallSites((BasicBlockInContext<ISSABasicBlock>) object, callee);
     } else {
       CGNode n = nodeManager.getProcOfCollapsedNode(object);
       return new NonNullSingletonIterator<CollapsedNode>(nodeManager.getCollapsedEntry(n));
@@ -305,7 +317,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
 
               // add an edge from n_exit -> return sites
               Object e_n = nodeManager.getCollapsedExit(n);
-              for (Iterator returnSites = getReturnSites(bb); returnSites.hasNext();) {
+              for (Iterator returnSites = getReturnSites(bb, n); returnSites.hasNext();) {
                 Object ret = returnSites.next();
                 Set<Object> in = MapUtil.findOrCreateSet(incomingTransverseEdges, ret);
                 in.add(e_n);
@@ -509,7 +521,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
           HashSet<Object> result = HashSetFactory.make(4);
           for (Iterator it = getPredNodes(entry); it.hasNext();) {
             Object callSite = it.next();
-            for (Iterator returnSites = getReturnSites(callSite); returnSites.hasNext();) {
+            for (Iterator returnSites = getReturnSites(callSite, n); returnSites.hasNext();) {
               result.add(returnSites.next());
             }
           }
@@ -560,7 +572,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
           BimodalMutableIntSet result = new BimodalMutableIntSet();
           for (Iterator it = getPredNodes(entry); it.hasNext();) {
             Object callSite = it.next();
-            for (Iterator returnSites = getReturnSites(callSite); returnSites.hasNext();) {
+            for (Iterator returnSites = getReturnSites(callSite, n); returnSites.hasNext();) {
               result.add(getNumber(returnSites.next()));
             }
           }

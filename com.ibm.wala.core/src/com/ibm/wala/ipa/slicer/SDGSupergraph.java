@@ -63,7 +63,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCallSites(java.lang.Object)
    */
-  public Iterator<? extends Statement> getCallSites(Statement r) {
+  public Iterator<? extends Statement> getCallSites(Statement r, PDG callee) {
     switch (r.getKind()) {
     case EXC_RET_CALLER: {
       ExceptionalReturnCaller n = (ExceptionalReturnCaller) r;
@@ -183,7 +183,7 @@ class SDGSupergraph implements ISupergraph<Statement, PDG> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getReturnSites(java.lang.Object)
    */
-  public Iterator<? extends Statement> getReturnSites(Statement call) {
+  public Iterator<? extends Statement> getReturnSites(Statement call, PDG callee) {
     switch (call.getKind()) {
     case PARAM_CALLER: {
       ParamCaller n = (ParamCaller) call;

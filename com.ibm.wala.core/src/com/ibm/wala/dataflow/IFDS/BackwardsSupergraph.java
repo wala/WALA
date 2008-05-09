@@ -127,8 +127,8 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getReturnSites(java.lang.Object)
    */
-  public Iterator<? extends T> getReturnSites(T c) {
-    return delegate.getCallSites(c);
+  public Iterator<? extends T> getReturnSites(T c, P callee) {
+    return delegate.getCallSites(c, callee);
   }
 
   /*
@@ -251,19 +251,6 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
     return delegate.getEntriesForProcedure(object);
   }
 
-//  /*
-//   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainEntry()
-//   */
-//  public T getMainEntry() {
-//    return delegate.getMainExit();
-//  }
-//
-//  /*
-//   * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getMainExit()
-//   */
-//  public T getMainExit() {
-//    return delegate.getMainEntry();
-//  }
 
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isReturn(java.lang.Object)
@@ -276,8 +263,8 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
   /*
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#getCallSites(java.lang.Object)
    */
-  public Iterator<? extends T> getCallSites(T r) {
-    return delegate.getReturnSites(r);
+  public Iterator<? extends T> getCallSites(T r, P callee) {
+    return delegate.getReturnSites(r, callee);
   }
 
   /*
