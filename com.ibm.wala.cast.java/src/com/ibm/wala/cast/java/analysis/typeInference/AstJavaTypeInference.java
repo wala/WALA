@@ -34,31 +34,24 @@ public class AstJavaTypeInference extends AstTypeInference {
 
   protected final IClass stringClass;
 
-  protected class AstJavaTypeOperatorFactory
-      extends AstTypeOperatorFactory
-      implements AstJavaInstructionVisitor 
-  {
+  protected class AstJavaTypeOperatorFactory extends AstTypeOperatorFactory implements AstJavaInstructionVisitor {
     public void visitBinaryOp(SSABinaryOpInstruction instruction) {
       if (doPrimitives) {
         BinaryOpInstruction.IOperator op = instruction.getOperator();
-    	if (op == AstConstants.BinaryOp.EQ ||
-	    op == AstConstants.BinaryOp.NE ||
-	    op == AstConstants.BinaryOp.LT ||
-	    op == AstConstants.BinaryOp.GE ||
-	    op == AstConstants.BinaryOp.GT ||
-	    op == AstConstants.BinaryOp.LE) {
-	  result = new DeclaredTypeOperator(PrimitiveType.BOOLEAN);
-    	} else {
-	  result = new PrimAndStringOp();
-    	}
+        if (op == AstConstants.BinaryOp.EQ || op == AstConstants.BinaryOp.NE || op == AstConstants.BinaryOp.LT
+            || op == AstConstants.BinaryOp.GE || op == AstConstants.BinaryOp.GT || op == AstConstants.BinaryOp.LE) {
+          result = new DeclaredTypeOperator(PrimitiveType.BOOLEAN);
+        } else {
+          result = new PrimAndStringOp();
+        }
       }
     }
-    
+
     public void visitEnclosingObjectReference(EnclosingObjectReference inst) {
       TypeReference type = inst.getEnclosingType();
       IClass klass = cha.lookupClass(type);
       if (klass == null) {
-	Assertions.UNREACHABLE();
+        Assertions.UNREACHABLE();
       } else {
         result = new DeclaredTypeOperator(new ConeType(klass));
       }
@@ -68,19 +61,19 @@ public class AstJavaTypeInference extends AstTypeInference {
       TypeReference type = instruction.getDeclaredResultType();
       if (type.isReferenceType()) {
         IClass klass = cha.lookupClass(type);
-	    if (klass == null) {
+        if (klass == null) {
           // a type that cannot be loaded.
           // be pessimistic
           result = new DeclaredTypeOperator(BOTTOM);
-	    } else {
+        } else {
           result = new DeclaredTypeOperator(new ConeType(klass));
-	    }
+        }
       } else {
         if (doPrimitives && type.isPrimitiveType()) {
-    	  result = new DeclaredTypeOperator(PrimitiveType.getPrimitive(type));
-    	} else {
-    	  result = null;
-    	}
+          result = new DeclaredTypeOperator(PrimitiveType.getPrimitive(type));
+        } else {
+          result = null;
+        }
       }
     }
   }
@@ -90,11 +83,11 @@ public class AstJavaTypeInference extends AstTypeInference {
     public IVariable makeVariable(int valueNumber) {
       SymbolTable st = ir.getSymbolTable();
       if (st.isStringConstant(valueNumber)) {
-	IClass klass = cha.lookupClass(TypeReference.JavaLangString);
-	TypeAbstraction stringTypeAbs = new PointType(klass);
-	return new TypeVariable(stringTypeAbs, 797 * valueNumber);
+        IClass klass = cha.lookupClass(TypeReference.JavaLangString);
+        TypeAbstraction stringTypeAbs = new PointType(klass);
+        return new TypeVariable(stringTypeAbs);
       } else {
-	return super.makeVariable(valueNumber);
+        return super.makeVariable(valueNumber);
       }
     }
 
@@ -127,35 +120,35 @@ public class AstJavaTypeInference extends AstTypeInference {
       TypeAbstraction meet = null;
 
       for (int i = 0; i < rhs.length; i++) {
-	if (rhs[i] != null) {
-	  TypeVariable r = (TypeVariable) rhs[i];
-	  TypeAbstraction ta = r.getType();
-	  if (ta instanceof PointType) {
-	    if (ta.getType().equals(stringClass)) {
-	      meet = new PointType(ta.getType());
-	      break;
-	    }
-	  } else if (ta instanceof ConeType) {
-	    if (ta.getType().equals(stringClass)) {
-	      meet = new PointType(ta.getType());
-	      break;
-	    }
-	  }
-	}
+        if (rhs[i] != null) {
+          TypeVariable r = (TypeVariable) rhs[i];
+          TypeAbstraction ta = r.getType();
+          if (ta instanceof PointType) {
+            if (ta.getType().equals(stringClass)) {
+              meet = new PointType(ta.getType());
+              break;
+            }
+          } else if (ta instanceof ConeType) {
+            if (ta.getType().equals(stringClass)) {
+              meet = new PointType(ta.getType());
+              break;
+            }
+          }
+        }
       }
 
       if (meet == null) {
-	return super.evaluate(lhs, rhs);
+        return super.evaluate(lhs, rhs);
       } else {
-	TypeVariable L = (TypeVariable) lhs;
-	TypeAbstraction lhsType = L.getType();
+        TypeVariable L = (TypeVariable) lhs;
+        TypeAbstraction lhsType = L.getType();
 
-	if (lhsType.equals(meet)) {
-	  return NOT_CHANGED;
-	} else {
-	  L.setType(meet);
-	  return CHANGED;
-	}
+        if (lhsType.equals(meet)) {
+          return NOT_CHANGED;
+        } else {
+          L.setType(meet);
+          return CHANGED;
+        }
       }
     }
 
@@ -179,4 +172,3 @@ public class AstJavaTypeInference extends AstTypeInference {
   }
 
 }
-
