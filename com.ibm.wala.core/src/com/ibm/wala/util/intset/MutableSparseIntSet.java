@@ -13,13 +13,12 @@ package com.ibm.wala.util.intset;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * A sparse ordered, mutable duplicate-free, fully-encapsulated set of integers.
- * Instances are not canonical, except for EMPTY.
+ * A sparse ordered, mutable duplicate-free, fully-encapsulated set of integers. Instances are not canonical, except for
+ * EMPTY.
  * 
  * This implementation will be inefficient if these sets get large.
  * 
- * TODO: even for small sets, we probably want to work on this to reduce the
- * allocation activity.
+ * TODO: even for small sets, we probably want to work on this to reduce the allocation activity.
  * 
  * @author Alan Donovan
  * @author Stephen Fink
@@ -168,7 +167,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   }
 
   /**
-   * @throws IllegalArgumentException  if that == null
+   * @throws IllegalArgumentException if that == null
    */
   public void copySet(IntSet that) throws IllegalArgumentException {
     if (that == null) {
@@ -177,7 +176,12 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     if (that instanceof SparseIntSet) {
       SparseIntSet set = (SparseIntSet) that;
       if (set.elements != null) {
-        elements = set.elements.clone();
+        // SJF: clone is performance problem.  don't use it.
+        // elements = set.elements.clone();
+        elements = new int[set.elements.length];
+        for (int i = 0; i < set.size; i++) {
+          elements[i] = set.elements[i];
+        }
         size = set.size;
       } else {
         elements = null;
@@ -292,7 +296,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
    * Add all elements from another int set.
    * 
    * @return true iff this set changes
-   * @throws IllegalArgumentException  if set == null
+   * @throws IllegalArgumentException if set == null
    */
   public boolean addAll(IntSet set) throws IllegalArgumentException {
     if (set == null) {
@@ -438,7 +442,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
    * TODO optimize
    * 
    * @param set
-   * @throws IllegalArgumentException  if set is null
+   * @throws IllegalArgumentException if set is null
    */
   public void removeAll(MutableSparseIntSet set) {
     if (set == null) {
@@ -483,9 +487,7 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
     }
   }
 
-  public static MutableSparseIntSet 
-    diff(MutableSparseIntSet A, MutableSparseIntSet B) 
-  {
+  public static MutableSparseIntSet diff(MutableSparseIntSet A, MutableSparseIntSet B) {
     return new MutableSparseIntSet(diffInternal(A, B));
   }
 
@@ -496,6 +498,5 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   public static MutableSparseIntSet makeEmpty() {
     return new MutableSparseIntSet();
   }
-
 
 }
