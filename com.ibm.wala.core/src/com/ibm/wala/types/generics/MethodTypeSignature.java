@@ -14,22 +14,18 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 
-
-
 /**
  * UNDER CONSTRUCTION.
  * 
- * MethodTypeSignature:
- *    FormalTypeParameters? (TypeSignature*) ReturnType ThrowsSignature*
+ * MethodTypeSignature: FormalTypeParameters? (TypeSignature*) ReturnType ThrowsSignature*
  * 
- * ReturnType:
- *    TypeSignature
- *    
+ * ReturnType: TypeSignature
+ * 
  * @author sjfink
- *
+ * 
  */
 public class MethodTypeSignature extends Signature {
-  
+
   private MethodTypeSignature(String s) {
     super(s);
   }
@@ -49,37 +45,37 @@ public class MethodTypeSignature extends Signature {
    * @return null if no arguments
    */
   public TypeSignature[] getArguments() {
-    String typeSig = rawString().replaceAll(".*\\(","\\(").replaceAll("\\).*", "\\)");
+    String typeSig = rawString().replaceAll(".*\\(", "\\(").replaceAll("\\).*", "\\)");
     String[] args = TypeSignature.parseForTypeSignatures(typeSig);
     if (args == null) {
       return null;
     }
     TypeSignature[] result = new TypeSignature[args.length];
-    for (int i = 0; i<args.length; i++) {
+    for (int i = 0; i < args.length; i++) {
       result[i] = TypeSignature.make(args[i]);
     }
     return result;
   }
-  
+
   public TypeSignature getReturnType() {
     String rtString = rawString().substring(rawString().indexOf(')') + 1);
     return TypeSignature.make(rtString);
   }
-  
+
   public FormalTypeParameter[] getFormalTypeParameters() {
     if (rawString().charAt(0) != '<') {
       // no formal type parameters
       return null;
     }
     int index = endOfFormalTypeParameters();
-    String[] args = FormalTypeParameter.parseForFormalTypeParameters(rawString().substring(0,index));
+    String[] args = FormalTypeParameter.parseForFormalTypeParameters(rawString().substring(0, index));
     FormalTypeParameter[] result = new FormalTypeParameter[args.length];
     for (int i = 0; i < args.length; i++) {
       result[i] = FormalTypeParameter.make(args[i]);
     }
     return result;
   }
-  
+
   private int endOfFormalTypeParameters() {
     if (rawString().charAt(0) != '<') {
       return 0;
@@ -98,6 +94,10 @@ public class MethodTypeSignature extends Signature {
     return i;
   }
 
+  /**
+   * @return {@link TypeSignature} for arguments, which includes information about generic types
+   * @throws InvalidClassFileException
+   */
   public static TypeSignature[] getArguments(IMethod method) throws InvalidClassFileException {
     if (method instanceof ShrikeCTMethod) {
       ShrikeCTMethod sm = (ShrikeCTMethod) method;
@@ -110,7 +110,7 @@ public class MethodTypeSignature extends Signature {
       return null;
     }
   }
-  
+
   public static MethodTypeSignature getMethodTypeSignature(IMethod method) throws InvalidClassFileException {
     if (method instanceof ShrikeCTMethod) {
       ShrikeCTMethod sm = (ShrikeCTMethod) method;
