@@ -12,8 +12,6 @@ package com.ibm.wala.dataflow.IFDS;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import com.ibm.wala.eclipse.util.CancelException;
-
 /**
  * A {@link TabulationSolver} that gives up after a finite bound.
  * 
@@ -47,16 +45,9 @@ public class BoundedTabulationSolver<T, P> extends TabulationSolver<T, P> {
   public int getNumSteps() {
     return numSteps;
   }
-
-  @Override
-  public TabulationResult<T, P> solve() throws CancelException {
+  
+  public void resetBound() {
     numSteps = 0;
-    return super.solve();
   }
 
-  @Override
-  public void addSeed(PathEdge<T> seed) {
-    numSteps = 0;
-    super.addSeed(seed);
-  }
 }
