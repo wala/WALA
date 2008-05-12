@@ -212,7 +212,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         if (Assertions.verifyAssertions) {
           Assertions._assert(n != null);
         }
-        MachineState result = new MachineState(71167 * n.hashCode() + (IN ? 0 : 1), n);
+        MachineState result = new MachineState(n);
         if (IN && n.equals(cfg.entry())) {
           entry = result;
         }
@@ -225,7 +225,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
           Assertions._assert(from != null);
           Assertions._assert(to != null);
         }
-        MachineState result = new MachineState(71167 * from.hashCode() + to.hashCode(), from);
+        MachineState result = new MachineState(from);
 
         return result;
       }
@@ -586,23 +586,20 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     // NOTE: stackHeight == -1 is a special code meaning "this variable is TOP"
     private int stackHeight;
 
-    private final int hash;
-
     private final BasicBlock bb;
 
     /**
-     * I'm not using clone becuase I don't want to necessarily inherit the
+     * I'm not using clone because I don't want to necessarily inherit the
      * AbstractVariable state from the superclass
      */
     public MachineState duplicate() {
-      MachineState result = new MachineState(hash, bb);
+      MachineState result = new MachineState(bb);
       result.copyState(this);
       return result;
     }
 
-    public MachineState(int hashCode, BasicBlock bb) {
+    public MachineState(BasicBlock bb) {
       setTOP();
-      this.hash = hashCode;
       this.bb = bb;
     }
 
@@ -803,12 +800,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     public int getStackHeight() {
       return stackHeight;
     }
-
-    @Override
-    public int hashCode() {
-      return hash;
-    }
-
+    
     /**
      * Use with care.
      */

@@ -10,12 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.util.DeterministicHashCode;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * 
  * A {@link BitVector} implementation of {@link MutableIntSet}.
  * 
  * Note that this is NOT a value with regard to hashCode and equals.
@@ -31,15 +29,10 @@ public final class BitVectorIntSet implements MutableIntSet {
 
   private BitVector bitVector = new BitVector(0);
 
-  private final int hash;
-
-
   public BitVectorIntSet() {
-    this.hash = DeterministicHashCode.get();
   }
-  
+
   public BitVectorIntSet(BitVector v) {
-    this.hash = DeterministicHashCode.get();
     bitVector.or(v);
     populationCount = UNDEFINED;
   }
@@ -50,7 +43,6 @@ public final class BitVectorIntSet implements MutableIntSet {
       throw new IllegalArgumentException("S == null");
     }
     copySet(S);
-    this.hash = DeterministicHashCode.get();
   }
 
   /*
@@ -81,7 +73,7 @@ public final class BitVectorIntSet implements MutableIntSet {
         }
       }
     } else if (set instanceof BimodalMutableIntSet) {
-      IntSet backing = ((BimodalMutableIntSet)set).getBackingStore();
+      IntSet backing = ((BimodalMutableIntSet) set).getBackingStore();
       copySet(backing);
     } else {
       bitVector.clearAll();
@@ -92,7 +84,6 @@ public final class BitVectorIntSet implements MutableIntSet {
     }
 
   }
-
 
   public boolean addAll(IntSet set) {
     if (set instanceof BitVectorIntSet) {
@@ -106,13 +97,11 @@ public final class BitVectorIntSet implements MutableIntSet {
       return addAll(other);
     }
   }
-  
+
   /**
-   * this version of add all will likely be faster
-   * if the client doesn't care about the change or
-   * the population count.
+   * this version of add all will likely be faster if the client doesn't care about the change or the population count.
    * @param set
-   * @throws IllegalArgumentException  if set == null
+   * @throws IllegalArgumentException if set == null
    */
   public void addAllOblivious(IntSet set) throws IllegalArgumentException {
     if (set == null) {
@@ -314,11 +303,6 @@ public final class BitVectorIntSet implements MutableIntSet {
     return this == obj;
   }
 
-  @Override
-  public int hashCode() {
-    return hash;
-  }
-
   public boolean contains(int i) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(i >= 0);
@@ -389,8 +373,8 @@ public final class BitVectorIntSet implements MutableIntSet {
     } else if (that instanceof SparseIntSet) {
       return isSubsetInternal((SparseIntSet) that);
     } else {
-      // really slow.  optimize as needed.
-      for (IntIterator it = intIterator(); it.hasNext(); ) {
+      // really slow. optimize as needed.
+      for (IntIterator it = intIterator(); it.hasNext();) {
         int x = it.next();
         if (!that.contains(x)) {
           return false;
@@ -422,7 +406,7 @@ public final class BitVectorIntSet implements MutableIntSet {
 
   /**
    * @param set
-   * @throws IllegalArgumentException  if set is null
+   * @throws IllegalArgumentException if set is null
    */
   public boolean removeAll(BitVectorIntSet set) {
     if (set == null) {

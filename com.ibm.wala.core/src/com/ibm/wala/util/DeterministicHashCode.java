@@ -13,11 +13,13 @@ package com.ibm.wala.util;
 import java.util.Random;
 
 /**
- * 
  * a simple pseudo-random number generator.
+ * 
+ * This is too expensive to use in inner loops.  Deprecating.
  * 
  * @author sfink
  */
+@Deprecated
 public class DeterministicHashCode {
 
   final private static Random r = new Random(1000);

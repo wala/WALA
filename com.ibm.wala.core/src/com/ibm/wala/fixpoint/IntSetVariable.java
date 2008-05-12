@@ -145,10 +145,6 @@ public abstract class IntSetVariable<T extends IntSetVariable> extends AbstractV
     }
   }
 
-  @Override
-  public abstract int hashCode();
-
-
   public int size() {
     return (V == null) ? 0 : V.size();
   }

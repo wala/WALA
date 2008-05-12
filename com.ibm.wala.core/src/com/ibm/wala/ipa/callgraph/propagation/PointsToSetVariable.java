@@ -67,11 +67,6 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
   }
 
   @Override
-  public int hashCode() {
-    return pointerKey.hashCode();
-  }
-
-  @Override
   public void add(int b) {
     if (PARANOID) {
       MutableSparseIntSet m = new MutableSparseIntSet(1);

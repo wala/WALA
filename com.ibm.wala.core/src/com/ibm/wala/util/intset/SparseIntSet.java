@@ -19,8 +19,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * A sparse ordered, duplicate-free, fully-encapsulated set of integers; not
- * necessary mutable
+ * A sparse ordered, duplicate-free, fully-encapsulated set of integers; not necessary mutable
  * 
  * @author Alan Donovan
  * @author Stephen Fink
@@ -55,8 +54,7 @@ public class SparseIntSet implements IntSet {
   }
 
   /**
-   * Subclasses should use this with extreme care. Do not allow the backing
-   * array to escape elsewhere.
+   * Subclasses should use this with extreme care. Do not allow the backing array to escape elsewhere.
    */
   protected SparseIntSet(int[] backingArray) {
     if (backingArray == null) {
@@ -302,7 +300,7 @@ public class SparseIntSet implements IntSet {
 
   /**
    * Reverse of toString(): "{2,3}" -> [2,3]
-   * @throws IllegalArgumentException  if str is null
+   * @throws IllegalArgumentException if str is null
    */
   public static int[] parseIntArray(String str) throws NumberFormatException {
     if (str == null) {
@@ -337,7 +335,7 @@ public class SparseIntSet implements IntSet {
     }
   }
 
-  public static SparseIntSet pair(int i, int j)  {
+  public static SparseIntSet pair(int i, int j) {
     if (i == j) {
       return SparseIntSet.singleton(i);
     }
@@ -366,9 +364,9 @@ public class SparseIntSet implements IntSet {
       temp.intersectWith(that);
       return temp;
     } else {
-      // this is really slow.  optimize as needed.
+      // this is really slow. optimize as needed.
       MutableSparseIntSet temp = MutableSparseIntSet.makeEmpty();
-      for (IntIterator it = intIterator(); it.hasNext(); ) {
+      for (IntIterator it = intIterator(); it.hasNext();) {
         int x = it.next();
         if (that.contains(x)) {
           temp.add(x);
@@ -441,7 +439,7 @@ public class SparseIntSet implements IntSet {
 
   /**
    * @return a new sparse int set which adds j to s
-   * @throws IllegalArgumentException  if s is null
+   * @throws IllegalArgumentException if s is null
    */
   public static SparseIntSet add(SparseIntSet s, int j) {
 
@@ -481,8 +479,8 @@ public class SparseIntSet implements IntSet {
     } else if (that instanceof BitVectorIntSet) {
       return isSubsetInternal((BitVectorIntSet) that);
     } else {
-      // really slow.  optimize as needed.
-      for (IntIterator it = intIterator(); it.hasNext(); ) {
+      // really slow. optimize as needed.
+      for (IntIterator it = intIterator(); it.hasNext();) {
         if (!that.contains(it.next())) {
           return false;
         }

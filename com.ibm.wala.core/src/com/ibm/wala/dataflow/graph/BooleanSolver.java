@@ -23,13 +23,13 @@ public class BooleanSolver<T> extends DataflowSolver<T, BooleanVariable> {
 
   @Override
   protected BooleanVariable makeNodeVariable(Object n, boolean IN) {
-    return new BooleanVariable(n.hashCode() * 97381 + (IN ? 0 : 1));
+    return new BooleanVariable();
 
   }
 
   @Override
   protected BooleanVariable makeEdgeVariable(Object src, Object dst) {
-    return new BooleanVariable(src.hashCode() ^ dst.hashCode());
+    return new BooleanVariable();
 
   }
 

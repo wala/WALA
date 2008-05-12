@@ -22,22 +22,15 @@ public class BooleanVariable extends AbstractVariable<BooleanVariable> {
 
   private boolean B;
 
-  private final int hash;
-
-  /**
-   * Default constructor
-   */
-  public BooleanVariable(int hash) {
-    this.hash = hash;
+  public BooleanVariable() {
   }
 
   /**
    * @param b
    *          initial value for this variable
    */
-  public BooleanVariable(boolean b, int hash) {
+  public BooleanVariable(boolean b) {
     this.B = b;
-    this.hash = hash;
   }
 
   public void copyState(BooleanVariable other) throws NullPointerException {
@@ -53,7 +46,7 @@ public class BooleanVariable extends AbstractVariable<BooleanVariable> {
 
   @Override
   public String toString() {
-    return hash + (B ? "[TRUE]" : "[FALSE]");
+    return (B ? "[TRUE]" : "[FALSE]");
   }
 
   /**
@@ -73,11 +66,6 @@ public class BooleanVariable extends AbstractVariable<BooleanVariable> {
       throw new IllegalArgumentException("other is null");
     }
     B = B | other.B;
-  }
-
-  @Override
-  public int hashCode() {
-    return hash;
   }
 
   public void set(boolean b) {

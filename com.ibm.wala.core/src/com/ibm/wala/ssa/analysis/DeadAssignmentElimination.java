@@ -128,7 +128,7 @@ public class DeadAssignmentElimination {
           }
           if (maybeDead) {
             // perhaps the phi is dead .. create a variable
-            BooleanVariable B = new BooleanVariable(false, def);
+            BooleanVariable B = new BooleanVariable(false);
             vars.put(new Integer(def), B);
           }
         }

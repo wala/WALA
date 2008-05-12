@@ -11,14 +11,12 @@
 package com.ibm.wala.fixpoint;
 
 import com.ibm.wala.fixedpoint.impl.AbstractVariable;
-import com.ibm.wala.util.DeterministicHashCode;
 import com.ibm.wala.util.intset.BitVector;
 import com.ibm.wala.util.intset.BitVectorIntSet;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
 
 /**
- *
  * A BitVector variable for dataflow analysis.
  * 
  * @author sfink
@@ -26,10 +24,8 @@ import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
 public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
 
   private MutableSharedBitVectorIntSet V;
-  private final int hash;
 
   public BitVectorVariable() {
-    this.hash = DeterministicHashCode.get();
   }
 
   public void copyState(BitVectorVariable other) {
@@ -122,11 +118,6 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
     if (V != null) {
       V.remove(i);
     }
-  }
-
-  @Override
-  public int hashCode() {
-    return hash;
   }
 
   @Override

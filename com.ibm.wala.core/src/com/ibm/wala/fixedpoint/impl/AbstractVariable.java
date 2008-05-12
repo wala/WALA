@@ -20,16 +20,39 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
  */
 public abstract class AbstractVariable<T extends AbstractVariable> extends NodeWithNumber implements IVariable<T> {
 
+  private static int nextHashCode = 0;
+  
   private int orderNumber;
+  
+  private final int hashCode;
+  
+  protected AbstractVariable() {
+    this.hashCode = nextHash();
+  }
 
   @Override
   public boolean equals(Object obj) {
     // we assume the solver manages these canonically
     return this == obj;
   }
+  
+  /**
+   * I know this is theoretically bad.   However,
+   * <ul>
+   * <li> we need this to be extremely fast .. it's in the inner loop of lots of stuff.
+   * <li> these objects will probably only be hashed with each other {@link AbstractVariable}s, 
+   * in which case incrementing hash codes is OK.
+   * <li> we want determinism, so we don't want to rely on System.identityHashCode
+   * </ul>
+   */
+  public static synchronized int nextHash() {
+    return nextHashCode++;
+  }
 
   @Override
-  public abstract int hashCode();
+  public final int hashCode() {
+    return hashCode;
+  }
 
   public int getOrderNumber() {
     return orderNumber;

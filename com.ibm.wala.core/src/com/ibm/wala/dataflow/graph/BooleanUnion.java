@@ -48,7 +48,7 @@ public class BooleanUnion extends AbstractMeetOperator<BooleanVariable> implemen
 
   @Override
   public byte evaluate(BooleanVariable lhs, IVariable[] rhs) throws NullPointerException {
-    BooleanVariable U = new BooleanVariable(lhs.hashCode());
+    BooleanVariable U = new BooleanVariable();
     U.copyState(lhs);
     for (int i = 0; i < rhs.length; i++) {
       BooleanVariable R = (BooleanVariable) rhs[i];

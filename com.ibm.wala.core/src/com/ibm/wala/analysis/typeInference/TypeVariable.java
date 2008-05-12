@@ -18,11 +18,8 @@ public class TypeVariable extends AbstractVariable<TypeVariable> {
 
   TypeAbstraction type;
 
-  private final int hash;
-
-  public TypeVariable(TypeAbstraction type, int hashCode) {
+  public TypeVariable(TypeAbstraction type) {
     this.type = type;
-    this.hash = hashCode;
   }
 
   public void copyState(TypeVariable other) throws IllegalArgumentException {
@@ -45,10 +42,4 @@ public class TypeVariable extends AbstractVariable<TypeVariable> {
   public String toString() {
     return type.toString();
   }
-
-  @Override
-  public int hashCode() {
-    return hash;
-  }
-
 }

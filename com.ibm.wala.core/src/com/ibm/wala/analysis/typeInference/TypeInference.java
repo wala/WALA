@@ -671,12 +671,12 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
       if (doPrimitives) {
         if (st.isConstant(valueNumber)) {
           if (st.isBooleanConstant(valueNumber)) {
-            return new TypeVariable(PrimitiveType.BOOLEAN, 797 * valueNumber);
+            return new TypeVariable(PrimitiveType.BOOLEAN);
           }
         }
       }
 
-      return new TypeVariable(TypeAbstraction.TOP, 797 * valueNumber);
+      return new TypeVariable(TypeAbstraction.TOP);
     }
 
   }
