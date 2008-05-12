@@ -118,7 +118,9 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
       if (b.equals(exit())) {
         continue;
       } else if (b.equals(entry())) {
-        addNormalEdge(b, getBlockForInstruction(0));
+        BasicBlock bb0 = getBlockForInstruction(0);
+        assert bb0 != null;
+        addNormalEdge(b, bb0);
       } else {
         b.computeOutgoingEdges();
       }
