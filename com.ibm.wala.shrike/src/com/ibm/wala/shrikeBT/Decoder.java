@@ -374,7 +374,9 @@ public abstract class Decoder implements Constants {
     if (retAddr > 0) {
       RetInfo r = retInfo[retAddr];
       r.sub = subAddr;
-      decodeAt(retToAddr, r.stackLen, r.stackWords.clone());
+      byte[] cloneStackWords= new byte[r.stackWords.length];
+      System.arraycopy(r.stackWords, 0, cloneStackWords, 0, cloneStackWords.length);
+      decodeAt(retToAddr, r.stackLen, cloneStackWords);
     }
   }
 
