@@ -225,7 +225,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     }
   }
 
-  private MethodSummary generateNoOp(MethodReference m, boolean isStatic) {
+  public static MethodSummary generateNoOp(MethodReference m, boolean isStatic) {
     return new NoOpSummary(m, isStatic);
   }
 
