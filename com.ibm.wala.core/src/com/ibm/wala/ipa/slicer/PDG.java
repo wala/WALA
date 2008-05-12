@@ -973,12 +973,16 @@ public class PDG implements NumberedGraph<Statement> {
     if (paramCalleeStatements == null) {
       createCalleeParams();
     }
-    return paramCalleeStatements.clone();
+    Statement[] result = new Statement[paramCalleeStatements.length];
+    System.arraycopy(paramCalleeStatements, 0, result, 0, result.length);
+    return result;
   }
 
   public Statement[] getReturnStatements() {
     populate();
-    return returnStatements.clone();
+    Statement[] result = new Statement[returnStatements.length];
+    System.arraycopy(returnStatements, 0, result, 0, result.length);
+    return result;
   }
 
   public CGNode getCallGraphNode() {
