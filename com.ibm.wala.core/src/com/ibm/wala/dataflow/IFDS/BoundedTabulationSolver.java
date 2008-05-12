@@ -53,4 +53,10 @@ public class BoundedTabulationSolver<T, P> extends TabulationSolver<T, P> {
     numSteps = 0;
     return super.solve();
   }
+
+  @Override
+  public void addSeed(PathEdge<T> seed) {
+    numSteps = 0;
+    super.addSeed(seed);
+  }
 }
