@@ -31,6 +31,7 @@ import com.ibm.wala.util.ref.CacheReference;
  * 
  * @author sfink
  */
+@Deprecated
 public class CFGCache {
 
   /**

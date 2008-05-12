@@ -24,13 +24,16 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  * 
  * @author sjfink
  */
+@SuppressWarnings("deprecation")
 public class AnalysisCache {
   private final IRFactory<IMethod> irFactory;
 
   private final SSACache ssaCache;
 
+  @SuppressWarnings("deprecation")
   private final CFGCache cfgCache;
 
+  @SuppressWarnings("deprecation")
   public AnalysisCache(IRFactory<IMethod> irFactory) {
     super();
     this.irFactory = irFactory;
@@ -43,6 +46,7 @@ public class AnalysisCache {
     this(new DefaultIRFactory());
   }
 
+  @SuppressWarnings("deprecation")
   public void invalidate(IMethod method, Context C) {
     ssaCache.invalidate(method, C);
     cfgCache.invalidate(method, C);
@@ -52,6 +56,7 @@ public class AnalysisCache {
     return ssaCache;
   }
 
+  @Deprecated
   public CFGCache getCFGCache() {
     return cfgCache;
   }

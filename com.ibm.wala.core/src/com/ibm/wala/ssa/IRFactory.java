@@ -29,6 +29,12 @@ public interface IRFactory<T extends IMethod> {
 
   IR makeIR(T method, Context C, SSAOptions options);
 
+  @Deprecated
   ControlFlowGraph makeCFG(T method, Context C);
+  
+  /**
+   * Does this factory always return the same IR for a method, regardless of context?
+   */
+  boolean contextIsIrrelevant(T method);
 
 }

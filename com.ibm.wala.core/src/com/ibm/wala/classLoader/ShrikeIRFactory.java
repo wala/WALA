@@ -100,4 +100,9 @@ public class ShrikeIRFactory implements IRFactory<ShrikeCTMethod> {
       }
     };
   }
+
+  public boolean contextIsIrrelevant(ShrikeCTMethod method) {
+    // this factory always returns the same IR for a method
+    return true;
+  }
 }

@@ -12,6 +12,7 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 
 /**
  * 
@@ -61,7 +62,7 @@ public class SSACache {
    * @throws IllegalArgumentException
    *           if m is null
    */
-  public synchronized IR findOrCreateIR(final IMethod m, final Context C, final SSAOptions options) {
+  public synchronized IR findOrCreateIR(final IMethod m, Context c, final SSAOptions options) {
 
     if (m == null) {
       throw new IllegalArgumentException("m is null");
@@ -69,15 +70,19 @@ public class SSACache {
     if (m.isAbstract() || m.isNative()) {
       return null;
     }
-
-    if (DISABLE) {
-      return factory.makeIR(m, C, options);
+    
+    if (factory.contextIsIrrelevant(m)) {
+      c = Everywhere.EVERYWHERE;
     }
 
-    IR ir = (IR) irCache.find(m, C, options);
+    if (DISABLE) {
+      return factory.makeIR(m, c, options);
+    }
+
+    IR ir = (IR) irCache.find(m, c, options);
     if (ir == null) {
-      ir = factory.makeIR(m, C, options);
-      irCache.cache(m, C, options, ir);
+      ir = factory.makeIR(m, c, options);
+      irCache.cache(m, c, options, ir);
     }
     return ir;
   }
@@ -92,7 +97,7 @@ public class SSACache {
    * @throws IllegalArgumentException
    *           if m is null
    */
-  public synchronized DefUse findOrCreateDU(IMethod m, Context C, SSAOptions options) {
+  public synchronized DefUse findOrCreateDU(IMethod m, Context c, SSAOptions options) {
 
     if (m == null) {
       throw new IllegalArgumentException("m is null");
@@ -100,12 +105,15 @@ public class SSACache {
     if (m.isAbstract() || m.isNative()) {
       return null;
     }
+    if (factory.contextIsIrrelevant(m)) {
+      c = Everywhere.EVERYWHERE;
+    }
 
-    DefUse du = (DefUse) duCache.find(m, C, options);
+    DefUse du = (DefUse) duCache.find(m, c, options);
     if (du == null) {
-      IR ir = findOrCreateIR(m, C, options);
+      IR ir = findOrCreateIR(m, c, options);
       du = new DefUse(ir);
-      duCache.cache(m, C, options, du);
+      duCache.cache(m, c, options, du);
     }
     return du;
   }

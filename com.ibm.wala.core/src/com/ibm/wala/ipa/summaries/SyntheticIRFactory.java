@@ -32,4 +32,9 @@ public class SyntheticIRFactory implements IRFactory<SyntheticMethod> {
     }
     return method.makeIR(C, options);
   }
+
+  public boolean contextIsIrrelevant(SyntheticMethod method) {
+    // conservatively return false .. the context might matter.
+    return false;
+  }
 }

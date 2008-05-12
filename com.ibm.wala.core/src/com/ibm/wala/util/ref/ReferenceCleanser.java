@@ -65,6 +65,7 @@ public class ReferenceCleanser {
   /**
    * A debugging aid. TODO: move this elsewhere
    */
+  @SuppressWarnings("deprecation")
   public static void clearSoftCaches() {
     float occupancy = 1f - ((float)Runtime.getRuntime().freeMemory() / (float)Runtime.getRuntime().totalMemory());
     if (occupancy < OCCUPANCY_TRIGGER) {
@@ -91,10 +92,6 @@ public class ReferenceCleanser {
         }
       }
     }
-    // System.gc();
-    // System.gc();
-    // System.gc();
-
   }
 
 }

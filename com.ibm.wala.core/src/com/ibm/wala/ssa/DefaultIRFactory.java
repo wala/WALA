@@ -62,4 +62,16 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
     }
   }
 
+  public boolean contextIsIrrelevant(IMethod method) {
+    if (method.isSynthetic()) {
+      return syntheticFactory.contextIsIrrelevant((SyntheticMethod)method);
+    } else if (method instanceof ShrikeCTMethod) {
+      // we know ShrikeFactory contextIsIrrelevant
+      return true;
+    } else {
+      Assertions.UNREACHABLE();
+      return false;
+    }
+  }
+
 }
