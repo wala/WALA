@@ -1006,6 +1006,12 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
   public IMethod getCalleeTarget(CGNode N, CallSiteReference site, IClass receiver) {
     MethodReference m = site.getDeclaredTarget();
 
+    // handle call to factory method for ActionForms
+    if (m.getDeclaringClass().equals(ActionFormFactoryMethod.factoryClassRef) && m.getName().equals(ActionFormFactoryMethod.name)
+        && m.getDescriptor().equals(ActionFormFactoryMethod.descr)) {
+      return new ActionFormFactoryMethod(cha);
+    }
+
     // If the declared target is something generic like EJBObject, perform
     // type inference to try and resolve a more specific bean receiver for
     // this call.
