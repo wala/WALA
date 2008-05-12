@@ -139,4 +139,8 @@ public class AstIRFactory implements IRFactory {
       }
     };
   }
+
+  public boolean contextIsIrrelevant(IMethod method) {
+    return true;
+  }
 }
