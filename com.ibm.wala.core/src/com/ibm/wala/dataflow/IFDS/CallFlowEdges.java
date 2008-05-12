@@ -12,7 +12,7 @@ package com.ibm.wala.dataflow.IFDS;
 
 import com.ibm.wala.util.collections.SparseVector;
 import com.ibm.wala.util.intset.BasicNaturalRelation;
-import com.ibm.wala.util.intset.BitVectorIntSet;
+import com.ibm.wala.util.intset.BimodalMutableIntSet;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
@@ -66,16 +66,16 @@ public class CallFlowEdges {
       System.err.println("addCallEdge " + c + " " + d1 + " " + d2);
     }
     if (d1 == d2) {
-      BitVectorIntSet s = (BitVectorIntSet) identityEdges.get(d1);
+      BimodalMutableIntSet s = (BimodalMutableIntSet) identityEdges.get(d1);
       if (s == null) {
-        s = new BitVectorIntSet();
+        s = new BimodalMutableIntSet();
         identityEdges.set(d1, s);
       }
       s.add(c);
     } else {
       IBinaryNaturalRelation R = edges.get(c);
       if (R == null) {
-        // we expect the first dimention of R to be dense, the second sparse
+        // we expect the first dimension of R to be dense, the second sparse
         R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
             BasicNaturalRelation.TWO_LEVEL);
         edges.set(c, R);
@@ -91,7 +91,7 @@ public class CallFlowEdges {
    *         null if none found.
    */
   public IntSet getCallFlowSources(int c, int d2) {
-    BitVectorIntSet s = (BitVectorIntSet) identityEdges.get(d2);
+    IntSet s = identityEdges.get(d2);
     IBinaryNaturalRelation R = edges.get(c);
     IntSet result = null;
     if (R == null) {
