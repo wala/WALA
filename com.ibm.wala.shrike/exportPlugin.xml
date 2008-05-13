@@ -3,54 +3,16 @@
 	<import file="../org.eclipse.imp.runtime.feature/buildCommon.xml"/>
 	<import file="../org.eclipse.imp.update/buildPluginCommon.xml"/>
 
-	<target name="init" depends="properties">
-		<loadfile property="plugin.id" srcfile="META-INF/MANIFEST.MF">
-			<filterchain>
-				<containsregex pattern="Bundle-SymbolicName:"/>
-				<replaceregex pattern="Bundle-SymbolicName: (.*)(;.*)?" replace="\1"/>
-				<!-- Don't know why we need striplinebreaks here and not in defining javacSource (see below) -->
-				<striplinebreaks/>
-			</filterchain>
-		</loadfile>
-		<!-- <echo message="Plugin ID = ${plugin.id}"/> -->
-
-		<loadfile property="plugin.version" srcfile="META-INF/MANIFEST.MF">
-			<filterchain>
-				<containsregex pattern="Bundle-Version:"/>
-				<replaceregex pattern="Bundle-Version: (.*)" replace="\1"/>
-				<!-- Don't know why we need striplinebreaks here and not in defining javacSource (see below) -->
-				<striplinebreaks/>
-			</filterchain>
-		</loadfile>
-		<!-- <echo message="Plugin version = ${plugin.version}"/> -->
-
-		<property name="plugin.jar.name" value="${plugin.id}_${plugin.version}.jar"/>
-		<property name="plugin.zip.name" value="${plugin.id}_${plugin.version}.zip"/>
-		<property name="plugin.src.zip" value="${plugin.id}src.zip"/>
-		<property name="plugin.destination" value="${basedir}"/>
-		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
-			<isset property="buildTempFolder"/>
-		</condition>
-		<property name="pluginTemp" value="${basedir}"/>
-		<condition property="build.result.folder" value="${pluginTemp}/${plugin.id}">
-			<isset property="buildTempFolder"/>
-		</condition>
-		<property name="build.result.folder" value="${basedir}"/>
-		<property name="temp.folder" value="${basedir}/temp.folder"/>
-	</target>
-
-	<target name="properties" if="eclipse.running">
-		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-
-	</target>
-
 	<!-- ================================================================================= -->
 
-	<target name="plugin.jar" depends="init" unless="${plugin.jar.name}" description="Create jar: ${plugin.jar.name}.">
+	<target name="plugin.jar" depends="init,javaInit" unless="${plugin.jar.name}" description="Create jar: ${plugin.jar.name}.">
 		<delete dir="${temp.folder}/${plugin.jar.name}.bin"/>
 		<mkdir dir="${temp.folder}/${plugin.jar.name}.bin"/>
 		<!-- compile the source code -->
-		<javac destdir="${temp.folder}/${plugin.jar.name}.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bootclasspath}" source="${javacSource}" target="${javacTarget}"		>
+		<javac destdir="${temp.folder}/${plugin.jar.name}.bin" failonerror="${javacFailOnError}"
+			   verbose="${javacVerbose}" debug="${javacDebugInfo}"
+			   includeAntRuntime="no" bootclasspath="${bootclasspath}"
+			   source="${javacSource}" target="${javacTarget}">
 			<compilerarg line="${compilerArg}"/>
 			<classpath>
 				<pathelement path="${eclipse.build.path}"/>
