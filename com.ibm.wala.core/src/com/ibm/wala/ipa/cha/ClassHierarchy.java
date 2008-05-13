@@ -1068,24 +1068,63 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * @param klass
-   * @return the number of classes that immediately extend klass.
+   * @return the number of classes that immediately extend klass. if klass is an array class A[][]...[], we return
+   *         number of immediate subclasses of A. If A is primitive, we return 0.
    */
   public int getNumberOfImmediateSubclasses(IClass klass) {
+    if (klass.isArrayClass()) {
+      IClass innermost = getInnermostTypeOfArrayClass(klass);
+      return innermost == null ? 0 : getNumberOfImmediateSubclasses(innermost);
+    }
     Node node = findNode(klass);
     return node.children.size();
   }
 
   /**
    * @param klass
-   * @return the classes that immediately extend klass.
+   * @return the classes that immediately extend klass. if klass is an array class A[][]...[], we return array classes
+   *         B[][]...[] (same dimensionality) where B is an immediate subclass of A. If A is primitive, we return the
+   *         empty set.
    */
   public Collection<IClass> getImmediateSubclasses(IClass klass) {
+    if (klass.isArrayClass()) {
+      return getImmediateArraySubclasses(klass);
+    }
     Function<Node, IClass> node2Class = new Function<Node, IClass>() {
       public IClass apply(Node n) {
         return n.klass;
       }
     };
     return Iterator2Collection.toCollection(new MapIterator<Node, IClass>(findNode(klass).children.iterator(), node2Class));
+  }
+
+  private Collection<IClass> getImmediateArraySubclasses(IClass klass) {
+    IClass innermost = getInnermostTypeOfArrayClass(klass);
+    if (innermost == null) {
+      return Collections.emptySet();
+    }
+    Collection<IClass> innermostSubclasses = getImmediateSubclasses(innermost);
+    int dim = klass.getReference().getDimensionality();
+    Collection<IClass> result = HashSetFactory.make();
+    for (IClass k : innermostSubclasses) {
+      TypeReference ref = k.getReference();
+      for (int i = 0; i < dim; i++) {
+        ref = ref.getArrayTypeForElementType();
+      }
+      result.add(lookupClass(ref));
+    }
+    return result;
+  }
+
+  /**
+   * for an array class, get the innermost type, or null if it's primitive
+   */
+  private IClass getInnermostTypeOfArrayClass(IClass klass) {
+    TypeReference result = klass.getReference();
+    while (result.isArrayType()) {
+      result = result.getArrayElementType();
+    }
+    return result.isPrimitiveType() ? null : lookupClass(result);
   }
 
   /**
