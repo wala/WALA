@@ -322,8 +322,6 @@ public final class ShrikeClass implements IClass {
   }
 
   /**
-   * Method getAllInterfacesAsCollection.
-   * 
    * @return Collection of IClasses, representing the interfaces this class
    *         implements.
    */
@@ -348,14 +346,14 @@ public final class ShrikeClass implements IClass {
     }
 
     // now add any interfaces from the super class
-    ShrikeClass sup = null;
+    IClass sup = null;
     try {
-      sup = (ShrikeClass) getSuperclass();
+      sup = getSuperclass();
     } catch (ClassHierarchyException e1) {
       Assertions.UNREACHABLE();
     }
     if (sup != null) {
-      result.addAll(sup.computeAllInterfacesAsCollection());
+      result.addAll(sup.getAllImplementedInterfaces());
     }
     return result;
   }
@@ -484,7 +482,7 @@ public final class ShrikeClass implements IClass {
     // check parent, caching if found
     try {
       if (!selector.equals(MethodReference.clinitSelector) && !selector.equals(MethodReference.initSelector)) {
-        ShrikeClass superclass = (ShrikeClass) getSuperclass();
+        IClass superclass = getSuperclass();
         if (superclass != null) {
           IMethod inherit = superclass.getMethod(selector);
           if (inherit != null) {
@@ -601,6 +599,9 @@ public final class ShrikeClass implements IClass {
     return loader.getSourceFileName(this);
   }
 
+  /* 
+   * @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces()
+   */
   public Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException {
     if (allInterfaces != null) {
       return allInterfaces;
@@ -611,9 +612,6 @@ public final class ShrikeClass implements IClass {
     }
   }
 
-  /**
-   * @see java.lang.Object#toString()
-   */
   @Override
   public String toString() {
     return getReference().toString();
@@ -633,17 +631,13 @@ public final class ShrikeClass implements IClass {
     }
   }
 
-  /**
-   * @see java.lang.Object#hashCode()
-   */
+
   @Override
   public int hashCode() {
     return hashCode;
   }
 
-  /**
-   * Method getReader.
-   */
+
   public ClassReader getReader() {
     try {
       return reader.get();

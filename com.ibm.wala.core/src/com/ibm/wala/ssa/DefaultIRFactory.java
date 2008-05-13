@@ -69,7 +69,7 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
       // we know ShrikeFactory contextIsIrrelevant
       return true;
     } else {
-      Assertions.UNREACHABLE();
+      // be conservative .. don't know what's going on.
       return false;
     }
   }

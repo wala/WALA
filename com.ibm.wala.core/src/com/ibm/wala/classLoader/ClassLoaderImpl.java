@@ -371,25 +371,9 @@ public class ClassLoaderImpl implements IClassLoader {
     return getAllClasses().iterator();
   }
 
-  /**
-   * This version returns null instead of throwing ClassNotFoundException.
+  /* 
+   * @see com.ibm.wala.classLoader.IClassLoader#lookupClass(com.ibm.wala.types.TypeName)
    */
-  private IClass lookupClassInternal(TypeName className) {
-    if (DEBUG_LEVEL > 1) {
-      Trace.println(this + ": lookupClassInternal " + className);
-    }
-
-    // try delegating first.
-    ClassLoaderImpl parent = (ClassLoaderImpl) getParent();
-    if (parent != null) {
-      IClass result = parent.lookupClassInternal(className);
-      if (result != null)
-        return result;
-    }
-    // delegating failed. Try our own namespace.
-    return loadedClasses.get(className);
-  }
-
   public IClass lookupClass(TypeName className) {
     if (className == null) {
       throw new IllegalArgumentException("className is null");
@@ -404,13 +388,10 @@ public class ClassLoaderImpl implements IClassLoader {
     }
 
     // try delegating first.
-    ClassLoaderImpl parent = (ClassLoaderImpl) getParent();
+    IClassLoader parent = getParent();
     if (parent != null) {
-      IClass result = parent.lookupClassInternal(className);
+      IClass result = parent.lookupClass(className);
       if (result != null) {
-        if (DEBUG_LEVEL > 1) {
-          Trace.println(this + ": returning class from parent: " + result);
-        }
         return result;
       }
     }
