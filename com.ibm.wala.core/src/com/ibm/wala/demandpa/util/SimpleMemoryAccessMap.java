@@ -21,6 +21,7 @@ import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ArrayLoadInstruction;
@@ -71,9 +72,12 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   private final IClassHierarchy cha;
 
   private final boolean includePrimOps;
+  
+  private final HeapModel heapModel;
 
-  public SimpleMemoryAccessMap(CallGraph cg, boolean includePrimOps) {
+  public SimpleMemoryAccessMap(CallGraph cg, HeapModel heapModel, boolean includePrimOps) {
     this.cha = cg.getClassHierarchy();
+    this.heapModel = heapModel;
     this.includePrimOps = includePrimOps;
     populate(cg);
   }
@@ -409,5 +413,10 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
 
   public Collection<MemoryAccess> getStaticFieldWrites(IField field) {
     return getFieldWrites(null, field);
+  }
+  
+  public HeapModel getHeapModel() {
+    // NOTE: this memory access map actually makes no use of the heap model
+    return heapModel;
   }
 }

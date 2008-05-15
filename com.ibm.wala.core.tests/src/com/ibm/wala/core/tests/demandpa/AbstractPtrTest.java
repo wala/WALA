@@ -201,7 +201,7 @@ public abstract class AbstractPtrTest extends TestCase {
     final CallGraph cg = cgBuilder.makeCallGraph(options, null);
 //    System.err.println(cg.toString());
 
-    MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, false);
+    MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, cgBuilder.getPointerAnalysis().getHeapModel(), false);
     SSAPropagationCallGraphBuilder builder = Util.makeVanillaZeroOneCFABuilder(options, analysisCache, cha, scope);
     DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(builder,cha), fam, cha, options,
         getStateMachineFactory());

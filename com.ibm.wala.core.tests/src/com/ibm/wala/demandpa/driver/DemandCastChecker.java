@@ -68,6 +68,7 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
@@ -140,10 +141,11 @@ public class DemandCastChecker {
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
 
     System.err.print("constructing call graph...");
-    final CallGraph cg = buildCallGraph(scope, cha, options);
+    final Pair<CallGraph, PointerAnalysis> cgAndPA = buildCallGraph(scope, cha, options);
+    CallGraph cg = cgAndPA.fst;    
     System.err.println("done");
     System.err.println(CallGraphStats.getStats(cg));
-    MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, false);
+    MemoryAccessMap fam = new SimpleMemoryAccessMap(cg, cgAndPA.snd.getHeapModel(), false);
     DemandRefinementPointsTo fullDemandPointsTo = new DemandRefinementPointsTo(cg, new ThisFilteringHeapModel(heapModel, cha), fam,
         cha, options, makeStateMachineFactory());
     fullDemandPointsTo.setRefinementPolicyFactory(chooseRefinePolicyFactory(cha));
@@ -169,9 +171,10 @@ public class DemandCastChecker {
    * @throws CancelException
    * @throws IllegalArgumentException
    */
-  private static CallGraph buildCallGraph(AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options)
+  private static Pair<CallGraph, PointerAnalysis> buildCallGraph(AnalysisScope scope, ClassHierarchy cha, AnalysisOptions options)
       throws IllegalArgumentException, CancelException {
-    CallGraph ret = null;
+    CallGraph retCG = null;
+    PointerAnalysis retPA = null;
     final AnalysisCache cache = new AnalysisCache();
     CallGraphBuilder builder;
     if (CHEAP_CG) {
@@ -186,12 +189,14 @@ public class DemandCastChecker {
     master.setMillisPerWorkItem(360000);
     master.beginTask("runSolver", 1);
     try {
-      ret = builder.makeCallGraph(options, master);
+      retCG = builder.makeCallGraph(options, master);
+      retPA = builder.getPointerAnalysis();
     } catch (CallGraphBuilderCancelException e) {
       System.err.println("TIMED OUT!!");
-      ret = e.getPartialCallGraph();
+      retCG = e.getPartialCallGraph();
+      retPA = e.getPartialPointerAnalysis();
     }
-    return ret;
+    return Pair.make(retCG, retPA);
   }
 
   @SuppressWarnings("unused")

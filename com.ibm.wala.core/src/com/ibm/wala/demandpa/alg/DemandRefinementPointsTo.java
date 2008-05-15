@@ -157,9 +157,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return refinementPolicy;
   }
 
-  public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap fam, ClassHierarchy cha,
+  public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap mam, ClassHierarchy cha,
       AnalysisOptions options, StateMachineFactory<IFlowLabel> stateMachineFactory) {
-    this(cg, model, fam, cha, options, stateMachineFactory, new DemandPointerFlowGraph(cg, model, fam, cha));
+    this(cg, model, mam, cha, options, stateMachineFactory, new DemandPointerFlowGraph(cg, model, mam, cha));
   }
 
   public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap fam, ClassHierarchy cha,

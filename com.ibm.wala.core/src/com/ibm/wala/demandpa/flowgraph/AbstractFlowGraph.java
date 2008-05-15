@@ -55,10 +55,12 @@ import com.ibm.wala.demandpa.util.MemoryAccess;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.ArrayContentsKey;
 import com.ibm.wala.ipa.callgraph.propagation.ConcreteTypeKey;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
+import com.ibm.wala.ipa.callgraph.propagation.NormalAllocationInNode;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
@@ -243,6 +245,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     if (f == ArrayContents.v()) {
       return getArrayWrites(pk);
     }
+    pk = convertToMAMPk(pk);
     Collection<MemoryAccess> writes = mam.getFieldWrites(pk, f);
     for (MemoryAccess a : writes) {
       addSubgraphForNode(a.getNode());
@@ -266,11 +269,37 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     return written.iterator();
   }
 
+  /**
+   * convert a pointer key to one in the memory access map's heap model
+   * @param pk
+   * @return
+   */
+  private PointerKey convertToMAMPk(PointerKey pk) {
+    HeapModel h = mam.getHeapModel();
+    if (pk instanceof LocalPointerKey) {
+      LocalPointerKey lpk = (LocalPointerKey) pk;
+      return h.getPointerKeyForLocal(lpk.getNode(), lpk.getValueNumber());
+    } else if (pk instanceof ArrayContentsKey) {
+      ArrayContentsKey ack = (ArrayContentsKey) pk;
+      InstanceKey ik = ack.getInstanceKey();
+      if (ik instanceof NormalAllocationInNode) {
+        NormalAllocationInNode nain = (NormalAllocationInNode) ik;
+        ik = h.getInstanceKeyForAllocation(nain.getNode(), nain.getSite());
+      } else {
+        assert false : "need to handle " + ik.getClass();
+      }
+      return h.getPointerKeyForArrayContents(ik);
+    }
+    assert false : "need to handle " + pk.getClass();
+    return null;
+  }
+
   public Iterator<PointerKey> getReadsOfInstanceField(PointerKey pk, IField f) {
     // TODO: cache this!!
     if (f == ArrayContents.v()) {
       return getArrayReads(pk);
     }
+    pk = convertToMAMPk(pk);
     Collection<MemoryAccess> reads = mam.getFieldReads(pk, f);
     for (MemoryAccess a : reads) {
       addSubgraphForNode(a.getNode());
@@ -293,6 +322,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   Iterator<PointerKey> getArrayWrites(PointerKey arrayRef) {
+    arrayRef = convertToMAMPk(arrayRef);
     Collection<MemoryAccess> arrayWrites = mam.getArrayWrites(arrayRef);
     for (MemoryAccess a : arrayWrites) {
       addSubgraphForNode(a.getNode());
@@ -360,6 +390,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   protected Iterator<PointerKey> getArrayReads(PointerKey arrayRef) {
+    arrayRef = convertToMAMPk(arrayRef);
     Collection<MemoryAccess> arrayReads = mam.getArrayReads(arrayRef);
     for (Iterator<MemoryAccess> it = arrayReads.iterator(); it.hasNext();) {
       MemoryAccess a = it.next();

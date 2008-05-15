@@ -13,6 +13,7 @@ package com.ibm.wala.demandpa.util;
 import java.util.Collection;
 
 import com.ibm.wala.classLoader.IField;
+import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 public interface MemoryAccessMap {
@@ -20,18 +21,23 @@ public interface MemoryAccessMap {
   /**
    * @return Collection<FieldAccess>
    */
-  public abstract Collection<MemoryAccess> getFieldReads(PointerKey baseRef, IField field);
+  public Collection<MemoryAccess> getFieldReads(PointerKey baseRef, IField field);
 
   /**
    * @return Collection<FieldAccess>
    */
-  public abstract Collection<MemoryAccess> getFieldWrites(PointerKey baseRef, IField field);
+  public Collection<MemoryAccess> getFieldWrites(PointerKey baseRef, IField field);
   
-  public abstract Collection<MemoryAccess> getArrayReads(PointerKey arrayRef);
+  public Collection<MemoryAccess> getArrayReads(PointerKey arrayRef);
 
-  public abstract Collection<MemoryAccess> getArrayWrites(PointerKey arrayRef);
+  public Collection<MemoryAccess> getArrayWrites(PointerKey arrayRef);
 
-  public abstract Collection<MemoryAccess> getStaticFieldReads(IField field);
+  public Collection<MemoryAccess> getStaticFieldReads(IField field);
 
-  public abstract Collection<MemoryAccess> getStaticFieldWrites(IField field);
+  public Collection<MemoryAccess> getStaticFieldWrites(IField field);
+  
+  /**
+   * get the heap model used in this memory access map
+   */
+  public HeapModel getHeapModel();  
 }
