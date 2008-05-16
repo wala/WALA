@@ -25,7 +25,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
 
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   private final ClassHierarchy cha;
 

@@ -63,6 +63,7 @@ import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.NormalAllocationInNode;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
+import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
@@ -245,7 +246,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     if (f == ArrayContents.v()) {
       return getArrayWrites(pk);
     }
-    pk = convertToMAMPk(pk);
+    pk = convertToHeapModel(pk, mam.getHeapModel());
     Collection<MemoryAccess> writes = mam.getFieldWrites(pk, f);
     for (MemoryAccess a : writes) {
       addSubgraphForNode(a.getNode());
@@ -271,11 +272,10 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
 
   /**
    * convert a pointer key to one in the memory access map's heap model
+   * TODO move this somewhere more appropriate
    * @param pk
-   * @return
    */
-  private PointerKey convertToMAMPk(PointerKey pk) {
-    HeapModel h = mam.getHeapModel();
+  public static PointerKey convertToHeapModel(PointerKey pk, HeapModel h) {
     if (pk instanceof LocalPointerKey) {
       LocalPointerKey lpk = (LocalPointerKey) pk;
       return h.getPointerKeyForLocal(lpk.getNode(), lpk.getValueNumber());
@@ -289,6 +289,9 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
         assert false : "need to handle " + ik.getClass();
       }
       return h.getPointerKeyForArrayContents(ik);
+    } else if (pk instanceof ReturnValueKey) {
+      ReturnValueKey rvk = (ReturnValueKey) pk;
+      return h.getPointerKeyForReturnValue(rvk.getNode());
     }
     assert false : "need to handle " + pk.getClass();
     return null;
@@ -299,7 +302,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     if (f == ArrayContents.v()) {
       return getArrayReads(pk);
     }
-    pk = convertToMAMPk(pk);
+    pk = convertToHeapModel(pk, mam.getHeapModel());
     Collection<MemoryAccess> reads = mam.getFieldReads(pk, f);
     for (MemoryAccess a : reads) {
       addSubgraphForNode(a.getNode());
@@ -322,7 +325,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   Iterator<PointerKey> getArrayWrites(PointerKey arrayRef) {
-    arrayRef = convertToMAMPk(arrayRef);
+    arrayRef = convertToHeapModel(arrayRef, mam.getHeapModel());
     Collection<MemoryAccess> arrayWrites = mam.getArrayWrites(arrayRef);
     for (MemoryAccess a : arrayWrites) {
       addSubgraphForNode(a.getNode());
@@ -390,7 +393,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   protected Iterator<PointerKey> getArrayReads(PointerKey arrayRef) {
-    arrayRef = convertToMAMPk(arrayRef);
+    arrayRef = convertToHeapModel(arrayRef, mam.getHeapModel());
     Collection<MemoryAccess> arrayReads = mam.getArrayReads(arrayRef);
     for (Iterator<MemoryAccess> it = arrayReads.iterator(); it.hasNext();) {
       MemoryAccess a = it.next();
