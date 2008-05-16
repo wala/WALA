@@ -33,7 +33,6 @@ import org.eclipse.ui.progress.IProgressService;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
-import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -47,12 +46,9 @@ import com.ibm.wala.util.debug.Assertions;
 public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegate, IRunnableWithProgress {
 
   private ISelection currentSelection;
-  
-  private final AnalysisCache cache;
 
-  public AbstractJavaAnalysisAction(AnalysisCache cache) {
+  public AbstractJavaAnalysisAction() {
     super();
-    this.cache = cache;
   }
 
   /**
@@ -155,9 +151,4 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   public ISelection getCurrentSelection() {
     return currentSelection;
   }
-
-  public AnalysisCache getAnalysisCache() {
-    return cache;
-  }
-
 }
