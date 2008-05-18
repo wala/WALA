@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: %PLUGINNAME
+Bundle-Name: %pluginName
 Bundle-SymbolicName: com.ibm.wala.j2ee
 Bundle-Version: 1.1.3.qualifier
-Bundle-Vendor: %VENDORNAME
+Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Export-Package: .,
  com.ibm.wala.j2ee,
