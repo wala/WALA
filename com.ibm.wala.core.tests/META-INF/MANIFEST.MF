@@ -1,12 +1,13 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: WALA Tests Plug-in
+Bundle-Name: %pluginName
 Bundle-SymbolicName: com.ibm.wala.core.tests;singleton:=true
 Bundle-Version: 1.1.3.qualifier
-Bundle-Vendor: IBM
+Bundle-Vendor: %providerName
 Require-Bundle: com.ibm.wala.core,
  org.junit,
  org.eclipse.jface
+Bundle-Localization: plugin
 Export-Package: com.ibm.wala.core.tests.basic,
  com.ibm.wala.core.tests.callGraph,
  com.ibm.wala.core.tests.cha,
