@@ -18,6 +18,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
 import com.ibm.wala.util.collections.Filter;
@@ -92,7 +94,7 @@ public class ViewIFDSLocalAction<T, P> extends Action {
         BasicBlockInContext bb = (BasicBlockInContext)t;
         if (bb.getDelegate() instanceof ExplodedBasicBlock) { 
           ExplodedBasicBlock delegate = (ExplodedBasicBlock) bb.getDelegate();
-          String s = delegate.getNumber() + " " + result.getResult(t) +  " " + delegate.getInstruction();
+          String s = delegate.getNumber() + " " + result.getResult(t) +  " " + stringify(delegate.getInstruction());
           for (Iterator<SSAPhiInstruction> phis = delegate.iteratePhis(); phis.hasNext(); ) {
             SSAPhiInstruction phi = phis.next();
             s += " " + phi;
@@ -105,6 +107,17 @@ public class ViewIFDSLocalAction<T, P> extends Action {
       }
       return t + " " + result.getResult(t);
     }
+  }
+  
+  public static String stringify(SSAInstruction s) {
+    if (s == null) {
+      return null;
+    }
+    if (s instanceof SSAAbstractInvokeInstruction) {
+      SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction)s;
+      return "call " + call.getDeclaredTarget().getDeclaringClass().getName().getClassName() + "." + call.getDeclaredTarget().getName();
+    }
+    return s.toString();
   }
 
   /*
