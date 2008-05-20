@@ -115,7 +115,8 @@ public class ViewIFDSLocalAction<T, P> extends Action {
     }
     if (s instanceof SSAAbstractInvokeInstruction) {
       SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction)s;
-      return "call " + call.getDeclaredTarget().getDeclaringClass().getName().getClassName() + "." + call.getDeclaredTarget().getName();
+      String def = call.hasDef() ? Integer.valueOf(call.getDef()) + "=" : "";
+      return def + "call " + call.getDeclaredTarget().getDeclaringClass().getName().getClassName() + "." + call.getDeclaredTarget().getName();
     }
     return s.toString();
   }
