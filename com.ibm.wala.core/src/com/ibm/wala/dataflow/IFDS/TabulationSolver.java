@@ -194,8 +194,7 @@ public class TabulationSolver<T, P> {
    */
   protected void initialize() {
     for (PathEdge<T> seed : problem.initialSeeds()) {
-      seeds.add(seed);
-      propagate(seed.entry, seed.d1, seed.target, seed.d2);
+      addSeed(seed);
     }
   }
 

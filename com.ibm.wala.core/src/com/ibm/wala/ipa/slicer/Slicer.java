@@ -17,8 +17,8 @@ import com.ibm.wala.dataflow.IFDS.BackwardsSupergraph;
 import com.ibm.wala.dataflow.IFDS.IMergeFunction;
 import com.ibm.wala.dataflow.IFDS.IPartiallyBalancedFlowFunctions;
 import com.ibm.wala.dataflow.IFDS.ISupergraph;
-import com.ibm.wala.dataflow.IFDS.PartiallyBalancedTabulation;
 import com.ibm.wala.dataflow.IFDS.PartiallyBalancedTabulationProblem;
+import com.ibm.wala.dataflow.IFDS.PartiallyBalancedTabulationSolver;
 import com.ibm.wala.dataflow.IFDS.PathEdge;
 import com.ibm.wala.dataflow.IFDS.TabulationDomain;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
@@ -210,8 +210,12 @@ public class Slicer {
     }
 
     SliceProblem p = makeSliceProblem(roots, sdg, backward);
-    TabulationResult<Statement, PDG> tr = PartiallyBalancedTabulation.tabulate(p);
+    
+    PartiallyBalancedTabulationSolver<Statement, PDG> solver = PartiallyBalancedTabulationSolver.createPartiallyBalancedTabulationSolver(p, null);
+    TabulationResult<Statement, PDG> tr = solver.solve();
 
+//    TabulationResult<Statement, PDG> tr = PartiallyBalancedTabulation.tabulate(p);
+    
     Collection<Statement> slice = tr.getSupergraphNodesReached();
 
     if (VERBOSE) {
