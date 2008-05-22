@@ -36,7 +36,6 @@ import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.GraphIntegrity;
 import com.ibm.wala.util.graph.GraphIntegrity.UnsoundGraphException;
@@ -227,9 +226,9 @@ public class CallGraphTest extends WalaTestCase {
     }
 
     Set<MethodReference> rtaMethods = CallGraphStats.collectMethods(cg);
-    Trace.println("RTA methods reached: " + rtaMethods.size());
-    Trace.println(CallGraphStats.getStats(cg));
-    Trace.println("RTA warnings:\n");
+    System.err.println("RTA methods reached: " + rtaMethods.size());
+    System.err.println(CallGraphStats.getStats(cg));
+    System.err.println("RTA warnings:\n");
 
     // ///////////////
     // // 0-CFA /////
@@ -325,8 +324,8 @@ public class CallGraphTest extends WalaTestCase {
       assertTrue(e1.getMessage(), false);
     }
     Set<MethodReference> callGraphMethods = CallGraphStats.collectMethods(cg);
-    Trace.println(thisAlgorithm + " methods reached: " + callGraphMethods.size());
-    Trace.println(CallGraphStats.getStats(cg));
+    System.err.println(thisAlgorithm + " methods reached: " + callGraphMethods.size());
+    System.err.println(CallGraphStats.getStats(cg));
 
     Graph<MethodReference> thisCG = com.ibm.wala.ipa.callgraph.impl.Util.squashCallGraph(thisAlgorithm, cg);
 

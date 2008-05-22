@@ -21,7 +21,6 @@ import com.ibm.wala.util.collections.BimodalMap;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.SmallMap;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.graph.dominators.Dominators;
@@ -78,21 +77,21 @@ public class PrimitivesTest extends WalaTestCase {
     MutableIntSet y = factory.make(new int[] { 7, 7, 7, 2, 7, 1 });
     MutableIntSet z = factory.parse("{ 9 }");
 
-    Trace.println(w); // { }
-    Trace.println(x); // { 2 4 7 }
-    Trace.println(y); // { 1 2 7 }
-    Trace.println(z); // { 9 }
+    System.err.println(w); // { }
+    System.err.println(x); // { 2 4 7 }
+    System.err.println(y); // { 1 2 7 }
+    System.err.println(z); // { 9 }
 
     MutableIntSet temp = factory.makeCopy(x);
     temp.intersectWith(y);
-    Trace.println(temp); // { 2 7 }
+    System.err.println(temp); // { 2 7 }
     temp.copySet(x);
     temp.addAll(y);
-    Trace.println(temp); // { 1 2 4 7 }
+    System.err.println(temp); // { 1 2 4 7 }
     temp.copySet(x);
-    Trace.println(IntSetUtil.diff(x, y, factory)); // { 4 }
-    Trace.println(IntSetUtil.diff(v, z, factory)); // { 17 }
-    Trace.println(IntSetUtil.diff(z, v, factory)); // { }
+    System.err.println(IntSetUtil.diff(x, y, factory)); // { 4 }
+    System.err.println(IntSetUtil.diff(v, z, factory)); // { 17 }
+    System.err.println(IntSetUtil.diff(z, v, factory)); // { }
 
     // assertTrue(x.union(z).intersection(y.union(z)).equals(x.intersection(y).union(z)));
     MutableIntSet temp1 = factory.makeCopy(x);
@@ -114,16 +113,16 @@ public class PrimitivesTest extends WalaTestCase {
     assertTrue(z.isSubset(v));
     temp = factory.make();
     temp.add(4);
-    Trace.println(temp); // { 4 }
+    System.err.println(temp); // { 4 }
     temp.add(7);
-    Trace.println(temp); // { 4 7 }
+    System.err.println(temp); // { 4 7 }
     temp.add(2);
-    Trace.println(temp); // { 2 4 7 }
-    Trace.println(x); // { 2 4 7 }
+    System.err.println(temp); // { 2 4 7 }
+    System.err.println(x); // { 2 4 7 }
     assertTrue(temp.sameValue(x));
 
     MutableIntSet a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
-    Trace.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
+    System.err.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
     // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
     assertTrue(a.sameValue(a));
@@ -137,7 +136,7 @@ public class PrimitivesTest extends WalaTestCase {
     assertTrue(a.isSubset(b));
 
     IntSet f = IntSetUtil.diff(b, factory.parse("{7,8,9}"), factory);
-    Trace.println(f);
+    System.err.println(f);
     assertFalse(f.contains(7));
     assertFalse(f.contains(8));
     assertFalse(f.contains(9));
@@ -146,7 +145,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     IntSet tmp = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
     f = IntSetUtil.diff(b, tmp, factory);
-    Trace.println(f);
+    System.err.println(f);
     assertFalse(f.sameValue(b));
     assertTrue(f.isSubset(b));
     assertFalse(f.contains(51));
@@ -158,7 +157,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     tmp = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63,100}");
     f = IntSetUtil.diff(b, tmp, factory);
-    Trace.println(f);
+    System.err.println(f);
     assertFalse(f.sameValue(b));
     assertTrue(f.isSubset(b));
     assertFalse(f.contains(51));
@@ -250,7 +249,7 @@ public class PrimitivesTest extends WalaTestCase {
     assertFalse(a.sameValue(c));
 
     a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
-    Trace.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
+    System.err.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
     // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
     assertTrue(a.sameValue(a));
@@ -285,14 +284,14 @@ public class PrimitivesTest extends WalaTestCase {
       for (int xx = 0; xx < 50; xx++, idx++) {
         temp2.add(idx);
       }
-      Trace.println(temp2);
+      System.err.println(temp2);
     }
 
     for (int idx = 3000; idx < 3200;) {
       for (int xx = 0; xx < 50; xx++, idx++) {
         temp2.add(idx);
       }
-      Trace.println(temp2);
+      System.err.println(temp2);
     }
 
     temp2 = factory.make();
@@ -302,12 +301,12 @@ public class PrimitivesTest extends WalaTestCase {
       for (int xx = 0; xx < 50; xx++, idx++) {
         temp2.add(idx);
       }
-      Trace.println(temp2);
+      System.err.println(temp2);
     }
 
     for (int idx = 0; idx < 25; idx++) {
       temp2.add(idx);
-      Trace.println(temp2);
+      System.err.println(temp2);
     }
 
   }
@@ -357,21 +356,21 @@ public class PrimitivesTest extends WalaTestCase {
     MutableLongSet y = factory.make(new long[] { 7, 7, 7, 2, 7, 1 });
     MutableLongSet z = factory.parse("{ 9 }");
 
-    Trace.println(w); // { }
-    Trace.println(x); // { 2 4 7 }
-    Trace.println(y); // { 1 2 7 }
-    Trace.println(z); // { 9 }
+    System.err.println(w); // { }
+    System.err.println(x); // { 2 4 7 }
+    System.err.println(y); // { 1 2 7 }
+    System.err.println(z); // { 9 }
 
     MutableLongSet temp = factory.makeCopy(x);
     temp.intersectWith(y);
-    Trace.println(temp); // { 2 7 }
+    System.err.println(temp); // { 2 7 }
     temp.copySet(x);
     temp.addAll(y);
-    Trace.println(temp); // { 1 2 4 7 }
+    System.err.println(temp); // { 1 2 4 7 }
     temp.copySet(x);
-    Trace.println(LongSetUtil.diff(x, y, factory)); // { 4 }
-    Trace.println(LongSetUtil.diff(v, z, factory)); // { 17 }
-    Trace.println(LongSetUtil.diff(z, v, factory)); // { }
+    System.err.println(LongSetUtil.diff(x, y, factory)); // { 4 }
+    System.err.println(LongSetUtil.diff(v, z, factory)); // { 17 }
+    System.err.println(LongSetUtil.diff(z, v, factory)); // { }
 
     // assertTrue(x.union(z).intersection(y.union(z)).equals(x.intersection(y).union(z)));
     MutableLongSet temp1 = factory.makeCopy(x);
@@ -393,16 +392,16 @@ public class PrimitivesTest extends WalaTestCase {
     assertTrue(z.isSubset(v));
     temp = factory.make();
     temp.add(4);
-    Trace.println(temp); // { 4 }
+    System.err.println(temp); // { 4 }
     temp.add(7);
-    Trace.println(temp); // { 4 7 }
+    System.err.println(temp); // { 4 7 }
     temp.add(2);
-    Trace.println(temp); // { 2 4 7 }
-    Trace.println(x); // { 2 4 7 }
+    System.err.println(temp); // { 2 4 7 }
+    System.err.println(x); // { 2 4 7 }
     assertTrue(temp.sameValue(x));
 
     MutableLongSet a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
-    Trace.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
+    System.err.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
     // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
     assertTrue(a.sameValue(a));
@@ -416,7 +415,7 @@ public class PrimitivesTest extends WalaTestCase {
     assertTrue(a.isSubset(b));
 
     LongSet f = LongSetUtil.diff(b, factory.parse("{7,8,9}"), factory);
-    Trace.println(f);
+    System.err.println(f);
     assertFalse(f.contains(7));
     assertFalse(f.contains(8));
     assertFalse(f.contains(9));
@@ -425,7 +424,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     LongSet tmp = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63}");
     f = LongSetUtil.diff(b, tmp, factory);
-    Trace.println(f);
+    System.err.println(f);
     assertFalse(f.sameValue(b));
     assertTrue(f.isSubset(b));
     assertFalse(f.contains(51));
@@ -437,7 +436,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     tmp = factory.parse("{2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,51,53,55,57,59,61,63,100}");
     f = LongSetUtil.diff(b, tmp, factory);
-    Trace.println(f);
+    System.err.println(f);
     assertFalse(f.sameValue(b));
     assertTrue(f.isSubset(b));
     assertFalse(f.contains(51));
@@ -529,7 +528,7 @@ public class PrimitivesTest extends WalaTestCase {
     assertFalse(a.sameValue(c));
 
     a = factory.parse("{1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59}");
-    Trace.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
+    System.err.println(a); // { 1 3 5 7 9 11 13 15 17 19 21 23 25 27 29 31 33
     // 35
     // 37 39 41 43 45 47 49 51 53 55 57 59 }
     assertTrue(a.sameValue(a));
@@ -564,14 +563,14 @@ public class PrimitivesTest extends WalaTestCase {
       for (int xx = 0; xx < 50; xx++, idx++) {
         temp2.add(idx);
       }
-      Trace.println(temp2);
+      System.err.println(temp2);
     }
 
     for (int idx = 3000; idx < 3200;) {
       for (int xx = 0; xx < 50; xx++, idx++) {
         temp2.add(idx);
       }
-      Trace.println(temp2);
+      System.err.println(temp2);
     }
 
     temp2 = factory.make();
@@ -581,12 +580,12 @@ public class PrimitivesTest extends WalaTestCase {
       for (int xx = 0; xx < 50; xx++, idx++) {
         temp2.add(idx);
       }
-      Trace.println(temp2);
+      System.err.println(temp2);
     }
 
     for (int idx = 0; idx < 25; idx++) {
       temp2.add(idx);
-      Trace.println(temp2);
+      System.err.println(temp2);
     }
 
   }
@@ -668,7 +667,7 @@ public class PrimitivesTest extends WalaTestCase {
     List<Integer> p = pf.find();
 
     // path should be 8, 6, 4, 2, 0
-    Trace.println("Path is " + p);
+    System.err.println("Path is " + p);
     for (int i = 0; i < p.size(); i++) {
       assertTrue((p.get(i)).intValue() == new int[] { 8, 6, 4, 2, 0 }[i]);
     }
@@ -790,7 +789,7 @@ public class PrimitivesTest extends WalaTestCase {
     R.add(5, 1);
     int count = 0;
     for (Iterator<IntPair> it = R.iterator(); it.hasNext();) {
-      Trace.println(it.next());
+      System.err.println(it.next());
       count++;
     }
     assertTrue(count == 5);
@@ -936,7 +935,7 @@ public class PrimitivesTest extends WalaTestCase {
       }
     }
 
-    Trace.println(bv);
+    System.err.println(bv);
   }
 
   public void testBitVectors() {
@@ -976,7 +975,7 @@ public class PrimitivesTest extends WalaTestCase {
 
     v1.or(v2);
 
-    Trace.println("v1 = " + v1 + ", v2 = " + v2);
+    System.err.println("v1 = " + v1 + ", v2 = " + v2);
     assertFalse("v1 = " + v1 + ", v2 = " + v2, v1.intersectionEmpty(v2));
     assertFalse("v1 = " + v1 + ", v2 = " + v2, v2.intersectionEmpty(v1));
     assertTrue("v1.max() is " + v1.max(), v1.max() == 202);
@@ -1050,7 +1049,7 @@ public class PrimitivesTest extends WalaTestCase {
     v2.set(101);
     v2.set(102);
 
-    Trace.println("v1 = " + v1 + ", v2 = " + v2);
+    System.err.println("v1 = " + v1 + ", v2 = " + v2);
     v1.andNot(v2);
 
     {
@@ -1077,7 +1076,7 @@ public class PrimitivesTest extends WalaTestCase {
     v2.set(104);
     v2.set(206);
 
-    Trace.println("v1 = " + v1 + ", v2 = " + v2);
+    System.err.println("v1 = " + v1 + ", v2 = " + v2);
     v1.xor(v2);
 
     {
@@ -1093,7 +1092,7 @@ public class PrimitivesTest extends WalaTestCase {
     v2.set(103);
     v2.set(105);
 
-    Trace.println("v1 = " + v1 + ", v2 = " + v2);
+    System.err.println("v1 = " + v1 + ", v2 = " + v2);
     assertTrue(v1.isSubset(v2));
 
     v2.clearAll();
@@ -1285,7 +1284,7 @@ public class PrimitivesTest extends WalaTestCase {
 
   public void testSpecificBugsInOffsetBitVectors() {
     OffsetBitVector v1 = makeBigTestOffsetVector();
-    Trace.println(v1);
+    System.err.println(v1);
 
     OffsetBitVector v2 = new OffsetBitVector(50000128, 512);
     v2.set(50000137);
@@ -1296,15 +1295,15 @@ public class PrimitivesTest extends WalaTestCase {
     v2.set(50000450);
     v2.set(50000455);
     v2.set(50000471);
-    Trace.println(v2);
+    System.err.println(v2);
 
     v1.andNot(v2);
-    Trace.println(v1);
+    System.err.println(v1);
     assertTrue(v1.intersectionEmpty(v2));
 
     v1 = makeBigTestOffsetVector();
     v1.and(v2);
-    Trace.println(v1);
+    System.err.println(v1);
     assertTrue(v1.sameBits(v2));
     assertTrue(v1.isSubset(v2));
     assertTrue(v2.isSubset(v1));

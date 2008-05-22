@@ -52,7 +52,7 @@ public class ClassConstantTest extends WalaTestCase {
     Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, TestConstants.CLASSCONSTANT_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
     CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope, false);
-    Trace.println("\nCall graph:");
+    System.out.println("\nCall graph:");
     Trace.println(cg);
 
     // make sure the main method is reached

@@ -22,7 +22,6 @@ import com.ibm.wala.ipa.callgraph.Entrypoint;
 import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.util.config.AnalysisScopeReader;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.io.FileProvider;
 import com.ibm.wala.util.perf.StopwatchGC;
 
@@ -57,7 +56,7 @@ public class CallGraphTestUtil {
     CallGraph cg = builder.makeCallGraph(options, null);
 
     S.stop();
-    Trace.println(S.report());
+    System.err.println(S.report());
     return cg;
   }
 
@@ -73,7 +72,7 @@ public class CallGraphTestUtil {
     }
 
     S.stop();
-    Trace.println(S.report());
+    System.err.println(S.report());
     return cg;
   }
 
@@ -86,7 +85,7 @@ public class CallGraphTestUtil {
     CallGraph cg = builder.makeCallGraph(options, null);
 
     S.stop();
-    Trace.println(S.report());
+    System.err.println(S.report());
     return cg;
   }
 
@@ -102,7 +101,7 @@ public class CallGraphTestUtil {
     }
 
     S.stop();
-    Trace.println(S.report());
+    System.err.println(S.report());
     return cg;
   }
 
@@ -115,7 +114,7 @@ public class CallGraphTestUtil {
     CallGraph cg = builder.makeCallGraph(options, null);
 
     S.stop();
-    Trace.println(S.report());
+    System.err.println(S.report());
     return cg;
   }
 
@@ -128,7 +127,7 @@ public class CallGraphTestUtil {
     CallGraph cg = builder.makeCallGraph(options, null);
 
     S.stop();
-    Trace.println(S.report());
+    System.err.println(S.report());
     return cg;
   }
 

@@ -43,7 +43,7 @@ import com.ibm.wala.util.debug.Trace;
  */
 public class PABasedMemoryAccessMap implements MemoryAccessMap {
 
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   private final PointerAnalysis pa;
 

@@ -13,7 +13,6 @@ package com.ibm.wala.core.tests.util;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.heapTrace.HeapTracer;
 import com.ibm.wala.util.warnings.Warnings;
 
@@ -35,28 +34,17 @@ public abstract class WalaTestCase extends TestCase {
     }
   }
 
-  private String baseTraceFile;
-
   /*
    * @see junit.framework.TestCase#setUp()
    */
   protected void setUp() throws Exception {
-    baseTraceFile = Trace.getTraceFile();
-    if (baseTraceFile != null) {
-      Trace.setTraceFile(baseTraceFile + "." + getName());
-    }
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see junit.framework.TestCase#tearDown()
    */
   protected void tearDown() throws Exception {
     Warnings.clear();
-    if (baseTraceFile != null) {
-      Trace.setTraceFile(baseTraceFile);
-    }
     if (ANALYZE_LEAKS) {
       HeapTracer.analyzeLeaks();
     }
@@ -86,13 +74,13 @@ public abstract class WalaTestCase extends TestCase {
 
   protected static void assertBound(String tag, double quantity, double bound) {
     String msg = tag + ", quantity: " + quantity + ", bound:" + bound;
-    Trace.println(msg);
+    System.err.println(msg);
     assertTrue(msg, quantity <= bound);
   }
 
   protected static void assertBound(String tag, int quantity, int bound) {
     String msg = tag + ", quantity: " + quantity + ", bound:" + bound;
-    Trace.println(msg);
+    System.err.println(msg);
     assertTrue(msg, quantity <= bound);
   }
 

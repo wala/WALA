@@ -189,10 +189,6 @@ public abstract class AbstractFixedPointSolver<T extends IVariable> implements I
       }
       workList.insertStatement(s);
     }
-    Trace.println("BEGIN VERBOSE ACTION");
-    Trace.println("Evaluated " + nEvaluated);
-    Trace.println("Created   " + nCreated);
-    Trace.println("Worklist  " + workList.size());
   }
 
   public static String lineBreak(String string, int wrap) {
