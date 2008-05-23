@@ -222,6 +222,14 @@ public final class TypeReference {
 
   public final static TypeReference JavaLangString = findOrCreate(ClassLoaderReference.Primordial, JavaLangStringName);
 
+  private final static TypeName JavaLangStringBufferName = TypeName.string2TypeName("Ljava/lang/StringBuffer");
+
+  public final static TypeReference JavaLangStringBuffer = findOrCreate(ClassLoaderReference.Primordial, JavaLangStringBufferName);
+
+  private final static TypeName JavaLangStringBuilderName = TypeName.string2TypeName("Ljava/lang/StringBuilder");
+
+  public final static TypeReference JavaLangStringBuilder = findOrCreate(ClassLoaderReference.Primordial, JavaLangStringBuilderName);
+
   private final static TypeName JavaLangThreadName = TypeName.string2TypeName("Ljava/lang/Thread");
 
   public final static TypeReference JavaLangThread = findOrCreate(ClassLoaderReference.Primordial, JavaLangThreadName);
