@@ -23,24 +23,20 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
+import org.eclipse.core.runtime.Plugin;
+
 import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
-import com.ibm.wala.core.tests.callGraph.CallGraphTestUtil;
 import com.ibm.wala.core.tests.slicer.SlicerTest;
 import com.ibm.wala.eclipse.util.CancelException;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
-import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.ipa.callgraph.Entrypoint;
-import com.ibm.wala.ipa.callgraph.impl.Util;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
-import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ipa.slicer.SDG;
 import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
@@ -58,21 +54,16 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.strings.Atom;
 
-public class JavaIRTests extends IRTests {
+public abstract class JavaIRTests extends IRTests {
+   
+  public JavaIRTests(String name, String projectName)  {
+    super(name, projectName);
+  }
+  
   public JavaIRTests(String name) {
-    super(name);
+    this(name, null);
   }
-
-  protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
-    JavaSourceAnalysisEngine engine = new JavaSourceAnalysisEngine() {
-      protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
-        return Util.makeMainEntrypoints(EclipseProjectPath.SOURCE_REF, cha, mainClassDescriptors);
-      }
-    };
-    engine.setExclusionsFile(CallGraphTestUtil.REGRESSION_EXCLUSIONS);
-    return engine;
-  }
-
+ 
   protected String singleInputForTest() {
     return getName().substring(4) + ".java";
   }

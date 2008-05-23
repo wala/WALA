@@ -16,6 +16,7 @@ import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
 import com.ibm.wala.cast.java.examples.ast.SynchronizedBlockDuplicator;
 import com.ibm.wala.cast.java.translator.polyglot.IRTranslatorExtension;
 import com.ibm.wala.cast.java.translator.polyglot.JavaIRTranslatorExtension;
+import com.ibm.wala.cast.java.translator.polyglot.PolyglotJavaSourceAnalysisEngine;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.impl.CAstRewriter;
 import com.ibm.wala.cast.tree.impl.CAstRewriterFactory;
@@ -36,7 +37,7 @@ import com.ibm.wala.util.strings.Atom;
 public class SyncDuplicatorTest extends IRTests {
 
   public SyncDuplicatorTest() {
-    super("SyncDuplicatorTest");
+    super("SyncDuplicatorTest", null);
   }
 
   private final static CallSiteReference testMethod = CallSiteReference.make(0, MethodReference.findOrCreate(TypeReference
@@ -44,7 +45,7 @@ public class SyncDuplicatorTest extends IRTests {
       Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)Z")), IInvokeInstruction.Dispatch.STATIC);
 
   protected JavaSourceAnalysisEngine getAnalysisEngine(final String[] mainClassDescriptors) {
-    JavaSourceAnalysisEngine engine = new JavaSourceAnalysisEngine() {
+    JavaSourceAnalysisEngine engine = new PolyglotJavaSourceAnalysisEngine() {
       protected Iterable<Entrypoint> makeDefaultEntrypoints(AnalysisScope scope, IClassHierarchy cha) {
         return Util.makeMainEntrypoints(EclipseProjectPath.SOURCE_REF, cha, mainClassDescriptors);
       }

@@ -15,6 +15,7 @@ package com.ibm.wala.cast.java.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,9 +26,20 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarFile;
 
+import org.eclipse.core.internal.resources.Resource;
+import org.eclipse.core.internal.resources.Workspace;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Plugin;
+import org.eclipse.jdt.core.IJavaProject;
+
 import junit.framework.Assert;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
+import com.ibm.wala.cast.java.translator.jdt.EclipseSourceFileModule;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
@@ -35,6 +47,7 @@ import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.core.tests.util.WalaTestCase;
+import com.ibm.wala.eclipse.tests.EclipseTestUtil;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -55,9 +68,12 @@ import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.WalaException;
 
 public abstract class IRTests extends WalaTestCase {
-  public IRTests(String name) {
+  public IRTests(String name, String projectName) {
     super(name);
+    this.projectName = projectName;
   }
+
+  protected final String projectName;
 
   protected static String javaHomePath;
 
@@ -372,8 +388,11 @@ public abstract class IRTests extends WalaTestCase {
     return null;
   }
 
-  protected void populateScope(JavaSourceAnalysisEngine engine, Collection<String> sources, List<String> libs) throws IOException {
-
+  protected void populateScope(JavaSourceAnalysisEngine engine, 
+      Collection<String> sources, 
+      List<String> libs) 
+    throws IOException 
+  {
     boolean foundLib = false;
     for (String lib : libs) {
       File libFile = new File(lib);
@@ -384,14 +403,32 @@ public abstract class IRTests extends WalaTestCase {
     }
     Assertions._assert(foundLib, "couldn't find library file from " + libs);
 
+     IWorkspace w = null;
+     IJavaProject project = null;
+     try {
+       if (projectName != null) {
+         w = ResourcesPlugin.getWorkspace();
+         project = EclipseTestUtil.getNamedProject(projectName);
+       }
+     } catch (IllegalStateException e) {
+      // use Workspace only if it exists
+    }
+    
     for (String srcFilePath : sources) {
-      String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
-      File f = new File(srcFilePath);
-      Assert.assertTrue(f.exists());
-      if (f.isDirectory()) {
-        engine.addSourceModule(new SourceDirectoryTreeModule(f));
+
+      if (w != null) {
+        IFile file = project.getProject().getFile(srcFilePath);
+        engine.addSourceModule(new EclipseSourceFileModule(file));
+        
       } else {
-        engine.addSourceModule(new SourceFileModule(f, srcFileName));
+        String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
+        File f = new File(srcFilePath);
+        Assert.assertTrue(f.exists());
+        if (f.isDirectory()) {
+          engine.addSourceModule(new SourceDirectoryTreeModule(f));
+        } else {
+          engine.addSourceModule(new SourceFileModule(f, srcFileName));
+        }
       }
     }
   }
