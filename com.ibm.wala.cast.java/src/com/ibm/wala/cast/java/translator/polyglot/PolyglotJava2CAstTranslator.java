@@ -2210,7 +2210,7 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
   }
 
-  private class BreakContext extends DelegatingContext {
+  public class BreakContext extends DelegatingContext {
     protected final String label;
 
     private final Node breakTo;
