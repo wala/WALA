@@ -158,3 +158,5 @@ transverse
 rotting
 cfg
 wala
+nuke
+pointwise
