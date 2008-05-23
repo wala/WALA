@@ -63,9 +63,11 @@ public class AnalysisScopeReader {
         String entryPathname = toks.nextToken();
         if ("classFile".equals(entryType)) {
           File cf = FileProvider.getFile(entryPathname, javaLoader);
+          assert cf != null && cf.exists();
           scope.addClassFileToScope(walaLoader, cf);
         } else if ("sourceFile".equals(entryType)) {
           File sf = FileProvider.getFile(entryPathname, javaLoader);
+          assert sf != null && sf.exists();
           scope.addSourceFileToScope(walaLoader, sf, entryPathname);
         } else if ("binaryDir".equals(entryType)) {
           File bd = FileProvider.getFile(entryPathname, javaLoader);
@@ -95,6 +97,7 @@ public class AnalysisScopeReader {
       }
 
     } catch (IOException e) {
+      e.printStackTrace();
       Assertions.UNREACHABLE(e.toString());
     }
 

@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,8 +40,11 @@ public class FileOfClasses extends SetOfClasses {
   private boolean needsCompile = false;
 
   public FileOfClasses(File textFile) throws IOException {
-
-    BufferedReader is = new BufferedReader(new InputStreamReader(new FileInputStream(textFile)));
+    this(new FileInputStream(textFile));
+  }
+  
+  public FileOfClasses(InputStream input) throws IOException {
+    BufferedReader is = new BufferedReader(new InputStreamReader(input));
 
     StringBuffer regex = null;
     String line;
