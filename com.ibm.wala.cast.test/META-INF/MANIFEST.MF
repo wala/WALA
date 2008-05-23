@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Java Plug-in
+Bundle-Name: CAst Test Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast.test
 Bundle-Version: 1.0.0
 Bundle-Vendor: IBM
@@ -8,7 +8,7 @@ Require-Bundle:
  com.ibm.wala.core.tests,
  com.ibm.wala.cast,
  com.ibm.wala.core,
- org.junit
-Eclipse-LazyStart: true
+ org.junit4
+Eclipse-LazyStart: false
 Export-Package: com.ibm.wala.cast.test
 
