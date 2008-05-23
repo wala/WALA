@@ -165,8 +165,7 @@ public abstract class Launcher {
   }
 
   /**
-   * A thread that runs in a loop, performing the drain() action until a process
-   * terminates
+   * A thread that runs in a loop, performing the drain() action until a process terminates
    */
   abstract class Drainer extends Thread {
 
@@ -218,18 +217,28 @@ public abstract class Launcher {
   }
 
   private void drainAndPrint(BufferedInputStream s, PrintStream p) throws IOException {
-    while (s.available() > 0) {
-      byte[] data = new byte[s.available()];
-      s.read(data);
-      p.print(new String(data));
+    try {
+      while (s.available() > 0) {
+        byte[] data = new byte[s.available()];
+        s.read(data);
+        p.print(new String(data));
+      }
+    } catch (IOException e) {
+      // assume the stream has been closed (e.g. the process died)
+      // so, just exit
     }
   }
 
   private void drainAndCatch(BufferedInputStream s, ByteArrayOutputStream b) throws IOException {
-    while (s.available() > 0) {
-      byte[] data = new byte[s.available()];
-      int nRead = s.read(data);
-      b.write(data, 0, nRead);
+    try {
+      while (s.available() > 0) {
+        byte[] data = new byte[s.available()];
+        int nRead = s.read(data);
+        b.write(data, 0, nRead);
+      }
+    } catch (IOException e) {
+      // assume the stream has been closed (e.g. the process died)
+      // so, just exit
     }
   }
 
