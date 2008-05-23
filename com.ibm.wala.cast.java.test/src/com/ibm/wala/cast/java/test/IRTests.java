@@ -39,7 +39,7 @@ import org.eclipse.jdt.core.IJavaProject;
 import junit.framework.Assert;
 
 import com.ibm.wala.cast.java.client.JavaSourceAnalysisEngine;
-import com.ibm.wala.cast.java.translator.jdt.EclipseSourceFileModule;
+import com.ibm.wala.classLoader.EclipseSourceFileModule;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
