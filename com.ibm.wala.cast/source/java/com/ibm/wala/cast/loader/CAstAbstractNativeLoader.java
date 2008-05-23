@@ -70,11 +70,11 @@ public abstract class CAstAbstractNativeLoader extends CAstAbstractLoader {
               topLevelEntities.add(Pair.make(fileEntity, fn));
             }
           } catch (MalformedURLException e) {
-            Trace.println("unpected problems with " + f);
+            Trace.println("unexpected problems (MalformedURLException) with " + f);
             e.printStackTrace(Trace.getTraceStream());
             Assertions.UNREACHABLE();
           } catch (RuntimeException e) {
-            Trace.println("unpected problems with " + f);
+            Trace.println("unexpected problems (RuntimeException) with " + f);
             e.printStackTrace(Trace.getTraceStream());
           }
 
