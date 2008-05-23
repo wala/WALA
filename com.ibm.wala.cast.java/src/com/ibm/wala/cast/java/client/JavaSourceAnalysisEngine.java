@@ -16,9 +16,6 @@ import java.util.Set;
 import com.ibm.wala.cast.ir.ssa.AstIRFactory;
 import com.ibm.wala.cast.java.client.impl.ZeroCFABuilderFactory;
 import com.ibm.wala.cast.java.ipa.callgraph.JavaSourceAnalysisScope;
-import com.ibm.wala.cast.java.translator.polyglot.IRTranslatorExtension;
-import com.ibm.wala.cast.java.translator.polyglot.JavaIRTranslatorExtension;
-import com.ibm.wala.cast.java.translator.polyglot.PolyglotClassLoaderFactory;
 import com.ibm.wala.classLoader.ClassLoaderFactory;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.client.AbstractAnalysisEngine;
@@ -48,7 +45,7 @@ import com.ibm.wala.util.io.FileProvider;
  * @author sfink. refactored to clean up eclipse utilities.
  * 
  */
-public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
+public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
 
   /**
    * Modules which are user-space code
@@ -128,17 +125,11 @@ public class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     return new JavaSourceAnalysisScope();
   }
 
-  public IRTranslatorExtension getTranslatorExtension() {
-    return new JavaIRTranslatorExtension();
-  }
-
-  protected ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions, IRTranslatorExtension extInfo) {
-    return new PolyglotClassLoaderFactory(exclusions, extInfo);
-  }
-
+  protected abstract ClassLoaderFactory getClassLoaderFactory(SetOfClasses exclusions);
+  
   public IClassHierarchy buildClassHierarchy() {
     IClassHierarchy cha = null;
-    ClassLoaderFactory factory = getClassLoaderFactory(scope.getExclusions(), getTranslatorExtension());
+    ClassLoaderFactory factory = getClassLoaderFactory(scope.getExclusions());
 
     try {
       cha = ClassHierarchy.make(getScope(), factory);
