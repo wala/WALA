@@ -38,7 +38,7 @@ public class GetLoadedFields {
   private final static ClassLoader MY_CLASSLOADER = GetLoadedFields.class.getClassLoader();
 
   /**
-   * Use the 'CountParameters' launcher to run this program with the appropriate classpath
+   * Use the 'GetLoadedFields' launcher to run this program with the appropriate classpath
    * @throws InvalidClassFileException
    */
   public static void main(String[] args) throws IOException, ClassHierarchyException, InvalidClassFileException {
