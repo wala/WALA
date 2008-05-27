@@ -14,8 +14,6 @@ import java.io.File;
 
 import org.eclipse.core.resources.IFile;
 
-import com.ibm.wala.util.io.FileSuffixes;
-
 /**
  * 
  * A module which is a wrapper around a .java file
