@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.java.test;
 
 import org.eclipse.core.runtime.Plugin;
-import org.eclipse.ui.IStartup;
 import org.osgi.framework.BundleContext;
 
 /**

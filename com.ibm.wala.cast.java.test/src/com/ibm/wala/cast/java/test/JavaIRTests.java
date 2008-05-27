@@ -23,8 +23,6 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.eclipse.core.runtime.Plugin;
-
 import com.ibm.wala.cast.java.ipa.slicer.AstJavaSlicer;
 import com.ibm.wala.cast.java.loader.JavaSourceLoaderImpl;
 import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
