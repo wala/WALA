@@ -36,7 +36,7 @@ public class ClassFileModule extends FileModule implements Module, ModuleEntry {
     try {
       name = ImmutableByteArray.make(reader.get().getName());
     } catch (InvalidClassFileException e) {
-      // TODO Auto-generated catch block
+      System.err.println("Invalid class file: " + f.getAbsolutePath());
       e.printStackTrace();
       Assertions.UNREACHABLE();
     }
