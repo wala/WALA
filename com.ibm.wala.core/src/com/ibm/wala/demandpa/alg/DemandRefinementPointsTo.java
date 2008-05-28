@@ -117,6 +117,7 @@ import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
@@ -137,6 +138,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
   private static final boolean DEBUG = false;
 
+  private static final boolean DEBUG_TOPLEVEL = false;
+  
   private static final boolean PARANOID = false;
 
   // private static final boolean DEBUG_FULL = DEBUG && false;
@@ -1208,14 +1211,17 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * @param ikToFields either {@link #forwInstKeyToFields} or {@link #backInstKeyToFields}
      */
     private void trackInstanceField(InstanceKeyAndState ikAndState, IField field, MultiMap<InstanceKeyAndState, IField> ikToFields) {
-      State state = ikAndState.getState();
       if (Assertions.verifyAssertions) {
         // Assertions._assert(refineFieldAccesses(field));
       }
       ikToFields.put(ikAndState, field);
+      addPredsOfIKeyAndStateToTrackedPointsTo(ikAndState);
+    }
+
+    private void addPredsOfIKeyAndStateToTrackedPointsTo(InstanceKeyAndState ikAndState) throws UnimplementedError {
       for (Iterator<? extends Object> iter = g.getPredNodes(ikAndState.getInstanceKey(), NewLabel.v()); iter.hasNext();) {
         PointerKey ikPred = (PointerKey) iter.next();
-        PointerKeyAndState ikPredAndState = new PointerKeyAndState(ikPred, state);
+        PointerKeyAndState ikPredAndState = new PointerKeyAndState(ikPred, ikAndState.getState());
         int mappedIndex = ikAndStates.getMappedIndex(ikAndState);
         if (Assertions.verifyAssertions) {
           Assertions._assert(mappedIndex != -1);
@@ -1843,6 +1849,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
       private Collection<IMethod> getOTFTargets(CallSiteAndCGNode callSiteAndCGNode, SSAAbstractInvokeInstruction[] callInstrs,
           State callerState) {
+        if (DEBUG_TOPLEVEL) {
+          System.err.println("toplevel refining call site " + callSiteAndCGNode);
+        }
         final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
         final CGNode caller = callSiteAndCGNode.getCGNode();
         Collection<IMethod> result = HashSetFactory.make();
@@ -1998,12 +2007,18 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         return ptoComputer.makeOrdinalSet(ptoComputer.pkToP2Set.get(pointerKeyAndState));
       }
 
-      private void computeFlowsTo(PointsToComputer ptoComputer, OrdinalSet<InstanceKeyAndState> basePToSet, IField field) {
+      private void computeFlowsTo(PointsToComputer ptoComputer, OrdinalSet<InstanceKeyAndState> basePToSet) {
         // track appropriate field of instance key
+        // BUG: we don't want to do it this way; otherwise, points-to computer starts tracking from putfield sinks
+        // on its own
+        // instead, we want to add directly to tracked points-to worklist
         for (InstanceKeyAndState ikAndState : basePToSet) {
-          ptoComputer.trackInstanceField(ikAndState, field, ptoComputer.forwInstKeyToFields);
+          //ptoComputer.trackInstanceField(ikAndState, field, ptoComputer.forwInstKeyToFields);
+          ptoComputer.addPredsOfIKeyAndStateToTrackedPointsTo(ikAndState);
         }
         // run worklist loop
+        assert ptoComputer.initWorklist.isEmpty(); 
+        assert ptoComputer.pointsToWorklist.isEmpty();
         ptoComputer.worklistLoop();
       }
 
@@ -2033,7 +2048,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       final PointerKey curPk = curPkAndState.getPointerKey();
       final State curState = curPkAndState.getState();
       // if predicate holds for pre-computed points-to set of curPk, we are done
+      if (DEBUG_TOPLEVEL) {
+        System.err.println("toplevel pkAndState " + curPkAndState);
+      }
       if (predHoldsForPk(curPk, pred, pa)) {
+        if (DEBUG_TOPLEVEL) {
+          System.err.println("predicate holds");
+        }
         continue;
       }
       // otherwise, traverse new, assign, assign global, param, return, match edges
@@ -2046,8 +2067,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           // TODO Auto-generated method stub
 
           final InstanceKey ik = (InstanceKey) dst;
-          if (DEBUG) {
-            System.err.println("alloc " + ik + " assigned to " + curPk);
+          if (DEBUG_TOPLEVEL) {
+            System.err.println("toplevel alloc " + ik + " assigned to " + curPk);
           }
           doTransition(curState, label, new Function<State, Object>() {
 
@@ -2067,11 +2088,20 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           IField field = (label).getField();
           PointerKey loadBase = (PointerKey) dst;
           if (refineFieldAccesses(field, loadBase, curPk, label, curState)) {
+            if (DEBUG_TOPLEVEL) {
+              System.err.println("toplevel refining for read of " + field);
+            }
             // find points-to set of base pointer
             OrdinalSet<InstanceKeyAndState> basePToSet = h.getPToSetFromComputer(ptoComputer, new PointerKeyAndState(loadBase,
                 curState));
+            if (DEBUG_TOPLEVEL) {
+              System.err.println("toplevel base pointer p2set " + basePToSet);
+            }
             // find "flows-to sets" of pointed-to instance keys
-            h.computeFlowsTo(ptoComputer, basePToSet, field);
+            h.computeFlowsTo(ptoComputer, basePToSet);
+            if (DEBUG_TOPLEVEL) {
+              System.err.println("toplevel finished computing flows to");
+            }
             // for each putfield base pointer, if flowed-to, then propagate written pointer key
             for (MemoryAccess fieldWrite : mam.getFieldWrites(convertToHeapModel(loadBase, mam.getHeapModel()), field)) {
               IR ir = fieldWrite.getNode().getIR();
@@ -2083,6 +2113,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               PointerKey writtenPk = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getVal());
               Collection<State> reachedFlowStates = h.getFlowedToStates(ptoComputer, basePToSet, putfieldBase);
               for (State nextState : reachedFlowStates) {
+                System.err.println("toplevel alias with base of " + s);
                 h.propagate(new PointerKeyAndState(writtenPk, nextState));
               }
             }
@@ -2121,7 +2152,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
         @Override
         public void visitAssign(AssignLabel label, Object dst) {
-          final PointerKey succPk = (PointerKey) dst;
+          final PointerKey succPk = (PointerKey) dst;          
           doTransition(curState, label, new Function<State, Object>() {
 
             public Object apply(State nextState) {
