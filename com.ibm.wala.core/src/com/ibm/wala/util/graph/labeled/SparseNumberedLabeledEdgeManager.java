@@ -23,14 +23,14 @@
  * the following two paragraphs are included in any distribution of
  * Refinement Analysis Tools or its derivative work, Regents agrees
  * not to assert any of Regents' copyright rights in Refinement
- * Analysis Tools against recipient for recipient’s reproduction,
+ * Analysis Tools against recipient for recipient's reproduction,
  * preparation of derivative works, public display, public
  * performance, distribution or sublicensing of Refinement Analysis
  * Tools and derivative works, in source code and object code form.
  * This agreement not to assert does not confer, by implication,
  * estoppel, or otherwise any license or rights in any intellectual
  * property of Regents, including, but not limited to, any patents
- * of Regents or Regents’ employees.
+ * of Regents or Regents' employees.
  * 
  * IN NO EVENT SHALL REGENTS BE LIABLE TO ANY PARTY FOR DIRECT,
  * INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES,
