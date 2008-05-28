@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jdt.core.IJavaModel;
 import org.eclipse.jdt.core.IJavaProject;
@@ -38,110 +37,108 @@ import org.osgi.framework.Bundle;
 
 public class EclipseTestUtil {
 
-	public static void importZippedProject(Plugin plugin, String zipFileName) {
-		ZipFile zipFile = getZipFile(plugin, zipFileName);
-		ZipFileStructureProvider zp = new ZipFileStructureProvider(zipFile);
-		List children = zp.getChildren(zp.getRoot());
-		Object element = children.get(0);
-		String projectName = zp.getLabel(element);
-		createOpenProject(projectName);
-		importZipfile(zipFile,zp);
-	}
-	
-	public static void createOpenProject(String projectName) {
-		IWorkspaceRoot root = getWorkspace();
-		IProject project = root.getProject(projectName);
-		try {
-			project.create(null);
-			project.open(null);
-		} catch (CoreException e) {
-			e.printStackTrace();
-		}
-	}
+  @SuppressWarnings("unchecked")
+  public static void importZippedProject(Plugin plugin, String zipFileName) {
+    ZipFile zipFile = getZipFile(plugin, zipFileName);
+    ZipFileStructureProvider zp = new ZipFileStructureProvider(zipFile);
+    List children = zp.getChildren(zp.getRoot());
+    Object element = children.get(0);
+    String projectName = zp.getLabel(element);
+    createOpenProject(projectName);
+    importZipfile(zipFile, zp);
+  }
 
-	   public static void destroyProject(String projectName) {
-	        IWorkspaceRoot root = getWorkspace();
-	        IProject project = root.getProject(projectName);
-	        try {
-	            project.delete(true, null);
-	        } catch (CoreException e) {
-	            e.printStackTrace();
-	        }
-	    }
+  public static void createOpenProject(String projectName) {
+    IWorkspaceRoot root = getWorkspace();
+    IProject project = root.getProject(projectName);
+    try {
+      project.create(null);
+      project.open(null);
+    } catch (CoreException e) {
+      e.printStackTrace();
+    }
+  }
 
-	protected static void importZipfile(ZipFile sourceZip, ZipFileStructureProvider provider) {
-		IPath containerPath = getWorkspacePath();
+  public static void destroyProject(String projectName) {
+    IWorkspaceRoot root = getWorkspace();
+    IProject project = root.getProject(projectName);
+    try {
+      project.delete(true, null);
+    } catch (CoreException e) {
+      e.printStackTrace();
+    }
+  }
 
-		ImportOperation importOp = new ImportOperation(containerPath,provider.getRoot(), provider,
-					new IOverwriteQuery() {
-						public String queryOverwrite(String pathString) {
-							return IOverwriteQuery.ALL;
-					}
-				}
-			);
-		
-		importOp.setCreateContainerStructure(true);
-		importOp.setOverwriteResources(true);
-		try {
-			importOp.run(new NullProgressMonitor());
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			sourceZip.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+  protected static void importZipfile(ZipFile sourceZip, ZipFileStructureProvider provider) {
+    IPath containerPath = getWorkspacePath();
 
-	
-	public static File getTestDataFile(Plugin plugin, String filename) {
-		Bundle bundle = plugin.getBundle();
-		IPath path = new Path("testdata").append(filename);
-		
-		URL url = FileLocator.find(bundle, path, null);
-		assert url != null;
-		try {
-			URL fileURL = FileLocator.toFileURL(url);
-			File file = new File(fileURL.getPath());
-			return file;
-		} catch (IOException e) {
-			reportException(e);
-		}
-		
-		return null;
-	}
-	
-	public static ZipFile getZipFile(Plugin plugin, String testArchive) {
-		File file = getTestDataFile(plugin, testArchive);
-		if(file != null) {
-			try {
-				return new ZipFile(file);
-			} catch (ZipException e) {
-				reportException(e);
-			} catch (IOException e) {
-				reportException(e);
-			}
-		}
-		
-		return null;
-	}
-	
-	public static IWorkspaceRoot getWorkspace() {
-		return ResourcesPlugin.getWorkspace().getRoot();
-	}
+    ImportOperation importOp = new ImportOperation(containerPath, provider.getRoot(), provider, new IOverwriteQuery() {
+      public String queryOverwrite(String pathString) {
+        return IOverwriteQuery.ALL;
+      }
+    });
 
-	private static IPath getWorkspacePath() {
-		return ResourcesPlugin.getWorkspace().getRoot().getFullPath();
-	}
-	
-	private static void reportException(Exception e) {
-		// TODO: add to appropriate error log?  Report differently ??
-		e.printStackTrace();
-	}
+    importOp.setCreateContainerStructure(true);
+    importOp.setOverwriteResources(true);
+    try {
+      importOp.run(new NullProgressMonitor());
+    } catch (InvocationTargetException e) {
+      e.printStackTrace();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+
+    try {
+      sourceZip.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static File getTestDataFile(Plugin plugin, String filename) {
+    Bundle bundle = plugin.getBundle();
+    IPath path = new Path("testdata").append(filename);
+
+    URL url = FileLocator.find(bundle, path, null);
+    assert url != null;
+    try {
+      URL fileURL = FileLocator.toFileURL(url);
+      File file = new File(fileURL.getPath());
+      return file;
+    } catch (IOException e) {
+      reportException(e);
+    }
+
+    return null;
+  }
+
+  public static ZipFile getZipFile(Plugin plugin, String testArchive) {
+    File file = getTestDataFile(plugin, testArchive);
+    if (file != null) {
+      try {
+        return new ZipFile(file);
+      } catch (ZipException e) {
+        reportException(e);
+      } catch (IOException e) {
+        reportException(e);
+      }
+    }
+
+    return null;
+  }
+
+  public static IWorkspaceRoot getWorkspace() {
+    return ResourcesPlugin.getWorkspace().getRoot();
+  }
+
+  private static IPath getWorkspacePath() {
+    return ResourcesPlugin.getWorkspace().getRoot().getFullPath();
+  }
+
+  private static void reportException(Exception e) {
+    // TODO: add to appropriate error log? Report differently ??
+    e.printStackTrace();
+  }
 
   public static IJavaProject getNamedProject(String projectName) {
     IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
