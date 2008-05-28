@@ -1,5 +1,5 @@
 /**
- * Refinement Analysis Tools is Copyright ©2007 The Regents of the
+ * Refinement Analysis Tools is Copyright (c) 2007 The Regents of the
  * University of California (Regents). Provided that this notice and
  * the following two paragraphs are included in any distribution of
  * Refinement Analysis Tools or its derivative work, Regents agrees
