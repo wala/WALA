@@ -2008,12 +2008,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       }
 
       private void computeFlowsTo(PointsToComputer ptoComputer, OrdinalSet<InstanceKeyAndState> basePToSet) {
-        // track appropriate field of instance key
-        // BUG: we don't want to do it this way; otherwise, points-to computer starts tracking from putfield sinks
-        // on its own
-        // instead, we want to add directly to tracked points-to worklist
         for (InstanceKeyAndState ikAndState : basePToSet) {
-          //ptoComputer.trackInstanceField(ikAndState, field, ptoComputer.forwInstKeyToFields);
           ptoComputer.addPredsOfIKeyAndStateToTrackedPointsTo(ikAndState);
         }
         // run worklist loop
