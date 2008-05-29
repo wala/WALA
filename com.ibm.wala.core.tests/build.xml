@@ -98,7 +98,7 @@
 		<junit fork="yes" errorProperty="test.failed" failureProperty="test.failed">
 			<jvmarg value="-Xmx800M" />
 			<jvmarg value="-ea" />
-			<jvmarg value="-Dcom.ibm.wala.junit.profiler=short" />
+			<jvmarg value="-Dcom.ibm.wala.junit.profile=short" />
 			<classpath>
 				<path refid="@dot.classpath" />
 				<pathelement path="@dot" />
