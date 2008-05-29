@@ -139,7 +139,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   private static final boolean DEBUG = false;
 
   private static final boolean DEBUG_TOPLEVEL = false;
-  
+
   private static final boolean PARANOID = false;
 
   // private static final boolean DEBUG_FULL = DEBUG && false;
@@ -672,11 +672,11 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       boolean added = findOrCreate(p2setMap, pkAndState).addAll(vals);
       // final boolean added = p2setMap.putAll(pkAndState, vals);
       if (DEBUG && added) {
-        // System.err.println("POINTS-TO ADDITION TO PK " + pkAndState + ":");
-        // for (InstanceKeyAndState ikAndState : makeOrdinalSet(vals)) {
-        // System.err.println(ikAndState);
-        // }
-        // System.err.println("*************");
+        System.err.println("POINTS-TO ADDITION TO PK " + pkAndState + ":");
+        for (InstanceKeyAndState ikAndState : makeOrdinalSet(vals)) {
+          System.err.println(ikAndState);
+        }
+        System.err.println("*************");
       }
       return added;
 
@@ -1712,7 +1712,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           // System.err.println("QUERIED: " + queriedPkAndStates);
           // }
           if (!basePointerOkay) {
-            // TEMPORARY --MS
+            // remove this assertion, since we now allow multiple queries --MS
             // Assertions._assert(false, "queried " + loadedValAndState + " but not " + baseAndStateToHandle);
           }
         }
@@ -1725,13 +1725,16 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           // Assertions._assert(startSize == curSize);
           // }
           InstanceFieldKeyAndState ifk = getInstFieldKey(ikAndState, field);
-          // just pass no label assign filter since no type-based filtering can be
-          // done here
-          if (addAllToP2Set(pkToP2Set, loadedValAndState, find(instFieldKeyToP2Set, ifk), AssignLabel.noFilter())) {
-            if (DEBUG) {
-              System.err.println("from load edge " + loadEdge);
+          // make sure we've actually queried the def'd val before adding to its points-to set
+          if (pointsToQueried.get(loadedValAndState.getPointerKey()).contains(loadedValAndState.getState())) {            
+            // just pass no label assign filter since no type-based filtering can be
+            // done here
+            if (addAllToP2Set(pkToP2Set, loadedValAndState, find(instFieldKeyToP2Set, ifk), AssignLabel.noFilter())) {
+              if (DEBUG) {
+                System.err.println("from load edge " + loadEdge);
+              }
+              addToPToWorklist(loadedValAndState);
             }
-            addToPToWorklist(loadedValAndState);
           }
         }
         // }
@@ -2012,7 +2015,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           ptoComputer.addPredsOfIKeyAndStateToTrackedPointsTo(ikAndState);
         }
         // run worklist loop
-        assert ptoComputer.initWorklist.isEmpty(); 
+        assert ptoComputer.initWorklist.isEmpty();
         assert ptoComputer.pointsToWorklist.isEmpty();
         ptoComputer.worklistLoop();
       }
@@ -2034,7 +2037,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     final Helper h = new Helper();
     PointerKeyAndState initPkAndState = new PointerKeyAndState(pk, stateMachine.getStartState());
     if (pk instanceof LocalPointerKey) {
-      g.addSubgraphForNode(((LocalPointerKey)pk).getNode());
+      g.addSubgraphForNode(((LocalPointerKey) pk).getNode());
     }
     h.propagate(initPkAndState);
     while (!worklist.isEmpty()) {
@@ -2108,7 +2111,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               PointerKey writtenPk = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getVal());
               Collection<State> reachedFlowStates = h.getFlowedToStates(ptoComputer, basePToSet, putfieldBase);
               for (State nextState : reachedFlowStates) {
-                System.err.println("toplevel alias with base of " + s);
+                if (DEBUG_TOPLEVEL) {
+                  System.err.println("toplevel alias with base of " + s);
+                }
                 h.propagate(new PointerKeyAndState(writtenPk, nextState));
               }
             }
@@ -2147,7 +2152,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
         @Override
         public void visitAssign(AssignLabel label, Object dst) {
-          final PointerKey succPk = (PointerKey) dst;          
+          final PointerKey succPk = (PointerKey) dst;
           doTransition(curState, label, new Function<State, Object>() {
 
             public Object apply(State nextState) {
@@ -2181,7 +2186,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return true;
   }
 
-  private PointerKey convertToHeapModel(PointerKey curPk, HeapModel heapModel) {    
+  private PointerKey convertToHeapModel(PointerKey curPk, HeapModel heapModel) {
     return AbstractFlowGraph.convertToHeapModel(curPk, heapModel);
   }
 
