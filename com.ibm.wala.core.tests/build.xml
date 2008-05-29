@@ -8,6 +8,8 @@
 	<property name="bundleId" value="com.ibm.wala.core.tests"/>
 	<property name="bundleVersion" value="1.1.3.200805291132"/>
 
+
+
 	<!-- Compiler settings. -->
 	<property name="javacFailOnError" value="true"/>
 	<property name="javacDebugInfo" value="on"/>
@@ -30,39 +32,8 @@
 	<property name="bundleJavacTarget" value="${javacTarget}"/>
 	<property name="bundleBootClasspath" value="${bootclasspath}"/>
 
-	<target name="init" depends="properties">
-		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
-			<isset property="buildTempFolder"/>
-		</condition>
-		<property name="pluginTemp" value="${basedir}"/>
-		<condition property="build.result.folder" value="${pluginTemp}/com.ibm.wala.core.tests_1.1.3.200805291132">
-			<isset property="buildTempFolder"/>
-		</condition>
-		<property name="build.result.folder" value="${basedir}"/>
-		<property name="temp.folder" value="${basedir}/temp.folder"/>
-		<property name="plugin.destination" value="${basedir}"/>
-	</target>
-
-	<target name="properties" if="eclipse.running">
-		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
-
-	</target>
-
-	<target name="build.update.jar" depends="init" description="Build the plug-in: com.ibm.wala.core.tests for an update site.">
-		<delete dir="${temp.folder}"/>
-		<mkdir dir="${temp.folder}"/>
-		<antcall target="build.jars"/>
-		<antcall target="gather.bin.parts">
-			<param name="destination.temp.folder" value="${temp.folder}/"/>
-		</antcall>
-		<jar destfile="${plugin.destination}/com.ibm.wala.core.tests_1.1.3.200805291132.jar" basedir="${temp.folder}/com.ibm.wala.core.tests_1.1.3.200805291132" filesetmanifest="merge"/>
-		<delete dir="${temp.folder}"/>
-	</target>
-
-	<target name="@dot" depends="init" unless="@dot" description="Create jar: com.ibm.wala.core.tests @dot.">
-		<delete dir="${temp.folder}/@dot.bin"/>
-		<mkdir dir="${temp.folder}/@dot.bin"/>
-		<path id="@dot.classpath">
+	<!-- SJF modifications to support junit -->
+	<path id="@dot.classpath">
 			<pathelement path="../com.ibm.wala.core/bin/"/>
 			<pathelement path="../com.ibm.wala.core/@dot"/>
 			<pathelement path="../com.ibm.wala.shrike/bin/"/>
@@ -117,7 +88,66 @@
 			<pathelement path="../../../eclipse/plugins/org.eclipse.update.ui_3.2.100.v20070615.jar"/>
 			<pathelement path="../../../eclipse/plugins/org.eclipse.ui.forms_3.3.0.v20070511.jar"/>
 			<pathelement path="../../../eclipse/plugins/org.eclipse.jface.text_3.3.2.r332_20071017-0800.jar"/>
-		</path>
+	</path>
+
+        <property name="junit.dir" value ="junit-results"/>	
+	
+	<target name="runtests" depends="build.update.jar" description="run junit tests for com.ibm.wala.core.tests">
+   	  <mkdir dir="${junit.dir}"/>
+          <junit fork="yes" errorProperty="test.failed" failureProperty="test.failed">
+	     <jvmarg value="-Xmx800M" />
+	     <jvmarg value="-ea" />
+	     <classpath> 
+		<path refid="@dot.classpath" />
+		<pathelement path="@dot" />
+             </classpath>
+
+	     <batchtest todir="${junit.dir}">
+		<!-- zipfileset src="com.ibm.wala.core.tests_1.1.3.200805291132.jar" -->
+		<fileset dir="@dot">	
+                   <include name="**/*Test*.class"/>
+		</fileset>
+	     </batchtest>
+
+             <formatter type="brief" usefile="false" />
+ 	     <formatter type="xml" />
+          </junit>
+	  <fail message="Tests failed: check test reports." if="test.failed" />
+        </target>
+
+
+	<target name="init" depends="properties">
+		<condition property="pluginTemp" value="${buildTempFolder}/plugins">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="pluginTemp" value="${basedir}"/>
+		<condition property="build.result.folder" value="${pluginTemp}/com.ibm.wala.core.tests_1.1.3.200805291132">
+			<isset property="buildTempFolder"/>
+		</condition>
+		<property name="build.result.folder" value="${basedir}"/>
+		<property name="temp.folder" value="${basedir}/temp.folder"/>
+		<property name="plugin.destination" value="${basedir}"/>
+	</target>
+
+	<target name="properties" if="eclipse.running">
+		<property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+
+	</target>
+
+	<target name="build.update.jar" depends="init" description="Build the plug-in: com.ibm.wala.core.tests for an update site.">
+		<delete dir="${temp.folder}"/>
+		<mkdir dir="${temp.folder}"/>
+		<antcall target="build.jars"/>
+		<antcall target="gather.bin.parts">
+			<param name="destination.temp.folder" value="${temp.folder}/"/>
+		</antcall>
+		<jar destfile="${plugin.destination}/com.ibm.wala.core.tests_1.1.3.200805291132.jar" basedir="${temp.folder}/com.ibm.wala.core.tests_1.1.3.200805291132" filesetmanifest="merge"/>
+		<delete dir="${temp.folder}"/>
+	</target>
+
+	<target name="@dot" depends="init" unless="@dot" description="Create jar: com.ibm.wala.core.tests @dot.">
+		<delete dir="${temp.folder}/@dot.bin"/>
+		<mkdir dir="${temp.folder}/@dot.bin"/>
 		<!-- compile the source code -->
 		<javac destdir="${temp.folder}/@dot.bin" failonerror="${javacFailOnError}" verbose="${javacVerbose}" debug="${javacDebugInfo}" includeAntRuntime="no" bootclasspath="${bundleBootClasspath}" source="${bundleJavacSource}" target="${bundleJavacTarget}"		>
 			<compilerarg line="${compilerArg}" compiler="${build.compiler}"/>
@@ -182,7 +212,7 @@
 				<include name="plugin.properties"/>
 			</fileset>
 		</copy>
-		<eclipse.versionReplacer path="${destination.temp.folder}/com.ibm.wala.core.tests_1.1.3.200805291132" version="1.1.3.200805291132"/>
+		<!-- eclipse.versionReplacer path="${destination.temp.folder}/com.ibm.wala.core.tests_1.1.3.200805291132" version="1.1.3.200805291132" -->
 	</target>
 
 	<target name="build.zips" depends="init">
@@ -208,6 +238,7 @@
 		<delete file="${plugin.destination}/com.ibm.wala.core.tests_1.1.3.200805291132.jar"/>
 		<delete file="${plugin.destination}/com.ibm.wala.core.tests_1.1.3.200805291132.zip"/>
 		<delete dir="${temp.folder}"/>
+		<delete dir="${junit.dir}"/>
 	</target>
 
 	<target name="refresh" depends="init" if="eclipse.running" description="Refresh this folder.">
