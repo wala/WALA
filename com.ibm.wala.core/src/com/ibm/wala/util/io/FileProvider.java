@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.zip.ZipException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IWorkspace;
@@ -63,8 +64,7 @@ public class FileProvider {
 
   /**
    * @param fileName
-   * @return the jar file packaged with this plug-in of the given name, or null
-   *         if not found.
+   * @return the jar file packaged with this plug-in of the given name, or null if not found.
    */
   public static Module getJarFileModule(String fileName) throws IOException {
     return getJarFileModule(fileName, FileProvider.class.getClassLoader());
@@ -112,10 +112,8 @@ public class FileProvider {
 
   /**
    * @param fileName
-   * @return the jar file packaged with this plug-in of the given name, or null
-   *         if not found.
-   * @throws IllegalArgumentException
-   *             if p is null
+   * @return the jar file packaged with this plug-in of the given name, or null if not found.
+   * @throws IllegalArgumentException if p is null
    */
   public static File getFileFromPlugin(Plugin p, String fileName) throws IOException {
 
@@ -131,8 +129,7 @@ public class FileProvider {
 
   /**
    * @param fileName
-   * @return the jar file packaged with this plug-in of the given name, or null
-   *         if not found.
+   * @return the jar file packaged with this plug-in of the given name, or null if not found.
    */
   private static JarFileModule getFromPlugin(Plugin p, String fileName) throws IOException {
     URL url = getFileURLFromPlugin(p, fileName);
@@ -142,8 +139,7 @@ public class FileProvider {
   /**
    * get a file URL for a file from a plugin
    * 
-   * @param fileName
-   *            the file name
+   * @param fileName the file name
    * @return the URL, or <code>null</code> if the file is not found
    * @throws IOException
    */
@@ -169,8 +165,7 @@ public class FileProvider {
   }
 
   /**
-   * escape spaces in a URL, primarily to work around a bug in
-   * {@link File#toURL()}
+   * escape spaces in a URL, primarily to work around a bug in {@link File#toURL()}
    * 
    * @param url
    * @return an escaped version of the URL
@@ -223,8 +218,8 @@ public class FileProvider {
 
   /**
    * @param fileName
-   * @return the jar file packaged with this plug-in of the given name, or null
-   *         if not found: wrapped as a JarFileModule or a NestedJarFileModule
+   * @return the jar file packaged with this plug-in of the given name, or null if not found: wrapped as a JarFileModule
+   *         or a NestedJarFileModule
    * @throws IOException
    */
   public static Module getJarFileFromClassLoader(String fileName, ClassLoader loader) throws IOException {
@@ -235,7 +230,11 @@ public class FileProvider {
     if (url == null) {
       // couldn't load it from the class loader. try again from the
       // system classloader
-      return new JarFileModule(new JarFile(fileName, false));
+      try {
+        return new JarFileModule(new JarFile(fileName, false));
+      } catch (ZipException e) {
+        throw new IOException("Could not find file: " + fileName);
+      }
     }
     if (url.getProtocol().equals("jar")) {
       JarURLConnection jc = (JarURLConnection) url.openConnection();
@@ -250,16 +249,14 @@ public class FileProvider {
   }
 
   /**
-   * Properly creates the String file name of a {@link URL}. This works around
-   * a bug in the Sun implementation of {@link URL#getFile()}, which doesn't
-   * properly handle file paths with spaces (see <a
-   * href="http://sourceforge.net/tracker/index.php?func=detail&aid=1565842&group_id=176742&atid=878458">bug
-   * report</a>). For now, fails with an assertion if the url is malformed.
+   * Properly creates the String file name of a {@link URL}. This works around a bug in the Sun implementation of
+   * {@link URL#getFile()}, which doesn't properly handle file paths with spaces (see <a
+   * href="http://sourceforge.net/tracker/index.php?func=detail&aid=1565842&group_id=176742&atid=878458">bug report</a>).
+   * For now, fails with an assertion if the url is malformed.
    * 
    * @param url
    * @return the path name for the url
-   * @throws IllegalArgumentException
-   *             if url is null
+   * @throws IllegalArgumentException if url is null
    */
   public static String filePathFromURL(URL url) {
     if (url == null) {
