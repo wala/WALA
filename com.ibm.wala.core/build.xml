@@ -48,7 +48,7 @@
 
 	</target>
 
-	<target name="build.update.jar" depends="init" description="Build the plug-in: com.ibm.wala.core for an update site.">
+	<target name="build.update.jar" depends="clean" description="Build the plug-in: com.ibm.wala.core for an update site.">
 		<delete dir="${temp.folder}"/>
 		<mkdir dir="${temp.folder}"/>
 		<antcall target="build.jars"/>
