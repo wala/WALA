@@ -12,9 +12,6 @@ package com.ibm.wala.eclipse.headless;
 
 import java.util.Collection;
 
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jdt.core.IJavaProject;
@@ -34,11 +31,9 @@ public class Main implements IApplication  {
 
   public Object start(IApplicationContext context) throws Exception {
     Collection<IJavaProject> jp = JdtUtil.getWorkspaceJavaProjects();
-    IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-    IPath workspaceRootPath = workspaceRoot.getLocation();
     for (IJavaProject p : jp) {
       System.out.println(p);
-      EclipseProjectPath path = EclipseProjectPath.make(workspaceRootPath, p);
+      EclipseProjectPath path = EclipseProjectPath.make(p);
       System.out.println("Path: " + path);
     }
     return null;
