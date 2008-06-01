@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
@@ -69,7 +68,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
       if (object instanceof IJavaElement) {
         IJavaElement e = (IJavaElement) object;
         IJavaProject jp = e.getJavaProject();
-        projectPaths.add(EclipseProjectPath.make(ResourcesPlugin.getWorkspace().getRoot().getLocation(), jp));
+        projectPaths.add(EclipseProjectPath.make(jp));
       } else {
         Assertions.UNREACHABLE(object.getClass());
       }

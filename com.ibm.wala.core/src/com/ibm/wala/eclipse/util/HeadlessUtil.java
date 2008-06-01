@@ -58,8 +58,7 @@ public class HeadlessUtil {
    */
   public static AnalysisScope computeScope(String projectName) throws JavaModelException, IOException {
     IJavaProject jp = getProjectFromWorkspace(projectName);
-    IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
-    EclipseProjectPath path = EclipseProjectPath.make(workspaceRoot.getLocation(), jp);
+    EclipseProjectPath path = EclipseProjectPath.make(jp);
     return path.toAnalysisScope(null);
   }
 

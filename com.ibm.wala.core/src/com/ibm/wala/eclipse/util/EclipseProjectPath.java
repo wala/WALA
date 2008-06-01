@@ -86,27 +86,20 @@ public class EclipseProjectPath {
   };
 
   /**
-   * path to the root of the workspace containing a project
-   */
-  private final IPath workspaceRootPath;
-
-  /**
    * The project whose path this object represents
    */
   private final IJavaProject project;
 
   // SJF: Intentionally do not use HashMapFactory, since the Loader keys in the following must use
-  // identityHashCode.  TODO: fix this source of non-determinism?
+  // identityHashCode. TODO: fix this source of non-determinism?
   private final Map<Loader, Set<Module>> binaryModules = new HashMap<Loader, Set<Module>>();
 
   private final Map<Loader, Set<Module>> sourceModules = new HashMap<Loader, Set<Module>>();
 
   private final Collection<IClasspathEntry> alreadyResolved = HashSetFactory.make();
 
-  protected EclipseProjectPath(IPath workspaceRootPath, IJavaProject project) throws JavaModelException, IOException {
-    this.workspaceRootPath = workspaceRootPath;
+  protected EclipseProjectPath(IJavaProject project) throws JavaModelException, IOException {
     this.project = project;
-    assert workspaceRootPath != null;
     assert project != null;
     for (Loader loader : Loader.values()) {
       MapUtil.findOrCreateSet(binaryModules, loader);
@@ -114,12 +107,15 @@ public class EclipseProjectPath {
     }
     resolveProjectClasspathEntries();
   }
-
+  
+  @Deprecated
   public static EclipseProjectPath make(IPath workspaceRootPath, IJavaProject project) throws JavaModelException, IOException {
-    if (workspaceRootPath == null) {
-      throw new IllegalArgumentException("workspaceRootPath is null");
-    }
-    return new EclipseProjectPath(workspaceRootPath, project);
+    return new EclipseProjectPath(project);
+  }
+
+
+  public static EclipseProjectPath make(IJavaProject project) throws JavaModelException, IOException {
+    return new EclipseProjectPath(project);
   }
 
   /**
@@ -207,7 +203,19 @@ public class EclipseProjectPath {
     if (p.toFile().exists()) {
       return p;
     }
-    return workspaceRootPath.append(p);
+    String projectName = p.segment(0);
+    IJavaProject jp = JdtUtil.getJavaProject(projectName);
+    if (jp != null) {
+      if (jp.getProject().getRawLocation() != null) {
+        return jp.getProject().getRawLocation().append(p.removeFirstSegments(1));
+      } else {
+        IWorkspaceRoot workspaceRoot = ResourcesPlugin.getWorkspace().getRoot();
+        return workspaceRoot.getLocation().append(p);
+      }
+    } else {
+      Assertions.UNREACHABLE("Unsupported path " + p);
+      return null;
+    }
   }
 
   /**
