@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * A Java process launcher
@@ -31,8 +32,8 @@ public class JavaLauncher extends Launcher {
    * @param classpathEntries
    *            Paths that will be added to the default classpath
    */
-  public static JavaLauncher make(String programArgs, String mainClass, List<String> classpathEntries) {
-    return new JavaLauncher(programArgs, mainClass, true, classpathEntries, false, false);
+  public static JavaLauncher make(String programArgs, String mainClass, List<String> classpathEntries, Logger logger) {
+    return new JavaLauncher(programArgs, mainClass, true, classpathEntries, false, false, logger);
   }
 
   /**
@@ -51,8 +52,8 @@ public class JavaLauncher extends Launcher {
    *            should the launcher capture the stderr from the subprocess?
    */
   public static JavaLauncher make(String programArgs, String mainClass, boolean inheritClasspath, List<String> classpathEntries,
-      boolean captureOutput, boolean captureErr) {
-    return new JavaLauncher(programArgs, mainClass, inheritClasspath, classpathEntries, captureOutput, captureErr);
+      boolean captureOutput, boolean captureErr, Logger logger) {
+    return new JavaLauncher(programArgs, mainClass, inheritClasspath, classpathEntries, captureOutput, captureErr, logger);
   }
 
   /**
@@ -92,8 +93,8 @@ public class JavaLauncher extends Launcher {
   private Thread stdErrDrain;
 
   private JavaLauncher(String programArgs, String mainClass, boolean inheritClasspath, List<String> xtraClasspath,
-      boolean captureOutput, boolean captureErr) {
-    super(captureOutput, captureErr);
+      boolean captureOutput, boolean captureErr, Logger logger) {
+    super(captureOutput, captureErr, logger);
     this.programArgs = programArgs;
     this.mainClass = mainClass;
     this.inheritClasspath = inheritClasspath;
@@ -146,8 +147,6 @@ public class JavaLauncher extends Launcher {
    * @throws IllegalArgumentException
    */
   public Process start() throws IllegalArgumentException, IOException {
-    System.err.println(System.getProperty("user.dir"));
-
     String cp = makeClasspath();
 
     String heap = " -Xmx800M ";

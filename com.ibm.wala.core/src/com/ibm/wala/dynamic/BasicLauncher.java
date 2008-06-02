@@ -12,6 +12,7 @@ package com.ibm.wala.dynamic;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import com.ibm.wala.util.warnings.WalaException;
 
@@ -22,8 +23,8 @@ public class BasicLauncher extends Launcher {
 
   protected String cmd;
 
-  public BasicLauncher(boolean captureOutput, boolean captureErr) {
-    super(captureOutput, captureErr);
+  public BasicLauncher(boolean captureOutput, boolean captureErr, Logger logger) {
+    super(captureOutput, captureErr, logger);
   }
 
   public String getCmd() {

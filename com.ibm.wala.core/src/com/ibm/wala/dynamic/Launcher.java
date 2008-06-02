@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import com.ibm.wala.util.warnings.WalaException;
 
@@ -45,16 +46,20 @@ public abstract class Launcher {
    */
   private final boolean captureErr;
 
-  protected Launcher() {
+  private final Logger logger;
+
+  protected Launcher(Logger logger) {
     super();
     this.captureOutput = false;
     this.captureErr = false;
+    this.logger = logger;
   }
 
-  protected Launcher(boolean captureOutput, boolean captureErr) {
+  protected Launcher(boolean captureOutput, boolean captureErr, Logger logger) {
     super();
     this.captureOutput = captureOutput;
     this.captureErr = true;
+    this.logger = logger;
   }
 
   public File getWorkingDir() {
@@ -96,7 +101,9 @@ public abstract class Launcher {
     if (cmd == null) {
       throw new IllegalArgumentException("cmd cannot be null");
     }
-    System.out.println("spawning process " + cmd);
+    if (logger != null) {
+      logger.fine("spawning process " + cmd);
+    }
     String[] ev = getEnv() == null ? null : buildEnv(getEnv());
     Process p = Runtime.getRuntime().exec(cmd, ev, getWorkingDir());
     return p;
@@ -196,7 +203,9 @@ public abstract class Launcher {
             // if we get here, the process has terminated
             repeat = false;
             drain();
-            System.out.println("process terminated with exit code " + p.exitValue());
+            if (logger != null) {
+              logger.fine("process terminated with exit code " + p.exitValue());
+            }
           } catch (IllegalThreadStateException e) {
             // this means the process has not yet terminated.
             repeat = true;
