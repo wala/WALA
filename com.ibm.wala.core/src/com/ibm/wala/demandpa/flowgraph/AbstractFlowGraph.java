@@ -44,11 +44,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.ibm.wala.classLoader.ArrayClass;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.ProgramCounter;
+import com.ibm.wala.demandpa.flowgraph.DemandPointerFlowGraph.NewMultiDimInfo;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel.IFlowLabelVisitor;
 import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.demandpa.util.MemoryAccess;
@@ -82,6 +82,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.MapUtil;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.labeled.SlowSparseNumberedLabeledGraph;
 
@@ -348,43 +349,10 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
 //        }
         written.add(r);
       } else if (instruction instanceof SSANewInstruction) {
-        SSANewInstruction n = (SSANewInstruction) instruction;
-        // should be allocated multi-dimentional array
-        InstanceKey iKey = heapModel.getInstanceKeyForAllocation(node, n.getNewSite());
-        // iKey can be null, e.g. if allocated type was in exclusions
-        if (iKey == null) {
-          continue;
+        NewMultiDimInfo multiDimInfo = DemandPointerFlowGraph.getInfoForNewMultiDim((SSANewInstruction) instruction, heapModel, node);
+        for (Pair<PointerKey,PointerKey> arrStoreInstr: multiDimInfo.arrStoreInstrs) {
+          written.add(arrStoreInstr.snd);
         }
-        IClass klass = iKey.getConcreteType();
-        if (Assertions.verifyAssertions) {
-          Assertions._assert(klass.isArrayClass() && ((ArrayClass) klass).getElementClass().isArrayClass());
-        }
-        int dim = 0;
-        InstanceKey lastInstance = iKey;
-        while (klass != null && klass.isArrayClass()) {
-          klass = ((ArrayClass) klass).getElementClass();
-          // klass == null means it's a primitive
-          if (klass != null && klass.isArrayClass()) {
-            InstanceKey ik = heapModel.getInstanceKeyForMultiNewArray(node, n.getNewSite(), dim);
-            PointerKey pk = heapModel.getPointerKeyForArrayContents(lastInstance);
-            written.add(pk);
-            // if (DEBUG_MULTINEWARRAY) {
-            // Trace.println("multinewarray constraint: ");
-            // Trace.println(" pk: " + pk);
-            // Trace.println(" ik: " +
-            // system.findOrCreateIndexForInstanceKey(ik)
-            // + " concrete type " + ik.getConcreteType()
-            // + " is " + ik);
-            // Trace.println(" klass:" + klass);
-            // }
-            // addNode(ik);
-            // addNode(pk);
-            // addEdge(pk, ik, NewLabel.v());
-            lastInstance = ik;
-            dim++;
-          }
-        }
-  
       } else {
         Assertions.UNREACHABLE();
       }

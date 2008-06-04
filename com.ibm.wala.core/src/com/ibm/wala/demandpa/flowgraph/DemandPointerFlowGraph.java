@@ -80,12 +80,14 @@ import com.ibm.wala.ssa.SSAThrowInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * A graph representation of statements flowing pointer values, but <em>not</em>
- * primitive values. Nodes are variables, and edges are <em>against</em> value
- * flow; assignment x = y yields edge from x to y with label {@link AssignLabel#noFilter()}
+ * A graph representation of statements flowing pointer values, but <em>not</em> primitive values. Nodes are
+ * variables, and edges are <em>against</em> value flow; assignment x = y yields edge from x to y with label
+ * {@link AssignLabel#noFilter()}
  * 
  * @author Manu Sridharan
  * 
@@ -125,21 +127,20 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
   /**
    * A visitor that generates graph nodes and edges for an IR.
    * 
-   * strategy: when visiting a statement, for each use of that statement, add a
-   * graph edge from def to use.
+   * strategy: when visiting a statement, for each use of that statement, add a graph edge from def to use.
    * 
    * TODO: special treatment for parameter passing, etc.
    */
   public static class StatementVisitor extends SSAInstruction.Visitor implements FlowStatementVisitor {
 
     private final HeapModel heapModel;
-    
+
     private final IFlowGraph g;
-    
+
     private final ClassHierarchy cha;
-    
+
     private final CallGraph cg;
-    
+
     /**
      * The node whose statements we are currently traversing
      */
@@ -165,8 +166,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
      */
     protected final DefUse du;
 
-    public StatementVisitor(HeapModel heapModel, IFlowGraph g, ClassHierarchy cha,
-        CallGraph cg, CGNode node) {
+    public StatementVisitor(HeapModel heapModel, IFlowGraph g, ClassHierarchy cha, CallGraph cg, CGNode node) {
       super();
       this.heapModel = heapModel;
       this.g = g;
@@ -180,7 +180,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         Assertions._assert(symbolTable != null);
       }
     }
-
 
     /*
      * (non-Javadoc)
@@ -250,8 +249,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         // instruction.getResult());
         return;
       } else {
-        FilteredPointerKey.SingleClassFilter singleClassFilter = new FilteredPointerKey.SingleClassFilter(
-            cls);
+        FilteredPointerKey.SingleClassFilter singleClassFilter = new FilteredPointerKey.SingleClassFilter(cls);
         result = heapModel.getPointerKeyForLocal(node, instruction.getResult());
         PointerKey value = heapModel.getPointerKeyForLocal(node, instruction.getVal());
         g.addNode(result);
@@ -365,26 +363,26 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     @Override
     public void visitInvoke(SSAInvokeInstruction instruction) {
 
-//      for (int i = 0; i < instruction.getNumberOfUses(); i++) {
-//        // just make nodes for parameters; we'll get to them when
-//        // traversing
-//        // from the callee
-//        PointerKey use = heapModel.getPointerKeyForLocal(node, instruction.getUse(i));
-//        g.addNode(use);
-//        Set<SSAInvokeInstruction> s = MapUtil.findOrCreateSet(callParams, use);
-//        s.add(instruction);
-//      }
-//
-//      // for any def'd values, keep track of the fact that they are def'd
-//      // by a call
-//      if (instruction.hasDef()) {
-//        PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
-//        g.addNode(def);
-//        callDefs.put(def, instruction);
-//      }
-//      PointerKey exc = heapModel.getPointerKeyForLocal(node, instruction.getException());
-//      g.addNode(exc);
-//      callDefs.put(exc, instruction);
+      // for (int i = 0; i < instruction.getNumberOfUses(); i++) {
+      // // just make nodes for parameters; we'll get to them when
+      // // traversing
+      // // from the callee
+      // PointerKey use = heapModel.getPointerKeyForLocal(node, instruction.getUse(i));
+      // g.addNode(use);
+      // Set<SSAInvokeInstruction> s = MapUtil.findOrCreateSet(callParams, use);
+      // s.add(instruction);
+      // }
+      //
+      // // for any def'd values, keep track of the fact that they are def'd
+      // // by a call
+      // if (instruction.hasDef()) {
+      // PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
+      // g.addNode(def);
+      // callDefs.put(def, instruction);
+      // }
+      // PointerKey exc = heapModel.getPointerKeyForLocal(node, instruction.getException());
+      // g.addNode(exc);
+      // callDefs.put(exc, instruction);
     }
 
     /*
@@ -405,34 +403,19 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       g.addNode(def);
       g.addEdge(def, iKey, NewLabel.v());
 
-      IClass klass = iKey.getConcreteType();
-      int dim = 0;
-      InstanceKey lastInstance = iKey;
-      PointerKey lastVar = def;
-      while (klass != null && klass.isArrayClass()) {
-        klass = ((ArrayClass) klass).getElementClass();
-        // klass == null means it's a primitive
-        if (klass != null && klass.isArrayClass()) {
-          InstanceKey ik = heapModel.getInstanceKeyForMultiNewArray(node, instruction.getNewSite(), dim);
-          PointerKey pk = heapModel.getPointerKeyForArrayContents(lastInstance);
-          // if (DEBUG_MULTINEWARRAY) {
-          // Trace.println("multinewarray constraint: ");
-          // Trace.println(" pk: " + pk);
-          // Trace.println(" ik: " + system.findOrCreateIndexForInstanceKey(ik)
-          // + " concrete type " + ik.getConcreteType()
-          // + " is " + ik);
-          // Trace.println(" klass:" + klass);
-          // }
-          g.addNode(ik);
-          g.addNode(pk);
-          g.addEdge(pk, ik, NewLabel.v());
-          g.addEdge(lastVar, pk, PutFieldLabel.make(ArrayContents.v()));
-          lastInstance = ik;
-          lastVar = pk;
-          dim++;
+      NewMultiDimInfo multiDimInfo = getInfoForNewMultiDim(instruction, heapModel, node);
+      if (multiDimInfo != null) {
+        for (Pair<PointerKey,InstanceKey> newInstr : multiDimInfo.newInstrs) {
+          g.addNode(newInstr.fst);
+          g.addNode(newInstr.snd);
+          g.addEdge(newInstr.fst, newInstr.snd, NewLabel.v());
+        }
+        for (Pair<PointerKey,PointerKey> arrStoreInstr : multiDimInfo.arrStoreInstrs) {
+          g.addNode(arrStoreInstr.fst);
+          g.addNode(arrStoreInstr.snd);
+          g.addEdge(arrStoreInstr.fst, arrStoreInstr.snd, PutFieldLabel.make(ArrayContents.v()));
         }
       }
-
     }
 
     /*
@@ -462,17 +445,12 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
 
     /**
-     * Generate constraints which assign exception values into an exception
-     * pointer
+     * Generate constraints which assign exception values into an exception pointer
      * 
-     * @param node
-     *            governing node
-     * @param peis
-     *            list of PEI instructions
-     * @param exceptionVar
-     *            PointerKey representing a pointer to an exception value
-     * @param catchClasses
-     *            the types "caught" by the exceptionVar
+     * @param node governing node
+     * @param peis list of PEI instructions
+     * @param exceptionVar PointerKey representing a pointer to an exception value
+     * @param catchClasses the types "caught" by the exceptionVar
      */
     protected void addExceptionDefConstraints(IR ir, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
         Set<TypeReference> catchClasses) {
@@ -522,6 +500,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         }
       }
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -559,5 +538,66 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
   }
 
+  public static class NewMultiDimInfo {
 
+    public final Collection<Pair<PointerKey, InstanceKey>> newInstrs;
+
+    public final Collection<Pair<PointerKey, PointerKey>> arrStoreInstrs;
+
+    public NewMultiDimInfo(Collection<Pair<PointerKey, InstanceKey>> newInstrs,
+        Collection<Pair<PointerKey, PointerKey>> arrStoreInstrs) {
+      this.newInstrs = newInstrs;
+      this.arrStoreInstrs = arrStoreInstrs;
+    }
+
+  }
+
+  /**
+   * collect information about the new instructions and putfield instructions used to model an allocation of a
+   * multi-dimensional array. excludes the new instruction itself (i.e., the allocation of the top-level multi-dim
+   * array).
+   */
+  public static NewMultiDimInfo getInfoForNewMultiDim(SSANewInstruction instruction, HeapModel heapModel, CGNode node) {
+    Collection<Pair<PointerKey, InstanceKey>> newInstrs = HashSetFactory.make();
+    Collection<Pair<PointerKey, PointerKey>> arrStoreInstrs = HashSetFactory.make();
+    InstanceKey iKey = heapModel.getInstanceKeyForAllocation(node, instruction.getNewSite());
+    if (iKey == null) {
+      // something went wrong. I hope someone raised a warning.
+      return null;
+    }
+    IClass klass = iKey.getConcreteType();
+    // if not a multi-dim array allocation, return null
+    if (!klass.isArrayClass() || ((ArrayClass)klass).getElementClass() == null || !((ArrayClass)klass).getElementClass().isArrayClass()) {
+      return null;
+    }
+    PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
+
+    int dim = 0;
+    InstanceKey lastInstance = iKey;
+    PointerKey lastVar = def;
+    while (klass != null && klass.isArrayClass()) {
+      klass = ((ArrayClass) klass).getElementClass();
+      // klass == null means it's a primitive
+      if (klass != null && klass.isArrayClass()) {
+        InstanceKey ik = heapModel.getInstanceKeyForMultiNewArray(node, instruction.getNewSite(), dim);
+        PointerKey pk = heapModel.getPointerKeyForArrayContents(lastInstance);
+        // if (DEBUG_MULTINEWARRAY) {
+        // Trace.println("multinewarray constraint: ");
+        // Trace.println(" pk: " + pk);
+        // Trace.println(" ik: " + system.findOrCreateIndexForInstanceKey(ik)
+        // + " concrete type " + ik.getConcreteType()
+        // + " is " + ik);
+        // Trace.println(" klass:" + klass);
+        // }
+//        g.addEdge(pk, ik, NewLabel.v());
+        newInstrs.add(Pair.make(pk, ik));
+        arrStoreInstrs.add(Pair.make(lastVar, pk));
+        lastInstance = ik;
+        lastVar = pk;
+        dim++;
+      }
+    }
+
+    return new NewMultiDimInfo(newInstrs, arrStoreInstrs);
+  }
 }

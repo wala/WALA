@@ -38,6 +38,7 @@
 package com.ibm.wala.demandpa.alg;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -84,6 +85,7 @@ import com.ibm.wala.demandpa.genericutil.ArraySetMultiMap;
 import com.ibm.wala.demandpa.genericutil.HashSetMultiMap;
 import com.ibm.wala.demandpa.genericutil.MultiMap;
 import com.ibm.wala.demandpa.genericutil.Predicate;
+import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
 import com.ibm.wala.demandpa.util.MemoryAccess;
 import com.ibm.wala.demandpa.util.MemoryAccessMap;
@@ -109,7 +111,10 @@ import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAArrayStoreInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAInvokeInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -1726,7 +1731,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
           // }
           InstanceFieldKeyAndState ifk = getInstFieldKey(ikAndState, field);
           // make sure we've actually queried the def'd val before adding to its points-to set
-          if (pointsToQueried.get(loadedValAndState.getPointerKey()).contains(loadedValAndState.getState())) {            
+          if (pointsToQueried.get(loadedValAndState.getPointerKey()).contains(loadedValAndState.getState())) {
             // just pass no label assign filter since no type-based filtering can be
             // done here
             if (addAllToP2Set(pkToP2Set, loadedValAndState, find(instFieldKeyToP2Set, ifk), AssignLabel.noFilter())) {
@@ -2101,20 +2106,21 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               System.err.println("toplevel finished computing flows to");
             }
             // for each putfield base pointer, if flowed-to, then propagate written pointer key
-            for (MemoryAccess fieldWrite : mam.getFieldWrites(convertToHeapModel(loadBase, mam.getHeapModel()), field)) {
-              IR ir = fieldWrite.getNode().getIR();
-              SSAPutInstruction s = (SSAPutInstruction) ir.getInstructions()[fieldWrite.getInstructionIndex()];
-              if (s == null) {
+            for (MemoryAccess fieldWrite : getWrites(field, loadBase)) {
+              Collection<Pair<PointerKey, PointerKey>> baseAndStoredPairs = getBaseAndStored(fieldWrite, field);
+              if (baseAndStoredPairs == null) {
                 continue;
               }
-              PointerKey putfieldBase = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getRef());
-              PointerKey writtenPk = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getVal());
-              Collection<State> reachedFlowStates = h.getFlowedToStates(ptoComputer, basePToSet, putfieldBase);
-              for (State nextState : reachedFlowStates) {
-                if (DEBUG_TOPLEVEL) {
-                  System.err.println("toplevel alias with base of " + s);
+              for (Pair<PointerKey, PointerKey> p : baseAndStoredPairs) {
+                PointerKey base = p.fst;
+                PointerKey stored = p.snd;
+                Collection<State> reachedFlowStates = h.getFlowedToStates(ptoComputer, basePToSet, base);
+                for (State nextState : reachedFlowStates) {
+                  if (DEBUG_TOPLEVEL) {
+                    System.err.println("toplevel alias with base " + base + " in state " + nextState);
+                  }
+                  h.propagate(new PointerKeyAndState(stored, nextState));
                 }
-                h.propagate(new PointerKeyAndState(writtenPk, nextState));
               }
             }
           } else { // use match edges
@@ -2130,6 +2136,40 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
               });
             }
+          }
+        }
+
+        private Collection<Pair<PointerKey, PointerKey>> getBaseAndStored(MemoryAccess fieldWrite, IField field) {
+          IR ir = fieldWrite.getNode().getIR();
+          PointerKey base = null, stored = null;
+          if (field == ArrayContents.v()) {
+            final SSAInstruction instruction = ir.getInstructions()[fieldWrite.getInstructionIndex()];
+            if (instruction == null) {
+              return null;
+            }
+            if (instruction instanceof SSANewInstruction) {
+              return DemandPointerFlowGraph.getInfoForNewMultiDim((SSANewInstruction) instruction, heapModel, fieldWrite.getNode()).arrStoreInstrs;
+            }
+            SSAArrayStoreInstruction s = (SSAArrayStoreInstruction) instruction;
+            base = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getArrayRef());
+            stored = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getValue());
+          } else {
+            SSAPutInstruction s = (SSAPutInstruction) ir.getInstructions()[fieldWrite.getInstructionIndex()];
+            if (s == null) {
+              return null;
+            }
+            base = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getRef());
+            stored = heapModel.getPointerKeyForLocal(fieldWrite.getNode(), s.getVal());
+          }
+          return Collections.singleton(Pair.make(base, stored));
+        }
+
+        private Collection<MemoryAccess> getWrites(IField field, PointerKey loadBase) {
+          final PointerKey convertedBase = convertToHeapModel(loadBase, mam.getHeapModel());
+          if (field == ArrayContents.v()) {
+            return mam.getArrayWrites(loadBase);
+          } else {
+            return mam.getFieldWrites(convertedBase, field);
           }
         }
 
