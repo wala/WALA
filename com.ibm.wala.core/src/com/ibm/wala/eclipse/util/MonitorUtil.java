@@ -11,6 +11,7 @@
 package com.ibm.wala.eclipse.util;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 
 
 /**
@@ -53,6 +54,14 @@ public class MonitorUtil {
       if (progressMonitor.isCanceled()) {
         throw CancelException.make("operation cancelled");
       }
+    }
+  }
+
+  public static IProgressMonitor subProgress(ProgressMaster progress, int i) {
+    if (progress == null) {
+      return null;
+    } else {
+      return new SubProgressMonitor(progress, i);
     }
   }
 }
