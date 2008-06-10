@@ -63,7 +63,7 @@ public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
 
   private boolean superOfAnyEncountered(IClass klass) {
     for (IClass toRefine : typesToRefine) {
-      if (cha.isAssignableFrom(klass, toRefine)) {
+      if (cha.isAssignableFrom(klass, toRefine) || cha.isAssignableFrom(toRefine, klass)) {
         return true;
       }
     }

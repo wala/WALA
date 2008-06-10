@@ -572,10 +572,15 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     protected final PointerKeyAndState queriedPkAndState;
 
     /**
-     * set of variables whose points-to sets were queried
+     * map from pointer key to states in which the key's points-to set was queried
      */
     private final MultiMap<PointerKey, State> pointsToQueried = HashSetMultiMap.make();
 
+    /**
+     * map from pointer key to states in which a tracked points-to set for the key was computed
+     */
+    private final MultiMap<PointerKey, State> trackedQueried = HashSetMultiMap.make();
+    
     /**
      * forward worklist: for initially processing points-to queries
      */
@@ -808,17 +813,14 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         Assertions._assert(label.isBarred());
       }
       final State curState = curPkAndState.getState();
-      // TODO may need to speed this up with another data structure
-      for (PointerKeyAndState pkAndState : pkToTrackedSet.keySet()) {
-        if (succPk.equals(pkAndState.getPointerKey())) {
-          State transState = stateMachine.transition(pkAndState.getState(), label);
-          if (transState.equals(curState)) {
-            ret.add(pkAndState);
-          }
+      Set<State> succPkStates = trackedQueried.get(succPk);
+      for (State succState : succPkStates) {
+        State transState = stateMachine.transition(succState, label);
+        if (transState.equals(curState)) {
+          ret.add(new PointerKeyAndState(succPk, succState));
         }
       }
       return ret;
-
     }
 
     void handleBackCopy(PointerKeyAndState curPkAndState, PointerKey predPk, IFlowLabel label) {
@@ -879,6 +881,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       if (DEBUG) {
         // System.err.println("adding to tracked points-to " + pkAndState);
       }
+      trackedQueried.put(pkAndState.getPointerKey(), pkAndState.getState());
       trackedPointsToWorklist.add(pkAndState);
     }
 
@@ -2007,12 +2010,23 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
       private OrdinalSet<InstanceKeyAndState> getPToSetFromComputer(final PointsToComputer ptoComputer,
           PointerKeyAndState pointerKeyAndState) {
+        // make sure relevant constraints have been added
+        if (pointerKeyAndState.getPointerKey() instanceof LocalPointerKey) {
+          LocalPointerKey lpk = (LocalPointerKey) pointerKeyAndState.getPointerKey();
+          g.addSubgraphForNode(lpk.getNode());
+        }
         // add pointerKeyAndState to init worklist
         ptoComputer.addToInitWorklist(pointerKeyAndState);
         // run worklist algorithm
         ptoComputer.worklistLoop();
         // suck out the points-to set
-        return ptoComputer.makeOrdinalSet(ptoComputer.pkToP2Set.get(pointerKeyAndState));
+        final MutableIntSet intP2Set = ptoComputer.pkToP2Set.get(pointerKeyAndState);
+        if (intP2Set == null) {
+          // null if empty p2set
+          return OrdinalSet.empty();
+        } else {
+          return ptoComputer.makeOrdinalSet(intP2Set);
+        }
       }
 
       private void computeFlowsTo(PointsToComputer ptoComputer, OrdinalSet<InstanceKeyAndState> basePToSet) {
@@ -2028,13 +2042,20 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
       private Collection<State> getFlowedToStates(PointsToComputer ptoComputer, OrdinalSet<InstanceKeyAndState> basePToSet,
           PointerKey putfieldBase) {
         Collection<State> result = HashSetFactory.make();
-        for (PointerKeyAndState pkAndState : ptoComputer.pkToTrackedSet.keySet()) {
-          if (pkAndState.getPointerKey().equals(putfieldBase)) {
-            if (ptoComputer.makeOrdinalSet(ptoComputer.pkToTrackedSet.get(pkAndState)).containsAny(basePToSet)) {
-              result.add(pkAndState.getState());
-            }
+        Set<State> trackedStates = ptoComputer.trackedQueried.get(putfieldBase);
+        for (State trackedState : trackedStates) {
+          PointerKeyAndState pkAndState = new PointerKeyAndState(putfieldBase, trackedState);
+          if (ptoComputer.makeOrdinalSet(ptoComputer.pkToTrackedSet.get(pkAndState)).containsAny(basePToSet)) {
+            result.add(trackedState);
           }
         }
+//        for (PointerKeyAndState pkAndState : ptoComputer.pkToTrackedSet.keySet()) {
+//          if (pkAndState.getPointerKey().equals(putfieldBase)) {
+//            if (ptoComputer.makeOrdinalSet(ptoComputer.pkToTrackedSet.get(pkAndState)).containsAny(basePToSet)) {
+//              result.add(pkAndState.getState());
+//            }
+//          }
+//        }
         return result;
       }
 
@@ -2140,7 +2161,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
         }
 
         private Collection<Pair<PointerKey, PointerKey>> getBaseAndStored(MemoryAccess fieldWrite, IField field) {
-          IR ir = fieldWrite.getNode().getIR();
+          final CGNode node = fieldWrite.getNode();
+          // an optimization; if node is not represented in our constraint graph, then we could not possibly
+          // have discovered flow to the base pointer
+          if (!g.hasSubgraphForNode(node)) {
+            return null;
+          }
+          IR ir = node.getIR();
           PointerKey base = null, stored = null;
           if (field == ArrayContents.v()) {
             final SSAInstruction instruction = ir.getInstructions()[fieldWrite.getInstructionIndex()];

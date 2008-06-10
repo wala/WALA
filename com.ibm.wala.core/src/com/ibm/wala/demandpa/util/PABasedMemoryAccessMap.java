@@ -11,8 +11,8 @@
 
 package com.ibm.wala.demandpa.util;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -29,7 +29,6 @@ import com.ibm.wala.ipa.slicer.Statement;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.thin.CISlicer;
-import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -70,19 +69,19 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
   }
 
   public Collection<MemoryAccess> getArrayReads(PointerKey arrayRef) {
-    Set<MemoryAccess> memAccesses = HashSetFactory.make();
+    Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
     if (DEBUG) {
       Trace.println("looking at reads of array ref " + arrayRef);
     }
     for (InstanceKey ik : pa.getPointsToSet(arrayRef)) {
       PointerKey ack = heapModel.getPointerKeyForArrayContents(ik);
-      memAccesses.addAll(convertStmtsToMemoryAccess(invRef.get(ack)));
+      convertStmtsToMemoryAccess(invRef.get(ack), memAccesses);
     }
     return memAccesses;
   }
 
   public Collection<MemoryAccess> getArrayWrites(PointerKey arrayRef) {
-    Set<MemoryAccess> memAccesses = HashSetFactory.make();
+    Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
     if (DEBUG) {
       Trace.println("looking at writes to array ref " + arrayRef);
     }
@@ -91,56 +90,58 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
         Trace.println("instance key " + ik + " class " + ik.getClass());
       }
       PointerKey ack = heapModel.getPointerKeyForArrayContents(ik);
-      memAccesses.addAll(convertStmtsToMemoryAccess(invMod.get(ack)));
+      convertStmtsToMemoryAccess(invMod.get(ack), memAccesses);
     }
     return memAccesses;
   }
 
   public Collection<MemoryAccess> getFieldReads(PointerKey baseRef, IField field) {
-    Set<MemoryAccess> memAccesses = HashSetFactory.make();
+    Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
     for (InstanceKey ik : pa.getPointsToSet(baseRef)) {
       PointerKey ifk = heapModel.getPointerKeyForInstanceField(ik, field);
-      memAccesses.addAll(convertStmtsToMemoryAccess(invRef.get(ifk)));
+      convertStmtsToMemoryAccess(invRef.get(ifk), memAccesses);
     }
     return memAccesses;
   }
 
   public Collection<MemoryAccess> getFieldWrites(PointerKey baseRef, IField field) {
-    Set<MemoryAccess> memAccesses = HashSetFactory.make();
+    Collection<MemoryAccess> memAccesses = new ArrayList<MemoryAccess>();
     for (InstanceKey ik : pa.getPointsToSet(baseRef)) {
       PointerKey ifk = heapModel.getPointerKeyForInstanceField(ik, field);
-      memAccesses.addAll(convertStmtsToMemoryAccess(invMod.get(ifk)));
+      convertStmtsToMemoryAccess(invMod.get(ifk), memAccesses);
     }
     return memAccesses;
   }
 
   public Collection<MemoryAccess> getStaticFieldReads(IField field) {
-    return convertStmtsToMemoryAccess(invRef.get(heapModel.getPointerKeyForStaticField(field)));
+    Collection<MemoryAccess> result = new ArrayList<MemoryAccess>();
+    convertStmtsToMemoryAccess(invRef.get(heapModel.getPointerKeyForStaticField(field)), result);
+    return result;
   }
 
   public Collection<MemoryAccess> getStaticFieldWrites(IField field) {
-    return convertStmtsToMemoryAccess(invMod.get(heapModel.getPointerKeyForStaticField(field)));
+    Collection<MemoryAccess> result = new ArrayList<MemoryAccess>();
+    convertStmtsToMemoryAccess(invMod.get(heapModel.getPointerKeyForStaticField(field)), result);
+    return result;
   }
 
-  private Collection<MemoryAccess> convertStmtsToMemoryAccess(Collection<Statement> stmts) {
+  private void convertStmtsToMemoryAccess(Collection<Statement> stmts, Collection<MemoryAccess> result) {
     if (stmts == null) {
-      return Collections.emptySet();
+      return;
     }
     if (DEBUG) {
       Trace.println("statements: " + stmts);
     }
-    Collection<MemoryAccess> ret = HashSetFactory.make();
     for (Statement s : stmts) {
       switch (s.getKind()) {
       case NORMAL:
         NormalStatement normStmt = (NormalStatement) s;
-        ret.add(new MemoryAccess(normStmt.getInstructionIndex(), normStmt.getNode()));
+        result.add(new MemoryAccess(normStmt.getInstructionIndex(), normStmt.getNode()));
         break;
       default:
         Assertions.UNREACHABLE();
       }
     }
-    return ret;
   }
 
   public HeapModel getHeapModel() {
