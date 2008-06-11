@@ -129,6 +129,9 @@ public class StringTable extends Table<String> implements Cloneable {
   }
 
   private static boolean isCommented(String line) {
+    if (line.length() == 0) {
+      return true;
+    }
     return line.charAt(0) == Constants.COMMENT;
   }
 
