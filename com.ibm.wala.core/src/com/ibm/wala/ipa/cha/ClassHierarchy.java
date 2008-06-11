@@ -928,9 +928,14 @@ public class ClassHierarchy implements IClassHierarchy {
    * Does c implement i?
    * 
    * @return true iff i is an interface and c is a class that implements i, or c is an interface that extends i.
-   * 
    */
   public boolean implementsInterface(IClass c, IClass i) {
+    if (i == null) {
+      throw new IllegalArgumentException("Cannot ask implementsInterface with i == null");
+    }
+    if (c == null) {
+      throw new IllegalArgumentException("Cannot ask implementsInterface with c == null");
+    }
     if (!i.isInterface()) {
       return false;
     }
