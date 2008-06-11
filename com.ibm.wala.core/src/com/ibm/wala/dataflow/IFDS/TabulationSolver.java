@@ -1015,4 +1015,8 @@ public class TabulationSolver<T, P> {
   public Collection<PathEdge<T>> getSeeds() {
     return Collections.unmodifiableCollection(seeds);
   }
+
+  public IProgressMonitor getProgressMonitor() {
+    return progressMonitor;
+  }
 }
