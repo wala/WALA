@@ -72,7 +72,8 @@ public class Table<T> implements Cloneable {
     result.append("\n");
     for (int j = 0; j < getNumberOfRows(); j++) {
       for (int i = 0; i < getNumberOfColumns(); i++) {
-        StringBuffer element = new StringBuffer(getElement(j, i).toString());
+        T e = getElement(j, i);
+        StringBuffer element = e == null ? new StringBuffer() : new StringBuffer(e.toString());
         StringStuff.padWithSpaces(element, format[i]);
         result.append(element);
       }
