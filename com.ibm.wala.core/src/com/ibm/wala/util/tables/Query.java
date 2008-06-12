@@ -22,7 +22,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
  * @author sjfink
  *
  */
-public class Query<T> {
+public class Query {
 
   /**
    * SELECT * from t where column=value
