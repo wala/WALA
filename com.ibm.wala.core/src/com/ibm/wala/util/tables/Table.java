@@ -100,7 +100,8 @@ public class Table<T> implements Cloneable {
     }
     for (int j = 0; j < getNumberOfRows(); j++) {
       for (int i = 0; i < getNumberOfColumns(); i++) {
-        result[i] = Math.max(result[i], getElement(j, i).toString().length() + 1);
+        T element = getElement(j, i);
+        result[i] = element == null ? result[i] : Math.max(result[i], element.toString().length() + 1);
       }
     }
     return result;
