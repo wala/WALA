@@ -31,7 +31,7 @@ import com.ibm.wala.util.warnings.WalaException;
 /**
  * 
  * An SWT action that spawns spawns a ghostview to see the local supergraph for
- * a proecedure node which is the current selection in a tree viewer.
+ * a procedure node which is the current selection in a tree viewer.
  * 
  * @author sfink
  */
