@@ -12,6 +12,7 @@ package com.ibm.wala.ipa.callgraph.propagation;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -333,7 +334,8 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     List<ProgramCounter> peis = getIncomingPEIs(ir, ir.getExitBlock());
     PointerKey exception = getPointerKeyForExceptionalReturnValue(node);
 
-    addExceptionDefConstraints(ir, du, node, peis, exception, THROWABLE_SET);
+    IClass c = node.getClassHierarchy().lookupClass(TypeReference.JavaLangThrowable);
+    addExceptionDefConstraints(ir, du, node, peis, exception, Collections.singleton(c));
   }
 
   /**
@@ -345,7 +347,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
    * @param catchClasses the types "caught" by the exceptionVar
    */
   private void addExceptionDefConstraints(IR ir, DefUse du, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
-      Set catchClasses) {
+      Set<IClass> catchClasses) {
     if (DEBUG) {
       System.err.println("Add exception def constraints for node " + node);
     }
@@ -1182,7 +1184,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
       // if (hasNoInterestingUses(instruction.getDef(), du)) {
       // solver.recordImplicitPointsToSet(def);
       // } else {
-      Set types = getCaughtExceptionTypes(instruction, ir);
+      Set<IClass> types = getCaughtExceptionTypes(instruction, ir);
       getBuilder().addExceptionDefConstraints(ir, du, node, peis, def, types);
       // }
     }
@@ -2058,7 +2060,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     return system.iteratePointerKeys();
   }
 
-  public static Set<TypeReference> getCaughtExceptionTypes(SSAGetCaughtExceptionInstruction instruction, IR ir) {
+  public static Set<IClass> getCaughtExceptionTypes(SSAGetCaughtExceptionInstruction instruction, IR ir) {
     if (ir == null) {
       throw new IllegalArgumentException("ir is null");
     }
@@ -2067,9 +2069,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     }
     Iterator<TypeReference> exceptionTypes = ((ExceptionHandlerBasicBlock) ir.getControlFlowGraph().getNode(
         instruction.getBasicBlockNumber())).getCaughtExceptionTypes();
-    HashSet<TypeReference> types = HashSetFactory.make(10);
+    HashSet<IClass> types = HashSetFactory.make(10);
     for (; exceptionTypes.hasNext();) {
-      types.add(exceptionTypes.next());
+      IClass c = ir.getMethod().getClassHierarchy().lookupClass(exceptionTypes.next());
+      if (c != null) {
+        types.add(c);
+      }
     }
     return types;
   }

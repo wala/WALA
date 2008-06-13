@@ -12,6 +12,7 @@
 package com.ibm.wala.demandpa.flowgraph;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -416,16 +417,14 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   /**
    * Add constraints to represent the flow of exceptions to the exceptional
    * return value for this node
-   * 
-   * @param node
-   * @param ir
    */
   protected void addNodePassthruExceptionConstraints(CGNode node, IR ir) {
     // add constraints relating to thrown exceptions that reach the exit block.
     List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getExitBlock());
     PointerKey exception = heapModel.getPointerKeyForExceptionalReturnValue(node);
-
-    addExceptionDefConstraints(ir, node, peis, exception, PropagationCallGraphBuilder.THROWABLE_SET);
+    IClass c = node.getClassHierarchy().lookupClass(TypeReference.JavaLangThrowable);
+    
+    addExceptionDefConstraints(ir, node, peis, exception, Collections.singleton(c));
   }
 
   /**
@@ -442,7 +441,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
    *            the types "caught" by the exceptionVar
    */
   private void addExceptionDefConstraints(IR ir, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
-      Set<TypeReference> catchClasses) {
+      Set<IClass> catchClasses) {
     for (ProgramCounter peiLoc : peis) {
       SSAInstruction pei = ir.getPEI(peiLoc);
 
@@ -1190,7 +1189,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
       List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, getBasicBlock());
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
 
-      Set<TypeReference> types = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
+      Set<IClass> types = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
       addExceptionDefConstraints(ir, node, peis, def, types);
     }
 

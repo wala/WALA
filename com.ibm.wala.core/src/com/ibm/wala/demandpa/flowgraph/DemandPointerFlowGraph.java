@@ -182,8 +182,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitArrayLoad(com.ibm.domo.ssa.SSAArrayLoadInstruction)
      */
     @Override
@@ -201,8 +199,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitArrayStore(com.ibm.domo.ssa.SSAArrayStoreInstruction)
      */
     @Override
@@ -222,8 +218,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitCheckCast(com.ibm.domo.ssa.SSACheckCastInstruction)
      */
     @Override
@@ -259,8 +253,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitReturn(com.ibm.domo.ssa.SSAReturnInstruction)
      */
     @Override
@@ -279,8 +271,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitGet(com.ibm.domo.ssa.SSAGetInstruction)
      */
     @Override
@@ -318,8 +308,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.Instruction.Visitor#visitPut(com.ibm.domo.ssa.PutInstruction)
      */
     @Override
@@ -356,8 +344,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.Instruction.Visitor#visitInvoke(com.ibm.domo.ssa.InvokeInstruction)
      */
     @Override
@@ -386,8 +372,6 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.Instruction.Visitor#visitNew(com.ibm.domo.ssa.NewInstruction)
      */
     @Override
@@ -419,20 +403,15 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.Instruction.Visitor#visitThrow(com.ibm.domo.ssa.ThrowInstruction)
      */
     @Override
     public void visitThrow(SSAThrowInstruction instruction) {
-      // Assertions.UNREACHABLE();
       // don't do anything: we handle exceptional edges
       // in a separate pass
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.Instruction.Visitor#visitGetCaughtException(com.ibm.domo.ssa.GetCaughtExceptionInstruction)
      */
     @Override
@@ -440,7 +419,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
       List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, getBasicBlock());
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
 
-      Set<TypeReference> types = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
+      Set<IClass> types = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
       addExceptionDefConstraints(ir, node, peis, def, types);
     }
 
@@ -453,7 +432,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
      * @param catchClasses the types "caught" by the exceptionVar
      */
     protected void addExceptionDefConstraints(IR ir, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
-        Set<TypeReference> catchClasses) {
+        Set<IClass> catchClasses) {
       for (Iterator<ProgramCounter> it = peis.iterator(); it.hasNext();) {
         ProgramCounter peiLoc = it.next();
         SSAInstruction pei = ir.getPEI(peiLoc);

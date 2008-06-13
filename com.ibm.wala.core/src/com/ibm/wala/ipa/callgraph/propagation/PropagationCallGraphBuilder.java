@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.propagation;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -80,26 +79,15 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
   private final static boolean DEBUG_ENTRYPOINTS = DEBUG_ALL | false;
 
-
   /**
    * Meta-data regarding how pointers are modeled
    */
   protected final PointerKeyFactory pointerKeyFactory;
 
   /**
-   * The object that represents the java.lang.Throwable class
+   * The object that represents the java.lang.Object class
    */
   final private IClass JAVA_LANG_OBJECT;
-
-  /**
-   * The object that represents the java.lang.Throwable class
-   */
-  final private IClass JAVA_LANG_THROWABLE;
-
-  /**
-   * A singleton set holding the java.lang.Throwable TypeReference
-   */
-  public final static Set<TypeReference> THROWABLE_SET = Collections.singleton(TypeReference.JavaLangThrowable);
 
   /**
    * Governing class hierarchy
@@ -213,7 +201,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     }
     callGraph.setInterpreter(contextInterpreter);
     JAVA_LANG_OBJECT = cha.lookupClass(TypeReference.JavaLangObject);
-    JAVA_LANG_THROWABLE = cha.lookupClass(TypeReference.JavaLangThrowable);
   }
 
   protected ExplicitCallGraph createEmptyCallGraph(IClassHierarchy cha, AnalysisOptions options) {
@@ -226,7 +213,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   protected boolean isJavaLangObject(IClass klass) {
     return (klass.getReference().equals(TypeReference.JavaLangObject));
   }
-  
+
   public CallGraph makeCallGraph(AnalysisOptions options) throws IllegalArgumentException, CancelException {
     return makeCallGraph(options, null);
   }
@@ -234,7 +221,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /*
    * @see com.ibm.wala.ipa.callgraph.CallGraphBuilder#makeCallGraph(com.ibm.wala.ipa.callgraph.AnalysisOptions)
    */
-  public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor) throws IllegalArgumentException, CallGraphBuilderCancelException {
+  public CallGraph makeCallGraph(AnalysisOptions options, IProgressMonitor monitor) throws IllegalArgumentException,
+      CallGraphBuilderCancelException {
     if (options == null) {
       throw new IllegalArgumentException("options is null");
     }
@@ -276,7 +264,8 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     try {
       solver.solve(monitor);
     } catch (CancelException e) {
-      CallGraphBuilderCancelException c = CallGraphBuilderCancelException.createCallGraphBuilderCancelException(e, callGraph, system.extractPointerAnalysis(this));
+      CallGraphBuilderCancelException c = CallGraphBuilderCancelException.createCallGraphBuilderCancelException(e, callGraph,
+          system.extractPointerAnalysis(this));
       throw c;
     }
 
@@ -315,7 +304,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * Add constraints a node.
+   * Add constraints for a node.
    * 
    * @return true iff any new constraints are added.
    */
@@ -341,8 +330,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * @param node
-   * @param valueNumber
    * @return the PointerKey that acts as a representative for the class of pointers that includes the local variable
    *         identified by the value number parameter.
    */
@@ -351,8 +338,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * @param node
-   * @param valueNumber
    * @return the PointerKey that acts as a representative for the class of pointers that includes the local variable
    *         identified by the value number parameter.
    */
@@ -372,7 +357,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * @param node
    * @return the PointerKey that acts as a representative for the class of pointers that includes the return value for a
    *         node
    */
@@ -381,7 +365,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   }
 
   /**
-   * @param node
    * @return the PointerKey that acts as a representative for the class of pointers that includes the exceptional return
    *         value
    */
@@ -452,8 +435,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @param catchClasses set of TypeReferences that the exceptionVar may catch
    * @param e a particular exception instance
    */
-  protected void assignInstanceToCatch(PointerKey exceptionVar, Set catchClasses, InstanceKey e) {
-
+  protected void assignInstanceToCatch(PointerKey exceptionVar, Set<IClass> catchClasses, InstanceKey e) {
     if (catches(catchClasses, e.getConcreteType(), cha)) {
       system.newConstraint(exceptionVar, e);
     }
@@ -467,30 +449,21 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @param catchClasses set of TypeReferences that the exceptionVar may catch
    * @param e points-to-set representing a thrown exception that might be caught.
    */
-  protected void addAssignmentsForCatchPointerKey(PointerKey exceptionVar, Set catchClasses, PointerKey e) {
+  protected void addAssignmentsForCatchPointerKey(PointerKey exceptionVar, Set<IClass> catchClasses, PointerKey e) {
     if (DEBUG_GENERAL) {
       System.err.println("addAssignmentsForCatch: " + catchClasses);
     }
-    // this is tricky ... we want to filter based on a number of classes ... so
-    // we can't
-    // just used a FilteredPointerKey for the exceptionVar. Instead, we create a
-    // new
+    // this is tricky ... we want to filter based on a number of classes ... so we can't
+    // just used a FilteredPointerKey for the exceptionVar. Instead, we create a new
     // "typed local" for each catch class, and coalesce the results using
     // assignment
-    for (Iterator it2 = catchClasses.iterator(); it2.hasNext();) {
-      TypeReference T = (TypeReference) it2.next();
-      IClass C = cha.lookupClass(T);
-      if (C == null) {
-        Warnings.add(ExceptionLookupFailure.create(T));
+    for (IClass c : catchClasses) {
+      if (c.getReference().equals(TypeReference.JavaLangThrowable)) {
+        system.newConstraint(exceptionVar, assignOperator, e);
       } else {
-        if (C.getReference().equals(TypeReference.JavaLangThrowable)) {
-          system.newConstraint(exceptionVar, assignOperator, e);
-        } else {
-          FilteredPointerKey typedException = TypedPointerKey.make(exceptionVar, C);
-          system.newConstraint(typedException, filterOperator, e);
-          system.newConstraint(exceptionVar, assignOperator, typedException);
-          // System.err.println("TE " + typedException);
-        }
+        FilteredPointerKey typedException = TypedPointerKey.make(exceptionVar, c);
+        system.newConstraint(typedException, filterOperator, e);
+        system.newConstraint(exceptionVar, assignOperator, typedException);
       }
     }
   }
@@ -498,6 +471,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   /**
    * A warning for when we fail to resolve a call to an entrypoint
    */
+  @SuppressWarnings("unused")
   private static class ExceptionLookupFailure extends Warning {
 
     final TypeReference t;
@@ -581,30 +555,19 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
    * @return true iff klass is a subclass of some element of the Set
    * @throws IllegalArgumentException if catchClasses is null
    */
-  public static boolean catches(Set catchClasses, IClass klass, IClassHierarchy cha) {
+  public static boolean catches(Set<IClass> catchClasses, IClass klass, IClassHierarchy cha) {
     if (catchClasses == null) {
       throw new IllegalArgumentException("catchClasses is null");
     }
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(catchClasses.size() > 0);
-      // Assertions._assert(cha.isSubclassOf(klass,
-      // TypeReference.JavaLangThrowable));
-    }
     // quick shortcut
-    if (catchClasses == THROWABLE_SET) {
-      return true;
-    }
-    for (Iterator it = catchClasses.iterator(); it.hasNext();) {
-      TypeReference T = (TypeReference) it.next();
-      IClass C = cha.lookupClass(T);
-      if (Assertions.verifyAssertions) {
-        if (C == null) {
-          // an unresolved catch type ... we should have raised a warning for
-          // this earlier!
-          continue;
-        }
+    if (catchClasses.size() == 1) {
+      IClass c = catchClasses.iterator().next();
+      if (c.getReference().equals(TypeReference.JavaLangThread)) {
+        return true;
       }
-      if (cha.isAssignableFrom(C, klass)) {
+    }
+    for (IClass c : catchClasses) {
+      if (cha.isAssignableFrom(c, klass)) {
         return true;
       }
     }
@@ -662,12 +625,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       FilteredPointerKey.TypeFilter filter = pk.getTypeFilter();
       changed = filter.addFiltered(system, lhs, rhs);
 
-      // SJF: Do NOT propagate malleables through filters!
-      // IntSet malleable = getMalleableInstances();
-      // if (malleable != null) {
-      // changed |= L.addAllInIntersection(R, malleable);
-      // }
-
       if (DEBUG_FILTER) {
         System.err.println("RESULT " + lhs + (changed ? " (changed)" : ""));
       }
@@ -689,8 +646,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
     @Override
     public boolean equals(Object obj) {
-      // these objects are canonicalized for the duration of a
-      // solve
+      // these objects are canonicalized for the duration of a solve
       return this == obj;
     }
 
@@ -711,10 +667,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
   public IClass getJavaLangObject() {
     return JAVA_LANG_OBJECT;
-  }
-
-  public IClass getJavaLangThrowable() {
-    return JAVA_LANG_THROWABLE;
   }
 
   public ExplicitCallGraph getCallGraph() {
@@ -824,9 +776,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     return alreadyVisited.contains(node);
   }
 
-  /**
-   * @param node
-   */
   protected void markAlreadyVisited(CGNode node) {
     alreadyVisited.add(node);
   }
@@ -1082,16 +1031,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
         }
       };
       if (priorInstances != null) {
-        // temp for performance debugging
-        // MutableSparseIntSet temp = new MutableSparseIntSet();
-        // temp.addAll(value);
-        // BitVectorIntSet b = new BitVectorIntSet();
-        // b.addAll(priorInstances);
-        // temp.removeAll(b);
-        // if (temp.size() == 317) {
-        //        
-        // System.err.println("SIZE GG" + temp.size());
-        // }
         value.foreachExcluding(priorInstances, action);
         priorInstances.addAll(value);
       } else {
@@ -1103,9 +1042,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
     /**
      * Subclasses can override as needed
-     * 
-     * @param value
-     * @return an IntSet
      */
     protected IntSet filterInstances(IntSet value) {
       return value;
@@ -1126,9 +1062,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
       }
     }
 
-    /**
-     * @return Returns the field.
-     */
     protected IField getField() {
       return field;
     }
@@ -1225,9 +1158,6 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
     /**
      * Subclasses can override as needed
-     * 
-     * @param value
-     * @return an IntSet
      */
     protected IntSet filterInstances(IntSet value) {
       return value;

@@ -343,7 +343,7 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
   private OrdinalSet<InstanceKey> computeImplicitPointsToSetAtCatch(CGNode node, SSAGetCaughtExceptionInstruction instruction) {
     IR ir = node.getIR();
     List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getBasicBlockForCatch(instruction));
-    Set caughtTypes = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
+    Set<IClass> caughtTypes = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
     MutableSparseIntSet S = MutableSparseIntSet.makeEmpty();
     // add the instances from each incoming pei ...
     for (Iterator<ProgramCounter> it = peis.iterator(); it.hasNext();) {

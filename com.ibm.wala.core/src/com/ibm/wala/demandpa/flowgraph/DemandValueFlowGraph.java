@@ -79,7 +79,6 @@ import com.ibm.wala.ssa.SSAUnaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSAInstruction.Visitor;
 import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -158,8 +157,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitArrayLoad(com.ibm.domo.ssa.SSAArrayLoadInstruction)
      */
     @Override
@@ -173,8 +170,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitArrayStore(com.ibm.domo.ssa.SSAArrayStoreInstruction)
      */
     @Override
@@ -189,8 +184,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitCheckCast(com.ibm.domo.ssa.SSACheckCastInstruction)
      */
     @Override
@@ -227,8 +220,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitReturn(com.ibm.domo.ssa.SSAReturnInstruction)
      */
     @Override
@@ -247,8 +238,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitGet(com.ibm.domo.ssa.SSAGetInstruction)
      */
     @Override
@@ -283,8 +272,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.Instruction.Visitor#visitPut(com.ibm.domo.ssa.PutInstruction)
      */
     @Override
@@ -318,8 +305,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.Instruction.Visitor#visitInvoke(com.ibm.domo.ssa.InvokeInstruction)
      */
     @Override
@@ -348,8 +333,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.Instruction.Visitor#visitNew(com.ibm.domo.ssa.NewInstruction)
      */
     @Override
@@ -375,14 +358,6 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
         if (klass != null && klass.isArrayClass()) {
           InstanceKey ik = heapModel.getInstanceKeyForMultiNewArray(node, instruction.getNewSite(), dim);
           PointerKey pk = heapModel.getPointerKeyForArrayContents(lastInstance);
-          // if (DEBUG_MULTINEWARRAY) {
-          // Trace.println("multinewarray constraint: ");
-          // Trace.println(" pk: " + pk);
-          // Trace.println(" ik: " + system.findOrCreateIndexForInstanceKey(ik)
-          // + " concrete type " + ik.getConcreteType()
-          // + " is " + ik);
-          // Trace.println(" klass:" + klass);
-          // }
           addNode(ik);
           addNode(pk);
           addEdge(pk, ik, NewLabel.v());
@@ -402,14 +377,11 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
      */
     @Override
     public void visitThrow(SSAThrowInstruction instruction) {
-      // Assertions.UNREACHABLE();
       // don't do anything: we handle exceptional edges
       // in a separate pass
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.Instruction.Visitor#visitGetCaughtException(com.ibm.domo.ssa.GetCaughtExceptionInstruction)
      */
     @Override
@@ -417,13 +389,11 @@ public class DemandValueFlowGraph extends AbstractDemandFlowGraph {
       List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, getBasicBlock());
       PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
 
-      Set<TypeReference> types = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
+      Set<IClass> types = SSAPropagationCallGraphBuilder.getCaughtExceptionTypes(instruction, ir);
       addExceptionDefConstraints(ir, node, peis, def, types);
     }
 
     /*
-     * (non-Javadoc)
-     * 
      * @see com.ibm.domo.ssa.SSAInstruction.Visitor#visitPi(com.ibm.domo.ssa.SSAPiInstruction)
      */
     @Override

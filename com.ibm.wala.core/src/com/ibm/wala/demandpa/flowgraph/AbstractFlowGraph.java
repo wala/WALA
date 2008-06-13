@@ -39,6 +39,7 @@ package com.ibm.wala.demandpa.flowgraph;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -106,33 +107,38 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     }
 
   };
+
   /**
-   * Map: LocalPointerKey -> SSAInvokeInstruction. If we have (x, foo()), that
-   * means that x was def'fed by the return value from the call to foo()
+   * Map: LocalPointerKey -> SSAInvokeInstruction. If we have (x, foo()), that means that x was def'fed by the return
+   * value from the call to foo()
    */
   protected final Map<PointerKey, SSAInvokeInstruction> callDefs = HashMapFactory.make();
+
   /**
-   * Map: {@link LocalPointerKey} -> Set<{@link SSAInvokeInstruction}>. If we
-   * have (x, foo()), that means x was passed as a parameter to the call to
-   * foo(). The parameter position is not represented and must be recovered.
+   * Map: {@link LocalPointerKey} -> Set<{@link SSAInvokeInstruction}>. If we have (x, foo()), that means x was
+   * passed as a parameter to the call to foo(). The parameter position is not represented and must be recovered.
    */
   protected final Map<PointerKey, Set<SSAInvokeInstruction>> callParams = HashMapFactory.make();
+
   /**
-   * Map: LocalPointerKey -> CGNode. If we have (x, foo), then x is a parameter
-   * of method foo. For now, we have to re-discover the parameter position. TODO
-   * this should just be a set; we can get the CGNode from the
+   * Map: LocalPointerKey -> CGNode. If we have (x, foo), then x is a parameter of method foo. For now, we have to
+   * re-discover the parameter position. TODO this should just be a set; we can get the CGNode from the
    * {@link LocalPointerKey}
    */
   protected final Map<PointerKey, CGNode> params = HashMapFactory.make();
+
   /**
-   * Map: {@link LocalPointerKey} -> {@link CGNode}. If we have (x, foo), then
-   * x is a return value of method foo. Must re-discover if x is normal or
-   * exceptional return value.
+   * Map: {@link LocalPointerKey} -> {@link CGNode}. If we have (x, foo), then x is a return value of method foo. Must
+   * re-discover if x is normal or exceptional return value.
    */
   protected final Map<PointerKey, CGNode> returns = HashMapFactory.make();
+
   protected final MemoryAccessMap mam;
+
   protected final HeapModel heapModel;
+
   protected final ClassHierarchy cha;
+
   protected final CallGraph cg;
 
   public AbstractFlowGraph(MemoryAccessMap mam, HeapModel heapModel, ClassHierarchy cha, CallGraph cg) {
@@ -174,7 +180,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    * @param node
    */
   protected void addNodesForInvocations(CGNode node, IR ir) {
-    for (Iterator<CallSiteReference> iter = ir.iterateCallSites(); iter.hasNext(); ) { 
+    for (Iterator<CallSiteReference> iter = ir.iterateCallSites(); iter.hasNext();) {
       CallSiteReference site = iter.next();
       SSAAbstractInvokeInstruction[] calls = ir.getCalls(site);
       for (SSAAbstractInvokeInstruction invokeInstr : calls) {
@@ -263,17 +269,16 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
         continue;
       }
       PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getVal());
-//      if (Assertions.verifyAssertions) {
-//        Assertions._assert(containsNode(r));
-//      }
+      // if (Assertions.verifyAssertions) {
+      // Assertions._assert(containsNode(r));
+      // }
       written.add(r);
     }
     return written.iterator();
   }
 
   /**
-   * convert a pointer key to one in the memory access map's heap model
-   * TODO move this somewhere more appropriate
+   * convert a pointer key to one in the memory access map's heap model TODO move this somewhere more appropriate
    * @param pk
    */
   public static PointerKey convertToHeapModel(PointerKey pk, HeapModel h) {
@@ -317,9 +322,9 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
         continue;
       }
       PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getDef());
-//      if (Assertions.verifyAssertions) {
-//        Assertions._assert(containsNode(r));
-//      }
+      // if (Assertions.verifyAssertions) {
+      // Assertions._assert(containsNode(r));
+      // }
       readInto.add(r);
     }
     return readInto.iterator();
@@ -344,13 +349,11 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
       if (instruction instanceof SSAArrayStoreInstruction) {
         SSAArrayStoreInstruction s = (SSAArrayStoreInstruction) instruction;
         PointerKey r = heapModel.getPointerKeyForLocal(node, s.getValue());
-//        if (Assertions.verifyAssertions) {
-//          Assertions._assert(containsNode(r), "missing node for " + r);
-//        }
         written.add(r);
       } else if (instruction instanceof SSANewInstruction) {
-        NewMultiDimInfo multiDimInfo = DemandPointerFlowGraph.getInfoForNewMultiDim((SSANewInstruction) instruction, heapModel, node);
-        for (Pair<PointerKey,PointerKey> arrStoreInstr: multiDimInfo.arrStoreInstrs) {
+        NewMultiDimInfo multiDimInfo = DemandPointerFlowGraph.getInfoForNewMultiDim((SSANewInstruction) instruction, heapModel,
+            node);
+        for (Pair<PointerKey, PointerKey> arrStoreInstr : multiDimInfo.arrStoreInstrs) {
           written.add(arrStoreInstr.snd);
         }
       } else {
@@ -377,52 +380,48 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
         continue;
       }
       PointerKey r = heapModel.getPointerKeyForLocal(a.getNode(), s.getDef());
-//      if (Assertions.verifyAssertions) {
-//        Assertions._assert(containsNode(r));
-//      }
+      // if (Assertions.verifyAssertions) {
+      // Assertions._assert(containsNode(r));
+      // }
       read.add(r);
     }
     return read.iterator();
   }
 
   /**
-   * Add constraints to represent the flow of exceptions to the exceptional
-   * return value for this node
+   * Add constraints to represent the flow of exceptions to the exceptional return value for this node
    */
   protected void addNodePassthruExceptionConstraints(CGNode node, IR ir) {
     // add constraints relating to thrown exceptions that reach the exit
     // block.
     List<ProgramCounter> peis = SSAPropagationCallGraphBuilder.getIncomingPEIs(ir, ir.getExitBlock());
     PointerKey exception = heapModel.getPointerKeyForExceptionalReturnValue(node);
-  
-    addExceptionDefConstraints(ir, node, peis, exception, PropagationCallGraphBuilder.THROWABLE_SET);
+    IClass c = node.getClassHierarchy().lookupClass(TypeReference.JavaLangThrowable);
+    
+    addExceptionDefConstraints(ir, node, peis, exception, Collections.singleton(c));
   }
 
   /**
-   * Generate constraints which assign exception values into an exception
-   * pointer
+   * Generate constraints which assign exception values into an exception pointer
    * 
-   * @param node
-   *            governing node
-   * @param peis
-   *            list of PEI instructions
-   * @param exceptionVar
-   *            PointerKey representing a pointer to an exception value
-   * @param catchClasses
-   *            the types "caught" by the exceptionVar
+   * @param node governing node
+   * @param peis list of PEI instructions
+   * @param exceptionVar PointerKey representing a pointer to an exception value
+   * @param catchClasses the types "caught" by the exceptionVar
    */
-  protected void addExceptionDefConstraints(IR ir, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar, Set<TypeReference> catchClasses) {
+  protected void addExceptionDefConstraints(IR ir, CGNode node, List<ProgramCounter> peis, PointerKey exceptionVar,
+      Set<IClass> catchClasses) {
     for (Iterator<ProgramCounter> it = peis.iterator(); it.hasNext();) {
       ProgramCounter peiLoc = it.next();
       SSAInstruction pei = ir.getPEI(peiLoc);
-  
+
       if (pei instanceof SSAAbstractInvokeInstruction) {
         SSAAbstractInvokeInstruction s = (SSAAbstractInvokeInstruction) pei;
         PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
         addNode(exceptionVar);
         addNode(e);
         addEdge(exceptionVar, e, AssignLabel.noFilter());
-  
+
       } else if (pei instanceof SSAAbstractThrowInstruction) {
         SSAAbstractThrowInstruction s = (SSAAbstractThrowInstruction) pei;
         PointerKey e = heapModel.getPointerKeyForLocal(node, s.getException());
@@ -430,7 +429,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
         addNode(e);
         addEdge(exceptionVar, e, AssignLabel.noFilter());
       }
-  
+
       // Account for those exceptions for which we do not actually have a
       // points-to set for
       // the pei, but just instance keys
