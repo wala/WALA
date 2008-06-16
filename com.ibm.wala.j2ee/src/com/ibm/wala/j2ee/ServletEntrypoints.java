@@ -310,8 +310,12 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
     
     IClass servlet = cha.lookupClass(Servlet);
     IClass servletFilter = cha.lookupClass(ServletFilter);
-    assert servlet != null;
-    assert servletFilter != null;
+    if (servlet == null) {
+      throw new IllegalStateException("javax.servlet.Servlet not loaded.");
+    }
+    if (servletFilter == null) {
+      throw new IllegalStateException("javax.servlet.ServletFilter not loaded.");
+    }
     if (cha.implementsInterface(klass, servlet) || cha.implementsInterface(klass, servletFilter)) {
       // ignore struts ActionServlets
       if (actionServletClass != null) {
