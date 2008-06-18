@@ -17,7 +17,7 @@ package com.ibm.wala.util.perf;
  */
 public class Stopwatch {
 
-  private int count;
+  protected int count;
 
   /**
    * elapsed time in nanoseconds
@@ -51,5 +51,16 @@ public class Stopwatch {
    */
   public int getCount() {
     return count;
+  }
+  
+  @Override
+  public String toString() {
+    StringBuffer sb = new StringBuffer();
+    sb.append("total: " + getElapsedMillis());
+    if (count > 0){
+      sb.append(", inv: " + count);
+      sb.append(", avg: " + getElapsedMillis()/count);
+    }
+    return sb.toString();
   }
 }

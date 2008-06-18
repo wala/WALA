@@ -33,9 +33,13 @@ public class StopwatchGC extends com.ibm.wala.util.perf.Stopwatch {
 
   @Override
   public final void start() {
-    System.gc();
-    Runtime r = Runtime.getRuntime();
-    startMemory = r.totalMemory() - r.freeMemory();
+    if (count == 0){
+      // when the GC stop watch is used for repeating events, we count from the first start to the last end.
+      // (a different approach would be to accumulate the delta's) 
+      System.gc();
+      Runtime r = Runtime.getRuntime();
+      startMemory = r.totalMemory() - r.freeMemory();
+    }
     super.start();
   }
 
@@ -89,4 +93,15 @@ public class StopwatchGC extends com.ibm.wala.util.perf.Stopwatch {
     return name;
   }
 
+  @Override
+  public String toString() {
+    StringBuffer sb = new StringBuffer();
+    sb.append(super.toString());
+//    if (count == 1){
+//      sb.append (", Footprint at entry: " + (float) startMemory / 1000000 + " MB");
+//      sb.append (", Footprint at exit: " + (float) endMemory / 1000000 + " MB");
+      sb.append (", Delta: " + (float) (endMemory - startMemory) / 1000000 + " MB");
+//    }
+    return sb.toString();
+  }
 }

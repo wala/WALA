@@ -31,7 +31,7 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * Reads {@link AnalysisScope} from a text file.
- *
+ * 
  */
 public class AnalysisScopeReader {
 
@@ -53,43 +53,7 @@ public class AnalysisScopeReader {
       String line;
       BufferedReader r = new BufferedReader(new FileReader(scopeFile));
       while ((line = r.readLine()) != null) {
-        StringTokenizer toks = new StringTokenizer(line, "\n,");
-
-        Atom loaderName = Atom.findOrCreateUnicodeAtom(toks.nextToken());
-        Atom languageName = Atom.findOrCreateUnicodeAtom(toks.nextToken());
-        ClassLoaderReference walaLoader = new ClassLoaderReference(loaderName, languageName);
-
-        String entryType = toks.nextToken();
-        String entryPathname = toks.nextToken();
-        if ("classFile".equals(entryType)) {
-          File cf = FileProvider.getFile(entryPathname, javaLoader);
-          assert cf != null && cf.exists();
-          scope.addClassFileToScope(walaLoader, cf);
-        } else if ("sourceFile".equals(entryType)) {
-          File sf = FileProvider.getFile(entryPathname, javaLoader);
-          assert sf != null && sf.exists();
-          scope.addSourceFileToScope(walaLoader, sf, entryPathname);
-        } else if ("binaryDir".equals(entryType)) {
-          File bd = FileProvider.getFile(entryPathname, javaLoader);
-          assert bd.isDirectory();
-          scope.addToScope(walaLoader, new BinaryDirectoryTreeModule(bd));
-        } else if ("sourceDir".equals(entryType)) {
-          File sd = FileProvider.getFile(entryPathname, javaLoader);
-          assert sd.isDirectory();
-          scope.addToScope(walaLoader, new SourceDirectoryTreeModule(sd));
-        } else if ("jarFile".equals(entryType)) {
-          Module M = FileProvider.getJarFileModule(entryPathname, javaLoader);
-          scope.addToScope(walaLoader, M);
-        } else if ("loaderImpl".equals(entryType)) {
-          scope.setLoaderImpl(walaLoader, entryPathname);
-        } else if ("stdlib".equals(entryType)) {
-          String[] stdlibs = WalaProperties.getJ2SEJarFiles();
-          for (int i = 0; i < stdlibs.length; i++) {
-            scope.addToScope(walaLoader, new JarFile(stdlibs[i]));
-          }
-        } else {
-          Assertions.UNREACHABLE();
-        }
+        processScopeDefLine(scope, javaLoader, line);
       }
 
       if (exclusionsFile != null) {
@@ -104,6 +68,44 @@ public class AnalysisScopeReader {
     return scope;
   }
 
+  public static void processScopeDefLine(AnalysisScope scope, ClassLoader javaLoader, String line) throws IOException {
+    StringTokenizer toks = new StringTokenizer(line, "\n,");
+
+    Atom loaderName = Atom.findOrCreateUnicodeAtom(toks.nextToken());
+    Atom languageName = Atom.findOrCreateUnicodeAtom(toks.nextToken());
+    ClassLoaderReference walaLoader = new ClassLoaderReference(loaderName, languageName);
+
+    String entryType = toks.nextToken();
+    String entryPathname = toks.nextToken();
+    if ("classFile".equals(entryType)) {
+      File cf = FileProvider.getFile(entryPathname, javaLoader);
+      scope.addClassFileToScope(walaLoader, cf);
+    } else if ("sourceFile".equals(entryType)) {
+      File sf = FileProvider.getFile(entryPathname, javaLoader);
+      scope.addSourceFileToScope(walaLoader, sf, entryPathname);
+    } else if ("binaryDir".equals(entryType)) {
+      File bd = FileProvider.getFile(entryPathname, javaLoader);
+      assert bd.isDirectory();
+      scope.addToScope(walaLoader, new BinaryDirectoryTreeModule(bd));
+    } else if ("sourceDir".equals(entryType)) {
+      File sd = FileProvider.getFile(entryPathname, javaLoader);
+      assert sd.isDirectory();
+      scope.addToScope(walaLoader, new SourceDirectoryTreeModule(sd));
+    } else if ("jarFile".equals(entryType)) {
+      Module M = FileProvider.getJarFileModule(entryPathname, javaLoader);
+      scope.addToScope(walaLoader, M);
+    } else if ("loaderImpl".equals(entryType)) {
+      scope.setLoaderImpl(walaLoader, entryPathname);
+    } else if ("stdlib".equals(entryType)) {
+      String[] stdlibs = WalaProperties.getJ2SEJarFiles();
+      for (int i = 0; i < stdlibs.length; i++) {
+        scope.addToScope(walaLoader, new JarFile(stdlibs[i]));
+      }
+    } else {
+      Assertions.UNREACHABLE();
+    }
+  }
+
   public static AnalysisScope makePrimordialScope(File exclusionsFile) {
     return read(BASIC_FILE, exclusionsFile, MY_CLASSLOADER);
   }
@@ -115,6 +117,12 @@ public class AnalysisScopeReader {
     AnalysisScope scope = makePrimordialScope(exclusionsFile);
     ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
 
+    addClassPathToScope(classPath, scope, loader);
+
+    return scope;
+  }
+
+  public static void addClassPathToScope(String classPath, AnalysisScope scope, ClassLoaderReference loader) {
     try {
       StringTokenizer paths = new StringTokenizer(classPath, File.pathSeparator);
       while (paths.hasMoreTokens()) {
@@ -133,7 +141,5 @@ public class AnalysisScopeReader {
     } catch (IOException e) {
       Assertions.UNREACHABLE(e.toString());
     }
-
-    return scope;
   }
 }
