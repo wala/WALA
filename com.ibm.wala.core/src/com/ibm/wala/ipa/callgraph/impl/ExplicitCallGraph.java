@@ -36,7 +36,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IntMapIterator;
 import com.ibm.wala.util.collections.SparseVector;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.functions.IntFunction;
 import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.NumberedEdgeManager;
@@ -49,22 +48,18 @@ import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- * A call graph which explicitly holds the target for each call site in each
- * node.
- * 
+ * A call graph which explicitly holds the target for each call site in each node.
  * 
  * @author sfink
  */
 public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstants {
 
-  private static final boolean DEBUG = false;
-
   protected final IClassHierarchy cha;
 
   protected final AnalysisOptions options;
-  
+
   private final AnalysisCache cache;
-  
+
   private final long maxNumberOfNodes;
 
   /**
@@ -90,16 +85,16 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
 
   /**
    * subclasses may wish to override!
-   * @throws CancelException 
+   * @throws CancelException
    */
   @Override
   protected CGNode makeFakeRootNode() throws CancelException {
     return findOrCreateNode(new FakeRootMethod(cha, options, cache), Everywhere.EVERYWHERE);
   }
-  
+
   /**
    * subclasses may wish to override!
-   * @throws CancelException 
+   * @throws CancelException
    */
   @Override
   protected CGNode makeFakeWorldClinitNode() throws CancelException {
@@ -107,27 +102,16 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   }
 
   /**
-   * Method findOrCreateNode.
-   * 
-   * @param method
-   * @return NodeImpl
    */
   @Override
   public CGNode findOrCreateNode(IMethod method, Context C) throws CancelException {
-    if (Assertions.verifyAssertions) {
-      if (method == null || C == null) {
-        Assertions._assert(method != null, "null method");
-        Assertions._assert(C != null, "null context for method " + method);
-      }
-    }
+    assert method != null : "null method";
+    assert C != null : "null context for method " + method;
     Key k = new Key(method, C);
     NodeImpl result = getNode(k);
     if (result == null) {
       if (maxNumberOfNodes == -1 || getNumberOfNodes() <= maxNumberOfNodes) {
         result = makeNode(method, C);
-        if (DEBUG) {
-          Trace.println("Create node for " + method + "hash code " + method.hashCode());
-        }
         registerNode(k, result);
       } else {
         throw CancelException.make("Too many nodes");
@@ -139,10 +123,8 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   public class ExplicitNode extends NodeImpl {
 
     /**
-     * A Mapping from call site program counter (int) -> Object, where Object is
-     * a CGNode if we've discovered exactly one target for the site, or an
-     * IntSet of node numbers if we've discovered more than one target for the
-     * site.
+     * A Mapping from call site program counter (int) -> Object, where Object is a CGNode if we've discovered exactly
+     * one target for the site, or an IntSet of node numbers if we've discovered more than one target for the site.
      */
     protected final SparseVector<Object> targets = new SparseVector<Object>();
 
@@ -161,7 +143,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       if (result == null) {
         return Collections.emptySet();
       } else if (result instanceof CGNode) {
-        Set<CGNode> s = Collections.singleton((CGNode)result);
+        Set<CGNode> s = Collections.singleton((CGNode) result);
         return s;
       } else {
         IntSet s = (IntSet) result;
@@ -197,7 +179,6 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
         }
       });
     }
-    
 
     protected int getNumberOfTargets(CallSiteReference site) {
       Object result = targets.get(site.getProgramCounter());
@@ -306,7 +287,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     public IR getIR() {
       return getCallGraph().getInterpreter(this).getIR(this);
     }
-    
+
     public DefUse getDU() {
       return getCallGraph().getInterpreter(this).getDU(this);
     }
@@ -350,8 +331,8 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     /**
      * for each y, the {x | (x,y) is an edge)
      */
-    final IBinaryNaturalRelation predecessors = new BasicNaturalRelation(
-        new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY }, BasicNaturalRelation.SIMPLE);
+    final IBinaryNaturalRelation predecessors = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
+        BasicNaturalRelation.SIMPLE);
 
     public IntSet getSuccNodeNumbers(CGNode node) {
       ExplicitNode n = (ExplicitNode) node;
@@ -446,7 +427,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       throw new IllegalArgumentException("node not in callgraph " + node);
     }
     assert (node instanceof ExplicitNode);
-    ExplicitNode n = (ExplicitNode)node;
+    ExplicitNode n = (ExplicitNode) node;
     return n.getNumberOfTargets(site);
   }
 
@@ -458,7 +439,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       throw new IllegalArgumentException("node not in callgraph " + target);
     }
     assert (src instanceof ExplicitNode);
-    ExplicitNode n = (ExplicitNode)src;
+    ExplicitNode n = (ExplicitNode) src;
     return n.getPossibleSites(target);
   }
 
@@ -467,16 +448,16 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
       throw new IllegalArgumentException("node not in callgraph " + node);
     }
     assert (node instanceof ExplicitNode);
-    ExplicitNode n = (ExplicitNode)node;
+    ExplicitNode n = (ExplicitNode) node;
     return n.getPossibleTargets(site);
   }
-  
+
   public IntSet getPossibleTargetNumbers(CGNode node, CallSiteReference site) {
     if (!containsNode(node)) {
       throw new IllegalArgumentException("node not in callgraph " + node);
     }
     assert (node instanceof ExplicitNode);
-    ExplicitNode n = (ExplicitNode)node;
+    ExplicitNode n = (ExplicitNode) node;
     return n.getPossibleTargetNumbers(site);
   }
 
