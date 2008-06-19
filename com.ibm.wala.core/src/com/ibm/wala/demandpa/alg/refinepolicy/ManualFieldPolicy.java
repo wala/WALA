@@ -46,7 +46,7 @@ import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -101,7 +101,7 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
     return true;
   }
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * 
@@ -132,7 +132,7 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
    *        pattern <code>Pattern.compile("Ljava/util")</code> will cause all fields of classes in the
    *        <code>java.util</code> package to be refined.
    */
-  public ManualFieldPolicy(ClassHierarchy cha, Pattern refinePattern) {
+  public ManualFieldPolicy(IClassHierarchy cha, Pattern refinePattern) {
     this.cha = cha;
     this.refinePattern = refinePattern;
   }

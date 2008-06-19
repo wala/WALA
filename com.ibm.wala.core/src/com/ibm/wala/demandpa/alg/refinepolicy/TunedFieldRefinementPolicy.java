@@ -18,7 +18,7 @@ import com.ibm.wala.demandpa.alg.statemachine.StateMachine;
 import com.ibm.wala.demandpa.flowgraph.IFlowLabel;
 import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -27,7 +27,7 @@ public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
 
   private static final boolean DEBUG = false;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   private final Collection<IClass> typesToRefine = HashSetFactory.make();
 
@@ -89,7 +89,7 @@ public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
     }
   }
 
-  public TunedFieldRefinementPolicy(ClassHierarchy cha) {
+  public TunedFieldRefinementPolicy(IClassHierarchy cha) {
     this.cha = cha;
   }
 

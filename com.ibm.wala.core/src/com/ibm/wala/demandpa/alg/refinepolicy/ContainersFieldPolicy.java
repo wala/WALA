@@ -12,11 +12,11 @@ package com.ibm.wala.demandpa.alg.refinepolicy;
 
 import java.util.regex.Pattern;
 
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 public class ContainersFieldPolicy extends ManualFieldPolicy {
 
-  public ContainersFieldPolicy(ClassHierarchy cha) {
+  public ContainersFieldPolicy(IClassHierarchy cha) {
     super(cha, Pattern.compile("Ljava/util(?!(/logging)).*"));
   }
 }
