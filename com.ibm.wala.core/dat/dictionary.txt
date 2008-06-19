@@ -160,3 +160,5 @@ cfg
 wala
 nuke
 pointwise
+subterm
+inline
