@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import com.ibm.wala.demandpa.genericutil.Predicate;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
@@ -53,6 +54,25 @@ public class Query {
     }
     return result;
   }
+  
+  /**
+   * SELECT attribute FROM t where P(column)
+   */
+  public static <T> Collection<Map<String,T>> selectStarWhere(Table<T> t, String column, Predicate<T> P) {
+    if (t == null) {
+      throw new IllegalArgumentException("t == null");
+    }
+    Collection<Map<String,T>> c = new ArrayList<Map<String,T>>();
+    for (int i = 0 ; i < t.getNumberOfRows(); i++) {
+      Map<String,T> p = t.row2Map(i);
+      T s = p.get(column);
+      if (P.test(s)) {
+        c.add(p);
+      }
+    }
+    return c;
+  }
+ 
 
   public static <T> Table<T> viewWhereEquals(Table<T> t, String column, T value) {
     Collection<Map<String,T>> c = selectStarWhereEquals(t, column, value);
