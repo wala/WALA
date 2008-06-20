@@ -50,7 +50,7 @@ import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -70,7 +70,7 @@ public class SimpleDemandPointsTo extends AbstractDemandPointsTo {
 
   private static final boolean VERBOSE = false;
 
-  public SimpleDemandPointsTo(CallGraph cg, HeapModel model, MemoryAccessMap fam, ClassHierarchy cha, AnalysisOptions options) {
+  public SimpleDemandPointsTo(CallGraph cg, HeapModel model, MemoryAccessMap fam, IClassHierarchy cha, AnalysisOptions options) {
     super(cg, model, fam, cha, options);
   }
 

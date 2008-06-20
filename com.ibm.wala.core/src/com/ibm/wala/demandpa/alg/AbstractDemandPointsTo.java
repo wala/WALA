@@ -43,7 +43,7 @@ import com.ibm.wala.demandpa.util.MemoryAccessMap;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * Abstract super class for demand points-to analysis. Implements basic methods
@@ -60,7 +60,7 @@ public abstract class AbstractDemandPointsTo implements IDemandPointerAnalysis {
 
   protected final MemoryAccessMap mam;
 
-  protected final ClassHierarchy cha;
+  protected final IClassHierarchy cha;
 
   protected final AnalysisOptions options;
 
@@ -76,7 +76,7 @@ public abstract class AbstractDemandPointsTo implements IDemandPointerAnalysis {
     this.traversalBudget = traversalBudget;
   }
 
-  public AbstractDemandPointsTo(CallGraph cg, HeapModel model, MemoryAccessMap mam, com.ibm.wala.ipa.cha.ClassHierarchy cha,
+  public AbstractDemandPointsTo(CallGraph cg, HeapModel model, MemoryAccessMap mam, IClassHierarchy cha,
       AnalysisOptions options) {
     this.cg = cg;
     this.heapModel = model;
@@ -111,7 +111,7 @@ public abstract class AbstractDemandPointsTo implements IDemandPointerAnalysis {
     return cg;
   }
 
-  public ClassHierarchy getClassHierarchy() {
+  public IClassHierarchy getClassHierarchy() {
     return cha;
   }
 }

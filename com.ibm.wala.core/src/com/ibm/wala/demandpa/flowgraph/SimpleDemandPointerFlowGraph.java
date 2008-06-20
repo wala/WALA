@@ -40,7 +40,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -111,7 +111,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
 
   private final MemoryAccessMap fam;
 
-  private final ClassHierarchy cha;
+  private final IClassHierarchy cha;
 
   /**
    * node numbers of CGNodes we have already visited
@@ -138,7 +138,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
    */
   final Map<PointerKey, CGNode> params = HashMapFactory.make();
 
-  public SimpleDemandPointerFlowGraph(CallGraph cg, HeapModel heapModel, MemoryAccessMap fam, ClassHierarchy cha) {
+  public SimpleDemandPointerFlowGraph(CallGraph cg, HeapModel heapModel, MemoryAccessMap fam, IClassHierarchy cha) {
     super();
     this.cg = cg;
     this.heapModel = heapModel;

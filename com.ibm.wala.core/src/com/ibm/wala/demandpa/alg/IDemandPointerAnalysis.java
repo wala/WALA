@@ -43,7 +43,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * Basic interface for a demand-driven points-to analysis.
@@ -57,7 +57,7 @@ public interface IDemandPointerAnalysis {
   
   public CallGraph getBaseCallGraph();
   
-  public ClassHierarchy getClassHierarchy();
+  public IClassHierarchy getClassHierarchy();
   
   public Collection<InstanceKey> getPointsTo(PointerKey pk);
 }

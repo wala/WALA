@@ -14,7 +14,6 @@ import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
@@ -31,7 +30,7 @@ import com.ibm.wala.util.debug.Assertions;
 
     private final HeapModel delegate;
 
-    private final ClassHierarchy cha;
+    private final IClassHierarchy cha;
 
     public IClassHierarchy getClassHierarchy() {
       return delegate.getClassHierarchy();
@@ -124,7 +123,7 @@ import com.ibm.wala.util.debug.Assertions;
       return delegate.iteratePointerKeys();
     }
 
-    public ThisFilteringHeapModel(HeapModel delegate, ClassHierarchy cha) {
+    public ThisFilteringHeapModel(HeapModel delegate, IClassHierarchy cha) {
       this.delegate = delegate;
       this.cha = cha;
     }

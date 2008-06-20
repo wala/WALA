@@ -37,7 +37,7 @@
  */
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * A refinement policy that iteratively adds more types to refine, based on which type was encountered first in each
@@ -48,15 +48,15 @@ import com.ibm.wala.ipa.cha.ClassHierarchy;
  */
 public class TunedRefinementPolicy extends AbstractRefinementPolicy {
 
-  public TunedRefinementPolicy(ClassHierarchy cha) {
+  public TunedRefinementPolicy(IClassHierarchy cha) {
     super(new TunedFieldRefinementPolicy(cha), new AlwaysRefineCGPolicy());
   }
 
   public static class Factory implements RefinementPolicyFactory {
 
-    private final ClassHierarchy cha;
+    private final IClassHierarchy cha;
 
-    public Factory(ClassHierarchy cha) {
+    public Factory(IClassHierarchy cha) {
       this.cha = cha;
     }
 

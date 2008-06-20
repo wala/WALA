@@ -67,7 +67,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
@@ -137,11 +137,11 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
 
   protected final HeapModel heapModel;
 
-  protected final ClassHierarchy cha;
+  protected final IClassHierarchy cha;
 
   protected final CallGraph cg;
 
-  public AbstractFlowGraph(MemoryAccessMap mam, HeapModel heapModel, ClassHierarchy cha, CallGraph cg) {
+  public AbstractFlowGraph(MemoryAccessMap mam, HeapModel heapModel, IClassHierarchy cha, CallGraph cg) {
     super(defaultLabel);
     this.mam = mam;
     this.heapModel = heapModel;

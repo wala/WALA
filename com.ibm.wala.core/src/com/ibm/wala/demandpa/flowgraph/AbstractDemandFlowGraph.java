@@ -55,7 +55,7 @@ import com.ibm.wala.ipa.callgraph.propagation.LocalPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -400,7 +400,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     void setBasicBlock(ISSABasicBlock b);
   }
 
-  public AbstractDemandFlowGraph(final CallGraph cg, final HeapModel heapModel, final MemoryAccessMap mam, final ClassHierarchy cha) {
+  public AbstractDemandFlowGraph(final CallGraph cg, final HeapModel heapModel, final MemoryAccessMap mam, final IClassHierarchy cha) {
     super(mam, heapModel, cha, cg);
   }
 

@@ -106,7 +106,7 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleClassFilt
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceFilter;
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
@@ -166,12 +166,12 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return refinementPolicy;
   }
 
-  public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap mam, ClassHierarchy cha,
+  public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap mam, IClassHierarchy cha,
       AnalysisOptions options, StateMachineFactory<IFlowLabel> stateMachineFactory) {
     this(cg, model, mam, cha, options, stateMachineFactory, new DemandPointerFlowGraph(cg, model, mam, cha));
   }
 
-  public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap fam, ClassHierarchy cha,
+  public DemandRefinementPointsTo(CallGraph cg, ThisFilteringHeapModel model, MemoryAccessMap fam, IClassHierarchy cha,
       AnalysisOptions options, StateMachineFactory<IFlowLabel> stateMachineFactory, IFlowGraph flowGraph) {
     super(cg, model, fam, cha, options);
     this.stateMachineFactory = stateMachineFactory;

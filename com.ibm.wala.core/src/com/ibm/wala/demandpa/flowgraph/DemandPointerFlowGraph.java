@@ -58,7 +58,7 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -94,7 +94,7 @@ import com.ibm.wala.util.debug.Assertions;
  */
 public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements IFlowGraph {
 
-  public DemandPointerFlowGraph(CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, ClassHierarchy cha) {
+  public DemandPointerFlowGraph(CallGraph cg, HeapModel heapModel, MemoryAccessMap mam, IClassHierarchy cha) {
     super(cg, heapModel, mam, cha);
   }
 
@@ -137,7 +137,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
 
     private final IFlowGraph g;
 
-    private final ClassHierarchy cha;
+    private final IClassHierarchy cha;
 
     private final CallGraph cg;
 
@@ -166,7 +166,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
      */
     protected final DefUse du;
 
-    public StatementVisitor(HeapModel heapModel, IFlowGraph g, ClassHierarchy cha, CallGraph cg, CGNode node) {
+    public StatementVisitor(HeapModel heapModel, IFlowGraph g, IClassHierarchy cha, CallGraph cg, CGNode node) {
       super();
       this.heapModel = heapModel;
       this.g = g;

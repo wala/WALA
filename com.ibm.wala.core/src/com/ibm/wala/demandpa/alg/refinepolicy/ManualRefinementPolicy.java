@@ -37,7 +37,7 @@
  */
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
-import com.ibm.wala.ipa.cha.ClassHierarchy;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 
 /**
  * A refinement policy specified manually with annotations.
@@ -50,14 +50,14 @@ public class ManualRefinementPolicy extends AbstractRefinementPolicy {
 
   private static final int NUM_PASSES = 1;
 
-  private ManualRefinementPolicy(ClassHierarchy cha) {
+  private ManualRefinementPolicy(IClassHierarchy cha) {
     super(new ContainersFieldPolicy(cha), new AlwaysRefineCGPolicy(), NUM_PASSES, new int[] { PASS_BUDGET });
   }
 
   public static class Factory implements RefinementPolicyFactory {
-    private final ClassHierarchy cha;
+    private final IClassHierarchy cha;
 
-    public Factory(ClassHierarchy cha) {
+    public Factory(IClassHierarchy cha) {
       this.cha = cha;
     }
 
