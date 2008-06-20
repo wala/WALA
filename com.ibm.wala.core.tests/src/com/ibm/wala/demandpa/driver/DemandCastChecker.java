@@ -72,6 +72,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerAnalysis;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
+import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSACheckCastInstruction;
@@ -213,7 +214,7 @@ public class DemandCastChecker {
   }
 
   private static List<Pair<CGNode, SSACheckCastInstruction>> findFailingCasts(CallGraph cg, DemandRefinementPointsTo dmp) {
-    final ClassHierarchy cha = dmp.getClassHierarchy();
+    final IClassHierarchy cha = dmp.getClassHierarchy();
     List<Pair<CGNode, SSACheckCastInstruction>> failing = new ArrayList<Pair<CGNode, SSACheckCastInstruction>>();
 
     int numSafe = 0, numMightFail = 0;
