@@ -27,6 +27,14 @@ import com.ibm.wala.util.warnings.WalaException;
  */
 public class GraphSlicer {
 
+  /**
+   * Performs a backward slice.
+   * @param <T> type for nodes
+   * @param g the graph to slice
+   * @param f identifies targets for the backward slice
+   * @return the set of nodes in g, from which any of the targets (nodes that f accepts) is reachable. 
+   * @throws WalaException
+   */
   public static <T> Set<T> slice(Graph<T> g, Filter<T> f) throws WalaException {
 
     if (g == null) {
