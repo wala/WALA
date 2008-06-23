@@ -19,6 +19,7 @@ import com.ibm.wala.dataflow.IFDS.ISupergraph;
 import com.ibm.wala.dataflow.IFDS.TabulationResult;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
@@ -109,6 +110,9 @@ public class ViewIFDSLocalAction<T, P> extends Action {
     }
   }
   
+  /**
+   * Print a short-ish representation of s as a String
+   */
   public static String stringify(SSAInstruction s) {
     if (s == null) {
       return null;
@@ -116,7 +120,23 @@ public class ViewIFDSLocalAction<T, P> extends Action {
     if (s instanceof SSAAbstractInvokeInstruction) {
       SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction)s;
       String def = call.hasDef() ? Integer.valueOf(call.getDef()) + "=" : "";
-      return def + "call " + call.getDeclaredTarget().getDeclaringClass().getName().getClassName() + "." + call.getDeclaredTarget().getName();
+      String result =  def + "call " + call.getDeclaredTarget().getDeclaringClass().getName().getClassName() + "." + call.getDeclaredTarget().getName();
+      for (int i = 0; i < s.getNumberOfUses(); i++) {
+        result += " ";
+        result += s.getUse(i);
+      }
+      return result;
+    }
+    if (s instanceof SSAGetInstruction) {
+      SSAGetInstruction g = (SSAGetInstruction)s;
+      String fieldName = g.getDeclaredField().getName().toString();
+     
+      StringBuffer result = new StringBuffer();
+      result.append(g.getDef());
+      result.append(":=");
+      result.append(g.isStatic() ? "getstatic " : "getfield ");
+      result.append(fieldName);
+      return result.toString();
     }
     return s.toString();
   }
