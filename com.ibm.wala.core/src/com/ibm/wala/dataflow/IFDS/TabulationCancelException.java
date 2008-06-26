@@ -23,7 +23,7 @@ public class TabulationCancelException extends CancelException {
   
   private final Result result;
 
-  protected TabulationCancelException(CancelException cause, Result r) {
+  protected TabulationCancelException(Exception cause, Result r) {
     super(cause);
     this.result = r;
   }

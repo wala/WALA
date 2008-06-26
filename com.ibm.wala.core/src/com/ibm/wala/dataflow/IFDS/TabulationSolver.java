@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.eclipse.util.CancelException;
+import com.ibm.wala.eclipse.util.CancelRuntimeException;
 import com.ibm.wala.eclipse.util.MonitorUtil;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -183,6 +184,10 @@ public class TabulationSolver<T, P> {
       Result r = new Result();
       return r;
     } catch (CancelException e) {
+      // store a partially-tabulated result in the thrown exception.
+      Result r = new Result();
+      throw new TabulationCancelException(e, r);
+    } catch (CancelRuntimeException e) {
       // store a partially-tabulated result in the thrown exception.
       Result r = new Result();
       throw new TabulationCancelException(e, r);
