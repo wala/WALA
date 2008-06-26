@@ -545,7 +545,9 @@ public class TabulationSolver<T, P> {
     
     Collection<T> allReturnSites = HashSetFactory.make();
     // populate allReturnSites with return sites for missing calls.
-    allReturnSites.addAll(Iterator2Collection.toCollection(supergraph.getReturnSites(edge.target, null)));
+    for (Iterator<? extends T> it = supergraph.getReturnSites(edge.target, null); it.hasNext(); ) {
+      allReturnSites.add(it.next());
+    }
     // [14 - 16]
     for (Iterator<? extends T> it = supergraph.getCalledNodes(edge.target); it.hasNext();) {
       final T callee = it.next();
