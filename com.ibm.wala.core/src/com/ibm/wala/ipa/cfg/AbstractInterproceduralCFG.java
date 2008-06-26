@@ -89,7 +89,6 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * 
    * @param cg the call graph
    */
-  @SuppressWarnings("unchecked")
   public AbstractInterproceduralCFG(CallGraph cg) {
     this(cg, IndiscriminateFilter.<CGNode> singleton());
   }
