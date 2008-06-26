@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.cfg;
 
+import java.util.Map;
+
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
@@ -17,6 +19,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
 import com.ibm.wala.util.collections.Filtersection;
+import com.ibm.wala.util.collections.HashMapFactory;
 
 /**
  * Interprocedural control-flow graph.
@@ -29,6 +32,10 @@ import com.ibm.wala.util.collections.Filtersection;
  */
 public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<ExplodedBasicBlock> {
 
+  /**
+   * Caching to improve runtime .. hope it doesn't turn into a memory leak.
+   */
+  private Map<CGNode, ExplodedControlFlowGraph> cfgMap;
 
   public static ExplodedInterproceduralCFG make(CallGraph CG) {
     return new ExplodedInterproceduralCFG(CG);
@@ -39,24 +46,32 @@ public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<Explo
   }
 
   public ExplodedInterproceduralCFG(CallGraph cg, Filtersection<CGNode> filtersection) {
-    super(cg,filtersection);
+    super(cg, filtersection);
   }
 
   /**
    * @return the cfg for n, or null if none found
-   * @throws IllegalArgumentException
-   *             if n == null
+   * @throws IllegalArgumentException if n == null
    */
   @Override
   public ControlFlowGraph<ExplodedBasicBlock> getCFG(CGNode n) throws IllegalArgumentException {
     if (n == null) {
       throw new IllegalArgumentException("n == null");
     }
-    IR ir = n.getIR();
-    if (ir == null) {
-      return null;
+    if (cfgMap == null) {
+      // we have to initialize this lazily since this might be called from a super() constructor
+      cfgMap = HashMapFactory.make();
     }
-    return ExplodedControlFlowGraph.make(ir);
+    ExplodedControlFlowGraph result = cfgMap.get(n);
+    if (result == null) {
+      IR ir = n.getIR();
+      if (ir == null) {
+        return null;
+      }
+      result = ExplodedControlFlowGraph.make(ir);
+      cfgMap.put(n, result);
+    }
+    return result;
   }
 
 }
