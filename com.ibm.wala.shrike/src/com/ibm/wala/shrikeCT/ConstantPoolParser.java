@@ -353,7 +353,8 @@ public final class ConstantPoolParser implements ClassConstants {
           throw invalidUtf8(i, offset);
         }
       }
-      s = buf.toString().intern();
+//      s = buf.toString().intern(); // removed intern() call --MS
+      s = buf.toString();
       cpItems[i] = s;
     }
     return s;
