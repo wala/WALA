@@ -58,7 +58,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   final protected ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
 
-  private Map<Integer, Integer> intConstant2ValueNumber = HashMapFactory.make();
+  private Map<ConstantValue, Integer> constant2ValueNumber = HashMapFactory.make();
 
   /**
    * The number of the next local value number available for the fake root
@@ -104,11 +104,11 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   public IR makeIR(Context context, SSAOptions options) {
     SSAInstruction instrs[] = getStatements(options);
     Map<Integer, ConstantValue> constants = null;
-    if (!intConstant2ValueNumber.isEmpty()) {
-      constants = HashMapFactory.make(intConstant2ValueNumber.size());
-      for (Integer c : intConstant2ValueNumber.keySet()) {
-        int vn = intConstant2ValueNumber.get(c);
-        constants.put(vn, new ConstantValue(c));
+    if (!constant2ValueNumber.isEmpty()) {
+      constants = HashMapFactory.make(constant2ValueNumber.size());
+      for (ConstantValue c : constant2ValueNumber.keySet()) {
+        int vn = constant2ValueNumber.get(c);
+        constants.put(vn, c);
       }
     }
     InducedCFG cfg = makeControlFlowGraph(instrs);
@@ -173,6 +173,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     Arrays.fill(sizes, getValueNumberForIntConstant(length));
     SSANewInstruction result = new SSANewInstruction(instance, ref, sizes);
     statements.add(result);
+    cache.invalidate(this, Everywhere.EVERYWHERE);
     return result;
   }
 
@@ -250,18 +251,28 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return result;
   }
 
-  private int getValueNumberForIntConstant(int c) {
-    Integer result = intConstant2ValueNumber.get(c);
+  protected int getValueNumberForIntConstant(int c) {
+    ConstantValue v = new ConstantValue(c);
+    Integer result = constant2ValueNumber.get(v);
     if (result == null) {
       result = nextLocal++;
-      intConstant2ValueNumber.put(c, result);
+      constant2ValueNumber.put(v, result);
+    }
+    return result;
+  }
+  
+  protected int getValueNumberForByteConstant(byte c) {
+    // treat it like an int constant for now.
+    ConstantValue v = new ConstantValue(c);
+    Integer result = constant2ValueNumber.get(v);
+    if (result == null) {
+      result = nextLocal++;
+      constant2ValueNumber.put(v, result);
     }
     return result;
   }
 
   /**
-   * @author sfink
-   * 
    * A warning for when we fail to allocate a type in the fake root method
    */
   private static class AllocationFailure extends Warning {

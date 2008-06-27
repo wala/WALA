@@ -11,7 +11,6 @@
 package com.ibm.wala.ssa;
 
 /**
- * 
  * The value of a constant.
  * 
  * @author sfink
