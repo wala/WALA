@@ -95,9 +95,6 @@ public class BypassSyntheticClassLoader implements IClassLoader {
 
   /**
    * Register the existence of a new synthetic class
-   * 
-   * @param className
-   * @param theClass
    */
   public void registerClass(TypeName className, IClass theClass) {
     cha.addClass(theClass);
@@ -106,8 +103,6 @@ public class BypassSyntheticClassLoader implements IClassLoader {
 
   /**
    * Return the ClassLoaderReference for this class loader.
-   * 
-   * @return ClassLoaderReference
    */
   public ClassLoaderReference getReference() {
     return me;

@@ -99,18 +99,6 @@ public class BypassSyntheticClass extends SyntheticClass {
     }
   }
 
-//  /*
-//   * @see com.ibm.wala.classLoader.IClass#getAllInterfaces()
-//   */
-//  public Collection<IClass> getAllAncestorInterfaces() throws ClassHierarchyException {
-//    if (Assertions.verifyAssertions) {
-//      Assertions._assert(realType.isInterface());
-//    }
-//    HashSet<IClass> result = HashSetFactory.make(realType.getAllAncestorInterfaces().size() + 1);
-//    result.addAll(realType.getAllImplementedInterfaces()());
-//    return result;
-//  }
-
   /*
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
@@ -200,13 +188,6 @@ public class BypassSyntheticClass extends SyntheticClass {
   public int getModifiers() throws UnimplementedError {
     Assertions.UNREACHABLE();
     return 0;
-  }
-
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getName()
-   */
-  public TypeName getName() {
-    return getReference().getName();
   }
 
   /*

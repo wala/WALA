@@ -13,10 +13,10 @@ package com.ibm.wala.classLoader;
 
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 
 /**
- *
  * A Class that exists nowhere in bytecode.
  * 
  * @author sfink
@@ -81,5 +81,9 @@ public abstract class SyntheticClass implements IClass {
   
   public IClassHierarchy getClassHierarchy() {
     return cha;
+  }
+  
+  public TypeName getName() {
+    return getReference().getName();
   }
 }

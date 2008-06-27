@@ -31,7 +31,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * 
  * A synthetic class for the fake root method
  * 
  * @author sfink
@@ -99,13 +98,6 @@ public class FakeRootClass extends SyntheticClass {
   }
 
   /*
-   * @see com.ibm.wala.classLoader.IClass#getName()
-   */
-  public TypeName getName() {
-    return getReference().getName();
-  }
-
-  /*
    * @see com.ibm.wala.classLoader.IClass#getModifiers()
    */
   public int getModifiers() throws UnsupportedOperationException {
@@ -116,14 +108,14 @@ public class FakeRootClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getSuperclass()
    */
   public IClass getSuperclass() throws UnsupportedOperationException {
-    throw new UnsupportedOperationException();
+    return getClassHierarchy().getRootClass();
   }
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces()
    */
   public Collection<IClass> getAllImplementedInterfaces() throws UnsupportedOperationException {
-    throw new UnsupportedOperationException();
+    return Collections.emptySet();
   }
 
   /*

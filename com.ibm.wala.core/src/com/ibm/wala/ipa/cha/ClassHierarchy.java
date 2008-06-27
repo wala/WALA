@@ -256,7 +256,6 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @param klass
    * @return true if the add succeeded; false if it failed for some reason
    * @throws IllegalArgumentException if klass is null
    */
