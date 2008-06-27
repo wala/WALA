@@ -37,12 +37,12 @@ public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<Explo
    */
   private Map<CGNode, ExplodedControlFlowGraph> cfgMap;
 
-  public static ExplodedInterproceduralCFG make(CallGraph CG) {
-    return new ExplodedInterproceduralCFG(CG);
+  public static ExplodedInterproceduralCFG make(CallGraph cg) {
+    return new ExplodedInterproceduralCFG(cg);
   }
 
-  protected ExplodedInterproceduralCFG(CallGraph CG) {
-    super(CG);
+  protected ExplodedInterproceduralCFG(CallGraph cg) {
+    super(cg);
   }
 
   public ExplodedInterproceduralCFG(CallGraph cg, Filtersection<CGNode> filtersection) {

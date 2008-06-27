@@ -41,7 +41,6 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SimpleIntVector;
 
 /**
- * 
  * A graph of basic blocks.
  * 
  * @author sfink
@@ -101,9 +100,6 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
    */
   private T exit;
 
-  /**
-   * @param method
-   */
   protected AbstractCFG(IMethod method) {
     this.method = method;
     this.catchBlocks = new BitVector(10);
@@ -127,8 +123,6 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
 
   /**
    * Return the entry basic block for the CFG.
-   * 
-   * @return the entry basic block for the CFG.
    */
   public T entry() {
     return getNode(0);
@@ -136,8 +130,6 @@ public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowG
 
   /**
    * Return the exit basic block for the CFG.
-   * 
-   * @return the exit basic block for the CFG.
    */
   public T exit() {
     return exit;

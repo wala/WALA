@@ -39,16 +39,22 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 
 /**
- * A view of a control flow graph where each basic block corresponds to exactly one SSA instruction index.
+ * A view of a control flow graph where each basic block corresponds to exactly
+ * one SSA instruction index.
  * 
  * Prototype: Not terribly efficient.
  */
 public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedControlFlowGraph.ExplodedBasicBlock> {
 
+  private final static int ENTRY_INDEX = -1;
+
+  private final static int EXIT_INDEX = -2;
+
   private final IR ir;
 
   /**
-   * The ith element of this vector is the basic block holding instruction i. this basic block has number i+1.
+   * The ith element of this vector is the basic block holding instruction i.
+   * this basic block has number i+1.
    */
   private final SimpleVector<ExplodedBasicBlock> normalNodes = new SimpleVector<ExplodedBasicBlock>();
 
@@ -61,8 +67,8 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
   private ExplodedControlFlowGraph(IR ir) {
     assert ir != null;
     this.ir = ir;
-    this.entry = new ExplodedBasicBlock(-2, ir.getControlFlowGraph().entry());
-    this.exit = new ExplodedBasicBlock(-2, ir.getControlFlowGraph().exit());
+    this.entry = new ExplodedBasicBlock(ENTRY_INDEX, null);
+    this.exit = new ExplodedBasicBlock(EXIT_INDEX, null);
     createNodes();
   }
 
@@ -166,7 +172,12 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
       List<ExplodedBasicBlock> result = new ArrayList<ExplodedBasicBlock>();
       for (ISSABasicBlock s : ir.getControlFlowGraph().getNormalPredecessors(eb.original)) {
         if (s.equals(ir.getControlFlowGraph().entry())) {
-          result.add(entry());
+          if (s.getLastInstructionIndex() >= 0) {
+            assert normalNodes.get(s.getLastInstructionIndex()) != null;
+            result.add(normalNodes.get(s.getLastInstructionIndex()));
+          } else {
+            result.add(entry());
+          }
         } else {
           assert normalNodes.get(s.getLastInstructionIndex()) != null;
           result.add(normalNodes.get(s.getLastInstructionIndex()));
@@ -184,7 +195,10 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     if (eb.equals(exit)) {
       return Collections.emptySet();
     }
-    if (eb.isEntryBlock() || eb.instructionIndex == eb.original.getLastInstructionIndex()) {
+    if (eb.isEntryBlock()) {
+      return Collections.singleton(normalNodes.get(0));
+    }
+    if (eb.instructionIndex == eb.original.getLastInstructionIndex()) {
       List<ExplodedBasicBlock> result = new ArrayList<ExplodedBasicBlock>();
       for (ISSABasicBlock s : ir.getControlFlowGraph().getNormalSuccessors(eb.original)) {
         if (s.equals(ir.getControlFlowGraph().exit())) {
@@ -243,8 +257,15 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     if (b.isEntryBlock()) {
       return 0;
     }
-    if (b.equals(exit) || b.instructionIndex == b.original.getFirstInstructionIndex()) {
-      return ir.getControlFlowGraph().getPredNodeCount(b.original);
+    if (b.isExitBlock()) {
+      return ir.getControlFlowGraph().getPredNodeCount(ir.getControlFlowGraph().exit());
+    }
+    if (b.instructionIndex == b.original.getFirstInstructionIndex()) {
+      if (b.original.isEntryBlock()) {
+        return 1;
+      } else {
+        return ir.getControlFlowGraph().getPredNodeCount(b.original);
+      }
     } else {
       return 1;
     }
@@ -257,12 +278,20 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     if (b.isEntryBlock()) {
       return EmptyIterator.instance();
     }
-    if (b.equals(exit) || b.instructionIndex == b.original.getFirstInstructionIndex()) {
+    ISSABasicBlock original = b.isExitBlock() ? ir.getControlFlowGraph().exit() : b.original;
+    if (b.isExitBlock() || b.instructionIndex == b.original.getFirstInstructionIndex()) {
       List<ExplodedBasicBlock> result = new ArrayList<ExplodedBasicBlock>();
-      for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().getPredNodes(b.original); it.hasNext();) {
+      if (b.original != null && b.original.isEntryBlock()) {
+        result.add(entry);
+      }
+      for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().getPredNodes(original); it.hasNext();) {
         ISSABasicBlock s = it.next();
         if (s.isEntryBlock()) {
-          result.add(entry);
+          if (s.getFirstInstructionIndex() == 0) {
+            result.add(normalNodes.get(0));
+          } else {
+            result.add(entry);
+          }
         } else {
           assert normalNodes.get(s.getLastInstructionIndex()) != null;
           result.add(normalNodes.get(s.getLastInstructionIndex()));
@@ -280,20 +309,28 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     return 0;
   }
 
+  /*
+   * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodes(java.lang.Object)
+   */
   public Iterator<? extends ExplodedBasicBlock> getSuccNodes(ExplodedBasicBlock b) {
     assert b != null;
-    if (b.equals(exit)) {
+    if (b.isExitBlock()) {
       return EmptyIterator.instance();
     }
-    if (b.isEntryBlock() || b.instructionIndex == b.original.getLastInstructionIndex()) {
+    if (b.isEntryBlock()) {
+      return NonNullSingletonIterator.make(normalNodes.get(0));
+    }
+    if (b.instructionIndex == b.original.getLastInstructionIndex()) {
       List<ExplodedBasicBlock> result = new ArrayList<ExplodedBasicBlock>();
       for (Iterator<ISSABasicBlock> it = ir.getControlFlowGraph().getSuccNodes(b.original); it.hasNext();) {
         ISSABasicBlock s = it.next();
         if (s.equals(ir.getControlFlowGraph().exit())) {
           result.add(exit());
         } else {
-          // there can be a weird corner case where a void method without a return statement 
-          // can have trailing empty basic blocks with no instructions.  ignore these.
+          // there can be a weird corner case where a void method without a
+          // return statement
+          // can have trailing empty basic blocks with no instructions. ignore
+          // these.
           if (normalNodes.get(s.getFirstInstructionIndex()) != null) {
             result.add(normalNodes.get(s.getFirstInstructionIndex()));
           }
@@ -368,8 +405,8 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
   }
 
   /**
-   * A basic block with exactly one normal instruction (which may be null), corresponding to a single instruction index
-   * in the SSA instruction array.
+   * A basic block with exactly one normal instruction (which may be null),
+   * corresponding to a single instruction index in the SSA instruction array.
    * 
    * The block may also have phis.
    */
@@ -382,7 +419,6 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     public ExplodedBasicBlock(int instructionIndex, ISSABasicBlock original) {
       this.instructionIndex = instructionIndex;
       this.original = original;
-      assert original != null;
     }
 
     public ExplodedControlFlowGraph getExplodedCFG() {
@@ -421,6 +457,9 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     }
 
     public boolean isCatchBlock() {
+      if (original == null) {
+        return false;
+      }
       return (original.isCatchBlock() && instructionIndex == original.getFirstInstructionIndex());
     }
 
@@ -431,11 +470,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     }
 
     public boolean isEntryBlock() {
-      return original.isEntryBlock();
+      return instructionIndex == ENTRY_INDEX;
     }
 
     public boolean isExitBlock() {
-      return original.isExitBlock();
+      return instructionIndex == EXIT_INDEX;
     }
 
     public int getGraphNodeId() {
@@ -518,7 +557,13 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
 
     @Override
     public String toString() {
-      return "ExplodedBlock[" + getNumber() + "](original:" + original.toString() + ")";
+      if (isEntryBlock()) {
+        return "ExplodedBlock[" + getNumber() + "](entry:" + getMethod() + ")";
+      }
+      if (isExitBlock()) {
+        return "ExplodedBlock[" + getNumber() + "](exit:" + getMethod() + ")";
+      }
+      return "ExplodedBlock[" + getNumber() + "](original:" + original + ")";
     }
   }
 

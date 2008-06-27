@@ -260,6 +260,7 @@ public abstract class Dominators<T> {
 
     while (dfs.hasNext()) {
       T node = dfs.next();
+      assert node != null;
       vertex[++reachableNodeCount] = node;
       setSemi(node, reachableNodeCount);
       if (DEBUG)
@@ -280,7 +281,6 @@ public abstract class Dominators<T> {
     // has number 1
     // for i=n downto 2
     for (int i = reachableNodeCount; i > 1; i--) {
-      // node = vertex[i]
       T node = vertex[i];
 
       if (DEBUG) {
@@ -429,10 +429,9 @@ public abstract class Dominators<T> {
     }
   }
 
-  //
-  // IMPLEMENTATION -- LOOK-ASIDE TABLE FOR PER-NODE STATE AND ITS ACCESSORS
-  //
-
+  /**
+   * LOOK-ASIDE TABLE FOR PER-NODE STATE AND ITS ACCESSORS
+   */
   protected final class DominatorInfo {
     /*
      * The result of this computation: the immediate dominator of this node
@@ -500,6 +499,7 @@ public abstract class Dominators<T> {
   }
 
   private T getDominator(T node) {
+    assert node != null;
     return getInfo(node).dominator;
   }
 

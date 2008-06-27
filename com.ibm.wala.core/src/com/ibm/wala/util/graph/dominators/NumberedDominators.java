@@ -50,6 +50,7 @@ public class NumberedDominators<T> extends Dominators<T> {
 
   @Override
   protected final DominatorInfo getInfo(T node) {
+    assert node != null;
     return (DominatorInfo) infoMap[getGraph().getNumber(node)];
   }
 
