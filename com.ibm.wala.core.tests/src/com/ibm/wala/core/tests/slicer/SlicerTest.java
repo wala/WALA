@@ -109,7 +109,7 @@ public class SlicerTest extends TestCase {
         DataDependenceOptions.FULL, ControlDependenceOptions.NONE);
     Collection<Statement> slice = computeBackwardSlice;
     dumpSlice(slice);
-    assertEquals(22, slice.size());
+    assertEquals(30, slice.size());
   }
 
   public void testSlice3() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
