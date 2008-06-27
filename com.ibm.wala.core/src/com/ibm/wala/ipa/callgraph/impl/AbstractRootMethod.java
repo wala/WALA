@@ -39,6 +39,7 @@ import com.ibm.wala.ssa.SSAInvokeInstruction;
 import com.ibm.wala.ssa.SSANewInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
@@ -130,6 +131,16 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     } else {
       s = new SSAInvokeInstruction(nextLocal++, params, nextLocal++, newSite);
     }
+    statements.add(s);
+    cache.invalidate(this, Everywhere.EVERYWHERE);
+    return s;
+  }
+  
+  /**
+   * Add a return statement
+   */
+  public SSAReturnInstruction addReturn(int vn, boolean isPrimitive) {
+    SSAReturnInstruction s = new SSAReturnInstruction(vn, isPrimitive);
     statements.add(s);
     cache.invalidate(this, Everywhere.EVERYWHERE);
     return s;
