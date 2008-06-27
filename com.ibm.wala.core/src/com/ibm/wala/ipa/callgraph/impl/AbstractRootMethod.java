@@ -58,7 +58,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   final protected ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
 
-  private int valueNumberForConstantOne = -1;
+  private Map<Integer, Integer> intConstant2ValueNumber = HashMapFactory.make();
 
   /**
    * The number of the next local value number available for the fake root
@@ -104,9 +104,12 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   public IR makeIR(Context context, SSAOptions options) {
     SSAInstruction instrs[] = getStatements(options);
     Map<Integer, ConstantValue> constants = null;
-    if (valueNumberForConstantOne > -1) {
-      constants = HashMapFactory.make(1);
-      constants.put(new Integer(valueNumberForConstantOne), new ConstantValue(new Integer(1)));
+    if (!intConstant2ValueNumber.isEmpty()) {
+      constants = HashMapFactory.make(intConstant2ValueNumber.size());
+      for (Integer c : intConstant2ValueNumber.keySet()) {
+        int vn = intConstant2ValueNumber.get(c);
+        constants.put(vn, new ConstantValue(c));
+      }
     }
     InducedCFG cfg = makeControlFlowGraph(instrs);
     return new SyntheticIR(this, Everywhere.EVERYWHERE, cfg, instrs, options, constants);
@@ -147,7 +150,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   }
 
   /**
-   * Add a New statement of the given type to the fake root node
+   * Add a New statement of the given type
    * 
    * Side effect: adds call to default constructor of given type if one exists.
    * 
@@ -159,16 +162,30 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   }
 
   /**
-   * Add a New statement of the given type to the fake root node
+   * Add a New statement of the given array type and length
+   */
+  public SSANewInstruction add1DArrayAllocation(TypeReference T, int length) {
+    int instance = nextLocal++;
+    NewSiteReference ref = NewSiteReference.make(statements.size(), T);
+    assert T.isArrayType();
+    assert T.getDimensionality() == 1;
+    int[] sizes = new int[1];
+    Arrays.fill(sizes, getValueNumberForIntConstant(length));
+    SSANewInstruction result = new SSANewInstruction(instance, ref, sizes);
+    statements.add(result);
+    return result;
+  }
+
+  /**
+   * Add a New statement of the given type
    */
   public SSANewInstruction addAllocationWithoutCtor(TypeReference T) {
     return addAllocation(T, false);
   }
 
   /**
-   * Add a New statement of the given type to the fake root node
+   * Add a New statement of the given type
    * 
-   * @param T
    * @return instruction added, or null
    * @throws IllegalArgumentException if T is null
    */
@@ -182,9 +199,8 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     if (T.isReferenceType()) {
       NewSiteReference ref = NewSiteReference.make(statements.size(), T);
       if (T.isArrayType()) {
-        initValueNumberForConstantOne();
         int[] sizes = new int[T.getDimensionality()];
-        Arrays.fill(sizes, valueNumberForConstantOne);
+        Arrays.fill(sizes, getValueNumberForIntConstant(1));
         result = new SSANewInstruction(instance, ref, sizes);
       } else {
         result = new SSANewInstruction(instance, ref);
@@ -206,9 +222,8 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
           int alloc = nextLocal++;
           SSANewInstruction ni = null;
           if (e.isArrayType()) {
-            initValueNumberForConstantOne();
             int[] sizes = new int[T.getDimensionality()];
-            Arrays.fill(sizes, valueNumberForConstantOne);
+            Arrays.fill(sizes, getValueNumberForIntConstant(1));
             ni = new SSANewInstruction(alloc, n, sizes);
           } else {
             ni = new SSANewInstruction(alloc, n);
@@ -235,10 +250,13 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     return result;
   }
 
-  private void initValueNumberForConstantOne() {
-    if (valueNumberForConstantOne == -1) {
-      valueNumberForConstantOne = nextLocal++;
+  private int getValueNumberForIntConstant(int c) {
+    Integer result = intConstant2ValueNumber.get(c);
+    if (result == null) {
+      result = nextLocal++;
+      intConstant2ValueNumber.put(c, result);
     }
+    return result;
   }
 
   /**
