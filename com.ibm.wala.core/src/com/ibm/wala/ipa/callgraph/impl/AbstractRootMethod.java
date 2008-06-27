@@ -70,10 +70,11 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   protected final IClassHierarchy cha;
 
   private final AnalysisOptions options;
-  
+
   protected final AnalysisCache cache;
 
-  public AbstractRootMethod(MethodReference method, IClass declaringClass, final IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
+  public AbstractRootMethod(MethodReference method, IClass declaringClass, final IClassHierarchy cha, AnalysisOptions options,
+      AnalysisCache cache) {
     super(method, declaringClass, true, false);
     this.cha = cha;
     this.options = options;
@@ -117,8 +118,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
 
   /**
    * @return the invoke instructions added by this operation
-   * @throws IllegalArgumentException
-   *             if site is null
+   * @throws IllegalArgumentException if site is null
    */
   public SSAInvokeInstruction addInvocation(int[] params, CallSiteReference site) {
     if (site == null) {
@@ -135,7 +135,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     cache.invalidate(this, Everywhere.EVERYWHERE);
     return s;
   }
-  
+
   /**
    * Add a return statement
    */
@@ -151,12 +151,28 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
    * 
    * Side effect: adds call to default constructor of given type if one exists.
    * 
-   * @param T
    * @return instruction added, or null
-   * @throws IllegalArgumentException
-   *             if T is null
+   * @throws IllegalArgumentException if T is null
    */
   public SSANewInstruction addAllocation(TypeReference T) {
+    return addAllocation(T, true);
+  }
+
+  /**
+   * Add a New statement of the given type to the fake root node
+   */
+  public SSANewInstruction addAllocationWithoutCtor(TypeReference T) {
+    return addAllocation(T, false);
+  }
+
+  /**
+   * Add a New statement of the given type to the fake root node
+   * 
+   * @param T
+   * @return instruction added, or null
+   * @throws IllegalArgumentException if T is null
+   */
+  private SSANewInstruction addAllocation(TypeReference T, boolean invokeCtor) {
     if (T == null) {
       throw new IllegalArgumentException("T is null");
     }
@@ -207,11 +223,12 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
           arrayRef = alloc;
         }
       }
-
-      IMethod ctor = cha.resolveMethod(klass, MethodReference.initSelector);
-      if (ctor != null) {
-        addInvocation(new int[] { instance }, CallSiteReference.make(statements.size(), ctor.getReference(),
-            IInvokeInstruction.Dispatch.SPECIAL));
+      if (invokeCtor) {
+        IMethod ctor = cha.resolveMethod(klass, MethodReference.initSelector);
+        if (ctor != null) {
+          addInvocation(new int[] { instance }, CallSiteReference.make(statements.size(), ctor.getReference(),
+              IInvokeInstruction.Dispatch.SPECIAL));
+        }
       }
     }
     cache.invalidate(this, Everywhere.EVERYWHERE);
