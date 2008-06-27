@@ -562,12 +562,12 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
     // quick shortcut
     if (catchClasses.size() == 1) {
       IClass c = catchClasses.iterator().next();
-      if (c.getReference().equals(TypeReference.JavaLangThread)) {
+      if (c != null && c.getReference().equals(TypeReference.JavaLangThread)) {
         return true;
       }
     }
     for (IClass c : catchClasses) {
-      if (cha.isAssignableFrom(c, klass)) {
+      if (c != null && cha.isAssignableFrom(c, klass)) {
         return true;
       }
     }
