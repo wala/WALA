@@ -271,6 +271,17 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     }
     return result;
   }
+  
+  protected int getValueNumberForCharConstant(char c) {
+    // treat it like an int constant for now.
+    ConstantValue v = new ConstantValue(c);
+    Integer result = constant2ValueNumber.get(v);
+    if (result == null) {
+      result = nextLocal++;
+      constant2ValueNumber.put(v, result);
+    }
+    return result;
+  }
 
   /**
    * A warning for when we fail to allocate a type in the fake root method
