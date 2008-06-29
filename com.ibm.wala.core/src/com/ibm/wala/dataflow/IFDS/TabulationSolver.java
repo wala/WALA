@@ -142,7 +142,7 @@ public class TabulationSolver<T, P> {
   /**
    * The worklist
    */
-  final private ITabulationWorklist<T> worklist = makeWorklist();
+  private ITabulationWorklist<T> worklist;
 
   /**
    * A progress monitor. can be null.
@@ -224,6 +224,9 @@ public class TabulationSolver<T, P> {
    * @throws CancelException
    */
   private void forwardTabulateSLRPs() throws CancelException {
+    if (worklist == null) {
+      worklist = makeWorklist();
+    }
     while (worklist.size() > 0) {
       MonitorUtil.throwExceptionIfCanceled(progressMonitor);
       if (verbose) {
@@ -752,11 +755,13 @@ public class TabulationSolver<T, P> {
   }
 
   protected PathEdge<T> popFromWorkList() {
+    assert worklist != null;
     return worklist.take();
   }
 
   private PathEdge peekFromWorkList() {
     // horrible. don't use in performance-critical
+    assert worklist != null;
     PathEdge<T> result = worklist.take();
     worklist.insert(result);
     return result;
@@ -835,6 +840,9 @@ public class TabulationSolver<T, P> {
   }
 
   protected void addToWorkList(T s_p, int i, T n, int j) {
+    if (worklist == null) {
+      worklist = makeWorklist();
+    }
     worklist.insert(PathEdge.createPathEdge(s_p, i, n, j));
     if (DEBUG_LEVEL >= 3) {
       System.err.println("WORKLIST: " + worklist);
