@@ -142,7 +142,7 @@ public class TabulationSolver<T, P> {
   /**
    * The worklist
    */
-  final protected Worklist worklist = new Worklist();
+  final private ITabulationWorklist<T> worklist = makeWorklist();
 
   /**
    * A progress monitor. can be null.
@@ -161,6 +161,13 @@ public class TabulationSolver<T, P> {
     this.flowFunctionMap = p.getFunctionMap();
     this.problem = p;
     this.progressMonitor = monitor;
+  }
+  
+  /**
+   * Subclasses can override this to plug in a different worklist implementation.
+   */
+  protected ITabulationWorklist<T> makeWorklist() {
+    return new Worklist();
   }
 
   /**
@@ -995,7 +1002,7 @@ public class TabulationSolver<T, P> {
     return supergraph;
   }
 
-  protected class Worklist extends Heap<PathEdge<T>> {
+  protected class Worklist extends Heap<PathEdge<T>> implements ITabulationWorklist<T> {
 
     Worklist() {
       super(100);
