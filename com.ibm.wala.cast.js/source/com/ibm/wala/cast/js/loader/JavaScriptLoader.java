@@ -59,6 +59,10 @@ public class JavaScriptLoader extends CAstAbstractLoader {
       return JavaScriptTypes.Root;
     }
 
+    public TypeReference getThrowableType() {
+      return JavaScriptTypes.Root;
+    }
+
     public TypeReference getConstantType(Object o) {
       if (o == null) {
 	return JavaScriptTypes.Null;
