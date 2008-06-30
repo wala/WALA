@@ -334,7 +334,9 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     List<ProgramCounter> peis = getIncomingPEIs(ir, ir.getExitBlock());
     PointerKey exception = getPointerKeyForExceptionalReturnValue(node);
 
-    IClass c = node.getClassHierarchy().lookupClass(TypeReference.JavaLangThrowable);
+    TypeReference throwableType = 
+      node.getMethod().getDeclaringClass().getClassLoader().getLanguage().getThrowableType();
+    IClass c = node.getClassHierarchy().lookupClass(throwableType);
     addExceptionDefConstraints(ir, du, node, peis, exception, Collections.singleton(c));
   }
 

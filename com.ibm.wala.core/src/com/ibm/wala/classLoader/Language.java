@@ -17,6 +17,10 @@ public interface Language {
       return TypeReference.JavaLangObject;
     }
 
+    public TypeReference getThrowableType() {
+      return TypeReference.JavaLangThrowable;
+    }
+
     public TypeReference getConstantType(Object o) {
       if (o instanceof String) {
         return TypeReference.JavaLangString;
@@ -42,6 +46,8 @@ public interface Language {
   Set<Language> getDerivedLanguages();
 
   TypeReference getRootType();
+
+  TypeReference getThrowableType();
 
   TypeReference getConstantType(Object o);
 
