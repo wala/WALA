@@ -59,7 +59,7 @@ public class Util {
   /**
    * TODO: Make these properties?
    */
-  private static final String nativeSpec = "natives.xml";
+  public static final String nativeSpec = "natives.xml";
 
   /**
    * Set up an AnalysisOptions object with default selectors, corresponding to
