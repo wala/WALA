@@ -318,7 +318,8 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
       return EmptyIterator.instance();
     }
     if (b.isEntryBlock()) {
-      return NonNullSingletonIterator.make(normalNodes.get(0));
+      ExplodedBasicBlock z = normalNodes.get(0);
+      return z == null ? EmptyIterator.<ExplodedBasicBlock>instance() : NonNullSingletonIterator.make(z);
     }
     if (b.instructionIndex == b.original.getLastInstructionIndex()) {
       List<ExplodedBasicBlock> result = new ArrayList<ExplodedBasicBlock>();
