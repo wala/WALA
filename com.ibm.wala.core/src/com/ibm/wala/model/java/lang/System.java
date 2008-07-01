@@ -19,13 +19,10 @@ import com.ibm.wala.annotations.Internal;
 public class System {
 
   /**
-   * A simple model of object-array copy
+   * A simple model of object-array copy.
+   * This is not completely correct.  TODO: fix it.
    */
-  static void arraycopy(Object src, Object dest) {
-    if (!src.getClass().isArray() || !dest.getClass().isArray()) {
-      return;
-    }
-    
+  static void arraycopy(Object src, Object dest) {   
     if (src instanceof Object[]) {
       Object[] A = (Object[]) src;
       Object[] B = (Object[]) dest;
@@ -71,6 +68,8 @@ public class System {
       float[] B = (float[]) dest;
       for (int i = 0; i < A.length; i++)
         B[i] = A[i];
+    } else {
+      throw new ArrayStoreException();
     }
   }
 }
