@@ -59,12 +59,14 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.graph.impl.SparseNumberedEdgeManager;
+import com.ibm.wala.util.intset.BitVectorIntSet;
+import com.ibm.wala.util.intset.IntSet;
 
 /**
  * @author manu
  * @author Stephen Fink
  */
-public class SparseNumberedLabeledEdgeManager<T, U> implements LabeledEdgeManager<T, U> {
+public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEdgeManager<T, U> {
 
   /**
    * the label to be attached to an edge when no label is specified
@@ -256,6 +258,34 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements LabeledEdgeManage
 
   public U getDefaultLabel() {
     return defaultLabel;
+  }
+
+  public IntSet getPredNodeNumbers(T node, U label) throws IllegalArgumentException {
+    return getManagerForLabel(label).getPredNodeNumbers(node);
+  }
+
+  public IntSet getSuccNodeNumbers(T node, U label) throws IllegalArgumentException {
+    return getManagerForLabel(label).getSuccNodeNumbers(node);
+  }
+
+  public IntSet getPredNodeNumbers(T node) {
+    BitVectorIntSet preds = new BitVectorIntSet();
+    
+    for (U label : nodeToPredLabels.get(node)) {
+      preds.addAll(getPredNodeNumbers(node, label));
+    }
+
+    return preds;
+  }
+
+  public IntSet getSuccNodeNumbers(T node) {
+    BitVectorIntSet succs = new BitVectorIntSet();
+    
+    for (U label : nodeToSuccLabels.get(node)) {
+      succs.addAll(getSuccNodeNumbers(node, label));
+    }
+
+    return succs;
   }
 
 }

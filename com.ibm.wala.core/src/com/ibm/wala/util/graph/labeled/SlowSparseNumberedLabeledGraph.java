@@ -74,7 +74,7 @@ public class SlowSparseNumberedLabeledGraph<T, U> extends AbstractNumberedLabele
   }
 
   @Override
-  protected LabeledEdgeManager<T, U> getEdgeManager() {
+  protected NumberedLabeledEdgeManager<T, U> getEdgeManager() {
     return edgeManager;
   }
 
