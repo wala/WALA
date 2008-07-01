@@ -17,6 +17,7 @@ import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.propagation.cfa.CallerContext;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ContainerContextSelector;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
@@ -67,16 +68,16 @@ public class AllocationSiteInNodeFactory implements InstanceKeyFactory {
     }
 
     // disallow recursion in contexts.
-    if (node.getContext() instanceof ReceiverInstanceContext) {
+    if (node.getContext() instanceof ReceiverInstanceContext || node.getContext() instanceof CallerContext) {
       IMethod m = node.getMethod();
       CGNode n = ContainerContextSelector.findNodeRecursiveMatchingContext(m, node.getContext());
       if (n != null) {
         return new NormalAllocationInNode(n, allocation, type);
       }
     }
-
+    
     InstanceKey key = new NormalAllocationInNode(node, allocation, type);
-
+    
     return key;
   }
 

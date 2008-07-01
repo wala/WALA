@@ -200,21 +200,29 @@ public class ContainerContextSelector implements ContextSelector {
    * If C is a ReceiverInstanceContext, Let N be the node that allocated C.instance. If N.method == M, return N. Else
    * return findRecursiveMatchingContext(M, N.context) Else return null
    */
-  public static CGNode findNodeRecursiveMatchingContext(IMethod M, Context C) {
+  public static CGNode findNodeRecursiveMatchingContext(IMethod m, Context c) {
     if (DEBUG) {
-      System.err.println("findNodeRecursiveMatchingContext " + M + " in context " + C);
+      System.err.println("findNodeRecursiveMatchingContext " + m + " in context " + c);
     }
-    if (C instanceof ReceiverInstanceContext) {
-      ReceiverInstanceContext ric = (ReceiverInstanceContext) C;
+    if (c instanceof ReceiverInstanceContext) {
+      ReceiverInstanceContext ric = (ReceiverInstanceContext) c;
       if (!(ric.getReceiver() instanceof AllocationSiteInNode)) {
         return null;
       }
-      AllocationSiteInNode I = (AllocationSiteInNode) ric.getReceiver();
-      CGNode N = I.getNode();
-      if (N.getMethod().equals(M)) {
-        return N;
+      AllocationSiteInNode i = (AllocationSiteInNode) ric.getReceiver();
+      CGNode n = i.getNode();
+      if (n.getMethod().equals(m)) {
+        return n;
       } else {
-        return findNodeRecursiveMatchingContext(M, N.getContext());
+        return findNodeRecursiveMatchingContext(m, n.getContext());
+      }
+    } else if (c instanceof CallerContext) {
+      CallerContext cc = (CallerContext)c;
+      CGNode n = cc.getCaller();
+      if (n.getMethod().equals(m)) {
+        return n;
+      } else {
+        return findNodeRecursiveMatchingContext(m, n.getContext());
       }
     } else {
       return null;
