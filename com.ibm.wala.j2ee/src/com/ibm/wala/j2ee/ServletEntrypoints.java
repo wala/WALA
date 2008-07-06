@@ -185,89 +185,91 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
     assert servletFilter != null;
     for (Iterator<IClass> it = getCandidateEntryClasses(cha); it.hasNext();) {
       IClass klass = (IClass) it.next();
-      if (DEBUG) {
-        Trace.println(getClass() + " consider " + klass);
-      }
-      if (cha.lookupClass(klass.getReference()) == null) {
-        continue;
-      }
-      // ignore struts ActionServlets
-      if (cha.lookupClass(actionServletType) != null) {
-        if (cha.isSubclassOf(klass, actionServletClass)) {
+      if (klass != null) {
+        if (DEBUG) {
+          Trace.println(getClass() + " consider " + klass);
+        }
+        if (cha.lookupClass(klass.getReference()) == null) {
           continue;
         }
-      }
-      if (cha.implementsInterface(klass, servlet) ) {
-        servlets.add(klass);
-        final TypeReference type = klass.getReference();
-        
-        for (int i = 0; i < servletMethodNames.length; i++) {
-          Atom name = servletMethodNames[i];
-          Descriptor desc = servletMethodDescs[i];
-          MethodReference M = MethodReference.findOrCreate(type, name, desc);
-          IMethod m = cha.resolveMethod(M);
-          if (cha.resolveMethod(M) != null) {
-            entrypoints.add(new DefaultEntrypoint(m, cha) {
-
-              /**
-               * Assume all ServletRequest and ServletResponse are HTTP flavor.
-               */
-              public TypeReference[] getParameterTypes(int i) {
-                if (i == 0) {
-                  // "this" pointer
-                  return new TypeReference[] { type };
-                } else {
-                  TypeReference[] tArray = super.getParameterTypes(i);
-                  if (Assertions.verifyAssertions) {
-                    Assertions._assert(tArray.length == 1);
-                  }
-                  TypeReference T = tArray[0];
-                  TypeName n = T.getName();
-                  TypeReference Tp = concreteParameterMap.get(n);
-                  if (Tp != null) {
-                    T = Tp;
-                  }
-                  return new TypeReference[] { T };
-                }
-              }
-            });
+        // ignore struts ActionServlets
+        if (cha.lookupClass(actionServletType) != null) {
+          if (cha.isSubclassOf(klass, actionServletClass)) {
+            continue;
           }
         }
-      }
-      if (cha.implementsInterface(klass, servletFilter) ) {
-        servlets.add(klass);
-        final TypeReference type = klass.getReference();
-        
-        for (int i = 0; i < servletFilterMethodNames.length; i++) {
-          Atom name = servletFilterMethodNames[i];
-          Descriptor desc = servletFilterMethodDescs[i];
-          MethodReference M = MethodReference.findOrCreate(type, name, desc);
-          IMethod m = cha.resolveMethod(M);
-          if (cha.resolveMethod(M) != null) {
-            entrypoints.add(new DefaultEntrypoint(m, cha) {
-
-              /**
-               * Assume all ServletRequest and ServletResponse are HTTP flavor.
-               */
-              public TypeReference[] getParameterTypes(int i) {
-                if (i == 0) {
-                  // "this" pointer
-                  return new TypeReference[] { type };
-                } else {
-                  TypeReference[] tArray = super.getParameterTypes(i);
-                  if (Assertions.verifyAssertions) {
-                    Assertions._assert(tArray.length == 1);
+        if (cha.implementsInterface(klass, servlet) ) {
+          servlets.add(klass);
+          final TypeReference type = klass.getReference();
+          
+          for (int i = 0; i < servletMethodNames.length; i++) {
+            Atom name = servletMethodNames[i];
+            Descriptor desc = servletMethodDescs[i];
+            MethodReference M = MethodReference.findOrCreate(type, name, desc);
+            IMethod m = cha.resolveMethod(M);
+            if (cha.resolveMethod(M) != null) {
+              entrypoints.add(new DefaultEntrypoint(m, cha) {
+  
+                /**
+                 * Assume all ServletRequest and ServletResponse are HTTP flavor.
+                 */
+                public TypeReference[] getParameterTypes(int i) {
+                  if (i == 0) {
+                    // "this" pointer
+                    return new TypeReference[] { type };
+                  } else {
+                    TypeReference[] tArray = super.getParameterTypes(i);
+                    if (Assertions.verifyAssertions) {
+                      Assertions._assert(tArray.length == 1);
+                    }
+                    TypeReference T = tArray[0];
+                    TypeName n = T.getName();
+                    TypeReference Tp = concreteParameterMap.get(n);
+                    if (Tp != null) {
+                      T = Tp;
+                    }
+                    return new TypeReference[] { T };
                   }
-                  TypeReference T = tArray[0];
-                  TypeName n = T.getName();
-                  TypeReference Tp = concreteParameterMap.get(n);
-                  if (Tp != null) {
-                    T = Tp;
-                  }
-                  return new TypeReference[] { T };
                 }
-              }
-            });
+              });
+            }
+          }
+        }
+        if (cha.implementsInterface(klass, servletFilter) ) {
+          servlets.add(klass);
+          final TypeReference type = klass.getReference();
+          
+          for (int i = 0; i < servletFilterMethodNames.length; i++) {
+            Atom name = servletFilterMethodNames[i];
+            Descriptor desc = servletFilterMethodDescs[i];
+            MethodReference M = MethodReference.findOrCreate(type, name, desc);
+            IMethod m = cha.resolveMethod(M);
+            if (cha.resolveMethod(M) != null) {
+              entrypoints.add(new DefaultEntrypoint(m, cha) {
+  
+                /**
+                 * Assume all ServletRequest and ServletResponse are HTTP flavor.
+                 */
+                public TypeReference[] getParameterTypes(int i) {
+                  if (i == 0) {
+                    // "this" pointer
+                    return new TypeReference[] { type };
+                  } else {
+                    TypeReference[] tArray = super.getParameterTypes(i);
+                    if (Assertions.verifyAssertions) {
+                      Assertions._assert(tArray.length == 1);
+                    }
+                    TypeReference T = tArray[0];
+                    TypeName n = T.getName();
+                    TypeReference Tp = concreteParameterMap.get(n);
+                    if (Tp != null) {
+                      T = Tp;
+                    }
+                    return new TypeReference[] { T };
+                  }
+                }
+              });
+            }
           }
         }
       }
