@@ -16,6 +16,7 @@ import java.util.Iterator;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntIterator;
 import com.ibm.wala.util.intset.IntSet;
@@ -33,7 +34,7 @@ public class PartiallyBalancedTabulationSolver<T, P> extends TabulationSolver<T,
     return new PartiallyBalancedTabulationSolver<T, P>(p, monitor);
   }
 
-  private final Collection<P> seedProcedures = HashSetFactory.make();
+  private final Collection<Pair<T,Integer>> unbalancedSeeds = HashSetFactory.make();
 
   protected PartiallyBalancedTabulationSolver(PartiallyBalancedTabulationProblem<T, P> p, IProgressMonitor monitor) {
     super(p, monitor);
@@ -42,7 +43,7 @@ public class PartiallyBalancedTabulationSolver<T, P> extends TabulationSolver<T,
   @Override
   protected void propagate(T s_p, int i, T n, int j) {
     super.propagate(s_p, i, n, j);
-    if (isExitFromSeedMethod(n)) {
+    if (wasUsedAsUnbalancedSeed(s_p, i) && supergraph.isExit(n)) {
       // j was reached from an entry seed. if there are any facts which are reachable from j, even without
       // balanced parentheses, we can use these as new seeds.
       for (Iterator<? extends T> it2 = supergraph.getSuccNodes(n); it2.hasNext();) {
@@ -71,18 +72,16 @@ public class PartiallyBalancedTabulationSolver<T, P> extends TabulationSolver<T,
 
   @Override
   public void addSeed(PathEdge<T> seed) {
-    seedProcedures.add(getSupergraph().getProcOf(seed.entry));
+    unbalancedSeeds.add(Pair.make(seed.entry, seed.d1));
     super.addSeed(seed);
 
   }
 
   /**
-   * Is n an exit from a procedure from which a seed originated
+   * Was the fact number i named at node s_p introduced as an "unbalanced" seed during partial tabulation?
+   * If so, any facts "reached" from here can be further propagated with unbalanced parens.
    */
-  private boolean isExitFromSeedMethod(T n) {
-    if (getSupergraph().isExit(n) && seedProcedures.contains(getSupergraph().getProcOf(n))) {
-      return true;
-    }
-    return false;
+  private boolean wasUsedAsUnbalancedSeed(T s_p, int i) {
+   return unbalancedSeeds.contains(Pair.make(s_p, i));
   }
 }
