@@ -2254,7 +2254,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   }
 
   private PointerKey convertToHeapModel(PointerKey curPk, HeapModel heapModel) {
-    return AbstractFlowGraph.convertToHeapModel(curPk, heapModel);
+    return AbstractFlowGraph.convertPointerKeyToHeapModel(curPk, heapModel);
   }
 
   private boolean refineFieldAccesses(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, State state) {

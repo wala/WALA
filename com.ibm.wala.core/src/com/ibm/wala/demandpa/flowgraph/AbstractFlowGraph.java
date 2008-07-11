@@ -253,7 +253,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     if (f == ArrayContents.v()) {
       return getArrayWrites(pk);
     }
-    pk = convertToHeapModel(pk, mam.getHeapModel());
+    pk = convertPointerKeyToHeapModel(pk, mam.getHeapModel());
     Collection<MemoryAccess> writes = mam.getFieldWrites(pk, f);
     for (MemoryAccess a : writes) {
       addSubgraphForNode(a.getNode());
@@ -281,7 +281,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
    * convert a pointer key to one in the memory access map's heap model TODO move this somewhere more appropriate
    * @param pk
    */
-  public static PointerKey convertToHeapModel(PointerKey pk, HeapModel h) {
+  public static PointerKey convertPointerKeyToHeapModel(PointerKey pk, HeapModel h) {
     if (pk instanceof LocalPointerKey) {
       LocalPointerKey lpk = (LocalPointerKey) pk;
       return h.getPointerKeyForLocal(lpk.getNode(), lpk.getValueNumber());
@@ -308,7 +308,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
     if (f == ArrayContents.v()) {
       return getArrayReads(pk);
     }
-    pk = convertToHeapModel(pk, mam.getHeapModel());
+    pk = convertPointerKeyToHeapModel(pk, mam.getHeapModel());
     Collection<MemoryAccess> reads = mam.getFieldReads(pk, f);
     for (MemoryAccess a : reads) {
       addSubgraphForNode(a.getNode());
@@ -331,7 +331,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   Iterator<PointerKey> getArrayWrites(PointerKey arrayRef) {
-    arrayRef = convertToHeapModel(arrayRef, mam.getHeapModel());
+    arrayRef = convertPointerKeyToHeapModel(arrayRef, mam.getHeapModel());
     Collection<MemoryAccess> arrayWrites = mam.getArrayWrites(arrayRef);
     for (MemoryAccess a : arrayWrites) {
       addSubgraphForNode(a.getNode());
@@ -364,7 +364,7 @@ public abstract class AbstractFlowGraph extends SlowSparseNumberedLabeledGraph<O
   }
 
   protected Iterator<PointerKey> getArrayReads(PointerKey arrayRef) {
-    arrayRef = convertToHeapModel(arrayRef, mam.getHeapModel());
+    arrayRef = convertPointerKeyToHeapModel(arrayRef, mam.getHeapModel());
     Collection<MemoryAccess> arrayReads = mam.getArrayReads(arrayRef);
     for (Iterator<MemoryAccess> it = arrayReads.iterator(); it.hasNext();) {
       MemoryAccess a = it.next();
