@@ -37,13 +37,12 @@ public class ShrikeIRFactory implements IRFactory<ShrikeCTMethod> {
 
   public IR makeIR(final ShrikeCTMethod method, Context C, final SSAOptions options) throws IllegalArgumentException {
 
-    com.ibm.wala.shrikeBT.Instruction[] shrikeInstructions;
+    com.ibm.wala.shrikeBT.Instruction[] shrikeInstructions = null;
     try {
       shrikeInstructions = method.getInstructions();
     } catch (InvalidClassFileException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();
-      shrikeInstructions = null;
     }
     final ShrikeCFG shrikeCFG = (ShrikeCFG) makeCFG(method, C);
 

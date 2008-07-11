@@ -545,6 +545,9 @@ public abstract class IR {
       throw new IllegalArgumentException("site is null");
     }
     final IntSet s = callSiteMapping.getRelated(site.getProgramCounter());
+    if (s == null) {
+      throw new IllegalArgumentException("invalid site: " + site);
+    }
     final ISSABasicBlock[] result = new ISSABasicBlock[s.size()];
     int index = 0;
     for (final IntIterator it = s.intIterator(); it.hasNext();) {
