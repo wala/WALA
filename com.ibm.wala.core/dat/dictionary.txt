@@ -164,3 +164,4 @@ subterm
 inline
 subtypes
 dominator
+conformant
