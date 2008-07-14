@@ -47,10 +47,7 @@ public class IFDSExplorer {
     gvExe = newGvExe;
   }
 
-  /**
-   * We pass in the supergraph to allow viewing of a forward supergraph with the results of a backwards problem.
-   */
-  public static <T,P> void viewIFDS(TabulationResult<T, P> r) throws WalaException {
+  public static <T,P> void viewIFDS(TabulationResult<T, P> r, Collection<? extends P> roots) throws WalaException {
 
     if (r == null) {
       throw new IllegalArgumentException("r is null");
@@ -75,10 +72,20 @@ public class IFDSExplorer {
     Graph<? extends P> g = r.getProblem().getSupergraph().getProcedureGraph();
     v.setGraphInput(g);
     v.setBlockInput(true);
-    Collection<? extends P> roots =  InferGraphRoots.inferRoots(r.getProblem().getSupergraph().getProcedureGraph());
     v.setRootsInput(roots);
     v.getPopUpActions().add(new ViewIFDSLocalAction<T, P>(v, r, outputFile, dotFile, dotExe, gvExe));
     v.run();
+    
+  }
+  
+  /**
+   * Calls {@link #viewIFDS(TabulationResult)} with roots computed by {@link InferGraphRoots}.
+   */
+  public static <T,P> void viewIFDS(TabulationResult<T, P> r) throws WalaException {
+
+    Collection<? extends P> roots =  InferGraphRoots.inferRoots(r.getProblem().getSupergraph().getProcedureGraph());
+    viewIFDS(r, roots);
+    
   }
 
   public static String getDotExe() {
