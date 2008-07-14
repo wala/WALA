@@ -165,3 +165,4 @@ inline
 subtypes
 dominator
 conformant
+precompute
