@@ -30,7 +30,6 @@ import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
- * 
  * An SWT action that spawns spawns a ghostview to see the local supergraph for
  * a procedure node which is the current selection in a tree viewer.
  * 
@@ -136,6 +135,10 @@ public class ViewIFDSLocalAction<T, P> extends Action {
       result.append(":=");
       result.append(g.isStatic() ? "getstatic " : "getfield ");
       result.append(fieldName);
+      if (!g.isStatic()) {
+        result.append(" ");
+        result.append(g.getUse(0));
+      }
       return result.toString();
     }
     return s.toString();
