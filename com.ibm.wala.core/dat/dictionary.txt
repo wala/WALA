@@ -166,3 +166,6 @@ subtypes
 dominator
 conformant
 precompute
+idempotence
+canonize
+unflattened
