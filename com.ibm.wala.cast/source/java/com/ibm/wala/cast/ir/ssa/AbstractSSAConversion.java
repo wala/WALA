@@ -23,6 +23,7 @@ import com.ibm.wala.ssa.SSAPhiInstruction;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSAOptions.DefaultValues;
+import com.ibm.wala.util.collections.ArrayIterator;
 import com.ibm.wala.util.collections.IntStack;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
@@ -140,6 +141,10 @@ public abstract class AbstractSSAConversion {
     return ir.getInstructions();
   }
 
+  protected final Iterator iterateInstructions(IR ir) {
+    return new ArrayIterator(getInstructions(ir));
+  }
+  
   protected void init() {
     this.S = new IntStack[getMaxValueNumber() + 1];
     this.C = new int[getMaxValueNumber() + 1];
