@@ -104,6 +104,8 @@ public interface TestConstants {
 
   public final static String SLICE_TESTCD3 = "Lslice/TestCD3";
 
+  public final static String SLICE_TESTCD4 = "Lslice/TestCD4";
+
   public final static String SLICE_TESTID = "Lslice/TestId";
 
   public final static String SLICE_TESTARRAYS = "Lslice/TestArrays";
