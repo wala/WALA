@@ -141,8 +141,8 @@ public abstract class AbstractSSAConversion {
     return ir.getInstructions();
   }
 
-  protected final Iterator iterateInstructions(IR ir) {
-    return new ArrayIterator(getInstructions(ir));
+  protected final Iterator<SSAInstruction> iterateInstructions(IR ir) {
+    return new ArrayIterator<SSAInstruction>(getInstructions(ir));
   }
   
   protected void init() {
