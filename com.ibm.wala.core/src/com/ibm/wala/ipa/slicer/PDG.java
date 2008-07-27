@@ -297,7 +297,7 @@ public class PDG implements NumberedGraph<Statement> {
      * right to add control dependence edges to represent how a phi
      * node depends on predecessor blocks.
      */
-    if (dOptions.equals(DataDependenceOptions.FULL)) {
+    if (!dOptions.equals(DataDependenceOptions.NONE)) {
       for (ISSABasicBlock bb : cdg) {
         for(Iterator<SSAPhiInstruction> ps = bb.iteratePhis(); 
 	    ps.hasNext(); )
