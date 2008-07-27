@@ -94,7 +94,7 @@ public class ViewIFDSLocalAction<T, P> extends Action {
         BasicBlockInContext bb = (BasicBlockInContext)t;
         if (bb.getDelegate() instanceof ExplodedBasicBlock) { 
           ExplodedBasicBlock delegate = (ExplodedBasicBlock) bb.getDelegate();
-          String s = delegate.getNumber() + " " + result.getResult(t) +  " " + stringify(delegate.getInstruction());
+          String s = delegate.getNumber() + " " + result.getResult(t) +  "\\n" + stringify(delegate.getInstruction());
           for (Iterator<SSAPhiInstruction> phis = delegate.iteratePhis(); phis.hasNext(); ) {
             SSAPhiInstruction phi = phis.next();
             s += " " + phi;

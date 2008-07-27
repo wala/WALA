@@ -63,7 +63,7 @@ public class DotUtil {
   /**
    * Recent versions of dot appear to croak on long labels.  Sigh.
    */
-  private final static int MAX_LABEL_LENGTH = 75;
+  private final static int MAX_LABEL_LENGTH = 1000;
 
   /**
    */
