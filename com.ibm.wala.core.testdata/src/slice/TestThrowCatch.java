@@ -14,7 +14,8 @@ public class TestThrowCatch {
 
   public static void callee(int x) throws MyException {
     if (x < 3) {
-      throw new MyException(x);
+      MyException exp = new MyException(x);
+      throw exp;
     }
   }
 
