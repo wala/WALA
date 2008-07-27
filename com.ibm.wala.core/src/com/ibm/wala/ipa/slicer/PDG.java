@@ -35,23 +35,7 @@ import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
 import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.ssa.DefUse;
-import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.ISSABasicBlock;
-import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
-import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
-import com.ibm.wala.ssa.SSAArrayLengthInstruction;
-import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
-import com.ibm.wala.ssa.SSACFG;
-import com.ibm.wala.ssa.SSACheckCastInstruction;
-import com.ibm.wala.ssa.SSAFieldAccessInstruction;
-import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
-import com.ibm.wala.ssa.SSAInstanceofInstruction;
-import com.ibm.wala.ssa.SSAInstruction;
-import com.ibm.wala.ssa.SSANewInstruction;
-import com.ibm.wala.ssa.SSAPhiInstruction;
-import com.ibm.wala.ssa.SSAPiInstruction;
-import com.ibm.wala.ssa.SSAReturnInstruction;
+import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
@@ -303,6 +287,57 @@ public class PDG implements NumberedGraph<Statement> {
     // for (int i = 0; i < paramCalleeStatements.length; i++) {
     // addEdge(methodEntry, paramCalleeStatements[i]);
     // }
+
+    /**
+     * JTD: While phi nodes live in a particular basic block, they
+     * represent a meet of values from multiple blocks.  Hence, they
+     * are really like multiple statements that are control dependent
+     * in the manner of the predecessor blocks.  When the slicer is
+     * following both data and control dependences, it therefore seems
+     * right to add control dependence edges to represent how a phi
+     * node depends on predecessor blocks.
+     */
+    if (dOptions.equals(DataDependenceOptions.FULL)) {
+      for (ISSABasicBlock bb : cdg) {
+        for(Iterator<SSAPhiInstruction> ps = bb.iteratePhis(); 
+	    ps.hasNext(); )
+	{
+	  SSAPhiInstruction phi = ps.next();
+	  Statement phiSt =
+	    ssaInstruction2Statement(phi, ir, instructionIndices);
+	  for (Iterator<? extends ISSABasicBlock> preds = controlFlowGraph.getPredNodes(bb); 
+	       preds.hasNext();)
+	  {
+	    ISSABasicBlock pb = preds.next();
+	    if (controlFlowGraph.getSuccNodeCount(pb) > 1) {
+	      // in this case, there is more than one edge from the
+	      // predecessor block, hence the phi node actually
+	      // depends on the last instruction in the previous
+	      // block, rather than having the same dependences as
+	      // statements in that block.
+	      SSAInstruction pss =
+		ir.getInstructions()[pb.getLastInstructionIndex()];
+	      assert pss != null;
+	      Statement pst = 
+		ssaInstruction2Statement(pss, ir, instructionIndices);
+	      delegate.addEdge(pst, phiSt);
+	    } else {
+	      for (Iterator<? extends ISSABasicBlock> cdps = cdg.getPredNodes(pb); 
+		   cdps.hasNext();)
+	      {
+		ISSABasicBlock cpb = cdps.next();
+		SSAInstruction cps =
+		  ir.getInstructions()[cpb.getLastInstructionIndex()];
+		assert cps != null;
+		Statement cpst = 
+		  ssaInstruction2Statement(cps, ir, instructionIndices);
+		delegate.addEdge(cpst, phiSt);
+	      }
+	    }
+	  }
+	}
+      }
+    }    
   }
 
   /**
