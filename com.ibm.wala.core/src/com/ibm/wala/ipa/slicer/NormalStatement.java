@@ -31,7 +31,19 @@ public class NormalStatement extends StatementWithInstructionIndex {
 
   @Override
   public String toString() {
-    return "NORMAL " + getNode().getMethod().getName() + ":" +  getInstruction().toString() + " " + getNode();
+    String name = "";
+    if (getInstruction().hasDef())  {
+	String[] names = getNode().getIR().getLocalNames(getInstructionIndex(), getInstruction().getDef());
+      if (names != null && names.length > 0) {
+	name = "[" + names[0];
+	for(int i = 1; i < names.length; i++) {
+	  name = name + ", " + names[i];
+	}
+	name = name + "]: ";
+      }
+    }
+
+    return "NORMAL " + getNode().getMethod().getName() + ":" +  name + getInstruction().toString() + " " + getNode();
   }
 
 }
