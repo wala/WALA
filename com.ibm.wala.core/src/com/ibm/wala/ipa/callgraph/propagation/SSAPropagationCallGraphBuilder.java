@@ -1136,7 +1136,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         klass = ((ArrayClass) klass).getElementClass();
         // klass == null means it's a primitive
         if (klass != null && klass.isArrayClass()) {
-
           if (instruction.getNumberOfUses() <= (dim + 1)) {
             break;
           }
