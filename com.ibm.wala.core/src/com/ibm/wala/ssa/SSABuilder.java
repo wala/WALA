@@ -265,8 +265,7 @@ public class SSABuilder extends AbstractIntStackMachine {
   }
 
   /**
-   * This class defines the type abstractions for this analysis and the flow function for each instruction in the
-   * ShrikeBT IR.
+   * This class defines the type abstractions for this analysis and the flow function for each instruction in the ShrikeBT IR.
    */
   private static class SymbolicPropagator extends BasicStackFlowProvider {
 
@@ -326,8 +325,8 @@ public class SSABuilder extends AbstractIntStackMachine {
     }
 
     /**
-     * If we've already created the current instruction, return the value number def'ed by the current instruction.
-     * Else, create a new symbol.
+     * If we've already created the current instruction, return the value number def'ed by the current instruction. Else, create a
+     * new symbol.
      */
     private int reuseOrCreateDef() {
       if (getCurrentInstruction() == null) {
@@ -338,8 +337,8 @@ public class SSABuilder extends AbstractIntStackMachine {
     }
 
     /**
-     * If we've already created the current instruction, return the value number representing the exception the
-     * instruction may throw. Else, create a new symbol
+     * If we've already created the current instruction, return the value number representing the exception the instruction may
+     * throw. Else, create a new symbol
      */
     private int reuseOrCreateException() {
 
@@ -598,7 +597,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         if (t.isArrayType()) {
           int[] sizes = new int[t.getDimensionality()];
           for (int i = 0; i < instruction.getArrayBoundsCount(); i++) {
-            sizes[i] = workingState.pop();
+            sizes[instruction.getArrayBoundsCount() - 1 - i] = workingState.pop();
           }
           for (int i = instruction.getArrayBoundsCount(); i < sizes.length; i++) {
             sizes[i] = symbolTable.getConstant(0);
@@ -733,14 +732,13 @@ public class SSABuilder extends AbstractIntStackMachine {
 
     private void maybeInsertPi(SSAConditionalBranchInstruction cond) {
       if (piNodePolicy != null) {
-        Pair<Integer, SSAInstruction> pi = piNodePolicy
-            .getPi(cond, getDef(cond.getUse(0)), getDef(cond.getUse(1)), symbolTable);
+        Pair<Integer, SSAInstruction> pi = piNodePolicy.getPi(cond, getDef(cond.getUse(0)), getDef(cond.getUse(1)), symbolTable);
         if (pi != null) {
           reuseOrCreatePi(pi.snd, pi.fst);
         }
       }
     }
-    
+
     private SSAInstruction getDef(int vn) {
       if (vn < creators.length) {
         return creators[vn];
@@ -789,16 +787,16 @@ public class SSABuilder extends AbstractIntStackMachine {
   }
 
   /**
-   * A logical mapping from <pc, valueNumber> -> local number Note: make sure this class remains static: this persists
-   * as part of the IR!!
+   * A logical mapping from <pc, valueNumber> -> local number Note: make sure this class remains static: this persists as part of
+   * the IR!!
    */
   private static class SSA2LocalMap implements com.ibm.wala.ssa.IR.SSA2LocalMap {
 
     private final ShrikeCFG shrikeCFG;
 
     /**
-     * Mapping Integer -> IntPair where p maps to (vn,L) iff we've started a range at pc p where value number vn
-     * corresponds to local L
+     * Mapping Integer -> IntPair where p maps to (vn,L) iff we've started a range at pc p where value number vn corresponds to
+     * local L
      */
     private final IntPair[] localStoreMap;
 
@@ -824,8 +822,8 @@ public class SSABuilder extends AbstractIntStackMachine {
     }
 
     /**
-     * Record the beginning of a new range, starting at the given program counter, in which a particular value number
-     * corresponds to a particular local number
+     * Record the beginning of a new range, starting at the given program counter, in which a particular value number corresponds to
+     * a particular local number
      * 
      * @param pc
      * @param valueNumber
@@ -887,8 +885,8 @@ public class SSABuilder extends AbstractIntStackMachine {
     /**
      * @param pc a program counter (index into ShrikeBT instruction array)
      * @param vn a value number
-     * @return if we know that immediately after the given program counter, v_vn corresponds to some set of locals, then
-     *         return an array of the local numbers. else return null.
+     * @return if we know that immediately after the given program counter, v_vn corresponds to some set of locals, then return an
+     *         array of the local numbers. else return null.
      */
     private int[] findLocalsForValueNumber(int pc, int vn) {
 

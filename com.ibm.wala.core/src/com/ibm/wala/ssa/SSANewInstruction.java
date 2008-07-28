@@ -27,9 +27,8 @@ public class SSANewInstruction extends SSAInstruction {
   private final NewSiteReference site;
 
   /**
-   * The value numbers of the arguments passed to the call. If params == null,
-   * this should be a static this statement allocates a scalar. if params !=
-   * null, then params[i] is the size of the ith dimension of the array.
+   * The value numbers of the arguments passed to the call. If params == null, this should be a static this statement allocates a
+   * scalar. if params != null, then params[i] is the size of the ith dimension of the array.
    */
   private final int[] params;
 
@@ -53,10 +52,8 @@ public class SSANewInstruction extends SSAInstruction {
   /**
    * Create a new instruction to allocate an array.
    * 
-   * @throws IllegalArgumentException
-   *             if site is null
-   * @throws IllegalArgumentException
-   *             if params is null
+   * @throws IllegalArgumentException if site is null
+   * @throws IllegalArgumentException if params is null
    */
   public SSANewInstruction(int result, NewSiteReference site, int[] params) {
     super();
@@ -88,13 +85,21 @@ public class SSANewInstruction extends SSAInstruction {
   @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, result) + " = new " + site.getDeclaredType() + "@" + site.getProgramCounter()
-        + (params == null ? "" : " dims: " + params.length);
+        + (params == null ? "" : " dims:" + params.length + " " + array2String(params, symbolTable));
+  }
+
+  private String array2String(int[] params, SymbolTable symbolTable) {
+    StringBuffer result = new StringBuffer();
+    for (int i =0; i < params.length; i++) {
+      result.append(getValueString(symbolTable, params[i]));
+      result.append(" ");
+    }
+    return result.toString();
   }
 
   /**
    * @see com.ibm.wala.ssa.SSAInstruction#visit(IVisitor)
-   * @throws IllegalArgumentException
-   *             if v is null
+   * @throws IllegalArgumentException if v is null
    */
   @Override
   public void visit(IVisitor v) {
