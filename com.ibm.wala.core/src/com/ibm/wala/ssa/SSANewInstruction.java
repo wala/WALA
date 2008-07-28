@@ -85,7 +85,7 @@ public class SSANewInstruction extends SSAInstruction {
   @Override
   public String toString(SymbolTable symbolTable) {
     return getValueString(symbolTable, result) + " = new " + site.getDeclaredType() + "@" + site.getProgramCounter()
-        + (params == null ? "" : " dims:" + params.length + " " + array2String(params, symbolTable));
+        + (params == null ? "" : array2String(params, symbolTable));
   }
 
   private String array2String(int[] params, SymbolTable symbolTable) {

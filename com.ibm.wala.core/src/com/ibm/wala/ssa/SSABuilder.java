@@ -595,12 +595,9 @@ public class SSABuilder extends AbstractIntStackMachine {
         TypeReference t = ShrikeUtil.makeTypeReference(loader, instruction.getType());
         NewSiteReference ref = NewSiteReference.make(getCurrentProgramCounter(), t);
         if (t.isArrayType()) {
-          int[] sizes = new int[t.getDimensionality()];
+          int[] sizes = new int[instruction.getArrayBoundsCount()];
           for (int i = 0; i < instruction.getArrayBoundsCount(); i++) {
             sizes[instruction.getArrayBoundsCount() - 1 - i] = workingState.pop();
-          }
-          for (int i = instruction.getArrayBoundsCount(); i < sizes.length; i++) {
-            sizes[i] = symbolTable.getConstant(0);
           }
           emitInstruction(new SSANewInstruction(result, ref, sizes));
         } else {
