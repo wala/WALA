@@ -47,8 +47,12 @@ public class IFDSExplorer {
     gvExe = newGvExe;
   }
 
-  public static <T,P> void viewIFDS(TabulationResult<T, P> r, Collection<? extends P> roots) throws WalaException {
+  public static <T, P> void viewIFDS(TabulationResult<T, P> r, Collection<? extends P> roots) throws WalaException {
+    viewIFDS(r, roots, null);
+  }
 
+  public static <T, P> void viewIFDS(TabulationResult<T, P> r, Collection<? extends P> roots, NodeDecorator labels)
+      throws WalaException {
     if (r == null) {
       throw new IllegalArgumentException("r is null");
     }
@@ -65,7 +69,8 @@ public class IFDSExplorer {
       e.printStackTrace();
       Assertions.UNREACHABLE();
     }
-    String outputFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + (DotUtil.getOutputType() == DotOutputType.PS ? "ir.ps" : "ir.svg");
+    String outputFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar
+        + (DotUtil.getOutputType() == DotOutputType.PS ? "ir.ps" : "ir.svg");
     String dotFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + "ir.dt";
 
     final SWTTreeViewer v = new SWTTreeViewer();
@@ -73,19 +78,19 @@ public class IFDSExplorer {
     v.setGraphInput(g);
     v.setBlockInput(true);
     v.setRootsInput(roots);
-    v.getPopUpActions().add(new ViewIFDSLocalAction<T, P>(v, r, outputFile, dotFile, dotExe, gvExe));
+    ViewIFDSLocalAction<T, P> action = (labels == null ? new ViewIFDSLocalAction<T, P>(v, r, outputFile, dotFile, dotExe, gvExe) : new ViewIFDSLocalAction<T, P>(v, r, outputFile, dotFile, dotExe, gvExe, labels));
+    v.getPopUpActions().add(action);
     v.run();
-    
+
   }
-  
+
   /**
    * Calls {@link #viewIFDS(TabulationResult)} with roots computed by {@link InferGraphRoots}.
    */
-  public static <T,P> void viewIFDS(TabulationResult<T, P> r) throws WalaException {
-
-    Collection<? extends P> roots =  InferGraphRoots.inferRoots(r.getProblem().getSupergraph().getProcedureGraph());
+  public static <T, P> void viewIFDS(TabulationResult<T, P> r) throws WalaException {
+    Collection<? extends P> roots = InferGraphRoots.inferRoots(r.getProblem().getSupergraph().getProcedureGraph());
     viewIFDS(r, roots);
-    
+
   }
 
   public static String getDotExe() {

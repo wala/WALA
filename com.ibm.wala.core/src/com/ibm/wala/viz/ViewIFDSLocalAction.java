@@ -67,6 +67,18 @@ public class ViewIFDSLocalAction<T, P> extends Action {
   private final String gvExe;
 
   private final NodeDecorator labels;
+  
+  public ViewIFDSLocalAction(SWTTreeViewer viewer, TabulationResult<T, P> result, String psFile, String dotFile, String dotExe,
+      String gvExe, NodeDecorator labels) {
+    this.viewer = viewer;
+    this.supergraph = result.getProblem().getSupergraph();
+    this.psFile = psFile;
+    this.dotFile = dotFile;
+    this.dotExe = dotExe;
+    this.gvExe = gvExe;
+    this.labels = labels;
+    setText("View Local Supergraph");
+  }
 
   public ViewIFDSLocalAction(SWTTreeViewer viewer, TabulationResult<T, P> result, String psFile, String dotFile, String dotExe,
       String gvExe) {
@@ -76,11 +88,11 @@ public class ViewIFDSLocalAction<T, P> extends Action {
     this.dotFile = dotFile;
     this.dotExe = dotExe;
     this.gvExe = gvExe;
-    this.labels = new Labels(result);
+    this.labels = new Labels<T,P>(result);
     setText("View Local Supergraph");
   }
 
-  private class Labels implements NodeDecorator {
+  private static class Labels<T,P> implements NodeDecorator {
     private TabulationResult<T, P> result;
 
     Labels(TabulationResult<T, P> result) {
