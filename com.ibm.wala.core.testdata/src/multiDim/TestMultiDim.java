@@ -15,4 +15,8 @@ public class TestMultiDim {
     doNothing(t);
   }
 
+  static void testNewMultiArray() {
+    String[][][] x = new String[3][4][];
+    doNothing(x);
+  }
 }

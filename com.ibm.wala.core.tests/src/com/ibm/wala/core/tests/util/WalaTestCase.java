@@ -51,7 +51,7 @@ public abstract class WalaTestCase extends TestCase {
   }
 
   public WalaTestCase() {
-    super("DomoTestCase");
+    super("WalaTestCase");
   }
 
   /**
