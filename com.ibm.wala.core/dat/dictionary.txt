@@ -169,3 +169,4 @@ precompute
 idempotence
 canonize
 unflattened
+arraycopy
