@@ -49,9 +49,10 @@ public class MultiNewArrayTest extends WalaTestCase {
     SSAInstruction[] instructions = ir.getInstructions();
     for (SSAInstruction instr : instructions) {
       if (instr instanceof SSANewInstruction) {
-//        assertTrue(instr.getNumberOfUses() == 2);
-//        assertTrue(instr.getUse(0) == 3);
-//        assertTrue(instr.getUse(1) == 4);
+        System.err.println(instr.toString(ir.getSymbolTable()));
+        assertTrue(instr.getNumberOfUses() == 3);
+        assertTrue(ir.getSymbolTable().getIntValue(instr.getUse(0)) == 3);
+        assertTrue(ir.getSymbolTable().getIntValue(instr.getUse(1)) == 4);
       }
     }
   }
