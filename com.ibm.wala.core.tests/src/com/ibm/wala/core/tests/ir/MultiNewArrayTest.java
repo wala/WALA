@@ -50,7 +50,7 @@ public class MultiNewArrayTest extends WalaTestCase {
     for (SSAInstruction instr : instructions) {
       if (instr instanceof SSANewInstruction) {
         System.err.println(instr.toString(ir.getSymbolTable()));
-        assertTrue(instr.getNumberOfUses() == 3);
+        assertTrue(instr.getNumberOfUses() == 2);
         assertTrue(ir.getSymbolTable().getIntValue(instr.getUse(0)) == 3);
         assertTrue(ir.getSymbolTable().getIntValue(instr.getUse(1)) == 4);
       }
