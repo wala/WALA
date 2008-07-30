@@ -65,6 +65,8 @@ public class DotUtil {
    */
   private final static int MAX_LABEL_LENGTH = Integer.MAX_VALUE;
 
+  private final static int FONT_SIZE = 6;
+  
   /**
    */
   public static <T> void dotify(Graph<T> g, NodeDecorator labels, String dotFile, String outputFile, String dotExe) throws WalaException {
@@ -153,7 +155,14 @@ public class DotUtil {
     if (rankdir != null) {
       result.append("rankdir=" + rankdir + ";");
     }
-    result.append("center=true;fontsize=6;node [fontsize=6];edge [fontsize=6]; \n");
+    String fontsizeStr = "fontsize=" + FONT_SIZE;
+    result.append("center=true;");
+    result.append(fontsizeStr);
+    result.append("node [");
+    result.append(fontsizeStr);
+    result.append("];edge [");
+    result.append(fontsizeStr);
+    result.append("]; \n");
 
     Collection dotNodes = computeDotNodes(g);
 
