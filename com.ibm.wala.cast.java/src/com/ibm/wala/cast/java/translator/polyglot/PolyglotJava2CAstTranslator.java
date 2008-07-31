@@ -894,8 +894,25 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     public CAstNode visit(ArrayAccess aa, WalkContext wc) {
       TypeReference eltTypeRef = fIdentityMapper.getTypeRef(aa.type());
 
-      return makeNode(wc, fFactory, aa, CAstNode.ARRAY_REF, walkNodes(aa.array(), wc), fFactory.makeConstant(eltTypeRef),
+      Collection excTargets = wc.getCatchTargets(fNPEType);
+      if (!excTargets.isEmpty()) {
+        // connect NPE exception edge to relevant catch targets
+        // (presumably only one)
+        for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
+          Pair catchPair = (Pair) iterator.next();
+          wc.cfg().add(aa, catchPair.snd, fNPEType);
+        }
+      } else {
+        // connect exception edge to exit
+        wc.cfg().add(aa, CAstControlFlowMap.EXCEPTION_TO_EXIT, fNPEType);
+      }
+
+      CAstNode n = makeNode(wc, fFactory, aa, CAstNode.ARRAY_REF, walkNodes(aa.array(), wc), fFactory.makeConstant(eltTypeRef),
           walkNodes(aa.index(), wc));
+      
+      wc.cfg().map(aa, n);
+      
+      return n;
     }
 
     public CAstNode visit(Field f, WalkContext wc) {

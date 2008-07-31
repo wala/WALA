@@ -98,8 +98,9 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     }
 
     public void doArrayRead(WalkContext context, int result, int arrayValue, CAstNode arrayRefNode, int[] dimValues) {
-	TypeReference arrayTypeRef= (TypeReference) arrayRefNode.getChild(1).getValue();
-	context.cfg().addInstruction(SSAInstructionFactory.ArrayLoadInstruction(result, arrayValue, dimValues[0], arrayTypeRef));
+      TypeReference arrayTypeRef= (TypeReference) arrayRefNode.getChild(1).getValue();
+      context.cfg().addInstruction(SSAInstructionFactory.ArrayLoadInstruction(result, arrayValue, dimValues[0], arrayTypeRef));
+      processExceptions(arrayRefNode, context);
     }
 
     public void doArrayWrite(WalkContext context, int arrayValue, CAstNode arrayRefNode, int[] dimValues, int rval) {
@@ -116,6 +117,8 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 	  dimValues[0], 
 	  rval, 
 	  arrayTypeRef));
+      
+      processExceptions(arrayRefNode, context);
     }
 
     protected void doFieldRead(WalkContext context, int result, int receiver, CAstNode elt, CAstNode parent) {
