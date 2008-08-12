@@ -20,6 +20,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
  */
 public class BoundedPartiallyBalancedSolver<T, P> extends PartiallyBalancedTabulationSolver<T, P> {
 
+  private final static boolean VERBOSE = false;
+  
   public static <T, P> BoundedPartiallyBalancedSolver<T, P> createBoundedParitallyBalancedSolver(PartiallyBalancedTabulationProblem<T, P> p, int bound,
       IProgressMonitor monitor) {
     return new BoundedPartiallyBalancedSolver<T, P>(p, bound, monitor);
@@ -39,6 +41,10 @@ public class BoundedPartiallyBalancedSolver<T, P> extends PartiallyBalancedTabul
     if (numSteps < bound) {
       numSteps++;
       super.propagate(s_p, i, n, j);
+    } else {
+      if (VERBOSE) {
+        System.err.println("Suppressing propagation; reached bound " + s_p + " " + i + " " + n + " " + j);
+      }
     }
   }
   
