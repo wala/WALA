@@ -50,13 +50,13 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  * <ul>
  * <li>to support exceptional control flow ... there may be several return sites for each call site.
  * <li>it supports an optional merge operator, useful for non-IFDS problems and widening
- * <li> it store summary edges at each callee instead of at each call site, to avoid unnecessary propagation during
- * demand-driven tabulation.
+ * <li>it store summary edges at each callee instead of at each call site, to avoid unnecessary propagation during demand-driven
+ * tabulation.
  * </ul>
  * <p>
  * 
- * Type parameter T represents type of nodes in the supergraph. Type parameter P represents the type of procedure (or
- * box in RSM parlance)
+ * Type parameter T represents type of nodes in the supergraph. Type parameter P represents the type of procedure (or box in RSM
+ * parlance)
  * 
  * @author sfink
  */
@@ -115,16 +115,16 @@ public class TabulationSolver<T, P> {
   /**
    * A map from Object (entry node in supergraph) -> LocalPathEdges.
    * 
-   * Logically, this represents a set of edges (s_p,d_i) -> (n, d_j). The data structure is chosen to attempt to save
-   * space over representing each edge explicitly.
+   * Logically, this represents a set of edges (s_p,d_i) -> (n, d_j). The data structure is chosen to attempt to save space over
+   * representing each edge explicitly.
    */
   final private Map<T, LocalPathEdges> pathEdges = HashMapFactory.make();
 
   /**
    * A map from Object (entry node in supergraph) -> CallFlowEdges.
    * 
-   * Logically, this represents a set of edges (c,d_i) -> (s_p, d_j). The data structure is chosen to attempt to save
-   * space over representing each edge explicitly.
+   * Logically, this represents a set of edges (c,d_i) -> (s_p, d_j). The data structure is chosen to attempt to save space over
+   * representing each edge explicitly.
    */
   final private Map<T, CallFlowEdges> callFlowEdges = HashMapFactory.make();
 
@@ -150,6 +150,12 @@ public class TabulationSolver<T, P> {
   private final IProgressMonitor progressMonitor;
 
   /**
+   * the path edge currently being processed in the main loop of {@link #forwardTabulateSLRPs()}; <code>null</code> if
+   * {@link #forwardTabulateSLRPs()} is not currently running
+   */
+  private PathEdge<T> curPathEdge;
+
+  /**
    * @param p a description of the dataflow problem to solve
    * @throws IllegalArgumentException if p is null
    */
@@ -162,7 +168,7 @@ public class TabulationSolver<T, P> {
     this.problem = p;
     this.progressMonitor = monitor;
   }
-  
+
   /**
    * Subclasses can override this to plug in a different worklist implementation.
    */
@@ -224,6 +230,7 @@ public class TabulationSolver<T, P> {
    * @throws CancelException
    */
   private void forwardTabulateSLRPs() throws CancelException {
+    assert curPathEdge == null : "curPathEdge should not be non-null here";
     if (worklist == null) {
       worklist = makeWorklist();
     }
@@ -240,6 +247,7 @@ public class TabulationSolver<T, P> {
       if (DEBUG_LEVEL > 0) {
         System.err.println("TABULATE " + edge);
       }
+      curPathEdge = edge;
       int j = merge(edge.entry, edge.d1, edge.target, edge.d2);
       if (j == -1 && DEBUG_LEVEL > 0) {
         System.err.println("merge -1: DROPPING");
@@ -267,11 +275,12 @@ public class TabulationSolver<T, P> {
         }
       }
     }
+    curPathEdge = null;
   }
 
   /**
-   * For some reason (either a bug in our code that defeats soft references, or a bad policy in the GC), leaving soft
-   * reference caches to clear themselves out doesn't work. Help it out.
+   * For some reason (either a bug in our code that defeats soft references, or a bad policy in the GC), leaving soft reference
+   * caches to clear themselves out doesn't work. Help it out.
    * 
    * It's unfortunate that this method exits.
    */
@@ -332,8 +341,8 @@ public class TabulationSolver<T, P> {
   /**
    * Handle lines [21 - 32] of the algorithm, propagating information from an exit node.
    * 
-   * Note that we've changed the way we record summary edges. Summary edges are now associated with a callee (s_p,exit),
-   * where the original algorithm used a call, return pair in the caller.
+   * Note that we've changed the way we record summary edges. Summary edges are now associated with a callee (s_p,exit), where the
+   * original algorithm used a call, return pair in the caller.
    */
   protected void processExit(final PathEdge<T> edge) {
     if (DEBUG_LEVEL > 0) {
@@ -552,10 +561,10 @@ public class TabulationSolver<T, P> {
 
     // c:= number of the call node
     final int c = supergraph.getNumber(edge.target);
-    
+
     Collection<T> allReturnSites = HashSetFactory.make();
     // populate allReturnSites with return sites for missing calls.
-    for (Iterator<? extends T> it = supergraph.getReturnSites(edge.target, null); it.hasNext(); ) {
+    for (Iterator<? extends T> it = supergraph.getReturnSites(edge.target, null); it.hasNext();) {
       allReturnSites.add(it.next());
     }
     // [14 - 16]
@@ -565,9 +574,10 @@ public class TabulationSolver<T, P> {
         System.err.println(" process callee: " + callee);
       }
       MutableSparseIntSet reached = MutableSparseIntSet.makeEmpty();
-      final Collection<T> returnSites = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.target, supergraph.getProcOf(callee)));
+      final Collection<T> returnSites = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.target, supergraph
+          .getProcOf(callee)));
       allReturnSites.addAll(returnSites);
-      // we modify this to handle each return site individually.  Some types of problems
+      // we modify this to handle each return site individually. Some types of problems
       // compute different flow functions for each return site.
       for (final T returnSite : returnSites) {
         IUnaryFlowFunction f = flowFunctionMap.getCallFlowFunction(edge.target, callee, returnSite);
@@ -578,7 +588,7 @@ public class TabulationSolver<T, P> {
         }
       }
       // in some problems, we also want to consider flow into a callee that can never flow out
-      // via a return.  in this case, the return site is null.
+      // via a return. in this case, the return site is null.
       IUnaryFlowFunction f = flowFunctionMap.getCallFlowFunction(edge.target, callee, null);
       // reached := {d1} that reach the callee
       IntSet r = computeFlow(edge.d2, f);
@@ -770,11 +780,10 @@ public class TabulationSolver<T, P> {
   /**
    * Propagate the fact <s_p,i> -> <n, j> has arisen as a path edge. Note: apply merging if necessary.
    * 
-   * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have path edges <s_p,i> -> <n, x>, <s_p,i> ->
-   * <n,y>, and <s_p,i> -><n, z>.
+   * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have path edges <s_p,i> -> <n, x>, <s_p,i> -> <n,y>, and
+   * <s_p,i> -><n, z>.
    * 
-   * let \alpha be the merge function. then instead of <s_p,i> -> <n,j>, we propagate <s_p,i> -> <n, \alpha(j,x,y,z) >
-   * !!!
+   * let \alpha be the merge function. then instead of <s_p,i> -> <n,j>, we propagate <s_p,i> -> <n, \alpha(j,x,y,z) > !!!
    * 
    * @param s_p entry block
    * @param i dataflow fact on entry
@@ -807,11 +816,10 @@ public class TabulationSolver<T, P> {
   }
 
   /**
-   * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have path edges <s_p,i> -> <n, x>, <s_p,i> ->
-   * <n,y>, and <s_p,i> -><n, z>.
+   * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have path edges <s_p,i> -> <n, x>, <s_p,i> -> <n,y>, and
+   * <s_p,i> -><n, z>.
    * 
-   * let \alpha be the merge function. then instead of <s_p,i> -> <n,j>, we propagate <s_p,i> -> <n, \alpha(j,x,y,z) >
-   * !!!
+   * let \alpha be the merge function. then instead of <s_p,i> -> <n,j>, we propagate <s_p,i> -> <n, \alpha(j,x,y,z) > !!!
    * 
    * return -1 if no fact should be propagated
    */
@@ -879,7 +887,7 @@ public class TabulationSolver<T, P> {
     }
     return result;
   }
-  
+
   /**
    * get the bitvector of facts that hold at the entry to a given node
    * 
@@ -1049,5 +1057,9 @@ public class TabulationSolver<T, P> {
 
   public IProgressMonitor getProgressMonitor() {
     return progressMonitor;
+  }
+
+  protected PathEdge<T> getCurPathEdge() {
+    return curPathEdge;
   }
 }
