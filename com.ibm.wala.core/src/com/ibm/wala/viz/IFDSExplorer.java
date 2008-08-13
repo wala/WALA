@@ -47,11 +47,11 @@ public class IFDSExplorer {
     gvExe = newGvExe;
   }
 
-  public static <T, P> void viewIFDS(TabulationResult<T, P> r, Collection<? extends P> roots) throws WalaException {
+  public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r, Collection<? extends P> roots) throws WalaException {
     viewIFDS(r, roots, null);
   }
 
-  public static <T, P> void viewIFDS(TabulationResult<T, P> r, Collection<? extends P> roots, NodeDecorator labels)
+  public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r, Collection<? extends P> roots, NodeDecorator labels)
       throws WalaException {
     if (r == null) {
       throw new IllegalArgumentException("r is null");
@@ -78,7 +78,7 @@ public class IFDSExplorer {
     v.setGraphInput(g);
     v.setBlockInput(true);
     v.setRootsInput(roots);
-    ViewIFDSLocalAction<T, P> action = (labels == null ? new ViewIFDSLocalAction<T, P>(v, r, outputFile, dotFile, dotExe, gvExe) : new ViewIFDSLocalAction<T, P>(v, r, outputFile, dotFile, dotExe, gvExe, labels));
+    ViewIFDSLocalAction<T, P, F> action = (labels == null ? new ViewIFDSLocalAction<T, P, F>(v, r, outputFile, dotFile, dotExe, gvExe) : new ViewIFDSLocalAction<T, P, F>(v, r, outputFile, dotFile, dotExe, gvExe, labels));
     v.getPopUpActions().add(action);
     v.run();
 
@@ -87,7 +87,7 @@ public class IFDSExplorer {
   /**
    * Calls {@link #viewIFDS(TabulationResult)} with roots computed by {@link InferGraphRoots}.
    */
-  public static <T, P> void viewIFDS(TabulationResult<T, P> r) throws WalaException {
+  public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r) throws WalaException {
     Collection<? extends P> roots = InferGraphRoots.inferRoots(r.getProblem().getSupergraph().getProcedureGraph());
     viewIFDS(r, roots);
 

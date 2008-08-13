@@ -55,12 +55,13 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  * </ul>
  * <p>
  * 
- * Type parameter T represents type of nodes in the supergraph. Type parameter P represents the type of procedure (or box in RSM
- * parlance)
+ * @param <T> type of node in the supergraph 
+ * @param <P> type of a procedure (like a box in an RSM)
+ * @param <F> type of factoids propagated when solving this problem
  * 
  * @author sfink
  */
-public class TabulationSolver<T, P> {
+public class TabulationSolver<T, P, F> {
 
   /**
    * DEBUG_LEVEL:
@@ -110,7 +111,7 @@ public class TabulationSolver<T, P> {
   /**
    * The problem being solved.
    */
-  private final TabulationProblem<T, P> problem;
+  private final TabulationProblem<T, P, F> problem;
 
   /**
    * A map from Object (entry node in supergraph) -> LocalPathEdges.
@@ -159,7 +160,7 @@ public class TabulationSolver<T, P> {
    * @param p a description of the dataflow problem to solve
    * @throws IllegalArgumentException if p is null
    */
-  protected TabulationSolver(TabulationProblem<T, P> p, IProgressMonitor monitor) {
+  protected TabulationSolver(TabulationProblem<T, P, F> p, IProgressMonitor monitor) {
     if (p == null) {
       throw new IllegalArgumentException("p is null");
     }
@@ -180,8 +181,8 @@ public class TabulationSolver<T, P> {
    * @param p a description of the dataflow problem to solve
    * @throws IllegalArgumentException if p is null
    */
-  public static <T, P> TabulationSolver<T, P> make(TabulationProblem<T, P> p) {
-    return new TabulationSolver<T, P>(p, null);
+  public static <T, P, F> TabulationSolver<T, P, F> make(TabulationProblem<T, P, F> p) {
+    return new TabulationSolver<T, P, F>(p, null);
   }
 
   /**
@@ -189,7 +190,7 @@ public class TabulationSolver<T, P> {
    * 
    * @return a representation of the result
    */
-  public TabulationResult<T, P> solve() throws CancelException {
+  public TabulationResult<T, P, F> solve() throws CancelException {
 
     try {
       initialize();
@@ -916,7 +917,7 @@ public class TabulationSolver<T, P> {
     return result;
   }
 
-  public class Result implements TabulationResult<T, P> {
+  public class Result implements TabulationResult<T, P, F> {
 
     /**
      * get the bitvector of facts that hold at the entry to a given node
@@ -969,7 +970,7 @@ public class TabulationSolver<T, P> {
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationResult#getProblem()
      */
-    public TabulationProblem<T, P> getProblem() {
+    public TabulationProblem<T, P, F> getProblem() {
       return problem;
     }
 
@@ -1047,7 +1048,7 @@ public class TabulationSolver<T, P> {
     // return summaries.getInvertedSummaryEdgesForTarget(num1, num2, d2);
   }
 
-  public TabulationProblem<T, P> getProblem() {
+  public TabulationProblem<T, P, F> getProblem() {
     return problem;
   }
 

@@ -15,21 +15,23 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * A {@link TabulationSolver} that gives up after a finite bound.
  * 
- * @author sjfink
- *
+ * @param <T> type of node in the supergraph 
+ * @param <P> type of a procedure (like a box in an RSM)
+ * @param <F> type of factoids propagated when solving this problem
+ * 
  */
-public class BoundedTabulationSolver<T, P> extends TabulationSolver<T, P> {
+public class BoundedTabulationSolver<T, P, F> extends TabulationSolver<T, P, F> {
 
-  public static <T, P> BoundedTabulationSolver<T, P> createBoundedTabulationSolver(TabulationProblem<T, P> p, int bound,
+  public static <T, P, F> BoundedTabulationSolver<T, P, F> createBoundedTabulationSolver(TabulationProblem<T, P, F> p, int bound,
       IProgressMonitor monitor) {
-    return new BoundedTabulationSolver<T, P>(p, bound, monitor);
+    return new BoundedTabulationSolver<T, P, F>(p, bound, monitor);
   }
 
   private final int bound;
   
   private int numSteps = 0;
   
-  protected BoundedTabulationSolver(TabulationProblem<T, P> p, int bound, IProgressMonitor monitor) {
+  protected BoundedTabulationSolver(TabulationProblem<T, P, F> p, int bound, IProgressMonitor monitor) {
     super(p, monitor);
     this.bound = bound;
   }

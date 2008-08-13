@@ -12,10 +12,9 @@ package com.ibm.wala.dataflow.IFDS;
 
 
 /**
- * 
  * an individual edge <entry, d1> -> <target, d2>
  * 
- * @author sfink
+ * @param <T> node type in the supergraph
  */
 public final class PathEdge<T> {
 

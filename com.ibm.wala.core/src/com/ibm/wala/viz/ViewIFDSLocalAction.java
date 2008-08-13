@@ -30,12 +30,12 @@ import com.ibm.wala.util.graph.GraphSlicer;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
- * An SWT action that spawns spawns a ghostview to see the local supergraph for
- * a procedure node which is the current selection in a tree viewer.
+ * An SWT action that spawns spawns a ghostview to see the local supergraph for a procedure node which is the current selection in a
+ * tree viewer.
  * 
  * @author sfink
  */
-public class ViewIFDSLocalAction<T, P> extends Action {
+public class ViewIFDSLocalAction<T, P, F> extends Action {
   /**
    * Governing tree viewer
    */
@@ -67,8 +67,8 @@ public class ViewIFDSLocalAction<T, P> extends Action {
   private final String gvExe;
 
   private final NodeDecorator labels;
-  
-  public ViewIFDSLocalAction(SWTTreeViewer viewer, TabulationResult<T, P> result, String psFile, String dotFile, String dotExe,
+
+  public ViewIFDSLocalAction(SWTTreeViewer viewer, TabulationResult<T, P, F> result, String psFile, String dotFile, String dotExe,
       String gvExe, NodeDecorator labels) {
     this.viewer = viewer;
     this.supergraph = result.getProblem().getSupergraph();
@@ -80,7 +80,7 @@ public class ViewIFDSLocalAction<T, P> extends Action {
     setText("View Local Supergraph");
   }
 
-  public ViewIFDSLocalAction(SWTTreeViewer viewer, TabulationResult<T, P> result, String psFile, String dotFile, String dotExe,
+  public ViewIFDSLocalAction(SWTTreeViewer viewer, TabulationResult<T, P, F> result, String psFile, String dotFile, String dotExe,
       String gvExe) {
     this.viewer = viewer;
     this.supergraph = result.getProblem().getSupergraph();
@@ -88,14 +88,14 @@ public class ViewIFDSLocalAction<T, P> extends Action {
     this.dotFile = dotFile;
     this.dotExe = dotExe;
     this.gvExe = gvExe;
-    this.labels = new Labels<T,P>(result);
+    this.labels = new Labels<T, P, F>(result);
     setText("View Local Supergraph");
   }
 
-  private static class Labels<T,P> implements NodeDecorator {
-    private TabulationResult<T, P> result;
+  private static class Labels<T, P, F> implements NodeDecorator {
+    private TabulationResult<T, P, F> result;
 
-    Labels(TabulationResult<T, P> result) {
+    Labels(TabulationResult<T, P, F> result) {
       this.result = result;
     }
 
@@ -103,11 +103,11 @@ public class ViewIFDSLocalAction<T, P> extends Action {
     public String getLabel(Object o) throws WalaException {
       T t = (T) o;
       if (t instanceof BasicBlockInContext) {
-        BasicBlockInContext bb = (BasicBlockInContext)t;
-        if (bb.getDelegate() instanceof ExplodedBasicBlock) { 
+        BasicBlockInContext bb = (BasicBlockInContext) t;
+        if (bb.getDelegate() instanceof ExplodedBasicBlock) {
           ExplodedBasicBlock delegate = (ExplodedBasicBlock) bb.getDelegate();
-          String s = delegate.getNumber() + " " + result.getResult(t) +  "\\n" + stringify(delegate.getInstruction());
-          for (Iterator<SSAPhiInstruction> phis = delegate.iteratePhis(); phis.hasNext(); ) {
+          String s = delegate.getNumber() + " " + result.getResult(t) + "\\n" + stringify(delegate.getInstruction());
+          for (Iterator<SSAPhiInstruction> phis = delegate.iteratePhis(); phis.hasNext();) {
             SSAPhiInstruction phi = phis.next();
             s += " " + phi;
           }
@@ -120,7 +120,7 @@ public class ViewIFDSLocalAction<T, P> extends Action {
       return t + " " + result.getResult(t);
     }
   }
-  
+
   /**
    * Print a short-ish representation of s as a String
    */
@@ -129,9 +129,10 @@ public class ViewIFDSLocalAction<T, P> extends Action {
       return null;
     }
     if (s instanceof SSAAbstractInvokeInstruction) {
-      SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction)s;
+      SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) s;
       String def = call.hasDef() ? Integer.valueOf(call.getDef()) + "=" : "";
-      String result =  def + "call " + call.getDeclaredTarget().getDeclaringClass().getName().getClassName() + "." + call.getDeclaredTarget().getName();
+      String result = def + "call " + call.getDeclaredTarget().getDeclaringClass().getName().getClassName() + "."
+          + call.getDeclaredTarget().getName();
       for (int i = 0; i < s.getNumberOfUses(); i++) {
         result += " ";
         result += s.getUse(i);
@@ -139,9 +140,9 @@ public class ViewIFDSLocalAction<T, P> extends Action {
       return result;
     }
     if (s instanceof SSAGetInstruction) {
-      SSAGetInstruction g = (SSAGetInstruction)s;
+      SSAGetInstruction g = (SSAGetInstruction) s;
       String fieldName = g.getDeclaredField().getName().toString();
-     
+
       StringBuffer result = new StringBuffer();
       result.append(g.getDef());
       result.append(":=");

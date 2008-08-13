@@ -13,16 +13,20 @@ package com.ibm.wala.dataflow.IFDS;
 /**
  * A {@link TabulationProblem} with additional support for computing with partially balanced parentheses.
  * 
- * @author sjfink
- *
+ * @param <T> type of node in the supergraph
+ * @param
+ *            <P>
+ *            type of a procedure (like a box in an RSM)
+ * @param <F> type of factoids propagated when solving this problem
+ * 
  */
-public interface PartiallyBalancedTabulationProblem<T,P> extends TabulationProblem<T,P> {
+public interface PartiallyBalancedTabulationProblem<T, P, F> extends TabulationProblem<T, P, F> {
 
   public IPartiallyBalancedFlowFunctions<T> getFunctionMap();
 
   /**
-   * If "node" is reached by a partially balanced parenthesis, what is the entry node we should use as the root of
-   * the {@link PathEdge} to node?
+   * If "node" is reached by a partially balanced parenthesis, what is the entry node we should use as the root of the
+   * {@link PathEdge} to node?
    */
   public T getFakeEntry(T node);
 }

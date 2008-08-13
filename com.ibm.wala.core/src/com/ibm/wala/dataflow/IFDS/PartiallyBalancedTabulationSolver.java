@@ -24,19 +24,21 @@ import com.ibm.wala.util.intset.IntSet;
 /**
  * Utilities for dealing with tabulation with partially balanced parentheses.
  * 
- * @author sjfink
+ * @param <T> type of node in the supergraph 
+ * @param <P> type of a procedure (like a box in an RSM)
+ * @param <F> type of factoids propagated when solving this problem
  * 
  */
-public class PartiallyBalancedTabulationSolver<T, P> extends TabulationSolver<T, P> {
+public class PartiallyBalancedTabulationSolver<T, P, F> extends TabulationSolver<T, P, F> {
 
-  public static <T, P> PartiallyBalancedTabulationSolver<T, P> createPartiallyBalancedTabulationSolver(
-      PartiallyBalancedTabulationProblem<T, P> p, IProgressMonitor monitor) {
-    return new PartiallyBalancedTabulationSolver<T, P>(p, monitor);
+  public static <T, P, F> PartiallyBalancedTabulationSolver<T, P, F> createPartiallyBalancedTabulationSolver(
+      PartiallyBalancedTabulationProblem<T, P, F> p, IProgressMonitor monitor) {
+    return new PartiallyBalancedTabulationSolver<T, P, F>(p, monitor);
   }
 
   private final Collection<Pair<T,Integer>> unbalancedSeeds = HashSetFactory.make();
 
-  protected PartiallyBalancedTabulationSolver(PartiallyBalancedTabulationProblem<T, P> p, IProgressMonitor monitor) {
+  protected PartiallyBalancedTabulationSolver(PartiallyBalancedTabulationProblem<T, P, F> p, IProgressMonitor monitor) {
     super(p, monitor);
   }
 
@@ -48,7 +50,7 @@ public class PartiallyBalancedTabulationSolver<T, P> extends TabulationSolver<T,
       // balanced parentheses, we can use these as new seeds.
       for (Iterator<? extends T> it2 = supergraph.getSuccNodes(n); it2.hasNext();) {
         T retSite = it2.next();
-        PartiallyBalancedTabulationProblem<T, P> problem = (PartiallyBalancedTabulationProblem<T, P>) getProblem();
+        PartiallyBalancedTabulationProblem<T, P, F> problem = (PartiallyBalancedTabulationProblem<T, P, F>) getProblem();
         IFlowFunction f = problem.getFunctionMap().getUnbalancedReturnFlowFunction(n, retSite);
         // for each fact that can be reached by the return flow ...
         if (f instanceof IUnaryFlowFunction) {

@@ -13,10 +13,12 @@ package com.ibm.wala.dataflow.IFDS;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
- * @author sfink
+ * Domain of facts for tabulation.
  *
+ * @param <F> factoid type
+ * @param <T> type of nodes in the supergraph
  */
-public interface TabulationDomain<T,U> extends OrdinalSetMapping<T> {
+public interface TabulationDomain<F,T> extends OrdinalSetMapping<F> {
 
   /**
    * returns <code>true</code> if p1 should be processed before
@@ -27,8 +29,6 @@ public interface TabulationDomain<T,U> extends OrdinalSetMapping<T> {
    * 
    * return false otherwise
    */
-  boolean hasPriorityOver(PathEdge<U> p1, PathEdge<U> p2);
-
-
+  boolean hasPriorityOver(PathEdge<T> p1, PathEdge<T> p2);
 
 }

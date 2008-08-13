@@ -13,7 +13,6 @@ package com.ibm.wala.dataflow.IFDS;
 import java.util.Collection;
 
 /**
- * 
  * Representation of a Dyck-language graph reachability problem for the 
  * tabulation solver.
  * 
@@ -28,13 +27,15 @@ import java.util.Collection;
  * 
  * See Reps, Horwitz, Sagiv POPL 95
  * 
- * @author sfink
+ * @param <T> type of node in the supergraph 
+ * @param <P> type of a procedure (like a box in an RSM)
+ * @param <F> type of factoids propagated when solving this problem
  */
-public interface TabulationProblem<T,P> {
+public interface TabulationProblem<T,P,F> {
 
   public ISupergraph<T,P> getSupergraph();
 
-  public TabulationDomain getDomain();
+  public TabulationDomain<F,T> getDomain();
 
   public IFlowFunctionMap<T> getFunctionMap();
 

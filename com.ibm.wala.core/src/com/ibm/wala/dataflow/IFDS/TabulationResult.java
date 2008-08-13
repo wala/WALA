@@ -15,13 +15,16 @@ import java.util.Collection;
 import com.ibm.wala.util.intset.IntSet;
 
 /**
- * The solution of a tabulation problem: a mapping from supergraph node ->
- * bit vector representing the dataflow facts that hold at the entry to the
- * supergraph node.
+ * The solution of a tabulation problem: a mapping from supergraph node -> bit vector representing the dataflow facts that hold at
+ * the entry to the supergraph node.
  * 
- * @author sfink
+ * @param <T> type of node in the supergraph
+ * @param
+ *            <P>
+ *            type of a procedure, like a box in an RSM
+ * @param <F> type of factoids propagated when solving this problem
  */
-public interface TabulationResult<T, P> {
+public interface TabulationResult<T, P, F> {
   /**
    * get the bitvector of facts that hold at the entry to a given node
    * 
@@ -29,23 +32,22 @@ public interface TabulationResult<T, P> {
    * @return SparseIntSet efficiently representing the bitvector
    */
   public IntSet getResult(T node);
-  
+
   /**
    * @return the governing IFDS problem
    */
-  public TabulationProblem<T, P> getProblem();
+  public TabulationProblem<T, P, F> getProblem();
 
   /**
    * @return the set of supergraph nodes for which any fact is reached
    */
   public Collection<T> getSupergraphNodesReached();
-  
+
   /**
    * @param n1
    * @param d1
    * @param n2
-   * @return set of d2 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or
-   *         null if none found
+   * @return set of d2 s.t. (n1,d1) -> (n2,d2) is recorded as a summary edge, or null if none found
    */
   public IntSet getSummaryTargets(T n1, int d1, T n2);
 

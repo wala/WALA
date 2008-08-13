@@ -15,23 +15,25 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * A {@link TabulationSolver} that gives up after a finite bound.
  * 
- * @author sjfink
+ * @param <T> type of node in the supergraph 
+ * @param <P> type of a procedure (like a box in an RSM)
+ * @param <F> type of factoids propagated when solving this problem
  *
  */
-public class BoundedPartiallyBalancedSolver<T, P> extends PartiallyBalancedTabulationSolver<T, P> {
+public class BoundedPartiallyBalancedSolver<T, P, F> extends PartiallyBalancedTabulationSolver<T, P, F> {
 
   private final static boolean VERBOSE = false;
   
-  public static <T, P> BoundedPartiallyBalancedSolver<T, P> createBoundedParitallyBalancedSolver(PartiallyBalancedTabulationProblem<T, P> p, int bound,
+  public static <T, P, F> BoundedPartiallyBalancedSolver<T, P, F> createBoundedParitallyBalancedSolver(PartiallyBalancedTabulationProblem<T, P, F> p, int bound,
       IProgressMonitor monitor) {
-    return new BoundedPartiallyBalancedSolver<T, P>(p, bound, monitor);
+    return new BoundedPartiallyBalancedSolver<T, P, F>(p, bound, monitor);
   }
 
   private final int bound;
   
   private int numSteps = 0;
   
-  protected BoundedPartiallyBalancedSolver(PartiallyBalancedTabulationProblem<T, P> p, int bound, IProgressMonitor monitor) {
+  protected BoundedPartiallyBalancedSolver(PartiallyBalancedTabulationProblem<T, P, F> p, int bound, IProgressMonitor monitor) {
     super(p, monitor);
     this.bound = bound;
   }

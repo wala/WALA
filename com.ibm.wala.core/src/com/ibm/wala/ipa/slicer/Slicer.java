@@ -211,11 +211,9 @@ public class Slicer {
 
     SliceProblem p = makeSliceProblem(roots, sdg, backward);
     
-    PartiallyBalancedTabulationSolver<Statement, PDG> solver = PartiallyBalancedTabulationSolver.createPartiallyBalancedTabulationSolver(p, null);
-    TabulationResult<Statement, PDG> tr = solver.solve();
+    PartiallyBalancedTabulationSolver<Statement, PDG, Object> solver = PartiallyBalancedTabulationSolver.createPartiallyBalancedTabulationSolver(p, null);
+    TabulationResult<Statement, PDG, Object> tr = solver.solve();
 
-//    TabulationResult<Statement, PDG> tr = PartiallyBalancedTabulation.tabulate(p);
-    
     Collection<Statement> slice = tr.getSupergraphNodesReached();
 
     if (VERBOSE) {
@@ -247,7 +245,7 @@ public class Slicer {
    * Tabulation problem representing slicing
    * 
    */
-  public static class SliceProblem implements PartiallyBalancedTabulationProblem<Statement, PDG> {
+  public static class SliceProblem implements PartiallyBalancedTabulationProblem<Statement, PDG, Object> {
 
     private final Collection<Statement> roots;
 
@@ -268,9 +266,9 @@ public class Slicer {
     /*
      * @see com.ibm.wala.dataflow.IFDS.TabulationProblem#getDomain()
      */
-    public TabulationDomain getDomain() {
+    public TabulationDomain<Object, Statement> getDomain() {
       // a dummy
-      return new UnorderedDomain<Object, Object>();
+      return new UnorderedDomain<Object, Statement>();
     }
 
     /*
