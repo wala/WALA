@@ -373,8 +373,8 @@ public class TabulationSolver<T, P> {
     // [22] for each c /in callers(p)
     for (Iterator<? extends T> it = supergraph.getPredNodes(edge.entry); it.hasNext();) {
       final T c = it.next();
-      final int cNum = supergraph.getLocalBlockNumber(c);
       if (DEBUG_LEVEL > 0) {
+        final int cNum = supergraph.getLocalBlockNumber(c);
         System.err.println("caller: " + c + " " + cNum);
       }
 
@@ -879,7 +879,7 @@ public class TabulationSolver<T, P> {
     return result;
   }
 
-  private CallFlowEdges findOrCreateCallFlowEdges(T s_p) {
+  protected CallFlowEdges findOrCreateCallFlowEdges(T s_p) {
     CallFlowEdges result = callFlowEdges.get(s_p);
     if (result == null) {
       result = new CallFlowEdges();
