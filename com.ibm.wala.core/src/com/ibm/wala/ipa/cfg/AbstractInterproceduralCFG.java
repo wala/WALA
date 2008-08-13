@@ -609,7 +609,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @return the nodes that are return sites for this call.
    * @throws IllegalArgumentException if bb is null
    */
-  public Iterator<BasicBlockInContext> getReturnSites(BasicBlockInContext<T> callBlock) {
+  public Iterator<BasicBlockInContext<T>> getReturnSites(BasicBlockInContext<T> callBlock) {
     if (callBlock == null) {
       throw new IllegalArgumentException("bb is null");
     }
@@ -623,7 +623,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         return !other.isEntryBlock() && node.equals(other.getNode());
       }
     };
-    return new FilterIterator<BasicBlockInContext>(getSuccNodes(callBlock), isReturn);
+    return new FilterIterator<BasicBlockInContext<T>>(getSuccNodes(callBlock), isReturn);
   }
 
   /**
