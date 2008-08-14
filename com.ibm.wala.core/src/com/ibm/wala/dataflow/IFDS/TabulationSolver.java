@@ -55,7 +55,7 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  * </ul>
  * <p>
  * 
- * @param <T> type of node in the supergraph 
+ * @param <T> type of node in the supergraph
  * @param <P> type of a procedure (like a box in an RSM)
  * @param <F> type of factoids propagated when solving this problem
  * 
@@ -447,37 +447,7 @@ public class TabulationSolver<T, P, F> {
         }
         IntSetAction action = new IntSetAction() {
           public void act(final int d4) {
-            if (D5 != null) {
-              D5.foreach(new IntSetAction() {
-                public void act(final int d5) {
-                  // [26 - 28]
-                  // note that we've modified the algorithm here to account
-                  // for potential
-                  // multiple entry nodes. Instead of propagating the new
-                  // summary edge
-                  // with respect to one s_profOf(c), we have to propagate
-                  // for each
-                  // potential entry node s_p /in s_procof(c)
-                  for (int i = 0; i < entries.length; i++) {
-                    final T s_p = entries[i];
-                    if (DEBUG_LEVEL > 1) {
-                      System.err.println(" do entry " + s_p);
-                    }
-                    IntSet D3 = getInversePathEdges(s_p, c, d4);
-                    if (DEBUG_LEVEL > 1) {
-                      System.err.println("D3" + D3);
-                    }
-                    if (D3 != null) {
-                      D3.foreach(new IntSetAction() {
-                        public void act(int d3) {
-                          propagate(s_p, d3, retSite, d5);
-                        }
-                      });
-                    }
-                  }
-                }
-              });
-            }
+            propToReturnSite(c, entries, retSite, d4, D5);
           }
         };
         D4.foreach(action);
@@ -502,39 +472,56 @@ public class TabulationSolver<T, P, F> {
     D4.foreach(new IntSetAction() {
       public void act(final int d4) {
         final IntSet D5 = computeBinaryFlow(d4, edge.d2, (IBinaryReturnFlowFunction) retf);
-        if (D5 != null) {
-          D5.foreach(new IntSetAction() {
-            public void act(final int d5) {
-              // [26 - 28]
-              // note that we've modified the algorithm here to account
-              // for potential
-              // multiple entry nodes. Instead of propagating the new
-              // summary edge
-              // with respect to one s_profOf(c), we have to propagate
-              // for each
-              // potential entry node s_p /in s_procof(c)
-              for (int i = 0; i < entries.length; i++) {
-                final T s_p = entries[i];
-                if (DEBUG_LEVEL > 1) {
-                  System.err.println(" do entry " + s_p);
-                }
-                IntSet D3 = getInversePathEdges(s_p, c, d4);
-                if (DEBUG_LEVEL > 1) {
-                  System.err.println("D3" + D3);
-                }
-                if (D3 != null) {
-                  D3.foreach(new IntSetAction() {
-                    public void act(int d3) {
-                      propagate(s_p, d3, retSite, d5);
-                    }
-                  });
-                }
-              }
-            }
-          });
-        }
+        propToReturnSite(c, entries, retSite, d4, D5);
       }
+
     });
+  }
+
+  /**
+   * Propagate information to a particular return site.
+   * 
+   * @param c the corresponding call site
+   * @param entries entry nodes in the caller
+   * @param retSite the return site
+   * @param d4 a fact s.t. <c, d4> -> <callee, d2> was recorded as call flow and <callee, d2> is the source of the summary edge
+   *            being applied
+   * @param D5 facts to propagate to return site
+   */
+  private void propToReturnSite(final T c, final T[] entries, final T retSite, final int d4, final IntSet D5) {
+    if (D5 != null) {
+      D5.foreach(new IntSetAction() {
+        public void act(final int d5) {
+          // [26 - 28]
+          // note that we've modified the algorithm here to account
+          // for potential
+          // multiple entry nodes. Instead of propagating the new
+          // summary edge
+          // with respect to one s_profOf(c), we have to propagate
+          // for each
+          // potential entry node s_p /in s_procof(c)
+          for (int i = 0; i < entries.length; i++) {
+            final T s_p = entries[i];
+            if (DEBUG_LEVEL > 1) {
+              System.err.println(" do entry " + s_p);
+            }
+            IntSet D3 = getInversePathEdges(s_p, c, d4);
+            if (DEBUG_LEVEL > 1) {
+              System.err.println("D3" + D3);
+            }
+            if (D3 != null) {
+              D3.foreach(new IntSetAction() {
+                public void act(int d3) {
+                  // set curPathEdge to be consistent with its setting in processCall() when applying a summary edge
+                  curPathEdge = PathEdge.createPathEdge(s_p, d3, c, d4);
+                  propagate(s_p, d3, retSite, d5);
+                }
+              });
+            }
+          }
+        }
+      });
+    }
   }
 
   /**
