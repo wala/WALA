@@ -17,11 +17,8 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
- * 
  * By convention, symbol numbers start at 1 ... the "this" parameter will be
  * symbol number 1 in a virtual method.
- * 
- * @author sfink
  */
 public class SymbolTable {
 
@@ -77,7 +74,7 @@ public class SymbolTable {
     Integer result = constants.get(v);
     if (result == null) {
       int r = getNewValueNumber();
-      result = new Integer(r);
+      result = Integer.valueOf(r);
       constants.put(v, result);
       values[r] = v;
     }
@@ -114,15 +111,15 @@ public class SymbolTable {
   }
 
   public int getConstant(boolean b) {
-    return findOrCreateConstant(new Boolean(b));
+    return findOrCreateConstant(Boolean.valueOf(b));
   }
 
   public int getConstant(int i) {
-    return findOrCreateConstant(new Integer(i));
+    return findOrCreateConstant(Integer.valueOf(i));
   }
 
   public int getConstant(long l) {
-    return findOrCreateConstant(new Long(l));
+    return findOrCreateConstant(Long.valueOf(l));
   }
 
   public int getConstant(float f) {

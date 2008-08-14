@@ -40,7 +40,7 @@ public class CallerSiteContext extends CallerContext {
 
   @Override
   public boolean equals(Object obj) {
-    if (getClass().equals(obj.getClass())) {
+    if (obj != null && getClass().equals(obj.getClass())) {
       CallerSiteContext other = (CallerSiteContext) obj;
       return getCaller().equals(other.getCaller()) && callSite.equals(other.callSite);
     } else {
@@ -61,5 +61,4 @@ public class CallerSiteContext extends CallerContext {
   public CallSiteReference getCallSite() {
     return callSite;
   }
-
 }

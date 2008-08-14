@@ -54,10 +54,7 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
  * Simple implementation of a class hierarchy
- * 
- * @author sfink
  */
 public class ClassHierarchy implements IClassHierarchy {
 
@@ -636,11 +633,9 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * @author sfink
-   * 
    * internal representation of a node in the class hiearachy, representing one java class.
    */
-  private final class Node {
+  private static final class Node {
 
     private final IClass klass;
 
@@ -789,15 +784,9 @@ public class ClassHierarchy implements IClassHierarchy {
       if (loaders[i].getReference().equals(loaderRef)) {
         IClass klass = loaders[i].lookupClass(A.getName());
         if (klass != null) {
-          if (DEBUG) {
-            Trace.println("lookupClass: got " + klass);
-          }
           if (findNode(klass) != null) {
             // it's a scalar type in the class hierarchy
             return klass;
-          }
-          if (klass == null) {
-            Assertions._assert(klass != null, "error looking up type " + A);
           }
           if (klass.isArrayClass()) {
             // check that we know how to handle the element type

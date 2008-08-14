@@ -20,7 +20,7 @@ import com.ibm.wala.util.strings.StringStuff;
 
 /**
  */
-public class Table<T> implements Cloneable {
+public class Table<T> {
 
   // table is implemented as an ArrayList of rows. Each row is a SimpleVector<T>.
   protected final ArrayList<SimpleVector<T>> rows = new ArrayList<SimpleVector<T>>();
@@ -97,7 +97,7 @@ public class Table<T> implements Cloneable {
   public int[] computeColumnWidths() {
     int[] result = new int[getNumberOfColumns()];
     for (int i = 0; i < getNumberOfColumns(); i++) {
-      result[i] = columnHeadings.get(i).toString().length() + 1;
+      result[i] = columnHeadings.get(i).length() + 1;
     }
     for (int j = 0; j < getNumberOfRows(); j++) {
       for (int i = 0; i < getNumberOfColumns(); i++) {

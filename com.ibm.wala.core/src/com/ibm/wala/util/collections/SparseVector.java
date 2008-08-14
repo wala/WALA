@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
@@ -115,6 +116,9 @@ public class SparseVector<T> implements IVector<T> {
 
       @SuppressWarnings("unchecked")
       public T next() {
+        if (!hasNext()) {
+          throw new NoSuchElementException();
+        }
         return (T) data[i++];
       }
 

@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
+import java.util.Arrays;
+
 import com.ibm.wala.analysis.typeInference.ConeType;
 import com.ibm.wala.analysis.typeInference.PrimitiveType;
 import com.ibm.wala.analysis.typeInference.TypeAbstraction;
@@ -27,10 +29,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * A representation of an entrypoint in the call graph.
- * 
- * @author sfink
  */
 public abstract class Entrypoint implements BytecodeConstants {
 
@@ -190,7 +189,6 @@ public abstract class Entrypoint implements BytecodeConstants {
   }
 
   /**
-   * @param i
    * @return types to allocate for parameter i; for non-static methods,
    *         parameter 0 is "this"
    */
@@ -206,11 +204,11 @@ public abstract class Entrypoint implements BytecodeConstants {
     StringBuffer result = new StringBuffer(method.toString());
     result.append("(");
     for (int i = 0; i < getNumberOfParameters() - 1; i++) {
-      result.append(getParameterTypes(i).toString());
+      result.append(Arrays.toString(getParameterTypes(i)));
       result.append(",");
     }
     if (getNumberOfParameters() > 0) {
-      result.append(getParameterTypes(getNumberOfParameters() - 1));
+      result.append(Arrays.toString(getParameterTypes(getNumberOfParameters() - 1)));
     }
     result.append(")");
     return result.toString();

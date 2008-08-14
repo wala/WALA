@@ -46,12 +46,13 @@ public class AnalysisScopeReader {
   }
 
   public static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader) {
+    BufferedReader r = null;
     try {
       File scopeFile = FileProvider.getFile(scopeFileName, javaLoader);
       assert scopeFile.exists();
 
       String line;
-      BufferedReader r = new BufferedReader(new FileReader(scopeFile));
+      r = new BufferedReader(new FileReader(scopeFile));
       while ((line = r.readLine()) != null) {
         processScopeDefLine(scope, javaLoader, line);
       }
@@ -63,6 +64,14 @@ public class AnalysisScopeReader {
     } catch (IOException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE(e.toString());
+    } finally {
+      if (r != null) {
+        try {
+          r.close();
+        } catch (IOException e) {
+           e.printStackTrace();
+        }
+      }
     }
 
     return scope;

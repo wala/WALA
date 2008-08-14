@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.util.NoSuchElementException;
+
 
 /**
  * Iterator that only returns non-null elements of the array 
@@ -42,6 +44,9 @@ public class ArrayNonNullIterator<T> extends ArrayIterator<T> {
 
   @Override
   public T next() {
+    if (!hasNext()) {
+      throw new NoSuchElementException();
+    }
     T result = _elts[_cnt];
     do {
       _cnt++;

@@ -238,7 +238,7 @@ public final class TypeReference {
 
   public final static TypeReference JavaLangThrowable = findOrCreate(ClassLoaderReference.Primordial, JavaLangThrowableName);
 
-  private final static TypeName JavaLangCloneableName = TypeName.string2TypeName("Ljava/lang/Cloneable");
+  public final static TypeName JavaLangCloneableName = TypeName.string2TypeName("Ljava/lang/Cloneable");
 
   public final static TypeReference JavaLangCloneable = findOrCreate(ClassLoaderReference.Primordial, JavaLangCloneableName);
 
@@ -250,7 +250,7 @@ public final class TypeReference {
 
   public final static TypeReference JavaLangInteger = findOrCreate(ClassLoaderReference.Primordial, JavaLangIntegerName);
 
-  private final static TypeName JavaIoSerializableName = TypeName.string2TypeName("Ljava/io/Serializable");
+  public final static TypeName JavaIoSerializableName = TypeName.string2TypeName("Ljava/io/Serializable");
 
   public final static TypeReference JavaIoSerializable = findOrCreate(ClassLoaderReference.Primordial, JavaIoSerializableName);
 
@@ -281,13 +281,6 @@ public final class TypeReference {
   private final static TypeName JavaUtilVectorName = TypeName.string2TypeName("Ljava/util/Vector");
 
   public final static TypeReference JavaUtilVector = findOrCreate(ClassLoaderReference.Primordial, JavaUtilVectorName);
-
-  /*********************************************************************************************************************
-   * Misc special types *
-   ********************************************************************************************************************/
-
-  // TODO: Is this necessary?
-  public static final TypeName[] array_interfaces = new TypeName[] { JavaIoSerializableName, JavaLangCloneableName };
 
   public final static byte ClassTypeCode = 'L';
 
@@ -517,6 +510,7 @@ public final class TypeReference {
 
     @Override
     public final boolean equals(Object other) {
+      assert other != null && other instanceof Key;
       Key that = (Key) other;
       return (name.equals(that.name) && classloader.equals(that.classloader));
     }

@@ -32,7 +32,7 @@ public class SemiSparseMutableIntSetFactory implements MutableIntSetFactory {
       // XXX not very efficient.
       TreeSet<Integer> T = new TreeSet<Integer>();
       for (int i = 0; i < set.length; i++) {
-        T.add(new Integer(set[i]));
+        T.add(Integer.valueOf(set[i]));
       }
       MutableIntSet result = new SemiSparseMutableIntSet();
       for (Iterator<Integer> it = T.iterator(); it.hasNext();) {

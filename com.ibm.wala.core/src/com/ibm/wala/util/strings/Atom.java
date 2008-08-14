@@ -13,31 +13,18 @@ package com.ibm.wala.util.strings;
 import java.util.HashMap;
 
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
-
-/*
- * (C) Copyright IBM Corp. 2001
- */
 
 /**
  * An utf8-encoded byte string.
  * 
- * Atom's are interned (canonicalized) so they may be compared for equality
- * using the "==" operator.
+ * Atom's are interned (canonicalized) so they may be compared for equality using the "==" operator.
  * 
- * Atoms are used to represent names, descriptors, and string literals appearing
- * in a class's constant pool.
- * 
- * @author Bowen Alpern
- * @author Dave Grove
- * @author Derek Lieber
- * @author Stephen Fink
+ * Atoms are used to represent names, descriptors, and string literals appearing in a class's constant pool.
  */
 public final class Atom {
 
   /**
-   * Used to canonicalize Atoms, a mapping from AtomKey -> Atom. AtomKeys are
-   * not canonical, but Atoms are.
+   * Used to canonicalize Atoms, a mapping from AtomKey -> Atom. AtomKeys are not canonical, but Atoms are.
    */
   final private static HashMap<AtomKey, Atom> dictionary = HashMapFactory.make();
 
@@ -54,8 +41,7 @@ public final class Atom {
   /**
    * Find or create an atom.
    * 
-   * @param str
-   *          atom value, as string literal whose characters are unicode
+   * @param str atom value, as string literal whose characters are unicode
    * @return atom
    */
   public static Atom findOrCreateUnicodeAtom(String str) {
@@ -66,11 +52,9 @@ public final class Atom {
   /**
    * Find or create an atom.
    * 
-   * @param str
-   *          atom value, as string literal whose characters are from ascii
-   *          subset of unicode (not including null)
+   * @param str atom value, as string literal whose characters are from ascii subset of unicode (not including null)
    * @return atom
-   * @throws IllegalArgumentException  if str is null
+   * @throws IllegalArgumentException if str is null
    */
   public static Atom findOrCreateAsciiAtom(String str) {
     if (str == null) {
@@ -83,10 +67,9 @@ public final class Atom {
   /**
    * Find or create an atom.
    * 
-   * @param utf8
-   *          atom value, as utf8 encoded bytes
+   * @param utf8 atom value, as utf8 encoded bytes
    * @return atom
-   * @throws IllegalArgumentException  if utf8 is null
+   * @throws IllegalArgumentException if utf8 is null
    */
   public static Atom findOrCreateUtf8Atom(byte[] utf8) {
     if (utf8 == null) {
@@ -97,9 +80,11 @@ public final class Atom {
 
   /**
    * create an Atom from utf8[off] of length len
-   * @throws IllegalArgumentException  if utf8.length <= off
+   * 
+   * @throws IllegalArgumentException if utf8.length <= off
    */
-  public static Atom findOrCreate(byte utf8[], int off, int len) throws IllegalArgumentException, IllegalArgumentException, IllegalArgumentException {
+  public static Atom findOrCreate(byte utf8[], int off, int len) throws IllegalArgumentException, IllegalArgumentException,
+      IllegalArgumentException {
 
     if (utf8 == null) {
       throw new IllegalArgumentException("utf8 == null");
@@ -149,8 +134,7 @@ public final class Atom {
   }
 
   /**
-   * Return printable representation of "this" atom. Does not correctly handle
-   * UTF8 translation.
+   * Return printable representation of "this" atom. Does not correctly handle UTF8 translation.
    */
   @Override
   public final String toString() {
@@ -165,8 +149,8 @@ public final class Atom {
   }
 
   /**
-   * Return array descriptor corresponding to "this" array-element descriptor.
-   * this: array-element descriptor - something like "I" or "Ljava/lang/Object;"
+   * Return array descriptor corresponding to "this" array-element descriptor. this: array-element descriptor - something like "I"
+   * or "Ljava/lang/Object;"
    * 
    * @return array descriptor - something like "[I" or "[Ljava/lang/Object;"
    */
@@ -179,9 +163,8 @@ public final class Atom {
   }
 
   /**
-   * Is "this" atom a reserved member name? Note: Sun has reserved all member
-   * names starting with '<' for future use. At present, only <init> and
-   * <clinit> are used.
+   * Is "this" atom a reserved member name? Note: Sun has reserved all member names starting with '<' for future use. At present,
+   * only <init> and <clinit> are used.
    */
   public final boolean isReservedMemberName() {
     if (length() == 0) {
@@ -233,8 +216,7 @@ public final class Atom {
   }
 
   /**
-   * Parse "this" array descriptor to obtain descriptor for array's element
-   * type. this: array descriptor - something like "[I"
+   * Parse "this" array descriptor to obtain descriptor for array's element type. this: array descriptor - something like "[I"
    * 
    * @return array element descriptor - something like "I"
    */
@@ -246,8 +228,7 @@ public final class Atom {
   }
 
   /**
-   * Parse "this" array descriptor to obtain number of dimensions in
-   * corresponding array type. this: descriptor - something like
+   * Parse "this" array descriptor to obtain number of dimensions in corresponding array type. this: descriptor - something like
    * "[Ljava/lang/String;" or "[[I"
    * 
    * @return dimensionality - something like "1" or "2"
@@ -308,11 +289,11 @@ public final class Atom {
      */
     @Override
     public final boolean equals(Object other) {
-      if (Assertions.verifyAssertions) {
-        Assertions._assert(this.getClass().equals(other.getClass()));
-      }
-      if (this == other)
+
+      assert (other != null && this.getClass().equals(other.getClass()));
+      if (this == other) {
         return true;
+      }
 
       AtomKey that = (AtomKey) other;
       if (hash != that.hash)
@@ -329,8 +310,7 @@ public final class Atom {
     }
 
     /**
-     * Return printable representation of "this" atom. Does not correctly handle
-     * UTF8 translation.
+     * Return printable representation of "this" atom. Does not correctly handle UTF8 translation.
      */
     @Override
     public final String toString() {
@@ -364,7 +344,6 @@ public final class Atom {
   public boolean equals(Object obj) {
     return this == obj;
   }
-
 
   public byte getVal(int i) throws IllegalArgumentException {
     try {

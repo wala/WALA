@@ -29,15 +29,12 @@ import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * 
  * "Non-standard" bypass rules to use during call graph construction.
  * 
  * Normally, the method bypass rules replace the IMethod that is resolved by
  * other means, via the getBypass() method. However, the bypass rules can be
  * invoked even before resolving the target of a call, by checking the intercept
  * rules.
- * 
- * @author sfink
  */
 public class MethodBypass {
 
@@ -114,13 +111,13 @@ public class MethodBypass {
       MethodSummary summ = findSummary(m);
       if (summ != null) {
         TypeReference T = m.getDeclaringClass();
-        IClass C = cha.lookupClass(T);
+        IClass c = cha.lookupClass(T);
         if (Assertions.verifyAssertions) {
-          if (C == null) {
-            Assertions._assert(C != null, "null class for " + T);
+          if (c == null) {
+            Assertions._assert(c != null, "null class for " + T);
           }
         }
-        SummarizedMethod n = new SummarizedMethod(m, summ, C);
+        SummarizedMethod n = new SummarizedMethod(m, summ, c);
         syntheticMethods.put(m, n);
         return n;
       }

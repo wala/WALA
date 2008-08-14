@@ -19,11 +19,8 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
- * 
  * A bit set mapping based on an immutable object array. This is not terribly
  * efficient, but is useful for prototyping.
- * 
- * @author sfink
  */
 public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
 
@@ -37,7 +34,7 @@ public class ObjectArrayMapping<T> implements OrdinalSetMapping<T> {
   public ObjectArrayMapping(final T[] array) {
     this.array = array;
     for (int i = 0; i < array.length; i++) {
-      map.put(array[i], new Integer(i));
+      map.put(array[i], Integer.valueOf(i));
     }
   }
 

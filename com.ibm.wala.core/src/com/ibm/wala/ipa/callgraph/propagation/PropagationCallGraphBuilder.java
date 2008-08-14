@@ -51,14 +51,11 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- * 
  * This abstract base class provides the general algorithm for a call graph builder that relies on propagation through
  * an iterative dataflow solver
  * 
  * TODO: This implementation currently keeps all points to sets live ... even those for local variables that do not span
  * interprocedural boundaries. This may be too space-inefficient .. we can consider recomputing local sets on demand.
- * 
- * @author sfink
  */
 public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
   private final static boolean DEBUG_ALL = false;
@@ -1170,7 +1167,7 @@ public abstract class PropagationCallGraphBuilder implements CallGraphBuilder {
 
     @Override
     public boolean equals(Object o) {
-      if (o.getClass().equals(getClass())) {
+      if (o != null && o.getClass().equals(getClass())) {
         PutFieldOperator other = (PutFieldOperator) o;
         return getField().equals(other.getField()) && getFixedSet().equals(other.getFixedSet());
       } else {

@@ -825,7 +825,7 @@ public final class ShrikeClass implements IClass {
     RuntimeInvisibleAnnotationsReader result = null;
     try {
       for (; attrs.isValid(); attrs.advance()) {
-        if (attrs.getName().toString().equals("RuntimeInvisibleAnnotations")) {
+        if (attrs.getName().equals("RuntimeInvisibleAnnotations")) {
           result = new RuntimeInvisibleAnnotationsReader(attrs);
           break;
         }

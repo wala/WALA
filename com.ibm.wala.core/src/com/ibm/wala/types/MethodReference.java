@@ -13,52 +13,58 @@ package com.ibm.wala.types;
 import java.util.HashMap;
 
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeUtil;
 import com.ibm.wala.util.strings.Atom;
 
 /**
  * A class to represent the reference in a class file to a method.
- * 
- * @author Bowen Alpern
- * @author Dave Grove
- * @author Derek Lieber
- * @author Stephen Fink
  */
 public final class MethodReference extends MemberReference {
   /**
-   * Used to canonicalize MethodReferences
-   * a mapping from Key -> MethodReference
+   * Used to canonicalize MethodReferences a mapping from Key -> MethodReference
    */
   final private static HashMap<Key, MethodReference> dictionary = HashMapFactory.make();
 
   public final static Atom newInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
+
   private final static Descriptor newInstanceDesc = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
-  public final static MethodReference JavaLangClassNewInstance =
-    findOrCreate(TypeReference.JavaLangClass, newInstanceAtom, newInstanceDesc);
+
+  public final static MethodReference JavaLangClassNewInstance = findOrCreate(TypeReference.JavaLangClass, newInstanceAtom,
+      newInstanceDesc);
 
   private final static Atom ctorNewInstanceAtom = Atom.findOrCreateUnicodeAtom("newInstance");
+
   private final static Descriptor ctorNewInstanceDesc = Descriptor.findOrCreateUTF8("([Ljava/lang/Object;)Ljava/lang/Object;");
-  public final static MemberReference JavaLangReflectCtorNewInstance =
-    findOrCreate(TypeReference.JavaLangReflectConstructor, ctorNewInstanceAtom, ctorNewInstanceDesc);
+
+  public final static MemberReference JavaLangReflectCtorNewInstance = findOrCreate(TypeReference.JavaLangReflectConstructor,
+      ctorNewInstanceAtom, ctorNewInstanceDesc);
 
   public final static Atom forNameAtom = Atom.findOrCreateUnicodeAtom("forName");
+
   private final static Descriptor forNameDesc = Descriptor.findOrCreateUTF8("(Ljava/langString;)Ljava/lang/Class;");
+
   public final static MethodReference JavaLangClassForName = findOrCreate(TypeReference.JavaLangClass, forNameAtom, forNameDesc);
 
   public final static Atom initAtom = Atom.findOrCreateUnicodeAtom("<init>");
+
   public final static Descriptor defaultInitDesc = Descriptor.findOrCreateUTF8("()V");
+
   public final static Selector initSelector = new Selector(initAtom, defaultInitDesc);
 
   public final static Atom clinitName = Atom.findOrCreateUnicodeAtom("<clinit>");
+
   public final static Selector clinitSelector = new Selector(clinitName, defaultInitDesc);
-  
+
   public final static Atom runAtom = Atom.findOrCreateUnicodeAtom("run");
+
   public final static Descriptor runDesc = Descriptor.findOrCreateUTF8("()Ljava/lang/Object;");
+
   public final static Selector runSelector = new Selector(runAtom, runDesc);
 
   public final static Atom equalsAtom = Atom.findOrCreateUnicodeAtom("equals");
+
   public final static Descriptor equalsDesc = Descriptor.findOrCreateUTF8("(Ljava/lang/Object;)Z");
+
   public final static Selector equalsSelector = new Selector(equalsAtom, equalsDesc);
 
   /**
@@ -77,8 +83,8 @@ public final class MethodReference extends MemberReference {
   private final Selector selector;
 
   /**
-   * Find or create the canonical MethodReference instance for
-   * the given tuple.
+   * Find or create the canonical MethodReference instance for the given tuple.
+   * 
    * @param mn the name of the member
    * @param md the descriptor of the member
    */
@@ -94,11 +100,11 @@ public final class MethodReference extends MemberReference {
   }
 
   /**
-   * Find or create the canonical MethodReference instance for
-   * the given tuple.
+   * Find or create the canonical MethodReference instance for the given tuple.
+   * 
    * @param tref the type reference
    * @param selector the selector for the method
-   * @throws IllegalArgumentException  if selector is null
+   * @throws IllegalArgumentException if selector is null
    */
   public static synchronized MethodReference findOrCreate(TypeReference tref, Selector selector) {
     if (selector == null) {
@@ -106,13 +112,12 @@ public final class MethodReference extends MemberReference {
     }
     return findOrCreate(tref, selector.getName(), selector.getDescriptor());
   }
-  
 
   public static MethodReference findOrCreate(TypeReference t, String methodName, String descriptor) throws IllegalArgumentException {
     Descriptor d = Descriptor.findOrCreateUTF8(descriptor);
-    return findOrCreate(t,Atom.findOrCreateUnicodeAtom(methodName),d);
+    return findOrCreate(t, Atom.findOrCreateUnicodeAtom(methodName), d);
   }
-  
+
   public static MethodReference findOrCreate(ClassLoaderReference loader, String methodClass, String methodName,
       String methodSignature) throws IllegalArgumentException {
     TypeReference t = ShrikeUtil.makeTypeReference(loader, methodClass);
@@ -161,8 +166,7 @@ public final class MethodReference extends MemberReference {
   }
 
   /**
-   * @return ith parameter to the method.  This does NOT include the implicit
-   * "this" pointer.
+   * @return ith parameter to the method. This does NOT include the implicit "this" pointer.
    */
   public final TypeReference getParameterType(int i) throws IllegalArgumentException {
     if (parameterTypes == null || i >= parameterTypes.length) {
@@ -170,15 +174,14 @@ public final class MethodReference extends MemberReference {
     }
     return parameterTypes[i];
   }
-  
+
   public boolean isInit() {
     return getName().equals(MethodReference.initAtom);
   }
 
   /**
-   * Method getSignature.
-   * something like: 
-   *   com.foo.bar.createLargeOrder(IILjava/lang/String;Ljava/sql/Date;)Ljava/lang/Integer;
+   * Method getSignature. something like: com.foo.bar.createLargeOrder(IILjava/lang/String;Ljava/sql/Date;)Ljava/lang/Integer;
+   * 
    * @return String
    */
   @Override
@@ -187,10 +190,10 @@ public final class MethodReference extends MemberReference {
     String s = getDeclaringClass().getName().toString().substring(1).replace('/', '.') + "." + getName() + getDescriptor();
     return s;
   }
+
   /**
-   * Method getSelector.
-   * something like: 
-   *   createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
+   * Method getSelector. something like: createLargeOrder(IILjava.lang.String;SLjava.sql.Date;)Ljava.lang.Integer;
+   * 
    * @return Atom
    */
   public Selector getSelector() {
@@ -198,45 +201,42 @@ public final class MethodReference extends MemberReference {
   }
 
   /**
-   * Method getNumberOfParameters.
-   * This method does NOT include the implicit "this" parameter
+   * Method getNumberOfParameters. This method does NOT include the implicit "this" parameter
+   * 
    * @return int
    */
   public int getNumberOfParameters() {
     return parameterTypes == null ? 0 : parameterTypes.length;
   }
 
-
-
   /**
    * An identifier/selector for methods.
    */
   protected static class Key {
     private final TypeReference type;
+
     private final Atom name;
+
     private final Descriptor descriptor;
+
     Key(TypeReference type, Atom name, Descriptor descriptor) {
       this.type = type;
       this.name = name;
       this.descriptor = descriptor;
     }
+
     @Override
     public final int hashCode() {
- 
+
       return 7001 * type.hashCode() + 7013 * name.hashCode() + descriptor.hashCode();
     }
 
     @Override
     public final boolean equals(Object other) {
-      if (Assertions.verifyAssertions) {
-        Assertions._assert(this.getClass().equals(other.getClass()));
-      }
-
+      assert other != null && this.getClass().equals(other.getClass());
       Key that = (Key) other;
-
       return type.equals(that.type) && name.equals(that.name) && descriptor.equals(that.descriptor);
     }
   }
-
 
 }

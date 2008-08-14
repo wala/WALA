@@ -221,7 +221,7 @@ public class SSACFG implements ControlFlowGraph<ISSABasicBlock> {
 
   private final Map<RefPathKey, SSAPiInstruction> piInstructions = HashMapFactory.make(2);
 
-  private class RefPathKey {
+  private static class RefPathKey {
     private final int n;
 
     private final Object src;

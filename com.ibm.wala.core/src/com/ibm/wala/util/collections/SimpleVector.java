@@ -59,7 +59,7 @@ public class SimpleVector<T> implements IVector<T> {
       if (x >= store.length) {
         return;
       } else {
-        store[x] = value;
+        store[x] = null;
       }
     } else {
       ensureCapacity(x);

@@ -65,8 +65,6 @@ import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * Logic to interpret "factory" methods in context.
- * 
- * @author sfink
  */
 class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
 
@@ -401,9 +399,9 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
       if ((T instanceof PointType) || (T instanceof ConeType)) {
         TypeReference ref = T.getType().getReference();
         NewSiteReference site = NewSiteReference.make(0, ref);
-        IClass klass = options.getClassTargetSelector().getAllocatedTarget(null, site);
-
+        
         if (DEBUG) {
+          IClass klass = options.getClassTargetSelector().getAllocatedTarget(null, site);
           Trace.println("Selected allocated target: " + klass + " for " + T);
         }
         if (T instanceof PointType) {

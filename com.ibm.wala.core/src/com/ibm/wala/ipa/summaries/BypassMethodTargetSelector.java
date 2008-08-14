@@ -265,42 +265,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   }
 
   private MethodSummary findSummary(MemberReference m) {
-    MethodSummary result = methodSummaries.get(m);
-    if (result != null) {
-      if (DEBUG) {
-        System.err.println("findSummary succeeded: " + m);
-      }
-      return result;
-    }
-
-    // try the class instead.
-    TypeReference t = m.getDeclaringClass();
-    result = methodSummaries.get(t);
-    if (result != null) {
-      if (DEBUG) {
-        System.err.println("findSummary succeeded: " + t);
-      }
-      return result;
-    }
-    if (t.isArrayType()) {
-      return null;
-    }
-
-    // finally try the package.
-    // Atom p = extractPackage(t);
-    Atom p = t.getName().getPackage();
-    result = methodSummaries.get(p);
-    if (result != null) {
-      if (DEBUG) {
-        System.err.println("findSummary succeeded: " + p);
-      }
-      return result;
-    } else {
-      if (DEBUG) {
-        System.err.println("findSummary failed: " + m);
-      }
-      return result;
-    }
+    return methodSummaries.get(m);
   }
 
   protected IClassHierarchy getClassHierarchy() {

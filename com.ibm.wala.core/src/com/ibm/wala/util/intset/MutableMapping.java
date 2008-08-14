@@ -52,7 +52,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
     this.array = new Object[2 * array.length];
     for (int i = 0; i < array.length; i++) {
       this.array[i] = array[i];
-      map.put((T) array[i], new Integer(i));
+      map.put((T) array[i], Integer.valueOf(i));
     }
     nextIndex = array.length;
   }

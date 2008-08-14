@@ -1244,14 +1244,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * Initiates a query for the targets of some virtual call, by asking for points-to set of receiver. NOTE: if
      * receiver has already been queried, will not do any additional propagation for already-discovered virtual call
      * targets
-     * 
-     * @param caller
-     * @param ir
-     * @param call
-     * @param callerState
      */
     private void queryCallTargets(CallSiteAndCGNode callSiteAndCGNode, SSAAbstractInvokeInstruction[] callInstrs, State callerState) {
-      final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
       final CGNode caller = callSiteAndCGNode.getCGNode();
       for (SSAAbstractInvokeInstruction callInstr : callInstrs) {
         PointerKey thisArg = heapModel.getPointerKeyForLocal(caller, callInstr.getUse(0));
@@ -1268,6 +1262,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             propTargets(thisArgAndState, callSiteAndCGNode);
           } else {
             if (DEBUG) {
+              final CallSiteReference call = callSiteAndCGNode.getCallSiteReference();
               System.err.println("querying for targets of call " + call + " in " + caller);
             }
           }

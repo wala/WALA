@@ -49,7 +49,7 @@ public class LocalPathElement implements PointerPathElement {
 
   @Override
   public boolean equals(Object o) {
-    if (getClass().equals(o.getClass())) {
+    if (o != null && getClass().equals(o.getClass())) {
       LocalPathElement other = (LocalPathElement) o;
       return lpk.equals(other.lpk);
     } else {

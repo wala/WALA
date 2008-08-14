@@ -764,7 +764,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
      */
     @Override
     public void visitCheckCast(SSACheckCastInstruction instruction) {
-
       IClass cls = getClassHierarchy().lookupClass(instruction.getDeclaredResultType());
       PointerKey result = null;
       if (cls == null) {
@@ -806,9 +805,6 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
             }
           }
         } else {
-          if (cls == null) {
-            cls = getBuilder().getJavaLangObject();
-          }
           if (isRootType(cls)) {
             system.newConstraint(result, assignOperator, value);
           } else {

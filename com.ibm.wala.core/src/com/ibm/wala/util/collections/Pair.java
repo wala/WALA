@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import com.ibm.wala.util.debug.Assertions;
 
@@ -59,7 +60,7 @@ public class Pair<T,U> {
             next = 0;
             return snd;
           default :
-            return null;
+            throw new NoSuchElementException();
         }
       }
 

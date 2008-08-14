@@ -20,11 +20,6 @@ import com.ibm.wala.util.strings.Atom;
 
 /**
  * A class to represent the reference in a class file to a field.
- * 
- * @author Bowen Alpern
- * @author Dave Grove
- * @author Derek Lieber
- * @author Stephen Fink
  */
 public final class FieldReference extends MemberReference {
   private final static boolean DEBUG = false;
@@ -36,9 +31,6 @@ public final class FieldReference extends MemberReference {
 
   private final TypeReference fieldType;
 
-  /*
-   * @see com.ibm.wala.types.MemberReference#getSignature()
-   */
   @Override
   public String getSignature() {
     return getDeclaringClass().getName() + "." + getName() + " " + getFieldType().getName();
@@ -47,8 +39,7 @@ public final class FieldReference extends MemberReference {
   /**
    * Find or create the canonical MemberReference instance for the given tuple.
    * 
-   * @param mn
-   *          the name of the member
+   * @param mn the name of the member
    */
   public static synchronized FieldReference findOrCreate(TypeReference tref, Atom mn, TypeReference fieldType) {
     Key key = new Key(tref, mn, fieldType);
@@ -126,9 +117,7 @@ public final class FieldReference extends MemberReference {
 
     @Override
     public final boolean equals(Object other) {
-      if (Assertions.verifyAssertions) {
-        Assertions._assert(this.getClass().equals(other.getClass()));
-      }
+      assert other != null && this.getClass().equals(other.getClass());
 
       Key that = (Key) other;
       return type.equals(that.type) && name.equals(that.name) && fieldType.equals(that.fieldType);

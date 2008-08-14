@@ -34,10 +34,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * A wrapper around a Shrike object that represents a method
- * 
- * @author sfink
  */
 public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
 
@@ -223,7 +220,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     CodeReader code = null;
     try {
       for (; iter.isValid(); iter.advance()) {
-        if (iter.getName().toString().equals("Code")) {
+        if (iter.getName().equals("Code")) {
           code = new CodeReader(iter);
           break;
         }
@@ -242,7 +239,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     ExceptionsReader result = null;
     try {
       for (; iter.isValid(); iter.advance()) {
-        if (iter.getName().toString().equals("Exceptions")) {
+        if (iter.getName().equals("Exceptions")) {
           result = new ExceptionsReader(iter);
           break;
         }
@@ -261,7 +258,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     SignatureReader result = null;
     try {
       for (; iter.isValid(); iter.advance()) {
-        if (iter.getName().toString().equals("Signature")) {
+        if (iter.getName().equals("Signature")) {
           result = new SignatureReader(iter);
           break;
         }
@@ -280,7 +277,7 @@ public final class ShrikeCTMethod extends ShrikeBTMethod implements IMethod {
     RuntimeInvisibleAnnotationsReader result = null;
     try {
       for (; iter.isValid(); iter.advance()) {
-        if (iter.getName().toString().equals("RuntimeInvisibleAnnotations")) {
+        if (iter.getName().equals("RuntimeInvisibleAnnotations")) {
           result = new RuntimeInvisibleAnnotationsReader(iter);
           break;
         }

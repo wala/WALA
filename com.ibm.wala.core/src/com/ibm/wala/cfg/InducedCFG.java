@@ -405,7 +405,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
 
     @Override
     public boolean equals(Object arg0) {
-      if (getClass().equals(arg0.getClass())) {
+      if (arg0 != null && getClass().equals(arg0.getClass())) {
         BasicBlock other = (BasicBlock) arg0;
         return start == other.start && getMethod().equals(other.getMethod());
       } else {

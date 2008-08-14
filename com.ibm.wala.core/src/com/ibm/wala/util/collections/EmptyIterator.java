@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  *
@@ -39,7 +40,7 @@ public final class EmptyIterator<T> implements Iterator<T> {
   }
 
   public T next() {
-    return null;
+    throw new NoSuchElementException();
   }
 
   public void remove() throws UnsupportedOperationException {

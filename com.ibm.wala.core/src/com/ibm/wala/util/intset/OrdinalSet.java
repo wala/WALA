@@ -89,7 +89,7 @@ public class OrdinalSet<T> implements Iterable<T> {
 
   /**
    * @return a new OrdinalSet instances
-   * @throws IllegalArgumentException  if A is null
+   * @throws IllegalArgumentException if A is null
    */
   public static <T> OrdinalSet<T> intersect(OrdinalSet<T> A, OrdinalSet<T> B) {
     if (A == null) {
@@ -109,6 +109,7 @@ public class OrdinalSet<T> implements Iterable<T> {
 
   /**
    * Creates the union of two ordinal sets.
+   * 
    * @param A ordinal set a
    * @param B ordinal set b
    * @return union of a and b
@@ -126,13 +127,11 @@ public class OrdinalSet<T> implements Iterable<T> {
         Assertions._assert(A.mapping.equals(B.mapping));
       }
     }
-    
+
     if (A.S == null) {
-      return (B.S == null) ? 
-          OrdinalSet.<T>empty() : new OrdinalSet<T>(B.S, B.mapping);
+      return (B.S == null) ? OrdinalSet.<T> empty() : new OrdinalSet<T>(B.S, B.mapping);
     } else if (B.S == null) {
-      return (A.S == null) ? 
-          OrdinalSet.<T>empty() : new OrdinalSet<T>(A.S, A.mapping);
+      return new OrdinalSet<T>(A.S, A.mapping);
     }
 
     IntSet union = A.S.union(B.S);
@@ -151,8 +150,7 @@ public class OrdinalSet<T> implements Iterable<T> {
   }
 
   /**
-   * Dangerous. Added for performance reasons. Use this only if you really know
-   * what you are doing.
+   * Dangerous. Added for performance reasons. Use this only if you really know what you are doing.
    */
   public IntSet getBackingSet() {
     return S;
@@ -176,16 +174,17 @@ public class OrdinalSet<T> implements Iterable<T> {
 
   /**
    * @param instances
-   * @throws NullPointerException  if instances is null
+   * @throws NullPointerException if instances is null
    */
   public static <T> Collection<T> toCollection(OrdinalSet<T> instances) throws NullPointerException {
     return Iterator2Collection.toCollection(instances.iterator());
   }
 
   /**
-   * Precondition: the ordinal set mapping has an index for every element of c
-   * Convert a "normal" collection to an OrdinalSet, based on the given mapping.
-   * @throws IllegalArgumentException  if c is null
+   * Precondition: the ordinal set mapping has an index for every element of c Convert a "normal" collection to an OrdinalSet, based
+   * on the given mapping.
+   * 
+   * @throws IllegalArgumentException if c is null
    */
   public static <T> OrdinalSet<T> toOrdinalSet(Collection<T> c, OrdinalSetMapping<T> m) {
     if (c == null) {

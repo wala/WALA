@@ -60,7 +60,7 @@ public class BitVectorRepository {
     }
     int size = value.size();
     for (int i = size; i > size - SUBSET_DELTA; i--) {
-      WeakHashMap m = buckets.get(new Integer(i));
+      WeakHashMap m = buckets.get(Integer.valueOf(i));
       if (m != null) {
         for (Iterator it = m.keySet().iterator(); it.hasNext();) {
           BitVectorIntSet bv = (BitVectorIntSet) it.next();

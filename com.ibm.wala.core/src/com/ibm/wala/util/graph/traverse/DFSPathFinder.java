@@ -31,8 +31,6 @@ import com.ibm.wala.util.graph.Graph;
  * This class follows the outNodes of the
  * graph nodes to define the graph, but this behavior can be changed
  * by overriding the getConnected method.
- *
- * @author Stephen Fink
  */
 public class DFSPathFinder<T> extends Stack<T> {
   public static final long serialVersionUID = 9939900773328288L;

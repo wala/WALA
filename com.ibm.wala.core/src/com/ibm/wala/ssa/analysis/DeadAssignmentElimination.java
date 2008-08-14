@@ -30,8 +30,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
  * Eliminate dead assignments (phis) from an SSA IR.
- * 
- * @author sfink
  */
 public class DeadAssignmentElimination {
 
@@ -175,7 +173,7 @@ public class DeadAssignmentElimination {
      * @return true iff there are no uses of the given value number
      */
     private boolean isDead(int value) {
-      Integer V = new Integer(value);
+      Integer V = Integer.valueOf(value);
       if (trivialDead.contains(V)) {
         return true;
       } else {

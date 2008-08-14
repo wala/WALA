@@ -298,11 +298,6 @@ public final class BitVectorIntSet implements MutableIntSet {
     }
   }
 
-  @Override
-  public boolean equals(Object obj) {
-    return this == obj;
-  }
-
   public boolean contains(int i) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(i >= 0);

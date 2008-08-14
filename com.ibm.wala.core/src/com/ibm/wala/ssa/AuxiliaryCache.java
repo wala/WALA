@@ -24,7 +24,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.ref.CacheReference;
 
 /**
- * 
  * A cache for auxiliary information based on an SSA representation
  * 
  * A mapping from (IMethod,Context) -> SSAOptions -> SoftReference -> something
@@ -55,7 +54,7 @@ public class AuxiliaryCache {
   /**
    * The existence of this is unfortunate.
    */
-  public void wipe() {
+  public synchronized void wipe() {
     dictionary = HashMapFactory.make();
     nItems = 0;
   }

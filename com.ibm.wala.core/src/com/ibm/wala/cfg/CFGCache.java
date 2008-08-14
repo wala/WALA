@@ -99,7 +99,7 @@ public class CFGCache {
   /**
    * The existence of this is unfortunate.
    */
-  public void wipe() {
+  public synchronized void wipe() {
     dictionary = HashMapFactory.make();
   }
 

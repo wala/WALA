@@ -50,10 +50,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * This class performs intraprocedural type propagation on an SSA IR.
- * 
- * @author sfink
  */
 public class TypeInference extends SSAInference<TypeVariable> implements FixedPointConstants {
 
@@ -225,7 +222,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
   /**
    * An operator which initializes a type to a declared type.
    */
-  protected final class DeclaredTypeOperator extends NullaryOperator<TypeVariable> {
+  protected static final class DeclaredTypeOperator extends NullaryOperator<TypeVariable> {
     private final TypeAbstraction type;
 
     public DeclaredTypeOperator(TypeAbstraction type) {

@@ -29,7 +29,7 @@ public abstract class CallStringContextSelector implements ContextSelector {
     }
   };
 
-  private class CallStringContextPair implements Context {
+  private static class CallStringContextPair implements Context {
     private final CallString cs;
 
     private final Context base;

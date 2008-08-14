@@ -102,10 +102,9 @@ public class PDG implements NumberedGraph<Statement> {
   private boolean isPopulated = false;
 
   /**
-   * @param mod the set of heap locations which may be written (transitively) by this node. These are logically return
-   *        values in the SDG.
-   * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters
-   *        in the SDG.
+   * @param mod the set of heap locations which may be written (transitively) by this node. These are logically return values in the
+   *            SDG.
+   * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    * @throws IllegalArgumentException if node is null
    */
   public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
@@ -115,10 +114,9 @@ public class PDG implements NumberedGraph<Statement> {
   }
 
   /**
-   * @param mod the set of heap locations which may be written (transitively) by this node. These are logically return
-   *        values in the SDG.
-   * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters
-   *        in the SDG.
+   * @param mod the set of heap locations which may be written (transitively) by this node. These are logically return values in the
+   *            SDG.
+   * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    * @throws IllegalArgumentException if node is null
    */
   public PDG(final CGNode node, PointerAnalysis pa, Map<CGNode, OrdinalSet<PointerKey>> mod,
@@ -143,9 +141,9 @@ public class PDG implements NumberedGraph<Statement> {
   }
 
   /**
-   * WARNING: Since we're using a {@link HashMap} of {@link SSAInstruction}s, and equals() of {@link SSAInstruction}
-   * assumes a canonical representative for each instruction, we <bf>must</bf> ensure that we use the same IR object
-   * throughout initialization!!
+   * WARNING: Since we're using a {@link HashMap} of {@link SSAInstruction}s, and equals() of {@link SSAInstruction} assumes a
+   * canonical representative for each instruction, we <bf>must</bf> ensure that we use the same IR object throughout
+   * initialization!!
    */
   private void populate() {
     if (!isPopulated) {
@@ -289,55 +287,41 @@ public class PDG implements NumberedGraph<Statement> {
     // }
 
     /**
-     * JTD: While phi nodes live in a particular basic block, they
-     * represent a meet of values from multiple blocks.  Hence, they
-     * are really like multiple statements that are control dependent
-     * in the manner of the predecessor blocks.  When the slicer is
-     * following both data and control dependences, it therefore seems
-     * right to add control dependence edges to represent how a phi
+     * JTD: While phi nodes live in a particular basic block, they represent a meet of values from multiple blocks. Hence, they are
+     * really like multiple statements that are control dependent in the manner of the predecessor blocks. When the slicer is
+     * following both data and control dependences, it therefore seems right to add control dependence edges to represent how a phi
      * node depends on predecessor blocks.
      */
     if (!dOptions.equals(DataDependenceOptions.NONE)) {
       for (ISSABasicBlock bb : cdg) {
-        for(Iterator<SSAPhiInstruction> ps = bb.iteratePhis(); 
-	    ps.hasNext(); )
-	{
-	  SSAPhiInstruction phi = ps.next();
-	  Statement phiSt =
-	    ssaInstruction2Statement(phi, ir, instructionIndices);
-	  for (Iterator<? extends ISSABasicBlock> preds = controlFlowGraph.getPredNodes(bb); 
-	       preds.hasNext();)
-	  {
-	    ISSABasicBlock pb = preds.next();
-	    if (controlFlowGraph.getSuccNodeCount(pb) > 1) {
-	      // in this case, there is more than one edge from the
-	      // predecessor block, hence the phi node actually
-	      // depends on the last instruction in the previous
-	      // block, rather than having the same dependences as
-	      // statements in that block.
-	      SSAInstruction pss =
-		ir.getInstructions()[pb.getLastInstructionIndex()];
-	      assert pss != null;
-	      Statement pst = 
-		ssaInstruction2Statement(pss, ir, instructionIndices);
-	      delegate.addEdge(pst, phiSt);
-	    } else {
-	      for (Iterator<? extends ISSABasicBlock> cdps = cdg.getPredNodes(pb); 
-		   cdps.hasNext();)
-	      {
-		ISSABasicBlock cpb = cdps.next();
-		SSAInstruction cps =
-		  ir.getInstructions()[cpb.getLastInstructionIndex()];
-		assert cps != null;
-		Statement cpst = 
-		  ssaInstruction2Statement(cps, ir, instructionIndices);
-		delegate.addEdge(cpst, phiSt);
-	      }
-	    }
-	  }
-	}
+        for (Iterator<SSAPhiInstruction> ps = bb.iteratePhis(); ps.hasNext();) {
+          SSAPhiInstruction phi = ps.next();
+          Statement phiSt = ssaInstruction2Statement(phi, ir, instructionIndices);
+          for (Iterator<? extends ISSABasicBlock> preds = controlFlowGraph.getPredNodes(bb); preds.hasNext();) {
+            ISSABasicBlock pb = preds.next();
+            if (controlFlowGraph.getSuccNodeCount(pb) > 1) {
+              // in this case, there is more than one edge from the
+              // predecessor block, hence the phi node actually
+              // depends on the last instruction in the previous
+              // block, rather than having the same dependences as
+              // statements in that block.
+              SSAInstruction pss = ir.getInstructions()[pb.getLastInstructionIndex()];
+              assert pss != null;
+              Statement pst = ssaInstruction2Statement(pss, ir, instructionIndices);
+              delegate.addEdge(pst, phiSt);
+            } else {
+              for (Iterator<? extends ISSABasicBlock> cdps = cdg.getPredNodes(pb); cdps.hasNext();) {
+                ISSABasicBlock cpb = cdps.next();
+                SSAInstruction cps = ir.getInstructions()[cpb.getLastInstructionIndex()];
+                assert cps != null;
+                Statement cpst = ssaInstruction2Statement(cps, ir, instructionIndices);
+                delegate.addEdge(cpst, phiSt);
+              }
+            }
+          }
+        }
       }
-    }    
+    }
   }
 
   /**
@@ -645,9 +629,8 @@ public class PDG implements NumberedGraph<Statement> {
     };
     Collection<Statement> relevantStatements = Iterator2Collection.toCollection(new FilterIterator<Statement>(iterator(), f));
 
-    Map<Statement, OrdinalSet<Statement>> heapReachingDefs = dOptions.isIgnoreHeap() ? null : (new HeapReachingDefs(modRef))
-        .computeReachingDefs(node, ir, pa, mod, relevantStatements, new HeapExclusions(SetComplement
-            .complement(new SingletonSet(t))), cg);
+    Map<Statement, OrdinalSet<Statement>> heapReachingDefs = new HeapReachingDefs(modRef).computeReachingDefs(node, ir, pa, mod,
+        relevantStatements, new HeapExclusions(SetComplement.complement(new SingletonSet(t))), cg);
 
     for (Statement st : heapReachingDefs.keySet()) {
       switch (st.getKind()) {
@@ -754,9 +737,9 @@ public class PDG implements NumberedGraph<Statement> {
   }
 
   /**
-   * Wrap an {@link SSAInstruction} in a {@link Statement}. WARNING: Since we're using a {@link HashMap} of
-   * {@link SSAInstruction}s, and equals() of {@link SSAInstruction} assumes a canonical representative for each
-   * instruction, we <bf>must</bf> ensure that we use the same IR object throughout initialization!!
+   * Wrap an {@link SSAInstruction} in a {@link Statement}. WARNING: Since we're using a {@link HashMap} of {@link SSAInstruction}s,
+   * and equals() of {@link SSAInstruction} assumes a canonical representative for each instruction, we <bf>must</bf> ensure that
+   * we use the same IR object throughout initialization!!
    */
   private Statement ssaInstruction2Statement(SSAInstruction s, IR ir, Map<SSAInstruction, Integer> instructionIndices) {
     return ssaInstruction2Statement(node, s, instructionIndices, ir);
@@ -847,8 +830,8 @@ public class PDG implements NumberedGraph<Statement> {
   /**
    * create nodes representing defs of the return values
    * 
-   * @param mod the set of heap locations which may be written (transitively) by this node. These are logically
-   *        parameters in the SDG.
+   * @param mod the set of heap locations which may be written (transitively) by this node. These are logically parameters in the
+   *            SDG.
    * @param dOptions
    */
   private void createReturnStatements() {
@@ -877,8 +860,7 @@ public class PDG implements NumberedGraph<Statement> {
   /**
    * create nodes representing defs of formal parameters
    * 
-   * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters
-   *        in the SDG.
+   * @param ref the set of heap locations which may be read (transitively) by this node. These are logically parameters in the SDG.
    */
   private void createCalleeParams() {
     if (paramCalleeStatements == null) {

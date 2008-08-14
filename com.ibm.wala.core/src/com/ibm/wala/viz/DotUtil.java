@@ -30,63 +30,69 @@ import com.ibm.wala.util.warnings.WalaException;
  * 
  */
 public class DotUtil {
-  
+
   /**
    * possible output formats for dot
+   * 
    * @author manu
-   *
+   * 
    */
-  public static enum DotOutputType { PS,SVG }
-  
+  public static enum DotOutputType {
+    PS, SVG
+  }
+
   private static DotOutputType outputType = DotOutputType.PS;
-  
+
   public static void setOutputType(DotOutputType outType) {
     outputType = outType;
   }
-  
+
   public static DotOutputType getOutputType() {
     return outputType;
   }
-  
+
   private static String outputTypeCmdLineParam() {
     switch (outputType) {
-    case PS: 
+    case PS:
       return "-Tps";
-    case SVG: 
-      return "-Tsvg"; 
+    case SVG:
+      return "-Tsvg";
     default:
       Assertions.UNREACHABLE();
       return null;
     }
   }
-  
+
   /**
-   * Some versions of dot appear to croak on long labels.  Reduce this if so.
+   * Some versions of dot appear to croak on long labels. Reduce this if so.
    */
   private final static int MAX_LABEL_LENGTH = Integer.MAX_VALUE;
 
   private final static int FONT_SIZE = 6;
-  
+
   /**
    */
-  public static <T> void dotify(Graph<T> g, NodeDecorator labels, String dotFile, String outputFile, String dotExe) throws WalaException {
+  public static <T> void dotify(Graph<T> g, NodeDecorator labels, String dotFile, String outputFile, String dotExe)
+      throws WalaException {
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
     File f = DotUtil.writeDotFile(g, labels, dotFile);
     spawnDot(dotExe, outputFile, f);
   }
-  
+
   public static void spawnDot(String dotExe, String outputFile, File dotFile) throws WalaException {
     if (dotFile == null) {
       throw new IllegalArgumentException("dotFile is null");
     }
     String[] cmdarray = { dotExe, outputTypeCmdLineParam(), "-o", outputFile, "-v", dotFile.getAbsolutePath() };
     System.out.println("spawning process " + Arrays.toString(cmdarray));
+    BufferedInputStream output = null;
+    BufferedInputStream error = null;
     try {
       Process p = Runtime.getRuntime().exec(cmdarray);
-      BufferedInputStream output = new BufferedInputStream(p.getInputStream());
-      BufferedInputStream error = new BufferedInputStream(p.getErrorStream());
+      output = new BufferedInputStream(p.getInputStream());
+      error = new BufferedInputStream(p.getErrorStream());
       boolean repeat = true;
       while (repeat) {
         try {
@@ -118,9 +124,24 @@ public class DotUtil {
     } catch (IOException e) {
       e.printStackTrace();
       throw new WalaException("IOException in " + DotUtil.class);
+    } finally {
+      if (output != null) {
+        try {
+          output.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+      if (error != null) {
+        try {
+          error.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
     }
   }
-  
+
   public static <T> File writeDotFile(Graph<T> g, NodeDecorator labels, String dotfile) throws WalaException {
 
     if (g == null) {
@@ -205,7 +226,6 @@ public class DotUtil {
     return Iterator2Collection.toCollection(g.iterator());
   }
 
-
   private static String getRankDir() throws WalaException {
     return null;
   }
@@ -221,11 +241,10 @@ public class DotUtil {
     return result.toString();
   }
 
-
   private static String getLabel(Object o, NodeDecorator d) throws WalaException {
     String result = null;
     if (d == null) {
-      result =  o.toString();
+      result = o.toString();
     } else {
       result = d.getLabel(o);
       result = result == null ? o.toString() : result;

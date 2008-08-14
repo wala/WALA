@@ -64,6 +64,8 @@ public class ArrayClass implements IClass, Constants {
 
   private final IClassLoader loader;
 
+  private static final TypeName[] array_interfaces = new TypeName[] { TypeReference.JavaIoSerializableName, TypeReference.JavaLangCloneableName };
+
   /*
    * @see com.ibm.wala.classLoader.IClass#getClassLoader()
    */
@@ -225,11 +227,11 @@ public class ArrayClass implements IClass, Constants {
    */
   public Collection<IClass> getAllImplementedInterfaces() {
     HashSet<IClass> result = HashSetFactory.make(2);
-    IClass klass = loader.lookupClass(TypeReference.array_interfaces[0]);
+    IClass klass = loader.lookupClass(ArrayClass.array_interfaces[0]);
     if (klass != null) {
       result.add(klass);
     }
-    klass = loader.lookupClass(TypeReference.array_interfaces[1]);
+    klass = loader.lookupClass(ArrayClass.array_interfaces[1]);
     if (klass != null) {
       result.add(klass);
     }
