@@ -148,7 +148,7 @@ public class TabulationSolver<T, P, F> {
   /**
    * A progress monitor. can be null.
    */
-  private final IProgressMonitor progressMonitor;
+  protected final IProgressMonitor progressMonitor;
 
   /**
    * the path edge currently being processed in the main loop of {@link #forwardTabulateSLRPs()}; <code>null</code> if
