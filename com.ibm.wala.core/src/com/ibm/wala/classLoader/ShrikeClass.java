@@ -27,6 +27,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.shrikeCT.ClassReader;
+import com.ibm.wala.shrikeCT.InnerClassesReader;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.shrikeCT.RuntimeInvisibleAnnotationsReader;
 import com.ibm.wala.shrikeCT.SignatureReader;
@@ -53,8 +54,6 @@ import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * A class read from Shrike
- * 
- * @author sfink
  */
 public final class ShrikeClass implements IClass {
 
@@ -78,14 +77,12 @@ public final class ShrikeClass implements IClass {
   /**
    * A mapping from Selector to IMethod
    * 
-   * TODO: get rid of this for classes (though keep it for interfaces) instead
-   * ... use a VMT.
+   * TODO: get rid of this for classes (though keep it for interfaces) instead ... use a VMT.
    */
   private Map<Selector, IMethod> methodMap;
 
   /**
-   * A mapping from Selector to IMethod used to cache method lookups from
-   * superclasses
+   * A mapping from Selector to IMethod used to cache method lookups from superclasses
    */
   private Map<Selector, IMethod> inheritCache;
 
@@ -105,20 +102,17 @@ public final class ShrikeClass implements IClass {
   private boolean superclassComputed = false;
 
   /**
-   * An Atom which holds the name of the super class. We cache this for
-   * efficiency reasons.
+   * An Atom which holds the name of the super class. We cache this for efficiency reasons.
    */
   private ImmutableByteArray superName;
 
   /**
-   * The names of interfaces for this class. We cache this for efficiency
-   * reasons.
+   * The names of interfaces for this class. We cache this for efficiency reasons.
    */
   private ImmutableByteArray[] interfaceNames;
 
   /**
-   * The IClasses that represent all interfaces this class implements (if it's a
-   * class) or extends (it it's an interface)
+   * The IClasses that represent all interfaces this class implements (if it's a class) or extends (it it's an interface)
    */
   private Collection<IClass> allInterfaces = null;
 
@@ -143,11 +137,9 @@ public final class ShrikeClass implements IClass {
   private final int hashCode;
 
   /**
-   * @throws IllegalArgumentException
-   *           if reader is null
+   * @throws IllegalArgumentException if reader is null
    */
-  public ShrikeClass(ShrikeClassReaderHandle reader, IClassLoader loader, IClassHierarchy cha)
-      throws InvalidClassFileException {
+  public ShrikeClass(ShrikeClassReaderHandle reader, IClassLoader loader, IClassHierarchy cha) throws InvalidClassFileException {
     if (reader == null) {
       throw new IllegalArgumentException("reader is null");
     }
@@ -167,8 +159,7 @@ public final class ShrikeClass implements IClass {
   /**
    * Compute the fields declared by this class
    * 
-   * @throws InvalidClassFileException
-   *           iff Shrike fails to read the class file correctly
+   * @throws InvalidClassFileException iff Shrike fails to read the class file correctly
    */
   private void computeFields() throws InvalidClassFileException {
     ClassReader cr = reader.get();
@@ -188,7 +179,6 @@ public final class ShrikeClass implements IClass {
           e.printStackTrace();
           // keep going
         }
-      
 
         if ((accessFlags & ClassConstants.ACC_STATIC) == 0) {
           addFieldToList(instanceList, name, b, accessFlags, annotations);
@@ -214,7 +204,8 @@ public final class ShrikeClass implements IClass {
     }
   }
 
-  private void addFieldToList(List<FieldImpl> L, Atom name, ImmutableByteArray fieldType, int accessFlags, Collection<Annotation> annotations) {
+  private void addFieldToList(List<FieldImpl> L, Atom name, ImmutableByteArray fieldType, int accessFlags,
+      Collection<Annotation> annotations) {
     TypeName T = null;
     if (fieldType.get(fieldType.length() - 1) == ';') {
       T = TypeName.findOrCreate(fieldType, 0, fieldType.length() - 1);
@@ -257,10 +248,8 @@ public final class ShrikeClass implements IClass {
   }
 
   /**
-   * Note that this is called from the constructor, at which point this class is
-   * not yet ready to actually load the superclass. Instead, we pull out the
-   * name of the superclass and cache it here, to avoid hitting the reader
-   * later.
+   * Note that this is called from the constructor, at which point this class is not yet ready to actually load the superclass.
+   * Instead, we pull out the name of the superclass and cache it here, to avoid hitting the reader later.
    */
   private void computeSuperName() {
     try {
@@ -304,10 +293,8 @@ public final class ShrikeClass implements IClass {
   }
 
   /**
-   * Note that this is called from the constructor, at which point this class is
-   * not yet ready to actually load the interfaces. Instead, we pull out the
-   * name of the interfaces and cache it here, to avoid hitting the reader
-   * later.
+   * Note that this is called from the constructor, at which point this class is not yet ready to actually load the interfaces.
+   * Instead, we pull out the name of the interfaces and cache it here, to avoid hitting the reader later.
    */
   private void computeInterfaceNames() {
     try {
@@ -322,8 +309,7 @@ public final class ShrikeClass implements IClass {
   }
 
   /**
-   * @return Collection of IClasses, representing the interfaces this class
-   *         implements.
+   * @return Collection of IClasses, representing the interfaces this class implements.
    */
   private Collection<IClass> computeAllInterfacesAsCollection() throws ClassHierarchyException {
     Collection<IClass> c = getDirectInterfaces();
@@ -368,11 +354,9 @@ public final class ShrikeClass implements IClass {
   /**
    * Method array2Set.
    * 
-   * @param interfaces
-   *          a set of class names
-   * @return Set of all IClasses that can be loaded corresponding to the class
-   *         names in the interfaces array; raise warnings if classes can not be
-   *         loaded
+   * @param interfaces a set of class names
+   * @return Set of all IClasses that can be loaded corresponding to the class names in the interfaces array; raise warnings if
+   *         classes can not be loaded
    */
   private Collection<IClass> array2IClassSet(ImmutableByteArray[] interfaces) {
     ArrayList<IClass> result = new ArrayList<IClass>(interfaces.length);
@@ -575,8 +559,7 @@ public final class ShrikeClass implements IClass {
   /**
    * initialize the TypeReference field for this instance
    * 
-   * @throws InvalidClassFileException
-   *           iff Shrike can't read this class
+   * @throws InvalidClassFileException iff Shrike can't read this class
    */
   private void computeTypeReference() throws InvalidClassFileException {
     String className = "L" + reader.get().getName();
@@ -599,7 +582,7 @@ public final class ShrikeClass implements IClass {
     return loader.getSourceFileName(this);
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.classLoader.IClass#getAllImplementedInterfaces()
    */
   public Collection<IClass> getAllImplementedInterfaces() throws ClassHierarchyException {
@@ -631,12 +614,10 @@ public final class ShrikeClass implements IClass {
     }
   }
 
-
   @Override
   public int hashCode() {
     return hashCode;
   }
-
 
   public ClassReader getReader() {
     try {
@@ -798,7 +779,7 @@ public final class ShrikeClass implements IClass {
     boolean result = ((modifiers & Constants.ACC_PUBLIC) != 0);
     return result;
   }
-  
+
   public Collection<Annotation> getRuntimeInvisibleAnnotations() throws InvalidClassFileException, UnimplementedException {
     RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader();
     if (r != null) {
@@ -836,6 +817,26 @@ public final class ShrikeClass implements IClass {
     return result;
   }
 
+  private InnerClassesReader getInnerClassesReader() throws InvalidClassFileException {
+    ClassReader r = reader.get();
+    ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
+    r.initClassAttributeIterator(attrs);
+
+    // search for the desired attribute
+    InnerClassesReader result = null;
+    try {
+      for (; attrs.isValid(); attrs.advance()) {
+        if (attrs.getName().equals("InnerClasses")) {
+          result = new InnerClassesReader(attrs);
+          break;
+        }
+      }
+    } catch (InvalidClassFileException e) {
+      Assertions.UNREACHABLE();
+    }
+    return result;
+  }
+
   private RuntimeInvisibleAnnotationsReader getRuntimeInvisibleAnnotationsReader(int fieldIndex) throws InvalidClassFileException {
     ClassReader.AttrIterator iter = new AttrIterator();
     reader.get().initFieldAttributeIterator(fieldIndex, iter);
@@ -854,18 +855,19 @@ public final class ShrikeClass implements IClass {
     }
     return result;
   }
-  
+
   /**
    * read the runtime-invisible annotations from the class file
    */
-  public Collection<Annotation> getRuntimeInvisibleAnnotations(int fieldIndex) throws InvalidClassFileException, UnimplementedException {
+  public Collection<Annotation> getRuntimeInvisibleAnnotations(int fieldIndex) throws InvalidClassFileException,
+      UnimplementedException {
     RuntimeInvisibleAnnotationsReader r = getRuntimeInvisibleAnnotationsReader(fieldIndex);
     if (r != null) {
       int[] offsets = r.getAnnotationOffsets();
       Collection<Annotation> result = HashSetFactory.make();
       for (int i : offsets) {
         String type = r.getAnnotationType(i);
-        type = type.replaceAll(";","");
+        type = type.replaceAll(";", "");
         TypeReference t = TypeReference.findOrCreate(getClassLoader().getReference(), type);
         result.add(Annotation.make(t));
       }
@@ -874,7 +876,7 @@ public final class ShrikeClass implements IClass {
       return Collections.emptySet();
     }
   }
-  
+
   private SignatureReader getSignatureReader() throws InvalidClassFileException {
     ClassReader r = reader.get();
     ClassReader.AttrIterator attrs = new ClassReader.AttrIterator();
@@ -907,5 +909,43 @@ public final class ShrikeClass implements IClass {
 
   public ModuleEntry getModuleEntry() {
     return reader.getModuleEntry();
+  }
+
+  /**
+   * Does the class file indicate that this class is a member of some other classe?
+   * @throws InvalidClassFileException
+   */
+  public boolean isInnerClass() throws InvalidClassFileException {
+    InnerClassesReader r = getInnerClassesReader();
+    if (r != null) {
+      for (String s : r.getInnerClasses()) {
+        if (s.equals(getName().toString().substring(1))) {
+          String outer = r.getOuterClass(s);
+          return outer != null;
+        }
+      }
+    }
+    return false;
+  }
+  
+  /**
+   * Does the class file indicate that this class is a static inner class?
+   * @throws InvalidClassFileException
+   */
+  public boolean isStaticInnerClass() throws InvalidClassFileException {
+    InnerClassesReader r = getInnerClassesReader();
+    if (r != null) {
+      for (String s : r.getInnerClasses()) {
+        if (s.equals(getName().toString().substring(1))) {
+          String outer = r.getOuterClass(s);
+          if (outer != null) {
+            int modifiers = r.getAccessFlags(s);
+            boolean result = ((modifiers & Constants.ACC_STATIC) != 0);
+            return result;
+          }
+        }
+      }
+    }
+    return false;
   }
 }
