@@ -50,7 +50,7 @@ public class SourceDebugExtensionWriter extends ClassWriter.Element {
       throw new IllegalArgumentException("sourceDebug is null");
     }
     for (int i = 0; i < sourceDebug.length; i++) {
-      if (sourceDebug[i] < 1 || sourceDebug[i] > 0xFFFF) {
+      if (sourceDebug[i] < 1) {
         throw new IllegalArgumentException("Invalid CP index: " + sourceDebug[i]);
       }
     }

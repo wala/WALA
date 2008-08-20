@@ -81,7 +81,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     @Override
     final public Object getValue() {
-      return new Integer(getIntValue());
+      return Integer.valueOf(getIntValue());
     }
 
     @Override
@@ -153,7 +153,7 @@ public abstract class ConstantInstruction extends Instruction {
 
     @Override
     final public Object getValue() {
-      return new Long(getLongValue());
+      return Long.valueOf(getLongValue());
     }
 
     @Override

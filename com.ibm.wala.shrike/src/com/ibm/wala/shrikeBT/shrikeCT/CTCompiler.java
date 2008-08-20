@@ -22,6 +22,8 @@ import com.ibm.wala.shrikeCT.ClassWriter;
  */
 final public class CTCompiler extends Compiler {
   final private ClassWriter cw;
+  
+  final private Random random = new Random();
 
   /**
    * Compile 'md' into the class given by 'cw'.
@@ -103,7 +105,7 @@ final public class CTCompiler extends Compiler {
 
   @Override
   protected String createHelperMethod(boolean isStatic, String sig) {
-    long r = Math.abs((new Random()).nextLong());
+    long r = Math.abs(random.nextLong());
     String name = "_helper_" + r;
 
     return name;

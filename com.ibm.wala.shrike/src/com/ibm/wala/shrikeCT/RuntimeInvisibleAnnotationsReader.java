@@ -40,8 +40,7 @@ public final class RuntimeInvisibleAnnotationsReader extends AttributeReader {
   }
 
   /**
-   * @return total length of this attribute in bytes, <bf>including</bf> the
-   *         first 6 bytes
+   * @return total length of this attribute in bytes, <bf>including</bf> the first 6 bytes
    * @throws InvalidClassFileException
    */
   public int getAttributeSize() throws InvalidClassFileException {
@@ -51,10 +50,9 @@ public final class RuntimeInvisibleAnnotationsReader extends AttributeReader {
   }
 
   /**
-   * @return the offsets into the class file of the annotations of this
-   *         attribute
+   * @return the offsets into the class file of the annotations of this attribute
    * @throws InvalidClassFileException
-   * @throws UnimplementedException 
+   * @throws UnimplementedException
    */
   public int[] getAnnotationOffsets() throws InvalidClassFileException, UnimplementedException {
     int[] result = new int[getAnnotationCount()];
@@ -67,12 +65,10 @@ public final class RuntimeInvisibleAnnotationsReader extends AttributeReader {
   }
 
   /**
-   * @param begin
-   *          offset in the constant pool
-   * @return the size, in bytes, of the annotation structure starting at a given
-   *         offset
+   * @param begin offset in the constant pool
+   * @return the size, in bytes, of the annotation structure starting at a given offset
    * @throws InvalidClassFileException
-   * @throws UnimplementedException 
+   * @throws UnimplementedException
    */
   private int getAnnotationSize(int begin) throws InvalidClassFileException, UnimplementedException {
     int offset = begin + 2;
@@ -86,7 +82,6 @@ public final class RuntimeInvisibleAnnotationsReader extends AttributeReader {
     return offset - begin;
   }
 
-
   /**
    * temporary migration aid until I've implemented everything.
    * 
@@ -97,61 +92,56 @@ public final class RuntimeInvisibleAnnotationsReader extends AttributeReader {
   }
 
   /**
-   * @return the type of the annotation stating at a given offset 
-   * @throws InvalidClassFileException 
+   * @return the type of the annotation stating at a given offset
+   * @throws InvalidClassFileException
    */
   public String getAnnotationType(int offset) throws InvalidClassFileException {
     checkSize(offset, 2);
     int cpOffset = cr.getUShort(offset);
     return cr.getCP().getCPUtf8(cpOffset);
   }
-  
+
   public static final int INT_TYPE = 3;
+
   public static final int STRING_TYPE = 1;
-  
+
   /*
-   * This method maps the internal type representation of
-   * annotation types to java types and stringifies all
-   * annotations.
+   * This method maps the internal type representation of annotation types to java types and stringifies all annotations.
    */
-  private String getFromConstantPool(int offset)
-  {
+  private String getFromConstantPool(int offset) {
     byte type = cr.getCP().getItemType(cr.getByte(offset));
 
-    if(type == INT_TYPE)
-    {
+    if (type == INT_TYPE) {
       String res = "";
-      try{
-        res = ""+cr.getCP().getCPInt(cr.getByte(offset));
+      try {
+        res = "" + cr.getCP().getCPInt(cr.getByte(offset));
+      } catch (InvalidClassFileException e) {
       }
-      catch(Exception e) {}
       return res;
     }
-    if(type == STRING_TYPE)
-    {
+    if (type == STRING_TYPE) {
       String res = "";
-      try{
+      try {
         res = cr.getCP().getCPUtf8(cr.getByte(offset));
+      } catch (Exception e) {
       }
-      catch(Exception e) {}
       return res;
     }
     return "";
   }
-  
+
   /**
-   * This method returns all the annotations as map key->stringified value
-   * starting at the index begin in the class file.
+   * This method returns all the annotations as map key->stringified value starting at the index begin in the class file.
+   * 
    * @param begin
    * @return HashMap<String, String>
    */
-  public HashMap<String, String> getAnnotationValues(int begin)
-  {
+  public HashMap<String, String> getAnnotationValues(int begin) {
     HashMap<String, String> res = new HashMap<String, String>();
     int offset = begin + 2;
 
     int numElementValuePairs = cr.getUShort(offset);
-    
+
     offset += 3;
     for (int i = 0; i < numElementValuePairs; i++) {
       String res1 = getFromConstantPool(offset);
@@ -164,15 +154,14 @@ public final class RuntimeInvisibleAnnotationsReader extends AttributeReader {
   }
 
   /**
-   * @return the size, in bytes, of the element-value structure starting at a
-   *         given offset
+   * @return the size, in bytes, of the element-value structure starting at a given offset
    * 
    * 
    */
   private int getElementValueSize(int begin) {
-    return 3; //this is correct for any primitive type annotations.
-    //TODO: Integrate array annotations
+    return 3; // this is correct for any primitive type annotations.
+    // TODO: Integrate array annotations
 
   }
-  
+
 }
