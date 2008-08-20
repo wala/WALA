@@ -188,6 +188,10 @@ public class CrossLanguageClassHierarchy implements IClassHierarchy {
     return getHierarchy(type).computeSubClasses(type);
   }
 
+  public Collection<TypeReference> getJavaLangRuntimeExceptionTypes() {
+    return getHierarchy(TypeReference.JavaLangRuntimeException).getJavaLangErrorTypes();
+  }
+
   public Collection<TypeReference> getJavaLangErrorTypes() {
     return getHierarchy(TypeReference.JavaLangError).getJavaLangErrorTypes();
   }
