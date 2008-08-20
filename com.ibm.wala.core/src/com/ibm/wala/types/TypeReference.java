@@ -152,12 +152,12 @@ public final class TypeReference {
 
   private final static TypeName JavaLangClassCastExceptionName = TypeName.string2TypeName("Ljava/lang/ClassCastException");
 
-  public final static TypeReference JavaLangClassCastException = new TypeReference(ClassLoaderReference.Primordial,
+  public final static TypeReference JavaLangClassCastException = findOrCreate(ClassLoaderReference.Primordial,
       JavaLangClassCastExceptionName);
 
   private final static TypeName JavaLangComparableName = TypeName.string2TypeName("Ljava/lang/Comparable");
 
-  public final static TypeReference JavaLangComparable = new TypeReference(ClassLoaderReference.Primordial, JavaLangComparableName);
+  public final static TypeReference JavaLangComparable = findOrCreate(ClassLoaderReference.Primordial, JavaLangComparableName);
 
   private final static TypeName JavaLangReflectConstructorName = TypeName.string2TypeName("Ljava/lang/reflect/Constructor");
 
@@ -180,7 +180,7 @@ public final class TypeReference {
   private final static TypeName JavaLangNegativeArraySizeExceptionName = TypeName
       .string2TypeName("Ljava/lang/NegativeArraySizeException");
 
-  public final static TypeReference JavaLangNegativeArraySizeException = new TypeReference(ClassLoaderReference.Primordial,
+  public final static TypeReference JavaLangNegativeArraySizeException = findOrCreate(ClassLoaderReference.Primordial,
       JavaLangNegativeArraySizeExceptionName);
 
   private final static TypeName JavaLangNullPointerExceptionName = TypeName.string2TypeName("Ljava/lang/NullPointerException");
@@ -190,7 +190,7 @@ public final class TypeReference {
 
   private final static TypeName JavaLangRuntimeExceptionName = TypeName.string2TypeName("Ljava/lang/RuntimeException");
 
-  public final static TypeReference JavaLangRuntimeException = new TypeReference(ClassLoaderReference.Primordial,
+  public final static TypeReference JavaLangRuntimeException = findOrCreate(ClassLoaderReference.Primordial,
       JavaLangRuntimeExceptionName);
 
   private final static TypeName JavaLangClassNotFoundExceptionName = TypeName.string2TypeName("Ljava/lang/ClassNotFoundException");
@@ -200,13 +200,13 @@ public final class TypeReference {
 
   private final static TypeName JavaLangOutOfMemoryErrorName = TypeName.string2TypeName("Ljava/lang/OutOfMemoryError");
 
-  public final static TypeReference JavaLangOutOfMemoryError = new TypeReference(ClassLoaderReference.Primordial,
+  public final static TypeReference JavaLangOutOfMemoryError = findOrCreate(ClassLoaderReference.Primordial,
       JavaLangOutOfMemoryErrorName);
 
   private final static TypeName JavaLangExceptionInInitializerErrorName = TypeName
       .string2TypeName("Ljava/lang/ExceptionInInitializerError");
 
-  public final static TypeReference JavaLangExceptionInInitializerError = new TypeReference(ClassLoaderReference.Primordial,
+  public final static TypeReference JavaLangExceptionInInitializerError = findOrCreate(ClassLoaderReference.Primordial,
       JavaLangExceptionInInitializerErrorName);
 
   private final static TypeName JavaLangObjectName = TypeName.string2TypeName("Ljava/lang/Object");

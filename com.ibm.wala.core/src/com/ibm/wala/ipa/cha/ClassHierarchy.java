@@ -61,8 +61,8 @@ public class ClassHierarchy implements IClassHierarchy {
   private static final boolean DEBUG = false;
 
   /**
-   * Languages that contribute classes to the set represented in this hierarchy. The languages may for example be
-   * related by inheritance (e.g. X10 derives from Java, and shares a common type hierarchy rooted at java.lang.Object).
+   * Languages that contribute classes to the set represented in this hierarchy. The languages may for example be related by
+   * inheritance (e.g. X10 derives from Java, and shares a common type hierarchy rooted at java.lang.Object).
    */
   private final Set<Language> languages = HashSetFactory.make();
 
@@ -114,6 +114,16 @@ public class ClassHierarchy implements IClassHierarchy {
    * A temporary hack : TODO: do intelligent caching somehow
    */
   private Collection<TypeReference> subTypeRefsOfError;
+
+  /**
+   * A temporary hack : TODO: do intelligent caching somehow
+   */
+  private Collection<IClass> runtimeExceptionClasses;
+
+  /**
+   * A temporary hack : TODO: do intelligent caching somehow
+   */
+  private Collection<TypeReference> runtimeExceptionTypeRefs;
 
   /**
    * Return a set of IClasses that holds all superclasses of klass
@@ -347,8 +357,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Find the possible receivers of a call to a method reference. Note that if the reference is to an instance
-   * initialization method, we assume the method was called with invokespecial rather than invokevirtual.
+   * Find the possible receivers of a call to a method reference. Note that if the reference is to an instance initialization
+   * method, we assume the method was called with invokespecial rather than invokevirtual.
    * 
    * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
@@ -608,9 +618,8 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Number the class hierarchy tree to support efficient subclass tests. After numbering the tree, n1 is a child of n2
-   * iff n2.left <= n1.left ^ n1.left <= n2.right. Described as "relative numbering" by Vitek, Horspool, and Krall,
-   * OOPSLA 97
+   * Number the class hierarchy tree to support efficient subclass tests. After numbering the tree, n1 is a child of n2 iff n2.left <=
+   * n1.left ^ n1.left <= n2.right. Described as "relative numbering" by Vitek, Horspool, and Krall, OOPSLA 97
    * 
    * TODO: this implementation is recursive; un-recursify if needed
    */
@@ -942,29 +951,33 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this implementation. Consider caching if
-   * necessary.
+   * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this implementation. Consider caching if necessary.
    */
   public Collection<IClass> computeSubClasses(TypeReference type) {
-    IClass T = lookupClass(type);
+    IClass t = lookupClass(type);
     if (Assertions.verifyAssertions) {
-      if (T == null) {
-        Assertions._assert(T != null, "null class for type " + type);
+      if (t == null) {
+        Assertions._assert(t != null, "null class for type " + type);
       }
     }
     // a hack: TODO: work on better caching
-    if (T.getReference().equals(TypeReference.JavaLangError)) {
+    if (t.getReference().equals(TypeReference.JavaLangError)) {
       if (subclassesOfError == null) {
-        subclassesOfError = computeSubClassesInternal(T);
+        subclassesOfError = computeSubClassesInternal(t);
       }
       return subclassesOfError;
+    } else if (t.getReference().equals(TypeReference.JavaLangRuntimeException)) {
+      if (runtimeExceptionClasses == null) {
+        runtimeExceptionClasses = computeSubClassesInternal(t);
+      }
+      return runtimeExceptionClasses;
     } else {
-      return computeSubClassesInternal(T);
+      return computeSubClassesInternal(t);
     }
   }
 
   /**
-   * Solely for optimization; return a Collection<TypeReference> representing the subclassesOfError
+   * Solely for optimization; return a Collection<TypeReference> representing the subclasses of Error
    * 
    * kind of ugly. a better scheme?
    */
@@ -981,8 +994,24 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this implementation. Consider caching if
-   * necessary.
+   * Solely for optimization; return a Collection<TypeReference> representing the subclasses of RuntimeException
+   * 
+   * kind of ugly. a better scheme?
+   */
+  public Collection<TypeReference> getJavaLangRuntimeExceptionTypes() {
+    if (runtimeExceptionTypeRefs == null) {
+      computeSubClasses(TypeReference.JavaLangRuntimeException);
+      runtimeExceptionTypeRefs = HashSetFactory.make(runtimeExceptionClasses.size());
+      for (Iterator it = runtimeExceptionClasses.iterator(); it.hasNext();) {
+        IClass klass = (IClass) it.next();
+        runtimeExceptionTypeRefs.add(klass.getReference());
+      }
+    }
+    return Collections.unmodifiableCollection(runtimeExceptionTypeRefs);
+  }
+
+  /**
+   * Return set of all subclasses of type in the Class Hierarchy TODO: Tune this implementation. Consider caching if necessary.
    * 
    * @return Set of IClasses
    */
@@ -1061,8 +1090,8 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * @param klass
-   * @return the number of classes that immediately extend klass. if klass is an array class A[][]...[], we return
-   *         number of immediate subclasses of A. If A is primitive, we return 0.
+   * @return the number of classes that immediately extend klass. if klass is an array class A[][]...[], we return number of
+   *         immediate subclasses of A. If A is primitive, we return 0.
    */
   public int getNumberOfImmediateSubclasses(IClass klass) {
     if (klass.isArrayClass()) {
@@ -1075,9 +1104,8 @@ public class ClassHierarchy implements IClassHierarchy {
 
   /**
    * @param klass
-   * @return the classes that immediately extend klass. if klass is an array class A[][]...[], we return array classes
-   *         B[][]...[] (same dimensionality) where B is an immediate subclass of A. If A is primitive, we return the
-   *         empty set.
+   * @return the classes that immediately extend klass. if klass is an array class A[][]...[], we return array classes B[][]...[]
+   *         (same dimensionality) where B is an immediate subclass of A. If A is primitive, we return the empty set.
    */
   public Collection<IClass> getImmediateSubclasses(IClass klass) {
     if (klass.isArrayClass()) {
@@ -1161,8 +1189,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * temporarily marking this internal to avoid infinite sleep with randomly chosen IProgressMonitor. TODO: nanny for
-   * testgen
+   * temporarily marking this internal to avoid infinite sleep with randomly chosen IProgressMonitor. TODO: nanny for testgen
    */
   @Internal
   public static ClassHierarchy make(AnalysisScope scope, ClassLoaderFactory factory, Language language, IProgressMonitor monitor)

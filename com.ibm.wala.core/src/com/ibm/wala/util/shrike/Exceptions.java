@@ -60,10 +60,6 @@ public class Exceptions implements Constants {
 
   private static final Collection<TypeReference> classNotFoundException = Collections.singleton(TypeReference.JavaLangClassNotFoundException);
 
-  private static final Collection<TypeReference> runtimeExceptions = Collections.unmodifiableCollection(Arrays.asList(new TypeReference[] {
-      TypeReference.JavaLangArithmeticException, TypeReference.JavaLangArrayStoreException,
-      TypeReference.JavaLangClassCastException, TypeReference.JavaLangArrayIndexOutOfBoundsException,
-      TypeReference.JavaLangNegativeArraySizeException, TypeReference.JavaLangNullPointerException }));;
 
   /**
    * @param pei
@@ -124,7 +120,7 @@ public class Exceptions implements Constants {
     if (target == null) {
       throw new IllegalArgumentException("target is null");
     }
-    ArrayList<TypeReference> set = new ArrayList<TypeReference>(runtimeExceptions);
+    ArrayList<TypeReference> set = new ArrayList<TypeReference>(cha.getJavaLangRuntimeExceptionTypes());
     set.addAll(cha.getJavaLangErrorTypes());
 
     IClass klass = cha.lookupClass(target.getDeclaringClass());
@@ -337,9 +333,5 @@ public class Exceptions implements Constants {
 
   public static Collection<TypeReference> getNullPointerException() {
     return nullPointerException;
-  }
-
-  public static Collection<TypeReference> getRuntimeExceptions() {
-    return runtimeExceptions;
   }
 }

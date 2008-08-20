@@ -127,9 +127,6 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
     }
   }
 
-  /**
-   * Method getBasicBlockStarts, stolen from ShrikeBT verifier
-   */
   private void makeBasicBlocks() {
     ExceptionHandler[][] handlers;
     try {

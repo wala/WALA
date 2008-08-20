@@ -147,11 +147,19 @@ public interface IClassHierarchy extends Iterable<IClass> {
 
   /**
    * Solely for optimization; return a Collection<TypeReference> representing
-   * the subclassesOfError
+   * the subclasses of Error
    * 
    * kind of ugly. a better scheme?
    */
   public Collection<TypeReference> getJavaLangErrorTypes();
+  
+  /**
+   * Solely for optimization; return a Collection<TypeReference> representing
+   * the subclasses of {@link RuntimeException}
+   * 
+   * kind of ugly. a better scheme?
+   */
+  public Collection<TypeReference> getJavaLangRuntimeExceptionTypes();
 
   /**
    * @param type
