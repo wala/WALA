@@ -611,10 +611,6 @@ public class J2EEMethodTargetSelector implements MethodTargetSelector, BytecodeC
       super(method);
       FieldReference field = deployment.getCMPField(method);
       int nextLocal = 2;
-      TypeReference T = field.getFieldType();
-      if (T.isReferenceType()) {
-        T = cha.lookupClass(T).getReference();
-      }
 
       // the reference dispatched on is value number 1, and
       // we store the result in value number nextLocal++
