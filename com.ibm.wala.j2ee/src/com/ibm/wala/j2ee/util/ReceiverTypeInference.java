@@ -67,7 +67,7 @@ public class ReceiverTypeInference {
     HashMap<Integer, CallSiteReference> intMap = HashMapFactory.make(5);
     for (CallSiteReference site :  CodeScanner.getCallSites(method)) {
       int pc = site.getProgramCounter();
-      intMap.put(new Integer(pc), site);
+      intMap.put(Integer.valueOf(pc), site);
     }
     // now set up mapping from CallSiteReference -> InvokeInstruction
     SSAInstruction[] instructions = ir.getInstructions();
