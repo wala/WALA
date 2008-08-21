@@ -63,7 +63,7 @@ public final class MethodOptimizer {
     this(d, new MethodEditor(d));
   }
 
-  public class UnoptimizableCodeException extends Exception {
+  public static class UnoptimizableCodeException extends Exception {
     private static final long serialVersionUID = 2543170335674010642L;
 
     public UnoptimizableCodeException(String s) {
