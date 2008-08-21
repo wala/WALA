@@ -955,10 +955,8 @@ public class ClassHierarchy implements IClassHierarchy {
    */
   public Collection<IClass> computeSubClasses(TypeReference type) {
     IClass t = lookupClass(type);
-    if (Assertions.verifyAssertions) {
-      if (t == null) {
-        Assertions._assert(t != null, "null class for type " + type);
-      }
+    if (t == null) {
+      throw new IllegalArgumentException("could not find class for TypeReference " + type);
     }
     // a hack: TODO: work on better caching
     if (t.getReference().equals(TypeReference.JavaLangError)) {
