@@ -61,9 +61,8 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
   private Map<ConstantValue, Integer> constant2ValueNumber = HashMapFactory.make();
 
   /**
-   * The number of the next local value number available for the fake root
-   * method. Note that we reserve value number 1 to represent the value "any
-   * exception caught by the root method"
+   * The number of the next local value number available for the fake root method. Note that we reserve value number 1 to represent
+   * the value "any exception caught by the root method"
    */
   protected int nextLocal = 2;
 
@@ -79,6 +78,11 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     this.cha = cha;
     this.options = options;
     this.cache = cache;
+    // I'd like to enforce that declaringClass is a FakeRootClass ... but CASt would currently break.
+    // so checking dynamically instead.
+    if (declaringClass instanceof FakeRootClass) {
+      ((FakeRootClass)declaringClass).addMethod(this);
+    }
     assert cache != null;
   }
 
@@ -260,7 +264,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     }
     return result;
   }
-  
+
   protected int getValueNumberForByteConstant(byte c) {
     // treat it like an int constant for now.
     ConstantValue v = new ConstantValue(c);
@@ -271,7 +275,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
     }
     return result;
   }
-  
+
   protected int getValueNumberForCharConstant(char c) {
     // treat it like an int constant for now.
     ConstantValue v = new ConstantValue(c);

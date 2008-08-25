@@ -13,6 +13,7 @@ package com.ibm.wala.ipa.callgraph.impl;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IField;
@@ -26,23 +27,28 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
 
 /**
  * A synthetic class for the fake root method
- * 
- * @author sfink
  */
 public class FakeRootClass extends SyntheticClass {
   public static final TypeReference FAKE_ROOT_CLASS = TypeReference.findOrCreate(ClassLoaderReference.Primordial, TypeName
       .string2TypeName("Lcom/ibm/wala/FakeRootClass"));
 
-  private Map<Atom,IField> fakeRootStaticFields = null;
+  private Map<Atom, IField> fakeRootStaticFields = null;
+
+  private Set<IMethod> methods = HashSetFactory.make();
 
   FakeRootClass(IClassHierarchy cha) {
     super(FAKE_ROOT_CLASS, cha);
+  }
+
+  public void addMethod(IMethod m) {
+    methods.add(m);
   }
 
   public void addStaticField(final Atom name, final TypeReference fieldType) {
@@ -129,7 +135,12 @@ public class FakeRootClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
   public IMethod getMethod(Selector selector) throws UnsupportedOperationException {
-    throw new UnsupportedOperationException();
+    for (IMethod m : methods) {
+      if (m.getSelector().equals(selector)) {
+        return m;
+      }
+    }
+    return null;
   }
 
   /*
@@ -155,7 +166,7 @@ public class FakeRootClass extends SyntheticClass {
    * @see com.ibm.wala.classLoader.IClass#getDeclaredMethods()
    */
   public Collection<IMethod> getDeclaredMethods() throws UnsupportedOperationException {
-    throw new UnsupportedOperationException();
+    return Collections.unmodifiableCollection(methods);
   }
 
   /*
