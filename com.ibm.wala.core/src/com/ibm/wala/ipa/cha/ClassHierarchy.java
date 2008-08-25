@@ -817,15 +817,6 @@ public class ClassHierarchy implements IClassHierarchy {
     return null;
   }
 
-  // /**
-  // * Is c a subclass of T?
-  // *
-  // * @return true if C == T or C is a subclass of T; false otherwise
-  // */
-  // public boolean isSubclassOf(TypeReference c, TypeReference T) {
-  // return isSubclassOf(lookupClass(c), T);
-  // }
-
   private boolean slowIsSubclass(IClass sub, IClass sup) {
     if (sub == sup)
       return true;
