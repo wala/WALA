@@ -53,11 +53,7 @@ import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
 
 /**
- * 
  * This class reads method summaries from an XML Stream.
- * 
- * @author sfink
- * 
  */
 public class XMLMethodSummaryReader implements BytecodeConstants {
 
@@ -69,13 +65,7 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
   final private AnalysisScope scope;
 
   /**
-   * Method summaries collected for methods. Mapping Object -> MethodSummary
-   * where Object is either a
-   * <ul>
-   * <li>MethodReference
-   * <li>TypeReference
-   * <li>Atom (package name)
-   * </ul>
+   * Method summaries collected for methods
    */
   final private HashMap<MethodReference, MethodSummary> summaries = HashMapFactory.make();
 
