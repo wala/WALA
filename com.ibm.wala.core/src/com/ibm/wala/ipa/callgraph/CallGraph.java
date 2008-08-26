@@ -21,8 +21,7 @@ import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.graph.NumberedGraph;
 
 /**
- * Basic interface for a call graph, which is a graph of CGNode
- * 
+ * Basic interface for a call graph, which is a graph of {@link CGNode}
  * 
  * @author Stephen Fink
  */
