@@ -21,8 +21,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * A MethodTargetSelector that simply looks up the declared type, name and
- * descriptor of a CallSiteReference in the appropriate class hierarchy.
+ * A MethodTargetSelector that simply looks up the declared type, name and descriptor of a CallSiteReference in the appropriate
+ * class hierarchy.
  * 
  * @author Julian Dolby (dolby@us.ibm.com)
  */
@@ -34,20 +34,20 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
   private final IClassHierarchy classHierarchy;
 
   /**
-   * Initialization. The class hierarchy is needed for lookups and the warnings
-   * are used when the lookups fails (which should never happen).
+   * Initialization. The class hierarchy is needed for lookups and the warnings are used when the lookups fails (which should never
+   * happen).
    * 
-   * @param cha
-   *          The class hierarchy to use.
+   * @param cha The class hierarchy to use.
    */
   public ClassHierarchyMethodTargetSelector(IClassHierarchy cha) {
     classHierarchy = cha;
   }
 
   /**
-   * This target selector searches the class hierarchy for the method matching the
-   * signature of the call that is appropriate for the receiver type.
-   * @throws IllegalArgumentException  if call is null
+   * This target selector searches the class hierarchy for the method matching the signature of the call that is appropriate for the
+   * receiver type.
+   * 
+   * @throws IllegalArgumentException if call is null
    */
   public IMethod getCalleeTarget(CGNode caller, CallSiteReference call, IClass receiver) {
 
@@ -77,14 +77,15 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
       return null;
     }
 
-    IMethod target = feasibleChaResolution(classHierarchy,call,klass) ? classHierarchy.resolveMethod(klass, call.getDeclaredTarget().getSelector()) : null;
+    IMethod target = feasibleChaResolution(classHierarchy, call, klass) ? classHierarchy.resolveMethod(klass, call
+        .getDeclaredTarget().getSelector()) : null;
     if (target == null) {
       return null;
     }
 
     return target;
   }
-  
+
   /**
    * @return true if it may be possible to resolve a call to a site on the concrete type dispatchType
    */
@@ -94,17 +95,14 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
     }
 
     /**
-     *  An interface as the dispatchType is a special case.  The only time this
-     * makes sense is for a static invocation of the class initializer method
-     * (<clinit>) of an interface type.  So we check for that here.
+     * An interface as the dispatchType is a special case. The only time this makes sense is for a static invocation of the class
+     * initializer method (<clinit>) of an interface type. So we check for that here.
      */
     if (dispatchType.isInterface()) {
-      if (site.getDeclaredTarget().getSelector().equals(
-	    MethodReference.clinitSelector)) 
-      {
-	return true;
+      if (site.getDeclaredTarget().getSelector().equals(MethodReference.clinitSelector)) {
+        return true;
       } else {
-	return false;
+        return false;
       }
     }
 
@@ -114,9 +112,9 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
       return false;
     } else {
       if (resolvedType.isInterface()) {
-        return cha.implementsInterface(dispatchType,resolvedType);
+        return cha.implementsInterface(dispatchType, resolvedType);
       } else {
-        return cha.isSubclassOf(dispatchType,resolvedType);
+        return cha.isSubclassOf(dispatchType, resolvedType);
       }
     }
   }
@@ -125,7 +123,7 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
     return false;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.ipa.callgraph.MethodTargetSelector#mightReturnSyntheticMethod(com.ibm.wala.types.MethodReference)
    */
   public boolean mightReturnSyntheticMethod(MethodReference declaredTarget) {
