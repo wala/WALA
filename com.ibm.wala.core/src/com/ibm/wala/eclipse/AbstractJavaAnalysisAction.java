@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -39,8 +40,6 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * An Eclipse action that analyzes a Java selection
- * 
- * @author sjfink
  */
 public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegate, IRunnableWithProgress {
 
@@ -58,11 +57,9 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
 
   /**
    * Compute an analysis scope for the current selection
-   * @throws IOException 
-   * @throws JavaModelException 
    */
   public static AnalysisScope computeScope(IStructuredSelection selection) throws JavaModelException, IOException {
-    Collection<EclipseProjectPath> projectPaths = HashSetFactory.make();
+    Collection<EclipseProjectPath> projectPaths = new LinkedList<EclipseProjectPath>();
     for (Iterator it = selection.iterator(); it.hasNext();) {
       Object object = it.next();
       if (object instanceof IJavaElement) {
