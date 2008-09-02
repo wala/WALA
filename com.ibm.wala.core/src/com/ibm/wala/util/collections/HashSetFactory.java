@@ -15,10 +15,8 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 /**
- *
  * A debugging aid.  When HashSetFactory.DEBUG is set, this class creates ParanoidHashSets.  Otherwise,
  * it returns {@link LinkedHashSet}s
- * @author sfink
  */
 public class HashSetFactory {
 
@@ -28,7 +26,7 @@ public class HashSetFactory {
   final public static boolean DEBUG = false;
 
   /**
-   * @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise
+   * @return A {@link ParanoidHashSet} if DEBUG = true, a java.util.HashSet otherwise
    */
   public static <T> HashSet<T> make(int size) {
     if (DEBUG) {
@@ -48,18 +46,6 @@ public class HashSetFactory {
       return new LinkedHashSet<T>();
     }
   }
-
-//
-//  /**
-//   * @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise
-//   */
-//  public static <T> HashSet<T> make(Set<T> s) {
-//    if (DEBUG) {
-//      return new ParanoidHashSet<T>(s);
-//    } else {
-//      return new HashSet<T>(s);
-//    }
-//  }
 
   /**
    * @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise
