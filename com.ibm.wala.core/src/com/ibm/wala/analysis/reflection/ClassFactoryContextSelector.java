@@ -22,36 +22,74 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SymbolTable;
+import com.ibm.wala.types.ClassLoaderReference;
+import com.ibm.wala.types.Descriptor;
+import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.strings.StringStuff;
 
 /**
- * A {@link ContextSelector} to intercept calls to Class.forName() when the parameter is a string constant
- * 
- * @author pistoia
+ * A {@link ContextSelector} to intercept calls to reflective class factories (e.g. Class.forName()) when the parameter is a string
+ * constant
  */
-class ForNameContextSelector implements ContextSelector {
+class ClassFactoryContextSelector implements ContextSelector {
 
-  public ForNameContextSelector() {
+  public final static Atom forNameAtom = Atom.findOrCreateUnicodeAtom("forName");
+
+  private final static Descriptor forNameDescriptor = Descriptor.findOrCreateUTF8("(Ljava/lang/String;)Ljava/lang/Class;");
+
+  public final static MethodReference FOR_NAME_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass, forNameAtom,
+      forNameDescriptor);
+
+  public final static Atom loadClassAtom = Atom.findOrCreateUnicodeAtom("loadClass");
+
+  private final static Descriptor loadClassDescriptor = Descriptor.findOrCreateUTF8("(Ljava/lang/String;)Ljava/lang/Class;");
+
+  private final static TypeReference CLASSLOADER = TypeReference.findOrCreate(ClassLoaderReference.Primordial,
+      "Ljava/lang/ClassLoader");
+
+  public final static MethodReference LOAD_CLASS_REF = MethodReference
+      .findOrCreate(CLASSLOADER, loadClassAtom, loadClassDescriptor);
+
+  public ClassFactoryContextSelector() {
+  }
+
+  public static boolean isClassFactory(IMethod m) {
+    if (m.getReference().equals(FOR_NAME_REF)) {
+      return true;
+    }
+    if (m.getReference().equals(LOAD_CLASS_REF)) {
+      return true;
+    }
+    return false;
+  }
+
+  public int getUseOfStringParameter(SSAAbstractInvokeInstruction call) {
+    if (call.isStatic()) {
+      return call.getUse(0);
+    } else {
+      return call.getUse(1);
+    }
   }
 
   /**
-   * If the {@link CallSiteReference} invokes Class.forName(s) and s is a string constant, return a
-   * {@link JavaTypeContext} representing the type named by s, if we can resolve it in the {@link IClassHierarchy}.
+   * If the {@link CallSiteReference} invokes Class.forName(s) and s is a string constant, return a {@link JavaTypeContext}
+   * representing the type named by s, if we can resolve it in the {@link IClassHierarchy}.
    * 
    * @see com.ibm.wala.ipa.callgraph.ContextSelector#getCalleeTarget(com.ibm.wala.ipa.callgraph.CGNode,
    *      com.ibm.wala.classLoader.CallSiteReference, com.ibm.wala.classLoader.IMethod,
    *      com.ibm.wala.ipa.callgraph.propagation.InstanceKey)
    */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
-    if (callee.getReference().equals(ForNameContextInterpreter.FOR_NAME_REF)) {
+    if (isClassFactory(callee)) {
       IR ir = caller.getIR();
       SymbolTable symbolTable = ir.getSymbolTable();
       SSAAbstractInvokeInstruction[] invokeInstructions = caller.getIR().getCalls(site);
       if (invokeInstructions.length != 1) {
         return null;
       }
-      int use = invokeInstructions[0].getUse(0);
+      int use = getUseOfStringParameter(invokeInstructions[0]);
       if (symbolTable.isStringConstant(use)) {
         String className = StringStuff.deployment2CanonicalTypeString(symbolTable.getStringValue(use));
         TypeReference t = TypeReference.findOrCreate(caller.getMethod().getDeclaringClass().getClassLoader().getReference(),
@@ -69,14 +107,14 @@ class ForNameContextSelector implements ContextSelector {
    * This object may understand a dispatch to Class.forName(s) when s is a string constant.
    */
   public boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (targetMethod.getReference().equals(ForNameContextInterpreter.FOR_NAME_REF)) {
+    if (isClassFactory(targetMethod)) {
       IR ir = caller.getIR();
       SymbolTable symbolTable = ir.getSymbolTable();
       SSAAbstractInvokeInstruction[] invokeInstructions = caller.getIR().getCalls(site);
       if (invokeInstructions.length != 1) {
         return false;
       }
-      int use = invokeInstructions[0].getUse(0);
+      int use = getUseOfStringParameter(invokeInstructions[0]);
       if (symbolTable.isStringConstant(use)) {
         return true;
       }

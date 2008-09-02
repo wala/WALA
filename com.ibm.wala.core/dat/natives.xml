@@ -272,7 +272,9 @@
 				</method>
 				<method name="findLoadedClass"
 					descriptor="(Ljava/lang/String;)Ljava/lang/Class;">
-					<new def="x" class="Ljava/lang/Class" />
+					<call type="static" name="forName"
+						class="Ljava/lang/Class" descriptor="(Ljava/lang/String;)Ljava/lang/Class;" 
+						arg0="arg0" def="x" />
 					<return value="x" />
 				</method>
 				<method name="getCallerClassLoader"

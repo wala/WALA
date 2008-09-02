@@ -34,7 +34,7 @@ public class ReflectionContextInterpreter extends DelegatingSSAContextInterprete
       ReflectionSpecification userSpec) {
     super(new ReflectiveInvocationInterpreter(), new DelegatingSSAContextInterpreter(new DelegatingSSAContextInterpreter(
         new GetClassContextInterpeter(), new JavaLangClassContextInterpreter()), new DelegatingSSAContextInterpreter(
-        new DelegatingSSAContextInterpreter(new ForNameContextInterpreter(), new ClassNewInstanceContextInterpreter(cha)),
+        new DelegatingSSAContextInterpreter(new ClassFactoryContextInterpreter(), new ClassNewInstanceContextInterpreter(cha)),
         new FactoryBypassInterpreter(options, cache, userSpec))));
   }
 

@@ -30,29 +30,17 @@ import com.ibm.wala.ssa.SSALoadClassInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.ssa.SSAThrowInstruction;
-import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.FieldReference;
-import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.EmptyIterator;
 import com.ibm.wala.util.collections.NonNullSingletonIterator;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.strings.Atom;
 
 /**
- * An {@link SSAContextInterpreter} specialized to interpret Class.forName in a {@link JavaTypeContext} which
- * represents the point-type of the class object created by the call.
- * 
- * @author pistoia
+ * An {@link SSAContextInterpreter} specialized to interpret reflective class factories (e.g. Class.forName()) in a
+ * {@link JavaTypeContext} which represents the point-type of the class object created by the call.
  */
-public class ForNameContextInterpreter implements SSAContextInterpreter {
-
-  public final static Atom forNameAtom = Atom.findOrCreateUnicodeAtom("forName");
-
-  private final static Descriptor forNameDescriptor = Descriptor.findOrCreateUTF8("(Ljava/lang/String;)Ljava/lang/Class;");
-
-  public final static MethodReference FOR_NAME_REF = MethodReference.findOrCreate(TypeReference.JavaLangClass, forNameAtom,
-      forNameDescriptor);
+public class ClassFactoryContextInterpreter implements SSAContextInterpreter {
 
   private static final boolean DEBUG = false;
 
@@ -77,15 +65,22 @@ public class ForNameContextInterpreter implements SSAContextInterpreter {
     return getIR(node).getInstructions().length;
   }
 
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#understands(com.ibm.wala.ipa.callgraph.CGNode)
+   */
   public boolean understands(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
     }
-    if (!(node.getContext() instanceof JavaTypeContext))
+    if (!(node.getContext() instanceof JavaTypeContext)) {
       return false;
-    return node.getMethod().getReference().equals(FOR_NAME_REF);
+    }
+    return ClassFactoryContextSelector.isClassFactory(node.getMethod());
   }
 
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateNewSites(com.ibm.wala.ipa.callgraph.CGNode)
+   */
   public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
     if (node == null) {
       throw new IllegalArgumentException("node is null");
@@ -101,12 +96,16 @@ public class ForNameContextInterpreter implements SSAContextInterpreter {
     return EmptyIterator.instance();
   }
 
+  /* 
+   * @see com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter#iterateCallSites(com.ibm.wala.ipa.callgraph.CGNode)
+   */
   public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
     if (Assertions.verifyAssertions) {
       Assertions._assert(understands(node));
     }
     return EmptyIterator.instance();
   }
+
 
   private SSAInstruction[] makeStatements(JavaTypeContext context) {
     ArrayList<SSAInstruction> statements = new ArrayList<SSAInstruction>();
