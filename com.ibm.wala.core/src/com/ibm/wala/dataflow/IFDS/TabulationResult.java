@@ -26,9 +26,9 @@ import com.ibm.wala.util.intset.IntSet;
  */
 public interface TabulationResult<T, P, F> {
   /**
-   * get the bitvector of facts that hold at the entry to a given node
+   * get the bitvector of facts that hold at IN for a given node in the supergraph.
    * 
-   * @param node
+   * @param node a node in the supergraph
    * @return SparseIntSet efficiently representing the bitvector
    */
   public IntSet getResult(T node);
