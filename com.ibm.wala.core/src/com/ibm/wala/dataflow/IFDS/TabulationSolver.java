@@ -364,12 +364,7 @@ public class TabulationSolver<T, P, F> {
       return;
     }
 
-    final LocalSummaryEdges summaries = findOrCreateLocalSummaryEdges(supergraph.getProcOf(edge.target));
-    int s_p_n = supergraph.getLocalBlockNumber(edge.entry);
-    int x = supergraph.getLocalBlockNumber(edge.target);
-    if (!summaries.contains(s_p_n, x, edge.d1, edge.d2)) {
-      summaries.insertSummaryEdge(s_p_n, x, edge.d1, edge.d2);
-    }
+    insertLocalSummaryEdge(edge);
 
     final CallFlowEdges callFlow = findOrCreateCallFlowEdges(edge.entry);
 
@@ -389,6 +384,18 @@ public class TabulationSolver<T, P, F> {
       if (D4 != null) {
         propagateToReturnSites(edge, succ, c, D4);
       }
+    }
+  }
+
+  /**
+   * insert a path edge into the {@link LocalSummaryEdges} data structure for the enclosing procedure
+   */
+  protected void insertLocalSummaryEdge(final PathEdge<T> edge) {
+    final LocalSummaryEdges summaries = findOrCreateLocalSummaryEdges(supergraph.getProcOf(edge.target));
+    int s_p_n = supergraph.getLocalBlockNumber(edge.entry);
+    int x = supergraph.getLocalBlockNumber(edge.target);
+    if (!summaries.contains(s_p_n, x, edge.d1, edge.d2)) {
+      summaries.insertSummaryEdge(s_p_n, x, edge.d1, edge.d2);
     }
   }
 
