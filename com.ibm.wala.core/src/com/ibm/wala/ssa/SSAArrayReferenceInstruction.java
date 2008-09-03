@@ -14,7 +14,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author sfink
+ * Abstract base class for instructions that load or store from array contents.
  *  
  */
 public abstract class SSAArrayReferenceInstruction extends SSAInstruction {

@@ -18,8 +18,6 @@ import com.ibm.wala.util.shrike.Exceptions;
 
 /**
  * SSA instruction representing v_x := arraylength v_y
- * 
- * @author sfink
  */
 public class SSAArrayLengthInstruction extends SSAInstruction {
   private final int result;
