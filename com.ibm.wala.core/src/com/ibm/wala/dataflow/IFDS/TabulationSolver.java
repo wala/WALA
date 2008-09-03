@@ -154,9 +154,17 @@ public class TabulationSolver<T, P, F> {
 
   /**
    * the path edge currently being processed in the main loop of {@link #forwardTabulateSLRPs()}; <code>null</code> if
-   * {@link #forwardTabulateSLRPs()} is not currently running
+   * {@link #forwardTabulateSLRPs()} is not currently running. Note that if we are applying a summary edge in
+   * {@link #processExit(PathEdge)}, curPathEdge is modified to be the path edge terminating at the call node in the caller, to
+   * match the behavior in {@link #processCall(PathEdge)}.
    */
   private PathEdge<T> curPathEdge;
+
+  /**
+   * the summary edge currently being applied in {@link #processCall(PathEdge)} or {@link #processExit(PathEdge)}, or
+   * <code>null</code> if summary edges are not currently being processed.
+   */
+  private PathEdge<T> curSummaryEdge;
 
   /**
    * @param p a description of the dataflow problem to solve
@@ -364,7 +372,14 @@ public class TabulationSolver<T, P, F> {
       return;
     }
 
-    insertLocalSummaryEdge(edge);
+    final LocalSummaryEdges summaries = findOrCreateLocalSummaryEdges(supergraph.getProcOf(edge.target));
+    int s_p_n = supergraph.getLocalBlockNumber(edge.entry);
+    int x = supergraph.getLocalBlockNumber(edge.target);
+    if (!summaries.contains(s_p_n, x, edge.d1, edge.d2)) {
+      summaries.insertSummaryEdge(s_p_n, x, edge.d1, edge.d2);
+    }
+    assert curSummaryEdge == null : "curSummaryEdge should be null here";
+    curSummaryEdge = edge;
 
     final CallFlowEdges callFlow = findOrCreateCallFlowEdges(edge.entry);
 
@@ -385,18 +400,7 @@ public class TabulationSolver<T, P, F> {
         propagateToReturnSites(edge, succ, c, D4);
       }
     }
-  }
-
-  /**
-   * insert a path edge into the {@link LocalSummaryEdges} data structure for the enclosing procedure
-   */
-  protected void insertLocalSummaryEdge(final PathEdge<T> edge) {
-    final LocalSummaryEdges summaries = findOrCreateLocalSummaryEdges(supergraph.getProcOf(edge.target));
-    int s_p_n = supergraph.getLocalBlockNumber(edge.entry);
-    int x = supergraph.getLocalBlockNumber(edge.target);
-    if (!summaries.contains(s_p_n, x, edge.d1, edge.d2)) {
-      summaries.insertSummaryEdge(s_p_n, x, edge.d1, edge.d2);
-    }
+    curSummaryEdge = null;
   }
 
   /**
@@ -613,7 +617,7 @@ public class TabulationSolver<T, P, F> {
               P p = supergraph.getProcOf(callee);
               T[] exits = supergraph.getExitsForProcedure(p);
               for (int e = 0; e < exits.length; e++) {
-                T exit = exits[e];
+                final T exit = exits[e];
                 // if "exit" is a valid exit from the callee to the return
                 // site being processed
                 if (DEBUG_LEVEL > 0 && Assertions.verifyAssertions) {
@@ -630,6 +634,8 @@ public class TabulationSolver<T, P, F> {
                       final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(edge.target, exit, returnSite);
                       reachedBySummary.foreach(new IntSetAction() {
                         public void act(int d2) {
+                          assert curSummaryEdge == null : "curSummaryEdge should be null here";                          
+                          curSummaryEdge = PathEdge.createPathEdge(callee, d1, exit, d2);
                           if (retf instanceof IBinaryReturnFlowFunction) {
                             final IntSet D5 = computeBinaryFlow(edge.d2, d2, (IBinaryReturnFlowFunction) retf);
                             if (D5 != null) {
@@ -649,6 +655,7 @@ public class TabulationSolver<T, P, F> {
                               });
                             }
                           }
+                          curSummaryEdge = null;
                         }
                       });
                     }
@@ -1058,5 +1065,9 @@ public class TabulationSolver<T, P, F> {
 
   protected PathEdge<T> getCurPathEdge() {
     return curPathEdge;
+  }
+  
+  protected PathEdge<T> getCurSummaryEdge() {
+    return curSummaryEdge;
   }
 }
