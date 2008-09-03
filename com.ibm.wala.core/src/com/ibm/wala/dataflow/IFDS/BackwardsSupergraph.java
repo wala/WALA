@@ -256,8 +256,7 @@ public class BackwardsSupergraph<T, P> implements ISupergraph<T, P> {
    * @see com.ibm.wala.dataflow.IFDS.ISupergraph#isReturn(java.lang.Object)
    */
   public boolean isReturn(T n) throws UnimplementedError {
-    Assertions.UNREACHABLE();
-    return false;
+    return delegate.isCall(n);
   }
 
   /*
