@@ -16,11 +16,7 @@ import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * 
  * An instruction in SSA form.
- * 
- * @author sfink
- * @author roca (visitor pattern copied from Shrike)
  */
 public abstract class SSAInstruction implements IInstruction {
 
@@ -219,19 +215,11 @@ public abstract class SSAInstruction implements IInstruction {
     return 0;
   }
 
-  /**
-   * Method getNumberOfUses.
-   * 
-   * @return int
-   */
   public int getNumberOfUses() {
     return 0;
   }
 
   /**
-   * Method getUse.
-   * 
-   * @param j
    * @return value number representing the jth use in this instruction. -1 means TOP (i.e., the value doesn't matter)
    */
   public int getUse(int j) throws UnsupportedOperationException {
@@ -252,7 +240,6 @@ public abstract class SSAInstruction implements IInstruction {
    * This method should never return null.
    * 
    * @return the set of exception types that an instruction might throw ... disregarding athrows and invokes.
-   * 
    */
   abstract public Collection<TypeReference> getExceptionTypes();
 

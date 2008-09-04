@@ -18,7 +18,6 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author Julian Dolby (dolby@us.ibm.com)
- * 
  */
 public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implements IInvokeInstruction {
 
