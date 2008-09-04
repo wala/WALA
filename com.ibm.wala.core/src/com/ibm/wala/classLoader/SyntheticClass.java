@@ -17,9 +17,7 @@ import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * A Class that exists nowhere in bytecode.
- * 
- * @author sfink
+ * An {@link IClass} that exists nowhere in bytecode.
  */
 public abstract class SyntheticClass implements IClass {
 
@@ -33,6 +31,37 @@ public abstract class SyntheticClass implements IClass {
     super();
     this.T = T;
     this.cha = cha;
+  }
+
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((T == null) ? 0 : T.hashCode());
+    result = prime * result + ((cha == null) ? 0 : cha.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (!(obj instanceof SyntheticClass))
+      return false;
+    final SyntheticClass other = (SyntheticClass) obj;
+    if (T == null) {
+      if (other.T != null)
+        return false;
+    } else if (!T.equals(other.T))
+      return false;
+    if (cha == null) {
+      if (other.cha != null)
+        return false;
+    } else if (!cha.equals(other.cha))
+      return false;
+    return true;
   }
 
   /**
