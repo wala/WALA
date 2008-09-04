@@ -435,13 +435,10 @@ public class TabulationSolver<T, P, F> {
       if (DEBUG_LEVEL > 1) {
         System.err.println("candidate return site: " + retSite + " " + supergraph.getNumber(retSite));
       }
-      // note: since we might have multiple exit nodes for the callee, (to
-      // handle exceptional returns)
+      // note: since we might have multiple exit nodes for the callee, (to handle exceptional returns)
       // not every return site might be valid for this exit node (edge.n).
-      // so, we'll filter the logic by checking that we only process
-      // reachable return sites.
-      // the supergraph carries the information regarding the legal
-      // successors
+      // so, we'll filter the logic by checking that we only process reachable return sites.
+      // the supergraph carries the information regarding the legal successors
       // of the exit node
       if (!succ.contains(supergraph.getNumber(retSite))) {
         continue;
@@ -634,7 +631,7 @@ public class TabulationSolver<T, P, F> {
                       final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(edge.target, exit, returnSite);
                       reachedBySummary.foreach(new IntSetAction() {
                         public void act(int d2) {
-                          assert curSummaryEdge == null : "curSummaryEdge should be null here";                          
+                          assert curSummaryEdge == null : "curSummaryEdge should be null here";
                           curSummaryEdge = PathEdge.createPathEdge(callee, d1, exit, d2);
                           if (retf instanceof IBinaryReturnFlowFunction) {
                             final IntSet D5 = computeBinaryFlow(edge.d2, d2, (IBinaryReturnFlowFunction) retf);
@@ -1066,7 +1063,7 @@ public class TabulationSolver<T, P, F> {
   protected PathEdge<T> getCurPathEdge() {
     return curPathEdge;
   }
-  
+
   protected PathEdge<T> getCurSummaryEdge() {
     return curSummaryEdge;
   }
