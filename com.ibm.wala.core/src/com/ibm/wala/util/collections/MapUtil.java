@@ -10,24 +10,22 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
 /**
- * 
- * utilities for managing Maps
- * 
- * @author sfink
+ * utilities for managing {@link Map}s
  */
 public class MapUtil {
   /**
-   * @param M
-   *          a mapping from Object -> Set
+   * @param M a mapping from Object -> Set
    * @param key
    * @return the Set corresponding to key in M; create one if needed
-   * @throws IllegalArgumentException  if M is null
+   * @throws IllegalArgumentException if M is null
    */
   public static <K, T> Set<T> findOrCreateSet(Map<K, Set<T>> M, K key) {
     if (M == null) {
@@ -40,13 +38,30 @@ public class MapUtil {
     }
     return result;
   }
+  
+  /**
+   * @param M a mapping from Object -> Set
+   * @param key
+   * @return the Set corresponding to key in M; create one if needed
+   * @throws IllegalArgumentException if M is null
+   */
+  public static <K, T> List<T> findOrCreateList(Map<K, List<T>> M, K key) {
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    List<T> result = M.get(key);
+    if (result == null) {
+      result = new ArrayList<T>();
+      M.put(key, result);
+    }
+    return result;
+  }
 
   /**
-   * @param M
-   *          a mapping from Object -> Map
+   * @param M a mapping from Object -> Map
    * @param key
    * @return the Map corresponding to key in M; create one if needed
-   * @throws IllegalArgumentException  if M is null
+   * @throws IllegalArgumentException if M is null
    */
   public static <K, K2, V> Map<K2, V> findOrCreateMap(Map<K, Map<K2, V>> M, K key) {
     if (M == null) {
@@ -61,12 +76,10 @@ public class MapUtil {
   }
 
   /**
-   * @param M
-   *          a mapping from Object -> WeakHashMap
+   * @param M a mapping from Object -> WeakHashMap
    * @param key
    * @return the WeakHashMap corresponding to key in M; create one if needed
-   * @throws IllegalArgumentException
-   *           if M is null
+   * @throws IllegalArgumentException if M is null
    */
   public static <K, V> WeakHashMap<K, V> findOrCreateWeakHashMap(Map<Object, WeakHashMap<K, V>> M, Object key) {
     if (M == null) {
@@ -81,10 +94,9 @@ public class MapUtil {
   }
 
   /**
-   * @param m
-   *          a map from key -> Set <value>
+   * @param m a map from key -> Set <value>
    * @return inverted map, value -> Set <key>
-   * @throws IllegalArgumentException  if m is null
+   * @throws IllegalArgumentException if m is null
    */
   public static <K, V> Map<V, Set<K>> inverseMap(Map<K, Set<V>> m) {
     if (m == null) {
@@ -106,15 +118,16 @@ public class MapUtil {
 
   /**
    * invert an input map that is one-to-one (i.e., it does not map two different keys to the same value)
+   * 
    * @throws IllegalArgumentException if m is null
    * @throws IllegalArgumentException if m is not one-to-one
    */
-  public static <K, V> Map<V, K> invertOneToOneMap(Map<K,V> m) {
+  public static <K, V> Map<V, K> invertOneToOneMap(Map<K, V> m) {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
     }
-    Map<V,K> result = HashMapFactory.make(m.size());
-    for (Map.Entry<K,V> entry : m.entrySet()) {
+    Map<V, K> result = HashMapFactory.make(m.size());
+    for (Map.Entry<K, V> entry : m.entrySet()) {
       K key = entry.getKey();
       V val = entry.getValue();
       if (result.containsKey(val)) {
@@ -124,7 +137,7 @@ public class MapUtil {
     }
     return result;
   }
-  
+
   public static <K, V> Map<Set<K>, V> groupKeysByValue(Map<K, V> m) {
     if (m == null) {
       throw new IllegalArgumentException("m is null");
