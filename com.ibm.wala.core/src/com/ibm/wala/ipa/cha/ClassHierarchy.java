@@ -357,7 +357,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Find the possible receivers of a call to a method reference. Note that if the reference is to an instance initialization
+   * Find the possible targets of a call to a method reference. Note that if the reference is to an instance initialization
    * method, we assume the method was called with invokespecial rather than invokevirtual.
    * 
    * @param ref method reference
@@ -385,7 +385,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Find the possible receivers of a call to a method reference
+   * Find the possible targets of a call to a method reference
    * 
    * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
@@ -430,7 +430,7 @@ public class ClassHierarchy implements IClassHierarchy {
       }
       for (Iterator it = impls.iterator(); it.hasNext();) {
         IClass klass = (IClass) it.next();
-        if (!klass.isInterface()) {
+        if (!klass.isInterface() && !klass.isAbstract()) {
           result.addAll(computeTargetsNotInterface(ref, klass));
         }
       }
@@ -522,7 +522,7 @@ public class ClassHierarchy implements IClassHierarchy {
   }
 
   /**
-   * Return the unique receiver of an invocation of method on an object of type declaringClass
+   * Return the unique target of an invocation of method on an object of type declaringClass
    * 
    * @param receiverClass type of receiver
    * @param selector method signature

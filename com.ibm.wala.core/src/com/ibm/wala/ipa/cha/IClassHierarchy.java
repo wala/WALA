@@ -48,7 +48,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
   public int getNumber(IClass c);
 
   /**
-   * Find the possible receivers of a call to a method reference
+   * Find the possible targets of a call to a method reference
    * 
    * @param ref
    *            method reference
@@ -60,7 +60,7 @@ public interface IClassHierarchy extends Iterable<IClass> {
 
   
   /**
-   * Find the possible receivers of a call to a method reference where the receiver is of a certain type
+   * Find the possible targets of a call to a method reference where the receiver is of a certain type
    * @param receiverClass the class of the receiver
    * @param ref method reference
    * @return the set of IMethods that this call can resolve to.
