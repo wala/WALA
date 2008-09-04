@@ -133,6 +133,7 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
       String def = call.hasDef() ? Integer.valueOf(call.getDef()) + "=" : "";
       String result = def + "call " + call.getDeclaredTarget().getDeclaringClass().getName().getClassName() + "."
           + call.getDeclaredTarget().getName();
+      result += " exc:" + call.getException();
       for (int i = 0; i < s.getNumberOfUses(); i++) {
         result += " ";
         result += s.getUse(i);
