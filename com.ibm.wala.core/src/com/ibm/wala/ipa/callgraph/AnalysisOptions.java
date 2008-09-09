@@ -11,6 +11,7 @@
 package com.ibm.wala.ipa.callgraph;
 
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
+import com.ibm.wala.ipa.callgraph.propagation.ReflectionHandler;
 import com.ibm.wala.ssa.SSAOptions;
 
 /**
@@ -47,21 +48,18 @@ public class AnalysisOptions {
   private MethodTargetSelector methodTargetSelector;
 
   /**
-   * A tuning parameter; how may new equations must be added before doing a new
-   * topological sort?
+   * A tuning parameter; how may new equations must be added before doing a new topological sort?
    */
   private int minEquationsForTopSort = 100;
 
   /**
-   * A tuning parameter; by what percentage must the number of equations grow
-   * before we perform a topological sort?
+   * A tuning parameter; by what percentage must the number of equations grow before we perform a topological sort?
    */
   private double topologicalGrowthFactor = 0.5;
 
   /**
-   * A tuning parameter: how many evaluations are allowed to take place between
-   * topological re-orderings. The idea is that many evaluations may be a sign
-   * of a bad ordering, even when few new equations are being added.
+   * A tuning parameter: how many evaluations are allowed to take place between topological re-orderings. The idea is that many
+   * evaluations may be a sign of a bad ordering, even when few new equations are being added.
    */
   private int maxEvalBetweenTopo = 1000000000;
 
@@ -73,8 +71,14 @@ public class AnalysisOptions {
   private boolean supportRefinement = false;
 
   /**
-   * Should we use the pretransitive solver for pointer analysis? Not yet ready
-   * for prime-time.
+   * Should call graph construction attempt to handle reflection via detection of flows to casts?
+   * 
+   * @see ReflectionHandler
+   */
+  private boolean handleReflection = true;
+
+  /**
+   * Should we use the pretransitive solver for pointer analysis? Not yet ready for prime-time.
    */
   private boolean usePreTransitiveSolver = false;
 
@@ -86,61 +90,54 @@ public class AnalysisOptions {
   /**
    * Use distinct instance keys for distinct string constants?
    * 
-   * TODO: Probably, this option should moved somewhere into the creation of
-   * instance keys. However, those factories are created within the various
-   * builders right now, and this is the most convenient place for an engine
-   * user to set an option which the creation of instance keys later picks up.
+   * TODO: Probably, this option should moved somewhere into the creation of instance keys. However, those factories are created
+   * within the various builders right now, and this is the most convenient place for an engine user to set an option which the
+   * creation of instance keys later picks up.
    */
   private boolean useConstantSpecificKeys = false;
 
   /**
    * Should analysis of lexical scoping consider call stacks?
    * 
-   * TODO: this option does not apply to all languages. We could have a
-   * separation into core engine options and language-specific options.
+   * TODO: this option does not apply to all languages. We could have a separation into core engine options and language-specific
+   * options.
    * 
-   * (be careful with multithreaded languages, as threading can break the stack
-   * discipline this option may assume)
+   * (be careful with multithreaded languages, as threading can break the stack discipline this option may assume)
    */
   private boolean useStacksForLexicalScoping = false;
 
   /**
    * Should global variables be considered lexically-scoped from the root node?
    * 
-   * TODO: this option does not apply to all languages. We could have a
-   * separation into core engine options and language-specific options.
+   * TODO: this option does not apply to all languages. We could have a separation into core engine options and language-specific
+   * options.
    * 
-   * (be careful with multithreaded languages, as threading can break the stack
-   * discipline this option may assume)
+   * (be careful with multithreaded languages, as threading can break the stack discipline this option may assume)
    */
   private boolean useLexicalScopingForGlobals = false;
 
   /**
-   *  Should analysis try to understand the results of string constants
-   * flowing to a + operator?  Note that this option does not apply to
-   * Java bytecode analysis, since the + operators have been compiled away 
-   * for that.  It is used for the Java CAst front end.
+   * Should analysis try to understand the results of string constants flowing to a + operator? Note that this option does not apply
+   * to Java bytecode analysis, since the + operators have been compiled away for that. It is used for the Java CAst front end.
    */
   private boolean traceStringConstants = false;
-  
+
   /**
-   * This numerical value indicates the maximum number of nodes that any {@link CallGraph}
-   * build with this {@link AnalysisOptions} object is allowed to have.  During {@link CallGraph}
-   * construction, once <code>maxNumberOfNodes</code> {@link CGNode} objects have been added
-   * to the {@link CallGraph}, no more {@link CGNode} objects will be added.
-   * By default, <code>maxNumberOfNodes</code> is set to <code>-1</code>, which indicates
-   * that no restrictions are in place.  See also {@link ExplicitCallGraph}.
+   * This numerical value indicates the maximum number of nodes that any {@link CallGraph} build with this {@link AnalysisOptions}
+   * object is allowed to have. During {@link CallGraph} construction, once <code>maxNumberOfNodes</code> {@link CGNode} objects
+   * have been added to the {@link CallGraph}, no more {@link CGNode} objects will be added. By default,
+   * <code>maxNumberOfNodes</code> is set to <code>-1</code>, which indicates that no restrictions are in place. See also
+   * {@link ExplicitCallGraph}.
    */
   private long maxNumberOfNodes = -1;
 
   // SJF: I'm not sure these factories and caches belong here.
   // TODO: figure out how to clean this up.
 
-
   public AnalysisOptions() {
   }
 
-  public AnalysisOptions(AnalysisScope scope,  Iterable<Entrypoint> e) {
+  public AnalysisOptions(AnalysisScope scope, Iterable<Entrypoint> e) {
     this.analysisScope = scope;
     this.entrypoints = e;
   }
@@ -160,11 +157,11 @@ public class AnalysisOptions {
   public void setEntrypoints(Iterable<Entrypoint> entrypoints) {
     this.entrypoints = entrypoints;
   }
-  
+
   public long getMaxNumberOfNodes() {
     return maxNumberOfNodes;
   }
-  
+
   public void setMaxNumberOfNodes(long maxNumberOfNodes) {
     this.maxNumberOfNodes = maxNumberOfNodes;
   }
@@ -177,8 +174,7 @@ public class AnalysisOptions {
   }
 
   /**
-   * @param specification
-   *          An object which represents the user specification for reflection
+   * @param specification An object which represents the user specification for reflection
    */
   public void setReflectionSpec(ReflectionSpecification specification) {
     reflection = specification;
@@ -201,9 +197,7 @@ public class AnalysisOptions {
   /**
    * install a method target selector
    * 
-   * @param x
-   *          an object which controls the policy for selecting the target at a
-   *          call site
+   * @param x an object which controls the policy for selecting the target at a call site
    */
   public void setSelector(MethodTargetSelector x) {
     methodTargetSelector = x;
@@ -212,77 +206,67 @@ public class AnalysisOptions {
   /**
    * install a class target selector
    * 
-   * @param x
-   *          an object which controls the policy for selecting the allocated
-   *          object at a new site
+   * @param x an object which controls the policy for selecting the allocated object at a new site
    */
   public void setSelector(ClassTargetSelector x) {
     classTargetSelector = x;
   }
 
   /**
-   * @return the mininum number of equations that the pointer analysis system
-   *         must contain before the solver will try to topologically sore
+   * @return the mininum number of equations that the pointer analysis system must contain before the solver will try to
+   *         topologically sore
    */
   public int getMinEquationsForTopSort() {
     return minEquationsForTopSort;
   }
 
   /**
-   * @param i
-   *          the mininum number of equations that the pointer analysis system
-   *          must contain before the solver will try to topologically sore
+   * @param i the mininum number of equations that the pointer analysis system must contain before the solver will try to
+   *            topologically sore
    */
   public void setMinEquationsForTopSort(int i) {
     minEquationsForTopSort = i;
   }
 
   /**
-   * @return the maximum number of evaluations that the pointer analysis solver
-   *         will perform before topologically resorting the system
+   * @return the maximum number of evaluations that the pointer analysis solver will perform before topologically resorting the
+   *         system
    */
   public int getMaxEvalBetweenTopo() {
     return maxEvalBetweenTopo;
   }
 
   /**
-   * @return a fraction x s.t. the solver will resort the system when it grows
-   *         by a factor of x
+   * @return a fraction x s.t. the solver will resort the system when it grows by a factor of x
    */
   public double getTopologicalGrowthFactor() {
     return topologicalGrowthFactor;
   }
 
   /**
-   * @param i
-   *          the maximum number of evaluations that the pointer analysis solver
-   *          will perform before topologically resorting the system
+   * @param i the maximum number of evaluations that the pointer analysis solver will perform before topologically resorting the
+   *            system
    */
   public void setMaxEvalBetweenTopo(int i) {
     maxEvalBetweenTopo = i;
   }
 
   /**
-   * @param d
-   *          a fraction x s.t. the solver will resort the system when it grows
-   *          by a factor of x
+   * @param d a fraction x s.t. the solver will resort the system when it grows by a factor of x
    */
   public void setTopologicalGrowthFactor(double d) {
     topologicalGrowthFactor = d;
   }
 
   /**
-   * @returns whether the call graph builder should support Julian's iterative
-   *          refinement
+   * @returns whether the call graph builder should support Julian's iterative refinement
    */
   public boolean getSupportRefinement() {
     return supportRefinement;
   }
 
   /**
-   * @param supportRefinement
-   *          whether the call graph builder should contruct a pointer-flow
-   *          graph as it solves
+   * @param supportRefinement whether the call graph builder should contruct a pointer-flow graph as it solves
    */
   public void setSupportRefinement(boolean supportRefinement) {
     this.supportRefinement = supportRefinement;
@@ -296,8 +280,7 @@ public class AnalysisOptions {
   }
 
   /**
-   * @param ssaOptions
-   *          options governing SSA construction
+   * @param ssaOptions options governing SSA construction
    */
   public void setSSAOptions(SSAOptions ssaOptions) {
     this.ssaOptions = ssaOptions;
@@ -344,5 +327,13 @@ public class AnalysisOptions {
 
   public void setUsePreTransitiveSolver(boolean b) {
     usePreTransitiveSolver = b;
+  }
+
+  public boolean getHandleReflection() {
+    return handleReflection;
+  }
+
+  public void setHandleReflection(boolean handleReflection) {
+    this.handleReflection = handleReflection;
   }
 }

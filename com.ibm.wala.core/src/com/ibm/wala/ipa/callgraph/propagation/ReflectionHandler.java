@@ -60,6 +60,9 @@ public class ReflectionHandler {
    */
   protected boolean updateForReflection() throws IllegalArgumentException, CancelException {
 
+    if (!builder.getOptions().getHandleReflection()) {
+      return false;
+    }
     Collection<Statement> returnStatements = computeFactoryReturnStatements();
     Set<CGNode> changedNodes = HashSetFactory.make();
     for (Statement st : returnStatements) {
