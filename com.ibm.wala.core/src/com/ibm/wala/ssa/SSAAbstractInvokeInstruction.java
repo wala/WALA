@@ -14,7 +14,6 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author Julian Dolby (dolby@us.ibm.com)
@@ -56,10 +55,7 @@ public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implem
    * @return the value number of the receiver of a virtual call
    */
   public int getReceiver() {
-    if (Assertions.verifyAssertions) {
-      IInvokeInstruction.IDispatch code = site.getInvocationCode();
-      Assertions._assert(code != IInvokeInstruction.Dispatch.STATIC, toString());
-    }
+    assert site.getInvocationCode() != IInvokeInstruction.Dispatch.STATIC : toString();
     return getUse(0);
   }
 
