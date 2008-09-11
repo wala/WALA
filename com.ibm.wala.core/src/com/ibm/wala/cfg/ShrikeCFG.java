@@ -322,9 +322,9 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
                 caughtException = null;
               }
               if (caughtException != null) {
+                IClass caughtClass = cha.lookupClass(caughtException);
                 // the set "caught" should be the set of exceptions that MUST
-                // have been caught
-                // by the handlers in scope
+                // have been caught by the handlers in scope
                 ArrayList<TypeReference> caught = new ArrayList<TypeReference>(exceptionTypes.size());
                 // check if we should add an edge to the catch block.
                 for (TypeReference t:  exceptionTypes) {
@@ -335,7 +335,6 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
                       // conservatively add an edge
                       addExceptionalEdgeTo(b);
                     } else {
-                      IClass caughtClass = cha.lookupClass(caughtException);
                       boolean subtype1 = cha.isSubclassOf(klass, caughtClass);
                       if (subtype1 || cha.isSubclassOf(caughtClass, klass)) {
                         // add the edge and null out the type from the array
