@@ -10,8 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.cfg;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -325,10 +325,9 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
                 // the set "caught" should be the set of exceptions that MUST
                 // have been caught
                 // by the handlers in scope
-                HashSet<TypeReference> caught = HashSetFactory.make(exceptionTypes.size());
+                ArrayList<TypeReference> caught = new ArrayList<TypeReference>(exceptionTypes.size());
                 // check if we should add an edge to the catch block.
-                for (Iterator it = exceptionTypes.iterator(); it.hasNext();) {
-                  TypeReference t = (TypeReference) it.next();
+                for (TypeReference t:  exceptionTypes) {
                   if (t != null) {
                     IClass klass = cha.lookupClass(t);
                     if (klass == null) {
@@ -337,10 +336,11 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
                       addExceptionalEdgeTo(b);
                     } else {
                       IClass caughtClass = cha.lookupClass(caughtException);
-                      if (cha.isSubclassOf(klass, caughtClass) || cha.isSubclassOf(caughtClass, klass)) {
+                      boolean subtype1 = cha.isSubclassOf(klass, caughtClass);
+                      if (subtype1 || cha.isSubclassOf(caughtClass, klass)) {
                         // add the edge and null out the type from the array
                         addExceptionalEdgeTo(b);
-                        if (cha.isSubclassOf(klass, caughtClass)) {
+                        if (subtype1) {
                           caught.add(t);
                         }
                       }
