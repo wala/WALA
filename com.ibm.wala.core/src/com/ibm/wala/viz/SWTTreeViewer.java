@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 import com.ibm.wala.util.warnings.WalaException;
@@ -119,7 +120,7 @@ public class SWTTreeViewer extends AbstractJFaceRunner {
         d.asyncExec(r);
       }
     } else {
-      if (System.getProperty("mrj.version") != null) {
+      if (PlatformUtil.onMacOSX()) {
         // the Mac does not like running the Window code in another thread
         // side-effect: we always block input on Mac
         w.open();

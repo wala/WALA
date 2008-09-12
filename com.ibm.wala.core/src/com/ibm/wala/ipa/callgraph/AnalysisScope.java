@@ -34,6 +34,7 @@ import com.ibm.wala.types.Descriptor;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.PlatformUtil;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.MapUtil;
@@ -341,7 +342,7 @@ public class AnalysisScope {
           return JF;
         }
         // hack for Mac
-        if (JF.getName().equals("/System/Library/Frameworks/JavaVM.framework/Classes/classes.jar")) {
+        if (PlatformUtil.onMacOSX() && JF.getName().endsWith(File.separator + "classes.jar")) {
           return JF;
         }
       }
