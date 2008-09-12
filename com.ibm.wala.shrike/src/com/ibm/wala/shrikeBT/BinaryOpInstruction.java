@@ -90,14 +90,14 @@ final public class BinaryOpInstruction extends Instruction {
     }
   }
 
-  /**
-   * don't call this unless you really know what you're doing
-   */
   public Operator getOperator() {
     if (opcode < OP_iand) {
+      // For these opcodes, there are 4 variants (i,l,f,d)
       return Operator.values()[(opcode - OP_iadd) / 4];
     } else {
-      return Operator.values()[(opcode - OP_iand) / 2];
+      // For these opcodes there are 2 variants (i,l)
+      // Note that AND is values()[5]
+      return Operator.values()[5 + (opcode - OP_iand) / 2];
     }
   }
 
