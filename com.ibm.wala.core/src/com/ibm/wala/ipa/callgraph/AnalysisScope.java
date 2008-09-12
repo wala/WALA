@@ -195,9 +195,6 @@ public class AnalysisScope {
 
   /**
    * Add a jar file to the scope for a loader
-   * 
-   * @param loader
-   * @param file
    */
   public void addToScope(ClassLoaderReference loader, JarFile file) {
     Set<Module> s = MapUtil.findOrCreateSet(moduleMap, loader);
@@ -209,9 +206,6 @@ public class AnalysisScope {
 
   /**
    * Add a module to the scope for a loader
-   * 
-   * @param loader
-   * @param m
    */
   public void addToScope(ClassLoaderReference loader, Module m) {
     if (Assertions.verifyAssertions) {
@@ -222,6 +216,17 @@ public class AnalysisScope {
       Trace.println("AnalysisScope: add module " + m);
     }
     s.add(m);
+  }
+  
+  /**
+   * Add all modules from another scope
+   */
+  public void addToScope(AnalysisScope other) {
+    for (ClassLoaderReference loader : other.getLoaders()) {
+      for (Module m : other.getModules(loader)) {
+        addToScope(loader, m);
+      }
+    }
   }
 
   /**
