@@ -18,7 +18,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
-import com.ibm.wala.util.collections.Filtersection;
+import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 /**
@@ -44,9 +44,9 @@ public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<Explo
   protected ExplodedInterproceduralCFG(CallGraph cg) {
     super(cg);
   }
-
-  public ExplodedInterproceduralCFG(CallGraph cg, Filtersection<CGNode> filtersection) {
-    super(cg, filtersection);
+  
+  public ExplodedInterproceduralCFG(CallGraph cg, Filter<CGNode> filter) {
+    super(cg, filter);
   }
 
   /**
