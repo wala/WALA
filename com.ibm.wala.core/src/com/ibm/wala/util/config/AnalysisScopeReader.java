@@ -18,10 +18,13 @@ import java.util.Collections;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
 
+import org.eclipse.core.runtime.Plugin;
+
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
+import com.ibm.wala.core.plugin.CorePlugin;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.properties.WalaProperties;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -38,17 +41,23 @@ public class AnalysisScopeReader {
   private static final ClassLoader MY_CLASSLOADER = AnalysisScopeReader.class.getClassLoader();
 
   private static final String BASIC_FILE = "primordial.txt";
-
+  
   public static AnalysisScope read(String scopeFileName, File exclusionsFile, ClassLoader javaLoader) {
     AnalysisScope scope = AnalysisScope.createAnalysisScope(Collections.singleton(Language.JAVA));
 
-    return read(scope, scopeFileName, exclusionsFile, javaLoader);
+    return read(scope, scopeFileName, exclusionsFile, javaLoader, CorePlugin.getDefault());
+  }
+  
+  private static AnalysisScope read(String scopeFileName, File exclusionsFile, ClassLoader javaLoader, Plugin plugIn) {
+    AnalysisScope scope = AnalysisScope.createAnalysisScope(Collections.singleton(Language.JAVA));
+
+    return read(scope, scopeFileName, exclusionsFile, javaLoader, plugIn);
   }
 
-  public static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader) {
+  private static AnalysisScope read(AnalysisScope scope, String scopeFileName, File exclusionsFile, ClassLoader javaLoader, Plugin plugIn) {
     BufferedReader r = null;
     try {
-      File scopeFile = FileProvider.getFile(scopeFileName, javaLoader);
+      File scopeFile = (plugIn == null) ? FileProvider.getFile(scopeFileName, javaLoader): FileProvider.getFileFromPlugin(plugIn, scopeFileName);
       assert scopeFile.exists();
 
       String line;
@@ -114,16 +123,27 @@ public class AnalysisScopeReader {
       Assertions.UNREACHABLE();
     }
   }
-
+  
   public static AnalysisScope makePrimordialScope(File exclusionsFile) {
-    return read(BASIC_FILE, exclusionsFile, MY_CLASSLOADER);
+    return read(BASIC_FILE, exclusionsFile, MY_CLASSLOADER, CorePlugin.getDefault());
+  }
+  
+  private static AnalysisScope makePrimordialScope(File exclusionsFile, Plugin plugIn) {
+    return read(BASIC_FILE, exclusionsFile, MY_CLASSLOADER, plugIn);
   }
 
   /**
    * @param classPath class path to analyze, delimited by File.pathSeparator
    */
   public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile) {
-    AnalysisScope scope = makePrimordialScope(exclusionsFile);
+    return makeJavaBinaryAnalysisScope(classPath, exclusionsFile, CorePlugin.getDefault());
+  }
+  
+  /**
+   * @param classPath class path to analyze, delimited by File.pathSeparator
+   */
+  public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile, Plugin plugIn) {
+    AnalysisScope scope = makePrimordialScope(exclusionsFile, plugIn);
     ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
 
     addClassPathToScope(classPath, scope, loader);
