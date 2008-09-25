@@ -51,8 +51,6 @@ import com.ibm.wala.util.warnings.Warnings;
 
 /**
  * A synthetic method from the {@link FakeRootClass}
- * 
- * @author sfink
  */
 public abstract class AbstractRootMethod extends SyntheticMethod {
 
@@ -236,7 +234,7 @@ public abstract class AbstractRootMethod extends SyntheticMethod {
           statements.add(ni);
 
           // emit an astore
-          SSAArrayStoreInstruction store = new SSAArrayStoreInstruction(arrayRef, 0, alloc, e);
+          SSAArrayStoreInstruction store = new SSAArrayStoreInstruction(arrayRef, getValueNumberForIntConstant(0), alloc, e);
           statements.add(store);
 
           e = e.isArrayType() ? e.getArrayElementType() : null;
