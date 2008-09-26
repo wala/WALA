@@ -171,3 +171,6 @@ canonize
 unflattened
 arraycopy
 validator
+polymorphic
+monomorphic
+skolem
