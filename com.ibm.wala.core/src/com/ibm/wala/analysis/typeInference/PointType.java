@@ -16,7 +16,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * 
- * Abstraction of a Java type. These are immutable.
+ * Represents a single concrete type.
  * 
  * @author sfink
  */
