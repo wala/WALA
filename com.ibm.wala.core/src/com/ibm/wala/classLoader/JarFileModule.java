@@ -36,8 +36,7 @@ public class JarFileModule implements Module {
   private final JarFile file;
 
   /**
-   * For efficiency, try to cache the byte[] holding each ZipEntries contents;
-   * this will help avoid multiple unzipping
+   * For efficiency, try to cache the byte[] holding each ZipEntries contents; this will help avoid multiple unzipping
    */
   private final HashMap<ZipEntry, Object> cache = HashMapFactory.make();
 
@@ -66,22 +65,26 @@ public class JarFileModule implements Module {
     return result.iterator();
   }
 
+  // need to do equals() and hashCode() based on file name, since JarFile
+  // does not implement equals() / hashCode()
+
   @Override
   public int hashCode() {
-    return file.hashCode();
+    return file.getName().hashCode();
   }
 
   @Override
-  public boolean equals(Object arg0) {
-    if (arg0 == null) {
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
       return false;
-    }
-    if (getClass().equals(arg0.getClass())) {
-      JarFileModule other = (JarFileModule) arg0;
-      return file.equals(other.file);
-    } else {
+    if (getClass() != obj.getClass())
       return false;
-    }
+    final JarFileModule other = (JarFileModule) obj;
+    if (!file.getName().equals(other.file.getName()))
+      return false;
+    return true;
   }
 
   public byte[] getContents(ZipEntry entry) {
