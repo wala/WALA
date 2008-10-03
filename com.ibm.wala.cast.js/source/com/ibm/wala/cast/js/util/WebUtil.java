@@ -50,7 +50,10 @@ public class WebUtil {
   public static SourceFileModule extractScriptFromHTML(URL url, Generator generator) {
     try {
       String urlFile = url.getFile();
-      String urlName = urlFile.substring(urlFile.lastIndexOf('/'));
+      String urlName = 
+        urlFile.lastIndexOf('/')>0?
+            urlFile.substring(urlFile.lastIndexOf('/')):
+            url.getHost() + ".html";
       File F = new File(outputDir + urlName);
       Trace.println("making driver at " + F + " " + outputDir);
       if (F.exists()) F.delete();

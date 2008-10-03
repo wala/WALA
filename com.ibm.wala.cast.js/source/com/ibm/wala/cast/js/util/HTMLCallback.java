@@ -67,7 +67,6 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
       System.out.println(new String(data));
       try {
 	out2.write(data);
-	out2.write("\n");
       } catch (IOException e) {
 	System.out.println("Error writing to second file");
       }
@@ -167,6 +166,9 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
     if(attr.substring(0,2).equals("on")) {
       out.write(varName + "." + attr + " = function " + attr + "_" + varName + "(event) {" + value + "};\n");
       out2.write("\n\n" + varName2 + "." + attr + "(null);\n\n");
+    } else if (value.startsWith("javascript:") || value.startsWith("javaScript:")) {
+      out.write("var " + varName + attr + " = " + value.substring(11) + "\n");
+      out.write(varName + ".setAttribute('" + attr + "', " + varName + attr + ");\n");
     } else {
       out.write(varName + ".setAttribute('" + attr + "', '" + value + "');\n");
     }
@@ -191,6 +193,11 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
   public void handleEndTag(HTML.Tag t, int pos) {
     if(t.toString().toUpperCase().equals("SCRIPT")) {
       System.out.println("Exiting Script");
+      try {
+        out2.write("\n\n");
+      } catch (IOException e) {
+        
+      }
       script = false;
     }
     System.out.println("End" + t);
@@ -199,7 +206,22 @@ public class HTMLCallback extends HTMLEditorKit.ParserCallback {
     
   public void handleSimpleTag(HTML.Tag t, MutableAttributeSet a, int pos) {
     System.out.println("Simple" + t);
-    createElement(t,a);
+    if (script) {
+      try {
+        out2.write("<" + t);
+        Enumeration names = a.getAttributeNames();
+        while (names.hasMoreElements()) {
+          Object name = names.nextElement();
+          Object val = a.getAttribute(name);
+          out2.write(" " + name + "='" + val + "'");
+        }
+        out2.write("></" + t + ">");
+      } catch (IOException e) {
+        
+      }
+    } else {
+      createElement(t,a);
+    }
   }
     
   public void handleError(String errorMsg, int pos) {
