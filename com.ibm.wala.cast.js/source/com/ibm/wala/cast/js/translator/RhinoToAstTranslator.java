@@ -83,11 +83,9 @@ public class RhinoToAstTranslator {
 
     void setCatchVar(String name);
 
-    String getForInVar(String loopVarName, Node initExpr);
+    String getForInVar(Node initExpr);
 
     String getForInInitVar();
-
-    String getForInLoopVar();
 
     void addInitializer(CAstNode n);
   }
@@ -143,15 +141,11 @@ public class RhinoToAstTranslator {
     public void setCatchVar(String name) {
     }
 
-    public String getForInVar(String loopVarName, Node initExpr) {
+    public String getForInVar(Node initExpr) {
       return null;
     }
 
     public String getForInInitVar() {
-      return null;
-    }
-
-    public String getForInLoopVar() {
       return null;
     }
 
@@ -218,16 +212,12 @@ public class RhinoToAstTranslator {
       parent.setCatchVar(name);
     }
 
-    public String getForInVar(String loopVarName, Node initExpr) {
-      return parent.getForInVar(loopVarName, initExpr);
+    public String getForInVar(Node initExpr) {
+      return parent.getForInVar(initExpr);
     }
 
     public String getForInInitVar() {
       return parent.getForInInitVar();
-    }
-
-    public String getForInLoopVar() {
-      return parent.getForInLoopVar();
     }
 
     public void addInitializer(CAstNode n) {
@@ -388,8 +378,6 @@ public class RhinoToAstTranslator {
   private static class LoopContext extends DelegatingContext {
     private static int counter = 0;
 
-    private String loopVarName;
-
     private String forInVar = null;
 
     private Node forInInitExpr = null;
@@ -398,8 +386,7 @@ public class RhinoToAstTranslator {
       super(parent);
     }
 
-    public String getForInVar(String loopVarName, Node initExpr) {
-      this.loopVarName = loopVarName;
+    public String getForInVar(Node initExpr) {
       this.forInVar = "_forin_tmp" + counter++;
       this.forInInitExpr = initExpr;
       return forInVar;
@@ -408,11 +395,6 @@ public class RhinoToAstTranslator {
     public String getForInInitVar() {
       Assertions._assert(forInVar != null);
       return forInVar;
-    }
-
-    public String getForInLoopVar() {
-      Assertions._assert(loopVarName != null);
-      return loopVarName;
     }
 
   }
@@ -437,6 +419,10 @@ public class RhinoToAstTranslator {
       return CAstOperator.OP_URSH;
     case Token.BITAND:
       return CAstOperator.OP_BIT_AND;
+    case Token.BITOR:
+      return CAstOperator.OP_BIT_OR;
+    case Token.BITXOR:
+      return CAstOperator.OP_BIT_XOR;
 
     case Token.EQ:
       return CAstOperator.OP_EQ;
@@ -972,7 +958,8 @@ public class RhinoToAstTranslator {
       return Ast.makeConstant(true);
     }
 
-    case Token.NULL: {
+    case Token.NULL: 
+    case Token.VOID: {
       return Ast.makeConstant(null);
     }
 
@@ -985,6 +972,8 @@ public class RhinoToAstTranslator {
     case Token.SUB:
     case Token.URSH:
     case Token.BITAND:
+    case Token.BITOR:
+    case Token.BITXOR:
     case Token.EQ:
     case Token.SHEQ:
     case Token.GE:
@@ -1021,10 +1010,6 @@ public class RhinoToAstTranslator {
             .getFirstChild(), child));
 
       } else {
-        if (n.getNext().getType() == Token.ENUM_INIT_KEYS) {
-          context.getForInVar(nm.getString(), n.getNext().getFirstChild());
-        }
-
         return Ast.makeNode(CAstNode.EMPTY);
       }
     }
@@ -1047,6 +1032,7 @@ public class RhinoToAstTranslator {
     }
 
     case Token.ENUM_INIT_KEYS: {
+      context.getForInVar(n.getFirstChild());
       return Ast.makeNode(CAstNode.EMPTY);
     }
 
