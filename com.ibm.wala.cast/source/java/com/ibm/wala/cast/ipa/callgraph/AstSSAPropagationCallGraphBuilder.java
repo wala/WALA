@@ -73,6 +73,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.graph.traverse.NumberedDFSDiscoverTimeIterator;
+import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.IntSetAction;
 import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.intset.MutableIntSet;
@@ -242,11 +243,9 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
   public boolean hasNoInterestingUses(CGNode node, int vn, DefUse du) {
     if (node.getMethod() instanceof AstMethod) {
-      int uses[] = ((AstMethod) node.getMethod()).lexicalInfo.getAllExposedUses();
-      for (int i = 0; i < uses.length; i++) {
-        if (uses[i] == vn) {
-          return false;
-        }
+      IntSet uses = ((AstMethod) node.getMethod()).lexicalInfo.getAllExposedUses();
+      if (uses.contains(vn)) {
+        return false;    
       }
     }
 
@@ -844,6 +843,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
               // now redo analysis
               // TODO: only values[i] uses need to be re-done.
+              AstM.lexicalInfo.handleAlteration();
               getAnalysisCache().getSSACache().invalidateDU(M, n.getContext());
               // addConstraintsFromChangedNode(n);
               getBuilder().markChanged(n);

@@ -25,6 +25,7 @@ import com.ibm.wala.types.Selector;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.strings.Atom;
 
 public abstract class AstMethod implements IMethod {
@@ -45,11 +46,13 @@ public abstract class AstMethod implements IMethod {
 	
     public int[] getExposedUses(int instructionOffset);
 
-    public int[] getAllExposedUses();
+    public IntSet getAllExposedUses();
 
     public Pair[] getExposedNames();
 
     public String[] getScopingParents();
+    
+    public void handleAlteration();
 
   }
 

@@ -43,6 +43,9 @@ import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
+import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
+import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -1910,7 +1913,9 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     private final int[] exitLexicalUses;
 
     private final String[] scopingParents;
-
+    
+    private MutableIntSet allExposedUses = null;
+    
     private int[] buildLexicalUseArray(Pair[] exposedNames) {
       if (exposedNames != null) {
         int[] lexicalUses = new int[exposedNames.length];
@@ -1994,30 +1999,28 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return instructionLexicalUses[instructionOffset];
     }
 
-    public int[] getAllExposedUses() {
-      List<Integer> uses = new ArrayList<Integer>();
-      if (exitLexicalUses != null) {
-        for (int i = 0; i < exitLexicalUses.length; i++) {
-          uses.add(new Integer(exitLexicalUses[i]));
+    public IntSet getAllExposedUses() {
+      if (allExposedUses == null) {
+        allExposedUses = IntSetUtil.make();
+        if (exitLexicalUses != null) {
+          for (int i = 0; i < exitLexicalUses.length; i++) {
+            allExposedUses.add(exitLexicalUses[i]);
+          }
         }
-      }
-      if (instructionLexicalUses != null) {
-        for (int i = 0; i < instructionLexicalUses.length; i++) {
-          if (instructionLexicalUses[i] != null) {
-            for (int j = 0; j < instructionLexicalUses[i].length; j++) {
-              uses.add(new Integer(instructionLexicalUses[i][j]));
+        if (instructionLexicalUses != null) {
+          for (int i = 0; i < instructionLexicalUses.length; i++) {
+            if (instructionLexicalUses[i] != null) {
+              for (int j = 0; j < instructionLexicalUses[i].length; j++) {
+                if (instructionLexicalUses[i][j] > 0) {
+                  allExposedUses.add(instructionLexicalUses[i][j]);
+                }
+              }
             }
           }
         }
       }
-
-      int i = 0;
-      int[] result = new int[uses.size()];
-      for (Iterator x = uses.iterator(); x.hasNext();) {
-        result[i++] = ((Integer) x.next()).intValue();
-      }
-
-      return result;
+      
+      return allExposedUses;
     }
 
     public Pair[] getExposedNames() {
@@ -2026,6 +2029,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
     public String[] getScopingParents() {
       return scopingParents;
+    }
+    
+    public void handleAlteration() {
+      allExposedUses = null;
     }
   };
 
