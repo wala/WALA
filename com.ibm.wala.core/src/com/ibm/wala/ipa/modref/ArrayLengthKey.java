@@ -12,11 +12,10 @@ package com.ibm.wala.ipa.modref;
 
 import com.ibm.wala.ipa.callgraph.propagation.AbstractFieldPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 /**
- * A "PointerKey" that represents an array length location
- * 
- * @author sjfink
+ * A {@link PointerKey} that represents an array length location
  * 
  */
 public class ArrayLengthKey extends AbstractFieldPointerKey {

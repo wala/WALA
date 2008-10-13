@@ -24,10 +24,8 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.TypeReference;
 
 /**
- * An implementation of ExtendedHeapModel based on a 
- * normal HeapModel
- * 
- * @author sjfink
+ * An implementation of {@link ExtendedHeapModel} based on a 
+ * normal {@link HeapModel}
  *
  */
 public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
