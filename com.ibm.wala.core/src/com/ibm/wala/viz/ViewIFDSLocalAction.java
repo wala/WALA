@@ -177,7 +177,9 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
       System.err.println("Spawn Viewer for " + proc);
       DotUtil.dotify(localGraph, labels, dotFile, psFile, dotExe);
 
-      GVUtil.launchGV(psFile, gvExe);
+      if (DotUtil.getOutputType() == DotUtil.DotOutputType.PS) {
+        GVUtil.launchGV(psFile, gvExe);
+      }
     } catch (WalaException e) {
       e.printStackTrace();
       Assertions.UNREACHABLE();

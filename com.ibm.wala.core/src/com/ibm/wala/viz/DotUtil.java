@@ -42,6 +42,8 @@ public class DotUtil {
   }
 
   private static DotOutputType outputType = DotOutputType.PS;
+  
+  private static int fontSize = 6;
 
   public static void setOutputType(DotOutputType outType) {
     outputType = outType;
@@ -68,7 +70,6 @@ public class DotUtil {
    */
   private final static int MAX_LABEL_LENGTH = Integer.MAX_VALUE;
 
-  private final static int FONT_SIZE = 6;
 
   /**
    */
@@ -176,7 +177,7 @@ public class DotUtil {
     if (rankdir != null) {
       result.append("rankdir=" + rankdir + ";");
     }
-    String fontsizeStr = "fontsize=" + FONT_SIZE;
+    String fontsizeStr = "fontsize=" + fontSize;
     result.append("center=true;");
     result.append(fontsizeStr);
     result.append("node [");
@@ -258,6 +259,14 @@ public class DotUtil {
   private static String getPort(Object o, NodeDecorator d) throws WalaException {
     return "\"" + getLabel(o, d) + "\"";
 
+  }
+
+  public static int getFontSize() {
+    return fontSize;
+  }
+
+  public static void setFontSize(int fontSize) {
+    DotUtil.fontSize = fontSize;
   }
 
 }
