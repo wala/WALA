@@ -815,6 +815,10 @@ public class TabulationSolver<T, P, F> {
       addToWorkList(s_p, i, n, j);
     }
   }
+  
+  public LocalPathEdges getLocalPathEdges(T s_p) {
+    return pathEdges.get(s_p);
+  }
 
   /**
    * Merging: suppose we're doing propagate <s_p,i> -> <n,j> but we already have path edges <s_p,i> -> <n, x>, <s_p,i> -> <n,y>, and
