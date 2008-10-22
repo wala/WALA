@@ -11,6 +11,7 @@
 package com.ibm.wala.util.collections;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,25 @@ public class MapUtil {
     }
     return result;
   }
+  
+  /**
+   * @param M a mapping from Object -> Collection
+   * @param key
+   * @return the Collection corresponding to key in M; create one if needed
+   * @throws IllegalArgumentException if M is null
+   */
+  public static <K, T> Collection<T> findOrCreateCollection(Map<K, Collection<T>> M, K key) {
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    Collection<T> result = M.get(key);
+    if (result == null) {
+      result = HashSetFactory.make(2);
+      M.put(key, result);
+    }
+    return result;
+  }
+
   
   /**
    * @param M a mapping from Object -> Set
