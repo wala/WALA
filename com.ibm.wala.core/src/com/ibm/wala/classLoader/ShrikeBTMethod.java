@@ -272,11 +272,16 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
    * @return Iterator of TypeReference
    * @throws InvalidClassFileException
    */
-  public Iterator getArraysWritten() throws InvalidClassFileException {
+  public Iterator<TypeReference> getArraysWritten() throws InvalidClassFileException {
     if (isNative()) {
       return EmptyIterator.instance();
     }
-    return (getBCInfo().arraysWritten == null) ? EmptyIterator.instance() : Arrays.asList(getBCInfo().arraysWritten).iterator();
+    if (getBCInfo().fieldsRead == null) {
+      return EmptyIterator.instance();
+    } else {
+      List<TypeReference> list = Arrays.asList(getBCInfo().arraysWritten);
+      return list.iterator();
+    }
   }
 
   /**

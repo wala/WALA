@@ -34,9 +34,8 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
- *
- * This class can scan an IMethod and generate a list of call sites in the
- * method.
+ * 
+ * This class can scan an IMethod and generate a list of call sites in the method.
  * 
  * @author sfink
  */
@@ -44,7 +43,7 @@ public class CodeScanner {
 
   /**
    * @throws InvalidClassFileException
-   * @throws IllegalArgumentException  if m is null
+   * @throws IllegalArgumentException if m is null
    */
   public static Collection<CallSiteReference> getCallSites(IMethod m) throws InvalidClassFileException {
     if (m == null) {
@@ -60,7 +59,7 @@ public class CodeScanner {
 
   /**
    * @throws InvalidClassFileException
-   * @throws IllegalArgumentException  if m is null
+   * @throws IllegalArgumentException if m is null
    */
   public static Collection<FieldReference> getFieldsRead(IMethod m) throws InvalidClassFileException {
     if (m == null) {
@@ -76,7 +75,7 @@ public class CodeScanner {
 
   /**
    * @throws InvalidClassFileException
-   * @throws IllegalArgumentException  if m is null
+   * @throws IllegalArgumentException if m is null
    */
   public static Collection<FieldReference> getFieldsWritten(IMethod m) throws InvalidClassFileException {
     if (m == null) {
@@ -91,8 +90,25 @@ public class CodeScanner {
   }
 
   /**
+   * get the element types of the arrays that m may update
+   * 
    * @throws InvalidClassFileException
-   * @throws IllegalArgumentException  if m is null
+   */
+  public static Collection<TypeReference> getArraysWritten(IMethod m) throws InvalidClassFileException {
+    if (m == null) {
+      throw new IllegalArgumentException("m is null");
+    }
+    if (m.isSynthetic()) {
+      SyntheticMethod sm = (SyntheticMethod) m;
+      return getArraysWritten(sm.getStatements(SSAOptions.defaultOptions()));
+    } else {
+      return getArraysWrittenFromShrikeBT((ShrikeCTMethod) m);
+    }
+  }
+
+  /**
+   * @throws InvalidClassFileException
+   * @throws IllegalArgumentException if m is null
    */
   public static Collection<NewSiteReference> getNewSites(IMethod m) throws InvalidClassFileException {
     if (m == null) {
@@ -147,7 +163,7 @@ public class CodeScanner {
    * 
    * @return iterator of TypeReference
    * @throws InvalidClassFileException
-   * @throws IllegalArgumentException  if m is null
+   * @throws IllegalArgumentException if m is null
    */
   public static Iterator iterateCastTypes(IMethod m) throws InvalidClassFileException {
     if (m == null) {
@@ -210,6 +226,15 @@ public class CodeScanner {
     return result;
   }
 
+  private static List<TypeReference> getArraysWrittenFromShrikeBT(ShrikeCTMethod M) throws InvalidClassFileException {
+    // TODO move the logic here from ShrikeCTMethodWrapper
+    List<TypeReference> result = new LinkedList<TypeReference>();
+    for (Iterator<TypeReference> it = M.getArraysWritten(); it.hasNext();) {
+      result.add(it.next());
+    }
+    return result;
+  }
+
   private static boolean hasShrikeBTObjectArrayLoad(ShrikeCTMethod M) throws InvalidClassFileException {
     for (Iterator it = M.getArraysRead(); it.hasNext();) {
       TypeReference t = (TypeReference) it.next();
@@ -222,7 +247,7 @@ public class CodeScanner {
 
   /**
    * @return Set <TypeReference>
-   * @throws IllegalArgumentException  if statements == null
+   * @throws IllegalArgumentException if statements == null
    */
   public static Set<TypeReference> getCaughtExceptions(SSAInstruction[] statements) throws IllegalArgumentException {
     if (statements == null) {
@@ -246,7 +271,7 @@ public class CodeScanner {
   }
 
   /**
-   * @throws IllegalArgumentException  if statements == null
+   * @throws IllegalArgumentException if statements == null
    */
   public static Iterator<TypeReference> iterateCastTypes(SSAInstruction[] statements) throws IllegalArgumentException {
     if (statements == null) {
@@ -265,8 +290,7 @@ public class CodeScanner {
   }
 
   /**
-   * @param statements
-   *          list of ssa statements
+   * @param statements list of ssa statements
    * @return List of InvokeInstruction
    */
   private static List<CallSiteReference> getCallSites(SSAInstruction[] statements) {
@@ -287,8 +311,7 @@ public class CodeScanner {
   }
 
   /**
-   * @param statements
-   *          list of ssa statements
+   * @param statements list of ssa statements
    * @return List of InvokeInstruction
    */
   private static List<NewSiteReference> getNewSites(SSAInstruction[] statements) {
@@ -309,10 +332,9 @@ public class CodeScanner {
   }
 
   /**
-   * @param statements
-   *          list of ssa statements
+   * @param statements list of ssa statements
    * @return List of FieldReference
-   * @throws IllegalArgumentException  if statements == null
+   * @throws IllegalArgumentException if statements == null
    */
   public static List<FieldReference> getFieldsRead(SSAInstruction[] statements) throws IllegalArgumentException {
     if (statements == null) {
@@ -335,10 +357,9 @@ public class CodeScanner {
   }
 
   /**
-   * @param statements
-   *          list of ssa statements
+   * @param statements list of ssa statements
    * @return List of FieldReference
-   * @throws IllegalArgumentException  if statements == null
+   * @throws IllegalArgumentException if statements == null
    */
   public static List<FieldReference> getFieldsWritten(SSAInstruction[] statements) throws IllegalArgumentException {
     if (statements == null) {
@@ -350,6 +371,33 @@ public class CodeScanner {
       public void visitPut(SSAPutInstruction instruction) {
         result.add(instruction.getDeclaredField());
       }
+    };
+    for (int i = 0; i < statements.length; i++) {
+      SSAInstruction s = statements[i];
+      if (s != null) {
+        s.visit(v);
+      }
+    }
+    return result;
+  }
+
+  /**
+   * @param statements list of ssa statements
+   * @return List of TypeReference
+   * @throws IllegalArgumentException if statements == null
+   */
+  public static List<TypeReference> getArraysWritten(SSAInstruction[] statements) throws IllegalArgumentException {
+    if (statements == null) {
+      throw new IllegalArgumentException("statements == null");
+    }
+    final List<TypeReference> result = new LinkedList<TypeReference>();
+    Visitor v = new Visitor() {
+
+      @Override
+      public void visitArrayStore(SSAArrayStoreInstruction instruction) {
+        result.add(instruction.getElementType());
+      }
+      
     };
     for (int i = 0; i < statements.length; i++) {
       SSAInstruction s = statements[i];
