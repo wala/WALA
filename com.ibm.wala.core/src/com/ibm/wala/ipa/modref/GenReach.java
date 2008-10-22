@@ -32,7 +32,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  * @author sjfink
  * 
  */
-class GenReach<T, L> extends BitVectorFramework<T, L> {
+public class GenReach<T, L> extends BitVectorFramework<T, L> {
 
   public GenReach(Graph<T> flowGraph, Map<T, Collection<L>> gen) {
     super(flowGraph, new GenFunctions<T, L>(gen), makeDomain(gen));
