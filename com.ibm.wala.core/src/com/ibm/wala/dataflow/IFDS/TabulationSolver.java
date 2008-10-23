@@ -384,20 +384,15 @@ public class TabulationSolver<T, P, F> {
     final CallFlowEdges callFlow = findOrCreateCallFlowEdges(edge.entry);
 
     // [22] for each c /in callers(p)
-    for (Iterator<? extends T> it = supergraph.getPredNodes(edge.entry); it.hasNext();) {
-      final T c = it.next();
-      if (DEBUG_LEVEL > 0) {
-        final int cNum = supergraph.getLocalBlockNumber(c);
-        System.err.println("caller: " + c + " " + cNum);
-      }
+    IntSet callFlowSourceNodes = callFlow.getCallFlowSourceNodes(edge.d1);
+    if (callFlowSourceNodes != null) {
+      for (IntIterator it = callFlowSourceNodes.intIterator(); it.hasNext();) {
+        // [23] for each d4 s.t. <c,d4> -> <s_p,d1> occurred earlier
+        int globalC = it.next();
+        final IntSet D4 = callFlow.getCallFlowSources(globalC, edge.d1);
 
-      // [23] for each d4 s.t. <c,d4> -> <s_p,d1> occurred earlier
-      int globalC = supergraph.getNumber(c);
-      final IntSet D4 = callFlow.getCallFlowSources(globalC, edge.d1);
-
-      // [23] for each d5 s.t. <e_p,d2> -> <returnSite(c),d5> ...
-      if (D4 != null) {
-        propagateToReturnSites(edge, succ, c, D4);
+        // [23] for each d5 s.t. <e_p,d2> -> <returnSite(c),d5> ...
+        propagateToReturnSites(edge, succ, supergraph.getNode(globalC), D4);
       }
     }
     curSummaryEdge = null;
@@ -815,7 +810,7 @@ public class TabulationSolver<T, P, F> {
       addToWorkList(s_p, i, n, j);
     }
   }
-  
+
   public LocalPathEdges getLocalPathEdges(T s_p) {
     return pathEdges.get(s_p);
   }

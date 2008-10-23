@@ -15,6 +15,7 @@ import com.ibm.wala.util.intset.BasicNaturalRelation;
 import com.ibm.wala.util.intset.BimodalMutableIntSet;
 import com.ibm.wala.util.intset.IBinaryNaturalRelation;
 import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.MutableIntSet;
 import com.ibm.wala.util.intset.MutableSparseIntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
@@ -30,21 +31,19 @@ public class CallFlowEdges {
    * A map from integer -> (IBinaryNonNegativeIntRelation)
    * 
    * 
-   * For a fact d2, edges[c] gives a relation R=(d2,d1) s.t. (<c, d1> ->
-   * <s_p,d2>) was recorded as a call flow edge.
+   * For a fact d2, edges[d2] gives a relation R=(c,d1) s.t. (<c, d1> -> <s_p,d2>) was recorded as a call flow edge.
    * 
    * Note that we handle paths of the form <c, d1> -> <s_p,d1> specially, below.
    * 
-   * TODO: more representation optimization. A special representation for triples?
-   * sparse representations for CFG? exploit shorts for ints?
+   * TODO: more representation optimization. A special representation for triples? sparse representations for CFG? exploit shorts
+   * for ints?
    */
   private final SparseVector<IBinaryNaturalRelation> edges = new SparseVector<IBinaryNaturalRelation>(1, 1.1f);
 
   /**
    * a map from integer d1 -> int set.
    * 
-   * for fact d1, identityPaths[d1] gives the set of block numbers C s.t. for c
-   * \in C, <c, d1> -> <s_p, d1> is an edge.
+   * for fact d1, identityPaths[d1] gives the set of block numbers C s.t. for c \in C, <c, d1> -> <s_p, d1> is an edge.
    */
   private final SparseVector<IntSet> identityEdges = new SparseVector<IntSet>(1, 1.1f);
 
@@ -54,12 +53,9 @@ public class CallFlowEdges {
   /**
    * Record that we've discovered a call edge <c,d1> -> <s_p, d2>
    * 
-   * @param c
-   *          global number identifying the call site node
-   * @param d1
-   *          source fact at the call edge
-   * @param d2
-   *          result fact (result of the call flow function)
+   * @param c global number identifying the call site node
+   * @param d1 source fact at the call edge
+   * @param d2 result fact (result of the call flow function)
    */
   public void addCallEdge(int c, int d1, int d2) {
     if (TabulationSolver.DEBUG_LEVEL > 0) {
@@ -73,26 +69,24 @@ public class CallFlowEdges {
       }
       s.add(c);
     } else {
-      IBinaryNaturalRelation R = edges.get(c);
+      IBinaryNaturalRelation R = edges.get(d2);
       if (R == null) {
         // we expect the first dimension of R to be dense, the second sparse
-        R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
-            BasicNaturalRelation.TWO_LEVEL);
-        edges.set(c, R);
+        R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.TWO_LEVEL }, BasicNaturalRelation.TWO_LEVEL);
+        edges.set(d2, R);
       }
-      R.add(d2, d1);
+      R.add(c, d1);
     }
   }
 
   /**
    * @param c
    * @param d2
-   * @return set of d1 s.t. <c, d1> -> <s_p, d2> was recorded as call flow, or
-   *         null if none found.
+   * @return set of d1 s.t. <c, d1> -> <s_p, d2> was recorded as call flow, or null if none found.
    */
   public IntSet getCallFlowSources(int c, int d2) {
     IntSet s = identityEdges.get(d2);
-    IBinaryNaturalRelation R = edges.get(c);
+    IBinaryNaturalRelation R = edges.get(d2);
     IntSet result = null;
     if (R == null) {
       if (s != null) {
@@ -100,17 +94,17 @@ public class CallFlowEdges {
       }
     } else {
       if (s == null) {
-        result = R.getRelated(d2);
+        result = R.getRelated(c);
       } else {
         if (s.contains(c)) {
-          if (R.getRelated(d2) == null) {
+          if (R.getRelated(c) == null) {
             result = SparseIntSet.singleton(d2);
           } else {
-            result = MutableSparseIntSet.make(R.getRelated(d2));
+            result = MutableSparseIntSet.make(R.getRelated(c));
             ((MutableSparseIntSet) result).add(d2);
           }
         } else {
-          result = R.getRelated(d2);
+          result = R.getRelated(c);
         }
       }
     }
@@ -119,4 +113,45 @@ public class CallFlowEdges {
     }
     return result;
   }
+
+  /**
+   * 
+   * @param d2
+   * @return set of c s.t. <c, d1> -> <s_p, d2> was recorded as call flow (for some d1), or null if none found.
+   */
+  public IntSet getCallFlowSourceNodes(int d2) {
+    IntSet s = identityEdges.get(d2);
+    IBinaryNaturalRelation R = edges.get(d2);
+    IntSet result = null;
+    if (R == null) {
+      if (s != null) {
+        result = s;
+      }
+    } else {
+      if (s == null) {
+        result = getDomain(R);
+      } else {
+        result = MutableSparseIntSet.make(s);
+        ((MutableSparseIntSet) result).addAll(getDomain(R));
+      }
+    }
+    if (TabulationSolver.DEBUG_LEVEL > 0) {
+      System.err.println("getCallFlowSources " + d2 + " " + result);
+    }
+    return result;
+
+  }
+
+  // TODO optimize
+  private IntSet getDomain(IBinaryNaturalRelation r) {
+    MutableIntSet result = MutableSparseIntSet.makeEmpty();
+    int maxKeyValue = r.maxKeyValue();
+    for (int i = 0; i <= maxKeyValue; i++) {
+      if (r.getRelated(i) != null) {
+        result.add(i);
+      }
+    }
+    return result;
+  }
+
 }
