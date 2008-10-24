@@ -360,18 +360,6 @@ public class TabulationSolver<T, P, F> {
       System.err.println("process exit: " + edge);
     }
 
-    // succ:= successor nodes of edge.n (the return block in the callee)
-    IntSet succ = supergraph.getSuccNodeNumbers(edge.target);
-    if (succ == null) {
-      // This should only happen for return from the entry point of the supergraph
-      // (fake root method for whole-program analysis).
-      // if (DEBUG_LEVEL > 0) {
-      // P n = supergraph.getProcOf(edge.n);
-      // Assertions._assert(supergraph.getMain().equals(n), "no successors for " + edge.n);
-      // }
-      return;
-    }
-
     final LocalSummaryEdges summaries = findOrCreateLocalSummaryEdges(supergraph.getProcOf(edge.target));
     int s_p_n = supergraph.getLocalBlockNumber(edge.entry);
     int x = supergraph.getLocalBlockNumber(edge.target);
@@ -392,7 +380,7 @@ public class TabulationSolver<T, P, F> {
         final IntSet D4 = callFlow.getCallFlowSources(globalC, edge.d1);
 
         // [23] for each d5 s.t. <e_p,d2> -> <returnSite(c),d5> ...
-        propagateToReturnSites(edge, succ, supergraph.getNode(globalC), D4);
+        propagateToReturnSites(edge, supergraph.getNode(globalC), D4);
       }
     }
     curSummaryEdge = null;
@@ -408,15 +396,7 @@ public class TabulationSolver<T, P, F> {
    * @param c a call site of edge.s_p
    * @param D4 set of d1 s.t. <c, d1> -> <edge.s_p, edge.d2> was recorded as call flow
    */
-  private void propagateToReturnSites(final PathEdge<T> edge, IntSet succ, final T c, final IntSet D4) {
-    if (DEBUG_LEVEL > 1) {
-      System.err.println("Successor nodes: " + succ);
-      for (IntIterator it = succ.intIterator(); it.hasNext();) {
-        int x = it.next();
-        System.err.println("  " + x + " " + supergraph.getNode(x));
-      }
-    }
-
+  private void propagateToReturnSites(final PathEdge<T> edge, final T c, final IntSet D4) {
     P proc = supergraph.getProcOf(c);
     final T[] entries = supergraph.getEntriesForProcedure(proc);
 
@@ -435,7 +415,7 @@ public class TabulationSolver<T, P, F> {
       // so, we'll filter the logic by checking that we only process reachable return sites.
       // the supergraph carries the information regarding the legal successors
       // of the exit node
-      if (!succ.contains(supergraph.getNumber(retSite))) {
+      if (!supergraph.hasEdge(edge.target, retSite)) {
         continue;
       }
       if (DEBUG_LEVEL > 1) {
@@ -567,12 +547,12 @@ public class TabulationSolver<T, P, F> {
         System.err.println(" process callee: " + callee);
       }
       MutableSparseIntSet reached = MutableSparseIntSet.makeEmpty();
-      final Collection<T> returnSites = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.target, supergraph
+      final Collection<T> returnSitesForCallee = Iterator2Collection.toCollection(supergraph.getReturnSites(edge.target, supergraph
           .getProcOf(callee)));
-      allReturnSites.addAll(returnSites);
+      allReturnSites.addAll(returnSitesForCallee);
       // we modify this to handle each return site individually. Some types of problems
       // compute different flow functions for each return site.
-      for (final T returnSite : returnSites) {
+      for (final T returnSite : returnSitesForCallee) {
         IUnaryFlowFunction f = flowFunctionMap.getCallFlowFunction(edge.target, callee, returnSite);
         // reached := {d1} that reach the callee
         IntSet r = computeFlow(edge.d2, f);
@@ -615,9 +595,8 @@ public class TabulationSolver<T, P, F> {
                 if (DEBUG_LEVEL > 0 && Assertions.verifyAssertions) {
                   Assertions._assert(supergraph.containsNode(exit));
                 }
-                for (Iterator<? extends T> succ = supergraph.getSuccNodes(exit); succ.hasNext();) {
-                  final T returnSite = succ.next();
-                  if (returnSites.contains(returnSite)) {
+                for (final T returnSite : returnSitesForCallee) {
+                  if (supergraph.hasEdge(exit, returnSite)) {
                     int x_num = supergraph.getLocalBlockNumber(exit);
                     // reachedBySummary := {d2} s.t. <callee,d1> -> <exit,d2>
                     // was recorded as a summary edge
