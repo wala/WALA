@@ -99,8 +99,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   private final ControlDependenceOptions cOptions;
 
   /**
-   * the set of heap locations which may be written (transitively) by each node. These are logically return values in
-   * the SDG.
+   * the set of heap locations which may be written (transitively) by each node. These are logically return values in the SDG.
    */
   private final Map<CGNode, OrdinalSet<PointerKey>> mod;
 
@@ -201,8 +200,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
   }
 
   /**
-   * iterate over the nodes <bf>without</bf> constructing any new ones. Use with extreme care. May break graph
-   * traversals that lazily add more nodes.
+   * iterate over the nodes <bf>without</bf> constructing any new ones. Use with extreme care. May break graph traversals that
+   * lazily add more nodes.
    */
   public Iterator<? extends Statement> iterateLazyNodes() {
     return nodeMgr.iterateLazyNodes();
@@ -261,8 +260,8 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
     }
 
     /**
-     * iterate over the nodes <bf>without</bf> constructing any new ones. Use with extreme care. May break graph
-     * traversals that lazily add more nodes.
+     * iterate over the nodes <bf>without</bf> constructing any new ones. Use with extreme care. May break graph traversals that
+     * lazily add more nodes.
      */
     Iterator<? extends Statement> iterateLazyNodes() {
       return super.iterator();
@@ -640,6 +639,7 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
       case HEAP_PARAM_CALLEE:
       case HEAP_RET_CALLER:
       case METHOD_ENTRY:
+      case METHOD_EXIT:
         return getPDG(src.getNode()).hasEdge(src, dst);
       case EXC_RET_CALLEE: {
         if (dOptions.equals(DataDependenceOptions.NONE)) {
@@ -683,9 +683,27 @@ public class SDG extends AbstractNumberedGraph<Statement> implements ISDG {
         if (dst.getKind().equals(Kind.PARAM_CALLEE)) {
           ParamCallee callee = (ParamCallee) dst;
           ParamCaller caller = (ParamCaller) src;
-
-          return caller.getValueNumber() == callee.getValueNumber()
-              && cg.getPossibleTargets(caller.getNode(), caller.getInstruction().getCallSite()).contains(callee.getNode());
+          SSAAbstractInvokeInstruction call = caller.getInstruction();
+          final CGNode calleeNode = callee.getNode();
+          if (!cg.getPossibleTargets(caller.getNode(), call.getCallSite()).contains(calleeNode)) {
+            return false;
+          }
+          if (dOptions.isTerminateAtCast() && call.isDispatch() && caller.getValueNumber() == call.getReceiver()) {
+            // a virtual dispatch is just like a cast.
+            return false;
+          }
+          if (dOptions.isTerminateAtCast() && isUninformativeForReflection(calleeNode)) {
+            // don't track reflection into reflective invokes
+            return false;
+          }
+          for (int i = 0; i < calleeNode.getMethod().getNumberOfParameters(); i++) {
+            if (call.getUse(i) == caller.getValueNumber()) {
+              if (callee.getValueNumber() == i + 1) {
+                return true;
+              }
+            }
+          }
+          return false;
         } else {
           return false;
         }
