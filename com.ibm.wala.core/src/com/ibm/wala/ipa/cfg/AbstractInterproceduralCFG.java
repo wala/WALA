@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.cfg;
 
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -28,7 +27,6 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
-import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.IndiscriminateFilter;
 import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.debug.Assertions;
@@ -333,42 +331,46 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
         System.err.println("got caller " + caller);
       }
       if (relevant.accepts(caller)) {
-        if (DEBUG_LEVEL > 0) {
-          System.err.println("caller " + caller + "is relevant");
-        }
-        ControlFlowGraph<T> ccfg = getCFG(caller);
-        IInstruction[] cinsts = ccfg.getInstructions();
+        addEntryAndExitEdgesToCaller(n, entryBlock, exitBlock, caller);
+      }
+    }
+  }
 
+  private void addEntryAndExitEdgesToCaller(CGNode n, T entryBlock, T exitBlock, CGNode caller) {
+    if (DEBUG_LEVEL > 0) {
+      System.err.println("caller " + caller + "is relevant");
+    }
+    ControlFlowGraph<T> ccfg = getCFG(caller);
+    IInstruction[] cinsts = ccfg.getInstructions();
+
+    if (DEBUG_LEVEL > 1) {
+      System.err.println("Visiting " + cinsts.length + " instructions");
+    }
+    for (int i = 0; i < cinsts.length; i++) {
+      if (cinsts[i] instanceof IInvokeInstruction) {
         if (DEBUG_LEVEL > 1) {
-          System.err.println("Visiting " + cinsts.length + " instructions");
+          System.err.println("Checking invokeinstruction: " + cinsts[i]);
         }
-        for (int i = 0; i < cinsts.length; i++) {
-          if (cinsts[i] instanceof IInvokeInstruction) {
-            if (DEBUG_LEVEL > 1) {
-              System.err.println("Checking invokeinstruction: " + cinsts[i]);
-            }
-            IInvokeInstruction call = (IInvokeInstruction) cinsts[i];
-            CallSiteReference site = makeCallSiteReference(n.getMethod().getDeclaringClass().getClassLoader().getReference(), ccfg
-                .getProgramCounter(i), call);
-            if (cg.getPossibleTargets(caller, site).contains(n)) {
-              if (DEBUG_LEVEL > 1) {
-                System.err.println("Adding edge " + ccfg.getBlockForInstruction(i) + " to " + entryBlock);
-              }
-              T callerBB = ccfg.getBlockForInstruction(i);
-              BasicBlockInContext<T> b1 = new BasicBlockInContext<T>(caller, callerBB);
-              // need to add a node for caller basic block, in case we haven't processed caller yet
-              addNodeForBasicBlockIfNeeded(b1);
-              BasicBlockInContext<T> b2 = new BasicBlockInContext<T>(n, entryBlock);
-              g.addEdge(b1, b2);
-              // also add edges from exit node to all return nodes (successor of call bb)
-              for (Iterator<? extends T> succIter = ccfg.getSuccNodes(callerBB); succIter.hasNext();) {
-                T returnBB = succIter.next();
-                BasicBlockInContext<T> b3 = new BasicBlockInContext<T>(n, exitBlock);
-                BasicBlockInContext<T> b4 = new BasicBlockInContext<T>(caller, returnBB);
-                addNodeForBasicBlockIfNeeded(b4);
-                g.addEdge(b3, b4);
-              }
-            }
+        IInvokeInstruction call = (IInvokeInstruction) cinsts[i];
+        CallSiteReference site = makeCallSiteReference(n.getMethod().getDeclaringClass().getClassLoader().getReference(), ccfg
+            .getProgramCounter(i), call);
+        if (cg.getPossibleTargets(caller, site).contains(n)) {
+          if (DEBUG_LEVEL > 1) {
+            System.err.println("Adding edge " + ccfg.getBlockForInstruction(i) + " to " + entryBlock);
+          }
+          T callerBB = ccfg.getBlockForInstruction(i);
+          BasicBlockInContext<T> b1 = new BasicBlockInContext<T>(caller, callerBB);
+          // need to add a node for caller basic block, in case we haven't processed caller yet
+          addNodeForBasicBlockIfNeeded(b1);
+          BasicBlockInContext<T> b2 = new BasicBlockInContext<T>(n, entryBlock);
+          g.addEdge(b1, b2);
+          // also add edges from exit node to all return nodes (successor of call bb)
+          for (Iterator<? extends T> succIter = ccfg.getSuccNodes(callerBB); succIter.hasNext();) {
+            T returnBB = succIter.next();
+            BasicBlockInContext<T> b3 = new BasicBlockInContext<T>(n, exitBlock);
+            BasicBlockInContext<T> b4 = new BasicBlockInContext<T>(caller, returnBB);
+            addNodeForBasicBlockIfNeeded(b4);
+            g.addEdge(b3, b4);
           }
         }
       }
@@ -742,12 +744,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     IInvokeInstruction call = (IInvokeInstruction) statements[B.getLastInstructionIndex()];
     int pc = cfg.getProgramCounter(B.getLastInstructionIndex());
     CallSiteReference site = makeCallSiteReference(B.getMethod().getDeclaringClass().getClassLoader().getReference(), pc, call);
-    HashSet<CGNode> result = HashSetFactory.make(cg.getNumberOfTargets(Bnode, site));
-    for (Iterator<CGNode> it = cg.getPossibleTargets(Bnode, site).iterator(); it.hasNext();) {
-      CGNode target = it.next();
-      result.add(target);
-    }
-    return result;
+    return cg.getPossibleTargets(Bnode, site);
   }
 
   public void removeIncomingEdges(BasicBlockInContext node) throws UnsupportedOperationException {
@@ -759,7 +756,32 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   }
 
   public boolean hasEdge(BasicBlockInContext<T> src, BasicBlockInContext<T> dst) {
-    initForSucc(src);
+    if (!addedSuccs.contains(getNumber(src))) {
+      if (!src.getNode().equals(dst.getNode())) {
+        if (src.getDelegate().isExitBlock()) {
+          // checking for an exit to return edge
+          CGNode callee = src.getNode();
+          if (!cgNodesWithCallerEdges.contains(cg.getNumber(callee))) {
+            CGNode caller = dst.getNode();
+            T exitBlock = src.getDelegate();
+            T entryBlock = getCFG(callee).entry();
+            addEntryAndExitEdgesToCaller(callee, entryBlock, exitBlock, caller);
+          }
+        } else if (hasCall(src) && dst.getDelegate().isEntryBlock()) {
+          // checking for a call to entry edge
+          CGNode callee = dst.getNode();
+          if (!cgNodesWithCallerEdges.contains(cg.getNumber(callee))) {
+            CGNode caller = src.getNode();
+            T entryBlock = dst.getDelegate();
+            T exitBlock = getCFG(callee).exit();
+            addEntryAndExitEdgesToCaller(callee, entryBlock, exitBlock, caller);            
+          }
+        }
+      } else {
+        // if it exists, edge must be intraprocedural
+        addIntraproceduralNodesAndEdgesForCGNodeIfNeeded(src.getNode());
+      }
+    }
     return g.hasEdge(src, dst);
   }
 
