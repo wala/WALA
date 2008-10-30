@@ -224,7 +224,7 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
                     }
                     TypeReference T = tArray[0];
                     TypeName n = T.getName();
-                    TypeReference Tp = concreteParameterMap.get(n);
+                    TypeReference Tp = getConcreteServletParameterType(n);
                     if (Tp != null) {
                       T = Tp;
                     }
@@ -305,6 +305,14 @@ private final static Descriptor[] servletFilterMethodDescs = { doFilterDesc };
     return result.toString();
   }
   
+  /**
+   * return the concrete type to use for a parameter to a servlet with declared type n.
+   */
+  public static TypeReference getConcreteServletParameterType(TypeName n) {
+    TypeReference Tp = concreteParameterMap.get(n);
+    return Tp;
+  }
+
   public static boolean isStandardServlet(IClass klass) {
     IClassHierarchy cha = klass.getClassHierarchy();
     TypeReference actionServletType = TypeReference.findOrCreate(ClassLoaderReference.Application, actionServlet);
