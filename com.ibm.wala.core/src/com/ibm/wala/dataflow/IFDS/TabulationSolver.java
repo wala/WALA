@@ -602,6 +602,7 @@ public class TabulationSolver<T, P, F> {
                     // was recorded as a summary edge
                     IntSet reachedBySummary = summaries.getSummaryEdges(s_p_num, x_num, d1);
                     if (reachedBySummary != null) {
+                      recordSummaryEdgeReUse(edge.target, callee);
                       final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(edge.target, exit, returnSite);
                       reachedBySummary.foreach(new IntSetAction() {
                         public void act(int d2) {
@@ -687,6 +688,15 @@ public class TabulationSolver<T, P, F> {
         });
       }
     }
+  }
+
+  /**
+   * invoked to indicate that summary edges were re-used at a call site; does nothing by default
+   * @param callNode 
+   * @param callee 
+   */
+  protected void recordSummaryEdgeReUse(T callNode, T callee) {
+    
   }
 
   private boolean hasCallee(T returnSite) {
