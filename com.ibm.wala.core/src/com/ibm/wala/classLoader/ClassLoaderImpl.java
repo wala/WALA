@@ -30,7 +30,6 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 import com.ibm.wala.util.collections.ToStringComparator;
 import com.ibm.wala.util.debug.Assertions;
-import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.shrike.ShrikeClassReaderHandle;
 import com.ibm.wala.util.strings.Atom;
 import com.ibm.wala.util.warnings.Warning;
@@ -98,7 +97,7 @@ public class ClassLoaderImpl implements IClassLoader {
     this.cha = cha;
 
     if (DEBUG_LEVEL > 0) {
-      Trace.println("Creating class loader for " + loader);
+      System.err.println("Creating class loader for " + loader);
     }
   }
 
@@ -112,7 +111,7 @@ public class ClassLoaderImpl implements IClassLoader {
    */
   private Set<ModuleEntry> getSourceFiles(Module M) throws IOException {
     if (DEBUG_LEVEL > 0) {
-      Trace.println("Get source files for " + M);
+      System.err.println("Get source files for " + M);
     }
     TreeSet<ModuleEntry> sortedEntries = new TreeSet<ModuleEntry>(HashCodeComparator.instance());
     sortedEntries.addAll(Iterator2Collection.toCollection(M.getEntries()));
@@ -121,11 +120,11 @@ public class ClassLoaderImpl implements IClassLoader {
     for (Iterator it = sortedEntries.iterator(); it.hasNext();) {
       ModuleEntry entry = (ModuleEntry) it.next();
       if (DEBUG_LEVEL > 0) {
-        Trace.println("consider entry for source information: " + entry);
+        System.err.println("consider entry for source information: " + entry);
       }
       if (entry.isSourceFile()) {
         if (DEBUG_LEVEL > 0) {
-          Trace.println("found source file: " + entry);
+          System.err.println("found source file: " + entry);
         }
         result.add(entry);
       } else if (entry.isModuleFile()) {
@@ -145,7 +144,7 @@ public class ClassLoaderImpl implements IClassLoader {
    */
   private Set<ModuleEntry> getClassFiles(Module M) throws IOException {
     if (DEBUG_LEVEL > 0) {
-      Trace.println("Get class files for " + M);
+      System.err.println("Get class files for " + M);
     }
     TreeSet<ModuleEntry> sortedEntries = new TreeSet<ModuleEntry>(HashCodeComparator.instance());
     sortedEntries.addAll(Iterator2Collection.toCollection(M.getEntries()));
@@ -154,11 +153,11 @@ public class ClassLoaderImpl implements IClassLoader {
     for (Iterator it = sortedEntries.iterator(); it.hasNext();) {
       ModuleEntry entry = (ModuleEntry) it.next();
       if (DEBUG_LEVEL > 0) {
-        Trace.println("ClassLoaderImpl.getClassFiles:Got entry: " + entry);
+        System.err.println("ClassLoaderImpl.getClassFiles:Got entry: " + entry);
       }
       if (entry.isClassFile()) {
         if (DEBUG_LEVEL > 0) {
-          Trace.println("result contains: " + entry);
+          System.err.println("result contains: " + entry);
         }
         result.add(entry);
       } else if (entry.isModuleFile()) {
@@ -167,7 +166,7 @@ public class ClassLoaderImpl implements IClassLoader {
         result.addAll(s);
       } else {
         if (DEBUG_LEVEL > 0) {
-          Trace.println("Ignoring entry: " + entry);
+          System.err.println("Ignoring entry: " + entry);
         }
       }
     }
@@ -221,12 +220,12 @@ public class ClassLoaderImpl implements IClassLoader {
       String className = entry.getClassName().replace('.', '/');
 
       if (DEBUG_LEVEL > 0) {
-        Trace.println("Consider " + className);
+        System.err.println("Consider " + className);
       }
 
       if (exclusions != null && exclusions.contains(className)) {
         if (DEBUG_LEVEL > 0) {
-          Trace.println("Excluding " + className);
+          System.err.println("Excluding " + className);
         }
         continue;
       }
@@ -235,7 +234,7 @@ public class ClassLoaderImpl implements IClassLoader {
 
       className = "L" + className;
       if (DEBUG_LEVEL > 0) {
-        Trace.println("Load class " + className);
+        System.err.println("Load class " + className);
       }
       try {
         TypeName T = TypeName.string2TypeName(className);
@@ -246,7 +245,7 @@ public class ClassLoaderImpl implements IClassLoader {
           if (klass.getReference().getName().equals(T)) {
             loadedClasses.put(T, new ShrikeClass(reader, this, cha));
             if (DEBUG_LEVEL > 1) {
-              Trace.println("put " + T + " ");
+              System.err.println("put " + T + " ");
             }
           } else {
             Warnings.add(InvalidClassFile.create(className));
@@ -254,7 +253,7 @@ public class ClassLoaderImpl implements IClassLoader {
         }
       } catch (InvalidClassFileException e) {
         if (DEBUG_LEVEL > 0) {
-          Trace.println("Ignoring class " + className + " due to InvalidClassFileException");
+          System.err.println("Ignoring class " + className + " due to InvalidClassFileException");
         }
         Warnings.add(InvalidClassFile.create(className));
       }
@@ -317,7 +316,7 @@ public class ClassLoaderImpl implements IClassLoader {
       className = "L" + ((className.startsWith("/")) ? className.substring(1) : className);
       TypeName T = TypeName.string2TypeName(className);
       if (DEBUG_LEVEL > 0) {
-        Trace.println("adding to source map: " + T + " -> " + entry.getName());
+        System.err.println("adding to source map: " + T + " -> " + entry.getName());
       }
       sourceMap.put(T, entry.getName());
     }
@@ -339,7 +338,7 @@ public class ClassLoaderImpl implements IClassLoader {
     for (Iterator i = modules.iterator(); i.hasNext();) {
       Module M = (Module) i.next();
       if (DEBUG_LEVEL > 0) {
-        Trace.println("add archive: " + M);
+        System.err.println("add archive: " + M);
       }
       archives.add(M);
     }
@@ -379,7 +378,7 @@ public class ClassLoaderImpl implements IClassLoader {
       throw new IllegalArgumentException("className is null");
     }
     if (DEBUG_LEVEL > 1) {
-      Trace.println(this + ": lookupClass " + className);
+      System.err.println(this + ": lookupClass " + className);
     }
 
     // treat arrays specially:
@@ -461,6 +460,9 @@ public class ClassLoaderImpl implements IClassLoader {
     }
     for (Iterator<IClass> it = toRemove.iterator(); it.hasNext();) {
       IClass klass = it.next();
+      if (DEBUG_LEVEL > 0) {
+        System.err.println("removing " + klass.getName());
+      }
       loadedClasses.remove(klass.getName());
       sourceMap.remove(klass.getName());
     }
