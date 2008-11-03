@@ -13,6 +13,7 @@ package com.ibm.wala.eclipse.util;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,6 +33,11 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.osgi.service.resolver.BundleDescription;
+import org.eclipse.pde.core.plugin.IPluginModelBase;
+import org.eclipse.pde.core.plugin.PluginRegistry;
+import org.eclipse.pde.internal.core.ClasspathUtilCore;
+import org.eclipse.pde.internal.core.PDEStateHelper;
 
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.JarFileModule;
@@ -62,6 +68,7 @@ import com.ibm.wala.util.strings.Atom;
  * @author smarkstr (added support for language file extensions)
  * 
  */
+@SuppressWarnings("restriction")
 public class EclipseProjectPath {
 
   /**
@@ -73,10 +80,8 @@ public class EclipseProjectPath {
       ClassLoaderReference.Java);
 
   public enum Loader {
-    APPLICATION(ClassLoaderReference.Application),
-    EXTENSION(ClassLoaderReference.Extension),
-    PRIMORDIAL(ClassLoaderReference.Primordial),
-    SOURCE(SOURCE_REF);
+    APPLICATION(ClassLoaderReference.Application), EXTENSION(ClassLoaderReference.Extension), PRIMORDIAL(
+        ClassLoaderReference.Primordial), SOURCE(SOURCE_REF);
 
     private ClassLoaderReference ref;
 
@@ -89,6 +94,9 @@ public class EclipseProjectPath {
    * The project whose path this object represents
    */
   private final IJavaProject project;
+  
+  // names of OSGi bundles already processed.
+  private final Set<String> bundlesProcessed = HashSetFactory.make();
 
   // SJF: Intentionally do not use HashMapFactory, since the Loader keys in the following must use
   // identityHashCode. TODO: fix this source of non-determinism?
@@ -98,7 +106,7 @@ public class EclipseProjectPath {
 
   private final Collection<IClasspathEntry> alreadyResolved = HashSetFactory.make();
 
-  protected EclipseProjectPath(IJavaProject project) throws JavaModelException, IOException {
+  protected EclipseProjectPath(IJavaProject project) throws IOException, CoreException {
     this.project = project;
     assert project != null;
     for (Loader loader : Loader.values()) {
@@ -106,15 +114,17 @@ public class EclipseProjectPath {
       MapUtil.findOrCreateSet(sourceModules, loader);
     }
     resolveProjectClasspathEntries();
+    if (isPluginProject(project)) {
+      resolvePluginClassPath(project.getProject());
+    }
   }
-  
+
   @Deprecated
-  public static EclipseProjectPath make(IPath workspaceRootPath, IJavaProject project) throws JavaModelException, IOException {
+  public static EclipseProjectPath make(IPath workspaceRootPath, IJavaProject project) throws IOException, CoreException {
     return new EclipseProjectPath(project);
   }
 
-
-  public static EclipseProjectPath make(IJavaProject project) throws JavaModelException, IOException {
+  public static EclipseProjectPath make(IJavaProject project) throws IOException, CoreException {
     return new EclipseProjectPath(project);
   }
 
@@ -122,8 +132,7 @@ public class EclipseProjectPath {
    * Figure out what a classpath entry means and add it to the appropriate set of modules
    */
   @SuppressWarnings("restriction")
-  private void resolveClasspathEntry(IClasspathEntry entry, Loader loader, String fileExtension) throws JavaModelException,
-      IOException {
+  private void resolveClasspathEntry(IClasspathEntry entry, Loader loader) throws JavaModelException, IOException {
     IClasspathEntry e = JavaCore.getResolvedClasspathEntry(entry);
     if (alreadyResolved.contains(e)) {
       return;
@@ -134,8 +143,7 @@ public class EclipseProjectPath {
     if (e.getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
       IClasspathContainer cont = JavaCore.getClasspathContainer(entry.getPath(), project);
       IClasspathEntry[] entries = cont.getClasspathEntries();
-      resolveClasspathEntries(entries, cont.getKind() == IClasspathContainer.K_APPLICATION ? loader : Loader.PRIMORDIAL,
-          fileExtension);
+      resolveClasspathEntries(entries, cont.getKind() == IClasspathContainer.K_APPLICATION ? loader : Loader.PRIMORDIAL);
     } else if (e.getEntryKind() == IClasspathEntry.CPE_LIBRARY) {
       File file = makeAbsolute(e.getPath()).toFile();
       JarFile j;
@@ -155,7 +163,7 @@ public class EclipseProjectPath {
     } else if (e.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
       File file = makeAbsolute(e.getPath()).toFile();
       Set<Module> s = MapUtil.findOrCreateSet(sourceModules, Loader.SOURCE);
-      s.add(new SourceDirectoryTreeModule(file, fileExtension));
+      s.add(new SourceDirectoryTreeModule(file));
       if (e.getOutputLocation() != null) {
         File output = makeAbsolute(e.getOutputLocation()).toFile();
         s = MapUtil.findOrCreateSet(binaryModules, loader);
@@ -169,10 +177,14 @@ public class EclipseProjectPath {
       try {
         if (project.hasNature(JavaCore.NATURE_ID)) {
           IJavaProject javaProject = JavaCore.create(project);
-          resolveClasspathEntries(javaProject.getRawClasspath(), loader, fileExtension);
-          File output = makeAbsolute(javaProject.getOutputLocation()).toFile();
-          Set<Module> s = MapUtil.findOrCreateSet(binaryModules, loader);
-          s.add(new BinaryDirectoryTreeModule(output));
+          if (isPluginProject(javaProject)) {
+            resolvePluginClassPath(javaProject.getProject());
+          } else {
+            resolveClasspathEntries(javaProject.getRawClasspath(), loader);
+            File output = makeAbsolute(javaProject.getOutputLocation()).toFile();
+            Set<Module> s = MapUtil.findOrCreateSet(binaryModules, loader);
+            s.add(new BinaryDirectoryTreeModule(output));
+          }
         }
       } catch (CoreException e1) {
         e1.printStackTrace();
@@ -183,19 +195,68 @@ public class EclipseProjectPath {
     }
   }
 
+  private void resolvePluginClassPath(IProject p) throws CoreException, IOException {
+    BundleDescription bd = PluginRegistry.findModel(p).getBundleDescription();
+    resolveBundleDescriptionClassPath(bd, Loader.APPLICATION);
+  }
+
+  @SuppressWarnings("restriction")
+  private void resolveBundleDescriptionClassPath(BundleDescription bd, Loader loader) throws CoreException, IOException {
+    assert bd != null;
+    if (alreadyProcessed(bd)) {
+      return;
+    }
+    bundlesProcessed.add(bd.getName());
+
+    // handle the classpath entries for bd
+    ArrayList l = new ArrayList();
+    ClasspathUtilCore.addLibraries(PluginRegistry.findModel(bd), l);
+    IClasspathEntry[] entries = new IClasspathEntry[l.size()];
+    int i = 0;
+    for (Object o : l) {
+      IClasspathEntry e = (IClasspathEntry) o;
+      entries[i++] = e;
+    }
+    resolveClasspathEntries(entries, loader);
+
+    // recurse to handle dependencies. put these in the Extension loader
+    for (BundleDescription b : PDEStateHelper.getImportedBundles(bd)) {
+      resolveBundleDescriptionClassPath(b, Loader.EXTENSION);
+    }
+    for (BundleDescription b : bd.getResolvedRequires()) {
+      resolveBundleDescriptionClassPath(b, Loader.EXTENSION);
+    }
+    for (BundleDescription b : bd.getFragments()) {
+      resolveBundleDescriptionClassPath(b, Loader.EXTENSION);
+    }
+  }
+
+  private boolean alreadyProcessed(BundleDescription bd) {
+    return bundlesProcessed.contains(bd.getName());
+  }
+
+  private boolean isPluginProject(IJavaProject javaProject) {
+    IPluginModelBase model = PluginRegistry.findModel(javaProject.getProject());
+    if (model == null) {
+      return false;
+    }
+    if (model.getPluginBase().getId() == null) {
+      return false;
+    }
+    return true;
+  }
+
   /**
-   * @return true if the given jar file should be handled by the Primordial loader. If false, other provisions should be
-   *         made to add the jar file to the appropriate component of the AnalysisScope. Subclasses can override this
-   *         method.
+   * @return true if the given jar file should be handled by the Primordial loader. If false, other provisions should be made to add
+   *         the jar file to the appropriate component of the AnalysisScope. Subclasses can override this method.
    */
   protected boolean isPrimordialJarFile(JarFile j) {
     return true;
   }
 
-  protected void resolveClasspathEntries(IClasspathEntry[] entries, Loader loader, String fileExtension) throws JavaModelException,
-      IOException {
+  protected void resolveClasspathEntries(IClasspathEntry[] entries, Loader loader) throws JavaModelException, IOException {
     for (int i = 0; i < entries.length; i++) {
-      resolveClasspathEntry(entries[i], loader, fileExtension);
+      resolveClasspathEntry(entries[i], loader);
     }
   }
 
@@ -224,19 +285,8 @@ public class EclipseProjectPath {
    * @throws JavaModelException
    * @throws IOException
    */
-  public void resolveProjectClasspathEntries() throws JavaModelException, IOException {
-    resolveClasspathEntries(project.getRawClasspath(), Loader.EXTENSION, null);
-  }
-
-  /**
-   * If file extension is provided, use that to resolve source files in the classpath
-   * 
-   * @param fileExtension
-   * @throws JavaModelException
-   * @throws IOException
-   */
-  public void resolveProjectClasspathEntries(String fileExtension) throws JavaModelException, IOException {
-    resolveClasspathEntries(project.getRawClasspath(), Loader.EXTENSION, fileExtension);
+  private void resolveProjectClasspathEntries() throws JavaModelException, IOException {
+    resolveClasspathEntries(project.getRawClasspath(), Loader.EXTENSION);
   }
 
   /**

@@ -17,9 +17,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -58,14 +58,19 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   /**
    * Compute an analysis scope for the current selection
    */
-  public static AnalysisScope computeScope(IStructuredSelection selection) throws JavaModelException, IOException {
+  public static AnalysisScope computeScope(IStructuredSelection selection) throws IOException {
     Collection<EclipseProjectPath> projectPaths = new LinkedList<EclipseProjectPath>();
     for (Iterator it = selection.iterator(); it.hasNext();) {
       Object object = it.next();
       if (object instanceof IJavaElement) {
         IJavaElement e = (IJavaElement) object;
         IJavaProject jp = e.getJavaProject();
-        projectPaths.add(EclipseProjectPath.make(jp));
+        try {
+          projectPaths.add(EclipseProjectPath.make(jp));
+        } catch (CoreException e1) {
+          e1.printStackTrace();
+          // skip and continue
+        }
       } else {
         Assertions.UNREACHABLE(object.getClass());
       }

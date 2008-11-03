@@ -11,7 +11,12 @@ Require-Bundle: com.ibm.wala.shrike;visibility:=reexport,
  org.eclipse.jface,
  org.eclipse.jdt.core;visibility:=reexport,
  org.eclipse.ui;visibility:=reexport,
- org.eclipse.core.runtime;visibility:=reexport
+ org.eclipse.core.runtime;visibility:=reexport,
+ org.eclipse.pde,
+ org.eclipse.pde.build,
+ org.eclipse.pde.core,
+ org.eclipse.pde.runtime,
+ org.eclipse.pde.ui
 Eclipse-LazyStart: true
 Export-Package: .,
  com.ibm.wala.accessPath,

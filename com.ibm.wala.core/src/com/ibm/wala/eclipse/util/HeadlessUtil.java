@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
 import com.ibm.wala.util.debug.Assertions;
@@ -54,9 +53,9 @@ public class HeadlessUtil {
   /**
    * compute the analysis scope for a project in the current workspace
    * @throws IOException 
-   * @throws JavaModelException 
+   * @throws CoreException 
    */
-  public static AnalysisScope computeScope(String projectName) throws JavaModelException, IOException {
+  public static AnalysisScope computeScope(String projectName) throws IOException, CoreException {
     IJavaProject jp = getProjectFromWorkspace(projectName);
     EclipseProjectPath path = EclipseProjectPath.make(jp);
     return path.toAnalysisScope(null);
