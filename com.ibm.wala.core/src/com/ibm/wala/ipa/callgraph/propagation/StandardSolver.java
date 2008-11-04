@@ -46,6 +46,15 @@ public class StandardSolver extends AbstractPointsToSolver {
       if (DEBUG) {
         System.err.println("Solved " + i);
       }
+      
+      if (getBuilder().getOptions().getMaxNumberOfNodes() > -1) {
+        if (getBuilder().getCallGraph().getNumberOfNodes() >= getBuilder().getOptions().getMaxNumberOfNodes()) {
+          if (DEBUG) {
+            System.err.println("Bail out from call graph limit" + i);
+          }
+          break;
+        }
+      }
 
       // Add constraints until there are no new discovered nodes
       if (DEBUG) {
