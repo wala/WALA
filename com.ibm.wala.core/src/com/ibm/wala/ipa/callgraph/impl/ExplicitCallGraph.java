@@ -110,7 +110,7 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
     Key k = new Key(method, C);
     NodeImpl result = getNode(k);
     if (result == null) {
-      if (maxNumberOfNodes == -1 || getNumberOfNodes() <= maxNumberOfNodes) {
+      if (maxNumberOfNodes == -1 || getNumberOfNodes() < maxNumberOfNodes) {
         result = makeNode(method, C);
         registerNode(k, result);
       } else {
