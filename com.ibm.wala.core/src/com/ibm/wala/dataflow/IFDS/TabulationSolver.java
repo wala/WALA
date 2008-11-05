@@ -588,6 +588,7 @@ public class TabulationSolver<T, P, F> {
               // for each exit from the callee
               P p = supergraph.getProcOf(callee);
               T[] exits = supergraph.getExitsForProcedure(p);
+              boolean gotReuse = false;
               for (int e = 0; e < exits.length; e++) {
                 final T exit = exits[e];
                 // if "exit" is a valid exit from the callee to the return
@@ -595,14 +596,14 @@ public class TabulationSolver<T, P, F> {
                 if (DEBUG_LEVEL > 0 && Assertions.verifyAssertions) {
                   Assertions._assert(supergraph.containsNode(exit));
                 }
-                for (final T returnSite : returnSitesForCallee) {
-                  if (supergraph.hasEdge(exit, returnSite)) {
-                    int x_num = supergraph.getLocalBlockNumber(exit);
-                    // reachedBySummary := {d2} s.t. <callee,d1> -> <exit,d2>
-                    // was recorded as a summary edge
-                    IntSet reachedBySummary = summaries.getSummaryEdges(s_p_num, x_num, d1);
-                    if (reachedBySummary != null) {
-                      recordSummaryEdgeReUse(edge.target, callee);
+                int x_num = supergraph.getLocalBlockNumber(exit);                
+                IntSet reachedBySummary = summaries.getSummaryEdges(s_p_num, x_num, d1);
+                if (reachedBySummary != null) {
+                  for (final T returnSite : returnSitesForCallee) {
+                    if (supergraph.hasEdge(exit, returnSite)) {
+                      // reachedBySummary := {d2} s.t. <callee,d1> -> <exit,d2>
+                      // was recorded as a summary edge
+                      gotReuse = true;
                       final IFlowFunction retf = flowFunctionMap.getReturnFlowFunction(edge.target, exit, returnSite);
                       reachedBySummary.foreach(new IntSetAction() {
                         public void act(int d2) {
@@ -634,6 +635,10 @@ public class TabulationSolver<T, P, F> {
                   }
                 }
               }
+              recordCall(edge.target, callee, d1, gotReuse);
+            } else { // summaries == null
+              // no reuse possible
+              recordCall(edge.target, callee, d1, false);
             }
           }
         });
@@ -691,12 +696,14 @@ public class TabulationSolver<T, P, F> {
   }
 
   /**
-   * invoked to indicate that summary edges were re-used at a call site; does nothing by default
-   * @param callNode 
-   * @param callee 
+   * invoked when a callee is processed with a particular entry fact
+   * 
+   * @param callNode
+   * @param callee
+   * @param d1 the entry fact
+   * @param gotReuse whether existing summary edges were applied
    */
-  protected void recordSummaryEdgeReUse(T callNode, T callee) {
-    
+  protected void recordCall(T callNode, T callee, int d1, boolean gotReuse) {
   }
 
   private boolean hasCallee(T returnSite) {
