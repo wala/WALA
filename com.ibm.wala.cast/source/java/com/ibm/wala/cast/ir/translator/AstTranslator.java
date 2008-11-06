@@ -2760,7 +2760,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     // true clause
     context.cfg().newBlock(true);
     CAstNode r = n.getChild(1);
-    walkNodes(r, context);
+    visitor.visit(r, context, visitor);
     if (isExpr)
       context.cfg().addInstruction(new AssignInstruction(getValue(n), getValue(r)));
     if (n.getChildCount() == 3) {
@@ -3153,7 +3153,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     for (Iterator kases = caseLabels.iterator(); kases.hasNext();) {
       Object x = kases.next();
       if (x != CAstControlFlowMap.SWITCH_DEFAULT) {
-        walkNodes((CAstNode) x, context);
+        visitor.visit((CAstNode) x, context, visitor);
         context.cfg().addInstruction(
             SSAInstructionFactory.ConditionalBranchInstruction(translateConditionOpcode(CAstOperator.OP_EQ), null, v,
                 getValue((CAstNode) x)));
@@ -3457,7 +3457,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
             nodeMap.put(Pair.make(root, c.key()), expr);
             return expr;
           } else {
-            return super.copyNodes(root, c, nodeMap);
+            return super.copyNodesHackForEclipse(root, c, nodeMap);
           }
         }
       }).rewrite(included);
@@ -3483,10 +3483,6 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   protected final void walkEntities(CAstEntity N, Context c) {
     visitEntities(N, c, this);
-  }
-
-  protected final void walkNodes(CAstNode N, Context c) {
-    visit(N, c, this);
   }
 
   public static final class DefaultContext implements WalkContext {
