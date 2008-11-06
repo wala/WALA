@@ -310,7 +310,7 @@ public abstract class IRTests extends WalaTestCase {
     }
   }
 
-  private static void dumpIR(CallGraph cg, boolean assertReachable) throws IOException {
+  protected static void dumpIR(CallGraph cg, boolean assertReachable) throws IOException {
     Set<IMethod> unreachable = HashSetFactory.make();
     IClassHierarchy cha = cg.getClassHierarchy();
     IClassLoader sourceLoader = cha.getLoader(EclipseProjectPath.SOURCE_REF);
