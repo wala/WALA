@@ -260,7 +260,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
           .getMethodSignature()), call.getInvocationCode());
     } else {
       com.ibm.wala.ssa.SSAAbstractInvokeInstruction c = (com.ibm.wala.ssa.SSAAbstractInvokeInstruction) call;
-      site = CallSiteReference.make(pc, c.getDeclaredTarget(), call.getInvocationCode());
+      site = c.getCallSite().cloneReference(pc);
     }
     return site;
   }
