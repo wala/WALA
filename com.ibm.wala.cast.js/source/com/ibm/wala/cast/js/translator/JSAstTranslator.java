@@ -184,7 +184,7 @@ public class JSAstTranslator extends AstTranslator {
   }
 
   protected void doFieldRead(WalkContext context, int result, int receiver, CAstNode elt, CAstNode parent) {
-    walkNodes(elt, context);
+    this.visit(elt, context, this);
     int x = context.currentScope().allocateTempValue();
 
     context.cfg().addInstruction(new AssignInstruction(x, receiver));
@@ -199,7 +199,7 @@ public class JSAstTranslator extends AstTranslator {
   }
     
   protected void doFieldWrite(WalkContext context, int receiver, CAstNode elt, CAstNode parent, int rval) {
-    walkNodes(elt, context);
+    this.visit(elt, context, this);
     if (elt.getKind() == CAstNode.CONSTANT && elt.getValue() instanceof String)
     {
       context.cfg().addInstruction(
@@ -334,7 +334,7 @@ public class JSAstTranslator extends AstTranslator {
     case CAstNode.TYPE_OF: {
       int result = context.currentScope().allocateTempValue();
 
-      walkNodes(n.getChild(0), context);
+      this.visit(n.getChild(0), context, this);
       int ref = getValue(n.getChild(0));
 
       context.cfg().addInstruction(
