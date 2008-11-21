@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.demandpa.alg.refinepolicy;
 
+import java.util.Arrays;
+
 /**
  * Default {@link RefinementPolicy} implementation, delegating to some provided {@link FieldRefinePolicy} and
  * {@link CallGraphRefinePolicy}
@@ -18,11 +20,20 @@ package com.ibm.wala.demandpa.alg.refinepolicy;
  */
 public abstract class AbstractRefinementPolicy implements RefinementPolicy {
 
-  private static final int DEFAULT_NUM_PASSES = 4;
+  protected static final int DEFAULT_NUM_PASSES = 4;
 
-  private static final int LONGER_PASS_BUDGET = 12000;
+  protected static final int LONGER_PASS_BUDGET = 12000;
   
-  private static final int[] DEFAULT_BUDGET_PER_PASS = { 1000, LONGER_PASS_BUDGET, LONGER_PASS_BUDGET, LONGER_PASS_BUDGET };
+  private static final int SHORTER_PASS_BUDGET = 1000;
+  
+  private static final int[] DEFAULT_BUDGET_PER_PASS; 
+  
+  static {
+    int[] tmp = new int[DEFAULT_NUM_PASSES];
+    tmp[0] = SHORTER_PASS_BUDGET;
+    Arrays.fill(tmp, 1, DEFAULT_NUM_PASSES, LONGER_PASS_BUDGET);
+    DEFAULT_BUDGET_PER_PASS = tmp;
+  }
 
   protected final FieldRefinePolicy fieldRefinePolicy;
 

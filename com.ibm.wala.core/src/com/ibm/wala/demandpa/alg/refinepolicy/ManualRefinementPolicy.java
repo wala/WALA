@@ -46,12 +46,9 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
  */
 public class ManualRefinementPolicy extends AbstractRefinementPolicy {
 
-  private static final int PASS_BUDGET = 12000;
-
-  private static final int NUM_PASSES = 1;
-
   private ManualRefinementPolicy(IClassHierarchy cha) {
-    super(new ContainersFieldPolicy(cha), new AlwaysRefineCGPolicy(), NUM_PASSES, new int[] { PASS_BUDGET });
+    // since we have specified what to refine manually, no need to run multiple passes
+    super(new ContainersFieldPolicy(cha), new AlwaysRefineCGPolicy(), 1, new int[] { LONGER_PASS_BUDGET });
   }
 
   public static class Factory implements RefinementPolicyFactory {
