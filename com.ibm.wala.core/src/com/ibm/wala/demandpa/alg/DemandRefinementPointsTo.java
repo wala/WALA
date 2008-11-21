@@ -2268,7 +2268,17 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     // NOTE: if we want to be more precise for queries in dead code,
     // we shouldn't rely on possibleTargets here (since there may be
     // zero targets)
-    return !refinementPolicy.getCallGraphRefinePolicy().shouldRefine(call) || possibleTargets.size() <= 1;
+    if (!refinementPolicy.getCallGraphRefinePolicy().shouldRefine(call)) {
+      return true;
+    }
+    // here we compute the number of unique *method* targets, as opposed to call graph nodes.
+    // if we have a context-sensitive call graph, with many targets representing clones of
+    // the same method, we don't want to count the clones twice
+    Set<IMethod> methodTargets = new HashSet<IMethod>();
+    for (CGNode node: possibleTargets) {
+      methodTargets.add(node.getMethod());
+    }
+    return methodTargets.size() <= 1;
   }
 
 }
