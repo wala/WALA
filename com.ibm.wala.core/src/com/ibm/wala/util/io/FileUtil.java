@@ -128,4 +128,25 @@ public class FileUtil {
     } while (listFiles(directory, null, true).size() > 0);
 
   }
+
+  /**
+   * Create a {@link FileOutputStream} corresponding to a particular file name. Delete the existing file if one exists.
+   */
+  public static final FileOutputStream createFile(String fileName) throws IOException {
+    File f = new File(fileName);
+    if (!f.getParentFile().exists()) {
+      boolean result = f.getParentFile().mkdirs();
+      if (!result) {
+        throw new IOException("failed to create " + f.getParentFile());
+      }
+    }
+    if (f.exists()) {
+      f.delete();
+    }
+    boolean result = f.createNewFile();
+    if (!result) {
+      throw new IOException("failed to create " + f);
+    }
+    return new FileOutputStream(f);
+  }
 }
