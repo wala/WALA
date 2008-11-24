@@ -18,6 +18,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
  * @author sfink
  * 
  */
+@Deprecated
 public interface PointerPathElement extends PathElement {
 
   public PointerKey getPointerKey();

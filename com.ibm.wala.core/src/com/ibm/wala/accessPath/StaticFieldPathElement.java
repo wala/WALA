@@ -19,6 +19,7 @@ import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
  * @author Eran Yahav (yahave)
  * @author Stephen Fink
  */
+@Deprecated
 public class StaticFieldPathElement extends FieldPathElement implements PointerPathElement {
 
   private final StaticFieldKey sfk;

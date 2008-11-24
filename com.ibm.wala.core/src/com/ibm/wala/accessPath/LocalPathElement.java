@@ -21,6 +21,7 @@ import com.ibm.wala.util.debug.Assertions;
  * @author Eran Yahav (yahave)
  * @author Stephen Fink
  */
+@Deprecated
 public class LocalPathElement implements PointerPathElement {
 
   /**

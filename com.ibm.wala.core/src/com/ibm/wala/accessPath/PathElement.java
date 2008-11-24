@@ -20,6 +20,7 @@ package com.ibm.wala.accessPath;
  * @author Eran Yahav (yahave)
  * @author Stephen Fink
  */
+@Deprecated
 public interface PathElement {
 
   /**
