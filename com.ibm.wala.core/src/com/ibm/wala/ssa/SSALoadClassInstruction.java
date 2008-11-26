@@ -65,6 +65,11 @@ public class SSALoadClassInstruction extends SSAInstruction {
   public Collection<TypeReference> getExceptionTypes() {
     return loadClassExceptions;
   }
+  
+  @Override
+  public boolean hasDef() {
+    return true;
+  }
 
   @Override
   public int getDef() {
