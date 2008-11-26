@@ -53,7 +53,6 @@ public class DFS {
     Iterator<T> dfs = new SlowDFSFinishTimeIterator<T>(G, C.iterator()) {
 
       @Override
-      @SuppressWarnings("unchecked")
       protected Iterator<T> getConnected(T n) {
         return new FilterIterator<T>(G.getSuccNodes(n), filter);
       }
