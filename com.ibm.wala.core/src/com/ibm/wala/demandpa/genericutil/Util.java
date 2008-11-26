@@ -61,8 +61,11 @@ public class Util {
   /** The empty {@link BitSet}. */
   public static final BitSet EMPTY_BITSET = new BitSet();
 
-  /** Convert an int[] to a {@link String} for printing 
-   * @throws IllegalArgumentException  if ints == null*/
+  /**
+   * Convert an int[] to a {@link String} for printing
+   * 
+   * @throws IllegalArgumentException if ints == null
+   */
   public static String str(int[] ints) throws IllegalArgumentException {
     if (ints == null) {
       throw new IllegalArgumentException("ints == null");
@@ -99,8 +102,11 @@ public class Util {
     return s.toString();
   }
 
-  /** Get a {@link String} representation of a {@link Throwable}. 
-   * @throws IllegalArgumentException  if thrown == null*/
+  /**
+   * Get a {@link String} representation of a {@link Throwable}.
+   * 
+   * @throws IllegalArgumentException if thrown == null
+   */
   public static String str(Throwable thrown) throws IllegalArgumentException {
     if (thrown == null) {
       throw new IllegalArgumentException("thrown == null");
@@ -114,9 +120,9 @@ public class Util {
   }
 
   /**
-   * Test whether <em>some</em> element of the given {@link Collection}
-   * satisfies the given {@link Predicate}.
-   * @throws IllegalArgumentException  if c == null
+   * Test whether <em>some</em> element of the given {@link Collection} satisfies the given {@link Predicate}.
+   * 
+   * @throws IllegalArgumentException if c == null
    */
   public static <T> boolean forSome(Collection<T> c, Predicate<T> p) throws IllegalArgumentException {
     if (c == null) {
@@ -131,11 +137,10 @@ public class Util {
   }
 
   /**
-   * Test whether <em>some</em> element of the given {@link Collection}
-   * satisfies the given {@link Predicate}.
+   * Test whether <em>some</em> element of the given {@link Collection} satisfies the given {@link Predicate}.
    * 
    * @return The first element satisfying the predicate; otherwise null.
-   * @throws IllegalArgumentException  if c == null
+   * @throws IllegalArgumentException if c == null
    */
   public static <T> T find(Collection<T> c, Predicate<T> p) throws IllegalArgumentException {
     if (c == null) {
@@ -151,11 +156,10 @@ public class Util {
   }
 
   /**
-   * Test whether <em>some</em> element of the given {@link Collection}
-   * satisfies the given {@link Predicate}.
+   * Test whether <em>some</em> element of the given {@link Collection} satisfies the given {@link Predicate}.
    * 
    * @return All the elements satisfying the predicate
-   * @throws IllegalArgumentException  if c == null
+   * @throws IllegalArgumentException if c == null
    */
   public static <T> Collection<T> findAll(Collection<T> c, Predicate<T> p) throws IllegalArgumentException {
     if (c == null) {
@@ -173,9 +177,9 @@ public class Util {
   }
 
   /**
-   * Test whether <em>all</em> elements of the given {@link Collection}
-   * satisfy the given {@link Predicate}.
-   * @throws NullPointerException  if c == null
+   * Test whether <em>all</em> elements of the given {@link Collection} satisfy the given {@link Predicate}.
+   * 
+   * @throws NullPointerException if c == null
    */
   public static <T> boolean forAll(Collection<T> c, Predicate<T> p) throws NullPointerException {
     for (T t : c) {
@@ -188,11 +192,9 @@ public class Util {
   /**
    * Perform an action for all elements in a collection.
    * 
-   * @param c
-   *            the collection
-   * @param v
-   *            the visitor defining the action
-   * @throws IllegalArgumentException  if c == null
+   * @param c the collection
+   * @param v the visitor defining the action
+   * @throws IllegalArgumentException if c == null
    */
   public static <T> void doForAll(Collection<T> c, ObjectVisitor<T> v) throws IllegalArgumentException {
     if (c == null) {
@@ -203,14 +205,11 @@ public class Util {
   }
 
   /**
-   * Map a list: generate a new list with each element mapped. The new list is
-   * always an {@link ArrayList}; it would have been more precise to use
-   * {@link java.lang.reflect reflection} to create a list of the same type as
-   * 'srcList', but reflection works really slowly in some implementations, so
-   * it's best to avoid it.
+   * Map a list: generate a new list with each element mapped. The new list is always an {@link ArrayList}; it would have been more
+   * precise to use {@link java.lang.reflect reflection} to create a list of the same type as 'srcList', but reflection works really
+   * slowly in some implementations, so it's best to avoid it.
    * 
-   * @throws IllegalArgumentException
-   *             if srcList == null
+   * @throws IllegalArgumentException if srcList == null
    */
   public static <T, U> List<U> map(List<T> srcList, Mapper<T, U> mapper) throws IllegalArgumentException {
     if (srcList == null) {
@@ -224,13 +223,11 @@ public class Util {
   }
 
   /**
-   * Filter a collection: generate a new list from an existing collection,
-   * consisting of the elements satisfying some predicate. The new list is
-   * always an {@link ArrayList}; it would have been more precise to use
-   * {@link java.lang.reflect reflection} to create a list of the same type as
-   * 'srcList', but reflection works really slowly in some implementations, so
-   * it's best to avoid it.
-   * @throws IllegalArgumentException  if src == null
+   * Filter a collection: generate a new list from an existing collection, consisting of the elements satisfying some predicate. The
+   * new list is always an {@link ArrayList}; it would have been more precise to use {@link java.lang.reflect reflection} to create
+   * a list of the same type as 'srcList', but reflection works really slowly in some implementations, so it's best to avoid it.
+   * 
+   * @throws IllegalArgumentException if src == null
    */
   public static <T> List<T> filter(Collection<T> src, Predicate<T> pred) throws IllegalArgumentException {
     if (src == null) {
@@ -246,16 +243,12 @@ public class Util {
   }
 
   /**
-   * Filter a collection according to some predicate, placing the result in a
-   * List
+   * Filter a collection according to some predicate, placing the result in a List
    * 
-   * @param src
-   *            collection to be filtered
-   * @param pred
-   *            the predicate
-   * @param result
-   *            the list for the result. assumed to be empty
-   * @throws IllegalArgumentException  if src == null
+   * @param src collection to be filtered
+   * @param pred the predicate
+   * @param result the list for the result. assumed to be empty
+   * @throws IllegalArgumentException if src == null
    */
   public static <T> void filter(Collection<T> src, Predicate<T> pred, List<T> result) throws IllegalArgumentException {
     if (src == null) {
@@ -269,12 +262,11 @@ public class Util {
   }
 
   /**
-   * Map a set: generate a new set with each element mapped. The new set is
-   * always a {@link HashSet}; it would have been more precise to use
-   * {@link java.lang.reflect reflection} to create a set of the same type as
-   * 'srcSet', but reflection works really slowly in some implementations, so
-   * it's best to avoid it.
-   * @throws IllegalArgumentException  if srcSet == null
+   * Map a set: generate a new set with each element mapped. The new set is always a {@link HashSet}; it would have been more
+   * precise to use {@link java.lang.reflect reflection} to create a set of the same type as 'srcSet', but reflection works really
+   * slowly in some implementations, so it's best to avoid it.
+   * 
+   * @throws IllegalArgumentException if srcSet == null
    */
   public static <T, U> Set<U> mapToSet(Collection<T> srcSet, Mapper<T, U> mapper) throws IllegalArgumentException {
     if (srcSet == null) {
@@ -288,8 +280,7 @@ public class Util {
   }
 
   /*
-   * Grow an int[] -- i.e. allocate a new array of the given size, with the
-   * initial segment equal to this int[].
+   * Grow an int[] -- i.e. allocate a new array of the given size, with the initial segment equal to this int[].
    */
   public static int[] realloc(int[] data, int newSize) throws IllegalArgumentException {
     if (data == null) {
@@ -303,8 +294,11 @@ public class Util {
       return data;
   }
 
-  /** Clear a {@link BitSet}. 
-   * @throws IllegalArgumentException  if bitSet == null*/
+  /**
+   * Clear a {@link BitSet}.
+   * 
+   * @throws IllegalArgumentException if bitSet == null
+   */
   public static void clear(BitSet bitSet) throws IllegalArgumentException {
     if (bitSet == null) {
       throw new IllegalArgumentException("bitSet == null");
@@ -312,8 +306,11 @@ public class Util {
     bitSet.and(EMPTY_BITSET);
   }
 
-  /** Replace all occurrences of a given substring in a given {@link String}. 
-   * @throws IllegalArgumentException  if str == null*/
+  /**
+   * Replace all occurrences of a given substring in a given {@link String}.
+   * 
+   * @throws IllegalArgumentException if str == null
+   */
   public static String replaceAll(String str, String sub, String newSub) throws IllegalArgumentException {
     if (str == null) {
       throw new IllegalArgumentException("str == null");
@@ -340,8 +337,7 @@ public class Util {
   /**
    * Write object fields to string
    * 
-   * @throws IllegalArgumentException
-   *             if obj == null
+   * @throws IllegalArgumentException if obj == null
    */
   public static String objectFieldsToString(Object obj) throws IllegalArgumentException {
     if (obj == null) {
@@ -408,8 +404,7 @@ public class Util {
 
   /**
    * @return a hash code for the array
-   * @throws IllegalArgumentException
-   *             if objs == null
+   * @throws IllegalArgumentException if objs == null
    */
   public static int hashArray(Object[] objs) throws IllegalArgumentException {
     if (objs == null) {
@@ -442,8 +437,7 @@ public class Util {
    * 
    * @param s1
    * @param s2
-   * @return <code>true</code> if the sets intersect; <code>false</code>
-   *         otherwise
+   * @return <code>true</code> if the sets intersect; <code>false</code> otherwise
    */
   public static <T> boolean intersecting(final Set<T> s1, final Set<T> s2) {
     return forSome(s1, new Predicate<T>() {
@@ -459,11 +453,11 @@ public class Util {
   }
 
   /**
-   * given the name of a class C, returns the name of the top-most enclosing
-   * class of class C. For example, given A$B$C, the method returns A
+   * given the name of a class C, returns the name of the top-most enclosing class of class C. For example, given A$B$C, the method
+   * returns A
    * 
    * @return String name of top-most enclosing class
-   * @throws IllegalArgumentException  if typeStr == null
+   * @throws IllegalArgumentException if typeStr == null
    */
   public static String topLevelTypeString(String typeStr) throws IllegalArgumentException {
     if (typeStr == null) {
@@ -499,4 +493,30 @@ public class Util {
     }
     return new ArrayList<T>(elems);
   }
+
+  /**
+   * @return the amount of memory currently being used, in bytes
+   */
+  public static long getUsedMemory() {
+    gc();
+    long totalMemory = Runtime.getRuntime().totalMemory();
+    gc();
+    long freeMemory = Runtime.getRuntime().freeMemory();
+    long usedMemory = totalMemory - freeMemory;
+    return usedMemory;
+  }
+
+  private static void gc() {
+    try {
+      for (int i = 0; i < 2; i++) {
+        System.gc();
+        Thread.sleep(100);
+        System.runFinalization();
+        Thread.sleep(100);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
 } // class Util

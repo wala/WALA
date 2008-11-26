@@ -85,6 +85,7 @@ import com.ibm.wala.demandpa.genericutil.ArraySetMultiMap;
 import com.ibm.wala.demandpa.genericutil.HashSetMultiMap;
 import com.ibm.wala.demandpa.genericutil.MultiMap;
 import com.ibm.wala.demandpa.genericutil.Predicate;
+import com.ibm.wala.demandpa.genericutil.Util;
 import com.ibm.wala.demandpa.util.ArrayContents;
 import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
 import com.ibm.wala.demandpa.util.MemoryAccess;
@@ -147,7 +148,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
   private static final boolean PARANOID = false;
 
-  // private static final boolean DEBUG_FULL = DEBUG && false;
+  private static final boolean MEASURE_MEMORY_USAGE = false;
 
   protected final IFlowGraph g;
 
@@ -225,8 +226,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      */
     SUCCESS,
     /**
-     * The {@link RefinementPolicy} indicated that no more refinement was possible, <em>and</em> on at least one
-     * refinement pass the budget was not exhausted
+     * The {@link RefinementPolicy} indicated that no more refinement was possible, <em>and</em> on at least one refinement pass
+     * the budget was not exhausted
      */
     NOMOREREFINE,
     /**
@@ -250,9 +251,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
    * 
    * @param pk the pointer key
    * @param ikeyPred the desired predicate that each instance key in the points-to set should ideally satisfy
-   * @return a pair consisting of (1) a {@link PointsToResult} indicating whether a points-to set satisfying the
-   *         predicate was computed, and (2) the last computed points-to set for the variable (possibly
-   *         <code>null</code> if no points-to set could be computed in the budget)
+   * @return a pair consisting of (1) a {@link PointsToResult} indicating whether a points-to set satisfying the predicate was
+   *         computed, and (2) the last computed points-to set for the variable (possibly <code>null</code> if no points-to set
+   *         could be computed in the budget)
    * @throws IllegalArgumentException if <code>pk</code> is not a {@link LocalPointerKey}; to eventually be fixed
    */
   public Pair<PointsToResult, Collection<InstanceKey>> getPointsTo(PointerKey pk, Predicate<InstanceKey> ikeyPred)
@@ -347,9 +348,10 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     return Pair.make(result, lastP2Set);
   }
 
+  public long lastQueryMemoryUse;
+
   /**
-   * check if the points-to set of a variable passes some predicate, without necessarily computing the whole points-to
-   * set
+   * check if the points-to set of a variable passes some predicate, without necessarily computing the whole points-to set
    * 
    * @param pk the pointer key
    * @param ikeyPred the desired predicate that each instance key in the points-to set should ideally satisfy
@@ -371,16 +373,22 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     int numPasses = refinementPolicy.getNumPasses();
     int passNum = 0;
     boolean completedSomePass = false;
+    if (MEASURE_MEMORY_USAGE) {
+      lastQueryMemoryUse = -1;
+    }
     for (; passNum < numPasses; passNum++) {
       setNumNodesTraversed(0);
       setTraversalBudget(refinementPolicy.getBudgetForPass(passNum));
-      PointsToComputer computer = null;
       boolean completedPassInBudget = false;
       boolean passed = false;
+      long initialMemory = 0;
       try {
         while (true) {
           try {
-            computer = new PointsToComputer(queriedPk);
+            if (MEASURE_MEMORY_USAGE) {
+              initialMemory = Util.getUsedMemory();
+            }
+            PointsToComputer computer = new PointsToComputer(queriedPk);
             passed = doTopLevelTraversal(queriedPk, ikeyPred, computer, pa);
             // System.err.println("completed pass");
             if (DEBUG) {
@@ -393,6 +401,20 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             if (DEBUG) {
               System.err.println("restarting...");
             }
+          } finally {
+            if (MEASURE_MEMORY_USAGE) {
+              long memoryAfterPass = Util.getUsedMemory();
+              assert initialMemory != 0;
+              long usedByPass = memoryAfterPass - initialMemory;
+              if (usedByPass > lastQueryMemoryUse) {
+                lastQueryMemoryUse = usedByPass;
+                if (usedByPass > 20000000) {
+                  System.err.println("DOH!");
+                  System.exit(1);
+                }
+              }
+            }
+
           }
         }
       } catch (BudgetExceededException e) {
@@ -421,6 +443,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     } else {
       result = completedSomePass ? PointsToResult.NOMOREREFINE : PointsToResult.BUDGETEXCEEDED;
     }
+    if (MEASURE_MEMORY_USAGE) {
+      System.err.println("memory " + lastQueryMemoryUse);
+    }
     return result;
   }
 
@@ -434,8 +459,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
   }
 
   /**
-   * @return the points-to set of <code>pk</code>, or <code>null</code> if the points-to set can't be computed in
-   *         the allocated budget
+   * @return the points-to set of <code>pk</code>, or <code>null</code> if the points-to set can't be computed in the allocated
+   *         budget
    */
   public Collection<InstanceKey> getPointsTo(PointerKey pk) {
     return getPointsTo(pk, Predicate.<InstanceKey> falsePred()).snd;
@@ -580,7 +605,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * map from pointer key to states in which a tracked points-to set for the key was computed
      */
     private final MultiMap<PointerKey, State> trackedQueried = HashSetMultiMap.make();
-    
+
     /**
      * forward worklist: for initially processing points-to queries
      */
@@ -785,9 +810,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
      * @param curPkAndState
      * @param predPk
      * @param label the label of the edge from curPk to predPk (must be barred)
-     * @return those {@link PointerKeyAndState}s whose points-to sets have been queried, such that the
-     *         {@link PointerKey} is predPk, and transitioning from its state on <code>label.bar()</code> yields the
-     *         state of <code>curPkAndState</code>
+     * @return those {@link PointerKeyAndState}s whose points-to sets have been queried, such that the {@link PointerKey} is
+     *         predPk, and transitioning from its state on <code>label.bar()</code> yields the state of <code>curPkAndState</code>
      */
     Collection<PointerKeyAndState> matchingPToQueried(PointerKeyAndState curPkAndState, PointerKey predPk, IFlowLabel label) {
       Collection<PointerKeyAndState> ret = ArraySet.make();
@@ -838,8 +862,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     /**
-     * should only be called when pk's points-to set has just been updated. add pk to the points-to worklist, and
-     * re-propagate and calls that had pk as the receiver.
+     * should only be called when pk's points-to set has just been updated. add pk to the points-to worklist, and re-propagate and
+     * calls that had pk as the receiver.
      * 
      * @param pkAndState
      */
@@ -886,9 +910,9 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     /**
-     * Adds new targets for a virtual call, based on the points-to set of the receiver, and propagates values for the
-     * parameters / return value of the new targets. NOTE: this method will <em>not</em> do any propagation for
-     * virtual call targets that have already been discovered.
+     * Adds new targets for a virtual call, based on the points-to set of the receiver, and propagates values for the parameters /
+     * return value of the new targets. NOTE: this method will <em>not</em> do any propagation for virtual call targets that have
+     * already been discovered.
      * 
      * @param receiverAndState the receiver
      * @param callSiteAndCGNode the call
@@ -1241,9 +1265,8 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     }
 
     /**
-     * Initiates a query for the targets of some virtual call, by asking for points-to set of receiver. NOTE: if
-     * receiver has already been queried, will not do any additional propagation for already-discovered virtual call
-     * targets
+     * Initiates a query for the targets of some virtual call, by asking for points-to set of receiver. NOTE: if receiver has
+     * already been queried, will not do any additional propagation for already-discovered virtual call targets
      */
     private void queryCallTargets(CallSiteAndCGNode callSiteAndCGNode, SSAAbstractInvokeInstruction[] callInstrs, State callerState) {
       final CGNode caller = callSiteAndCGNode.getCGNode();
@@ -1821,6 +1844,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
 
   /**
    * we are looking for an instance key flowing to pk that violates pred.
+   * 
    * @param pk
    * @param pred
    * @param pa
@@ -2044,13 +2068,13 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
             result.add(trackedState);
           }
         }
-//        for (PointerKeyAndState pkAndState : ptoComputer.pkToTrackedSet.keySet()) {
-//          if (pkAndState.getPointerKey().equals(putfieldBase)) {
-//            if (ptoComputer.makeOrdinalSet(ptoComputer.pkToTrackedSet.get(pkAndState)).containsAny(basePToSet)) {
-//              result.add(pkAndState.getState());
-//            }
-//          }
-//        }
+        // for (PointerKeyAndState pkAndState : ptoComputer.pkToTrackedSet.keySet()) {
+        // if (pkAndState.getPointerKey().equals(putfieldBase)) {
+        // if (ptoComputer.makeOrdinalSet(ptoComputer.pkToTrackedSet.get(pkAndState)).containsAny(basePToSet)) {
+        // result.add(pkAndState.getState());
+        // }
+        // }
+        // }
         return result;
       }
 
@@ -2275,7 +2299,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
     // if we have a context-sensitive call graph, with many targets representing clones of
     // the same method, we don't want to count the clones twice
     Set<IMethod> methodTargets = new HashSet<IMethod>();
-    for (CGNode node: possibleTargets) {
+    for (CGNode node : possibleTargets) {
       methodTargets.add(node.getMethod());
     }
     return methodTargets.size() <= 1;
