@@ -17,5 +17,6 @@ Require-Bundle: com.ibm.wala.core;visibility:=reexport,
  org.eclipse.wst.common.frameworks,
  org.eclipse.emf.ecore.xmi,
  com.ibm.icu;visibility:=reexport,
- javax.servlet
+ org.eclipse.equinox.servlet.api;resolution:=optional,
+ javax.servlet;bundle-version="2.4.0";resolution:=optional
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
