@@ -149,6 +149,10 @@ public final class WalaProperties {
     if (l.startsWith("update@")) {
       l = l.replace("update@", "");
     }
-    return install + File.separator + l;
+    if (l.startsWith("reference:file:")) {
+      return l.replace("reference:file:/","");
+    } else {
+      return install + File.separator + l;
+    }
   }
 }

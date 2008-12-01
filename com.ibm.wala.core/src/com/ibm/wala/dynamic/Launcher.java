@@ -101,6 +101,7 @@ public abstract class Launcher {
     if (cmd == null) {
       throw new IllegalArgumentException("cmd cannot be null");
     }
+    System.out.println("spawning process " + cmd);
     if (logger != null) {
       logger.fine("spawning process " + cmd);
     }
