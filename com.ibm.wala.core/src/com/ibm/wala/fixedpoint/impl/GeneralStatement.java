@@ -33,7 +33,6 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
    * 
    * @return true if the lhs value changed. false otherwise
    */
-  @SuppressWarnings("unchecked")
   public byte evaluate() {
     return operator.evaluate(lhs,  rhs);
   }

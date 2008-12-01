@@ -93,7 +93,6 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
    * @param loader
    *          governing class loader
    */
-  @SuppressWarnings("restriction")
   private void addEntrypointsRecursive(TopLevelArchiveModule T, ClassLoaderReference loader) {
     if (T.getType() == TopLevelArchiveModule.APPLICATION_CLIENT_FILE) {
       addEntrypoints((ApplicationClientFile) T.materializeArchive());
@@ -110,7 +109,6 @@ public class AppClientEntrypoints implements Iterable<Entrypoint> {
     }
   }
 
-  @SuppressWarnings("restriction")
   private void addEntrypoints(ApplicationClientFile file) {
     ArchiveManifest manifest = file.getManifest();
     String mainClass = manifest.getMainClass();

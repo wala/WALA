@@ -200,7 +200,6 @@ public class DemandCastChecker {
     return Pair.make(retCG, retPA);
   }
 
-  @SuppressWarnings("unused")
   private static RefinementPolicyFactory chooseRefinePolicyFactory(ClassHierarchy cha) {
     if (true) {
       return new TunedRefinementPolicy.Factory(cha);

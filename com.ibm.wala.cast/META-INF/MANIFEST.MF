@@ -7,7 +7,7 @@ Bundle-Activator: com.ibm.wala.cast.plugin.AstPlugin
 Bundle-Vendor: IBM
 Require-Bundle: org.eclipse.core.runtime,
  com.ibm.wala.core
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.analysis.typeInference,
  com.ibm.wala.cast.ipa.callgraph,
  com.ibm.wala.cast.ipa.cha,
@@ -23,4 +23,5 @@ Export-Package: com.ibm.wala.cast.analysis.typeInference,
  com.ibm.wala.cast.tree.visit,
  com.ibm.wala.cast.types,
  com.ibm.wala.cast.util
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 

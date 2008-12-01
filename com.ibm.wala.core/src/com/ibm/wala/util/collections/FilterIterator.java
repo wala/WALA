@@ -58,7 +58,6 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
     done = true;
   }
 
-  @SuppressWarnings("unchecked")
   public T next() throws NoSuchElementException {
     if (done) {
       throw new java.util.NoSuchElementException();

@@ -40,8 +40,7 @@ package demandpa;
 public class TestOnTheFlyCS {
 
   static class C1 {
-    void doSomething(@SuppressWarnings("unused")
-    Object o) {
+    void doSomething(Object o) {
 
     }
   }

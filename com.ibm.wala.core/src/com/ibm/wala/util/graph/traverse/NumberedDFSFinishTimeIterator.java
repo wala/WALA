@@ -44,7 +44,6 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
    *
    * @param G the graph whose nodes to enumerate
    */
-  @SuppressWarnings("unchecked")
   NumberedDFSFinishTimeIterator(NumberedGraph<T> G, T N) {
     this.G = G;
     pendingChildren = new Iterator[G.getMaxNumber() + 1];
@@ -59,7 +58,6 @@ public class NumberedDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> i
    * @param G the graph whose nodes to enumerate
    * @param nodes the set of nodes from which to start searching
    */
-  @SuppressWarnings("unchecked")
   NumberedDFSFinishTimeIterator(NumberedGraph<T> G, Iterator<? extends T> nodes) {
     this.G = G;
     pendingChildren = new Iterator[G.getMaxNumber() + 1];

@@ -49,7 +49,7 @@ public class TransactionUtil {
    * Create a set of objects to represent transaction entrypoints
    * defined in this module.
    */
-  @SuppressWarnings({ "restriction", "unchecked" })
+  @SuppressWarnings({ "unchecked" })
   public static Set<DeploymentDeclaredTransaction> createDeclaredTransactionEntries(Archive A, ClassLoaderReference loader) {
 
     if (DEBUG) {

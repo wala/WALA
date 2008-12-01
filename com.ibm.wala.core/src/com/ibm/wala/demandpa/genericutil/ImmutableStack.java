@@ -92,7 +92,6 @@ public class ImmutableStack<T> implements Iterable<T> {
     // return Util.hashArray(this.entries);
   }
 
-  @SuppressWarnings("unchecked")
   public ImmutableStack<T> push(T entry) {
     assert entry != null;
     if (MAX_SIZE == 0) {
@@ -127,7 +126,6 @@ public class ImmutableStack<T> implements Iterable<T> {
     return entries[entries.length - 1];
   }
 
-  @SuppressWarnings("unchecked")
   public ImmutableStack<T> pop() {
     assert entries.length != 0;
     int size = entries.length - 1;

@@ -7,7 +7,7 @@ Bundle-Activator: com.ibm.wala.cast.java.JavaSourcePlugin
 Bundle-Vendor: rfuhrer@watson.ibm.com
 Require-Bundle: com.ibm.wala.cast;visibility:=reexport,
  com.ibm.wala.core;visibility:=reexport
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: com.ibm.wala.cast.java,
  com.ibm.wala.cast.java.analysis.typeInference,
  com.ibm.wala.cast.java.client,
@@ -41,3 +41,4 @@ Export-Package: com.ibm.wala.cast.java,
 Bundle-ClassPath: .,
  lib/java_cup.jar,
  lib/polyglot.jar
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

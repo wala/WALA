@@ -29,7 +29,6 @@ import com.ibm.wala.util.graph.Graph;
 
 public class GenericDominators<T> extends Dominators<T> {
 
-  @SuppressWarnings("unchecked")
   public GenericDominators(Graph<T> G, T root)
       throws IllegalArgumentException 
   {

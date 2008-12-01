@@ -30,10 +30,8 @@ public class AnalysisCache {
 
   private final SSACache ssaCache;
 
-  @SuppressWarnings("deprecation")
   private final CFGCache cfgCache;
 
-  @SuppressWarnings("deprecation")
   public AnalysisCache(IRFactory<IMethod> irFactory) {
     super();
     this.irFactory = irFactory;
@@ -46,7 +44,6 @@ public class AnalysisCache {
     this(new DefaultIRFactory());
   }
 
-  @SuppressWarnings("deprecation")
   public void invalidate(IMethod method, Context C) {
     ssaCache.invalidate(method, C);
     cfgCache.invalidate(method, C);

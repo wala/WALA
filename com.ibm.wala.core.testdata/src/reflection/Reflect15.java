@@ -7,7 +7,6 @@ import java.lang.reflect.InvocationTargetException;
  * Test of Class.getConstructors().
  */
 public class Reflect15 {
-  @SuppressWarnings("unchecked")
   public static void main(String[] args) throws ClassNotFoundException, IllegalArgumentException, InstantiationException,
       IllegalAccessException, InvocationTargetException {
     Class c = Class.forName("reflection.Helper");

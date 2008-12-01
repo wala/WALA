@@ -79,7 +79,6 @@ public class TopLevelArchiveModule implements Module {
    * @param A an ARCHIVE
    * @return one of EAR_FILE, JAR_FILE, WAR_FILE, or APPLICATION_CLIENT_FILE
    */
-  @SuppressWarnings("restriction")
   public static byte getTypeCode(Archive A) {
     if (A instanceof EARFile) {
       return EAR_FILE;
@@ -97,7 +96,6 @@ public class TopLevelArchiveModule implements Module {
   /* (non-Javadoc)
    * @see java.lang.Object#toString()
    */
-  @SuppressWarnings("restriction")
   public String toString() {
     return "ArchiveModule:" + materializeArchive().getName();
   }
@@ -112,7 +110,7 @@ public class TopLevelArchiveModule implements Module {
   /* (non-Javadoc)
    * @see com.ibm.wala.classLoader.Module#getEntries()
    */
-  @SuppressWarnings({ "restriction", "unchecked" })
+  @SuppressWarnings({ "unchecked" })
   public Iterator<ModuleEntry> getEntries() {
     if (DEBUG) {
       Trace.println("ArchiveModule.getEntries(): " + this);
@@ -170,7 +168,6 @@ public class TopLevelArchiveModule implements Module {
     /* (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#getName()
      */
-    @SuppressWarnings("restriction")
     public String getName() {
       return F.getURI();
     }
@@ -178,7 +175,6 @@ public class TopLevelArchiveModule implements Module {
     /* (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#isClassFile()
      */
-    @SuppressWarnings("restriction")
     public boolean isClassFile() {
       return FileSuffixes.isClassFile(F.getName());
     }
@@ -186,7 +182,6 @@ public class TopLevelArchiveModule implements Module {
     /* (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#getInputStream()
      */
-    @SuppressWarnings("restriction")
     public InputStream getInputStream() {
       try {
         return F.getInputStream();
@@ -211,7 +206,6 @@ public class TopLevelArchiveModule implements Module {
     /* (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#isModuleFile()
      */
-    @SuppressWarnings("restriction")
     public boolean isModuleFile() {
       return F.isArchive();
     }
@@ -219,7 +213,6 @@ public class TopLevelArchiveModule implements Module {
     /* (non-Javadoc)
      * @see com.ibm.wala.classLoader.ModuleEntry#asModule()
      */
-    @SuppressWarnings("restriction")
     public Module asModule() {
       if (Assertions.verifyAssertions) {
         Assertions._assert(isModuleFile());

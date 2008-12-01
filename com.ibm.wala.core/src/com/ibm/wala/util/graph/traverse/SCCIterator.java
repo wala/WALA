@@ -42,7 +42,7 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
    *          The graph over which to construct SCCs
    * @throws NullPointerException  if G is null
    */
-  @SuppressWarnings({ "unchecked", "cast" })
+  @SuppressWarnings({ "cast" })
   public SCCIterator(Graph<T> G) throws NullPointerException {
     this(G, (Iterator<T>) G.iterator());
   }

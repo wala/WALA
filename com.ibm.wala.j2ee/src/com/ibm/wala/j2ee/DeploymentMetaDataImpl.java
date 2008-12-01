@@ -136,7 +136,7 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
    * @param scope
    *          the analysis scope which defines the EJB jar files to analyze
    */
-  @SuppressWarnings({ "restriction", "unchecked" })
+  @SuppressWarnings({ "unchecked" })
   public DeploymentMetaDataImpl(AnalysisScope scope) {
     ClassLoaderReference loader = scope.getApplicationLoader();
 
@@ -163,7 +163,7 @@ public class DeploymentMetaDataImpl implements DeploymentMetaData {
    * @param archive
    *          WCCM object which holds the ejb jarfile
    */
-  @SuppressWarnings({ "restriction", "unchecked" })
+  @SuppressWarnings({ "unchecked" })
   private void processEJBJarFile(ClassLoaderReference loader, EJBJarFile archive) {
     // extract the deployment descriptor
     EJBJar DD = null;

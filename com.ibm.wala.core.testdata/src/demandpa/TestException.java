@@ -50,8 +50,7 @@ public class TestException {
     }
   }
 
-  public static void foo(@SuppressWarnings("unused")
-  Object o) throws IllegalAccessException {
+  public static void foo(Object o) throws IllegalAccessException {
     throw new IllegalAccessException();
   }
 }

@@ -17,7 +17,7 @@ Require-Bundle: com.ibm.wala.shrike;visibility:=reexport,
  org.eclipse.pde.core,
  org.eclipse.pde.runtime,
  org.eclipse.pde.ui
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: .,
  com.ibm.wala.accessPath,
  com.ibm.wala.analysis.pointers,
@@ -87,3 +87,4 @@ Export-Package: .,
  com.ibm.wala.util.tables,
  com.ibm.wala.util.warnings,
  com.ibm.wala.viz
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

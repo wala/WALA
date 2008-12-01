@@ -111,7 +111,7 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
    * @param scope
    *          representation of the analysis scope.
    */
-  @SuppressWarnings({ "restriction", "unchecked" })
+  @SuppressWarnings({ "unchecked" })
   public EJBEntrypoints(IClassHierarchy cha, J2EEAnalysisScope scope, DeploymentMetaData deployment, boolean justMDBs,
       J2EEClassTargetSelector classTargetSelector) {
     this.cha = cha;
@@ -163,7 +163,7 @@ public class EJBEntrypoints implements Iterable<Entrypoint>, EJBConstants {
    * @param archive
    *          WCCM representation of EJB jar file.
    */
-  @SuppressWarnings({ "restriction", "unchecked" })
+  @SuppressWarnings({ "unchecked" })
   private void addEntrypointsForEJBJarFile(J2EEAnalysisScope scope, ClassLoaderReference loader, Archive archive) {
     // extract the deployment descriptor
     EJBJar DD = ((EJBJarFile) archive).getDeploymentDescriptor();

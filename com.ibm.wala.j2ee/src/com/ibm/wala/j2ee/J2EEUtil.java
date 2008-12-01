@@ -62,7 +62,6 @@ public class J2EEUtil {
    * @param M the module to analyze
    * @return Archive, or null if no WCCM conversion is possible
    */
-  @SuppressWarnings("restriction")
   public static Archive getArchive(Module M) {
     CommonarchiveFactory factory = CommonarchiveFactoryImpl.getActiveFactory();
     try {

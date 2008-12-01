@@ -34,6 +34,7 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
  */
 public class GenReach<T, L> extends BitVectorFramework<T, L> {
 
+  @SuppressWarnings("unchecked")
   public GenReach(Graph<T> flowGraph, Map<T, Collection<L>> gen) {
     super(flowGraph, new GenFunctions<T, L>(gen), makeDomain(gen));
     // ugly but necessary, in order to avoid computing the domain twice.

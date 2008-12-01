@@ -46,12 +46,10 @@ package demandpa;
  */
 public class TestUtil {
 
-  public static void makeVarUsed(@SuppressWarnings("unused")
-  Object o) {
+  public static void makeVarUsed(Object o) {
   }
 
-  public static void testThisVar(@SuppressWarnings("unused")
-  Object o) {
+  public static void testThisVar(Object o) {
   }
 
 }

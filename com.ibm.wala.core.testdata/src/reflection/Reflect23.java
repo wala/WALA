@@ -9,7 +9,6 @@ import java.lang.reflect.Modifier;
  * Test of Constructor.newInstance
  */
 public class Reflect23 {
-  @SuppressWarnings("unchecked")
   public static void main(String[] args) throws ClassNotFoundException, SecurityException,
       NoSuchMethodException, IllegalAccessException, InstantiationException,
       IllegalArgumentException, InvocationTargetException {

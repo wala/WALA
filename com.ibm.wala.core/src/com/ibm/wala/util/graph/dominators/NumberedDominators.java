@@ -26,7 +26,6 @@ import com.ibm.wala.util.graph.NumberedGraph;
 
 public class NumberedDominators<T> extends Dominators<T> {
 
-  @SuppressWarnings("unchecked")
   public NumberedDominators(NumberedGraph<T> G, T root) throws IllegalArgumentException {
     super(G, root);
 

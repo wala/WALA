@@ -271,7 +271,6 @@ public abstract class Dominators<T> {
   /**
    * This is the heart of the algorithm. See sources for details.
    */
-  @SuppressWarnings("unchecked")
   private void step2() {
     if (DEBUG) {
       System.out.println(" ******* Beginning STEP 2 *******\n");

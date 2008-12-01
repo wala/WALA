@@ -18,3 +18,4 @@ Require-Bundle: com.ibm.wala.core;visibility:=reexport,
  org.eclipse.emf.ecore.xmi,
  com.ibm.icu;visibility:=reexport,
  javax.servlet
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

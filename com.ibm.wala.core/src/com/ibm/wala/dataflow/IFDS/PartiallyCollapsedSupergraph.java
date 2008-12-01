@@ -111,7 +111,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
    * @param noCollapse
    *            set of nodes in the call graph which cannot be collapsed
    */
-  @SuppressWarnings("unchecked")
   public PartiallyCollapsedSupergraph(CallGraph cg, Collection<CGNode> noCollapse) {
     this(cg, noCollapse, IndiscriminateFilter.<CGNode>singleton());
   }
@@ -236,7 +235,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     }
   }
 
-  @SuppressWarnings("unchecked")
   public Iterator<Object> getCalledNodes(Object n) {
     return new FilterIterator<Object>(edgeManager.getSuccNodes(n), isEntry);
   }
@@ -480,7 +478,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
     /*
      * @see com.ibm.wala.util.graph.EdgeManager#getPredNodeCount(java.lang.Object)
      */
-    @SuppressWarnings("unchecked")
     public int getPredNodeCount(Object N) {
       Collection c = Iterator2Collection.toCollection(getPredNodes(N));
       return c.size();
@@ -604,7 +601,6 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
      * @see com.ibm.wala.util.graph.EdgeManager#getSuccNodeCount(java.lang.Object)
      */
 
-    @SuppressWarnings("unchecked")
     public int getSuccNodeCount(Object N) {
       Collection c = Iterator2Collection.toCollection(getSuccNodes(N));
       return c.size();

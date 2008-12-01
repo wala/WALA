@@ -131,7 +131,6 @@ public class EclipseProjectPath {
   /**
    * Figure out what a classpath entry means and add it to the appropriate set of modules
    */
-  @SuppressWarnings("restriction")
   private void resolveClasspathEntry(IClasspathEntry entry, Loader loader) throws JavaModelException, IOException {
     IClasspathEntry e = JavaCore.getResolvedClasspathEntry(entry);
     if (alreadyResolved.contains(e)) {
@@ -200,7 +199,6 @@ public class EclipseProjectPath {
     resolveBundleDescriptionClassPath(bd, Loader.APPLICATION);
   }
 
-  @SuppressWarnings("restriction")
   private void resolveBundleDescriptionClassPath(BundleDescription bd, Loader loader) throws CoreException, IOException {
     assert bd != null;
     if (alreadyProcessed(bd)) {

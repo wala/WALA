@@ -1020,7 +1020,6 @@ public class TabulationSolver<T, P, F> {
       super(100);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected boolean compareElements(PathEdge<T> p1, PathEdge<T> p2) {
       return problem.getDomain().hasPriorityOver(p1, p2);

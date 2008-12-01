@@ -236,7 +236,6 @@ public abstract class IR {
 
     abstract Iterator<? extends SSAInstruction> getBlockIterator(BasicBlock b);
 
-    @SuppressWarnings("unchecked")
     TwoLevelIterator() {
       currentBlockIndex = 0;
       currentBlockIterator = cfg.getNode(0).iteratePhis();
