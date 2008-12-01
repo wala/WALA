@@ -17,4 +17,4 @@ Export-Package: com.ibm.wala.annotations,
  com.ibm.wala.shrikeBT.shrikeCT.tools,
  com.ibm.wala.shrikeBT.tools,
  com.ibm.wala.shrikeCT
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

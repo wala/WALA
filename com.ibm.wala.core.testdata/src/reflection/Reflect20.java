@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
  * Test of Constructor.newInstance
  */
 public class Reflect20 {
-  @SuppressWarnings("unchecked")
   public static void main(String[] args) throws ClassNotFoundException, SecurityException,
       NoSuchMethodException, IllegalAccessException, InstantiationException,
       IllegalArgumentException, InvocationTargetException {

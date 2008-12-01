@@ -7,7 +7,6 @@ import java.lang.reflect.Method;
  * Test of Method.invoke
  */
 public class Reflect18 {
-  @SuppressWarnings("unchecked")
   public static void main(String[] args) throws ClassNotFoundException, IllegalArgumentException, InstantiationException,
       IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException {
     Class c = Class.forName("reflection.Helper");

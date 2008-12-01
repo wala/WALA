@@ -8,7 +8,6 @@ import java.lang.reflect.InvocationTargetException;
  * Test of Constructor.newInstance
  */
 public class Reflect21 {
-  @SuppressWarnings("unchecked")
   public static void main(String[] args) throws ClassNotFoundException, SecurityException,
       NoSuchMethodException, IllegalAccessException, InstantiationException,
       IllegalArgumentException, InvocationTargetException {

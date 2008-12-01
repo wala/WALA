@@ -87,4 +87,4 @@ Export-Package: .,
  com.ibm.wala.util.tables,
  com.ibm.wala.util.warnings,
  com.ibm.wala.viz
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

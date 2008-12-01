@@ -4,4 +4,4 @@ Bundle-Name: Testdata Plug-in
 Bundle-SymbolicName: com.ibm.wala.core.testdata
 Bundle-Version: 1.0.0
 Bundle-Vendor: IBM
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
