@@ -11,7 +11,7 @@ public class Reflect21 {
   public static void main(String[] args) throws ClassNotFoundException, SecurityException,
       NoSuchMethodException, IllegalAccessException, InstantiationException,
       IllegalArgumentException, InvocationTargetException {
-    Class helperClass = Class.forName("reflection.Helper");
+    Class<?> helperClass = Class.forName("reflection.Helper");
     Class objectClass = Class.forName("java.lang.Object");
     Class[] paramArrayTypes = new Class[]{objectClass, objectClass};
     Constructor constr = helperClass.getDeclaredConstructor(paramArrayTypes);
