@@ -118,10 +118,7 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
       return;
     }
 
-    ClassLoaderReference appLoaderRef = scope.getApplicationLoader();
-    IClassLoader appLoader = cha.getLoader(appLoaderRef);
-
-    for (Iterator<IClass> it = appLoader.iterateAllClasses(); it.hasNext();) {
+    for (Iterator<IClass> it = getCandidateEntryClasses(cha); it.hasNext();) {
       IClass klass = (IClass) it.next();
       if (isConcreteStrutsAction(klass)) {
         actions.add(klass);
@@ -384,5 +381,13 @@ public class StrutsEntrypoints implements Iterable<Entrypoint>, EJBConstants {
     public StrutsPlugInEntrypoint(IMethod method, IClassHierarchy cha) {
       super(method, cha);
     }
+  }
+  
+  /**
+   * return the set of classes that should be examined when searching for struts entrypoints.
+   */
+  protected Iterator<IClass> getCandidateEntryClasses(IClassHierarchy cha) {
+    IClassLoader appLoader = cha.getLoader(ClassLoaderReference.Application);
+    return appLoader.iterateAllClasses();
   }
 }
