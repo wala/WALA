@@ -154,8 +154,14 @@ public class FileProvider {
         String binFileName = "bin/" + fileName;
         url = FileLocator.find(p.getBundle(), new Path(binFileName), null);
         if (url == null) {
-          // give up
-          return null;
+          // try it as an absolute path?
+          File f = new File(fileName);
+          if (!f.exists()) {
+            // give up
+            return null;
+          } else {
+            url = f.toURI().toURL();
+          }
         }
       }
     }
