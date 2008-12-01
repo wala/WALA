@@ -24,7 +24,7 @@ public class BoundedPartiallyBalancedSolver<T, P, F> extends PartiallyBalancedTa
 
   private final static boolean VERBOSE = false;
   
-  public static <T, P, F> BoundedPartiallyBalancedSolver<T, P, F> createBoundedParitallyBalancedSolver(PartiallyBalancedTabulationProblem<T, P, F> p, int bound,
+  public static <T, P, F> BoundedPartiallyBalancedSolver<T, P, F> createdBoundedPartiallyBalancedSolver(PartiallyBalancedTabulationProblem<T, P, F> p, int bound,
       IProgressMonitor monitor) {
     return new BoundedPartiallyBalancedSolver<T, P, F>(p, bound, monitor);
   }
