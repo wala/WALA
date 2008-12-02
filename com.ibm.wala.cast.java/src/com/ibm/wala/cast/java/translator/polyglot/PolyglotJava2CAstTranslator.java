@@ -1097,12 +1097,12 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
       return lcdNode;
     }
 
-    private Node makeBreakTarget(Node loop) {
+    protected Node makeBreakTarget(Node loop) {
       return fNodeFactory.Labeled(Position.COMPILER_GENERATED, "breakLabel" + loop.position().toString().replace('.', '_'),
           fNodeFactory.Empty(Position.COMPILER_GENERATED));
     }
 
-    private Node makeContinueTarget(Node loop) {
+    protected Node makeContinueTarget(Node loop) {
       return fNodeFactory.Labeled(Position.COMPILER_GENERATED, "continueLabel" + loop.position().toString().replace('.', '_'),
           fNodeFactory.Empty(Position.COMPILER_GENERATED));
     }
@@ -2251,10 +2251,10 @@ public class PolyglotJava2CAstTranslator implements TranslatorToCAst {
     }
   }
 
-  private class LoopContext extends BreakContext {
+  public class LoopContext extends BreakContext {
     private final Node continueTo;
 
-    protected LoopContext(WalkContext parent, String label, Node breakTo, Node continueTo) {
+    public LoopContext(WalkContext parent, String label, Node breakTo, Node continueTo) {
       super(parent, label, breakTo);
       this.continueTo = continueTo;
     }

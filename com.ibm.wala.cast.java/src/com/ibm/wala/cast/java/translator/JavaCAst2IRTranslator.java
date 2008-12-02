@@ -252,7 +252,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 				  SymbolTable symtab,
 				  boolean hasCatchBlock,
 				  TypeReference[][] caughtTypes,
-				  LexicalInformation lexicalInfo,
+				  AstLexicalInformation lexicalInfo,
 				  DebuggingInformation debugInfo) {
       // N.B.: base class may actually ask to create a synthetic type to wrap
       // code bodies, so we may see other things than TYPE_ENTITY here.
