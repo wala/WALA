@@ -10,5 +10,5 @@ Require-Bundle:
  com.ibm.wala.core,
  org.junit4
 Export-Package: com.ibm.wala.cast.test
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
 

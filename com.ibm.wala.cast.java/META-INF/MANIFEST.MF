@@ -41,4 +41,4 @@ Export-Package: com.ibm.wala.cast.java,
 Bundle-ClassPath: .,
  lib/java_cup.jar,
  lib/polyglot.jar
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

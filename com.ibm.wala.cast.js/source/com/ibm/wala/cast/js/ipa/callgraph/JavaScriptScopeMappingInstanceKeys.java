@@ -13,7 +13,6 @@ package com.ibm.wala.cast.js.ipa.callgraph;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingInstanceKeys;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader.JavaScriptMethodObject;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
-import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.loader.AstMethod.LexicalParent;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.classLoader.IClass;

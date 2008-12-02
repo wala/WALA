@@ -80,8 +80,6 @@ public class AstCallGraph extends ExplicitCallGraph {
   protected class AstCGNode extends ExplicitNode {
     private Set<Function<Object, Object>> callbacks;
 
-    private boolean lexicalScopingChanges = false;
-    
     private AstCGNode(IMethod method, Context context) {
       super(method, context);
     }
@@ -140,7 +138,6 @@ public class AstCallGraph extends ExplicitCallGraph {
     }
 
     public void setLexicalScopingChanges() {
-      lexicalScopingChanges = true;
     }
     
     public boolean addTarget(CallSiteReference site, CGNode node) {

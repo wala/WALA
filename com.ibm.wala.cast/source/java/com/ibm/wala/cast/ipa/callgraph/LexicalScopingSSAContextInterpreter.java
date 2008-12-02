@@ -1,24 +1,15 @@
 package com.ibm.wala.cast.ipa.callgraph;
 
-import java.util.Iterator;
-
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingKeysContextSelector.ScopeMappingContext;
 import com.ibm.wala.cast.loader.AstMethod;
-import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.classLoader.CallSiteReference;
-import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.ipa.callgraph.AnalysisCache;
 import com.ibm.wala.ipa.callgraph.AnalysisOptions;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
-import com.ibm.wala.ssa.ISSABasicBlock;
-import com.ibm.wala.types.FieldReference;
 
 public class LexicalScopingSSAContextInterpreter extends AstContextInsensitiveSSAContextInterpreter implements SSAContextInterpreter {
 

@@ -27,7 +27,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
-import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.strings.Atom;
 
 public abstract class AstMethod implements IMethod {
