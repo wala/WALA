@@ -1733,10 +1733,13 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     if (du == null) {
       throw new IllegalArgumentException("du is null");
     }
+    if (vn <= 0) {
+        throw new IllegalArgumentException("v is invalid: " + vn);
+    }
     // todo: enhance this by solving a dead-code elimination
     // problem.
     InterestingVisitor v = makeInterestingVisitor(node, vn);
-    for (Iterator it = du.getUses(vn); it.hasNext();) {
+    for (Iterator it = du.getUses(v.vn); it.hasNext();) {
       SSAInstruction s = (SSAInstruction) it.next();
       s.visit(v);
       if (v.bingo) {
