@@ -109,7 +109,7 @@ public class JSAstTranslator extends AstTranslator {
 				SymbolTable symtab, 
 				boolean hasCatchBlock, 
 				TypeReference[][] caughtTypes,
-				LexicalInformation LI,
+				AstLexicalInformation LI,
 				DebuggingInformation debugInfo)
   {
     if (DEBUG) Trace.println("\n\nAdding code for " + N);
