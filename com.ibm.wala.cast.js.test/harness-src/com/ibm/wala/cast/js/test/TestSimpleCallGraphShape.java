@@ -183,5 +183,19 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = B.makeCallGraph(B.getOptions());
     verifyGraphAssertions(CG, assertionsForStringPrims);
   }
-
+  
+  private static final Object[][] assertionsForNested = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/nested.js" } },
+    new Object[] { "tests/nested.js", 
+                   new String[] { "tests/nested.js/f", 
+                                  "tests/nested.js/f/ff", 
+                                  "tests/nested.js/f/ff/fff" } 
+    } 
+  };
+  
+  public void testNested() throws IOException, IllegalArgumentException, CancelException {
+    PropagationCallGraphBuilder B = Util.makeScriptCGBuilder("tests", "nested.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    verifyGraphAssertions(CG, assertionsForNested);
+  }
 }
