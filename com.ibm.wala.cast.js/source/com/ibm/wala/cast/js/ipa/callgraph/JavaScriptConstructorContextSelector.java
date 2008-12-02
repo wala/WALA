@@ -1,0 +1,31 @@
+package com.ibm.wala.cast.js.ipa.callgraph;
+
+import com.ibm.wala.cast.ipa.callgraph.ScopeMappingKeysContextSelector.ScopeMappingContext;
+import com.ibm.wala.cast.js.ipa.callgraph.JavaScriptConstructTargetSelector.JavaScriptConstructor;
+import com.ibm.wala.classLoader.CallSiteReference;
+import com.ibm.wala.classLoader.IMethod;
+import com.ibm.wala.ipa.callgraph.CGNode;
+import com.ibm.wala.ipa.callgraph.Context;
+import com.ibm.wala.ipa.callgraph.ContextSelector;
+import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
+
+public class JavaScriptConstructorContextSelector implements ContextSelector {
+  private final ContextSelector base;
+  
+  public JavaScriptConstructorContextSelector(ContextSelector base) {
+    this.base = base;
+  }
+  
+  public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {   
+    if (caller.getMethod().getDeclaringClass().getName().toString().indexOf("f/ff") != -1) {
+      System.err.println("got hete");
+    }
+    
+    if (callee instanceof JavaScriptConstructor && caller.getContext() instanceof ScopeMappingContext) {
+      return caller.getContext();
+    } else {
+      return base.getCalleeTarget(caller, site, callee, receiver);
+    }
+  }
+
+}

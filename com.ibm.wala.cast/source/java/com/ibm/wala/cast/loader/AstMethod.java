@@ -12,6 +12,7 @@ package com.ibm.wala.cast.loader;
 
 import java.util.Collection;
 
+import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
 import com.ibm.wala.cast.tree.CAstQualifier;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cfg.AbstractCFG;
@@ -26,6 +27,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.intset.IntSet;
+import com.ibm.wala.util.intset.IntSetUtil;
 import com.ibm.wala.util.strings.Atom;
 
 public abstract class AstMethod implements IMethod {
@@ -56,15 +58,15 @@ public abstract class AstMethod implements IMethod {
 
   }
 
-  public final IClass cls;
-  public final Collection qualifiers;
-  public final AbstractCFG cfg;
-  public final SymbolTable symtab; 
-  public final MethodReference ref;
-  public final boolean hasCatchBlock;
-  public final TypeReference[][] catchTypes;
-  public final LexicalInformation lexicalInfo;
-  public final DebuggingInformation debugInfo;
+  protected final IClass cls;
+  private final Collection qualifiers;
+  private final AbstractCFG cfg;
+  private final SymbolTable symtab; 
+  private final MethodReference ref;
+  private final boolean hasCatchBlock;
+  private final TypeReference[][] catchTypes;
+  private final AstLexicalInformation lexicalInfo;
+  private final DebuggingInformation debugInfo;
 
   protected AstMethod(IClass cls,
 	      Collection qualifiers,
@@ -73,7 +75,7 @@ public abstract class AstMethod implements IMethod {
 	      MethodReference ref,
 	      boolean hasCatchBlock,
 	      TypeReference[][] catchTypes,
-	      LexicalInformation lexicalInfo,
+	      AstLexicalInformation lexicalInfo,
 	      DebuggingInformation debugInfo)
   {
     this.cls = cls;
@@ -105,6 +107,34 @@ public abstract class AstMethod implements IMethod {
     Assertions._assert(isAbstract());
   }
 
+  public AbstractCFG cfg() {
+    return cfg;
+  }
+  
+  public boolean hasCatchBlock() {
+    return hasCatchBlock();
+  }
+  
+  public SymbolTable symbolTable() {
+    return symtab;
+  }
+  
+  public TypeReference[][] catchTypes() {
+    return catchTypes;
+  }
+  
+  public LexicalInformation cloneLexicalInfo() {
+    return new AstLexicalInformation(lexicalInfo);
+  }
+ 
+  public LexicalInformation lexicalInfo() {
+    return lexicalInfo;
+  }
+  
+  public DebuggingInformation debugInfo() {
+    return debugInfo;
+  }
+  
   /**
    *  Parents of this method with respect to lexical scoping, that is, 
    * methods containing state possibly referenced lexically in this

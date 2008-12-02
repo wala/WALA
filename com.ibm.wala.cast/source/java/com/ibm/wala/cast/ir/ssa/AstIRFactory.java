@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.ibm.wala.cast.loader.AstMethod;
+import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.cfg.ControlFlowGraph;
@@ -30,17 +31,18 @@ import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
+import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
 public class AstIRFactory implements IRFactory {
   private final boolean keepIR;
 
-  private final Map<IMethod, IR> keptIRs;
+  private final Map<Pair<IMethod,Context>, IR> keptIRs;
 
   AstIRFactory(boolean keepIR) {
     this.keepIR = keepIR;
     
-    HashMap<IMethod, IR> m = HashMapFactory.make();
+    HashMap<Pair<IMethod,Context>, IR> m = HashMapFactory.make();
     this.keptIRs = (keepIR) ? m : null;
   }
 
@@ -49,8 +51,14 @@ public class AstIRFactory implements IRFactory {
   }
 
   public class AstIR extends IR {
+    private final LexicalInformation lexicalInfo;
+    
     private final SSA2LocalMap localMap;
 
+    public LexicalInformation lexicalInfo() {
+      return lexicalInfo;
+    }
+    
     private void setCatchInstructions(SSACFG ssacfg, AbstractCFG oldcfg) {
       for (int i = 0; i < oldcfg.getNumberOfNodes(); i++)
         if (oldcfg.isCatchBlock(i)) {
@@ -87,11 +95,13 @@ public class AstIRFactory implements IRFactory {
     private AstIR(AstMethod method, SSAInstruction[] instructions, SymbolTable symbolTable, SSACFG cfg, SSAOptions options) {
       super(method, instructions, symbolTable, cfg, options);
 
+      lexicalInfo = method.cloneLexicalInfo();
+      
       localMap = SSAConversion.convert(method, this, options);
 
-      setCatchInstructions(getControlFlowGraph(), method.cfg);
+      setCatchInstructions(getControlFlowGraph(), method.cfg());
 
-      setupCatchTypes(getControlFlowGraph(), method.catchTypes);
+      setupCatchTypes(getControlFlowGraph(), method.catchTypes());
 
       setupLocationMap();
     }
@@ -99,20 +109,23 @@ public class AstIRFactory implements IRFactory {
 
   public IR makeIR(final IMethod method, final Context context, final SSAOptions options) {
     Assertions._assert(method instanceof AstMethod, method.toString());
+    Pair<IMethod,Context> key = Pair.make(method, context);
     if (keepIR) {
-      if (keptIRs.containsKey(method)) {
-        return keptIRs.get(method);
+      if (keptIRs.containsKey(key)) {
+        return keptIRs.get(key);
       }
     }
 
-    AbstractCFG oldCfg = ((AstMethod) method).cfg;
-    SSAInstruction[] instrs = (SSAInstruction[]) oldCfg.getInstructions();
-
-    IR newIR = new AstIR((AstMethod) method, instrs, ((AstMethod) method).symtab, new SSACFG(method, oldCfg, instrs),
+    AbstractCFG oldCfg = ((AstMethod) method).cfg();
+    SSAInstruction[] oldInstrs = (SSAInstruction[]) oldCfg.getInstructions();
+    SSAInstruction[] instrs = new SSAInstruction[ oldInstrs.length ];
+    System.arraycopy(oldInstrs, 0, instrs, 0, instrs.length);
+    
+    IR newIR = new AstIR((AstMethod) method, instrs, ((AstMethod) method).symbolTable(), new SSACFG(method, oldCfg, instrs),
         options);
 
     if (keepIR) {
-      keptIRs.put(method, newIR);
+      keptIRs.put(key, newIR);
     }
 
     return newIR;

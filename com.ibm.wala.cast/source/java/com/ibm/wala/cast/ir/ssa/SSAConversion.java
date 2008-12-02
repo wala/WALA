@@ -448,8 +448,8 @@ public class SSAConversion extends AbstractSSAConversion {
         : m;
 
     this.ir = ir;
-    this.debugInfo = M.debugInfo;
-    this.lexicalInfo = M.lexicalInfo;
+    this.debugInfo = M.debugInfo();
+    this.lexicalInfo = ir.lexicalInfo();
     this.symtab = ir.getSymbolTable();
     this.R = new Stack[ir.getSymbolTable().getMaxValueNumber() + 1];
 

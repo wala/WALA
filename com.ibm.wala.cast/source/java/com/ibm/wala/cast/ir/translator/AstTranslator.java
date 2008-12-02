@@ -68,7 +68,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   protected abstract void declareFunction(CAstEntity N, WalkContext context);
 
   protected abstract void defineFunction(CAstEntity N, WalkContext definingContext, AbstractCFG cfg, SymbolTable symtab,
-      boolean hasCatchBlock, TypeReference[][] caughtTypes, LexicalInformation lexicalInfo, DebuggingInformation debugInfo);
+      boolean hasCatchBlock, TypeReference[][] caughtTypes, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo);
 
   protected abstract void defineField(CAstEntity topEntity, WalkContext context, CAstEntity n);
 
@@ -1916,6 +1916,46 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     
     private MutableIntSet allExposedUses = null;
     
+    public AstLexicalInformation(AstLexicalInformation original) {
+      if (original.exposedNames != null) {
+        exposedNames = new Pair[ original.exposedNames.length ];
+        for(int i = 0; i < exposedNames.length; i++) {
+          exposedNames[i] = Pair.make(original.exposedNames[i].fst, original.exposedNames[i].snd);
+        }
+      } else {
+        exposedNames = null;
+      }
+      
+      instructionLexicalUses = new int[ original.instructionLexicalUses.length ][];
+      for(int i= 0; i < instructionLexicalUses.length; i++) {
+        int[] x = original.instructionLexicalUses[i];
+        if (x != null) {
+          instructionLexicalUses[i] = new int[ x.length ];
+          for(int j = 0; j < x.length; j++) {
+            instructionLexicalUses[i][j] = x[j];
+          }
+        }
+      }
+      
+      if (original.exitLexicalUses != null) {
+        exitLexicalUses = new int[ original.exitLexicalUses.length ];
+        for(int i = 0; i < exitLexicalUses.length; i++) {
+          exitLexicalUses[i] = original.exitLexicalUses[i];
+        }
+      } else {
+        exitLexicalUses = null;
+      }
+      
+      if (original.scopingParents != null) {
+        scopingParents = new String[ original.scopingParents.length ];
+        for(int i = 0; i < scopingParents.length; i++) {
+          scopingParents[i] = original.scopingParents[i];
+        }
+      } else {
+        scopingParents = null;
+      }
+    }
+   
     private int[] buildLexicalUseArray(Pair[] exposedNames) {
       if (exposedNames != null) {
         int[] lexicalUses = new int[exposedNames.length];
@@ -2337,7 +2377,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     // (put here to allow subclasses to handle stuff in scoped entities)
     // assemble lexical information
     patchLexicalAccesses(cfg.getInstructions(), accesses.get(n));
-    LexicalInformation LI =
+    AstLexicalInformation LI =
     // TODO: Ask Julian if the below change is always correct
     new AstLexicalInformation((AbstractScope) functionContext.currentScope(), cfg.getInstructions(), exposedNames.get(n), accesses
         .get(n));

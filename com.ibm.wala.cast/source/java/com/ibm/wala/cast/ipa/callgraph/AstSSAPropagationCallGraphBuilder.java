@@ -108,6 +108,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     SSAContextInterpreter c = new DefaultSSAInterpreter(options, getAnalysisCache());
     c = new DelegatingSSAContextInterpreter(new AstContextInsensitiveSSAContextInterpreter(options, getAnalysisCache()), c);
 
+    c = new DelegatingSSAContextInterpreter(new LexicalScopingSSAContextInterpreter(options, getAnalysisCache()), c);
+
     c = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, options, getAnalysisCache(), reflect), c);
 
     if (appContextInterpreter == null)
@@ -243,7 +245,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
   public boolean hasNoInterestingUses(CGNode node, int vn, DefUse du) {
     if (node.getMethod() instanceof AstMethod) {
-      IntSet uses = ((AstMethod) node.getMethod()).lexicalInfo.getAllExposedUses();
+      IntSet uses = ((AstIR) node.getIR()).lexicalInfo().getAllExposedUses();
       if (uses.contains(vn)) {
         return false;    
       }
@@ -663,7 +665,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
     private void addUpwardFunargConstraints(PointerKey lhs, String name, String definer, CGNode definingNode) {
       discoveredUpwardFunargs.add(lhs);
 
-      LexicalInformation LI = ((AstMethod) definingNode.getMethod()).lexicalInfo;
+      LexicalInformation LI = ((AstIR) definingNode.getIR()).lexicalInfo();
       Pair[] names = LI.getExposedNames();
       for (int i = 0; i < names.length; i++) {
         if (name.equals(names[i].fst) && definer.equals(names[i].snd)) {
@@ -712,11 +714,13 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
           public boolean equals(Object x) {
             return (x instanceof UpwardFunargPointerKey) && super.equals(x)
-                && definingNode.equals(((UpwardFunargPointerKey) x).getDefiningNode());
+                && (definingNode == null?
+                    definingNode == ((UpwardFunargPointerKey) x).getDefiningNode():
+                    definingNode.equals(((UpwardFunargPointerKey) x).getDefiningNode()));
           }
 
           public int hashCode() {
-            return super.hashCode() * definingNode.hashCode();
+            return super.hashCode() * ((definingNode == null)? 17: definingNode.hashCode());
           }
 
           public String toString() {
@@ -726,7 +730,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
         PointerKey result = new UpwardFunargPointerKey(name);
 
-        if (!discoveredUpwardFunargs.contains(result)) {
+        if (!discoveredUpwardFunargs.contains(result)  && definingNode != null) {
           addUpwardFunargConstraints(result, name, definer, definingNode);
         }
 
@@ -741,9 +745,9 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
       }
 
       else if (M instanceof AstMethod) {
-        AstIR ir = (AstIR) getBuilder().getCFAContextInterpreter().getIR(n);
+        AstIR ir = (AstIR) n.getIR();
         int pc = callSite.getProgramCounter();
-        LexicalInformation L = ((AstMethod) M).lexicalInfo;
+        LexicalInformation L = ((AstIR) n.getIR()).lexicalInfo();
 
         // some people have no lexical uses at all
         if (L == null) {
@@ -776,6 +780,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
               SSAConversion.copyUse(ir, pc, -i - 1, pc, I.getNumberOfUses() - 1);
 
+              ((AstCallGraph.AstCGNode)n).setLexicalScopingChanges();
+              
               return getBuilder().getPointerKeyForLocal(n, values[i]);
             }
           }
@@ -796,13 +802,13 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
       else if (M instanceof AstMethod) {
         AstMethod AstM = (AstMethod) M;
-        LexicalInformation L = AstM.lexicalInfo;
+        AstIR ir = (AstIR) n.getIR();
+        LexicalInformation L = ir.lexicalInfo();
 
         // some people have no lexical uses at all
         if (L == null)
           return null;
 
-        AstIR ir = (AstIR) getBuilder().getCFAContextInterpreter().getIR(n);
         int pc = callSite.getProgramCounter();
         AbstractLexicalInvoke I = (AbstractLexicalInvoke) ir.getInstructions()[pc];
 
@@ -843,7 +849,8 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
               // now redo analysis
               // TODO: only values[i] uses need to be re-done.
-              AstM.lexicalInfo.handleAlteration();
+              ir.lexicalInfo().handleAlteration();
+              ((AstCallGraph.AstCGNode)n).setLexicalScopingChanges();
               getAnalysisCache().getSSACache().invalidateDU(M, n.getContext());
               // addConstraintsFromChangedNode(n);
               getBuilder().markChanged(n);

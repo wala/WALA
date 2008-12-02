@@ -31,7 +31,7 @@ import com.ibm.wala.ssa.ISSABasicBlock;
  */
 public class ContextInsensitiveSSAInterpreter extends ContextInsensitiveRTAInterpreter implements SSAContextInterpreter {
 
-  private final AnalysisOptions options;
+  protected final AnalysisOptions options;
 
   public ContextInsensitiveSSAInterpreter(AnalysisOptions options, AnalysisCache cache) {
     super(cache);

@@ -59,7 +59,7 @@ public class JavaScriptConstructTargetSelector implements MethodTargetSelector {
 
   private final Map<Object, IMethod> constructors = HashMapFactory.make();
 
-  private class JavaScriptConstructor extends JavaScriptSummarizedFunction {
+  class JavaScriptConstructor extends JavaScriptSummarizedFunction {
     private final String toStringExtra;
 
     private JavaScriptConstructor(MethodReference ref, MethodSummary summary, IClass declaringClass, String toStringExtra) {

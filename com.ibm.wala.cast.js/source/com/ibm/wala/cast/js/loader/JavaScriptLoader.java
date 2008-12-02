@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import com.ibm.wala.cast.ir.translator.AstTranslator.AstLexicalInformation;
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstClass;
@@ -186,7 +187,7 @@ public class JavaScriptLoader extends CAstAbstractLoader {
   public class JavaScriptMethodObject extends AstMethod {
 
     JavaScriptMethodObject(JavaScriptCodeBody cls, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-        TypeReference[][] caughtTypes, LexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+        TypeReference[][] caughtTypes, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
       super(cls, functionQualifiers, cfg, symtab, AstMethodReference.fnReference(cls.getReference()), hasCatchBlock, caughtTypes,
           lexicalInfo, debugInfo);
     }
@@ -204,10 +205,10 @@ public class JavaScriptLoader extends CAstAbstractLoader {
     }
 
     public LexicalParent[] getParents() {
-      if (lexicalInfo == null)
+      if (lexicalInfo() == null)
         return new LexicalParent[0];
 
-      final String[] parents = lexicalInfo.getScopingParents();
+      final String[] parents = lexicalInfo().getScopingParents();
 
       if (parents == null)
         return new LexicalParent[0];
@@ -270,7 +271,7 @@ public class JavaScriptLoader extends CAstAbstractLoader {
   }
 
   public IMethod defineCodeBodyCode(String clsName, AbstractCFG cfg, SymbolTable symtab, boolean hasCatchBlock,
-      TypeReference[][] caughtTypes, LexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
+      TypeReference[][] caughtTypes, AstLexicalInformation lexicalInfo, DebuggingInformation debugInfo) {
     JavaScriptCodeBody C = (JavaScriptCodeBody) lookupClass(clsName, cha);
     Assertions._assert(C != null, clsName);
     return C.setCodeBody(new JavaScriptMethodObject(C, cfg, symtab, hasCatchBlock, caughtTypes, lexicalInfo, debugInfo));
