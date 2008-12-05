@@ -52,16 +52,7 @@ public class IFDSExplorer {
   }
 
   public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r, Collection<? extends P> roots, NodeDecorator labels)
-      throws WalaException {
-    if (r == null) {
-      throw new IllegalArgumentException("r is null");
-    }
-    assert gvExe != null;
-    assert dotExe != null;
-
-    // dump the domain to stderr
-    System.err.println("Domain:\n" + r.getProblem().getDomain().toString());
-
+  throws WalaException {
     Properties p = null;
     try {
       p = WalaProperties.loadProperties();
@@ -69,9 +60,23 @@ public class IFDSExplorer {
       e.printStackTrace();
       Assertions.UNREACHABLE();
     }
-    String outputFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar
+    String scratch = p.getProperty(WalaProperties.OUTPUT_DIR);
+    viewIFDS(r, roots, labels, scratch);
+  }
+  
+  public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r, Collection<? extends P> roots, NodeDecorator labels, String scratchDirectory)
+      throws WalaException {
+    if (r == null) {
+      throw new IllegalArgumentException("r is null");
+    }
+    assert dotExe != null;
+
+    // dump the domain to stderr
+    System.err.println("Domain:\n" + r.getProblem().getDomain().toString());
+
+    String outputFile = scratchDirectory + File.separatorChar
         + (DotUtil.getOutputType() == DotOutputType.PS ? "ir.ps" : "ir.svg");
-    String dotFile = p.getProperty(WalaProperties.OUTPUT_DIR) + File.separatorChar + "ir.dt";
+    String dotFile = scratchDirectory + File.separatorChar + "ir.dt";
 
     final SWTTreeViewer v = new SWTTreeViewer();
     Graph<? extends P> g = r.getProblem().getSupergraph().getProcedureGraph();
