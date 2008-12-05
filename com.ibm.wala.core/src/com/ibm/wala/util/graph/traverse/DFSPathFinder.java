@@ -24,13 +24,10 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.Graph;
 
 /**
- * This class searches depth-first search for node that matches some
- * criteria.
- * If found, it reports a path to the first node found.
+ * This class searches depth-first search for node that matches some criteria. If found, it reports a path to the first node found.
  * 
- * This class follows the outNodes of the
- * graph nodes to define the graph, but this behavior can be changed
- * by overriding the getConnected method.
+ * This class follows the outNodes of the graph nodes to define the graph, but this behavior can be changed by overriding the
+ * getConnected method.
  */
 public class DFSPathFinder<T> extends Stack<T> {
   public static final long serialVersionUID = 9939900773328288L;
@@ -56,16 +53,15 @@ public class DFSPathFinder<T> extends Stack<T> {
   final private Map<T, Iterator<? extends T>> pendingChildren = HashMapFactory.make(25);
 
   /**
-   *  Flag recording whether initialization has happened.
+   * Flag recording whether initialization has happened.
    */
   private boolean initialized = false;
 
   /**
-   * Construct a depth-first enumerator starting with a particular node
-   * in a directed graph. 
-   *
+   * Construct a depth-first enumerator starting with a particular node in a directed graph.
+   * 
    * @param G the graph whose nodes to enumerate
-   * @throws IllegalArgumentException  if G is null
+   * @throws IllegalArgumentException if G is null
    */
   public DFSPathFinder(Graph<T> G, T N, Filter<T> f) throws IllegalArgumentException {
     if (G == null) {
@@ -80,10 +76,9 @@ public class DFSPathFinder<T> extends Stack<T> {
   }
 
   /**
-   * Construct a depth-first enumerator across the (possibly
-   * improper) subset of nodes reachable from the nodes in the given
-   * enumeration. 
-   *
+   * Construct a depth-first enumerator across the (possibly improper) subset of nodes reachable from the nodes in the given
+   * enumeration.
+   * 
    * @param nodes the set of nodes from which to start searching
    */
   public DFSPathFinder(Graph<T> G, Iterator<T> nodes, Filter<T> f) {
@@ -102,19 +97,18 @@ public class DFSPathFinder<T> extends Stack<T> {
   }
 
   /**
-   * @return a List of nodes that specifies the first path found
-   * from a root to a node accepted by the filter.  Returns null if
-   * no path found.
+   * @return a List of nodes that specifies the first path found from a root to a node accepted by the filter. Returns null if no
+   *         path found.
    */
-  public List find() {
+  public List<T> find() {
     if (!initialized) {
       init();
     }
     while (hasNext()) {
       T n = peek();
       if (filter.accepts(n)) {
-	List path = currentPath();
-	advance();
+        List<T> path = currentPath();
+        advance();
         return path;
       }
       advance();
@@ -124,7 +118,7 @@ public class DFSPathFinder<T> extends Stack<T> {
 
   private List<T> currentPath() {
     ArrayList<T> result = new ArrayList<T>();
-    for(Iterator<T> path = iterator(); path.hasNext(); ) {
+    for (Iterator<T> path = iterator(); path.hasNext();) {
       result.add(0, path.next());
     }
     return result;
@@ -132,7 +126,7 @@ public class DFSPathFinder<T> extends Stack<T> {
 
   /**
    * Return whether there are any more nodes left to enumerate.
-   *
+   * 
    * @return true if there nodes left to enumerate.
    */
   public boolean hasNext() {
@@ -141,13 +135,16 @@ public class DFSPathFinder<T> extends Stack<T> {
 
   /**
    * Method getPendingChildren.
+   * 
    * @return Object
    */
   private Iterator<? extends T> getPendingChildren(T n) {
     return pendingChildren.get(n);
   }
+
   /**
    * Method setPendingChildren.
+   * 
    * @param v
    * @param iterator
    */
@@ -179,7 +176,7 @@ public class DFSPathFinder<T> extends Stack<T> {
           return;
         }
       }
-      // didn't find any new children.  pop the stack and try again.
+      // didn't find any new children. pop the stack and try again.
       pop();
 
     } while (!empty());
@@ -198,10 +195,10 @@ public class DFSPathFinder<T> extends Stack<T> {
 
   /**
    * get the out edges of a given node
-   *
+   * 
    * @param n the node of which to get the out edges
    * @return the out edges
-   *
+   * 
    */
   protected Iterator<? extends T> getConnected(T n) {
     return G.getSuccNodes(n);
