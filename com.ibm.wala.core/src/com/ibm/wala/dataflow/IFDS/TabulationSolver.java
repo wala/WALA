@@ -891,22 +891,26 @@ public class TabulationSolver<T, P, F> {
    * @return IntSet representing the bitvector
    */
   public IntSet getResult(T node) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(node != null);
-    }
     P proc = supergraph.getProcOf(node);
-    if (Assertions.verifyAssertions && proc == null) {
-      Assertions.UNREACHABLE("no proc for node " + node);
-    }
     int n = supergraph.getLocalBlockNumber(node);
-    Object[] entries = supergraph.getEntriesForProcedure(proc);
+    T[] entries = supergraph.getEntriesForProcedure(proc);
     MutableIntSet result = MutableSparseIntSet.makeEmpty();
 
     for (int i = 0; i < entries.length; i++) {
-      Object s_p = entries[i];
+      T s_p = entries[i];
       LocalPathEdges lp = pathEdges.get(s_p);
       if (lp != null) {
         result.addAll(lp.getReachable(n));
+      }
+    }
+    
+    for (PathEdge<T> seed : getSeeds()) {
+      P p = supergraph.getProcOf(seed.entry);
+      if (p.equals(proc)) {
+        LocalPathEdges lp = pathEdges.get(seed.entry);
+        if (lp != null) {
+          result.addAll(lp.getReachable(n));
+        }
       }
     }
     return result;
