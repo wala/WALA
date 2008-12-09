@@ -47,6 +47,7 @@ import com.ibm.wala.viz.IFDSExplorer;
  * 
  * @author sfink
  * @author Julian Dolby
+ * @author Manu Sridharan
  */
 public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> implements NumberedGraph<BasicBlockInContext<T>> {
 

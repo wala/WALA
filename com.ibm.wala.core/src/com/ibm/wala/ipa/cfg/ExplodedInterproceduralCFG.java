@@ -22,10 +22,7 @@ import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 /**
- * Interprocedural control-flow graph.
- * 
- * TODO: think about a better implementation; perhaps a lazy view of the
- * constituent CFGs Lots of ways this can be optimized?
+ * Exploded interprocedural control-flow graph, constructed lazily.
  * 
  * @author sfink
  * @author Julian Dolby
