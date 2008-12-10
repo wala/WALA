@@ -109,7 +109,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
   public boolean solve() {
     return solve(null);
   }
-  
+
   @Override
   public boolean solve(IProgressMonitor monitor) {
     try {
@@ -186,10 +186,11 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
         // t should be NullPointerException
         TypeReference t = defaultExceptions.iterator().next();
         IClass klass = cha.lookupClass(t);
-        if (Assertions.verifyAssertions) {
-          Assertions._assert(klass != null);
+        if (klass == null) {
+          v.setType(BOTTOM);
+        } else {
+          v.setType(new PointType(klass));
         }
-        v.setType(new PointType(klass));
 
         IMethod m = cha.resolveMethod(call.getDeclaredTarget());
         if (m != null) {
@@ -400,8 +401,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
   }
 
   /**
-   * This operator will extract the element type from an arrayref in an array
-   * access instruction
+   * This operator will extract the element type from an arrayref in an array access instruction
    * 
    * TODO: why isn't this a nullary operator?
    */
@@ -590,7 +590,7 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
         result = new DeclaredTypeOperator(PrimitiveType.getPrimitive(instruction.getToType()));
       }
     }
-    
+
     @Override
     public void visitComparison(SSAComparisonInstruction instruction) {
       if (doPrimitives) {
