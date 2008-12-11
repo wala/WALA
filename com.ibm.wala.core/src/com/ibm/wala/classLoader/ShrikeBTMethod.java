@@ -155,6 +155,14 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
   }
 
   /**
+   * Return the number of Shrike instructions for this method.
+   * 
+   * @throws InvalidClassFileException
+   */
+  public int getNumShrikeInstructions() throws InvalidClassFileException {
+    return getBCInfo().pcMap.length;
+  }
+  /**
    * @throws InvalidClassFileException
    */
   Collection<CallSiteReference> getCallSites() throws InvalidClassFileException {
