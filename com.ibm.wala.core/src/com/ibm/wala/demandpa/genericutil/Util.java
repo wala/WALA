@@ -495,7 +495,8 @@ public class Util {
   }
 
   /**
-   * @return the amount of memory currently being used, in bytes
+   * @return the amount of memory currently being used, in bytes. Often inaccurate, but there's no better thing to do from within
+   *         the JVM.
    */
   public static long getUsedMemory() {
     gc();
