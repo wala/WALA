@@ -90,7 +90,7 @@ public class StringTable extends Table<String> implements Cloneable {
    * @throws IllegalArgumentException if s is null
    */
   public static StringTable readFromStream(InputStream s, Character commentToken) throws IOException {
-    return readFromStream(s, commentToken, ' ');
+    return readFromStream(s, commentToken, null);
   }
 
   /**
@@ -147,7 +147,7 @@ public class StringTable extends Table<String> implements Cloneable {
   }
 
   private void populateRow(int row, String line, Character delimiter) {
-    StringTokenizer st = new StringTokenizer(line, delimiter.toString());
+    StringTokenizer st = delimiter == null ? new StringTokenizer(line) : new StringTokenizer(line, delimiter.toString());
     int nColumns = st.countTokens();
     Assertions.productionAssertion(nColumns == getNumberOfColumns(), "expected " + getNumberOfColumns() + " got " + nColumns
         + " row " + row + " " + line.length() + " " + line);
@@ -162,7 +162,7 @@ public class StringTable extends Table<String> implements Cloneable {
    * @param line a whitespace-delimited string of column names
    */
   private void populateColumnHeadings(String line, Character delimiter) {
-    StringTokenizer st = new StringTokenizer(line, delimiter.toString());
+    StringTokenizer st = delimiter == null ? new StringTokenizer(line) : new StringTokenizer(line, delimiter.toString());
     int nColumns = st.countTokens();
     for (int i = 0; i < nColumns; i++) {
       columnHeadings.set(i, (String) st.nextElement());
