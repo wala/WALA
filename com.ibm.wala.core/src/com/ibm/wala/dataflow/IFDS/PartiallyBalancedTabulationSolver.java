@@ -74,6 +74,9 @@ public class PartiallyBalancedTabulationSolver<T, P, F> extends TabulationSolver
 
   @Override
   public void addSeed(PathEdge<T> seed) {
+    if (getSeeds().contains(seed)) {
+      return;
+    }
     unbalancedSeeds.add(Pair.make(seed.entry, seed.d1));
     super.addSeed(seed);
 
