@@ -198,4 +198,14 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = B.makeCallGraph(B.getOptions());
     verifyGraphAssertions(CG, assertionsForNested);
   }
+
+  private static final Object[][] assertionsForInstanceof = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/instanceof.js" } }
+  };
+  
+  public void testInstanceof() throws IOException, IllegalArgumentException, CancelException {
+    PropagationCallGraphBuilder B = Util.makeScriptCGBuilder("tests", "instanceof.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    verifyGraphAssertions(CG, assertionsForInstanceof);
+  }
 }

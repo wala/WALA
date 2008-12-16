@@ -52,7 +52,7 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
       scope = makeScope(new SourceFileModule[] { makeSourceModule(script, dir, name) }, loaders, JavaScriptLoader.JS);
     }
 
-    return makeCG(loaders, true, scope, useOneCFA);
+    return makeCG(loaders, scope, useOneCFA);
   }
 
   public static PropagationCallGraphBuilder makeScriptCGBuilder(String dir, String name) throws IOException {
@@ -92,16 +92,16 @@ public class Util extends com.ibm.wala.cast.js.ipa.callgraph.Util {
   public static PropagationCallGraphBuilder makeCGBuilder(SourceFileModule[] scripts, boolean useOneCFA) throws IOException {
     JavaScriptLoaderFactory loaders = makeLoaders();
     AnalysisScope scope = makeScope(scripts, loaders, JavaScriptLoader.JS);
-    return makeCG(loaders, true, scope, useOneCFA);
+    return makeCG(loaders, scope, useOneCFA);
   }
 
-  protected static PropagationCallGraphBuilder makeCG(JavaScriptLoaderFactory loaders, boolean keepIRs, AnalysisScope scope, boolean useOneCFA)
+  protected static PropagationCallGraphBuilder makeCG(JavaScriptLoaderFactory loaders, AnalysisScope scope, boolean useOneCFA)
       throws IOException {
     try {
       IClassHierarchy cha = makeHierarchy(scope, loaders);
       Iterable<Entrypoint> roots = makeScriptRoots(cha);
-      AnalysisOptions options = makeOptions(scope, keepIRs, cha, roots);
-      AnalysisCache cache = makeCache(keepIRs);
+      AnalysisOptions options = makeOptions(scope, cha, roots);
+      AnalysisCache cache = makeCache();
 
       JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, null, ZeroXInstanceKeys.ALLOCATIONS, useOneCFA);
 

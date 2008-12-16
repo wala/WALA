@@ -41,9 +41,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
 
   protected JavaScriptTranslatorFactory translatorFactory;
 
-  protected boolean keepIRs = true;
-
-  public JavaScriptAnalysisEngine() {
+   public JavaScriptAnalysisEngine() {
   }
 
   @SuppressWarnings("unchecked")
@@ -90,7 +88,7 @@ public class JavaScriptAnalysisEngine extends AbstractAnalysisEngine {
 
   @Override
   public AnalysisCache makeDefaultCache() {
-    return new AnalysisCache(AstIRFactory.makeDefaultFactory(keepIRs));
+    return new AnalysisCache(AstIRFactory.makeDefaultFactory());
   }
 
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> roots) {

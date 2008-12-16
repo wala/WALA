@@ -13,7 +13,9 @@ package com.ibm.wala.cast.js.translator;
 import com.ibm.wala.cast.ir.ssa.AssignInstruction;
 import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.NonExceptingThrowInstruction;
+import com.ibm.wala.cast.ir.ssa.AstConstants.BinaryOp;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
+import com.ibm.wala.cast.ir.translator.AstTranslator.WalkContext;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
@@ -32,9 +34,12 @@ import com.ibm.wala.cast.tree.CAstSymbol;
 import com.ibm.wala.cast.tree.CAstType;
 import com.ibm.wala.cast.tree.impl.CAstSymbolImpl;
 import com.ibm.wala.cast.tree.visit.CAstVisitor;
+import com.ibm.wala.cast.tree.visit.CAstVisitor.Context;
 import com.ibm.wala.cast.types.AstMethodReference;
 import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.classLoader.NewSiteReference;
+import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
+import com.ibm.wala.ssa.SSAInstructionFactory;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.MethodReference;
@@ -317,6 +322,31 @@ public class JSAstTranslator extends AstTranslator {
     }
   }
 
+  protected boolean visitInstanceOf(CAstNode n, Context c, CAstVisitor visitor) {
+    WalkContext context = (WalkContext)c;
+    int result = context.currentScope().allocateTempValue();
+    setValue(n, result);
+    return false;
+  }
+  
+  protected void leaveInstanceOf(CAstNode n, Context c, CAstVisitor visitor) {
+    WalkContext context = (WalkContext)c;
+    int result = getValue(n);
+ 
+    visit(n.getChild(0), context, visitor);
+    int value = getValue(n.getChild(0));
+
+    visit(n.getChild(1), context, visitor);
+    int type = getValue(n.getChild(1));
+
+    int tmp = context.currentScope().allocateTempValue();
+    context.cfg().addInstruction(
+      new JavaScriptTypeOfInstruction(tmp, value));
+ 
+    context.cfg().addInstruction(
+      SSAInstructionFactory.BinaryOpInstruction(BinaryOp.EQ, result, tmp, type, false));
+  }
+
   protected void doPrologue(WalkContext context) {
     super.doPrologue(context);
     int tempVal = context.currentScope().allocateTempValue();
@@ -342,7 +372,8 @@ public class JSAstTranslator extends AstTranslator {
       setValue(n, result);
       return true;
     }
-
+    
+    
     default: {
       return false;
     }

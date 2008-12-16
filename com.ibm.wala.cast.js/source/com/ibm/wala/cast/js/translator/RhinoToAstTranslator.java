@@ -1276,9 +1276,18 @@ public class RhinoToAstTranslator {
       return Ast.makeConstant(null);
     }
 
+    case Token.INSTANCEOF: {
+      Node value = n.getFirstChild();
+      Node type = value.getNext();
+      return Ast.makeNode(CAstNode.INSTANCEOF,
+          walkNodes( value, context ),
+          walkNodes( type, context ));      
+    }
+    
     default: {
       System.err.println("while converting: " + context.top().toStringTree(context.top()) + "\nlooking at unhandled:\n "
-          + n.toStringTree(context.top()) + "\n(of type " + NT + ") (of class " + n.getClass() + ")");
+          + n.toStringTree(context.top()) + "\n(of type " + NT + ") (of class " + n.getClass() + ")"
+          + " at " + n.getLineno());
 
       Assertions.UNREACHABLE();
       return null;

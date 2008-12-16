@@ -43,7 +43,7 @@ public class Util extends com.ibm.wala.cast.ipa.callgraph.Util {
     return translatorFactory;
   }
   
-  public static AnalysisOptions makeOptions(AnalysisScope scope, boolean keepIRs, IClassHierarchy cha, Iterable<Entrypoint> roots) {
+  public static AnalysisOptions makeOptions(AnalysisScope scope, IClassHierarchy cha, Iterable<Entrypoint> roots) {
     final AnalysisOptions options = new AnalysisOptions(scope, /* AstIRFactory.makeDefaultFactory(keepIRs), */ roots);
 
     com.ibm.wala.ipa.callgraph.impl.Util.addDefaultSelectors(options, cha);

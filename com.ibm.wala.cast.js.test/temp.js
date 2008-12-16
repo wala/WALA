@@ -409,6 +409,8 @@ function windowSetInterval(win, fun, time) {
 function windowClearInterval(win, id) {
   return win.clearInterval(id);
 }
+
+
 // Copyright 2006 Google Inc.
 // All Rights Reserved
 //
@@ -558,6 +560,8 @@ var XML11_ATTRIBUTE =
 var XML_NC_NAME_CHAR = XML10_LETTER + XML10_DIGIT + '\\._' +
                        XML10_COMBINING_CHAR + XML10_EXTENDER + '-';
 var XML_NC_NAME = '[' + XML10_LETTER + '_][' + XML_NC_NAME_CHAR + ']*';
+
+
 // Copyright 2005 Google Inc.
 // All Rights Reserved
 //
@@ -1115,6 +1119,8 @@ XDocument.prototype.createComment = function(data) {
 XDocument.prototype.createCDATASection = function(data) {
   return XNode.create(DOM_CDATA_SECTION_NODE, '#cdata-section', data, this);
 }
+
+
 // Copyright 2005 Google Inc.
 // All Rights Reserved
 //
@@ -3284,6 +3290,8 @@ function xpathEval(select, context) {
   var ret = expr.evaluate(context);
   return ret;
 }
+
+
 // Copyright 2005, Google Inc.
 // All Rights Reserved.
 //
@@ -3820,6 +3828,8 @@ function doTestEvalDom(xml, page, location, lat, latValue, lon, lonValue) {
   assertEquals(slashPageLocationAtLon, n.nodeName, lon);
   assertEquals(slashPageLocationAtLon, n.nodeValue, lonValue);
 }
+
+
 // Copyright 2005 Google Inc.
 // All Rights Reserved
 //
@@ -4054,6 +4064,8 @@ StringValue.prototype.toString = Value_toString;
 NumberValue.prototype.toString = Value_toString;
 BooleanValue.prototype.toString = Value_toString;
 NodeSetValue.prototype.toString = Value_toString;
+
+
 // Copyright 2005-2006 Google
 //
 // Author: Steffen Meschkat <mesch@google.com>
@@ -4133,6 +4145,8 @@ function xpathLog(msg) {
 };
 function xsltLog(msg) {};
 function xsltLogXml(msg) {};
+
+
 // Copyright 2005 Google Inc.
 // All Rights Reserved
 //
@@ -4178,6 +4192,8 @@ function xpath_test(form) {
     Log.write('EXCEPTION ' + e);
   }
 }
+
+
 
 
 node10.onload(null);

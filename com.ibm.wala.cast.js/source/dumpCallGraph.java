@@ -28,8 +28,8 @@ class dumpCallGraph {
     AnalysisScope scope = Util.makeScope(args, loaders, JavaScriptLoader.JS);
     IClassHierarchy cha = Util.makeHierarchy(scope, loaders);
     Iterable<Entrypoint> roots = Util.makeScriptRoots(cha);
-    AnalysisOptions options = Util.makeOptions(scope, false, cha, roots);
-    AnalysisCache cache = Util.makeCache(false);
+    AnalysisOptions options = Util.makeOptions(scope, cha, roots);
+    AnalysisCache cache = Util.makeCache();
     
     JSCFABuilder builder = new JSZeroOrOneXCFABuilder(cha, options, cache, null, null, null, ZeroXInstanceKeys.ALLOCATIONS, false);
 
