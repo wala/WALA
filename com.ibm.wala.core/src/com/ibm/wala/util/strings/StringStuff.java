@@ -152,8 +152,10 @@ public class StringStuff {
     }
 
     int i = 0;
-    while (b.get(i++) != ')')
-      ;
+    while (b.get(i++) != ')');
+    if (b.length() < i+1) {
+      throw new IllegalArgumentException("invalid descriptor: " + b);
+    }
     switch (b.get(i)) {
     case TypeReference.VoidTypeCode:
       return TypeReference.Void.getName();
