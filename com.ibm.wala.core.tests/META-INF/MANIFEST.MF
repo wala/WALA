@@ -22,3 +22,5 @@ Export-Package: com.ibm.wala.core.tests.basic,
  com.ibm.wala.examples.properties,
  com.ibm.wala.demandpa.driver
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
+Bundle-Activator: com.ibm.wala.core.tests.plugin.CoreTestsPlugin
