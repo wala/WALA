@@ -114,7 +114,7 @@ public abstract class TestCAstTranslator extends WalaTestCase {
 
   protected abstract SingleClassLoaderFactory getClassLoaderFactory();
 
-  protected final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory(false);
+  protected final IRFactory<IMethod> factory = AstIRFactory.makeDefaultFactory();
 
   protected final SSAOptions options = new SSAOptions();
 
