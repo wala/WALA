@@ -90,6 +90,15 @@ public class StringTable extends Table<String> implements Cloneable {
    * @throws IllegalArgumentException if s is null
    */
   public static StringTable readFromStream(InputStream s, Character commentToken) throws IOException {
+    return readFromStream(s, commentToken, ' ');
+  }
+
+  /**
+   * @param s a stream containing a table in text format, whitespace delimited
+   * @throws IOException
+   * @throws IllegalArgumentException if s is null
+   */
+  public static StringTable readFromStream(InputStream s, Character commentToken, Character delimiter) throws IOException {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
@@ -103,12 +112,12 @@ public class StringTable extends Table<String> implements Cloneable {
     if (line == null) {
       throw new IOException("first line expected to be column headings");
     }
-    result.populateColumnHeadings(line);
+    result.populateColumnHeadings(line, delimiter);
 
     line = readNextNonCommentLine(reader, commentToken);
     int row = 0;
     while (line != null) {
-      result.populateRow(row, line);
+      result.populateRow(row, line, delimiter);
       line = readNextNonCommentLine(reader, commentToken);
       row++;
     }
@@ -137,11 +146,11 @@ public class StringTable extends Table<String> implements Cloneable {
     return line.charAt(0) == commentToken;
   }
 
-  private void populateRow(int row, String line) {
-    StringTokenizer st = new StringTokenizer(line);
+  private void populateRow(int row, String line, Character delimiter) {
+    StringTokenizer st = new StringTokenizer(line, delimiter.toString());
     int nColumns = st.countTokens();
     Assertions.productionAssertion(nColumns == getNumberOfColumns(), "expected " + getNumberOfColumns() + " got " + nColumns
-        + " row " + row + " " + line.length());
+        + " row " + row + " " + line.length() + " " + line);
     SimpleVector<String> r = new SimpleVector<String>();
     rows.add(row, r);
     for (int i = 0; i < nColumns; i++) {
@@ -152,8 +161,8 @@ public class StringTable extends Table<String> implements Cloneable {
   /**
    * @param line a whitespace-delimited string of column names
    */
-  private void populateColumnHeadings(String line) {
-    StringTokenizer st = new StringTokenizer(line);
+  private void populateColumnHeadings(String line, Character delimiter) {
+    StringTokenizer st = new StringTokenizer(line, delimiter.toString());
     int nColumns = st.countTokens();
     for (int i = 0; i < nColumns; i++) {
       columnHeadings.set(i, (String) st.nextElement());
