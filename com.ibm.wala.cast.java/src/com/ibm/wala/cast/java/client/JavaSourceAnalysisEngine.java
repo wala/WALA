@@ -10,6 +10,7 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.client;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
@@ -110,7 +111,7 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
     scope = makeSourceAnalysisScope();
 
     if (getExclusionsFile() != null) {
-      scope.setExclusions(new FileOfClasses(FileProvider.getFile(getExclusionsFile())));
+      scope.setExclusions(new FileOfClasses(new File(getExclusionsFile())));
     }
 
     for (Module M : this.systemEntries) {
@@ -147,7 +148,7 @@ public abstract class JavaSourceAnalysisEngine extends AbstractAnalysisEngine {
 
   @Override
   public AnalysisCache makeDefaultCache() {
-    return new AnalysisCache(AstIRFactory.makeDefaultFactory(true));
+    return new AnalysisCache(AstIRFactory.makeDefaultFactory());
   }
 
   public AnalysisOptions getDefaultOptions(Iterable<Entrypoint> entrypoints) {

@@ -71,7 +71,7 @@ public abstract class IRTests extends WalaTestCase {
 
   protected static String javaHomePath;
 
-  protected static String testSrcPath = "." + File.separator + "testSrc";
+  private String testSrcPath = "." + File.separator + "src";
 
   public static List<String> rtJar;
 
@@ -100,7 +100,7 @@ public abstract class IRTests extends WalaTestCase {
         }
         found = true;
       }
-    } catch (WalaException e) {
+    } catch (Exception e) {
       // no properties
     }
 
@@ -267,11 +267,11 @@ public abstract class IRTests extends WalaTestCase {
   protected abstract String singlePkgInputForTest(String pkgName);
 
   protected Collection<String> singleTestSrc() {
-    return Collections.singletonList(testSrcPath + File.separator + singleInputForTest());
+    return Collections.singletonList(getTestSrcPath() + File.separator + singleInputForTest());
   }
 
   protected Collection<String> singlePkgTestSrc(String pkgName) {
-    return Collections.singletonList(testSrcPath + File.separator + singlePkgInputForTest(pkgName));
+    return Collections.singletonList(getTestSrcPath() + File.separator + singlePkgInputForTest(pkgName));
   }
 
   protected String[] simpleTestEntryPoint() {
@@ -425,5 +425,13 @@ public abstract class IRTests extends WalaTestCase {
         }
       }
     }
+  }
+
+  protected void setTestSrcPath(String testSrcPath) {
+    this.testSrcPath = testSrcPath;
+  }
+
+  protected String getTestSrcPath() {
+    return testSrcPath;
   }
 }

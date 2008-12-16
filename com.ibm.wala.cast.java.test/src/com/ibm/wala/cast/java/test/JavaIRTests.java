@@ -140,7 +140,7 @@ public abstract class JavaIRTests extends IRTests {
     new IRAssertion() {
 
       public void check(CallGraph cg) throws Exception {
-        final String typeStr = "Foo";
+        final String typeStr = "FooIT1";
 
         final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
