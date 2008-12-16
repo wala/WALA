@@ -24,6 +24,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
@@ -38,14 +39,14 @@ import org.osgi.framework.Bundle;
 public class EclipseTestUtil {
 
   @SuppressWarnings("unchecked")
-  public static void importZippedProject(Plugin plugin, String zipFileName) {
+  public static void importZippedProject(Plugin plugin, String zipFileName, IProgressMonitor monitor) {
     ZipFile zipFile = getZipFile(plugin, zipFileName);
     ZipFileStructureProvider zp = new ZipFileStructureProvider(zipFile);
     List children = zp.getChildren(zp.getRoot());
     Object element = children.get(0);
     String projectName = zp.getLabel(element);
     createOpenProject(projectName);
-    importZipfile(zipFile, zp);
+    importZipfile(zipFile, zp, monitor);
   }
 
   public static void createOpenProject(String projectName) {
@@ -69,7 +70,7 @@ public class EclipseTestUtil {
     }
   }
 
-  protected static void importZipfile(ZipFile sourceZip, ZipFileStructureProvider provider) {
+  protected static void importZipfile(ZipFile sourceZip, ZipFileStructureProvider provider, IProgressMonitor monitor) {
     IPath containerPath = getWorkspacePath();
 
     ImportOperation importOp = new ImportOperation(containerPath, provider.getRoot(), provider, new IOverwriteQuery() {
@@ -81,7 +82,7 @@ public class EclipseTestUtil {
     importOp.setCreateContainerStructure(true);
     importOp.setOverwriteResources(true);
     try {
-      importOp.run(new NullProgressMonitor());
+      importOp.run(monitor);
     } catch (InvocationTargetException e) {
       e.printStackTrace();
     } catch (InterruptedException e) {
