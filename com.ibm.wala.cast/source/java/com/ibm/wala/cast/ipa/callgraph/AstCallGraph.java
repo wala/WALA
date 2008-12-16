@@ -30,6 +30,8 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.impl.FakeRootMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.ssa.DefUse;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.MethodReference;
@@ -80,6 +82,12 @@ public class AstCallGraph extends ExplicitCallGraph {
   protected class AstCGNode extends ExplicitNode {
     private Set<Function<Object, Object>> callbacks;
 
+    private boolean lexicalScopingChanges = false;
+    
+    private IR cachedIR;
+    
+    private DefUse cachedDU;
+    
     private AstCGNode(IMethod method, Context context) {
       super(method, context);
     }
@@ -137,9 +145,28 @@ public class AstCallGraph extends ExplicitCallGraph {
       }
     }
 
-    public void setLexicalScopingChanges() {
+    public void setLexicallyMutatedIR(IR ir) {
+      lexicalScopingChanges = true;
+      cachedIR = ir;
+      cachedDU = new DefUse(ir);
     }
     
+    public IR getLexicallyMutatedIR() {
+      if (lexicalScopingChanges) {
+        return cachedIR;
+      } else {
+        return null;
+      }
+    }
+    
+    public DefUse getLexicallyMutatedDU() {
+      if (lexicalScopingChanges) {
+        return cachedDU;
+      } else {
+        return null;
+      }
+    }
+
     public boolean addTarget(CallSiteReference site, CGNode node) {
       if (super.addTarget(site, node)) {
         if (((AstCGNode) node).callbacks != null) {

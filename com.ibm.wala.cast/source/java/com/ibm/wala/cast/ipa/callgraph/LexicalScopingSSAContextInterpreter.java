@@ -1,5 +1,6 @@
 package com.ibm.wala.cast.ipa.callgraph;
 
+import com.ibm.wala.cast.ipa.callgraph.AstCallGraph.AstCGNode;
 import com.ibm.wala.cast.ipa.callgraph.ScopeMappingKeysContextSelector.ScopeMappingContext;
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.classLoader.IMethod;
@@ -12,7 +13,7 @@ import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 
 public class LexicalScopingSSAContextInterpreter extends AstContextInsensitiveSSAContextInterpreter implements SSAContextInterpreter {
-
+  
   public LexicalScopingSSAContextInterpreter(AnalysisOptions options, AnalysisCache cache) {
     super(options, cache);
   }
@@ -26,10 +27,24 @@ public class LexicalScopingSSAContextInterpreter extends AstContextInsensitiveSS
   }
 
   public IR getIR(CGNode node) {
+    if (node instanceof AstCGNode) {
+      IR ir = ((AstCGNode)node).getLexicallyMutatedIR();
+      if (ir != null) {
+        return ir;
+      }
+    }
+    
     return getAnalysisCache().getSSACache().findOrCreateIR(node.getMethod(), node.getContext(), options.getSSAOptions());
   }
   
   public DefUse getDU(CGNode node) {
+    if (node instanceof AstCGNode) {
+      DefUse du = ((AstCGNode)node).getLexicallyMutatedDU();
+      if (du != null) {
+        return du;
+      }
+    }
+
     return getAnalysisCache().getSSACache().findOrCreateDU(node.getMethod(), node.getContext(), options.getSSAOptions());
   }
   

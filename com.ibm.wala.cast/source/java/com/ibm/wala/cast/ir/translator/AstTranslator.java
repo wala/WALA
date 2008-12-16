@@ -3520,7 +3520,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       }
     }
   }
-
+  
   protected final void walkEntities(CAstEntity N, Context c) {
     visitEntities(N, c, this);
   }

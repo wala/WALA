@@ -35,16 +35,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
 public class AstIRFactory implements IRFactory {
-  private final boolean keepIR;
-
-  private final Map<Pair<IMethod,Context>, IR> keptIRs;
-
-  AstIRFactory(boolean keepIR) {
-    this.keepIR = keepIR;
-    
-    HashMap<Pair<IMethod,Context>, IR> m = HashMapFactory.make();
-    this.keptIRs = (keepIR) ? m : null;
-  }
 
   public ControlFlowGraph makeCFG(final IMethod method, final Context context) {
     return ((AstMethod) method).getControlFlowGraph();
@@ -110,11 +100,6 @@ public class AstIRFactory implements IRFactory {
   public IR makeIR(final IMethod method, final Context context, final SSAOptions options) {
     Assertions._assert(method instanceof AstMethod, method.toString());
     Pair<IMethod,Context> key = Pair.make(method, context);
-    if (keepIR) {
-      if (keptIRs.containsKey(key)) {
-        return keptIRs.get(key);
-      }
-    }
 
     AbstractCFG oldCfg = ((AstMethod) method).cfg();
     SSAInstruction[] oldInstrs = (SSAInstruction[]) oldCfg.getInstructions();
@@ -124,16 +109,12 @@ public class AstIRFactory implements IRFactory {
     IR newIR = new AstIR((AstMethod) method, instrs, ((AstMethod) method).symbolTable(), new SSACFG(method, oldCfg, instrs),
         options);
 
-    if (keepIR) {
-      keptIRs.put(key, newIR);
-    }
-
     return newIR;
   }
 
-  public static IRFactory<IMethod> makeDefaultFactory(final boolean keepAstIRs) {
+  public static IRFactory<IMethod> makeDefaultFactory() {
     return new DefaultIRFactory() {
-      private final AstIRFactory astFactory = new AstIRFactory(keepAstIRs);
+      private final AstIRFactory astFactory = new AstIRFactory();
 
       public IR makeIR(IMethod method, Context context, SSAOptions options) {
         if (method instanceof AstMethod) {

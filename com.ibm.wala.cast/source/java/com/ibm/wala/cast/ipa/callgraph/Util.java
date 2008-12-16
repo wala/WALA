@@ -61,8 +61,8 @@ public class Util {
     return result;
   }
 
-  public static AnalysisCache makeCache(boolean keepIRs) {
-    return new AnalysisCache(AstIRFactory.makeDefaultFactory(keepIRs));
+  public static AnalysisCache makeCache() {
+    return new AnalysisCache(AstIRFactory.makeDefaultFactory());
   }
 
   public static void dumpCG(PropagationCallGraphBuilder builder, CallGraph CG) {

@@ -780,7 +780,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
 
               SSAConversion.copyUse(ir, pc, -i - 1, pc, I.getNumberOfUses() - 1);
 
-              ((AstCallGraph.AstCGNode)n).setLexicalScopingChanges();
+              ((AstCallGraph.AstCGNode)n).setLexicallyMutatedIR(ir);
               
               return getBuilder().getPointerKeyForLocal(n, values[i]);
             }
@@ -850,7 +850,7 @@ public abstract class AstSSAPropagationCallGraphBuilder extends SSAPropagationCa
               // now redo analysis
               // TODO: only values[i] uses need to be re-done.
               ir.lexicalInfo().handleAlteration();
-              ((AstCallGraph.AstCGNode)n).setLexicalScopingChanges();
+              ((AstCallGraph.AstCGNode)n).setLexicallyMutatedIR(ir);
               getAnalysisCache().getSSACache().invalidateDU(M, n.getContext());
               // addConstraintsFromChangedNode(n);
               getBuilder().markChanged(n);
