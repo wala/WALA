@@ -10,14 +10,16 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.summaries;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.Language;
+import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -159,8 +161,7 @@ public class BypassSyntheticClassLoader implements IClassLoader {
     return parent;
   }
 
-  public void init(Set modules) {
-
+  public void init(List<Module> modules) throws IOException {
   }
 
   /*

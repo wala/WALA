@@ -59,7 +59,6 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.strings.Atom;
-import com.ibm.wala.util.warnings.WalaException;
 
 public abstract class IRTests extends WalaTestCase {
   public IRTests(String name, String projectName) {
@@ -417,7 +416,7 @@ public abstract class IRTests extends WalaTestCase {
       } else {
         String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
         File f = new File(srcFilePath);
-        Assert.assertTrue(f.exists());
+        Assert.assertTrue("couldn't find " + srcFilePath, f.exists());
         if (f.isDirectory()) {
           engine.addSourceModule(new SourceDirectoryTreeModule(f));
         } else {

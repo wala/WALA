@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarFile;
@@ -100,9 +101,9 @@ public class EclipseProjectPath {
 
   // SJF: Intentionally do not use HashMapFactory, since the Loader keys in the following must use
   // identityHashCode. TODO: fix this source of non-determinism?
-  private final Map<Loader, Set<Module>> binaryModules = new HashMap<Loader, Set<Module>>();
+  private final Map<Loader, List<Module>> binaryModules = new HashMap<Loader, List<Module>>();
 
-  private final Map<Loader, Set<Module>> sourceModules = new HashMap<Loader, Set<Module>>();
+  private final Map<Loader, List<Module>> sourceModules = new HashMap<Loader, List<Module>>();
 
   private final Collection<IClasspathEntry> alreadyResolved = HashSetFactory.make();
 
@@ -110,8 +111,8 @@ public class EclipseProjectPath {
     this.project = project;
     assert project != null;
     for (Loader loader : Loader.values()) {
-      MapUtil.findOrCreateSet(binaryModules, loader);
-      MapUtil.findOrCreateSet(sourceModules, loader);
+      MapUtil.findOrCreateList(binaryModules, loader);
+      MapUtil.findOrCreateList(sourceModules, loader);
     }
     resolveProjectClasspathEntries();
     if (isPluginProject(project)) {
@@ -156,16 +157,16 @@ public class EclipseProjectPath {
         return;
       }
       if (isPrimordialJarFile(j)) {
-        Set<Module> s = MapUtil.findOrCreateSet(binaryModules, loader);
+        List<Module> s = MapUtil.findOrCreateList(binaryModules, loader);
         s.add(file.isDirectory() ? (Module) new BinaryDirectoryTreeModule(file) : (Module) new JarFileModule(j));
       }
     } else if (e.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
       File file = makeAbsolute(e.getPath()).toFile();
-      Set<Module> s = MapUtil.findOrCreateSet(sourceModules, Loader.SOURCE);
+      List<Module> s = MapUtil.findOrCreateList(sourceModules, Loader.SOURCE);
       s.add(new SourceDirectoryTreeModule(file));
       if (e.getOutputLocation() != null) {
         File output = makeAbsolute(e.getOutputLocation()).toFile();
-        s = MapUtil.findOrCreateSet(binaryModules, loader);
+        s = MapUtil.findOrCreateList(binaryModules, loader);
         s.add(new BinaryDirectoryTreeModule(output));
       }
     } else if (e.getEntryKind() == IClasspathEntry.CPE_PROJECT) {
@@ -181,7 +182,7 @@ public class EclipseProjectPath {
           } else {
             resolveClasspathEntries(javaProject.getRawClasspath(), loader);
             File output = makeAbsolute(javaProject.getOutputLocation()).toFile();
-            Set<Module> s = MapUtil.findOrCreateSet(binaryModules, loader);
+            List<Module> s = MapUtil.findOrCreateList(binaryModules, loader);
             s.add(new BinaryDirectoryTreeModule(output));
           }
         }
@@ -292,12 +293,12 @@ public class EclipseProjectPath {
    */
   public AnalysisScope toAnalysisScope(ClassLoader classLoader, File exclusionsFile) {
     try {
-      Set<Module> s = MapUtil.findOrCreateSet(binaryModules, Loader.APPLICATION);
+      List<Module> l = MapUtil.findOrCreateList(binaryModules, Loader.APPLICATION);
       File dir = makeAbsolute(project.getOutputLocation()).toFile();
       if (!dir.isDirectory()) {
         System.err.println("PANIC: project output location is not a directory: " + dir);
       } else {
-        s.add(new BinaryDirectoryTreeModule(dir));
+        l.add(new BinaryDirectoryTreeModule(dir));
       }
 
       AnalysisScope scope = AnalysisScopeReader.read(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile, classLoader);

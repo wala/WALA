@@ -13,6 +13,7 @@ package com.ibm.wala.cast.js.loader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -326,7 +327,7 @@ public class JavaScriptLoader extends CAstAbstractLoader {
     return JavaScriptTypes.jsLoader;
   }
 
-  public void init(Set modules) throws IOException {
+  public void init(List modules) throws IOException {
     translatorFactory.make(this).translate(modules);
   }
 

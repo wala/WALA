@@ -10,9 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.ibm.wala.cast.loader.AstMethod;
 import com.ibm.wala.cast.loader.AstMethod.LexicalInformation;
 import com.ibm.wala.cast.tree.CAstSourcePositionMap.Position;
@@ -30,8 +27,6 @@ import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.ssa.SymbolTable;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
 public class AstIRFactory implements IRFactory {
@@ -99,7 +94,7 @@ public class AstIRFactory implements IRFactory {
 
   public IR makeIR(final IMethod method, final Context context, final SSAOptions options) {
     Assertions._assert(method instanceof AstMethod, method.toString());
-    Pair<IMethod,Context> key = Pair.make(method, context);
+//    Pair<IMethod,Context> key = Pair.make(method, context);
 
     AbstractCFG oldCfg = ((AstMethod) method).cfg();
     SSAInstruction[] oldInstrs = (SSAInstruction[]) oldCfg.getInstructions();

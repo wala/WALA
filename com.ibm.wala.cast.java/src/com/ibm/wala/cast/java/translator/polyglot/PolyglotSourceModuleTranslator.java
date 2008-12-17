@@ -60,7 +60,7 @@ public class PolyglotSourceModuleTranslator implements SourceModuleTranslator {
 	ClassLoaderReference cl= findInnermostClassLoader(scope);
 
 	while (cl != null) {
-	    Set<Module> modules= scope.getModules(cl);
+	    List<Module> modules= scope.getModules(cl);
 
 	    for(Iterator<Module> iter= modules.iterator(); iter.hasNext(); ) {
 		Module m= (Module) iter.next();

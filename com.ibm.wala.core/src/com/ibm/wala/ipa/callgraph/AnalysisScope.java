@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.jar.Attributes;
@@ -89,9 +90,9 @@ public class AnalysisScope {
   private final ArrayClassLoader arrayClassLoader = new ArrayClassLoader();
 
   /**
-   * map: ClassLoaderReference -> Set <Modules>
+   * map: ClassLoaderReference -> List <Modules>
    */
-  final private Map<ClassLoaderReference, Set<Module>> moduleMap = HashMapFactory.make(3);
+  final private Map<ClassLoaderReference, List<Module>> moduleMap = HashMapFactory.make(3);
 
   private final Collection<Language> languages;
 
@@ -179,7 +180,7 @@ public class AnalysisScope {
    * @param file
    */
   public void addSourceFileToScope(ClassLoaderReference loader, File file, String fileName) throws IllegalArgumentException {
-    Set<Module> s = MapUtil.findOrCreateSet(moduleMap, loader);
+    List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     s.add(new SourceFileModule(file, fileName));
   }
 
@@ -190,7 +191,7 @@ public class AnalysisScope {
    * @param file
    */
   public void addClassFileToScope(ClassLoaderReference loader, File file) throws IllegalArgumentException {
-    Set<Module> s = MapUtil.findOrCreateSet(moduleMap, loader);
+    List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     s.add(new ClassFileModule(file));
   }
 
@@ -198,7 +199,7 @@ public class AnalysisScope {
    * Add a jar file to the scope for a loader
    */
   public void addToScope(ClassLoaderReference loader, JarFile file) {
-    Set<Module> s = MapUtil.findOrCreateSet(moduleMap, loader);
+    List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     if (DEBUG_LEVEL > 0) {
       Trace.println("AnalysisScope: add JarFileModule " + file.getName());
     }
@@ -212,7 +213,7 @@ public class AnalysisScope {
     if (Assertions.verifyAssertions) {
       Assertions._assert(m != null);
     }
-    Set<Module> s = MapUtil.findOrCreateSet(moduleMap, loader);
+    List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     if (DEBUG_LEVEL > 0) {
       Trace.println("AnalysisScope: add module " + m);
     }
@@ -228,6 +229,23 @@ public class AnalysisScope {
         addToScope(loader, m);
       }
     }
+  }
+
+  /**
+   * Add a module file to the scope for a loader. The classes in the added jar file will override classes added to the scope so far.
+   * 
+   * @param loader
+   * @param m
+   */
+  public void addToScopeHead(ClassLoaderReference loader, Module m) {
+    if (Assertions.verifyAssertions) {
+      Assertions._assert(m != null);
+    }
+    List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
+    if (DEBUG_LEVEL > 0) {
+      Trace.println("AnalysisScope: add overriding module " + m);
+    }
+    s.add(0, m);
   }
 
   /**
@@ -314,9 +332,9 @@ public class AnalysisScope {
     return MethodReference.findOrCreate(type, name, ddesc);
   }
 
-  public Set<Module> getModules(ClassLoaderReference loader) {
-    Set<Module> result = moduleMap.get(loader);
-    Set<Module> empty = Collections.emptySet();
+  public List<Module> getModules(ClassLoaderReference loader) {
+    List<Module> result = moduleMap.get(loader);
+    List<Module> empty = Collections.emptyList();
     return result == null ? empty : result;
   }
 

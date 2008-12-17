@@ -14,7 +14,7 @@ package com.ibm.wala.classLoader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
@@ -83,7 +83,7 @@ public interface IClassLoader {
    * @throws IOException
    * @throws IllegalArgumentException  if modules is null
    */
-  public void init(Set<Module> modules) throws IOException;
+  public void init(List<Module> modules) throws IOException;
   
   /**
    * blow away references to any classes in the set

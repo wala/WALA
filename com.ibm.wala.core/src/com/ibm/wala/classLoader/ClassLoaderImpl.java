@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -328,7 +329,7 @@ public class ClassLoaderImpl implements IClassLoader {
    * @throws IOException
    * @throws IllegalArgumentException  if modules is null
    */
-  public void init(Set<Module> modules) throws IOException {
+  public void init(List<Module> modules) throws IOException {
 
     if (modules == null) {
       throw new IllegalArgumentException("modules is null");

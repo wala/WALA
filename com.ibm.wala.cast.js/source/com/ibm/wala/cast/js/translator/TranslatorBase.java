@@ -12,6 +12,7 @@ package com.ibm.wala.cast.js.translator;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import com.ibm.wala.classLoader.ModuleEntry;
@@ -44,7 +45,7 @@ public abstract class TranslatorBase {
 
   public abstract void translate(ModuleEntry M, String N) throws IOException;
 
-  public void translate(Set modules) throws IOException {
+  public void translate(List modules) throws IOException {
     translate(new SourceURLModule(getClass().getClassLoader().getResource(prologueFileName)), prologueFileName);
     Iterator MS = modules.iterator();
     while (MS.hasNext()) {
