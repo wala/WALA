@@ -30,6 +30,7 @@ import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Heap;
 import com.ibm.wala.util.collections.Iterator2Collection;
+import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.collections.ToStringComparator;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.heapTrace.HeapTracer;
@@ -56,9 +57,7 @@ import com.ibm.wala.util.ref.ReferenceCleanser;
  * <p>
  * 
  * @param <T> type of node in the supergraph
- * @param
- *            <P>
- *            type of a procedure (like a box in an RSM)
+ * @param <P> type of a procedure (like a box in an RSM)
  * @param <F> type of factoids propagated when solving this problem
  * 
  * @author sfink
@@ -138,9 +137,14 @@ public class TabulationSolver<T, P, F> {
   final protected Map<P, LocalSummaryEdges> summaryEdges = HashMapFactory.make();
 
   /**
-   * the set of all {@link PathEdge}s that were used as seeds during the tabulation.
+   * the set of all {@link PathEdge}s that were used as seeds during the tabulation, grouped by procedure.
    */
-  private final Collection<PathEdge<T>> seeds = HashSetFactory.make();
+  private final Map<P, Set<PathEdge<T>>> seeds = HashMapFactory.make();
+
+  /**
+   * All seeds, stored redundantly for quick access.
+   */
+  private final Set<PathEdge<T>> allSeeds = HashSetFactory.make();
 
   /**
    * The worklist
@@ -231,7 +235,9 @@ public class TabulationSolver<T, P, F> {
    * Restart tabulation from a particular path edge. Use with care.
    */
   public void addSeed(PathEdge<T> seed) {
-    seeds.add(seed);
+    Set<PathEdge<T>> s = MapUtil.findOrCreateSet(seeds, supergraph.getProcOf(seed.entry));
+    s.add(seed);
+    allSeeds.add(seed);
     propagate(seed.entry, seed.d1, seed.target, seed.d2);
   }
 
@@ -470,7 +476,7 @@ public class TabulationSolver<T, P, F> {
    * @param entries entry nodes in the caller
    * @param retSite the return site
    * @param d4 a fact s.t. <c, d4> -> <callee, d2> was recorded as call flow and <callee, d2> is the source of the summary edge
-   *            being applied
+   *          being applied
    * @param D5 facts to propagate to return site
    */
   private void propToReturnSite(final T c, final T[] entries, final T retSite, final int d4, final IntSet D5) {
@@ -596,7 +602,7 @@ public class TabulationSolver<T, P, F> {
                 if (DEBUG_LEVEL > 0 && Assertions.verifyAssertions) {
                   Assertions._assert(supergraph.containsNode(exit));
                 }
-                int x_num = supergraph.getLocalBlockNumber(exit);                
+                int x_num = supergraph.getLocalBlockNumber(exit);
                 IntSet reachedBySummary = summaries.getSummaryEdges(s_p_num, x_num, d1);
                 if (reachedBySummary != null) {
                   for (final T returnSite : returnSitesForCallee) {
@@ -887,7 +893,6 @@ public class TabulationSolver<T, P, F> {
   /**
    * get the bitvector of facts that hold at the entry to a given node
    * 
-   * @param node
    * @return IntSet representing the bitvector
    */
   public IntSet getResult(T node) {
@@ -903,10 +908,10 @@ public class TabulationSolver<T, P, F> {
         result.addAll(lp.getReachable(n));
       }
     }
-    
-    for (PathEdge<T> seed : getSeeds()) {
-      P p = supergraph.getProcOf(seed.entry);
-      if (p.equals(proc)) {
+
+    Set<PathEdge<T>> pSeeds = seeds.get(proc);
+    if (pSeeds != null) {
+      for (PathEdge<T> seed : pSeeds) {
         LocalPathEdges lp = pathEdges.get(seed.entry);
         if (lp != null) {
           result.addAll(lp.getReachable(n));
@@ -921,7 +926,6 @@ public class TabulationSolver<T, P, F> {
     /**
      * get the bitvector of facts that hold at the entry to a given node
      * 
-     * @param node
      * @return IntSet representing the bitvector
      */
     public IntSet getResult(T node) {
@@ -1051,7 +1055,7 @@ public class TabulationSolver<T, P, F> {
   }
 
   public Collection<PathEdge<T>> getSeeds() {
-    return Collections.unmodifiableCollection(seeds);
+    return Collections.unmodifiableCollection(allSeeds);
   }
 
   public IProgressMonitor getProgressMonitor() {
