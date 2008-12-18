@@ -68,7 +68,7 @@ public class LocalPathEdges {
    * 
    * A map from integer (d1) -> (IBinaryNonNegativeIntRelation)
    * 
-   * For fact d1, paths[d2] gives a relation R=(n,d2) s.t. (<s_p, d1> ->
+   * For fact d1, paths[d1] gives a relation R=(n,d2) s.t. (<s_p, d1> ->
    * <n,d2>) is a path edge.
    * 
    * 
@@ -169,7 +169,7 @@ public class LocalPathEdges {
     if (altPaths != null) {
       IBinaryNaturalRelation R2 = altPaths.get(i);
       if (R2 == null) {
-        // we expect the first dimention of R to be dense, the second sparse
+        // we expect the first dimension of R to be dense, the second sparse
         R2 = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
             BasicNaturalRelation.TWO_LEVEL);
         altPaths.set(i, R2);
