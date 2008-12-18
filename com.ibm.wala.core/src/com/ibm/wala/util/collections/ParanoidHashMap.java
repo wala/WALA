@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.collections;
 
+import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -50,7 +51,14 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
   @Override
   public V put(K arg0, V arg1) {
     if (arg0 != null && arg0.hashCode() == System.identityHashCode(arg0)) {
-      Assertions._assert(false, arg0.getClass().toString());
+      try {
+        Method method = arg0.getClass().getMethod("hashCode");
+        if (method.getDeclaringClass() == Object.class){
+          Assertions._assert(false, arg0.getClass().toString());
+        }
+      } catch (Exception e) {
+        Assertions._assert(false, "Could not find hashCode method");
+      }
     }
     return super.put(arg0, arg1);
   }
