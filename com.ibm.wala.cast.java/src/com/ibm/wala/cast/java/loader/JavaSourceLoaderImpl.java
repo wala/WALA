@@ -38,6 +38,7 @@ import com.ibm.wala.cfg.AbstractCFG;
 import com.ibm.wala.classLoader.ClassLoaderImpl;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.classLoader.IClassLoader;
+import com.ibm.wala.classLoader.ModuleEntry;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeCT.ClassConstants;
@@ -396,7 +397,7 @@ public abstract class JavaSourceLoaderImpl extends ClassLoaderImpl {
     return cha;
   }
 
-  protected void loadAllSources(Set/* <ModuleEntry> */modules) {
+  protected void loadAllSources(Set<ModuleEntry> modules) {
     getTranslator().loadAllSources(modules);
     fTypeMap = null;
   }
