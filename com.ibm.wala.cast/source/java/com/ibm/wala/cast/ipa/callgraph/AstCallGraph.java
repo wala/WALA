@@ -79,7 +79,7 @@ public class AstCallGraph extends ExplicitCallGraph {
 
   }
 
-  protected class AstCGNode extends ExplicitNode {
+  public class AstCGNode extends ExplicitNode {
     private Set<Function<Object, Object>> callbacks;
 
     private boolean lexicalScopingChanges = false;
