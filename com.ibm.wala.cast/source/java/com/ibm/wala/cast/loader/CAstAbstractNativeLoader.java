@@ -43,7 +43,7 @@ public abstract class CAstAbstractNativeLoader extends CAstAbstractLoader {
 
   }
 
-  public void init(final Set modules) {
+  public void init(final List modules) {
     final CAst ast = new CAstImpl();
 
     final Set<Pair> topLevelEntities = new LinkedHashSet<Pair>();
