@@ -730,4 +730,20 @@ public class TypeInference extends SSAInference<TypeVariable> implements FixedPo
     TypeAbstraction ta = getVariable(valueNumber).getType();
     return ta == BOTTOM || ta.getType() == null;
   }
+
+  /**
+   * Extract all results of the type inference analysis.
+   * @return an array, where the i'th variable holds the type abstraction of the i'th value number. 
+   */
+  public TypeAbstraction[] extractAllResults(){
+    int numberOfVars = ir.getSymbolTable().getMaxValueNumber() + 1;
+    TypeAbstraction[] ret = new TypeAbstraction[numberOfVars];
+    
+    for (int i = 0 ; i < numberOfVars ; ++i){
+      TypeVariable var = getVariable(i);
+      ret[i] = var == null ? null : var.getType();
+    }
+    
+    return ret;
+  }
 }
