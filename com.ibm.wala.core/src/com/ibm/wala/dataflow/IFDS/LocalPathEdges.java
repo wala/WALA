@@ -423,7 +423,7 @@ public class LocalPathEdges {
       for (IntIterator it = paths.iterateIndices(); it.hasNext();) {
         int d2 = it.next();
         IBinaryNaturalRelation R = (IBinaryNaturalRelation) contents.next();
-        if (R != null && R.getRelatedCount(n) > 0) {
+        if (R != null && R.anyRelated(n)) {
           result.add(d2);
         }
       }

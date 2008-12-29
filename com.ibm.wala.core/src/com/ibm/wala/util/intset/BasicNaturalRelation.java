@@ -222,7 +222,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     private void advanceX() {
       delegateIterator = null;
       for (int i = nextX + 1; i <= maxX; i++) {
-        if (anyRelationWithX(i)) {
+        if (anyRelated(i)) {
           nextX = i;
           nextIndex = getFirstIndex(i);
           if (nextIndex == smallStore.length) {
@@ -285,7 +285,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
    * @param x
    * @return true iff there exists pair (x,y) for some y
    */
-  private boolean anyRelationWithX(int x) {
+  public boolean anyRelated(int x) {
     return smallStore[0].get(x) != EMPTY_CODE;
   }
 
@@ -342,7 +342,7 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
     if (Assertions.verifyAssertions) {
       Assertions._assert(x >= 0);
     }
-    if (!anyRelationWithX(x)) {
+    if (!anyRelated(x)) {
       return 0;
     } else {
       if (usingDelegate(x)) {

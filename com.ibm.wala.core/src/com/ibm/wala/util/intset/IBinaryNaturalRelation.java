@@ -41,6 +41,12 @@ public interface IBinaryNaturalRelation extends VerboseAction, Iterable<IntPair>
 
   /**
    * @param x
+   * @return true iff there exists pair (x,y) for some y
+   */
+  public abstract boolean anyRelated(int x);
+  
+  /**
+   * @param x
    * @param y
    */
   public abstract void remove(int x, int y);
