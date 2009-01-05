@@ -214,6 +214,39 @@ public class NestedJarFileModule implements Module {
       return FileSuffixes.isSourceFile(getName());
     }
 
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + getOuterType().hashCode();
+      result = prime * result + ((name == null) ? 0 : name.hashCode());
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      Entry other = (Entry) obj;
+      if (!getOuterType().equals(other.getOuterType()))
+        return false;
+      if (name == null) {
+        if (other.name != null)
+          return false;
+      } else if (!name.equals(other.name))
+        return false;
+      return true;
+    }
+
+    private NestedJarFileModule getOuterType() {
+      return NestedJarFileModule.this;
+    }
+
+    
   }
 
   @Override
@@ -221,4 +254,31 @@ public class NestedJarFileModule implements Module {
     return "Nested Jar File:" + entry.getName();
   }
 
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    NestedJarFileModule other = (NestedJarFileModule) obj;
+    if (parent == null) {
+      if (other.parent != null)
+        return false;
+    } else if (!parent.equals(other.parent))
+      return false;
+    return true;
+  }
+
+   
+  
 }

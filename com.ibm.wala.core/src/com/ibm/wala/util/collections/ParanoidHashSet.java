@@ -78,9 +78,8 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
     if (arg0 == null) {
       throw new IllegalArgumentException("arg0 is null");
     }
-    if (arg0.hashCode() == System.identityHashCode(arg0)) {
-      Assertions._assert(false, arg0.getClass().toString());
-    }
+    
+    ParanoidHashMap.assertOverridesHashCode(arg0);
     boolean result = super.add(arg0);
     if (result) {
       nAdded++;
@@ -104,5 +103,4 @@ public class ParanoidHashSet<T> extends LinkedHashSet<T> {
     }
     return result;
   }
-
 }

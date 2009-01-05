@@ -145,6 +145,17 @@ public class ActionFormFactoryMethod extends SummarizedMethod {
       assert false;
       return false;
     }
+    
+    @Override
+    public int hashCode() {
+      return super.hashCode(); // like a singleton
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+      return super.equals(o);
+    }
+    
   }
 
 }

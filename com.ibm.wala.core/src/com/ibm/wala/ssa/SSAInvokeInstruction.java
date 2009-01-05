@@ -148,9 +148,8 @@ public class SSAInvokeInstruction extends SSAAbstractInvokeInstruction {
 
   @Override
   public int hashCode() {
-    return site.hashCode() * 7529;
+    return (site.hashCode() * 7529) + (exception * 9823); 
   }
-
 
   @Override
   public Collection<TypeReference> getExceptionTypes() {

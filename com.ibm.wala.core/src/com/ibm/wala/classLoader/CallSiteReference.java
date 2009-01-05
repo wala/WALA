@@ -44,6 +44,33 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
     this.declaredTarget = declaredTarget;
   }
 
+  
+  
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = super.hashCode();
+    result = prime * result + ((declaredTarget == null) ? 0 : declaredTarget.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (!super.equals(obj))
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    CallSiteReference other = (CallSiteReference) obj;
+    if (declaredTarget == null) {
+      if (other.declaredTarget != null)
+        return false;
+    } else if (!declaredTarget.equals(other.declaredTarget))
+      return false;
+    return true;
+  }
+
   // the following atrocities are needed to save a word of space by
   // declaring these classes static, so they don't keep a pointer
   // to the enclosing environment
@@ -200,4 +227,8 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
   public CallSiteReference cloneReference(int pc) {
     return make(pc, getDeclaredTarget(), getInvocationCode());
   }
+  
+  
+  
+  
 }

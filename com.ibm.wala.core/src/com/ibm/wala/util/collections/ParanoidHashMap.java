@@ -16,6 +16,7 @@ import java.util.Map;
 
 import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.util.debug.Assertions;
+import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
@@ -50,17 +51,21 @@ public class ParanoidHashMap<K, V> extends LinkedHashMap<K, V> {
    */
   @Override
   public V put(K arg0, V arg1) {
-    if (arg0 != null && arg0.hashCode() == System.identityHashCode(arg0)) {
+    assertOverridesHashCode(arg0);
+    return super.put(arg0, arg1);
+  }
+
+  public static void assertOverridesHashCode(Object o) throws UnimplementedError {
+    if (o != null && o.hashCode() == System.identityHashCode(o)) {
       try {
-        Method method = arg0.getClass().getMethod("hashCode");
+        Method method = o.getClass().getMethod("hashCode");
         if (method.getDeclaringClass() == Object.class){
-          Assertions._assert(false, arg0.getClass().toString());
+          Assertions._assert(false, o.getClass().toString());
         }
       } catch (Exception e) {
         Assertions._assert(false, "Could not find hashCode method");
       }
     }
-    return super.put(arg0, arg1);
   }
 
   /*
