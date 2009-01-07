@@ -398,13 +398,12 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
     SSAContextInterpreter defI = new DefaultSSAInterpreter(getOptions(), getAnalysisCache());
     defI = new DelegatingSSAContextInterpreter(ReflectionContextInterpreter.createReflectionContextInterpreter(cha, getOptions(), getAnalysisCache(), reflect),
         defI);
-    SSAContextInterpreter contextInterpreter = new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
+    SSAContextInterpreter contextInterpreter = appContextInterpreter == null ? defI : new DelegatingSSAContextInterpreter(appContextInterpreter, defI);
     return contextInterpreter;
   }
 
   @Override
   protected boolean unconditionallyAddConstraintsFromNode(CGNode node) {
-    
     // add all relevant constraints
     addNewConstraints(node);
     addCallConstraints(node);

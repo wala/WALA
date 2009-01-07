@@ -32,14 +32,17 @@ public class DelegatingSSAContextInterpreter extends DelegatingRTAContextInterpr
   private final SSAContextInterpreter B;
 
   /**
-   * TODO: really shouldn't allow A to be null.
+   * neither A nor B should be null.
    */
   public DelegatingSSAContextInterpreter(SSAContextInterpreter A, SSAContextInterpreter B) {
     super(A, B);
     this.A = A;
     this.B = B;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(B != null, "B is null");
+    if (A == null) {
+      throw new IllegalArgumentException("A cannot be null");
+    }
+    if (B == null) {
+      throw new IllegalArgumentException("B cannot be null");
     }
   }
 
