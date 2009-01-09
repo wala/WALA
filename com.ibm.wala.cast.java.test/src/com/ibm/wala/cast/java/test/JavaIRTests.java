@@ -13,7 +13,6 @@
  */
 package com.ibm.wala.cast.java.test;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -62,18 +61,6 @@ public abstract class JavaIRTests extends IRTests {
     this(name, null);
   }
  
-  protected String singleInputForTest() {
-    return getName().substring(4) + ".java";
-  }
-
-  protected String singleInputForTestNoExt() {
-    return getName().substring(4);
-  }
-
-  protected String singlePkgInputForTest(String pkgName) {
-    return pkgName + File.separator + getName().substring(4) + ".java";
-  }
-
   public void testSimple1() {
 
     List<? extends IRAssertion> assertions = Arrays.asList(new SourceMapAssertion("Source#Simple1#doStuff#(I)V", "prod", 14),
@@ -94,7 +81,7 @@ public abstract class JavaIRTests extends IRTests {
     new IRAssertion() {
 
       public void check(CallGraph cg) throws Exception {
-        final String typeStr = singleInputForTestNoExt();
+        final String typeStr = singleInputForTest();
 
         final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
@@ -327,7 +314,7 @@ public abstract class JavaIRTests extends IRTests {
     new IRAssertion() {
 
       public void check(CallGraph cg) throws Exception {
-        final String typeStr = singleInputForTestNoExt() + "$WhatsIt";
+        final String typeStr = singleInputForTest() + "$WhatsIt";
 
         final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 
@@ -357,7 +344,7 @@ public abstract class JavaIRTests extends IRTests {
     new IRAssertion() {
 
       public void check(CallGraph cg) throws Exception {
-        final String typeStr = singleInputForTestNoExt();
+        final String typeStr = singleInputForTest();
 
         final TypeReference type = findOrCreateTypeReference("Source", typeStr + "$WhatsIt", cg.getClassHierarchy());
 
@@ -473,7 +460,7 @@ public abstract class JavaIRTests extends IRTests {
        * to.
        */
       public void check(CallGraph cg) throws Exception {
-        final String typeStr = singleInputForTestNoExt();
+        final String typeStr = singleInputForTest();
         final String localClassStr = "Foo";
 
         // Observe the descriptor for a class local to a method.
@@ -509,7 +496,7 @@ public abstract class JavaIRTests extends IRTests {
     new IRAssertion() {
 
       public void check(CallGraph cg) throws Exception {
-        final String typeStr = singleInputForTestNoExt();
+        final String typeStr = singleInputForTest();
 
         final TypeReference type = findOrCreateTypeReference("Source", typeStr, cg.getClassHierarchy());
 

@@ -261,16 +261,12 @@ public abstract class IRTests extends WalaTestCase {
     }
   }
 
-  protected abstract String singleInputForTest();
-
-  protected abstract String singlePkgInputForTest(String pkgName);
-
   protected Collection<String> singleTestSrc() {
-    return Collections.singletonList(getTestSrcPath() + File.separator + singleInputForTest());
+    return Collections.singletonList(getTestSrcPath() + File.separator + singleJavaInputForTest());
   }
 
   protected Collection<String> singlePkgTestSrc(String pkgName) {
-    return Collections.singletonList(getTestSrcPath() + File.separator + singlePkgInputForTest(pkgName));
+    return Collections.singletonList(getTestSrcPath() + File.separator + singleJavaPkgInputForTest(pkgName));
   }
 
   protected String[] simpleTestEntryPoint() {
@@ -337,7 +333,7 @@ public abstract class IRTests extends WalaTestCase {
     }
 
     if (assertReachable) {
-      Assert.assertTrue(unreachable.toString(), unreachable.isEmpty());
+      Assert.assertTrue("unreachable methods: " + unreachable.toString(), unreachable.isEmpty());
     }
   }
 
@@ -411,7 +407,11 @@ public abstract class IRTests extends WalaTestCase {
 
       if (w != null) {
         IFile file = project.getProject().getFile(srcFilePath);
-        engine.addSourceModule(new EclipseSourceFileModule(file));
+        try {
+          engine.addSourceModule(new EclipseSourceFileModule(file));
+        } catch (IllegalArgumentException e) {
+          assertTrue(e.getMessage(), false);
+        }
         
       } else {
         String srcFileName = srcFilePath.substring(srcFilePath.lastIndexOf(File.separator) + 1);
@@ -433,4 +433,17 @@ public abstract class IRTests extends WalaTestCase {
   protected String getTestSrcPath() {
     return testSrcPath;
   }
+  
+  protected String singleJavaInputForTest() {
+    return getName().substring(4) + ".java";
+  }
+
+  protected String singleInputForTest() {
+    return getName().substring(4);
+  }
+
+  protected String singleJavaPkgInputForTest(String pkgName) {
+    return pkgName + File.separator + getName().substring(4) + ".java";
+  }
+
 }
