@@ -35,53 +35,81 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package javaonepointfive;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+import java.util.ArrayList;
+import java.util.Iterator;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
-
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
-
-	// The shared instance
-	private static Activator plugin;
+public class BasicsGenerics {
 	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+	static ArrayList<String> strs = new ArrayList<String>();
+	static ArrayList ints = new ArrayList();
+	
+	public BasicsGenerics() {
+		strs.add("Coucou, monde!");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
+	public BasicsGenerics(String s) {
+		strs.add(s);
+	}
+	
+	public static void main(String args[]) {
+		BasicsGenerics a = new BasicsGenerics();
+		String frenchy = a.part1();
+//		
+//		
+		String s = "mondo";
+		String sicilian = new BasicsGenerics("ciao "+s).part2();
+//		
+		System.out.println(frenchy);
+		System.out.println(sicilian);
+		strs.add("hello");
+		ints.add(new Integer(3));
+		
+		String qqq;
+		
+		for (Iterator iter = ((Iterable)ints).iterator(); iter.hasNext(); iter.next());
+		
+		for (Iterator<String> iter = strs.iterator(); iter.hasNext();) {
+			qqq = iter.next();
+			System.out.println(qqq);
+		}
+		
+		Iterable s1 = strs;
+		for (Iterator itertmp = s1.iterator(); itertmp.hasNext();) {
+			String rrr = (String) itertmp.next();
+			{
+				System.out.println("la vida pasaba y sentia " + rrr);
+			}
+		}
+		
+		for (String rrr: strs) {
+			System.out.println("la vida pasaba y sentia " + rrr);
+		}
+
+		for (String rrr: strs) {
+			System.out.println("la vida pasaba y sentia " + rrr);
+		}
+
+		for ( String x: makeArray() )
+			System.out.println(x);
+//		
+//		System.out.println("---break time---");
+//		for ( int i = 0; i < makeArray().length; i++ )
+//			System.out.println(makeArray()[i]);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
+	public static String[] makeArray() {
+		String[] hey = {"hey","whats","up"};
+		System.out.println("give a hoot");
+		return hey;
+	}
+	
+	public String part1() {
+		return strs.get(0);
 	}
 
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
+	public String part2() {
+		return strs.get(0);
 	}
-
 }

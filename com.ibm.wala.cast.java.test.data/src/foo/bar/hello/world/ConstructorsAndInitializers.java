@@ -35,53 +35,73 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package foo.bar.hello.world;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+class Super {
+	String s;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
-
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
-
-	// The shared instance
-	private static Activator plugin;
-	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+	Super(String x) {
+		super();
+		s = x;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
 }
+
+public class ConstructorsAndInitializers extends Super {
+	static int iX;
+	static int sX;
+
+	Object x;
+
+	static {
+		sX = 11;
+	}
+
+	{
+		iX = 55 + 33;
+		sX = 6;
+	}
+
+	ConstructorsAndInitializers() {
+		this("hello");
+	}
+
+	{
+		int y = 5;
+		iX = y + 9;
+
+		x = new Super("yo wassup") {
+
+			{
+				s += " i say wassup!";
+				iX = 55 + 12;
+			}
+
+			public String toString() {
+				return s + " -- from an anon class in " + iX + "," + sX + ": " + ConstructorsAndInitializers.this.s;
+			}
+			
+			{
+				s += " i say i say";
+			}
+		};
+	}
+
+	protected ConstructorsAndInitializers(String x) {
+		super("yo");
+		iX = 99;
+	}
+
+	static {
+		sX = 22;
+	}
+
+	public static void main(String args[]) {
+		System.out.println(new ConstructorsAndInitializers().x.toString()); // yo wassup i say wassup! i say i say -- from an anon class in 99,6: yo
+
+		class T{
+			
+		}
+		T t = new T();
+	}
+}
+

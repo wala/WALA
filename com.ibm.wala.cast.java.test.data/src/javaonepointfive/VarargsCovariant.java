@@ -35,53 +35,32 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package javaonepointfive;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+public class VarargsCovariant {
+	static class A { 
+		A hello(int... x) {
+			System.out.println("a hello");
+			return this;
+		} 
+	}
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
+	static class B extends A { 
+		B hello(int... x) {
+			System.out.println("b hello");
+			return this;
+		}
+	}
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
-
-	// The shared instance
-	private static Activator plugin;
+	public static void main(String args[]) {
+		(new VarargsCovariant()).doit();
+	}
 	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
+	private void doit() {
+		A a = new A();
+		a.hello(3114, 35, 74, 51617054);
+		a = new B();
+		a.hello(3114, 35, 74, 51617054);
 	}
 
 }

@@ -35,53 +35,46 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package foo;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+// need inner classes to run this test
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
+public class SimpleNames {
+	int f;
+	static int s;
+	public void hello() {
+		f = 3; // this.f = 3
+		s = 4; // SimpleNames.f = 4
+		
+		SimpleNames.s = foo.SimpleNames.s;
+		if ( false ) {
+			foo.SimpleNames.this.hello();
+			hello();
+			this.hello();
+		}
+		
+		final int i = 5;
+		new Object() {
+			public int hashCode() {
+				f = 5; // SimpleNames.this = 5
+				s = 6; // SimpleNames.s = 6
+				
+				SimpleNames.this.f = 5;
+				SimpleNames.s = 6;
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
+				if ( false ) {
+					foo.SimpleNames.this.hello();
+					SimpleNames.this.hello();
+					hello(); // this should expand to above
+					this.hashCode();
+					hashCode(); // should expand to above
+				}
 
-	// The shared instance
-	private static Activator plugin;
-	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+				return i; // just plain "i" in polyglot, treats like local.
+			}
+		};
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
+	public static void main(String args[]) {
+		new SimpleNames().hello();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
 }

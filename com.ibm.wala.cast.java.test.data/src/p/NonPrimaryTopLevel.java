@@ -6,6 +6,7 @@ public class NonPrimaryTopLevel {
 	Foo f = new Foo();
     }
 }
+
 class Foo {
     
 }

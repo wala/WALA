@@ -35,53 +35,63 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package javaonepointfive;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+class Alef {
+	void foo(String... args) {
+		System.out.println("var args not overridden");
+	}
+}
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
+class Bet extends Alef {
+	void foo(String a, String b) {
+		System.out.println("non-varargs overrides varargs");
+	}
+}
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
+class Alpha {
+	void foo(String a, String b) {
+		System.out.println("non-varargs not overridden");
+	}
+}
 
-	// The shared instance
-	private static Activator plugin;
+class Beta extends Alpha {
+	void foo(String... args) {
+		System.out.println("varargs overrides non-varargs");
+	}
+}
+
+
+////
+
+class VarityTestSuper {
+	void bar(String... args) {}
+}
+
+class VarityTestSub extends VarityTestSuper {
+	void bar(String... args) {}
+}
+
+public class VarargsOverriding {
+	public static void main(String args[]) {
+		(new VarargsOverriding()).doit();
+	}
 	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
+	private void doit() {
+		Bet b = new Bet();
+		Alef a = b;
+		a.foo("hello", "world");
+		b.foo("hello", "world");
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
+		Beta bb = new Beta();
+		Alpha aa = bb;
+		aa.foo("hello", "world");
+		bb.foo("hello", "world");
+		bb.foo("hello", "world", "and", "more");
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
+		VarityTestSuper x = new VarityTestSuper();
+		x.bar("Hello", "world", "howareya");
+		x = new VarityTestSub();
+		x.bar("Hello", "world", "howareya");
 	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
 }

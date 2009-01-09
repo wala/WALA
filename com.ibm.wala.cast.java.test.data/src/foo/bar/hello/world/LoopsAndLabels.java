@@ -35,53 +35,74 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package foo.bar.hello.world;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+public class LoopsAndLabels {
+	public static void main(String args[]) {
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
+		aaa: do {
+			while (null instanceof String) {
+				String x = (String) null;
+				Object a = (Object) x;
+				Object b = (Object) "hello";
+				x = (String) a;
+				x = "hello";
+				x = (String) b.toString();
+				x = ((String)((Object) b.toString()));
+				x = (String)(Object) b.toString();
+				b = (Object) b.toString();
+				b = (String) b.toString();
+				if (true)
+					break aaa;
+			}
+			if ("war".equals("peace"))
+				continue;
+			else if (1 == 0)
+				break;
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
+			int x = 6;
+			x ++;
+		} while (false);
 
-	// The shared instance
-	private static Activator plugin;
-	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+		if (false)
+			return;
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; i < 4; i++) {
+				System.out.println(i + "*" + j + "=" + (i * j));
+			}
+		}
+		a: for (int i = 0; i < 3; i++) {
+			b: for (int j = 0; j < 10; j++) {
+				c: for (int k = 0; k < 10; k++) {
+					if (true)
+						break c;
+				}
+
+				if ('c' == 'd')
+					continue b;
+			}
+
+			if (null instanceof Object)
+				break a;
+		}
+		a: for (int i = 0; i < 3; i++) {
+			b: for (int j = 0; j < i; i++) {
+				c: for (int k = 0; k < j; k++) {
+					if (true)
+						;
+					else
+						continue c;
+				}
+				if ("freedom".equals("slavery"))
+					break b;
+			}
+			if ("ignorance" == "strength")
+				continue a;
+		}
+
+		foo:
+		;
+
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
 }

@@ -35,53 +35,44 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package javaonepointfive;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+public class MoreOverriddenGenerics {
+	class Super<T> {
+		T x;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
+		public T get() {
+			return x;
+		}
+	}
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
-
-	// The shared instance
-	private static Activator plugin;
+	class Sub extends Super<Number> {
+		public Number get() {
+			return super.get();
+		} 
+	}
 	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+	class SubSub extends Sub {
+		public Long get() {
+			return new Long(6);
+		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
+	private void doit() {
+		String x = new Super<String>().get();
+		System.err.println(x);
+		Super<Number> s = new Sub();
+		Number n = s.get();
+		SubSub sss = new SubSub();
+		n = sss.get();
+		Sub ss = sss;
+		n = ss.get();
+		s = sss;
+		n = s.get();
+		System.err.println(n);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
+	
+	public static void main(String args[]) {
+		(new MoreOverriddenGenerics()).doit();
 	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
 }

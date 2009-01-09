@@ -35,53 +35,44 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package foo.bar.hello.world;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+public class ArraysAndSuch {
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
+	public static void main(String args[]) {
+		ArraysAndSuch.main();
+	}
+	public static void main() {
+		Object o1 = null;
+		Object[] os1 = new Object[] { null, o1, null };
+		Object[] os2 = { null };
+		os1 = new Object[] { null };
+		os1 = new String[][] { { null, null }, { null} };
+		os1 = new Object[][] { { null, o1 }, { null}, {os2}, {null,os1,null} };
+		System.out.println(os1[1]);
+		os1[1] = null;
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
-
-	// The shared instance
-	private static Activator plugin;
+		os1.clone();
+		if ( os1.equals(os2) ) {
+			Class x = os1.getClass();
+			os1.notify();
+			os1.toString();
+			try {
+				x.getClasses().wait(x.getClasses().length,o1.hashCode());
+				os1.wait(os1.length);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		float x[] = new float[4+5];
+		int[][][][] y = new int[2][x.length][1][1+1];
+		int z[] = new int[] { 2+3, 4+3 };
+		boolean[] a = new boolean[] { };
+		Object b = new String[] { };
+		Object c[] = new String[] {};
+		String d[] = new String[3];
+	}
 	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
+	
 }

@@ -35,53 +35,53 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package javaonepointfive;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+public class AnonymousGenerics {
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
+	static interface Ops<E> {
+		public E nullary();
+		public E unary(E x);
+	}
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
+	static class StrTripler implements Ops<String> {
+		// if has type parameters, find overriding method and 
+		// get erasures for all of those types and make a new method
+		// that calls this one (with casts). no worries about return values.
+		public String unary(String x) {
+			return x + x + x;
+		}
+		public String nullary() {
+			String x = "talk about it ";
+			return x+x+x;
+		}
+	}		
 
-	// The shared instance
-	private static Activator plugin;
+	public static void main(String args[]) {
+		(new AnonymousGenerics()).doit();
+	}
 	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+	private void doit() {
+		Ops<String> strQuadrupler = new Ops<String>() {
+			public String unary(String x) {
+				return x+x+x+x;
+			}
+			public String nullary() {
+				String x = "time to make a move to the global economy ";
+				return x+x+x+x;
+			}
+		};
+		System.out.println(strQuadrupler.unary("hi"));
+		System.out.println(new StrTripler().unary("hi"));
+		
+		String globalEconomy = strQuadrupler.nullary();
+		System.out.println(globalEconomy);
+		
+		Ops<String> ops = new StrTripler();
+		globalEconomy = ops.nullary();
+		System.out.println(globalEconomy);
+		
+		Ops hack = ops;
+		hack.unary("whatever");
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
 }

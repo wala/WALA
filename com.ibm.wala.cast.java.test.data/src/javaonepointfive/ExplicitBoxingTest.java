@@ -35,53 +35,29 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package javaonepointfive;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+public class ExplicitBoxingTest {
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
-
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
-
-	// The shared instance
-	private static Activator plugin;
+	public static void main(String[] args) {
+		(new ExplicitBoxingTest()).doit();
+	}
 	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
+	private void doit() {
+		int a = 6;
+		a = a + a;
+		System.out.println(a);
+		Integer useless1 = new Integer(5+6);
+		Integer aa = new Integer(a+a);
+		int aaa = aa.intValue();
+		System.out.println(aaa);
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
+		int b = 6;
+		b = b + b;
+		System.out.println(b);
+		Integer useless2 = 5+6;
+		Integer bb = b+b;
+		int bbb = bb;
+		System.out.println(bbb);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
 }

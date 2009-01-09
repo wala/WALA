@@ -35,53 +35,37 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package foo;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+public class QualifiedNames {
+        static int field;
+        int x;
+        public QualifiedNames(int xx) {
+        	x = xx;
+        }
+        public static void main(String args[]) {
+        	QualifiedNames qn = new QualifiedNames(5);
+        	int y = 3;
+        	y = y + qn.x;
+        }
+        public void test() {
+                int x = 2;
+                x = x / x / x;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
+                field = 5;
+                field = QualifiedNames.field + field;
+                this.x = 6;
+                QualifiedNames.field = 6;
+                QualifiedNames.this.x = 6;
+                
+                foo.QualifiedNames.field = 6;
+                foo.QualifiedNames.this.x = 7;
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
-
-	// The shared instance
-	private static Activator plugin;
-	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
+//              TODO FIXME IMPORTANT: ENABLE WHEN WE SUPPORT FUNCTIONSIN JDT BRIDGE!!!
+                foo.QualifiedNames.empty();
+                emptyInstance();
+                foo.QualifiedNames.this.emptyInstance();
+        }
+        public static void empty() {}
+        public void emptyInstance() {}
 }

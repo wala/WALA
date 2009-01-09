@@ -35,53 +35,30 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package javaonepointfive;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+import java.util.ArrayList;
+import java.util.Collection;
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
+public class MethodGenerics {
+	static <T> void fromArrayToCollection(T[] a, Collection<T> c) {
+		c.add(a[0]);
+	}
 
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
-
-	// The shared instance
-	private static Activator plugin;
+	static <T extends String> void foo(String x, T y) {
+		x = y;
+		System.out.println(x);
+	}
 	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+	public static void main(String args[]) {
+		(new MethodGenerics()).doit();
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
+	
+	private void doit() {
+		ArrayList<String> list = new ArrayList<String>();
+		String array[] = new String[] { "coucou monde", "ciao mondo", "guten tag welt", "hola mundo", "shalom olam" };
+		fromArrayToCollection(array, list);
+		System.out.println(list);
+		foo("whatever", "whatever");
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
 }

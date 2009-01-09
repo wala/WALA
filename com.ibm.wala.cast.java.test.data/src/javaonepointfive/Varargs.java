@@ -35,53 +35,37 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package javaonepointfive;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
-
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
-
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
-
-	// The shared instance
-	private static Activator plugin;
+public class Varargs {
+	public Varargs(int... x) {
+		System.out.println(x[0]==x[1]);
+	}
+	public Varargs() {
+		this(1,1);
+	}
 	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+	public static void varargs(int x, int y, Object... foo) {
+		System.out.println(x);
+		System.out.println(y);
+		for (int i = 0; i < foo.length; i++)
+			System.out.println(foo[i]);
+		
+		new Varargs();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
+	// try overriding a function and causing havoc (i assume it knows at compile time whether to expand varargs)
+	public static void varargs(int x, int y, String foo, String xa, String ya, String z) {
+		System.out.println("gotcha!");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
+	public static void main(String args[]) {
+		varargs(2, 3, new String[] { "hello", "world" });
+		varargs(2, 3, (Object) new String[] { "hello", "world" });
+		varargs(2, 3, (Object[]) new String[] { "hello", "world" });
+		varargs(2, 3);
+		varargs(2, 3, "hi");
+		varargs(2, 3, "hello", "there");
+		varargs(4, 5, "coucou", "monde", "shalom", "'olam");
 	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
 }

@@ -35,53 +35,52 @@
  * IS". REGENTS HAS NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT,
  * UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
  */
-package com.ibm.wala.cast.java.test.data;
+package javaonepointfive;
 
-import org.eclipse.core.runtime.Plugin;
-import org.osgi.framework.BundleContext;
+public class SimpleEnums2 {
+	public enum Direction {
+	    NORTH,
+	    EAST,
+	    SOUTH,
+	    WEST;
+	    public static void hello() {
+	    	System.out.println(NORTH);
+	    }
+	    
+	    public static Direction[] myValues() {
+	    	return new Direction[] { NORTH, EAST, SOUTH, WEST };
+	    }
+	}
 
-/**
- * The activator class controls the plug-in life cycle
- */
-public class Activator extends Plugin {
-
-	// The plug-in ID
-	public static final String PLUGIN_ID = "com.ibm.wala.cast.java.test.data";
-
-	// The shared instance
-	private static Activator plugin;
+	public static void main(String args[]) {
+		(new SimpleEnums2()).doit();
+	}
 	
-	/**
-	 * The constructor
-	 */
-	public Activator() {
+	private void doit() {
+		System.out.println("never eat shredded wheat");
+		System.out.println(Direction.NORTH);
+		System.out.println(Direction.EAST);
+		System.out.println(Direction.SOUTH);
+		System.out.println(Direction.WEST);
+		
+		Direction abc = Enum.valueOf(Direction.class, "NORTH");
+		Direction efg = Direction.valueOf("NORTH");
+		System.out.println(abc);
+		System.out.println(efg);
+		
+		Direction x = Direction.values()[0];
+		System.out.println(x);
+		Direction y = Direction.myValues()[0];
+		System.out.println(y);
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.eclipse.core.runtime.Plugin#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
-
-	/**
-	 * Returns the shared instance
-	 *
-	 * @return the shared instance
-	 */
-	public static Activator getDefault() {
-		return plugin;
-	}
-
+	
+//	public static class Foo {
+//		public static final Foo foo = new Foo("NORTH",1);
+//		public Foo(String string, int i) {
+//		}
+//	}
+//	public static void main(String args[]) {
+//		System.out.println(Foo.foo);
+//	}
+	
 }
