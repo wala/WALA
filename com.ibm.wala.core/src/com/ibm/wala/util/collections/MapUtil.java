@@ -18,6 +18,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
+import com.ibm.wala.util.intset.MutableIntSet;
+import com.ibm.wala.util.intset.MutableSparseIntSet;
+
 /**
  * utilities for managing {@link Map}s
  */
@@ -38,6 +41,15 @@ public class MapUtil {
       M.put(key, result);
     }
     return result;
+  }
+
+  public static <K> MutableIntSet findOrCreateMutableIntSet(Map<K, MutableIntSet> M, K key){
+    MutableIntSet mis = M.get(key);
+    if (mis == null){
+      mis = MutableSparseIntSet.makeEmpty();
+      M.put(key, mis);
+    }
+    return mis;
   }
   
   /**
