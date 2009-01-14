@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
+import com.ibm.wala.util.PlatformUtil;
+
 /**
  * A Java process launcher
  * 
@@ -25,31 +27,21 @@ import java.util.logging.Logger;
 public class JavaLauncher extends Launcher {
 
   /**
-   * @param programArgs
-   *            arguments to be passed to the Java program
-   * @param mainClass
-   *            Declaring class of the main() method to run.
-   * @param classpathEntries
-   *            Paths that will be added to the default classpath
+   * @param programArgs arguments to be passed to the Java program
+   * @param mainClass Declaring class of the main() method to run.
+   * @param classpathEntries Paths that will be added to the default classpath
    */
   public static JavaLauncher make(String programArgs, String mainClass, List<String> classpathEntries, Logger logger) {
     return new JavaLauncher(programArgs, mainClass, true, classpathEntries, false, false, logger);
   }
 
   /**
-   * @param programArgs
-   *            arguments to be passed to the Java program
-   * @param mainClass
-   *            Declaring class of the main() method to run.
-   * @param inheritClasspath
-   *            Should the spawned process inherit all classpath entries of the
-   *            currently running process?
-   * @param classpathEntries
-   *            Paths that will be added to the default classpath
-   * @param captureOutput
-   *            should the launcher capture the stdout from the subprocess? 
-   * @param captureErr
-   *            should the launcher capture the stderr from the subprocess?
+   * @param programArgs arguments to be passed to the Java program
+   * @param mainClass Declaring class of the main() method to run.
+   * @param inheritClasspath Should the spawned process inherit all classpath entries of the currently running process?
+   * @param classpathEntries Paths that will be added to the default classpath
+   * @param captureOutput should the launcher capture the stdout from the subprocess?
+   * @param captureErr should the launcher capture the stderr from the subprocess?
    */
   public static JavaLauncher make(String programArgs, String mainClass, boolean inheritClasspath, List<String> classpathEntries,
       boolean captureOutput, boolean captureErr, Logger logger) {
@@ -67,8 +59,7 @@ public class JavaLauncher extends Launcher {
   private final String mainClass;
 
   /**
-   * Should the spawned process inherit all classpath entries of the currently
-   * running process?
+   * Should the spawned process inherit all classpath entries of the currently running process?
    */
   private final boolean inheritClasspath;
 
@@ -86,7 +77,7 @@ public class JavaLauncher extends Launcher {
    * A {@link Thread} which spins and drains stdout of the running process.
    */
   private Thread stdOutDrain;
-  
+
   /**
    * A {@link Thread} which spins and drains stderr of the running process.
    */
@@ -151,9 +142,13 @@ public class JavaLauncher extends Launcher {
 
     String heap = " -Xmx800M ";
 
+    // on Mac, need to pass an extra parameter so we can cleanly kill child
+    // Java process
+    String signalParam = PlatformUtil.onMacOSX() ? " -Xrs " : "";
+
     String ea = enableAssertions ? " -ea " : "";
 
-    String cmd = getJavaExe() + heap + cp + " " + makeLibPath() + " " + ea + getMainClass() + " " + getProgramArgs();
+    String cmd = getJavaExe() + heap + signalParam + cp + " " + makeLibPath() + " " + ea + getMainClass() + " " + getProgramArgs();
 
     Process p = spawnProcess(cmd);
     stdErrDrain = isCaptureErr() ? captureStdErr(p) : drainStdErr(p);
@@ -208,10 +203,9 @@ public class JavaLauncher extends Launcher {
   }
 
   /**
-   * If the input string contains a space, quote it (for use as a classpath).
-   * TODO: Figure out how to make a Mac happy with quotes. Trailing separators
-   * are unsafe, so we have to escape the last backslash (if present and
-   * unescaped), so it doesn't escape the closing quote.
+   * If the input string contains a space, quote it (for use as a classpath). TODO: Figure out how to make a Mac happy with quotes.
+   * Trailing separators are unsafe, so we have to escape the last backslash (if present and unescaped), so it doesn't escape the
+   * closing quote.
    */
   private String quoteStringIfNeeded(String s) {
     s = s.trim();
