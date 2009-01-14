@@ -10,8 +10,6 @@
  *****************************************************************************/
 package com.ibm.wala.cast.java.test;
 
-import java.io.File;
-
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
