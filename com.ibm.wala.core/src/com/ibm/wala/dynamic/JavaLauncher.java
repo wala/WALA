@@ -82,6 +82,11 @@ public class JavaLauncher extends Launcher {
    * A {@link Thread} which spins and drains stderr of the running process.
    */
   private Thread stdErrDrain;
+  
+  /**
+   * Absolute path of the 'java' executable to use.
+   */
+  private String javaExe;
 
   private JavaLauncher(String programArgs, String mainClass, boolean inheritClasspath, List<String> xtraClasspath,
       boolean captureOutput, boolean captureErr, Logger logger) {
@@ -92,6 +97,15 @@ public class JavaLauncher extends Launcher {
     if (xtraClasspath != null) {
       this.xtraClasspath.addAll(xtraClasspath);
     }
+    this.javaExe = defaultJavaExe();
+  }
+  
+  public String getJavaExe() {
+    return javaExe;
+  }
+
+  public void setJavaExe(String javaExe) {
+    this.javaExe = javaExe;
   }
 
   public void setProgramArgs(String s) {
@@ -126,7 +140,7 @@ public class JavaLauncher extends Launcher {
   /**
    * @return the string that identifies the java executable file
    */
-  protected String getJavaExe() {
+  public static String defaultJavaExe() {
     String java = System.getProperty("java.home") + File.separatorChar + "bin" + File.separatorChar + "java";
     return java;
   }
@@ -148,7 +162,7 @@ public class JavaLauncher extends Launcher {
 
     String ea = enableAssertions ? " -ea " : "";
 
-    String cmd = getJavaExe() + heap + signalParam + cp + " " + makeLibPath() + " " + ea + getMainClass() + " " + getProgramArgs();
+    String cmd = javaExe + heap + signalParam + cp + " " + makeLibPath() + " " + ea + getMainClass() + " " + getProgramArgs();
 
     Process p = spawnProcess(cmd);
     stdErrDrain = isCaptureErr() ? captureStdErr(p) : drainStdErr(p);
