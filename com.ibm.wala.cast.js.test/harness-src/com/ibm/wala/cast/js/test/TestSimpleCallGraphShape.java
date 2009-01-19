@@ -11,7 +11,6 @@
 package com.ibm.wala.cast.js.test;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.eclipse.util.CancelException;
