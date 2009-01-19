@@ -49,6 +49,17 @@ public class CAstOperator implements CAstNode {
     return 0; 
   }
 
+  /*
+   *  The EQ and STRICT_EQ and NE and STRICT_NE pairs of operators are meant to 
+   * support languages that define multiple notions of equality, such as Scheme with
+   * eql and eq and JavaScript with == and ===.
+   */
+  public final static CAstOperator OP_EQ = new CAstOperator("==");
+  public final static CAstOperator OP_STRICT_EQ = new CAstOperator("===");
+
+  public final static CAstOperator OP_NE = new CAstOperator("!=");
+  public final static CAstOperator OP_STRICT_NE = new CAstOperator("!==");
+
   public final static CAstOperator OP_ADD = new CAstOperator("+");
   public final static CAstOperator OP_CONCAT = new CAstOperator(".");
   public final static CAstOperator OP_DIV = new CAstOperator("/");
@@ -58,12 +69,10 @@ public class CAstOperator implements CAstNode {
   public final static CAstOperator OP_RSH = new CAstOperator(">>");
   public final static CAstOperator OP_URSH = new CAstOperator(">>>");
   public final static CAstOperator OP_SUB = new CAstOperator("-");
-  public final static CAstOperator OP_EQ = new CAstOperator("==");
   public final static CAstOperator OP_GE = new CAstOperator(">=");
   public final static CAstOperator OP_GT = new CAstOperator(">");
   public final static CAstOperator OP_LE = new CAstOperator("<=");
   public final static CAstOperator OP_LT = new CAstOperator("<");
-  public final static CAstOperator OP_NE = new CAstOperator("!=");
   public final static CAstOperator OP_NOT = new CAstOperator("!");
   public final static CAstOperator OP_BITNOT = new CAstOperator("~");
   public final static CAstOperator OP_BIT_AND = new CAstOperator("&");

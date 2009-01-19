@@ -68,6 +68,10 @@ public abstract class TestCallGraphShape extends WalaTestCase {
   protected void verifyGraphAssertions(CallGraph CG, Object[][] assertionData) {
     Trace.println(CG);
 
+    if (assertionData == null) {
+      return;
+    }
+    
     for (int i = 0; i < assertionData.length; i++) {
 
       check_target: for (int j = 0; j < ((String[]) assertionData[i][1]).length; j++) {

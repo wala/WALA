@@ -11,6 +11,7 @@
 package com.ibm.wala.cast.js.test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import com.ibm.wala.cast.js.translator.JavaScriptTranslatorFactory;
 import com.ibm.wala.eclipse.util.CancelException;
@@ -208,4 +209,10 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = B.makeCallGraph(B.getOptions());
     verifyGraphAssertions(CG, assertionsForInstanceof);
   }
+  
+  public void testCrash1() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "crash1.js");
+    verifyGraphAssertions(CG, null);
+  }
+
 }

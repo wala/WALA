@@ -427,7 +427,7 @@ public class RhinoToAstTranslator {
     case Token.EQ:
       return CAstOperator.OP_EQ;
     case Token.SHEQ:
-      return CAstOperator.OP_EQ; // FIXME
+      return CAstOperator.OP_STRICT_EQ; 
     case Token.IFEQ:
       return CAstOperator.OP_EQ;
     case Token.GE:
@@ -441,7 +441,7 @@ public class RhinoToAstTranslator {
     case Token.NE:
       return CAstOperator.OP_NE;
     case Token.SHNE:
-      return CAstOperator.OP_NE; // FIXME
+      return CAstOperator.OP_STRICT_NE;
     case Token.IFNE:
       return CAstOperator.OP_NE;
 
@@ -901,8 +901,7 @@ public class RhinoToAstTranslator {
     }
 
     case Token.EXPR_VOID:
-    case Token.EXPR_RESULT:
-    case Token.POS: {
+    case Token.EXPR_RESULT: {
       WalkContext child = new ExpressionContext(context);
       Node expr = n.getFirstChild();
 
@@ -911,6 +910,14 @@ public class RhinoToAstTranslator {
       }
 
       return walkNodes(expr, child);
+    }
+
+    case Token.POS: {
+      return 
+        Ast.makeNode(CAstNode.BINARY_EXPR, 
+              translateOpcode(Token.ADD), 
+              walkNodes(n.getFirstChild(), context), 
+              Ast.makeConstant(0));
     }
 
     case Token.CALL: {

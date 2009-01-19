@@ -2138,7 +2138,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   protected UnaryOpInstruction.IOperator translateUnaryOpcode(CAstNode op) {
     if (op == CAstOperator.OP_BITNOT)
-      return UnaryOpInstruction.Operator.NEG;
+      return AstConstants.UnaryOp.BITNOT;
     else if (op == CAstOperator.OP_NOT)
       return UnaryOpInstruction.Operator.NEG;
     else if (op == CAstOperator.OP_SUB)
@@ -2176,6 +2176,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return AstConstants.BinaryOp.CONCAT;
     else if (op == CAstOperator.OP_EQ)
       return AstConstants.BinaryOp.EQ;
+    else if (op == CAstOperator.OP_STRICT_EQ)
+      return AstConstants.BinaryOp.STRICT_EQ;
     else if (op == CAstOperator.OP_GE)
       return AstConstants.BinaryOp.GE;
     else if (op == CAstOperator.OP_GT)
@@ -2186,6 +2188,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return AstConstants.BinaryOp.LT;
     else if (op == CAstOperator.OP_NE)
       return AstConstants.BinaryOp.NE;
+    else if (op == CAstOperator.OP_STRICT_NE)
+      return AstConstants.BinaryOp.STRICT_NE;
     else {
       Assertions.UNREACHABLE("cannot translate " + CAstPrinter.print(op));
       return null;

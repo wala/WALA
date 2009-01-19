@@ -16,7 +16,7 @@ import com.ibm.wala.shrikeBT.UnaryOpInstruction;
 public interface AstConstants  {
 
   public enum BinaryOp implements BinaryOpInstruction.IOperator {
-    CONCAT, EQ, NE, LT, GE, GT, LE;
+    CONCAT, EQ, NE, LT, GE, GT, LE, STRICT_EQ, STRICT_NE;
 
     public String toString() {
       return super.toString().toLowerCase();
@@ -24,7 +24,7 @@ public interface AstConstants  {
   }
 
   public enum UnaryOp implements UnaryOpInstruction.IOperator {
-    MINUS;
+    MINUS, BITNOT;
 
     public String toString() {
       return super.toString().toLowerCase();

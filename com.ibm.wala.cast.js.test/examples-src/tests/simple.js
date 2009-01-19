@@ -78,6 +78,8 @@ function rubbish(one, two) {
     return rubbish(two, one);
 }
 
+if (1 < 2) q = 42;
+
 rubbish(strange, weird);
 
 var F;
@@ -88,7 +90,7 @@ else
 
 trivial(3, 2);
 
-if ( F(6) != 0 )
+if ( F(6) !== 0 )
   bad(4, 5);
 else
   weird( silly( "whatever", 7 ) );
