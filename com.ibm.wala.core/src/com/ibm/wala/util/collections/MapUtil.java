@@ -107,6 +107,18 @@ public class MapUtil {
     return result;
   }
 
+  public static <K, V> V findOrCreateValue(Map<K,V> M, K key, Factory<V> factory){
+    if (M == null) {
+      throw new IllegalArgumentException("M is null");
+    }
+    V result = M.get(key);
+    if (result == null) {
+      result = factory.make();
+      M.put(key, result);
+    }
+    return result;
+  }
+  
   /**
    * @param M a mapping from Object -> WeakHashMap
    * @param key
