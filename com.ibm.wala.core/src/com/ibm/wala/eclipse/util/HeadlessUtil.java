@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.eclipse.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -58,7 +59,7 @@ public class HeadlessUtil {
   public static AnalysisScope computeScope(String projectName) throws IOException, CoreException {
     IJavaProject jp = getProjectFromWorkspace(projectName);
     EclipseProjectPath path = EclipseProjectPath.make(jp);
-    return path.toAnalysisScope(null);
+    return path.toAnalysisScope((File)null);
   }
 
   private static IJavaProject getProjectFromWorkspace(String projectName) {

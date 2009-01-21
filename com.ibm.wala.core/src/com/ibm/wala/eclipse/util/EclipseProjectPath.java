@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.jar.JarFile;
 import java.util.zip.ZipException;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -41,6 +42,8 @@ import org.eclipse.pde.internal.core.ClasspathUtilCore;
 import org.eclipse.pde.internal.core.PDEStateHelper;
 
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
+import com.ibm.wala.classLoader.EclipseSourceFileModule;
+import com.ibm.wala.classLoader.FileModule;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
@@ -96,6 +99,8 @@ public class EclipseProjectPath {
    */
   private final IJavaProject project;
   
+  private final boolean analyzeSource;
+  
   // names of OSGi bundles already processed.
   private final Set<String> bundlesProcessed = HashSetFactory.make();
 
@@ -107,8 +112,9 @@ public class EclipseProjectPath {
 
   private final Collection<IClasspathEntry> alreadyResolved = HashSetFactory.make();
 
-  protected EclipseProjectPath(IJavaProject project) throws IOException, CoreException {
+  protected EclipseProjectPath(IJavaProject project, boolean analyzeSource) throws IOException, CoreException {
     this.project = project;
+    this.analyzeSource = analyzeSource;
     assert project != null;
     for (Loader loader : Loader.values()) {
       MapUtil.findOrCreateList(binaryModules, loader);
@@ -122,11 +128,15 @@ public class EclipseProjectPath {
 
   @Deprecated
   public static EclipseProjectPath make(IPath workspaceRootPath, IJavaProject project) throws IOException, CoreException {
-    return new EclipseProjectPath(project);
+    return new EclipseProjectPath(project, false);
   }
 
   public static EclipseProjectPath make(IJavaProject project) throws IOException, CoreException {
-    return new EclipseProjectPath(project);
+    return make(project, false);
+  }
+  
+  public static EclipseProjectPath make(IJavaProject project, boolean analyzeSource) throws IOException, CoreException {
+    return new EclipseProjectPath(project, analyzeSource);
   }
 
   /**
@@ -161,10 +171,18 @@ public class EclipseProjectPath {
         s.add(file.isDirectory() ? (Module) new BinaryDirectoryTreeModule(file) : (Module) new JarFileModule(j));
       }
     } else if (e.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-      File file = makeAbsolute(e.getPath()).toFile();
+      final File dir = makeAbsolute(e.getPath()).toFile();
+      final File relDir = e.getPath().removeFirstSegments(1).toFile();
       List<Module> s = MapUtil.findOrCreateList(sourceModules, Loader.SOURCE);
-      s.add(new SourceDirectoryTreeModule(file));
-      if (e.getOutputLocation() != null) {
+      s.add(new SourceDirectoryTreeModule(dir) {
+        protected FileModule makeFile(File file) {
+          assert file.toString().startsWith(dir.toString()) : file + " " + dir + " " + relDir;
+          file = new File(file.toString().substring(dir.toString().length()));
+          IFile f = project.getProject().getFile(relDir.toString() + file.toString());
+          return new EclipseSourceFileModule(f);
+        }
+      });
+      if (!analyzeSource && e.getOutputLocation() != null) {
         File output = makeAbsolute(e.getOutputLocation()).toFile();
         s = MapUtil.findOrCreateList(binaryModules, loader);
         s.add(new BinaryDirectoryTreeModule(output));
@@ -181,9 +199,11 @@ public class EclipseProjectPath {
             resolvePluginClassPath(javaProject.getProject());
           } else {
             resolveClasspathEntries(javaProject.getRawClasspath(), loader);
-            File output = makeAbsolute(javaProject.getOutputLocation()).toFile();
-            List<Module> s = MapUtil.findOrCreateList(binaryModules, loader);
-            s.add(new BinaryDirectoryTreeModule(output));
+            if (! analyzeSource) {
+              File output = makeAbsolute(javaProject.getOutputLocation()).toFile();
+              List<Module> s = MapUtil.findOrCreateList(binaryModules, loader);
+              s.add(new BinaryDirectoryTreeModule(output));
+            }
           }
         }
       } catch (CoreException e1) {
@@ -292,17 +312,22 @@ public class EclipseProjectPath {
    * Convert this path to a WALA analysis scope
    */
   public AnalysisScope toAnalysisScope(ClassLoader classLoader, File exclusionsFile) {
+    AnalysisScope scope = AnalysisScopeReader.read(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile, classLoader);
+    return toAnalysisScope(scope);
+  }
+  
+  public AnalysisScope toAnalysisScope(AnalysisScope scope) {
     try {
       List<Module> l = MapUtil.findOrCreateList(binaryModules, Loader.APPLICATION);
-      File dir = makeAbsolute(project.getOutputLocation()).toFile();
-      if (!dir.isDirectory()) {
-        System.err.println("PANIC: project output location is not a directory: " + dir);
-      } else {
-        l.add(new BinaryDirectoryTreeModule(dir));
+      if (! analyzeSource) {
+        File dir = makeAbsolute(project.getOutputLocation()).toFile();
+        if (!dir.isDirectory()) {
+          System.err.println("PANIC: project output location is not a directory: " + dir);
+        } else {
+          l.add(new BinaryDirectoryTreeModule(dir));
+        }
       }
-
-      AnalysisScope scope = AnalysisScopeReader.read(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile, classLoader);
-
+      
       for (Loader loader : Loader.values()) {
         for (Module m : binaryModules.get(loader)) {
           scope.addToScope(loader.ref, m);
@@ -333,7 +358,7 @@ public class EclipseProjectPath {
 
   @Override
   public String toString() {
-    return toAnalysisScope(null).toString();
+    return toAnalysisScope((File)null).toString();
   }
 
 }

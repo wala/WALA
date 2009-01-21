@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.eclipse;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -117,7 +118,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
   private static void buildScope(ClassLoaderReference loader, Collection<EclipseProjectPath> projectPaths, AnalysisScope scope,
       Collection<Module> seen) {
     for (EclipseProjectPath path : projectPaths) {
-      AnalysisScope pScope = path.toAnalysisScope(null);
+      AnalysisScope pScope = path.toAnalysisScope((File)null);
       for (Module m : pScope.getModules(loader)) {
         if (!seen.contains(m)) {
           seen.add(m);
