@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: DOMO JavaScript Test Plug-in
+Bundle-SymbolicName: com.ibm.wala.cast.js.test;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-ClassPath: test.jar
+Bundle-Activator: com.ibm.wala.cast.js.test.JavaScriptTestPlugin
+Bundle-Vendor: IBM
+Bundle-Localization: plugin
+Require-Bundle: com.ibm.wala.cast.js,
+ com.ibm.wala.cast,
+ com.ibm.wala.core,
+ org.eclipse.core.runtime,
+ com.ibm.wala.core.tests,
+ org.junit
+Bundle-ActivationPolicy: lazy
+Export-Package: com.ibm.wala.cast.js.test

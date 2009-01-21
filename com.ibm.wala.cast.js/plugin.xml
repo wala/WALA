@@ -1,24 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.0"?>
-<plugin
-   id="com.ibm.wala.cast.js"
-   name="JavaScript Plug-in"
-   version="1.0.0"
-   provider-name="IBM"
-   class="com.ibm.wala.cast.js.JavaScriptPlugin">
+<plugin>
 
-   <runtime>
-      <library name="lib/js.jar">
-         <export name="*"/>
-      </library>
-      <library name="lib/xalan.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
-
-   <requires>
-      <import plugin="com.ibm.wala.cast"/>
-      <import plugin="com.ibm.wala.core"/>
-   </requires>
-
+    
 </plugin>
