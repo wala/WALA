@@ -1382,6 +1382,10 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         Assertions._assert(klass != null);
       }
 
+      if (!getBuilder().getOptions().getHandleStaticInit()) {
+        return;
+      }
+      
       if (getBuilder().clinitVisited.contains(klass)) {
         return;
       }

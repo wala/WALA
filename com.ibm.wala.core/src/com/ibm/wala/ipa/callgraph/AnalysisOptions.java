@@ -78,6 +78,10 @@ public class AnalysisOptions {
   private boolean handleReflection = true;
 
   /**
+   * Should call graph construction handle possible invocations of static initializer methods?
+   */
+  private boolean handleStaticInit = true;
+  /**
    * Should we use the pretransitive solver for pointer analysis? Not yet ready for prime-time.
    */
   private boolean usePreTransitiveSolver = false;
@@ -335,5 +339,13 @@ public class AnalysisOptions {
 
   public void setHandleReflection(boolean handleReflection) {
     this.handleReflection = handleReflection;
+  }
+
+  public boolean getHandleStaticInit() {
+    return handleStaticInit;
+  }
+
+  public void setHandleStaticInit(boolean handleStaticInit) {
+    this.handleStaticInit = handleStaticInit;
   }
 }
