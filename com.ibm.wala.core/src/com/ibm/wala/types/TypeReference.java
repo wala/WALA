@@ -249,6 +249,10 @@ public final class TypeReference {
   private final static TypeName JavaLangIntegerName = TypeName.string2TypeName("Ljava/lang/Integer");
 
   public final static TypeReference JavaLangInteger = findOrCreate(ClassLoaderReference.Primordial, JavaLangIntegerName);
+  
+  private final static TypeName JavaLangBooleanName = TypeName.string2TypeName("Ljava/lang/Boolean");
+
+  public final static TypeReference JavaLangBoolean = findOrCreate(ClassLoaderReference.Primordial, JavaLangBooleanName);
 
   public final static TypeName JavaIoSerializableName = TypeName.string2TypeName("Ljava/io/Serializable");
 
