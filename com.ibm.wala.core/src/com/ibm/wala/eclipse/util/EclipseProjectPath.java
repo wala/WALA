@@ -175,6 +175,7 @@ public class EclipseProjectPath {
       final File relDir = e.getPath().removeFirstSegments(1).toFile();
       List<Module> s = MapUtil.findOrCreateList(sourceModules, Loader.SOURCE);
       s.add(new SourceDirectoryTreeModule(dir) {
+        @Override
         protected FileModule makeFile(File file) {
           assert file.toString().startsWith(dir.toString()) : file + " " + dir + " " + relDir;
           file = new File(file.toString().substring(dir.toString().length()));
