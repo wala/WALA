@@ -253,7 +253,23 @@ public final class TypeReference {
   private final static TypeName JavaLangBooleanName = TypeName.string2TypeName("Ljava/lang/Boolean");
 
   public final static TypeReference JavaLangBoolean = findOrCreate(ClassLoaderReference.Primordial, JavaLangBooleanName);
+  
+  private final static TypeName JavaLangDoubleName = TypeName.string2TypeName("Ljava/lang/Double");
 
+  public final static TypeReference JavaLangDouble = findOrCreate(ClassLoaderReference.Primordial, JavaLangDoubleName);
+  
+  private final static TypeName JavaLangFloatName = TypeName.string2TypeName("Ljava/lang/Float");
+
+  public final static TypeReference JavaLangFloat = findOrCreate(ClassLoaderReference.Primordial, JavaLangFloatName);
+
+  private final static TypeName JavaLangShortName = TypeName.string2TypeName("Ljava/lang/Short");
+
+  public final static TypeReference JavaLangShort = findOrCreate(ClassLoaderReference.Primordial, JavaLangShortName);
+  
+  private final static TypeName JavaLangLongName = TypeName.string2TypeName("Ljava/lang/Long");
+
+  public final static TypeReference JavaLangLong = findOrCreate(ClassLoaderReference.Primordial, JavaLangLongName);
+  
   public final static TypeName JavaIoSerializableName = TypeName.string2TypeName("Ljava/io/Serializable");
 
   public final static TypeReference JavaIoSerializable = findOrCreate(ClassLoaderReference.Primordial, JavaIoSerializableName);
