@@ -914,10 +914,9 @@ public class RhinoToAstTranslator {
 
     case Token.POS: {
       return 
-        Ast.makeNode(CAstNode.BINARY_EXPR, 
+        Ast.makeNode(CAstNode.UNARY_EXPR, 
               translateOpcode(Token.ADD), 
-              walkNodes(n.getFirstChild(), context), 
-              Ast.makeConstant(0));
+              walkNodes(n.getFirstChild(), context));
     }
 
     case Token.CALL: {
@@ -995,8 +994,7 @@ public class RhinoToAstTranslator {
     }
 
     case Token.NEG: {
-      return Ast.makeNode(CAstNode.BINARY_EXPR, translateOpcode(Token.SUB), Ast.makeConstant(0), walkNodes(n.getFirstChild(),
-          context));
+      return Ast.makeNode(CAstNode.UNARY_EXPR, translateOpcode(Token.SUB), walkNodes(n.getFirstChild(), context));
     }
 
     case Token.BITNOT:

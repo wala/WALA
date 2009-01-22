@@ -24,7 +24,7 @@ public interface AstConstants  {
   }
 
   public enum UnaryOp implements UnaryOpInstruction.IOperator {
-    MINUS, BITNOT;
+    MINUS, BITNOT, PLUS;
 
     public String toString() {
       return super.toString().toLowerCase();

@@ -2143,6 +2143,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return UnaryOpInstruction.Operator.NEG;
     else if (op == CAstOperator.OP_SUB)
       return AstConstants.UnaryOp.MINUS;
+    else if (op == CAstOperator.OP_ADD)
+      return AstConstants.UnaryOp.PLUS;
     else
       Assertions.UNREACHABLE("cannot translate " + CAstPrinter.print(op));
     return null;
