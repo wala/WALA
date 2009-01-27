@@ -21,5 +21,12 @@ public interface InstructionVisitor extends AstInstructionVisitor {
   public void visitJavaScriptPropertyRead(JavaScriptPropertyRead instruction);
   
   public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction);
+  
+  public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction);
+  
+  public void visitWithRegion(JavaScriptWithRegion instruction);
+  
+  public void visitCheckRef(JavaScriptCheckReference instruction);
+  
 }
 

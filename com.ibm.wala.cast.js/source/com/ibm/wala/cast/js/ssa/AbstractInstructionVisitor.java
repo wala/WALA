@@ -33,5 +33,17 @@ public class AbstractInstructionVisitor
       
   }
 
+  public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {
+     
+  }
+
+  public void visitCheckRef(JavaScriptCheckReference instruction) {
+ 
+  }
+
+  public void visitWithRegion(JavaScriptWithRegion instruction) {
+    
+  }
+
 }
 

@@ -18,10 +18,13 @@ import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.EachElementHasNextInstruction;
 import com.ibm.wala.cast.js.analysis.typeInference.JSTypeInference;
 import com.ibm.wala.cast.js.ssa.InstructionVisitor;
+import com.ibm.wala.cast.js.ssa.JavaScriptCheckReference;
+import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
+import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.fixedpoint.impl.AbstractOperator;
@@ -146,6 +149,18 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     public void visitTypeOf(JavaScriptTypeOfInstruction inst) {
       bingo = true;
     }
+
+    public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {
+      bingo = true;
+    }
+
+    public void visitCheckRef(JavaScriptCheckReference instruction) {
+
+    }
+
+    public void visitWithRegion(JavaScriptWithRegion instruction) {
+      
+    }
   }
 
   protected InterestingVisitor makeInterestingVisitor(CGNode node, int vn) {
@@ -185,6 +200,18 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
 
       public void visitJavaScriptPropertyWrite(JavaScriptPropertyWrite instruction) {
 
+      }
+
+      public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {
+        
+      }
+
+      public void visitCheckRef(JavaScriptCheckReference instruction) {
+        
+      }
+
+      public void visitWithRegion(JavaScriptWithRegion instruction) {
+         
       }
     };
 
@@ -230,6 +257,16 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
 
     public void visitIsDefined(AstIsDefinedInstruction inst) {
+      int lval = inst.getDef(0);
+      PointerKey lk = getPointerKeyForLocal(lval);
+
+      IClass bool = getClassHierarchy().lookupClass(JavaScriptTypes.Boolean);
+      InstanceKey key = new ConcreteTypeKey(bool);
+
+      system.newConstraint(lk, key);
+    }
+
+    public void visitJavaScriptInstanceOf(JavaScriptInstanceOf inst) {
       int lval = inst.getDef(0);
       PointerKey lk = getPointerKeyForLocal(lval);
 
@@ -612,6 +649,16 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
           system.newConstraint(lk, B, k1, getPointerKeyForLocal(arg2));
         }
       }
+    }
+
+    public void visitCheckRef(JavaScriptCheckReference instruction) {
+      // TODO Auto-generated method stub
+      
+    }
+
+    public void visitWithRegion(JavaScriptWithRegion instruction) {
+      // TODO Auto-generated method stub
+      
     }
   }
 

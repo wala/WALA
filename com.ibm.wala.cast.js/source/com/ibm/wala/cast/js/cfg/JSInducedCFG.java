@@ -12,10 +12,13 @@ package com.ibm.wala.cast.js.cfg;
 
 import com.ibm.wala.cast.ir.cfg.AstInducedCFG;
 import com.ibm.wala.cast.js.ssa.InstructionVisitor;
+import com.ibm.wala.cast.js.ssa.JavaScriptCheckReference;
+import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
+import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -44,6 +47,18 @@ public class JSInducedCFG extends AstInducedCFG {
 
     public void visitTypeOf(JavaScriptTypeOfInstruction inst) {
     }
+
+    public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {
+      
+    }
+
+    public void visitCheckRef(JavaScriptCheckReference instruction) {
+      breakBasicBlock();
+    }
+
+    public void visitWithRegion(JavaScriptWithRegion instruction) {
+      
+    }
   }
     
   class JSBranchVisitor extends AstBranchVisitor implements InstructionVisitor {
@@ -62,6 +77,15 @@ public class JSInducedCFG extends AstInducedCFG {
     }
 
     public void visitTypeOf(JavaScriptTypeOfInstruction inst) {
+    }
+
+    public void visitJavaScriptInstanceOf(JavaScriptInstanceOf instruction) {      
+    }
+
+    public void visitCheckRef(JavaScriptCheckReference instruction) {      
+    }
+
+    public void visitWithRegion(JavaScriptWithRegion instruction) {
     }
   }
     

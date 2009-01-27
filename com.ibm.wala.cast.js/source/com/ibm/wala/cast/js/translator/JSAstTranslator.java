@@ -15,8 +15,11 @@ import com.ibm.wala.cast.ir.ssa.AstIsDefinedInstruction;
 import com.ibm.wala.cast.ir.ssa.NonExceptingThrowInstruction;
 import com.ibm.wala.cast.ir.ssa.AstConstants.BinaryOp;
 import com.ibm.wala.cast.ir.translator.AstTranslator;
+import com.ibm.wala.cast.ir.translator.AstTranslator.WalkContext;
 import com.ibm.wala.cast.js.loader.JSCallSiteReference;
 import com.ibm.wala.cast.js.loader.JavaScriptLoader;
+import com.ibm.wala.cast.js.ssa.JavaScriptCheckReference;
+import com.ibm.wala.cast.js.ssa.JavaScriptInstanceOf;
 import com.ibm.wala.cast.js.ssa.JavaScriptInvoke;
 import com.ibm.wala.cast.js.ssa.JavaScriptNewInstruction;
 import com.ibm.wala.cast.js.ssa.JavaScriptPropertyRead;
@@ -24,6 +27,7 @@ import com.ibm.wala.cast.js.ssa.JavaScriptPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptStaticPropertyRead;
 import com.ibm.wala.cast.js.ssa.JavaScriptStaticPropertyWrite;
 import com.ibm.wala.cast.js.ssa.JavaScriptTypeOfInstruction;
+import com.ibm.wala.cast.js.ssa.JavaScriptWithRegion;
 import com.ibm.wala.cast.js.types.JavaScriptMethods;
 import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.loader.AstMethod.DebuggingInformation;
@@ -78,6 +82,20 @@ public class JSAstTranslator extends AstTranslator {
     return null;
   }
 
+  protected int doLexicallyScopedRead(CAstNode n, WalkContext context, String name) {
+    int readVn = super.doLexicallyScopedRead(n, context, name);
+ 
+    context.cfg().addPreNode(n);
+    context.cfg().addInstruction(new JavaScriptCheckReference(readVn));
+    
+    CAstNode target = context.getControlFlow().getTarget(n, JavaScriptTypes.ReferenceError);
+    assert target != null;
+    context.cfg().addPreEdge(n, target, true);
+    context.cfg().newBlock(true);
+    
+    return readVn;
+  }
+  
   protected void defineType(CAstEntity type, WalkContext wc) {
       Assertions.UNREACHABLE("JavaScript doesn't have types. I suggest you look elsewhere for your amusement.");
   }
@@ -336,13 +354,8 @@ public class JSAstTranslator extends AstTranslator {
     visit(n.getChild(1), context, visitor);
     int type = getValue(n.getChild(1));
 
-    int tmp = context.currentScope().allocateTempValue();
-    context.cfg().addInstruction(
-      new JavaScriptTypeOfInstruction(tmp, value));
- 
-    context.cfg().addInstruction(
-      SSAInstructionFactory.BinaryOpInstruction(BinaryOp.EQ, result, tmp, type, false));
-  }
+    context.cfg().addInstruction(new JavaScriptInstanceOf(result, value, type));
+}
 
   protected void doPrologue(WalkContext context) {
     super.doPrologue(context);
@@ -370,7 +383,16 @@ public class JSAstTranslator extends AstTranslator {
       return true;
     }
     
-    
+    case JavaScriptCAstNode.ENTER_WITH:
+    case JavaScriptCAstNode.EXIT_WITH: {
+
+      this.visit(n.getChild(0), context, this);
+      int ref = getValue(n.getChild(0));
+
+      context.cfg().addInstruction(new JavaScriptWithRegion(ref, n.getKind()==JavaScriptCAstNode.ENTER_WITH));
+
+      return true;
+    }
     default: {
       return false;
     }

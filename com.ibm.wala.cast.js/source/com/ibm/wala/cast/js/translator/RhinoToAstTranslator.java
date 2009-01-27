@@ -30,6 +30,7 @@ import org.mozilla.javascript.ScriptOrFnNode;
 import org.mozilla.javascript.Token;
 import org.mozilla.javascript.tools.ToolErrorReporter;
 
+import com.ibm.wala.cast.js.types.JavaScriptTypes;
 import com.ibm.wala.cast.tree.CAst;
 import com.ibm.wala.cast.tree.CAstControlFlowMap;
 import com.ibm.wala.cast.tree.CAstEntity;
@@ -849,11 +850,20 @@ public class RhinoToAstTranslator {
       return Ast.makeNode(CAstNode.BLOCK_EXPR, cs);
     }
 
-    case Token.ENTERWITH:
+    /*
+    case Token.ENTERWITH: {
+      return Ast.makeNode(JavaScriptCAstNode.ENTER_WITH, walkNodes(n.getFirstChild(), context));
+    }
+ 
+    case Token.LEAVEWITH: {
+      return Ast.makeNode(JavaScriptCAstNode.EXIT_WITH, Ast.makeConstant(null));
+    }
+    */
+    case Token.ENTERWITH: 
     case Token.LEAVEWITH: {
       return Ast.makeNode(CAstNode.EMPTY);
     }
-
+    
     case Token.LOOP: {
       LoopContext child = new LoopContext(context);
       CAstNode[] nodes = gatherChildren(n, child);
@@ -871,6 +881,7 @@ public class RhinoToAstTranslator {
     case Token.FINALLY:
     case Token.BLOCK:
     case Token.LABEL: {
+      CAstNode ast; 
       Node c1 = n.getFirstChild();
       if (c1 != null && c1.getType() == Token.SWITCH) {
         Node switchValue = c1.getFirstChild();
@@ -899,7 +910,7 @@ public class RhinoToAstTranslator {
         return Ast.makeNode(CAstNode.BLOCK_STMT, gatherChildren(n, context));
       }
     }
-
+    
     case Token.EXPR_VOID:
     case Token.EXPR_RESULT: {
       WalkContext child = new ExpressionContext(context);
@@ -937,7 +948,15 @@ public class RhinoToAstTranslator {
     }
 
     case Token.NAME: {
-      return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(n.getString()));
+      CAstNode cn = Ast.makeNode(CAstNode.VAR, Ast.makeConstant(n.getString()));
+      context.cfg().map(n, cn);
+      CAstNode target = context.getCatchTarget();
+      if (target != null) {
+        context.cfg().add(n, target, JavaScriptTypes.ReferenceError);
+      } else {
+        context.cfg().add(n, CAstControlFlowMap.EXCEPTION_TO_EXIT, JavaScriptTypes.ReferenceError);
+      }
+      return cn;
     }
 
     case Token.THIS: {

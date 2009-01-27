@@ -145,7 +145,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
-  protected int doLexicallyScopedRead(WalkContext context, String name) {
+  protected int doLexicallyScopedRead(CAstNode node, WalkContext context, String name) {
     Symbol S = context.currentScope().lookup(name);
     int vn = S.valueNumber();
     CAstEntity E = S.getDefiningScope().getEntity();
@@ -739,7 +739,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
 
     public void addPreEdge(PreBasicBlock src, CAstNode dst, boolean exception) {
-      if (nodeToBlock.containsKey(dst)) {
+      if (dst == CAstControlFlowMap.EXCEPTION_TO_EXIT) {
+        assert exception;
+        addPreEdgeToExit(src, exception);
+      } else if (nodeToBlock.containsKey(dst)) {
         PreBasicBlock target = nodeToBlock.get(dst);
         if (DEBUG_CFG)
           Trace.println("adding pre-edge " + src + " --> " + dst);
@@ -2595,7 +2598,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     if (context.currentScope().isGlobal(s)) {
       setValue(n, doGlobalRead(context, nm));
     } else if (context.currentScope().isLexicallyScoped(s)) {
-      setValue(n, doLexicallyScopedRead(context, nm));
+      setValue(n, doLexicallyScopedRead(n, context, nm));
     } else {
       setValue(n, doLocalRead(context, nm));
     }
@@ -3077,7 +3080,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     if (context.currentScope().isGlobal(ls))
       temp = doGlobalRead(context, nm);
     else if (context.currentScope().isLexicallyScoped(ls)) {
-      temp = doLexicallyScopedRead(context, nm);
+      temp = doLexicallyScopedRead(n, context, nm);
     } else {
       temp = doLocalRead(context, nm);
     }

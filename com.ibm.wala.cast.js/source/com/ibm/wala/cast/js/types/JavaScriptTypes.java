@@ -54,6 +54,9 @@ public class JavaScriptTypes extends AstTypeReference {
   public static final TypeReference Script =
     TypeReference.findOrCreate(jsLoader, "LScript");
 
+  public static final TypeReference ReferenceError =
+    TypeReference.findOrCreate(jsLoader, "LReferenceError");
+
   public static final TypeReference TypeError =
     TypeReference.findOrCreate(jsLoader, "LTypeError");
 
