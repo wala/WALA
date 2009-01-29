@@ -138,9 +138,6 @@ public class SymbolTable {
    * Return the value number of the ith parameter
    * 
    * By convention, for a non-static method, the 0th parameter is 'this'
-   * 
-   * @param i
-   * @return int
    */
   public int getParameter(int i) throws IllegalArgumentException {
     if (parameters.length <= i) {
