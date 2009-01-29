@@ -53,7 +53,7 @@ public abstract class Entrypoint implements BytecodeConstants {
     }
   }
 
-  public Entrypoint(MethodReference method, IClassHierarchy cha) {
+  protected Entrypoint(MethodReference method, IClassHierarchy cha) {
     if (cha == null) {
       throw new IllegalArgumentException("cha is null");
     }
