@@ -208,9 +208,26 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     CallGraph CG = B.makeCallGraph(B.getOptions());
     verifyGraphAssertions(CG, assertionsForInstanceof);
   }
+
+  /*
+  private static final Object[][] assertionsForWith = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/with.js" } }
+  };
+  
+  public void testWith() throws IOException, IllegalArgumentException, CancelException {
+    PropagationCallGraphBuilder B = Util.makeScriptCGBuilder("tests", "with.js");
+    CallGraph CG = B.makeCallGraph(B.getOptions());
+    verifyGraphAssertions(CG, assertionsForWith);
+  }
+  */
   
   public void testCrash1() throws IOException, IllegalArgumentException, CancelException {
     CallGraph CG = Util.makeScriptCG("tests", "crash1.js");
+    verifyGraphAssertions(CG, null);
+  }
+
+  public void testCrash2() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "crash2.js");
     verifyGraphAssertions(CG, null);
   }
 

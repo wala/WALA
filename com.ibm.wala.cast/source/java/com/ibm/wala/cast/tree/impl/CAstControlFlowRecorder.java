@@ -137,6 +137,8 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
    * using this call.
    */
   public void map(Object node, CAstNode ast) {
+    assert node != null;
+    assert ast != null;
     assert ! nodeToCAst.containsKey(node) : node + " already mapped:\n" + this;
     assert ! CAstToNode.containsKey(ast) : ast + " already mapped:\n" + this;
     nodeToCAst.put(node, ast);

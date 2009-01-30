@@ -462,7 +462,7 @@ public class RhinoToAstTranslator {
   }
 
   private CAstNode handleNew(WalkContext context, String globalName, Node arguments) {
-    return handleNew(context, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(globalName)), arguments);
+    return handleNew(context, readName(context, globalName), arguments);
   }
 
   private CAstNode handleNew(WalkContext context, CAstNode value, Node arguments) {
@@ -712,6 +712,18 @@ public class RhinoToAstTranslator {
     return n;
   }
 
+  private CAstNode readName(WalkContext context, String name) {
+    CAstNode cn = Ast.makeNode(CAstNode.VAR, Ast.makeConstant(name));
+    context.cfg().map(cn, cn);
+    CAstNode target = context.getCatchTarget();
+    if (target != null) {
+      context.cfg().add(cn, target, JavaScriptTypes.ReferenceError);
+    } else {
+      context.cfg().add(cn, CAstControlFlowMap.EXCEPTION_TO_EXIT, JavaScriptTypes.ReferenceError);
+    }
+    return cn;
+  }
+  
   private CAstNode walkNodesInternal(final Node n, WalkContext context) {
     int NT = n.getType();
     switch (NT) {
@@ -947,17 +959,10 @@ public class RhinoToAstTranslator {
       }
     }
 
+    case Token.BINDNAME:
     case Token.NAME: {
-      CAstNode cn = Ast.makeNode(CAstNode.VAR, Ast.makeConstant(n.getString()));
-      context.cfg().map(n, cn);
-      CAstNode target = context.getCatchTarget();
-      if (target != null) {
-        context.cfg().add(n, target, JavaScriptTypes.ReferenceError);
-      } else {
-        context.cfg().add(n, CAstControlFlowMap.EXCEPTION_TO_EXIT, JavaScriptTypes.ReferenceError);
-      }
-      return cn;
-    }
+      return readName(context, n.getString());
+     }
 
     case Token.THIS: {
       return Ast.makeNode(CAstNode.VAR, Ast.makeConstant("this"));
@@ -1024,8 +1029,8 @@ public class RhinoToAstTranslator {
     case Token.VAR: {
       Node nm = n.getFirstChild();
 
-      context.addInitializer(Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(nm.getString())), Ast.makeNode(
-          CAstNode.VAR, Ast.makeConstant("undefined"))));
+      context.addInitializer(Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(nm.getString())), 
+          readName(context, "undefined")));
 
       if (nm.getFirstChild() != null) {
         WalkContext child = new ExpressionContext(context);
@@ -1081,10 +1086,6 @@ public class RhinoToAstTranslator {
     case Token.SETNAME: {
       Node nm = n.getFirstChild();
       return Ast.makeNode(CAstNode.ASSIGN, walkNodes(nm, context), walkNodes(nm.getNext(), context));
-    }
-
-    case Token.BINDNAME: {
-      return Ast.makeNode(CAstNode.VAR, Ast.makeConstant(n.getString()));
     }
 
     case Token.IFNE:

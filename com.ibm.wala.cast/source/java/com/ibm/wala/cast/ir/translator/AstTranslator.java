@@ -84,7 +84,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   protected abstract void doFieldWrite(WalkContext context, int receiver, CAstNode elt, CAstNode parent, int rval);
 
-  protected abstract void doMaterializeFunction(WalkContext context, int result, int exception, CAstEntity fn);
+  protected abstract void doMaterializeFunction(CAstNode node, WalkContext context, int result, int exception, CAstEntity fn);
 
   protected abstract void doNewObject(WalkContext context, CAstNode newNode, int result, Object type, int[] arguments);
 
@@ -192,7 +192,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
-  protected int doGlobalRead(WalkContext context, String name) {
+  protected int doGlobalRead(CAstNode node, WalkContext context, String name) {
     Symbol S = context.currentScope().lookup(name);
 
     // Global variables can be treated as lexicals defined in the CG root, or
@@ -2445,7 +2445,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     declareFunction(fn, context);
     int result = context.currentScope().allocateTempValue();
     int ex = context.currentScope().allocateTempValue();
-    doMaterializeFunction(context, result, ex, fn);
+    doMaterializeFunction(n, context, result, ex, fn);
     return result;
   }
 
@@ -2596,7 +2596,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     Symbol s = context.currentScope().lookup(nm);
     assert s != null : "cannot find symbol for " + nm + " at " + CAstPrinter.print(n, context.getSourceMap());
     if (context.currentScope().isGlobal(s)) {
-      setValue(n, doGlobalRead(context, nm));
+      setValue(n, doGlobalRead(n, context, nm));
     } else if (context.currentScope().isLexicallyScoped(s)) {
       setValue(n, doLexicallyScopedRead(n, context, nm));
     } else {
@@ -3078,7 +3078,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     int temp;
 
     if (context.currentScope().isGlobal(ls))
-      temp = doGlobalRead(context, nm);
+      temp = doGlobalRead(n, context, nm);
     else if (context.currentScope().isLexicallyScoped(ls)) {
       temp = doLexicallyScopedRead(n, context, nm);
     } else {

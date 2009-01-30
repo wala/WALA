@@ -143,7 +143,7 @@ public class JavaCAst2IRTranslator extends AstTranslator {
 	}
     }
 
-    protected void doMaterializeFunction(WalkContext context, int result, int exception, CAstEntity fn) {
+    protected void doMaterializeFunction(CAstNode n, WalkContext context, int result, int exception, CAstEntity fn) {
 	// Not possible in Java (no free-standing functions)
 	Assertions.UNREACHABLE("Real functions in Java??? I don't think so!");
     }

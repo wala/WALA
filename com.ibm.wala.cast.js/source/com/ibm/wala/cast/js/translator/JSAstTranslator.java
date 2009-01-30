@@ -82,20 +82,30 @@ public class JSAstTranslator extends AstTranslator {
     return null;
   }
 
-  protected int doLexicallyScopedRead(CAstNode n, WalkContext context, String name) {
-    int readVn = super.doLexicallyScopedRead(n, context, name);
- 
+  private void addDefinedCheck(CAstNode n, WalkContext context, int readVn) {
     context.cfg().addPreNode(n);
     context.cfg().addInstruction(new JavaScriptCheckReference(readVn));
     
     CAstNode target = context.getControlFlow().getTarget(n, JavaScriptTypes.ReferenceError);
     assert target != null;
     context.cfg().addPreEdge(n, target, true);
-    context.cfg().newBlock(true);
-    
+    context.cfg().newBlock(true);    
+  }
+  
+  protected int doLexicallyScopedRead(CAstNode n, WalkContext context, String name) {
+    int readVn = super.doLexicallyScopedRead(n, context, name);
+    addDefinedCheck(n, context, readVn);
     return readVn;
   }
   
+  protected int doGlobalRead(CAstNode n, WalkContext context, String name) {
+    int readVn = super.doGlobalRead(n, context, name);
+    if (! "undefined".equals(name)) {
+      addDefinedCheck(n, context, readVn);
+    }
+    return readVn;
+  }
+      
   protected void defineType(CAstEntity type, WalkContext wc) {
       Assertions.UNREACHABLE("JavaScript doesn't have types. I suggest you look elsewhere for your amusement.");
   }
@@ -184,9 +194,9 @@ public class JSAstTranslator extends AstTranslator {
 	  typeRef)));
   }
 
-  protected void doMaterializeFunction(WalkContext context, int result, int exception, CAstEntity fn) {
+  protected void doMaterializeFunction(CAstNode n, WalkContext context, int result, int exception, CAstEntity fn) {
     int nm = context.currentScope().getConstantValue("L"+composeEntityName(context, fn));
-    int tmp = doGlobalRead(context, "Function");
+    int tmp = super.doGlobalRead(n, context, "Function");
     context.cfg().addInstruction(
       new JavaScriptInvoke(tmp, result, new int[]{ nm }, exception,
         new JSCallSiteReference(
