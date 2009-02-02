@@ -52,7 +52,7 @@ public class StandardSolver extends AbstractPointsToSolver {
           if (DEBUG) {
             System.err.println("Bail out from call graph limit" + i);
           }
-          break;
+          throw CancelException.make("reached call graph size limit");
         }
       }
 
