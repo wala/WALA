@@ -323,9 +323,14 @@ public final class ShrikeClass implements IClass {
       }
     }
     for (Iterator<IClass> it = c.iterator(); it.hasNext();) {
-      ShrikeClass I = (ShrikeClass) it.next();
+      IClass I = it.next();
       if (I.isInterface()) {
-        result.addAll(I.computeAllInterfacesAsCollection());
+        if (I instanceof ShrikeClass) {
+          ShrikeClass sc = (ShrikeClass) I;
+          result.addAll(sc.computeAllInterfacesAsCollection());
+        } else {
+          Warnings.add(ClassHierarchyWarning.create("cannot handle superinterface that is not a ShrikeClass"));
+        }
       } else {
         Warnings.add(ClassHierarchyWarning.create("expected an interface " + I));
       }
@@ -376,7 +381,7 @@ public final class ShrikeClass implements IClass {
   /**
    * @author sfink
    * 
-   * A warning for when we get a class not found exception
+   *         A warning for when we get a class not found exception
    */
   private static class ClassNotFoundWarning extends Warning {
 
@@ -913,6 +918,7 @@ public final class ShrikeClass implements IClass {
 
   /**
    * Does the class file indicate that this class is a member of some other classe?
+   * 
    * @throws InvalidClassFileException
    */
   public boolean isInnerClass() throws InvalidClassFileException {
@@ -927,9 +933,10 @@ public final class ShrikeClass implements IClass {
     }
     return false;
   }
-  
+
   /**
    * Does the class file indicate that this class is a static inner class?
+   * 
    * @throws InvalidClassFileException
    */
   public boolean isStaticInnerClass() throws InvalidClassFileException {
