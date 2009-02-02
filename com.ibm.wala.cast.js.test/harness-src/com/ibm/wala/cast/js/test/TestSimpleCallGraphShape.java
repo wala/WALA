@@ -231,4 +231,19 @@ public class TestSimpleCallGraphShape extends TestJSCallGraphShape {
     verifyGraphAssertions(CG, null);
   }
 
+  private static final Object[][] assertionsForMultivar = new Object[][] {
+    new Object[] { ROOT, new String[] { "tests/multivar.js" } },
+    new Object[] { "tests/multivar.js", 
+        new String[] { "tests/multivar.js/a",
+                       "tests/multivar.js/bf",
+                       "tests/multivar.js/c"
+        }
+    }
+  };
+
+  public void testMultivar() throws IOException, IllegalArgumentException, CancelException {
+    CallGraph CG = Util.makeScriptCG("tests", "multivar.js");
+    verifyGraphAssertions(CG, assertionsForMultivar);
+  }
+
 }

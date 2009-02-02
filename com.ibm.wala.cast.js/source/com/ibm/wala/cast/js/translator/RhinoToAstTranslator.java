@@ -1027,17 +1027,25 @@ public class RhinoToAstTranslator {
     }
 
     case Token.VAR: {
+      List<CAstNode> result = new ArrayList();
       Node nm = n.getFirstChild();
+      while (nm != null) {
+        context.addInitializer(Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(nm.getString())), 
+            readName(context, "undefined")));
 
-      context.addInitializer(Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(nm.getString())), 
-          readName(context, "undefined")));
+        if (nm.getFirstChild() != null) {
+          WalkContext child = new ExpressionContext(context);
 
-      if (nm.getFirstChild() != null) {
-        WalkContext child = new ExpressionContext(context);
+          result.add(Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(nm.getString())), walkNodes(nm
+            .getFirstChild(), child)));
 
-        return Ast.makeNode(CAstNode.ASSIGN, Ast.makeNode(CAstNode.VAR, Ast.makeConstant(nm.getString())), walkNodes(nm
-            .getFirstChild(), child));
-
+        }
+        
+        nm = nm.getNext();
+      }
+      
+      if (result.size() > 0) {
+        return Ast.makeNode(CAstNode.BLOCK_EXPR, result.toArray(new CAstNode[result.size()]));
       } else {
         return Ast.makeNode(CAstNode.EMPTY);
       }
