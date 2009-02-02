@@ -134,7 +134,7 @@ public interface IMethod extends IMember, ContextItem {
    * @return an array of the exception types declared by the throws clause for this method, or null if there are none
    * @throws InvalidClassFileException
    */
-  TypeReference[] getDeclaredExceptions() throws InvalidClassFileException;
+  TypeReference[] getDeclaredExceptions() throws InvalidClassFileException, UnsupportedOperationException;
 
   /**
    * @return the source line number corresponding to a particular bytecode index, or -1 if the information is not

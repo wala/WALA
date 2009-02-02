@@ -60,7 +60,7 @@ public interface IClass extends IClassHierarchyDweller {
    * @return the integer that encodes the class's modifiers,
    * as defined by the JVM specification
    */
-  int getModifiers();
+  int getModifiers() throws UnsupportedOperationException;
 
   /**
    * @return the superclass, or null if java.lang.Object
