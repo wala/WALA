@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *****************************************************************************/
-public class StaticInit {
+public class StaticInitializers {
 
   static class X {
     int x;
@@ -30,12 +30,12 @@ public class StaticInit {
     y = new X();
   }
 
-  private static int sum() {
+  private int sum() {
     return x.sum() * y.diff();
   }
 
   public static void main(String[] args) {
-    StaticInit SI = new StaticInit();
+    StaticInitializers SI = new StaticInitializers();
     SI.sum();
   }
 }

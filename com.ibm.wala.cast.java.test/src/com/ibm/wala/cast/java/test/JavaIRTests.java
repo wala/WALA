@@ -63,13 +63,14 @@ public abstract class JavaIRTests extends IRTests {
  
   public void testSimple1() {
 
-    List<? extends IRAssertion> assertions = Arrays.asList(new SourceMapAssertion("Source#Simple1#doStuff#(I)V", "prod", 14),
-        new SourceMapAssertion("Source#Simple1#doStuff#(I)V", "j", 13), new SourceMapAssertion(
-            "Source#Simple1#main#([Ljava/lang/String;)V", "s", 22), new SourceMapAssertion(
-            "Source#Simple1#main#([Ljava/lang/String;)V", "i", 18), new SourceMapAssertion(
-            "Source#Simple1#main#([Ljava/lang/String;)V", "sum", 19), EdgeAssertions.make(
-            "Source#Simple1#main#([Ljava/lang/String;)V", "Source#Simple1#doStuff#(I)V"), EdgeAssertions.make(
-            "Source#Simple1#instanceMethod1#()V", "Source#Simple1#instanceMethod2#()V"));
+    List<? extends IRAssertion> assertions = Arrays.asList(
+        new SourceMapAssertion("Source#Simple1#doStuff#(I)V", "prod", 24),
+        new SourceMapAssertion("Source#Simple1#doStuff#(I)V", "j", 23), 
+        new SourceMapAssertion("Source#Simple1#main#([Ljava/lang/String;)V", "s", 32), 
+        new SourceMapAssertion("Source#Simple1#main#([Ljava/lang/String;)V", "i", 28), 
+        new SourceMapAssertion("Source#Simple1#main#([Ljava/lang/String;)V", "sum", 29), 
+        EdgeAssertions.make("Source#Simple1#main#([Ljava/lang/String;)V", "Source#Simple1#doStuff#(I)V"), 
+        EdgeAssertions.make("Source#Simple1#instanceMethod1#()V", "Source#Simple1#instanceMethod2#()V"));
 
     // this needs soure positions to work too
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), assertions, true);
@@ -549,7 +550,7 @@ public abstract class JavaIRTests extends IRTests {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
-  public void testStaticInit() {
+  public void testStaticInitializers() {
     runTest(singleTestSrc(), rtJar, simpleTestEntryPoint(), emptyList, true);
   }
 
