@@ -51,8 +51,7 @@ import com.ibm.wala.util.intset.IntSet;
 
 /**
  * 
- * A dataflow graph implementation specialized for propagation-based pointer
- * analysis
+ * A dataflow graph implementation specialized for propagation-based pointer analysis
  * 
  * @author sfink
  */
@@ -78,11 +77,10 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   private final HashSet<AbstractStatement> delegateStatements = HashSetFactory.make();
 
   /**
-   * special representation for implicitly represented unary equations. This is
-   * a map from UnaryOperator -> IBinaryNonNegativeIntRelation.
+   * special representation for implicitly represented unary equations. This is a map from UnaryOperator ->
+   * IBinaryNonNegativeIntRelation.
    * 
-   * for UnaryOperator op, let R be implicitMap.get(op) then (i,j) \in R implies
-   * i op j is an equation in the graph
+   * for UnaryOperator op, let R be implicitMap.get(op) then (i,j) \in R implies i op j is an equation in the graph
    * 
    */
   private final SmallMap<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation> implicitUnaryMap = new SmallMap<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation>();
@@ -90,8 +88,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   /**
    * The inverse of relations in the implicit map
    * 
-   * for UnaryOperator op, let R be invImplicitMap.get(op) then (i,j) \in R
-   * implies j op i is an equation in the graph
+   * for UnaryOperator op, let R be invImplicitMap.get(op) then (i,j) \in R implies j op i is an equation in the graph
    */
   private final SmallMap<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation> invImplicitUnaryMap = new SmallMap<UnaryOperator<PointsToSetVariable>, IBinaryNaturalRelation>();
 
@@ -131,9 +128,9 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   /**
    * @author sfink
    * 
-   * A graph which tracks explicit equations.
+   *         A graph which tracks explicit equations.
    * 
-   * use this with care ...
+   *         use this with care ...
    */
   private class DelegateGraph extends AbstractNumberedGraph<INodeWithNumber> {
 
@@ -146,7 +143,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
       Assertions.UNREACHABLE("Don't call me");
     }
 
-    public void addEquation(AbstractStatement<PointsToSetVariable,?> eq) {
+    public void addEquation(AbstractStatement<PointsToSetVariable, ?> eq) {
       if (Assertions.verifyAssertions) {
         Assertions._assert(!containsStatement(eq));
       }
@@ -188,8 +185,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * @throws IllegalArgumentException
-   *             if eq is null
+   * @throws IllegalArgumentException if eq is null
    */
   public void addStatement(GeneralStatement<PointsToSetVariable> eq) {
     if (eq == null) {
@@ -232,8 +228,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * @return true iff this equation should be represented implicitly in this
-   *         data structure
+   * @return true iff this equation should be represented implicitly in this data structure
    */
   private boolean useImplicitRepresentation(IFixedPointStatement s) {
     AbstractStatement eq = (AbstractStatement) s;
@@ -452,12 +447,10 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * A graph of just the variables in the system. v1 -> v2 iff there exists
-   * equation e s.t. e uses v1 and e defs v2.
+   * A graph of just the variables in the system. v1 -> v2 iff there exists equation e s.t. e uses v1 and e defs v2.
    * 
-   * Note that this graph trickily and fragilely reuses the nodeManager from the
-   * delegateGraph, above. This will work ok as long as every variable is
-   * inserted in the delegateGraph.
+   * Note that this graph trickily and fragilely reuses the nodeManager from the delegateGraph, above. This will work ok as long as
+   * every variable is inserted in the delegateGraph.
    */
   private class VariableGraphView extends AbstractNumberedGraph<PointsToSetVariable> {
 
@@ -622,8 +615,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     }
 
     /*
-     * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
-     *      java.lang.Object)
+     * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object, java.lang.Object)
      */
     @Override
     public void addEdge(PointsToSetVariable src, PointsToSetVariable dst) {
@@ -704,12 +696,10 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * Note that this implementation consults the implicit relation for each and
-   * every operator cached. This will be inefficient if there are many implicit
-   * operators.
+   * Note that this implementation consults the implicit relation for each and every operator cached. This will be inefficient if
+   * there are many implicit operators.
    * 
-   * @throws IllegalArgumentException
-   *             if v is null
+   * @throws IllegalArgumentException if v is null
    * 
    */
   public int getNumberOfStatementsThatUse(PointsToSetVariable v) {
@@ -838,8 +828,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * A graph of just the variables in the system. v1 -> v2 iff there exists an
-   * assignment equation e s.t. e uses v1 and e defs v2.
+   * A graph of just the variables in the system. v1 -> v2 iff there exists an assignment equation e s.t. e uses v1 and e defs v2.
    * 
    */
   public NumberedGraph<PointsToSetVariable> getAssignmentGraph() {
@@ -853,8 +842,8 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * A graph of just the variables in the system. v1 -> v2 iff there exists an
-   * Assingnment or Filter equation e s.t. e uses v1 and e defs v2.
+   * A graph of just the variables in the system. v1 -> v2 iff there exists an Assingnment or Filter equation e s.t. e uses v1 and e
+   * defs v2.
    * 
    */
   public Graph<PointsToSetVariable> getFilterAssignmentGraph() {
@@ -868,8 +857,14 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
   }
 
   /**
-   * A graph of just the variables in the system. v1 -> v2 that are related by
-   * def-use with "interesting" operators
+   * NOTE: do not use this method unless you really know what you are doing. Functionality is fragile and may not work in the future.
+   */
+  public Graph<PointsToSetVariable> getFlowGraphIncludingImplicitConstraints() {
+    return new VariableGraphView();
+  }
+
+  /**
+   * A graph of just the variables in the system. v1 -> v2 that are related by def-use with "interesting" operators
    * 
    */
   private abstract class FilteredConstraintGraphView extends AbstractNumberedGraph<PointsToSetVariable> {
@@ -1035,8 +1030,7 @@ public class PropagationGraph implements IFixedPointSystem<PointsToSetVariable> 
     }
 
     /*
-     * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object,
-     *      java.lang.Object)
+     * @see com.ibm.wala.util.graph.EdgeManager#addEdge(java.lang.Object, java.lang.Object)
      */
     @Override
     public void addEdge(PointsToSetVariable src, PointsToSetVariable dst) {

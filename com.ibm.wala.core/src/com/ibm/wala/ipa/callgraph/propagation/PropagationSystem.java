@@ -84,8 +84,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   protected final MutableMapping<InstanceKey> instanceKeys = MutableMapping.make();
 
   /**
-   * A mapping from IClass -> MutableSharedBitVectorIntSet The range represents the instance keys that correspond to a
-   * given class. This mapping is used to filter sets based on declared types; e.g., in cast constraints
+   * A mapping from IClass -> MutableSharedBitVectorIntSet The range represents the instance keys that correspond to a given class.
+   * This mapping is used to filter sets based on declared types; e.g., in cast constraints
    */
   final private Map<IClass, MutableIntSet> class2InstanceKey = HashMapFactory.make();
 
@@ -163,8 +163,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * Keep this method private .. this returns the actual backing set for the class, which we do not want to expose to
-   * clients.
+   * Keep this method private .. this returns the actual backing set for the class, which we do not want to expose to clients.
    */
   private MutableIntSet findOrCreateSparseSetForClass(IClass klass) {
     if (Assertions.verifyAssertions) {
@@ -179,8 +178,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * @return a set of integers representing the instance keys that correspond to a given class. This method creates a
-   *         new set, which the caller may bash at will.
+   * @return a set of integers representing the instance keys that correspond to a given class. This method creates a new set, which
+   *         the caller may bash at will.
    */
   MutableIntSet cloneInstanceKeysForClass(IClass klass) {
     if (Assertions.verifyAssertions) {
@@ -196,8 +195,7 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * @return a set of integers representing the instance keys that correspond to a given class, or null if there are
-   *         none.
+   * @return a set of integers representing the instance keys that correspond to a given class, or null if there are none.
    * @throws IllegalArgumentException if klass is null
    */
   public IntSet getInstanceKeysForClass(IClass klass) {
@@ -324,8 +322,8 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
   }
 
   /**
-   * NB: this is idempotent ... if the given constraint exists, it will not be added to the system; however, this will
-   * be more expensive since it must check if the constraint pre-exits.
+   * NB: this is idempotent ... if the given constraint exists, it will not be added to the system; however, this will be more
+   * expensive since it must check if the constraint pre-exits.
    * 
    * @return true iff the system changes
    */
@@ -713,6 +711,14 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
 
   public Graph<PointsToSetVariable> getFilterAsssignmentGraph() {
     return flowGraph.getFilterAssignmentGraph();
+  }
+
+  /**
+   * NOTE: do not use this method unless you really know what you are doing. Functionality is fragile and may not work in the
+   * future.
+   */
+  public Graph<PointsToSetVariable> getFlowGraphIncludingImplicitConstraints() {
+    return flowGraph.getFlowGraphIncludingImplicitConstraints();
   }
 
   /**
