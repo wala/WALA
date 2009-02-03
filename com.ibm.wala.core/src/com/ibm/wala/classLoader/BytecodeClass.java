@@ -41,13 +41,18 @@ import com.ibm.wala.util.strings.ImmutableByteArray;
 import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
+/**
+ * A class representing which originates in some form of bytecode.
+ *
+ * @param <T> type of classloader which loads this format of class. 
+ */
 public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
   protected BytecodeClass(T loader, IClassHierarchy cha) {
     this.loader = loader;
     this.cha = cha;
   }
-  
+
   /**
    * An Atom which holds the name of the super class. We cache this for efficiency reasons.
    */
@@ -57,7 +62,6 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    * The names of interfaces for this class. We cache this for efficiency reasons.
    */
   protected ImmutableByteArray[] interfaceNames;
-
 
   /**
    * The object that loaded this class.
@@ -119,8 +123,6 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   private final HashMap<Atom, IField> fieldMap = HashMapFactory.make(5);
 
   /**
-   * @author sfink
-   * 
    * A warning for when we get a class not found exception
    */
   private static class ClassNotFoundWarning extends Warning {
@@ -148,16 +150,11 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
 
   protected abstract IMethod[] computeDeclaredMethods() throws InvalidClassFileException;
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getReference()
-   */
+
   public TypeReference getReference() {
     return typeReference;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getSourceFileName()
-   */
   public String getSourceFileName() {
     return loader.getSourceFileName(this);
   }
@@ -172,9 +169,6 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     return getReference().toString();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isArrayClass()
-   */
   public boolean isArrayClass() {
     return false;
   }
@@ -183,23 +177,14 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
     return cha;
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getName()
-   */
   public TypeName getName() {
     return getReference().getName();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#isReferenceType()
-   */
   public boolean isReferenceType() {
     return getReference().isReferenceType();
   }
 
-  /*
-   * @see com.ibm.wala.classLoader.IClass#getField(com.ibm.wala.util.Atom)
-   */
   public IField getField(Atom name) {
     if (fieldMap.containsKey(name)) {
       return fieldMap.get(name);
@@ -250,7 +235,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       computeSuperclass();
     }
     if (superClass == null && !getReference().equals(TypeReference.JavaLangObject)) {
-         throw new ClassHierarchyException("No superclass found for " + this);
+      throw new ClassHierarchyException("No superclass found for " + this);
     }
     return superClass;
   }
@@ -446,16 +431,19 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
         Warnings.add(ClassHierarchyWarning.create("expected an interface " + klass));
       }
     }
-    for (Iterator<IClass> it = c.iterator(); it.hasNext();) {
-      BytecodeClass I = (BytecodeClass) it.next();
-      if (I.isInterface()) {
-        result.addAll(I.computeAllInterfacesAsCollection());
-      } else {
-        Warnings.add(ClassHierarchyWarning.create("expected an interface " + I));
+    
+    // at this point result holds all interfaces the class directly extends.
+    // now expand to a fixed point.
+    Set<IClass> last = null;
+    do {
+      last = HashSetFactory.make(result);
+      for (IClass i : last) {
+        result.addAll(i.getDirectInterfaces());
       }
-    }
+    } while (last.size() < result.size());
+    
 
-    // now add any interfaces from the super class
+    // now add any interfaces implemented by the super class
     IClass sup = null;
     try {
       sup = getSuperclass();
@@ -469,8 +457,6 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
   }
 
   /**
-   * Method array2Set.
-   * 
    * @param interfaces a set of class names
    * @return Set of all IClasses that can be loaded corresponding to the class names in the interfaces array; raise warnings if
    *         classes can not be loaded
@@ -524,7 +510,6 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
    * set up the methodMap mapping
    */
   protected void computeMethodMap() throws InvalidClassFileException {
-
     if (methodMap == null) {
       IMethod[] methods = computeDeclaredMethods();
       if (methods.length > 5) {
