@@ -15,12 +15,13 @@ Export-Package: com.ibm.wala.core.tests.basic,
  com.ibm.wala.core.tests.cha,
  com.ibm.wala.core.tests.demandpa,
  com.ibm.wala.core.tests.ir,
+ com.ibm.wala.core.tests.plugin,
  com.ibm.wala.core.tests.slicer,
  com.ibm.wala.core.tests.util,
+ com.ibm.wala.demandpa.driver,
  com.ibm.wala.eclipse.headless,
  com.ibm.wala.examples.drivers,
- com.ibm.wala.examples.properties,
- com.ibm.wala.demandpa.driver
+ com.ibm.wala.examples.properties
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: com.ibm.wala.core.tests.plugin.CoreTestsPlugin
