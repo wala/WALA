@@ -71,7 +71,8 @@ public class AnalysisOptions {
   private boolean supportRefinement = false;
 
   /**
-   * Should call graph construction attempt to handle reflection via detection of flows to casts?
+   * Should call graph construction attempt to handle reflection via detection of flows to casts, analysis of string constant
+   * parameters to reflective methods, etc.?
    * 
    * @see ReflectionHandler
    */
@@ -81,6 +82,7 @@ public class AnalysisOptions {
    * Should call graph construction handle possible invocations of static initializer methods?
    */
   private boolean handleStaticInit = true;
+
   /**
    * Should we use the pretransitive solver for pointer analysis? Not yet ready for prime-time.
    */
@@ -226,7 +228,7 @@ public class AnalysisOptions {
 
   /**
    * @param i the mininum number of equations that the pointer analysis system must contain before the solver will try to
-   *            topologically sore
+   *          topologically sore
    */
   public void setMinEquationsForTopSort(int i) {
     minEquationsForTopSort = i;
@@ -249,7 +251,7 @@ public class AnalysisOptions {
 
   /**
    * @param i the maximum number of evaluations that the pointer analysis solver will perform before topologically resorting the
-   *            system
+   *          system
    */
   public void setMaxEvalBetweenTopo(int i) {
     maxEvalBetweenTopo = i;

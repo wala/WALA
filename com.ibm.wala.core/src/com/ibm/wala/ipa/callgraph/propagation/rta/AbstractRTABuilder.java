@@ -387,7 +387,7 @@ public abstract class AbstractRTABuilder extends PropagationCallGraphBuilder {
   }
 
   protected ContextSelector makeContextSelector(ContextSelector appContextSelector) {
-    ContextSelector def = new DefaultContextSelector();
+    ContextSelector def = new DefaultContextSelector(options);
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
     return contextSelector;
   }

@@ -34,7 +34,7 @@ public class AstJavaZeroXCFABuilder extends AstJavaCFABuilder {
     SSAContextInterpreter contextInterpreter = makeDefaultContextInterpreters(appContextInterpreter, options, cha, reflect);
     setContextInterpreter(contextInterpreter);
 
-    ContextSelector def = new DefaultContextSelector();
+    ContextSelector def = new DefaultContextSelector(options);
     ContextSelector contextSelector = appContextSelector == null ? def : new DelegatingContextSelector(appContextSelector, def);
 
     setContextSelector(contextSelector);
