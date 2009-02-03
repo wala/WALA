@@ -27,7 +27,7 @@ public class MemoryAccess {
    * index of the field access instruction in a shrikeBt or SSA instruction
    * array
    */
-  final int instructionIndex;
+  final private int instructionIndex;
 
   public MemoryAccess(int index, CGNode node) {
     super();
@@ -53,5 +53,35 @@ public class MemoryAccess {
   public CGNode getNode() {
     return node;
   }
+  
+  @Override
+  public int hashCode() {
+    final int prime = 31;
+    int result = 1;
+    result = prime * result + instructionIndex;
+    result = prime * result + ((node == null) ? 0 : node.hashCode());
+    return result;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (obj == null)
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    MemoryAccess other = (MemoryAccess) obj;
+    if (instructionIndex != other.instructionIndex)
+      return false;
+    if (node == null) {
+      if (other.node != null)
+        return false;
+    } else if (!node.equals(other.node))
+      return false;
+    return true;
+  }
+
+  
 
 }
