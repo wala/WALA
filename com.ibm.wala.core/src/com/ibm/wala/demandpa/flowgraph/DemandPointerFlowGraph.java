@@ -85,9 +85,8 @@ import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * A graph representation of statements flowing pointer values, but <em>not</em> primitive values. Nodes are
- * variables, and edges are <em>against</em> value flow; assignment x = y yields edge from x to y with label
- * {@link AssignLabel#noFilter()}
+ * A graph representation of statements flowing pointer values, but <em>not</em> primitive values. Nodes are variables, and edges
+ * are <em>against</em> value flow; assignment x = y yields edge from x to y with label {@link AssignLabel#noFilter()}
  * 
  * @author Manu Sridharan
  * 
@@ -389,12 +388,12 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
 
       NewMultiDimInfo multiDimInfo = getInfoForNewMultiDim(instruction, heapModel, node);
       if (multiDimInfo != null) {
-        for (Pair<PointerKey,InstanceKey> newInstr : multiDimInfo.newInstrs) {
+        for (Pair<PointerKey, InstanceKey> newInstr : multiDimInfo.newInstrs) {
           g.addNode(newInstr.fst);
           g.addNode(newInstr.snd);
           g.addEdge(newInstr.fst, newInstr.snd, NewLabel.v());
         }
-        for (Pair<PointerKey,PointerKey> arrStoreInstr : multiDimInfo.arrStoreInstrs) {
+        for (Pair<PointerKey, PointerKey> arrStoreInstr : multiDimInfo.arrStoreInstrs) {
           g.addNode(arrStoreInstr.fst);
           g.addNode(arrStoreInstr.snd);
           g.addEdge(arrStoreInstr.fst, arrStoreInstr.snd, PutFieldLabel.make(ArrayContents.v()));
@@ -521,6 +520,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
 
     public final Collection<Pair<PointerKey, InstanceKey>> newInstrs;
 
+    // pairs of (base pointer, stored val)
     public final Collection<Pair<PointerKey, PointerKey>> arrStoreInstrs;
 
     public NewMultiDimInfo(Collection<Pair<PointerKey, InstanceKey>> newInstrs,
@@ -532,9 +532,8 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
   }
 
   /**
-   * collect information about the new instructions and putfield instructions used to model an allocation of a
-   * multi-dimensional array. excludes the new instruction itself (i.e., the allocation of the top-level multi-dim
-   * array).
+   * collect information about the new instructions and putfield instructions used to model an allocation of a multi-dimensional
+   * array. excludes the new instruction itself (i.e., the allocation of the top-level multi-dim array).
    */
   public static NewMultiDimInfo getInfoForNewMultiDim(SSANewInstruction instruction, HeapModel heapModel, CGNode node) {
     Collection<Pair<PointerKey, InstanceKey>> newInstrs = HashSetFactory.make();
@@ -546,7 +545,8 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
     }
     IClass klass = iKey.getConcreteType();
     // if not a multi-dim array allocation, return null
-    if (!klass.isArrayClass() || ((ArrayClass)klass).getElementClass() == null || !((ArrayClass)klass).getElementClass().isArrayClass()) {
+    if (!klass.isArrayClass() || ((ArrayClass) klass).getElementClass() == null
+        || !((ArrayClass) klass).getElementClass().isArrayClass()) {
       return null;
     }
     PointerKey def = heapModel.getPointerKeyForLocal(node, instruction.getDef());
@@ -568,7 +568,7 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
         // + " is " + ik);
         // Trace.println(" klass:" + klass);
         // }
-//        g.addEdge(pk, ik, NewLabel.v());
+        // g.addEdge(pk, ik, NewLabel.v());
         newInstrs.add(Pair.make(pk, ik));
         arrStoreInstrs.add(Pair.make(lastVar, pk));
         lastInstance = ik;
