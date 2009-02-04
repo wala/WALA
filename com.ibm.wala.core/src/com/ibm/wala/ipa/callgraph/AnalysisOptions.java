@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph;
 
+import com.ibm.wala.analysis.reflection.ReflectionContextInterpreter;
+import com.ibm.wala.analysis.reflection.ReflectionContextSelector;
 import com.ibm.wala.ipa.callgraph.impl.ExplicitCallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.ReflectionHandler;
 import com.ibm.wala.ssa.SSAOptions;
@@ -71,12 +73,64 @@ public class AnalysisOptions {
   private boolean supportRefinement = false;
 
   /**
+   * options for handling reflection during call graph construction
+   */
+  public static enum ReflectionOptions {
+    FULL("full", false, false, false), NO_FLOW_TO_CASTS("no_flow_to_casts", true, false, false), NO_METHOD_INVOKE(
+        "no_method_invoke", false, true, false), NO_FLOW_TO_CASTS_NO_METHOD_INVOKE("no_flow_to_casts_no_method_invoke", true, true,
+        false), NO_STRING_CONSTANTS("no_string_constants", false, false, true), NONE("none", true, true, true);
+
+    private final String name;
+
+    /**
+     * should flows from calls to newInstance() to casts be ignored?
+     */
+    private final boolean ignoreFlowToCasts;
+
+    /**
+     * should calls to Method.invoke() be ignored?
+     */
+    private final boolean ignoreMethodInvoke;
+
+    /**
+     * should calls to reflective methods with String constant arguments be ignored?
+     */
+    private final boolean ignoreStringConstants;
+
+    private ReflectionOptions(String name, boolean ignoreFlowToCasts, boolean ignoreMethodInvoke, boolean ignoreInterpretCalls) {
+      this.name = name;
+      this.ignoreFlowToCasts = ignoreFlowToCasts;
+      this.ignoreMethodInvoke = ignoreMethodInvoke;
+      this.ignoreStringConstants = ignoreInterpretCalls;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public boolean isIgnoreFlowToCasts() {
+      return ignoreFlowToCasts;
+    }
+
+    public boolean isIgnoreMethodInvoke() {
+      return ignoreMethodInvoke;
+    }
+
+    public boolean isIgnoreStringConstants() {
+      return ignoreStringConstants;
+    }
+
+  }
+
+  /**
    * Should call graph construction attempt to handle reflection via detection of flows to casts, analysis of string constant
    * parameters to reflective methods, etc.?
    * 
    * @see ReflectionHandler
+   * @see ReflectionContextInterpreter
+   * @see ReflectionContextSelector
    */
-  private boolean handleReflection = true;
+  private ReflectionOptions reflectionOptions = ReflectionOptions.FULL;
 
   /**
    * Should call graph construction handle possible invocations of static initializer methods?
@@ -335,12 +389,12 @@ public class AnalysisOptions {
     usePreTransitiveSolver = b;
   }
 
-  public boolean getHandleReflection() {
-    return handleReflection;
+  public ReflectionOptions getReflectionOptions() {
+    return reflectionOptions;
   }
 
-  public void setHandleReflection(boolean handleReflection) {
-    this.handleReflection = handleReflection;
+  public void setReflectionOptions(ReflectionOptions reflectionOptions) {
+    this.reflectionOptions = reflectionOptions;
   }
 
   public boolean getHandleStaticInit() {

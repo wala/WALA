@@ -31,13 +31,8 @@ public class DefaultContextSelector implements ContextSelector {
 
   public DefaultContextSelector(AnalysisOptions options) {
     ContextInsensitiveSelector ci = new ContextInsensitiveSelector();
-    ContextSelector s = null;
-    if (options.getHandleReflection()) {
-      ReflectionContextSelector r = ReflectionContextSelector.createReflectionContextSelector();
-      s = new DelegatingContextSelector(r, ci);
-    } else {
-      s = ci;
-    }
+    ContextSelector r = ReflectionContextSelector.createReflectionContextSelector(options);
+    ContextSelector s = new DelegatingContextSelector(r, ci);
     delegate = new DelegatingContextSelector(new CloneContextSelector(), s);
   }
 

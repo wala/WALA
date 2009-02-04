@@ -34,74 +34,76 @@ import com.ibm.wala.types.FieldReference;
  * @author sjfink
  * 
  */
-public class ReflectionContextInterpreter extends DelegatingSSAContextInterpreter {
+public class ReflectionContextInterpreter {
 
   public static SSAContextInterpreter createReflectionContextInterpreter(IClassHierarchy cha, AnalysisOptions options,
       AnalysisCache cache, ReflectionSpecification userSpec) {
-    if (options.getHandleReflection()) {
-      return new ReflectionContextInterpreter(cha, options, cache, userSpec);
-    } else {
-      // return a dummy interpreter that understands nothing
-      return new SSAContextInterpreter() {
+    // start with a dummy interpreter that understands nothing
+    SSAContextInterpreter result = new SSAContextInterpreter() {
 
-        public boolean understands(CGNode node) {
-          return false;
-        }
+      public boolean understands(CGNode node) {
+        return false;
+      }
 
-        public boolean recordFactoryType(CGNode node, IClass klass) {
-          // TODO Auto-generated method stub
-          return false;
-        }
+      public boolean recordFactoryType(CGNode node, IClass klass) {
+        // TODO Auto-generated method stub
+        return false;
+      }
 
-        public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
-          // TODO Auto-generated method stub
-          return null;
-        }
+      public Iterator<NewSiteReference> iterateNewSites(CGNode node) {
+        // TODO Auto-generated method stub
+        return null;
+      }
 
-        public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
-          // TODO Auto-generated method stub
-          return null;
-        }
+      public Iterator<FieldReference> iterateFieldsWritten(CGNode node) {
+        // TODO Auto-generated method stub
+        return null;
+      }
 
-        public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
-          // TODO Auto-generated method stub
-          return null;
-        }
+      public Iterator<FieldReference> iterateFieldsRead(CGNode node) {
+        // TODO Auto-generated method stub
+        return null;
+      }
 
-        public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
-          // TODO Auto-generated method stub
-          return null;
-        }
+      public Iterator<CallSiteReference> iterateCallSites(CGNode node) {
+        // TODO Auto-generated method stub
+        return null;
+      }
 
-        public int getNumberOfStatements(CGNode node) {
-          // TODO Auto-generated method stub
-          return 0;
-        }
+      public int getNumberOfStatements(CGNode node) {
+        // TODO Auto-generated method stub
+        return 0;
+      }
 
-        public IR getIR(CGNode node) {
-          // TODO Auto-generated method stub
-          return null;
-        }
+      public IR getIR(CGNode node) {
+        // TODO Auto-generated method stub
+        return null;
+      }
 
-        public DefUse getDU(CGNode node) {
-          // TODO Auto-generated method stub
-          return null;
-        }
+      public DefUse getDU(CGNode node) {
+        // TODO Auto-generated method stub
+        return null;
+      }
 
-        public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode n) {
-          // TODO Auto-generated method stub
-          return null;
-        }
-      };
+      public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode n) {
+        // TODO Auto-generated method stub
+        return null;
+      }
+    };
+
+    if (!options.getReflectionOptions().isIgnoreFlowToCasts()) {
+      // need the factory bypass interpreter
+      result = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, cache, userSpec), result);
     }
-  }
-
-  private ReflectionContextInterpreter(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache,
-      ReflectionSpecification userSpec) {
-    super(new ReflectiveInvocationInterpreter(), new DelegatingSSAContextInterpreter(new DelegatingSSAContextInterpreter(
-        new GetClassContextInterpeter(), new JavaLangClassContextInterpreter()), new DelegatingSSAContextInterpreter(
-        new DelegatingSSAContextInterpreter(new ClassFactoryContextInterpreter(), new ClassNewInstanceContextInterpreter(cha)),
-        new FactoryBypassInterpreter(options, cache, userSpec))));
+    if (!options.getReflectionOptions().isIgnoreStringConstants()) {
+      result = new DelegatingSSAContextInterpreter(new DelegatingSSAContextInterpreter(new GetClassContextInterpeter(),
+          new JavaLangClassContextInterpreter()), new DelegatingSSAContextInterpreter(new DelegatingSSAContextInterpreter(
+          new ClassFactoryContextInterpreter(), new ClassNewInstanceContextInterpreter(cha)), result));
+    }
+    if (!options.getReflectionOptions().isIgnoreMethodInvoke()) {
+      result = new DelegatingSSAContextInterpreter(new ReflectiveInvocationInterpreter(), result);
+    }
+    return result;
   }
 
 }

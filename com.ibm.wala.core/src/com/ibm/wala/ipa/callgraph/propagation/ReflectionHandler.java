@@ -36,8 +36,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.collections.Iterator2Collection;
 
 /**
- * a helper class which can modify a {@link PropagationCallGraphBuilder} to deal with
- * reflective factory methods.
+ * a helper class which can modify a {@link PropagationCallGraphBuilder} to deal with reflective factory methods.
  * 
  * @author sfink
  */
@@ -51,16 +50,15 @@ public class ReflectionHandler {
   }
 
   /**
-   * update the pointer analysis solver based on flow of reflective factory
-   * results to checkcasts
+   * update the pointer analysis solver based on flow of reflective factory results to checkcasts
    * 
    * @return true if anything has changed
-   * @throws CancelException 
-   * @throws IllegalArgumentException 
+   * @throws CancelException
+   * @throws IllegalArgumentException
    */
   protected boolean updateForReflection() throws IllegalArgumentException, CancelException {
 
-    if (!builder.getOptions().getHandleReflection()) {
+    if (builder.getOptions().getReflectionOptions().isIgnoreFlowToCasts()) {
       return false;
     }
     Collection<Statement> returnStatements = computeFactoryReturnStatements();
@@ -110,9 +108,9 @@ public class ReflectionHandler {
     }
     return result;
   }
+
   /**
-   * modify the contextInterpreter to account for new interpretations of factory
-   * methods.
+   * modify the contextInterpreter to account for new interpretations of factory methods.
    * 
    * @return set of nodes whose interpretation has changed.
    */
