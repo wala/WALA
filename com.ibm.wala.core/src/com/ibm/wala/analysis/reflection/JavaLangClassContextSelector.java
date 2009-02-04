@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.analysis.reflection;
 
+import java.util.Collection;
+
 import com.ibm.wala.analysis.typeInference.PointType;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -20,17 +22,18 @@ import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.ConstantKey;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
+import com.ibm.wala.types.MethodReference;
+import com.ibm.wala.util.collections.HashSetFactory;
 
 /**
- * A {@link ContextSelector} to intercept calls to certain methods on java.lang.Class when the receiver is a type
- * constant
+ * A {@link ContextSelector} to intercept calls to certain methods on java.lang.Class when the receiver is a type constant
  * 
  * Currently supported methods:
  * <ul>
- * <li> getConstructor
- * <li> getConstructors
- * <li> getDeclaredMethod
- * <li> getMethods
+ * <li>getConstructor
+ * <li>getConstructors
+ * <li>getDeclaredMethod
+ * <li>getMethods
  * </ul>
  * 
  * @author pistoia
@@ -42,8 +45,8 @@ class JavaLangClassContextSelector implements ContextSelector {
   }
 
   /**
-   * If the {@link CallSiteReference} invokes a method we understand and c is a type constant, return a
-   * {@link JavaTypeContext} representing the type named by s, if we can resolve it in the {@link IClassHierarchy}.
+   * If the {@link CallSiteReference} invokes a method we understand and c is a type constant, return a {@link JavaTypeContext}
+   * representing the type named by s, if we can resolve it in the {@link IClassHierarchy}.
    */
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
     if (mayUnderstand(caller, site, callee, receiver)) {
@@ -62,42 +65,23 @@ class JavaLangClassContextSelector implements ContextSelector {
     return null;
   }
 
+  private static final Collection<MethodReference> UNDERSTOOD_METHOD_REFS = HashSetFactory.make();
+
+  static {
+    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_CONSTRUCTOR);
+    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_CONSTRUCTORS);
+    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_METHOD);
+    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_METHODS);
+    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_DECLARED_CONSTRUCTOR);
+    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_DECLARED_CONSTRUCTORS);
+    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_DECLARED_METHOD);
+    UNDERSTOOD_METHOD_REFS.add(JavaLangClassContextInterpreter.GET_DECLARED_METHODS);
+  }
+
   /**
    * This object may understand a dispatch to Class.getContructor when the receiver is a type constant.
    */
   private boolean mayUnderstand(CGNode caller, CallSiteReference site, IMethod targetMethod, InstanceKey instance) {
-    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_CONSTRUCTOR)
-        && getTypeConstant(instance) != null) {
-      return true;
-    }
-    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_CONSTRUCTORS)
-        && getTypeConstant(instance) != null) {
-      return true;
-    }
-    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_METHOD)
-        && getTypeConstant(instance) != null) {
-      return true;
-    }
-    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_METHODS)
-        && getTypeConstant(instance) != null) {
-      return true;
-    }
-    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_DECLARED_CONSTRUCTOR)
-        && getTypeConstant(instance) != null) {
-      return true;
-    }
-    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_DECLARED_CONSTRUCTORS)
-        && getTypeConstant(instance) != null) {
-      return true;
-    }
-    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_DECLARED_METHOD)
-        && getTypeConstant(instance) != null) {
-      return true;
-    }
-    if (targetMethod.getReference().equals(JavaLangClassContextInterpreter.GET_DECLARED_METHODS)
-        && getTypeConstant(instance) != null) {
-      return true;
-    }
-    return false;
+    return UNDERSTOOD_METHOD_REFS.contains(targetMethod.getReference()) && getTypeConstant(instance) != null;
   }
 }
