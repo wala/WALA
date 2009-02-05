@@ -34,8 +34,8 @@ import com.ibm.wala.util.strings.Atom;
 /**
  * "Non-standard" bypass rules to use during call graph construction.
  * 
- * Normally, the method bypass rules replace the IMethod that is resolved by other means, via the getBypass() method.
- * However, the bypass rules can be invoked even before resolving the target of a call, by checking the intercept rules.
+ * Normally, the method bypass rules replace the IMethod that is resolved by other means, via the getBypass() method. However, the
+ * bypass rules can be invoked even before resolving the target of a call, by checking the intercept rules.
  * 
  * @author sfink
  */
@@ -69,8 +69,13 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
   private final MethodTargetSelector parent;
 
   /**
-   * Mapping from MethodReference -> SyntheticMethod We may call syntheticMethod.put(m,null) .. in which case we use
-   * containsKey() to check for having already considered m.
+   * for checking method target resolution via CHA
+   */
+  private final ClassHierarchyMethodTargetSelector chaMethodTargetSelector;
+
+  /**
+   * Mapping from MethodReference -> SyntheticMethod We may call syntheticMethod.put(m,null) .. in which case we use containsKey()
+   * to check for having already considered m.
    */
   final private HashMap<MethodReference, SummarizedMethod> syntheticMethods = HashMapFactory.make();
 
@@ -86,6 +91,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     this.ignoredPackages = ignoredPackages;
     this.parent = parent;
     this.cha = cha;
+    this.chaMethodTargetSelector = new ClassHierarchyMethodTargetSelector(cha);
   }
 
   /**
@@ -98,24 +104,12 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     if (site == null) {
       throw new IllegalArgumentException("site is null");
     }
-    MethodReference ref = site.getDeclaredTarget();
-    IMethod resolved = null;
+    // first, see if we'd like to bypass the CHA-based target for the site
+    MethodReference ref = site.getDeclaredTarget();    
+    IMethod chaTarget = chaMethodTargetSelector.getCalleeTarget(caller, site, dispatchType);
+    IMethod target = (chaTarget == null) ? findOrCreateSyntheticMethod(ref, site.isStatic()) : findOrCreateSyntheticMethod(chaTarget,
+        site.isStatic());
 
-    if (ClassHierarchyMethodTargetSelector.feasibleChaResolution(cha, site, dispatchType)) {
-      if (site.isVirtual() || site.isInterface()) {
-        if (dispatchType != null) {
-          resolved = cha.resolveMethod(dispatchType, ref.getSelector());
-        }
-      } else /* (site.isStatic() || site.isSpecial()) */{
-        IClass computedDispatchType = cha.lookupClass(site.getDeclaredTarget().getDeclaringClass());
-        if (computedDispatchType != null) {
-          resolved = cha.resolveMethod(computedDispatchType, ref.getSelector());
-        }
-      }
-    }
-
-    IMethod target = (resolved == null) ? findOrCreateSyntheticMethod(ref, site.isStatic()) : getBypassInternal(resolved, site
-        .isStatic());
 
     if (DEBUG) {
       System.err.println("target is initially " + target);
@@ -124,9 +118,14 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
     if (target != null) {
       return target;
     } else {
+      // didn't bypass the CHA target; check if we should bypass the parent target
       if (canIgnore(site.getDeclaredTarget())) {
         // we want to generate a NoOpSummary for this method.
         return findOrCreateSyntheticMethod(site.getDeclaredTarget(), site.isStatic());
+      }
+      if (parent instanceof ClassHierarchyMethodTargetSelector) {
+        // already checked this case and decided not to bypass
+        return chaTarget;
       }
       target = parent.getCalleeTarget(caller, site, dispatchType);
 
@@ -135,7 +134,7 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
       }
 
       if (target != null) {
-        IMethod bypassTarget = getBypassInternal(target, site.isStatic());
+        IMethod bypassTarget = findOrCreateSyntheticMethod(target, site.isStatic());
 
         if (DEBUG)
           System.err.println("bypassTarget is " + target);
@@ -144,21 +143,6 @@ public class BypassMethodTargetSelector implements MethodTargetSelector {
       } else
         return target;
     }
-  }
-
-  /**
-   * Lookup bypass rules based on a resolved method
-   * 
-   * Method getBypass.
-   * 
-   * @param m
-   * @return Object
-   */
-  private SyntheticMethod getBypassInternal(IMethod m, boolean isStatic) {
-    if (DEBUG) {
-      System.err.println("MethodBypass.getBypass? " + m);
-    }
-    return findOrCreateSyntheticMethod(m, isStatic);
   }
 
   /**

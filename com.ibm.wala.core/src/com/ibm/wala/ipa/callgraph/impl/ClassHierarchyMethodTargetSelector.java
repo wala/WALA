@@ -77,46 +77,7 @@ public class ClassHierarchyMethodTargetSelector implements MethodTargetSelector 
       return null;
     }
 
-    IMethod target = feasibleChaResolution(classHierarchy, call, klass) ? classHierarchy.resolveMethod(klass, call
-        .getDeclaredTarget().getSelector()) : null;
-    if (target == null) {
-      return null;
-    }
-
-    return target;
-  }
-
-  /**
-   * @return true if it may be possible to resolve a call to a site on the concrete type dispatchType
-   */
-  public static boolean feasibleChaResolution(IClassHierarchy cha, CallSiteReference site, IClass dispatchType) {
-    if (dispatchType == null) {
-      return false;
-    }
-
-    /**
-     * An interface as the dispatchType is a special case. The only time this makes sense is for a static invocation of the class
-     * initializer method (<clinit>) of an interface type. So we check for that here.
-     */
-    if (dispatchType.isInterface()) {
-      if (site.getDeclaredTarget().getSelector().equals(MethodReference.clinitSelector)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-
-    TypeReference targetType = site.getDeclaredTarget().getDeclaringClass();
-    IClass resolvedType = cha.lookupClass(targetType);
-    if (resolvedType == null) {
-      return false;
-    } else {
-      if (resolvedType.isInterface()) {
-        return cha.implementsInterface(dispatchType, resolvedType);
-      } else {
-        return cha.isSubclassOf(dispatchType, resolvedType);
-      }
-    }
+    return classHierarchy.resolveMethod(klass, call.getDeclaredTarget().getSelector());
   }
 
   public boolean mightReturnSyntheticMethod(CGNode caller, CallSiteReference site) {
