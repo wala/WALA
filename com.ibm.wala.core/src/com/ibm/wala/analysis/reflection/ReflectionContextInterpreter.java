@@ -91,7 +91,7 @@ public class ReflectionContextInterpreter {
       }
     };
 
-    if (!options.getReflectionOptions().isIgnoreFlowToCasts()) {
+    if (options.getReflectionOptions().getNumFlowToCastIterations() > 0) {
       // need the factory bypass interpreter
       result = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, cache, userSpec), result);
     }

@@ -36,16 +36,12 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
 
 /**
  * 
- * pre-transitive solver incorporating concepts from Heintze and Tardieu, PLDI
- * 2001
+ * pre-transitive solver incorporating concepts from Heintze and Tardieu, PLDI 2001
  * 
- * In this implementation, there are two types of points-to-sets, "transitive
- * roots", and "not-roots".
+ * In this implementation, there are two types of points-to-sets, "transitive roots", and "not-roots".
  * 
- * The points-to-sets for transitive roots are "primordial", they do not result
- * from assignments and transitive closure. For example, if x = new A, the
- * points-to-set for x will be a transitive root holding the instance key for
- * the allocation site.
+ * The points-to-sets for transitive roots are "primordial", they do not result from assignments and transitive closure. For
+ * example, if x = new A, the points-to-set for x will be a transitive root holding the instance key for the allocation site.
  * 
  * Under construction.
  * 
@@ -68,7 +64,9 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
     getBuilder().addConstraintsFromNewNodes();
 
     boolean changed = false;
+    int i = 0;
     do {
+      i++;
       changed = false;
       BitVectorIntSet visited = new BitVectorIntSet();
 
@@ -93,9 +91,11 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
       // Add constraints until from new nodes and reflection
       changed |= getBuilder().addConstraintsFromNewNodes();
       if (!changed) {
-        // avoid this until last minute.  it's expensive.
+        // avoid this until last minute. it's expensive.
         if (getReflectionHandler() != null) {
-          changed |= getReflectionHandler().updateForReflection();
+          if (i <= getBuilder().getOptions().getReflectionOptions().getNumFlowToCastIterations()) {
+            changed |= getReflectionHandler().updateForReflection();
+          }
         }
       }
     } while (changed);
@@ -107,22 +107,17 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
   }
 
   /**
-   * perform graph reachability to find all pointer keys that may flow into p.
-   * Perform cycle elimination as a side effect.
+   * perform graph reachability to find all pointer keys that may flow into p. Perform cycle elimination as a side effect.
    * 
-   * This is named getLvals matching the Heintze Tardieu PLDI 01 paper, but I
-   * don't find the name intuitive.
+   * This is named getLvals matching the Heintze Tardieu PLDI 01 paper, but I don't find the name intuitive.
    * 
    * TODO: recode so it's not recursive?
    * 
-   * @param ag
-   *          graph view of pointer assignments
+   * @param ag graph view of pointer assignments
    * @param p
-   * @param path
-   *          numbers of points-to-sets on the current path.
-   * @param visited
-   *          numbers of points-to-sets we have already visited in this
-   *          iteration, and thus have already cached the reachability.
+   * @param path numbers of points-to-sets on the current path.
+   * @param visited numbers of points-to-sets we have already visited in this iteration, and thus have already cached the
+   *          reachability.
    * @return the set of instance key numbers which flow to p through assignments
    */
   private IntSet getLvals(Graph<PointsToSetVariable> ag, PointerKey p, Path path, MutableIntSet visited) {
@@ -187,8 +182,7 @@ public class PreTransitiveSolver extends AbstractPointsToSolver {
   }
 
   /**
-   * TODO: This is horribly slow. Optimize it by pushing the functionality into
-   * PropagationSystem and PropagationGraph.
+   * TODO: This is horribly slow. Optimize it by pushing the functionality into PropagationSystem and PropagationGraph.
    * 
    * @return set of PointsToSetVariable that are used by complex constraints
    */

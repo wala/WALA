@@ -46,7 +46,7 @@ public class StandardSolver extends AbstractPointsToSolver {
       if (DEBUG) {
         System.err.println("Solved " + i);
       }
-      
+
       if (getBuilder().getOptions().getMaxNumberOfNodes() > -1) {
         if (getBuilder().getCallGraph().getNumberOfNodes() >= getBuilder().getOptions().getMaxNumberOfNodes()) {
           if (DEBUG) {
@@ -65,8 +65,9 @@ public class StandardSolver extends AbstractPointsToSolver {
       if (DEBUG) {
         System.err.println("handling reflection");
       }
-      getReflectionHandler().updateForReflection();
-      
+      if (i <= getBuilder().getOptions().getReflectionOptions().getNumFlowToCastIterations()) {
+        getReflectionHandler().updateForReflection();
+      }
       // Handling reflection may have discovered new nodes!
       if (DEBUG) {
         System.err.println("adding constraints again");
@@ -75,7 +76,7 @@ public class StandardSolver extends AbstractPointsToSolver {
       // Note that we may have added stuff to the
       // worklist; so,
     } while (!getSystem().emptyWorkList());
-    
+
   }
 
 }

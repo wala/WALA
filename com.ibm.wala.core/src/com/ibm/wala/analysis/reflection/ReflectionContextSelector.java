@@ -34,7 +34,7 @@ public class ReflectionContextSelector {
         return null;
       }
     };
-    if (!options.getReflectionOptions().isIgnoreFlowToCasts()) {
+    if (options.getReflectionOptions().getNumFlowToCastIterations() > 0) {
       result = new DelegatingContextSelector(new FactoryContextSelector(), result);
     }
     if (!options.getReflectionOptions().isIgnoreStringConstants()) {

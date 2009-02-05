@@ -76,16 +76,17 @@ public class AnalysisOptions {
    * options for handling reflection during call graph construction
    */
   public static enum ReflectionOptions {
-    FULL("full", false, false, false), NO_FLOW_TO_CASTS("no_flow_to_casts", true, false, false), NO_METHOD_INVOKE(
-        "no_method_invoke", false, true, false), NO_FLOW_TO_CASTS_NO_METHOD_INVOKE("no_flow_to_casts_no_method_invoke", true, true,
-        false), NO_STRING_CONSTANTS("no_string_constants", false, false, true), NONE("none", true, true, true);
+    FULL("full", Integer.MAX_VALUE, false, false), NO_FLOW_TO_CASTS("no_flow_to_casts", 0, false, false), NO_METHOD_INVOKE(
+        "no_method_invoke", Integer.MAX_VALUE, true, false), NO_FLOW_TO_CASTS_NO_METHOD_INVOKE("no_flow_to_casts_no_method_invoke",
+        0, true, false), ONE_FLOW_TO_CASTS_NO_METHOD_INVOKE("one_flow_to_casts_no_method_invoke", 1, true, false), NO_STRING_CONSTANTS(
+        "no_string_constants", Integer.MAX_VALUE, false, true), NONE("none", 0, true, true);
 
     private final String name;
 
     /**
      * should flows from calls to newInstance() to casts be ignored?
      */
-    private final boolean ignoreFlowToCasts;
+    private final int numFlowToCastIterations;
 
     /**
      * should calls to Method.invoke() be ignored?
@@ -97,9 +98,9 @@ public class AnalysisOptions {
      */
     private final boolean ignoreStringConstants;
 
-    private ReflectionOptions(String name, boolean ignoreFlowToCasts, boolean ignoreMethodInvoke, boolean ignoreInterpretCalls) {
+    private ReflectionOptions(String name, int numFlowToCastIterations, boolean ignoreMethodInvoke, boolean ignoreInterpretCalls) {
       this.name = name;
-      this.ignoreFlowToCasts = ignoreFlowToCasts;
+      this.numFlowToCastIterations = numFlowToCastIterations;
       this.ignoreMethodInvoke = ignoreMethodInvoke;
       this.ignoreStringConstants = ignoreInterpretCalls;
     }
@@ -108,8 +109,8 @@ public class AnalysisOptions {
       return name;
     }
 
-    public boolean isIgnoreFlowToCasts() {
-      return ignoreFlowToCasts;
+    public int getNumFlowToCastIterations() {
+      return numFlowToCastIterations;
     }
 
     public boolean isIgnoreMethodInvoke() {
