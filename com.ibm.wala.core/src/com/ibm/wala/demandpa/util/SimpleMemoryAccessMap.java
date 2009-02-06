@@ -58,6 +58,12 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   private static final boolean DEBUG = false;
 
   /**
+   * if true, always use IR from CGNode when reasoning about method statements; otherwise, try to use bytecodes when possible. Note
+   * that current code may not work if set to false.
+   */
+  private static final boolean ALWAYS_BUILD_IR = true;
+
+  /**
    * Map: IField -> Set<MemoryAccess>
    */
   final private Map<IField, Set<MemoryAccess>> readMap = HashMapFactory.make();
@@ -96,7 +102,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   private void populate(CGNode n) {
     // we analyze bytecodes to avoid the cost of IR construction, except
     // for synthetic methods, where we must use the synthetic IR
-    if (n.getMethod().isSynthetic()) {
+    if (ALWAYS_BUILD_IR || n.getMethod().isSynthetic()) {
       if (DEBUG) {
         System.err.println("synthetic method");
       }
