@@ -106,7 +106,11 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
       if (DEBUG) {
         System.err.println("synthetic method");
       }
-      SSAInstruction[] statements = n.getIR().getInstructions();
+      IR ir = n.getIR();
+      if (ir == null) {
+        return;
+      }
+      SSAInstruction[] statements = ir.getInstructions();
       SSAMemoryAccessVisitor v = new SSAMemoryAccessVisitor(n);
       for (int i = 0; i < statements.length; i++) {
         SSAInstruction s = statements[i];
