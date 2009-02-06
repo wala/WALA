@@ -18,7 +18,6 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IField;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
-import com.ibm.wala.classLoader.SyntheticMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
@@ -31,7 +30,9 @@ import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.PutInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
+import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
+import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
 import com.ibm.wala.ssa.SSAGetInstruction;
 import com.ibm.wala.ssa.SSAInstruction;
@@ -40,8 +41,10 @@ import com.ibm.wala.ssa.SSAPutInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
+import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 import com.ibm.wala.util.collections.HashSetFactory;
+import com.ibm.wala.util.collections.Iterator2Iterable;
 import com.ibm.wala.util.collections.MapUtil;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.ShrikeUtil;
@@ -53,6 +56,7 @@ import com.ibm.wala.util.shrike.ShrikeUtil;
 public class SimpleMemoryAccessMap implements MemoryAccessMap {
 
   private static final boolean DEBUG = false;
+
   /**
    * Map: IField -> Set<MemoryAccess>
    */
@@ -72,7 +76,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   private final IClassHierarchy cha;
 
   private final boolean includePrimOps;
-  
+
   private final HeapModel heapModel;
 
   public SimpleMemoryAccessMap(CallGraph cg, HeapModel heapModel, boolean includePrimOps) {
@@ -90,12 +94,13 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   }
 
   private void populate(CGNode n) {
+    // we analyze bytecodes to avoid the cost of IR construction, except
+    // for synthetic methods, where we must use the synthetic IR
     if (n.getMethod().isSynthetic()) {
       if (DEBUG) {
         System.err.println("synthetic method");
       }
-      SyntheticMethod sm = (SyntheticMethod) n.getMethod();
-      SSAInstruction[] statements = sm.getStatements();
+      SSAInstruction[] statements = n.getIR().getInstructions();
       SSAMemoryAccessVisitor v = new SSAMemoryAccessVisitor(n);
       for (int i = 0; i < statements.length; i++) {
         SSAInstruction s = statements[i];
@@ -273,10 +278,10 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
           return;
         }
       }
-      
+
       if (DEBUG) {
         System.err.println("found array write at " + instructionIndex);
-      }      
+      }
       arrayWrites.add(new MemoryAccess(instructionIndex, node));
     }
 
@@ -324,7 +329,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
 
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.demandpa.util.MemoryAccessMap#getFieldReads(com.ibm.wala.classLoader.IField)
    */
   public Collection<MemoryAccess> getFieldReads(PointerKey pk, IField field) {
@@ -336,7 +341,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     }
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.demandpa.util.MemoryAccessMap#getFieldWrites(com.ibm.wala.classLoader.IField)
    */
   public Collection<MemoryAccess> getFieldWrites(PointerKey pk, IField field) {
@@ -348,20 +353,19 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
     }
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.demandpa.util.MemoryAccessMap#getArrayReads()
    */
   public Collection<MemoryAccess> getArrayReads(PointerKey pk) {
     return arrayReads;
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.demandpa.util.MemoryAccessMap#getArrayWrites()
    */
   public Collection<MemoryAccess> getArrayWrites(PointerKey pk) {
     return arrayWrites;
   }
-
 
   @Override
   public String toString() {
@@ -414,9 +418,28 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   public Collection<MemoryAccess> getStaticFieldWrites(IField field) {
     return getFieldWrites(null, field);
   }
-  
+
   public HeapModel getHeapModel() {
     // NOTE: this memory access map actually makes no use of the heap model
     return heapModel;
+  }
+
+  public void repOk() {
+    for (MemoryAccess m : Iterator2Iterable.make(new CompoundIterator<MemoryAccess>(arrayReads.iterator(), arrayWrites.iterator()))) {
+      CGNode node = m.getNode();
+      IR ir = node.getIR();
+      assert ir != null : "null IR for " + node + " but we have a memory access";
+      SSAInstruction[] instructions = ir.getInstructions();
+      int instructionIndex = m.getInstructionIndex();
+      assert instructionIndex >= 0 && instructionIndex < instructions.length : "instruction index " + instructionIndex
+          + " out of range for " + node + ", which has " + instructions.length + " instructions";
+      SSAInstruction s = instructions[m.getInstructionIndex()];
+      if (s == null) {
+        // this is possible due to dead bytecodes
+        continue;
+      }
+      assert s instanceof SSAArrayReferenceInstruction || s instanceof SSANewInstruction : "bad type " + s.getClass()
+          + " for array access instruction";
+    }
   }
 }
