@@ -37,8 +37,8 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.osgi.service.resolver.BundleDescription;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
-import org.eclipse.pde.core.plugin.PluginRegistry;
 import org.eclipse.pde.internal.core.ClasspathUtilCore;
+import org.eclipse.pde.internal.core.PDECore;
 import org.eclipse.pde.internal.core.PDEStateHelper;
 
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
@@ -61,10 +61,10 @@ import com.ibm.wala.util.strings.Atom;
  * 
  * We set up classloaders as follows:
  * <ul>
- * <li> The project being analyzed is in the Application Loader
- * <li> Projects on which the main project depends are in the Extension loader
- * <li> System libraries are in the primordial loader.
- * <li> Source modules go in a special Source loader.
+ * <li>The project being analyzed is in the Application Loader
+ * <li>Projects on which the main project depends are in the Extension loader
+ * <li>System libraries are in the primordial loader.
+ * <li>Source modules go in a special Source loader.
  * </ul>
  * 
  * @author sjfink
@@ -98,9 +98,9 @@ public class EclipseProjectPath {
    * The project whose path this object represents
    */
   private final IJavaProject project;
-  
+
   private final boolean analyzeSource;
-  
+
   // names of OSGi bundles already processed.
   private final Set<String> bundlesProcessed = HashSetFactory.make();
 
@@ -134,7 +134,7 @@ public class EclipseProjectPath {
   public static EclipseProjectPath make(IJavaProject project) throws IOException, CoreException {
     return make(project, false);
   }
-  
+
   public static EclipseProjectPath make(IJavaProject project, boolean analyzeSource) throws IOException, CoreException {
     return new EclipseProjectPath(project, analyzeSource);
   }
@@ -200,7 +200,7 @@ public class EclipseProjectPath {
             resolvePluginClassPath(javaProject.getProject());
           } else {
             resolveClasspathEntries(javaProject.getRawClasspath(), loader);
-            if (! analyzeSource) {
+            if (!analyzeSource) {
               File output = makeAbsolute(javaProject.getOutputLocation()).toFile();
               List<Module> s = MapUtil.findOrCreateList(binaryModules, loader);
               s.add(new BinaryDirectoryTreeModule(output));
@@ -217,7 +217,7 @@ public class EclipseProjectPath {
   }
 
   private void resolvePluginClassPath(IProject p) throws CoreException, IOException {
-    BundleDescription bd = PluginRegistry.findModel(p).getBundleDescription();
+    BundleDescription bd = findModel(p).getBundleDescription();
     resolveBundleDescriptionClassPath(bd, Loader.APPLICATION);
   }
 
@@ -230,7 +230,7 @@ public class EclipseProjectPath {
 
     // handle the classpath entries for bd
     ArrayList l = new ArrayList();
-    ClasspathUtilCore.addLibraries(PluginRegistry.findModel(bd), l);
+    ClasspathUtilCore.addLibraries(findModel(bd), l);
     IClasspathEntry[] entries = new IClasspathEntry[l.size()];
     int i = 0;
     for (Object o : l) {
@@ -256,7 +256,7 @@ public class EclipseProjectPath {
   }
 
   private boolean isPluginProject(IJavaProject javaProject) {
-    IPluginModelBase model = PluginRegistry.findModel(javaProject.getProject());
+    IPluginModelBase model = findModel(javaProject.getProject());
     if (model == null) {
       return false;
     }
@@ -316,11 +316,11 @@ public class EclipseProjectPath {
     AnalysisScope scope = AnalysisScopeReader.read(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile, classLoader);
     return toAnalysisScope(scope);
   }
-  
+
   public AnalysisScope toAnalysisScope(AnalysisScope scope) {
     try {
       List<Module> l = MapUtil.findOrCreateList(binaryModules, Loader.APPLICATION);
-      if (! analyzeSource) {
+      if (!analyzeSource) {
         File dir = makeAbsolute(project.getOutputLocation()).toFile();
         if (!dir.isDirectory()) {
           System.err.println("PANIC: project output location is not a directory: " + dir);
@@ -328,7 +328,7 @@ public class EclipseProjectPath {
           l.add(new BinaryDirectoryTreeModule(dir));
         }
       }
-      
+
       for (Loader loader : Loader.values()) {
         for (Module m : binaryModules.get(loader)) {
           scope.addToScope(loader.ref, m);
@@ -359,7 +359,18 @@ public class EclipseProjectPath {
 
   @Override
   public String toString() {
-    return toAnalysisScope((File)null).toString();
+    return toAnalysisScope((File) null).toString();
   }
 
+  private IPluginModelBase findModel(IProject p) {
+    // PluginRegistry is specific to Eclipse 3.3+. Use PDECore for compatibility with 3.2
+    // return PluginRegistry.findModel(p);
+    return PDECore.getDefault().getModelManager().findModel(p);
+  }
+
+  private IPluginModelBase findModel(BundleDescription bd) {
+    // PluginRegistry is specific to Eclipse 3.3+. Use PDECore for compatibility with 3.2
+    // return PluginRegistry.findModel(bd);
+    return PDECore.getDefault().getModelManager().findModel(bd);
+  }
 }
