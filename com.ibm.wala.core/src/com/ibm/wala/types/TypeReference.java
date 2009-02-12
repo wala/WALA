@@ -274,6 +274,10 @@ public final class TypeReference {
 
   public final static TypeReference JavaLangByte = findOrCreate(ClassLoaderReference.Primordial, JavaLangByteName);
   
+  private final static TypeName JavaLangCharacterName = TypeName.string2TypeName("Ljava/lang/Character");
+
+  public final static TypeReference JavaLangCharacter = findOrCreate(ClassLoaderReference.Primordial, JavaLangCharacterName);
+  
   public final static TypeName JavaIoSerializableName = TypeName.string2TypeName("Ljava/io/Serializable");
 
   public final static TypeReference JavaIoSerializable = findOrCreate(ClassLoaderReference.Primordial, JavaIoSerializableName);
