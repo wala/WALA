@@ -28,9 +28,93 @@ import com.ibm.wala.util.graph.traverse.DFS;
 public class CallGraphStats {
 
   /**
-   * @throws IllegalArgumentException  if cg is null
+   * @author manu
+   * 
    */
-  public static String getStats(CallGraph cg) {
+  public static class CGStats {
+
+    private final int nNodes;
+
+    private final int nEdges;
+
+    private final int nMethods;
+
+    private final int bytecodeBytes;
+
+    private CGStats(int nodes, int edges, int methods, int bytecodeBytes) {
+      super();
+      nNodes = nodes;
+      nEdges = edges;
+      nMethods = methods;
+      this.bytecodeBytes = bytecodeBytes;
+    }
+
+    public int getNNodes() {
+      return nNodes;
+    }
+
+    public int getNEdges() {
+      return nEdges;
+    }
+
+    public int getNMethods() {
+      return nMethods;
+    }
+
+    public int getBytecodeBytes() {
+      return bytecodeBytes;
+    }
+
+    @Override
+    public int hashCode() {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + bytecodeBytes;
+      result = prime * result + nEdges;
+      result = prime * result + nMethods;
+      result = prime * result + nNodes;
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      CGStats other = (CGStats) obj;
+      if (bytecodeBytes != other.bytecodeBytes)
+        return false;
+      if (nEdges != other.nEdges)
+        return false;
+      if (nMethods != other.nMethods)
+        return false;
+      if (nNodes != other.nNodes)
+        return false;
+      return true;
+    }
+
+    @Override
+    public String toString() {
+      StringBuffer result = new StringBuffer();
+      result.append("Call graph stats:");
+      result.append("\n");
+      result.append("  Nodes: " + nNodes);
+      result.append("\n");
+      result.append("  Edges: " + nEdges);
+      result.append("\n");
+      result.append("  Methods: " + nMethods);
+      result.append("\n");
+      result.append("  Bytecode Bytes: " + bytecodeBytes);
+      result.append("\n");
+      return result.toString();
+
+    }
+  }
+
+  public static CGStats getCGStats(CallGraph cg) {
     if (cg == null) {
       throw new IllegalArgumentException("cg is null");
     }
@@ -42,24 +126,20 @@ public class CallGraphStats {
       nNodes++;
       nEdges += cg.getSuccNodeCount(n);
     }
-    StringBuffer result = new StringBuffer();
-    result.append("Call graph stats:");
-    result.append("\n");
-    result.append("  Nodes: " + nNodes);
-    result.append("\n");
-    result.append("  Edges: " + nEdges);
-    result.append("\n");
-    result.append("  Methods: " + collectMethods(cg).size());
-    result.append("\n");
-    result.append("  Bytecode Bytes: " + countBytecodeBytes(cg));
-    result.append("\n");
-    return result.toString();
+    return new CGStats(nNodes, nEdges, collectMethods(cg).size(), countBytecodeBytes(cg));
   }
-  
+
+  /**
+   * @throws IllegalArgumentException if cg is null
+   */
+  public static String getStats(CallGraph cg) {
+    return getCGStats(cg).toString();
+  }
+
   /**
    * @param cg
    * @return the number of bytecode bytes
-   * @throws IllegalArgumentException  if cg is null
+   * @throws IllegalArgumentException if cg is null
    */
   public static int countBytecodeBytes(CallGraph cg) {
     if (cg == null) {
@@ -83,12 +163,11 @@ public class CallGraphStats {
   }
 
   /**
-   * Walk the call graph and return the set of MethodReferences that appear in
-   * the graph.
+   * Walk the call graph and return the set of MethodReferences that appear in the graph.
    * 
    * @param cg
    * @return a set of MethodReferences
-   * @throws IllegalArgumentException  if cg is null
+   * @throws IllegalArgumentException if cg is null
    */
   public static Set<MethodReference> collectMethods(CallGraph cg) {
     if (cg == null) {
