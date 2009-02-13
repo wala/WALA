@@ -120,15 +120,7 @@ public class ContainerContextSelector implements ContextSelector {
    * usually wish to model with one level of call-string context?
    */
   public static boolean isWellKnownStaticFactory(MethodReference m) {
-    if (m.getDeclaringClass().equals(TypeReference.JavaLangSystem)) {
-      if (m.getName().toString().equals("arraycopy")) {
-        return true;
-      }
-    }
-    if (m.equals(synthArraycopy)) {
-      return true;
-    }
-    if (isArrayCopyMethod(m)) {
+    if (isArrayCopyingMethod(m)) {
       return true;
     }
     if (isArrayToStringMethod(m)) {
@@ -143,6 +135,23 @@ public class ContainerContextSelector implements ContextSelector {
     return false;
   }
 
+  /**
+   * Does m represent a library method that copies arrays?
+   */
+  public static boolean isArrayCopyingMethod(MethodReference m) {
+    if (m.getDeclaringClass().equals(TypeReference.JavaLangSystem)) {
+      if (m.getName().toString().equals("arraycopy")) {
+        return true;
+      }
+    }
+    if (m.equals(synthArraycopy)) {
+      return true;
+    }
+    if (isArrayCopyMethod(m)) {
+      return true;
+    }    
+    return false;
+  }
   /**
    * return true iff m represents one of the well-known methods in java.lang.reflect.Arrays that 
    * do some sort of arraycopy
