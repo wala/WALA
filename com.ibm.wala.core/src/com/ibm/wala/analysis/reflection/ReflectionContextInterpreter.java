@@ -96,12 +96,13 @@ public class ReflectionContextInterpreter {
       result = new DelegatingSSAContextInterpreter(new FactoryBypassInterpreter(options, cache, userSpec), result);
     }
     if (!options.getReflectionOptions().isIgnoreStringConstants()) {
-      result = new DelegatingSSAContextInterpreter(new DelegatingSSAContextInterpreter(new GetClassContextInterpeter(),
-          new JavaLangClassContextInterpreter()), new DelegatingSSAContextInterpreter(new DelegatingSSAContextInterpreter(
-          new ClassFactoryContextInterpreter(), new ClassNewInstanceContextInterpreter(cha)), result));
+      result = new DelegatingSSAContextInterpreter(new GetClassContextInterpeter(), new DelegatingSSAContextInterpreter(
+          new DelegatingSSAContextInterpreter(new ClassFactoryContextInterpreter(), new ClassNewInstanceContextInterpreter(cha)),
+          result));
     }
     if (!options.getReflectionOptions().isIgnoreMethodInvoke()) {
-      result = new DelegatingSSAContextInterpreter(new ReflectiveInvocationInterpreter(), result);
+      result = new DelegatingSSAContextInterpreter(new ReflectiveInvocationInterpreter(), new DelegatingSSAContextInterpreter(
+          new JavaLangClassContextInterpreter(), result));
     }
     return result;
   }

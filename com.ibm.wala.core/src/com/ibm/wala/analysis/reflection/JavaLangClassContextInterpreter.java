@@ -56,7 +56,7 @@ import com.ibm.wala.util.debug.Assertions;
  * <li> getDeclaredConstructor
  * <li> getDeclaredConstructors
  * <li> getDeclaredMethod
- * <li> getDeclartedMethods
+ * <li> getDeclaredMethods
  * </ul>
  * 
  * @author pistoia

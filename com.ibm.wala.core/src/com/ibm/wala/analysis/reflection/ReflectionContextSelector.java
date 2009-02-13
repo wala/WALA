@@ -38,14 +38,13 @@ public class ReflectionContextSelector {
       result = new DelegatingContextSelector(new FactoryContextSelector(), result);
     }
     if (!options.getReflectionOptions().isIgnoreStringConstants()) {
-      result = new DelegatingContextSelector(new JavaLangClassContextSelector(), new DelegatingContextSelector(
-          new DelegatingContextSelector(new DelegatingContextSelector(new ClassFactoryContextSelector(),
-              new GetClassContextSelector()), new ClassNewInstanceContextSelector()), result));
+      result = new DelegatingContextSelector(new DelegatingContextSelector(new DelegatingContextSelector(
+          new ClassFactoryContextSelector(), new GetClassContextSelector()), new ClassNewInstanceContextSelector()), result);
     }
     if (!options.getReflectionOptions().isIgnoreMethodInvoke()) {
-      result = new DelegatingContextSelector(new ReflectiveInvocationSelector(), result);
+      result = new DelegatingContextSelector(new ReflectiveInvocationSelector(), new DelegatingContextSelector(
+          new JavaLangClassContextSelector(), result));
     }
     return result;
   }
-
 }

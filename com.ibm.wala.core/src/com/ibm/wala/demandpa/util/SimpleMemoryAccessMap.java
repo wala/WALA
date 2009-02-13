@@ -73,8 +73,6 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
    */
   final private Map<IField, Set<MemoryAccess>> writeMap = HashMapFactory.make();
 
-  // TODO allow for more precise handling of arrays
-
   final private Set<MemoryAccess> arrayReads = HashSetFactory.make();
 
   final private Set<MemoryAccess> arrayWrites = HashSetFactory.make();
