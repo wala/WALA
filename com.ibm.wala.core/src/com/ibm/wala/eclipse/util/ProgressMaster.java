@@ -17,8 +17,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * 
  * This class bounds each work item with a time in milliseconds. If there is no
  * apparent progress within the specified bound, this class cancels itself.
- * 
- * @author sjfink
  */
 public class ProgressMaster implements IProgressMonitor {
 
