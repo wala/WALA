@@ -69,7 +69,7 @@ public class LiveAnalysis {
   /**
    *
    */
-  public static Result perform(final ControlFlowGraph<ISSABasicBlock> cfg, final SymbolTable symtab) {
+  public static Result perform(final ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, final SymbolTable symtab) {
     return perform(cfg, symtab, new BitVector());
   }
 
@@ -78,7 +78,7 @@ public class LiveAnalysis {
    *
    * todo: used once in {@link com.ibm.wala.cast.ir.ssa.SSAConversion}; Explain better the purpose.
    */
-  public static Result perform(final ControlFlowGraph<ISSABasicBlock> cfg, final SymbolTable symtab, final BitVector considerLiveAtExit) {
+  public static Result perform(final ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, final SymbolTable symtab, final BitVector considerLiveAtExit) {
     final BitVectorIntSet liveAtExit = new BitVectorIntSet(considerLiveAtExit);
     final SSAInstruction[] instructions = (SSAInstruction[]) cfg.getInstructions();
 

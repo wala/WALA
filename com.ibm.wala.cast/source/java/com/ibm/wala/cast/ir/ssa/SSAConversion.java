@@ -564,11 +564,11 @@ public class SSAConversion extends AbstractSSAConversion {
   }
 
   private static IntSet valuesToConvert(AstIR ir) {
-    IInstruction[] insts = ir.getInstructions();
+    SSAInstruction[] insts = ir.getInstructions();
     MutableIntSet foundOne = new BitVectorIntSet();
     MutableIntSet foundTwo = new BitVectorIntSet();
     for (int i = 0; i < insts.length; i++) {
-      SSAInstruction inst = (SSAInstruction) insts[i];
+      SSAInstruction inst = insts[i];
       if (inst != null) {
         for (int j = 0; j < inst.getNumberOfDefs(); j++) {
           int def = inst.getDef(j);

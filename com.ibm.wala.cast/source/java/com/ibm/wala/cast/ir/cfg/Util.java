@@ -18,7 +18,7 @@ import com.ibm.wala.util.debug.Assertions;
 
 public class Util {
 
-  public static <T extends IBasicBlock> int whichPred(ControlFlowGraph<T> CFG, T Y, T X) {
+  public static <I, T extends IBasicBlock<I>> int whichPred(ControlFlowGraph<I, T> CFG, T Y, T X) {
     int i = 0;
     for (Iterator<?> N = CFG.getPredNodes(Y); N.hasNext(); i++)
       if (N.next() == X)

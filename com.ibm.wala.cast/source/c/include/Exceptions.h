@@ -2,7 +2,7 @@
 #define EXCEPTIONS_H
 
 /**
- *  The combination of the macroes and the Exceptions class declared 
+ *  The combination of the macros and the Exceptions class declared 
  * in this file is used to provide a (shaky) veneer of exception handling
  * to JNI code.
  *

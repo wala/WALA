@@ -28,9 +28,11 @@ import com.ibm.wala.classLoader.IClassLoader;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.ShiftInstruction;
-import com.ibm.wala.shrikeBT.UnaryOpInstruction;
 import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
@@ -328,7 +330,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   public static final boolean DEBUG_LEXICAL = DEBUG_ALL || true;
 
-  protected final static class PreBasicBlock implements INodeWithNumber, IBasicBlock {
+  protected final static class PreBasicBlock implements INodeWithNumber, IBasicBlock<SSAInstruction> {
     private static final int NORMAL = 0;
 
     private static final int HANDLER = 1;
@@ -415,13 +417,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return null;
     }
 
-    public Iterator<IInstruction> iterator() {
-      Function<SSAInstruction, IInstruction> kludge = new Function<SSAInstruction, IInstruction>() {
-        public IInstruction apply(SSAInstruction s) {
-          return s;
-        }
-      };
-      return new MapIterator<SSAInstruction, IInstruction>(instructions.iterator(), kludge);
+    public Iterator<SSAInstruction> iterator() {
+      return instructions.iterator();
     }
   }
 
@@ -821,8 +818,8 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
-  protected final static class AstCFG extends AbstractCFG<IBasicBlock> {
-    private final IInstruction[] instructions;
+  protected final static class AstCFG extends AbstractCFG<SSAInstruction, PreBasicBlock> {
+    private final SSAInstruction[] instructions;
 
     private final int[] instructionToBlockMap;
 
@@ -892,15 +889,15 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return (o instanceof AstCFG) && functionName.equals(((AstCFG) o).functionName);
     }
 
-    public IBasicBlock getBlockForInstruction(int index) {
+    public PreBasicBlock getBlockForInstruction(int index) {
       for (int i = 1; i < getNumberOfNodes() - 1; i++)
         if (index <= instructionToBlockMap[i])
-          return (IBasicBlock) getNode(i);
+          return getNode(i);
 
       return null;
     }
 
-    public IInstruction[] getInstructions() {
+    public SSAInstruction[] getInstructions() {
       return instructions;
     }
 
@@ -1985,7 +1982,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       }
     }
 
-    AstLexicalInformation(Scope scope, IInstruction[] instrs, Set<Pair<Pair<String, String>, Integer>> exposedNamesSet, Set accesses) {
+    AstLexicalInformation(Scope scope, SSAInstruction[] instrs, Set<Pair<Pair<String, String>, Integer>> exposedNamesSet, Set accesses) {
       Pair[] EN = null;
       if (exposedNamesSet != null) {
         EN = (Pair[]) exposedNamesSet.toArray(new Pair[exposedNamesSet.size()]);
@@ -2139,11 +2136,11 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
-  protected UnaryOpInstruction.IOperator translateUnaryOpcode(CAstNode op) {
+  protected IUnaryOpInstruction.IOperator translateUnaryOpcode(CAstNode op) {
     if (op == CAstOperator.OP_BITNOT)
       return AstConstants.UnaryOp.BITNOT;
     else if (op == CAstOperator.OP_NOT)
-      return UnaryOpInstruction.Operator.NEG;
+      return IUnaryOpInstruction.Operator.NEG;
     else if (op == CAstOperator.OP_SUB)
       return AstConstants.UnaryOp.MINUS;
     else if (op == CAstOperator.OP_ADD)
@@ -2154,7 +2151,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   }
 
-  protected BinaryOpInstruction.IOperator translateBinaryOpcode(CAstNode op) {
+  protected IBinaryOpInstruction.IOperator translateBinaryOpcode(CAstNode op) {
     if (op == CAstOperator.OP_ADD)
       return BinaryOpInstruction.Operator.ADD;
     else if (op == CAstOperator.OP_DIV)
@@ -2201,7 +2198,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
-  protected ConditionalBranchInstruction.IOperator translateConditionOpcode(CAstNode op) {
+  protected IConditionalBranchInstruction.IOperator translateConditionOpcode(CAstNode op) {
     if (op == CAstOperator.OP_EQ)
       return ConditionalBranchInstruction.Operator.EQ;
     else if (op == CAstOperator.OP_GE)
@@ -2266,7 +2263,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     }
   }
 
-  private void patchLexicalAccesses(IInstruction[] instrs, Set<Access> accesses) {
+  private void patchLexicalAccesses(SSAInstruction[] instrs, Set<Access> accesses) {
     Access[] AC = accesses == null ? (Access[]) null : (Access[]) accesses.toArray(new Access[accesses.size()]);
     for (int i = 0; i < instrs.length; i++) {
       if (instrs[i] instanceof AstLexicalAccess && ((AstLexicalAccess) instrs[i]).getAccessCount() == 0) {
@@ -2373,7 +2370,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     // create code entry stuff for this entity
     SymbolTable symtab = ((AbstractScope) functionContext.currentScope()).getUnderlyingSymtab();
     TypeReference[][] catchTypes = functionContext.getCatchTypes();
-    AbstractCFG cfg = new AstCFG(n, functionContext.cfg(), symtab);
+    AstCFG cfg = new AstCFG(n, functionContext.cfg(), symtab);
     Position[] line = functionContext.cfg().getLinePositionMap();
     boolean katch = functionContext.cfg().hasCatchBlock();
     String[] nms = makeNameMap(n, functionContext.entityScopes());

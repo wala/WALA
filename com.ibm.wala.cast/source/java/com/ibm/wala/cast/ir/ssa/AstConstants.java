@@ -10,12 +10,12 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.ssa;
 
-import com.ibm.wala.shrikeBT.BinaryOpInstruction;
-import com.ibm.wala.shrikeBT.UnaryOpInstruction;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 
 public interface AstConstants  {
 
-  public enum BinaryOp implements BinaryOpInstruction.IOperator {
+  public enum BinaryOp implements IBinaryOpInstruction.IOperator {
     CONCAT, EQ, NE, LT, GE, GT, LE, STRICT_EQ, STRICT_NE;
 
     public String toString() {
@@ -23,7 +23,7 @@ public interface AstConstants  {
     }
   }
 
-  public enum UnaryOp implements UnaryOpInstruction.IOperator {
+  public enum UnaryOp implements IUnaryOpInstruction.IOperator {
     MINUS, BITNOT, PLUS;
 
     public String toString() {

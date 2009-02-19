@@ -27,14 +27,8 @@ void Exceptions::throwException(const char *file_name, int line_number) {
   jthrowable real_ex = _java_env->ExceptionOccurred();
   _java_env->ExceptionClear();
 
-#ifdef _MSC_VER
-  int msglen = strlen(file_name) + 1024;
-  char* msg = (char*)_alloca(msglen);
-  memset(msg, msglen, 0);
-#else
   char msg[strlen(file_name) + 1024];
-  bzero(msg, strlen(file_name) + 1024);
-#endif
+  memset(msg, 0, strlen(file_name) + 1024);
   sprintf(msg, "exception at %s:%d", file_name, line_number);
   jstring java_message = _java_env->NewStringUTF(msg);
 
@@ -53,14 +47,8 @@ void Exceptions::throwException(const char *file_name, int line_number) {
 
 void 
 Exceptions::throwException(const char *file_name, int line_number, const char *c_message) {
-#ifdef _MSC_VER
-  int msglen = strlen(file_name) + strlen(c_message) + 1024;
-  char* msg = (char*)_alloca(msglen);
-  memset(msg, msglen, 0);
-#else
   char msg[strlen(file_name) + strlen(c_message) + 1024]; 
-  bzero(msg, strlen(file_name) + strlen(c_message) + 1024);
-#endif
+  memset(msg, 0, strlen(file_name) + strlen(c_message) + 1024);
   sprintf(msg, "exception at %s:%d: %s", file_name, line_number, c_message);
   jstring java_message = _java_env->NewStringUTF(msg);
   jthrowable ex = (jthrowable)_java_env->NewObject(_jre, _ctr, java_message);

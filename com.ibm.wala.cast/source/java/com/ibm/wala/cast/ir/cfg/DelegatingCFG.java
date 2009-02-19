@@ -22,27 +22,27 @@ import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.NodeManager;
 import com.ibm.wala.util.intset.BitVector;
 
-public class DelegatingCFG extends AbstractNumberedGraph<IBasicBlock> implements ControlFlowGraph<IBasicBlock> {
+public class DelegatingCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGraph<T> implements ControlFlowGraph<I, T> {
 
-  protected final ControlFlowGraph<IBasicBlock> parent;
+  protected final ControlFlowGraph<I, T> parent;
 
-  public DelegatingCFG(ControlFlowGraph<IBasicBlock> parent) {
+  public DelegatingCFG(ControlFlowGraph<I, T> parent) {
     this.parent = parent;
   }
 
-  protected NodeManager<IBasicBlock> getNodeManager() {
+  protected NodeManager<T> getNodeManager() {
     return parent;
   }
 
-  protected EdgeManager<IBasicBlock> getEdgeManager() {
+  protected EdgeManager<T> getEdgeManager() {
     return parent;
   }
 
-  public IBasicBlock entry() {
+  public T entry() {
     return parent.entry();
   }
 
-  public IBasicBlock exit() {
+  public T exit() {
     return parent.exit();
   }
 
@@ -50,11 +50,11 @@ public class DelegatingCFG extends AbstractNumberedGraph<IBasicBlock> implements
     return parent.getCatchBlocks();
   }
 
-  public IBasicBlock getBlockForInstruction(int index) {
+  public T getBlockForInstruction(int index) {
     return parent.getBlockForInstruction(index);
   }
 
-  public IInstruction[] getInstructions() {
+  public I[] getInstructions() {
     return parent.getInstructions();
   }
 
@@ -66,19 +66,19 @@ public class DelegatingCFG extends AbstractNumberedGraph<IBasicBlock> implements
     return parent.getMethod();
   }
 
-  public List<IBasicBlock> getExceptionalSuccessors(IBasicBlock b) {
+  public List<T> getExceptionalSuccessors(T b) {
     return parent.getExceptionalSuccessors(b);
   }
 
-  public Collection<IBasicBlock> getNormalSuccessors(IBasicBlock b) {
+  public Collection<T> getNormalSuccessors(T b) {
     return parent.getNormalSuccessors(b);
   }
 
-  public Collection<IBasicBlock> getExceptionalPredecessors(IBasicBlock b) {
+  public Collection<T> getExceptionalPredecessors(T b) {
     return parent.getExceptionalPredecessors(b);
   }
 
-  public Collection<IBasicBlock> getNormalPredecessors(IBasicBlock b) {
+  public Collection<T> getNormalPredecessors(T b) {
     return parent.getNormalPredecessors(b);
   }
 
