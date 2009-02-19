@@ -51,7 +51,7 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.PropagationSystem;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
-import com.ibm.wala.shrikeBT.UnaryOpInstruction;
+import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
@@ -245,7 +245,7 @@ public class JSSSAPropagationCallGraphBuilder extends AstSSAPropagationCallGraph
     }
 
     public void visitUnaryOp(SSAUnaryOpInstruction inst) {
-      if (inst.getOpcode() == UnaryOpInstruction.Operator.NEG) {
+      if (inst.getOpcode() == IUnaryOpInstruction.Operator.NEG) {
         int lval = inst.getDef(0);
         PointerKey lk = getPointerKeyForLocal(lval);
 

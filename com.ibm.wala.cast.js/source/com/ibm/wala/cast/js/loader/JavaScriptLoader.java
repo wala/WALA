@@ -92,6 +92,10 @@ public class JavaScriptLoader extends CAstAbstractLoader {
 	                 || 
 	type.equals(JavaScriptTypes.Null);
     }
+
+    public TypeReference[] getArrayInterfaces() {
+       return new TypeReference[0];
+    }
   };
 
   private static final Map<Selector,IMethod> emptyMap1 = Collections.emptyMap();

@@ -22,6 +22,10 @@ public class JSCallSiteReference extends CallSiteReference {
   // see com.ibm.shrikeBT.BytecodeConstants
   public static enum Dispatch implements IInvokeInstruction.IDispatch {
     JS_CALL;
+
+    public boolean hasImplicitThis() {
+      return false;
+    }
   }
 
   public JSCallSiteReference(MethodReference ref, int pc) {
