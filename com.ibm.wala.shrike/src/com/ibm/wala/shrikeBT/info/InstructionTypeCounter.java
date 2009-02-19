@@ -35,7 +35,6 @@ import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.PopInstruction;
 import com.ibm.wala.shrikeBT.PutInstruction;
 import com.ibm.wala.shrikeBT.ReturnInstruction;
-import com.ibm.wala.shrikeBT.ShiftInstruction;
 import com.ibm.wala.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrikeBT.SwapInstruction;
 import com.ibm.wala.shrikeBT.SwitchInstruction;
