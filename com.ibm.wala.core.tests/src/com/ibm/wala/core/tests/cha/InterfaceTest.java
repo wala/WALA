@@ -39,7 +39,7 @@ public class InterfaceTest extends WalaTestCase {
   }
 
   protected void setUp() throws Exception {
-    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
+    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
 
     ClassLoaderFactory factory = new ClassLoaderFactoryImpl(scope.getExclusions() );
 

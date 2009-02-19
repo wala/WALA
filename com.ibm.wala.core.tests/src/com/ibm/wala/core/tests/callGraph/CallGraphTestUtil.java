@@ -43,7 +43,7 @@ public class CallGraphTestUtil {
   public static String REGRESSION_EXCLUSIONS = "Java60RegressionExclusions.txt";
 
   public static AnalysisScope makeJ2SEAnalysisScope(String scopeFile, String exclusionsFile) throws IOException {
-    AnalysisScope scope = AnalysisScopeReader.read(scopeFile, FileProvider.getFile(exclusionsFile), MY_CLASSLOADER);
+    AnalysisScope scope = AnalysisScopeReader.readJavaScope(scopeFile, FileProvider.getFile(exclusionsFile), MY_CLASSLOADER);
     return scope;
   }
 

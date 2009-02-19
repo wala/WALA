@@ -21,6 +21,7 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.cha.ClassHierarchy;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAOptions;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.config.AnalysisScopeReader;
@@ -60,7 +61,7 @@ public class CFGTest extends WalaTestCase {
       options.getSSAOptions().setPiNodePolicy(SSAOptions.getAllBuiltInPiNodes());
       IR ir = cache.getSSACache().findOrCreateIR(m, Everywhere.EVERYWHERE, options.getSSAOptions());
 
-      ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
+      ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
       try {
         GraphIntegrity.check(cfg);
       } catch (UnsoundGraphException e) {

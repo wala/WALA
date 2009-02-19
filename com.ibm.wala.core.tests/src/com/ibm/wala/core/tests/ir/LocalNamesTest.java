@@ -62,7 +62,7 @@ public class LocalNamesTest extends WalaTestCase {
    */
   protected void setUp() throws Exception {
 
-    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"),
+    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"),
         MY_CLASSLOADER);
 
     options = new AnalysisOptions(scope, null);
@@ -92,7 +92,7 @@ public class LocalNamesTest extends WalaTestCase {
    */
   public void testAliasNames() {
     try {
-      AnalysisScope scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, FileProvider
+      AnalysisScope scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider
           .getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
       ClassHierarchy cha = ClassHierarchy.make(scope);
       TypeReference t = TypeReference.findOrCreateClass(scope.getApplicationLoader(), "cornerCases", "AliasNames");

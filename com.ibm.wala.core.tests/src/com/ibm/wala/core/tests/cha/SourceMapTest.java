@@ -31,7 +31,7 @@ public class SourceMapTest extends WalaTestCase {
 
   public void testHello() throws ClassHierarchyException {
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.read(TestConstants.HELLO, null, MY_CLASSLOADER);
+    scope = AnalysisScopeReader.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
     // see feature 38676
     ClassHierarchy cha = ClassHierarchy.make(scope);
@@ -45,7 +45,7 @@ public class SourceMapTest extends WalaTestCase {
 
   public void testFromJar() throws ClassHierarchyException {
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.read(TestConstants.HELLO, null, MY_CLASSLOADER);
+    scope = AnalysisScopeReader.readJavaScope(TestConstants.HELLO, null, MY_CLASSLOADER);
     // TODO: it's annoying to have to build a class hierarchy here.
     // open a feature to fix this
     ClassHierarchy cha = ClassHierarchy.make(scope);

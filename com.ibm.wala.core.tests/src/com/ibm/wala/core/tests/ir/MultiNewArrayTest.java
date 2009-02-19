@@ -37,7 +37,7 @@ public class MultiNewArrayTest extends WalaTestCase {
   
   public void testMultiNewArray1() throws IOException, ClassHierarchyException {
     AnalysisScope scope = null;
-    scope = AnalysisScopeReader.read(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
+    scope = AnalysisScopeReader.readJavaScope(TestConstants.WALA_TESTDATA, FileProvider.getFile("J2SEClassHierarchyExclusions.txt"), MY_CLASSLOADER);
     ClassHierarchy cha = ClassHierarchy.make(scope);
     IClass klass = cha.lookupClass(TypeReference.findOrCreate(ClassLoaderReference.Application, TestConstants.MULTI_DIM_MAIN));
     assertTrue(klass != null);

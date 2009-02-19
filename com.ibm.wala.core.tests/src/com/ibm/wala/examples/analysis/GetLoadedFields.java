@@ -43,7 +43,7 @@ public class GetLoadedFields {
    */
   public static void main(String[] args) throws IOException, ClassHierarchyException, InvalidClassFileException {
     // build an analysis scope representing the standard libraries, excluding no classes
-    AnalysisScope scope = AnalysisScopeReader.read("primordial.txt", null, MY_CLASSLOADER);
+    AnalysisScope scope = AnalysisScopeReader.readJavaScope("primordial.txt", null, MY_CLASSLOADER);
 
     // build a class hierarchy
     System.err.print("Build class hierarchy...");
