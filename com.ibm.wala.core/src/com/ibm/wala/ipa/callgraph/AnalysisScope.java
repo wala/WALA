@@ -55,8 +55,6 @@ import com.ibm.wala.util.strings.ImmutableByteArray;
  * <li>Extension (for extension libraries in $JRE/lib/ext)
  * <li>Application (for the classes of the application)
  * </ul>
- * 
- * @author sfink
  */
 public class AnalysisScope {
 
@@ -70,8 +68,8 @@ public class AnalysisScope {
 
   public static final Atom SYNTHETIC = Atom.findOrCreateUnicodeAtom("Synthetic");
 
-  public static AnalysisScope createJavaAnalysisScope(Set<Language> languages) {
-    AnalysisScope scope = new AnalysisScope(languages);
+  public static AnalysisScope createJavaAnalysisScope() {
+    AnalysisScope scope = new AnalysisScope(Collections.singleton(Language.JAVA));
     scope.initForJava();
     return scope;
   }

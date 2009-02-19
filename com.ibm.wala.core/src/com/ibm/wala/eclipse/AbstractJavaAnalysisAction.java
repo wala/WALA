@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -31,7 +30,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.progress.IProgressService;
 
-import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.eclipse.util.EclipseProjectPath;
 import com.ibm.wala.ipa.callgraph.AnalysisScope;
@@ -104,7 +102,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
    * create an analysis scope as the union of a bunch of EclipseProjectPath
    */
   private static AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath> projectPaths) {
-    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope(Collections.singleton(Language.JAVA));
+    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
     
     Collection<Module> seen = HashSetFactory.make();
     // to avoid duplicates, we first add all application modules, then extension

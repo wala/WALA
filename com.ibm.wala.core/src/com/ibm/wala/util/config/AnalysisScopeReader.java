@@ -14,14 +14,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.StringTokenizer;
 import java.util.jar.JarFile;
 
 import org.eclipse.core.runtime.Plugin;
 
 import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
-import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
 import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.core.plugin.CorePlugin;
@@ -43,13 +41,13 @@ public class AnalysisScopeReader {
   private static final String BASIC_FILE = "primordial.txt";
   
   public static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader) {
-    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope(Collections.singleton(Language.JAVA));
+    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
 
     return read(scope, scopeFileName, exclusionsFile, javaLoader, CorePlugin.getDefault());
   }
   
   private static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader, Plugin plugIn) {
-    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope(Collections.singleton(Language.JAVA));
+    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope();
 
     return read(scope, scopeFileName, exclusionsFile, javaLoader, plugIn);
   }
