@@ -310,7 +310,7 @@ public class CommandInterpreter implements SSAContextInterpreter {
     return false;
   }
 
-  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode N) {
+  public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode N) {
     return getIR(N).getControlFlowGraph();
   }
  /**

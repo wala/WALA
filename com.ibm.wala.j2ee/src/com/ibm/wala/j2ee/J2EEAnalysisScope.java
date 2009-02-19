@@ -64,7 +64,7 @@ public class J2EEAnalysisScope extends AnalysisScope {
    */
   public J2EEAnalysisScope(String baseScope, ClassLoader loader, File exclusionsFile, boolean lifecycleEntrypoints) throws IOException {
     super(Collections.singleton(Language.JAVA));
-    AnalysisScope base = AnalysisScopeReader.read(baseScope, exclusionsFile, loader);
+    AnalysisScope base = AnalysisScopeReader.readJavaScope(baseScope, exclusionsFile, loader);
     
     for (ClassLoaderReference cl : base.getLoaders()) {
       for (Module m : base.getModules(cl)) {
