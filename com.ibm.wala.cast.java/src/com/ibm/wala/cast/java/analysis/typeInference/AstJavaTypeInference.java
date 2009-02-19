@@ -23,7 +23,7 @@ import com.ibm.wala.cast.java.ssa.EnclosingObjectReference;
 import com.ibm.wala.classLoader.IClass;
 import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.BinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSABinaryOpInstruction;
 import com.ibm.wala.ssa.SymbolTable;
@@ -37,7 +37,7 @@ public class AstJavaTypeInference extends AstTypeInference {
   protected class AstJavaTypeOperatorFactory extends AstTypeOperatorFactory implements AstJavaInstructionVisitor {
     public void visitBinaryOp(SSABinaryOpInstruction instruction) {
       if (doPrimitives) {
-        BinaryOpInstruction.IOperator op = instruction.getOperator();
+        IBinaryOpInstruction.IOperator op = instruction.getOperator();
         if (op == AstConstants.BinaryOp.EQ || op == AstConstants.BinaryOp.NE || op == AstConstants.BinaryOp.LT
             || op == AstConstants.BinaryOp.GE || op == AstConstants.BinaryOp.GT || op == AstConstants.BinaryOp.LE) {
           result = new DeclaredTypeOperator(PrimitiveType.BOOLEAN);

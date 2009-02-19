@@ -29,6 +29,7 @@ public class JavaSourceAnalysisScope extends AnalysisScope {
 
   public JavaSourceAnalysisScope(Collection<Language> languages) {
     super(languages);
+    initForJava();
     EclipseProjectPath.SOURCE_REF.setParent(getLoader(APPLICATION));
     getLoader(SYNTHETIC).setParent(EclipseProjectPath.SOURCE_REF);
 
