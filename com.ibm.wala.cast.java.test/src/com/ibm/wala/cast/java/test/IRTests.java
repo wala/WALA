@@ -301,6 +301,7 @@ public abstract class IRTests extends WalaTestCase {
 
     } catch (Exception e) {
       e.printStackTrace();
+      Assert.assertTrue(e.toString(), false);
       return null;
     }
   }
