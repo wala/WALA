@@ -137,7 +137,7 @@ public class PutInstruction extends Instruction {
   }
 
   @Override
-  final public void visit(Visitor v) throws NullPointerException {
+  final public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitPut(this);
   }
 

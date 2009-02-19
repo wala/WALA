@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Iterator;
 
-import com.ibm.wala.shrikeBT.BinaryOpInstruction.Operator;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
 import com.ibm.wala.shrikeBT.analysis.ClassHierarchyProvider;
 import com.ibm.wala.shrikeBT.analysis.Verifier;
 
@@ -37,7 +37,7 @@ public abstract class Compiler implements Constants {
 
   final private String signature;
 
-  private final Instruction[] instructions;
+  private final IInstruction[] instructions;
 
   final private ExceptionHandler[][] handlers;
 
@@ -99,7 +99,7 @@ public abstract class Compiler implements Constants {
    *           if instructions is null
    * @throws IllegalArgumentException  if instructionsToBytecodes is null
    */
-  public Compiler(boolean isStatic, String classType, String signature, Instruction[] instructions, ExceptionHandler[][] handlers,
+  public Compiler(boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers,
       int[] instructionsToBytecodes) {
     if (instructionsToBytecodes == null) {
           throw new IllegalArgumentException("instructionsToBytecodes is null");
@@ -182,8 +182,8 @@ public abstract class Compiler implements Constants {
     final BitSet localsUsed = new BitSet(32);
     final BitSet localsWide = new BitSet(32);
 
-    Instruction.Visitor visitor = new Instruction.Visitor() {
-      private void visitTargets(Instruction instr) {
+    IInstruction.Visitor visitor = new IInstruction.Visitor() {
+      private void visitTargets(IInstruction instr) {
         int[] ts = instr.getBranchTargets();
         for (int k = 0; k < ts.length; k++) {
           s.set(ts[k]);
@@ -205,7 +205,7 @@ public abstract class Compiler implements Constants {
       }
 
       @Override
-      public void visitConditionalBranch(ConditionalBranchInstruction instruction) {
+      public void visitConditionalBranch(IConditionalBranchInstruction instruction) {
         visitTargets(instruction);
       }
 
@@ -312,7 +312,7 @@ public abstract class Compiler implements Constants {
 
   private void computeStackWordsAt(int i, int stackLen, byte[] stackWords, boolean[] visited) {
     while (!visited[i]) {
-      Instruction instr = instructions[i];
+      IInstruction instr = instructions[i];
 
       if (i > 0 && !instructions[i - 1].isFallThrough()) {
         byte[] newWords = new byte[stackLen];
@@ -494,7 +494,7 @@ public abstract class Compiler implements Constants {
     }
     final int[] instrRef = new int[1];
 
-    Instruction.Visitor noOpcodeHandler = new Instruction.Visitor() {
+    IInstruction.Visitor noOpcodeHandler = new IInstruction.Visitor() {
       @Override
       public void visitPop(PopInstruction instruction) {
         int count = instruction.getPoppedCount();
@@ -556,7 +556,7 @@ public abstract class Compiler implements Constants {
     };
 
     for (int i = startInstruction; i < endInstruction; i++) {
-      Instruction instr = instructions[i];
+      Instruction instr = (Instruction)instructions[i];
       int opcode = instr.getOpcode();
       int startI = i;
 
@@ -576,7 +576,7 @@ public abstract class Compiler implements Constants {
               code[curOffset - 1] = (byte) (cbr.getOperator().ordinal() + OP_ifeq);
               fallToConditional = true;
               i++;
-              instr = instructions[i];
+              instr = (Instruction)instructions[i];
             }
           }
           if (!fallToConditional) {
@@ -589,7 +589,7 @@ public abstract class Compiler implements Constants {
               code[curOffset - 1] = (byte) (cbr.getOperator().ordinal() + OP_ifnull);
               fallToConditional = true;
               i++;
-              instr = instructions[i];
+              instr = (Instruction)instructions[i];
             }
           }
           if (!fallToConditional) {
@@ -1003,7 +1003,7 @@ public abstract class Compiler implements Constants {
       boolean haveStack = true;
 
       while (startI <= i) {
-        instr = instructions[startI];
+        instr = (Instruction)instructions[startI];
         if (instr.isFallThrough() && haveStack) {
           if (stackLen < instr.getPoppedCount()) {
             throw new IllegalArgumentException("Stack underflow in intermediate code, at offset " + startI);
@@ -1212,7 +1212,7 @@ public abstract class Compiler implements Constants {
         break;
       }
 
-      Instruction instr = instructions[instruction];
+      IInstruction instr = instructions[instruction];
       if (instr instanceof StoreInstruction && ((StoreInstruction) instr).getVarIndex() == index) {
         break;
       }
@@ -1238,7 +1238,7 @@ public abstract class Compiler implements Constants {
     backEdges = new int[instructions.length][];
 
     for (int i = 0; i < instructions.length; i++) {
-      Instruction instr = instructions[i];
+      IInstruction instr = instructions[i];
       int[] targets = instr.getBranchTargets();
       for (int j = 0; j < targets.length; j++) {
         addBackEdge(targets[j], i);
@@ -1264,7 +1264,7 @@ public abstract class Compiler implements Constants {
     }
 
     for (int i = 0; i < instructions.length; i++) {
-      Instruction instr = instructions[i];
+      IInstruction instr = instructions[i];
       if (instr instanceof LoadInstruction) {
         addLiveVar(i, ((LoadInstruction) instr).getVarIndex());
       }
@@ -1553,7 +1553,7 @@ public abstract class Compiler implements Constants {
       int firstDef = -1;
       int secondDef = -1;
       for (int i = start; i < start + len; i++) {
-        Instruction instr = instructions[i];
+        IInstruction instr = instructions[i];
         if (instr instanceof StoreInstruction) {
           int l = ((StoreInstruction) instr).getVarIndex();
           if (liveAtEnd.get(l) && l != localDefed) {

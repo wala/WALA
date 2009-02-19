@@ -17,6 +17,7 @@ import java.io.Writer;
 
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Disassembler;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeBT.InvokeInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
@@ -110,7 +111,7 @@ public class MethodTracer {
           }
         });
         if (INSTRUMENT_CALLERS) {
-          Instruction[] ins = d.getInstructions();
+          IInstruction[] ins = d.getInstructions();
           for (int k = 0; k < ins.length; k++) {
             if (ins[k] instanceof InvokeInstruction) {
               InvokeInstruction instr = (InvokeInstruction) ins[k];

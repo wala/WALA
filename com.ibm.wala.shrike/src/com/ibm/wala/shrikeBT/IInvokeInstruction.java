@@ -24,11 +24,30 @@ public interface IInvokeInstruction extends IInstruction {
    */
   IDispatch getInvocationCode();
 
+  String getMethodSignature();
+
+  String getMethodName();
+
+  String getClassType();
+
   public interface IDispatch {
 
+    boolean hasImplicitThis();
+    
   }
 
   public static enum Dispatch implements IDispatch {
-	  VIRTUAL, SPECIAL, STATIC, INTERFACE;
+	  VIRTUAL, SPECIAL, INTERFACE, 
+	  STATIC {
+	    @Override
+        public boolean hasImplicitThis() {
+	        return true;
+	     } 
+	  };
+	  
+	  public boolean hasImplicitThis() {
+	    return true;
+	  }
   }
+
 }

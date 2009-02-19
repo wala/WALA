@@ -556,7 +556,7 @@ public abstract class ConstantInstruction extends Instruction {
   }
 
   @Override
-  final public void visit(Visitor v) throws NullPointerException {
+  final public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitConstant(this);
   }
 

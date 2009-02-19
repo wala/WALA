@@ -20,6 +20,7 @@ import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Disassembler;
 import com.ibm.wala.shrikeBT.GetInstruction;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MethodEditor;
@@ -137,7 +138,7 @@ public class Bench {
         if (doExit) {
           final String msg0 = "Exiting call to " + Util.makeClass("L" + ci.getReader().getName() + ";") + "."
               + ci.getReader().getMethodName(m);
-          Instruction[] instr = me.getInstructions();
+          IInstruction[] instr = me.getInstructions();
           for (int i = 0; i < instr.length; i++) {
             if (instr[i] instanceof ReturnInstruction) {
               final int noTraceLabel = me.allocateLabel();

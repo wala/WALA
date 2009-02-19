@@ -67,7 +67,7 @@ final public class ArrayStoreInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws NullPointerException {
+  public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitArrayStore(this);
   }
 

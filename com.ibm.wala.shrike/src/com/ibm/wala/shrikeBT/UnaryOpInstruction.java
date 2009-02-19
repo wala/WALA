@@ -14,19 +14,7 @@ package com.ibm.wala.shrikeBT;
  * This class represents unary operators where the result is the same type as
  * the operand.
  */
-public final class UnaryOpInstruction extends Instruction {
-  public interface IOperator {
-  }
-
-  public static enum Operator implements IOperator {
-    NEG;
-
-    @Override
-    public String toString() {
-      return super.toString().toLowerCase();
-    }
-  }
-
+public final class UnaryOpInstruction extends Instruction implements IUnaryOpInstruction {
   protected UnaryOpInstruction(short opcode) {
     super(opcode);
   }
@@ -41,7 +29,7 @@ public final class UnaryOpInstruction extends Instruction {
     return r;
   }
 
-  public static UnaryOpInstruction make(String type, Operator operator) throws IllegalArgumentException {
+  public static UnaryOpInstruction make(String type, IUnaryOpInstruction.Operator operator) throws IllegalArgumentException {
     int t = Util.getTypeIndex(type);
     if (t < 0 || t > TYPE_double_index) {
       throw new IllegalArgumentException("Type " + type + " cannot have a unary operator applied");
@@ -59,8 +47,8 @@ public final class UnaryOpInstruction extends Instruction {
     }
   }
 
-  public Operator getOperator() {
-    return Operator.NEG;
+  public IUnaryOpInstruction.Operator getOperator() {
+    return IUnaryOpInstruction.Operator.NEG;
   }
 
   @Override
@@ -88,7 +76,7 @@ public final class UnaryOpInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws NullPointerException {
+  public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitUnaryOp(this);
   }
 

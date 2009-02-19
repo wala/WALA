@@ -16,7 +16,7 @@ import java.util.BitSet;
 import com.ibm.wala.annotations.NonNull;
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
-import com.ibm.wala.shrikeBT.Instruction;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.LoadInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MethodEditor;
@@ -28,7 +28,7 @@ import com.ibm.wala.shrikeBT.info.LocalAllocator;
 
 public final class MethodOptimizer {
   final private MethodData data;
-  private Instruction[] instructions;
+  private IInstruction[] instructions;
   private ExceptionHandler[][] handlers;
   @NonNull
   private final MethodEditor editor;
@@ -166,7 +166,7 @@ public final class MethodOptimizer {
       }
       stackSizes[instruction] = stackSize;
 
-      Instruction instr = instructions[instruction];
+      IInstruction instr = instructions[instruction];
       stackSize -= instr.getPoppedCount();
       if (stackSize < 0) {
         throw new UnoptimizableCodeException("Stack underflow at " + instruction);
@@ -196,7 +196,7 @@ public final class MethodOptimizer {
     }
   }
 
-  private static boolean instructionKillsVar(Instruction instr, int v) {
+  private static boolean instructionKillsVar(IInstruction instr, int v) {
     if (instr instanceof StoreInstruction) {
       StoreInstruction st = (StoreInstruction) instr;
       return st.getVarIndex() == v || (Util.getWordSize(st.getType()) == 2 && st.getVarIndex() + 1 == v);
@@ -207,7 +207,7 @@ public final class MethodOptimizer {
 
   private void forwardDups() {
     for (int i = 0; i < instructions.length; i++) {
-      Instruction instr = instructions[i];
+      IInstruction instr = instructions[i];
       if (instr instanceof DupInstruction && ((DupInstruction) instr).getDelta() == 0 && uniqueStackDefLocations[i][0] >= 0
           && instructions[uniqueStackDefLocations[i][0]] instanceof LoadInstruction) {
         int source = uniqueStackDefLocations[i][0];
@@ -247,7 +247,7 @@ public final class MethodOptimizer {
 
   private void pushBackLocalStores() {
     for (int i = 0; i < instructions.length; i++) {
-      Instruction instr = instructions[i];
+      IInstruction instr = instructions[i];
       if (instr instanceof StoreInstruction && uniqueStackDefLocations[i][0] >= 0 && uniqueStackDefLocations[i][0] != i - 1
           && uniqueStackUseLocations[uniqueStackDefLocations[i][0]] == i) {
         final StoreInstruction s = (StoreInstruction) instr;

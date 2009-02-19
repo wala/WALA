@@ -126,7 +126,7 @@ final public class ComparisonInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws NullPointerException {
+  public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitComparison(this);
   }
 

@@ -14,26 +14,7 @@ package com.ibm.wala.shrikeBT;
  * This class represents binary operator instructions for which the operands and
  * the result all have the same type.
  */
-final public class BinaryOpInstruction extends Instruction {
-  public interface IOperator {
-  }
-
-  public enum Operator implements IOperator {
-    ADD,
-    SUB,
-    MUL,
-    DIV,
-    REM,
-    AND,
-    OR,
-    XOR;
-
-    @Override
-    public String toString() {
-      return super.toString().toLowerCase();
-    }
-  }
-
+final public class BinaryOpInstruction extends Instruction implements IBinaryOpInstruction {
   protected BinaryOpInstruction(short opcode) {
     super(opcode);
   }
@@ -132,7 +113,7 @@ final public class BinaryOpInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws NullPointerException {
+  public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitBinaryOp(this);
   }
 

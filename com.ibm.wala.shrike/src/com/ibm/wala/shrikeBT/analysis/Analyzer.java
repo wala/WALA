@@ -19,7 +19,8 @@ import java.util.List;
 import com.ibm.wala.annotations.NonNull;
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
-import com.ibm.wala.shrikeBT.Instruction;
+import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrikeBT.ILoadInstruction;
 import com.ibm.wala.shrikeBT.LoadInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.StoreInstruction;
@@ -36,7 +37,7 @@ public class Analyzer {
   final protected String classType;
   final protected String signature;
   @NonNull
-  final protected Instruction[] instructions;
+  final protected IInstruction[] instructions;
   final protected ExceptionHandler[][] handlers;
   protected ClassHierarchyProvider hierarchy;
 
@@ -52,7 +53,7 @@ public class Analyzer {
   protected final static String[] noStrings = new String[0];
   protected final static int[] noEdges = new int[0];
 
-  public Analyzer(boolean isStatic, String classType, String signature, Instruction[] instructions, ExceptionHandler[][] handlers) {
+  public Analyzer(boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers) {
     this.classType = classType;
     this.isStatic = isStatic;
     this.signature = signature;
@@ -115,7 +116,7 @@ public class Analyzer {
     backEdges = new int[instructions.length][];
 
     for (int i = 0; i < instructions.length; i++) {
-      Instruction instr = instructions[i];
+      IInstruction instr = instructions[i];
       int[] targets = instr.getBranchTargets();
       for (int j = 0; j < targets.length; j++) {
         addBackEdge(targets[j], i);
@@ -180,7 +181,7 @@ public class Analyzer {
     return r;
   }
 
-  final public Instruction[] getInstructions() {
+  final public IInstruction[] getInstructions() {
     return instructions;
   }
 
@@ -197,7 +198,7 @@ public class Analyzer {
 
       reachable.set(from);
 
-      Instruction instr = instructions[from];
+      IInstruction instr = instructions[from];
       int[] targets = instr.getBranchTargets();
       for (int i = 0; i < targets.length; i++) {
         getReachableRecursive(targets[i], reachable, followHandlers, mask);
@@ -302,7 +303,7 @@ public class Analyzer {
       }
       stackSizes[i] = size;
 
-      Instruction instr = instructions[i];
+      IInstruction instr = instructions[i];
       if (instr instanceof DupInstruction) {
         size += ((DupInstruction) instr).getSize();
       } else if (instr instanceof SwapInstruction) {
@@ -504,9 +505,9 @@ public class Analyzer {
       final int[] curLocalsSize = { locals[i].length };
       System.arraycopy(locals[i], 0, curLocals, 0, curLocalsSize[0]);
 
-      Instruction.Visitor localsUpdate = new Instruction.Visitor() {
+      IInstruction.Visitor localsUpdate = new IInstruction.Visitor() {
         @Override
-        public void visitLocalLoad(LoadInstruction instruction) {
+        public void visitLocalLoad(ILoadInstruction instruction) {
           String t = curLocals[instruction.getVarIndex()];
           curStack[0] = t;
         }
@@ -523,7 +524,7 @@ public class Analyzer {
 
       boolean restart = false;
       while (true) {
-        Instruction instr = instructions[i];
+        IInstruction instr = instructions[i];
         int popped = instr.getPoppedCount();
 
         if (curStackSize < popped) {
@@ -613,7 +614,7 @@ public class Analyzer {
   private void computeMaxLocals() {
     maxLocals = locals[0].length;
     for (int i = 0; i < instructions.length; i++) {
-      Instruction instr = instructions[i];
+      IInstruction instr = instructions[i];
       if (instr instanceof LoadInstruction) {
         maxLocals = Math.max(maxLocals, ((LoadInstruction) instr).getVarIndex() + 1);
       } else if (instr instanceof StoreInstruction) {
@@ -647,7 +648,7 @@ public class Analyzer {
     computeTypes(0, v, makeTypesAt, wantPath ? new ArrayList<PathElement>() : null);
   }
 
-  public abstract class TypeVisitor extends Instruction.Visitor {
+  public abstract class TypeVisitor extends IInstruction.Visitor {
     public abstract void setState(int index, List<PathElement> path, String[] curStack, String[] curLocals);
 
     public abstract boolean shouldContinue();

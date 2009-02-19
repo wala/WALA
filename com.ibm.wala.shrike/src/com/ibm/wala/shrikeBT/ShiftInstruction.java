@@ -15,13 +15,7 @@ package com.ibm.wala.shrikeBT;
  * binary operations in the JVM require both parameters to be the same type, but
  * shifts always take one int parameter.
  */
-public final class ShiftInstruction extends Instruction {
-  public enum Operator implements BinaryOpInstruction.IOperator {
-    SHL,
-    SHR,
-    USHR;
-  }
-
+public final class ShiftInstruction extends Instruction implements IShiftInstruction {
   protected ShiftInstruction(short opcode) {
     super(opcode);
   }
@@ -87,7 +81,7 @@ public final class ShiftInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws NullPointerException {
+  public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitShift(this);
   }
 

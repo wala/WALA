@@ -55,7 +55,7 @@ public final class GotoInstruction extends Instruction {
   }
 
   @Override
-  public Instruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
+  public IInstruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
     if (targetMap == null) {
       throw new IllegalArgumentException("targetMap is null");
     }
@@ -87,7 +87,7 @@ public final class GotoInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws IllegalArgumentException {
+  public void visit(IInstruction.Visitor v) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException();
     }

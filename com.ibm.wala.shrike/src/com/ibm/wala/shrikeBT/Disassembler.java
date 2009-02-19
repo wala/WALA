@@ -19,14 +19,14 @@ import java.io.Writer;
  * exception handler blocks and the mapping back to the original bytecodes.
  */
 public class Disassembler {
-  final private Instruction[] instructions;
+  final private IInstruction[] instructions;
   final private ExceptionHandler[][] handlers;
   final private int[] instructionsToBytecodes;
 
   /**
    * Create a disassembler for a method.
    */
-  public Disassembler(Instruction[] instructions, ExceptionHandler[][] handlers, int[] instructionsToBytecodes) {
+  public Disassembler(IInstruction[] instructions, ExceptionHandler[][] handlers, int[] instructionsToBytecodes) {
     this.instructions = instructions;
     this.handlers = handlers;
     this.instructionsToBytecodes = instructionsToBytecodes;

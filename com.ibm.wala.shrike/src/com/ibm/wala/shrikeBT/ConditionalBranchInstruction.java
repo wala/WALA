@@ -15,24 +15,7 @@ package com.ibm.wala.shrikeBT;
  * integers or two object references for some relationship, and takes the branch
  * if the relationship holds.
  */
-public final class ConditionalBranchInstruction extends Instruction {
-
-  public interface IOperator {
-  };
-
-  public enum Operator implements IOperator {
-    EQ,
-    NE,
-    LT,
-    GE,
-    GT,
-    LE;
-
-    @Override
-    public String toString() {
-      return super.toString().toLowerCase();
-    }
-  }
+public final class ConditionalBranchInstruction extends Instruction implements IConditionalBranchInstruction {
 
   final private int label;
 
@@ -96,7 +79,7 @@ public final class ConditionalBranchInstruction extends Instruction {
   }
 
   @Override
-  public Instruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
+  public IInstruction redirectTargets(int[] targetMap) throws IllegalArgumentException {
     if (targetMap == null) {
       throw new IllegalArgumentException("targetMap is null");
     }
@@ -133,7 +116,7 @@ public final class ConditionalBranchInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws NullPointerException {
+  public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitConditionalBranch(this);
   }
 

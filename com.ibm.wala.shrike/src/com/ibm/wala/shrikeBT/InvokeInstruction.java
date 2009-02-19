@@ -169,7 +169,7 @@ public class InvokeInstruction extends Instruction implements IInvokeInstruction
   }
 
   @Override
-  final public void visit(Visitor v) throws NullPointerException {
+  final public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitInvoke(this);
   }
 

@@ -64,7 +64,7 @@ public final class MethodEditor {
   /** Records which original bytecode instruction each Instruction belongs to. */
   private int[] instructionsToBytecodes;
   @NonNull
-  private Instruction[] instructions;
+  private IInstruction[] instructions;
   private ExceptionHandler[][] handlers;
 
   final private MethodData methodInfo;
@@ -162,7 +162,7 @@ public final class MethodEditor {
   /**
    * @return the current instruction array
    */
-  public Instruction[] getInstructions() {
+  public IInstruction[] getInstructions() {
     verifyState(BEFORE_PASS | DURING_PASS);
     return instructions;
   }
@@ -193,7 +193,7 @@ public final class MethodEditor {
    * body.
    */
   public final static class Output {
-    final ArrayList<Instruction> newInstructions = new ArrayList<Instruction>();
+    final ArrayList<IInstruction> newInstructions = new ArrayList<IInstruction>();
     final ArrayList<ExceptionHandler[]> newInstructionHandlers = new ArrayList<ExceptionHandler[]>();
     int[] instructionsToBytecodes = new int[10];
     final int[] labelDefs;
@@ -240,7 +240,7 @@ public final class MethodEditor {
       newInstructionHandlers.add(mergeHandlers(handlers, additionalHandlers));
     }
 
-    void internalEmitInstruction(Instruction i) {
+    void internalEmitInstruction(IInstruction i) {
       int s = newInstructions.size();
       if (s + 1 > instructionsToBytecodes.length) {
         int[] t = new int[instructionsToBytecodes.length * 2];
@@ -674,7 +674,7 @@ public final class MethodEditor {
    * inserting patches. In particular it maintains a notion of the "current
    * position" in the code array.
    */
-  public static class Visitor extends Instruction.Visitor {
+  public static class Visitor extends IInstruction.Visitor {
     private int index;
     private MethodEditor editor;
 

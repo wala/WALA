@@ -13,20 +13,22 @@ package com.ibm.wala.shrikeBT.info;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
 import com.ibm.wala.shrikeBT.ArrayLoadInstruction;
 import com.ibm.wala.shrikeBT.ArrayStoreInstruction;
-import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.CheckCastInstruction;
 import com.ibm.wala.shrikeBT.ComparisonInstruction;
-import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
-import com.ibm.wala.shrikeBT.ConversionInstruction;
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.GetInstruction;
 import com.ibm.wala.shrikeBT.GotoInstruction;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.shrikeBT.IConversionInstruction;
+import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrikeBT.ILoadInstruction;
+import com.ibm.wala.shrikeBT.IShiftInstruction;
+import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.InstanceofInstruction;
-import com.ibm.wala.shrikeBT.Instruction;
-import com.ibm.wala.shrikeBT.InvokeInstruction;
-import com.ibm.wala.shrikeBT.LoadInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
@@ -38,7 +40,6 @@ import com.ibm.wala.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrikeBT.SwapInstruction;
 import com.ibm.wala.shrikeBT.SwitchInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
-import com.ibm.wala.shrikeBT.UnaryOpInstruction;
 
 /**
  * This method annotation counts the number of instructions of each type
@@ -107,7 +108,7 @@ public class InstructionTypeCounter implements MethodData.Results {
     recalculateFrom(info.getInstructions());
   }
 
-  private void recalculateFrom(Instruction[] instructions) {
+  private void recalculateFrom(IInstruction[] instructions) {
     countMonitors = 0;
     countGets = 0;
     countPuts = 0;
@@ -135,14 +136,14 @@ public class InstructionTypeCounter implements MethodData.Results {
     countThrows = 0;
     countUnaryOps = 0;
 
-    Instruction.Visitor visitor = new Instruction.Visitor() {
+    IInstruction.Visitor visitor = new IInstruction.Visitor() {
       @Override
       public void visitArrayLength(ArrayLengthInstruction instruction) {
         countArrayLengths++;
       }
 
       @Override
-      public void visitBinaryOp(BinaryOpInstruction instruction) {
+      public void visitBinaryOp(IBinaryOpInstruction instruction) {
         countBinaryOps++;
       }
 
@@ -157,7 +158,7 @@ public class InstructionTypeCounter implements MethodData.Results {
       }
 
       @Override
-      public void visitConditionalBranch(ConditionalBranchInstruction instruction) {
+      public void visitConditionalBranch(IConditionalBranchInstruction instruction) {
         countConditionalBranches++;
       }
 
@@ -167,7 +168,7 @@ public class InstructionTypeCounter implements MethodData.Results {
       }
 
       @Override
-      public void visitConversion(ConversionInstruction instruction) {
+      public void visitConversion(IConversionInstruction instruction) {
         countConversions++;
       }
 
@@ -187,7 +188,7 @@ public class InstructionTypeCounter implements MethodData.Results {
       }
 
       @Override
-      public void visitLocalLoad(LoadInstruction instruction) {
+      public void visitLocalLoad(ILoadInstruction instruction) {
         countLocalLoads++;
       }
 
@@ -212,7 +213,7 @@ public class InstructionTypeCounter implements MethodData.Results {
       }
 
       @Override
-      public void visitShift(ShiftInstruction instruction) {
+      public void visitShift(IShiftInstruction instruction) {
         countShifts++;
       }
 
@@ -232,7 +233,7 @@ public class InstructionTypeCounter implements MethodData.Results {
       }
 
       @Override
-      public void visitUnaryOp(UnaryOpInstruction instruction) {
+      public void visitUnaryOp(IUnaryOpInstruction instruction) {
         countUnaryOps++;
       }
 
@@ -262,7 +263,7 @@ public class InstructionTypeCounter implements MethodData.Results {
       }
 
       @Override
-      public void visitInvoke(InvokeInstruction instruction) {
+      public void visitInvoke(IInvokeInstruction instruction) {
         countInvokes++;
       }
     };
@@ -278,7 +279,7 @@ public class InstructionTypeCounter implements MethodData.Results {
    * 
    * This is not to be called by clients.
    */
-  public boolean notifyUpdate(MethodData info, Instruction[] newInstructions, ExceptionHandler[][] newHandlers,
+  public boolean notifyUpdate(MethodData info, IInstruction[] newInstructions, ExceptionHandler[][] newHandlers,
       int[] newInstructionMap) {
     // just throw this away and we'll recalculate from scratch if necessary
     return true;

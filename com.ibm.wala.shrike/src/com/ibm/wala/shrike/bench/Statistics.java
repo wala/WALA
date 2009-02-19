@@ -15,7 +15,7 @@ import java.io.FileWriter;
 import java.io.Writer;
 
 import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.shrikeBT.Instruction;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.InvokeInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.Util;
@@ -82,7 +82,7 @@ public class Statistics {
         }
 
         int constructorCalls = 0;
-        Instruction[] instrs = d.getInstructions();
+        IInstruction[] instrs = d.getInstructions();
         for (int i = 0; i < instrs.length; i++) {
           if (instrs[i] instanceof InvokeInstruction) {
             InvokeInstruction invoke = (InvokeInstruction) instrs[i];

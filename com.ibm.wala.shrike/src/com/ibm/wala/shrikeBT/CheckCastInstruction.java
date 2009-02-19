@@ -66,7 +66,7 @@ final public class CheckCastInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) {
+  public void visit(IInstruction.Visitor v) {
     if (v == null) {
       throw new IllegalArgumentException();
     }

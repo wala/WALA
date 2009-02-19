@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeBT;
 import java.util.ArrayList;
 
 import com.ibm.wala.annotations.NonNull;
-import com.ibm.wala.shrikeBT.BinaryOpInstruction.Operator;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction.Operator;
 
 /**
  * A Decoder translates a method's Java bytecode into shrikeBT code, i.e. an
@@ -90,7 +90,7 @@ public abstract class Decoder implements Constants {
       table[i] = BinaryOpInstruction.make(indexedTypes[(i - OP_iadd) % 4], BinaryOpInstruction.Operator.values()[(i - OP_iadd) / 4]);
     }
     for (int i = OP_ineg; i <= OP_dneg; i++) {
-      table[i] = UnaryOpInstruction.make(indexedTypes[i - OP_ineg], UnaryOpInstruction.Operator.NEG);
+      table[i] = UnaryOpInstruction.make(indexedTypes[i - OP_ineg], IUnaryOpInstruction.Operator.NEG);
     }
     for (int i = OP_ishl; i <= OP_lushr; i++) {
       table[i] = ShiftInstruction.make(indexedTypes[(i - OP_ishl) % 2], ShiftInstruction.Operator.values()[(i - OP_ishl) / 2]);
@@ -129,7 +129,7 @@ public abstract class Decoder implements Constants {
   private static final Instruction makeZero = ConstantInstruction.make(0);
 
   // Holds the result of decoding
-  private Instruction[] instructions;
+  private IInstruction[] instructions;
   private ExceptionHandler[][] handlers;
   private int[] instructionsToBytecodes;
   final private ConstantPoolReader constantPool;
@@ -901,7 +901,7 @@ public abstract class Decoder implements Constants {
 
     // fix up branch targets within emitted subroutine
     for (int i = subStart; i < newCodeIndex; i++) {
-      Instruction instr = instructions[i];
+      IInstruction instr = instructions[i];
       if (instr instanceof GotoInstruction && ((GotoInstruction) instr).getLabel() < 0) {
         // fix up 'ret' instruction to branch back to return address
         instructions[i] = GotoInstruction.make(callerMap[callSite] + 1);
@@ -1055,7 +1055,7 @@ public abstract class Decoder implements Constants {
    * 
    * @return array of decoded instructions
    */
-  final public Instruction[] getInstructions() {
+  final public IInstruction[] getInstructions() {
     if (instructions == null) {
       throw new Error("Call decode() before calling getInstructions()");
     }

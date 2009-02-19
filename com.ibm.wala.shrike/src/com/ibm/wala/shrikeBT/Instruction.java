@@ -80,7 +80,7 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
    * @return an Instruction equivalent to this one but with any branch labels
    *         updated by looking them up in the targetMap array
    */
-  public Instruction redirectTargets(int[] targetMap) {
+  public IInstruction redirectTargets(int[] targetMap) {
     return this;
   }
 
@@ -124,8 +124,8 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
    * Apply a Visitor to this instruction. We invoke the appropriate Visitor
    * method according to the type of this instruction.
    */
-  public abstract void visit(Visitor v);
-
+  public abstract void visit(IInstruction.Visitor v);
+    
   /**
    * Subclasses must implement toString.
    */
@@ -138,89 +138,5 @@ public abstract class Instruction implements Constants, Cloneable, IInstruction 
   @Override
   final public Object clone() {
     return this;
-  }
-
-  /**
-   * This class is used by Instruction.visit to dispatch based on the
-   * instruction type.
-   */
-  public static abstract class Visitor {
-    public void visitConstant(ConstantInstruction instruction) {
-    }
-
-    public void visitGoto(GotoInstruction instruction) {
-    }
-
-    public void visitLocalLoad(LoadInstruction instruction) {
-    }
-
-    public void visitLocalStore(StoreInstruction instruction) {
-    }
-
-    public void visitArrayLoad(ArrayLoadInstruction instruction) {
-    }
-
-    public void visitArrayStore(ArrayStoreInstruction instruction) {
-    }
-
-    public void visitPop(PopInstruction instruction) {
-    }
-
-    public void visitDup(DupInstruction instruction) {
-    }
-
-    public void visitSwap(SwapInstruction instruction) {
-    }
-
-    public void visitBinaryOp(BinaryOpInstruction instruction) {
-    }
-
-    public void visitUnaryOp(UnaryOpInstruction instruction) {
-    }
-
-    public void visitShift(ShiftInstruction instruction) {
-    }
-
-    public void visitConversion(ConversionInstruction instruction) {
-    }
-
-    public void visitComparison(ComparisonInstruction instruction) {
-    }
-
-    public void visitConditionalBranch(ConditionalBranchInstruction instruction) {
-    }
-
-    public void visitSwitch(SwitchInstruction instruction) {
-    }
-
-    public void visitReturn(ReturnInstruction instruction) {
-    }
-
-    public void visitGet(GetInstruction instruction) {
-    }
-
-    public void visitPut(PutInstruction instruction) {
-    }
-
-    public void visitInvoke(InvokeInstruction instruction) {
-    }
-
-    public void visitNew(NewInstruction instruction) {
-    }
-
-    public void visitArrayLength(ArrayLengthInstruction instruction) {
-    }
-
-    public void visitThrow(ThrowInstruction instruction) {
-    }
-
-    public void visitMonitor(MonitorInstruction instruction) {
-    }
-
-    public void visitCheckCast(CheckCastInstruction instruction) {
-    }
-
-    public void visitInstanceof(InstanceofInstruction instruction) {
-    }
   }
 }

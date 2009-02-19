@@ -45,7 +45,7 @@ public final class ThrowInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws IllegalArgumentException {
+  public void visit(IInstruction.Visitor v) throws IllegalArgumentException {
     if (v == null) {
       throw new IllegalArgumentException();
     }

@@ -89,7 +89,7 @@ public final class StoreInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws NullPointerException {
+  public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitLocalStore(this);
   }
 

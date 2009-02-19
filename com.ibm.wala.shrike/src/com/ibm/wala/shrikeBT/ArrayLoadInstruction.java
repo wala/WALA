@@ -95,7 +95,7 @@ final public class ArrayLoadInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws NullPointerException {
+  public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitArrayLoad(this);
   }
   public boolean isPEI() {

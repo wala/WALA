@@ -32,7 +32,7 @@ public final class MethodData {
   final private String classType;
   final private String name;
   final private String signature;
-  private Instruction[] instructions;
+  private IInstruction[] instructions;
   private ExceptionHandler[][] handlers;
   private int[] instructionsToBytecodes;
   private boolean hasChanged = false;
@@ -58,7 +58,7 @@ public final class MethodData {
    *          a map stating, for each instruction, the offset of the original
    *          bytecode instruction(s) giving rise to this instruction
    */
-  public MethodData(int access, String classType, String name, String signature, Instruction[] instructions,
+  public MethodData(int access, String classType, String name, String signature, IInstruction[] instructions,
       ExceptionHandler[][] handlers, int[] instructionsToBytecodes) {
     this.classType = classType;
     this.access = access;
@@ -165,7 +165,7 @@ public final class MethodData {
   /**
    * @return the instruction array
    */
-  public Instruction[] getInstructions() {
+  public IInstruction[] getInstructions() {
     return instructions;
   }
 
@@ -196,7 +196,7 @@ public final class MethodData {
      * @return true to remove the object from the info set, for example because
      *         the annotation is now invalid
      */
-    public boolean notifyUpdate(MethodData info, Instruction[] newInstructions, ExceptionHandler[][] newHandlers,
+    public boolean notifyUpdate(MethodData info, IInstruction[] newInstructions, ExceptionHandler[][] newHandlers,
         int[] newInstructionMap);
   }
 
@@ -216,7 +216,7 @@ public final class MethodData {
     map.put(key, value);
   }
 
-  void update(Instruction[] instructions, ExceptionHandler[][] handlers, int[] newInstructionMap, int[] instructionsToBytecodes) {
+  void update(IInstruction[] instructions, ExceptionHandler[][] handlers, int[] newInstructionMap, int[] instructionsToBytecodes) {
     for (Iterator<Object> i = map.keySet().iterator(); i.hasNext();) {
       Object key = i.next();
       Results r = map.get(key);

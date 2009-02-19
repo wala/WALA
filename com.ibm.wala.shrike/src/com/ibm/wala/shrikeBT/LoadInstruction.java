@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeBT;
 /**
  * This class represents local variable load instructions.
  */
-public final class LoadInstruction extends Instruction {
+public final class LoadInstruction extends Instruction implements ILoadInstruction {
   private final int index;
 
   protected LoadInstruction(short opcode, int index) {
@@ -74,7 +74,7 @@ public final class LoadInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws NullPointerException {
+  public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitLocalLoad(this);
   }
 

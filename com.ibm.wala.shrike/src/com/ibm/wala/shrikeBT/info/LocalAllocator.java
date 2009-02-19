@@ -11,8 +11,8 @@
 package com.ibm.wala.shrikeBT.info;
 
 import com.ibm.wala.shrikeBT.ExceptionHandler;
-import com.ibm.wala.shrikeBT.Instruction;
-import com.ibm.wala.shrikeBT.LoadInstruction;
+import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrikeBT.ILoadInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrikeBT.Util;
@@ -32,12 +32,12 @@ public class LocalAllocator implements MethodData.Results {
   }
 
   private void recalculateFrom(MethodData info) {
-    Instruction[] instructions = info.getInstructions();
+    IInstruction[] instructions = info.getInstructions();
     final int[] max = { Util.getParamsWordSize(info.getSignature()) + (info.getIsStatic() ? 0 : 1) };
 
-    Instruction.Visitor visitor = new Instruction.Visitor() {
+    IInstruction.Visitor visitor = new IInstruction.Visitor() {
       @Override
-      public void visitLocalLoad(LoadInstruction instruction) {
+      public void visitLocalLoad(ILoadInstruction instruction) {
         int v = instruction.getVarIndex() + Util.getWordSize(instruction.getType());
         if (v > max[0]) {
           max[0] = v;
@@ -69,7 +69,7 @@ public class LocalAllocator implements MethodData.Results {
   /**
    * This should not be called by clients.
    */
-  public boolean notifyUpdate(MethodData info, Instruction[] newInstructions, ExceptionHandler[][] newHandlers,
+  public boolean notifyUpdate(MethodData info, IInstruction[] newInstructions, ExceptionHandler[][] newHandlers,
       int[] newInstructionMap) {
     return false;
   }

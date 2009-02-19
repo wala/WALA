@@ -50,7 +50,7 @@ public final class SwapInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws NullPointerException {
+  public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitSwap(this);
   }
 

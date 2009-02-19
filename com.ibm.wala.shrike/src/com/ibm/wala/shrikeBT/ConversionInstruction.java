@@ -14,7 +14,7 @@ package com.ibm.wala.shrikeBT;
  * This class represents instructions that convert from one primitive type to
  * another.
  */
-public final class ConversionInstruction extends Instruction {
+public final class ConversionInstruction extends Instruction implements IConversionInstruction {
   final private String fromType;
 
   final private String toType;
@@ -113,7 +113,7 @@ public final class ConversionInstruction extends Instruction {
   }
 
   @Override
-  public void visit(Visitor v) throws NullPointerException {
+  public void visit(IInstruction.Visitor v) throws NullPointerException {
     v.visitConversion(this);
   }
 

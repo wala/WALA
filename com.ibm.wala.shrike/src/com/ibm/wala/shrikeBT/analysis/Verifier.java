@@ -16,32 +16,32 @@ import java.util.List;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
 import com.ibm.wala.shrikeBT.ArrayLoadInstruction;
 import com.ibm.wala.shrikeBT.ArrayStoreInstruction;
-import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.CheckCastInstruction;
 import com.ibm.wala.shrikeBT.ComparisonInstruction;
-import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.shrikeBT.ConversionInstruction;
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.GetInstruction;
 import com.ibm.wala.shrikeBT.GotoInstruction;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.shrikeBT.IConversionInstruction;
+import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrikeBT.ILoadInstruction;
+import com.ibm.wala.shrikeBT.IShiftInstruction;
+import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.InstanceofInstruction;
-import com.ibm.wala.shrikeBT.Instruction;
-import com.ibm.wala.shrikeBT.InvokeInstruction;
-import com.ibm.wala.shrikeBT.LoadInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.PopInstruction;
 import com.ibm.wala.shrikeBT.PutInstruction;
 import com.ibm.wala.shrikeBT.ReturnInstruction;
-import com.ibm.wala.shrikeBT.ShiftInstruction;
 import com.ibm.wala.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrikeBT.SwitchInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
-import com.ibm.wala.shrikeBT.UnaryOpInstruction;
 import com.ibm.wala.shrikeBT.Util;
 
 /**
@@ -123,7 +123,7 @@ public final class Verifier extends Analyzer {
     }
 
     @Override
-    public void visitLocalLoad(LoadInstruction instruction) {
+    public void visitLocalLoad(ILoadInstruction instruction) {
       String t = curLocals[instruction.getVarIndex()];
       if (t == null) {
         ex = new FailureException(curIndex, "Local variable " + instruction.getVarIndex() + " is not defined", curPath);
@@ -161,24 +161,24 @@ public final class Verifier extends Analyzer {
     }
 
     @Override
-    public void visitBinaryOp(BinaryOpInstruction instruction) {
+    public void visitBinaryOp(IBinaryOpInstruction instruction) {
       checkStackSubtype(0, instruction.getType());
       checkStackSubtype(1, instruction.getType());
     }
 
     @Override
-    public void visitUnaryOp(UnaryOpInstruction instruction) {
+    public void visitUnaryOp(IUnaryOpInstruction instruction) {
       checkStackSubtype(0, instruction.getType());
     }
 
     @Override
-    public void visitShift(ShiftInstruction instruction) {
+    public void visitShift(IShiftInstruction instruction) {
       checkStackSubtype(0, Constants.TYPE_int);
       checkStackSubtype(1, instruction.getType());
     }
 
     @Override
-    public void visitConversion(ConversionInstruction instruction) {
+    public void visitConversion(IConversionInstruction instruction) {
       checkStackSubtype(0, instruction.getFromType());
     }
 
@@ -189,7 +189,7 @@ public final class Verifier extends Analyzer {
     }
 
     @Override
-    public void visitConditionalBranch(ConditionalBranchInstruction instruction) {
+    public void visitConditionalBranch(IConditionalBranchInstruction instruction) {
       checkStackSubtype(0, instruction.getType());
       checkStackSubtype(1, instruction.getType());
     }
@@ -230,12 +230,12 @@ public final class Verifier extends Analyzer {
     }
 
     @Override
-    public void visitInvoke(InvokeInstruction instruction) {
+    public void visitInvoke(IInvokeInstruction instruction) {
       // make sure constant pool entries are dereferenced
       String classType = instruction.getClassType();
       String signature = instruction.getMethodSignature();
 
-      String thisClass = instruction.getInvocationMode() == Constants.OP_invokestatic ? null : classType;
+      String thisClass = instruction.getInvocationCode() == IInvokeInstruction.Dispatch.STATIC ? null : classType;
       String[] params = Util.getParamsTypes(thisClass, signature);
 
       for (int i = 0; i < params.length; i++) {
@@ -287,7 +287,7 @@ public final class Verifier extends Analyzer {
   /**
    * Initialize a verifier.
    */
-  public Verifier(boolean isStatic, String classType, String signature, Instruction[] instructions, ExceptionHandler[][] handlers) {
+  public Verifier(boolean isStatic, String classType, String signature, IInstruction[] instructions, ExceptionHandler[][] handlers) {
     super(isStatic, classType, signature, instructions, handlers);
   }
 

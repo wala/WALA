@@ -11,7 +11,7 @@
 package com.ibm.wala.shrikeBT.info;
 
 import com.ibm.wala.shrikeBT.ExceptionHandler;
-import com.ibm.wala.shrikeBT.Instruction;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.StoreInstruction;
 
@@ -32,10 +32,10 @@ public class ThisAssignmentChecker implements MethodData.Results {
     assignmentToThis = false;
 
     if (!info.getIsStatic()) {
-      Instruction[] instructions = info.getInstructions();
+      IInstruction[] instructions = info.getInstructions();
 
       for (int i = 0; i < instructions.length; i++) {
-        Instruction instr = instructions[i];
+        IInstruction instr = instructions[i];
         if (instr instanceof StoreInstruction) {
           StoreInstruction st = (StoreInstruction) instr;
           if (st.getVarIndex() == 0) {
@@ -49,7 +49,7 @@ public class ThisAssignmentChecker implements MethodData.Results {
   /**
    * This should not be called by any client.
    */
-  public boolean notifyUpdate(MethodData info, Instruction[] newInstructions, ExceptionHandler[][] newHandlers,
+  public boolean notifyUpdate(MethodData info, IInstruction[] newInstructions, ExceptionHandler[][] newHandlers,
       int[] newInstructionMap) {
     // just throw this away and we'll recalculate from scratch if necessary
     return true;
