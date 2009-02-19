@@ -18,7 +18,7 @@ import com.ibm.wala.types.TypeReference;
 /**
  * @author Julian Dolby (dolby@us.ibm.com)
  */
-public abstract class SSAAbstractInvokeInstruction extends SSAInstruction implements IInvokeInstruction {
+public abstract class SSAAbstractInvokeInstruction extends SSAInstruction {
 
   /**
    * The value number which represents the exception object which the call may throw.

@@ -56,7 +56,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.ReturnValueKey;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -285,7 +284,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
    */
   protected void addNodeInstructionConstraints(CGNode node, IR ir, DefUse du) {
     FlowStatementVisitor v = makeVisitor(node);
-    ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
+    ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
     for (ISSABasicBlock b : cfg) {
       addBlockInstructionConstraints(node, cfg, b, v);
     }
@@ -294,13 +293,13 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
   /**
    * Add constraints for a particular basic block.
    */
-  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, ISSABasicBlock b,
+  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock b,
       FlowStatementVisitor v) {
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.
-    for (Iterator<IInstruction> it = b.iterator(); it.hasNext();) {
-      SSAInstruction s = (SSAInstruction) it.next();
+    for (Iterator<SSAInstruction> it = b.iterator(); it.hasNext();) {
+      SSAInstruction s = it.next();
       if (s != null) {
         s.visit(v);
       }
@@ -309,7 +308,7 @@ public abstract class AbstractDemandFlowGraph extends AbstractFlowGraph {
     addPhiConstraints(node, cfg, b);
   }
 
-  private void addPhiConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, ISSABasicBlock b) {
+  private void addPhiConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock b) {
 
     // visit each phi instruction in each successor block
     for (Iterator<? extends IBasicBlock> iter = cfg.getSuccNodes(b); iter.hasNext();) {

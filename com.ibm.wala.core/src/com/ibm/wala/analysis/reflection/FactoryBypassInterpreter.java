@@ -318,7 +318,7 @@ class FactoryBypassInterpreter extends AbstractReflectionInterpreter {
   /*
    * @see com.ibm.wala.ipa.callgraph.propagation.SSAContextInterpreter#getCFG(com.ibm.wala.ipa.callgraph.CGNode)
    */
-  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode N) {
+  public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode N) {
     return getIR(N).getControlFlowGraph();
   }
 

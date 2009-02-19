@@ -433,7 +433,7 @@ public class JavaLangClassContextInterpreter implements SSAContextInterpreter {
     return EmptyIterator.instance();
   }
 
-  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode N) {
+  public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode N) {
     return getIR(N).getControlFlowGraph();
   }
 

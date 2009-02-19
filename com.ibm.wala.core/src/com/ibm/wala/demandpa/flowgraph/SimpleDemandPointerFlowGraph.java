@@ -41,7 +41,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.SSAPropagationCallGraphBuilder;
 import com.ibm.wala.ipa.callgraph.propagation.StaticFieldKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
@@ -492,7 +491,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
    */
   protected void addNodeInstructionConstraints(CGNode node, IR ir, DefUse du) {
     StatementVisitor v = makeVisitor((ExplicitCallGraph.ExplicitNode) node, ir, du);
-    ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
+    ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
     for (ISSABasicBlock b : cfg) {
       addBlockInstructionConstraints(node, cfg, b, v);
     }
@@ -501,12 +500,12 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
   /**
    * Add constraints for a particular basic block.
    */
-  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, ISSABasicBlock b, StatementVisitor v) {
+  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock b, StatementVisitor v) {
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.
-    for (Iterator<IInstruction> it = b.iterator(); it.hasNext();) {
-      SSAInstruction s = (SSAInstruction) it.next();
+    for (Iterator<SSAInstruction> it = b.iterator(); it.hasNext();) {
+      SSAInstruction s = it.next();
       if (s != null) {
         s.visit(v);
       }
@@ -515,7 +514,7 @@ public class SimpleDemandPointerFlowGraph extends SlowSparseNumberedGraph<Object
     addPhiConstraints(node, cfg, b);
   }
 
-  private void addPhiConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, ISSABasicBlock b) {
+  private void addPhiConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, ISSABasicBlock b) {
 
     // visit each phi instruction in each successor block
     for (Iterator<? extends IBasicBlock> sbs = cfg.getSuccNodes(b); sbs.hasNext();) {

@@ -104,7 +104,7 @@ public abstract class AbstractJavaAnalysisAction implements IObjectActionDelegat
    * create an analysis scope as the union of a bunch of EclipseProjectPath
    */
   private static AnalysisScope mergeProjectPaths(Collection<EclipseProjectPath> projectPaths) {
-    AnalysisScope scope = AnalysisScope.createAnalysisScope(Collections.singleton(Language.JAVA));
+    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope(Collections.singleton(Language.JAVA));
     
     Collection<Module> seen = HashSetFactory.make();
     // to avoid duplicates, we first add all application modules, then extension

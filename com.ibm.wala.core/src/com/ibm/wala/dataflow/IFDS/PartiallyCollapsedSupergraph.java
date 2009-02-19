@@ -24,6 +24,7 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.cfg.BasicBlockInContext;
 import com.ibm.wala.ipa.cfg.InterproceduralCFG;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.CollectionFilter;
 import com.ibm.wala.util.collections.CompoundIterator;
 import com.ibm.wala.util.collections.EmptyIterator;
@@ -188,7 +189,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
 
   public Object[] getExitsForProcedure(CGNode node) {
     if (noCollapse.contains(node)) {
-      ControlFlowGraph<ISSABasicBlock> cfg = partialIPFG.getCFG(node);
+      ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = partialIPFG.getCFG(node);
       return new Object[] { new BasicBlockInContext<ISSABasicBlock>(node, cfg.exit()) };
     } else {
       return new Object[] { nodeManager.getCollapsedExit(node) };
@@ -337,7 +338,7 @@ public class PartiallyCollapsedSupergraph extends AbstractGraph<Object> implemen
         for (Iterator it2 = cg.getSuccNodes(node); it2.hasNext();) {
           CGNode outNode = (CGNode) it2.next();
           if (noCollapse.contains(outNode)) {
-            ControlFlowGraph<ISSABasicBlock> cfg = partialIPFG.getCFG(outNode);
+            ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = partialIPFG.getCFG(outNode);
             // add an edge to the entry block
             BasicBlockInContext<ISSABasicBlock> entry = new BasicBlockInContext<ISSABasicBlock>(outNode, cfg.entry());
             Set<Object> incoming = MapUtil.findOrCreateSet(incomingTransverseEdges, entry);

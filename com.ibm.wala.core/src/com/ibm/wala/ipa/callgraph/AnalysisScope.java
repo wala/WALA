@@ -70,9 +70,28 @@ public class AnalysisScope {
 
   public static final Atom SYNTHETIC = Atom.findOrCreateUnicodeAtom("Synthetic");
 
-  public static AnalysisScope createAnalysisScope(Set<Language> languages) {
-    return new AnalysisScope(languages);
+  public static AnalysisScope createJavaAnalysisScope(Set<Language> languages) {
+    AnalysisScope scope = new AnalysisScope(languages);
+    scope.initForJava();
+    return scope;
   }
+   
+  protected void initForJava() {
+    ClassLoaderReference primordial = new ClassLoaderReference(PRIMORDIAL, ClassLoaderReference.Java);
+    ClassLoaderReference extension = new ClassLoaderReference(EXTENSION, ClassLoaderReference.Java);
+    ClassLoaderReference application = new ClassLoaderReference(APPLICATION, ClassLoaderReference.Java);
+    ClassLoaderReference synthetic = new ClassLoaderReference(SYNTHETIC, ClassLoaderReference.Java);
+    extension.setParent(primordial);
+    application.setParent(extension);
+    synthetic.setParent(application);
+
+    setLoaderImpl(synthetic, "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
+
+    loadersByName.put(PRIMORDIAL, primordial);
+    loadersByName.put(EXTENSION, extension);
+    loadersByName.put(APPLICATION, application);
+    loadersByName.put(SYNTHETIC, synthetic);
+ }
 
   /**
    * A set of classes to exclude from the analysis entirely.
@@ -99,20 +118,6 @@ public class AnalysisScope {
   protected AnalysisScope(Collection<Language> languages) {
     super();
     this.languages = languages;
-    ClassLoaderReference primordial = new ClassLoaderReference(PRIMORDIAL, ClassLoaderReference.Java);
-    ClassLoaderReference extension = new ClassLoaderReference(EXTENSION, ClassLoaderReference.Java);
-    ClassLoaderReference application = new ClassLoaderReference(APPLICATION, ClassLoaderReference.Java);
-    ClassLoaderReference synthetic = new ClassLoaderReference(SYNTHETIC, ClassLoaderReference.Java);
-    extension.setParent(primordial);
-    application.setParent(extension);
-    synthetic.setParent(application);
-
-    setLoaderImpl(synthetic, "com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader");
-
-    loadersByName.put(PRIMORDIAL, primordial);
-    loadersByName.put(EXTENSION, extension);
-    loadersByName.put(APPLICATION, application);
-    loadersByName.put(SYNTHETIC, synthetic);
   }
 
   /**

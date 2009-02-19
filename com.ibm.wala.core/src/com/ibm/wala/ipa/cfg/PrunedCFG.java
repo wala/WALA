@@ -21,7 +21,6 @@ import java.util.Set;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.Iterator2Collection;
@@ -45,7 +44,7 @@ import com.ibm.wala.util.intset.MutableIntSet;
  * For example, you can use this class to produce a CFG view that ignores
  * certain types of exceptional edges.
  */
-public class PrunedCFG<T extends IBasicBlock> extends AbstractNumberedGraph<T> implements ControlFlowGraph<T> {
+public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGraph<T> implements ControlFlowGraph<I, T> {
 
   /**
    * @param cfg
@@ -56,21 +55,21 @@ public class PrunedCFG<T extends IBasicBlock> extends AbstractNumberedGraph<T> i
    * @throws IllegalArgumentException
    *             if cfg is null
    */
-  public static <T extends IBasicBlock> PrunedCFG<T> make(final ControlFlowGraph<T> cfg, final EdgeFilter<T> filter) {
+  public static <I, T extends IBasicBlock<I>> PrunedCFG<I, T> make(final ControlFlowGraph<I, T> cfg, final EdgeFilter<T> filter) {
     if (cfg == null) {
       throw new IllegalArgumentException("cfg is null");
     }
-    return new PrunedCFG<T>(cfg, filter);
+    return new PrunedCFG<I, T>(cfg, filter);
   }
 
   private static class FilteredCFGEdges<T extends IBasicBlock> implements NumberedEdgeManager<T> {
-    private final ControlFlowGraph<T> cfg;
+    private final ControlFlowGraph<?, T> cfg;
 
     private final NumberedNodeManager<T> currentCFGNodes;
 
     private final EdgeFilter<T> filter;
 
-    FilteredCFGEdges(ControlFlowGraph<T> cfg, NumberedNodeManager<T> currentCFGNodes, EdgeFilter<T> filter) {
+    FilteredCFGEdges(ControlFlowGraph<?, T> cfg, NumberedNodeManager<T> currentCFGNodes, EdgeFilter<T> filter) {
       this.cfg = cfg;
       this.filter = filter;
       this.currentCFGNodes = currentCFGNodes;
@@ -253,13 +252,13 @@ public class PrunedCFG<T extends IBasicBlock> extends AbstractNumberedGraph<T> i
     }
   }
 
-  private final ControlFlowGraph<T> cfg;
+  private final ControlFlowGraph<I, T> cfg;
 
   private final FilteredNodes<T> nodes;
 
   private final FilteredCFGEdges<T> edges;
 
-  private PrunedCFG(final ControlFlowGraph<T> cfg, final EdgeFilter<T> filter) {
+  private PrunedCFG(final ControlFlowGraph<I, T> cfg, final EdgeFilter<T> filter) {
     this.cfg = cfg;
     Graph<T> temp = new AbstractNumberedGraph<T>() {
       private final EdgeManager<T> edges = new FilteredCFGEdges<T>(cfg, cfg, filter);
@@ -325,7 +324,7 @@ public class PrunedCFG<T extends IBasicBlock> extends AbstractNumberedGraph<T> i
     return cfg.getBlockForInstruction(index);
   }
 
-  public IInstruction[] getInstructions() {
+  public I[] getInstructions() {
     return cfg.getInstructions();
   }
 

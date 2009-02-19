@@ -18,7 +18,6 @@ import java.util.Set;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.Context;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.SSAArrayLengthInstruction;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
 import com.ibm.wala.ssa.SSAArrayStoreInstruction;
@@ -49,7 +48,7 @@ import com.ibm.wala.util.graph.impl.NodeWithNumber;
  * 
  * This is a funny CFG ... we assume that there are always fallthru edges, even from throws and returns.
  */
-public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
+public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBlock> {
 
   private static final boolean DEBUG = false;
 
@@ -60,7 +59,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
 
   private final Context context;
 
-  private final IInstruction[] instructions;
+  private final SSAInstruction[] instructions;
 
   /**
    * TODO: we do not yet support induced CFGS with exception handlers.
@@ -109,7 +108,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
         && context.equals(((InducedCFG) o).context);
   }
 
-  public IInstruction[] getInstructions() {
+  public SSAInstruction[] getInstructions() {
     return instructions;
   }
 
@@ -123,7 +122,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
         continue;
       b.computeOutgoingEdges();
     }
-    clearPis((SSAInstruction[]) getInstructions());
+    clearPis(getInstructions());
   }
 
   private void clearPis(SSAInstruction[] instructions) {
@@ -154,7 +153,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
    * Walk through the instructions and compute basic block boundaries.
    */
   private void makeBasicBlocks() {
-    SSAInstruction[] instructions = (SSAInstruction[]) getInstructions();
+    SSAInstruction[] instructions = getInstructions();
     final boolean[] r = new boolean[instructions.length];
 
     // Compute r so r[i] == true iff instruction i begins a basic block.
@@ -375,7 +374,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
 
   // TODO: share some common parts of this implementation with the ShrikeCFG
   // implementation! right now it's clone-and-owned :(
-  public class BasicBlock extends NodeWithNumber implements IBasicBlock {
+  public class BasicBlock extends NodeWithNumber implements IBasicBlock<SSAInstruction> {
 
     private Collection<SSAPhiInstruction> phis;
 
@@ -447,7 +446,7 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       }
       // TODO: we don't currently model branches
 
-      SSAInstruction last = (SSAInstruction) getInstructions()[getLastInstructionIndex()];
+      SSAInstruction last = getInstructions()[getLastInstructionIndex()];
       addExceptionalEdges(last);
       // this CFG is odd in that we assume fallthru might always
       // happen .. this is because I'm too lazy to code control
@@ -559,8 +558,8 @@ public class InducedCFG extends AbstractCFG<InducedCFG.BasicBlock> {
       return InducedCFG.this.getNumber(this);
     }
 
-    public Iterator<IInstruction> iterator() {
-      return new ArrayIterator<IInstruction>(getInstructions(), getFirstInstructionIndex(), getLastInstructionIndex());
+    public Iterator<SSAInstruction> iterator() {
+      return new ArrayIterator<SSAInstruction>(getInstructions(), getFirstInstructionIndex(), getLastInstructionIndex());
     }
   }
 

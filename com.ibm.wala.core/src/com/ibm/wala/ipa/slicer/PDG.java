@@ -18,7 +18,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
-import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.cfg.cdg.ControlDependenceGraph;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IClass;
@@ -34,7 +33,6 @@ import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.*;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Filter;
@@ -196,7 +194,7 @@ public class PDG implements NumberedGraph<Statement> {
     if (ir == null) {
       return;
     }
-    ControlFlowGraph<ISSABasicBlock> controlFlowGraph = ir.getControlFlowGraph();
+    ControlFlowGraph<SSAInstruction, ISSABasicBlock> controlFlowGraph = ir.getControlFlowGraph();
     if (cOptions.equals(ControlDependenceOptions.NO_EXCEPTIONAL_EDGES)) {
       controlFlowGraph = ExceptionPrunedCFG.make(controlFlowGraph);
       // In case the CFG has no nodes left because the only control dependencies
@@ -210,7 +208,7 @@ public class PDG implements NumberedGraph<Statement> {
       Assertions.productionAssertion(cOptions.equals(ControlDependenceOptions.FULL));
     }
 
-    ControlDependenceGraph<ISSABasicBlock> cdg = new ControlDependenceGraph<ISSABasicBlock>(controlFlowGraph);
+    ControlDependenceGraph<SSAInstruction, ISSABasicBlock> cdg = new ControlDependenceGraph<SSAInstruction, ISSABasicBlock>(controlFlowGraph);
     for (ISSABasicBlock bb : cdg) {
       if (bb.isExitBlock()) {
         // nothing should be control-dependent on the exit block.
@@ -250,10 +248,10 @@ public class PDG implements NumberedGraph<Statement> {
       // any
       // control-dependent successors
       if (src != null) {
-        for (Iterator<? extends IBasicBlock> succ = cdg.getSuccNodes(bb); succ.hasNext();) {
-          IBasicBlock bb2 = succ.next();
-          for (Iterator<? extends IInstruction> it2 = bb2.iterator(); it2.hasNext();) {
-            SSAInstruction st = (SSAInstruction) it2.next();
+        for (Iterator<? extends ISSABasicBlock> succ = cdg.getSuccNodes(bb); succ.hasNext();) {
+          ISSABasicBlock bb2 = succ.next();
+          for (Iterator<SSAInstruction> it2 = bb2.iterator(); it2.hasNext();) {
+            SSAInstruction st = it2.next();
             if (st != null) {
               Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
               assert src != null;
@@ -271,8 +269,7 @@ public class PDG implements NumberedGraph<Statement> {
       ISSABasicBlock bb = it.next();
       if (cdg.getPredNodeCount(bb) == 0) {
         // this is control dependent on the method entry.
-        for (IInstruction s : bb) {
-          SSAInstruction st = (SSAInstruction) s;
+        for (SSAInstruction st : bb) {
           Statement dest = ssaInstruction2Statement(st, ir, instructionIndices);
           delegate.addEdge(methodEntry, dest);
         }

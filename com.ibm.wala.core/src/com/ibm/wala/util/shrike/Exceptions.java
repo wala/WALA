@@ -20,6 +20,7 @@ import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeBT.InvokeInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -187,11 +188,11 @@ public class Exceptions implements Constants {
    * TODO: move this elsewhere.
    * @throws IllegalArgumentException  if pei is null
    */
-  public static Collection<TypeReference> getIndependentExceptionTypes(Instruction pei) {
+  public static Collection<TypeReference> getIndependentExceptionTypes(IInstruction pei) {
     if (pei == null) {
       throw new IllegalArgumentException("pei is null");
     }
-    switch (pei.getOpcode()) {
+    switch (((Instruction)pei).getOpcode()) {
     case OP_iaload:
     case OP_laload:
     case OP_faload:
@@ -255,11 +256,11 @@ public class Exceptions implements Constants {
    * peis.
    * @throws IllegalArgumentException  if s is null
    */
-  public static boolean isPEI(Instruction s) {
+  public static boolean isPEI(IInstruction s) {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
-    switch (s.getOpcode()) {
+    switch (((Instruction)s).getOpcode()) {
     case OP_iaload:
     case OP_laload:
     case OP_faload:

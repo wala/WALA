@@ -29,28 +29,28 @@ import com.ibm.wala.fixpoint.IVariable;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
 import com.ibm.wala.shrikeBT.ArrayLoadInstruction;
 import com.ibm.wala.shrikeBT.ArrayStoreInstruction;
-import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.ComparisonInstruction;
-import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.shrikeBT.ConversionInstruction;
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.GetInstruction;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.shrikeBT.IConversionInstruction;
+import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrikeBT.ILoadInstruction;
+import com.ibm.wala.shrikeBT.IShiftInstruction;
+import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.InstanceofInstruction;
-import com.ibm.wala.shrikeBT.Instruction;
-import com.ibm.wala.shrikeBT.InvokeInstruction;
-import com.ibm.wala.shrikeBT.LoadInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.PopInstruction;
 import com.ibm.wala.shrikeBT.PutInstruction;
-import com.ibm.wala.shrikeBT.ShiftInstruction;
 import com.ibm.wala.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrikeBT.SwapInstruction;
 import com.ibm.wala.shrikeBT.SwitchInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
-import com.ibm.wala.shrikeBT.UnaryOpInstruction;
 import com.ibm.wala.shrikeBT.Util;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
@@ -851,7 +851,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
 
     private BasicStackMachineVisitor visitor;
 
-    private com.ibm.wala.shrikeBT.Instruction.Visitor edgeVisitor;
+    private com.ibm.wala.shrikeBT.IInstruction.Visitor edgeVisitor;
 
     private int currentInstructionIndex = 0;
 
@@ -869,7 +869,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     /**
      * Initialize the visitors used to perform the flow functions
      */
-    protected void init(BasicStackMachineVisitor v, com.ibm.wala.shrikeBT.Instruction.Visitor ev) {
+    protected void init(BasicStackMachineVisitor v, com.ibm.wala.shrikeBT.IInstruction.Visitor ev) {
       this.visitor = v;
       this.edgeVisitor = ev;
     }
@@ -886,7 +886,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       workingState = entry.duplicate();
       currentBlock = basicBlock;
       currentSuccessorBlock = null;
-      Instruction[] instructions = getInstructions();
+      IInstruction[] instructions = getInstructions();
       if (DEBUG) {
         Trace.println("Entry to BB" + cfg.getNumber(basicBlock) + " " + workingState);
       }
@@ -905,7 +905,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       workingState = entry.duplicate();
       currentBlock = from;
       currentSuccessorBlock = to;
-      Instruction[] instructions = getInstructions();
+      IInstruction[] instructions = getInstructions();
       if (DEBUG) {
         Trace.println("Entry to BB" + cfg.getNumber(from) + " " + workingState);
       }
@@ -936,12 +936,12 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
     }
 
 
-    public abstract Instruction[] getInstructions();
+    public abstract IInstruction[] getInstructions();
 
     /**
      * Update the machine state to account for an instruction
      */
-    protected class BasicStackMachineVisitor extends Instruction.Visitor {
+    protected class BasicStackMachineVisitor extends IInstruction.Visitor {
 
       /**
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLength(ArrayLengthInstruction)
@@ -974,10 +974,10 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitBinaryOp(BinaryOpInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitBinaryOp(IBinaryOpInstruction)
        */
       @Override
-      public void visitBinaryOp(BinaryOpInstruction instruction) {
+      public void visitBinaryOp(IBinaryOpInstruction instruction) {
         workingState.pop();
       }
 
@@ -992,10 +992,10 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConditionalBranch(ConditionalBranchInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConditionalBranch(IConditionalBranchInstruction)
        */
       @Override
-      public void visitConditionalBranch(ConditionalBranchInstruction instruction) {
+      public void visitConditionalBranch(IConditionalBranchInstruction instruction) {
         workingState.pop();
         workingState.pop();
       }
@@ -1009,10 +1009,10 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConversion(ConversionInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConversion(IConversionInstruction)
        */
       @Override
-      public void visitConversion(ConversionInstruction instruction) {
+      public void visitConversion(IConversionInstruction instruction) {
         workingState.pop();
         workingState.push(UNANALYZED);
       }
@@ -1061,7 +1061,7 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
         workingState.push(UNANALYZED);
       }
 
-      protected void popN(Instruction instruction) {
+      protected void popN(IInstruction instruction) {
         for (int i = 0; i < instruction.getPoppedCount(); i++) {
           workingState.pop();
         }
@@ -1077,10 +1077,10 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInvoke(InvokeInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInvoke(IInvokeInstruction)
        */
       @Override
-      public void visitInvoke(com.ibm.wala.shrikeBT.InvokeInstruction instruction) {
+      public void visitInvoke(IInvokeInstruction instruction) {
         popN(instruction);
         ClassLoaderReference loader = cfg.getMethod().getDeclaringClass().getClassLoader().getReference();
         TypeReference returnType = ShrikeUtil.makeTypeReference(loader, Util.getReturnType(instruction.getMethodSignature()));
@@ -1098,10 +1098,10 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitLocalLoad(LoadInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitLocalLoad(ILoadInstruction)
        */
       @Override
-      public void visitLocalLoad(LoadInstruction instruction) {
+      public void visitLocalLoad(ILoadInstruction instruction) {
         int t = workingState.getLocal(instruction.getVarIndex());
         workingState.push(t);
       }
@@ -1141,10 +1141,10 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitShift(ShiftInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitShift(IShiftInstruction)
        */
       @Override
-      public void visitShift(ShiftInstruction instruction) {
+      public void visitShift(IShiftInstruction instruction) {
         workingState.pop();
       }
 
@@ -1175,10 +1175,10 @@ public abstract class AbstractIntStackMachine implements FixedPointConstants {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitUnaryOp(UnaryOpInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitUnaryOp(IUnaryOpInstruction)
        */
       @Override
-      public void visitUnaryOp(UnaryOpInstruction instruction) {
+      public void visitUnaryOp(IUnaryOpInstruction instruction) {
         // treated as a no-op in basic scheme
       }
     }

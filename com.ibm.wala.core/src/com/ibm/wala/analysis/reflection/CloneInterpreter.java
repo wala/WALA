@@ -270,7 +270,7 @@ public class CloneInterpreter implements SSAContextInterpreter {
     return CodeScanner.iterateCastTypes(statements);
   }
 
-  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode N) {
+  public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode N) {
     return getIR(N).getControlFlowGraph();
   }
 

@@ -26,7 +26,7 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ArrayLoadInstruction;
 import com.ibm.wala.shrikeBT.ArrayStoreInstruction;
 import com.ibm.wala.shrikeBT.GetInstruction;
-import com.ibm.wala.shrikeBT.Instruction;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.PutInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -125,7 +125,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
       ShrikeCTMethod sm = (ShrikeCTMethod) n.getMethod();
       MemoryAccessVisitor v = new MemoryAccessVisitor(n.getMethod().getReference().getDeclaringClass().getClassLoader(), n);
       try {
-        Instruction[] statements = sm.getInstructions();
+        IInstruction[] statements = sm.getInstructions();
         if (statements == null) {
           // System.err.println("no statements for " + n.getMethod());
           return;
@@ -136,7 +136,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
           }
         }
         for (int i = 0; i < statements.length; i++) {
-          Instruction s = statements[i];
+          IInstruction s = statements[i];
           if (s != null) {
             v.setInstructionIndex(i);
             s.visit(v);
@@ -222,7 +222,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
 
   }
 
-  private class MemoryAccessVisitor extends Instruction.Visitor {
+  private class MemoryAccessVisitor extends IInstruction.Visitor {
     int instructionIndex;
 
     final ClassLoaderReference loader;

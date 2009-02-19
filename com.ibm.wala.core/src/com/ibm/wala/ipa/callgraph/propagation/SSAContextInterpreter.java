@@ -16,6 +16,7 @@ import com.ibm.wala.ipa.callgraph.propagation.rta.RTAContextInterpreter;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAInstruction;
 
 /**
  * 
@@ -44,6 +45,6 @@ public interface SSAContextInterpreter extends RTAContextInterpreter {
    */
   public int getNumberOfStatements(CGNode node);
 
-  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode n);
+  public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode n);
 
 }

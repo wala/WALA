@@ -14,8 +14,6 @@ import java.util.HashMap;
 
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrikeBT.Constants;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.shrikeBT.InvokeInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
@@ -44,30 +42,6 @@ public class ShrikeUtil implements BytecodeConstants {
     primitiveMap.put("Z", TypeReference.Boolean);
     primitiveMap.put("V", TypeReference.Void);
     primitiveMap.put(Constants.TYPE_null, TypeReference.Null);
-  }
-
-  /**
-   * @param instruction
-   * @return byte
-   * @throws IllegalArgumentException  if instruction is null
-   */
-  public static IInvokeInstruction.Dispatch getInvocationCode(InvokeInstruction instruction) {
-    if (instruction == null) {
-      throw new IllegalArgumentException("instruction is null");
-    }
-    switch (instruction.getInvocationMode()) {
-    case Constants.OP_invokestatic:
-      return IInvokeInstruction.Dispatch.STATIC;
-    case Constants.OP_invokevirtual:
-      return IInvokeInstruction.Dispatch.VIRTUAL;
-    case Constants.OP_invokespecial:
-      return IInvokeInstruction.Dispatch.SPECIAL;
-    case Constants.OP_invokeinterface:
-      return IInvokeInstruction.Dispatch.INTERFACE;
-    default:
-      Assertions.UNREACHABLE();
-      return null;
-    }
   }
 
   /**

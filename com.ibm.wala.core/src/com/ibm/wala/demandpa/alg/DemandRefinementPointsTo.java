@@ -108,7 +108,7 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.SingleInstanceF
 import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey.TypeFilter;
 import com.ibm.wala.ipa.callgraph.propagation.cfa.ExceptionReturnValueKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.Instruction;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
@@ -196,7 +196,7 @@ public class DemandRefinementPointsTo extends AbstractDemandPointsTo {
               System.err.println(caller.getIR());
               if (caller.getMethod() instanceof ShrikeBTMethod) {
                 try {
-                  Instruction[] instructions = ((ShrikeBTMethod) caller.getMethod()).getInstructions();
+                  IInstruction[] instructions = ((ShrikeBTMethod) caller.getMethod()).getInstructions();
                   for (int i = 0; i < instructions.length; i++) {
                     System.err.println(i + ": " + instructions[i]);
                   }

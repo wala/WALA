@@ -42,14 +42,14 @@ public class AnalysisScopeReader {
 
   private static final String BASIC_FILE = "primordial.txt";
   
-  public static AnalysisScope read(String scopeFileName, File exclusionsFile, ClassLoader javaLoader) {
-    AnalysisScope scope = AnalysisScope.createAnalysisScope(Collections.singleton(Language.JAVA));
+  public static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader) {
+    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope(Collections.singleton(Language.JAVA));
 
     return read(scope, scopeFileName, exclusionsFile, javaLoader, CorePlugin.getDefault());
   }
   
-  private static AnalysisScope read(String scopeFileName, File exclusionsFile, ClassLoader javaLoader, Plugin plugIn) {
-    AnalysisScope scope = AnalysisScope.createAnalysisScope(Collections.singleton(Language.JAVA));
+  private static AnalysisScope readJavaScope(String scopeFileName, File exclusionsFile, ClassLoader javaLoader, Plugin plugIn) {
+    AnalysisScope scope = AnalysisScope.createJavaAnalysisScope(Collections.singleton(Language.JAVA));
 
     return read(scope, scopeFileName, exclusionsFile, javaLoader, plugIn);
   }
@@ -125,11 +125,11 @@ public class AnalysisScopeReader {
   }
   
   public static AnalysisScope makePrimordialScope(File exclusionsFile) {
-    return read(BASIC_FILE, exclusionsFile, MY_CLASSLOADER, CorePlugin.getDefault());
+    return readJavaScope(BASIC_FILE, exclusionsFile, MY_CLASSLOADER, CorePlugin.getDefault());
   }
   
   private static AnalysisScope makePrimordialScope(File exclusionsFile, Plugin plugIn) {
-    return read(BASIC_FILE, exclusionsFile, MY_CLASSLOADER, plugIn);
+    return readJavaScope(BASIC_FILE, exclusionsFile, MY_CLASSLOADER, plugIn);
   }
 
   /**

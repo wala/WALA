@@ -18,10 +18,10 @@ import com.ibm.wala.cfg.IBasicBlock;
  */
 public class ExceptionPrunedCFG {
 
-  private static class ExceptionEdgePruner<T extends IBasicBlock> implements EdgeFilter<T>{
-    private final ControlFlowGraph<T> cfg;
+  private static class ExceptionEdgePruner<I, T extends IBasicBlock<I>> implements EdgeFilter<T>{
+    private final ControlFlowGraph<I, T> cfg;
 
-    ExceptionEdgePruner(ControlFlowGraph<T> cfg) {
+    ExceptionEdgePruner(ControlFlowGraph<I, T> cfg) {
       this.cfg = cfg;
     }
 
@@ -34,8 +34,8 @@ public class ExceptionPrunedCFG {
     }
   };
 
-  public static <T extends IBasicBlock> PrunedCFG<T> make(ControlFlowGraph<T> cfg) {
-    return PrunedCFG.make(cfg, new ExceptionEdgePruner<T>(cfg));
+  public static <I, T extends IBasicBlock<I>> PrunedCFG<I, T> make(ControlFlowGraph<I, T> cfg) {
+    return PrunedCFG.make(cfg, new ExceptionEdgePruner<I, T>(cfg));
   }
 }
 

@@ -41,7 +41,6 @@ import com.ibm.wala.ipa.callgraph.impl.FakeWorldClinitMethod;
 import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
@@ -249,7 +248,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     ConstraintVisitor v = makeVisitor((ExplicitCallGraph.ExplicitNode) node);
 
     IR ir = getCFAContextInterpreter().getIR(node);
-    ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
+    ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
     for (Iterator<ISSABasicBlock> x = cfg.iterator(); x.hasNext();) {
       BasicBlock b = (BasicBlock) x.next();
       addBlockInstructionConstraints(node, cfg, b, v);
@@ -262,12 +261,12 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
   /**
    * Add constraints for a particular basic block.
    */
-  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, BasicBlock b, ConstraintVisitor v) {
+  protected void addBlockInstructionConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, BasicBlock b, ConstraintVisitor v) {
     v.setBasicBlock(b);
 
     // visit each instruction in the basic block.
-    for (Iterator<IInstruction> it = b.iterator(); it.hasNext();) {
-      SSAInstruction s = (SSAInstruction) it.next();
+    for (Iterator<SSAInstruction> it = b.iterator(); it.hasNext();) {
+      SSAInstruction s = it.next();
       if (s != null) {
         s.visit(v);
         if (wasChanged(node)) {
@@ -279,7 +278,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     addPhiConstraints(node, cfg, b, v);
   }
 
-  private void addPhiConstraints(CGNode node, ControlFlowGraph<ISSABasicBlock> cfg, BasicBlock b, ConstraintVisitor v) {
+  private void addPhiConstraints(CGNode node, ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg, BasicBlock b, ConstraintVisitor v) {
     // visit each phi instruction in each successor block
     for (Iterator sbs = cfg.getSuccNodes(b); sbs.hasNext();) {
       BasicBlock sb = (BasicBlock) sbs.next();
@@ -474,7 +473,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
     if (DEBUG) {
       System.err.println("getIncomingPEIs " + bb);
     }
-    ControlFlowGraph<ISSABasicBlock> g = ir.getControlFlowGraph();
+    ControlFlowGraph<SSAInstruction, ISSABasicBlock> g = ir.getControlFlowGraph();
     List<ProgramCounter> result = new ArrayList<ProgramCounter>(g.getPredNodeCount(bb));
     for (Iterator it = g.getPredNodes(bb); it.hasNext();) {
       BasicBlock pred = (BasicBlock) it.next();
@@ -1255,7 +1254,7 @@ public abstract class SSAPropagationCallGraphBuilder extends PropagationCallGrap
         PointerKey dst = getPointerKeyForLocal(instruction.getDef());
         system.recordImplicitPointsToSet(dst);
       } else {
-        ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
+        ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
         if (com.ibm.wala.cfg.Util.endsWithConditionalBranch(cfg, getBasicBlock()) && cfg.getSuccNodeCount(getBasicBlock()) == 2) {
           SSAConditionalBranchInstruction cond = (SSAConditionalBranchInstruction) com.ibm.wala.cfg.Util.getLastInstruction(cfg,
               getBasicBlock());

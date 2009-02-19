@@ -14,7 +14,6 @@ import java.util.Iterator;
 
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.SSAPhiInstruction;
@@ -55,7 +54,7 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   /* 
    * @see com.ibm.wala.cfg.IBasicBlock#iterateAllInstructions()
    */
-  public Iterator<IInstruction> iterator() {
+  public Iterator<SSAInstruction> iterator() {
     return delegate.iterator();
   }
 

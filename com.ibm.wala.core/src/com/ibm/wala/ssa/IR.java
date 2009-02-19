@@ -18,7 +18,6 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.IMethod;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ProgramCounter;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.SSACFG.BasicBlock;
 import com.ibm.wala.ssa.SSACFG.ExceptionHandlerBasicBlock;
 import com.ibm.wala.types.TypeReference;
@@ -572,8 +571,8 @@ public abstract class IR {
   private void mapInstructions2Blocks() {
     instruction2Block = HashMapFactory.make();
     for (ISSABasicBlock b : cfg) {
-      for (IInstruction s : b) {
-        instruction2Block.put((SSAInstruction) s, b);
+      for (SSAInstruction s : b) {
+        instruction2Block.put(s, b);
       }
     }
   }

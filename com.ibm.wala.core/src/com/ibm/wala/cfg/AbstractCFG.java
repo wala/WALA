@@ -45,7 +45,7 @@ import com.ibm.wala.util.intset.SimpleIntVector;
  * 
  * @author sfink
  */
-public abstract class AbstractCFG<T extends IBasicBlock> implements ControlFlowGraph<T>, Constants {
+public abstract class AbstractCFG<I, T extends IBasicBlock<I>> implements ControlFlowGraph<I, T>, Constants {
 
   /**
    * The method this AbstractCFG represents

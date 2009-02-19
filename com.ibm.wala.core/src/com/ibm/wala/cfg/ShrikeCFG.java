@@ -41,7 +41,7 @@ import com.ibm.wala.util.warnings.Warnings;
  * @author sfink
  * @author roca
  */
-public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
+public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
 
   private static final boolean DEBUG = false;
 
@@ -211,7 +211,7 @@ public class ShrikeCFG extends AbstractCFG<ShrikeCFG.BasicBlock> {
     return getNode(instruction2Block[index]);
   }
 
-  public final class BasicBlock extends NodeWithNumber implements IBasicBlock {
+  public final class BasicBlock extends NodeWithNumber implements IBasicBlock<IInstruction> {
 
     /**
      * The number of the ShrikeBT instruction that begins this block.

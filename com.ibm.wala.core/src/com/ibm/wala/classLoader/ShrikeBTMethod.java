@@ -27,9 +27,8 @@ import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.GetInstruction;
+import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.shrikeBT.Instruction;
-import com.ibm.wala.shrikeBT.InvokeInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.PutInstruction;
@@ -426,7 +425,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
 
     SimpleVisitor simpleVisitor = new SimpleVisitor(info);
 
-    Instruction[] instructions = info.decoder.getInstructions();
+    IInstruction[] instructions = info.decoder.getInstructions();
     for (int i = 0; i < instructions.length; i++) {
       simpleVisitor.setInstructionIndex(i);
       instructions[i].visit(simpleVisitor);
@@ -553,7 +552,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
    * A visitor used to process bytecodes
    * 
    */
-  private class SimpleVisitor extends Instruction.Visitor {
+  private class SimpleVisitor extends IInstruction.Visitor {
 
     private final BytecodeInfo info;
 
@@ -624,7 +623,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
 
     @Override
-    public void visitInvoke(InvokeInstruction instruction) {
+    public void visitInvoke(IInvokeInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
       MethodReference m = MethodReference.findOrCreate(loader, instruction.getClassType(), instruction.getMethodName(), instruction
           .getMethodSignature());
@@ -636,26 +635,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
         Assertions.UNREACHABLE();
       }
       CallSiteReference site = null;
-      int nParams = m.getNumberOfParameters();
-      switch (instruction.getInvocationMode()) {
-      case Constants.OP_invokestatic:
-        site = CallSiteReference.make(programCounter, m, IInvokeInstruction.Dispatch.STATIC);
-        break;
-      case Constants.OP_invokeinterface:
-        site = CallSiteReference.make(programCounter, m, IInvokeInstruction.Dispatch.INTERFACE);
-        nParams++;
-        break;
-      case Constants.OP_invokespecial:
-        site = CallSiteReference.make(programCounter, m, IInvokeInstruction.Dispatch.SPECIAL);
-        nParams++;
-        break;
-      case Constants.OP_invokevirtual:
-        site = CallSiteReference.make(programCounter, m, IInvokeInstruction.Dispatch.VIRTUAL);
-        nParams++;
-        break;
-      default:
-        Assertions.UNREACHABLE();
-      }
+      site = CallSiteReference.make(programCounter, m, instruction.getInvocationCode());
       callSites.add(site);
     }
 
@@ -688,7 +668,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
    * @return Instruction[]
    * @throws InvalidClassFileException
    */
-  public Instruction[] getInstructions() throws InvalidClassFileException {
+  public IInstruction[] getInstructions() throws InvalidClassFileException {
     if (getBCInfo().decoder == null) {
       return null;
     } else {

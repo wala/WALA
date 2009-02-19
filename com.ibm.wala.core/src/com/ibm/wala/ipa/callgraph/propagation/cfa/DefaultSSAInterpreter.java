@@ -25,6 +25,7 @@ import com.ibm.wala.ipa.callgraph.propagation.rta.DefaultRTAInterpreter;
 import com.ibm.wala.ssa.DefUse;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAInstruction;
 
 /**
  * Basic analysis; context-insensitive except for newInstance and clone
@@ -76,7 +77,7 @@ public class DefaultSSAInterpreter extends DefaultRTAInterpreter implements SSAC
     return false;
   }
 
-  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode N) {
+  public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode N) {
     return getCFAInterpreter(N).getCFG(N);
   }
 

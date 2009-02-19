@@ -22,25 +22,24 @@ import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
 import com.ibm.wala.shrikeBT.ArrayLoadInstruction;
 import com.ibm.wala.shrikeBT.ArrayStoreInstruction;
-import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.CheckCastInstruction;
 import com.ibm.wala.shrikeBT.ComparisonInstruction;
-import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
-import com.ibm.wala.shrikeBT.ConversionInstruction;
 import com.ibm.wala.shrikeBT.GetInstruction;
 import com.ibm.wala.shrikeBT.GotoInstruction;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.shrikeBT.IConversionInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrikeBT.IShiftInstruction;
+import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.InstanceofInstruction;
-import com.ibm.wala.shrikeBT.InvokeInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.ReturnInstruction;
-import com.ibm.wala.shrikeBT.ShiftInstruction;
 import com.ibm.wala.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrikeBT.SwitchInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
-import com.ibm.wala.shrikeBT.UnaryOpInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.FieldReference;
@@ -400,10 +399,10 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitBinaryOp(BinaryOpInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitBinaryOp(IBinaryOpInstruction)
        */
       @Override
-      public void visitBinaryOp(com.ibm.wala.shrikeBT.BinaryOpInstruction instruction) {
+      public void visitBinaryOp(IBinaryOpInstruction instruction) {
         int val2 = workingState.pop();
         int val1 = workingState.pop();
         int result = reuseOrCreateDef();
@@ -439,10 +438,10 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConditionalBranch(ConditionalBranchInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConditionalBranch(IConditionalBranchInstruction)
        */
       @Override
-      public void visitConditionalBranch(com.ibm.wala.shrikeBT.ConditionalBranchInstruction instruction) {
+      public void visitConditionalBranch(IConditionalBranchInstruction instruction) {
         int val2 = workingState.pop();
         int val1 = workingState.pop();
 
@@ -486,10 +485,10 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConversion(ConversionInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitConversion(IConversionInstruction)
        */
       @Override
-      public void visitConversion(com.ibm.wala.shrikeBT.ConversionInstruction instruction) {
+      public void visitConversion(IConversionInstruction instruction) {
 
         int val = workingState.pop();
         int result = reuseOrCreateDef();
@@ -542,10 +541,10 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInvoke(InvokeInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitInvoke(IInvokeInstruction)
        */
       @Override
-      public void visitInvoke(com.ibm.wala.shrikeBT.InvokeInstruction instruction) {
+      public void visitInvoke(IInvokeInstruction instruction) {
         int n = instruction.getPoppedCount();
         int[] params = new int[n];
         for (int i = n - 1; i >= 0; i--) {
@@ -553,7 +552,7 @@ public class SSABuilder extends AbstractIntStackMachine {
         }
         MethodReference m = MethodReference.findOrCreate(loader, instruction.getClassType(), instruction.getMethodName(),
             instruction.getMethodSignature());
-        IInvokeInstruction.Dispatch code = ShrikeUtil.getInvocationCode(instruction);
+        IInvokeInstruction.IDispatch code = instruction.getInvocationCode();
         CallSiteReference site = CallSiteReference.make(getCurrentProgramCounter(), m, code);
         int exc = reuseOrCreateException();
         if (instruction.getPushedWordSize() > 0) {
@@ -640,10 +639,10 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitShift(ShiftInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitShift(IShiftInstruction)
        */
       @Override
-      public void visitShift(com.ibm.wala.shrikeBT.ShiftInstruction instruction) {
+      public void visitShift(IShiftInstruction instruction) {
         int val2 = workingState.pop();
         int val1 = workingState.pop();
         int result = reuseOrCreateDef();
@@ -672,10 +671,10 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitUnaryOp(UnaryOpInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitUnaryOp(IUnaryOpInstruction)
        */
       @Override
-      public void visitUnaryOp(com.ibm.wala.shrikeBT.UnaryOpInstruction instruction) {
+      public void visitUnaryOp(IUnaryOpInstruction instruction) {
         int val = workingState.pop();
         int result = reuseOrCreateDef();
         workingState.push(result);
@@ -744,21 +743,21 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
     }
 
-    class EdgeVisitor extends com.ibm.wala.shrikeBT.Instruction.Visitor {
+    class EdgeVisitor extends com.ibm.wala.shrikeBT.IInstruction.Visitor {
 
       @Override
-      public void visitInvoke(InvokeInstruction instruction) {
+      public void visitInvoke(IInvokeInstruction instruction) {
         maybeInsertPi((SSAAbstractInvokeInstruction) getCurrentInstruction());
       }
 
       @Override
-      public void visitConditionalBranch(com.ibm.wala.shrikeBT.ConditionalBranchInstruction instruction) {
+      public void visitConditionalBranch(IConditionalBranchInstruction instruction) {
         maybeInsertPi((SSAConditionalBranchInstruction) getCurrentInstruction());
       }
     }
 
     @Override
-    public com.ibm.wala.shrikeBT.Instruction[] getInstructions() {
+    public com.ibm.wala.shrikeBT.IInstruction[] getInstructions() {
       try {
         return ((ShrikeCTMethod) shrikeCFG.getMethod()).getInstructions();
       } catch (InvalidClassFileException e) {

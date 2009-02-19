@@ -12,7 +12,6 @@
 package com.ibm.wala.cfg;
 
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.util.graph.INodeWithNumber;
 
 /**
@@ -20,7 +19,7 @@ import com.ibm.wala.util.graph.INodeWithNumber;
  * @author cahoon
  * @author Stephen Fink
  */
-public interface IBasicBlock extends INodeWithNumber, Iterable<IInstruction> {
+public interface IBasicBlock<InstType> extends INodeWithNumber, Iterable<InstType> {
 
   /**
    * Get the index of the first instruction in the basic block.  The value

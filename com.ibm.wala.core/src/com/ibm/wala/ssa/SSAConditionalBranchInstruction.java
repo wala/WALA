@@ -13,7 +13,7 @@ package com.ibm.wala.ssa;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
+import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 
@@ -22,7 +22,7 @@ import com.ibm.wala.util.debug.Assertions;
  * 
  */
 public class SSAConditionalBranchInstruction extends SSAInstruction {
-  private final ConditionalBranchInstruction.IOperator operator;
+  private final IConditionalBranchInstruction.IOperator operator;
 
   private final int val1;
 
@@ -30,7 +30,7 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
 
   private final TypeReference type;
 
-  SSAConditionalBranchInstruction(ConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) throws IllegalArgumentException {
+  SSAConditionalBranchInstruction(IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) throws IllegalArgumentException {
     super();
     this.operator = operator;
     this.val1 = val1;
@@ -52,7 +52,7 @@ public class SSAConditionalBranchInstruction extends SSAInstruction {
     return new SSAConditionalBranchInstruction(operator, type, uses == null ? val1 : uses[0], uses == null ? val2 : uses[1]);
   }
 
-  public ConditionalBranchInstruction.IOperator getOperator() {
+  public IConditionalBranchInstruction.IOperator getOperator() {
     return operator;
   }
 

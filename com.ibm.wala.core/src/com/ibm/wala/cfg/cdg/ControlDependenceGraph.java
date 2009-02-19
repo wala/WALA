@@ -33,13 +33,13 @@ import com.ibm.wala.util.graph.impl.GraphInverter;
  * @author Julian Dolby
  * 
  */
-public class ControlDependenceGraph<T extends IBasicBlock> extends AbstractNumberedGraph<T> {
+public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends AbstractNumberedGraph<T> {
 
   /**
    * Governing control flow-graph. The control dependence graph is computed from
    * this cfg.
    */
-  private final ControlFlowGraph<T> cfg;
+  private final ControlFlowGraph<I, T> cfg;
 
   /**
    * the EdgeManager for the CDG. It implements the edge part of the standard
@@ -199,7 +199,7 @@ public class ControlDependenceGraph<T extends IBasicBlock> extends AbstractNumbe
    * @param wantEdgeLabels
    *            whether to compute edge labels for CDG edges
    */
-  public ControlDependenceGraph(ControlFlowGraph<T> cfg, boolean wantEdgeLabels) {
+  public ControlDependenceGraph(ControlFlowGraph<I, T> cfg, boolean wantEdgeLabels) {
     this.cfg = cfg;
     this.edgeManager = constructGraphEdges(buildControlDependence(wantEdgeLabels));
   }
@@ -208,7 +208,7 @@ public class ControlDependenceGraph<T extends IBasicBlock> extends AbstractNumbe
    * @param cfg
    *            governing control flow graph
    */
-  public ControlDependenceGraph(ControlFlowGraph<T> cfg) {
+  public ControlDependenceGraph(ControlFlowGraph<I, T> cfg) {
     this(cfg, false);
   }
 

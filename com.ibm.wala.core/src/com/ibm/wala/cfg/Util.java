@@ -42,7 +42,7 @@ public class Util {
     return getLastInstruction(G, b) instanceof SSASwitchInstruction;
   }
 
-  public static <T extends IBasicBlock> T getFallThruBlock(ControlFlowGraph<T> G, T b) {
+  public static <I, T extends IBasicBlock<I>> T getFallThruBlock(ControlFlowGraph<I, T> G, T b) {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
@@ -56,7 +56,7 @@ public class Util {
    * Given that b ends with a conditional branch, return the basic block to
    * which control transfers if the branch is not taken.
    */
-  public static <T extends IBasicBlock> T getNotTakenSuccessor(ControlFlowGraph<T> G, T b) {
+  public static <I, T extends IBasicBlock<I>> T getNotTakenSuccessor(ControlFlowGraph<I, T> G, T b) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -70,7 +70,7 @@ public class Util {
    * Given that b ends with a conditional branch, return the basic block to
    * which control transfers if the branch is taken.
    */
-  public static <T extends IBasicBlock> T getTakenSuccessor(ControlFlowGraph<T> G, T b) {
+  public static <I, T extends IBasicBlock<I>> T getTakenSuccessor(ControlFlowGraph<I, T> G, T b) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -94,7 +94,7 @@ public class Util {
    * When the tested value of the switch statement in b has value c, which basic
    * block does control transfer to.
    */
-  public static <T extends IBasicBlock> T resolveSwitch(ControlFlowGraph<T> G, T b, int c) {
+  public static <I, T extends IBasicBlock<I>> T resolveSwitch(ControlFlowGraph<I, T> G, T b, int c) {
     Assertions._assert(endsWithSwitch(G, b));
     SSASwitchInstruction s = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = s.getCasesAndLabels();
@@ -105,7 +105,7 @@ public class Util {
     return G.getBlockForInstruction(s.getDefault());
   }
 
-  public static <T extends IBasicBlock >boolean isSwitchDefault(ControlFlowGraph<T> G, T b, T s) {
+  public static <I, T extends IBasicBlock<I>> boolean isSwitchDefault(ControlFlowGraph<I, T> G, T b, T s) {
     if (G == null) {
       throw new IllegalArgumentException("G is null");
     }
@@ -120,7 +120,7 @@ public class Util {
    * which case was taken? TODO: Is this correct? Can't we have multiple cases
    * that apply? Check on this.
    */
-  public static <T extends IBasicBlock> int getSwitchLabel(ControlFlowGraph<T> G, T b, T s) {
+  public static <I, T extends IBasicBlock<I>> int getSwitchLabel(ControlFlowGraph<I, T> G, T b, T s) {
     Assertions._assert(endsWithSwitch(G, b));
     SSASwitchInstruction sw = (SSASwitchInstruction) getLastInstruction(G, b);
     int[] casesAndLabels = sw.getCasesAndLabels();
@@ -142,7 +142,7 @@ public class Util {
    * Callers must resolve the constant values from the {@link SymbolTable}
    * before calling this method. These integers are <bf>not</bf> value numbers;
    */
-  public static <T extends IBasicBlock> T resolveBranch(ControlFlowGraph<T> G, T bb, int c1, int c2) {
+  public static <I, T extends IBasicBlock<I>> T resolveBranch(ControlFlowGraph<I, T> G, T bb, int c1, int c2) {
     SSAConditionalBranchInstruction c = (SSAConditionalBranchInstruction) getLastInstruction(G, bb);
     switch ((ConditionalBranchInstruction.Operator) c.getOperator()) {
     case EQ:
@@ -188,7 +188,7 @@ public class Util {
    * in this order in which a appears? Note that this order corresponds to the
    * order of operands in a phi instruction.
    */
-  public static <T extends IBasicBlock> int whichPred(ControlFlowGraph<T> cfg, T a, T b) {
+  public static <I, T extends IBasicBlock<I>> int whichPred(ControlFlowGraph<I, T> cfg, T a, T b) {
     if (cfg == null) {
       throw new IllegalArgumentException("cfg is null");
     }

@@ -313,7 +313,7 @@ public class EclipseProjectPath {
    * Convert this path to a WALA analysis scope
    */
   public AnalysisScope toAnalysisScope(ClassLoader classLoader, File exclusionsFile) {
-    AnalysisScope scope = AnalysisScopeReader.read(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile, classLoader);
+    AnalysisScope scope = AnalysisScopeReader.readJavaScope(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile, classLoader);
     return toAnalysisScope(scope);
   }
 

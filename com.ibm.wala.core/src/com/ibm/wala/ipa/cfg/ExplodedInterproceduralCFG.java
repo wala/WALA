@@ -16,6 +16,7 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph;
 import com.ibm.wala.ssa.analysis.ExplodedControlFlowGraph.ExplodedBasicBlock;
 import com.ibm.wala.util.collections.Filter;
@@ -51,7 +52,7 @@ public class ExplodedInterproceduralCFG extends AbstractInterproceduralCFG<Explo
    * @throws IllegalArgumentException if n == null
    */
   @Override
-  public ControlFlowGraph<ExplodedBasicBlock> getCFG(CGNode n) throws IllegalArgumentException {
+  public ControlFlowGraph<SSAInstruction, ExplodedBasicBlock> getCFG(CGNode n) throws IllegalArgumentException {
     if (n == null) {
       throw new IllegalArgumentException("n == null");
     }

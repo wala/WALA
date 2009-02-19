@@ -13,7 +13,7 @@ package com.ibm.wala.ssa;
 import java.util.Collection;
 import java.util.Collections;
 
-import com.ibm.wala.shrikeBT.UnaryOpInstruction;
+import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.types.TypeReference;
 
 /**
@@ -22,9 +22,9 @@ import com.ibm.wala.types.TypeReference;
  */
 public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
 
-  private final UnaryOpInstruction.IOperator operator;
+  private final IUnaryOpInstruction.IOperator operator;
 
-  protected SSAUnaryOpInstruction(UnaryOpInstruction.IOperator operator, int result, int val) {
+  protected SSAUnaryOpInstruction(IUnaryOpInstruction.IOperator operator, int result, int val) {
     super(result, val);
     this.operator = operator;
   }
@@ -50,7 +50,7 @@ public class SSAUnaryOpInstruction extends SSAAbstractUnaryInstruction {
     v.visitUnaryOp(this);
   }
 
-  public UnaryOpInstruction.IOperator getOpcode() {
+  public IUnaryOpInstruction.IOperator getOpcode() {
     return operator;
   }
 

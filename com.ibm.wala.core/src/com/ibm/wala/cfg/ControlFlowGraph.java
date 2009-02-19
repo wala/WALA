@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.List;
 
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.util.graph.NumberedGraph;
 import com.ibm.wala.util.intset.BitVector;
 
@@ -24,7 +23,7 @@ import com.ibm.wala.util.intset.BitVector;
  * @author cahoon
  * @author sfink
  */
-public interface ControlFlowGraph<T extends IBasicBlock> extends NumberedGraph<T> {
+public interface ControlFlowGraph<I, T extends IBasicBlock<I>> extends NumberedGraph<T> {
 
   /**
    * Return the entry basic block in the CFG
@@ -51,7 +50,7 @@ public interface ControlFlowGraph<T extends IBasicBlock> extends NumberedGraph<T
   /**
    * @return the instructions of this CFG, as an array.
    */
-  IInstruction[] getInstructions();
+  I[] getInstructions();
 
   /**
    * TODO: move this into IR?

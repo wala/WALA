@@ -18,13 +18,10 @@ import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
-import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.shrikeBT.IInvokeInstruction;
-import com.ibm.wala.shrikeBT.InvokeInstruction;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.types.ClassLoaderReference;
-import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
 import com.ibm.wala.util.collections.IndiscriminateFilter;
@@ -103,7 +100,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    */
   private final MutableIntSet handledReturns = new BitVectorIntSet();
 
-  protected abstract ControlFlowGraph<T> getCFG(CGNode n);
+  protected abstract ControlFlowGraph<SSAInstruction, T> getCFG(CGNode n);
 
   /**
    * Build an Interprocedural CFG from a call graph. This version defaults to using whatever CFGs the call graph provides by
@@ -140,11 +137,11 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       }
       cgNodesVisited.add(cg.getNumber(n));
       // retrieve a cfg for node n.
-      ControlFlowGraph<T> cfg = getCFG(n);
+      ControlFlowGraph<SSAInstruction, T> cfg = getCFG(n);
       if (cfg != null) {
         // create a node for each basic block.
         addNodeForEachBasicBlock(cfg, n);
-        IInstruction[] instrs = cfg.getInstructions();
+        SSAInstruction[] instrs = cfg.getInstructions();
         // create edges for node n.
         for (Iterator<T> bbs = cfg.iterator(); bbs.hasNext();) {
           T bb = bbs.next();
@@ -163,7 +160,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param instrs the instructions for node n
    * @param bb a basic block in the CFG
    */
-  private void addEdgesToNonEntryBlock(CGNode n, ControlFlowGraph<T> cfg, IInstruction[] instrs, T bb) {
+  private void addEdgesToNonEntryBlock(CGNode n, ControlFlowGraph<?, T> cfg, SSAInstruction[] instrs, T bb) {
 
     if (DEBUG_LEVEL > 1) {
       System.err.println("addEdgesToNonEntryBlock: " + bb);
@@ -186,11 +183,11 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
       }
 
       int index = pb.getLastInstructionIndex();
-      IInstruction inst = instrs[index];
+      SSAInstruction inst = instrs[index];
       if (DEBUG_LEVEL > 1) {
         System.err.println("Last instruction is : " + inst);
       }
-      if (inst instanceof IInvokeInstruction) {
+      if (inst instanceof SSAAbstractInvokeInstruction) {
         // a previous instruction is a call instruction. If necessary,
         // add an edge from the exit() of each target of the call.
         // IInvokeInstruction call = (IInvokeInstruction) inst;
@@ -243,28 +240,15 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     }
   }
 
-  public static CallSiteReference makeCallSiteReference(ClassLoaderReference loader, int pc, IInvokeInstruction call)
+  public static CallSiteReference makeCallSiteReference(ClassLoaderReference loader, int pc, SSAAbstractInvokeInstruction call)
       throws IllegalArgumentException, IllegalArgumentException {
 
     if (call == null) {
       throw new IllegalArgumentException("call == null");
     }
-    if (!(call instanceof com.ibm.wala.ssa.SSAAbstractInvokeInstruction)
-        && !(call instanceof com.ibm.wala.shrikeBT.InvokeInstruction)) {
-      throw new IllegalArgumentException(
-          "(not ( call instanceof com.ibm.wala.ssa.SSAAbstractInvokeInstruction ) ) and (not ( call instanceof com.ibm.wala.shrikeBT.InvokeInstruction ) )");
-    }
-    CallSiteReference site = null;
-    if (call instanceof InvokeInstruction) {
-      InvokeInstruction c = (InvokeInstruction) call;
-      site = CallSiteReference.make(pc, MethodReference.findOrCreate(loader, c.getClassType(), c.getMethodName(), c
-          .getMethodSignature()), call.getInvocationCode());
-    } else {
-      com.ibm.wala.ssa.SSAAbstractInvokeInstruction c = (com.ibm.wala.ssa.SSAAbstractInvokeInstruction) call;
-      site = c.getCallSite().cloneReference(pc);
-    }
-    return site;
-  }
+ 
+    return call.getCallSite().cloneReference(pc);
+   }
 
   /**
    * Add an edge from the exit() block of a callee to a return site in the caller
@@ -272,7 +256,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param returnBlock the return site for a call
    * @param targetCFG the called method
    */
-  private void addEdgesFromExitToReturn(CGNode caller, T returnBlock, CGNode target, ControlFlowGraph<? extends T> targetCFG) {
+  private void addEdgesFromExitToReturn(CGNode caller, T returnBlock, CGNode target, ControlFlowGraph<SSAInstruction, ? extends T> targetCFG) {
     T texit = targetCFG.exit();
     BasicBlockInContext<T> exit = new BasicBlockInContext<T>(target, texit);
     addNodeForBasicBlockIfNeeded(exit);
@@ -295,7 +279,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param callBlock the return site for a call
    * @param targetCFG the called method
    */
-  private void addEdgesFromCallToEntry(CGNode caller, T callBlock, CGNode target, ControlFlowGraph<? extends T> targetCFG) {
+  private void addEdgesFromCallToEntry(CGNode caller, T callBlock, CGNode target, ControlFlowGraph<SSAInstruction, ? extends T> targetCFG) {
     T tentry = targetCFG.entry();
     BasicBlockInContext<T> entry = new BasicBlockInContext<T>(target, tentry);
     addNodeForBasicBlockIfNeeded(entry);
@@ -318,7 +302,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param n a node in the call graph
    * @param bb the entry() block for n
    */
-  private void addInterproceduralEdgesForEntryAndExitBlocks(CGNode n, ControlFlowGraph<? extends T> cfg) {
+  private void addInterproceduralEdgesForEntryAndExitBlocks(CGNode n, ControlFlowGraph<SSAInstruction, ? extends T> cfg) {
 
     T entryBlock = cfg.entry();
     T exitBlock = cfg.exit();
@@ -341,18 +325,18 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     if (DEBUG_LEVEL > 0) {
       System.err.println("caller " + caller + "is relevant");
     }
-    ControlFlowGraph<T> ccfg = getCFG(caller);
-    IInstruction[] cinsts = ccfg.getInstructions();
+    ControlFlowGraph<SSAInstruction, T> ccfg = getCFG(caller);
+    SSAInstruction[] cinsts = ccfg.getInstructions();
 
     if (DEBUG_LEVEL > 1) {
       System.err.println("Visiting " + cinsts.length + " instructions");
     }
     for (int i = 0; i < cinsts.length; i++) {
-      if (cinsts[i] instanceof IInvokeInstruction) {
+      if (cinsts[i] instanceof SSAAbstractInvokeInstruction) {
         if (DEBUG_LEVEL > 1) {
           System.err.println("Checking invokeinstruction: " + cinsts[i]);
         }
-        IInvokeInstruction call = (IInvokeInstruction) cinsts[i];
+        SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) cinsts[i];
         CallSiteReference site = makeCallSiteReference(n.getMethod().getDeclaringClass().getClassLoader().getReference(), ccfg
             .getProgramCounter(i), call);
         if (cg.getPossibleTargets(caller, site).contains(n)) {
@@ -383,7 +367,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * 
    * @param cfg a control-flow graph
    */
-  private void addNodeForEachBasicBlock(ControlFlowGraph<? extends T> cfg, CGNode N) {
+  private void addNodeForEachBasicBlock(ControlFlowGraph<? extends SSAInstruction, ? extends T> cfg, CGNode N) {
     for (Iterator<? extends T> bbs = cfg.iterator(); bbs.hasNext();) {
       T bb = bbs.next();
       if (DEBUG_LEVEL > 1) {
@@ -397,7 +381,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   private void addNodeForBasicBlockIfNeeded(BasicBlockInContext<T> b) {
     if (!g.containsNode(b)) {
       g.addNode(b);
-      ControlFlowGraph<T> cfg = getCFG(b);
+      ControlFlowGraph<SSAInstruction, T> cfg = getCFG(b);
       if (hasCall(b, cfg)) {
         hasCallVector.set(g.getNumber(b));
       }
@@ -408,7 +392,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @return the original CFG from whence B came
    * @throws IllegalArgumentException if B == null
    */
-  public ControlFlowGraph<T> getCFG(BasicBlockInContext B) throws IllegalArgumentException {
+  public ControlFlowGraph<SSAInstruction, T> getCFG(BasicBlockInContext B) throws IllegalArgumentException {
     if (B == null) {
       throw new IllegalArgumentException("B == null");
     }
@@ -483,7 +467,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
    * @param n
    */
   private void addEdgesToCallees(CGNode n) {
-    ControlFlowGraph<T> cfg = getCFG(n);
+    ControlFlowGraph<SSAInstruction, T> cfg = getCFG(n);
     if (cfg != null) {
       for (Iterator<T> bbs = cfg.iterator(); bbs.hasNext();) {
         T bb = bbs.next();
@@ -503,7 +487,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     if (!handledReturns.contains(num)) {
       handledReturns.add(num);
       // compute calls for return
-      ControlFlowGraph<T> cfg = getCFG(returnBlock);
+      ControlFlowGraph<SSAInstruction, T> cfg = getCFG(returnBlock);
       for (Iterator<? extends T> it = cfg.getPredNodes(returnBlock.getDelegate()); it.hasNext();) {
         T b = it.next();
         final BasicBlockInContext<T> block = new BasicBlockInContext<T>(node, b);
@@ -521,7 +505,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     int num = g.getNumber(callBlock);
     if (!handledCalls.contains(num)) {
       handledCalls.add(num);
-      ControlFlowGraph<T> cfg = getCFG(n);
+      ControlFlowGraph<SSAInstruction,T> cfg = getCFG(n);
       int index = callBlock.getLastInstructionIndex();
       SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) callBlock.getLastInstruction();
       CallSiteReference site = makeCallSiteReference(n.getMethod().getDeclaringClass().getClassLoader().getReference(), cfg
@@ -544,7 +528,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
           System.err.println("Relevant target: " + tn);
         }
         // add an edge from tn exit to this node
-        ControlFlowGraph<? extends T> tcfg = getCFG(tn);
+        ControlFlowGraph<SSAInstruction, ? extends T> tcfg = getCFG(tn);
         // tcfg might be null if tn is an unmodelled native method
         if (tcfg != null) {
           final T cbDelegate = callBlock.getDelegate();
@@ -571,7 +555,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     final int num = cg.getNumber(n);
     if (!cgNodesWithCallerEdges.contains(num)) {
       cgNodesWithCallerEdges.add(num);
-      ControlFlowGraph<T> cfg = getCFG(n);
+      ControlFlowGraph<SSAInstruction, T> cfg = getCFG(n);
       addInterproceduralEdgesForEntryAndExitBlocks(n, cfg);
     }
   }
@@ -704,8 +688,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   /**
    * @return true iff basic block B ends in a call instuction
    */
-  private boolean hasCall(BasicBlockInContext B, ControlFlowGraph cfg) {
-    IInstruction[] statements = cfg.getInstructions();
+  private boolean hasCall(BasicBlockInContext B, ControlFlowGraph<SSAInstruction, T> cfg) {
+    SSAInstruction[] statements = cfg.getInstructions();
 
     int lastIndex = B.getLastInstructionIndex();
     if (lastIndex >= 0) {
@@ -717,8 +701,8 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
           Assertions._assert(lastIndex < statements.length, "bad BB " + B + " and CFG for " + getCGNode(B));
         }
       }
-      IInstruction last = statements[lastIndex];
-      return (last instanceof IInvokeInstruction);
+      SSAInstruction last = statements[lastIndex];
+      return (last instanceof SSAAbstractInvokeInstruction);
     } else {
       return false;
     }
@@ -733,16 +717,16 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     if (B == null) {
       throw new IllegalArgumentException("B is null");
     }
-    ControlFlowGraph cfg = getCFG(B);
+    ControlFlowGraph<SSAInstruction, T> cfg = getCFG(B);
     return getCallTargets(B, cfg, getCGNode(B));
   }
 
   /**
    * @return the set of CGNodes that B may call, according to the governing call graph.
    */
-  private Set<CGNode> getCallTargets(IBasicBlock B, ControlFlowGraph cfg, CGNode Bnode) {
-    IInstruction[] statements = cfg.getInstructions();
-    IInvokeInstruction call = (IInvokeInstruction) statements[B.getLastInstructionIndex()];
+  private Set<CGNode> getCallTargets(IBasicBlock B, ControlFlowGraph<SSAInstruction, T> cfg, CGNode Bnode) {
+    SSAInstruction[] statements = cfg.getInstructions();
+    SSAAbstractInvokeInstruction call = (SSAAbstractInvokeInstruction) statements[B.getLastInstructionIndex()];
     int pc = cfg.getProgramCounter(B.getLastInstructionIndex());
     CallSiteReference site = makeCallSiteReference(B.getMethod().getDeclaringClass().getClassLoader().getReference(), pc, call);
     return cg.getPossibleTargets(Bnode, site);
@@ -822,13 +806,13 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
   }
 
   public BasicBlockInContext<T> getEntry(CGNode n) {
-    ControlFlowGraph<? extends T> cfg = getCFG(n);
+    ControlFlowGraph<SSAInstruction, ? extends T> cfg = getCFG(n);
     T entry = cfg.entry();
     return new BasicBlockInContext<T>(n, entry);
   }
 
   public BasicBlockInContext<T> getExit(CGNode n) {
-    ControlFlowGraph<? extends T> cfg = getCFG(n);
+    ControlFlowGraph<SSAInstruction, ? extends T> cfg = getCFG(n);
     T entry = cfg.exit();
     return new BasicBlockInContext<T>(n, entry);
   }
@@ -863,7 +847,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     if (returnBlock == null) {
       throw new IllegalArgumentException("bb is null");
     }
-    final ControlFlowGraph<T> cfg = getCFG(returnBlock);
+    final ControlFlowGraph<SSAInstruction, T> cfg = getCFG(returnBlock);
     Iterator<? extends T> it = cfg.getPredNodes(returnBlock.getDelegate());
     final CGNode node = returnBlock.getNode();
 
@@ -902,7 +886,7 @@ public abstract class AbstractInterproceduralCFG<T extends ISSABasicBlock> imple
     if (bb == null) {
       throw new IllegalArgumentException("bb == null");
     }
-    ControlFlowGraph<T> cfg = getCFG(bb);
+    ControlFlowGraph<SSAInstruction, T> cfg = getCFG(bb);
     for (Iterator<? extends T> it = cfg.getPredNodes(bb.getDelegate()); it.hasNext();) {
       T b = it.next();
       if (hasCall(new BasicBlockInContext<T>(bb.getNode(), b))) {

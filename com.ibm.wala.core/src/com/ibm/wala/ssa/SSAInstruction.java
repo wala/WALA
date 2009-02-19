@@ -12,13 +12,12 @@ package com.ibm.wala.ssa;
 
 import java.util.Collection;
 
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.types.TypeReference;
 
 /**
  * An instruction in SSA form.
  */
-public abstract class SSAInstruction implements IInstruction {
+public abstract class SSAInstruction /* implements IInstruction */ {
 
   /**
    * prevent instantiation by the outside

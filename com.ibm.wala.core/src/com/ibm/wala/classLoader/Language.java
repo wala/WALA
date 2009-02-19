@@ -21,6 +21,7 @@ public interface Language {
       return TypeReference.JavaLangThrowable;
     }
 
+    
     public TypeReference getConstantType(Object o) {
       if (o instanceof String) {
         return TypeReference.JavaLangString;
@@ -34,6 +35,10 @@ public interface Language {
 
     public boolean isNullType(TypeReference type) {
       return false;
+    }
+
+    public TypeReference[] getArrayInterfaces() {
+      return new TypeReference[] { TypeReference.JavaIoSerializable, TypeReference.JavaLangCloneable };
     }
   };
 
@@ -53,4 +58,6 @@ public interface Language {
 
   boolean isNullType(TypeReference type);
 
+  TypeReference[] getArrayInterfaces();
+  
 }

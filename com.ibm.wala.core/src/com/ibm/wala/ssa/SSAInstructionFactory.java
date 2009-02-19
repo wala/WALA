@@ -13,9 +13,9 @@ package com.ibm.wala.ssa;
 
 import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.NewSiteReference;
-import com.ibm.wala.shrikeBT.BinaryOpInstruction;
-import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
-import com.ibm.wala.shrikeBT.UnaryOpInstruction;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
+import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 
@@ -40,7 +40,7 @@ public final class SSAInstructionFactory {
   public static SSAArrayStoreInstruction ArrayStoreInstruction(int arrayref, int index, int value, TypeReference declaredType) {
     return new SSAArrayStoreInstruction(arrayref, index, value, declaredType);
   }
-  public static SSABinaryOpInstruction BinaryOpInstruction(BinaryOpInstruction.IOperator operator, int result, int val1, int val2, boolean mayBeInteger) {
+  public static SSABinaryOpInstruction BinaryOpInstruction(IBinaryOpInstruction.IOperator operator, int result, int val1, int val2, boolean mayBeInteger) {
     return new SSABinaryOpInstruction(operator, result, val1, val2, mayBeInteger);
   }
   public static SSACheckCastInstruction CheckCastInstruction(int result, int val, TypeReference type) {
@@ -49,7 +49,7 @@ public final class SSAInstructionFactory {
   public static SSAComparisonInstruction ComparisonInstruction(short opcode, int result, int val1, int val2) {
     return new SSAComparisonInstruction(opcode, result, val1, val2);
   }
-  public static SSAConditionalBranchInstruction ConditionalBranchInstruction(ConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) {
+  public static SSAConditionalBranchInstruction ConditionalBranchInstruction(IConditionalBranchInstruction.IOperator operator, TypeReference type, int val1, int val2) {
     return new SSAConditionalBranchInstruction(operator,type,val1, val2);
   }
   public static SSAConversionInstruction ConversionInstruction(int result, int val, TypeReference fromType, TypeReference toType) {
@@ -103,7 +103,7 @@ public final class SSAInstructionFactory {
   public static SSAThrowInstruction ThrowInstruction(int exception) {
     return new SSAThrowInstruction(exception);
   }
-  public static SSAUnaryOpInstruction UnaryOpInstruction(UnaryOpInstruction.IOperator operator,int result, int val) {
+  public static SSAUnaryOpInstruction UnaryOpInstruction(IUnaryOpInstruction.IOperator operator,int result, int val) {
     return new SSAUnaryOpInstruction(operator, result, val);
   }
 }

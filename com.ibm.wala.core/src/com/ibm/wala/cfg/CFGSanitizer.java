@@ -46,7 +46,7 @@ public class CFGSanitizer {
       throw new IllegalArgumentException("ir cannot be null");
     }
 
-    ControlFlowGraph<ISSABasicBlock> cfg = ir.getControlFlowGraph();
+    ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = ir.getControlFlowGraph();
     Graph<ISSABasicBlock> g = SlowSparseNumberedGraph.make();
     // add all nodes to the graph
     for (Iterator<? extends ISSABasicBlock> it = cfg.iterator(); it.hasNext();) {

@@ -27,7 +27,9 @@ import com.ibm.wala.util.debug.UnimplementedError;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * Implementation of {@link IClass} for array classes.
+ * Implementation of {@link IClass} for array classes.  Such classes would be
+ * best called 'broken covariant array types', since that is the semantics that
+ * they implement.
  * 
  * @author Alan Donovan
  * @author sfink
@@ -63,8 +65,6 @@ public class ArrayClass implements IClass, Constants {
   private final TypeReference type;
 
   private final IClassLoader loader;
-
-  private static final TypeName[] array_interfaces = new TypeName[] { TypeReference.JavaIoSerializableName, TypeReference.JavaLangCloneableName };
 
   /*
    * @see com.ibm.wala.classLoader.IClass#getClassLoader()
@@ -119,8 +119,8 @@ public class ArrayClass implements IClass, Constants {
       // super is Ljava/lang/Object in two cases:
       // 1) [Ljava/lang/Object
       // 2) [? for primitive arrays (null from getElementClass)
-      if (elt == null || elt.getReference() == TypeReference.JavaLangObject) {
-        return loader.lookupClass(TypeReference.JavaLangObject.getName());
+      if (elt == null || elt.getReference() == getClassLoader().getLanguage().getRootType()) {
+        return loader.lookupClass(getClassLoader().getLanguage().getRootType().getName());
       }
 
       // else it is array of super of element type (yuck)
@@ -140,7 +140,7 @@ public class ArrayClass implements IClass, Constants {
    * @see com.ibm.wala.classLoader.IClass#getMethod(com.ibm.wala.classLoader.Selector)
    */
   public IMethod getMethod(Selector sig) {
-    return loader.lookupClass(TypeReference.JavaLangObject.getName()).getMethod(sig);
+    return loader.lookupClass(getClassLoader().getLanguage().getRootType().getName()).getMethod(sig);
   }
 
   public IField getField(Atom name) {
@@ -227,13 +227,11 @@ public class ArrayClass implements IClass, Constants {
    */
   public Collection<IClass> getAllImplementedInterfaces() {
     HashSet<IClass> result = HashSetFactory.make(2);
-    IClass klass = loader.lookupClass(ArrayClass.array_interfaces[0]);
-    if (klass != null) {
-      result.add(klass);
-    }
-    klass = loader.lookupClass(ArrayClass.array_interfaces[1]);
-    if (klass != null) {
-      result.add(klass);
+    for(TypeReference ref : getClassLoader().getLanguage().getArrayInterfaces()) {
+      IClass klass = loader.lookupClass(ref.getName());
+      if (klass != null) {
+        result.add(klass);
+      }
     }
 
     return result;
@@ -307,7 +305,7 @@ public class ArrayClass implements IClass, Constants {
    * @see com.ibm.wala.classLoader.IClass#getAllMethods()
    */
   public Collection<IMethod> getAllMethods() throws UnimplementedError, ClassHierarchyException {
-    return loader.lookupClass(TypeReference.JavaLangObject.getName()).getAllMethods();
+    return loader.lookupClass(getClassLoader().getLanguage().getRootType().getName()).getAllMethods();
   }
 
   /*

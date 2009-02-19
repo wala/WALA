@@ -21,7 +21,7 @@ import com.ibm.wala.types.TypeReference;
  * 
  * @author Eran Yahav
  */
-public interface ISSABasicBlock extends IBasicBlock {
+public interface ISSABasicBlock extends IBasicBlock<SSAInstruction> {
   
   /**
    * Is this block a catch block

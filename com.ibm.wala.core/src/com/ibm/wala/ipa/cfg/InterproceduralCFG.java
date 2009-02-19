@@ -14,6 +14,7 @@ import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAInstruction;
 import com.ibm.wala.util.collections.Filtersection;
 
 /**
@@ -43,14 +44,14 @@ public class InterproceduralCFG extends AbstractInterproceduralCFG<ISSABasicBloc
    *             if n == null
    */
   @Override
-  public ControlFlowGraph<ISSABasicBlock> getCFG(CGNode n) throws IllegalArgumentException {
+  public ControlFlowGraph<SSAInstruction, ISSABasicBlock> getCFG(CGNode n) throws IllegalArgumentException {
     if (n == null) {
       throw new IllegalArgumentException("n == null");
     }
     if (n.getIR() == null) {
       return null;
     }
-    ControlFlowGraph<ISSABasicBlock> cfg = n.getIR().getControlFlowGraph();
+    ControlFlowGraph<SSAInstruction, ISSABasicBlock> cfg = n.getIR().getControlFlowGraph();
     if (cfg == null) {
       return null;
     }

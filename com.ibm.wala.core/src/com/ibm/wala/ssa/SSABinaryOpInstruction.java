@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.shrikeBT.BinaryOpInstruction;
+import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.Exceptions;
@@ -30,14 +31,14 @@ public class SSABinaryOpInstruction extends SSAInstruction {
 
   private final int val2;
 
-  private final BinaryOpInstruction.IOperator operator;
+  private final IBinaryOpInstruction.IOperator operator;
 
   /**
    * Might this instruction represent integer arithmetic?
    */
   private final boolean mayBeInteger;
 
-  SSABinaryOpInstruction(BinaryOpInstruction.IOperator operator, int result, int val1, int val2, boolean mayBeInteger) {
+  SSABinaryOpInstruction(IBinaryOpInstruction.IOperator operator, int result, int val1, int val2, boolean mayBeInteger) {
     super();
     this.result = result;
     this.val1 = val1;
@@ -75,7 +76,7 @@ public class SSABinaryOpInstruction extends SSAInstruction {
   /**
    * Ugh. clean up shrike operator stuff.
    */
-  public BinaryOpInstruction.IOperator getOperator() {
+  public IBinaryOpInstruction.IOperator getOperator() {
     return operator;
   }
 

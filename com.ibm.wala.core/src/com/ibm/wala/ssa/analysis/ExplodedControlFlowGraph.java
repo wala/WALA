@@ -19,7 +19,6 @@ import java.util.List;
 
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.ISSABasicBlock;
 import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
@@ -44,7 +43,7 @@ import com.ibm.wala.util.intset.MutableSparseIntSet;
  * 
  * Prototype: Not terribly efficient.
  */
-public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedControlFlowGraph.ExplodedBasicBlock> {
+public class ExplodedControlFlowGraph implements ControlFlowGraph<SSAInstruction, ExplodedControlFlowGraph.ExplodedBasicBlock> {
 
   private final static int ENTRY_INDEX = -1;
 
@@ -155,7 +154,7 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
     }
   }
 
-  public IInstruction[] getInstructions() {
+  public SSAInstruction[] getInstructions() {
     return ir.getInstructions();
   }
 
@@ -488,11 +487,11 @@ public class ExplodedControlFlowGraph implements ControlFlowGraph<ExplodedContro
 
     }
 
-    public Iterator<IInstruction> iterator() {
+    public Iterator<SSAInstruction> iterator() {
       if (isEntryBlock() || isExitBlock() || getInstruction() == null) {
         return EmptyIterator.instance();
       } else {
-        return NonNullSingletonIterator.make((IInstruction) getInstruction());
+        return NonNullSingletonIterator.make(getInstruction());
       }
     }
 
