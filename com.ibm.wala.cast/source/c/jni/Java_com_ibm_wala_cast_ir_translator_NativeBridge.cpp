@@ -5,14 +5,13 @@
 #include "Exceptions.h"
 #include "com_ibm_wala_cast_ir_translator_NativeBridge.h"
 
+extern "C" {
+
 JNIEXPORT void JNICALL 
 Java_com_ibm_wala_cast_ir_translator_NativeBridge_initialize(
   JNIEnv *env, 
   jclass cls)
 {
-
-  fprintf(stderr, "got here\n");
-
   TRY(exp, env)
 
   jclass CAstNode = env->FindClass( "com/ibm/wala/cast/tree/CAstNode" );
@@ -39,4 +38,4 @@ Java_com_ibm_wala_cast_ir_translator_NativeBridge_initialize(
   CATCH()
 }
 
-
+}

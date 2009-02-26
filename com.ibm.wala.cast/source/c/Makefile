@@ -35,7 +35,7 @@ CAPA_SOURCES = $(notdir $(wildcard jni/*.cpp))
 CAPA_OBJECTS = $(patsubst %.cpp,$(C_GENERATED)%.o,$(CAPA_SOURCES))
 
 ifeq ($(PLATFORM),windows)
-	ALL_FLAGS = -gstabs+ $(TRACE) $(INCLUDES)
+	ALL_FLAGS = -gstabs+ $(TRACE) $(INCLUDES) -DBUILD_CAST_DLL
 	DLLEXT = dll
 else
 ifeq ($(PLATFORM),Darwin)
@@ -48,7 +48,7 @@ endif
 endif
 
 ifeq ($(PLATFORM),windows)
-	CC_LDFLAGS = -shared -Wl,--add-stdcall-alias
+	CC_LDFLAGS = -shared -Wl,--add-stdcall-alias -Wl,-export-all-symbols
 	LIBPREFIX = 
 else
 ifeq ($(PLATFORM),Darwin)
@@ -83,5 +83,5 @@ $(DOMO_AST_BIN)$(LIBPREFIX)cast.$(DLLEXT):	$(CAPA_OBJECTS)
 	$(CC) $(CC_LDFLAGS) $^ -o $@
 
 clean:
-	rm -rf $(DOMO_AST_BIN)$(LIBPREFIX)cast.$(DLLEXT) $(C_GENERATED) hs_err_pid*
+	rm -rf $(C_GENERATED) hs_err_pid*
 

@@ -54,14 +54,13 @@ static const char *objectSig = "(" __OBJS ")" __CNS;
 
 #define XLATOR_CLS_NAME "NativeTranslatorToCAst"
 
-#define XLATOR_CLS(cls) XLATOR_PKG XLATOR_CLS_NAME "$" cls
-
 static const char *XlatorCls = XLATOR_PKG XLATOR_CLS_NAME;
 
-static const char *EntityCls = XLATOR_CLS("NativeEntity");
-static const char *CodeEntityCls = XLATOR_CLS("NativeCodeEntity");
-static const char *ScriptCls = XLATOR_CLS("NativeScriptEntity");
-static const char *FieldCls = XLATOR_CLS("NativeFieldEntity");
+static const char *EntityCls = XLATOR_PKG "AbstractEntity";
+static const char *CodeEntityCls = XLATOR_PKG "AbstractCodeEntity";
+static const char *ScriptCls = XLATOR_PKG "AbstractScriptEntity";
+static const char *FieldCls = XLATOR_PKG "AbstractFieldEntity";
+static const char *GlobalCls = XLATOR_PKG "AbstractGlobalEntity";
 
 CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject xlator) 
   : java_ex(ex), env(env), xlator(xlator)
@@ -83,43 +82,84 @@ CAstWrapper::CAstWrapper(JNIEnv *env, Exceptions &ex, jobject xlator)
   THROW_ANY_EXCEPTION(java_ex);
 
   this->NativeEntity = env->FindClass(EntityCls);
+  THROW_ANY_EXCEPTION(java_ex);
   this->addScopedEntity = env->GetMethodID(NativeEntity, "addScopedEntity", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstEntity;)V");
+  THROW_ANY_EXCEPTION(java_ex);
   this->entityGetType = env->GetMethodID(NativeEntity, "getType", "()Lcom/ibm/wala/cast/tree/CAstType;");
+  THROW_ANY_EXCEPTION(java_ex);
 
   this->NativeCodeEntity = env->FindClass(CodeEntityCls);
+  THROW_ANY_EXCEPTION(java_ex);
   this->astField = env->GetFieldID(NativeCodeEntity, "Ast", "Lcom/ibm/wala/cast/tree/CAstNode;");
+  THROW_ANY_EXCEPTION(java_ex);
   this->codeSetGotoTarget = env->GetMethodID(NativeCodeEntity, "setGotoTarget", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstNode;)V");
+  THROW_ANY_EXCEPTION(java_ex);
   this->codeSetLabelledGotoTarget = env->GetMethodID(NativeCodeEntity, "setLabelledGotoTarget", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstNode;Ljava/lang/Object;)V");
+  THROW_ANY_EXCEPTION(java_ex);
   this->setNodePosition = env->GetMethodID(NativeCodeEntity, "setNodePosition", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstSourcePositionMap$Position;)V");
+  THROW_ANY_EXCEPTION(java_ex);
   this->setNodeType = env->GetMethodID(NativeCodeEntity, "setNodeType", "(Lcom/ibm/wala/cast/tree/CAstNode;Lcom/ibm/wala/cast/tree/CAstType;)V");
+  THROW_ANY_EXCEPTION(java_ex);
   this->setPosition = env->GetMethodID(NativeEntity, "setPosition", "(Lcom/ibm/wala/cast/tree/CAstSourcePositionMap$Position;)V");
+  THROW_ANY_EXCEPTION(java_ex);
 
   this->NativeFieldEntity = env->FindClass(FieldCls);
-  this->fieldEntityInit = env->GetMethodID(NativeFieldEntity, "<init>", "(Lcom/ibm/wala/cast/ir/translator/NativeTranslatorToCAst;Ljava/lang/String;Ljava/util/Set;Z" __CES ")V");
+  THROW_ANY_EXCEPTION(java_ex);
+  this->fieldEntityInit = env->GetMethodID(NativeFieldEntity, "<init>", "(Ljava/lang/String;Ljava/util/Set;Z" __CES ")V");
+  THROW_ANY_EXCEPTION(java_ex);
+
+  this->NativeGlobalEntity = env->FindClass(GlobalCls);
+  THROW_ANY_EXCEPTION(java_ex);
+  this->globalEntityInit = env->GetMethodID(NativeGlobalEntity, "<init>", "(Ljava/lang/String;Ljava/util/Set;)V");
+  THROW_ANY_EXCEPTION(java_ex);
+
+  this->AbstractScriptEntity = env->FindClass(ScriptCls);
+  THROW_ANY_EXCEPTION(java_ex);
 
   this->makeNode0 = env->GetMethodID(CAstInterface, __MN, zeroSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeNode1 = env->GetMethodID(CAstInterface, __MN, oneSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeNode2 = env->GetMethodID(CAstInterface, __MN, twoSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeNode3 = env->GetMethodID(CAstInterface, __MN, threeSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeNode4 = env->GetMethodID(CAstInterface, __MN, fourSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeNode5 = env->GetMethodID(CAstInterface, __MN, fiveSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeNode6 = env->GetMethodID(CAstInterface, __MN, sixSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeNodeNary = env->GetMethodID(CAstInterface, __MN, narySig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeNode1Nary = env->GetMethodID(CAstInterface, __MN, oneNarySig);
+  THROW_ANY_EXCEPTION(java_ex);
 
   this->makeBool = env->GetMethodID(CAstInterface, __MC, boolSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeChar = env->GetMethodID(CAstInterface, __MC, charSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeShort = env->GetMethodID(CAstInterface, __MC, shortSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeInt = env->GetMethodID(CAstInterface, __MC, intSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeLong = env->GetMethodID(CAstInterface, __MC, longSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeDouble = env->GetMethodID(CAstInterface, __MC, doubleSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeFloat = env->GetMethodID(CAstInterface, __MC, floatSig);
+  THROW_ANY_EXCEPTION(java_ex);
   this->makeObject = env->GetMethodID(CAstInterface, __MC, objectSig);
+  THROW_ANY_EXCEPTION(java_ex);
 
   this->getChild = env->GetMethodID(CAstNode, "getChild", "(I)" __CNS);
+  THROW_ANY_EXCEPTION(java_ex);
   this->_getChildCount = env->GetMethodID(CAstNode, "getChildCount", "()I");
+  THROW_ANY_EXCEPTION(java_ex);
   this->getValue = env->GetMethodID(CAstNode, "getValue", "()" __OBJS);
+  THROW_ANY_EXCEPTION(java_ex);
   this->_getKind = env->GetMethodID(CAstNode, "getKind", "()I");
+  THROW_ANY_EXCEPTION(java_ex);
 
   jclass CAstMemberReference = env->FindClass( __CRN );
   THROW_ANY_EXCEPTION(java_ex);
@@ -493,7 +533,7 @@ jobject CAstWrapper::makeSet(list<jobject> *elts) {
   if (elts == NULL) return set;
 
   for(list<jobject>::iterator it=elts->begin(); it!=elts->end(); it++) {
-    env->CallVoidMethod(set, hashSetAdd, *it);
+    env->CallBooleanMethod(set, hashSetAdd, *it);
   }
   
   return set;
@@ -506,7 +546,7 @@ jobject CAstWrapper::makeList(list<jobject> *elts) {
   if (elts == NULL) return set;
 
   for(list<jobject>::iterator it=elts->begin(); it!=elts->end(); it++) {
-    env->CallVoidMethod(set, linkedListAdd, *it);
+    env->CallBooleanMethod(set, linkedListAdd, *it);
   }
   
   return set;
@@ -629,9 +669,21 @@ jobject CAstWrapper::makeLocation(int fl, int fc, int ll, int lc) {
 
 jobject CAstWrapper::makeFieldEntity(jobject declaringClass, jobject name, bool isStatic, list<jobject> *modifiers) {
 
-  jobject entity = env->NewObject(NativeFieldEntity, fieldEntityInit, xlator, getConstantValue(name), makeSet(modifiers), isStatic, declaringClass);
+  jobject entity = env->NewObject(NativeFieldEntity, fieldEntityInit, getConstantValue(name), makeSet(modifiers), isStatic, declaringClass);
 
   THROW_ANY_EXCEPTION(java_ex);
+  return entity;
+}
+
+jobject CAstWrapper::makeGlobalEntity(char *name, list<jobject> *modifiers) {
+  char *safeData = strdup(name);
+  jobject val = env->NewStringUTF( safeData );
+  THROW_ANY_EXCEPTION(java_ex);
+  delete safeData;
+
+  jobject entity = env->NewObject(NativeGlobalEntity, globalEntityInit, val, makeSet(modifiers));
+  THROW_ANY_EXCEPTION(java_ex);
+
   return entity;
 }
 

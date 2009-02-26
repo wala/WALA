@@ -10,25 +10,38 @@
  *****************************************************************************/
 package com.ibm.wala.cast.ir.translator;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+
 import com.ibm.wala.cast.tree.CAst;
 
 public class NativeBridge {
 
   protected final CAst Ast;
 
+  protected static boolean isInitialized;
+  
   protected NativeBridge(CAst Ast) {
     this.Ast = Ast;
   }
 
   protected static native void initialize();
   
-  /*
-   *  trying to modularize shared library loading like this seems to 
-   * cause trouble on certain VMs.  (guess which? :)
-   *
-  static {
-    System.loadLibrary("cast");
-    initialize();
+  private static boolean amRunningInEclipse() {
+    try {
+      return ResourcesPlugin.getWorkspace() != null;
+    } catch (IllegalStateException e) {
+      return false;
+    } catch (Error e) {
+      return false;
+    }
   }
-  */
+  
+  static {
+    isInitialized = false;
+    if (amRunningInEclipse()) {
+      System.loadLibrary("cast");
+      initialize();
+      isInitialized = true;
+    }
+  }
 }

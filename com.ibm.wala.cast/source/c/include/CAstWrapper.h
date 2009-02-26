@@ -16,7 +16,7 @@ using namespace std;
 
 #endif
 
-#ifdef _MSC_VER
+#if __WIN32__
 #ifdef BUILD_CAST_DLL
 #define DLLEXPORT __declspec(dllexport)
 #else
@@ -46,6 +46,7 @@ protected:
   jmethodID linkedListInit;
   jmethodID linkedListAdd;
   jfieldID astField;
+  jclass AbstractScriptEntity;
 
 private:
   jclass CAstNode;
@@ -55,6 +56,7 @@ private:
   jclass NativeEntity;
   jclass NativeCodeEntity;
   jclass NativeFieldEntity;
+  jclass NativeGlobalEntity;
   jclass NativeBridge;
   jclass NativeTranslatorToCAst;
   jmethodID castPrint;
@@ -90,6 +92,7 @@ private:
   jmethodID addScopedEntity;
   jmethodID entityGetType;
   jmethodID fieldEntityInit;
+  jmethodID globalEntityInit;
   jmethodID _makeLocation;
   jmethodID setNodePosition;
   jmethodID setNodeType;
@@ -219,6 +222,8 @@ public:
   jobject makeLocation(int, int, int, int);
 
   jobject makeFieldEntity(jobject, jobject, bool, list<jobject> *);
+
+  jobject makeGlobalEntity(char *, list<jobject> *);
 
   jobject getEntityAst(jobject);
 

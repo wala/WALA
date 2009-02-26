@@ -2,7 +2,7 @@
 #define EXCEPTIONS_H
 
 /**
- *  The combination of the macros and the Exceptions class declared 
+ *  The combination of the macroes and the Exceptions class declared 
  * in this file is used to provide a (shaky) veneer of exception handling
  * to JNI code.
  *
@@ -45,7 +45,7 @@ extern "C" {
 #define THROW_ANY_EXCEPTION(CPP_EXP_NAME)	\
 (CPP_EXP_NAME).throwAnyException(__FILE__, __LINE__)
 
-#ifdef _MSC_VER
+#if __WIN32__
 #ifdef BUILD_CAST_DLL
 #define DLLEXPORT __declspec(dllexport)
 #else

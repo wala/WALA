@@ -252,6 +252,8 @@ public class CAstPrinter {
   }
 
   public static void printTo(CAstEntity e, Writer w) {
+    //anca: check if the writer is null
+    if(w != null)
       instance.doPrintTo(e, w);
   }
 

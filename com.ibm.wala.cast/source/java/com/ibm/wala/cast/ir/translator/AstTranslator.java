@@ -30,7 +30,6 @@ import com.ibm.wala.shrikeBT.BinaryOpInstruction;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.ShiftInstruction;
 import com.ibm.wala.ssa.*;
@@ -38,11 +37,9 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
-import com.ibm.wala.util.collections.MapIterator;
 import com.ibm.wala.util.collections.Pair;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
-import com.ibm.wala.util.functions.Function;
 import com.ibm.wala.util.graph.INodeWithNumber;
 import com.ibm.wala.util.graph.impl.SparseNumberedGraph;
 import com.ibm.wala.util.intset.IntSet;
@@ -2319,6 +2316,16 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     defineField(topEntity, (WalkContext) context, n);
   }
 
+  protected boolean visitGlobalEntity(CAstEntity n, Context context, CAstVisitor visitor) { /* empty */
+    return false;
+  }
+
+  protected void leaveGlobalEntity(CAstEntity n, Context context, CAstVisitor visitor) {
+    // Define a new field in the enclosing type, if the language we're
+    // processing allows such.
+    getGlobalScope().declare(new CAstSymbolImpl(n.getName()));
+  }
+  
   protected boolean visitTypeEntity(CAstEntity n, Context context, Context typeContext, CAstVisitor visitor) {
     defineType(n, (WalkContext) context);
     return false;
@@ -2396,7 +2403,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
 
   private final Stack<Position> positions = new Stack<Position>();
 
-  protected Context makeLocalContext(Context context, CAstNode n) {
+   protected Context makeLocalContext(Context context, CAstNode n) {
     return new LocalContext((WalkContext) context, makeLocalScope(n, ((WalkContext) context).currentScope()));
   }
 
@@ -2420,7 +2427,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
         }
 
         context.cfg().setCurrentPosition(p);
-      }
+       }
     }
 
     if (popPosition)
@@ -3458,17 +3465,23 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     wc.cfg().addInstruction(new AstEchoInstruction(rvals));
   }
 
-  protected void leaveInclude(final CAstNode n, Context c, CAstVisitor visitor) {
-    WalkContext wc = (WalkContext) c;
-
-    CAstEntity included;
+  public CAstEntity getIncludedEntity(CAstNode n) {
     if (n.getChild(0).getKind() == CAstNode.NAMED_ENTITY_REF) {
       assert namedEntityResolver != null;
-      included = (CAstEntity) namedEntityResolver.get(n.getChild(0).getChild(0).getValue());
+      return (CAstEntity) namedEntityResolver.get(n.getChild(0).getChild(0).getValue());
     } else {
-      included = (CAstEntity) n.getChild(0).getValue();
+      return (CAstEntity) n.getChild(0).getValue();
     }
-
+  }
+  
+  protected void leaveInclude(final CAstNode n, 
+			      Context c, 
+			      CAstVisitor visitor) 
+  {
+    WalkContext wc = (WalkContext) c;
+      
+    CAstEntity included = getIncludedEntity(n);
+    
     if (included == null) {
       Trace.println("cannot find include for " + CAstPrinter.print(n));
       Trace.println("from:\n" + namedEntityResolver);
@@ -3531,7 +3544,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
     visitEntities(N, c, this);
   }
 
-  public static final class DefaultContext implements WalkContext {
+  public final class DefaultContext implements WalkContext {
     private final AstTranslator t;
 
     private final CAstEntity N;
@@ -3564,6 +3577,10 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
       return N.getSourceMap();
     }
 
+    public CAstSourcePositionMap getInlinedSourceMap() {
+      return inlinedSourceMap;
+    }
+
     public CAstControlFlowMap getControlFlow() {
       return N.getControlFlow();
     }
@@ -3594,9 +3611,12 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   public void translate(final CAstEntity N, final String nm) {
     if (DEBUG_TOP)
       Trace.println("translating " + nm);
+    this.inlinedSourceMap = inlinedSourceMap;
     walkEntities(N, new DefaultContext(this, N, nm));
   }
 
+  private CAstSourcePositionMap inlinedSourceMap;
+  
   private final Scope globalScope = makeGlobalScope();
 
   protected Scope getGlobalScope() {

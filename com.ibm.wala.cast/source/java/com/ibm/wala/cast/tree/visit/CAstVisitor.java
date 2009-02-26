@@ -146,6 +146,12 @@ public abstract class CAstVisitor {
       visitor.leaveFieldEntity(n, context, visitor);
       break;
     }
+    case CAstEntity.GLOBAL_ENTITY: {
+      if (visitor.visitGlobalEntity(n, context, visitor))
+        break;
+      visitor.leaveGlobalEntity(n, context, visitor);
+      break;
+    }
     case CAstEntity.TYPE_ENTITY: {
       Context typeContext = visitor.makeTypeContext(context, n);
       if (visitor.visitTypeEntity(n, context, typeContext, visitor))
@@ -260,6 +266,19 @@ public abstract class CAstVisitor {
    */
   protected void leaveFieldEntity(CAstEntity n, Context context, CAstVisitor visitor) { visitor.leaveEntity(n, context, visitor); }
   /**
+   * Visit a Field entity.
+   * @param n the entity to process
+   * @param context a visitor-specific context
+   * @return true if no further processing is needed
+   */
+  protected boolean visitGlobalEntity(CAstEntity n, Context context, CAstVisitor visitor) { return visitor.visitEntity(n, context, visitor); }
+  /**
+   * Leave a Field entity.
+   * @param n the entity to process
+   * @param context a visitor-specific context
+   */
+  protected void leaveGlobalEntity(CAstEntity n, Context context, CAstVisitor visitor) { visitor.leaveEntity(n, context, visitor); }
+ /**
    * Visit a Type entity.
    * @param n the entity to process
    * @param context a visitor-specific context

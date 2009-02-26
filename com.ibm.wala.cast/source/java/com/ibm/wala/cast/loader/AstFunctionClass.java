@@ -76,6 +76,10 @@ abstract public class AstFunctionClass implements IClass, ClassConstants {
   public boolean isPublic() {
     return true;
   }
+  
+  public boolean isStatic() {
+    return false;
+  }
 
   public int getModifiers() {
     return ACC_PUBLIC;

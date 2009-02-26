@@ -56,6 +56,7 @@ public class CAstControlFlowRecorder implements CAstControlFlowMap {
     private final Object from;
 
     Key(Object label, Object from) {
+      assert from != null;
       this.from = from;
       this.label = label;
     }

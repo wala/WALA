@@ -75,7 +75,7 @@ public abstract class CAstAbstractLoader implements IClassLoader {
     return parent;
   }
 
-  public void removeAll(Collection toRemove) {
+  public void removeAll(Collection<IClass> toRemove) {
     Set<TypeName> keys = HashSetFactory.make();
 
     for (Iterator<Map.Entry<TypeName,IClass>> EE = types.entrySet().iterator(); EE.hasNext();) {

@@ -52,8 +52,7 @@ public interface CAstEntity {
   public static int FIELD_ENTITY = 4;
 
   /** This entity is a source file (i.e. a compilation unit).
-   * Children: in JavaScript, nothing(doesn't occur?); in Java, TYPE_ENTITY's.
-   **/
+   */
   public static int FILE_ENTITY = 5;
 
   /** This entity represents a rule in a logic language.
@@ -65,6 +64,12 @@ public interface CAstEntity {
    **/
   public static int MACRO_ENTITY = 7;
 
+  /**
+   *  This entity represents a global varible
+   */
+  public static int GLOBAL_ENTITY = 8;
+  
+  
   /**
    *  Languages that introduce new kinds of CAstEntity should use this
    * number as the base of integers chosen to denote the new entity

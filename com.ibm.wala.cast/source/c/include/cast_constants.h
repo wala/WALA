@@ -21,6 +21,7 @@
 #undef VOID
 #undef CONST
 #undef ERROR
+#undef THIS
 #endif
 
 _CAstNodeType(ASSERT)
