@@ -547,7 +547,9 @@ public class TabulationSolver<T, P, F> {
       allReturnSites.add(it.next());
     }
     // [14 - 16]
+    boolean hasCallee = false;
     for (Iterator<? extends T> it = supergraph.getCalledNodes(edge.target); it.hasNext();) {
+      hasCallee = true;
       final T callee = it.next();
       if (DEBUG_LEVEL > 0) {
         System.err.println(" process callee: " + callee);
@@ -678,7 +680,7 @@ public class TabulationSolver<T, P, F> {
         System.err.println(" process return site: " + returnSite);
       }
       IUnaryFlowFunction f = null;
-      if (hasCallee(returnSite)) {
+      if (hasCallee) {
         f = flowFunctionMap.getCallToReturnFlowFunction(edge.target, returnSite);
       } else {
         f = flowFunctionMap.getCallNoneToReturnFlowFunction(edge.target, returnSite);
@@ -710,20 +712,6 @@ public class TabulationSolver<T, P, F> {
    * @param gotReuse whether existing summary edges were applied
    */
   protected void recordCall(T callNode, T callee, int d1, boolean gotReuse) {
-  }
-
-  private boolean hasCallee(T returnSite) {
-    // if the supergraph says returnSite has a predecessor which indicates a
-    // return
-    // edge, then we say this return site has a callee.
-    for (Iterator<? extends T> it = supergraph.getPredNodes(returnSite); it.hasNext();) {
-      T pred = it.next();
-      if (!supergraph.getProcOf(pred).equals(supergraph.getProcOf(returnSite))) {
-        // an interprocedural edge. there must be a callee.
-        return true;
-      }
-    }
-    return false;
   }
 
   /**
