@@ -20,17 +20,18 @@ import com.ibm.wala.classLoader.CallSiteReference;
 import com.ibm.wala.classLoader.NewSiteReference;
 import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
-import com.ibm.wala.shrikeBT.ArrayLoadInstruction;
-import com.ibm.wala.shrikeBT.ArrayStoreInstruction;
 import com.ibm.wala.shrikeBT.CheckCastInstruction;
 import com.ibm.wala.shrikeBT.ComparisonInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
-import com.ibm.wala.shrikeBT.GetInstruction;
 import com.ibm.wala.shrikeBT.GotoInstruction;
+import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
+import com.ibm.wala.shrikeBT.IArrayStoreInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IConversionInstruction;
+import com.ibm.wala.shrikeBT.IGetInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrikeBT.IPutInstruction;
 import com.ibm.wala.shrikeBT.IShiftInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.InstanceofInstruction;
@@ -373,10 +374,10 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLoad(ArrayLoadInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLoad(IArrayLoadInstruction)
        */
       @Override
-      public void visitArrayLoad(com.ibm.wala.shrikeBT.ArrayLoadInstruction instruction) {
+      public void visitArrayLoad(IArrayLoadInstruction instruction) {
         int index = workingState.pop();
         int arrayRef = workingState.pop();
         int result = reuseOrCreateDef();
@@ -386,10 +387,10 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayStore(ArrayStoreInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayStore(IArrayStoreInstruction)
        */
       @Override
-      public void visitArrayStore(com.ibm.wala.shrikeBT.ArrayStoreInstruction instruction) {
+      public void visitArrayStore(IArrayStoreInstruction instruction) {
 
         int value = workingState.pop();
         int index = workingState.pop();
@@ -501,10 +502,10 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitGet(GetInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitGet(IGetInstruction)
        */
       @Override
-      public void visitGet(com.ibm.wala.shrikeBT.GetInstruction instruction) {
+      public void visitGet(IGetInstruction instruction) {
         int result = reuseOrCreateDef();
         if (instruction.isStatic()) {
           FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(),
@@ -607,10 +608,10 @@ public class SSABuilder extends AbstractIntStackMachine {
       }
 
       /**
-       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitGet(GetInstruction)
+       * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitGet(IGetInstruction)
        */
       @Override
-      public void visitPut(com.ibm.wala.shrikeBT.PutInstruction instruction) {
+      public void visitPut(IPutInstruction instruction) {
         int value = workingState.pop();
         if (instruction.isStatic()) {
           FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(),

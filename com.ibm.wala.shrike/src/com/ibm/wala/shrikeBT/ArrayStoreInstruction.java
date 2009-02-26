@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeBT;
 /**
  * This class represents the ?astore instructions.
  */
-final public class ArrayStoreInstruction extends Instruction {
+final public class ArrayStoreInstruction extends Instruction implements IArrayStoreInstruction {
   protected ArrayStoreInstruction(short opcode) {
     super(opcode);
   }

@@ -41,7 +41,7 @@ public interface IInvokeInstruction extends IInstruction {
 	  STATIC {
 	    @Override
         public boolean hasImplicitThis() {
-	        return true;
+	        return false;
 	     } 
 	  };
 	  

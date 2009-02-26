@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeBT;
 /**
  * This class represents put and putstatic instructions.
  */
-public class PutInstruction extends Instruction {
+public class PutInstruction extends Instruction implements IPutInstruction {
   protected String type;
 
   protected String classType;

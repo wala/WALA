@@ -16,17 +16,17 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.util.Random;
 
-import com.ibm.wala.shrikeBT.ArrayStoreInstruction;
 import com.ibm.wala.shrikeBT.ConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Disassembler;
 import com.ibm.wala.shrikeBT.DupInstruction;
-import com.ibm.wala.shrikeBT.GetInstruction;
+import com.ibm.wala.shrikeBT.IArrayStoreInstruction;
+import com.ibm.wala.shrikeBT.IGetInstruction;
+import com.ibm.wala.shrikeBT.IPutInstruction;
 import com.ibm.wala.shrikeBT.LoadInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MethodEditor;
-import com.ibm.wala.shrikeBT.PutInstruction;
 import com.ibm.wala.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrikeBT.SwapInstruction;
 import com.ibm.wala.shrikeBT.Util;
@@ -122,7 +122,7 @@ public class Mangler {
 
           me.visitInstructions(new MethodEditor.Visitor() {
             @Override
-            public void visitGet(GetInstruction instruction) {
+            public void visitGet(IGetInstruction instruction) {
               if (doGet && !instruction.isStatic()) {
                 insertBefore(new MethodEditor.Patch() {
                   @Override
@@ -141,7 +141,7 @@ public class Mangler {
             }
 
             @Override
-            public void visitPut(PutInstruction instruction) {
+            public void visitPut(IPutInstruction instruction) {
               if (doPut && !instruction.isStatic()) {
                 insertBefore(new MethodEditor.Patch() {
                   @Override
@@ -161,7 +161,7 @@ public class Mangler {
             }
 
             @Override
-            public void visitArrayStore(final ArrayStoreInstruction instruction) {
+            public void visitArrayStore(final IArrayStoreInstruction instruction) {
               if (doArrayStore) {
                 final int label = me.allocateLabel();
                 insertBefore(new MethodEditor.Patch() {

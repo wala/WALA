@@ -13,7 +13,7 @@ package com.ibm.wala.shrikeBT;
 /**
  * This class represents get and getstatic instructions.
  */
-public class GetInstruction extends Instruction {
+public class GetInstruction extends Instruction implements IGetInstruction {
   protected String type;
 
   protected String classType;

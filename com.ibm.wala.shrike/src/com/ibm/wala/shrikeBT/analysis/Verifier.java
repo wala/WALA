@@ -14,22 +14,23 @@ import java.util.BitSet;
 import java.util.List;
 
 import com.ibm.wala.shrikeBT.ArrayLengthInstruction;
-import com.ibm.wala.shrikeBT.ArrayLoadInstruction;
-import com.ibm.wala.shrikeBT.ArrayStoreInstruction;
 import com.ibm.wala.shrikeBT.CheckCastInstruction;
 import com.ibm.wala.shrikeBT.ComparisonInstruction;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
-import com.ibm.wala.shrikeBT.GetInstruction;
 import com.ibm.wala.shrikeBT.GotoInstruction;
+import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
+import com.ibm.wala.shrikeBT.IArrayStoreInstruction;
 import com.ibm.wala.shrikeBT.IBinaryOpInstruction;
 import com.ibm.wala.shrikeBT.IConditionalBranchInstruction;
 import com.ibm.wala.shrikeBT.IConversionInstruction;
+import com.ibm.wala.shrikeBT.IGetInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.ILoadInstruction;
+import com.ibm.wala.shrikeBT.IPutInstruction;
 import com.ibm.wala.shrikeBT.IShiftInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.InstanceofInstruction;
@@ -37,7 +38,6 @@ import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.PopInstruction;
-import com.ibm.wala.shrikeBT.PutInstruction;
 import com.ibm.wala.shrikeBT.ReturnInstruction;
 import com.ibm.wala.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrikeBT.SwitchInstruction;
@@ -140,13 +140,13 @@ public final class Verifier extends Analyzer {
     }
 
     @Override
-    public void visitArrayLoad(ArrayLoadInstruction instruction) {
+    public void visitArrayLoad(IArrayLoadInstruction instruction) {
       checkStackSubtype(0, Constants.TYPE_int);
       checkArrayStackSubtype(1, instruction.getType());
     }
 
     @Override
-    public void visitArrayStore(ArrayStoreInstruction instruction) {
+    public void visitArrayStore(IArrayStoreInstruction instruction) {
       checkStackSubtype(0, instruction.getType());
       checkStackSubtype(1, Constants.TYPE_int);
       checkArrayStackSubtype(2, instruction.getType());
@@ -208,7 +208,7 @@ public final class Verifier extends Analyzer {
     }
 
     @Override
-    public void visitGet(GetInstruction instruction) {
+    public void visitGet(IGetInstruction instruction) {
       // make sure constant pool entries are dereferenced
       String classType = instruction.getClassType();
 
@@ -218,7 +218,7 @@ public final class Verifier extends Analyzer {
     }
 
     @Override
-    public void visitPut(PutInstruction instruction) {
+    public void visitPut(IPutInstruction instruction) {
       // make sure constant pool entries are dereferenced
       String classType = instruction.getClassType();
       String type = instruction.getFieldType();

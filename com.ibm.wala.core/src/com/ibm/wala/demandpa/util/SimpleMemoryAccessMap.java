@@ -23,12 +23,12 @@ import com.ibm.wala.ipa.callgraph.CallGraph;
 import com.ibm.wala.ipa.callgraph.propagation.HeapModel;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
-import com.ibm.wala.shrikeBT.ArrayLoadInstruction;
-import com.ibm.wala.shrikeBT.ArrayStoreInstruction;
-import com.ibm.wala.shrikeBT.GetInstruction;
+import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
+import com.ibm.wala.shrikeBT.IArrayStoreInstruction;
+import com.ibm.wala.shrikeBT.IGetInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrikeBT.IPutInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
-import com.ibm.wala.shrikeBT.PutInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.ssa.IR;
 import com.ibm.wala.ssa.SSAArrayLoadInstruction;
@@ -261,7 +261,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
      * @see com.ibm.shrikeBT.Instruction.Visitor#visitArrayLoad(com.ibm.shrikeBT.ArrayLoadInstruction)
      */
     @Override
-    public void visitArrayLoad(ArrayLoadInstruction instruction) {
+    public void visitArrayLoad(IArrayLoadInstruction instruction) {
       if (!includePrimOps) {
         TypeReference tr = ShrikeUtil.makeTypeReference(loader, instruction.getType());
         // ISSUE is this the right check?
@@ -279,7 +279,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
      * @see com.ibm.shrikeBT.Instruction.Visitor#visitArrayStore(com.ibm.shrikeBT.ArrayStoreInstruction)
      */
     @Override
-    public void visitArrayStore(ArrayStoreInstruction instruction) {
+    public void visitArrayStore(IArrayStoreInstruction instruction) {
       if (!includePrimOps) {
         TypeReference tr = ShrikeUtil.makeTypeReference(loader, instruction.getType());
         if (tr.isPrimitiveType()) {
@@ -299,7 +299,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
      * @see com.ibm.shrikeBT.Instruction.Visitor#visitGet(com.ibm.shrikeBT.GetInstruction)
      */
     @Override
-    public void visitGet(GetInstruction instruction) {
+    public void visitGet(IGetInstruction instruction) {
       FieldReference fr = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(), instruction
           .getFieldType());
       if (!includePrimOps && fr.getFieldType().isPrimitiveType()) {
@@ -320,7 +320,7 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
      * @see com.ibm.shrikeBT.Instruction.Visitor#visitPut(com.ibm.shrikeBT.PutInstruction)
      */
     @Override
-    public void visitPut(PutInstruction instruction) {
+    public void visitPut(IPutInstruction instruction) {
       FieldReference fr = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(), instruction
           .getFieldType());
       if (!includePrimOps && fr.getFieldType().isPrimitiveType()) {

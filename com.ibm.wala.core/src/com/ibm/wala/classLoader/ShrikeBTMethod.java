@@ -19,19 +19,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.ibm.wala.shrikeBT.ArrayLoadInstruction;
-import com.ibm.wala.shrikeBT.ArrayStoreInstruction;
 import com.ibm.wala.shrikeBT.BytecodeConstants;
 import com.ibm.wala.shrikeBT.CheckCastInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.Decoder;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
-import com.ibm.wala.shrikeBT.GetInstruction;
+import com.ibm.wala.shrikeBT.IArrayLoadInstruction;
+import com.ibm.wala.shrikeBT.IArrayStoreInstruction;
+import com.ibm.wala.shrikeBT.IGetInstruction;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
+import com.ibm.wala.shrikeBT.IPutInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
-import com.ibm.wala.shrikeBT.PutInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.Descriptor;
@@ -607,7 +607,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
 
     @Override
-    public void visitGet(GetInstruction instruction) {
+    public void visitGet(IGetInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
       FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(), instruction
           .getFieldType());
@@ -615,7 +615,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     }
 
     @Override
-    public void visitPut(PutInstruction instruction) {
+    public void visitPut(IPutInstruction instruction) {
       ClassLoaderReference loader = getReference().getDeclaringClass().getClassLoader();
       FieldReference f = FieldReference.findOrCreate(loader, instruction.getClassType(), instruction.getFieldName(), instruction
           .getFieldType());
@@ -643,7 +643,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
      * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayLoad(com.ibm.wala.shrikeBT.ArrayLoadInstruction)
      */
     @Override
-    public void visitArrayLoad(ArrayLoadInstruction instruction) {
+    public void visitArrayLoad(IArrayLoadInstruction instruction) {
       arraysRead.add(ShrikeUtil.makeTypeReference(getDeclaringClass().getClassLoader().getReference(), instruction.getType()));
     }
 
@@ -651,7 +651,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
      * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitArrayStore(com.ibm.wala.shrikeBT.ArrayStoreInstruction)
      */
     @Override
-    public void visitArrayStore(ArrayStoreInstruction instruction) {
+    public void visitArrayStore(IArrayStoreInstruction instruction) {
       arraysWritten.add(ShrikeUtil.makeTypeReference(getDeclaringClass().getClassLoader().getReference(), instruction.getType()));
     }
 

@@ -34,10 +34,10 @@ public interface IInstruction {
     public void visitLocalStore(StoreInstruction instruction) {
     }
   
-    public void visitArrayLoad(ArrayLoadInstruction instruction) {
+    public void visitArrayLoad(IArrayLoadInstruction instruction) {
     }
   
-    public void visitArrayStore(ArrayStoreInstruction instruction) {
+    public void visitArrayStore(IArrayStoreInstruction instruction) {
     }
   
     public void visitPop(PopInstruction instruction) {
@@ -73,10 +73,10 @@ public interface IInstruction {
     public void visitReturn(ReturnInstruction instruction) {
     }
   
-    public void visitGet(GetInstruction instruction) {
+    public void visitGet(IGetInstruction instruction) {
     }
   
-    public void visitPut(PutInstruction instruction) {
+    public void visitPut(IPutInstruction instruction) {
     }
   
     public void visitInvoke(IInvokeInstruction instruction) {
