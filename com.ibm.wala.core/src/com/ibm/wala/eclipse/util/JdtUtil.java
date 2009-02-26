@@ -39,6 +39,7 @@ import org.eclipse.jdt.core.search.SearchMatch;
 import org.eclipse.jdt.core.search.SearchParticipant;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.SearchRequestor;
+import org.eclipse.jface.viewers.StructuredSelection;
 
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashSetFactory;
@@ -536,6 +537,19 @@ public class JdtUtil {
 
       return result;
     }
+  }
+
+  /**
+   * get a {@link StructuredSelection} corresponding to the named projects
+   */
+  public static StructuredSelection getStructuredSelectionForProjectNames(Collection<String> projectNames) {
+    Object[] projects = new Object[projectNames.size()];
+    int i = 0;
+    for (String projectName : projectNames) {
+      projects[i++] = getJavaProject(projectName);
+    }
+    StructuredSelection selection = new StructuredSelection(projects);
+    return selection;
   }
 
 }
