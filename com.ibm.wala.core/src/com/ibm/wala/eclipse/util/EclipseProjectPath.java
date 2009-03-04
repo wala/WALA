@@ -348,6 +348,10 @@ public class EclipseProjectPath {
   public AnalysisScope toAnalysisScope(final File exclusionsFile) {
     return toAnalysisScope(getClass().getClassLoader(), exclusionsFile);
   }
+  
+  public AnalysisScope toAnalysisScope() {
+    return toAnalysisScope(getClass().getClassLoader(), null);
+  }
 
   public Collection<Module> getModules(Loader loader, boolean binary) {
     if (binary) {
