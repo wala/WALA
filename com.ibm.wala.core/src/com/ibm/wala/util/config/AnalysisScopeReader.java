@@ -86,7 +86,10 @@ public class AnalysisScopeReader {
 
   public static void processScopeDefLine(AnalysisScope scope, ClassLoader javaLoader, String line) throws IOException {
     StringTokenizer toks = new StringTokenizer(line, "\n,");
-
+    if (!toks.hasMoreTokens()) {
+      return;
+    }
+    
     Atom loaderName = Atom.findOrCreateUnicodeAtom(toks.nextToken());
     Atom languageName = Atom.findOrCreateUnicodeAtom(toks.nextToken());
     ClassLoaderReference walaLoader = new ClassLoaderReference(loaderName, languageName);
