@@ -114,7 +114,7 @@ public class HeapTracer {
    *          traversal?
    */
   HeapTracer(boolean traceStatics) {
-    rootInstances = Collections.EMPTY_SET;
+    rootInstances = Collections.emptySet();
     this.traceStatics = traceStatics;
   }
 

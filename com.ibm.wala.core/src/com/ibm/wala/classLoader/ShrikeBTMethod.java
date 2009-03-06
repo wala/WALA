@@ -191,7 +191,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
    */
   public Collection getImplicitExceptionTypes() throws InvalidClassFileException {
     if (isNative()) {
-      return Collections.EMPTY_SET;
+      return Collections.emptySet();
     }
     return (getBCInfo().implicitExceptions == null) ? Arrays.asList(new TypeReference[0]) : Arrays
         .asList(getBCInfo().implicitExceptions);

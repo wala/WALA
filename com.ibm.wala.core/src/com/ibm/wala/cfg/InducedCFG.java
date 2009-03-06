@@ -369,7 +369,7 @@ public class InducedCFG extends AbstractCFG<SSAInstruction, InducedCFG.BasicBloc
 
   public Set getExceptionHandlers() {
     // TODO: support exception handlers
-    return Collections.EMPTY_SET;
+    return Collections.emptySet();
   }
 
   // TODO: share some common parts of this implementation with the ShrikeCFG

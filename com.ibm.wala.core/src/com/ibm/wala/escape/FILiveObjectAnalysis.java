@@ -56,7 +56,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
   /**
    * Cached map from InstanceKey -> Set<CGNode>
    */
-  final private Map<InstanceKey, Set> liveNodes = HashMapFactory.make();
+  final private Map<InstanceKey, Set<CGNode>> liveNodes = HashMapFactory.make();
 
   /**
    * Set of instanceKeys which are live everywhere
@@ -95,7 +95,7 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
     if (liveEverywhere.contains(ik)) {
       return true;
     } else {
-      Set live = liveNodes.get(ik);
+      Set<CGNode> live = liveNodes.get(ik);
       if (live != null) {
         if (live.contains(m)) {
           if (instructionIndex == -1) {
@@ -166,13 +166,13 @@ public class FILiveObjectAnalysis implements ILiveObjectAnalysis {
    * return an EMPTY_SET, but also record this fact in the "liveEverywhere" set
    * as a side effect
    */
-  private Set computeLiveNodes(InstanceKey ik) {
+  private Set<CGNode> computeLiveNodes(InstanceKey ik) {
     Set<CGNode> localRootNodes = HashSetFactory.make();
     for (Iterator it = DFS.iterateDiscoverTime(GraphInverter.invert(heapGraph), ik); it.hasNext();) {
       Object node = it.next();
       if (node instanceof StaticFieldKey) {
         liveEverywhere.add(ik);
-        return Collections.EMPTY_SET;
+        return Collections.emptySet();
       } else {
         if (node instanceof AbstractLocalPointerKey) {
           AbstractLocalPointerKey local = (AbstractLocalPointerKey) node;
