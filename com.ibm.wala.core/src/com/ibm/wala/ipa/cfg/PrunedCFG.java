@@ -62,14 +62,14 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     return new PrunedCFG<I, T>(cfg, filter);
   }
 
-  private static class FilteredCFGEdges<T extends IBasicBlock> implements NumberedEdgeManager<T> {
-    private final ControlFlowGraph<?, T> cfg;
+  private static class FilteredCFGEdges<I,T extends IBasicBlock<I>> implements NumberedEdgeManager<T> {
+    private final ControlFlowGraph<I, T > cfg;
 
     private final NumberedNodeManager<T> currentCFGNodes;
 
     private final EdgeFilter<T> filter;
 
-    FilteredCFGEdges(ControlFlowGraph<?, T> cfg, NumberedNodeManager<T> currentCFGNodes, EdgeFilter<T> filter) {
+    FilteredCFGEdges(ControlFlowGraph<I, T > cfg, NumberedNodeManager<T> currentCFGNodes, EdgeFilter<T> filter) {
       this.cfg = cfg;
       this.filter = filter;
       this.currentCFGNodes = currentCFGNodes;
@@ -256,12 +256,12 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
 
   private final FilteredNodes<T> nodes;
 
-  private final FilteredCFGEdges<T> edges;
+  private final FilteredCFGEdges<I, T> edges;
 
   private PrunedCFG(final ControlFlowGraph<I, T> cfg, final EdgeFilter<T> filter) {
     this.cfg = cfg;
     Graph<T> temp = new AbstractNumberedGraph<T>() {
-      private final EdgeManager<T> edges = new FilteredCFGEdges<T>(cfg, cfg, filter);
+      private final EdgeManager<T> edges = new FilteredCFGEdges<I, T>(cfg, cfg, filter);
 
       @Override
       protected NodeManager<T> getNodeManager() {
@@ -279,7 +279,7 @@ public class PrunedCFG<I, T extends IBasicBlock<I>> extends AbstractNumberedGrap
     reachable.retainAll(back);
 
     this.nodes = new FilteredNodes<T>(cfg, reachable);
-    this.edges = new FilteredCFGEdges<T>(cfg, nodes, filter);
+    this.edges = new FilteredCFGEdges<I, T>(cfg, nodes, filter);
   }
 
   @Override
