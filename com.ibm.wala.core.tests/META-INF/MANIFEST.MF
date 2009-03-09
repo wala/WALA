@@ -5,9 +5,7 @@ Bundle-SymbolicName: com.ibm.wala.core.tests;singleton:=true
 Bundle-Version: 1.1.3.qualifier
 Bundle-Vendor: %providerName
 Require-Bundle: com.ibm.wala.core,
- com.ibm.wala.core.testdata,
  org.junit,
- org.eclipse.jface,
  org.eclipse.ui.ide
 Bundle-Localization: plugin
 Export-Package: com.ibm.wala.core.tests.basic,
