@@ -16,7 +16,6 @@ import java.util.List;
 import com.ibm.wala.cfg.ControlFlowGraph;
 import com.ibm.wala.cfg.IBasicBlock;
 import com.ibm.wala.classLoader.IMethod;
-import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.util.graph.AbstractNumberedGraph;
 import com.ibm.wala.util.graph.EdgeManager;
 import com.ibm.wala.util.graph.NodeManager;
