@@ -31,7 +31,6 @@ public abstract class NativeTranslatorToCAst
     return sourceFileName;
   }
 
-  @SuppressWarnings("unused")
   protected String getFile() {
     return sourceURL.getFile();
   }

@@ -3611,7 +3611,7 @@ public abstract class AstTranslator extends CAstVisitor implements ArrayOpHandle
   public void translate(final CAstEntity N, final String nm) {
     if (DEBUG_TOP)
       Trace.println("translating " + nm);
-    this.inlinedSourceMap = inlinedSourceMap;
+//    this.inlinedSourceMap = inlinedSourceMap;
     walkEntities(N, new DefaultContext(this, N, nm));
   }
 

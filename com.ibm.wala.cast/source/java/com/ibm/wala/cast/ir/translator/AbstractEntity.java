@@ -45,7 +45,6 @@ public abstract class AbstractEntity implements CAstEntity {
     }
   }
 
-  @SuppressWarnings("unused")
   public void addScopedEntity(CAstNode construct, CAstEntity child) {
     if (!scopedEntities.containsKey(construct)) {
       Collection<CAstEntity> set = HashSetFactory.make(1);

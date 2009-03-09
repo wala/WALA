@@ -29,7 +29,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
-    
+
   public CAstAbstractModuleLoader(IClassHierarchy cha, IClassLoader parent) {
     super(cha, parent);
   }
@@ -38,11 +38,10 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     this(cha, null);
   }
 
-  protected abstract TranslatorToCAst
-    getTranslatorToCAst(CAst ast, URL sourceURL, String localFileName);
+  protected abstract TranslatorToCAst getTranslatorToCAst(CAst ast, URL sourceURL, String localFileName);
 
   protected abstract boolean shouldTranslate(CAstEntity entity);
-  
+
   protected abstract TranslatorToIR initTranslator();
 
   protected void finishTranslation() {
@@ -52,7 +51,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
   public void init(final List<Module> modules) {
     final CAst ast = new CAstImpl();
 
-    final Set topLevelEntities = new LinkedHashSet();
+    final Set<Pair> topLevelEntities = new LinkedHashSet<Pair>();
 
     final TranslatorToIR xlatorToIR = initTranslator();
 
@@ -66,24 +65,23 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
           String fn = f.toString();
 
           try {
-            TranslatorToCAst xlatorToCAst = 
-	      getTranslatorToCAst(ast, new URL("file://" + f), fn);
+            TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, new URL("file://" + f), fn);
 
             CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 
-	    if (fileEntity != null) {
-	      CAstPrinter.printTo(fileEntity, Trace.getTraceWriter());
+            if (fileEntity != null) {
+              CAstPrinter.printTo(fileEntity, Trace.getTraceWriter());
 
-	      topLevelEntities.add(Pair.make(fileEntity, fn));
-	    }
+              topLevelEntities.add(Pair.make(fileEntity, fn));
+            }
           } catch (MalformedURLException e) {
             Trace.println("unpected problems with " + f);
-	    e.printStackTrace( Trace.getTraceStream() );
+            e.printStackTrace(Trace.getTraceStream());
             Assertions.UNREACHABLE();
           } catch (RuntimeException e) {
             Trace.println("unpected problems with " + f);
-	    e.printStackTrace( Trace.getTraceStream() );
-	  }
+            e.printStackTrace(Trace.getTraceStream());
+          }
 
         } else if (moduleEntry instanceof SourceURLModule) {
           java.net.URL url = ((SourceURLModule) moduleEntry).getURL();
@@ -91,29 +89,27 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
           String localFileName = fileName.replace('/', '_');
 
           try {
-            File F = TemporaryFile.streamToFile(localFileName,
-                ((SourceURLModule) moduleEntry).getInputStream());
+            File F = TemporaryFile.streamToFile(localFileName, ((SourceURLModule) moduleEntry).getInputStream());
 
-            final TranslatorToCAst xlatorToCAst =
-		getTranslatorToCAst(ast, url, localFileName);
+            final TranslatorToCAst xlatorToCAst = getTranslatorToCAst(ast, url, localFileName);
 
             CAstEntity fileEntity = xlatorToCAst.translateToCAst();
 
-	    if (fileEntity != null) {
-	      Trace.println(CAstPrinter.print(fileEntity));
+            if (fileEntity != null) {
+              Trace.println(CAstPrinter.print(fileEntity));
 
-	      topLevelEntities.add(Pair.make(fileEntity, fileName));
-	    }
+              topLevelEntities.add(Pair.make(fileEntity, fileName));
+            }
 
             F.delete();
           } catch (IOException e) {
             Trace.println("unexpected problems with " + fileName);
-	    e.printStackTrace( Trace.getTraceStream() );
+            e.printStackTrace(Trace.getTraceStream());
             Assertions.UNREACHABLE();
           } catch (RuntimeException e) {
             Trace.println("unexpected problems with " + fileName);
-	    e.printStackTrace( Trace.getTraceStream() );
-	  }
+            e.printStackTrace(Trace.getTraceStream());
+          }
         }
       }
 
@@ -128,12 +124,12 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
           init((Module) mes.next());
         }
 
-	for(Iterator tles = topLevelEntities.iterator(); tles.hasNext(); ) {
-	  Pair p = (Pair)tles.next();
-      if (shouldTranslate((CAstEntity)p.fst)) {
-	    xlatorToIR.translate((CAstEntity)p.fst, (String)p.snd);
-      }
-	}
+        for (Iterator tles = topLevelEntities.iterator(); tles.hasNext();) {
+          Pair p = (Pair) tles.next();
+          if (shouldTranslate((CAstEntity) p.fst)) {
+            xlatorToIR.translate((CAstEntity) p.fst, (String) p.snd);
+          }
+        }
       }
     }
 
@@ -142,8 +138,7 @@ public abstract class CAstAbstractModuleLoader extends CAstAbstractLoader {
     for (Iterator ts = types.keySet().iterator(); ts.hasNext();) {
       TypeName tn = (TypeName) ts.next();
       try {
-        Trace.println("found type " + tn + " : " + types.get(tn) + " < "
-            + ((IClass) types.get(tn)).getSuperclass());
+        Trace.println("found type " + tn + " : " + types.get(tn) + " < " + ((IClass) types.get(tn)).getSuperclass());
       } catch (Exception e) {
         System.err.println(e);
       }

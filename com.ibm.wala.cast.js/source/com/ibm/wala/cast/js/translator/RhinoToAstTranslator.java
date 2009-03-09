@@ -893,7 +893,7 @@ public class RhinoToAstTranslator {
     case Token.FINALLY:
     case Token.BLOCK:
     case Token.LABEL: {
-      CAstNode ast; 
+//      CAstNode ast; 
       Node c1 = n.getFirstChild();
       if (c1 != null && c1.getType() == Token.SWITCH) {
         Node switchValue = c1.getFirstChild();
@@ -1027,7 +1027,7 @@ public class RhinoToAstTranslator {
     }
 
     case Token.VAR: {
-      List<CAstNode> result = new ArrayList();
+      List<CAstNode> result = new ArrayList<CAstNode>();
       Node nm = n.getFirstChild();
       while (nm != null) {
         context.addInitializer(Ast.makeNode(CAstNode.DECL_STMT, Ast.makeConstant(new CAstSymbolImpl(nm.getString())), 
