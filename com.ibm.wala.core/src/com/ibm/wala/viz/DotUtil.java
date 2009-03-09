@@ -195,7 +195,6 @@ public class DotUtil {
     result.append(fontsizeStr);
     result.append(";node [ color=blue,shape=\"box\"");
     result.append(fontsizeStr);
-    result.append("];edge [");
     result.append(fontcolorStr);
     result.append(fontnameStr);
     result.append("];edge [ color=black,");
