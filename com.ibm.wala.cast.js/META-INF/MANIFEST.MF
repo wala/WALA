@@ -9,7 +9,6 @@ Bundle-ClassPath: bin/,
  lib/xalan.jar
 Bundle-Activator: com.ibm.wala.cast.js.JavaScriptPlugin
 Bundle-Vendor: IBM
-Bundle-Localization: plugin
 Export-Package: com.ibm.wala.cast.js,
  com.ibm.wala.cast.js.analysis.typeInference,
  com.ibm.wala.cast.js.cfg,
@@ -92,3 +91,4 @@ Require-Bundle: com.ibm.wala.cast,
  com.ibm.wala.core,
  com.ibm.wala.cast
 Bundle-ActivationPolicy: lazy
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
