@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: DOMO JavaScript Test Plug-in
+Bundle-Name: WALA JavaScript Test Plug-in
 Bundle-SymbolicName: com.ibm.wala.cast.js.test;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-ClassPath: test.jar
