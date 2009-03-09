@@ -129,31 +129,31 @@ public class GhostviewUtil {
     for (Iterator it = bb.iteratePhis(); it.hasNext();) {
       SSAPhiInstruction phi = (SSAPhiInstruction) it.next();
       if (phi != null) {
-        result.append("           " + phi.toString()).append("\\n");
+        result.append("           " + phi.toString(ir.getSymbolTable())).append("\\l");
       }
     }
     if (bb instanceof ExceptionHandlerBasicBlock) {
       ExceptionHandlerBasicBlock ebb = (ExceptionHandlerBasicBlock) bb;
       SSAGetCaughtExceptionInstruction s = ebb.getCatchInstruction();
       if (s != null) {
-        result.append("           " + s.toString()).append("\\n");
+        result.append("           " + s.toString(ir.getSymbolTable())).append("\\l");
       } else {
-        result.append("           " + " No catch instruction. Unreachable?\\n");
+        result.append("           " + " No catch instruction. Unreachable?\\l");
       }
     }
     SSAInstruction[] instructions = ir.getInstructions();
     for (int j = start; j <= end; j++) {
       if (instructions[j] != null) {
-        StringBuffer x = new StringBuffer(j + "   " + instructions[j].toString());
+        StringBuffer x = new StringBuffer(j + "   " + instructions[j].toString(ir.getSymbolTable()));
         StringStuff.padWithSpaces(x, 35);
         result.append(x);
-        result.append("\\n");
+        result.append("\\l");
       }
     }
     for (Iterator it = bb.iteratePis(); it.hasNext();) {
       SSAPiInstruction pi = (SSAPiInstruction) it.next();
       if (pi != null) {
-        result.append("           " + pi.toString()).append("\\n");
+        result.append("           " + pi.toString(ir.getSymbolTable())).append("\\l");
       }
     }
     return result.toString();

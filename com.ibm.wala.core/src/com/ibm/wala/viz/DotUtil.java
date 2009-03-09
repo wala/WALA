@@ -25,25 +25,22 @@ import com.ibm.wala.util.warnings.WalaException;
 
 /**
  * utilities for interfacing with DOT
- * 
- * @author sfink
- * 
  */
 public class DotUtil {
 
   /**
    * possible output formats for dot
    * 
-   * @author manu
-   * 
    */
   public static enum DotOutputType {
-    PS, SVG
+    PS, SVG, PDF
   }
 
   private static DotOutputType outputType = DotOutputType.PS;
   
   private static int fontSize = 6;
+  private static String fontColor = "black";
+  private static String fontName = "Arial";
 
   public static void setOutputType(DotOutputType outType) {
     outputType = outType;
@@ -59,6 +56,8 @@ public class DotUtil {
       return "-Tps";
     case SVG:
       return "-Tsvg";
+    case PDF:
+      return "-Tpdf";
     default:
       Assertions.UNREACHABLE();
       return null;
@@ -74,11 +73,16 @@ public class DotUtil {
   /**
    */
   public static <T> void dotify(Graph<T> g, NodeDecorator labels, String dotFile, String outputFile, String dotExe)
+    throws WalaException {
+    dotify(g, labels, null, dotFile, outputFile, dotExe);
+  }
+
+  public static <T> void dotify(Graph<T> g, NodeDecorator labels, String title, String dotFile, String outputFile, String dotExe)
       throws WalaException {
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
-    File f = DotUtil.writeDotFile(g, labels, dotFile);
+    File f = DotUtil.writeDotFile(g, labels, title, dotFile);
     spawnDot(dotExe, outputFile, f);
   }
 
@@ -143,12 +147,12 @@ public class DotUtil {
     }
   }
 
-  public static <T> File writeDotFile(Graph<T> g, NodeDecorator labels, String dotfile) throws WalaException {
+  public static <T> File writeDotFile(Graph<T> g, NodeDecorator labels, String title, String dotfile) throws WalaException {
 
     if (g == null) {
       throw new IllegalArgumentException("g is null");
     }
-    StringBuffer dotStringBuffer = dotOutput(g, labels);
+    StringBuffer dotStringBuffer = dotOutput(g, labels, title);
 
     // retrieve the filename parameter to this component, a String
     if (dotfile == null) {
@@ -170,20 +174,34 @@ public class DotUtil {
    * @return StringBuffer holding dot output representing G
    * @throws WalaException
    */
-  private static <T> StringBuffer dotOutput(Graph<T> g, NodeDecorator labels) throws WalaException {
+  private static <T> StringBuffer dotOutput(Graph<T> g, NodeDecorator labels, String title) throws WalaException {
     StringBuffer result = new StringBuffer("digraph \"DirectedGraph\" {\n");
 
+    if (title != null) {
+      result.append("graph [label = \""+title+"\", labelloc=t, concentrate = true];");
+    } else {
+      result.append("graph [concentrate = true];");
+    }
+    
     String rankdir = getRankDir();
     if (rankdir != null) {
       result.append("rankdir=" + rankdir + ";");
     }
     String fontsizeStr = "fontsize=" + fontSize;
+    String fontcolorStr = (fontColor != null) ? ",fontcolor="+fontColor : "";
+    String fontnameStr = (fontName != null) ? ",fontname="+fontName : "";
+         
     result.append("center=true;");
     result.append(fontsizeStr);
-    result.append("node [");
+    result.append(";node [ color=blue,shape=\"box\"");
     result.append(fontsizeStr);
     result.append("];edge [");
+    result.append(fontcolorStr);
+    result.append(fontnameStr);
+    result.append("];edge [ color=black,");
     result.append(fontsizeStr);
+    result.append(fontcolorStr);
+    result.append(fontnameStr);
     result.append("]; \n");
 
     Collection dotNodes = computeDotNodes(g);
@@ -237,8 +255,7 @@ public class DotUtil {
    */
   private static String decorateNode(Object n, NodeDecorator d) throws WalaException {
     StringBuffer result = new StringBuffer();
-    result.append(" [shape=\"box\" color=\"blue\"");
-    result.append("] \n");
+    result.append(" [ ]\n");
     return result.toString();
   }
 
