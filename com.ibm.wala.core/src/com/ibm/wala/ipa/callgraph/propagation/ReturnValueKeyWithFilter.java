@@ -11,14 +11,10 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * a helper class which can modify a PropagationCallGraphBuilder to deal with
  * reflective factory methods.
- * 
- * @author sfink
  */
 public class ReturnValueKeyWithFilter extends ReturnValueKey implements FilteredPointerKey {
 
@@ -26,8 +22,8 @@ public class ReturnValueKeyWithFilter extends ReturnValueKey implements Filtered
 
   public ReturnValueKeyWithFilter(CGNode node, TypeFilter typeFilter) {
     super(node);
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(typeFilter != null);
+    if (typeFilter == null) {
+      throw new IllegalArgumentException("null typeFilter");
     }
     this.typeFilter = typeFilter;
   }

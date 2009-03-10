@@ -22,6 +22,9 @@ public class IteratorPlusTwo<T> implements Iterator<T> {
   private T xtra2;
   
   public IteratorPlusTwo(Iterator<T> it, T xtra1, T xtra2) {
+    if (it == null) {
+      throw new IllegalArgumentException("it null");
+    }
     this.it = it;
     this.xtra1 = xtra1;
     this.xtra2 = xtra2;

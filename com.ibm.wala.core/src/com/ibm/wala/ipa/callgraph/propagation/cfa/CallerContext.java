@@ -17,8 +17,6 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 
 /**
  * This is a context which is defined by the caller node.
- * 
- * @author sfink
  */
 public class CallerContext implements Context {
 

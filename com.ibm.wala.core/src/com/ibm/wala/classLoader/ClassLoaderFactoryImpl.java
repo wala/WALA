@@ -52,10 +52,12 @@ public class ClassLoaderFactoryImpl implements ClassLoaderFactory {
    * 
    * @param classLoaderReference
    *          identifier for the desired class loader
-   * @return IClassLoader
    */
   public IClassLoader getLoader(ClassLoaderReference classLoaderReference, IClassHierarchy cha, AnalysisScope scope)
       throws IOException {
+    if (classLoaderReference == null) {
+      throw new IllegalArgumentException("null classLoaderReference");
+    }
     IClassLoader result = map.get(classLoaderReference);
     if (result == null) {
       ClassLoaderReference parentRef = classLoaderReference.getParent();

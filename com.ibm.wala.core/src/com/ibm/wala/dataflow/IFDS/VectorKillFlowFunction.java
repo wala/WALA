@@ -16,8 +16,6 @@ import com.ibm.wala.util.intset.SparseIntSet;
 /**
  * 
  * A function which kills a vector of incoming dataflow facts
- * 
- * @author sfink
  */
 public class VectorKillFlowFunction implements IReversibleFlowFunction {
 
@@ -27,6 +25,9 @@ public class VectorKillFlowFunction implements IReversibleFlowFunction {
    * @param kill the intset of facts which are killed by this flow function
    */
   private VectorKillFlowFunction(IntSet kill) {
+    if (kill == null) {
+      throw new IllegalArgumentException("null kill");
+    }
     this.kill = kill;
   }
 

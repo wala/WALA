@@ -20,19 +20,15 @@ import com.ibm.wala.ipa.callgraph.propagation.FilteredPointerKey;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
- * Implement a Context which corresponds to a given type abstraction. Thus, this
- * maps the name "TYPE" to a JavaTypeAbstraction.
- * 
- * @author sfink
+ * Implement a Context which corresponds to a given type abstraction. Thus, this maps the name "TYPE" to a JavaTypeAbstraction.
  */
 public class JavaTypeContext implements Context {
 
   private final TypeAbstraction type;
 
   public JavaTypeContext(TypeAbstraction type) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(type != null);
+    if (type == null) {
+      throw new IllegalArgumentException("null type");
     }
     this.type = type;
   }

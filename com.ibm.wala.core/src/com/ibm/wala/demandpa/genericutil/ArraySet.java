@@ -43,8 +43,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * A set implementation backed by an array. This implementation is
- * space-efficient for small sets, but several operations like
+ * A set implementation backed by an array. This implementation is space-efficient for small sets, but several operations like
  * {@link #contains(Object)} are linear time.
  * 
  * @author Manu Sridharan
@@ -100,8 +99,6 @@ public class ArraySet<T> extends AbstractSet<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see AAA.util.AAASet#add(java.lang.Object)
    */
   @SuppressWarnings("all")
@@ -133,8 +130,6 @@ public class ArraySet<T> extends AbstractSet<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see AAA.util.AAASet#contains(java.lang.Object)
    */
   @Override
@@ -158,8 +153,6 @@ public class ArraySet<T> extends AbstractSet<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see AAA.util.AAASet#forall(AAA.util.ObjectVisitor)
    */
   public void forall(ObjectVisitor<T> visitor_) {
@@ -173,6 +166,9 @@ public class ArraySet<T> extends AbstractSet<T> {
     return _curIndex;
   }
 
+  /**
+   * @throws IndexOutOfBoundsException if the index is out of range (index &lt; 0 || index &gt;= size()).
+   */
   public T get(int i) {
     return _elems[i];
   }
@@ -205,8 +201,6 @@ public class ArraySet<T> extends AbstractSet<T> {
   }
 
   /*
-   * (non-Javadoc)
-   * 
    * @see java.util.Set#iterator()
    */
   @Override
@@ -214,44 +208,23 @@ public class ArraySet<T> extends AbstractSet<T> {
     return new ArraySetIterator();
   }
 
-  /**
-   * @author manu
-   */
   public class ArraySetIterator implements Iterator<T> {
 
     int ind = 0;
 
     final int setSize = size();
 
-    /**
-     * 
-     */
     public ArraySetIterator() {
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#remove()
-     */
     public void remove() {
       throw new UnsupportedOperationException();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#hasNext()
-     */
     public boolean hasNext() {
       return ind < setSize;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Iterator#next()
-     */
     public T next() {
       if (ind >= setSize) {
         throw new NoSuchElementException();
@@ -264,7 +237,7 @@ public class ArraySet<T> extends AbstractSet<T> {
   public static <T> ArraySet<T> make() {
     return new ArraySet<T>();
   }
-  
+
   public static <T> ArraySet<T> make(Collection<T> other) throws IllegalArgumentException {
     if (other == null) {
       throw new IllegalArgumentException("other == null");

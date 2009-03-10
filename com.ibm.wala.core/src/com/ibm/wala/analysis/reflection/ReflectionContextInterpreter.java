@@ -32,16 +32,18 @@ import com.ibm.wala.types.FieldReference;
 /**
  * {@link SSAContextInterpreter} to handle all reflection procession.
  * 
- * @author sjfink
- * 
  */
 public class ReflectionContextInterpreter {
 
   public static SSAContextInterpreter createReflectionContextInterpreter(IClassHierarchy cha, AnalysisOptions options,
       AnalysisCache cache, ReflectionSpecification userSpec) {
+    
+    if (options == null) {
+      throw new IllegalArgumentException("null options");
+    }
+    
     // start with a dummy interpreter that understands nothing
     SSAContextInterpreter result = new SSAContextInterpreter() {
-
       public boolean understands(CGNode node) {
         return false;
       }

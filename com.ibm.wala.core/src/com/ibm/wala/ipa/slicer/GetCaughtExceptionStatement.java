@@ -15,9 +15,6 @@ import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
 
 /**
  * identifier of a GetCaughtException instruction
- * 
- * @author sjfink
- *
  */
 public class GetCaughtExceptionStatement extends Statement {
   private final SSAGetCaughtExceptionInstruction st;

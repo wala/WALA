@@ -62,6 +62,9 @@ public class PABasedMemoryAccessMap implements MemoryAccessMap {
   
   public PABasedMemoryAccessMap(CallGraph cg, PointerAnalysis pa, Map<Statement, Set<PointerKey>> mod,
       Map<Statement, Set<PointerKey>> ref) {
+    if (pa == null) {
+      throw new IllegalArgumentException("null pa");
+    }
     this.pa = pa;
     this.heapModel = pa.getHeapModel();
     invMod = MapUtil.inverseMap(mod);

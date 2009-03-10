@@ -17,14 +17,15 @@ import com.ibm.wala.util.functions.Function;
 /**
  * An <code>MapIterator</code> maps an
  * <code>Iterator</code> contents to produce a new Iterator
- * 
- * @author sfink
  */
 public class MapIterator<X,Y> implements Iterator<Y> {
   final Iterator<? extends X> i;
   final Function<X,Y> f;
 
   public MapIterator(Iterator<? extends X> i, Function<X,Y> f) {
+    if (i == null) {
+      throw new IllegalArgumentException("null i");
+    }
     this.i = i;
     this.f = f;
   }

@@ -10,11 +10,10 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author sfink
- *  
+ * 
  */
 public class BitVector extends BitVectorBase<BitVector> {
 
@@ -27,8 +26,7 @@ public class BitVector extends BitVectorBase<BitVector> {
   /**
    * Creates an empty string with the specified size.
    * 
-   * @param nbits
-   *          the size of the string
+   * @param nbits the size of the string
    */
   public BitVector(int nbits) {
     bits = new int[subscript(nbits) + 1];
@@ -48,9 +46,8 @@ public class BitVector extends BitVectorBase<BitVector> {
   /**
    * Creates a copy of a Bit String
    * 
-   * @param s
-   *          the string to copy
-   * @throws IllegalArgumentException  if s is null
+   * @param s the string to copy
+   * @throws IllegalArgumentException if s is null
    */
   public BitVector(BitVector s) {
     if (s == null) {
@@ -63,8 +60,7 @@ public class BitVector extends BitVectorBase<BitVector> {
   /**
    * Sets a bit.
    * 
-   * @param bit
-   *          the bit to be set
+   * @param bit the bit to be set
    */
   @Override
   public final void set(int bit) {
@@ -85,8 +81,7 @@ public class BitVector extends BitVectorBase<BitVector> {
   /**
    * Clears a bit.
    * 
-   * @param bit
-   *          the bit to be cleared
+   * @param bit the bit to be cleared
    */
   @Override
   public final void clear(int bit) {
@@ -101,13 +96,12 @@ public class BitVector extends BitVectorBase<BitVector> {
   /**
    * Gets a bit.
    * 
-   * @param bit
-   *          the bit to be gotten
+   * @param bit the bit to be gotten
    */
   @Override
   public final boolean get(int bit) {
-    if (DEBUG) {
-      Assertions._assert(bit >= 0);
+    if (bit < 0) {
+      throw new IllegalArgumentException("illegal bit: " + bit);
     }
     int ss = subscript(bit);
     if (ss >= bits.length) {
@@ -129,8 +123,7 @@ public class BitVector extends BitVectorBase<BitVector> {
   /**
    * Logically ANDs this bit set with the specified set of bits.
    * 
-   * @param set
-   *          the bit set to be ANDed with
+   * @param set the bit set to be ANDed with
    */
   @Override
   public final void and(BitVector set) {
@@ -159,8 +152,7 @@ public class BitVector extends BitVectorBase<BitVector> {
   /**
    * Logically ORs this bit set with the specified set of bits.
    * 
-   * @param set
-   *          the bit set to be ORed with
+   * @param set the bit set to be ORed with
    */
   @Override
   public final void or(BitVector set) {
@@ -185,13 +177,12 @@ public class BitVector extends BitVectorBase<BitVector> {
   }
 
   /**
-   * Logically ORs this bit set with the specified set of bits. This is
-   * performance-critical, and so, a little ugly in an attempt to help out the
-   * compiler.
+   * Logically ORs this bit set with the specified set of bits. This is performance-critical, and so, a little ugly in an attempt to
+   * help out the compiler.
    * 
    * @param set
    * @return the number of bits added to this.
-   * @throws IllegalArgumentException  if set is null
+   * @throws IllegalArgumentException if set is null
    */
   public final int orWithDelta(BitVector set) {
     if (set == null) {
@@ -233,13 +224,12 @@ public class BitVector extends BitVectorBase<BitVector> {
     b.xor(b2);
     return b;
   }
-  
+
   /**
    * Logically XORs this bit set with the specified set of bits.
    * 
-   * @param set
-   *          the bit set to be XORed with
-   * @throws IllegalArgumentException  if set is null
+   * @param set the bit set to be XORed with
+   * @throws IllegalArgumentException if set is null
    */
   @Override
   public final void xor(BitVector set) {
@@ -257,9 +247,8 @@ public class BitVector extends BitVectorBase<BitVector> {
   /**
    * Check if the intersection of the two sets is empty
    * 
-   * @param other
-   *          the set to check intersection with
-   * @throws IllegalArgumentException  if other is null
+   * @param other the set to check intersection with
+   * @throws IllegalArgumentException if other is null
    */
   @Override
   public final boolean intersectionEmpty(BitVector other) {
@@ -277,8 +266,7 @@ public class BitVector extends BitVectorBase<BitVector> {
   }
 
   /**
-   * Calculates and returns the set's size in bits. The maximum element in the
-   * set is the size - 1st element.
+   * Calculates and returns the set's size in bits. The maximum element in the set is the size - 1st element.
    */
   @Override
   public final int length() {
@@ -288,8 +276,7 @@ public class BitVector extends BitVectorBase<BitVector> {
   /**
    * Compares this object against the specified object.
    * 
-   * @param B
-   *          the object to compare with
+   * @param B the object to compare with
    * @return true if the objects are the same; false otherwise.
    */
   @Override
@@ -356,8 +343,7 @@ public class BitVector extends BitVectorBase<BitVector> {
   /**
    * Compares this object against the specified object.
    * 
-   * @param obj
-   *          the object to compare with
+   * @param obj the object to compare with
    * @return true if the objects are the same; false otherwise.
    */
   @Override
@@ -389,7 +375,7 @@ public class BitVector extends BitVectorBase<BitVector> {
       bits[i] ^= MASK;
     }
   }
-  
+
   /**
    * Return a new bit string as the AND of two others.
    */

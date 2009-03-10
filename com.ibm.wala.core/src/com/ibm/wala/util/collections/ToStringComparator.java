@@ -13,10 +13,7 @@ package com.ibm.wala.util.collections;
 import java.util.Comparator;
 
 /**
- *
  * A comparator based on lexicographical ordering of toString()
- * 
- * @author sfink
  */
 public class ToStringComparator<T> implements Comparator<T> {
 

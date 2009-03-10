@@ -22,14 +22,11 @@ import com.ibm.wala.util.debug.Trace;
 import com.ibm.wala.util.ref.CacheReference;
 
 /**
- * 
  * A soft handle to a Shrike class reader
  * 
  * TODO: implement more effective caching than just soft references TODO: push
  * weakness up the chain the InputStream, etc ... TODO: reduce reliance on
  * reader throughout the analysis packages
- * 
- * @author sfink
  */
 public class ShrikeClassReaderHandle {
 
@@ -47,6 +44,9 @@ public class ShrikeClassReaderHandle {
   private int hydrateCount = 0;
 
   public ShrikeClassReaderHandle(ModuleEntry entry) {
+    if (entry == null) {
+      throw new IllegalArgumentException("null entry");
+    }
     this.entry = entry;
   }
 
@@ -86,9 +86,6 @@ public class ShrikeClassReaderHandle {
 
   /**
    * Read is into bytes
-   * 
-   * @param is
-   * @param bytes
    * @throws IOException
    */
   private void readBytes(InputStream is, ByteArrayOutputStream bytes) throws IOException {

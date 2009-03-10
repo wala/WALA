@@ -78,8 +78,8 @@ public final class TypeName {
   }
 
   public static TypeName findOrCreateClass(Atom packageName, Atom className) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(packageName != null);
+    if (packageName == null) {
+      throw new IllegalArgumentException("null packageName");
     }
     TypeNameKey T = new TypeNameKey(packageName, className, (short) 0, false);
     return findOrCreate(T);

@@ -20,10 +20,7 @@ import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
  * A context interpreter that first checks with A, then defaults to B.
- * 
- * @author sfink
  */
 public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
 
@@ -34,8 +31,8 @@ public class DelegatingRTAContextInterpreter implements RTAContextInterpreter {
   public DelegatingRTAContextInterpreter(RTAContextInterpreter A, RTAContextInterpreter B) {
     this.A = A;
     this.B = B;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(B != null, "B is null");
+    if (B == null) {
+      throw new IllegalArgumentException("null B");
     }
   }
 

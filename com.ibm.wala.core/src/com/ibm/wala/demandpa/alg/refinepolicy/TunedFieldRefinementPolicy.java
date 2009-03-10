@@ -47,6 +47,9 @@ public class TunedFieldRefinementPolicy implements FieldRefinePolicy {
   }
 
   public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state) {
+    if (field == null) {
+      throw new IllegalArgumentException("null field");
+    }
     if (field == ArrayContents.v()) {
       return true;
     }

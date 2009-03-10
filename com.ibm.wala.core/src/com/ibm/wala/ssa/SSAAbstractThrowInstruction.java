@@ -11,11 +11,8 @@
 
 package com.ibm.wala.ssa;
 
-import com.ibm.wala.util.debug.Assertions;
 
 /**
- * @author sfink
- *
  */
 public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
   private final int exception;
@@ -43,14 +40,15 @@ public abstract class SSAAbstractThrowInstruction extends SSAInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
-      Assertions._assert(j == 0);
+    if (j != 0) {
+      throw new IllegalArgumentException("j must be 0");
+    }
     return exception;
   }
 
   @Override
   public int hashCode() {
-    return 7529 * exception ^ 823;
+    return 7529 + exception * 823;
   }
 
   /*

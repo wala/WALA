@@ -19,6 +19,9 @@ public class TypeVariable extends AbstractVariable<TypeVariable> {
   TypeAbstraction type;
 
   public TypeVariable(TypeAbstraction type) {
+    if (type == null) {
+      throw new IllegalArgumentException("null type");
+    }
     this.type = type;
   }
 

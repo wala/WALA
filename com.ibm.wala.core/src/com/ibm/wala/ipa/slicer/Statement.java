@@ -20,14 +20,16 @@ import com.ibm.wala.ipa.callgraph.CGNode;
  */
 public abstract class Statement {
   public static enum Kind {
-    NORMAL, PHI, PI, CATCH, PARAM_CALLER, PARAM_CALLEE, NORMAL_RET_CALLER, NORMAL_RET_CALLEE, EXC_RET_CALLER, EXC_RET_CALLEE,
-    HEAP_PARAM_CALLER, HEAP_PARAM_CALLEE, HEAP_RET_CALLER, HEAP_RET_CALLEE, METHOD_ENTRY, METHOD_EXIT
+    NORMAL, PHI, PI, CATCH, PARAM_CALLER, PARAM_CALLEE, NORMAL_RET_CALLER, NORMAL_RET_CALLEE, EXC_RET_CALLER, EXC_RET_CALLEE, HEAP_PARAM_CALLER, HEAP_PARAM_CALLEE, HEAP_RET_CALLER, HEAP_RET_CALLEE, METHOD_ENTRY, METHOD_EXIT
   }
 
   private final CGNode node;
 
   public Statement(final CGNode node) {
     super();
+    if (node == null) {
+      throw new IllegalArgumentException("null node");
+    }
     this.node = node;
   }
 
@@ -61,11 +63,10 @@ public abstract class Statement {
       return false;
     return true;
   }
-  
 
   @Override
   public String toString() {
     return getKind().toString() + ":" + getNode();
   }
-  
+
 }

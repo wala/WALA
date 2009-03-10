@@ -68,7 +68,9 @@ public class TypeBasedPointerAnalysis extends AbstractPointerAnalysis {
    * @param c Collection<IClass>
    */
   private static MutableMapping<InstanceKey> makeInstanceKeys(Collection<IClass> c) {
-    assert c != null;
+    if (c == null) {
+      throw new IllegalArgumentException("null c");
+    }
     MutableMapping<InstanceKey> result = MutableMapping.make();
     for (Iterator<IClass> it = c.iterator(); it.hasNext();) {
       IClass klass = it.next();

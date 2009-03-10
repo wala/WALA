@@ -265,8 +265,11 @@ public class PropagationSystem extends DefaultFixedPointSolver<PointsToSetVariab
    */
   public PointsToSetVariable findOrCreatePointsToSet(PointerKey key) {
 
+    if (key == null) {
+      throw new IllegalArgumentException("null key");
+    }
+    
     if (Assertions.verifyAssertions) {
-      Assertions._assert(key != null);
       if (pointsToMap.isImplicit(key)) {
         System.err.println("Did not expect to findOrCreatePointsToSet for implicitly represented PointerKey");
         System.err.println(key);

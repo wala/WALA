@@ -16,13 +16,10 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 import com.ibm.wala.ipa.callgraph.Context;
 import com.ibm.wala.ipa.callgraph.ContextSelector;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
  * A context selector that first checks with A, then defaults to B.
- * 
- * @author sfink
  */
 public class DelegatingContextSelector implements ContextSelector {
 
@@ -34,9 +31,11 @@ public class DelegatingContextSelector implements ContextSelector {
   public DelegatingContextSelector(ContextSelector A, ContextSelector B) {
     this.A = A;
     this.B = B;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(A != null, "A is null");
-      Assertions._assert(B != null, "B is null");
+    if (A == null) {
+      throw new IllegalArgumentException("null A");
+    }
+    if (B == null) {
+      throw new IllegalArgumentException("null B");
     }
   }
 

@@ -22,10 +22,7 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.graph.impl.NodeWithNumber;
 
 /**
- * A helper class to make the ipcfg work correctly with context-sensitive call
- * graphs.
- * 
- * @author sfink
+ * A helper class to make the ipcfg work correctly with context-sensitive call graphs.
  */
 public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWithNumber implements ISSABasicBlock {
   private final T delegate;
@@ -33,6 +30,9 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   private final CGNode node;
 
   public BasicBlockInContext(CGNode node, T bb) {
+    if (bb == null) {
+      throw new IllegalArgumentException("null bb");
+    }
     this.delegate = bb;
     this.node = node;
   }
@@ -50,8 +50,8 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   public int getLastInstructionIndex() {
     return delegate.getLastInstructionIndex();
   }
-  
-  /* 
+
+  /*
    * @see com.ibm.wala.cfg.IBasicBlock#iterateAllInstructions()
    */
   public Iterator<SSAInstruction> iterator() {
@@ -92,7 +92,6 @@ public final class BasicBlockInContext<T extends ISSABasicBlock> extends NodeWit
   public boolean isExitBlock() {
     return delegate.isExitBlock();
   }
-
 
   @Override
   public int hashCode() {

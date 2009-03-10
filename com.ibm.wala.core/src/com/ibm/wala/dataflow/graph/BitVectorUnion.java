@@ -51,6 +51,9 @@ public class BitVectorUnion extends AbstractMeetOperator<BitVectorVariable> impl
    */
   @Override
   public byte evaluate(BitVectorVariable lhs, IVariable[] rhs) throws IllegalArgumentException {
+    if (lhs == null) {
+      throw new IllegalArgumentException("null lhs");
+    }
     if (rhs == null) {
       throw new IllegalArgumentException("rhs == null");
     }

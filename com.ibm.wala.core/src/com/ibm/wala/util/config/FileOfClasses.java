@@ -44,6 +44,9 @@ public class FileOfClasses extends SetOfClasses {
   }
   
   public FileOfClasses(InputStream input) throws IOException {
+    if (input == null) {
+      throw new IllegalArgumentException("null input");
+    }
     BufferedReader is = new BufferedReader(new InputStreamReader(input));
 
     StringBuffer regex = null;

@@ -56,8 +56,6 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
 
   /**
    * Create an empty set with a non-zero capacity
-   * 
-   * @param initialCapacity
    */
   public MutableSparseLongSet(int initialCapacity) {
     super(new long[initialCapacity]);
@@ -103,8 +101,8 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
    * @return true iff this value changes
    */
   public boolean add(long value) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(value >= 0);
+    if (value < 0) {
+      throw new IllegalArgumentException("illegal value: " + value);
     }
     if (elements == null) {
       elements = new long[INITIAL_NONEMPTY_SIZE];

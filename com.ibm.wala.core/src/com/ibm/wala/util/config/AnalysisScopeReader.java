@@ -144,6 +144,9 @@ public class AnalysisScopeReader {
    * @param classPath class path to analyze, delimited by File.pathSeparator
    */
   public static AnalysisScope makeJavaBinaryAnalysisScope(String classPath, File exclusionsFile, Plugin plugIn) {
+    if (classPath == null) {
+      throw new IllegalArgumentException("classPath null");
+    }
     AnalysisScope scope = makePrimordialScope(exclusionsFile, plugIn);
     ClassLoaderReference loader = scope.getLoader(AnalysisScope.APPLICATION);
 

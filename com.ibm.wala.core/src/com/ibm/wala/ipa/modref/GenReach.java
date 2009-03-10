@@ -28,9 +28,6 @@ import com.ibm.wala.util.intset.OrdinalSetMapping;
 
 /**
  * Generic dataflow framework to accumulate reachable gen'ned values in a graph.
- * 
- * @author sjfink
- * 
  */
 public class GenReach<T, L> extends BitVectorFramework<T, L> {
 
@@ -44,6 +41,9 @@ public class GenReach<T, L> extends BitVectorFramework<T, L> {
 
   private static <T, L> OrdinalSetMapping<L> makeDomain(Map<T, Collection<L>> gen) {
     MutableMapping<L> result = MutableMapping.make();
+    if (gen == null) {
+      throw new IllegalArgumentException("null gen");
+    }
     for (Collection<L> c : gen.values()) {
       for (L p : c) {
         result.add(p);

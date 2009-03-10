@@ -18,8 +18,6 @@ import com.ibm.wala.util.intset.MutableSharedBitVectorIntSet;
 
 /**
  * A BitVector variable for dataflow analysis.
- * 
- * @author sfink
  */
 public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
 
@@ -29,6 +27,9 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
   }
 
   public void copyState(BitVectorVariable other) {
+    if (other == null) {
+      throw new IllegalArgumentException("null other");
+    }
     if (V == null) {
       if (other.V == null) {
         return;

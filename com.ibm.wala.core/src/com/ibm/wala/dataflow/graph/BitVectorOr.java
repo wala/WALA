@@ -22,6 +22,9 @@ public class BitVectorOr extends UnaryOperator<BitVectorVariable> {
   
   private final BitVector v;
   public BitVectorOr(BitVector v) {
+    if (v == null) {
+      throw new IllegalArgumentException("null v");
+    }
     this.v = v;
   }
   

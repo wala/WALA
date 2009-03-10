@@ -51,6 +51,9 @@ public class HashSetFactory {
    * @return A ParanoidHashSet if DEBUG = true, a java.util.HashSet otherwise
    */
   public static <T> HashSet<T> make(Collection<T> s) {
+    if (s == null) {
+      throw new IllegalArgumentException("null s");
+    }
     if (DEBUG) {
       return new ParanoidHashSet<T>(s);
     } else {

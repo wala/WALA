@@ -36,6 +36,9 @@ public class ClassBasedInstanceKeys implements InstanceKeyFactory {
   private final IClassHierarchy cha;
 
   public ClassBasedInstanceKeys(AnalysisOptions options, IClassHierarchy cha) {
+    if (cha == null) {
+      throw new IllegalArgumentException("null cha");
+    }
     this.cha = cha;
     this.options = options;
   }

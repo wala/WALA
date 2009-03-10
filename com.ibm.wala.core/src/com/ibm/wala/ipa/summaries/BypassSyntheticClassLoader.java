@@ -75,6 +75,9 @@ public class BypassSyntheticClassLoader implements IClassLoader {
    * @param cha governing class hierarchy
    */
   public BypassSyntheticClassLoader(ClassLoaderReference me, IClassLoader parent, SetOfClasses exclusions, IClassHierarchy cha) {
+    if (cha == null) {
+      throw new IllegalArgumentException("null cha");
+    }
     this.me = me;
     this.cha = cha;
     this.parent = parent;

@@ -16,10 +16,7 @@ import java.util.Collection;
 import com.ibm.wala.annotations.NonNull;
 
 /**
- * 
  * A filter defined by set membership
- * 
- * @author sfink
  */
 public class CollectionFilter<T> implements Filter<T> {
 
@@ -27,6 +24,9 @@ public class CollectionFilter<T> implements Filter<T> {
   private final Collection<? extends T> S;
 
   public CollectionFilter(Collection<? extends T> S) {
+    if (S == null) {
+      throw new IllegalArgumentException("null S");
+    }
     this.S = S;
   }
 

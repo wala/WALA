@@ -16,8 +16,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * Utilities for dealing with IntSets
- * 
- * @author sfink
  */
 public class IntSetUtil {
 
@@ -111,30 +109,15 @@ public class IntSetUtil {
 
   /**
    * Compute the asymmetric difference of two sets, a \ b.
-   * 
-   * @param A
-   * @param B
    */
   public static IntSet diff(IntSet A, IntSet B, MutableIntSetFactory factory) {
-    if (DEBUG) {
-      Trace.println("diff " + A + " " + B);
+    if (factory == null) {
+      throw new IllegalArgumentException("null factory");
     }
     if (A instanceof SparseIntSet && B instanceof SparseIntSet) {
-      if (DEBUG) {
-        Trace.println("call SparseIntSet.diff");
-      }
       return SparseIntSet.diff((SparseIntSet) A, (SparseIntSet) B);
-
     } else if (A instanceof SemiSparseMutableIntSet && B instanceof SemiSparseMutableIntSet) {
-      if (DEBUG) {
-        Trace.println("call SemiSparseMutableIntSet.diff");
-      }
       IntSet d = SemiSparseMutableIntSet.diff((SemiSparseMutableIntSet) A, (SemiSparseMutableIntSet) B);
-
-      if (DEBUG) {
-        Assertions._assert(d.sameValue(defaultSlowDiff(A, B, factory)));
-      }
-
       return d;
     } else {
       return defaultSlowDiff(A, B, factory);

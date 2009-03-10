@@ -22,10 +22,6 @@ import java.util.NoSuchElementException;
  * next() returns the
  * current element and advances the counter up to the next non-null element or
  * beyond the limit of the array
- * 
- * @author Stephen Fink
- * @author Eran Yahav
- * 
  */
 public class ArrayNonNullIterator<T> extends ArrayIterator<T> {
 

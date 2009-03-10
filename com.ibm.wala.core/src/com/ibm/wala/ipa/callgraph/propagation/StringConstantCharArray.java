@@ -16,8 +16,6 @@ import com.ibm.wala.types.TypeReference;
 /**
  * An {@link InstanceKey} which represents the constant char[] contents
  * of a string constant object.
- * 
- * @author sjfink
  */
 public class StringConstantCharArray implements InstanceKey {
   
@@ -28,6 +26,9 @@ public class StringConstantCharArray implements InstanceKey {
   }
   
   public static StringConstantCharArray make(ConstantKey<String> constant) {
+    if (constant == null) {
+      throw new IllegalArgumentException("null constant");
+    }
     return new StringConstantCharArray(constant);
   }
 

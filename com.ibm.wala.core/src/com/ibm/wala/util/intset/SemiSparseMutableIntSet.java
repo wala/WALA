@@ -375,9 +375,8 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   }
 
   /**
-   * @return true iff <code>this</code> has the same value as
-   *         <code>that</code>.
-   * @throws IllegalArgumentException  if that is null
+   * @return true iff <code>this</code> has the same value as <code>that</code>.
+   * @throws IllegalArgumentException if that is null
    */
   public boolean sameValue(IntSet that) {
     if (that == null) {
@@ -403,7 +402,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   /**
    * @return true iff <code>this</code> is a subset of <code>that</code>.
-   * @throws IllegalArgumentException  if that is null
+   * @throws IllegalArgumentException if that is null
    */
   public boolean isSubset(IntSet that) {
     if (that == null) {
@@ -433,7 +432,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * Set the value of this to be the same as the value of set
    * 
-   * @throws IllegalArgumentException  if set == null
+   * @throws IllegalArgumentException if set == null
    */
   public void copySet(IntSet set) throws IllegalArgumentException {
     if (set == null) {
@@ -464,7 +463,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
    * Add all members of set to this.
    * 
    * @return true iff the value of this changes.
-   * @throws IllegalArgumentException  if set == null
+   * @throws IllegalArgumentException if set == null
    */
   public boolean addAll(IntSet set) throws IllegalArgumentException {
     if (set == null) {
@@ -540,8 +539,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * Add an integer value to this set.
    * 
-   * @param i
-   *          integer to add
+   * @param i integer to add
    * @return true iff the value of this changes.
    */
   public boolean add(int i) {
@@ -564,8 +562,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * Remove an integer from this set.
    * 
-   * @param i
-   *          integer to remove
+   * @param i integer to remove
    * @return true iff the value of this changes.
    */
   public boolean remove(int i) {
@@ -602,7 +599,7 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   /**
    * @param other
    * @param filter
-   * @throws IllegalArgumentException  if other is null
+   * @throws IllegalArgumentException if other is null
    */
   public boolean addAllInIntersection(IntSet other, IntSet filter) {
     if (other == null) {
@@ -630,32 +627,28 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
   }
 
   public SemiSparseMutableIntSet removeAll(SemiSparseMutableIntSet B) {
+    if (B == null) {
+      throw new IllegalArgumentException("B null");
+    }
     if (densePart == null) {
-
       if (B.densePart == null) {
         sparsePart = MutableSparseIntSet.diff(sparsePart, B.sparsePart);
-
       } else {
         MutableSparseIntSet C = MutableSparseIntSet.diff(sparsePart, B.sparsePart);
-
         for (IntIterator bits = sparsePart.intIterator(); bits.hasNext();) {
           int bit = bits.next();
           if (B.densePart.get(bit)) {
             C.remove(bit);
           }
         }
-
         sparsePart = C;
       }
-
     } else {
       if (B.densePart == null) {
         for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext();) {
           densePart.clear(bits.next());
         }
-
         sparsePart = MutableSparseIntSet.diff(sparsePart, B.sparsePart);
-
       } else {
         densePart.andNot(B.densePart);
         for (IntIterator bits = B.sparsePart.intIterator(); bits.hasNext();) {

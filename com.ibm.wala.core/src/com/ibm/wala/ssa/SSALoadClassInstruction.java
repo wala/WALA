@@ -28,6 +28,9 @@ public class SSALoadClassInstruction extends SSAInstruction {
   public SSALoadClassInstruction(int lval, TypeReference typeRef) {
     this.lval = lval;
     this.typeRef = typeRef;
+    if (typeRef == null) {
+      throw new IllegalArgumentException("null typeRef");
+    }
   }
 
   @Override

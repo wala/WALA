@@ -13,10 +13,7 @@ package com.ibm.wala.util.collections;
 import java.util.Comparator;
 
 /**
- * 
  * A comparator based on hash codes
- * 
- * @author sfink
  */
 public class HashCodeComparator<T> implements Comparator<T> {
 

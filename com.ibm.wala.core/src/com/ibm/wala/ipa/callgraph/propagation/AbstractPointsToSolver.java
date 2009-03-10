@@ -17,8 +17,6 @@ import com.ibm.wala.eclipse.util.CancelException;
 
 /**
  * abstract base class for solver for pointer analysis
- * 
- * @author sfink
  */
 public abstract class AbstractPointsToSolver implements IPointsToSolver {
 
@@ -31,6 +29,9 @@ public abstract class AbstractPointsToSolver implements IPointsToSolver {
   private final ReflectionHandler reflectionHandler;
 
   public AbstractPointsToSolver(PropagationSystem system, PropagationCallGraphBuilder builder) {
+    if (system == null) {
+      throw new IllegalArgumentException("null system");
+    }
     this.system = system;
     this.builder = builder;
     this.reflectionHandler = new ReflectionHandler(builder);

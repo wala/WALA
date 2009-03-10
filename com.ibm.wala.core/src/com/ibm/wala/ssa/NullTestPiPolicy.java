@@ -20,9 +20,6 @@ import com.ibm.wala.util.collections.Pair;
  * replace it with: <verbatim> S1: if (c op null) { v2 = PI(c, S1) .... } </verbatim>
  * 
  * This renaming allows SSA-based analysis to reason about the nullness of v2 depending on the outcome of the branch.
- * 
- * @author sjfink
- * 
  */
 public class NullTestPiPolicy implements SSAPiNodePolicy {
   
@@ -40,6 +37,9 @@ public class NullTestPiPolicy implements SSAPiNodePolicy {
    */
   public Pair<Integer, SSAInstruction> getPi(SSAConditionalBranchInstruction cond, SSAInstruction def1, SSAInstruction def2,
       SymbolTable symbolTable) {
+    if (symbolTable == null) {
+      throw new IllegalArgumentException("null symbolTable");
+    }
     if (symbolTable.isNullConstant(cond.getUse(1))) {
       return Pair.<Integer,SSAInstruction>make(cond.getUse(0), cond);
     }

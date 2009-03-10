@@ -16,8 +16,6 @@ import com.ibm.wala.util.strings.Atom;
  * A method selector; something like: foo(Ljava/lang/String;)Ljava/lang/Class;
  * 
  * TODO: Canonicalize these?
- * 
- * @author sfink
  */
 public final class Selector {
 
@@ -26,6 +24,9 @@ public final class Selector {
   private final Descriptor descriptor;
 
   public static Selector make(String selectorStr) {
+    if (selectorStr == null) {
+      throw new IllegalArgumentException("null selectorStr");
+    }
     String methodName = selectorStr.substring(0, selectorStr.indexOf('('));
     String desc = selectorStr.substring(selectorStr.indexOf('('));
     return new Selector(Atom.findOrCreateUnicodeAtom(methodName), Descriptor.findOrCreateUTF8(desc));

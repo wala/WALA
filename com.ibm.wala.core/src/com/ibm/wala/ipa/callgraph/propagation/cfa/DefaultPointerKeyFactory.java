@@ -33,10 +33,8 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
   }
 
   public PointerKey getPointerKeyForLocal(CGNode node, int valueNumber) {
-    if (Assertions.verifyAssertions) {
-      if (valueNumber <= 0) {
-        Assertions._assert(valueNumber > 0, "illegal value number: " + valueNumber + " in " + node);
-      }
+    if (valueNumber <= 0) {
+      throw new IllegalArgumentException("illegal value number: " + valueNumber + " in " + node);
     }
     return new LocalPointerKey(node, valueNumber);
   }

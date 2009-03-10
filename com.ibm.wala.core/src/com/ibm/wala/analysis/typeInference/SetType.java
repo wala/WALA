@@ -36,8 +36,8 @@ public class SetType extends TypeAbstraction {
     if (points == null) {
       throw new IllegalArgumentException("points is null");
     }
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(points.length > 0);
+    if (points.length == 0) {
+      throw new IllegalArgumentException("points.length == 0");
     }
     types = HashSetFactory.make(points.length);
     int h = 0;

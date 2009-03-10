@@ -18,6 +18,9 @@ public class CallStringContext implements Context {
   private final CallString cs;
 
   public CallStringContext(CallString cs) {
+    if (cs == null) {
+      throw new IllegalArgumentException("null cs");
+    }
     this.cs = cs;
   }
 

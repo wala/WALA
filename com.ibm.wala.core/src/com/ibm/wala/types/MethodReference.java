@@ -89,6 +89,9 @@ public final class MethodReference extends MemberReference {
    * @param md the descriptor of the member
    */
   public static synchronized MethodReference findOrCreate(TypeReference tref, Atom mn, Descriptor md) {
+    if (tref == null) {
+      throw new IllegalArgumentException("null tref");
+    }
     Key key = new Key(tref, mn, md);
 
     MethodReference val = dictionary.get(key);

@@ -44,8 +44,8 @@ public class PointsToSetVariable extends IntSetVariable<PointsToSetVariable> {
 
   public PointsToSetVariable(PointerKey key) {
     super();
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(key != null);
+    if (key == null) {
+      throw new IllegalArgumentException("null key");
     }
     this.pointerKey = key;
   }

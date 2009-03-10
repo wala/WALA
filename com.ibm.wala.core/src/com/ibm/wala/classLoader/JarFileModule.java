@@ -41,6 +41,9 @@ public class JarFileModule implements Module {
   private final HashMap<ZipEntry, Object> cache = HashMapFactory.make();
 
   public JarFileModule(JarFile f) {
+    if (f == null) {
+      throw new IllegalArgumentException("null f");
+    }
     this.file = f;
   }
 

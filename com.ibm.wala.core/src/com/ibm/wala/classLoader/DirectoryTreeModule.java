@@ -20,8 +20,6 @@ import com.ibm.wala.util.debug.Trace;
 /**
  * A module containing files under some directory.
  * 
- * @author julian (i think?)
- * 
  */
 public abstract class DirectoryTreeModule implements Module {
 
@@ -32,6 +30,9 @@ public abstract class DirectoryTreeModule implements Module {
    */
   DirectoryTreeModule(File root) throws IllegalArgumentException {
     this.root = root;
+    if (root == null) {
+      throw new IllegalArgumentException("null root");
+    }
     if (!root.isDirectory()) {
       throw new IllegalArgumentException("root is not a directory " + root);
     }

@@ -49,7 +49,6 @@ import com.ibm.wala.demandpa.util.CallSiteAndCGNode;
  */
 public class CallStack extends ImmutableStack<CallSiteAndCGNode> implements State {
 
-
   public static CallStack emptyCallStack() {
     CallStack ret = new CallStack(new CallSiteAndCGNode[0]);
     return ret;

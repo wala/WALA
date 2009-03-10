@@ -13,10 +13,7 @@ package com.ibm.wala.fixpoint;
 import com.ibm.wala.fixedpoint.impl.AbstractVariable;
 
 /**
- * 
  * A boolean variable for dataflow analysis.
- * 
- * @author sfink
  */
 public class BooleanVariable extends AbstractVariable<BooleanVariable> {
 
@@ -26,14 +23,16 @@ public class BooleanVariable extends AbstractVariable<BooleanVariable> {
   }
 
   /**
-   * @param b
-   *          initial value for this variable
+   * @param b initial value for this variable
    */
   public BooleanVariable(boolean b) {
     this.B = b;
   }
 
-  public void copyState(BooleanVariable other) throws NullPointerException {
+  public void copyState(BooleanVariable other) {
+    if (other == null) {
+      throw new IllegalArgumentException("other null");
+    }
     B = other.B;
   }
 
@@ -58,8 +57,7 @@ public class BooleanVariable extends AbstractVariable<BooleanVariable> {
 
   /**
    * @param other
-   * @throws IllegalArgumentException
-   *           if other is null
+   * @throws IllegalArgumentException if other is null
    */
   public void or(BooleanVariable other) {
     if (other == null) {

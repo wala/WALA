@@ -19,11 +19,7 @@ import com.ibm.wala.ssa.IR;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
- * 
- * An SWT action that spawns spawns a ghostview to see the IR for a call graph
- * node which is the current selection in a tree viewer.
- * 
- * @author sfink
+ * An SWT action that spawns spawns a ghostview to see the IR for a call graph node which is the current selection in a tree viewer.
  */
 public class ViewIRAction extends Action {
   /**
@@ -57,12 +53,13 @@ public class ViewIRAction extends Action {
   private final String gvExe;
 
   /**
-   * @param viewer
-   *            Governing tree viewer
-   * @param cg
-   *            Governing call graph
+   * @param viewer Governing tree viewer
+   * @param cg Governing call graph
    */
   public ViewIRAction(SWTTreeViewer viewer, CallGraph cg, String psFile, String dotFile, String dotExe, String gvExe) {
+    if (viewer == null) {
+      throw new IllegalArgumentException("null viewer");
+    }
     this.viewer = viewer;
     this.cg = cg;
     this.psFile = psFile;

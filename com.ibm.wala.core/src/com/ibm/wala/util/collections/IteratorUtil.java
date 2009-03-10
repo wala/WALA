@@ -25,6 +25,9 @@ public class IteratorUtil {
    *         object o
    */
   public static <T> boolean contains(Iterator<? extends T> it, T o) {
+    if (it == null) {
+      throw new IllegalArgumentException("null it");
+    }
     while (it.hasNext()) {
       if (o.equals(it.next())) {
         return true;

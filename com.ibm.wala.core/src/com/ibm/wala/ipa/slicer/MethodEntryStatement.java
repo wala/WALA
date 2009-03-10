@@ -16,9 +16,6 @@ import com.ibm.wala.ipa.callgraph.CGNode;
  * A statement representing method entry, used for managing control dependence.
  * 
  * This is also used as a dummy entry for starting propagation to a seed statement.
- * 
- * @author sjfink
- * 
  */
 public class MethodEntryStatement extends Statement {
 

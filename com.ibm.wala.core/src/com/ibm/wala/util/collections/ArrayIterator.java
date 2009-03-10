@@ -14,10 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- *
  * an Iterator of array elements
- * 
- * @author unknown
  */
 public class ArrayIterator<T> implements Iterator<T> {
 
@@ -49,6 +46,9 @@ public class ArrayIterator<T> implements Iterator<T> {
    * @param start the first array index to return 
    */
   public ArrayIterator(T[] elts, int start) {
+    if (elts == null) {
+      throw new IllegalArgumentException("null elts");
+    }
     _elts = elts;
     _cnt = start;
     last = _elts.length - 1;

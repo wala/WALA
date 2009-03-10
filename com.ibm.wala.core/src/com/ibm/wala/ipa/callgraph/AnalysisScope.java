@@ -241,8 +241,8 @@ public class AnalysisScope {
    * @param m
    */
   public void addToScopeHead(ClassLoaderReference loader, Module m) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(m != null);
+    if (m == null) {
+      throw new IllegalArgumentException("null m");
     }
     List<Module> s = MapUtil.findOrCreateList(moduleMap, loader);
     if (DEBUG_LEVEL > 0) {

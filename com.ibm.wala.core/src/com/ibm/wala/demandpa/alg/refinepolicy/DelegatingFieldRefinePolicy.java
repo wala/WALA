@@ -18,9 +18,6 @@ import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
 
 /**
  * A field refine policy that first checks with A, then delegates to B
- * 
- * @author manu
- * 
  */
 public class DelegatingFieldRefinePolicy implements FieldRefinePolicy {
 
@@ -29,6 +26,12 @@ public class DelegatingFieldRefinePolicy implements FieldRefinePolicy {
   private final FieldRefinePolicy B;
 
   public DelegatingFieldRefinePolicy(FieldRefinePolicy a, FieldRefinePolicy b) {
+    if (a == null) {
+      throw new IllegalArgumentException("null A");
+    }
+    if (b == null) {
+      throw new IllegalArgumentException("null B");
+    }
     A = a;
     B = b;
   }

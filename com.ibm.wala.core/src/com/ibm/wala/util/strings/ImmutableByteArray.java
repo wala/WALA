@@ -24,6 +24,9 @@ public final class ImmutableByteArray {
   final byte[] b;
 
   public ImmutableByteArray(byte[] b) {
+    if (b == null) {
+      throw new IllegalArgumentException("b is null");
+    }
     this.b = b;
   }
 

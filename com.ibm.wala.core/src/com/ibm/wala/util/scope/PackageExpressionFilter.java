@@ -19,14 +19,15 @@ import com.ibm.wala.util.collections.Filter;
 /**
  * A file which accepts an IClass only if the package name matches
  * a regular expression
- * 
- * @author sjfink
  */
 public class PackageExpressionFilter implements Filter<IClass> {
 
   private final Pattern pattern;
 
   public PackageExpressionFilter(String pattern) {
+    if (pattern == null) {
+      throw new IllegalArgumentException("null pattern");
+    }
     this.pattern = Pattern.compile(pattern);
   }
 

@@ -15,17 +15,10 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import com.ibm.wala.eclipse.util.CancelException;
 
 /**
- * 
  * standard fixed-point iterative solver for pointer analysis
- * 
- * @author sfink
  */
 public class StandardSolver extends AbstractPointsToSolver {
 
-  /**
-   * @param system
-   * @param builder
-   */
   public StandardSolver(PropagationSystem system, PropagationCallGraphBuilder builder) {
     super(system, builder);
   }

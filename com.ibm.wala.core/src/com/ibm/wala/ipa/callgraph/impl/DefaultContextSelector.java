@@ -22,14 +22,15 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 /**
  * Default object to control context-insensitive context selection, This includes reflection logic.
- * 
- * @author sfink
  */
 public class DefaultContextSelector implements ContextSelector {
 
   private final ContextSelector delegate;
 
   public DefaultContextSelector(AnalysisOptions options) {
+    if (options == null) {
+      throw new IllegalArgumentException("null options");
+    }
     ContextInsensitiveSelector ci = new ContextInsensitiveSelector();
     ContextSelector r = ReflectionContextSelector.createReflectionContextSelector(options);
     ContextSelector s = new DelegatingContextSelector(r, ci);
