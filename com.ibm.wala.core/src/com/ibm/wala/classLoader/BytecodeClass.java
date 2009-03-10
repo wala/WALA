@@ -235,7 +235,7 @@ public abstract class BytecodeClass<T extends IClassLoader> implements IClass {
       computeSuperclass();
     }
     if (superClass == null && !getReference().equals(TypeReference.JavaLangObject)) {
-      throw new ClassHierarchyException("No superclass found for " + this);
+      throw new ClassHierarchyException("No superclass found for " + this+" Superclass name "+superName);
     }
     return superClass;
   }
