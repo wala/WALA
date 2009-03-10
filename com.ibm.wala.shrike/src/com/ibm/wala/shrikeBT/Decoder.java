@@ -278,7 +278,8 @@ public abstract class Decoder implements Constants {
 
             if (decodedOffset[handlerAddr] < 0) {
               byte[] stackWords = new byte[code.length * 2];
-
+              // the bottom element on the stack must be a return address.
+              stackWords[0] = 1;
               decodeAt(handlerAddr, 1, stackWords);
             }
 
