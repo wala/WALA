@@ -13,8 +13,6 @@ package com.ibm.wala.util.collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-import com.ibm.wala.util.debug.Assertions;
-
 /**
  *
  * A singleton iterator for an object which is guaranteed to be not-null.  Exploiting this invariant
@@ -31,8 +29,8 @@ public class NonNullSingletonIterator<T> implements Iterator<T> {
    * @param o the single object in this collection, must be non-null
    */
   public NonNullSingletonIterator(T o) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(o != null);
+    if (o == null) {
+      throw new IllegalArgumentException("o is null");
     }
     this.it = o;
   }

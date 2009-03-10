@@ -12,16 +12,12 @@ package com.ibm.wala.util.graph.impl;
 
 import java.util.Iterator;
 
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.graph.NumberedNodeManager;
 import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.MutableMapping;
 
 /**
- * 
  * An object which manages node numbers via a mapping.
- * 
- * @author sfink
  */
 public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
 
@@ -37,6 +33,9 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
 
 
   public T getNode(int number)  {
+    if (number < 0) {
+      throw new IllegalArgumentException("number must be >= 0");
+    }
     T result = map.getMappedObject(number);
     return result;
   }
@@ -59,8 +58,8 @@ public class SlowNumberedNodeManager<T> implements NumberedNodeManager<T> {
   }
 
   public void addNode(T n) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(n != null);
+    if (n == null) {
+      throw new IllegalArgumentException("n is null");
     }
     map.add(n);
   }

@@ -69,6 +69,9 @@ public class SlowDFSDiscoverTimeIterator<T> extends GraphDFSDiscoverTimeIterator
    * @throws NullPointerException  if G is null
    */
   public SlowDFSDiscoverTimeIterator(Graph<T> G) throws NullPointerException {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     init(G,G.iterator());
   }
 

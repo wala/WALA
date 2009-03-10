@@ -85,6 +85,15 @@ public class DFSPathFinder<T> extends Stack<T> {
     this.G = G;
     this.roots = nodes;
     this.filter = f;
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
+    if (roots == null) {
+      throw new IllegalArgumentException("roots is null");
+    }
+    if (filter == null) {
+      throw new IllegalArgumentException("filter is null");
+    }
   }
 
   private void init() {

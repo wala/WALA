@@ -61,6 +61,12 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
    * @param nodes the set of nodes from which to start searching
    */
   public SlowDFSFinishTimeIterator(Graph<T> G, Iterator<? extends T> nodes) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
+    if (nodes == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     init(G, nodes);
   }
 
@@ -68,7 +74,7 @@ public class SlowDFSFinishTimeIterator<T> extends DFSFinishTimeIterator<T> {
    * @throws NullPointerException  if G is null
    */
   public SlowDFSFinishTimeIterator(Graph<T> G) throws NullPointerException {
-    this(G, G.iterator());
+    this(G, G == null ? null : G.iterator());
   }
 
 

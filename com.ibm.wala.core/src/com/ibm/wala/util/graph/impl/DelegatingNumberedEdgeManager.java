@@ -22,20 +22,17 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- * 
  * An object that delegates edge management to the nodes, INodeWithNumberedEdges
- * 
- * @author sfink
  * 
  */
 public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> implements NumberedEdgeManager<T> {
 
   private final DelegatingNumberedNodeManager<T> nodeManager;
 
-  /**
-   * 
-   */
   public DelegatingNumberedEdgeManager(DelegatingNumberedNodeManager<T> nodeManager) {
+    if (nodeManager == null) {
+      throw new IllegalArgumentException("nodeManager is null");
+    }
     this.nodeManager = nodeManager;
   }
 
@@ -92,7 +89,12 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
       throw new IllegalArgumentException("N cannot be null");
     }
     INodeWithNumberedEdges en = N;
-    return en.getPredNumbers().size();
+    IntSet s = en.getPredNumbers();
+    if (s == null) {
+      return 0;
+    } else {
+      return s.size();
+    }
   }
 
   /*
@@ -116,12 +118,12 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
       throw new IllegalArgumentException("N is null");
     }
     INodeWithNumberedEdges en = N;
-    return en.getSuccNumbers().size();
+    IntSet s = en.getSuccNumbers();
+    return s == null ? 0 : s.size();
   }
 
   /*
-   * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node,
-   *      com.ibm.wala.util.graph.Node)
+   * @see com.ibm.wala.util.graph.EdgeManager#addEdge(com.ibm.wala.util.graph.Node, com.ibm.wala.util.graph.Node)
    */
   public void addEdge(T src, T dst) {
     if (dst == null || src == null) {
@@ -132,7 +134,7 @@ public class DelegatingNumberedEdgeManager<T extends INodeWithNumberedEdges> imp
   }
 
   public void removeEdge(T src, T dst) throws UnimplementedError {
-    Assertions.UNREACHABLE();
+    Assertions.UNREACHABLE("Implement me");
   }
 
   /*

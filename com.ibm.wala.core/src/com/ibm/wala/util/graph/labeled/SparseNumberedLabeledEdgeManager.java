@@ -190,6 +190,9 @@ public class SparseNumberedLabeledEdgeManager<T, U> implements NumberedLabeledEd
     if (defaultLabel == null) {
       throw new IllegalArgumentException("null default label");
     }
+    if (nodeManager == null) {
+      throw new IllegalArgumentException("null nodeManager");
+    }
   }
 
   public Iterator<? extends U> getPredLabels(T N) {

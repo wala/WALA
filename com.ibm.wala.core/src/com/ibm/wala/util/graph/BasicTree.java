@@ -14,9 +14,6 @@ import com.ibm.wala.util.collections.SimpleVector;
 
 /**
  * A simple, extremely inefficient tree implementation
- * 
- * @author sjfink
- * 
  */
 public class BasicTree<T> {
 
@@ -28,6 +25,9 @@ public class BasicTree<T> {
   }
   
   public static <T> BasicTree<T> make(T value) {
+    if (value == null) {
+      throw new IllegalArgumentException("null value");
+    }
     return new BasicTree<T>(value);
   }
   

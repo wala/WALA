@@ -13,7 +13,6 @@ package com.ibm.wala.util.collections;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
@@ -37,8 +36,8 @@ public class SimpleVector<T> implements IVector<T> {
    */
   @SuppressWarnings("unchecked")
   public T get(int x) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(x >= 0);
+    if (x < 0) {
+      throw new IllegalArgumentException("illegal x: " + x);
     }
     if (x < store.length) {
       return (T) store[x];
@@ -51,8 +50,8 @@ public class SimpleVector<T> implements IVector<T> {
    * @see com.ibm.wala.util.intset.IVector#set(int, int)
    */
   public void set(int x, T value) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(x >= 0);
+    if (x < 0) {
+      throw new IllegalArgumentException("illegal x value " + x);
     }
     maxIndex = Math.max(maxIndex,x);
     if (value == null) {

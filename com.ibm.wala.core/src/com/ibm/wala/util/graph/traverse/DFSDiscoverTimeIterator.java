@@ -42,6 +42,7 @@ public abstract class DFSDiscoverTimeIterator<T> extends Stack<T> implements Ite
    */
   protected void init(Iterator<? extends T> nodes) {
     roots = nodes;
+    assert nodes != null;
     if (roots.hasNext()) {
       T n = roots.next();
       push(n);

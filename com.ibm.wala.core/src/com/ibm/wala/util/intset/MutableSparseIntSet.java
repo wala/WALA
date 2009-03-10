@@ -19,9 +19,6 @@ import com.ibm.wala.util.debug.Assertions;
  * This implementation will be inefficient if these sets get large.
  * 
  * TODO: even for small sets, we probably want to work on this to reduce the allocation activity.
- * 
- * @author Alan Donovan
- * @author Stephen Fink
  */
 public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
 
@@ -112,9 +109,6 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
    * @return true iff this value changes
    */
   public boolean add(int value) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(value >= 0);
-    }
     if (elements == null) {
       elements = new int[getInitialNonEmptySize()];
       size = 1;

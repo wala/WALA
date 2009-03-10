@@ -17,14 +17,15 @@ import com.ibm.wala.util.intset.IntSet;
 
 /**
  * An edge manager that reverses the edges in a graph
- *
- * @author Julian Dolby
  */
 public class InvertingNumberedEdgeManager<T> implements NumberedEdgeManager<T> {
 
   private final NumberedEdgeManager<T> original;
 
   public InvertingNumberedEdgeManager(NumberedEdgeManager<T> original) {
+    if (original == null) {
+      throw new IllegalArgumentException("null original");
+    }
     this.original = original;
   }
 

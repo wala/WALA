@@ -23,11 +23,6 @@ import com.ibm.wala.util.graph.impl.GraphInverter;
  * This class computes strongly connected components for a Graph (or a subset of
  * it). It does not store the SCCs in any lookaside structure, but rather simply
  * generates an enumeration of them. See Cormen, Leiserson, Rivest Ch. 23 Sec. 5
- * 
- * @author Julian Dolby
- * 
- * @see Graph
- * 
  */
 public class SCCIterator<T> implements Iterator<Set<T>> {
   /**
@@ -42,9 +37,8 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
    *          The graph over which to construct SCCs
    * @throws NullPointerException  if G is null
    */
-  @SuppressWarnings({ "cast" })
   public SCCIterator(Graph<T> G) throws NullPointerException {
-    this(G, (Iterator<T>) G.iterator());
+    this(G, G == null ? null : G.iterator());
   }
 
   /**
@@ -52,6 +46,9 @@ public class SCCIterator<T> implements Iterator<Set<T>> {
    * determined by starting at a given set of nodes.
    */
   public SCCIterator(Graph<T> G, Iterator<T> nodes) {
+    if (G == null) {
+      throw new IllegalArgumentException("G cannot be null");
+    }
     Iterator<T> reverseFinishTime = ReverseIterator.reverse(DFS.iterateFinishTime(G, nodes));
 
     rev = DFS.iterateFinishTime(GraphInverter.invert(G), reverseFinishTime);

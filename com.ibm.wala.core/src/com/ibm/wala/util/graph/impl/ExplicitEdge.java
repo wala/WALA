@@ -11,10 +11,7 @@
 package com.ibm.wala.util.graph.impl;
 
 /**
- *
  * A utility class for use by clients.  Use with care ... this will be slow and a space hog.
- * 
- * @author sfink
  */
 public class ExplicitEdge {
   
@@ -22,6 +19,12 @@ public class ExplicitEdge {
   final private Object dest;
   
   public ExplicitEdge(Object src, Object dest) {
+    if (src == null) {
+      throw new IllegalArgumentException("null src");
+    }
+    if (dest == null) {
+      throw new IllegalArgumentException("null dest");
+    }
     this.src = src;
     this.dest = dest;
   }

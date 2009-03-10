@@ -45,6 +45,10 @@ public class Acyclic {
    * Not efficient. Recursive and uses hash sets.
    */
   public static <T> IBinaryNaturalRelation computeBackEdges(NumberedGraph<T> G, T root) {
+   
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     BasicNaturalRelation result = new BasicNaturalRelation();
 
     Set<T> visited = HashSetFactory.make();

@@ -30,6 +30,9 @@ public class Path extends SimpleIntVector {
   }
 
   public static Path prepend(int x, Path p) {
+    if (p == null) {
+      throw new IllegalArgumentException("null p");
+    }
     Path result = new Path(0, p.size + 1);
     result.set(0, x);
     for (int i = 0; i < p.size; i++) {

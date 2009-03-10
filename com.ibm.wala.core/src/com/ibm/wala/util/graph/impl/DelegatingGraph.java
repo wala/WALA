@@ -16,18 +16,19 @@ import com.ibm.wala.util.graph.Graph;
 
 /**
  * A utility class.
- * 
- * @author sjfink
  */
 public class DelegatingGraph<T> implements Graph<T> {
 
   private final Graph<T> delegate;
-  
+
   public DelegatingGraph(Graph<T> delegate) {
-   this.delegate = delegate;
+    if (delegate == null) {
+      throw new IllegalArgumentException("delegate is null");
+    }
+    this.delegate = delegate;
   }
 
-  public void addEdge(T src, T dst)throws IllegalArgumentException {
+  public void addEdge(T src, T dst) throws IllegalArgumentException {
     delegate.addEdge(src, dst);
   }
 
@@ -48,11 +49,11 @@ public class DelegatingGraph<T> implements Graph<T> {
     return delegate.toString();
   }
 
-  public int getPredNodeCount(T N) throws IllegalArgumentException{
+  public int getPredNodeCount(T N) throws IllegalArgumentException {
     return delegate.getPredNodeCount(N);
   }
 
-  public Iterator<? extends T> getPredNodes(T N) throws IllegalArgumentException{
+  public Iterator<? extends T> getPredNodes(T N) throws IllegalArgumentException {
     return delegate.getPredNodes(N);
   }
 
@@ -76,11 +77,11 @@ public class DelegatingGraph<T> implements Graph<T> {
     delegate.removeAllIncidentEdges(node);
   }
 
-  public void removeEdge(T src, T dst)throws IllegalArgumentException {
+  public void removeEdge(T src, T dst) throws IllegalArgumentException {
     delegate.removeEdge(src, dst);
   }
 
-  public void removeIncomingEdges(T node) throws IllegalArgumentException{
+  public void removeIncomingEdges(T node) throws IllegalArgumentException {
     delegate.removeIncomingEdges(node);
   }
 
@@ -88,12 +89,12 @@ public class DelegatingGraph<T> implements Graph<T> {
     delegate.removeNode(n);
   }
 
-  public void removeNodeAndEdges(T N)throws IllegalArgumentException {
+  public void removeNodeAndEdges(T N) throws IllegalArgumentException {
     delegate.removeNodeAndEdges(N);
   }
 
   public void removeOutgoingEdges(T node) throws IllegalArgumentException {
     delegate.removeOutgoingEdges(node);
   }
-  
+
 }

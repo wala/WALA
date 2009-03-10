@@ -22,6 +22,9 @@ abstract class GraphDFSDiscoverTimeIterator<T> extends DFSDiscoverTimeIterator<T
   private Graph<T> G;
 
   protected void init(Graph<T> G, Iterator<? extends T> nodes) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     this.G = G;
     super.init(nodes);
   }

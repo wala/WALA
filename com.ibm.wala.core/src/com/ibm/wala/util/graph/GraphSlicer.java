@@ -29,10 +29,11 @@ public class GraphSlicer {
 
   /**
    * Performs a backward slice.
+   * 
    * @param <T> type for nodes
    * @param g the graph to slice
    * @param f identifies targets for the backward slice
-   * @return the set of nodes in g, from which any of the targets (nodes that f accepts) is reachable. 
+   * @return the set of nodes in g, from which any of the targets (nodes that f accepts) is reachable.
    * @throws WalaException
    */
   public static <T> Set<T> slice(Graph<T> g, Filter<T> f) throws WalaException {
@@ -54,10 +55,14 @@ public class GraphSlicer {
 
   }
 
+  /**
+   * Prune a graph to only the nodes accepted by the filter f
+   */
   public static <T> Graph<T> prune(final Graph<T> g, final Filter<T> f) {
-
+    if (g == null) {
+      throw new IllegalArgumentException("g is null");
+    }
     final NodeManager<T> n = new NodeManager<T>() {
-
       int nodeCount = -1;
 
       public Iterator<T> iterator() {
@@ -143,4 +148,4 @@ public class GraphSlicer {
 
     return output;
   }
-} 
+}

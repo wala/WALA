@@ -86,7 +86,7 @@ public class BFSIterator<T> implements Iterator<T> {
    * @throws NullPointerException  if G is null
    */
   public BFSIterator(Graph<T> G) throws NullPointerException {
-    this(G, G.iterator());
+    this(G, G == null ? null : G.iterator());
   }
 
   private void init(Graph<T> G, Iterator<? extends T> nodes) {

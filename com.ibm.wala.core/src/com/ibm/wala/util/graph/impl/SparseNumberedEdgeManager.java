@@ -55,6 +55,9 @@ public final class SparseNumberedEdgeManager<T> implements NumberedEdgeManager<T
    * @throws IllegalArgumentException  if normalCase < 0
    */
   public SparseNumberedEdgeManager(NumberedNodeManager<T> nodeManager, int normalCase, byte delegateImpl) throws IllegalArgumentException {
+    if (nodeManager == null) {
+      throw new IllegalArgumentException("null nodeManager");
+    }
     if (normalCase < 0) {
       throw new IllegalArgumentException("normalCase < 0");
     }

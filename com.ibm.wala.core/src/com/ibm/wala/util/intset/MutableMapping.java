@@ -18,11 +18,7 @@ import java.util.Iterator;
 import com.ibm.wala.util.collections.HashMapFactory;
 
 /**
- * 
- * A bit set mapping based on an object array. This is not terribly efficient,
- * but is useful for prototyping.
- * 
- * @author sfink
+ * A bit set mapping based on an object array. This is not terribly efficient, but is useful for prototyping.
  */
 public class MutableMapping<T> implements OrdinalSetMapping<T> {
 
@@ -42,7 +38,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
   final HashMap<T, Integer> map = HashMapFactory.make();
 
   /**
-   * @throws IllegalArgumentException  if array is null
+   * @throws IllegalArgumentException if array is null
    */
   @SuppressWarnings("unchecked")
   public MutableMapping(final Object[] array) {
@@ -64,7 +60,11 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
 
   @SuppressWarnings("unchecked")
   public T getMappedObject(int n) {
-    return (T) array[n];
+    try {
+      return (T) array[n];
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("n out of range " + n);
+    }
   }
 
   public int getMappedIndex(T o) {
@@ -166,7 +166,7 @@ public class MutableMapping<T> implements OrdinalSetMapping<T> {
       System.arraycopy(old, 0, array, 0, old.length);
     }
     array[i] = o;
-    nextIndex = Math.max(nextIndex, i+1);
+    nextIndex = Math.max(nextIndex, i + 1);
 
   }
 

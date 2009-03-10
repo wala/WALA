@@ -30,7 +30,6 @@ import com.ibm.wala.ipa.cha.ClassHierarchyException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MethodReference;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Trace;
 
 /**
  * Check handling of class constants (test for part of 1.5 support)
@@ -41,7 +40,8 @@ public class ClassConstantTest extends WalaTestCase {
 
   public void testClassConstants() throws ClassHierarchyException, IllegalArgumentException, CancelException, IOException {
 
-    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA, CallGraphTestUtil.REGRESSION_EXCLUSIONS);
+    AnalysisScope scope = CallGraphTestUtil.makeJ2SEAnalysisScope(TestConstants.WALA_TESTDATA,
+        CallGraphTestUtil.REGRESSION_EXCLUSIONS);
     ClassHierarchy cha = ClassHierarchy.make(scope);
 
     // make sure we have the test class
@@ -51,17 +51,17 @@ public class ClassConstantTest extends WalaTestCase {
     // make call graph
     Iterable<Entrypoint> entrypoints = Util.makeMainEntrypoints(scope, cha, TestConstants.CLASSCONSTANT_MAIN);
     AnalysisOptions options = CallGraphTestUtil.makeAnalysisOptions(scope, entrypoints);
-    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(),cha, scope, false);
-    System.out.println("\nCall graph:");
-    Trace.println(cg);
+    CallGraph cg = CallGraphTestUtil.buildZeroCFA(options, new AnalysisCache(), cha, scope, false);
+    // System.out.println("\nCall graph:");
+    // Trace.println(cg);
 
     // make sure the main method is reached
     MethodReference mainMethodRef = MethodReference.findOrCreate(mainClassRef, "main", "([Ljava/lang/String;)V");
     Set<CGNode> mainMethodNodes = cg.getNodes(mainMethodRef);
     Assert.assertFalse(mainMethodNodes.isEmpty());
     CGNode mainMethodNode = (CGNode) mainMethodNodes.iterator().next();
-    Trace.println("main IR:");
-    Trace.println(mainMethodNode.getIR());
+    // Trace.println("main IR:");
+    // Trace.println(mainMethodNode.getIR());
 
     // Make sure call to hashCode is there (it uses the class constant)
     TypeReference classRef = TypeReference.findOrCreate(ClassLoaderReference.Primordial, "Ljava/lang/Class");

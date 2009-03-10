@@ -64,6 +64,9 @@ public class BFSPathFinder<T> {
    *          the graph whose nodes to enumerate
    */
   public BFSPathFinder(Graph<T> G, T N, Filter<T> f) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
     this.G = G;
     this.roots = new NonNullSingletonIterator<T>(N);
     this.filter = f;
@@ -101,6 +104,9 @@ public class BFSPathFinder<T> {
    *          the graph whose nodes to enumerate
    */
   public BFSPathFinder(Graph<T> G, T src, Iterator<T> targets) {
+    if (targets == null) {
+      throw new IllegalArgumentException("targets is null");
+    }
     final Set<T> ts = HashSetFactory.make();
     while (targets.hasNext()) {
       ts.add(targets.next());
@@ -124,6 +130,12 @@ public class BFSPathFinder<T> {
    *          the graph whose nodes to enumerate
    */
   public BFSPathFinder(Graph<T> G, Iterator<T> sources, final T target) {
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
+    if (sources == null) {
+      throw new IllegalArgumentException("sources is null");
+    }
     this.G = G;
     this.roots = sources;
     this.filter = new Filter<T>() {
@@ -144,6 +156,12 @@ public class BFSPathFinder<T> {
     this.G = G;
     this.roots = nodes;
     this.filter = f;
+    if (G == null) {
+      throw new IllegalArgumentException("G is null");
+    }
+    if (roots == null) {
+      throw new IllegalArgumentException("roots is null");
+    }
   }
 
   /**

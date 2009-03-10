@@ -19,11 +19,9 @@ import com.ibm.wala.util.intset.IntSet;
 
 /**
  * 
- * Basic implementation of a numbered graph -- this implementation relies on
- * nodes that carry numbers and edges.
+ * Basic implementation of a numbered graph -- this implementation relies on nodes that carry numbers and edges.
  * 
- * The management of node numbers is a bit fragile, but designed this way for
- * efficiency. Use this class with care.
+ * The management of node numbers is a bit fragile, but designed this way for efficiency. Use this class with care.
  * 
  * @author sfink
  */
@@ -50,7 +48,11 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
 
   @SuppressWarnings("unchecked")
   public T getNode(int number) {
-    return (T) nodes[number];
+    try {
+      return (T) nodes[number];
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("Invalid number " + number);
+    }
   }
 
   /*
@@ -110,12 +112,10 @@ public class DelegatingNumberedNodeManager<T extends INodeWithNumber> implements
   }
 
   /**
-   * If N.getNumber() == -1, then set N.number and insert this node in the
-   * graph. Use with extreme care.
+   * If N.getNumber() == -1, then set N.number and insert this node in the graph. Use with extreme care.
    * 
    * @see com.ibm.wala.util.graph.NodeManager#addNode(java.lang.Object)
-   * @throws IllegalArgumentException
-   *           if n is null
+   * @throws IllegalArgumentException if n is null
    */
   public void addNode(T n) {
     if (n == null) {
