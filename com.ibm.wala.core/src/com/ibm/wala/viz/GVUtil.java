@@ -27,6 +27,9 @@ public class GVUtil {
     if (gvExe == null) {
       throw new IllegalArgumentException("null gvExe");
     }
+    if (psFile == null) {
+      throw new IllegalArgumentException("null psFile");
+    }
     final GSViewLauncher gv = new GSViewLauncher();
     gv.setGvExe(gvExe);
     gv.setPsfile(psFile);

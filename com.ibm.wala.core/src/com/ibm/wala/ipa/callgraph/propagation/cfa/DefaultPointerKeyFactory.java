@@ -61,8 +61,8 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
   }
 
   public PointerKey getPointerKeyForStaticField(IField f) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(f != null, "null f");
+    if (f == null) {
+      throw new IllegalArgumentException("null f");
     }
     return new StaticFieldKey(f);
   }

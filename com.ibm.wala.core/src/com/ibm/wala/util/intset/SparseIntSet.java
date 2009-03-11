@@ -138,6 +138,9 @@ public class SparseIntSet implements IntSet {
   }
 
   public final int elementAt(int idx) throws NoSuchElementException {
+    if (idx < 0) {
+      throw new IllegalArgumentException("invalid idx: " + idx);
+    }
     if (elements == null || idx >= size) {
       throw new NoSuchElementException("Index: " + idx);
     }

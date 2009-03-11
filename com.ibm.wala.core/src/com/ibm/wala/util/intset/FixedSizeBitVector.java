@@ -91,6 +91,9 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    * @param bit the bit to be cleared
    */
   public void clear(int bit) {
+    if (bit < 0) {
+      throw new IllegalArgumentException("illegal bit: " + bit);
+    }
     int shiftBits = bit & LOW_MASK;
     bits[subscript(bit)] &= ~(1 << shiftBits);
   }

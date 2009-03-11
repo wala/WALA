@@ -124,6 +124,9 @@ import com.ibm.wala.util.debug.Assertions;
     }
 
     public ThisFilteringHeapModel(HeapModel delegate, IClassHierarchy cha) {
+      if (delegate == null) {
+        throw new IllegalArgumentException("delegate null");
+      }
       this.delegate = delegate;
       this.cha = cha;
     }

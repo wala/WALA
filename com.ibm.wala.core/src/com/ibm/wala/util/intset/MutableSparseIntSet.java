@@ -423,6 +423,9 @@ public class MutableSparseIntSet extends SparseIntSet implements MutableIntSet {
   }
 
   public <T extends BitVectorBase<T>> void removeAll(T v) {
+    if (v == null) {
+      throw new IllegalArgumentException("null v");
+    }
     int ai = 0;
     for (int i = 0; i < size; i++) {
       if (!v.get(elements[i])) {

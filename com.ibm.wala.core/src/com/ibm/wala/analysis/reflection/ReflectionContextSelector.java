@@ -27,9 +27,13 @@ import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 public class ReflectionContextSelector {
 
   public static ContextSelector createReflectionContextSelector(AnalysisOptions options) {
+  
+    if (options == null) {
+      throw new IllegalArgumentException("null options");
+    }
+    
     // start with a dummy
     ContextSelector result = new ContextSelector() {
-
       public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
         return null;
       }

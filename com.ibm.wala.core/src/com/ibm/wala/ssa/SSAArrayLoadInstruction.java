@@ -13,14 +13,10 @@ package com.ibm.wala.ssa;
 import java.util.Collection;
 
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.Exceptions;
 
 /**
  * SSA instruction representing an array load.
- * 
- * @author sfink
- * 
  */
 public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
   private final int result;
@@ -76,8 +72,8 @@ public class SSAArrayLoadInstruction extends SSAArrayReferenceInstruction {
 
   @Override
   public int getDef(int i) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(i == 0);
+    if (i != 0) {
+      throw new IllegalArgumentException("illegal i: " + i);
     }
     return result;
   }

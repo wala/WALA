@@ -95,6 +95,9 @@ public class FileProvider {
   }
 
   public static URL getResource(String fileName, ClassLoader loader) throws IOException {
+    if (CorePlugin.getDefault() == null && loader == null) {
+      throw new IllegalArgumentException("null loader");
+    }
     return (CorePlugin.getDefault() == null) ? loader.getResource(fileName) : FileLocator.find(CorePlugin.getDefault().getBundle(),
         new Path(fileName), null);
   }

@@ -12,7 +12,6 @@ package com.ibm.wala.dataflow.graph;
 
 import com.ibm.wala.fixedpoint.impl.UnaryOperator;
 import com.ibm.wala.fixpoint.BitVectorVariable;
-import com.ibm.wala.util.debug.Assertions;
 
 
 /**
@@ -22,8 +21,8 @@ public class BitVectorUnionConstant extends UnaryOperator<BitVectorVariable> {
   
   private final int c;
   public BitVectorUnionConstant(int c) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(c >= 0);
+    if (c < 0) {
+      throw new IllegalArgumentException("Invalid c: " + c);
     }
     this.c = c;
   }

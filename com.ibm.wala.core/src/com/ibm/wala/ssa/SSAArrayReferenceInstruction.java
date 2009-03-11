@@ -29,6 +29,9 @@ public abstract class SSAArrayReferenceInstruction extends SSAInstruction {
     this.arrayref = arrayref;
     this.index = index;
     this.elementType = elementType;
+    if (elementType == null) {
+      throw new IllegalArgumentException("null elementType");
+    }
   }
 
   /*

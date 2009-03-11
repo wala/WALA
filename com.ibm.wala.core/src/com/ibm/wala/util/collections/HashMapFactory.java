@@ -52,6 +52,9 @@ public class HashMapFactory {
    * @return A ParanoidHashMap if DEBUG = true, a LinkedHashMap otherwise
    */
   public static <K,V> HashMap<K,V> make(Map<K,V> t) {
+    if (t == null) {
+      throw new IllegalArgumentException("null t");
+    }
     if (HashSetFactory.DEBUG) {
       return new ParanoidHashMap<K,V>(t);
     } else {

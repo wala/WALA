@@ -16,8 +16,6 @@ import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.shrike.Exceptions;
 
 /**
- * @author sfink
- * 
  */
 public class SSAArrayStoreInstruction extends SSAArrayReferenceInstruction {
 

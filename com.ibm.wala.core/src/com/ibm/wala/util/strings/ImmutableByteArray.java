@@ -10,13 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.util.strings;
 
-import com.ibm.wala.util.debug.Assertions;
-
 /**
- * 
  * A read-only byte array.
- * 
- * @author sfink
  */
 public final class ImmutableByteArray {
 
@@ -34,10 +29,10 @@ public final class ImmutableByteArray {
     if (b == null) {
       throw new IllegalArgumentException("b is null");
     }
-    this.b = new byte[length];
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(b.length >= start + length, "illegal");
+    if (start < 0) {
+      throw new IllegalArgumentException("invalid start: " + start);
     }
+    this.b = new byte[length];
     System.arraycopy(b, start, this.b, 0, length);
   }
 

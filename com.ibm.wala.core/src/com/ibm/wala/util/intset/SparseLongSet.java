@@ -386,6 +386,9 @@ public class SparseLongSet implements LongSet {
   }
 
   public void foreach(LongSetAction action) {
+    if (action == null) {
+      throw new IllegalArgumentException("null action");
+    }
     for (int i = 0; i < size; i++)
       action.act(elements[i]);
   }

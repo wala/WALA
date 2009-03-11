@@ -19,12 +19,8 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * 
  * Abstraction of a set of PointTypes. These are immutable. TODO: fix for
  * efficiency if needed.
- * 
- * @author sfink
- * 
  */
 public class SetType extends TypeAbstraction {
 
@@ -42,6 +38,9 @@ public class SetType extends TypeAbstraction {
     types = HashSetFactory.make(points.length);
     int h = 0;
     for (int i = 0; i < points.length; i++) {
+      if (points[i] == null) {
+        throw new IllegalArgumentException("points[" + i + "] is null");
+      }
       TypeReference T = points[i].getType().getReference();
       h ^= T.hashCode();
       types.add(T);

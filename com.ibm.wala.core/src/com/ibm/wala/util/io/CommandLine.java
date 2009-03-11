@@ -33,6 +33,10 @@ public class CommandLine {
     }
     Properties result = new Properties();
     for (int i = 0; i < args.length; i++) {
+      if (args[i] == null) {
+        // skip it
+        continue;
+      }
       String key = parseForKey(args[i]);
       if (key != null) {
         if (args[i].contains("=")) {

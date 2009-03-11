@@ -117,6 +117,12 @@ public class IntSetUtil {
     if (factory == null) {
       throw new IllegalArgumentException("null factory");
     }
+    if (A == null) {
+      throw new IllegalArgumentException("null A");
+    }
+    if (B == null) {
+      throw new IllegalArgumentException("null B");
+    }
     if (A instanceof SparseIntSet && B instanceof SparseIntSet) {
       return SparseIntSet.diff((SparseIntSet) A, (SparseIntSet) B);
     } else if (A instanceof SemiSparseMutableIntSet && B instanceof SemiSparseMutableIntSet) {

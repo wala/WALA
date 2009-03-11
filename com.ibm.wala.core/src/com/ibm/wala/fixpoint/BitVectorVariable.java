@@ -66,6 +66,9 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
   }
 
   public boolean sameValue(BitVectorVariable other) {
+    if (other == null) {
+      throw new IllegalArgumentException("null other");
+    }
     if (V == null) {
       return (other.V == null);
     } else {

@@ -40,6 +40,9 @@ public class NullTestPiPolicy implements SSAPiNodePolicy {
     if (symbolTable == null) {
       throw new IllegalArgumentException("null symbolTable");
     }
+    if (cond == null) {
+      throw new IllegalArgumentException("null cond");
+    }
     if (symbolTable.isNullConstant(cond.getUse(1))) {
       return Pair.<Integer,SSAInstruction>make(cond.getUse(0), cond);
     }

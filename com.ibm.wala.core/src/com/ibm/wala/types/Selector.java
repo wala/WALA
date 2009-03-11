@@ -27,11 +27,15 @@ public final class Selector {
     if (selectorStr == null) {
       throw new IllegalArgumentException("null selectorStr");
     }
-    String methodName = selectorStr.substring(0, selectorStr.indexOf('('));
-    String desc = selectorStr.substring(selectorStr.indexOf('('));
-    return new Selector(Atom.findOrCreateUnicodeAtom(methodName), Descriptor.findOrCreateUTF8(desc));
-    
+    try {
+      String methodName = selectorStr.substring(0, selectorStr.indexOf('('));
+      String desc = selectorStr.substring(selectorStr.indexOf('('));
+      return new Selector(Atom.findOrCreateUnicodeAtom(methodName), Descriptor.findOrCreateUTF8(desc));
+    } catch (StringIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid selectorStr: " + selectorStr);
+    }
   }
+
   public Selector(Atom name, Descriptor descriptor) {
     this.name = name;
     this.descriptor = descriptor;

@@ -44,6 +44,9 @@ public final class Descriptor {
    * @return the canonical representative for this descriptor value
    */
   public static Descriptor findOrCreate(TypeName[] parameters, TypeName returnType) {
+    if (returnType == null) {
+      throw new IllegalArgumentException("null returnType");
+    }
     if (parameters != null && parameters.length == 0) {
       parameters = null;
     }

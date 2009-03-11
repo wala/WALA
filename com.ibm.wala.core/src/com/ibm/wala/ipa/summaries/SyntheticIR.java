@@ -31,8 +31,8 @@ public class SyntheticIR extends IR {
   private final static boolean PARANOID = true;
 
   /**
-   * Create an SSA form, induced over a list of instructions provided externally. This entrypoint is often used for,
-   * e.g., native method models
+   * Create an SSA form, induced over a list of instructions provided externally. This entrypoint is often used for, e.g., native
+   * method models
    * 
    * @param method the method to construct SSA form for
    * @param context the governing context
@@ -72,7 +72,9 @@ public class SyntheticIR extends IR {
    */
   private static SymbolTable makeSymbolTable(IMethod method, SSAInstruction[] instructions, Map<Integer, ConstantValue> constants,
       AbstractCFG cfg) {
-    assert method != null;
+    if (method == null) {
+      throw new IllegalArgumentException("null method");
+    }
     SymbolTable symbolTable = new SymbolTable(method.getNumberOfParameters());
 
     // simulate allocation of value numbers
@@ -82,13 +84,12 @@ public class SyntheticIR extends IR {
         updateForInstruction(constants, symbolTable, s);
       }
     }
-    
+
     /**
-     * In InducedCFGs, we have nulled out phi instructions from the instruction array ... so go back and
-     * retrieve them now.
+     * In InducedCFGs, we have nulled out phi instructions from the instruction array ... so go back and retrieve them now.
      */
     if (cfg instanceof InducedCFG) {
-      InducedCFG icfg = (InducedCFG)cfg;
+      InducedCFG icfg = (InducedCFG) cfg;
       for (SSAPhiInstruction phi : icfg.getAllPhiInstructions()) {
         updateForInstruction(constants, symbolTable, phi);
       }

@@ -58,6 +58,9 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
 
   public boolean mayEscape(MethodReference allocMethod, int allocPC, MethodReference m) throws WalaException {
 
+    if (allocMethod == null) {
+      throw new IllegalArgumentException("null allocMethod");
+    }
     // nodes:= set of call graph nodes representing method m
     Set nodes = cg.getNodes(m);
     if (nodes.size() == 0) {

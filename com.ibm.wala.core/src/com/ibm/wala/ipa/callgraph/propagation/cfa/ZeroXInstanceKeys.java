@@ -319,8 +319,11 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
         || C.getReference().equals(JavaLangStringBuilder) || C.getReference().equals(JavaLangAbstractStringBuilder);
   }
 
-  public static boolean isThrowable(IClass C) {
-    return C.getClassHierarchy().isSubclassOf(C, C.getClassHierarchy().lookupClass(TypeReference.JavaLangThrowable));
+  public static boolean isThrowable(IClass c) {
+    if (c == null) {
+      throw new IllegalArgumentException("null c");
+    }
+    return c.getClassHierarchy().isSubclassOf(c, c.getClassHierarchy().lookupClass(TypeReference.JavaLangThrowable));
   }
 
   public boolean isStackTraceElement(IClass C) {

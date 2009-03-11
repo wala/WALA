@@ -85,6 +85,9 @@ public class AnalysisScopeReader {
   }
 
   public static void processScopeDefLine(AnalysisScope scope, ClassLoader javaLoader, String line) throws IOException {
+    if (line == null) {
+      throw new IllegalArgumentException("null line");
+    }
     StringTokenizer toks = new StringTokenizer(line, "\n,");
     if (!toks.hasMoreTokens()) {
       return;

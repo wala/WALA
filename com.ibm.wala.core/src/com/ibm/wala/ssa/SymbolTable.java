@@ -197,6 +197,9 @@ public class SymbolTable {
   }
 
   public boolean isOne(int v) {
+    if (v < 0) {
+      throw new IllegalArgumentException("Illegal v: " + v);
+    }
     return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isOneConstant();
   }
 

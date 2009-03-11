@@ -68,6 +68,9 @@ public class TwoLevelVector<T> implements IVector<T> {
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   public void set(int x, T value) {
+    if (x < 0) {
+      throw new IllegalArgumentException("illegal x: " + x);
+    }
     int page = getPageNumber(x);
     IVector<T> v = findOrCreatePage(page);
     int localX = toLocalIndex(x, page);

@@ -52,8 +52,6 @@ import com.ibm.wala.util.graph.traverse.SlowDFSDiscoverTimeIterator;
 import com.ibm.wala.util.strings.Atom;
 
 /**
- * @author sfink
- * 
  */
 public class Util {
   /**
@@ -498,7 +496,13 @@ public class Util {
     };
   }
 
+  /**
+   * create a set holding the contents of an {@link Iterator}
+   */
   public static <T> Set<T> setify(Iterator<? extends T> x) {
+    if (x == null) {
+      throw new IllegalArgumentException("Null x");
+    }
     Set<T> y = HashSetFactory.make();
     while (x.hasNext()) {
       y.add(x.next());

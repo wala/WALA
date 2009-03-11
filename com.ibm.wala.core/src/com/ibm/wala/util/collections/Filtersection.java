@@ -13,10 +13,7 @@ package com.ibm.wala.util.collections;
 import com.ibm.wala.annotations.NonNull;
 
 /**
- *
  * intersection of two filters
- * 
- * @author sfink
  */
 public class Filtersection<T> implements Filter<T> {
   
@@ -27,6 +24,12 @@ public class Filtersection<T> implements Filter<T> {
   public Filtersection(Filter<T> a, Filter<T> b) {
     this.a = a;
     this.b = b;
+    if (a == null) {
+      throw new IllegalArgumentException("null a");
+    }
+    if (b == null) {
+      throw new IllegalArgumentException("null b");
+    }
   }
 
   public boolean accepts(T o) {

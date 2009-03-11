@@ -25,6 +25,9 @@ public class PointerKeyComparator implements Comparator {
   private final IClassHierarchy cha;
 
   public PointerKeyComparator(IClassHierarchy cha) {
+    if (cha == null) {
+      throw new IllegalArgumentException("null cha");
+    }
     this.cha = cha;
   }
 

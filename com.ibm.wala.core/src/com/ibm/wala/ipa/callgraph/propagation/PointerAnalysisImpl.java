@@ -82,10 +82,9 @@ public class PointerAnalysisImpl extends AbstractPointerAnalysis {
     this.pointerKeys = pointerKeys;
     this.iKeyFactory = iKeyFactory;
     this.pointsToMap = pointsToMap;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(iKeyFactory != null);
+    if (iKeyFactory == null) {
+      throw new IllegalArgumentException("null iKeyFactory");
     }
-
     H = makeHeapModel();
   }
 

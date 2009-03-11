@@ -28,6 +28,9 @@ public class LocalPointerKey extends AbstractLocalPointerKey {
     if (valueNumber <= 0) {
       throw new IllegalArgumentException("illegal valueNumber: " + valueNumber);
     }
+    if (node == null) {
+      throw new IllegalArgumentException("null node");
+    }
   }
 
   @Override

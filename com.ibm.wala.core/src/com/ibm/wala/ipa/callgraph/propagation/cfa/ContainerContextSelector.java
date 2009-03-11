@@ -84,8 +84,8 @@ public class ContainerContextSelector implements ContextSelector {
   public ContainerContextSelector(IClassHierarchy cha, ZeroXInstanceKeys delegate) {
     this.cha = cha;
     this.delegate = delegate;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(delegate != null);
+    if (delegate == null) {
+      throw new IllegalArgumentException("null delegate");
     }
   }
 

@@ -104,6 +104,9 @@ public class CISlicer {
    * Compute the set of pointer keys each statement refs
    */
   public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis pa) {
+    if (sdg == null) {
+      throw new IllegalArgumentException("null sdg");
+    }
     return scanForRef(sdg, pa, ModRef.make());
   }
 

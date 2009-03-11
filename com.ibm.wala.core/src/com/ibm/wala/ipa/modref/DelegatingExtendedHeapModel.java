@@ -26,13 +26,15 @@ import com.ibm.wala.types.TypeReference;
 /**
  * An implementation of {@link ExtendedHeapModel} based on a 
  * normal {@link HeapModel}
- *
  */
 public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
 
    private final HeapModel h;
    
    public DelegatingExtendedHeapModel(HeapModel h) {
+     if (h == null) {
+       throw new IllegalArgumentException("null h");
+     }
      this.h = h;
    }
 
