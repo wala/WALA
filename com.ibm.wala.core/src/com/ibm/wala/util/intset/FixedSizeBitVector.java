@@ -212,6 +212,9 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
    * @param other the set to check intersection with
    */
   public boolean intersectionEmpty(FixedSizeBitVector other) {
+    if (other == null) {
+      throw new IllegalArgumentException("other is null");
+    }
     int n = bits.length;
     for (int i = n; i-- > 0;) {
       if ((bits[i] & other.bits[i]) != 0)

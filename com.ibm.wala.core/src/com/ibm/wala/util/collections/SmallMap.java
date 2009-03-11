@@ -55,7 +55,11 @@ public class SmallMap<K, V> implements Map<K, V> {
     if (keysAndValues == null) {
       throw new IllegalStateException("getKey on empty map");
     }
-    return (K) keysAndValues[i];
+    try {
+      return (K) keysAndValues[i];
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid i: " + i);
+    }
   }
 
   /**

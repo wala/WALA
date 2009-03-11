@@ -246,7 +246,11 @@ public class SymbolTable {
   }
 
   public boolean isStringConstant(int v) {
-    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof String;
+    try {
+      return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).getValue() instanceof String;
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
+    }
   }
 
   public boolean isNullConstant(int v) {

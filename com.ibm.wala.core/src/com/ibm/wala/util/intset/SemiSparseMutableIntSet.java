@@ -335,10 +335,11 @@ public class SemiSparseMutableIntSet implements MutableIntSet {
 
   /**
    * Invoke an action on each element of the Set
-   * 
-   * @param action
    */
   public void foreach(IntSetAction action) {
+    if (action == null) {
+      throw new IllegalArgumentException("null action");
+    }
     sparsePart.foreach(action);
     if (densePart != null) {
       for (int b = densePart.nextSetBit(0); b != -1; b = densePart.nextSetBit(b + 1)) {

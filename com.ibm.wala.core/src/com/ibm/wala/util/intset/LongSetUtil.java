@@ -102,15 +102,14 @@ public class LongSetUtil {
    * Compute the asymmetric difference of two sets, a \ b.
    */
   public static LongSet diff(LongSet A, LongSet B, MutableLongSetFactory factory) {
-    if (DEBUG) {
-      Trace.println("diff " + A + " " + B);
+    if (A == null) {
+      throw new IllegalArgumentException("null A");
+    }
+    if (B == null) {
+      throw new IllegalArgumentException("null B");
     }
     if (A instanceof SparseLongSet && B instanceof SparseLongSet) {
-      if (DEBUG) {
-        Trace.println("call SparseLongSet.diff");
-      }
       return SparseLongSet.diff((SparseLongSet) A, (SparseLongSet) B);
-
     } else {
       return defaultSlowDiff(A, B, factory);
     }

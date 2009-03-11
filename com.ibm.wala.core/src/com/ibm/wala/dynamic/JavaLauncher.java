@@ -21,8 +21,6 @@ import com.ibm.wala.util.PlatformUtil;
 
 /**
  * A Java process launcher
- * 
- * @author sfink
  */
 public class JavaLauncher extends Launcher {
 

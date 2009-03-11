@@ -136,6 +136,9 @@ public class EclipseProjectPath {
   }
 
   public static EclipseProjectPath make(IJavaProject project, boolean analyzeSource) throws IOException, CoreException {
+    if (project == null) {
+      throw new IllegalArgumentException("null project");
+    }
     return new EclipseProjectPath(project, analyzeSource);
   }
 

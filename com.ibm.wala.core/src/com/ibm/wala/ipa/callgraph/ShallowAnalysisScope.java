@@ -42,6 +42,9 @@ public class ShallowAnalysisScope implements Serializable {
     if (moduleLinesList == null) {
       throw new IllegalArgumentException("null moduleLinesList");
     }
+    if (ldrImplLinesList == null) {
+      throw new IllegalArgumentException("null ldrImplLinesList");
+    }
     this.exclusions = exclusions;
     this.moduleLinesList = moduleLinesList;
     this.ldrImplLinesList = ldrImplLinesList;

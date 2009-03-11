@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.annotations.Internal;
 import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
@@ -18,10 +17,7 @@ import com.ibm.wala.util.debug.UnimplementedError;
  * A debugging factory that creates debugging bitsets that are implemented as
  * two bitsets that perform consistency checks for every operation.
  * 
- * @author Julian Dolby (dolby@us.ibm.com)
- * 
  */
-@Internal
 public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
 
   private MutableIntSetFactory primary;
@@ -31,6 +27,12 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
   public DebuggingMutableIntSetFactory(MutableIntSetFactory p, MutableIntSetFactory s) {
     primary = p;
     secondary = s;
+    if (p == null) {
+      throw new IllegalArgumentException("null p");
+    }
+    if (s == null) {
+      throw new IllegalArgumentException("null s");
+    }
   }
 
   public DebuggingMutableIntSetFactory() {

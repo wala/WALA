@@ -138,8 +138,7 @@ public abstract class CallSiteReference extends ProgramCounter implements Byteco
     if (invocationCode == IInvokeInstruction.Dispatch.STATIC)
       return new StaticCall(programCounter, declaredTarget);
 
-    Assertions.UNREACHABLE();
-    return null;
+    throw new IllegalArgumentException("unsupported code: " + invocationCode);
   }
 
   /**

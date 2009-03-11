@@ -28,6 +28,9 @@ public class BimodalMutableIntSet implements MutableIntSet {
    * @see com.ibm.wala.util.intset.MutableIntSet#copySet(com.ibm.wala.util.intset.IntSet)
    */
   public void copySet(IntSet set) {
+    if (set == null) {
+      throw new IllegalArgumentException("null set");
+    }
     if (set instanceof BimodalMutableIntSet) {
       impl = IntSetUtil.makeMutableCopy(((BimodalMutableIntSet) set).impl);
     } else if (sameRepresentation(impl, set)) {

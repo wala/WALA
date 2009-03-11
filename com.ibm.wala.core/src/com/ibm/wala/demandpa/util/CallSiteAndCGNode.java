@@ -46,6 +46,12 @@ public class CallSiteAndCGNode extends Pair<CallSiteReference, CGNode> {
 
   public CallSiteAndCGNode(CallSiteReference fst, CGNode snd) {
     super(fst, snd);
+    if (fst == null) {
+      throw new IllegalArgumentException("null fst");
+    }
+    if (snd == null) {
+      throw new IllegalArgumentException("null snd");
+    }
   }
 
   public CallSiteReference getCallSiteReference() {
