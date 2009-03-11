@@ -10,7 +10,6 @@
  *******************************************************************************/
 package com.ibm.wala.util.intset;
 
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * An implementation of Tarjan's union-find, using path compression and balancing, for non-negative integers
@@ -47,14 +46,19 @@ public class IntegerUnionFind {
 
   /**
    * union the equiv classes of x and y
-   * 
-   * @param x
-   * @param y
    */
   public void union(int x, int y) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(x >= 0);
-      Assertions._assert(y >= 0);
+    if (x < 0) {
+      throw new IllegalArgumentException("invalid x : " + x);
+    }
+    if (y < 0) {
+      throw new IllegalArgumentException("invalid y: " + y);
+    }
+    if (x > Integer.MAX_VALUE / 2) {
+      throw new IllegalArgumentException("x is too big: " + x);
+    }
+    if (y > Integer.MAX_VALUE / 2) {
+      throw new IllegalArgumentException("y is too big: " + y);
     }
     if (x >= size() || y >= size()) {
       grow(2 * Math.max(x, y));

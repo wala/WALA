@@ -208,6 +208,9 @@ public class FileProvider {
    * @throws FileNotFoundException
    */
   public static File getFileFromClassLoader(String fileName, ClassLoader loader) throws FileNotFoundException {
+    if (loader == null) {
+      throw new IllegalArgumentException("null loader");
+    }
     URL url = loader.getResource(fileName);
     if (DEBUG_LEVEL > 0) {
       Trace.println("FileProvider got url: " + url + " for " + fileName);

@@ -46,12 +46,16 @@ public class NestedJarFileModule implements Module {
    */
   private HashMap<String, byte[]> cache = null;
 
-  /**
-   *  
-   */
+
   public NestedJarFileModule(JarFileModule parent, ZipEntry entry) {
     this.parent = parent;
     this.entry = entry;
+    if (parent == null) {
+      throw new IllegalArgumentException("null parent");
+    }
+    if (entry == null) {
+      throw new IllegalArgumentException("null entry");
+    }
   }
 
   public InputStream getInputStream(String name) {

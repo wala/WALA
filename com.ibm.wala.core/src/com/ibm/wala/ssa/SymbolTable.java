@@ -17,8 +17,7 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
- * By convention, symbol numbers start at 1 ... the "this" parameter will be
- * symbol number 1 in a virtual method.
+ * By convention, symbol numbers start at 1 ... the "this" parameter will be symbol number 1 in a virtual method.
  */
 public class SymbolTable {
 
@@ -33,8 +32,7 @@ public class SymbolTable {
   final private HashMap<ConstantValue, Integer> constants = HashMapFactory.make(10);
 
   /**
-   * @param numberOfParameters
-   *            in the IR .. should be ir.getNumberOfParameters()
+   * @param numberOfParameters in the IR .. should be ir.getNumberOfParameters()
    */
   public SymbolTable(int numberOfParameters) {
     if (numberOfParameters < 0) {
@@ -47,8 +45,7 @@ public class SymbolTable {
   }
 
   /**
-   * Values. Note: this class must maintain the following invariant:
-   * values.length > nextFreeValueNumber.
+   * Values. Note: this class must maintain the following invariant: values.length > nextFreeValueNumber.
    */
   private Value[] values = new Value[5];
 
@@ -66,8 +63,7 @@ public class SymbolTable {
   /**
    * Common part of getConstant functions.
    * 
-   * @param o
-   *            instance of a Java 'boxed-primitive' class, String or NULL.
+   * @param o instance of a Java 'boxed-primitive' class, String or NULL.
    * @return value number for constant.
    */
   int findOrCreateConstant(Object o) {
@@ -162,11 +158,9 @@ public class SymbolTable {
   }
 
   /**
-   * ensure that the symbol table has allocated space for the particular value
-   * number
+   * ensure that the symbol table has allocated space for the particular value number
    * 
-   * @param i
-   *            a value number
+   * @param i a value number
    */
   public void ensureSymbol(int i) {
     if (i != -1) {
@@ -193,7 +187,11 @@ public class SymbolTable {
   }
 
   public boolean isZero(int v) {
-    return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isZeroConstant();
+    try {
+      return (values[v] instanceof ConstantValue) && ((ConstantValue) values[v]).isZeroConstant();
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("invalid v: " + v);
+    }
   }
 
   public boolean isOne(int v) {
@@ -256,8 +254,7 @@ public class SymbolTable {
   }
 
   /**
-   * @throws IllegalArgumentException
-   *             if rhs is null
+   * @throws IllegalArgumentException if rhs is null
    */
   public int newPhi(int[] rhs) throws IllegalArgumentException {
     if (rhs == null) {
@@ -339,8 +336,7 @@ public class SymbolTable {
   }
 
   /**
-   * @return the Value object for given value number or null if we have no
-   *         special information about the value
+   * @return the Value object for given value number or null if we have no special information about the value
    */
   public Value getValue(int valueNumber) {
     if (Assertions.verifyAssertions) {

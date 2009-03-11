@@ -16,8 +16,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * Utilities for dealing with LongSets
- * 
- * @author sfink
  */
 public class LongSetUtil {
 
@@ -70,11 +68,14 @@ public class LongSetUtil {
 
   /**
    * Compute the asymmetric difference of two sets, a \ b.
-   * 
-   * @param A
-   * @param B
    */
   public static LongSet diff(LongSet A, LongSet B) {
+    if (A == null) {
+      throw new IllegalArgumentException("null A");
+    }
+    if (B == null) {
+      throw new IllegalArgumentException("null B");
+    }
     return diff(A, B, LongSetUtil.getDefaultLongSetFactory());
   }
 
@@ -99,9 +100,6 @@ public class LongSetUtil {
 
   /**
    * Compute the asymmetric difference of two sets, a \ b.
-   * 
-   * @param A
-   * @param B
    */
   public static LongSet diff(LongSet A, LongSet B, MutableLongSetFactory factory) {
     if (DEBUG) {

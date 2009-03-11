@@ -56,6 +56,9 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
   }
 
   public void addAll(BitVectorVariable other) {
+    if (other == null) {
+      throw new IllegalArgumentException("null other");
+    }
     if (V == null) {
       copyState(other);
     } else {

@@ -63,6 +63,9 @@ public class DefaultIRFactory implements IRFactory<IMethod> {
   }
 
   public boolean contextIsIrrelevant(IMethod method) {
+    if (method == null) {
+      throw new IllegalArgumentException("null method");
+    }
     if (method.isSynthetic()) {
       return syntheticFactory.contextIsIrrelevant((SyntheticMethod)method);
     } else if (method instanceof ShrikeCTMethod) {

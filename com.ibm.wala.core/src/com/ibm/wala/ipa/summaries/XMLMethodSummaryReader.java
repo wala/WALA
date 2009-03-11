@@ -180,8 +180,12 @@ public class XMLMethodSummaryReader implements BytecodeConstants {
 
   public XMLMethodSummaryReader(InputStream xmlFile, AnalysisScope scope) {
     super();
-    Assertions.productionAssertion(xmlFile != null, "XMLMethodSummaryReader given null xmlFile");
-    Assertions.productionAssertion(scope != null, "null scope");
+    if (xmlFile == null) {
+      throw new IllegalArgumentException("null xmlFile");
+    }
+    if (scope == null) {
+      throw new IllegalArgumentException("null scope");
+    }
     this.scope = scope;
     try {
       readXML(xmlFile);

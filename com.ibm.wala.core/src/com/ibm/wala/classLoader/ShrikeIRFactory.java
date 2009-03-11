@@ -37,6 +37,9 @@ public class ShrikeIRFactory implements IRFactory<ShrikeCTMethod> {
 
   public IR makeIR(final ShrikeCTMethod method, Context C, final SSAOptions options) throws IllegalArgumentException {
 
+    if (method == null) {
+      throw new IllegalArgumentException("null method");
+    }
     com.ibm.wala.shrikeBT.IInstruction[] shrikeInstructions = null;
     try {
       shrikeInstructions = method.getInstructions();

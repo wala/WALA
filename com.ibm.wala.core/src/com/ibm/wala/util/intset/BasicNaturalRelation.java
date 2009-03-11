@@ -424,9 +424,11 @@ public final class BasicNaturalRelation implements IBinaryNaturalRelation {
   }
 
   public boolean contains(int x, int y) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(x >= 0);
-      Assertions._assert(y >= 0);
+    if (x < 0) {
+      throw new IllegalArgumentException("invalid x: " + x);
+    }
+    if (y < 0) {
+      throw new IllegalArgumentException("invalid y: " + y);
     }
     if (usingDelegate(x)) {
       return getDelegate(x).contains(y);

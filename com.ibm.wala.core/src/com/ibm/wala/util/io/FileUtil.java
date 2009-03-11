@@ -143,7 +143,7 @@ public class FileUtil {
       throw new IllegalArgumentException("null file");
     }
     File f = new File(fileName);
-    if (!f.getParentFile().exists()) {
+    if (f.getParentFile() != null && !f.getParentFile().exists()) {
       boolean result = f.getParentFile().mkdirs();
       if (!result) {
         throw new IOException("failed to create " + f.getParentFile());

@@ -20,7 +20,6 @@ import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
- * 
  * A simple implementation of Map; intended for Maps with few elements. Optimized for space, not time -- use with care.
  * 
  * @author sfink
@@ -62,14 +61,17 @@ public class SmallMap<K, V> implements Map<K, V> {
   /**
    * Use with care.
    * 
-   * @param i
    * @return the ith key
    */
   public Object getValue(int i) throws IllegalStateException {
     if (keysAndValues == null) {
       throw new IllegalStateException("getValue on empty map");
     }
-    return keysAndValues[size() + i];
+    try {
+      return keysAndValues[size() + i];
+    } catch (ArrayIndexOutOfBoundsException e) {
+      throw new IllegalArgumentException("illegal i: " + i);
+    }
   }
 
   /*
@@ -140,8 +142,8 @@ public class SmallMap<K, V> implements Map<K, V> {
    */
   @SuppressWarnings("unchecked")
   public V put(Object key, Object value) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(key != null);
+    if (key == null) {
+      throw new IllegalArgumentException("null key");
     }
     for (int i = 0; i < size(); i++) {
       if (keysAndValues[i] != null && keysAndValues[i].equals(key)) {

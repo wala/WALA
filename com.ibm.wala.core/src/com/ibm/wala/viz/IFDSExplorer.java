@@ -24,8 +24,6 @@ import com.ibm.wala.viz.DotUtil.DotOutputType;
 
 /**
  * Explore the result of an IFDS problem with an SWT viewer and ghostview.
- * 
- * @author Stephen Fink
  */
 public class IFDSExplorer {
 
@@ -52,7 +50,7 @@ public class IFDSExplorer {
   }
 
   public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r, Collection<? extends P> roots, NodeDecorator labels)
-  throws WalaException {
+      throws WalaException {
     Properties p = null;
     try {
       p = WalaProperties.loadProperties();
@@ -63,9 +61,9 @@ public class IFDSExplorer {
     String scratch = p.getProperty(WalaProperties.OUTPUT_DIR);
     viewIFDS(r, roots, labels, scratch);
   }
-  
-  public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r, Collection<? extends P> roots, NodeDecorator labels, String scratchDirectory)
-      throws WalaException {
+
+  public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r, Collection<? extends P> roots, NodeDecorator labels,
+      String scratchDirectory) throws WalaException {
     if (r == null) {
       throw new IllegalArgumentException("r is null");
     }
@@ -74,8 +72,7 @@ public class IFDSExplorer {
     // dump the domain to stderr
     System.err.println("Domain:\n" + r.getProblem().getDomain().toString());
 
-    String outputFile = scratchDirectory + File.separatorChar
-        + (DotUtil.getOutputType() == DotOutputType.PS ? "ir.ps" : "ir.svg");
+    String outputFile = scratchDirectory + File.separatorChar + (DotUtil.getOutputType() == DotOutputType.PS ? "ir.ps" : "ir.svg");
     String dotFile = scratchDirectory + File.separatorChar + "ir.dt";
 
     final SWTTreeViewer v = new SWTTreeViewer();
@@ -83,7 +80,8 @@ public class IFDSExplorer {
     v.setGraphInput(g);
     v.setBlockInput(true);
     v.setRootsInput(roots);
-    ViewIFDSLocalAction<T, P, F> action = (labels == null ? new ViewIFDSLocalAction<T, P, F>(v, r, outputFile, dotFile, dotExe, gvExe) : new ViewIFDSLocalAction<T, P, F>(v, r, outputFile, dotFile, dotExe, gvExe, labels));
+    ViewIFDSLocalAction<T, P, F> action = (labels == null ? new ViewIFDSLocalAction<T, P, F>(v, r, outputFile, dotFile, dotExe,
+        gvExe) : new ViewIFDSLocalAction<T, P, F>(v, r, outputFile, dotFile, dotExe, gvExe, labels));
     v.getPopUpActions().add(action);
     v.run();
 
@@ -93,9 +91,11 @@ public class IFDSExplorer {
    * Calls {@link #viewIFDS(TabulationResult)} with roots computed by {@link InferGraphRoots}.
    */
   public static <T, P, F> void viewIFDS(TabulationResult<T, P, F> r) throws WalaException {
+    if (r == null) {
+      throw new IllegalArgumentException("null r");
+    }
     Collection<? extends P> roots = InferGraphRoots.inferRoots(r.getProblem().getSupergraph().getProcedureGraph());
     viewIFDS(r, roots);
-
   }
 
   public static String getDotExe() {

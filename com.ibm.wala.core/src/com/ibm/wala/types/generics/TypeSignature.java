@@ -46,6 +46,9 @@ public abstract class TypeSignature extends Signature {
     if (s == null) {
       throw new IllegalArgumentException("s is null");
     }
+    if (s.length() == 0) {
+      throw new IllegalArgumentException("illegal empty string s");
+    }
     assert (s.length() > 0);
     switch (s.charAt(0)) {
     case TypeReference.VoidTypeCode:

@@ -13,7 +13,6 @@ package com.ibm.wala.ssa;
 import java.util.Collection;
 
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.shrike.Exceptions;
 
 /**
@@ -69,8 +68,8 @@ public class SSAArrayLengthInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(i == 0);
+    if (i != 0) {
+      throw new IllegalArgumentException("invalid i " + i);
     }
     return result;
   }

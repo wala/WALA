@@ -38,6 +38,9 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   public FixedSizeBitVector(int nbits) {
     // subscript(nbits) is the length of the array needed to
     // hold nbits
+    if (nbits < 0) {
+      throw new IllegalArgumentException("illegal nbits: " + nbits);
+    }
     bits = new int[subscript(nbits) + 1];
     this.nbits = nbits;
   }

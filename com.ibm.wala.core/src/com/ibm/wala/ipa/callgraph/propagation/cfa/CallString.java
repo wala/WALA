@@ -20,6 +20,9 @@ public class CallString implements ContextItem {
   private final IMethod methods[];
 
   public CallString(CallSiteReference site, IMethod method) {
+    if (site == null) {
+      throw new IllegalArgumentException("null site");
+    }
     this.sites = new CallSiteReference[] { site };
     this.methods = new IMethod[] { method };
   }
@@ -36,8 +39,9 @@ public class CallString implements ContextItem {
   @Override
   public String toString() {
     StringBuffer str = new StringBuffer("[");
-    for (int i = 0; i < sites.length; i++)
+    for (int i = 0; i < sites.length; i++) {
       str.append(" ").append(methods[i].getName()).append("@").append(sites[i].getProgramCounter());
+    }
     str.append(" ]");
     return str.toString();
   }
@@ -69,13 +73,13 @@ public class CallString implements ContextItem {
 
     return false;
   }
-  
+
   public CallSiteReference[] getCallSiteRefs() {
     return this.sites;
   }
-  
+
   public IMethod[] getMethods() {
     return this.methods;
   }
-  
+
 }

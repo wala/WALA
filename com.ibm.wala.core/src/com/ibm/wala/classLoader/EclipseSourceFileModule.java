@@ -15,10 +15,7 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 
 /**
- * 
  * A module which is a wrapper around a .java file
- * 
- * @author sfink
  */
 public class EclipseSourceFileModule extends SourceFileModule  {
   private IFile f;

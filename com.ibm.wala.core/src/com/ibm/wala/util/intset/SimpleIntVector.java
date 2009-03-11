@@ -12,13 +12,10 @@ package com.ibm.wala.util.intset;
 
 import java.util.Arrays;
 
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.debug.Trace;
 
 /**
  * simple implementation of IntVector
- * 
- * @author sfink
  */
 public class SimpleIntVector implements IntVector {
 
@@ -39,7 +36,7 @@ public class SimpleIntVector implements IntVector {
   }
 
   public SimpleIntVector(int defaultValue, int initialSize) {
-    if (initialSize < 0) {
+    if (initialSize <= 0) {
       throw new IllegalArgumentException("Illegal initialSize: " + initialSize);
     }
     this.defaultValue = defaultValue;
@@ -59,8 +56,8 @@ public class SimpleIntVector implements IntVector {
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
   public int get(int x) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(x >= 0);
+    if (x < 0) {
+      throw new IllegalArgumentException("illegal x: " + x);
     }
     if (x < store.length) {
       return store[x];

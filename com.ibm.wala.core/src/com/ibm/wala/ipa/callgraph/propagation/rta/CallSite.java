@@ -18,10 +18,16 @@ import com.ibm.wala.util.collections.Pair;
 /**
  * A utility class consisting of a pair CallSiteReference x CGNode
  */
-public final class CallSite extends Pair<CallSiteReference, CGNode>{
+public final class CallSite extends Pair<CallSiteReference, CGNode> {
 
   public CallSite(CallSiteReference site, CGNode node) {
-    super(site,node);
+    super(site, node);
+    if (site == null) {
+      throw new IllegalArgumentException("null site");
+    }
+    if (node == null) {
+      throw new IllegalArgumentException("null node");
+    }
   }
 
   public CGNode getNode() {

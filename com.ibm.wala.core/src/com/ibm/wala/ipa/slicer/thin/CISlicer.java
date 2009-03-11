@@ -150,6 +150,9 @@ public class CISlicer {
    * don't iterate over SDG statements!
    */
   public static Map<Statement, Set<PointerKey>> scanForRef(SDG sdg, PointerAnalysis pa, ModRef modRef) {
+    if (pa == null) {
+      throw new IllegalArgumentException("null pa");
+    }
     ExtendedHeapModel h = new DelegatingExtendedHeapModel(pa.getHeapModel());
     Map<Statement, Set<PointerKey>> result = HashMapFactory.make();
     for (CGNode n : sdg.getCallGraph()) {

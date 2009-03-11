@@ -37,10 +37,7 @@ import com.ibm.wala.util.warnings.Warning;
 import com.ibm.wala.util.warnings.Warnings;
 
 /**
- *
  * A class loader that reads class definitions from a set of Modules.
- * 
- * @author sfink
  */
 public class ClassLoaderImpl implements IClassLoader {
   private static final int DEBUG_LEVEL = 0;
@@ -81,16 +78,17 @@ public class ClassLoaderImpl implements IClassLoader {
   private final ArrayClassLoader arrayClassLoader;
 
   /**
-   * @param loader
-   *          class loader reference identifying this loader
-   * @param parent
-   *          parent loader for delegation
-   * @param exclusions
-   *          set of classes to exclude from loading
+   * @param loader class loader reference identifying this loader
+   * @param parent parent loader for delegation
+   * @param exclusions set of classes to exclude from loading
    */
   public ClassLoaderImpl(ClassLoaderReference loader, ArrayClassLoader arrayClassLoader, IClassLoader parent,
       SetOfClasses exclusions, IClassHierarchy cha) {
 
+    if (loader == null) {
+      throw new IllegalArgumentException("null loader");
+    }
+    
     this.arrayClassLoader = arrayClassLoader;
     this.parent = parent;
     this.loader = loader;
@@ -105,8 +103,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * Return the Set of (ModuleEntry) source files found in a module.
    * 
-   * @param M
-   *          the module
+   * @param M the module
    * @return the Set of source files in the module
    * @throws IOException
    */
@@ -138,8 +135,7 @@ public class ClassLoaderImpl implements IClassLoader {
   /**
    * Return the Set of (ModuleEntry) class files found in a module.
    * 
-   * @param M
-   *          the module
+   * @param M the module
    * @return the Set of class Files in the module
    * @throws IOException
    */
@@ -197,8 +193,7 @@ public class ClassLoaderImpl implements IClassLoader {
   }
 
   /**
-   * Return a Set of IClasses, which represents all classes this class loader
-   * can load.
+   * Return a Set of IClasses, which represents all classes this class loader can load.
    */
   private Collection<IClass> getAllClasses() {
     if (Assertions.verifyAssertions) {
@@ -327,7 +322,7 @@ public class ClassLoaderImpl implements IClassLoader {
    * Initialize internal data structures
    * 
    * @throws IOException
-   * @throws IllegalArgumentException  if modules is null
+   * @throws IllegalArgumentException if modules is null
    */
   public void init(List<Module> modules) throws IOException {
 
@@ -371,7 +366,7 @@ public class ClassLoaderImpl implements IClassLoader {
     return getAllClasses().iterator();
   }
 
-  /* 
+  /*
    * @see com.ibm.wala.classLoader.IClassLoader#lookupClass(com.ibm.wala.types.TypeName)
    */
   public IClass lookupClass(TypeName className) {
@@ -384,7 +379,7 @@ public class ClassLoaderImpl implements IClassLoader {
 
     // treat arrays specially:
     if (className.isArrayType()) {
-      return arrayClassLoader.lookupClass(className, this,cha);
+      return arrayClassLoader.lookupClass(className, this, cha);
     }
 
     // try delegating first.

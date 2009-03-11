@@ -70,6 +70,9 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
 
   public ExplicitCallGraph(IClassHierarchy cha, AnalysisOptions options, AnalysisCache cache) {
     super();
+    if (options == null) {
+      throw new IllegalArgumentException("null options");
+    }
     this.cha = cha;
     this.options = options;
     this.cache = cache;
@@ -105,14 +108,18 @@ public class ExplicitCallGraph extends BasicCallGraph implements BytecodeConstan
   /**
    */
   @Override
-  public CGNode findOrCreateNode(IMethod method, Context C) throws CancelException {
-    assert method != null : "null method";
-    assert C != null : "null context for method " + method;
-    Key k = new Key(method, C);
+  public CGNode findOrCreateNode(IMethod method, Context context) throws CancelException {
+    if (method == null) {
+      throw new IllegalArgumentException("null method");
+    }
+    if (context == null) {
+      throw new IllegalArgumentException("null context");
+    }
+    Key k = new Key(method, context);
     NodeImpl result = getNode(k);
     if (result == null) {
       if (maxNumberOfNodes == -1 || getNumberOfNodes() < maxNumberOfNodes) {
-        result = makeNode(method, C);
+        result = makeNode(method, context);
         registerNode(k, result);
       } else {
         throw CancelException.make("Too many nodes");

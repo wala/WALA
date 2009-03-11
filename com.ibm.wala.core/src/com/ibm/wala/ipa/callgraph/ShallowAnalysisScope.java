@@ -18,42 +18,44 @@ import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.util.config.AnalysisScopeReader;
 
 /**
- * A serializable version of {@link AnalysisScope}. 
- * Note: any information about the array class loader is lost using this representation.
+ * A serializable version of {@link AnalysisScope}. Note: any information about the array class loader is lost using this
+ * representation.
+ * 
  * @author dpikus, yinnonh
- *
+ * 
  */
 public class ShallowAnalysisScope implements Serializable {
-  
+
   /* Serial version */
-  private static final long serialVersionUID = -3256390509887654321L;  
-  
+  private static final long serialVersionUID = -3256390509887654321L;
+
   private final SetOfClasses exclusions;
 
   // example for a line: "Primordial,Java,jarFile,primordial.jar.model"
   private final List<String> moduleLinesList;
-  
+
   // example for a line: "Synthetic, Java, loaderImpl, com.ibm.wala.ipa.summaries.BypassSyntheticClassLoader"
   // may be empty
   private final List<String> ldrImplLinesList;
-  
-  public ShallowAnalysisScope(  SetOfClasses exclusions, 
-                                List<String> moduleLinesList,
-                                List<String> ldrImplLinesList) {
+
+  public ShallowAnalysisScope(SetOfClasses exclusions, List<String> moduleLinesList, List<String> ldrImplLinesList) {
+    if (moduleLinesList == null) {
+      throw new IllegalArgumentException("null moduleLinesList");
+    }
     this.exclusions = exclusions;
     this.moduleLinesList = moduleLinesList;
     this.ldrImplLinesList = ldrImplLinesList;
   }
-  
+
   public AnalysisScope toAnalysisScope() throws IOException {
     AnalysisScope analysisScope = AnalysisScope.createJavaAnalysisScope();
     analysisScope.setExclusions(exclusions);
 
-    for(String moduleLine : moduleLinesList) {
+    for (String moduleLine : moduleLinesList) {
       AnalysisScopeReader.processScopeDefLine(analysisScope, this.getClass().getClassLoader(), moduleLine);
     }
-        
-    for(String ldrLine : ldrImplLinesList) {
+
+    for (String ldrLine : ldrImplLinesList) {
       AnalysisScopeReader.processScopeDefLine(analysisScope, this.getClass().getClassLoader(), ldrLine);
     }
 

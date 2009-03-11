@@ -32,6 +32,9 @@ public final class ImmutableByteArray {
     if (start < 0) {
       throw new IllegalArgumentException("invalid start: " + start);
     }
+    if (length < 0) {
+      throw new IllegalArgumentException("null length");
+    }
     this.b = new byte[length];
     System.arraycopy(b, start, this.b, 0, length);
   }

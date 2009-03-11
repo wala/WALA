@@ -26,8 +26,6 @@ import com.ibm.wala.util.intset.MutableMapping;
 /**
  * An object that tracks the mapping between pointer keys and points-to set
  * variables
- * 
- * @author sfink
  */
 public class PointsToMap {
 

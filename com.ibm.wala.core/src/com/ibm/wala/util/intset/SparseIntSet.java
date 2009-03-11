@@ -233,10 +233,9 @@ public class SparseIntSet implements IntSet {
     if (A == null) {
       throw new IllegalArgumentException("A is null");
     }
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(B != null);
+    if (B == null) {
+      throw new IllegalArgumentException("B is null");
     }
-
     if (A.isEmpty()) {
       return new int[0];
     } else if (B.isEmpty()) {

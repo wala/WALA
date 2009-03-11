@@ -38,6 +38,9 @@ public class DefaultContextSelector implements ContextSelector {
   }
 
   public Context getCalleeTarget(CGNode caller, CallSiteReference site, IMethod callee, InstanceKey receiver) {
+    if (caller == null) {
+      throw new IllegalArgumentException("null caller");
+    }
     return delegate.getCalleeTarget(caller, site, callee, receiver);
   }
 

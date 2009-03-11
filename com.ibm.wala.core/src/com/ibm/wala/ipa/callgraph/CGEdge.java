@@ -14,7 +14,6 @@ package com.ibm.wala.ipa.callgraph;
 import com.ibm.wala.util.collections.Pair;
 
 /**
- * 
  * An explicit representation of an edge in a call graph.
  * 
  * NB: We do NOT enforce that any particular call graph implementation actually
@@ -24,14 +23,17 @@ import com.ibm.wala.util.collections.Pair;
  * 
  * This abstraction does not include a call site reference, so this edge might
  * actually represent several distinct call sites.
- * 
- * @author sfink
  */
 public class CGEdge extends Pair<CGNode,CGNode>{
 
-
   public CGEdge(CGNode src, CGNode dest) {
     super(src,dest);
+    if (src == null) {
+      throw new IllegalArgumentException("null src");
+    }
+    if (dest == null) {
+      throw new IllegalArgumentException("null dest");
+    }
   }
 
 

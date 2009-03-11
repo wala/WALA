@@ -118,7 +118,7 @@ public class SSAPhiInstruction extends SSAInstruction {
    */
   @Override
   public int getUse(int j) throws IllegalArgumentException {
-    if (j >= params.length) {
+    if (j >= params.length || j < 0) {
       throw new IllegalArgumentException("Bad use " + j);
     }
     return params[j];

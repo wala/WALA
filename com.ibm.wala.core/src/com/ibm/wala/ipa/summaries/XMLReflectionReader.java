@@ -98,7 +98,9 @@ public class XMLReflectionReader implements BytecodeConstants, ReflectionSpecifi
 
   public XMLReflectionReader(InputStream xmlFile, AnalysisScope scope) {
     super();
-    Assertions.productionAssertion(xmlFile != null, "XMLMethodSummaryReader given null xmlFile");
+    if (xmlFile == null) {
+      throw new IllegalArgumentException("null xmlFile");
+    }
     this.scope = scope;
     try {
       readXML(xmlFile);

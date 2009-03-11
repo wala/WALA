@@ -42,6 +42,9 @@ public final class FieldReference extends MemberReference {
    * @param mn the name of the member
    */
   public static synchronized FieldReference findOrCreate(TypeReference tref, Atom mn, TypeReference fieldType) {
+    if (tref == null) {
+      throw new IllegalArgumentException("null tref");
+    }
     Key key = new Key(tref, mn, fieldType);
 
     FieldReference val = dictionary.get(key);

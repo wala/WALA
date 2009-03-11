@@ -146,7 +146,7 @@ public class SparseLongSet implements LongSet {
   }
 
   public final long elementAt(int idx) throws NoSuchElementException {
-    if (idx >= size) {
+    if (idx < 0 || idx >= size) {
       throw new NoSuchElementException();
     }
     return elements[idx];
@@ -232,8 +232,8 @@ public class SparseLongSet implements LongSet {
     if (A == null) {
       throw new IllegalArgumentException("A is null");
     }
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(B != null);
+    if (B == null) {
+      throw new IllegalArgumentException("B is null");
     }
 
     if (A.isEmpty()) {

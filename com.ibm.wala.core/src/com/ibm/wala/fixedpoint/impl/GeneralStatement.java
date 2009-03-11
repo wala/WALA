@@ -112,6 +112,9 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, T op3) {
     super();
+    if (operator == null) {
+      throw new IllegalArgumentException("null operator");
+    }
     this.operator = operator;
     rhs = new IVariable[3];
     this.lhs = lhs;
