@@ -28,6 +28,7 @@ import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.ILoadInstruction;
 import com.ibm.wala.shrikeBT.IPutInstruction;
 import com.ibm.wala.shrikeBT.IShiftInstruction;
+import com.ibm.wala.shrikeBT.IStoreInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.InstanceofInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
@@ -192,7 +193,7 @@ public class InstructionTypeCounter implements MethodData.Results {
       }
 
       @Override
-      public void visitLocalStore(StoreInstruction instruction) {
+      public void visitLocalStore(IStoreInstruction instruction) {
         countLocalStores++;
       }
 

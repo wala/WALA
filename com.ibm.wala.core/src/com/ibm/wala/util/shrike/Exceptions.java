@@ -21,8 +21,9 @@ import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ConstantInstruction;
 import com.ibm.wala.shrikeBT.Constants;
 import com.ibm.wala.shrikeBT.IInstruction;
+import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.Instruction;
-import com.ibm.wala.shrikeBT.InvokeInstruction;
+import com.ibm.wala.shrikeBT.ThrowInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.MemberReference;
@@ -53,6 +54,8 @@ public class Exceptions implements Constants {
   private static final Collection<TypeReference> newArrayExceptions = Collections.unmodifiableCollection(Arrays.asList(new TypeReference[] {
       TypeReference.JavaLangOutOfMemoryError, TypeReference.JavaLangNegativeArraySizeException }));
 
+  private static final Collection<TypeReference> exceptionInInitializerError = Collections.singleton(TypeReference.JavaLangExceptionInInitializerError);
+
   private static final Collection<TypeReference> nullPointerException = Collections.singleton(TypeReference.JavaLangNullPointerException);
 
   private static final Collection<TypeReference> arithmeticException = Collections.singleton(TypeReference.JavaLangArithmeticException);
@@ -79,17 +82,12 @@ public class Exceptions implements Constants {
    * @throws IllegalArgumentException  if pei is null
    * 
    */
-  public static Collection<TypeReference> getExceptionTypes(ClassLoaderReference loader, Instruction pei, IClassHierarchy cha) {
+  public static Collection<TypeReference> getExceptionTypes(ClassLoaderReference loader, IInstruction pei, IClassHierarchy cha) {
     if (pei == null) {
       throw new IllegalArgumentException("pei is null");
     }
-    switch (pei.getOpcode()) {
-
-    case OP_invokevirtual:
-    case OP_invokespecial:
-    case OP_invokestatic:
-    case OP_invokeinterface:
-      InvokeInstruction call = (InvokeInstruction) pei;
+    if (pei instanceof IInvokeInstruction) {
+      IInvokeInstruction call = (IInvokeInstruction) pei;
       Collection<TypeReference> result = null;
         try {
           result = inferInvokeExceptions(MethodReference.findOrCreate(loader, call.getClassType(), call.getMethodName(),
@@ -99,10 +97,10 @@ public class Exceptions implements Constants {
           Assertions.UNREACHABLE();
         }
       return result;
-    case OP_athrow:
-      Assertions.UNREACHABLE("This class does not have the smarts to infer exception types for athrow");
+    } else if (pei instanceof ThrowInstruction) {
+       Assertions.UNREACHABLE("This class does not have the smarts to infer exception types for athrow");
       return null;
-    default:
+    } else {
       return getIndependentExceptionTypes(pei);
     }
   }
@@ -246,61 +244,11 @@ public class Exceptions implements Constants {
         return getClassNotFoundException();
       else
         return null;
+    case OP_getstatic:
+    case OP_putstatic:
+      return getExceptionInInitializerError();
     default:
       return null;
-    }
-  }
-
-  /**
-   * TODO: move this elsewhere. Move it into shrike and develop new way to track
-   * peis.
-   * @throws IllegalArgumentException  if s is null
-   */
-  public static boolean isPEI(IInstruction s) {
-    if (s == null) {
-      throw new IllegalArgumentException("s is null");
-    }
-    switch (((Instruction)s).getOpcode()) {
-    case OP_iaload:
-    case OP_laload:
-    case OP_faload:
-    case OP_daload:
-    case OP_aaload:
-    case OP_baload:
-    case OP_caload:
-    case OP_saload:
-    case OP_iastore:
-    case OP_lastore:
-    case OP_fastore:
-    case OP_dastore:
-    case OP_aastore:
-    case OP_bastore:
-    case OP_castore:
-    case OP_sastore:
-    case OP_getfield:
-    case OP_putfield:
-    case OP_idiv:
-    case OP_invokevirtual:
-    case OP_invokespecial:
-    case OP_invokestatic:
-    case OP_invokeinterface:
-    case OP_irem:
-    case OP_ldiv:
-    case OP_lrem:
-    case OP_new:
-    case OP_newarray:
-    case OP_anewarray:
-    case OP_arraylength:
-    case OP_athrow:
-    case OP_checkcast:
-    case OP_monitorenter:
-    case OP_monitorexit:
-    case OP_multianewarray:
-      return true;
-    case OP_ldc_w:
-      return (((ConstantInstruction) s).getType().equals(TYPE_Class));
-    default:
-      return false;
     }
   }
 
@@ -335,4 +283,9 @@ public class Exceptions implements Constants {
   public static Collection<TypeReference> getNullPointerException() {
     return nullPointerException;
   }
+  
+  public static Collection<TypeReference> getExceptionInInitializerError() {
+    return exceptionInInitializerError;
+  }
+  
 }

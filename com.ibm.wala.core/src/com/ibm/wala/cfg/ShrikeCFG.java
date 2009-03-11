@@ -21,8 +21,8 @@ import com.ibm.wala.classLoader.ShrikeCTMethod;
 import com.ibm.wala.ipa.cha.IClassHierarchy;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
-import com.ibm.wala.shrikeBT.Instruction;
 import com.ibm.wala.shrikeBT.ReturnInstruction;
+import com.ibm.wala.shrikeBT.ThrowInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
 import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeReference;
@@ -144,7 +144,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
     // Compute r so r[i] == true iff instruction i begins a basic block.
     // While doing so count the number of blocks.
     r[0] = true;
-    Instruction[] instructions = (Instruction[]) getInstructions();
+    IInstruction[] instructions = getInstructions();
     for (int i = 0; i < instructions.length; i++) {
       int[] targets = instructions[i].getBranchTargets();
 
@@ -163,7 +163,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
           blockCount++;
         }
       }
-      if (Exceptions.isPEI(instructions[i])) {
+      if (instructions[i].isPEI()) {
         ExceptionHandler[] hs = handlers[i];
         // break the basic block here.
         if (i + 1 < instructions.length && !r[i + 1]) {
@@ -231,7 +231,7 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
         System.err.println("Block " + this + ": computeOutgoingEdges()");
       }
 
-      Instruction last = (Instruction) getInstructions()[getLastInstructionIndex()];
+      IInstruction last = getInstructions()[getLastInstructionIndex()];
       int[] targets = last.getBranchTargets();
       for (int i = 0; i < targets.length; i++) {
         BasicBlock b = getBlockForInstruction(targets[i]);
@@ -254,14 +254,14 @@ public class ShrikeCFG extends AbstractCFG<IInstruction, ShrikeCFG.BasicBlock> {
      * 
      * @param last the last instruction in a basic block.
      */
-    private void addExceptionalEdges(Instruction last) {
+    private void addExceptionalEdges(IInstruction last) {
       IClassHierarchy cha = getMethod().getClassHierarchy();
-      if (Exceptions.isPEI(last)) {
+      if (last.isPEI()) {
         Collection<TypeReference> exceptionTypes = null;
         boolean goToAllHandlers = false;
 
         ExceptionHandler[] hs = getExceptionHandlers();
-        if (last.getOpcode() == OP_athrow) {
+        if (last instanceof ThrowInstruction) {
           // this class does not have the type information needed
           // to determine what the athrow throws. So, add an
           // edge to all reachable handlers. Better information can

@@ -429,7 +429,7 @@ public abstract class ShrikeBTMethod implements IMethod, BytecodeConstants {
     for (int i = 0; i < instructions.length; i++) {
       simpleVisitor.setInstructionIndex(i);
       instructions[i].visit(simpleVisitor);
-      if (Exceptions.isPEI(instructions[i])) {
+      if (instructions[i].isPEI()) {
         Collection<TypeReference> t = Exceptions.getIndependentExceptionTypes(instructions[i]);
         if (t != null) {
           simpleVisitor.implicitExceptions.addAll(t);

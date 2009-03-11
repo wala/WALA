@@ -13,8 +13,8 @@ package com.ibm.wala.shrikeBT.info;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.ILoadInstruction;
+import com.ibm.wala.shrikeBT.IStoreInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
-import com.ibm.wala.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrikeBT.Util;
 
 /**
@@ -45,7 +45,7 @@ public class LocalAllocator implements MethodData.Results {
       }
 
       @Override
-      public void visitLocalStore(StoreInstruction instruction) {
+      public void visitLocalStore(IStoreInstruction instruction) {
         int v = instruction.getVarIndex() + Util.getWordSize(instruction.getType());
         if (v > max[0]) {
           max[0] = v;

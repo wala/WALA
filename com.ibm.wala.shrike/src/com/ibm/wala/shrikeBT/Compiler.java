@@ -196,7 +196,7 @@ public abstract class Compiler implements Constants {
       }
 
       @Override
-      public void visitLocalStore(StoreInstruction instruction) {
+      public void visitLocalStore(IStoreInstruction instruction) {
         localsUsed.set(instruction.getVarIndex());
         String t = instruction.getType();
         if (t.equals(TYPE_long) || t.equals(TYPE_double)) {

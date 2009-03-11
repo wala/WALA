@@ -33,12 +33,12 @@ import com.ibm.wala.shrikeBT.IGetInstruction;
 import com.ibm.wala.shrikeBT.IInvokeInstruction;
 import com.ibm.wala.shrikeBT.IPutInstruction;
 import com.ibm.wala.shrikeBT.IShiftInstruction;
+import com.ibm.wala.shrikeBT.IStoreInstruction;
 import com.ibm.wala.shrikeBT.IUnaryOpInstruction;
 import com.ibm.wala.shrikeBT.InstanceofInstruction;
 import com.ibm.wala.shrikeBT.MonitorInstruction;
 import com.ibm.wala.shrikeBT.NewInstruction;
 import com.ibm.wala.shrikeBT.ReturnInstruction;
-import com.ibm.wala.shrikeBT.StoreInstruction;
 import com.ibm.wala.shrikeBT.SwitchInstruction;
 import com.ibm.wala.shrikeBT.ThrowInstruction;
 import com.ibm.wala.shrikeCT.InvalidClassFileException;
@@ -569,7 +569,7 @@ public class SSABuilder extends AbstractIntStackMachine {
        * @see com.ibm.wala.shrikeBT.Instruction.Visitor#visitLocalStore(com.ibm.wala.shrikeBT.StoreInstruction)
        */
       @Override
-      public void visitLocalStore(StoreInstruction instruction) {
+      public void visitLocalStore(IStoreInstruction instruction) {
         if (localMap != null) {
           localMap.startRange(getCurrentInstructionIndex(), instruction.getVarIndex(), workingState.peek());
         }

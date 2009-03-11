@@ -21,6 +21,7 @@ import com.ibm.wala.shrikeBT.DupInstruction;
 import com.ibm.wala.shrikeBT.ExceptionHandler;
 import com.ibm.wala.shrikeBT.IInstruction;
 import com.ibm.wala.shrikeBT.ILoadInstruction;
+import com.ibm.wala.shrikeBT.IStoreInstruction;
 import com.ibm.wala.shrikeBT.LoadInstruction;
 import com.ibm.wala.shrikeBT.MethodData;
 import com.ibm.wala.shrikeBT.StoreInstruction;
@@ -513,7 +514,7 @@ public class Analyzer {
         }
 
         @Override
-        public void visitLocalStore(StoreInstruction instruction) {
+        public void visitLocalStore(IStoreInstruction instruction) {
           int index = instruction.getVarIndex();
           curLocals[index] = curStack[0];
           if (index >= curLocalsSize[0]) {

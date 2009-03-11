@@ -31,7 +31,7 @@ public interface IInstruction {
     public void visitLocalLoad(ILoadInstruction instruction) {
     }
   
-    public void visitLocalStore(StoreInstruction instruction) {
+    public void visitLocalStore(IStoreInstruction instruction) {
     }
   
     public void visitArrayLoad(IArrayLoadInstruction instruction) {
