@@ -18,7 +18,6 @@ import com.ibm.wala.shrikeCT.ClassConstants;
 import com.ibm.wala.types.FieldReference;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.types.annotations.Annotation;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -43,9 +42,11 @@ public final class FieldImpl implements IField {
     this.fieldRef = canonicalRef;
     this.accessFlags = accessFlags;
     this.annotations = annotations;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(declaringClass != null);
-      Assertions._assert(fieldRef != null);
+    if (declaringClass == null) {
+      throw new IllegalArgumentException("null declaringClass");
+    }
+    if (fieldRef == null) {
+      throw new IllegalArgumentException("null canonicalRef");
     }
   }
 

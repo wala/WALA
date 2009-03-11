@@ -18,25 +18,22 @@ import com.ibm.wala.ipa.callgraph.ContextKey;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- *
- * This is a context which is defined by a pair consisting of 
- * <caller node, base context>.
+ * This is a context which is defined by a pair consisting of <caller node, base context>.
  * 
- * The base context is typically some special case; e.g.,
- * a JavaTypeContext used for reflection.
- * 
- * @author Julian Dolby (dolby@us.ibm.com)
- * @author sjfink
+ * The base context is typically some special case; e.g., a JavaTypeContext used for reflection.
  */
 public class CallerSiteContextPair extends CallerSiteContext {
 
-
   private final Context baseContext;
+
   /**
    * @param caller the node which defines this context.
    */
   public CallerSiteContextPair(CGNode caller, CallSiteReference callSite, Context baseContext) {
     super(caller, callSite);
+    if (caller == null) {
+      throw new IllegalArgumentException("null caller");
+    }
     this.baseContext = baseContext;
     if (Assertions.verifyAssertions) {
       // avoid recursive contexts for now.
@@ -62,10 +59,9 @@ public class CallerSiteContextPair extends CallerSiteContext {
       return false;
     }
     if (getClass().equals(obj.getClass())) {
-      CallerSiteContextPair other = (CallerSiteContextPair)obj;
-      return getCaller().equals(other.getCaller())
-	  && getCallSite().equals(other.getCallSite())
-	  && baseContext.equals(other.baseContext);
+      CallerSiteContextPair other = (CallerSiteContextPair) obj;
+      return getCaller().equals(other.getCaller()) && getCallSite().equals(other.getCallSite())
+          && baseContext.equals(other.baseContext);
     } else {
       return false;
     }

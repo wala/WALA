@@ -45,6 +45,9 @@ public class JavaLauncher extends Launcher {
    */
   public static JavaLauncher make(String programArgs, String mainClass, boolean inheritClasspath, List<String> classpathEntries,
       boolean captureOutput, boolean captureErr, Logger logger) {
+    if (mainClass == null) {
+      throw new IllegalArgumentException("null mainClass");
+    }
     return new JavaLauncher(programArgs, mainClass, inheritClasspath, classpathEntries, captureOutput, captureErr, logger);
   }
 

@@ -156,6 +156,9 @@ public class AnalysisScopeReader {
   }
 
   public static void addClassPathToScope(String classPath, AnalysisScope scope, ClassLoaderReference loader) {
+    if (classPath == null) {
+      throw new IllegalArgumentException("null classPath");
+    }
     try {
       StringTokenizer paths = new StringTokenizer(classPath, File.pathSeparator);
       while (paths.hasMoreTokens()) {

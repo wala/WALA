@@ -44,6 +44,9 @@ public class BitVectorVariable extends AbstractVariable<BitVectorVariable> {
   }
 
   public void addAll(BitVector B) {
+    if (B == null) {
+      throw new IllegalArgumentException("null B");
+    }
     if (V == null) {
       V = new MutableSharedBitVectorIntSet(new BitVectorIntSet(B));
       return;

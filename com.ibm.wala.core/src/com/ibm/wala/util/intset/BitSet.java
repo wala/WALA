@@ -45,7 +45,7 @@ public final class BitSet<T> {
     this.map = map;
   }
 
-  public BitSet(BitSet<T> B) throws NullPointerException {
+  public BitSet(BitSet<T> B){
     this(B.map);
     addAll(B);
   }

@@ -15,7 +15,6 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * @author sfink
@@ -85,8 +84,9 @@ public class SSAReturnInstruction extends SSAInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
-      Assertions._assert(j == 0);
+    if (j != 0) {
+      throw new IllegalArgumentException("illegal j: " + j);
+    }
     return result;
   }
 

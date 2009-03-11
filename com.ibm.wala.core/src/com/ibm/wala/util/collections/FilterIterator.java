@@ -14,8 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * A <code>FilterIterator</code> filters an <code>Iterator</code> to
- * generate a new one.
+ * A <code>FilterIterator</code> filters an <code>Iterator</code> to generate a new one.
  * 
  * @author Mauricio J. Serrano
  * @author John Whaley
@@ -31,13 +30,16 @@ public class FilterIterator<T> implements java.util.Iterator<T> {
   private boolean done = false;
 
   /**
-   * @param i
-   *          the original iterator
-   * @param f
-   *          a filter which defines which elements belong to the generated
-   *          iterator
+   * @param i the original iterator
+   * @param f a filter which defines which elements belong to the generated iterator
    */
   public FilterIterator(Iterator<?> i, Filter f) {
+    if (i == null) {
+      throw new IllegalArgumentException("null i");
+    }
+    if (f == null) {
+      throw new IllegalArgumentException("null f");
+    }
     this.i = i;
     this.f = f;
     advance();

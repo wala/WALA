@@ -33,12 +33,13 @@ public class SymbolTable {
   final private HashMap<ConstantValue, Integer> constants = HashMapFactory.make(10);
 
   /**
-   * Constructor.
-   * 
    * @param numberOfParameters
    *            in the IR .. should be ir.getNumberOfParameters()
    */
   public SymbolTable(int numberOfParameters) {
+    if (numberOfParameters < 0) {
+      throw new IllegalArgumentException("Illegal numberOfParameters: " + numberOfParameters);
+    }
     parameters = new int[numberOfParameters];
     for (int i = 0; i < parameters.length; i++) {
       parameters[i] = getNewValueNumber();

@@ -33,8 +33,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   /**
    * Creates an empty string with the specified size.
    * 
-   * @param nbits
-   *            the size of the string
+   * @param nbits the size of the string
    */
   public FixedSizeBitVector(int nbits) {
     // subscript(nbits) is the length of the array needed to
@@ -46,10 +45,8 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   /**
    * Creates a copy of a Bit String
    * 
-   * @param s
-   *            the string to copy
-   * @throws IllegalArgumentException
-   *             if s is null
+   * @param s the string to copy
+   * @throws IllegalArgumentException if s is null
    */
   public FixedSizeBitVector(FixedSizeBitVector s) {
     if (s == null) {
@@ -72,8 +69,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   /**
    * Sets a bit.
    * 
-   * @param bit
-   *            the bit to be set
+   * @param bit the bit to be set
    */
   public void set(int bit) {
     int shiftBits = bit & LOW_MASK;
@@ -92,8 +88,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   /**
    * Clears a bit.
    * 
-   * @param bit
-   *            the bit to be cleared
+   * @param bit the bit to be cleared
    */
   public void clear(int bit) {
     int shiftBits = bit & LOW_MASK;
@@ -103,10 +98,12 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   /**
    * Gets a bit.
    * 
-   * @param bit
-   *            the bit to be gotten
+   * @param bit the bit to be gotten
    */
   public boolean get(int bit) {
+    if (bit < 0) {
+      throw new IllegalArgumentException("illegal bit: " + bit);
+    }
     int shiftBits = bit & LOW_MASK;
     int n = subscript(bit);
     return ((bits[n] & (1 << shiftBits)) != 0);
@@ -133,8 +130,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   /**
    * Logically ANDs this bit set with the specified set of bits.
    * 
-   * @param set
-   *            the bit set to be ANDed with
+   * @param set the bit set to be ANDed with
    */
   public void and(FixedSizeBitVector set) {
     if (this == set) {
@@ -158,9 +154,8 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   /**
    * Logically ORs this bit set with the specified set of bits.
    * 
-   * @param set
-   *            the bit set to be ORed with
-   * @throws IllegalArgumentException  if set == null
+   * @param set the bit set to be ORed with
+   * @throws IllegalArgumentException if set == null
    */
   public void or(FixedSizeBitVector set) throws IllegalArgumentException {
     if (set == null) {
@@ -177,7 +172,8 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
 
   /**
    * Return a new FixedSizeBitVector as the OR of two others
-   * @throws IllegalArgumentException  if b2 == null
+   * 
+   * @throws IllegalArgumentException if b2 == null
    */
   public static FixedSizeBitVector or(FixedSizeBitVector b1, FixedSizeBitVector b2) throws IllegalArgumentException {
     if (b2 == null) {
@@ -191,10 +187,8 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   /**
    * Logically XORs this bit set with the specified set of bits.
    * 
-   * @param set
-   *            the bit set to be XORed with
-   * @throws IllegalArgumentException
-   *             if set is null
+   * @param set the bit set to be XORed with
+   * @throws IllegalArgumentException if set is null
    */
   public void xor(FixedSizeBitVector set) {
     if (set == null) {
@@ -209,8 +203,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   /**
    * Check if the intersection of the two sets is empty
    * 
-   * @param other
-   *            the set to check intersection with
+   * @param other the set to check intersection with
    */
   public boolean intersectionEmpty(FixedSizeBitVector other) {
     int n = bits.length;
@@ -224,10 +217,8 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   /**
    * Copies the values of the bits in the specified set into this set.
    * 
-   * @param set
-   *            the bit set to copy the bits from
-   * @throws IllegalArgumentException
-   *             if set is null
+   * @param set the bit set to copy the bits from
+   * @throws IllegalArgumentException if set is null
    */
   public void copyBits(FixedSizeBitVector set) {
     if (set == null) {
@@ -263,8 +254,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   }
 
   /**
-   * Calculates and returns the set's size in bits. The maximum element in the
-   * set is the size - 1st element.
+   * Calculates and returns the set's size in bits. The maximum element in the set is the size - 1st element.
    */
   public int length() {
     return bits.length << LOG_BITS_PER_UNIT;
@@ -273,8 +263,7 @@ public final class FixedSizeBitVector implements Cloneable, java.io.Serializable
   /**
    * Compares this object against the specified object.
    * 
-   * @param obj
-   *            the object to compare with
+   * @param obj the object to compare with
    * @return true if the objects are the same; false otherwise.
    */
   @Override

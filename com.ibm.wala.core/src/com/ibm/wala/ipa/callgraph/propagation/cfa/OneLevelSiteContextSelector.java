@@ -19,22 +19,20 @@ import com.ibm.wala.ipa.callgraph.impl.Everywhere;
 import com.ibm.wala.ipa.callgraph.propagation.InstanceKey;
 
 /**
- * 
- * This is a context selector that adds one level of calling context to a base
- * context selector.
- * 
- * @author sfink
+ * This is a context selector that adds one level of calling context to a base context selector.
  */
 public class OneLevelSiteContextSelector implements ContextSelector {
 
   private final ContextSelector baseSelector;
 
   /**
-   * @param baseSelector
-   *          a context selector which provides the context to analyze a method
-   *          in, but without one level of calling context.
+   * @param baseSelector a context selector which provides the context to analyze a method in, but without one level of calling
+   *          context.
    */
   public OneLevelSiteContextSelector(ContextSelector baseSelector) {
+    if (baseSelector == null) {
+      throw new IllegalArgumentException("null baseSelector");
+    }
     this.baseSelector = baseSelector;
   }
 

@@ -53,6 +53,9 @@ public final class ImmutableByteArray {
   }
 
   public byte[] substring(int i, int length) {
+    if (length < 0) {
+      throw new IllegalArgumentException("illegal length: " + length);
+    }
     byte[] result = new byte[length];
     System.arraycopy(b, i, result, 0, length);
     return result;

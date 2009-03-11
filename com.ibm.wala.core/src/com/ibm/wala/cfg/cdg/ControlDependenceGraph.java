@@ -36,37 +36,32 @@ import com.ibm.wala.util.graph.impl.GraphInverter;
 public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends AbstractNumberedGraph<T> {
 
   /**
-   * Governing control flow-graph. The control dependence graph is computed from
-   * this cfg.
+   * Governing control flow-graph. The control dependence graph is computed from this cfg.
    */
   private final ControlFlowGraph<I, T> cfg;
 
   /**
-   * the EdgeManager for the CDG. It implements the edge part of the standard
-   * Graph abstraction, using the control-dependence edges of the cdg.
+   * the EdgeManager for the CDG. It implements the edge part of the standard Graph abstraction, using the control-dependence edges
+   * of the cdg.
    */
   private final EdgeManager<T> edgeManager;
 
   /**
-   * If requested, this is a map from parentXchild Pairs representing edges in
-   * the CDG to the labels of the control flow edges that edge corresponds to.
-   * The labels are Boolean.True or Boolean.False for conditionals and an
-   * Integer for a switch label.
+   * If requested, this is a map from parentXchild Pairs representing edges in the CDG to the labels of the control flow edges that
+   * edge corresponds to. The labels are Boolean.True or Boolean.False for conditionals and an Integer for a switch label.
    */
   private Map<Pair, Set<Object>> edgeLabels;
 
   /**
-   * This is the heart of the CDG computation. Based on Cytron et al., this is
-   * the reverse dominance frontier based algorithm for computing control
-   * dependence edges.
+   * This is the heart of the CDG computation. Based on Cytron et al., this is the reverse dominance frontier based algorithm for
+   * computing control dependence edges.
    * 
    * @return Map: node n -> {x : n is control-dependent on x}
    */
   private Map<T, Set<T>> buildControlDependence(boolean wantEdgeLabels) {
     Map<T, Set<T>> controlDependence = HashMapFactory.make(cfg.getNumberOfNodes());
 
-    DominanceFrontiers<T> RDF =
-      new DominanceFrontiers<T>(GraphInverter.invert(cfg), cfg.exit());
+    DominanceFrontiers<T> RDF = new DominanceFrontiers<T>(GraphInverter.invert(cfg), cfg.exit());
 
     if (wantEdgeLabels) {
       edgeLabels = HashMapFactory.make();
@@ -99,9 +94,8 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
   }
 
   /**
-   * Given the control-dependence edges in a forward direction (i.e. edges from
-   * control parents to control children), this method creates an EdgeManager
-   * that provides the edge half of the Graph abstraction.
+   * Given the control-dependence edges in a forward direction (i.e. edges from control parents to control children), this method
+   * creates an EdgeManager that provides the edge half of the Graph abstraction.
    */
   private EdgeManager<T> constructGraphEdges(final Map<T, Set<T>> forwardEdges) {
     return new EdgeManager<T>() {
@@ -194,19 +188,19 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
   }
 
   /**
-   * @param cfg
-   *            governing control flow graph
-   * @param wantEdgeLabels
-   *            whether to compute edge labels for CDG edges
+   * @param cfg governing control flow graph
+   * @param wantEdgeLabels whether to compute edge labels for CDG edges
    */
   public ControlDependenceGraph(ControlFlowGraph<I, T> cfg, boolean wantEdgeLabels) {
+    if (cfg == null) {
+      throw new IllegalArgumentException("null cfg");
+    }
     this.cfg = cfg;
     this.edgeManager = constructGraphEdges(buildControlDependence(wantEdgeLabels));
   }
 
   /**
-   * @param cfg
-   *            governing control flow graph
+   * @param cfg governing control flow graph
    */
   public ControlDependenceGraph(ControlFlowGraph<I, T> cfg) {
     this(cfg, false);
@@ -217,9 +211,8 @@ public class ControlDependenceGraph<I, T extends IBasicBlock<I>> extends Abstrac
   }
 
   /**
-   * Return the set of edge labels for the control flow edges that cause the
-   * given edge in the CDG. Requires that the CDG be constructed with
-   * wantEdgeLabels being true.
+   * Return the set of edge labels for the control flow edges that cause the given edge in the CDG. Requires that the CDG be
+   * constructed with wantEdgeLabels being true.
    */
   public Set<Object> getEdgeLabels(Object from, Object to) {
     return edgeLabels.get(Pair.make(from, to));

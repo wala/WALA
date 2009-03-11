@@ -35,6 +35,12 @@ public final class Selector {
   public Selector(Atom name, Descriptor descriptor) {
     this.name = name;
     this.descriptor = descriptor;
+    if (name == null) {
+      throw new IllegalArgumentException("null name");
+    }
+    if (descriptor == null) {
+      throw new IllegalArgumentException("null descriptor");
+    }
   }
 
   @Override

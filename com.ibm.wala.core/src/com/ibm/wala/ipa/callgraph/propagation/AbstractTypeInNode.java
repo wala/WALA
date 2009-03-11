@@ -24,8 +24,10 @@ public abstract class AbstractTypeInNode implements InstanceKeyWithNode {
   private final CGNode node;
 
   public AbstractTypeInNode(CGNode node, IClass type) {
+    if (node == null) {
+      throw new IllegalArgumentException("null node");
+    }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(node != null);
       if (type != null && type.isInterface()) {
         Assertions.UNREACHABLE("unexpected type: " + type);
       }

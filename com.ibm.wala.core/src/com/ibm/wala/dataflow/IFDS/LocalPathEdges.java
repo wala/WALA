@@ -38,81 +38,67 @@ public class LocalPathEdges {
   /**
    * A map from integer (d2) -> (IBinaryNonNegativeIntRelation)
    * 
-   * For fact d2, paths[d2] gives a relation R=(n,d1) s.t. (<s_p, d1> ->
-   * <n,d2>) is a path edge.
+   * For fact d2, paths[d2] gives a relation R=(n,d1) s.t. (<s_p, d1> -> <n,d2>) is a path edge.
    * 
-   * Note that we handle paths of the form <s_p, d1> -> <n,d1> specially, below.
-   * We also handle paths of the form <s_p, 0> -> <n, d1> specially below.
+   * Note that we handle paths of the form <s_p, d1> -> <n,d1> specially, below. We also handle paths of the form <s_p, 0> -> <n,
+   * d1> specially below.
    * 
-   * We choose this somewhat convoluted representation for the following
-   * reasons: 1) of the (n, d1, d2) tuple-space, we expect the set of n to be
-   * dense for a given (d1,d2) pair. However the pairs should be sparse. So, we
-   * set up so n is the first dimension of the int-relations, which are designed
-   * to be dense in the first dimension 2) we need to support getInverse(), so
-   * we design lookup to get the d1's for an (n,d2) pair.
+   * We choose this somewhat convoluted representation for the following reasons: 1) of the (n, d1, d2) tuple-space, we expect the
+   * set of n to be dense for a given (d1,d2) pair. However the pairs should be sparse. So, we set up so n is the first dimension of
+   * the int-relations, which are designed to be dense in the first dimension 2) we need to support getInverse(), so we design
+   * lookup to get the d1's for an (n,d2) pair.
    * 
    * Note that this representation is not good for merges. See below.
    * 
-   * TODO: more representation optimization. A special representation for triples?
-   * sparse representations for CFG? exploit shorts for ints?
+   * TODO: more representation optimization. A special representation for triples? sparse representations for CFG? exploit shorts
+   * for ints?
    */
   private final SparseVector<IBinaryNaturalRelation> paths = new SparseVector<IBinaryNaturalRelation>(1, 1.1f);
 
   /**
-   * If this is non-null, it holds a redundant representation of the paths
-   * information, designed to make getReachable(II) faster. This is designed for
-   * algorithms that want to use frequent merges. While it's a shame to waste
-   * space, I don't want to compromise space or time of the non-merging IFDS
-   * solver, for which the original paths representation works well. Is there a
-   * better data structure tradeoff?
+   * If this is non-null, it holds a redundant representation of the paths information, designed to make getReachable(II) faster.
+   * This is designed for algorithms that want to use frequent merges. While it's a shame to waste space, I don't want to compromise
+   * space or time of the non-merging IFDS solver, for which the original paths representation works well. Is there a better data
+   * structure tradeoff?
    * 
    * A map from integer (d1) -> (IBinaryNonNegativeIntRelation)
    * 
-   * For fact d1, paths[d1] gives a relation R=(n,d2) s.t. (<s_p, d1> ->
-   * <n,d2>) is a path edge.
+   * For fact d1, paths[d1] gives a relation R=(n,d2) s.t. (<s_p, d1> -> <n,d2>) is a path edge.
    * 
    * 
-   * We choose this somewhat convoluted representation for the following
-   * reasons: 1) of the (n, d1, d2) tuple-space, we expect the set of n to be
-   * dense for a given (d1,d2) pair. However the pairs should be sparse. So, we
-   * set up so n is the first dimension of the int-relations, which are designed
-   * to be dense in the first dimension 2) we need to support getReachable(), so
-   * we design lookup to get the d2's for an (n,d1) pair.
+   * We choose this somewhat convoluted representation for the following reasons: 1) of the (n, d1, d2) tuple-space, we expect the
+   * set of n to be dense for a given (d1,d2) pair. However the pairs should be sparse. So, we set up so n is the first dimension of
+   * the int-relations, which are designed to be dense in the first dimension 2) we need to support getReachable(), so we design
+   * lookup to get the d2's for an (n,d1) pair.
    */
   private final SparseVector<IBinaryNaturalRelation> altPaths;
 
   /**
    * a map from integer d1 -> int set.
    * 
-   * for fact d1, identityPaths[d1] gives the set of block numbers N s.t. for n
-   * \in N, <s_p, d1> -> <n, d1> is a path edge.
+   * for fact d1, identityPaths[d1] gives the set of block numbers N s.t. for n \in N, <s_p, d1> -> <n, d1> is a path edge.
    */
   private final SparseVector<IntSet> identityPaths = new SparseVector<IntSet>(1, 1.1f);
 
   /**
    * a map from integer d2 -> int set
    * 
-   * for fact d2, zeroPaths[d2] gives the set of block numbers N s.t. for n \in
-   * N, <s_p, 0> -> <n, d2> is a path edge.
+   * for fact d2, zeroPaths[d2] gives the set of block numbers N s.t. for n \in N, <s_p, 0> -> <n, d2> is a path edge.
    */
   private final SparseVector<IntSet> zeroPaths = new SparseVector<IntSet>(1, 1.1f);
 
   /**
-   * @param fastMerge
-   *          if true, the representation uses extra space in order to support
-   *          faster merge operations
+   * @param fastMerge if true, the representation uses extra space in order to support faster merge operations
    */
   public LocalPathEdges(boolean fastMerge) {
     altPaths = fastMerge ? new SparseVector<IBinaryNaturalRelation>(1, 1.1f) : null;
   }
 
   /**
-   * Record that in this procedure we've discovered a same-level realizable path
-   * from (s_p,d_i) to (n,d_j)
+   * Record that in this procedure we've discovered a same-level realizable path from (s_p,d_i) to (n,d_j)
    * 
    * @param i
-   * @param n
-   *          local block number of the basic block n
+   * @param n local block number of the basic block n
    * 
    * @param j
    */
@@ -127,8 +113,7 @@ public class LocalPathEdges {
         IBinaryNaturalRelation R = paths.get(j);
         if (R == null) {
           // we expect the first dimension of R to be dense, the second sparse
-          R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
-              BasicNaturalRelation.TWO_LEVEL);
+          R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY }, BasicNaturalRelation.TWO_LEVEL);
           paths.set(j, R);
         }
         R.add(n, i);
@@ -137,26 +122,23 @@ public class LocalPathEdges {
           IBinaryNaturalRelation R2 = altPaths.get(i);
           if (R2 == null) {
             // we expect the first dimension of R to be dense, the second sparse
-            R2 = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
-                BasicNaturalRelation.TWO_LEVEL);
+            R2 = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY }, BasicNaturalRelation.TWO_LEVEL);
             altPaths.set(i, R2);
           }
           R2.add(n, j);
         }
 
         if (TabulationSolver.DEBUG_LEVEL > 1) {
-//          System.err.println("recording path edge, now d2=" + j + " has been reached from " + R);
+          // System.err.println("recording path edge, now d2=" + j + " has been reached from " + R);
         }
       }
     }
   }
 
   /**
-   * Record that in this procedure we've discovered a same-level realizable path
-   * from (s_p,i) to (n,i)
+   * Record that in this procedure we've discovered a same-level realizable path from (s_p,i) to (n,i)
    * 
-   * @param n
-   *          local block number of the basic block n
+   * @param n local block number of the basic block n
    */
   private void addIdentityPathEdge(int i, int n) {
     BitVectorIntSet s = (BitVectorIntSet) identityPaths.get(i);
@@ -170,8 +152,7 @@ public class LocalPathEdges {
       IBinaryNaturalRelation R2 = altPaths.get(i);
       if (R2 == null) {
         // we expect the first dimension of R to be dense, the second sparse
-        R2 = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
-            BasicNaturalRelation.TWO_LEVEL);
+        R2 = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY }, BasicNaturalRelation.TWO_LEVEL);
         altPaths.set(i, R2);
       }
       R2.add(n, i);
@@ -183,11 +164,9 @@ public class LocalPathEdges {
   }
 
   /**
-   * Record that in this procedure we've discovered a same-level realizable path
-   * from (s_p,0) to (n,d_j)
+   * Record that in this procedure we've discovered a same-level realizable path from (s_p,0) to (n,d_j)
    * 
-   * @param n
-   *          local block number of the basic block n
+   * @param n local block number of the basic block n
    * 
    * @param j
    */
@@ -203,8 +182,7 @@ public class LocalPathEdges {
       IBinaryNaturalRelation R = altPaths.get(0);
       if (R == null) {
         // we expect the first dimension of R to be dense, the second sparse
-        R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY },
-            BasicNaturalRelation.TWO_LEVEL);
+        R = new BasicNaturalRelation(new byte[] { BasicNaturalRelation.SIMPLE_SPACE_STINGY }, BasicNaturalRelation.TWO_LEVEL);
         altPaths.set(0, R);
       }
       R.add(n, j);
@@ -215,22 +193,16 @@ public class LocalPathEdges {
   }
 
   /**
-   * N.B: If we're using the ZERO_PATH_SHORT_CIRCUIT, then we may have <s_p, d1> ->
-   * <n, d2> implicitly represented since we also have <s_p, 0> -> <n,d2>.
-   * However, getInverse() <b> will NOT </b> return these implicit d1 bits in
-   * the result. This translates to saying that the caller had better not care
-   * about any other d1 other than d1==0 if d1==0 is present. This happens to be
-   * true in the single use of getInverse() in the tabulation solver, which uses
-   * getInverse() to propagate flow from an exit node back to the caller's
-   * return site(s). Since we know that we will see flow from fact 0 to the
-   * return sites(s), we don't care about other facts that may induce the same
-   * flow to the return site(s).
+   * N.B: If we're using the ZERO_PATH_SHORT_CIRCUIT, then we may have <s_p, d1> -> <n, d2> implicitly represented since we also
+   * have <s_p, 0> -> <n,d2>. However, getInverse() <b> will NOT </b> return these implicit d1 bits in the result. This translates
+   * to saying that the caller had better not care about any other d1 other than d1==0 if d1==0 is present. This happens to be true
+   * in the single use of getInverse() in the tabulation solver, which uses getInverse() to propagate flow from an exit node back to
+   * the caller's return site(s). Since we know that we will see flow from fact 0 to the return sites(s), we don't care about other
+   * facts that may induce the same flow to the return site(s).
    * 
-   * @param n
-   *          local block number of a basic block n
+   * @param n local block number of a basic block n
    * @param d2
-   * @return the sparse int set of d1 s.t. <s_p, d1> -> <n, d2> are recorded as
-   *         path edges. null if none found
+   * @return the sparse int set of d1 s.t. <s_p, d1> -> <n, d2> are recorded as path edges. null if none found
    */
   public IntSet getInverse(int n, int d2) {
     IBinaryNaturalRelation R = paths.get(d2);
@@ -305,17 +277,15 @@ public class LocalPathEdges {
 
   /**
    * @param i
-   * @param n
-   *          local block number of a basic block n
+   * @param n local block number of a basic block n
    * @param j
    * @return true iff we have a path edge <s_p,i>-><n, j>
    */
   public boolean contains(int i, int n, int j) {
 
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(n >= 0);
+    if (n < 0) {
+      throw new IllegalArgumentException("invalid n: " + n);
     }
-    
     if (i == 0) {
       BitVectorIntSet z = (BitVectorIntSet) zeroPaths.get(j);
       if (z != null && z.contains(n)) {
@@ -410,7 +380,7 @@ public class LocalPathEdges {
   /**
    * TODO: optimize this based on altPaths
    * 
-   * @param n the local block number of a node 
+   * @param n the local block number of a node
    * @return set of d2 s.t \exists d1 s.t. d1->d2 is a path edge for node n
    */
   public IntSet getReachable(int n) {
@@ -459,6 +429,7 @@ public class LocalPathEdges {
 
   /**
    * TODO: optimize this
+   * 
    * @return set of node numbers that are reached by any fact
    */
   public IntSet getReachedNodeNumbers() {

@@ -34,6 +34,12 @@ public class CompoundIntIterator implements IntIterator {
   public CompoundIntIterator(IntIterator A, IntIterator B) {
     this.A = A;
     this.B = B;
+    if (A == null) {
+      throw new IllegalArgumentException("null A");
+    }
+    if (B == null) {
+      throw new IllegalArgumentException("null B");
+    }
   }
 
 

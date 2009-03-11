@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.classLoader.IField;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * An pointer key which represents a unique set for each static field
@@ -20,8 +19,8 @@ public final class StaticFieldKey extends AbstractPointerKey {
   private final IField field;
 
   public StaticFieldKey(IField field) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(field != null);
+    if (field == null) {
+      throw new IllegalArgumentException("null field");
     }
     this.field = field;
   }

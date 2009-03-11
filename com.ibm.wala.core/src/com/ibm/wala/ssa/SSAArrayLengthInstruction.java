@@ -97,8 +97,9 @@ public class SSAArrayLengthInstruction extends SSAInstruction {
    */
   @Override
   public int getUse(int j) {
-    if (Assertions.verifyAssertions)
-      Assertions._assert(j == 0);
+    if (j != 0) {
+      throw new IllegalArgumentException("invalid j: " + j);
+    }
     return arrayref;
   }
 

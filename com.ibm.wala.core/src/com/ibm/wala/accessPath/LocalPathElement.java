@@ -10,16 +10,11 @@
  *******************************************************************************/
 package com.ibm.wala.accessPath;
 
-
 import com.ibm.wala.ipa.callgraph.propagation.AbstractPointerKey;
 import com.ibm.wala.ipa.callgraph.propagation.PointerKey;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * An element in an access path representing a local pointer.
- * 
- * @author Eran Yahav (yahave)
- * @author Stephen Fink
  */
 @Deprecated
 public class LocalPathElement implements PointerPathElement {
@@ -32,16 +27,14 @@ public class LocalPathElement implements PointerPathElement {
   /**
    * create a new anchor element
    * 
-   * @param lpk -
-   *            anchor element to serve as head of path
+   * @param lpk - anchor element to serve as head of path
    */
   public LocalPathElement(AbstractPointerKey lpk) {
     this.lpk = lpk;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(lpk != null);
+    if (lpk == null) {
+      throw new IllegalArgumentException("null lpk");
     }
   }
-
 
   @Override
   public String toString() {
@@ -62,7 +55,6 @@ public class LocalPathElement implements PointerPathElement {
   public int hashCode() {
     return 5351 * lpk.hashCode();
   }
-
 
   public boolean isAnchor() {
     return true;

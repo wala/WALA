@@ -14,7 +14,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * A class to represent the reference in a class file to some type (class, primitive or array). A type reference is
@@ -358,8 +357,8 @@ public final class TypeReference implements Serializable {
    */
   public static synchronized TypeReference findOrCreate(ClassLoaderReference cl, TypeName typeName) {
 
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(cl != null);
+    if (cl == null) {
+      throw new IllegalArgumentException("null cl");
     }
     TypeReference p = primitiveMap.get(typeName);
     if (p != null) {

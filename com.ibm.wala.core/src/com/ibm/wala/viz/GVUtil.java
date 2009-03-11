@@ -19,13 +19,14 @@ import com.ibm.wala.util.warnings.WalaException;
  */
 public class GVUtil {
   
-  
-
   /**
    * Launch a process to view a postscript file
    */
   public static Process launchGV(String psFile, String gvExe) throws WalaException {
     // set up a viewer for the ps file.
+    if (gvExe == null) {
+      throw new IllegalArgumentException("null gvExe");
+    }
     final GSViewLauncher gv = new GSViewLauncher();
     gv.setGvExe(gvExe);
     gv.setPsfile(psFile);

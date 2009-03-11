@@ -72,13 +72,18 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
   final private IClass[] encounteredClasses = new IClass[NUM_DECISIONS_TO_TRACK];
 
   public boolean shouldRefine(IField field, PointerKey basePtr, PointerKey val, IFlowLabel label, StateMachine.State state) {
-    if (field == ArrayContents.v())
+    if (field == null) {
+      throw new IllegalArgumentException("null field");
+    }
+    if (field == ArrayContents.v()) {
       return true;
-    final IClass declaringClass = field.getDeclaringClass();
-    final Matcher m = refinePattern.matcher(declaringClass.toString());
-    final boolean foundPattern = m.find();
-    recordDecision(declaringClass, foundPattern);
-    return foundPattern;
+    } else {
+      final IClass declaringClass = field.getDeclaringClass();
+      final Matcher m = refinePattern.matcher(declaringClass.toString());
+      final boolean foundPattern = m.find();
+      recordDecision(declaringClass, foundPattern);
+      return foundPattern;
+    }
   }
 
   private void recordDecision(final IClass declaringClass, final boolean foundPattern) {
@@ -127,10 +132,10 @@ public class ManualFieldPolicy implements FieldRefinePolicy {
   /**
    * 
    * @param cha
-   * @param refinePattern a pattern for detecting which match edges to refine. If the <em>declaring class</em> of the
-   *        field related to the match edge matches the pattern, the match edge will be refined. For example, the
-   *        pattern <code>Pattern.compile("Ljava/util")</code> will cause all fields of classes in the
-   *        <code>java.util</code> package to be refined.
+   * @param refinePattern a pattern for detecting which match edges to refine. If the <em>declaring class</em> of the field related
+   *          to the match edge matches the pattern, the match edge will be refined. For example, the pattern
+   *          <code>Pattern.compile("Ljava/util")</code> will cause all fields of classes in the <code>java.util</code> package to
+   *          be refined.
    */
   public ManualFieldPolicy(IClassHierarchy cha, Pattern refinePattern) {
     this.cha = cha;

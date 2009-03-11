@@ -39,6 +39,9 @@ public class SimpleIntVector implements IntVector {
   }
 
   public SimpleIntVector(int defaultValue, int initialSize) {
+    if (initialSize < 0) {
+      throw new IllegalArgumentException("Illegal initialSize: " + initialSize);
+    }
     this.defaultValue = defaultValue;
     store = new int[initialSize];
     store[0] = defaultValue;
@@ -70,8 +73,8 @@ public class SimpleIntVector implements IntVector {
    * @see com.ibm.wala.util.intset.IntVector#set(int, int)
    */
   public void set(int x, int value) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(x >= 0);
+    if (x < 0) {
+      throw new IllegalArgumentException("illegal x: " + x);
     }
     maxIndex = Math.max(maxIndex,x);
     if (value == defaultValue) {

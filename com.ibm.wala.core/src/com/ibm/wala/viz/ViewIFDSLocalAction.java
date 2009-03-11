@@ -70,6 +70,9 @@ public class ViewIFDSLocalAction<T, P, F> extends Action {
 
   public ViewIFDSLocalAction(SWTTreeViewer viewer, TabulationResult<T, P, F> result, String psFile, String dotFile, String dotExe,
       String gvExe, NodeDecorator labels) {
+    if (result == null) {
+      throw new IllegalArgumentException("null result");
+    }
     this.viewer = viewer;
     this.supergraph = result.getProblem().getSupergraph();
     this.psFile = psFile;

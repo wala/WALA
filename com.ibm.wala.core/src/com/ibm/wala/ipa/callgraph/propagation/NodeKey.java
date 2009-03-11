@@ -19,6 +19,9 @@ import com.ibm.wala.ipa.callgraph.CGNode;
 public abstract class NodeKey extends AbstractLocalPointerKey {
   private final CGNode node;
   protected NodeKey(CGNode node) {
+    if (node == null) {
+      throw new IllegalArgumentException("null node");
+    }
     this.node = node;
   }
   protected boolean internalEquals(Object obj) {

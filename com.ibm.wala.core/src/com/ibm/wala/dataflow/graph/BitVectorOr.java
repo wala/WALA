@@ -34,6 +34,9 @@ public class BitVectorOr extends UnaryOperator<BitVectorVariable> {
     if (lhs == null) {
       throw new IllegalArgumentException("lhs == null");
     }
+    if (rhs == null) {
+      throw new IllegalArgumentException("rhs == null");
+    }
     BitVectorVariable U = new BitVectorVariable();
     U.copyState(lhs);
     U.addAll(rhs);

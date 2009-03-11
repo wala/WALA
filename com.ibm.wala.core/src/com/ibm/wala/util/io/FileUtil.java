@@ -66,6 +66,12 @@ public class FileUtil {
   }
 
   public static void copy(String srcFileName, String destFileName) throws WalaException {
+    if (srcFileName == null) {
+      throw new IllegalArgumentException("srcFileName is null");
+    }
+    if (destFileName == null) {
+      throw new IllegalArgumentException("destFileName is null");
+    }
     FileChannel src = null;
     FileChannel dest = null;
     try {

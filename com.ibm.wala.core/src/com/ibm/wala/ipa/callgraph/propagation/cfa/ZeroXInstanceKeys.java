@@ -149,6 +149,9 @@ public class ZeroXInstanceKeys implements InstanceKeyFactory {
   final Map<CGNode, Set> smushMap = HashMapFactory.make();
 
   public ZeroXInstanceKeys(AnalysisOptions options, IClassHierarchy cha, RTAContextInterpreter contextInterpreter, int policy) {
+    if (options == null) {
+      throw new IllegalArgumentException("null options");
+    }
     this.policy = policy;
     if (disambiguateConstants()) {
       // this is an ugly hack. TODO: clean it all up.

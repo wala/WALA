@@ -18,14 +18,18 @@ import com.ibm.wala.util.intset.IntIterator;
 /**
  * An <code>IntMapIterator</code> maps an
  * <code>Iterator</code> contents to produce a new Iterator
- * 
- * @author sfink
  */
 public class IntMapIterator<T> implements Iterator<T> {
   final IntIterator i;
   final IntFunction<T> f;
 
   public IntMapIterator(IntIterator i, IntFunction<T> f) {
+    if (i == null) {
+      throw new IllegalArgumentException("null i");
+    }
+    if (f == null) {
+      throw new IllegalArgumentException("null f");
+    }
     this.i = i;
     this.f = f;
   }

@@ -84,6 +84,9 @@ public class SimpleMemoryAccessMap implements MemoryAccessMap {
   private final HeapModel heapModel;
 
   public SimpleMemoryAccessMap(CallGraph cg, HeapModel heapModel, boolean includePrimOps) {
+    if (cg == null) {
+      throw new IllegalArgumentException("null cg");
+    }
     this.cha = cg.getClassHierarchy();
     this.heapModel = heapModel;
     this.includePrimOps = includePrimOps;

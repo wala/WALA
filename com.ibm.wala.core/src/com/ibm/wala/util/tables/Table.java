@@ -36,7 +36,8 @@ public class Table<T> {
 
   /**
    * create an empty table with the same column headings as t
-   * @throws IllegalArgumentException  if t == null
+   * 
+   * @throws IllegalArgumentException if t == null
    */
   public Table(Table<T> t) throws IllegalArgumentException {
     if (t == null) {
@@ -49,7 +50,8 @@ public class Table<T> {
 
   /**
    * create an empty table with the given column headings
-   * @throws IllegalArgumentException  if columns == null
+   * 
+   * @throws IllegalArgumentException if columns == null
    */
   public Table(String[] columns) throws IllegalArgumentException {
     if (columns == null) {
@@ -83,6 +85,9 @@ public class Table<T> {
   }
 
   public synchronized T getElement(int row, int column) {
+    if (row < 0) {
+      throw new IllegalArgumentException("Invalid row : " + row);
+    }
     SimpleVector<T> r = rows.get(row);
     return r.get(column);
   }
@@ -116,26 +121,26 @@ public class Table<T> {
     return rows.size();
   }
 
-  public synchronized Map<String,T> row2Map(int row) {
-    Map<String,T> result = HashMapFactory.make();
+  public synchronized Map<String, T> row2Map(int row) {
+    Map<String, T> result = HashMapFactory.make();
     for (int j = 0; j < getNumberOfColumns(); j++) {
       result.put(getColumnHeading(j), getElement(row, j));
     }
     return result;
   }
 
-  public synchronized void addRow(Map<String,T> p) {
+  public synchronized void addRow(Map<String, T> p) {
     SimpleVector<T> r = new SimpleVector<T>();
     rows.add(r);
     for (int i = 0; i < getNumberOfColumns(); i++) {
       r.set(i, p.get(getColumnHeading(i)));
     }
   }
-  
+
   public synchronized void removeRow(Map<String, T> p) {
     BitVector toRemove = new BitVector();
     for (int i = 0; i < rows.size(); i++) {
-      Map<String,T> row = row2Map(i);
+      Map<String, T> row = row2Map(i);
       if (row.equals(p)) {
         toRemove.set(i);
       }

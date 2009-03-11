@@ -74,8 +74,8 @@ public class MethodSummary {
   private boolean isFactory = false;
 
   public MethodSummary(MethodReference method) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(method != null);
+    if (method == null) {
+      throw new IllegalArgumentException("null method");
     }
     this.method = method;
   }

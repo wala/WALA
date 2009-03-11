@@ -477,6 +477,9 @@ public class SparseIntSet implements IntSet {
    * @see com.ibm.wala.util.intset.IntSet#isSubset(com.ibm.wala.util.intset.IntSet)
    */
   public boolean isSubset(IntSet that) {
+    if (that == null) {
+      throw new IllegalArgumentException("null that");
+    }
     if (that instanceof SparseIntSet) {
       return isSubsetInternal((SparseIntSet) that);
     } else if (that instanceof BitVectorIntSet) {

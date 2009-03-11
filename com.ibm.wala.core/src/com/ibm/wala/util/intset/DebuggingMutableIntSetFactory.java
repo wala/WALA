@@ -47,6 +47,9 @@ public class DebuggingMutableIntSetFactory implements MutableIntSetFactory {
   }
 
   public MutableIntSet makeCopy(IntSet x) throws UnimplementedError {
+    if (x == null) {
+      throw new IllegalArgumentException("null x");
+    }
     if (x instanceof DebuggingMutableIntSet) {
       DebuggingMutableIntSet db = (DebuggingMutableIntSet) x;
       MutableIntSet pr = primary.makeCopy(db.primaryImpl);

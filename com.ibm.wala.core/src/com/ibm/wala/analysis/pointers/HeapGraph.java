@@ -34,15 +34,15 @@ import com.ibm.wala.util.intset.IntSet;
  * There is an edge from an InstanceKey I to a PointerKey P iff - P represents a
  * field of an object instance modeled by I, or - P represents the array
  * contents of array instance I.
- * 
- * @author sfink
- * 
  */
 public abstract class HeapGraph implements NumberedGraph<Object> {
 
   private final PointerAnalysis pa;
 
   protected HeapGraph(PointerAnalysis pa) {
+    if (pa == null) {
+      throw new IllegalArgumentException("null pa ");
+    }
     this.pa = pa;
   }
 

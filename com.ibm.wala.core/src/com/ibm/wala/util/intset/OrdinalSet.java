@@ -176,7 +176,7 @@ public class OrdinalSet<T> implements Iterable<T> {
    * @param instances
    * @throws NullPointerException if instances is null
    */
-  public static <T> Collection<T> toCollection(OrdinalSet<T> instances) throws NullPointerException {
+  public static <T> Collection<T> toCollection(OrdinalSet<T> instances) {
     return Iterator2Collection.toCollection(instances.iterator());
   }
 

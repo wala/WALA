@@ -61,6 +61,9 @@ public class DelegatingExtendedHeapModel implements ExtendedHeapModel {
   }
 
   public InstanceKey getInstanceKeyForPEI(CGNode node, ProgramCounter instr, TypeReference type) {
+    if (node == null) {
+      throw new IllegalArgumentException("null node");
+    }
     return h.getInstanceKeyForPEI(node, instr, type);
   }
 

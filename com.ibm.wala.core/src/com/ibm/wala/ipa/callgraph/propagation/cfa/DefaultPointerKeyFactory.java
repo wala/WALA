@@ -40,8 +40,10 @@ public class DefaultPointerKeyFactory implements PointerKeyFactory {
   }
 
   public FilteredPointerKey getFilteredPointerKeyForLocal(CGNode node, int valueNumber, FilteredPointerKey.TypeFilter filter) {
+    if (filter == null) {
+      throw new IllegalArgumentException("null filter");
+    }
     if (Assertions.verifyAssertions) {
-      Assertions._assert(filter != null);
       if (valueNumber <= 0) {
         Assertions._assert(valueNumber > 0, "illegal value number: " + valueNumber + " in " + node);
       }

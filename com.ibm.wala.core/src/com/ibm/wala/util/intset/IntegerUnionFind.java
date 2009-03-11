@@ -13,11 +13,7 @@ package com.ibm.wala.util.intset;
 import com.ibm.wala.util.debug.Assertions;
 
 /**
- * 
- * An implementation of Tarjan's union-find, using path compression and
- * balancing, for non-negative integers
- * 
- * @author sfink
+ * An implementation of Tarjan's union-find, using path compression and balancing, for non-negative integers
  */
 public class IntegerUnionFind {
 
@@ -27,8 +23,8 @@ public class IntegerUnionFind {
    * 
    * parent[i+1] =
    * <ul>
-   * <li> j > 0 if i is in the same equiv class as j
-   * <li> j <= 0 if i is the representative of a class of size -(j)+1
+   * <li>j > 0 if i is in the same equiv class as j
+   * <li>j <= 0 if i is the representative of a class of size -(j)+1
    * </ul>
    * 
    * we initialize parent[j] = 0, so each element is a class of size 1
@@ -43,6 +39,9 @@ public class IntegerUnionFind {
    * @param size
    */
   public IntegerUnionFind(int size) {
+    if (size + 1 < 0) {
+      throw new IllegalArgumentException("illegal size: " + size);
+    }
     parent = new int[size + 1];
   }
 
@@ -58,7 +57,7 @@ public class IntegerUnionFind {
       Assertions._assert(y >= 0);
     }
     if (x >= size() || y >= size()) {
-      grow(2*Math.max(x, y));
+      grow(2 * Math.max(x, y));
     }
     // shift by one to support sets including 0
     x += 1;
@@ -81,8 +80,8 @@ public class IntegerUnionFind {
 
   private void grow(int size) {
     int[] old = parent;
-    parent = new int[size+1];
-    System.arraycopy(old,0,parent,0,old.length);
+    parent = new int[size + 1];
+    System.arraycopy(old, 0, parent, 0, old.length);
   }
 
   /**
@@ -90,8 +89,8 @@ public class IntegerUnionFind {
    * @return representative of x's equivalence class
    */
   public int find(int x) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(x >= 0);
+    if (x < 0) {
+      throw new IllegalArgumentException("illegal x " + x);
     }
     if (x >= size()) {
       return x;

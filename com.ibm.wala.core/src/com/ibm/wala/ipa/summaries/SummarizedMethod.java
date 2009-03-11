@@ -32,7 +32,6 @@ public class SummarizedMethod extends SyntheticMethod {
   final private MethodSummary summary;
 
   public SummarizedMethod(MethodReference ref, MethodSummary summary, IClass declaringClass) throws NullPointerException {
-
     super(ref, declaringClass, summary.isStatic(), summary.isFactory());
     this.summary = summary;
     if (Assertions.verifyAssertions) {

@@ -17,8 +17,6 @@ import com.ibm.wala.util.debug.Assertions;
 
 /**
  * This is a context which is customized for the {@link InstanceKey} of the receiver.
- * 
- * @author sfink
  */
 public class ReceiverInstanceContext implements Context {
 
@@ -29,8 +27,8 @@ public class ReceiverInstanceContext implements Context {
    *          the instance key that represents the receiver
    */
   public ReceiverInstanceContext(InstanceKey I) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(I != null);
+    if (I == null) {
+      throw new IllegalArgumentException("null I");
     }
     this.ik = I;
   }

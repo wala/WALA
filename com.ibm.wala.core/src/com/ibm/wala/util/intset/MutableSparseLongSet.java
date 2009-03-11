@@ -60,9 +60,6 @@ public final class MutableSparseLongSet extends SparseLongSet implements Mutable
   public MutableSparseLongSet(int initialCapacity) {
     super(new long[initialCapacity]);
     size = 0;
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(initialCapacity > 0);
-    }
   }
 
   public MutableSparseLongSet() {

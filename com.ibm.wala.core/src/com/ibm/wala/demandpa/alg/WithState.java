@@ -41,9 +41,6 @@ import com.ibm.wala.demandpa.alg.statemachine.StateMachine.State;
 
 /**
  * Simple abstraction for pairing some type with a {@link State}.
- * 
- * @author Manu Sridharan
- * 
  */
 public abstract class WithState<T> {
 
@@ -54,6 +51,12 @@ public abstract class WithState<T> {
   private final int hc;
   
   public WithState(final T wrapped, final State state) {
+    if (wrapped == null) {
+      throw new IllegalArgumentException("null wrapped");
+    }
+    if (state == null) {
+      throw new IllegalArgumentException("null state");
+    }
     this.wrapped = wrapped;
     this.state = state;
     this.hc = 31 * state.hashCode() + wrapped.hashCode();

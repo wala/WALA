@@ -536,6 +536,9 @@ public class DemandPointerFlowGraph extends AbstractDemandFlowGraph implements I
    * array. excludes the new instruction itself (i.e., the allocation of the top-level multi-dim array).
    */
   public static NewMultiDimInfo getInfoForNewMultiDim(SSANewInstruction instruction, HeapModel heapModel, CGNode node) {
+    if (heapModel == null) {
+      throw new IllegalArgumentException("null heapModel");
+    }
     Collection<Pair<PointerKey, InstanceKey>> newInstrs = HashSetFactory.make();
     Collection<Pair<PointerKey, PointerKey>> arrStoreInstrs = HashSetFactory.make();
     InstanceKey iKey = heapModel.getInstanceKeyForAllocation(node, instruction.getNewSite());

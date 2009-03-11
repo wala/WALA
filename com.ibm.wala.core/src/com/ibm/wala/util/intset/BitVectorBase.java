@@ -185,10 +185,12 @@ abstract public class BitVectorBase<T extends BitVectorBase> implements Cloneabl
   }
 
   /**
-   * @param start
    * @return min j >= start s.t get(j)
    */
   public int nextSetBit(int start) {
+    if (start < 0) {
+      throw new IllegalArgumentException("illegal start: " + start);
+    }
     int word = subscript(start);
     int bit = (1 << (start & LOW_MASK));
     while (word < bits.length) {

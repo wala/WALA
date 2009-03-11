@@ -14,9 +14,6 @@ import com.ibm.wala.fixpoint.IVariable;
 
 /**
  * Represents a single step in an iterative solver
- * 
- * @author Stephen Fink
- * @author Julian Dolby
  */
 public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, AbstractOperator<T>> {
 
@@ -34,7 +31,7 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
    * @return true if the lhs value changed. false otherwise
    */
   public byte evaluate() {
-    return operator.evaluate(lhs,  rhs);
+    return operator.evaluate(lhs, rhs);
   }
 
   /**
@@ -49,12 +46,10 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
   /**
    * Does this equation contain an appearance of a given cell?
    * 
-   * Note: this uses reference equality, assuming that the variables are
-   * canonical! This is fragile. TODO: Address it perhaps, but be careful not to
-   * sacrifice efficiency.
+   * Note: this uses reference equality, assuming that the variables are canonical! This is fragile. TODO: Address it perhaps, but
+   * be careful not to sacrifice efficiency.
    * 
-   * @param cell
-   *          the cell in question
+   * @param cell the cell in question
    * @return true or false
    */
   public boolean hasVariable(IVariable cell) {
@@ -71,10 +66,8 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
   /**
    * Constructor for case of zero operands on the right-hand side.
    * 
-   * @param lhs
-   *          the lattice cell set by this equation
-   * @param operator
-   *          the equation operator
+   * @param lhs the lattice cell set by this equation
+   * @param operator the equation operator
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator) {
     super();
@@ -87,17 +80,16 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
   /**
    * Constructor for case of two operands on the right-hand side.
    * 
-   * @param lhs
-   *          the lattice cell set by this equation
-   * @param operator
-   *          the equation operator
-   * @param op1
-   *          the first operand on the rhs
-   * @param op2
-   *          the second operand on the rhs
+   * @param lhs the lattice cell set by this equation
+   * @param operator the equation operator
+   * @param op1 the first operand on the rhs
+   * @param op2 the second operand on the rhs
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator, T op1, T op2) {
     super();
+    if (operator == null) {
+      throw new IllegalArgumentException("null operator");
+    }
     this.operator = operator;
     this.lhs = lhs;
     rhs = new IVariable[2];
@@ -109,16 +101,11 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
   /**
    * Constructor for case of three operands on the right-hand side.
    * 
-   * @param lhs
-   *          the lattice cell set by this equation
-   * @param operator
-   *          the equation operator
-   * @param op1
-   *          the first operand on the rhs
-   * @param op2
-   *          the second operand on the rhs
-   * @param op3
-   *          the third operand on the rhs
+   * @param lhs the lattice cell set by this equation
+   * @param operator the equation operator
+   * @param op1 the first operand on the rhs
+   * @param op2 the second operand on the rhs
+   * @param op3 the third operand on the rhs
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator, T op1, T op2, T op3) {
     super();
@@ -134,14 +121,10 @@ public class GeneralStatement<T extends IVariable> extends AbstractStatement<T, 
   /**
    * Constructor for case of more than three operands on the right-hand side.
    * 
-   * @param lhs
-   *          the lattice cell set by this equation
-   * @param operator
-   *          the equation operator
-   * @param rhs
-   *          the operands of the right-hand side in order
-   * @throws IllegalArgumentException
-   *           if rhs is null
+   * @param lhs the lattice cell set by this equation
+   * @param operator the equation operator
+   * @param rhs the operands of the right-hand side in order
+   * @throws IllegalArgumentException if rhs is null
    */
   public GeneralStatement(T lhs, AbstractOperator<T> operator, IVariable[] rhs) {
     super();

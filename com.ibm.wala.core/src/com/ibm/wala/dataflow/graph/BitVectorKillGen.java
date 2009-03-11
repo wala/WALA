@@ -25,6 +25,12 @@ public class BitVectorKillGen extends UnaryOperator<BitVectorVariable> {
   private final BitVectorIntSet gen;
 
   public BitVectorKillGen(BitVector kill, BitVector gen) {
+    if (kill == null) {
+      throw new IllegalArgumentException("null kill");
+    }
+    if (gen == null) {
+      throw new IllegalArgumentException("null gen");
+    }
     this.kill = new BitVectorIntSet(kill);
     this.gen = new BitVectorIntSet(gen);
   }

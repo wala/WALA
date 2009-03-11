@@ -21,6 +21,7 @@ public class Array {
    */
   public static Object get(Object array, int index) throws IllegalArgumentException, ArrayIndexOutOfBoundsException {
 
+    
     if (!array.getClass().isArray()) {
       throw new IllegalArgumentException();
     }

@@ -17,8 +17,6 @@ import com.ibm.wala.util.debug.UnimplementedError;
  * A {@link BitVector} implementation of {@link MutableIntSet}.
  * 
  * Note that this is NOT a value with regard to hashCode and equals.
- * 
- * @author sfink
  */
 public final class BitVectorIntSet implements MutableIntSet {
 
@@ -33,12 +31,14 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   public BitVectorIntSet(BitVector v) {
+    if (v == null) {
+      throw new IllegalArgumentException("null v");
+    }
     bitVector.or(v);
     populationCount = UNDEFINED;
   }
 
   public BitVectorIntSet(IntSet S) throws IllegalArgumentException {
-
     if (S == null) {
       throw new IllegalArgumentException("S == null");
     }
@@ -299,8 +299,8 @@ public final class BitVectorIntSet implements MutableIntSet {
   }
 
   public boolean contains(int i) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(i >= 0);
+    if (i < 0) {
+      throw new IllegalArgumentException("invalid i: " + i)  ;
     }
     return bitVector.get(i);
   }

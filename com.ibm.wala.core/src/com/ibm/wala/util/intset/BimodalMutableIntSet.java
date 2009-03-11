@@ -147,6 +147,9 @@ public class BimodalMutableIntSet implements MutableIntSet {
    * @see com.ibm.wala.util.intset.MutableIntSet#intersectWith(com.ibm.wala.util.intset.IntSet)
    */
   public void intersectWith(IntSet set) throws UnimplementedError {
+    if (set == null) {
+      throw new IllegalArgumentException("null set");
+    }
     if (set instanceof BimodalMutableIntSet) {
       BimodalMutableIntSet that = (BimodalMutableIntSet) set;
       impl.intersectWith(that.impl);

@@ -24,6 +24,12 @@ public final class PathEdge<T> {
   final int d2;
 
   public static <T> PathEdge<T> createPathEdge(T s_p, int d1, T n, int d2) {
+    if (s_p == null) {
+      throw new IllegalArgumentException("null s_p");
+    }
+    if (n == null) {
+      throw new IllegalArgumentException("null n");
+    }
     return new PathEdge<T>(s_p, d1, n, d2);
   }
   

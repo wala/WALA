@@ -25,6 +25,12 @@ public class ToStringComparator<T> implements Comparator<T> {
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
   public int compare(T o1, T o2) throws NullPointerException {
+    // by convention, null is the least element
+    if (o1 == null) {
+      return o2 == null ? 0 : -1;
+    } else if (o2 == null) {
+      return 1;
+    }
     return o1.toString().compareTo(o2.toString());
   }
   

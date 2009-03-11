@@ -139,6 +139,9 @@ public class ContainerContextSelector implements ContextSelector {
    * Does m represent a library method that copies arrays?
    */
   public static boolean isArrayCopyingMethod(MethodReference m) {
+    if (m == null) {
+      throw new IllegalArgumentException("null m");
+    }
     if (m.getDeclaringClass().equals(TypeReference.JavaLangSystem)) {
       if (m.getName().toString().equals("arraycopy")) {
         return true;

@@ -167,9 +167,6 @@ public class BitVector extends BitVectorBase<BitVector> {
     }
   }
 
-  /**
-   * @param set
-   */
   private void ensureCapacity(BitVector set) {
     if (set.bits.length > bits.length) {
       expand(BITS_PER_UNIT * set.bits.length - 1);

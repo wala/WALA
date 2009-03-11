@@ -80,11 +80,14 @@ public class IntSetUtil {
 
   /**
    * Compute the asymmetric difference of two sets, a \ b.
-   * 
-   * @param A
-   * @param B
    */
   public static IntSet diff(IntSet A, IntSet B) {
+    if (A == null) {
+      throw new IllegalArgumentException("null A");
+    }
+    if (B == null) {
+      throw new IllegalArgumentException("null B");
+    }
     return diff(A, B, IntSetUtil.getDefaultIntSetFactory());
   }
 

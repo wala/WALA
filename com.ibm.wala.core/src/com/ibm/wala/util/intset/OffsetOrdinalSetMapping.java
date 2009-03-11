@@ -14,11 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * An ordinal set mapping, backed a delegate, but adding an offset to each
- * index.
- * 
- * @author sjfink
- * 
+ * An ordinal set mapping, backed a delegate, but adding an offset to each index.
  */
 public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
 
@@ -40,9 +36,12 @@ public class OffsetOrdinalSetMapping<T> implements OrdinalSetMapping<T> {
   }
 
   public static <T> OffsetOrdinalSetMapping<T> make(OrdinalSetMapping<T> delegate, int offset) {
+    if (delegate == null) {
+      throw new IllegalArgumentException("null delegate");
+    }
     return new OffsetOrdinalSetMapping<T>(delegate, offset);
   }
-  
+
   public static <T> OffsetOrdinalSetMapping<T> make(int offset) {
     MutableMapping<T> m = MutableMapping.make();
     return new OffsetOrdinalSetMapping<T>(m, offset);

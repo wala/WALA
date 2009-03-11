@@ -39,6 +39,9 @@ public class TwoLevelVector<T> implements IVector<T> {
    * @see com.ibm.wala.util.intset.IntVector#get(int)
    */
   public T get(int x) {
+    if (x < 0) {
+      throw new IllegalArgumentException("invalid x: " + x);
+    }
     int page = getPageNumber(x);
     if (page >= data.size()) {
       return null;

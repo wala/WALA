@@ -11,7 +11,6 @@
 package com.ibm.wala.ipa.callgraph.propagation;
 
 import com.ibm.wala.ipa.callgraph.CGNode;
-import com.ibm.wala.util.debug.Assertions;
 
 
 /**
@@ -26,10 +25,8 @@ public class LocalPointerKey extends AbstractLocalPointerKey {
     super();
     this.node = node;
     this.valueNumber = valueNumber;
-    if (Assertions.verifyAssertions) {
-      if (valueNumber <= 0) {
-        Assertions._assert(valueNumber > 0, "illegal value number: " + valueNumber);
-      }
+    if (valueNumber <= 0) {
+      throw new IllegalArgumentException("illegal valueNumber: " + valueNumber);
     }
   }
 

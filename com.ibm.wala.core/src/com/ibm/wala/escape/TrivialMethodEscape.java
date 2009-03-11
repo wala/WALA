@@ -27,18 +27,13 @@ import com.ibm.wala.util.collections.HashSetFactory;
 import com.ibm.wala.util.warnings.WalaException;
 
 /**
- * 
  * Trivial method-level escape analysis.
  * 
  * An instance does not escape from method m if the following hold:
  * <ol>
- * <li> the instance is only ever pointed to by locals (it is never stored in
- * the heap)
- * <li> the method m does NOT return (either normally or exceptionally) a
- * pointer to the instance
+ * <li>the instance is only ever pointed to by locals (it is never stored in the heap)
+ * <li>the method m does NOT return (either normally or exceptionally) a pointer to the instance
  * </ol>
- * 
- * @author sfink
  */
 public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAnalysis {
 
@@ -53,10 +48,8 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
   private final CallGraph cg;
 
   /**
-   * @param hg
-   *          Heap graph representation of pointer analysis
-   * @param cg
-   *          governing call graph
+   * @param hg Heap graph representation of pointer analysis
+   * @param cg governing call graph
    */
   public TrivialMethodEscape(CallGraph cg, HeapGraph hg) {
     this.hg = hg;
@@ -84,13 +77,11 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
   }
 
   /**
-   * @param allocN
-   *          Set<CGNode> representing the allocation site.
+   * @param allocN Set<CGNode> representing the allocation site.
    * @param allocPC
-   * @param nodes
-   *          Set<CGNode>, the nodes of interest
-   * @return true iff some instance allocated at a site N \in &lt;allocN, allocPC>
-   *         might escape from some activation of a node m \in { nodes }
+   * @param nodes Set<CGNode>, the nodes of interest
+   * @return true iff some instance allocated at a site N \in &lt;allocN, allocPC> might escape from some activation of a node m \in
+   *         { nodes }
    * @throws WalaException
    */
   private boolean mayEscape(Set allocN, int allocPC, Set nodes) throws WalaException {
@@ -131,14 +122,15 @@ public class TrivialMethodEscape implements IMethodEscapeAnalysis, INodeEscapeAn
   }
 
   /**
-   * @param n
-   *          a call graph node
-   * @param allocPC
-   *          a bytecode index corresponding to an allocation
+   * @param n a call graph node
+   * @param allocPC a bytecode index corresponding to an allocation
    * @return the NewSiteReference for the allocation
    * @throws WalaException
    */
   static NewSiteReference findAlloc(CGNode n, int allocPC) throws WalaException {
+    if (n == null) {
+      throw new IllegalArgumentException("null n");
+    }
     for (Iterator it = n.iterateNewSites(); it.hasNext();) {
       NewSiteReference site = (NewSiteReference) it.next();
       if (site.getProgramCounter() == allocPC) {

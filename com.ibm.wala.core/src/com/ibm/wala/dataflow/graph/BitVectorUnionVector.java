@@ -22,6 +22,9 @@ public class BitVectorUnionVector extends UnaryOperator<BitVectorVariable> {
   
   private final BitVector v;
   public BitVectorUnionVector(BitVector v) {
+    if (v == null) {
+      throw new IllegalArgumentException("null v");
+    }
     this.v = v;
   }
   

@@ -14,10 +14,7 @@ import com.ibm.wala.util.intset.IntSet;
 import com.ibm.wala.util.intset.SparseIntSet;
 
 /**
- * 
  * A function which gens a vector of outgoing dataflow facts
- * 
- * @author sfink
  */
 public class VectorGenFlowFunction implements IReversibleFlowFunction {
 
@@ -43,6 +40,9 @@ public class VectorGenFlowFunction implements IReversibleFlowFunction {
    * @return an instance of a flow function which gens these facts
    */
   public static VectorGenFlowFunction make(IntSet gen) {
+    if (gen == null) {
+      throw new IllegalArgumentException("null gen");
+    }
     return new VectorGenFlowFunction(gen);
   }
 

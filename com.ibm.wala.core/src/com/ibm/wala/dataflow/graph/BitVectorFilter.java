@@ -24,12 +24,14 @@ public class BitVectorFilter extends UnaryOperator<BitVectorVariable> {
   private final BitVectorIntSet mask;
 
   public BitVectorFilter(BitVector mask) {
+    if (mask == null) {
+      throw new IllegalArgumentException("null mask");
+    }
     this.mask = new BitVectorIntSet(mask);
   }
 
   @Override
   public byte evaluate(BitVectorVariable lhs, BitVectorVariable rhs) throws IllegalArgumentException {
-
     if (rhs == null) {
       throw new IllegalArgumentException("rhs == null");
     }

@@ -14,11 +14,12 @@ import java.util.Iterator;
 
 /**
  * A utility to efficiently compose an iterator and a singleton
- * 
- * @author sfink
  */
 public class IteratorPlusOne<T> implements Iterator<T> {
   public static <T> IteratorPlusOne<T> make(Iterator<? extends T> it, T xtra) {
+    if (it == null) {
+      throw new IllegalArgumentException("null it");
+    }
     return new IteratorPlusOne<T>(it, xtra);
   }
 

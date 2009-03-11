@@ -26,6 +26,9 @@ public class CallerContext implements Context {
    * @param caller the node which defines this context.
    */
   public CallerContext(CGNode caller) {
+    if (caller == null) {
+      throw new IllegalArgumentException("null caller");
+    }
     this.caller = caller;
   }
 

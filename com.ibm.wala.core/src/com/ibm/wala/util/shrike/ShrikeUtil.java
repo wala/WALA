@@ -18,13 +18,10 @@ import com.ibm.wala.types.ClassLoaderReference;
 import com.ibm.wala.types.TypeName;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.HashMapFactory;
-import com.ibm.wala.util.debug.Assertions;
 import com.ibm.wala.util.strings.ImmutableByteArray;
 
 /**
  * Utilities to interface with the Shrike CT library.
- * 
- * @author sfink
  */
 public class ShrikeUtil implements BytecodeConstants {
 
@@ -45,13 +42,11 @@ public class ShrikeUtil implements BytecodeConstants {
   }
 
   /**
-   * @param type
-   *          a type as a String returned by Shrike
+   * @param type a type as a String returned by Shrike
    */
   public static TypeReference makeTypeReference(ClassLoaderReference loader, String type) throws IllegalArgumentException {
-
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(type != null);
+    if (type == null) {
+      throw new IllegalArgumentException("null type");
     }
     TypeReference p = primitiveMap.get(type);
     if (p != null) {

@@ -21,12 +21,11 @@ import com.ibm.wala.util.debug.UnimplementedError;
 
 /**
  * 
- * A simple implementation of Map; intended for Maps with few elements.
- * Optimized for space, not time -- use with care.
+ * A simple implementation of Map; intended for Maps with few elements. Optimized for space, not time -- use with care.
  * 
  * @author sfink
  */
-public class SmallMap<K,V> implements Map<K,V> {
+public class SmallMap<K, V> implements Map<K, V> {
 
   private static final boolean DEBUG_USAGE = false;
 
@@ -66,7 +65,7 @@ public class SmallMap<K,V> implements Map<K,V> {
    * @param i
    * @return the ith key
    */
-  public Object getValue(int i) throws IllegalStateException{
+  public Object getValue(int i) throws IllegalStateException {
     if (keysAndValues == null) {
       throw new IllegalStateException("getValue on empty map");
     }
@@ -112,14 +111,14 @@ public class SmallMap<K,V> implements Map<K,V> {
    */
   @SuppressWarnings("unchecked")
   public V get(Object key) {
-    
+
     if (key != null)
       for (int i = 0; i < size(); i++) {
         if (keysAndValues[i] != null && keysAndValues[i].equals(key)) {
           return (V) keysAndValues[size() + i];
         }
       }
-    
+
     return null;
   }
 
@@ -213,7 +212,7 @@ public class SmallMap<K,V> implements Map<K,V> {
   /*
    * @see java.util.Map#entrySet()
    */
-  public Set<Map.Entry<K,V>> entrySet() throws UnimplementedError {
+  public Set<Map.Entry<K, V>> entrySet() throws UnimplementedError {
     Assertions.UNREACHABLE("must implement entrySet");
     return null;
   }

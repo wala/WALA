@@ -15,7 +15,6 @@ import java.util.Collections;
 
 import com.ibm.wala.analysis.stackMachine.AbstractIntStackMachine;
 import com.ibm.wala.types.TypeReference;
-import com.ibm.wala.util.debug.Assertions;
 
 /**
  * Note: if getUse(i) returns {@link AbstractIntStackMachine}.TOP (that is, -1), then that use represents
@@ -95,8 +94,8 @@ public class SSAPhiInstruction extends SSAInstruction {
 
   @Override
   public int getDef(int i) {
-    if (Assertions.verifyAssertions) {
-      Assertions._assert(i == 0);
+    if (i != 0) {
+      throw new IllegalArgumentException("invalid i: " + i);
     }
     return result;
   }
