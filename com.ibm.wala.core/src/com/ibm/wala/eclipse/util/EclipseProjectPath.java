@@ -198,13 +198,12 @@ public class EclipseProjectPath {
           IJavaProject javaProject = JavaCore.create(project);
           if (isPluginProject(javaProject)) {
             resolvePluginClassPath(javaProject.getProject());
-          } else {
-            resolveClasspathEntries(javaProject.getRawClasspath(), loader);
-            if (!analyzeSource) {
-              File output = makeAbsolute(javaProject.getOutputLocation()).toFile();
-              List<Module> s = MapUtil.findOrCreateList(binaryModules, loader);
-              s.add(new BinaryDirectoryTreeModule(output));
-            }
+          }
+          resolveClasspathEntries(javaProject.getRawClasspath(), loader);
+          if (!analyzeSource) {
+            File output = makeAbsolute(javaProject.getOutputLocation()).toFile();
+            List<Module> s = MapUtil.findOrCreateList(binaryModules, loader);
+            s.add(new BinaryDirectoryTreeModule(output));
           }
         }
       } catch (CoreException e1) {
@@ -218,6 +217,9 @@ public class EclipseProjectPath {
 
   private void resolvePluginClassPath(IProject p) throws CoreException, IOException {
     BundleDescription bd = findModel(p).getBundleDescription();
+    if (bd == null) {
+      throw new IllegalStateException("bundle description was null for " + p);
+    }
     resolveBundleDescriptionClassPath(bd, Loader.APPLICATION);
   }
 
@@ -299,12 +301,6 @@ public class EclipseProjectPath {
     }
   }
 
-  /**
-   * If file extension is not provided, use system default
-   * 
-   * @throws JavaModelException
-   * @throws IOException
-   */
   private void resolveProjectClasspathEntries() throws JavaModelException, IOException {
     resolveClasspathEntries(project.getRawClasspath(), Loader.EXTENSION);
   }
@@ -313,7 +309,8 @@ public class EclipseProjectPath {
    * Convert this path to a WALA analysis scope
    */
   public AnalysisScope toAnalysisScope(ClassLoader classLoader, File exclusionsFile) {
-    AnalysisScope scope = AnalysisScopeReader.readJavaScope(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile, classLoader);
+    AnalysisScope scope = AnalysisScopeReader.readJavaScope(AbstractAnalysisEngine.SYNTHETIC_J2SE_MODEL, exclusionsFile,
+        classLoader);
     return toAnalysisScope(scope);
   }
 
@@ -348,7 +345,7 @@ public class EclipseProjectPath {
   public AnalysisScope toAnalysisScope(final File exclusionsFile) {
     return toAnalysisScope(getClass().getClassLoader(), exclusionsFile);
   }
-  
+
   public AnalysisScope toAnalysisScope() {
     return toAnalysisScope(getClass().getClassLoader(), null);
   }
