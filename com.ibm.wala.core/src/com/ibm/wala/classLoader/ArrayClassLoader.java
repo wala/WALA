@@ -85,5 +85,8 @@ public class ArrayClassLoader {
     }
     return l;
   }
-
+  
+  public int getNumberOfClasses() {
+    return arrayClasses.size();
+  }
 }

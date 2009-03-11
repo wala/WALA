@@ -10,6 +10,8 @@
  *******************************************************************************/
 package com.ibm.wala.types;
 
+import java.io.Serializable;
+
 import com.ibm.wala.util.strings.Atom;
 
 /**
@@ -19,8 +21,11 @@ import com.ibm.wala.util.strings.Atom;
  * @author sfink
  * 
  */
-public class ClassLoaderReference {
+public class ClassLoaderReference implements Serializable {
 
+  /* Serial version */
+  private static final long serialVersionUID = -3256390509887654325L;  
+  
   /**
    * Canonical name for the Java language
    */

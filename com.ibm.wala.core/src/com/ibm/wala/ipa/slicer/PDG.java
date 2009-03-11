@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.slicer;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,7 +34,23 @@ import com.ibm.wala.ipa.modref.ModRef;
 import com.ibm.wala.ipa.slicer.Slicer.ControlDependenceOptions;
 import com.ibm.wala.ipa.slicer.Slicer.DataDependenceOptions;
 import com.ibm.wala.ipa.slicer.Statement.Kind;
-import com.ibm.wala.ssa.*;
+import com.ibm.wala.ssa.DefUse;
+import com.ibm.wala.ssa.IR;
+import com.ibm.wala.ssa.ISSABasicBlock;
+import com.ibm.wala.ssa.SSAAbstractInvokeInstruction;
+import com.ibm.wala.ssa.SSAAbstractThrowInstruction;
+import com.ibm.wala.ssa.SSAArrayLengthInstruction;
+import com.ibm.wala.ssa.SSAArrayReferenceInstruction;
+import com.ibm.wala.ssa.SSACFG;
+import com.ibm.wala.ssa.SSACheckCastInstruction;
+import com.ibm.wala.ssa.SSAFieldAccessInstruction;
+import com.ibm.wala.ssa.SSAGetCaughtExceptionInstruction;
+import com.ibm.wala.ssa.SSAInstanceofInstruction;
+import com.ibm.wala.ssa.SSAInstruction;
+import com.ibm.wala.ssa.SSANewInstruction;
+import com.ibm.wala.ssa.SSAPhiInstruction;
+import com.ibm.wala.ssa.SSAPiInstruction;
+import com.ibm.wala.ssa.SSAReturnInstruction;
 import com.ibm.wala.types.TypeReference;
 import com.ibm.wala.util.collections.Filter;
 import com.ibm.wala.util.collections.FilterIterator;
@@ -530,7 +547,10 @@ public class PDG implements NumberedGraph<Statement> {
     }
   }
 
-  private static class SingletonSet extends SetOfClasses {
+  private static class SingletonSet extends SetOfClasses implements Serializable {
+
+    /* Serial version */
+    private static final long serialVersionUID = -3256390509887654324L;  
 
     private final TypeReference t;
 
@@ -555,7 +575,11 @@ public class PDG implements NumberedGraph<Statement> {
     }
   }
 
-  private static class SetComplement extends SetOfClasses {
+  private static class SetComplement extends SetOfClasses implements Serializable {
+
+    /* Serial version */
+    private static final long serialVersionUID = -3256390509887654323L;  
+
     private final SetOfClasses set;
 
     SetComplement(SetOfClasses set) {

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.types;
 
+import java.io.Serializable;
 import java.io.UTFDataFormatException;
 import java.util.Map;
 
@@ -29,7 +30,10 @@ import com.ibm.wala.util.strings.StringStuff;
  * 
  * @author sfink
  */
-public final class TypeName {
+public final class TypeName implements Serializable {
+
+  /* Serial version */
+  private static final long serialVersionUID = -3256390509887654326L;  
 
   /**
    * canonical mapping from TypeNameKey -> TypeName
@@ -204,7 +208,7 @@ public final class TypeName {
    * A key into the dictionary; this is just like a type name, but uses value
    * equality instead of object equality.
    */
-  private final static class TypeNameKey {
+  private final static class TypeNameKey implements Serializable {
     /**
      * The package, like "java/lang". null means the unnamed package.
      */

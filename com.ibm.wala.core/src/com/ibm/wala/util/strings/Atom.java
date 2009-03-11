@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.util.strings;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -21,7 +22,10 @@ import com.ibm.wala.util.collections.HashMapFactory;
  * 
  * Atoms are used to represent names, descriptors, and string literals appearing in a class's constant pool.
  */
-public final class Atom {
+public final class Atom implements Serializable {
+
+  /* Serial version */
+  private static final long serialVersionUID = -3256390509887654329L;  
 
   /**
    * Used to canonicalize Atoms, a mapping from AtomKey -> Atom. AtomKeys are not canonical, but Atoms are.
@@ -388,4 +392,9 @@ public final class Atom {
     }
     return b.get(0) == '[';
   }
+
+  private Object readResolve(){
+    return findOrCreate(this.val);
+  }
+       
 }

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.types;
 
+import java.io.Serializable;
 import java.util.Map;
 
 import com.ibm.wala.util.collections.HashMapFactory;
@@ -30,8 +31,11 @@ import com.ibm.wala.util.debug.Assertions;
  * @author Derek Lieber
  * @author Stephen Fink
  */
-public final class TypeReference {
+public final class TypeReference implements Serializable {
 
+  /* Serial version */
+  private static final long serialVersionUID = -3256390509887654327L;  
+  
   /**
    * NOTE: initialisation order is important!
    * 

@@ -10,6 +10,7 @@
  *******************************************************************************/
 package com.ibm.wala.ipa.callgraph.impl;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -21,7 +22,7 @@ import com.ibm.wala.util.collections.HashSetFactory;
 /**
  * @author sfink
  */
-public abstract class SetOfClasses {
+public abstract class SetOfClasses implements Serializable {
 
   public abstract boolean contains(String klassName);
 

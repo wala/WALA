@@ -11,6 +11,8 @@
 package com.ibm.wala.ipa.callgraph;
 
 import java.io.File;
+import java.io.NotSerializableException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,10 +26,12 @@ import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 import com.ibm.wala.classLoader.ArrayClassLoader;
+import com.ibm.wala.classLoader.BinaryDirectoryTreeModule;
 import com.ibm.wala.classLoader.ClassFileModule;
 import com.ibm.wala.classLoader.JarFileModule;
 import com.ibm.wala.classLoader.Language;
 import com.ibm.wala.classLoader.Module;
+import com.ibm.wala.classLoader.SourceDirectoryTreeModule;
 import com.ibm.wala.classLoader.SourceFileModule;
 import com.ibm.wala.ipa.callgraph.impl.SetOfClasses;
 import com.ibm.wala.types.ClassLoaderReference;
@@ -284,7 +288,7 @@ public class AnalysisScope {
   public void setLoaderImpl(ClassLoaderReference ref, String implClass) {
     loaderImplByRef.put(ref, implClass);
   }
-
+  
   public Collection<ClassLoaderReference> getLoaders() {
     return Collections.unmodifiableCollection(loadersByName.values());
   }
@@ -404,4 +408,68 @@ public class AnalysisScope {
     return getJavaLibraryVersion().startsWith("1.4");
   }
 
+  /**
+   * Creates a "serializable" version of the analysis scope.
+   * 
+   * @return a "serializable" version of the analysis scope.
+   * @throws NotSerializableException
+   */
+  public ShallowAnalysisScope toShallowAnalysisScope() throws NotSerializableException {
+ 
+    if(getArrayClassLoader().getNumberOfClasses() != 0) {
+      throw new NotSerializableException("Scope was already used for building array classes");
+    }
+    //Note: 'arrayClassLoader' object will be built from scratch in remote process
+    
+    // represent modules map as a set of strings (corresponding to analysis scope file lines.
+    List<String> moduleLines = new ArrayList<String>();
+    for (Map.Entry<ClassLoaderReference, List<Module>> e : moduleMap.entrySet()){
+      ClassLoaderReference lrReference = e.getKey();
+      String moduleLdr = lrReference.getName().toString();
+      String moduleLang = lrReference.getLanguage().toString();
+      Assertions.precondition(Language.JAVA.getName().equals(lrReference.getLanguage()), "Java language only is currently supported");
+      
+      for (Module m : e.getValue()){
+        String moduleType;
+        String modulePath;
+        if(m instanceof JarFileModule) {
+          moduleType = "jarFile";
+          modulePath = ((JarFileModule)m).getAbsolutePath();
+        } else if(m instanceof BinaryDirectoryTreeModule) {
+          moduleType = "binaryDir";
+          modulePath = ((BinaryDirectoryTreeModule)m).getPath();  
+        } else if(m instanceof SourceDirectoryTreeModule) {
+          moduleType = "sourceDir";
+          modulePath = ((SourceDirectoryTreeModule)m).getPath();  
+        } else if(m instanceof SourceFileModule) {
+          moduleType = "sourceFile";
+          modulePath = ((SourceFileModule)m).getAbsolutePath();  
+        } else {
+          Assertions.UNREACHABLE("Module type isn't supported - " + m);
+          continue;
+        }        
+        modulePath.replace("\\", "/");
+        String moduleDescrLine = String.format("%s,%s,%s,%s", moduleLdr, moduleLang, moduleType, modulePath);
+        moduleLines.add(moduleDescrLine);
+      }
+    }
+    
+    // represent loaderImplByRef map as set of strings
+    List<String> ldrImplLines = new ArrayList<String>();
+    for (Map.Entry<ClassLoaderReference, String> e : loaderImplByRef.entrySet()){
+      ClassLoaderReference lrReference = e.getKey();
+      String ldrName = lrReference.getName().toString();
+      String ldrLang = lrReference.getLanguage().toString();      
+      Assertions.precondition(Language.JAVA.getName().equals(lrReference.getLanguage()), "Java language only is currently supported");
+      String ldrImplName = e.getValue();
+      String ldrImplDescrLine = String.format("%s,%s,%s,%s", ldrName, ldrLang, "loaderImpl", ldrImplName);
+      ldrImplLines.add(ldrImplDescrLine);
+    }
+    
+    ShallowAnalysisScope shallowScope = 
+      new ShallowAnalysisScope(getExclusions(),
+                               moduleLines,
+                               ldrImplLines);
+    return shallowScope;
+  }
 }

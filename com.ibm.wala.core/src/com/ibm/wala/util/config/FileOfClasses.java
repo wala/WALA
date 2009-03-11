@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,7 +30,10 @@ import com.ibm.wala.types.TypeReference;
  * 
  * @author sfink
  */
-public class FileOfClasses extends SetOfClasses {
+public class FileOfClasses extends SetOfClasses implements Serializable {
+
+  /* Serial version */
+  private static final long serialVersionUID = -3256390509887654322L;  
 
   private static final boolean DEBUG = false;
 
