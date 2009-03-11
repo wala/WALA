@@ -386,23 +386,25 @@ public class JavaCAst2IRTranslator extends AstTranslator {
     protected boolean doVisit(CAstNode n, Context context, CAstVisitor visitor) {
       WalkContext wc = (WalkContext) context;
       if (n.getKind() == CAstNode.MONITOR_ENTER) {
-	visitor.visit(n.getChild(0), wc, visitor);
-	wc.cfg().addInstruction(
-	  SSAInstructionFactory.MonitorInstruction(
-	    getValue(n.getChild(0)), 
-	    true));
-
-	return true;	
+        visitor.visit(n.getChild(0), wc, visitor);
+        wc.cfg().addInstruction(
+            SSAInstructionFactory.MonitorInstruction(
+                getValue(n.getChild(0)), 
+                true));
+        processExceptions(n, wc);
+        
+        return true;	
       } else if (n.getKind() == CAstNode.MONITOR_EXIT) {
-	visitor.visit(n.getChild(0), wc, visitor);
-	wc.cfg().addInstruction(
-	  SSAInstructionFactory.MonitorInstruction(
-	    getValue(n.getChild(0)), 
-	    false));
+        visitor.visit(n.getChild(0), wc, visitor);
+        wc.cfg().addInstruction(
+            SSAInstructionFactory.MonitorInstruction(
+                getValue(n.getChild(0)), 
+                false));
+        processExceptions(n, wc);
 
-	return true;
+        return true;
       } else {
-	return super.doVisit(n, wc, visitor);
+        return super.doVisit(n, wc, visitor);
       }
     }
 

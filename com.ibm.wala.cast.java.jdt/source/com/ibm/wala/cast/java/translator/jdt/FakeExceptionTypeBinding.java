@@ -61,8 +61,11 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
   static public final FakeExceptionTypeBinding arithmetic = new FakeExceptionTypeBinding("Ljava/lang/ArithmeticException;");
   static public final FakeExceptionTypeBinding nullPointer = new FakeExceptionTypeBinding("Ljava/lang/NullPointerException;");
   static public final FakeExceptionTypeBinding classCast = new FakeExceptionTypeBinding("Ljava/lang/ClassCastException;");
+  static public final FakeExceptionTypeBinding noClassDef = new FakeExceptionTypeBinding("Ljava/lang/NoClassDefFoundError;");
+  static public final FakeExceptionTypeBinding initException = new FakeExceptionTypeBinding("Ljava/lang/ExceptionInInitializerError;");
+  static public final FakeExceptionTypeBinding outOfMemory = new FakeExceptionTypeBinding("Ljava/lang/OutOfMemoryError;");
   
-  private String exceptionBinaryName;
+  private final String exceptionBinaryName;
 
   private FakeExceptionTypeBinding(String exceptionBinaryName) {
     this.exceptionBinaryName = exceptionBinaryName;
@@ -290,11 +293,24 @@ public class FakeExceptionTypeBinding implements ITypeBinding {
 
   public boolean isSubTypeCompatible(ITypeBinding type) {
     String name = type.getBinaryName();
-    if ( name.equals("Ljava/lang/Throwable;") ||
-        name.equals("Ljava/lang/Exception;") ||
-        name.equals("Ljava/lang/RuntimeException;") ||
-        name.equals(exceptionBinaryName) )
-      return true;
+    if (exceptionBinaryName.endsWith("Error;")) {
+       	if ( name.equals("Ljava/lang/Throwable;") ||
+       		 name.equals("Ljava/lang/Error;") ||
+       		 name.equals(exceptionBinaryName) ) 
+       	{
+       		return true;
+       	}
+    	
+    } else {
+    	if ( name.equals("Ljava/lang/Throwable;") ||
+    		 name.equals("Ljava/lang/Exception;") ||
+    		 name.equals("Ljava/lang/RuntimeException;") ||
+    		 name.equals(exceptionBinaryName) ) 
+    	{
+    		return true;
+    	}
+    }
+    
     return false;
   }
 

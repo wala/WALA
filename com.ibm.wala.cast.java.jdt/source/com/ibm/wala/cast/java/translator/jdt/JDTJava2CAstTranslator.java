@@ -193,6 +193,12 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
 
   protected ITypeBinding fRuntimeExcType;
 
+  protected ITypeBinding NoClassDefFoundError;
+  
+  protected ITypeBinding ExceptionInInitializerError;
+  
+  protected ITypeBinding OutOfMemoryError;
+  
   private String fullPath;
 
   private CompilationUnit cu;
@@ -218,8 +224,13 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     fDivByZeroExcType = FakeExceptionTypeBinding.arithmetic;
     fNullPointerExcType = FakeExceptionTypeBinding.nullPointer;
     fClassCastExcType = FakeExceptionTypeBinding.classCast;
+    NoClassDefFoundError = FakeExceptionTypeBinding.noClassDef;
+    ExceptionInInitializerError = FakeExceptionTypeBinding.initException;
+    OutOfMemoryError = FakeExceptionTypeBinding.outOfMemory;
+    
     fRuntimeExcType = ast.resolveWellKnownType("java.lang.RuntimeException");
-
+    assert fRuntimeExcType != null;
+    
     List<CAstEntity> declEntities = new ArrayList<CAstEntity>();
 
     for (Iterator iter = cu.types().iterator(); iter.hasNext();) {
@@ -1206,6 +1217,16 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     else
       newNode = makeNode(context, fFactory, nn, CAstNode.NEW, fFactory.makeConstant(newTypeRef));
 
+    ITypeBinding[] newExceptions = new ITypeBinding[]{
+    		NoClassDefFoundError, ExceptionInInitializerError, OutOfMemoryError
+    };
+   	context.cfg().map(newNode, newNode);
+   	for(ITypeBinding exp : newExceptions) {
+    	for (Pair<ITypeBinding, Object> catchTarget : context.getCatchTargets(exp)) {
+    		context.cfg().add(newNode, catchTarget.snd, catchTarget.fst);
+    	}
+    }
+    
     // ANONYMOUS CLASSES
     // ctor already points to right place, so should type ref, so all we have to do is make the entity
     if (anonDecl != null)
@@ -1743,14 +1764,14 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
           // (presumably only one)
           for (Iterator iterator = excTargets.iterator(); iterator.hasNext();) {
             Pair catchPair = (Pair) iterator.next();
-            context.cfg().add(positioningNode, catchPair.snd, fNullPointerExcType);
+            context.cfg().add(refNode, catchPair.snd, fNullPointerExcType);
           }
         } else {
           // connect exception edge to exit
-          context.cfg().add(positioningNode, CAstControlFlowMap.EXCEPTION_TO_EXIT, fNullPointerExcType);
+          context.cfg().add(refNode, CAstControlFlowMap.EXCEPTION_TO_EXIT, fNullPointerExcType);
         }
 
-        context.cfg().map(positioningNode, refNode);
+        context.cfg().map(refNode, refNode);
       }
 
       if (fieldBinding.getConstantValue() != null ) {
@@ -2574,11 +2595,21 @@ public class JDTJava2CAstTranslator implements TranslatorToCAst {
     String exprName = fFactory.makeUnique();
     CAstNode declStmt = makeNode(context, fFactory, n, CAstNode.DECL_STMT, fFactory
         .makeConstant(new CAstSymbolImpl(exprName, true)), exprNode);
+ 
     CAstNode monitorEnterNode = makeNode(context, fFactory, n, CAstNode.MONITOR_ENTER, makeNode(context, fFactory, n, CAstNode.VAR,
         fFactory.makeConstant(exprName)));
+    context.cfg().map(monitorEnterNode, monitorEnterNode);
+    for (Pair<ITypeBinding, Object> catchTarget : context.getCatchTargets(fNullPointerExcType))
+        context.cfg().add(monitorEnterNode, catchTarget.snd, catchTarget.fst);
+
     CAstNode bodyNodes = visitNode(n.getBody(), context);
+    
     CAstNode monitorExitNode = makeNode(context, fFactory, n, CAstNode.MONITOR_EXIT, makeNode(context, fFactory, n, CAstNode.VAR,
         fFactory.makeConstant(exprName)));
+    context.cfg().map(monitorExitNode, monitorExitNode);
+    for (Pair<ITypeBinding, Object> catchTarget : context.getCatchTargets(fNullPointerExcType))
+        context.cfg().add(monitorExitNode, catchTarget.snd, catchTarget.fst);
+    
     CAstNode tryBody = makeNode(context, fFactory, n, CAstNode.BLOCK_STMT, monitorEnterNode, bodyNodes);
     CAstNode bigBody = makeNode(context, fFactory, n, CAstNode.UNWIND, tryBody, monitorExitNode);
 
